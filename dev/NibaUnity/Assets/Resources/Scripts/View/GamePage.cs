@@ -2,23 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GamePage : AbstractView {
+namespace GameView{
+	public class GamePage : AbstractView {
 
-	public void OnBtnBackClick(){
-		View.ChangeToPage ("Prefabs/TitlePage");
-	}
+		public TileLayer tileLayer;
 
-	// Use this for initialization
-	void Start () {
+		public void OnBtnBackClick(){
+			
+			View.ChangeToPage ("Prefabs/TitlePage");
+		}
+
+		// Use this for initialization
+		void Start () {
+			tileLayer.View = View;
+		}
 		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	void CreateTile( ArrayList tileData ){
+		// Update is called once per frame
+		void Update () {
+			
+		}
 
 	}
 }
