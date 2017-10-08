@@ -29,8 +29,6 @@ public class ActivityX extends Activity {
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
         mUnityPlayer.requestFocus();
-
-        GooglePlayServiceBinder.instance.connect(this);
     }
 
     // Quit Unity
@@ -97,6 +95,7 @@ public class ActivityX extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         IABBinder.onActivityResult(requestCode, resultCode, data);
+        GooglePlayServiceBinder.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

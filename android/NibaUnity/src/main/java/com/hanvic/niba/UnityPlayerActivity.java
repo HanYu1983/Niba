@@ -22,6 +22,8 @@ import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListe
 import com.google.android.gms.common.api.Scope;
 import com.unity3d.player.UnityPlayer;
 
+import org.han.unity.UnityBinder;
+
 public class UnityPlayerActivity extends FragmentActivity implements OnConnectionFailedListener
 {
 	protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
@@ -41,7 +43,7 @@ public class UnityPlayerActivity extends FragmentActivity implements OnConnectio
 		OnConnectionFailedListener lis;
 
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-				//.requestServerAuthCode("241640252242-e9962fc449bb9sh847eoqlt5oshef34g.apps.googleusercontent.com")
+				.requestIdToken("241640252242-e9962fc449bb9sh847eoqlt5oshef34g.apps.googleusercontent.com")
 				.requestEmail()
 				.requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
 				.build();
@@ -71,6 +73,8 @@ public class UnityPlayerActivity extends FragmentActivity implements OnConnectio
 			if (result.isSuccess()) {
 				GoogleSignInAccount acct = result.getSignInAccount();
 				String token = acct.getIdToken();
+
+				UnityBinder.sendToUnity("?cmd=xxx&token=" + token);
 
 				AlertDialog.Builder MyAlertDialog = new AlertDialog.Builder(this);
 				MyAlertDialog.setTitle("token");

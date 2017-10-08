@@ -31,6 +31,7 @@ public class GooglePlayServiceBinder implements ConnectionCallbacks{
     public void connect(Activity act) {
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
+                .requestIdToken("241640252242-e9962fc449bb9sh847eoqlt5oshef34g.apps.googleusercontent.com")
                 .requestScopes(new Scope(Scopes.DRIVE_APPFOLDER))
                 .build();
 
@@ -67,7 +68,12 @@ public class GooglePlayServiceBinder implements ConnectionCallbacks{
     public static void HandleCommand(String cmd, List<UrlQuerySanitizer.ParameterValuePair> pairs) {
         switch (cmd) {
             case "GooglePlayServce.connect":
-                instance.connect(UnityPlayer.currentActivity);
+                UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        instance.connect(UnityPlayer.currentActivity);
+                    }
+                });
                 break;
             case "GooglePlayServce.Auth.SignIn":
                 UnityPlayer.currentActivity.runOnUiThread(new Runnable() {

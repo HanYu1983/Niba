@@ -20,10 +20,11 @@ public class UnityBinder {
         String cmd = GetValue(pairs, "cmd");
 
         IABBinder.HandleCommand(cmd, pairs);
-        GABinder.HandleCommand(cmd, pairs);
-        GoogleAdsBinder.HandleCommand(cmd, pairs);
-        YoMobBinder.HandleCommand(cmd, pairs);
-        BackgroundAudioBinder.HandleCommand(cmd, pairs);
+        //GABinder.HandleCommand(cmd, pairs);
+        //GoogleAdsBinder.HandleCommand(cmd, pairs);
+        //YoMobBinder.HandleCommand(cmd, pairs);
+        GooglePlayServiceBinder.HandleCommand(cmd, pairs);
+        //BackgroundAudioBinder.HandleCommand(cmd, pairs);
     }
 
     public static String encodeString(String msg){
@@ -43,7 +44,8 @@ public class UnityBinder {
         UnityPlayer.currentActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                UnityPlayer.UnitySendMessage("Native", "onNativeCommand", queryString);
+                sendToUnityDirectly(queryString);
+                //UnityPlayer.UnitySendMessage("Main", "onNativeCommand", queryString);
             }
         });
     }

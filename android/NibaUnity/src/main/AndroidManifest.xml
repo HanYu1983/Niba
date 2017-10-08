@@ -6,7 +6,7 @@
         android:screenOrientation="fullSensor"
         android:launchMode="singleTask"
         android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|screenLayout|uiMode|screenSize|smallestScreenSize|fontScale"
-        android:name="com.hanvic.niba.UnityPlayerActivity">
+        android:name="org.han.unity.ActivityX">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
