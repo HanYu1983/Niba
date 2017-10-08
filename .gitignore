@@ -46,7 +46,6 @@ android/NibaUnity/src/main/jniLibs/
 android/NibaUnity/src/main/res/
 android/NibaUnity/libs/
 android/NibaUnity/*.iml
-android/NibaUnity/*.gradle
 android/NibaUnity/gradlew
 android/NibaUnity/*.bat
 android/NibaUnity/*.properties
