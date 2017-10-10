@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbstractView : MonoBehaviour {
+namespace GameView{
+	public class AbstractView : MonoBehaviour {
 
-	public View View;
+		public View View;
+	}
 }

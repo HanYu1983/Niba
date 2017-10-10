@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TitlePage : AbstractView {
+namespace GameView{
+	public class TitlePage : AbstractView {
 
-	public void OnBtnStartClick(){
-		View.ChangeToPage ("Prefabs/GamePage");
-	}
+		public void OnBtnStartClick(){
+			View.ChangeToPage (PrefabPath.Game);
+		}
 
-	// Use this for initialization
-	void Start () {
+		// Use this for initialization
+		void Start () {
+			
+		}
 		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
+		// Update is called once per frame
+		void Update () {
+			
+		}
 	}
 }
