@@ -20,10 +20,9 @@ public class UnityBinder {
         String cmd = GetValue(pairs, "cmd");
 
         IABBinder.HandleCommand(cmd, pairs);
-        //GABinder.HandleCommand(cmd, pairs);
+        //IABinder.HandleCommand(cmd, pairs);
         //GoogleAdsBinder.HandleCommand(cmd, pairs);
         //YoMobBinder.HandleCommand(cmd, pairs);
-        //GooglePlayServiceBinder.HandleCommand(cmd, pairs);
         //BackgroundAudioBinder.HandleCommand(cmd, pairs);
         FirebaseBinder.HandleCommand(cmd, pairs);
     }
@@ -46,7 +45,6 @@ public class UnityBinder {
             @Override
             public void run() {
                 sendToUnityDirectly(queryString);
-                //UnityPlayer.UnitySendMessage("Main", "onNativeCommand", queryString);
             }
         });
     }

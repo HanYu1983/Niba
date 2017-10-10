@@ -32,9 +32,6 @@ import com.unity3d.player.UnityPlayer;
 
 import java.util.List;
 
-import static org.han.unity.GooglePlayServiceBinder.PLAY_SERVICES_RESOLUTION_REQUEST;
-import static org.han.unity.GooglePlayServiceBinder.googlePlayServiceBinderRequestCode;
-
 /**
  * Created by hanyu on 2017/10/10.
  */
@@ -43,7 +40,10 @@ public class FirebaseBinder{
     private static final String WEB_CLIENT_ID = "241640252242-e9962fc449bb9sh847eoqlt5oshef34g.apps.googleusercontent.com";
     private static final String STORAGE_NAME = "gs://fast-drake-630.appspot.com";
 
+    private static final int GOOGLE_SIGN_IN_REQUEST_CODE = 90001;
     private static final int RESOLVE_CONNECTION_REQUEST_CODE = 90002;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 90003;
+
     public static FirebaseBinder instance = new FirebaseBinder();
 
     private GoogleSignIn googleSignIn = new GoogleSignIn();
@@ -206,7 +206,7 @@ public class FirebaseBinder{
                 @Override
                 public void run() {
                     Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                    UnityPlayer.currentActivity.startActivityForResult(signInIntent, googlePlayServiceBinderRequestCode);
+                    UnityPlayer.currentActivity.startActivityForResult(signInIntent, GOOGLE_SIGN_IN_REQUEST_CODE);
                 }
             });
         }
@@ -240,7 +240,7 @@ public class FirebaseBinder{
                 this.connect();
             }
 
-            if (requestCode == googlePlayServiceBinderRequestCode) {
+            if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 if (result.isSuccess()) {
                     GoogleSignInAccount acct = result.getSignInAccount();
