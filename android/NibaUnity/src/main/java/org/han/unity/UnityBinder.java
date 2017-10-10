@@ -23,8 +23,9 @@ public class UnityBinder {
         //GABinder.HandleCommand(cmd, pairs);
         //GoogleAdsBinder.HandleCommand(cmd, pairs);
         //YoMobBinder.HandleCommand(cmd, pairs);
-        GooglePlayServiceBinder.HandleCommand(cmd, pairs);
+        //GooglePlayServiceBinder.HandleCommand(cmd, pairs);
         //BackgroundAudioBinder.HandleCommand(cmd, pairs);
+        FirebaseBinder.HandleCommand(cmd, pairs);
     }
 
     public static String encodeString(String msg){
@@ -37,7 +38,7 @@ public class UnityBinder {
     }
 
     public static void sendToUnityDirectly(String queryString){
-        UnityPlayer.UnitySendMessage("Native", "onNativeCommand", queryString);
+        UnityPlayer.UnitySendMessage("Main", "onNativeCommand", queryString);
     }
 
     public static void sendToUnity(final String queryString){

@@ -11,6 +11,9 @@ import android.view.Window;
 
 import com.unity3d.player.UnityPlayer;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
 /**
  * Created by hanyu on 2016/11/28.
  */
@@ -18,6 +21,8 @@ import com.unity3d.player.UnityPlayer;
 public class ActivityX extends Activity {
     protected UnityPlayer mUnityPlayer; // don't change the name of this variable; referenced from native code
 
+    private static final ScheduledExecutorService worker =
+            Executors.newSingleThreadScheduledExecutor();
     // Setup activity layout
     @Override protected void onCreate (Bundle savedInstanceState)
     {
@@ -29,6 +34,57 @@ public class ActivityX extends Activity {
         mUnityPlayer = new UnityPlayer(this);
         setContentView(mUnityPlayer);
         mUnityPlayer.requestFocus();
+
+        /*
+        UnityBinder.command("?cmd=FirebaseBinder.anonymouse.signIn");
+
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.save&data="+UnityBinder.encodeString("{\"name\":\"han\"}"));
+            }
+        }, 2, TimeUnit.SECONDS);
+
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.load");
+            }
+        }, 4, TimeUnit.SECONDS);
+        */
+
+        /*
+        UnityBinder.command("?cmd=FirebaseBinder.init");
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.google.signIn");
+            }
+        }, 2, TimeUnit.SECONDS);
+
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.anonymouse.link.google");
+            }
+        }, 8, TimeUnit.SECONDS);
+        */
+        /*
+        UnityBinder.command("?cmd=FirebaseBinder.init");
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.google.signIn");
+            }
+        }, 2, TimeUnit.SECONDS);
+
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.save&data="+UnityBinder.encodeString("{\"name\":\"han2\"}"));
+            }
+        }, 4, TimeUnit.SECONDS);
+        */
     }
 
     // Quit Unity
@@ -95,7 +151,8 @@ public class ActivityX extends Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         IABBinder.onActivityResult(requestCode, resultCode, data);
-        GooglePlayServiceBinder.onActivityResult(requestCode, resultCode, data);
+        //GooglePlayServiceBinder.onActivityResult(requestCode, resultCode, data);
+        FirebaseBinder.instance.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
