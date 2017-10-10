@@ -69,7 +69,7 @@ public class ActivityX extends Activity {
             }
         }, 8, TimeUnit.SECONDS);
         */
-        /*
+/*
         UnityBinder.command("?cmd=FirebaseBinder.init");
         worker.schedule(new Runnable() {
             @Override
@@ -81,9 +81,18 @@ public class ActivityX extends Activity {
         worker.schedule(new Runnable() {
             @Override
             public void run() {
-                UnityBinder.command("?cmd=FirebaseBinder.save&data="+UnityBinder.encodeString("{\"name\":\"han2\"}"));
+                String temp = "%7B%22nam22e%22%3A%22hanxxXXX%22%7D";
+                //String temp = UnityBinder.encodeString("{\"name2\":\"hahaWW\"}");
+                UnityBinder.command("?cmd=FirebaseBinder.save&data="+temp);
             }
-        }, 4, TimeUnit.SECONDS);
+        }, 8, TimeUnit.SECONDS);
+
+        worker.schedule(new Runnable() {
+            @Override
+            public void run() {
+                UnityBinder.command("?cmd=FirebaseBinder.load");
+            }
+        }, 16, TimeUnit.SECONDS);
         */
     }
 

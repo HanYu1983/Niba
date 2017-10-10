@@ -2,6 +2,7 @@ package org.han.unity;
 
 import android.content.Intent;
 import android.content.IntentSender;
+import android.net.Uri;
 import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +25,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -39,6 +47,7 @@ import java.util.List;
 public class FirebaseBinder{
     private static final String WEB_CLIENT_ID = "241640252242-e9962fc449bb9sh847eoqlt5oshef34g.apps.googleusercontent.com";
     private static final String STORAGE_NAME = "gs://fast-drake-630.appspot.com";
+    private static final String REALTIME_DATABASE_NAME = "https://fast-drake-630.firebaseio.com/";
 
     private static final int GOOGLE_SIGN_IN_REQUEST_CODE = 90001;
     private static final int RESOLVE_CONNECTION_REQUEST_CODE = 90002;
@@ -95,6 +104,55 @@ public class FirebaseBinder{
                 });
     }
 
+    void saveToRealtime(final String content) throws Exception{
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            throw didntLoginException;
+        }
+        String uid = user.getUid();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance(REALTIME_DATABASE_NAME).getReference();
+        //mDatabase.child("niba").child("data").child(uid).setValue(content);
+
+        mDatabase.child("niba").child("data").child(uid).runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                mutableData.setValue(content);
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError e, boolean b,
+                                   DataSnapshot dataSnapshot) {
+                if(e != null){
+                    UnityBinder.sendToUnity("?cmd=FirebaseBinder.save.error&reason=" + e.getMessage());
+                } else {
+                    UnityBinder.sendToUnity("?cmd=FirebaseBinder.save.ok");
+                }
+            }
+        });
+    }
+
+    void loadFromRealtime() throws Exception{
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null){
+            throw didntLoginException;
+        }
+        String uid = user.getUid();
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance(REALTIME_DATABASE_NAME).getReference();
+        mDatabase.child("niba").child("data").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String content = dataSnapshot.getValue(String.class);
+                UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.ok&data="+UnityBinder.encodeString(content));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError e) {
+                UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.error&reason=" + e.getMessage());
+            }
+        });
+    }
+
     void save(String content) throws Exception{
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
@@ -103,7 +161,7 @@ public class FirebaseBinder{
         String uid = user.getUid();
         String fileName = uid+".json";
         StorageReference storageRef = FirebaseStorage.getInstance(STORAGE_NAME).getReference();
-        StorageReference saveTarget = storageRef.child("save").child(fileName);
+        StorageReference saveTarget = storageRef.child("niba/save").child(fileName);
 
         StorageMetadata metadata = new StorageMetadata.Builder()
                 .setContentType("application/json")
@@ -122,17 +180,6 @@ public class FirebaseBinder{
         });
     }
 
-    /*void loadWithUser(FirebaseUser user, OnSuccessListener<byte[]> onSuccess, OnFailureListener onFailure){
-        String uid = user.getUid();
-        String fileName = uid+".json";
-
-        StorageReference storageRef = FirebaseStorage.getInstance(STORAGE_NAME).getReference();
-        StorageReference loadTarget = storageRef.child("save").child(fileName);
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        loadTarget.getBytes(ONE_MEGABYTE).addOnSuccessListener(onSuccess).addOnFailureListener(onFailure);
-    }*/
-
     void load() throws Exception{
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null){
@@ -142,7 +189,7 @@ public class FirebaseBinder{
         String fileName = uid+".json";
 
         StorageReference storageRef = FirebaseStorage.getInstance(STORAGE_NAME).getReference();
-        StorageReference loadTarget = storageRef.child("save").child(fileName);
+        StorageReference loadTarget = storageRef.child("niba/save").child(fileName);
 
         final long ONE_MEGABYTE = 1024 * 1024;
         loadTarget.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
@@ -154,7 +201,7 @@ public class FirebaseBinder{
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.error&reason=" + e.getLocalizedMessage());
+                UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.error&reason=" + e.getMessage());
             }
         });
     }
@@ -280,6 +327,45 @@ public class FirebaseBinder{
         }
     }
 
+    public static void HandleCommand(String cmd, Uri uri){
+        switch (cmd) {
+            case "FirebaseBinder.init":{
+                instance.init();
+            } break;
+            case "FirebaseBinder.signOut":{
+                instance.signOut();
+            } break;
+            case "FirebaseBinder.google.signIn": {
+                instance.googleSignIn.signIn();
+            } break;
+            case "FirebaseBinder.anonymouse.signIn": {
+                instance.anonymousSignIn.signIn();
+            } break;
+            case "FirebaseBinder.anonymouse.link.google": {
+                try {
+                    instance.linkCredentail(instance.googleSignIn.getCredential());
+                }catch (Exception e){
+                    UnityBinder.sendToUnity("?cmd=FirebaseBinder.anonymouse.link.google.error&reason="+UnityBinder.encodeString(e.getMessage()));
+                }
+            } break;
+            case "FirebaseBinder.save":{
+                String data = uri.getQueryParameter("data");
+                try {
+                    instance.saveToRealtime(data);
+                }catch (Exception e){
+                    UnityBinder.sendToUnity("?cmd=FirebaseBinder.save.error&reason="+UnityBinder.encodeString(e.getMessage()));
+                }
+            } break;
+            case "FirebaseBinder.load":{
+                try {
+                    instance.loadFromRealtime();
+                }catch (Exception e){
+                    UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.error&reason="+UnityBinder.encodeString(e.getMessage()));
+                }
+            } break;
+        }
+    }
+
     public static void HandleCommand(String cmd, List<UrlQuerySanitizer.ParameterValuePair> pairs) {
         switch (cmd) {
             case "FirebaseBinder.init":{
@@ -306,14 +392,14 @@ public class FirebaseBinder{
                 try {
                     // 這樣存正常
                     //instance.save("{\"wow\":\"gangangan\"}");
-                    instance.save(data);
+                    instance.saveToRealtime(data);
                 }catch (Exception e){
                     UnityBinder.sendToUnity("?cmd=FirebaseBinder.save.error&reason="+UnityBinder.encodeString(e.getMessage()));
                 }
             } break;
             case "FirebaseBinder.load":{
                 try {
-                    instance.load();
+                    instance.loadFromRealtime();
                 }catch (Exception e){
                     UnityBinder.sendToUnity("?cmd=FirebaseBinder.load.error&reason="+UnityBinder.encodeString(e.getMessage()));
                 }

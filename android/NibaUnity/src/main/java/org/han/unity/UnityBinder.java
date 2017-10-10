@@ -1,5 +1,6 @@
 package org.han.unity;
 
+import android.net.Uri;
 import android.net.UrlQuerySanitizer;
 
 import com.unity3d.player.UnityPlayer;
@@ -15,16 +16,22 @@ import java.util.List;
 
 public class UnityBinder {
     public static void command(String queryString){
+        Uri uri = Uri.parse(queryString);
+        String cmd = uri.getQueryParameter("cmd");
+        FirebaseBinder.HandleCommand(cmd, uri);
+
+        /*
         UrlQuerySanitizer sanitizer = new UrlQuerySanitizer(queryString);
         List<UrlQuerySanitizer.ParameterValuePair> pairs = sanitizer.getParameterList();
         String cmd = GetValue(pairs, "cmd");
-
-        IABBinder.HandleCommand(cmd, pairs);
+        FirebaseBinder.HandleCommand(cmd, pairs);
+*/
+        //IABBinder.HandleCommand(cmd, pairs);
         //IABinder.HandleCommand(cmd, pairs);
         //GoogleAdsBinder.HandleCommand(cmd, pairs);
         //YoMobBinder.HandleCommand(cmd, pairs);
         //BackgroundAudioBinder.HandleCommand(cmd, pairs);
-        FirebaseBinder.HandleCommand(cmd, pairs);
+        //FirebaseBinder.HandleCommand(cmd, pairs);
     }
 
     public static String encodeString(String msg){
