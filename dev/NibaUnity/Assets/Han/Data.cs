@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Text;
+using UnityEngine;
 
 namespace Model
 {
@@ -82,7 +86,26 @@ namespace Model
 	}
 
 	public struct MoveResult{
-		
+		public bool isMoveSuccess;
+		public List<string> events;
+		public bool HasEvent{
+			get{
+				return events != null && events.Count > 0;
+			}
+		}
+		public static string BuildEvent(String eventName, NameValueCollection args){
+			return string.Format ("?eventName={0}&{1}", eventName, args.ToString ());
+		}
+		public static string ParseEvent(string eventDescription, NameValueCollection args){
+			HanUtil.Native.ParseQueryString (eventDescription, Encoding.UTF8, args);
+			var hasEventName = new List<string> (args.AllKeys).Contains("eventName");
+			if (hasEventName == false) {
+				throw new UnityException ("unknown event");
+			}
+			var eventName = args.Get ("eventName");
+			return eventName;
+		}
+		public static MoveResult Empty;
 	}
 	#endregion
 
@@ -92,12 +115,18 @@ namespace Model
 	#endregion
 
 	public interface IView {
-
+		IEnumerator ChangePage(string page, IModelGetter model, Action<Exception> callback);
 	}
 
-	public interface IModel {
-		IEnumerator LoadMap<T>(MapType type, Action<Exception, T> callback);
-		MapPlayer GetMapPlayer{ get; }
+	public interface IModelGetter{
+		List<MapObject> MapObjects{ get; }
+		List<ResourceInfo> ResourceInfos{ get; }
+		List<MonsterInfo> MonsterInfos{ get; }
+		MapPlayer MapPlayer{ get; }
+	}
+
+	public interface IModel : IModelGetter{
+		IEnumerator LoadMap(MapType type, Action<Exception> callback);
 		MoveResult MoveUp();
 		MoveResult MoveDown();
 		MoveResult MoveLeft();

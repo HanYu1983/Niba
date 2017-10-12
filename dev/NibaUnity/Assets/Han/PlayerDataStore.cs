@@ -150,9 +150,9 @@ namespace Model
 			playerInMap.position.x = 5;
 			playerInMap.position.y = 3;
 		}
-		public bool MovePlayerTo(int x, int y){
-			playerInMap.position.x = x;
-			playerInMap.position.y = y;
+		public bool MovePlayerTo(Position pos){
+			playerInMap.position.x = pos.x;
+			playerInMap.position.y = pos.y;
 			// TODO detect bound
 			return true;
 		}
