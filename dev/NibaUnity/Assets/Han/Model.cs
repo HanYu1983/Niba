@@ -23,38 +23,58 @@ namespace Model
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
 
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
-		public MoveResult MoveUp(){
+
+		MoveResult tempMoveResult;
+		bool hasMoveResult;
+
+		public void MoveUp(){
 			Position p;
 			p.x = 0; p.y = -1;
-			return Move (p);
+			Move (p);
 		}
-		public MoveResult MoveDown(){
+		public void MoveDown(){
 			Position p;
 			p.x = 0; p.y = 1;
-			return Move (p);
+			Move (p);
 		}
-		public MoveResult MoveLeft(){
+		public void MoveLeft(){
 			Position p;
 			p.x = -1; p.y = 0;
-			return Move (p);
+			Move (p);
 		}
-		public MoveResult MoveRight(){
+		public void MoveRight(){
 			Position p;
 			p.x = 1; p.y = 0;
-			return Move (p);
+			Move (p);
+		}
+		public MoveResult MoveResult{ 
+			get{
+				if (hasMoveResult == false) {
+					throw new UnityException ("沒有move result");
+				}
+				return tempMoveResult;
+			} 
+		}
+		public void ClearMoveResult(){
+			hasMoveResult = false;
 		}
 
-		MoveResult Move(Position position){
+		void Move(Position position){
+			if (hasMoveResult) {
+				throw new UnityException ("必須先處理之前的move result並且呼叫ClearMoveResult");
+			}
 			MoveResult rs = MoveResult.Empty;
 			var p = playerData.playerInMap.position;
 			p.x += position.x;
 			p.y += position.y;
 			if (playerData.MovePlayerTo (p)) {
-				return rs;
+				return;
 			}
 			rs.isMoveSuccess = true;
 			RequestSavePlayer ();
-			return rs;
+
+			tempMoveResult = rs;
+			hasMoveResult = true;
 		}
 		void RequestSavePlayer(){
 

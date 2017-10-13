@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace Model
 {
-	#region model data
 	[Serializable]
 	public struct Position{
 		public int x, y;
@@ -107,35 +106,99 @@ namespace Model
 		}
 		public static MoveResult Empty;
 	}
-	#endregion
 
+	public enum Page{
+		Unknown, Title, Game
+	}
 
-	#region view data
-
-	#endregion
+	public enum Popup{
+		Unknown, Event
+	}
 
 	public interface IView {
-		IEnumerator ChangePage(string page, IModelGetter model, Action<Exception> callback);
+		IModelGetter ModelGetter{ set; }
+		/// <summary>
+		/// 切換頁面
+		/// callback(null if exception == null else exception)
+		/// </summary>
+		/// <returns>The page.</returns>
+		/// <param name="page">Page.</param>
+		/// <param name="callback">Callback.</param>
+		IEnumerator ChangePage(Page page, Action<Exception> callback);
+		IEnumerator OpenPopup(Popup page, Action<Exception> callback);
 	}
 
 	public interface IModelGetter{
+		/// <summary>
+		/// 地圖狀態
+		/// </summary>
+		/// <value>The map objects.</value>
+		/// <code>
+		/// var obj1 = MapObjects[0];
+		/// switch(obj1.type){
+		/// case MapObjectType.Resource:{
+		/// 	var info = ResourceInfos[obj1.infoKey]
+		/// 	// your process
+		/// 	} break;
+		/// case MapObjectType.Monster:{
+		/// 	var info = MonsterInfos[obj1.infoKey]
+		/// 	// your process
+		/// 	} break;
+		/// }
+		/// </code>
 		List<MapObject> MapObjects{ get; }
 		List<ResourceInfo> ResourceInfos{ get; }
 		List<MonsterInfo> MonsterInfos{ get; }
+		/// <summary>
+		/// 取得玩家在地圖中的狀態
+		/// 注意：回傳的是struct，千萬不要暫存它，不然會取得不正確的資料
+		/// </summary>
+		/// <value>The map player.</value>
 		MapPlayer MapPlayer{ get; }
 	}
 
 	public interface IModel : IModelGetter{
+		/// <summary>
+		/// 讀取地圖
+		/// 任何一張地圖就是臨時創建的
+		/// 同時間只能存在一張地圖
+		/// 使用MapObjects取得地圖狀態
+		/// </summary>
+		/// <returns>The map.</returns>
+		/// <param name="type">Type.</param>
+		/// <param name="callback">Callback.</param>
 		IEnumerator LoadMap(MapType type, Action<Exception> callback);
-		MoveResult MoveUp();
-		MoveResult MoveDown();
-		MoveResult MoveLeft();
-		MoveResult MoveRight();
+		/// <summary>
+		/// 向上移動一格
+		/// </summary>
+		void MoveUp();
+		/// <summary>
+		/// 向下移動一格
+		/// </summary>
+		void MoveDown();
+		/// <summary>
+		/// 向左移動一格
+		/// </summary>
+		void MoveLeft();
+		/// <summary>
+		/// 向右移動一格
+		/// </summary>
+		void MoveRight();
+		/// <summary>
+		/// 取得移動結果
+		/// 呼叫任何移動後就必須處理MoveResult，並呼叫ClearMoveResult來清除暫存
+		/// </summary>
+		/// <value>The move result.</value>
+		MoveResult MoveResult{ get; }
+		/// <summary>
+		/// 清除移動結果的暫存
+		/// </summary>
+		void ClearMoveResult();
 	}
 
-	public class Data
+	public class Common
 	{
-		
+		public static event Action<string, object> OnEvent = delegate{};
 	}
 }
 

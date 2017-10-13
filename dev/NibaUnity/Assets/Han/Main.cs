@@ -29,11 +29,29 @@ namespace Model
 		}
 
 		void TestGame(){
+			View.ModelGetter = Model;
+
+			Common.OnEvent += (evt, arg) => {
+				switch(evt){
+				case "btn_move_up":
+					{
+						Model.MoveUp();
+						var result = Model.MoveResult;
+						View.OpenPopup(Popup.Event, e=>{
+
+						});
+					}
+					break;
+				case "btn_move_down":
+					break;
+				}
+			};
+
 			Model.LoadMap (MapType.Unknown, e => {
 				if(e != null){
 
 				} else {
-					View.ChangePage (PrefabPath.Game, Model, e2 => {
+					View.ChangePage (Page.Game, e2 => {
 						if(e2 != null){
 
 						} else {
