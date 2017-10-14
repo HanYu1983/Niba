@@ -9,9 +9,33 @@ namespace Model
 	public class MapDataStore{
 		#region map
 		// Dictionary無法Serializable
-		public List<MapObject> items = new List<MapObject>();
+		public List<Position> isPositionVisible = new List<Position>();
+		public List<MapObject> mapObjects = new List<MapObject>();
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
+
+		public List<MapObject> VisibleMapObjects {
+			get {
+				var posSet = new HashSet<Position> (isPositionVisible);
+				var visiblePosition = mapObjects.Where (obj => {
+					return posSet.Contains(obj.position);
+				});
+				return visiblePosition.ToList();
+			}
+		}
+		public void VisitPosition(Position pos, int expend){
+			var posSet = new HashSet<Position> (isPositionVisible);
+			for (var x = -expend; x <= expend; ++x) {
+				var yexpend = expend - Math.Abs (x);
+				for (var y = -yexpend; y <= yexpend; ++y) {
+					Position newPos;
+					newPos.x = x;
+					newPos.y = y;
+					posSet.Add (newPos);
+				}
+			}
+			isPositionVisible = posSet.ToList ();
+		}
 
 		public void GenMap(MapType type, int w, int h){
 			for (var y = 0; y < h; ++y) {
@@ -19,20 +43,20 @@ namespace Model
 					var p = Mathf.PerlinNoise (x, y);
 					if (p < 0.8f) {
 						var key = GenObject (MapObjectType.Resource, null);
-						var obj = items [key];
+						var obj = mapObjects [key];
 						Position pos;
 						pos.x = x;
 						pos.y = y;
 						obj.position = pos;
-						var info = resourceInfo [items [key].infoKey];
+						var info = resourceInfo [mapObjects [key].infoKey];
 						if (p < 0.3f) {
 							info.type = ResourceType.Tree;
 						} else if (p < 0.8f) {
 							info.type = ResourceType.Grass;
 						}
 						// assign back
-						resourceInfo [items [key].infoKey] = info;
-						items [key] = obj;
+						resourceInfo [mapObjects [key].infoKey] = info;
+						mapObjects [key] = obj;
 						// gen monster after assign item
 						if (obj.type == MapObjectType.Resource) {
 							GenMonster (key, false);
@@ -44,7 +68,8 @@ namespace Model
 			}
 		}
 		public void ClearMap(){
-			items.Clear ();
+			mapObjects.Clear ();
+			isPositionVisible = null;
 		}
 		public int GenObject(MapObjectType type, string strKey){
 			if (strKey != null) {
@@ -73,19 +98,19 @@ namespace Model
 				break;
 			}
 			// 先取得數字鍵
-			item.key = items.Count;
+			item.key = mapObjects.Count;
 			// 再加入到串列
-			items.Add (item);
+			mapObjects.Add (item);
 			return item.key;
 		}
 		public int GenMonster(int objKey, bool assignMonsterType, MonsterType monsterType = MonsterType.Unknown){
-			var obj = items [objKey];
+			var obj = mapObjects [objKey];
 			var resInfo = resourceInfo [obj.infoKey];
 			if (resInfo.type == ResourceType.Unknown) {
 				throw new UnityException ("resourceType type not defined. with object key:"+objKey);
 			}
 			var m1Key = GenObject (MapObjectType.Monster, null);
-			var m1Object = items [m1Key];
+			var m1Object = mapObjects [m1Key];
 			var m1Info = monsterInfo [m1Object.infoKey];
 			m1Info.habitats = resInfo.type;
 			if (assignMonsterType) {
@@ -99,12 +124,12 @@ namespace Model
 			return m1Key;
 		}
 		public MapObject FindObject(string strKey){
-			return items.Find (item => {
+			return mapObjects.Find (item => {
 				return item.strKey == strKey;
 			});
 		}
 		public IEnumerable<MapObject> FindObjects(Position pos){
-			return items.Where (item => {
+			return mapObjects.Where (item => {
 				return item.position.Equals(pos);
 			});
 		}

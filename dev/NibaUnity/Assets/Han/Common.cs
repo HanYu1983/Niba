@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using UnityEngine;
+using System.Linq;
 
 namespace Model
 {
 	[Serializable]
-	public struct Position{
+	public struct Position : IEquatable<Position>{
 		public int x, y;
+		public bool Equals(Position other){
+			return x == other.x && y == other.y;
+		}
 		public static Position Empty;
 	}
 
@@ -203,6 +207,20 @@ namespace Model
         {
             OnEvent(cmd, args);
         }
+
+		public static List<MapObject> FilterMapObjectsForCenterExpend(IModelGetter model, Position center, int w, int h){
+			return model.MapObjects.Where (obj => {
+				var disX = Math.Abs (obj.position.x - center.x);
+				if (disX > w) {
+					return false;
+				}
+				var disY = Math.Abs (obj.position.y - center.y);
+				if (disY > h) {
+					return false;
+				}
+				return true;
+			}).ToList ();
+		}
 	}
 }
 

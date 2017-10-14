@@ -18,7 +18,7 @@ namespace Model
 			mapData.GenMap (type, 10, 10);
 			callback (null);
 		}
-		public List<MapObject> MapObjects{ get{ return mapData.items; } }
+		public List<MapObject> MapObjects{ get{ return mapData.VisibleMapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
 
