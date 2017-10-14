@@ -2,22 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Model;
+namespace GameView
+{
+    public class View : MonoBehaviour
+    {
 
-namespace GameView{
-	public class View : MonoBehaviour {
+        public GameObject MainLayer;
+        public Action<String, View> OnChangePage;
 
-		public GameObject MainLayer;
-		public Action<String,View> OnChangePage;
+        Dictionary<string, GameObject> pagePool = new Dictionary<string, GameObject>();
+        GameObject currentPage;
 
-		Dictionary<string,GameObject> pagePool = new Dictionary<string, GameObject> ();
-		GameObject currentPage;
 
-		/// <summary>
-		/// 取出實例物件，會異步加載
-		/// </summary>
-		/// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
-		/// <param name="parent">要取出物件的父親</param>
-		/// <param name="callback">加載完成的事件</param>
+
+
+        //========================= 游戲頁面的方法 ==============================
+
+        public void SetGamePageTile( IModelGetter model )
+        {
+            GamePage gamePage = currentPage.GetComponent<GamePage>();
+            if(gamePage == null)
+            {
+                throw new Exception("不合法的頁面，應該要在游戲頁面才能呼叫");
+            }
+            gamePage.SetTile(model);
+        }
+        
+        //========================= 游戲頁面的方法 ==============================
+
+        /// <summary>
+        /// 取出實例物件，會異步加載
+        /// </summary>
+        /// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
+        /// <param name="parent">要取出物件的父親</param>
+        /// <param name="callback">加載完成的事件</param>
         public IEnumerator GetInstanceByPath(string path, GameObject parent, Action<GameObject> callback)
         {
             yield return GetPrefabByPath(path, (GameObject prefab) => {
@@ -67,21 +86,25 @@ namespace GameView{
             });
         }
 
-        void CreatePageAndCloseOld( string pageName, GameObject page ){
-			if (currentPage != null) {
-				DestroyObject (currentPage);
-			}
-			currentPage = page;
-			if (OnChangePage != null) {
-				OnChangePage.Invoke (pageName, this);
-			}
-		}
+        void CreatePageAndCloseOld(string pageName, GameObject page)
+        {
+            if (currentPage != null)
+            {
+                DestroyObject(currentPage);
+            }
+            currentPage = page;
+            if (OnChangePage != null)
+            {
+                OnChangePage.Invoke(pageName, this);
+            }
+        }
 
-		IEnumerator LoadPrefab( string path, Action<GameObject> callback ) {
-			ResourceRequest request = Resources.LoadAsync(path);
-			yield return request;
-			pagePool.Add (path, request.asset as GameObject);
-			callback (request.asset as GameObject);
-		}
-	}
+        IEnumerator LoadPrefab(string path, Action<GameObject> callback)
+        {
+            ResourceRequest request = Resources.LoadAsync(path);
+            yield return request;
+            pagePool.Add(path, request.asset as GameObject);
+            callback(request.asset as GameObject);
+        }
+    }
 }

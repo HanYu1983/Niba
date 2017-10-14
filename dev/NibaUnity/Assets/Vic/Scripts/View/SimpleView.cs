@@ -34,6 +34,7 @@ namespace GameView
                 case Page.Game:
                     yield return view.ChangeToPage(PrefabPath.Game, (GameObject obj) =>
                     {
+                        view.SetGamePageTile(model);
                         callback(null);
                     });
                     break;
