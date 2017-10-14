@@ -8,7 +8,12 @@ namespace Model
 	public class Main : MonoBehaviour
 	{
 		public HandleDebug debug;
-		public View gameView;
+		public SimpleView gameView;
+
+        void Start()
+        {
+            TestGame();
+        }
 
 		IModel Model{
 			get{
@@ -24,7 +29,7 @@ namespace Model
 				if (gameView == null) {
 					throw new UnityException ("view not found");
 				}
-				return null;
+				return gameView;
 			}
 		}
 
