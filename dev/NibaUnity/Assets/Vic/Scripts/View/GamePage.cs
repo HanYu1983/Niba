@@ -9,7 +9,7 @@ namespace GameView{
 
 		public void OnBtnBackClick(){
 			
-			View.ChangeToPage ("Prefabs/TitlePage");
+			
 		}
 
 		// Use this for initialization
