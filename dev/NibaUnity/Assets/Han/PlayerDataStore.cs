@@ -23,7 +23,7 @@ namespace Model
 				return visiblePosition.ToList();
 			}
 		}
-		public void VisitPosition(Position pos, int expend){
+		public bool VisitPosition(Position pos, int expend){
 			var posSet = new HashSet<Position> (isPositionVisible);
 			for (var x = -expend; x <= expend; ++x) {
 				var yexpend = expend - Math.Abs (x);
@@ -34,7 +34,12 @@ namespace Model
 					posSet.Add (newPos);
 				}
 			}
-			isPositionVisible = posSet.ToList ();
+			var newVisiblePosition = posSet.ToList ();
+			var oldCnt = isPositionVisible.Count;
+			var isDirty = newVisiblePosition.Count != oldCnt;
+
+			isPositionVisible = newVisiblePosition;
+			return isDirty;
 		}
 
 		public void GenMap(MapType type, int w, int h){

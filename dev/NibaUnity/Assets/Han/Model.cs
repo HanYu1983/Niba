@@ -16,6 +16,8 @@ namespace Model
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
 			mapData.GenMap (type, 10, 10);
+			mapData.VisitPosition (playerData.playerInMap.position, 3);
+			RequestSaveMap ();
 			callback (null);
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.VisibleMapObjects; } }
@@ -73,6 +75,9 @@ namespace Model
 			rs.isMoveSuccess = true;
 			RequestSavePlayer ();
 
+			if (mapData.VisitPosition (playerData.playerInMap.position, 3)) {
+				RequestSaveMap ();
+			}
 			tempMoveResult = rs;
 			hasMoveResult = true;
 		}

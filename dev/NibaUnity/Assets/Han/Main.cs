@@ -10,13 +10,13 @@ namespace Model
 		public HandleDebug debug;
 		public SimpleView gameView;
 
-        void Start()
-        {
-            TestGame();
-        }
+		void Start ()
+		{
+			TestGame ();
+		}
 
-		IModel Model{
-			get{
+		IModel Model {
+			get {
 				var model = GetComponent<Model> ();
 				if (model == null) {
 					throw new UnityException ("model not found");
@@ -24,8 +24,9 @@ namespace Model
 				return model;
 			}
 		}
-		IView View{
-			get{
+
+		IView View {
+			get {
 				if (gameView == null) {
 					throw new UnityException ("view not found");
 				}
@@ -33,50 +34,43 @@ namespace Model
 			}
 		}
 
-		void TestGame(){
+		void TestGame ()
+		{
 			View.ModelGetter = Model;
 
 			Common.OnEvent += (evt, arg) => {
-                print("evt: " + evt);
-				switch(evt){
+				print ("evt: " + evt);
+				switch (evt) {
 				case "btn_move_up":
 					{
-						Model.MoveUp();
+						Model.MoveUp ();
 						var result = Model.MoveResult;
-						View.OpenPopup(Popup.Event, e=>{
+						View.OpenPopup (Popup.Event, e => {
 
 						});
 					}
 					break;
 				case "btn_move_down":
 					break;
-                case "TitlePage_btnStart_click":
+				case "TitlePage_btnStart_click":
                             
-                        break;
-                }
+					break;
+				}
 			};
 
-            StartCoroutine(Model.LoadMap(MapType.Unknown, e =>
-            {
-                if (e != null)
-                {
+			StartCoroutine (Model.LoadMap (MapType.Unknown, e => {
+				if (e != null) {
 
-                }
-                else
-                {
-                    StartCoroutine(View.ChangePage(Page.Game, e2 =>
-                    {
-                        if (e2 != null)
-                        {
+				} else {
+					StartCoroutine (View.ChangePage (Page.Game, e2 => {
+						if (e2 != null) {
 
-                        }
-                        else
-                        {
+						} else {
 
-                        }
-                    }));
-                }
-            }));
+						}
+					}));
+				}
+			}));
 		}
 	}
 }
