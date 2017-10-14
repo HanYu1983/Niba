@@ -26,14 +26,15 @@ namespace GameView
             switch (page)
             {
                 case Page.Title:
-                    yield return view.ChangeToPage2(PrefabPath.Title, (GameObject obj)=>
+                    yield return view.ChangeToPage(PrefabPath.Title, (GameObject obj)=>
                     {
                         callback(null);
                     });
                     break;
                 case Page.Game:
-                    yield return view.ChangeToPage2(PrefabPath.Game, (GameObject obj) =>
+                    yield return view.ChangeToPage(PrefabPath.Game, (GameObject obj) =>
                     {
+                        view.SetGamePageTile(model);
                         callback(null);
                     });
                     break;
