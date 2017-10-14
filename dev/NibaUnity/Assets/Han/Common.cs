@@ -199,6 +199,10 @@ namespace Model
 	public class Common
 	{
 		public static event Action<string, object> OnEvent = delegate{};
+        public static void Notify(string cmd, object args)
+        {
+            OnEvent(cmd, args);
+        }
 	}
 }
 

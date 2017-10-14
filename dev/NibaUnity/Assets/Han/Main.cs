@@ -37,6 +37,7 @@ namespace Model
 			View.ModelGetter = Model;
 
 			Common.OnEvent += (evt, arg) => {
+                print("evt: " + evt);
 				switch(evt){
 				case "btn_move_up":
 					{
@@ -49,22 +50,33 @@ namespace Model
 					break;
 				case "btn_move_down":
 					break;
-				}
+                case "TitlePage_btnStart_click":
+                            
+                        break;
+                }
 			};
 
-			Model.LoadMap (MapType.Unknown, e => {
-				if(e != null){
+            StartCoroutine(Model.LoadMap(MapType.Unknown, e =>
+            {
+                if (e != null)
+                {
 
-				} else {
-					View.ChangePage (Page.Game, e2 => {
-						if(e2 != null){
+                }
+                else
+                {
+                    StartCoroutine(View.ChangePage(Page.Game, e2 =>
+                    {
+                        if (e2 != null)
+                        {
 
-						} else {
+                        }
+                        else
+                        {
 
-						}
-					});
-				}
-			});
+                        }
+                    }));
+                }
+            }));
 		}
 	}
 }

@@ -10,22 +10,39 @@ namespace GameView
     {
         public View view;
 
+        IModelGetter model;
+
         public IModelGetter ModelGetter
         {
             set
             {
-                throw new NotImplementedException();
+                model = value;
             }
         }
 
         public IEnumerator ChangePage(Page page, Action<Exception> callback)
         {
-            throw new NotImplementedException();
+            
+            switch (page)
+            {
+                case Page.Title:
+                    yield return view.ChangeToPage2(PrefabPath.Title, (GameObject obj)=>
+                    {
+                        callback(null);
+                    });
+                    break;
+                case Page.Game:
+                    yield return view.ChangeToPage2(PrefabPath.Game, (GameObject obj) =>
+                    {
+                        callback(null);
+                    });
+                    break;
+            }
         }
 
         public IEnumerator OpenPopup(Popup page, Action<Exception> callback)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 }
