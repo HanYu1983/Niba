@@ -5,7 +5,8 @@ using Model;
 namespace GameView{
 	public class GamePage : AbstractView {
 
-		public TileLayer tileLayer;
+		public TileLayer TileLayer;
+        public CreatureLayer CreatureLayer;
 
 		public void OnBtnBackClick(){
 			
@@ -22,13 +23,13 @@ namespace GameView{
                     case MapObjectType.Resource:
                         {
                             ResourceInfo info = model.ResourceInfos[mapObj.infoKey];
-                            tileLayer.PutResource(mapObj.position,info);
+                            TileLayer.PutResource(mapObj.position,info);
                 	    }
                         break;
                     case MapObjectType.Monster:
                         {
                             MonsterInfo info = model.MonsterInfos[mapObj.infoKey];
-                            tileLayer.PutCreature(mapObj.position, info);
+                            CreatureLayer.PutCreature(mapObj.position, info);
                         }
                         break;
                 }
@@ -38,8 +39,9 @@ namespace GameView{
 
 		// Use this for initialization
 		void Start () {
-			tileLayer.View = View;
-		}
+			TileLayer.View = View;
+
+        }
 		
 		// Update is called once per frame
 		void Update () {

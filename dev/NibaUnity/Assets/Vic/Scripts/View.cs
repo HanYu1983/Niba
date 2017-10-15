@@ -9,14 +9,10 @@ namespace GameView
     {
 
         public GameObject MainLayer;
-        public Action<String, View> OnChangePage;
 
         Dictionary<string, GameObject> pagePool = new Dictionary<string, GameObject>();
         GameObject currentPage;
-
-
-
-
+        
         //========================= 游戲頁面的方法 ==============================
 
         public void SetGamePageTile( IModelGetter model )
@@ -93,10 +89,6 @@ namespace GameView
                 DestroyObject(currentPage);
             }
             currentPage = page;
-            if (OnChangePage != null)
-            {
-                OnChangePage.Invoke(pageName, this);
-            }
         }
 
         IEnumerator LoadPrefab(string path, Action<GameObject> callback)
@@ -105,6 +97,11 @@ namespace GameView
             yield return request;
             pagePool.Add(path, request.asset as GameObject);
             callback(request.asset as GameObject);
+        }
+
+        public static int GetIndexByXY( int x, int y )
+        {
+            return y * 10 + x;
         }
     }
 }

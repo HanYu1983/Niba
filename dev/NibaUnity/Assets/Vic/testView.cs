@@ -10,10 +10,7 @@ public class testView : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		View.OnChangePage += OnChangePage;
+		
 	}
-
-	void OnChangePage( string name, View view ){
-		print ("OnChangePage");
-	}
+    
 }
