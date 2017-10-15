@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
+using Common;
 
 namespace Model
 {

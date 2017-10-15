@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Common;
 
 namespace Model
 {
@@ -55,9 +56,9 @@ namespace Model
 						obj.position = pos;
 						var info = resourceInfo [mapObjects [key].infoKey];
 						if (p < 0.3f) {
-							info.type = ResourceType.Tree;
+							info.type = 0;
 						} else if (p < 0.8f) {
-							info.type = ResourceType.Grass;
+							info.type = 1;
 						}
 						// assign back
 						resourceInfo [mapObjects [key].infoKey] = info;
@@ -90,16 +91,11 @@ namespace Model
 			switch (item.type) {
 			case MapObjectType.Resource:
 				item.infoKey = resourceInfo.Count;
-				ResourceInfo ri;
-				ri.type = ResourceType.Unknown;
-				resourceInfo.Add (ri);
+				resourceInfo.Add (ResourceInfo.Empty);
 				break;
 			case MapObjectType.Monster:
 				item.infoKey = monsterInfo.Count;
-				MonsterInfo mi;
-				mi.type = MonsterType.Unknown;
-				mi.habitats = ResourceType.Unknown;
-				monsterInfo.Add (mi);
+				monsterInfo.Add (MonsterInfo.Empty);
 				break;
 			}
 			// 先取得數字鍵
@@ -108,10 +104,10 @@ namespace Model
 			mapObjects.Add (item);
 			return item.key;
 		}
-		public int GenMonster(int objKey, bool assignMonsterType, MonsterType monsterType = MonsterType.Unknown){
+		public int GenMonster(int objKey, bool assignMonsterType, int monsterType = 0){
 			var obj = mapObjects [objKey];
 			var resInfo = resourceInfo [obj.infoKey];
-			if (resInfo.type == ResourceType.Unknown) {
+			if (resInfo.type == 0) {
 				throw new UnityException ("resourceType type not defined. with object key:"+objKey);
 			}
 			var m1Key = GenObject (MapObjectType.Monster, null);
@@ -122,7 +118,7 @@ namespace Model
 				m1Info.type = monsterType;
 			} else {
 				// TODO
-				m1Info.type = MonsterType.Dog;
+				m1Info.type = 1;
 			}
 			// assign back
 			monsterInfo [m1Object.infoKey] = m1Info;
@@ -147,11 +143,11 @@ namespace Model
 		#endregion
 
 		#region action
-		public IEnumerable<Action> GetActions(PlayerDataStore store){
+		public IEnumerable<Common.Action> GetActions(PlayerDataStore store){
 			return FindObjects (store.playerInMap.position).Aggregate (
-				new List<Action> (),
+				new List<Common.Action> (),
 				(actions, currItem) => {
-					Action action = new Action();
+					Common.Action action = new Common.Action();
 					action.target = currItem.key;
 					actions.Add(action);
 					return actions;

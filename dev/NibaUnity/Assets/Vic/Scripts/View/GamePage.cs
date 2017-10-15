@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Model;
+using Common;
+
 namespace GameView{
 	public class GamePage : AbstractView {
 

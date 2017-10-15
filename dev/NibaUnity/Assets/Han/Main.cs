@@ -2,6 +2,7 @@
 using UnityEngine;
 using HanUtil;
 using GameView;
+using Common;
 
 namespace Model
 {
@@ -38,7 +39,7 @@ namespace Model
 		{
 			View.ModelGetter = Model;
 
-			Common.OnEvent += (evt, arg) => {
+			Common.Common.OnEvent += (evt, arg) => {
 				print ("evt: " + evt);
 				switch (evt) {
 				case "btn_move_up":

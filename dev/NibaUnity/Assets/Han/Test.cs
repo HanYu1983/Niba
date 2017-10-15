@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Model;
+using Common;
 
 public class Test : MonoBehaviour {
 	void Start () {
@@ -15,10 +16,10 @@ public class Test : MonoBehaviour {
 		var godKey = store.GenObject (MapObjectType.Resource, "god");
 		var godObject = store.mapObjects [godKey];
 		var godInfo = store.resourceInfo [godObject.infoKey];
-		godInfo.type = ResourceType.Grass;
+		godInfo.type = 2;
 		store.resourceInfo [godObject.infoKey] = godInfo;
 
-		store.GenMonster (godKey, true, MonsterType.Bufferfly);
+		store.GenMonster (godKey, true, 1);
 
 		store.VisitPosition (Position.Empty, 3);
 

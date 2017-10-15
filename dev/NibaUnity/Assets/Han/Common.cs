@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 
-namespace Model
+namespace Common
 {
 	[Serializable]
 	public struct Position : IEquatable<Position>{
@@ -25,22 +25,6 @@ namespace Model
 	}
 
 	[Serializable]
-	public enum ResourceType{
-		Unknown = 0, 
-		Grass = 1, 
-		Tree = 2, 
-		Sky = 3, 
-		Rock = 4
-	}
-
-	[Serializable]
-	public enum MonsterType{
-		Unknown = 0, 
-		Dog = 1, 
-		Bufferfly = 2
-	}
-
-	[Serializable]
 	public struct MapObject{
 		public int key;
 		public string strKey;
@@ -53,14 +37,16 @@ namespace Model
 
 	[Serializable]
 	public struct ResourceInfo{
-		public ResourceType type;
+		public int type;
+		public static ResourceInfo Empty;
 	}
 
 	[Serializable]
 	public struct MonsterInfo {
-		public MonsterType type;
-		// 棲息地
-		public ResourceType habitats;
+		public int type;
+		// 棲息地(ResourceInfo.type)
+		public int habitats;
+		public static MonsterInfo Empty;
 	}
 
 	[Serializable]
