@@ -8,24 +8,24 @@ public class Tile : MonoBehaviour {
 
     public Text txt_type;
 
-    public void SetType(ResourceType resourceType)
+    public void SetType(int resourceType)
     {
         var typeName = "";
         switch (resourceType)
         {
-            case ResourceType.Grass:
+            case 1:
                 typeName = "草";
                 break;
-            case ResourceType.Rock:
+            case 2:
                 typeName = "石";
                 break;
-            case ResourceType.Sky:
+            case 3:
                 typeName = "天";
                 break;
-            case ResourceType.Tree:
+            case 4:
                 typeName = "樹";
                 break;
-            case ResourceType.Unknown:
+			case 0:
                 typeName = "";
                 break;
         }
@@ -34,7 +34,7 @@ public class Tile : MonoBehaviour {
 
     private void Awake()
     {
-        SetType(ResourceType.Unknown);
+        SetType(0);
     }
 
     // Use this for initialization

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
+using Common;
 
 namespace Model
 {
@@ -16,9 +17,11 @@ namespace Model
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
 			mapData.GenMap (type, 10, 10);
+			mapData.VisitPosition (playerData.playerInMap.position, 10);
+			RequestSaveMap ();
 			callback (null);
 		}
-		public List<MapObject> MapObjects{ get{ return mapData.items; } }
+		public List<MapObject> MapObjects{ get{ return mapData.VisibleMapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
 
@@ -73,6 +76,9 @@ namespace Model
 			rs.isMoveSuccess = true;
 			RequestSavePlayer ();
 
+			if (mapData.VisitPosition (playerData.playerInMap.position, 3)) {
+				RequestSaveMap ();
+			}
 			tempMoveResult = rs;
 			hasMoveResult = true;
 		}

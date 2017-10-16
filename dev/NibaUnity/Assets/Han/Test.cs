@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Model;
+using Common;
 
 public class Test : MonoBehaviour {
 	void Start () {
@@ -13,12 +14,14 @@ public class Test : MonoBehaviour {
 		MapDataStore store = new MapDataStore ();
 		store.GenMap (MapType.Unknown, 5, 5);
 		var godKey = store.GenObject (MapObjectType.Resource, "god");
-		var godObject = store.items [godKey];
+		var godObject = store.mapObjects [godKey];
 		var godInfo = store.resourceInfo [godObject.infoKey];
-		godInfo.type = ResourceType.Grass;
+		godInfo.type = 2;
 		store.resourceInfo [godObject.infoKey] = godInfo;
 
-		store.GenMonster (godKey, true, MonsterType.Bufferfly);
+		store.GenMonster (godKey, true, 1);
+
+		store.VisitPosition (Position.Empty, 3);
 
 		var memonto1 = store.GetMemonto ();
 		Debug.Log (memonto1);
@@ -44,14 +47,13 @@ public class Test : MonoBehaviour {
 			}
 		}
 		var itemKey = store.GenObject (MapObjectType.Monster, null);
-		MapObject item = store.items [itemKey];
+		MapObject item = store.mapObjects [itemKey];
 		item.position.x = 5;
 		item.position.y = 100;
-		store.items [itemKey] = item;
+		store.mapObjects [itemKey] = item;
 
 		var memonto1 = store.GetMemonto ();
-		MapDataStore store2 = MapDataStore.FromMemonto (memonto1);
-		item = store.items [itemKey];
+		item = store.mapObjects [itemKey];
 		if (item.position.x != 5 || item.position.y != 100) {
 			throw new UnityException ("position not right!");
 		}

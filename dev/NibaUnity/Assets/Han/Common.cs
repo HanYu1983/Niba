@@ -4,12 +4,16 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Text;
 using UnityEngine;
+using System.Linq;
 
-namespace Model
+namespace Common
 {
 	[Serializable]
-	public struct Position{
+	public struct Position : IEquatable<Position>{
 		public int x, y;
+		public bool Equals(Position other){
+			return x == other.x && y == other.y;
+		}
 		public static Position Empty;
 	}
 
@@ -18,22 +22,6 @@ namespace Model
 		Unknown = 0, 
 		Resource = 1, 
 		Monster = 2
-	}
-
-	[Serializable]
-	public enum ResourceType{
-		Unknown = 0, 
-		Grass = 1, 
-		Tree = 2, 
-		Sky = 3, 
-		Rock = 4
-	}
-
-	[Serializable]
-	public enum MonsterType{
-		Unknown = 0, 
-		Dog = 1, 
-		Bufferfly = 2
 	}
 
 	[Serializable]
@@ -49,14 +37,16 @@ namespace Model
 
 	[Serializable]
 	public struct ResourceInfo{
-		public ResourceType type;
+		public int type;
+		public static ResourceInfo Empty;
 	}
 
 	[Serializable]
 	public struct MonsterInfo {
-		public MonsterType type;
-		// 棲息地
-		public ResourceType habitats;
+		public int type;
+		// 棲息地(ResourceInfo.type)
+		public int habitats;
+		public static MonsterInfo Empty;
 	}
 
 	[Serializable]
@@ -203,6 +193,23 @@ namespace Model
         {
             OnEvent(cmd, args);
         }
+
+		public static List<MapObject> FilterMapObjectsForCenterExpend(IModelGetter model, Position center, int w, int h){
+			return model.MapObjects.Where (obj => {
+				var disX = Math.Abs (obj.position.x - center.x);
+				if (disX > w) {
+					return false;
+				}
+				var disY = Math.Abs (obj.position.y - center.y);
+				if (disY > h) {
+					return false;
+				}
+				return true;
+			}).ToList ();
+		}
+
+		public static void ignore(){
+		}
 	}
 }
 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Model;
+using Common;
 namespace GameView
 {
     public class View : MonoBehaviour

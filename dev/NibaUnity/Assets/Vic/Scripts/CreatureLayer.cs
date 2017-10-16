@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Model;
+using Common;
 
 namespace GameView
 {
@@ -11,9 +11,9 @@ namespace GameView
         public GameObject CreaturePrefab;
         List<Creature> AryCreature = new List<Creature>();
 
-        public void PutCreature(Position position, MonsterInfo info)
+		public void PutCreature(Position position, MonsterInfo info)
         {
-            print("PutCreature, type: " + info.type + ",pos.x:" + position.x + ",y:" + position.y);
+			print("PutCreature, type: " + info.type + ",pos.x:" + position.x + ",y:" + position.y);
             Creature creature = GetCreatureByXY(position.x, position.y);
             if (creature != null)
             {

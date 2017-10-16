@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Model;
+using Common;
 
 public class Creature : MonoBehaviour {
 
     public GameObject CreatureFace;
     public Text Txt_type;
 
-    public void SetType(MonsterType monsterInfo )
+    public void SetType(int monsterInfo )
     {
         string creatureName = "";
         bool showCreature = false;
         switch (monsterInfo)
         {
-            case MonsterType.Bufferfly:
+            case 1:
                 creatureName = "蝶";
                 showCreature = true;
                 break;
-            case MonsterType.Dog:
+            case 2:
                 creatureName = "狗";
                 showCreature = true;
                 break;
-            case MonsterType.Unknown:
+            case 0:
                 creatureName = "";
                 showCreature = false;
                 break;
@@ -34,7 +34,7 @@ public class Creature : MonoBehaviour {
 
     private void Awake()
     {
-        SetType(MonsterType.Unknown);
+        SetType(0);
     }
 
     // Use this for initialization
