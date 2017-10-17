@@ -21,6 +21,8 @@ namespace Model
 			RequestSaveMap ();
 			callback (null);
 		}
+		public int MapWidth{ get{ return mapData.width; } }
+		public int MapHeight{ get{ return mapData.height; } }
 		public List<MapObject> MapObjects{ get{ return mapData.VisibleMapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }

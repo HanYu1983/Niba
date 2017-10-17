@@ -139,6 +139,8 @@ namespace Common
 		List<MapObject> MapObjects{ get; }
 		List<ResourceInfo> ResourceInfos{ get; }
 		List<MonsterInfo> MonsterInfos{ get; }
+		int MapWidth{ get; }
+		int MapHeight{ get; }
 		/// <summary>
 		/// 取得玩家在地圖中的狀態
 		/// 注意：回傳的是struct，千萬不要暫存它，不然會取得不正確的資料
@@ -194,6 +196,14 @@ namespace Common
             OnEvent(cmd, args);
         }
 
+		/// <summary>
+		/// 這個方去很像不需要了
+		/// </summary>
+		/// <returns>The map objects for center expend.</returns>
+		/// <param name="model">Model.</param>
+		/// <param name="center">Center.</param>
+		/// <param name="w">The width.</param>
+		/// <param name="h">The height.</param>
 		public static List<MapObject> FilterMapObjectsForCenterExpend(IModelGetter model, Position center, int w, int h){
 			return model.MapObjects.Where (obj => {
 				var disX = Math.Abs (obj.position.x - center.x);
@@ -208,7 +218,38 @@ namespace Common
 			}).ToList ();
 		}
 
-		public static void ignore(){
+		/// <summary>
+		/// 平面化地圖物件
+		/// </summary>
+		/// <param name="model">Model.</param>
+		/// <param name="data">Data.</param>
+		/*
+		MapObject[,] mapObjs;
+		FlattenMapObjects(model, MapObjectType.Resource, out mapObjs);
+		for (var x = 0; x < mapObjs.GetLength (1); ++x) {
+			for (var y = 0; y < mapObjs.GetLength (2); ++y) {
+		 		var obj = mapObjs[x,y];
+		 	}
+		} 
+		*/ 
+		public static void FlattenMapObjects(IModelGetter model, MapObjectType type, out MapObject[,] data){
+			data = new MapObject[model.MapWidth, model.MapHeight];
+			for (var x = 0; x < data.GetLength (1); ++x) {
+				for (var y = 0; y < data.GetLength (2); ++y) {
+					var curr = Position.Empty;
+					curr.x = x;
+					curr.y = y;
+
+					var sg = model.MapObjects.Where (obj => {
+						return obj.type == type && obj.position.Equals(curr);
+					})
+						.GroupBy (obj => obj.type)
+						.OrderByDescending (g => g.Count())
+						.First ();
+					var first = sg.FirstOrDefault ();
+					data [x, y] = first;
+				}
+			}
 		}
 	}
 }

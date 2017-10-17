@@ -14,6 +14,7 @@ namespace Model
 		public List<MapObject> mapObjects = new List<MapObject>();
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
+		public int width, height;
 
 		public List<MapObject> VisibleMapObjects {
 			get {
@@ -44,6 +45,8 @@ namespace Model
 		}
 
 		public void GenMap(MapType type, int w, int h){
+			width = w;
+			height = h;
 			for (var y = 0; y < h; ++y) {
 				for (var x = 0; x < w; ++x) {
 					var p = Mathf.PerlinNoise (x/(float)w, y/(float)h);
