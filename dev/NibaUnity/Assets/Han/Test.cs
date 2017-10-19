@@ -21,7 +21,7 @@ public class Test : MonoBehaviour {
 
 		store.GenMonster (godKey, true, 1);
 
-		store.VisitPosition (Position.Empty, 3);
+		store.VisitPosition (Position.Zero, 3);
 
 		var memonto1 = store.GetMemonto ();
 		Debug.Log (memonto1);

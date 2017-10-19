@@ -16,13 +16,13 @@ namespace Model
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
 		public int width, height;
 
-		public List<MapObject> VisibleMapObjects {
+		public IEnumerable<MapObject> VisibleMapObjects {
 			get {
 				var posSet = new HashSet<Position> (isPositionVisible);
 				var visiblePosition = mapObjects.Where (obj => {
 					return posSet.Contains(obj.position);
 				});
-				return visiblePosition.ToList();
+				return visiblePosition;
 			}
 		}
 		public bool VisitPosition(Position pos, int expend){
@@ -157,13 +157,30 @@ namespace Model
 		#endregion
 
 		#region action
-		public IEnumerable<Common.Action> GetActions(PlayerDataStore store){
+		public IEnumerable<UserAction> GetActions(PlayerDataStore store){
 			return FindObjects (store.playerInMap.position).Aggregate (
-				new List<Common.Action> (),
+				new List<UserAction> (),
 				(actions, currItem) => {
-					Common.Action action = new Common.Action();
-					action.target = currItem.key;
-					actions.Add(action);
+					switch(currItem.type){
+					case MapObjectType.Resource:
+						{
+							var action = UserAction.Empty;
+							action.type = UserAction.TypeCaptureResource;
+							action.mapObjectId = new List<int>();
+							action.mapObjectId.Add(currItem.key);
+							actions.Add(action);
+						}
+						break;
+					case MapObjectType.Monster:
+						{
+							var action = UserAction.Empty;
+							action.type = UserAction.TypeAttack;
+							action.mapObjectId = new List<int>();
+							action.mapObjectId.Add(currItem.key);
+							actions.Add(action);
+						}
+						break;
+					}
 					return actions;
 				}
 			);

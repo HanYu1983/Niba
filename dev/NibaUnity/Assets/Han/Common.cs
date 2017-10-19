@@ -14,7 +14,31 @@ namespace Common
 		public bool Equals(Position other){
 			return x == other.x && y == other.y;
 		}
-		public static Position Empty;
+		public Position Add(int x, int y){
+			var ret = Zero;
+			ret.x += x;
+			ret.y += y;
+			return ret;
+		}
+		public Position Add(Position b){
+			return Add (b.x, b.y);
+		}
+		public Position Max(int x, int y){
+			var ret = this;
+			ret.x = Math.Max (x, this.x);
+			ret.y = Math.Max (y, this.y);
+			return ret;
+		}
+		public Position Max(Position b){
+			return Max (b.x, b.y);
+		}
+		public Position Min(int x, int y){
+			var ret = this;
+			ret.x = Math.Min (x, this.x);
+			ret.y = Math.Min (y, this.y);
+			return ret;
+		}
+		public static Position Zero;
 	}
 
 	[Serializable]
@@ -65,13 +89,12 @@ namespace Common
 
 	}
 
-	public enum ActionType{
-		Unknown
-	}
-
-	public struct Action{
-		public ActionType type;
-		public int target;
+	public struct UserAction{
+		public const string TypeAttack = "attack {mapObjectId[0]}";
+		public const string TypeCaptureResource = "capture resource {mapObjectId[0]}";
+		public string type;
+		public List<int> mapObjectId;
+		public static UserAction Empty;
 	}
 
 	public struct MoveResult{
@@ -142,11 +165,18 @@ namespace Common
 		int MapWidth{ get; }
 		int MapHeight{ get; }
 		/// <summary>
+		/// 取得可視的tile
+		/// </summary>
+		/// <value>The visible map objects.</value>
+		IEnumerable<MapObject> VisibleMapObjects{ get; }
+		/// <summary>
 		/// 取得玩家在地圖中的狀態
 		/// 注意：回傳的是struct，千萬不要暫存它，不然會取得不正確的資料
 		/// </summary>
 		/// <value>The map player.</value>
 		MapPlayer MapPlayer{ get; }
+		IEnumerable<UserAction> UserActions{ get; }
+		bool PerformUserAction (UserAction action);
 	}
 
 	public interface IModel : IModelGetter{
@@ -197,7 +227,7 @@ namespace Common
         }
 
 		/// <summary>
-		/// 這個方去很像不需要了
+		/// 這個方法很像不需要了
 		/// </summary>
 		/// <returns>The map objects for center expend.</returns>
 		/// <param name="model">Model.</param>
@@ -225,22 +255,26 @@ namespace Common
 		/// <param name="data">Data.</param>
 		/*
 		MapObject[,] mapObjs;
-		FlattenMapObjects(model, MapObjectType.Resource, out mapObjs);
+		var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
+		var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
+		FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
 		for (var x = 0; x < mapObjs.GetLength (1); ++x) {
 			for (var y = 0; y < mapObjs.GetLength (2); ++y) {
-		 		var obj = mapObjs[x,y];
-		 	}
-		} 
+				var obj = mapObjs[x,y];
+				if(obj == MapObject.Empty){
+					// 不可視的tile
+				}
+			}
+		}
 		*/ 
-		public static void FlattenMapObjects(IModelGetter model, MapObjectType type, out MapObject[,] data){
-			data = new MapObject[model.MapWidth, model.MapHeight];
-			for (var x = 0; x < data.GetLength (1); ++x) {
-				for (var y = 0; y < data.GetLength (2); ++y) {
-					var curr = Position.Empty;
-					curr.x = x;
-					curr.y = y;
-
-					var sg = model.MapObjects.Where (obj => {
+		public static void FlattenMapObjects(IModelGetter model, MapObjectType type, Position leftTop, Position rightBottom, out MapObject[,] data){
+			var w = rightBottom.x - leftTop.x;
+			var h = rightBottom.y - leftTop.y;
+			data = new MapObject[w, h];
+			for (var x = 0; x < w; ++x) {
+				for (var y = 0; y < h; ++y) {
+					var curr = Position.Zero.Add(leftTop);
+					var sg = model.VisibleMapObjects.Where (obj => {
 						return obj.type == type && obj.position.Equals(curr);
 					})
 						.GroupBy (obj => obj.type)

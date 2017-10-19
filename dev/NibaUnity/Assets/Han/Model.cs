@@ -21,13 +21,20 @@ namespace Model
 			RequestSaveMap ();
 			callback (null);
 		}
-		public int MapWidth{ get{ return mapData.width; } }
-		public int MapHeight{ get{ return mapData.height; } }
-		public List<MapObject> MapObjects{ get{ return mapData.VisibleMapObjects; } }
+		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
 
+		public int MapWidth{ get{ return mapData.width; } }
+		public int MapHeight{ get{ return mapData.height; } }
+		public IEnumerable<MapObject> VisibleMapObjects{ get { return mapData.VisibleMapObjects; } }
+
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
+		public IEnumerable<UserAction> UserActions{ get { return mapData.GetActions (playerData); } }
+
+		public bool PerformUserAction (UserAction action){
+			return false;
+		}
 
 		MoveResult tempMoveResult;
 		bool hasMoveResult;
