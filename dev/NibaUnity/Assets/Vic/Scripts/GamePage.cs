@@ -13,6 +13,27 @@ namespace GameView{
 			
 		}
 
+        public void OnBtnMoveClick( int dir)
+        {
+            string eventName = "";
+            switch (dir)
+            {
+                case 0:
+                    eventName = "GamePage_btnMove_left";
+                    break;
+                case 1:
+                    eventName = "GamePage_btnMove_up";
+                    break;
+                case 2:
+                    eventName = "GamePage_btnMove_right";
+                    break;
+                case 3:
+                    eventName = "GamePage_btnMove_down";
+                    break;
+            }
+            Common.Common.Notify(eventName, null);
+        }
+
         public void SetTile(IModelGetter model)
         {
             List<MapObject> mapObjects = model.MapObjects;

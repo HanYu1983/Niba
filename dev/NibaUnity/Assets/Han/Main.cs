@@ -42,7 +42,7 @@ namespace Model
 			Common.Common.OnEvent += (evt, arg) => {
 				print ("evt: " + evt);
 				switch (evt) {
-				case "btn_move_up":
+				case UIEventName.GamePage_btnMove_up:
 					{
 						Model.MoveUp ();
 						var result = Model.MoveResult;
@@ -51,10 +51,13 @@ namespace Model
 						});
 					}
 					break;
-				case "btn_move_down":
-					break;
-				case "TitlePage_btnStart_click":
-                            
+                case UIEventName.GamePage_btnMove_down:
+                    break;
+                case UIEventName.GamePage_btnMove_left:
+                    break;
+                case UIEventName.GamePage_btnMove_right:
+                    break;
+                case UIEventName.TitlePage_btnStart_click: 
 					break;
 				}
 			};

@@ -6,7 +6,7 @@ namespace GameView{
 	public class TitlePage : AbstractView {
 
 		public void OnBtnStartClick(){
-            Common.Common.Notify("TitlePage_btnStart_click", PrefabPath.Game);
+            Common.Common.Notify(UIEventName.TitlePage_btnStart_click, PrefabPath.Game);
         }
 
 		// Use this for initialization
