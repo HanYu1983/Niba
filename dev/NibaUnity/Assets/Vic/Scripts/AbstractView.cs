@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameView{
-	public class AbstractView : MonoBehaviour {
+	public abstract class AbstractView : MonoBehaviour {
 
 		public View View;
 	}
