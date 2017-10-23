@@ -45,6 +45,36 @@ namespace GameView{
             }
         }
 
+		public void SetTileWithPlayerPositionCenterExpend(IModelGetter model)
+		{
+			MapObject[,] mapObjs;
+			var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
+			var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
+			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
+			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
+				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
+					var mapObj = mapObjs[x,y];
+					if(mapObj.type == MapObjectType.Unknown){
+						// 不可視的tile
+						continue;
+					}
+					TileLayer.PutItemWithXY (mapObj, x, y, model);
+				}
+			}
+
+			Common.Common.FlattenMapObjects(model, MapObjectType.Monster, leftTop, rightBottom, out mapObjs);
+			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
+				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
+					var mapObj = mapObjs[x,y];
+					/*if(mapObj.type == MapObjectType.Unknown){
+						// 不可視的tile
+						continue;
+					}*/
+					CreatureLayer.PutItemWithXY (mapObj, x, y, model);
+				}
+			}
+		}
+
 		// Use this for initialization
 		void Start () {
 			TileLayer.View = View;

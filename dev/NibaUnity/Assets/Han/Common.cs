@@ -15,7 +15,7 @@ namespace Common
 			return x == other.x && y == other.y;
 		}
 		public Position Add(int x, int y){
-			var ret = Zero;
+			var ret = this;
 			ret.x += x;
 			ret.y += y;
 			return ret;
@@ -139,6 +139,7 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator OpenPopup(Popup page, Action<Exception> callback);
+		IEnumerator UpdateMap (Action<Exception> callback);
 	}
 
 	public interface IModelGetter{
@@ -273,13 +274,25 @@ namespace Common
 			data = new MapObject[w, h];
 			for (var x = 0; x < w; ++x) {
 				for (var y = 0; y < h; ++y) {
-					var curr = Position.Zero.Add(leftTop);
+					var curr = Position.Zero.Add(x, y).Add(leftTop);
 					var sg = model.VisibleMapObjects.Where (obj => {
-						return obj.type == type && obj.position.Equals(curr);
+						return obj.type == type && obj.position.Equals (curr);
 					})
-						.GroupBy (obj => obj.type)
-						.OrderByDescending (g => g.Count())
-						.First ();
+						.GroupBy (obj => {
+						if (type == MapObjectType.Resource) {
+							return model.ResourceInfos [obj.infoKey].type;
+						}
+						if (type == MapObjectType.Resource) {
+							return model.MonsterInfos [obj.infoKey].type;
+						}
+						return 0;
+					})
+						.OrderByDescending (g => g.Count ())
+						.FirstOrDefault ();
+					// 沒半個物件所以沒有半個分類
+					if (sg == null) {
+						continue;
+					}
 					var first = sg.FirstOrDefault ();
 					data [x, y] = first;
 				}

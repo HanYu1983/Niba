@@ -30,9 +30,7 @@ namespace Model
 			for (var x = -expend; x <= expend; ++x) {
 				var yexpend = expend - Math.Abs (x);
 				for (var y = -yexpend; y <= yexpend; ++y) {
-					Position newPos;
-					newPos.x = x;
-					newPos.y = y;
+					var newPos = pos.Add(x, y);
 					posSet.Add (newPos);
 				}
 			}
@@ -50,7 +48,7 @@ namespace Model
 			for (var y = 0; y < h; ++y) {
 				for (var x = 0; x < w; ++x) {
 					var p = Mathf.PerlinNoise (x/(float)w, y/(float)h);
-					Debug.Log (p);
+					//Debug.Log (p);
 					if (p < 0.8f) {
 						var key = GenObject (MapObjectType.Resource, null);
 						var obj = mapObjects [key];
@@ -73,13 +71,15 @@ namespace Model
 						resourceInfo [mapObjects [key].infoKey] = info;
 
 						// gen monster after assign item
-						if (obj.type == MapObjectType.Resource) {
-							var monsterKey = GenMonster (key, false);
-							var monster = mapObjects [monsterKey];
-							// change position
-							monster.position = pos;
-							// assign back
-							mapObjects [monsterKey] = monster;
+						if (UnityEngine.Random.Range (0, 100) < 25) {
+							if (obj.type == MapObjectType.Resource) {
+								var monsterKey = GenMonster (key, false);
+								var monster = mapObjects [monsterKey];
+								// change position
+								monster.position = pos;
+								// assign back
+								mapObjects [monsterKey] = monster;
+							}
 						}
 					} else {
 						// ignore
@@ -208,8 +208,7 @@ namespace Model
 			playerInMap.position.y = 3;
 		}
 		public bool MovePlayerTo(Position pos){
-			playerInMap.position.x = pos.x;
-			playerInMap.position.y = pos.y;
+			playerInMap.position = pos;
 			// TODO detect bound
 			return true;
 		}

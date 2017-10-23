@@ -22,7 +22,8 @@ namespace GameView
             {
                 throw new Exception("不合法的頁面，應該要在游戲頁面才能呼叫");
             }
-            gamePage.SetTile(model);
+            //gamePage.SetTile(model);
+			gamePage.SetTileWithPlayerPositionCenterExpend (model);
         }
         
         //========================= 游戲頁面的方法 ==============================

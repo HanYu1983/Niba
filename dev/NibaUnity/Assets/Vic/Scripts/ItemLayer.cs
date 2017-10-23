@@ -19,6 +19,15 @@ namespace GameView
             }
         }
 
+		public void PutItemWithXY(MapObject mapObject, int x, int y, IModelGetter info)
+		{
+			if(mapObject.type == GetValidType())
+			{
+				Item item = GetItemByXY(x, y);
+				item.SetType(mapObject, info);
+			}
+		}
+
         internal virtual MapObjectType GetValidType()
         {
             return MapObjectType.Unknown;

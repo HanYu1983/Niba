@@ -45,5 +45,10 @@ namespace GameView
         {
             return null;
         }
+
+		public IEnumerator UpdateMap (Action<Exception> callback){
+			// implement for test
+			yield return ChangePage(Page.Game, callback);
+		}
     }
 }

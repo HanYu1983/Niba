@@ -42,21 +42,43 @@ namespace Model
 			Common.Common.OnEvent += (evt, arg) => {
 				print ("evt: " + evt);
 				switch (evt) {
+				case UIEventName.GamePage_btnMove_down:
+				case UIEventName.GamePage_btnMove_left:
+				case UIEventName.GamePage_btnMove_right:
 				case UIEventName.GamePage_btnMove_up:
 					{
-						Model.MoveUp ();
+						if(evt == UIEventName.GamePage_btnMove_down){
+							Model.MoveDown ();
+						}
+						if(evt == UIEventName.GamePage_btnMove_left){
+							Model.MoveLeft ();
+						}
+						if(evt == UIEventName.GamePage_btnMove_right){
+							Model.MoveRight ();
+						}
+						if(evt == UIEventName.GamePage_btnMove_up){
+							Model.MoveUp ();
+						}
 						var result = Model.MoveResult;
-						View.OpenPopup (Popup.Event, e => {
+						if(result.isMoveSuccess){
+							/*
+							if(result.HasEvent){
+								View.OpenPopup (Popup.Event, e => {
 
-						});
+								});
+							}
+							*/
+							StartCoroutine (View.UpdateMap (e2 => {
+								if (e2 != null) {
+
+								} else {
+
+								}
+							}));
+						}
+						Model.ClearMoveResult();
 					}
 					break;
-                case UIEventName.GamePage_btnMove_down:
-                    break;
-                case UIEventName.GamePage_btnMove_left:
-                    break;
-                case UIEventName.GamePage_btnMove_right:
-                    break;
                 case UIEventName.TitlePage_btnStart_click: 
 					break;
 				}

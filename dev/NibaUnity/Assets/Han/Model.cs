@@ -10,6 +10,7 @@ namespace Model
 	public class Model : MonoBehaviour, IModel
 	{
 		public HandleDebug debug;
+		public int visibleExtendLength = 3;
 
 		MapDataStore mapData = new MapDataStore();
 		PlayerDataStore playerData = new PlayerDataStore();
@@ -17,7 +18,7 @@ namespace Model
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
 			mapData.GenMap (type, 10, 10);
-			mapData.VisitPosition (playerData.playerInMap.position, 10);
+			mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 			RequestSaveMap ();
 			callback (null);
 		}
@@ -79,14 +80,15 @@ namespace Model
 			var p = playerData.playerInMap.position;
 			p.x += position.x;
 			p.y += position.y;
-			if (playerData.MovePlayerTo (p)) {
-				return;
-			}
-			rs.isMoveSuccess = true;
-			RequestSavePlayer ();
+			if (playerData.MovePlayerTo (p) == false) {
+				//	ignore
+			} else {
+				rs.isMoveSuccess = true;
+				RequestSavePlayer ();
 
-			if (mapData.VisitPosition (playerData.playerInMap.position, 3)) {
-				RequestSaveMap ();
+				if (mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength)) {
+					RequestSaveMap ();
+				}
 			}
 			tempMoveResult = rs;
 			hasMoveResult = true;
