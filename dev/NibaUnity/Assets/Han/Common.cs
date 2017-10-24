@@ -56,6 +56,7 @@ namespace Common
 		// info的主鍵為(type, infoKey)
 		public MapObjectType type;
 		public int infoKey;
+		public bool died;
 		public static MapObject Empty;
 	}
 
@@ -91,7 +92,7 @@ namespace Common
 
 	public struct UserAction{
 		public const string TypeAttack = "attack {mapObjectId[0]}";
-		public const string TypeCaptureResource = "capture resource {mapObjectId[0]}";
+		public const string TypeCollectResource = "collect resource {mapObjectId[0]}";
 		public string type;
 		public List<int> mapObjectId;
 		public static UserAction Empty;
@@ -120,12 +121,23 @@ namespace Common
 		public static MoveResult Empty;
 	}
 
+	public struct Item{
+		public int prototype;
+		public int count;
+		public static Item Empty;
+	}
+
 	public enum Page{
 		Unknown, Title, Game
 	}
 
 	public enum Popup{
 		Unknown, Event
+	}
+
+	public class MessageException : Exception{
+		public MessageException(string msg) : base(msg){}
+		public MessageException(string msg, Exception inner) : base(msg, inner){}
 	}
 
 	public interface IView {

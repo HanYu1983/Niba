@@ -20,7 +20,7 @@ namespace Model
 			get {
 				var posSet = new HashSet<Position> (isPositionVisible);
 				var visiblePosition = mapObjects.Where (obj => {
-					return posSet.Contains(obj.position);
+					return obj.died == false && posSet.Contains(obj.position);
 				});
 				return visiblePosition;
 			}
@@ -138,6 +138,23 @@ namespace Model
 			monsterInfo [m1Object.infoKey] = m1Info;
 			return m1Key;
 		}
+		public List<Item> Collect(PlayerDataStore player, int objKey){
+			var ret = new List<Item> ();
+			var obj = mapObjects [objKey];
+			if (obj.died == true) {
+				throw new MessageException ("不能採集已消除的物件:"+objKey);
+			}
+			if (obj.type != MapObjectType.Resource) {
+				throw new MessageException ("非資源不得採集:"+obj.type);
+			}
+			obj.died = true;
+			// assign back
+			mapObjects [objKey] = obj;
+			foreach (var item in ret) {
+				player.AddItem (item);
+			}
+			return ret;
+		}
 		public MapObject FindObject(string strKey){
 			return mapObjects.Find (item => {
 				return item.strKey == strKey;
@@ -165,7 +182,7 @@ namespace Model
 					case MapObjectType.Resource:
 						{
 							var action = UserAction.Empty;
-							action.type = UserAction.TypeCaptureResource;
+							action.type = UserAction.TypeCollectResource;
 							action.mapObjectId = new List<int>();
 							action.mapObjectId.Add(currItem.key);
 							actions.Add(action);
@@ -201,7 +218,7 @@ namespace Model
 	[Serializable]
 	public class PlayerDataStore
 	{
-		#region player
+		#region playerInMap
 		public MapPlayer playerInMap;
 		public void InitPlayerPosition(){
 			playerInMap.position.x = 5;
@@ -211,6 +228,44 @@ namespace Model
 			playerInMap.position = pos;
 			// TODO detect bound
 			return true;
+		}
+		#endregion
+
+		#region storageInMap
+		public List<Item> storageInMap;
+		public void AddItem(Item item){
+			if (storageInMap == null) {
+				storageInMap = new List<Item> ();
+			}
+			storageInMap.Add (item);
+			// 計算同一種類的道具總數
+			var sumOfCount = storageInMap.Where (obj => {
+				return obj.prototype == item.prototype;
+			}).Aggregate (0, (sum, obj) => {
+				return sum + obj.count;
+			});
+			// 一個道具在一格中的最大數量限制
+			var maxOfItem = 99;
+			// 依最大限制重新計算分組
+			var num = sumOfCount / maxOfItem;
+			// 最後一個剩餘
+			var remain = sumOfCount % maxOfItem;
+			// 將拿來計算的道具抽出來
+			var itemExcludeAddedItemPrototype = storageInMap.Where (obj => {
+				return obj.prototype != item.prototype;
+			});
+			// 重建要新加入的道具
+			var originItem = item;
+			originItem.count = maxOfItem;
+			var itemsShouldReAdd = Enumerable.Repeat (originItem, num);
+			if (remain > 0) {
+				originItem.count = remain;
+				itemsShouldReAdd = itemsShouldReAdd.Concat (Enumerable.Repeat (originItem, 1));
+			}
+			// 加回去
+			var newItems = itemExcludeAddedItemPrototype.Concat (itemsShouldReAdd);
+			// 替換
+			storageInMap = newItems.ToList();
 		}
 		#endregion
 
