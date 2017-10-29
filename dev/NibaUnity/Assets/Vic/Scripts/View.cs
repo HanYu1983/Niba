@@ -28,6 +28,7 @@ namespace GameView
         public void OnTouchItem( TouchItem touchItem )
         {
             Vector2 clickPos = touchItem.Position;
+            //還要加偏移才行
             print(clickPos);
         }
         
