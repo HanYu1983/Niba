@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class UILayer : MonoBehaviour {
-
     public void OnBtnMoveClick(int dir)
     {
         string eventName = "";
@@ -24,8 +23,8 @@ public class UILayer : MonoBehaviour {
         }
         Common.Common.Notify(eventName, null);
     }
-	
-	void Update () {
+    void Update()
+    {
         if (Input.GetKeyUp(KeyCode.A))
         {
             OnBtnMoveClick(0);

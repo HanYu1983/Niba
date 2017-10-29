@@ -17,6 +17,7 @@ namespace GameView
             set
             {
                 model = value;
+                view.Model = model;
             }
         }
 
@@ -47,8 +48,8 @@ namespace GameView
         }
 
 		public IEnumerator UpdateMap (Action<Exception> callback){
-			// implement for test
-			yield return ChangePage(Page.Game, callback);
+            // implement for test
+            yield return ChangePage(Page.Game, callback);
 		}
     }
 }

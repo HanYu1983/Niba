@@ -9,6 +9,10 @@ namespace GameView
     {
 
         public GameObject MainLayer;
+        public IModelGetter Model
+        {
+            get;set;
+        }
 
         Dictionary<string, GameObject> pagePool = new Dictionary<string, GameObject>();
         GameObject currentPage;
@@ -17,13 +21,14 @@ namespace GameView
 
         public void SetGamePageTile( IModelGetter model )
         {
-            GamePage gamePage = currentPage.GetComponent<GamePage>();
-            if(gamePage == null)
-            {
-                throw new Exception("不合法的頁面，應該要在游戲頁面才能呼叫");
-            }
-            //gamePage.SetTile(model);
-			gamePage.SetTileWithPlayerPositionCenterExpend (model);
+            GamePage page = CheckPage<GamePage>();
+            page.SetTileWithPlayerPositionCenterExpend (model);
+        }
+
+        public void OnTouchItem( TouchItem touchItem )
+        {
+            Vector2 clickPos = touchItem.Position;
+            print(clickPos);
         }
         
         //========================= 游戲頁面的方法 ==============================
@@ -40,10 +45,7 @@ namespace GameView
                 GameObject obj = Instantiate(prefab);
                 obj.SetActive(true);
                 obj.transform.SetParent(parent.transform);
-                if (obj.GetComponent<AbstractView>() != null)
-                {
-                    obj.GetComponent<AbstractView>().View = this;
-                }
+                obj.GetComponent<AbstractView>().View = this;
                 obj.GetComponent<RectTransform>().localPosition = new Vector3();
                 obj.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 callback(obj);
@@ -100,9 +102,32 @@ namespace GameView
             callback(request.asset as GameObject);
         }
 
+        T CheckPage<T>()
+        {
+            T page = currentPage.GetComponent<T>();
+            if (page == null)
+            {
+                throw new Exception("不合法的頁面，應該要在正確的頁面才能呼叫");
+            }
+            return page;
+        }
+
+        /// <summary>
+        /// 從一維轉二維
+        /// </summary>
         public static int GetIndexByXY( int x, int y )
         {
             return y * 10 + x;
         }
+
+        /// <summary>
+        /// 從二維轉一維
+        /// </summary>
+        public static Vector2 GetXYByIndex( int index )
+        {
+            return new Vector2(index % 10, (int)(index / 10));
+        }
+
+        
     }
 }

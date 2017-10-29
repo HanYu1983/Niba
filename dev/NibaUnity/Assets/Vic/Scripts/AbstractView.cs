@@ -4,7 +4,6 @@ using UnityEngine;
 
 namespace GameView{
 	public abstract class AbstractView : MonoBehaviour {
-
-		public View View;
+        public View View;
 	}
 }

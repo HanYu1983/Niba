@@ -48,30 +48,26 @@ namespace GameView
         {
             for (int i = 0; i < count; ++i)
             {
-                GameObject item = Instantiate(ItemPrefab);
-                item.SetActive(true);
-                item.transform.SetParent(this.transform);
-                item.GetComponent<RectTransform>().localPosition = new Vector3();
-                item.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-                AryItem.Add(item.GetComponent<Item>());
+                GameObject itemObj = Instantiate(ItemPrefab);
+                itemObj.SetActive(true);
+                itemObj.transform.SetParent(this.transform);
+                itemObj.GetComponent<RectTransform>().localPosition = new Vector3();
+                itemObj.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+
+                Item item = itemObj.GetComponent<Item>();
+                item.Index = i;
+                AryItem.Add(item);
             }
         }
-
+        
         private void Awake()
         {
             CreateEmptyItem(100);
         }
 
-        // Use this for initialization
-        void Start()
+        private void Start()
         {
-            
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            foreach (Item item in AryItem) item.View = View;
         }
     }
 }

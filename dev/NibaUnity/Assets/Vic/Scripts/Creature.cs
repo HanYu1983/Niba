@@ -46,5 +46,10 @@ namespace GameView
         {
             Clear();
         }
+
+        void OnMouseUp()
+        {
+            Debug.Log("Drag ended!");
+        }
     }
 }

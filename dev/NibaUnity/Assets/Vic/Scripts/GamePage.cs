@@ -7,11 +7,7 @@ namespace GameView{
 
 		public ItemLayer TileLayer;
         public ItemLayer CreatureLayer;
-
-		public void OnBtnBackClick(){
-			
-			
-		}
+        public ItemLayer TouchLayer;
 
         public void SetTile(IModelGetter model)
         {
@@ -54,11 +50,12 @@ namespace GameView{
 				}
 			}
 		}
-
-		// Use this for initialization
-		void Start () {
-			TileLayer.View = View;
+        
+        // Use this for initialization
+        void Start () {
+            TileLayer.View = View;
             CreatureLayer.View = View;
+            TouchLayer.View = View;
         }
 	}
 }
