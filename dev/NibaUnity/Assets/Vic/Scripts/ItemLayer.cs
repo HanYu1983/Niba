@@ -21,7 +21,7 @@ namespace GameView
 
 		public void PutItemWithXY(MapObject mapObject, int x, int y, IModelGetter info)
 		{
-			if(mapObject.type == GetValidType())
+            if (mapObject.type == GetValidType())
 			{
 				Item item = GetItemByXY(x, y);
 				item.SetType(mapObject, info);
@@ -31,6 +31,11 @@ namespace GameView
         internal virtual MapObjectType GetValidType()
         {
             return MapObjectType.Unknown;
+        }
+
+        public void ClearAllItem()
+        {
+            foreach (Item item in AryItem) item.Clear();
         }
 
         Item GetItemByXY(int x, int y)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Common;
+using System;
 
 namespace GameView
 {
@@ -26,30 +27,24 @@ namespace GameView
                     creatureName = "狗";
                     showCreature = true;
                     break;
-                case 0:
-                    creatureName = "";
-                    showCreature = false;
+                default:
+                    throw new Exception("沒有處理到的怪物類型，請加上, type: " + info.type);
                     break;
+
             }
             Txt_type.text = creatureName;
             CreatureFace.SetActive(showCreature);
         }
 
-        private void Awake()
+        public override void Clear()
         {
             Txt_type.text = "";
+            CreatureFace.SetActive(false);
         }
 
-        // Use this for initialization
-        void Start()
+        private void Awake()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            Clear();
         }
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Model;
 using Common;
+using System;
 
 namespace GameView {
     public class Tile : Item
@@ -13,7 +14,6 @@ namespace GameView {
         public override void SetType(MapObject mapObject, IModelGetter model)
         {
             ResourceInfo info = model.ResourceInfos[mapObject.infoKey];
-            print(info.type);
             var typeName = "";
             switch (info.type)
             {
@@ -32,25 +32,21 @@ namespace GameView {
                 case 0:
                     typeName = "";
                     break;
+                default:
+                    throw new Exception("沒有處理到的怪物類型，請加上, type: " + info.type);
+                    break;
             }
             txt_type.text = typeName;
         }
-        
-        private void Awake()
+
+        public override void Clear()
         {
             txt_type.text = "";
         }
 
-        // Use this for initialization
-        void Start()
+        private void Awake()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            Clear();
         }
     }
 
