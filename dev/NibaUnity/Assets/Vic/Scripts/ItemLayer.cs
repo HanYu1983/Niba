@@ -67,6 +67,7 @@ namespace GameView
 
         private void Start()
         {
+            //要在這邊設定的原因是因爲awake的時候View還沒被設定到這個類別
             foreach (Item item in AryItem) item.View = View;
         }
     }
