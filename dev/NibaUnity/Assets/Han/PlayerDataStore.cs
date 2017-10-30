@@ -173,16 +173,50 @@ namespace Model
 		}
 		#endregion
 
-		#region action
-		public IEnumerable<UserAction> GetActions(PlayerDataStore store){
-			return FindObjects (store.playerInMap.position).Aggregate (
-				new List<UserAction> (),
+		#region works
+		public void StartWork(PlayerDataStore player, Description work){
+			if (player.playerInMap.IsWorking) {
+				throw new MessageException ("目前有工作在身:"+work.description);
+			}
+			player.playerInMap.currentWork = work;
+			player.playerInMap.workFinishedTime = DateTime.Now.Add (TimeSpan.FromSeconds (5)).Ticks;
+		}
+
+		public void CancelWork(PlayerDataStore player){
+			if (player.playerInMap.IsWorking == false) {
+				Debug.LogWarning ("沒有工作，不必取消");
+				return;
+			}
+			player.playerInMap.workFinishedTime = DateTime.Now.Ticks;
+		}
+
+		public List<Description> ApplyWork(PlayerDataStore player){
+			if (player.playerInMap.IsWorking == false) {
+				throw new MessageException ("沒有工作，不能應用");
+			}
+			var work = player.playerInMap.currentWork;
+			switch (work.description) {
+			case Description.TypeCollectResource:
+				{
+					var mapObjectId = work.mapObjectId [0];
+					var obj = mapObjects [mapObjectId];
+					obj.died = true;
+					mapObjects [mapObjectId] = obj;
+				}
+				break;
+			}
+			return null;
+		}
+
+		public IEnumerable<Description> GetWorks(PlayerDataStore player){
+			return FindObjects (player.playerInMap.position).Aggregate (
+				new List<Description> (),
 				(actions, currItem) => {
 					switch(currItem.type){
 					case MapObjectType.Resource:
 						{
-							var action = UserAction.Empty;
-							action.type = UserAction.TypeCollectResource;
+							var action = Description.Empty;
+							action.description = Description.TypeCollectResource;
 							action.mapObjectId = new List<int>();
 							action.mapObjectId.Add(currItem.key);
 							actions.Add(action);
@@ -190,8 +224,8 @@ namespace Model
 						break;
 					case MapObjectType.Monster:
 						{
-							var action = UserAction.Empty;
-							action.type = UserAction.TypeAttack;
+							var action = Description.Empty;
+							action.description = Description.TypeAttack;
 							action.mapObjectId = new List<int>();
 							action.mapObjectId.Add(currItem.key);
 							actions.Add(action);

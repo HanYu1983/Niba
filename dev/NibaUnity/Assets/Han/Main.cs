@@ -3,6 +3,7 @@ using UnityEngine;
 using HanUtil;
 using GameView;
 using Common;
+using System.Linq;
 
 namespace Model
 {
@@ -92,7 +93,7 @@ namespace Model
 						if (e2 != null) {
 
 						} else {
-
+							
 						}
 					}));
 				}

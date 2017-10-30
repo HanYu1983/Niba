@@ -83,6 +83,13 @@ namespace Common
 	public struct MapPlayer{
 		public Position position;
 		public int mapHp, hp;
+		public Description currentWork;
+		public long workFinishedTime;
+		public bool IsWorking{
+			get{
+				return DateTime.Now.Ticks < workFinishedTime;
+			}
+		}
 	}
 
 	[Serializable]
@@ -90,17 +97,23 @@ namespace Common
 
 	}
 
-	public struct UserAction{
+	public struct Description{
 		public const string TypeAttack = "attack {mapObjectId[0]}";
 		public const string TypeCollectResource = "collect resource {mapObjectId[0]}";
-		public string type;
+		public string description;
 		public List<int> mapObjectId;
-		public static UserAction Empty;
+		public static Description Empty;
 	}
 
 	public struct MoveResult{
 		public bool isMoveSuccess;
-		public List<string> events;
+		public List<Description> events;
+		public bool HasEvent{
+			get{
+				return events != null && events.Count > 0;
+			}
+		}
+		/*public List<string> events;
 		public bool HasEvent{
 			get{
 				return events != null && events.Count > 0;
@@ -117,7 +130,7 @@ namespace Common
 			}
 			var eventName = args.Get ("eventName");
 			return eventName;
-		}
+		}*/
 		public static MoveResult Empty;
 	}
 
@@ -183,13 +196,22 @@ namespace Common
 		/// <value>The visible map objects.</value>
 		IEnumerable<MapObject> VisibleMapObjects{ get; }
 		/// <summary>
+		/// 指定位置的物件列表
+		/// </summary>
+		/// <returns>The <see cref="System.Collections.Generic.IEnumerable`1[[Common.MapObject]]"/>.</returns>
+		/// <param name="pos">Position.</param>
+		IEnumerable<MapObject> MapObjectsAt (Position pos);
+		/// <summary>
 		/// 取得玩家在地圖中的狀態
 		/// 注意：回傳的是struct，千萬不要暫存它，不然會取得不正確的資料
 		/// </summary>
 		/// <value>The map player.</value>
 		MapPlayer MapPlayer{ get; }
-		IEnumerable<UserAction> UserActions{ get; }
-		bool PerformUserAction (UserAction action);
+		/// <summary>
+		/// 取得玩家所在格的工作列表
+		/// </summary>
+		/// <value>The player actions.</value>
+		IEnumerable<Description> Works{ get; }
 	}
 
 	public interface IModel : IModelGetter{
@@ -229,6 +251,10 @@ namespace Common
 		/// 清除移動結果的暫存
 		/// </summary>
 		void ClearMoveResult();
+
+		void StartWork (Description work);
+		void CancelWork ();
+		void ApplyWork();
 	}
 
 	public class Common

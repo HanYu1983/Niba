@@ -29,12 +29,20 @@ namespace Model
 		public int MapWidth{ get{ return mapData.width; } }
 		public int MapHeight{ get{ return mapData.height; } }
 		public IEnumerable<MapObject> VisibleMapObjects{ get { return mapData.VisibleMapObjects; } }
-
+		public IEnumerable<MapObject> MapObjectsAt (Position pos){
+			return mapData.FindObjects (pos);
+		}
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
-		public IEnumerable<UserAction> UserActions{ get { return mapData.GetActions (playerData); } }
+		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
 
-		public bool PerformUserAction (UserAction action){
-			return false;
+		public void StartWork (Description work){
+			mapData.StartWork (playerData, work);
+		}
+		public void CancelWork (){
+			mapData.CancelWork (playerData);
+		}
+		public void ApplyWork(){
+			mapData.ApplyWork (playerData);
 		}
 
 		MoveResult tempMoveResult;
