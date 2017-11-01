@@ -96,6 +96,8 @@ namespace Model
 		}
 
 		static IEnumerator TestMap(IModel model, IView view){
+			UnityEngine.Random.InitState (1);
+
 			Exception e = null;
 			yield return model.LoadMap (MapType.Unknown, e2 => {
 				e = e2;

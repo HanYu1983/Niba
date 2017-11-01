@@ -276,6 +276,23 @@ namespace Model
 			if (storageInMap == null) {
 				storageInMap = new List<Item> ();
 			}
+			var shouldArrange = true;
+			for (var i = 0; i < storageInMap.Count; ++i) {
+				var adjItem = storageInMap [i];
+				if (adjItem.prototype != item.prototype) {
+					continue;
+				}
+				if (adjItem.count + item.count > 99) {
+					continue;
+				}
+				adjItem.count += item.count;
+				storageInMap [i] = adjItem;
+				shouldArrange = false;
+				break;
+			}
+			if (shouldArrange == false) {
+				return;
+			}
 			storageInMap.Add (item);
 			// 計算同一種類的道具總數
 			var sumOfCount = storageInMap.Where (obj => {
