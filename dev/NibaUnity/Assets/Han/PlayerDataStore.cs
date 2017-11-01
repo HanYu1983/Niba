@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using UnityEngine;
 using System.Linq;
 using Common;
@@ -194,14 +195,20 @@ namespace Model
 			if (player.playerInMap.IsWorking == false) {
 				throw new MessageException ("沒有工作，不能應用");
 			}
+			player.playerInMap.workFinishedTime = 0;
+
 			var work = player.playerInMap.currentWork;
 			switch (work.description) {
 			case Description.TypeCollectResource:
 				{
-					var mapObjectId = work.mapObjectId [0];
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var obj = mapObjects [mapObjectId];
 					obj.died = true;
 					mapObjects [mapObjectId] = obj;
+					var item = Item.Empty;
+					item.prototype = 1;
+					item.count = 1;
+					player.AddItem (item);
 				}
 				break;
 			}
@@ -217,8 +224,8 @@ namespace Model
 						{
 							var action = Description.Empty;
 							action.description = Description.TypeCollectResource;
-							action.mapObjectId = new List<int>();
-							action.mapObjectId.Add(currItem.key);
+							action.values = new NameValueCollection();
+							action.values.Add("mapObjectId", currItem.key+"");
 							actions.Add(action);
 						}
 						break;
@@ -226,8 +233,8 @@ namespace Model
 						{
 							var action = Description.Empty;
 							action.description = Description.TypeAttack;
-							action.mapObjectId = new List<int>();
-							action.mapObjectId.Add(currItem.key);
+							action.values = new NameValueCollection();
+							action.values.Add("mapObjectId", currItem.key+"");
 							actions.Add(action);
 						}
 						break;
@@ -258,10 +265,8 @@ namespace Model
 			playerInMap.position.x = 5;
 			playerInMap.position.y = 3;
 		}
-		public bool MovePlayerTo(Position pos){
+		public void MovePlayerTo(Position pos){
 			playerInMap.position = pos;
-			// TODO detect bound
-			return true;
 		}
 		#endregion
 

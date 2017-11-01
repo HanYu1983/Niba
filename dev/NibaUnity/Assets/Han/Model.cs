@@ -34,6 +34,7 @@ namespace Model
 		}
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
+		public List<Item> StorageInMap{ get { return playerData.storageInMap; }  }
 
 		public void StartWork (Description work){
 			mapData.StartWork (playerData, work);
@@ -85,18 +86,18 @@ namespace Model
 				throw new UnityException ("必須先處理之前的move result並且呼叫ClearMoveResult");
 			}
 			MoveResult rs = MoveResult.Empty;
-			var p = playerData.playerInMap.position;
-			p.x += position.x;
-			p.y += position.y;
-			if (playerData.MovePlayerTo (p) == false) {
-				//	ignore
-			} else {
-				rs.isMoveSuccess = true;
-				RequestSavePlayer ();
+			var newPos = playerData.playerInMap.position;
+			newPos.x += position.x;
+			newPos.y += position.y;
+			newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
+			var isPositionDirty = newPos.Equals (playerData.playerInMap.position) == false;
 
-				if (mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength)) {
-					RequestSaveMap ();
-				}
+			playerData.MovePlayerTo (newPos);
+			rs.isMoveSuccess = isPositionDirty;
+
+			RequestSavePlayer ();
+			if (mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength)) {
+				RequestSaveMap ();
 			}
 			tempMoveResult = rs;
 			hasMoveResult = true;

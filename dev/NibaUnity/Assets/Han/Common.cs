@@ -38,6 +38,9 @@ namespace Common
 			ret.y = Math.Min (y, this.y);
 			return ret;
 		}
+		public override string ToString(){
+			return string.Format ("({0}, {1})", x, y);
+		}
 		public static Position Zero;
 	}
 
@@ -98,10 +101,10 @@ namespace Common
 	}
 
 	public struct Description{
-		public const string TypeAttack = "attack {mapObjectId[0]}";
-		public const string TypeCollectResource = "collect resource {mapObjectId[0]}";
+		public const string TypeAttack = "attack {mapObjectId}";
+		public const string TypeCollectResource = "collect resource {mapObjectId}";
 		public string description;
-		public List<int> mapObjectId;
+		public NameValueCollection values;
 		public static Description Empty;
 	}
 
@@ -212,6 +215,8 @@ namespace Common
 		/// </summary>
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
+
+		List<Item> StorageInMap{ get; }
 	}
 
 	public interface IModel : IModelGetter{
