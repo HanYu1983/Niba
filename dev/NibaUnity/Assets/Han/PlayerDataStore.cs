@@ -44,6 +44,8 @@ namespace Model
 		}
 
 		public void GenMap(MapType type, int w, int h){
+			ClearMap ();
+
 			width = w;
 			height = h;
 			for (var y = 0; y < h; ++y) {
@@ -89,8 +91,11 @@ namespace Model
 			}
 		}
 		public void ClearMap(){
+			isPositionVisible.Clear ();
 			mapObjects.Clear ();
-			isPositionVisible = null;
+			resourceInfo.Clear ();
+			monsterInfo.Clear ();
+			width = height = 0;
 		}
 		public int GenObject(MapObjectType type, string strKey){
 			if (strKey != null) {
@@ -169,8 +174,28 @@ namespace Model
 		#endregion
 
 		#region event
-		public string GenEvent(PlayerDataStore store){
-			return "Test Event One{0}";
+		public IEnumerable<Description> GenEvent(PlayerDataStore player, Position pos){
+			var objs = FindObjects (pos);
+			return objs.Aggregate(
+				new List<Description>(),
+				(accu, obj)=>{
+					switch(obj.type){
+					case MapObjectType.Resource:
+						{
+							var des = Description.Empty;
+							des.description = Description.EventLucklyFind;
+							des.values = new NameValueCollection();
+							des.values.Add("itemPrototype", 1+"");
+							des.values.Add("count", 2+"");
+							accu.Add(des);
+						}
+						break;
+					case MapObjectType.Monster:
+						break;
+					}
+					return accu;
+				}
+			);
 		}
 		#endregion
 
@@ -199,7 +224,7 @@ namespace Model
 
 			var work = player.playerInMap.currentWork;
 			switch (work.description) {
-			case Description.TypeCollectResource:
+			case Description.WorkCollectResource:
 				{
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var obj = mapObjects [mapObjectId];
@@ -223,7 +248,7 @@ namespace Model
 					case MapObjectType.Resource:
 						{
 							var action = Description.Empty;
-							action.description = Description.TypeCollectResource;
+							action.description = Description.WorkCollectResource;
 							action.values = new NameValueCollection();
 							action.values.Add("mapObjectId", currItem.key+"");
 							actions.Add(action);
@@ -232,7 +257,7 @@ namespace Model
 					case MapObjectType.Monster:
 						{
 							var action = Description.Empty;
-							action.description = Description.TypeAttack;
+							action.description = Description.WorkAttack;
 							action.values = new NameValueCollection();
 							action.values.Add("mapObjectId", currItem.key+"");
 							actions.Add(action);

@@ -13,12 +13,6 @@ namespace Model
 		public HandleDebug debug;
 		public SimpleView gameView;
 
-		void Start ()
-		{
-			View.ModelGetter = Model;
-			StartCoroutine (TestMap (Model, View));
-		}
-
 		IModel Model {
 			get {
 				var model = GetComponent<Model> ();
@@ -75,7 +69,7 @@ namespace Model
 						Model.ClearMoveResult();
 					}
 					break;
-                case UIEventName.TitlePage_btnStart_click: 
+				case UIEventName.TitlePage_btnStart_click: 
 					break;
 				}
 			};
@@ -88,124 +82,11 @@ namespace Model
 						if (e2 != null) {
 
 						} else {
-							
+
 						}
 					}));
 				}
 			}));
-		}
-
-		static IEnumerator TestMap(IModel model, IView view){
-			UnityEngine.Random.InitState (1);
-
-			Exception e = null;
-			yield return model.LoadMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
-			yield return view.ChangePage (Page.Game, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
-			Debug.Log ("向右移20步");
-			for (var i = 0; i < 20; ++i) {
-				model.MoveRight ();
-				var result = model.MoveResult;
-				if(result.isMoveSuccess){
-					yield return view.UpdateMap (e2 => {
-						e = e2;
-					});
-					if (e != null) {
-						throw e;
-					}
-				}
-				model.ClearMoveResult();
-				yield return new WaitForSeconds (0f);
-			}
-			Debug.Log ("向下移20步");
-			for (var i = 0; i < 20; ++i) {
-				model.MoveDown ();
-				var result = model.MoveResult;
-				if(result.isMoveSuccess){
-					yield return view.UpdateMap (e2 => {
-						e = e2;
-					});
-					if (e != null) {
-						throw e;
-					}
-				}
-				model.ClearMoveResult();
-				yield return new WaitForSeconds (0f);
-			}
-			Debug.Log ("目前位置:" + model.MapPlayer.position);
-			var objs = model.MapObjectsAt (model.MapPlayer.position);
-			foreach (var obj in objs) {
-				Debug.Log ("有物件:" + obj.type);
-			}
-			var works = model.Works;
-			Debug.Log ("取得目前工作數量:" + works.Count ());
-			if (works.Count () > 0) {
-				if (model.MapPlayer.IsWorking) {
-					throw new Exception ("現在必須沒有工作在身");
-				}
-
-				var firstWork = works.First ();
-				Debug.Log ("開始第一件工作，工作為:"+firstWork.description);
-				model.StartWork (firstWork);
-
-				if (model.MapPlayer.IsWorking == false) {
-					throw new Exception ("現在必須有工作在身");
-				}
-				var finishedTime = new DateTime (model.MapPlayer.workFinishedTime);
-				Debug.Log ("工作結束時間為:"+finishedTime);
-
-				model.ApplyWork ();
-
-				switch (firstWork.description) {
-				case Description.TypeCollectResource:
-					{
-						var collectTargetId = int.Parse (firstWork.values.Get ("mapObjectId"));
-						var target = model.MapObjects [collectTargetId];
-						var targetInfo = model.ResourceInfos [target.infoKey];
-						Debug.Log ("采集"+targetInfo.type+"結束");
-						if (target.died == false) {
-							throw new Exception ("采集完的物件必須死亡");
-						}
-						yield return view.UpdateMap (e2 => {
-							e = e2;
-						});
-						if (e != null) {
-							throw e;
-						}
-					}
-					break;
-				case Description.TypeAttack:
-					break;
-				}
-			}
-			Debug.Log ("上移1格");
-			model.MoveUp ();
-			yield return view.UpdateMap (e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
-			model.ClearMoveResult();
-
-			Debug.Log ("直接完成第1個工作");
-			model.StartWork (model.Works.First());
-			model.ApplyWork ();
-			yield return view.UpdateMap (e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
 		}
 	}
 }

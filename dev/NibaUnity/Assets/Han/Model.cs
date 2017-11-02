@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
 using Common;
+using System.Linq;
 
 namespace Model
 {
@@ -17,9 +18,11 @@ namespace Model
 
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
+			playerData.playerInMap.position = Position.Zero;
 			mapData.GenMap (type, 10, 10);
 			mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 			RequestSaveMap ();
+			RequestSavePlayer ();
 			callback (null);
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
@@ -91,16 +94,24 @@ namespace Model
 			newPos.y += position.y;
 			newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
 			var isPositionDirty = newPos.Equals (playerData.playerInMap.position) == false;
-
+			// 移動位置
 			playerData.MovePlayerTo (newPos);
+			// 新增視野
+			var isMapDirty = mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			// 產生事件
+			var events = mapData.GenEvent (playerData, newPos);
+			// 準備回傳物件
 			rs.isMoveSuccess = isPositionDirty;
-
-			RequestSavePlayer ();
-			if (mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength)) {
-				RequestSaveMap ();
-			}
+			rs.events = events.ToList();
 			tempMoveResult = rs;
 			hasMoveResult = true;
+			// 有更動就儲存
+			if (isPositionDirty) {
+				RequestSavePlayer ();
+			}
+			if (isMapDirty) {
+				RequestSaveMap ();
+			}
 		}
 		void RequestSavePlayer(){
 

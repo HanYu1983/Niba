@@ -87,7 +87,7 @@ public class Test : MonoBehaviour {
 		}
 
 		var firstWork = works.First ();
-		if (firstWork.description != Description.TypeCollectResource) {
+		if (firstWork.description != Description.WorkCollectResource) {
 			throw new UnityException ("必須是收集資源工作");
 		}
 

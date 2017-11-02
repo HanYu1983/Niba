@@ -101,8 +101,9 @@ namespace Common
 	}
 
 	public struct Description{
-		public const string TypeAttack = "attack {mapObjectId}";
-		public const string TypeCollectResource = "collect resource {mapObjectId}";
+		public const string WorkAttack = "[work]attack {mapObjectId}";
+		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
+		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
@@ -147,8 +148,8 @@ namespace Common
 		Unknown, Title, Game
 	}
 
-	public enum Popup{
-		Unknown, Event
+	public enum Info{
+		Unknown, Event, Work
 	}
 
 	public class MessageException : Exception{
@@ -166,7 +167,7 @@ namespace Common
 		/// <param name="page">Page.</param>
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
-		IEnumerator OpenPopup(Popup page, Action<Exception> callback);
+		IEnumerator ShowInfo(Info page, Action<Exception> callback);
 		IEnumerator UpdateMap (Action<Exception> callback);
 	}
 
@@ -193,6 +194,12 @@ namespace Common
 		List<MonsterInfo> MonsterInfos{ get; }
 		int MapWidth{ get; }
 		int MapHeight{ get; }
+		/// <summary>
+		/// 取得移動結果
+		/// 呼叫任何移動後就必須處理MoveResult，並呼叫ClearMoveResult來清除暫存
+		/// </summary>
+		/// <value>The move result.</value>
+		MoveResult MoveResult{ get; }
 		/// <summary>
 		/// 取得可視的tile
 		/// </summary>
@@ -247,16 +254,9 @@ namespace Common
 		/// </summary>
 		void MoveRight();
 		/// <summary>
-		/// 取得移動結果
-		/// 呼叫任何移動後就必須處理MoveResult，並呼叫ClearMoveResult來清除暫存
-		/// </summary>
-		/// <value>The move result.</value>
-		MoveResult MoveResult{ get; }
-		/// <summary>
 		/// 清除移動結果的暫存
 		/// </summary>
 		void ClearMoveResult();
-
 		void StartWork (Description work);
 		void CancelWork ();
 		void ApplyWork();

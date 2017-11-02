@@ -42,9 +42,39 @@ namespace GameView
             }
         }
 
-        public IEnumerator OpenPopup(Popup page, Action<Exception> callback)
+        public IEnumerator ShowInfo(Info page, Action<Exception> callback)
         {
-            return null;
+			switch (page) {
+			case Info.Work:
+				{
+					var works = model.Works;
+					foreach (var work in works) {
+						Debug.Log (work.description);
+						if (work.description == Description.WorkCollectResource) {
+							var mapObjectId = int.Parse (work.values.Get ("mapObjectId"));
+							var mapObject = model.MapObjects [mapObjectId];
+							var mapObjectInfo = model.ResourceInfos [mapObject.infoKey];
+							Debug.Log ("采集任務，目標為:"+mapObjectInfo.type);
+						}
+					}
+				}
+				break;
+			case Info.Event:
+				{
+					var result = model.MoveResult;
+					var events = result.events;
+					foreach (var e in events) {
+						Debug.Log (e.description);
+						if (e.description == Description.EventLucklyFind) {
+							var itemPrototype = int.Parse (e.values.Get ("itemPrototype"));
+							var count = int.Parse (e.values.Get ("count"));
+							Debug.Log ("獲得item:"+itemPrototype+" 數量:"+count);
+						}
+					}
+				}
+				break;
+			}
+			throw new NotImplementedException();
         }
 
 		public IEnumerator UpdateMap (Action<Exception> callback){
