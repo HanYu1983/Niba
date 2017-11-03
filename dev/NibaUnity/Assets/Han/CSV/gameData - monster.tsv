@@ -1,0 +1,4 @@
+id	name	description	item	atk	def	spd
+ant	螞蟻		1	1	1	1
+bird	小鳥		1	2	1	3
+snack	蛇		1	3	3	2

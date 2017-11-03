@@ -7,42 +7,16 @@ using Common;
 
 namespace Model
 {
+	// 地圖的部分另外存，因為資料量比較大
+	// 所以把比較長變動的資料移到PlayerDataStore
 	[Serializable]
 	public class MapDataStore{
 		#region map
 		// Dictionary無法Serializable
-		public List<Position> isPositionVisible = new List<Position>();
 		public List<MapObject> mapObjects = new List<MapObject>();
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
 		public int width, height;
-
-		public IEnumerable<MapObject> VisibleMapObjects {
-			get {
-				var posSet = new HashSet<Position> (isPositionVisible);
-				var visiblePosition = mapObjects.Where (obj => {
-					return obj.died == false && posSet.Contains(obj.position);
-				});
-				return visiblePosition;
-			}
-		}
-		public bool VisitPosition(Position pos, int expend){
-			var posSet = new HashSet<Position> (isPositionVisible);
-			for (var x = -expend; x <= expend; ++x) {
-				var yexpend = expend - Math.Abs (x);
-				for (var y = -yexpend; y <= yexpend; ++y) {
-					var newPos = pos.Add(x, y);
-					posSet.Add (newPos);
-				}
-			}
-			var newVisiblePosition = posSet.ToList ();
-			var oldCnt = isPositionVisible.Count;
-			var isDirty = newVisiblePosition.Count != oldCnt;
-
-			isPositionVisible = newVisiblePosition;
-			return isDirty;
-		}
-
 		public void GenMap(MapType type, int w, int h){
 			ClearMap ();
 
@@ -66,9 +40,9 @@ namespace Model
 						// change type
 						var info = resourceInfo [mapObjects [key].infoKey];
 						if (p < 0.3f) {
-							info.type = 2;
+							info.type = ConfigResource.ID_stone;
 						} else if (p < 0.8f) {
-							info.type = 1;
+							info.type = ConfigResource.ID_grass;
 						}
 						// assign back
 						resourceInfo [mapObjects [key].infoKey] = info;
@@ -91,7 +65,6 @@ namespace Model
 			}
 		}
 		public void ClearMap(){
-			isPositionVisible.Clear ();
 			mapObjects.Clear ();
 			resourceInfo.Clear ();
 			monsterInfo.Clear ();
@@ -124,10 +97,10 @@ namespace Model
 			mapObjects.Add (item);
 			return item.key;
 		}
-		public int GenMonster(int objKey, bool assignMonsterType, int monsterType = 0){
+		public int GenMonster(int objKey, bool assignMonsterType, string monsterType = ""){
 			var obj = mapObjects [objKey];
 			var resInfo = resourceInfo [obj.infoKey];
-			if (resInfo.type == 0) {
+			if (resInfo.type == "") {
 				throw new UnityException ("resourceType type not defined. with object key:"+objKey);
 			}
 			var m1Key = GenObject (MapObjectType.Monster, null);
@@ -138,7 +111,7 @@ namespace Model
 				m1Info.type = monsterType;
 			} else {
 				// TODO
-				m1Info.type = 1;
+				m1Info.type = ConfigMonster.ID_snack;
 			}
 			// assign back
 			monsterInfo [m1Object.infoKey] = m1Info;
@@ -292,6 +265,36 @@ namespace Model
 		}
 		public void MovePlayerTo(Position pos){
 			playerInMap.position = pos;
+		}
+		#endregion
+
+		#region visible map
+		public List<Position> isPositionVisible = new List<Position>();
+		public IEnumerable<MapObject> VisibleMapObjects(MapDataStore mapData) {
+			var posSet = new HashSet<Position> (isPositionVisible);
+			var visiblePosition = mapData.mapObjects.Where (obj => {
+				return obj.died == false && posSet.Contains(obj.position);
+			});
+			return visiblePosition;
+		}
+		public bool VisitPosition(Position pos, int expend){
+			var posSet = new HashSet<Position> (isPositionVisible);
+			for (var x = -expend; x <= expend; ++x) {
+				var yexpend = expend - Math.Abs (x);
+				for (var y = -yexpend; y <= yexpend; ++y) {
+					var newPos = pos.Add(x, y);
+					posSet.Add (newPos);
+				}
+			}
+			var newVisiblePosition = posSet.ToList ();
+			var oldCnt = isPositionVisible.Count;
+			var isDirty = newVisiblePosition.Count != oldCnt;
+
+			isPositionVisible = newVisiblePosition;
+			return isDirty;
+		}
+		public void ClearVisibleMapObjects(){
+			isPositionVisible.Clear ();
 		}
 		#endregion
 

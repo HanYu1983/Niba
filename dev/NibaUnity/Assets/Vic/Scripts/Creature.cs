@@ -15,15 +15,16 @@ namespace GameView
         public override void SetType(MapObject mapObject, IModelGetter model)
         {
             MonsterInfo info = model.MonsterInfos[mapObject.infoKey];
+			/*
             string creatureName = "";
             bool showCreature = false;
             switch (info.type)
             {
-                case 1:
+                case "1":
                     creatureName = "蝶";
                     showCreature = true;
                     break;
-                case 2:
+                case "2":
                     creatureName = "狗";
                     showCreature = true;
                     break;
@@ -34,6 +35,17 @@ namespace GameView
             }
             Txt_type.text = creatureName;
             CreatureFace.SetActive(showCreature);
+            */
+
+			try{
+				var config = ConfigMonster.Get (info.type);
+				string creatureName = config.Name;
+				Txt_type.text = creatureName;
+				CreatureFace.SetActive(true);
+			}catch(Exception){
+				CreatureFace.SetActive(false);
+				throw new Exception("沒有處理到的怪物類型，請加上, type: " + info.type);
+			}
         }
 
         public override void Clear()

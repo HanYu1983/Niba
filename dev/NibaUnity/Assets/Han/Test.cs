@@ -19,12 +19,10 @@ public class Test : MonoBehaviour {
 		var godKey = store.GenObject (MapObjectType.Resource, "god");
 		var godObject = store.mapObjects [godKey];
 		var godInfo = store.resourceInfo [godObject.infoKey];
-		godInfo.type = 2;
+		godInfo.type = "2";
 		store.resourceInfo [godObject.infoKey] = godInfo;
 
-		store.GenMonster (godKey, true, 1);
-
-		store.VisitPosition (Position.Zero, 3);
+		store.GenMonster (godKey, true, "1");
 
 		var memonto1 = store.GetMemonto ();
 		Debug.Log (memonto1);

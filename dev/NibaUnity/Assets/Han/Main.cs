@@ -58,7 +58,7 @@ namespace Model
 						}
 						var result = Model.MoveResult;
 						if(result.isMoveSuccess){
-							StartCoroutine (View.UpdateMap (e2 => {
+							StartCoroutine (View.ShowInfo (Info.Map, e2 => {
 								if (e2 != null) {
 
 								} else {

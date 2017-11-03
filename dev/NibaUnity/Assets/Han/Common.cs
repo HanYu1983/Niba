@@ -65,15 +65,15 @@ namespace Common
 
 	[Serializable]
 	public struct ResourceInfo{
-		public int type;
+		public string type;
 		public static ResourceInfo Empty;
 	}
 
 	[Serializable]
 	public struct MonsterInfo {
-		public int type;
+		public string type;
 		// 棲息地(ResourceInfo.type)
-		public int habitats;
+		public string habitats;
 		public static MonsterInfo Empty;
 	}
 
@@ -149,7 +149,7 @@ namespace Common
 	}
 
 	public enum Info{
-		Unknown, Event, Work
+		Unknown, Event, Work, Map
 	}
 
 	public class MessageException : Exception{
@@ -168,7 +168,6 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
-		IEnumerator UpdateMap (Action<Exception> callback);
 	}
 
 	public interface IModelGetter{
@@ -278,7 +277,7 @@ namespace Common
 		/// <param name="center">Center.</param>
 		/// <param name="w">The width.</param>
 		/// <param name="h">The height.</param>
-		public static List<MapObject> FilterMapObjectsForCenterExpend(IModelGetter model, Position center, int w, int h){
+		static List<MapObject> FilterMapObjectsForCenterExpend(IModelGetter model, Position center, int w, int h){
 			return model.MapObjects.Where (obj => {
 				var disX = Math.Abs (obj.position.x - center.x);
 				if (disX > w) {
@@ -328,7 +327,7 @@ namespace Common
 						if (type == MapObjectType.Resource) {
 							return model.MonsterInfos [obj.infoKey].type;
 						}
-						return 0;
+						return "";
 					})
 						.OrderByDescending (g => g.Count ())
 						.FirstOrDefault ();

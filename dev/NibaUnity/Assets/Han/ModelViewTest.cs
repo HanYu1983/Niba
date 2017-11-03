@@ -39,8 +39,8 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
-			yield return TestShowInfo (Model, View);
 			yield return TestMap (Model, View);
+			yield return TestShowInfo (Model, View);
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){
@@ -69,7 +69,7 @@ namespace Model
 			model.MoveRight ();
 			var result = model.MoveResult;
 			if(result.isMoveSuccess){
-				yield return view.UpdateMap (e2 => {
+				yield return view.ShowInfo (Info.Map, e2 => {
 					e = e2;
 				});
 				if (e != null) {
@@ -108,7 +108,7 @@ namespace Model
 				model.MoveRight ();
 				var result = model.MoveResult;
 				if(result.isMoveSuccess){
-					yield return view.UpdateMap (e2 => {
+					yield return view.ShowInfo (Info.Map, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -123,7 +123,7 @@ namespace Model
 				model.MoveDown ();
 				var result = model.MoveResult;
 				if(result.isMoveSuccess){
-					yield return view.UpdateMap (e2 => {
+					yield return view.ShowInfo (Info.Map, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -167,7 +167,7 @@ namespace Model
 						if (target.died == false) {
 							throw new Exception ("采集完的物件必須死亡");
 						}
-						yield return view.UpdateMap (e2 => {
+						yield return view.ShowInfo (Info.Map, e2 => {
 							e = e2;
 						});
 						if (e != null) {
@@ -181,7 +181,7 @@ namespace Model
 			}
 			Debug.Log ("上移1格");
 			model.MoveUp ();
-			yield return view.UpdateMap (e2 => {
+			yield return view.ShowInfo (Info.Map, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -192,7 +192,7 @@ namespace Model
 			Debug.Log ("直接完成第1個工作");
 			model.StartWork (model.Works.First());
 			model.ApplyWork ();
-			yield return view.UpdateMap (e2 => {
+			yield return view.ShowInfo (Info.Map, e2 => {
 				e = e2;
 			});
 			if (e != null) {

@@ -18,9 +18,10 @@ namespace Model
 
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
-			playerData.playerInMap.position = Position.Zero;
 			mapData.GenMap (type, 10, 10);
-			mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			playerData.ClearVisibleMapObjects ();
+			playerData.playerInMap.position = Position.Zero;
+			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 			RequestSaveMap ();
 			RequestSavePlayer ();
 			callback (null);
@@ -31,7 +32,7 @@ namespace Model
 
 		public int MapWidth{ get{ return mapData.width; } }
 		public int MapHeight{ get{ return mapData.height; } }
-		public IEnumerable<MapObject> VisibleMapObjects{ get { return mapData.VisibleMapObjects; } }
+		public IEnumerable<MapObject> VisibleMapObjects{ get { return playerData.VisibleMapObjects(mapData); } }
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
 		}
@@ -97,7 +98,7 @@ namespace Model
 			// 移動位置
 			playerData.MovePlayerTo (newPos);
 			// 新增視野
-			var isMapDirty = mapData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			var isMapDirty = playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 			// 產生事件
 			var events = mapData.GenEvent (playerData, newPos);
 			// 準備回傳物件

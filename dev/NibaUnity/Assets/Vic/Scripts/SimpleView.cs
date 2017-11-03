@@ -45,6 +45,11 @@ namespace GameView
         public IEnumerator ShowInfo(Info page, Action<Exception> callback)
         {
 			switch (page) {
+			case Info.Map:
+				{
+					yield return UpdateMap (callback);
+				}
+				break;
 			case Info.Work:
 				{
 					var works = model.Works;
@@ -58,7 +63,7 @@ namespace GameView
 						}
 					}
 				}
-				break;
+				throw new NotImplementedException();
 			case Info.Event:
 				{
 					var result = model.MoveResult;
@@ -72,12 +77,13 @@ namespace GameView
 						}
 					}
 				}
-				break;
+				throw new NotImplementedException();
+			default:
+				throw new NotImplementedException();
 			}
-			throw new NotImplementedException();
         }
 
-		public IEnumerator UpdateMap (Action<Exception> callback){
+		IEnumerator UpdateMap (Action<Exception> callback){
             // implement for test
             yield return ChangePage(Page.Game, callback);
 		}
