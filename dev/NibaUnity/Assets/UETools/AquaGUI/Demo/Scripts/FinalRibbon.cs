@@ -60,9 +60,9 @@ namespace UETools.AquaGUI.Demo
 		
 		private void Awake()
 		{
-			m_Highlights	= transform.FindChild("Ribbon_Highlights").gameObject.GetComponent<UnityEngine.UI.Image>();
-			m_Ribbon		= transform.FindChild("Ribbon").gameObject.GetComponent<UnityEngine.UI.Image>();
-			m_Base			= transform.FindChild("Ribbon_Base").gameObject.GetComponent<UnityEngine.UI.Image>();
+			m_Highlights	= transform.Find("Ribbon_Highlights").gameObject.GetComponent<UnityEngine.UI.Image>();
+			m_Ribbon		= transform.Find("Ribbon").gameObject.GetComponent<UnityEngine.UI.Image>();
+			m_Base			= transform.Find("Ribbon_Base").gameObject.GetComponent<UnityEngine.UI.Image>();
 
 			Highlights.OnColorChanged	= RefreshHighlights;
 			Ribbon.OnColorChanged		= RefreshRibbon;

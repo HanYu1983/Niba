@@ -23,8 +23,8 @@ namespace UETools.AquaGUI
 		{
 			button = gameObject.GetComponent<UnityEngine.UI.Button>();
 
-			buttonEnabled	= gameObject.transform.FindChild("Buttons").FindChild("Button_Enabled").gameObject;
-			buttonDisabled	= gameObject.transform.FindChild("Buttons").FindChild("Button_Disabled").gameObject;
+			buttonEnabled	= gameObject.transform.Find("Buttons").Find("Button_Enabled").gameObject;
+			buttonDisabled	= gameObject.transform.Find("Buttons").Find("Button_Disabled").gameObject;
 		}
 
 		private void Start()

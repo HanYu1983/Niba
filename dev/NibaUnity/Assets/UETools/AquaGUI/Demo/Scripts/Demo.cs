@@ -38,7 +38,7 @@ namespace UETools.AquaGUI.Demo
 #if UNITY_5
 				GetComponent<AudioSource>().Play();
 #else
-				audio.Play();
+				GetComponent<AudioSource>().Play();
 #endif
 			}
 		}
