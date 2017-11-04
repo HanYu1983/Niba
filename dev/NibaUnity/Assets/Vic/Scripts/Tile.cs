@@ -11,9 +11,9 @@ namespace GameView {
     {
         public Text txt_type;
 
-        public override void SetType(MapObject mapObject, IModelGetter model)
+        public override void SetType()
         {
-            ResourceInfo info = model.ResourceInfos[mapObject.infoKey];
+            ResourceInfo info = View.Instance.Model.ResourceInfos[Model.infoKey];
 			var config = ConfigResource.Get (info.type);
 			var typeName = config.Name;
             txt_type.text = typeName;

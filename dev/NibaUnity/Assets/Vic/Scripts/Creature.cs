@@ -12,9 +12,9 @@ namespace GameView
         public GameObject CreatureFace;
         public Text Txt_type;
 
-        public override void SetType(MapObject mapObject, IModelGetter model)
+        public override void SetType()
         {
-            MonsterInfo info = model.MonsterInfos[mapObject.infoKey];
+            MonsterInfo info = View.Instance.Model.MonsterInfos[Model.infoKey];
 			try{
 				var config = ConfigMonster.Get (info.type);
 				string creatureName = config.Name;

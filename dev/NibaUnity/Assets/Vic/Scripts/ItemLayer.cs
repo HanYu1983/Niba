@@ -10,21 +10,21 @@ namespace GameView
         public GameObject ItemPrefab;
         List<Item> AryItem = new List<Item>();
 
-        public void PutItem(MapObject mapObject, IModelGetter info)
+        public void PutItem(MapObject mapObject)
         {
             if(mapObject.type == GetValidType())
             {
                 Item item = GetItemByXY(mapObject.position.x, mapObject.position.y);
-                item.SetType(mapObject, info);
+                item.Model = mapObject;
             }
         }
 
-		public void PutItemWithXY(MapObject mapObject, int x, int y, IModelGetter info)
+		public void PutItemWithXY(MapObject mapObject, int x, int y)
 		{
             if (mapObject.type == GetValidType())
 			{
 				Item item = GetItemByXY(x, y);
-				item.SetType(mapObject, info);
+                item.Model = mapObject;
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace GameView
             foreach (Item item in AryItem) item.Clear();
         }
 
-        Item GetItemByXY(int x, int y)
+        public Item GetItemByXY(int x, int y)
         {
             int index = View.GetIndexByXY(x, y);
             return AryItem[index];
@@ -67,8 +67,7 @@ namespace GameView
 
         private void Start()
         {
-            //要在這邊設定的原因是因爲awake的時候View還沒被設定到這個類別
-            foreach (Item item in AryItem) item.View = View;
+
         }
     }
 }

@@ -15,8 +15,8 @@ namespace GameView{
             for( int i = 0; i < mapObjects.Count; ++i)
             {
                 var mapObj = mapObjects[i];
-                TileLayer.PutItem(mapObj, model);
-                CreatureLayer.PutItem(mapObj, model);
+                TileLayer.PutItem(mapObj);
+                CreatureLayer.PutItem(mapObj);
             }
         }
 
@@ -35,7 +35,7 @@ namespace GameView{
 					if(mapObj.type == MapObjectType.Unknown){
 						continue;
 					}
-					TileLayer.PutItemWithXY (mapObj, x, y, model);
+					TileLayer.PutItemWithXY (mapObj, x, y);
 				}
 			}
 
@@ -46,16 +46,10 @@ namespace GameView{
 					if(mapObj.type == MapObjectType.Unknown){
 						continue;
 					}
-					CreatureLayer.PutItemWithXY (mapObj, x, y, model);
+					CreatureLayer.PutItemWithXY (mapObj, x, y);
 				}
 			}
 		}
         
-        // Use this for initialization
-        void Start () {
-            TileLayer.View = View;
-            CreatureLayer.View = View;
-            TouchLayer.View = View;
-        }
 	}
 }

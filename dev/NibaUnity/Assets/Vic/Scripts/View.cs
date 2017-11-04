@@ -7,6 +7,9 @@ namespace GameView
 {
     public class View : MonoBehaviour
     {
+
+        public static View Instance;
+
         public ZUIManager ZUIMgr;
 
         public GameObject MainLayer;
@@ -17,7 +20,12 @@ namespace GameView
 
         Dictionary<string, GameObject> pagePool = new Dictionary<string, GameObject>();
         GameObject currentPage;
-        
+
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         //========================= 游戲頁面的方法 ==============================
 
         public void SetGamePageTile()
@@ -28,7 +36,15 @@ namespace GameView
 
         public void OnTouchItem( TouchItem touchItem )
         {
-            Vector2 clickPos = touchItem.Position;
+            GamePage page = CheckPage<GamePage>();
+            Position clickPos = touchItem.Position;
+            MapObject tile = page.TileLayer.GetItemByXY(clickPos.x, clickPos.y).Model;
+            IEnumerable<MapObject> objs = Model.MapObjectsAt(tile.position);
+            foreach(MapObject obj in objs)
+            {
+                print(obj.type);
+            }
+            ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
             //還要加偏移才行
             print(clickPos);
         }
@@ -47,7 +63,6 @@ namespace GameView
                 GameObject obj = Instantiate(prefab);
                 obj.SetActive(true);
                 obj.transform.SetParent(parent.transform);
-                obj.GetComponent<AbstractView>().View = this;
                 obj.GetComponent<RectTransform>().localPosition = new Vector3();
                 obj.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
                 callback(obj);
@@ -174,9 +189,12 @@ namespace GameView
         /// <summary>
         /// 從二維轉一維
         /// </summary>
-        public static Vector2 GetXYByIndex( int index )
+        public static Position GetXYByIndex( int index )
         {
-            return new Vector2(index % 10, (int)(index / 10));
+            Position pos = new Position();
+            pos.x = index % 10;
+            pos.y = (int)(index / 10);
+            return pos;
         }
 
         

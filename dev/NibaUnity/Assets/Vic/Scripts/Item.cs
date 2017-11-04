@@ -3,16 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 namespace GameView {
-    public abstract class Item : AbstractView
+    public class Item : AbstractView
     {
-        public abstract void SetType(MapObject mapObject, IModelGetter model);
-        public abstract void Clear();
+        private MapObject _Model;
+        public MapObject Model
+        {
+            get
+            {
+                return _Model;
+            }
+            set
+            {
+                _Model = value;
+                SetType();
+            }
+        }
+        public virtual void SetType() { }
+        public virtual void Clear() { }
         public int Index
         {
             set;
             get;
         }
-        public Vector2 Position
+        public Position Position
         {
             get
             {
