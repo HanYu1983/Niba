@@ -27,6 +27,16 @@ namespace Model
 				"Item","string",
 			}, "CSV/gameData - resource.tsv");
 
+			GenCode ("ConfigItem", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+				"Type","string",
+				"MaxCount","int",
+				"FusionRequire","string",
+				"SkillRequire","string",
+			}, "CSV/gameData - item.tsv");
+
 			AssetDatabase.Refresh();
 		}
 

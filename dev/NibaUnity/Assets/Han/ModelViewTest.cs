@@ -173,6 +173,9 @@ namespace Model
 						if (e != null) {
 							throw e;
 						}
+						foreach (var item in model.StorageInMap) {
+							Debug.Log ("擁有" + item.prototype +"/"+item.count);
+						}
 					}
 					break;
 				case Description.WorkAttack:

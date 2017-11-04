@@ -107,9 +107,10 @@ namespace GameView
                 Debug.Log(e.description);
                 if (e.description == Description.EventLucklyFind)
                 {
-                    var itemPrototype = int.Parse(e.values.Get("itemPrototype"));
+                    var itemPrototype = e.values.Get("itemPrototype");
                     var count = int.Parse(e.values.Get("count"));
-                    showstr += "獲得item:" + itemPrototype + " 數量:" + count + ".\n";
+					var config = ConfigItem.Get (itemPrototype);
+					showstr += "獲得item:" + config.Name + " 數量:" + count + ".\n";
                 }
             }
             OpenMessagePopup(showstr);

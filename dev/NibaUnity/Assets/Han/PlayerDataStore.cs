@@ -40,7 +40,7 @@ namespace Model
 						// change type
 						var info = resourceInfo [mapObjects [key].infoKey];
 						if (p < 0.3f) {
-							info.type = ConfigResource.ID_stone;
+							info.type = ConfigResource.ID_rock;
 						} else if (p < 0.8f) {
 							info.type = ConfigResource.ID_grass;
 						}
@@ -158,7 +158,7 @@ namespace Model
 							var des = Description.Empty;
 							des.description = Description.EventLucklyFind;
 							des.values = new NameValueCollection();
-							des.values.Add("itemPrototype", 1+"");
+							des.values.Add("itemPrototype", ConfigItem.ID_arrows);
 							des.values.Add("count", 2+"");
 							accu.Add(des);
 						}
@@ -203,10 +203,11 @@ namespace Model
 					var obj = mapObjects [mapObjectId];
 					obj.died = true;
 					mapObjects [mapObjectId] = obj;
-					var item = Item.Empty;
-					item.prototype = 1;
-					item.count = 1;
-					player.AddItem (item);
+					var info = resourceInfo [obj.infoKey];
+					var config = ConfigResource.Get (info.type);
+					foreach (var item in ParseItemFromResource(config)) {
+						player.AddItem (item);
+					}
 				}
 				break;
 			}
@@ -252,6 +253,37 @@ namespace Model
 			return JsonUtility.FromJson<MapDataStore>(json);
 		}
 		#endregion
+
+		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
+			var hasItem = string.IsNullOrEmpty (res.Item) == false;
+			if (hasItem == false) {
+				return new List<Item> ();
+			}
+			Func<string, Item> parseOne = str => {
+				var prototype = str;
+				var count = 1;
+				var hasCount = str.IndexOf ("_") != -1;
+				if (hasCount) {
+					var info = str.Split (new char[]{ '_' }, StringSplitOptions.None);
+					prototype = info[0];
+					try{
+						count = int.Parse (info [1]);
+					}catch(Exception){
+						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
+					}
+				}
+				var item = Item.Empty;
+				item.prototype = prototype;
+				item.count = count;
+				return item;
+			};
+			var hasMulti = res.Item.IndexOf (",") != -1;
+			if (hasMulti) {
+				var strs = res.Item.Split (new char[]{ ',' }, StringSplitOptions.None);
+				return strs.Select (parseOne);
+			}
+			return Enumerable.Repeat (parseOne (res.Item), 1);
+		}
 	}
 
 	[Serializable]
@@ -304,13 +336,15 @@ namespace Model
 			if (storageInMap == null) {
 				storageInMap = new List<Item> ();
 			}
+			var config = ConfigItem.Get (item.prototype);
+			var maxCount = config.MaxCount;
 			var shouldArrange = true;
 			for (var i = 0; i < storageInMap.Count; ++i) {
 				var adjItem = storageInMap [i];
 				if (adjItem.prototype != item.prototype) {
 					continue;
 				}
-				if (adjItem.count + item.count > 99) {
+				if (adjItem.count + item.count > maxCount) {
 					continue;
 				}
 				adjItem.count += item.count;
@@ -329,7 +363,7 @@ namespace Model
 				return sum + obj.count;
 			});
 			// 一個道具在一格中的最大數量限制
-			var maxOfItem = 99;
+			var maxOfItem = maxCount;
 			// 依最大限制重新計算分組
 			var num = sumOfCount / maxOfItem;
 			// 最後一個剩餘

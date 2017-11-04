@@ -139,7 +139,7 @@ namespace Common
 	}
 
 	public struct Item{
-		public int prototype;
+		public string prototype;
 		public int count;
 		public static Item Empty;
 	}
