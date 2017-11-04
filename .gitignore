@@ -52,3 +52,4 @@ android/NibaUnity/*.properties
 android/NibaUnity/*.txt
 android/NibaUnity/google-services.json
 doc/keystore/
+/dev/NibaUnity/.vs/
