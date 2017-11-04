@@ -7,6 +7,7 @@ namespace GameView
 {
     public class View : MonoBehaviour
     {
+        public ZUIManager ZUIMgr;
 
         public GameObject MainLayer;
         public IModelGetter Model
@@ -19,10 +20,10 @@ namespace GameView
         
         //========================= 游戲頁面的方法 ==============================
 
-        public void SetGamePageTile( IModelGetter model )
+        public void SetGamePageTile()
         {
             GamePage page = CheckPage<GamePage>();
-            page.SetTileWithPlayerPositionCenterExpend (model);
+            page.SetTileWithPlayerPositionCenterExpend (Model);
         }
 
         public void OnTouchItem( TouchItem touchItem )
@@ -84,6 +85,54 @@ namespace GameView
                 CreatePageAndCloseOld(pageName, obj);
                 callback(obj);
             });
+        }
+
+        public void OpenTitlePage()
+        {
+            ChangeToPage(ZUIMgr.AllMenus[0]);
+        }
+
+        public void OpenGamePlayPage()
+        {
+            ChangeToPage(ZUIMgr.AllMenus[1]);
+        }
+
+        public void ProcessEvent()
+        {
+            var result = Model.MoveResult;
+            var events = result.events;
+            string showstr = "";
+            foreach (var e in events)
+            {
+                Debug.Log(e.description);
+                if (e.description == Description.EventLucklyFind)
+                {
+                    var itemPrototype = int.Parse(e.values.Get("itemPrototype"));
+                    var count = int.Parse(e.values.Get("count"));
+                    showstr += "獲得item:" + itemPrototype + " 數量:" + count + ".\n";
+                }
+            }
+            OpenMessagePopup(showstr);
+        }
+
+        public void OpenMessagePopup(string msg)
+        {
+            ZUIMgr.OpenPopup(ZUIMgr.AllPopups[0]);
+            ZUIMgr.CurActivePopup.GetComponent<MessagePopup>().SetText(msg);
+        }
+
+        void ChangeToPage( Menu page )
+        {
+            if (CheckNeedChangePage(page.gameObject))
+            {
+                ZUIMgr.OpenMenu(page);
+                currentPage = page.gameObject;
+            }
+        }
+
+        bool CheckNeedChangePage(GameObject page)
+        {
+            return currentPage != page;
         }
 
         void CreatePageAndCloseOld(string pageName, GameObject page)

@@ -23,23 +23,17 @@ namespace GameView
 
         public IEnumerator ChangePage(Page page, Action<Exception> callback)
         {
-            
             switch (page)
             {
                 case Page.Title:
-                    yield return view.ChangeToPage(PrefabPath.Title, (GameObject obj)=>
-                    {
-                        callback(null);
-                    });
+                    view.OpenTitlePage();
                     break;
                 case Page.Game:
-                    yield return view.ChangeToPage(PrefabPath.Game, (GameObject obj) =>
-                    {
-                        view.SetGamePageTile(model);
-                        callback(null);
-                    });
+                    view.OpenGamePlayPage();
+                    view.SetGamePageTile();
                     break;
             }
+            yield return null;
         }
 
         public IEnumerator ShowInfo(Info page, Action<Exception> callback)
@@ -66,18 +60,9 @@ namespace GameView
 				throw new NotImplementedException();
 			case Info.Event:
 				{
-					var result = model.MoveResult;
-					var events = result.events;
-					foreach (var e in events) {
-						Debug.Log (e.description);
-						if (e.description == Description.EventLucklyFind) {
-							var itemPrototype = int.Parse (e.values.Get ("itemPrototype"));
-							var count = int.Parse (e.values.Get ("count"));
-							Debug.Log ("獲得item:"+itemPrototype+" 數量:"+count);
-						}
-					}
+                        view.ProcessEvent();
 				}
-				throw new NotImplementedException();
+                    break;
 			default:
 				throw new NotImplementedException();
 			}
