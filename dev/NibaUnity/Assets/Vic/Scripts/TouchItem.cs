@@ -12,14 +12,14 @@ namespace GameView
             throw new NotImplementedException();
         }
 
-        public override void SetType(MapObject mapObject, IModelGetter model)
+        public override void SetType()
         {
             throw new NotImplementedException();
         }
 
         void OnMouseUp()
         {
-            View.OnTouchItem(this);
+            View.Instance.OnTouchItem(this);
         }
     }
 }
