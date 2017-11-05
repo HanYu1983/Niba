@@ -55,57 +55,6 @@ namespace GameView
         
         //========================= 游戲頁面的方法 ==============================
 
-        /// <summary>
-        /// 取出實例物件，會異步加載
-        /// </summary>
-        /// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
-        /// <param name="parent">要取出物件的父親</param>
-        /// <param name="callback">加載完成的事件</param>
-        public IEnumerator GetInstanceByPath(string path, GameObject parent, Action<GameObject> callback)
-        {
-            yield return GetPrefabByPath(path, (GameObject prefab) => {
-                GameObject obj = Instantiate(prefab);
-                obj.SetActive(true);
-                obj.transform.SetParent(parent.transform);
-                obj.GetComponent<RectTransform>().localPosition = new Vector3();
-                obj.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-                callback(obj);
-            });
-        }
-
-        /// <summary>
-        /// 取出prefab，會異步加載
-        /// </summary>
-        /// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
-        /// <param name="callback">加載完成的事件</param>
-        public IEnumerator GetPrefabByPath(string path, Action<GameObject> callback)
-        {
-            if (pagePool.ContainsKey(path))
-            {
-                callback(pagePool[path]);
-                yield return null;
-            }
-            else
-            {
-                yield return LoadPrefab(path, (GameObject asset) => {
-                    callback(pagePool[path]);
-                });
-            }
-        }
-
-
-        /// <summary>
-        /// 切換頁面，這些頁面會共用同一個Layer
-        /// </summary>
-        /// <param name="pageName">Prefab路徑，可以從PrefabPath.cs找到</param>
-        public IEnumerator ChangeToPage(string pageName, Action<GameObject> callback)
-        {
-            yield return GetInstanceByPath(pageName, MainLayer, (obj) => {
-                CreatePageAndCloseOld(pageName, obj);
-                callback(obj);
-            });
-        }
-
         public void OpenTitlePage()
         {
             ChangeToPage(ZUIMgr.AllMenus[0]);
@@ -175,6 +124,57 @@ namespace GameView
                 DestroyObject(currentPage);
             }
             currentPage = page;
+        }
+
+        /// <summary>
+        /// 取出實例物件，會異步加載
+        /// </summary>
+        /// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
+        /// <param name="parent">要取出物件的父親</param>
+        /// <param name="callback">加載完成的事件</param>
+        public IEnumerator GetInstanceByPath(string path, GameObject parent, Action<GameObject> callback)
+        {
+            yield return GetPrefabByPath(path, (GameObject prefab) => {
+                GameObject obj = Instantiate(prefab);
+                obj.SetActive(true);
+                obj.transform.SetParent(parent.transform);
+                obj.GetComponent<RectTransform>().localPosition = new Vector3();
+                obj.GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
+                callback(obj);
+            });
+        }
+
+        /// <summary>
+        /// 取出prefab，會異步加載
+        /// </summary>
+        /// <param name="path">Prefab路徑，可以從PrefabPath.cs找到</param>
+        /// <param name="callback">加載完成的事件</param>
+        public IEnumerator GetPrefabByPath(string path, Action<GameObject> callback)
+        {
+            if (pagePool.ContainsKey(path))
+            {
+                callback(pagePool[path]);
+                yield return null;
+            }
+            else
+            {
+                yield return LoadPrefab(path, (GameObject asset) => {
+                    callback(pagePool[path]);
+                });
+            }
+        }
+
+
+        /// <summary>
+        /// 切換頁面，這些頁面會共用同一個Layer
+        /// </summary>
+        /// <param name="pageName">Prefab路徑，可以從PrefabPath.cs找到</param>
+        public IEnumerator ChangeToPage(string pageName, Action<GameObject> callback)
+        {
+            yield return GetInstanceByPath(pageName, MainLayer, (obj) => {
+                CreatePageAndCloseOld(pageName, obj);
+                callback(obj);
+            });
         }
 
         IEnumerator LoadPrefab(string path, Action<GameObject> callback)
