@@ -43,6 +43,42 @@ namespace Model
 			yield return TestShowInfo (Model, View);
 		}
 
+		static IEnumerator TestInteraction(IModel model, IView view){
+			UnityEngine.Random.InitState (1);
+
+			Exception e = null;
+			yield return model.LoadMap (MapType.Unknown, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return view.ChangePage (Page.Game, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			view.ShowInfo (Info.Work, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+
+			model.MoveRight ();
+			model.ClearMoveResult ();
+
+			var works = model.Works;
+			var firstWork = works.First ();
+
+			model.StartWork (firstWork);
+			var playerInteraction = model.MakeInteraction (firstWork);
+			var inters = model.Interactions;
+
+
+		}
+
 		static IEnumerator TestShowInfo(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
 
@@ -82,9 +118,18 @@ namespace Model
 					if (e != null) {
 						throw e;
 					}
+					yield return new WaitForSeconds (2f);
 				}
 			}
 			model.ClearMoveResult();
+
+			yield return view.ShowInfo (Info.Work, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
 		}
 
 		static IEnumerator TestMap(IModel model, IView view){

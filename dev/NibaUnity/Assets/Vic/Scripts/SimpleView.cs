@@ -53,14 +53,25 @@ namespace GameView
 							var mapObjectId = int.Parse (work.values.Get ("mapObjectId"));
 							var mapObject = model.MapObjects [mapObjectId];
 							var mapObjectInfo = model.ResourceInfos [mapObject.infoKey];
-							Debug.Log ("采集任務，目標為:"+mapObjectInfo.type);
+							var config = ConfigResource.Get (mapObjectInfo.type);
+							Debug.Log ("采集任務，目標為:"+config.Name);
+						}
+
+						if (work.description == Description.WorkAttack) {
+							var mapObjectId = int.Parse (work.values.Get ("mapObjectId"));
+							var mapObject = model.MapObjects [mapObjectId];
+							var mapObjectInfo = model.MonsterInfos [mapObject.infoKey];
+							var config = ConfigMonster.Get (mapObjectInfo.type);
+							Debug.Log ("攻擊任務，目標為:"+config.Name);
 						}
 					}
+					callback (null);
 				}
 				throw new NotImplementedException();
 			case Info.Event:
 				{
                         view.ProcessEvent();
+					callback (null);
 				}
                     break;
 			default:

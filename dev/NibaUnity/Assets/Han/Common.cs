@@ -93,6 +93,9 @@ namespace Common
 				return DateTime.Now.Ticks < workFinishedTime;
 			}
 		}
+		public void ClearWork(){
+			workFinishedTime = 0;
+		}
 	}
 
 	[Serializable]
@@ -104,9 +107,17 @@ namespace Common
 		public const string WorkAttack = "[work]attack {mapObjectId}";
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
+		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
+
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
+	}
+
+	public struct Interaction{
+		public Description description;
+		public int priority;
+		public static Interaction Empty;
 	}
 
 	public struct MoveResult{
@@ -221,6 +232,8 @@ namespace Common
 		/// </summary>
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
+		IEnumerable<Interaction> Interactions{ get; }
+		Interaction MakeInteraction (Description work);
 
 		List<Item> StorageInMap{ get; }
 	}
@@ -256,6 +269,7 @@ namespace Common
 		/// 清除移動結果的暫存
 		/// </summary>
 		void ClearMoveResult();
+
 		void StartWork (Description work);
 		void CancelWork ();
 		void ApplyWork();

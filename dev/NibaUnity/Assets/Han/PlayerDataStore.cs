@@ -172,30 +172,7 @@ namespace Model
 		}
 		#endregion
 
-		#region works
-		public void StartWork(PlayerDataStore player, Description work){
-			if (player.playerInMap.IsWorking) {
-				throw new MessageException ("目前有工作在身:"+work.description);
-			}
-			player.playerInMap.currentWork = work;
-			player.playerInMap.workFinishedTime = DateTime.Now.Add (TimeSpan.FromSeconds (5)).Ticks;
-		}
-
-		public void CancelWork(PlayerDataStore player){
-			if (player.playerInMap.IsWorking == false) {
-				Debug.LogWarning ("沒有工作，不必取消");
-				return;
-			}
-			player.playerInMap.workFinishedTime = DateTime.Now.Ticks;
-		}
-
-		public List<Description> ApplyWork(PlayerDataStore player){
-			if (player.playerInMap.IsWorking == false) {
-				throw new MessageException ("沒有工作，不能應用");
-			}
-			player.playerInMap.workFinishedTime = 0;
-
-			var work = player.playerInMap.currentWork;
+		public IEnumerable<Description> ProcessWork(PlayerDataStore player, Description work){
 			switch (work.description) {
 			case Description.WorkCollectResource:
 				{
@@ -211,7 +188,88 @@ namespace Model
 				}
 				break;
 			}
-			return null;
+			return new List<Description>();
+		}
+
+		#region interaction
+		// 應用所有互動並回傳結果
+		public IEnumerable<Description> ApplyInteraction(PlayerDataStore player, IEnumerable<Interaction> interations){
+			var sorted = interations.OrderByDescending (curr => {
+				return curr.priority;
+			});
+			return sorted.SelectMany (work => { return ProcessWork (player, work.description);}).ToList(); // 呼叫ToList強迫墮性序列立即求值
+		}
+
+		// 玩家選擇一個工作後呼叫這個將選擇的工作轉為互動
+		// 當中會計算這個互動的優先權
+		public Interaction MakeInteraction(PlayerDataStore player, Description work){
+			var ret = Interaction.Empty;
+			ret.description = work;
+			ret.priority = 1;
+			return ret;
+		}
+
+		// 場地與玩家互動列表
+		// 玩家每執行一個互動前都要呼叫這個方法
+		public IEnumerable<Interaction> GetInteraction(PlayerDataStore player){
+			return FindObjects (player.playerInMap.position).Aggregate (
+				new List<Interaction> (),
+				(actions, currItem) => {
+					switch(currItem.type){
+					case MapObjectType.Monster:
+						{
+							var action = Description.Empty;
+							action.description = Description.EventMonsterAttackYou;
+							action.values = new NameValueCollection();
+							action.values.Add("mapObjectId", currItem.key+"");
+
+							var ret = Interaction.Empty;
+							ret.description = action;
+							ret.priority = 0;
+							actions.Add(ret);
+						}
+						break;
+					}
+					return actions;
+				}
+			);
+		}
+		#endregion
+
+
+		#region works
+		public void StartWork(PlayerDataStore player, Description work){
+			if (player.playerInMap.IsWorking) {
+				throw new MessageException ("目前有工作在身:"+work.description);
+			}
+			player.playerInMap.currentWork = work;
+			player.playerInMap.workFinishedTime = DateTime.Now.Add (TimeSpan.FromSeconds (5)).Ticks;
+		}
+
+		public void CancelWork(PlayerDataStore player){
+			if (player.playerInMap.IsWorking == false) {
+				Debug.LogWarning ("沒有工作，不必取消");
+				return;
+			}
+			player.playerInMap.ClearWork ();
+		}
+
+		public IEnumerable<Description> ApplyWork(PlayerDataStore player){
+			if (player.playerInMap.IsWorking == false) {
+				throw new MessageException ("沒有工作，不能應用");
+			}
+			player.playerInMap.ClearWork ();
+
+			var work = player.playerInMap.currentWork;
+			// 將工作轉為互動
+			var interaction = MakeInteraction (player, work);
+			// 取得場景互動
+			var envirInteraction = GetInteraction (player);
+			// 匯總所有互動
+			var allInter = envirInteraction.Concat (Enumerable.Repeat (interaction, 1));
+			// 依優先權處理互動
+			return ApplyInteraction (player, allInter);
+			//return ProcessWork (player, work);
 		}
 
 		public IEnumerable<Description> GetWorks(PlayerDataStore player){
@@ -243,6 +301,7 @@ namespace Model
 			);
 		}
 		#endregion
+
 
 		#region store
 		public string GetMemonto(){
