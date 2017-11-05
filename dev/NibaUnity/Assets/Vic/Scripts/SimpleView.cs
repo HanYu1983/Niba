@@ -55,10 +55,43 @@ namespace GameView
                         view.ProcessEvent(callback);
                     }
                     break;
+			case Info.ItemInMap:
+				{
+					var items = model.StorageInMap;
+					foreach (var item in items) {
+						var config = ConfigItem.Get (item.prototype);
+						var itemName = config.Name;
+						var count = item.count;
+						Debug.Log (itemName + "/" + count);
+					}
+				}
+				throw new NotImplementedException();
                 default:
                     throw new NotImplementedException();
             }
         }
+
+		public void HideInfo(Info page)
+		{
+			switch (page)
+			{
+			case Info.Work:
+				{
+					
+				}
+				throw new NotImplementedException();
+			case Info.Event:
+				{
+					
+				}
+				throw new NotImplementedException();
+			case Info.ItemInMap:
+				{
+					
+				}
+				throw new NotImplementedException();
+			}
+		}
 
         IEnumerator UpdateMap(Action<Exception> callback)
         {

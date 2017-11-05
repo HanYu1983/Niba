@@ -68,15 +68,6 @@ namespace Model
 
 			model.MoveRight ();
 			model.ClearMoveResult ();
-
-			var works = model.Works;
-			var firstWork = works.First ();
-
-			model.StartWork (firstWork);
-			var playerInteraction = model.MakeInteraction (firstWork);
-			var inters = model.Interactions;
-
-
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){
@@ -119,6 +110,7 @@ namespace Model
 						throw e;
 					}
 					yield return new WaitForSeconds (2f);
+					view.HideInfo (Info.Event);
 				}
 			}
 			model.ClearMoveResult();
@@ -130,6 +122,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
+			view.HideInfo (Info.Work);
 		}
 
 		static IEnumerator TestMap(IModel model, IView view){
@@ -221,6 +214,14 @@ namespace Model
 						foreach (var item in model.StorageInMap) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
+						yield return view.ShowInfo (Info.ItemInMap, e2 => {
+							e = e2;
+						});
+						if (e != null) {
+							throw e;
+						}
+						yield return new WaitForSeconds (2);
+						view.HideInfo(Info.Map);
 					}
 					break;
 				case Description.WorkAttack:

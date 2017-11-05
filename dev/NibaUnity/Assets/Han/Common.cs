@@ -160,7 +160,7 @@ namespace Common
 	}
 
 	public enum Info{
-		Unknown, Event, Work, Map
+		Unknown, Event, Work, Map, ItemInMap
 	}
 
 	public class MessageException : Exception{
@@ -179,6 +179,7 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
+		void HideInfo(Info page);
 	}
 
 	public interface IModelGetter{
@@ -232,10 +233,7 @@ namespace Common
 		/// </summary>
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
-		IEnumerable<Interaction> Interactions{ get; }
-		Interaction MakeInteraction (Description work);
-
-		List<Item> StorageInMap{ get; }
+		IEnumerable<Item> StorageInMap{ get; }
 	}
 
 	public interface IModel : IModelGetter{

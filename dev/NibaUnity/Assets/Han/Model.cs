@@ -38,11 +38,7 @@ namespace Model
 		}
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
-		public IEnumerable<Interaction> Interactions{ get{ return mapData.GetInteraction (playerData); }}
-		public Interaction MakeInteraction (Description work){
-			return mapData.MakeInteraction (playerData, work);
-		}
-		public List<Item> StorageInMap{ get { return playerData.storageInMap; }  }
+		public IEnumerable<Item> StorageInMap{ get { return playerData.storageInMap; }  }
 
 		public void StartWork (Description work){
 			mapData.StartWork (playerData, work);
