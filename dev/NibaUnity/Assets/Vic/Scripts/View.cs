@@ -45,8 +45,12 @@ namespace GameView
                 print(obj.type);
             }
             ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
-            //還要加偏移才行
-            print(clickPos);
+        }
+
+        public void OnWorkItemClickDo(WorkItem workItem)
+        {
+            Common.Common.Notify(UIEventName.GamePage_WorkItem_BtnDo_Click, workItem.WorkModel);
+            print("OnWorkItemClickDo");
         }
         
         //========================= 游戲頁面的方法 ==============================
@@ -112,7 +116,13 @@ namespace GameView
             ChangeToPage(ZUIMgr.AllMenus[1]);
         }
 
-        public void ProcessEvent()
+        public void ProcessWork(Action<Exception> callback)
+        {
+            OpenWorkSideMenu();
+            callback(null);
+        }
+
+        public void ProcessEvent(Action<Exception> callback)
         {
             var result = Model.MoveResult;
             var events = result.events;
@@ -129,12 +139,19 @@ namespace GameView
                 }
             }
             OpenMessagePopup(showstr);
+            callback(null);
         }
 
         public void OpenMessagePopup(string msg)
         {
             ZUIMgr.OpenPopup(ZUIMgr.AllPopups[0]);
             ZUIMgr.CurActivePopup.GetComponent<MessagePopup>().SetText(msg);
+        }
+
+        public void OpenWorkSideMenu()
+        {
+            ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[1]);
+            ZUIMgr.CurActiveSideMenu.GetComponent<WorkPanel>().UpdateContent();
         }
 
         void ChangeToPage( Menu page )

@@ -11,5 +11,6 @@ namespace GameView
         public const string GamePage_btnMove_right = "GamePage_btnMove_right";
         public const string GamePage_btnMove_down = "GamePage_btnMove_down";
         public const string TitlePage_btnStart_click = "TitlePage_btnStart_click";
+        public const string GamePage_WorkItem_BtnDo_Click = "GamePage_WorkItem_BtnDo_Click";
     }
 }
