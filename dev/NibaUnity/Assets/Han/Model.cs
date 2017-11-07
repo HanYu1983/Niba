@@ -85,6 +85,19 @@ namespace Model
 			hasMoveResult = false;
 		}
 
+		public void AddItemToStorageInMap(Item item){
+			playerData.AddItem (item);
+			RequestSavePlayer ();
+		}
+
+		public bool IsCanFusionInMap (string prototype){
+			return playerData.IsCanFusionInMap (prototype);
+		}
+
+		public void FusionInMap (string prototype){
+			playerData.FusionInMap (prototype);
+		}
+
 		void Move(Position position){
 			if (hasMoveResult) {
 				throw new UnityException ("必須先處理之前的move result並且呼叫ClearMoveResult");

@@ -182,7 +182,7 @@ namespace Model
 					mapObjects [mapObjectId] = obj;
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
-					foreach (var item in ParseItemFromResource(config)) {
+					foreach (var item in Helper.ParseItemFromResource(config)) {
 						player.AddItem (item);
 					}
 				}
@@ -313,36 +313,7 @@ namespace Model
 		}
 		#endregion
 
-		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
-			var hasItem = string.IsNullOrEmpty (res.Item) == false;
-			if (hasItem == false) {
-				return new List<Item> ();
-			}
-			Func<string, Item> parseOne = str => {
-				var prototype = str;
-				var count = 1;
-				var hasCount = str.IndexOf ("_") != -1;
-				if (hasCount) {
-					var info = str.Split (new char[]{ '_' }, StringSplitOptions.None);
-					prototype = info[0];
-					try{
-						count = int.Parse (info [1]);
-					}catch(Exception){
-						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
-					}
-				}
-				var item = Item.Empty;
-				item.prototype = prototype;
-				item.count = count;
-				return item;
-			};
-			var hasMulti = res.Item.IndexOf (",") != -1;
-			if (hasMulti) {
-				var strs = res.Item.Split (new char[]{ ',' }, StringSplitOptions.None);
-				return strs.Select (parseOne);
-			}
-			return Enumerable.Repeat (parseOne (res.Item), 1);
-		}
+
 	}
 
 	[Serializable]
@@ -395,54 +366,27 @@ namespace Model
 			if (storageInMap == null) {
 				storageInMap = new List<Item> ();
 			}
-			var config = ConfigItem.Get (item.prototype);
-			var maxCount = config.MaxCount;
-			var shouldArrange = true;
-			for (var i = 0; i < storageInMap.Count; ++i) {
-				var adjItem = storageInMap [i];
-				if (adjItem.prototype != item.prototype) {
-					continue;
-				}
-				if (adjItem.count + item.count > maxCount) {
-					continue;
-				}
-				adjItem.count += item.count;
-				storageInMap [i] = adjItem;
-				shouldArrange = false;
-				break;
-			}
-			if (shouldArrange == false) {
-				return;
-			}
-			storageInMap.Add (item);
-			// 計算同一種類的道具總數
-			var sumOfCount = storageInMap.Where (obj => {
-				return obj.prototype == item.prototype;
-			}).Aggregate (0, (sum, obj) => {
-				return sum + obj.count;
+			storageInMap = Helper.AddItem (storageInMap, item);
+		}
+		#endregion
+
+		#region fusion
+		public void FusionInMap(string prototype){
+			var requires = Helper.ParseItem (ConfigItem.Get (prototype).FusionRequire);
+			var formatForSubstrct = requires.Select (item => {
+				item.count = -item.count;
+				return item;
 			});
-			// 一個道具在一格中的最大數量限制
-			var maxOfItem = maxCount;
-			// 依最大限制重新計算分組
-			var num = sumOfCount / maxOfItem;
-			// 最後一個剩餘
-			var remain = sumOfCount % maxOfItem;
-			// 將拿來計算的道具抽出來
-			var itemExcludeAddedItemPrototype = storageInMap.Where (obj => {
-				return obj.prototype != item.prototype;
-			});
-			// 重建要新加入的道具
-			var originItem = item;
-			originItem.count = maxOfItem;
-			var itemsShouldReAdd = Enumerable.Repeat (originItem, num);
-			if (remain > 0) {
-				originItem.count = remain;
-				itemsShouldReAdd = itemsShouldReAdd.Concat (Enumerable.Repeat (originItem, 1));
-			}
-			// 加回去
-			var newItems = itemExcludeAddedItemPrototype.Concat (itemsShouldReAdd);
-			// 替換
-			storageInMap = newItems.ToList();
+			storageInMap = Enumerable.Aggregate (formatForSubstrct, storageInMap, Helper.AddItem);
+
+			var fusionItem = Item.Empty;
+			fusionItem.prototype = prototype;
+			fusionItem.count = 1;
+			storageInMap = Helper.AddItem (storageInMap, fusionItem);
+		}
+
+		public bool IsCanFusionInMap(string prototype){
+			return Helper.IsCanFusion (prototype, storageInMap);
 		}
 		#endregion
 
@@ -455,5 +399,121 @@ namespace Model
 			return JsonUtility.FromJson<PlayerDataStore>(json);
 		}
 		#endregion
+	}
+
+	public class Helper{
+
+		public static IEnumerable<Item> ParseItem(string itemString){
+			Func<string, Item> parseOne = str => {
+				var prototype = str;
+				var count = 1;
+				var hasCount = str.IndexOf ("_") != -1;
+				if (hasCount) {
+					var info = str.Split (new char[]{ '_' }, StringSplitOptions.None);
+					prototype = info[0];
+					try{
+						count = int.Parse (info [1]);
+					}catch(Exception){
+						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
+					}
+				}
+				var item = Item.Empty;
+				item.prototype = prototype;
+				item.count = count;
+				return item;
+			};
+			var hasMulti = itemString.IndexOf (",") != -1;
+			if (hasMulti) {
+				var strs = itemString.Split (new char[]{ ',' }, StringSplitOptions.None);
+				return strs.Select (parseOne);
+			}
+			return Enumerable.Repeat (parseOne (itemString), 1);
+		}
+
+		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
+			var hasItem = string.IsNullOrEmpty (res.Item) == false;
+			if (hasItem == false) {
+				return new List<Item> ();
+			}
+			return ParseItem (res.Item);
+		}
+
+		public static bool IsCanFusion(string prototype, IEnumerable<Item> items){
+			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
+			foreach (var requireItem in requires) {
+				var search = items.Where (it => {
+					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
+				});
+				var isNotFound = search.Count () == 0;
+				if (isNotFound) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		public static List<Item> AddItem(List<Item> input, Item item){
+			var container = new List<Item> (input);
+			var shouldArrange = true;
+			var config = ConfigItem.Get (item.prototype);
+			var maxCount = config.MaxCount;
+			if (item.count < 0) {
+				// 處理減
+				var allCount = input.Sum (it => {
+					return it.prototype == item.prototype ? it.count : 0;
+				});
+				var isEnougth = allCount + item.count >= 0;
+				if (isEnougth == false) {
+					throw new MessageException ("道具數量不足");
+				}
+				shouldArrange = true;
+			} else {
+				// 處理加
+				for (var i = 0; i < container.Count; ++i) {
+					var adjItem = container [i];
+					if (adjItem.prototype != item.prototype) {
+						continue;
+					}
+					if (adjItem.count + item.count > maxCount) {
+						continue;
+					}
+					adjItem.count += item.count;
+					container [i] = adjItem;
+					shouldArrange = false;
+					break;
+				}
+			}
+			if (shouldArrange == false) {
+				return container;
+			}
+			container.Add (item);
+			// 計算同一種類的道具總數
+			var sumOfCount = container.Where (obj => {
+				return obj.prototype == item.prototype;
+			}).Aggregate (0, (sum, obj) => {
+				return sum + obj.count;
+			});
+			// 一個道具在一格中的最大數量限制
+			var maxOfItem = maxCount;
+			// 依最大限制重新計算分組
+			var num = sumOfCount / maxOfItem;
+			// 最後一個剩餘
+			var remain = sumOfCount % maxOfItem;
+			// 將拿來計算的道具抽出來
+			var itemExcludeAddedItemPrototype = container.Where (obj => {
+				return obj.prototype != item.prototype;
+			});
+			// 重建要新加入的道具
+			var originItem = item;
+			originItem.count = maxOfItem;
+			var itemsShouldReAdd = Enumerable.Repeat (originItem, num);
+			if (remain > 0) {
+				originItem.count = remain;
+				itemsShouldReAdd = itemsShouldReAdd.Concat (Enumerable.Repeat (originItem, 1));
+			}
+			// 加回去
+			var newItems = itemExcludeAddedItemPrototype.Concat (itemsShouldReAdd);
+			return newItems.ToList();
+		}
 	}
 }

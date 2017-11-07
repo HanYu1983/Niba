@@ -149,10 +149,37 @@ namespace Common
 		public static MoveResult Empty;
 	}
 
-	public struct Item{
+	public struct Item : IEquatable<Item>{
 		public string prototype;
 		public int count;
 		public static Item Empty;
+		public bool Equals(Item other){
+			return prototype == other.prototype && count == other.count;
+		}
+		/*
+		// 向下相容
+		public override bool Equals(object obj){
+			if (!(obj is Item)){
+				return false;
+			}
+			Item other = (Item) obj;
+			return this.Equals(other);
+		}
+		// 必須同Equals(object)一同實做
+		public override int GetHashCode(){
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 23 + prototype.GetHashCode();
+				hash = hash * 23 + count.GetHashCode();
+				return hash;
+			}
+		}
+		*/
+		public override string ToString(){
+			var config = ConfigItem.Get (prototype);
+			return string.Format ("({0}, {1})", config.Name, count);
+		}
 	}
 
 	public enum Page{
@@ -234,6 +261,8 @@ namespace Common
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
 		IEnumerable<Item> StorageInMap{ get; }
+
+		bool IsCanFusionInMap (string prototype);
 	}
 
 	public interface IModel : IModelGetter{
@@ -271,6 +300,9 @@ namespace Common
 		void StartWork (Description work);
 		void CancelWork ();
 		void ApplyWork();
+
+		void AddItemToStorageInMap(Item item);
+		void FusionInMap (string prototype);
 	}
 
 	public class Common

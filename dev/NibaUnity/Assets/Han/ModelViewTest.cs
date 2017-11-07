@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
 using GameView;
@@ -39,11 +40,12 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestFusion (Model, View);
 			yield return TestMap (Model, View);
 			yield return TestShowInfo (Model, View);
 		}
 
-		static IEnumerator TestInteraction(IModel model, IView view){
+		static IEnumerator TestFusion(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
@@ -65,9 +67,54 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			var item = Common.Item.Empty;
+			item.prototype = ConfigItem.ID_feather;
+			item.count = 5;
+			model.AddItemToStorageInMap (item);
 
-			model.MoveRight ();
-			model.ClearMoveResult ();
+			item.prototype = ConfigItem.ID_wood;
+			item.count = 5;
+			model.AddItemToStorageInMap (item);
+
+			var canFusionArrows = model.IsCanFusionInMap (ConfigItem.ID_arrows);
+			if (canFusionArrows == true) {
+				throw new Exception ("少一個項目不能合成箭矢");
+			}
+
+			item.prototype = ConfigItem.ID_gravel;
+			item.count = 5;
+			model.AddItemToStorageInMap (item);
+
+			foreach(var i in model.StorageInMap){
+				Debug.Log (i);
+			}
+			yield return view.ShowInfo (Info.ItemInMap, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
+			view.HideInfo (Info.ItemInMap);
+
+			canFusionArrows = model.IsCanFusionInMap (ConfigItem.ID_arrows);
+			if (canFusionArrows == false) {
+				throw new Exception ("必須能合成箭矢");
+			}
+
+			model.FusionInMap (ConfigItem.ID_arrows);
+			model.FusionInMap (ConfigItem.ID_arrows);
+			foreach(var i in model.StorageInMap){
+				Debug.Log (i);
+			}
+			yield return view.ShowInfo (Info.ItemInMap, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
+			view.HideInfo (Info.ItemInMap);
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){

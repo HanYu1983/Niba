@@ -4,4 +4,4 @@ wood	木		resource	10
 gravel	礫石		resource	10		
 feather	羽毛		resource	99		
 bred	木板		resource	10	wood_3	
-arrows	箭矢		resource	1	grass,wood,gravel	
+arrows	箭矢		resource	1	feather,wood,gravel	
