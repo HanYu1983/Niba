@@ -18,7 +18,7 @@ namespace Model
 
 		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
 			yield return null;
-			mapData.GenMap (type, 10, 10);
+			mapData.GenMap (type, 10, 10, playerData);
 			playerData.ClearVisibleMapObjects ();
 			playerData.playerInMap.position = Position.Zero;
 			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);

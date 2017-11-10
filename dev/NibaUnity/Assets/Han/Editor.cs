@@ -15,9 +15,12 @@ namespace Model
 				"Name", "string",
 				"Description", "string", 
 				"Item","string",
-				"Atk","int",
-				"Def","int",
-				"Spd","int",
+				"Str", "int",
+				"Vit", "int",
+				"Agi", "int",
+				"Dex", "int", 
+				"Int","int",
+				"Luc","int",
 			}, "CSV/gameData - monster.tsv");
 
 			GenCode ("ConfigResource", null, new string[]{
@@ -36,6 +39,16 @@ namespace Model
 				"FusionRequire","string",
 				"SkillRequire","string",
 			}, "CSV/gameData - item.tsv");
+
+			GenCode ("ConfigAbility", null, new string[]{
+				"ID", "string",
+				"Str", "float",
+				"Vit", "float",
+				"Agi", "float",
+				"Dex", "float", 
+				"Int","float",
+				"Luc","float",
+			}, "CSV/gameData - ability.tsv");
 
 			AssetDatabase.Refresh();
 		}

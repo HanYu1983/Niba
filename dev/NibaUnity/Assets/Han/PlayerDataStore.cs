@@ -17,7 +17,7 @@ namespace Model
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
 		public int width, height;
-		public void GenMap(MapType type, int w, int h){
+		public void GenMap(MapType type, int w, int h, PlayerDataStore player){
 			ClearMap ();
 
 			width = w;
@@ -50,7 +50,7 @@ namespace Model
 						// gen monster after assign item
 						if (UnityEngine.Random.Range (0, 100) < 25) {
 							if (obj.type == MapObjectType.Resource) {
-								var monsterKey = GenMonster (key, false);
+								var monsterKey = GenMonster (player, key, false);
 								var monster = mapObjects [monsterKey];
 								// change position
 								monster.position = pos;
@@ -97,7 +97,7 @@ namespace Model
 			mapObjects.Add (item);
 			return item.key;
 		}
-		public int GenMonster(int objKey, bool assignMonsterType, string monsterType = ""){
+		public int GenMonster(PlayerDataStore player, int objKey, bool assignMonsterType, string monsterType = ""){
 			var obj = mapObjects [objKey];
 			var resInfo = resourceInfo [obj.infoKey];
 			if (resInfo.type == "") {
@@ -106,17 +106,20 @@ namespace Model
 			var m1Key = GenObject (MapObjectType.Monster, null);
 			var m1Object = mapObjects [m1Key];
 			var m1Info = monsterInfo [m1Object.infoKey];
-			m1Info.habitats = resInfo.type;
 			if (assignMonsterType) {
 				m1Info.type = monsterType;
 			} else {
 				// TODO
 				m1Info.type = ConfigMonster.ID_snack;
 			}
+			var ability = BasicAbility.Get (m1Info).FightAbility;
+			m1Info.hp = (int)ability.hp;
+			m1Info.mp = (int)ability.mp;
 			// assign back
 			monsterInfo [m1Object.infoKey] = m1Info;
 			return m1Key;
 		}
+
 		public List<Item> Collect(PlayerDataStore player, int objKey){
 			var ret = new List<Item> ();
 			var obj = mapObjects [objKey];
@@ -173,6 +176,7 @@ namespace Model
 		#endregion
 
 		public IEnumerable<Description> ProcessWork(PlayerDataStore player, Description work){
+			var ret = new List<Description>();
 			switch (work.description) {
 			case Description.WorkCollectResource:
 				{
@@ -187,8 +191,31 @@ namespace Model
 					}
 				}
 				break;
+			case Description.WorkAttack:
+				{
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var damage = Helper.GetBasicDamage (player, this, mapObjectId);
+
+					var obj = mapObjects [mapObjectId];
+					var info = monsterInfo [obj.infoKey];
+					info.hp -= damage;
+					if (info.IsDied) {
+						obj.died = true;
+					}
+					// assign back
+					monsterInfo [obj.infoKey] = info;
+					mapObjects [mapObjectId] = obj;
+
+					var des = Description.Empty;
+					des.description = Description.InfoAttack;
+					des.values = new NameValueCollection ();
+					des.values.Set ("mapObjectId", mapObjectId+"");
+					des.values.Set ("damage", damage+"");
+					ret.Add (des);
+				}
+				break;
 			}
-			return new List<Description>();
+			return ret;
 		}
 
 		#region interaction
@@ -319,6 +346,8 @@ namespace Model
 	[Serializable]
 	public class PlayerDataStore
 	{
+		public BasicAbility basicAbility;
+
 		#region playerInMap
 		public MapPlayer playerInMap;
 		public void InitPlayerPosition(){
@@ -402,6 +431,13 @@ namespace Model
 	}
 
 	public class Helper{
+
+		public static int GetBasicDamage(PlayerDataStore player, MapDataStore map, int mapObjectId){
+			var a = player.basicAbility.FightAbility;
+			var monsterInfo = map.monsterInfo [map.mapObjects [mapObjectId].infoKey];
+			var b = BasicAbility.Get (monsterInfo).FightAbility;
+			return (int)(a.atk - b.def);
+		}
 
 		public static IEnumerable<Item> ParseItem(string itemString){
 			Func<string, Item> parseOne = str => {

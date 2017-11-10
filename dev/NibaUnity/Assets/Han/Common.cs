@@ -72,8 +72,8 @@ namespace Common
 	[Serializable]
 	public struct MonsterInfo {
 		public string type;
-		// 棲息地(ResourceInfo.type)
-		public string habitats;
+		public int hp, mp;
+		public bool IsDied{ get { return hp <= 0; } }
 		public static MonsterInfo Empty;
 	}
 
@@ -85,7 +85,7 @@ namespace Common
 	[Serializable]
 	public struct MapPlayer{
 		public Position position;
-		public int mapHp, hp;
+		public int hp, mp;
 		public Description currentWork;
 		public long workFinishedTime;
 		public bool IsWorking{
@@ -98,17 +98,12 @@ namespace Common
 		}
 	}
 
-	[Serializable]
-	public struct PlayerInformation{
-
-	}
-
 	public struct Description{
 		public const string WorkAttack = "[work]attack {mapObjectId}";
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
-
+		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}";
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
@@ -118,6 +113,143 @@ namespace Common
 		public Description description;
 		public int priority;
 		public static Interaction Empty;
+	}
+
+	public struct BasicAbility {
+		public int str, vit, agi, dex, Int, luc;
+
+		public BasicAbility Add(BasicAbility b){
+			var a = this;
+			a.str += b.str;
+			a.vit += b.vit;
+			a.agi += b.agi;
+			a.dex += b.dex;
+			a.Int += b.Int;
+			a.luc += b.luc;
+			return a;
+		}
+
+		public static BasicAbility Get(MonsterInfo info){
+			if (string.IsNullOrEmpty (info.type)) {
+				throw new Exception ("沒有指定type:"+info.type);
+			}
+			return Get (ConfigMonster.Get (info.type));
+		}
+
+		public static BasicAbility Get(ConfigMonster monster){
+			BasicAbility ret;
+			ret.str = monster.Str;
+			ret.vit = monster.Vit;
+			ret.agi = monster.Agi;
+			ret.dex = monster.Dex;
+			ret.Int = monster.Int;
+			ret.luc = monster.Luc;
+			return ret;
+		}
+
+		public FightAbility FightAbility{
+			get{
+				ConfigAbility config = null;
+				FightAbility ret;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_hp);
+				ret.hp = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_mp);
+				ret.mp = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_atk);
+				ret.atk = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_def);
+				ret.def = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_matk);
+				ret.matk = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_mdef);
+				ret.mdef = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_accuracy);
+				ret.accuracy = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_dodge);
+				ret.dodge = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+
+				config = ConfigAbility.Get (ConfigAbility.ID_critical);
+				ret.critical = str * config.Str + vit*config.Vit + agi*config.Agi + dex*config.Dex + Int*config.Int + luc*config.Luc;
+				return ret;
+			}
+		}
+	}
+
+	public struct FightAbility {
+		public float hp, mp, atk, def, matk, mdef, accuracy, dodge, critical;
+		/*public static FightAbility Get(BasicAbility basic){
+			ConfigAbility config = null;
+			FightAbility ret;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_hp);
+			ret.hp = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_mp);
+			ret.mp = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_atk);
+			ret.atk = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_def);
+			ret.def = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_matk);
+			ret.matk = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_mdef);
+			ret.mdef = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_accuracy);
+			ret.accuracy = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_dodge);
+			ret.dodge = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_critical);
+			ret.critical = basic.str * config.Str + basic.vit*config.Vit + basic.agi*config.Agi + basic.dex*config.Dex + basic.Int*config.Int + basic.luc*config.Luc;
+			return ret;
+		}
+
+		public static FightAbility Get(ConfigMonster basic){
+			ConfigAbility config = null;
+			FightAbility ret;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_hp);
+			ret.hp = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_mp);
+			ret.mp = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_atk);
+			ret.atk = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_def);
+			ret.def = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_matk);
+			ret.matk = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_mdef);
+			ret.mdef = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_accuracy);
+			ret.accuracy = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_dodge);
+			ret.dodge = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+
+			config = ConfigAbility.Get (ConfigAbility.ID_critical);
+			ret.critical = basic.Str * config.Str + basic.Vit*config.Vit + basic.Agi*config.Agi + basic.Dex*config.Dex + basic.Int*config.Int + basic.Luc*config.Luc;
+			return ret;
+		}*/
 	}
 
 	public struct MoveResult{
