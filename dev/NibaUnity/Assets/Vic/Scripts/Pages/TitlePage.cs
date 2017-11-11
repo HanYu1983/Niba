@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameView{
-	public class TitlePage : AbstractView {
+	public class TitlePage : MonoBehaviour {
 
 		public void OnBtnStartClick(){
             Common.Common.Notify(UIEventName.TitlePage_btnStart_click, PrefabPath.Game);

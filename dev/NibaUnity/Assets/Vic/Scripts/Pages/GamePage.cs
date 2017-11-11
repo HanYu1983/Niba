@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 namespace GameView{
-	public class GamePage : AbstractView {
+	public class GamePage : MonoBehaviour {
 
 		public ItemLayer TileLayer;
         public ItemLayer CreatureLayer;

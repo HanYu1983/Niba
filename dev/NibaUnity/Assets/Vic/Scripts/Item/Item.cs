@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Common;
 namespace GameView {
-    public class Item : AbstractView
+    public class Item : MonoBehaviour
     {
         private MapObject _Model;
         public MapObject Model

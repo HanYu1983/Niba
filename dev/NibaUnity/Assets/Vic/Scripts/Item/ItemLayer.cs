@@ -5,7 +5,7 @@ using Model;
 using Common;
 namespace GameView
 {
-    public class ItemLayer : AbstractView
+    public class ItemLayer : MonoBehaviour
     {
         public GameObject ItemPrefab;
         List<Item> AryItem = new List<Item>();
