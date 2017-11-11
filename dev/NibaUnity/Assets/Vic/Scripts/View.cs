@@ -36,20 +36,20 @@ namespace GameView
 
         public void OnTouchItem( TouchItem touchItem )
         {
-            GamePage page = CheckPage<GamePage>();
-            Position clickPos = touchItem.Position;
-            MapObject tile = page.TileLayer.GetItemByXY(clickPos.x, clickPos.y).Model;
-            IEnumerable<MapObject> objs = Model.MapObjectsAt(tile.position);
-            foreach(MapObject obj in objs)
-            {
-                print(obj.type);
-            }
-            ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
+            //GamePage page = CheckPage<GamePage>();
+            //Position clickPos = touchItem.Position;
+            //MapObject tile = page.TileLayer.GetItemByXY(clickPos.x, clickPos.y).Model;
+            //IEnumerable<MapObject> objs = Model.MapObjectsAt(tile.position);
+            //foreach(MapObject obj in objs)
+            //{
+            //    print(obj.type);
+            //}
+            //ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
         }
 
-        public void OnWorkItemClickDo(WorkItem workItem)
+        public void OnWorkItemClickDo(Description workModel)
         {
-            Common.Common.Notify(UIEventName.GamePage_WorkItem_BtnDo_Click, workItem.WorkModel);
+            Common.Common.Notify(UIEventName.GamePage_WorkItem_BtnDo_Click, workModel);
             print("OnWorkItemClickDo");
         }
         
@@ -91,6 +91,12 @@ namespace GameView
             callback(null);
         }
 
+        public void ShowBackpack()
+        {
+            ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
+            ZUIMgr.CurActiveSideMenu.GetComponent<BasicPanel>().UpdateContent();
+        }
+
         public void OpenMessagePopup(string msg)
         {
             ZUIMgr.OpenPopup(ZUIMgr.AllPopups[0]);
@@ -100,7 +106,7 @@ namespace GameView
         public void OpenWorkSideMenu()
         {
             ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[1]);
-            ZUIMgr.CurActiveSideMenu.GetComponent<WorkPanel>().UpdateContent();
+            ZUIMgr.CurActiveSideMenu.GetComponent<BasicPanel>().UpdateContent();
         }
 
         void ChangeToPage( Menu page )

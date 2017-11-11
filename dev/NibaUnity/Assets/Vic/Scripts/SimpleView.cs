@@ -57,15 +57,9 @@ namespace GameView
                     break;
 			case Info.ItemInMap:
 				{
-					var items = model.StorageInMap;
-					foreach (var item in items) {
-						var config = ConfigItem.Get (item.prototype);
-						var itemName = config.Name;
-						var count = item.count;
-						Debug.Log (itemName + "/" + count);
-					}
+                        view.ShowBackpack();
 				}
-				throw new NotImplementedException();
+                    break;
                 default:
                     throw new NotImplementedException();
             }

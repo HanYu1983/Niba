@@ -7,14 +7,9 @@ using System.Linq;
 
 namespace GameView
 {
-    public class WorkPanel : MonoBehaviour
+    public class WorkPanel : BasicPanel
     {
-        public ScrollRect SrollView;
-        public GameObject workItemPrefab;
-        
-        List<WorkItem> WorkItems = new List<WorkItem>();
-
-        public void UpdateContent()
+        override public void UpdateContent()
         {
             IModelGetter model = View.Instance.Model;
             var works = model.Works;
@@ -22,33 +17,38 @@ namespace GameView
             SetContentHeight(workcount);
             for (int i = 0; i < WorkItems.Count; ++i)
             {
-                WorkItem workitem = WorkItems[i];
+                WorkItem workitem = WorkItems[i].GetComponent<WorkItem>();
                 workitem.gameObject.SetActive(i < workcount);
                 if (i < workcount)
                 {
                     Description workModel = works.ElementAt(i);
+                    string describe = "";
+                    string doName = "";
+                    if (workModel.description == Description.WorkCollectResource)
+                    {
+                        var mapObjectId = int.Parse(workModel.values.Get("mapObjectId"));
+                        var mapObject = model.MapObjects[mapObjectId];
+                        var mapObjectInfo = model.ResourceInfos[mapObject.infoKey];
+                        var config = ConfigResource.Get(mapObjectInfo.type);
+                        describe += "采集[" + config.Name + "]";
+                        doName += "采集";
+                    }
+
+                    if (workModel.description == Description.WorkAttack)
+                    {
+                        var mapObjectId = int.Parse(workModel.values.Get("mapObjectId"));
+                        var mapObject = model.MapObjects[mapObjectId];
+                        var mapObjectInfo = model.MonsterInfos[mapObject.infoKey];
+                        var config = ConfigMonster.Get(mapObjectInfo.type);
+                        describe += "攻擊[" + config.Name + "]";
+                        doName += "攻擊";
+                    }
+                    workitem.Describe = describe;
+                    workitem.DoName = doName;
                     workitem.WorkModel = workModel;
                 }
             }
         }
-
-        void SetContentHeight( int workCount )
-        {
-            Vector2 size = SrollView.content.GetComponent<RectTransform>().sizeDelta;
-            size.y = workCount * 100;
-            SrollView.content.GetComponent<RectTransform>().sizeDelta = size;
-        }
-
-        void Start()
-        {
-            for(int i = 0; i < 10; ++i)
-            {
-                GameObject workitem = Instantiate(workItemPrefab);
-                workitem.transform.SetParent(SrollView.content.transform);
-                workitem.GetComponent<RectTransform>().localPosition = new Vector3();
-                workitem.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
-                WorkItems.Add(workitem.GetComponent<WorkItem>());
-            }
-        }
+        
     }
 }

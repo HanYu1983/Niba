@@ -244,7 +244,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 44366964}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 80.983505, z: 0}
+  m_LocalPosition: {x: 0, y: 84.95395, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 60149840}
@@ -310,7 +310,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 60149839}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: -120.649994, z: 0}
+  m_LocalPosition: {x: -10, y: -129.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 44366965}
@@ -4606,7 +4606,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 44366965}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.26811105
+  m_Size: 0.28699994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4937,7 +4937,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1543912553}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 300.7, y: 10, z: 0}
+  m_LocalPosition: {x: 309.2, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2036611182}
@@ -5506,8 +5506,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SrollView: {fileID: 1940002072}
-  workItemPrefab: {fileID: 1337562309477026, guid: 4591edc493a2f5d40836f7f4ee45a49a,
-    type: 2}
+  ItemPrefab: {fileID: 1337562309477026, guid: 4591edc493a2f5d40836f7f4ee45a49a, type: 2}
 --- !u!1 &1766279985
 GameObject:
   m_ObjectHideFlags: 0
@@ -5634,8 +5633,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1813646977}
   - component: {fileID: 1813646976}
+  - component: {fileID: 1813646978}
   m_Layer: 5
-  m_Name: StuffPanel
+  m_Name: BackpackPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5690,6 +5690,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -339}
   m_SizeDelta: {x: 640, y: 270}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1813646978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1813646975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 824ea2108f5485143953d19e8582fc07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SrollView: {fileID: 1040550805}
+  ItemPrefab: {fileID: 1675797455126836, guid: b836c2fb2b892624cb042eeb31445294, type: 2}
 --- !u!1 &1852177823
 GameObject:
   m_ObjectHideFlags: 0
