@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using Common;
+using System.Linq;
+
 namespace GameView
 {
     public class View : MonoBehaviour
@@ -71,21 +73,44 @@ namespace GameView
             callback(null);
         }
 
-        public void ProcessEvent(Action<Exception> callback)
+		public void ProcessEvent(IEnumerable<Description> events, Action<Exception> callback)
         {
-            var result = Model.MoveResult;
-            var events = result.events;
             string showstr = "";
             foreach (var e in events)
             {
                 Debug.Log(e.description);
-                if (e.description == Description.EventLucklyFind)
-                {
-                    var itemPrototype = e.values.Get("itemPrototype");
-                    var count = int.Parse(e.values.Get("count"));
-					var config = ConfigItem.Get (itemPrototype);
-					showstr += "獲得item:" + config.Name + " 數量:" + count + ".\n";
-                }
+				switch (e.description) {
+				case Description.EventLucklyFind:
+					{
+						var itemPrototype = e.values.Get("itemPrototype");
+						var count = int.Parse(e.values.Get("count"));
+						var config = ConfigItem.Get (itemPrototype);
+						showstr += "獲得item:" + config.Name + " 數量:" + count + ".\n";
+					}
+					break;
+				case Description.InfoAttack:
+					{
+						var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+						var mapObj = View.Instance.Model.MapObjects [mapObjectId];
+						var objInfo = View.Instance.Model.MonsterInfos [mapObj.infoKey];
+						var objCfg = ConfigMonster.Get (objInfo.type);
+						var damage = int.Parse (e.values.Get ("damage"));
+						showstr += string.Format ("你攻擊{0}造成{1}傷害\n", objCfg.Name, damage);
+					}
+					break;
+				case Description.InfoMonsterAttack:
+					{
+						var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+						var mapObj = View.Instance.Model.MapObjects [mapObjectId];
+						var objInfo = View.Instance.Model.MonsterInfos [mapObj.infoKey];
+						var objCfg = ConfigMonster.Get (objInfo.type);
+						var damage = int.Parse (e.values.Get ("damage"));
+						showstr += string.Format ("{0}對你造成{1}傷害\n", objCfg.Name, damage);
+					}
+					break;
+				default:
+					throw new NotImplementedException();	
+				}
             }
             OpenMessagePopup(showstr);
             callback(null);

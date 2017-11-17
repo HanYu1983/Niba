@@ -40,6 +40,10 @@ namespace Model
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
 		public IEnumerable<Item> StorageInMap{ get { return playerData.storageInMap; }  }
 
+
+		IEnumerable<Description> workResult;
+		public IEnumerable<Description> WorkResults{ get{ return workResult; } }
+
 		public void StartWork (Description work){
 			mapData.StartWork (playerData, work);
 		}
@@ -47,7 +51,7 @@ namespace Model
 			mapData.CancelWork (playerData);
 		}
 		public void ApplyWork(){
-			mapData.ApplyWork (playerData);
+			workResult = mapData.ApplyWork (playerData);
 		}
 
 		MoveResult tempMoveResult;
@@ -97,6 +101,8 @@ namespace Model
 		public void FusionInMap (string prototype){
 			playerData.FusionInMap (prototype);
 		}
+
+		public BasicAbility PlayerBasicAbility{ get { return playerData.basicAbility; } }
 
 		void Move(Position position){
 			if (hasMoveResult) {

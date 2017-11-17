@@ -40,14 +40,14 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestFight (Model, View);
 			yield return TestFusion (Model, View);
 			yield return TestMap (Model, View);
 			yield return TestShowInfo (Model, View);
 		}
 
-		static IEnumerator TestFusion(IModel model, IView view){
+		static IEnumerator TestFight(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
-
 			Exception e = null;
 			yield return model.LoadMap (MapType.Unknown, e2 => {
 				e = e2;
@@ -61,7 +61,67 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
-			view.ShowInfo (Info.Work, e2 => {
+			yield return view.ShowInfo (Info.Map, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			model.MoveRight ();
+			yield return view.ShowInfo (Info.Map, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return view.ShowInfo (Info.Work, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
+
+			var atkWork = model.Works.Where (w => {
+				return w.description == Description.WorkAttack;
+			}).FirstOrDefault ();
+			if(atkWork.Equals(Description.Empty)){
+				throw new Exception ("必須要有敵人可攻擊");
+			}
+			model.StartWork (atkWork);
+			model.ApplyWork ();
+
+			foreach (var result in model.WorkResults) {
+				Debug.Log (result.description);
+			}
+			yield return view.ShowInfo (Info.WorkResult, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
+			view.HideInfo (Info.WorkResult);
+
+			yield return view.ShowInfo (Info.Ability, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+		}
+
+		static IEnumerator TestFusion(IModel model, IView view){
+			UnityEngine.Random.InitState (1);
+
+			Exception e = null;
+			yield return model.LoadMap (MapType.Unknown, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -108,6 +168,15 @@ namespace Model
 			foreach(var i in model.StorageInMap){
 				Debug.Log (i);
 			}
+			var arrows = model.StorageInMap.Where(it=>{
+				return it.prototype == ConfigItem.ID_arrows;
+			}).FirstOrDefault();
+			if (arrows.Equals (Common.Item.Empty)) {
+				throw new Exception ("必須有箭矢");
+			}
+			if (arrows.count != 2) {
+				throw new Exception ("箭矢必須有2個");
+			}
 			yield return view.ShowInfo (Info.ItemInMap, e2 => {
 				e = e2;
 			});
@@ -140,6 +209,7 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			yield return new WaitForSeconds (2f);
 
 			model.MoveRight ();
 			var result = model.MoveResult;
@@ -159,6 +229,7 @@ namespace Model
 					}
 					yield return new WaitForSeconds (2f);
 					view.HideInfo (Info.Event);
+					yield return new WaitForSeconds (2f);
 				}
 			}
 			model.ClearMoveResult();
@@ -171,6 +242,14 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			view.HideInfo (Info.Work);
+			yield return new WaitForSeconds (2f);
+
+			yield return view.ShowInfo (Info.Ability, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
 		}
 
 		static IEnumerator TestMap(IModel model, IView view){

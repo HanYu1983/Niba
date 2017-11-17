@@ -104,6 +104,7 @@ namespace Common
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
 		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}";
+		public const string InfoMonsterAttack = "[info]{mapObjectId} attack you and deal damage {damage}";
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
@@ -111,7 +112,7 @@ namespace Common
 
 	public struct Interaction{
 		public Description description;
-		public int priority;
+		public float priority;
 		public static Interaction Empty;
 	}
 
@@ -127,6 +128,10 @@ namespace Common
 			a.Int += b.Int;
 			a.luc += b.luc;
 			return a;
+		}
+
+		public override string ToString(){
+			return string.Format ("str({0}) vit({1}) agi({2}) dex({3}) int({4}) luc({5})", str, vit, agi, dex, Int, luc);
 		}
 
 		public static BasicAbility Get(MonsterInfo info){
@@ -185,6 +190,18 @@ namespace Common
 
 	public struct FightAbility {
 		public float hp, mp, atk, def, matk, mdef, accuracy, dodge, critical;
+
+		public int Damage(FightAbility other){
+			return (int)(atk - other.def);
+		}
+
+		public override string ToString(){
+			return string.Format (
+				"hp({0}) mp({1}) atk({2}) def({3}) matk({4}) mdef({5}) accuracy({6}) dodge({7}) critical({8})", 
+				hp, mp, atk, def, matk, mdef, accuracy, dodge, critical
+			);
+		}
+
 		/*public static FightAbility Get(BasicAbility basic){
 			ConfigAbility config = null;
 			FightAbility ret;
@@ -319,7 +336,7 @@ namespace Common
 	}
 
 	public enum Info{
-		Unknown, Event, Work, Map, ItemInMap
+		Unknown, Event, Work, WorkResult, Map, ItemInMap, Ability
 	}
 
 	public class MessageException : Exception{
@@ -392,9 +409,12 @@ namespace Common
 		/// </summary>
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
+		IEnumerable<Description> WorkResults{ get; }
 		IEnumerable<Item> StorageInMap{ get; }
 
 		bool IsCanFusionInMap (string prototype);
+
+		BasicAbility PlayerBasicAbility{ get; }
 	}
 
 	public interface IModel : IModelGetter{

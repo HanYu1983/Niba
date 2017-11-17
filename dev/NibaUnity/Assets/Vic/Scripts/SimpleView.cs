@@ -52,14 +52,31 @@ namespace GameView
                     break;
                 case Info.Event:
                     {
-                        view.ProcessEvent(callback);
+						var result = model.MoveResult;
+						var events = result.events;
+                        view.ProcessEvent(events, callback);
                     }
                     break;
+			case Info.WorkResult:
+				{
+					var events = model.WorkResults;
+					view.ProcessEvent(events, callback);
+				}
+				break;
 			case Info.ItemInMap:
 				{
                         view.ShowBackpack();
 				}
                     break;
+			case Info.Ability:
+				{
+					// 顯示基本數量與換算後的數值
+					var ability = model.PlayerBasicAbility;
+					var fightAbility = ability.FightAbility;
+					Debug.Log (ability);
+					Debug.Log (fightAbility);
+				}
+				throw new NotImplementedException();
                 default:
                     throw new NotImplementedException();
             }
@@ -82,6 +99,11 @@ namespace GameView
 			case Info.ItemInMap:
 				{
 					view.HidePackpack ();	
+				}
+				break;
+			case Info.WorkResult:
+				{
+					view.CloseMessagePopup ();
 				}
 				break;
 			}

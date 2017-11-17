@@ -194,20 +194,44 @@ namespace Model
 			case Description.WorkAttack:
 				{
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
-					var damage = Helper.GetBasicDamage (player, this, mapObjectId);
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					var monsterCfg = ConfigMonster.Get(monsterInf.type);
+					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
+					var playerAbility = player.basicAbility.FightAbility;
 
-					var obj = mapObjects [mapObjectId];
-					var info = monsterInfo [obj.infoKey];
-					info.hp -= damage;
-					if (info.IsDied) {
-						obj.died = true;
+					var damage = playerAbility.Damage (monsterAbility);
+
+					monsterInf.hp -= damage;
+					if (monsterInf.IsDied) {
+						mapObject.died = true;
 					}
 					// assign back
-					monsterInfo [obj.infoKey] = info;
-					mapObjects [mapObjectId] = obj;
+					monsterInfo [mapObject.infoKey] = monsterInf;
+					mapObjects [mapObjectId] = mapObject;
 
 					var des = Description.Empty;
 					des.description = Description.InfoAttack;
+					des.values = new NameValueCollection ();
+					des.values.Set ("mapObjectId", mapObjectId+"");
+					des.values.Set ("damage", damage+"");
+					ret.Add (des);
+				}
+				break;
+			case Description.EventMonsterAttackYou:
+				{
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					var monsterCfg = ConfigMonster.Get(monsterInf.type);
+					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
+					var playerAbility = player.basicAbility.FightAbility;
+
+					var damage = monsterAbility.Damage (playerAbility);
+					player.hp -= damage;
+
+					var des = Description.Empty;
+					des.description = Description.InfoMonsterAttack;
 					des.values = new NameValueCollection ();
 					des.values.Set ("mapObjectId", mapObjectId+"");
 					des.values.Set ("damage", damage+"");
@@ -232,7 +256,7 @@ namespace Model
 		public Interaction MakeInteraction(PlayerDataStore player, Description work){
 			var ret = Interaction.Empty;
 			ret.description = work;
-			ret.priority = 1;
+			ret.priority = player.basicAbility.FightAbility.dodge;
 			return ret;
 		}
 
@@ -245,6 +269,11 @@ namespace Model
 					switch(currItem.type){
 					case MapObjectType.Monster:
 						{
+							var info = monsterInfo[currItem.infoKey];
+							var cfg = ConfigMonster.Get(info.type);
+							var ability = BasicAbility.Get(cfg);
+							var fightAbility = ability.FightAbility;
+
 							var action = Description.Empty;
 							action.description = Description.EventMonsterAttackYou;
 							action.values = new NameValueCollection();
@@ -252,7 +281,7 @@ namespace Model
 
 							var ret = Interaction.Empty;
 							ret.description = action;
-							ret.priority = 0;
+							ret.priority = fightAbility.dodge;
 							actions.Add(ret);
 						}
 						break;
@@ -347,6 +376,7 @@ namespace Model
 	public class PlayerDataStore
 	{
 		public BasicAbility basicAbility;
+		public int hp, mp;
 
 		#region playerInMap
 		public MapPlayer playerInMap;
