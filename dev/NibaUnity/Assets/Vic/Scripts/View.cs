@@ -97,17 +97,32 @@ namespace GameView
             ZUIMgr.CurActiveSideMenu.GetComponent<BasicPanel>().UpdateContent();
         }
 
+		public void HidePackpack()
+		{
+			ZUIMgr.CloseSideMenu ();
+		}
+
         public void OpenMessagePopup(string msg)
         {
             ZUIMgr.OpenPopup(ZUIMgr.AllPopups[0]);
             ZUIMgr.CurActivePopup.GetComponent<MessagePopup>().SetText(msg);
         }
 
+		public void CloseMessagePopup()
+		{
+			ZUIMgr.ClosePopup (ZUIMgr.AllPopups [0]);
+		}
+
         public void OpenWorkSideMenu()
         {
             ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[1]);
             ZUIMgr.CurActiveSideMenu.GetComponent<BasicPanel>().UpdateContent();
         }
+
+		public void CloseWorkSideMenu()
+		{
+			ZUIMgr.CloseSideMenu ();
+		}
 
         void ChangeToPage( Menu page )
         {

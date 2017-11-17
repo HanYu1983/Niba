@@ -71,19 +71,19 @@ namespace GameView
 			{
 			case Info.Work:
 				{
-					
+					view.CloseWorkSideMenu ();
 				}
-				throw new NotImplementedException();
+				break;
 			case Info.Event:
 				{
-					
+					view.CloseMessagePopup ();
 				}
-				throw new NotImplementedException();
+				break;
 			case Info.ItemInMap:
 				{
-					
+					view.HidePackpack ();	
 				}
-				throw new NotImplementedException();
+				break;
 			}
 		}
 

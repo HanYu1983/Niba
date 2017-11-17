@@ -96,6 +96,7 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			view.HideInfo (Info.ItemInMap);
+			yield return new WaitForSeconds (2f);
 
 			canFusionArrows = model.IsCanFusionInMap (ConfigItem.ID_arrows);
 			if (canFusionArrows == false) {
