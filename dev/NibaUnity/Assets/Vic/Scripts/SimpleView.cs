@@ -70,13 +70,9 @@ namespace GameView
                     break;
 			case Info.Ability:
 				{
-					// 顯示基本數量與換算後的數值
-					var ability = model.PlayerBasicAbility;
-					var fightAbility = ability.FightAbility;
-					Debug.Log (ability);
-					Debug.Log (fightAbility);
+                        view.ShowProperties();
 				}
-				throw new NotImplementedException();
+                    break;
                 default:
                     throw new NotImplementedException();
             }

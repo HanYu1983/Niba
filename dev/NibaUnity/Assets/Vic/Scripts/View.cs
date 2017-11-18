@@ -116,6 +116,14 @@ namespace GameView
             callback(null);
         }
 
+        public void ShowProperties()
+        {
+            // 顯示基本數量與換算後的數值
+            var ability = Model.PlayerBasicAbility;
+            var fightAbility = ability.FightAbility;
+            OpenMessagePopup(fightAbility.ToString());
+        }
+
         public void ShowBackpack()
         {
             ZUIMgr.OpenSideMenu(ZUIMgr.AllSideMenus[0]);
