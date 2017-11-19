@@ -102,6 +102,11 @@ namespace GameView
 					view.CloseMessagePopup ();
 				}
 				break;
+			case Info.Ability:
+				{
+					view.CloseMessagePopup ();
+				}
+				break;
 			}
 		}
 

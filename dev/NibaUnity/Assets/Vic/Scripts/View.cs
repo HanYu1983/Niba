@@ -121,7 +121,7 @@ namespace GameView
             // 顯示基本數量與換算後的數值
             var ability = Model.PlayerBasicAbility;
             var fightAbility = ability.FightAbility;
-            OpenMessagePopup(fightAbility.ToString());
+			OpenMessagePopup(ability+"\n"+fightAbility);
         }
 
         public void ShowBackpack()

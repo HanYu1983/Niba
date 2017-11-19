@@ -20,8 +20,11 @@ namespace Model
 			yield return null;
 			mapData.GenMap (type, 10, 10, playerData);
 			playerData.ClearVisibleMapObjects ();
+			playerData.basicAbility = BasicAbility.Default;
 			playerData.playerInMap.position = Position.Zero;
 			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+
+			ClearMoveResult ();
 			RequestSaveMap ();
 			RequestSavePlayer ();
 			callback (null);

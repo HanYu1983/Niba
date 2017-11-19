@@ -74,6 +74,15 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			yield return view.ShowInfo (Info.Ability, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (2f);
+			view.HideInfo (Info.Ability);
+
 			yield return view.ShowInfo (Info.Work, e2 => {
 				e = e2;
 			});
@@ -103,12 +112,7 @@ namespace Model
 			yield return new WaitForSeconds (2f);
 			view.HideInfo (Info.WorkResult);
 
-			yield return view.ShowInfo (Info.Ability, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
+
 		}
 
 		static IEnumerator TestFusion(IModel model, IView view){

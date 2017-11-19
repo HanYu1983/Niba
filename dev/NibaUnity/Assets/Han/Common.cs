@@ -119,6 +119,19 @@ namespace Common
 	public struct BasicAbility {
 		public int str, vit, agi, dex, Int, luc;
 
+		public static BasicAbility Default{
+			get{
+				BasicAbility ret;
+				ret.str = 3;
+				ret.vit = 5;
+				ret.agi = 3;
+				ret.dex = 1;
+				ret.Int = 0;
+				ret.luc = 0;
+				return ret;
+			}
+		}
+
 		public BasicAbility Add(BasicAbility b){
 			var a = this;
 			a.str += b.str;
@@ -130,8 +143,19 @@ namespace Common
 			return a;
 		}
 
+		string int2bar(int v){
+			return Enumerable.Repeat ("I", v).Aggregate ("", (accu, curr) => {
+				return accu + curr;
+			});
+		}
+
 		public override string ToString(){
-			return string.Format ("str({0}) vit({1}) agi({2}) dex({3}) int({4}) luc({5})", str, vit, agi, dex, Int, luc);
+			return string.Format (@"腕力:{0}
+體質:{1}
+敏捷:{2}
+技巧:{3}
+知識:{4}
+幸運:{5}", int2bar(str), int2bar(vit), int2bar(agi), int2bar(dex), int2bar(Int), int2bar(luc));
 		}
 
 		public static BasicAbility Get(MonsterInfo info){
@@ -195,10 +219,16 @@ namespace Common
 			return (int)(atk - other.def);
 		}
 
+		string int2bar(float v){
+			return Enumerable.Repeat ("I", (int)v).Aggregate ("", (accu, curr) => {
+				return accu + curr;
+			});
+		}
+
 		public override string ToString(){
 			return string.Format (
-				"hp({0}) mp({1}) atk({2}) def({3}) matk({4}) mdef({5}) accuracy({6}) dodge({7}) critical({8})", 
-				hp, mp, atk, def, matk, mdef, accuracy, dodge, critical
+				"血量:{0}\n魔力:{1}\n攻擊:{2}\n防禦:{3}\n魔攻:{4}\n魔防:{5}\n命中:{6}\n閃避:{7}\n爆擊:{8}\n", 
+				int2bar(hp), int2bar(mp), int2bar(atk), int2bar(def), int2bar(matk), int2bar(mdef), int2bar(accuracy), int2bar(dodge), int2bar(critical)
 			);
 		}
 
