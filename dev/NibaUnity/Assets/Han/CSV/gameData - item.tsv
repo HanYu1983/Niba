@@ -1,7 +1,17 @@
-id	name	description	type	max count	build	require skill
-grass	草		resource	99		
-wood	木		resource	10		
-gravel	礫石		resource	10		
-feather	羽毛		resource	99		
-bred	木板		resource	10	wood_3	
-arrows	箭矢		resource	1	feather,wood,gravel	
+id	name	description	type	max count	fusion require	skill require	ability	position
+grass	草		material	99				
+wood	木		material	10				
+gravel	礫石		material	10				
+feather	羽毛		material	99				
+bred	木板		material	10	wood_2			
+iron	鐵		material	10				
+woodSword	木劍		weapon	1	wood_3		atk+2	hand
+woodShield	木盾		weapon	1	wood_3		def+2	hand
+powerRing	加量戒指		weapon	1			str+2	accessory
+ironSword	鐵劍		weapon	1	iron_2		atk+4	hand
+ironShield	鐵盾		weapon	1	iron_2		def+4	hand
+arrows	箭矢		weapon	99	feather,wood,gravel			hand
+bigIronSword	雙手劍		weapon	1	iron_4		atk+8,dodge-2	hand
+nightShield	騎士盾		weapon	1	iron_4		def+8	hand
+woodKen	木指虎		weapon	1	wood_1		atk+1,dodge+2	hand
+ironKen	鐵指虎		weapon	1	iron_2		atk+3,dodge+2	hand

@@ -38,6 +38,8 @@ namespace Model
 				"MaxCount","int",
 				"FusionRequire","string",
 				"SkillRequire","string",
+				"Ability","string",
+				"Position","string",
 			}, "CSV/gameData - item.tsv");
 
 			GenCode ("ConfigAbility", null, new string[]{
@@ -156,35 +158,39 @@ namespace Model
 			string[][] strArray = new string [lineArray.Length][];  
 			for (int i=0;i<lineArray.Length;i++){
 				var line = lineArray [i];
-				// ==== 處理""內的文字 ====
-				var curr = 0;
-				while (true) {
-					var id1 = line.IndexOf ("\"", curr);
-					if (id1 == -1) {
-						break;
-					}
-					var id2 = line.IndexOf ("\"", id1+1);
-					if (id2 == -1) {
-						throw new Exception ("格式錯誤，少一個\"");
-					}
-					var contentBetweenId12 = line.Substring (id1+1, (id2 - id1)-1);
-					line = line.Replace ("\""+contentBetweenId12+"\"", WWW.EscapeURL (contentBetweenId12));
+				var needSpecialProcess = line.IndexOf ("\"") != -1;
+				if (needSpecialProcess) {
+					// ==== 處理""內的文字 ====
+					var curr = 0;
+					while (true) {
+						var id1 = line.IndexOf ("\"", curr);
+						if (id1 == -1) {
+							break;
+						}
+						var id2 = line.IndexOf ("\"", id1 + 1);
+						if (id2 == -1) {
+							throw new Exception ("格式錯誤，少一個\"");
+						}
+						var contentBetweenId12 = line.Substring (id1 + 1, (id2 - id1) - 1);
+						line = line.Replace ("\"" + contentBetweenId12 + "\"", WWW.EscapeURL (contentBetweenId12));
 
-					curr = id2 + 1;
+						curr = id2 + 1;
+					}
+					var tempAry = line.Split (split); 
+					for (var j = 0; j < tempAry.Length; ++j) {
+						var tempStr = tempAry [j];
+						var replaceMark = "anystringforreplace";
+						// 先將%符號換掉，不然在UnEscapeURL的時候會解析成????
+						tempStr = tempStr.Replace ("%", replaceMark);
+						tempStr = WWW.UnEscapeURL (tempStr);
+						// 再置換回來
+						tempStr = tempStr.Replace (replaceMark, "%");
+						tempAry [j] = tempStr;
+					}
+					strArray [i] = tempAry;
+				} else {
+					strArray [i] = line.Split (split);
 				}
-				var tempAry = line.Split (split); 
-				for (var j = 0; j < tempAry.Length; ++j) {
-					var tempStr = tempAry [j];
-					var replaceMark = "anystringforreplace";
-					// 先將%符號換掉，不然在UnEscapeURL的時候會解析成????
-					tempStr = tempStr.Replace ("%", replaceMark);
-					tempStr = WWW.UnEscapeURL (tempStr);
-					// 再置換回來
-					tempStr = tempStr.Replace (replaceMark, "%");
-					tempAry [j] = tempStr;
-				}
-				// ========
-				strArray[i] = tempAry;
 			}
 			return strArray;
 		}

@@ -20,7 +20,7 @@ namespace Model
 			yield return null;
 			mapData.GenMap (type, 10, 10, playerData);
 			playerData.ClearVisibleMapObjects ();
-			playerData.basicAbility = BasicAbility.Default;
+			playerData.playerInMap.basicAbility = BasicAbility.Default;
 			playerData.playerInMap.position = Position.Zero;
 			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 
@@ -105,7 +105,25 @@ namespace Model
 			playerData.FusionInMap (prototype);
 		}
 
-		public BasicAbility PlayerBasicAbility{ get { return playerData.basicAbility; } }
+		public void EquipWeaponInMap (Item item){
+			var who = playerData.playerInMap;
+			who = playerData.EquipWeapon (item, who);
+			playerData.playerInMap = who;
+			RequestSavePlayer ();
+		}
+
+		BasicAbility tmpBasic;
+		FightAbility tmpFight;
+
+		public BasicAbility PlayerBasicAbility(MapPlayer who){
+			Helper.CalcAbility (playerData, mapData, who, ref tmpBasic, ref tmpFight);
+			return tmpBasic;
+		}
+
+		public FightAbility PlayerFightAbility(MapPlayer who){
+			Helper.CalcAbility (playerData, mapData, who, ref tmpBasic, ref tmpFight);
+			return tmpFight;
+		}
 
 		void Move(Position position){
 			if (hasMoveResult) {

@@ -85,7 +85,9 @@ namespace Common
 	[Serializable]
 	public struct MapPlayer{
 		public Position position;
+		public BasicAbility basicAbility;
 		public int hp, mp;
+		public List<Item> weapons;
 		public Description currentWork;
 		public long workFinishedTime;
 		public bool IsWorking{
@@ -119,6 +121,8 @@ namespace Common
 	public struct BasicAbility {
 		public int str, vit, agi, dex, Int, luc;
 
+		public static BasicAbility Zero;
+
 		public static BasicAbility Default{
 			get{
 				BasicAbility ret;
@@ -129,6 +133,19 @@ namespace Common
 				ret.Int = 0;
 				ret.luc = 0;
 				return ret;
+			}
+		}
+
+		public BasicAbility Negative{
+			get{
+				var a = this;
+				a.str = -str;
+				a.vit = -vit;
+				a.agi = -agi;
+				a.dex = -dex;
+				a.Int = -Int;
+				a.luc = -luc;
+				return a;
 			}
 		}
 
@@ -214,6 +231,36 @@ namespace Common
 
 	public struct FightAbility {
 		public float hp, mp, atk, def, matk, mdef, accuracy, dodge, critical;
+
+		public FightAbility Add(FightAbility b){
+			var a = this;
+			a.hp += b.hp;
+			a.mp += b.mp;
+			a.atk += b.atk;
+			a.def += b.def;
+			a.matk += b.matk;
+			a.mdef += b.mdef;
+			a.accuracy += b.accuracy;
+			a.dodge += b.dodge;
+			a.critical += b.critical;
+			return a;
+		}
+
+		public FightAbility Negative{
+			get{
+				var a = this;
+				a.hp = -hp;
+				a.mp = -mp;
+				a.atk = -atk;
+				a.def = -def;
+				a.matk = -matk;
+				a.mdef = -mdef;
+				a.accuracy = -accuracy;
+				a.dodge = -dodge;
+				a.critical = -critical;
+				return a;
+			}
+		}
 
 		public int Damage(FightAbility other){
 			return (int)(atk - other.def);
@@ -328,13 +375,196 @@ namespace Common
 		public static MoveResult Empty;
 	}
 
+	public struct ItemEffect{
+		public string value;
+		public string EffectOperator{
+			get{
+				var op = 
+					value.IndexOf ("+") != -1 ? "+" :
+					value.IndexOf ("*") != -1 ? "*" :
+					"unknown";
+				if (op == "unknown") {
+					throw new Exception ("format error:"+value);
+				}
+				return op;
+			}
+		}
+		// 請參考Helper.CalcAbility
+		public BasicAbility Effect(BasicAbility ability){
+			var idx = value.Split (new char[]{ '+', '*' });
+			if (idx.Length != 2) {
+				throw new Exception ("format error:"+value);
+			}
+			try{
+				float.Parse (idx[1]);
+			}catch{
+				throw new Exception ("format error:"+value);
+			}
+
+			var target = idx [0];
+			var op = EffectOperator;
+			if (op == "+") {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str += effectValue;
+					break;
+				case "vit":
+					ability.vit += effectValue;
+					break;
+				case "dex":
+					ability.dex += effectValue;
+					break;
+				case "agi":
+					ability.agi += effectValue;
+					break;
+				case "int":
+					ability.Int += effectValue;
+					break;
+				case "luc":
+					ability.luc += effectValue;
+					break;
+				}
+			} if (EffectOperator == "*") {
+				var effectValue = float.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str = (int)(ability.str * effectValue);
+					break;
+				case "vit":
+					ability.vit = (int)(ability.vit * effectValue);
+					break;
+				case "dex":
+					ability.dex = (int)(ability.dex * effectValue);
+					break;
+				case "agi":
+					ability.agi = (int)(ability.agi * effectValue);
+					break;
+				case "int":
+					ability.Int = (int)(ability.Int * effectValue);
+					break;
+				case "luc":
+					ability.luc = (int)(ability.luc * effectValue);
+					break;
+				}
+			}
+			return ability;
+		}
+
+		// 請參考Helper.CalcAbility
+		public FightAbility Effect(FightAbility ability){
+			var idx = value.Split (new char[]{ '+', '*' });
+			if (idx.Length != 2) {
+				throw new Exception ("format error:" + value);
+			}
+			try {
+				float.Parse (idx [1]);
+			} catch {
+				throw new Exception ("format error:" + value);
+			}
+			var target = idx [0];
+			var op = EffectOperator;
+			if (op == "+") {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp += effectValue;
+					break;
+				case "mp":
+					ability.mp += effectValue;
+					break;
+				case "atk":
+					ability.atk += effectValue;
+					break;
+				case "def":
+					ability.def += effectValue;
+					break;
+				case "matk":
+					ability.matk += effectValue;
+					break;
+				case "mdef":
+					ability.mdef += effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy += effectValue;
+					break;
+				case "dodge":
+					ability.dodge += effectValue;
+					break;
+				case "critical":
+					ability.critical += effectValue;
+					break;
+				}
+			}
+			if (op == "*") {
+				var effectValue = float.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp *= effectValue;
+					break;
+				case "mp":
+					ability.mp *= effectValue;
+					break;
+				case "atk":
+					ability.atk *= effectValue;
+					break;
+				case "def":
+					ability.def *= effectValue;
+					break;
+				case "matk":
+					ability.matk *= effectValue;
+					break;
+				case "mdef":
+					ability.mdef *= effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy *= effectValue;
+					break;
+				case "dodge":
+					ability.dodge *= effectValue;
+					break;
+				case "critical":
+					ability.critical *= effectValue;
+					break;
+				}
+			}
+			return ability;
+		}
+	}
+
 	public struct Item : IEquatable<Item>{
 		public string prototype;
 		public int count;
-		public static Item Empty;
 		public bool Equals(Item other){
 			return prototype == other.prototype && count == other.count;
 		}
+		public Item Negative{
+			get{
+				var a = this;
+				a.prototype = prototype;
+				a.count = -count;
+				return a;
+			}
+		}
+		public IEnumerable<ItemEffect> Effects {
+			get {
+				var cfg = ConfigItem.Get (prototype);
+				if (cfg.Type != "weapon") {
+					throw new Exception ("必須是武器:"+prototype);
+				}
+				return cfg.Ability.Split (new char[]{ ',' }).Select (v => {
+					ItemEffect ef;
+					ef.value = v;
+					return ef;
+				});
+			}
+		}
+		public override string ToString(){
+			var config = ConfigItem.Get (prototype);
+			return string.Format ("({0}, {1})", config.Name, count);
+		}
+		public static Item Empty;
+
 		/*
 		// 向下相容
 		public override bool Equals(object obj){
@@ -355,10 +585,6 @@ namespace Common
 			}
 		}
 		*/
-		public override string ToString(){
-			var config = ConfigItem.Get (prototype);
-			return string.Format ("({0}, {1})", config.Name, count);
-		}
 	}
 
 	public enum Page{
@@ -444,7 +670,8 @@ namespace Common
 
 		bool IsCanFusionInMap (string prototype);
 
-		BasicAbility PlayerBasicAbility{ get; }
+		BasicAbility PlayerBasicAbility (MapPlayer who);
+		FightAbility PlayerFightAbility (MapPlayer who);
 	}
 
 	public interface IModel : IModelGetter{
@@ -485,6 +712,7 @@ namespace Common
 
 		void AddItemToStorageInMap(Item item);
 		void FusionInMap (string prototype);
+		void EquipWeaponInMap (Item item);
 	}
 
 	public class Common

@@ -198,7 +198,7 @@ namespace Model
 					var monsterInf = monsterInfo[mapObject.infoKey];
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-					var playerAbility = player.basicAbility.FightAbility;
+					var playerAbility = player.playerInMap.basicAbility.FightAbility;
 
 					var damage = playerAbility.Damage (monsterAbility);
 
@@ -225,10 +225,10 @@ namespace Model
 					var monsterInf = monsterInfo[mapObject.infoKey];
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-					var playerAbility = player.basicAbility.FightAbility;
+					var playerAbility = player.playerInMap.basicAbility.FightAbility;
 
 					var damage = monsterAbility.Damage (playerAbility);
-					player.hp -= damage;
+					player.playerInMap.hp -= damage;
 
 					var des = Description.Empty;
 					des.description = Description.InfoMonsterAttack;
@@ -256,7 +256,7 @@ namespace Model
 		public Interaction MakeInteraction(PlayerDataStore player, Description work){
 			var ret = Interaction.Empty;
 			ret.description = work;
-			ret.priority = player.basicAbility.FightAbility.dodge;
+			ret.priority = player.playerInMap.basicAbility.FightAbility.dodge;
 			return ret;
 		}
 
@@ -368,15 +368,20 @@ namespace Model
 			return JsonUtility.FromJson<MapDataStore>(json);
 		}
 		#endregion
-
-
 	}
 
 	[Serializable]
 	public class PlayerDataStore
 	{
-		public BasicAbility basicAbility;
-		public int hp, mp;
+		public MapPlayer player;
+
+		public MapPlayer EquipWeapon(Item item, MapPlayer who){
+			if (who.weapons == null) {
+				who.weapons = new List<Item> ();
+			}
+			who.weapons.Add (item);
+			return who;
+		}
 
 		#region playerInMap
 		public MapPlayer playerInMap;
@@ -462,8 +467,40 @@ namespace Model
 
 	public class Helper{
 
+		public static void CalcAbility(PlayerDataStore player, MapDataStore map, MapPlayer who, ref BasicAbility basic, ref FightAbility fight){
+			if (who.weapons == null) {
+				return;
+			}
+			var effects = who.weapons.SelectMany (it => it.Effects);
+			var addEffect = effects.Where (ef => ef.EffectOperator == "+");
+			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
+			// 先處理基本能力
+			var tmpBasic = basic;
+			// 先加減
+			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
+				return curr.Effect(accu);
+			});
+			// 後乘除
+			tmpBasic = multiEffect.Aggregate (tmpBasic, (accu, curr) => {
+				return curr.Effect(accu);
+			});
+			// 處理後的基本能力轉成戰鬥力
+			// 再處理戰鬥力
+			var tmpFight = tmpBasic.FightAbility;
+			// 先加減
+			tmpFight = addEffect.Aggregate (tmpFight, (accu, curr) => {
+				return curr.Effect(accu);
+			});
+			// 後乘除
+			tmpFight = multiEffect.Aggregate (tmpFight, (accu, curr) => {
+				return curr.Effect (accu);
+			});
+			basic = tmpBasic;
+			fight = tmpFight;
+		}
+
 		public static int GetBasicDamage(PlayerDataStore player, MapDataStore map, int mapObjectId){
-			var a = player.basicAbility.FightAbility;
+			var a = player.playerInMap.basicAbility.FightAbility;
 			var monsterInfo = map.monsterInfo [map.mapObjects [mapObjectId].infoKey];
 			var b = BasicAbility.Get (monsterInfo).FightAbility;
 			return (int)(a.atk - b.def);

@@ -119,8 +119,8 @@ namespace GameView
         public void ShowProperties()
         {
             // 顯示基本數量與換算後的數值
-            var ability = Model.PlayerBasicAbility;
-            var fightAbility = ability.FightAbility;
+			var ability = Model.PlayerBasicAbility(Model.MapPlayer);
+			var fightAbility = Model.PlayerFightAbility (Model.MapPlayer);
 			OpenMessagePopup(ability+"\n"+fightAbility);
         }
 

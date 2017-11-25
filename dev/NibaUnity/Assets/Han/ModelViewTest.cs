@@ -40,10 +40,25 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestWeapon (Model, View);
 			yield return TestFight (Model, View);
 			yield return TestFusion (Model, View);
 			yield return TestMap (Model, View);
 			yield return TestShowInfo (Model, View);
+		}
+
+		static IEnumerator TestWeapon(IModel model, IView view){
+			var weapon = Common.Item.Empty;
+			weapon.prototype = ConfigItem.ID_woodSword;
+			weapon.count = 1;
+			model.EquipWeaponInMap (weapon);
+
+			weapon.prototype = ConfigItem.ID_powerRing;
+			model.EquipWeaponInMap (weapon);
+
+			var fight = model.PlayerFightAbility(model.MapPlayer);
+			Debug.Log (fight);
+			yield return null;
 		}
 
 		static IEnumerator TestFight(IModel model, IView view){
