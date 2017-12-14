@@ -34,7 +34,7 @@ case 2: return new ConfigItem {ID="gravel",Name="礫石",Type="material",MaxCoun
 case 3: return new ConfigItem {ID="feather",Name="羽毛",Type="material",MaxCount=99};
 case 4: return new ConfigItem {ID="bred",Name="木板",Type="material",MaxCount=10,FusionRequire="wood_2"};
 case 5: return new ConfigItem {ID="iron",Name="鐵",Type="material",MaxCount=10};
-case 6: return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="atk*3",Position="hand"};
+case 6: return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="atk+2",Position="hand"};
 case 7: return new ConfigItem {ID="woodShield",Name="木盾",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="def+2",Position="hand"};
 case 8: return new ConfigItem {ID="powerRing",Name="加量戒指",Type="weapon",MaxCount=1,Ability="str+2",Position="accessory"};
 case 9: return new ConfigItem {ID="ironSword",Name="鐵劍",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+4",Position="hand"};
@@ -53,7 +53,7 @@ case "gravel": return new ConfigItem {ID="gravel",Name="礫石",Type="material",
 case "feather": return new ConfigItem {ID="feather",Name="羽毛",Type="material",MaxCount=99};
 case "bred": return new ConfigItem {ID="bred",Name="木板",Type="material",MaxCount=10,FusionRequire="wood_2"};
 case "iron": return new ConfigItem {ID="iron",Name="鐵",Type="material",MaxCount=10};
-case "woodSword": return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="atk*5",Position="hand"};
+case "woodSword": return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="atk+2",Position="hand"};
 case "woodShield": return new ConfigItem {ID="woodShield",Name="木盾",Type="weapon",MaxCount=1,FusionRequire="wood_3",Ability="def+2",Position="hand"};
 case "powerRing": return new ConfigItem {ID="powerRing",Name="加量戒指",Type="weapon",MaxCount=1,Ability="str+2",Position="accessory"};
 case "ironSword": return new ConfigItem {ID="ironSword",Name="鐵劍",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+4",Position="hand"};

@@ -41,7 +41,7 @@ namespace Model
 		}
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
-		public IEnumerable<Item> StorageInMap{ get { return playerData.storageInMap; }  }
+		public IEnumerable<Item> StorageInMap{ get { return playerData.playerInMap.storage; }  }
 
 
 		IEnumerable<Description> workResult;
@@ -92,23 +92,21 @@ namespace Model
 			hasMoveResult = false;
 		}
 
-		public void AddItemToStorageInMap(Item item){
-			playerData.AddItem (item);
+		public void AddItemToStorage(Item item, MapPlayer who){
+			playerData.AddItem (item, who);
 			RequestSavePlayer ();
 		}
 
-		public bool IsCanFusionInMap (string prototype){
-			return playerData.IsCanFusionInMap (prototype);
+		public bool IsCanFusion (string prototype, MapPlayer who){
+			return playerData.IsCanFusion (prototype, who);
 		}
 
-		public void FusionInMap (string prototype){
-			playerData.FusionInMap (prototype);
+		public void Fusion (string prototype, MapPlayer who){
+			playerData.Fusion (prototype, who);
 		}
 
-		public void EquipWeaponInMap (Item item){
-			var who = playerData.playerInMap;
-			who = playerData.EquipWeapon (item, who);
-			playerData.playerInMap = who;
+		public void EquipWeapon (Item item, MapPlayer who){
+			playerData.EquipWeapon (item, who);
 			RequestSavePlayer ();
 		}
 

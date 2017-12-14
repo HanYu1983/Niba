@@ -133,7 +133,7 @@ namespace Model
 			// assign back
 			mapObjects [objKey] = obj;
 			foreach (var item in ret) {
-				player.AddItem (item);
+				player.AddItem (item, player.playerInMap);
 			}
 			return ret;
 		}
@@ -187,7 +187,7 @@ namespace Model
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
 					foreach (var item in Helper.ParseItemFromResource(config)) {
-						player.AddItem (item);
+						player.AddItem (item, player.playerInMap);
 					}
 				}
 				break;
@@ -198,8 +198,17 @@ namespace Model
 					var monsterInf = monsterInfo[mapObject.infoKey];
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-					var playerAbility = player.playerInMap.basicAbility.FightAbility;
 
+					var playerBasic = BasicAbility.Zero;
+					var playerAbility = FightAbility.Zero;
+					// 先計算非針對怪物的能力
+					Helper.CalcAbility (player, this, player.playerInMap, ref playerBasic, ref playerAbility);
+					// 計算針對怪物的能力，例：如果對像是鳥，攻擊力*1.1之類
+					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
+					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
+						// TODO 實做針對性能力
+						return playerAbility;
+					});
 					var damage = playerAbility.Damage (monsterAbility);
 
 					monsterInf.hp -= damage;
@@ -225,8 +234,17 @@ namespace Model
 					var monsterInf = monsterInfo[mapObject.infoKey];
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-					var playerAbility = player.playerInMap.basicAbility.FightAbility;
 
+					var playerBasic = BasicAbility.Zero;
+					var playerAbility = FightAbility.Zero;
+					// 先計算非針對怪物的能力
+					Helper.CalcAbility (player, this, player.playerInMap, ref playerBasic, ref playerAbility);
+					// 計算針對怪物的能力，例：如果對像是鳥，防禦力*1.1之類
+					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
+					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
+						// TODO 實做針對性能力
+						return playerAbility;
+					});
 					var damage = monsterAbility.Damage (playerAbility);
 					player.playerInMap.hp -= damage;
 
@@ -373,24 +391,114 @@ namespace Model
 	[Serializable]
 	public class PlayerDataStore
 	{
-		public MapPlayer player;
+		public MapPlayer player = MapPlayer.PlayerInHome;
+		public MapPlayer playerInMap = MapPlayer.PlayerInMap;
 
-		public MapPlayer EquipWeapon(Item item, MapPlayer who){
-			if (who.weapons == null) {
-				who.weapons = new List<Item> ();
+		#region weapon
+		public string IsCanEquip(Item item, MapPlayer who){
+			var cfg = ConfigItem.Get (item.prototype);
+			if (cfg.Type != "weapon") {
+				return "只能裝備weapon類型，請檢查程式";
 			}
-			who.weapons.Add (item);
-			return who;
+			var weaponPosition = cfg.Position;
+			var maxCount = ConfigWeaponPosition.Get (weaponPosition).SlotCount;
+			Func<List<Item>, List<Item>, string> canEquip = (weapons, items) => {
+				var haveCount = items.Count(i=>{
+					return i.Equals(item);
+				});
+				if(haveCount <1){
+					return "沒有那個道具:"+item;
+				}
+				var alreadyEquipCount = weapons.Count(i=>{
+					return ConfigItem.Get (i.prototype).Position == weaponPosition;
+				});
+				if(alreadyEquipCount >= maxCount){
+					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition;
+				}
+				return null;
+			};
+			if (who.Equals (player)) {
+				return canEquip (player.weapons, player.storage);
+			} else if (who.Equals (playerInMap)) {
+				return canEquip (playerInMap.weapons, playerInMap.storage);
+			} else {
+				return canEquip (player.weapons, storage);
+			}
 		}
 
+		public void EquipWeapon(Item item, MapPlayer who){
+			var err = IsCanEquip (item, who);
+			if (err != null) {
+				throw new Exception ("無法裝備，請檢查:"+err);
+			}
+			if (who.Equals (player)) {
+				player.storage.Remove (item);
+				player.weapons.Add (item);
+			} else if (who.Equals (playerInMap)) {
+				playerInMap.storage.Remove (item);
+				playerInMap.weapons.Add (item);
+			} else {
+				throw new Exception ("無法裝備在unknow");
+			}
+		}
+		#endregion
+
 		#region playerInMap
-		public MapPlayer playerInMap;
 		public void InitPlayerPosition(){
 			playerInMap.position.x = 5;
 			playerInMap.position.y = 3;
 		}
 		public void MovePlayerTo(Position pos){
 			playerInMap.position = pos;
+		}
+		#endregion
+
+		#region storage
+		public List<Item> storage = new List<Item>();
+		public void AddItem(Item item, MapPlayer who){
+			if (who.Equals (player)) {
+				player.storage = Helper.AddItem (player.storage, item);
+			} else if (who.Equals (playerInMap)) {
+				playerInMap.storage = Helper.AddItem (playerInMap.storage, item);
+			} else {
+				storage = Helper.AddItem (storage, item);
+			}
+		}
+		#endregion
+
+		#region fusion
+		public void Fusion(string prototype, MapPlayer who){
+			Func<List<Item>, List<Item>> fusion = (storage_)=>{
+				var requires = Helper.ParseItem (ConfigItem.Get (prototype).FusionRequire);
+				var formatForSubstrct = requires.Select (item => {
+					item.count = -item.count;
+					return item;
+				});
+				var tempStorage = Enumerable.Aggregate (formatForSubstrct, storage_, Helper.AddItem);
+
+				var fusionItem = Item.Empty;
+				fusionItem.prototype = prototype;
+				fusionItem.count = 1;
+				tempStorage = Helper.AddItem (tempStorage, fusionItem);
+				return tempStorage;
+			};
+			if (who.Equals (player)) {
+				player.storage = fusion (player.storage);
+			} else if (who.Equals (playerInMap)) {
+				playerInMap.storage = fusion (playerInMap.storage);
+			} else {
+				storage = fusion (storage);
+			}
+		}
+
+		public bool IsCanFusion(string prototype, MapPlayer who){
+			if (who.Equals (player)) {
+				return Helper.IsCanFusion (prototype, player.storage);
+			} else if (who.Equals (playerInMap)) {
+				return Helper.IsCanFusion (prototype, playerInMap.storage);
+			} else {
+				return Helper.IsCanFusion (prototype, storage);
+			}
 		}
 		#endregion
 
@@ -424,36 +532,6 @@ namespace Model
 		}
 		#endregion
 
-		#region storageInMap
-		public List<Item> storageInMap;
-		public void AddItem(Item item){
-			if (storageInMap == null) {
-				storageInMap = new List<Item> ();
-			}
-			storageInMap = Helper.AddItem (storageInMap, item);
-		}
-		#endregion
-
-		#region fusion
-		public void FusionInMap(string prototype){
-			var requires = Helper.ParseItem (ConfigItem.Get (prototype).FusionRequire);
-			var formatForSubstrct = requires.Select (item => {
-				item.count = -item.count;
-				return item;
-			});
-			storageInMap = Enumerable.Aggregate (formatForSubstrct, storageInMap, Helper.AddItem);
-
-			var fusionItem = Item.Empty;
-			fusionItem.prototype = prototype;
-			fusionItem.count = 1;
-			storageInMap = Helper.AddItem (storageInMap, fusionItem);
-		}
-
-		public bool IsCanFusionInMap(string prototype){
-			return Helper.IsCanFusion (prototype, storageInMap);
-		}
-		#endregion
-
 		#region store
 		public string GetMemonto(){
 			string json = JsonUtility.ToJson(this);
@@ -467,7 +545,7 @@ namespace Model
 
 	public class Helper{
 
-		public static void CalcAbility(PlayerDataStore player, MapDataStore map, MapPlayer who, ref BasicAbility basic, ref FightAbility fight){
+		public static void CalcAbility(PlayerDataStore player, MapDataStore map,MapPlayer who, ref BasicAbility basic, ref FightAbility fight){
 			if (who.weapons == null) {
 				return;
 			}

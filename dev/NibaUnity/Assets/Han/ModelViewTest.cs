@@ -48,16 +48,46 @@ namespace Model
 		}
 
 		static IEnumerator TestWeapon(IModel model, IView view){
-			var weapon = Common.Item.Empty;
-			weapon.prototype = ConfigItem.ID_woodSword;
-			weapon.count = 1;
-			model.EquipWeaponInMap (weapon);
-
-			weapon.prototype = ConfigItem.ID_powerRing;
-			model.EquipWeaponInMap (weapon);
+			Exception e = null;
 
 			var fight = model.PlayerFightAbility(model.MapPlayer);
 			Debug.Log (fight);
+
+			var weapon = Common.Item.Empty;
+			weapon.prototype = ConfigItem.ID_woodSword;
+			weapon.count = 1;
+
+			model.AddItemToStorage (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer);
+			try{
+				model.EquipWeapon (weapon, model.MapPlayer);
+			}catch(Exception e2){
+				if (e2.Message.IndexOf ("無法裝備，請檢查:沒有那個道具") == -1) {
+					throw new Exception ("裝備沒有的裝備必須丟出例外");
+				}
+			}
+			model.AddItemToStorage (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer);
+			try{
+				model.AddItemToStorage (weapon, model.MapPlayer);
+				model.EquipWeapon (weapon, model.MapPlayer);
+			}catch(Exception e2){
+				if (e2.Message.IndexOf ("無法裝備，請檢查:那個位置已經滿") == -1) {
+					throw new Exception ("裝備超過最大數量限制必須丟出例外");
+				}
+			}
+			weapon.prototype = ConfigItem.ID_powerRing;
+			model.AddItemToStorage (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer);
+
+			fight = model.PlayerFightAbility(model.MapPlayer);
+			Debug.Log (fight);
+			yield return view.ShowInfo (Info.Ability, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
 			yield return null;
 		}
 
@@ -126,8 +156,6 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			view.HideInfo (Info.WorkResult);
-
-
 		}
 
 		static IEnumerator TestFusion(IModel model, IView view){
@@ -149,20 +177,20 @@ namespace Model
 			var item = Common.Item.Empty;
 			item.prototype = ConfigItem.ID_feather;
 			item.count = 5;
-			model.AddItemToStorageInMap (item);
+			model.AddItemToStorage (item, model.MapPlayer);
 
 			item.prototype = ConfigItem.ID_wood;
 			item.count = 5;
-			model.AddItemToStorageInMap (item);
+			model.AddItemToStorage (item, model.MapPlayer);
 
-			var canFusionArrows = model.IsCanFusionInMap (ConfigItem.ID_arrows);
+			var canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
 			if (canFusionArrows == true) {
 				throw new Exception ("少一個項目不能合成箭矢");
 			}
 
 			item.prototype = ConfigItem.ID_gravel;
 			item.count = 5;
-			model.AddItemToStorageInMap (item);
+			model.AddItemToStorage (item, model.MapPlayer);
 
 			foreach(var i in model.StorageInMap){
 				Debug.Log (i);
@@ -174,16 +202,16 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			view.HideInfo (Info.ItemInMap);
-			yield return new WaitForSeconds (2f);
-
-			canFusionArrows = model.IsCanFusionInMap (ConfigItem.ID_arrows);
+			canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
 			if (canFusionArrows == false) {
 				throw new Exception ("必須能合成箭矢");
 			}
 
-			model.FusionInMap (ConfigItem.ID_arrows);
-			model.FusionInMap (ConfigItem.ID_arrows);
+			view.HideInfo (Info.ItemInMap);
+			yield return new WaitForSeconds (2f);
+
+			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
+			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
 			foreach(var i in model.StorageInMap){
 				Debug.Log (i);
 			}

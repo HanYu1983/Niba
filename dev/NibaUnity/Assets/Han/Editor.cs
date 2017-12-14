@@ -52,6 +52,12 @@ namespace Model
 				"Luc","float",
 			}, "CSV/gameData - ability.tsv");
 
+			GenCode ("ConfigWeaponPosition", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"SlotCount", "int",
+			}, "CSV/gameData - weaponPosition.tsv");
+
 			AssetDatabase.Refresh();
 		}
 

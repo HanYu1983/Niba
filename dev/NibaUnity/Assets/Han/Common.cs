@@ -83,11 +83,13 @@ namespace Common
 	}
 
 	[Serializable]
-	public struct MapPlayer{
+	public struct MapPlayer : IEquatable<MapPlayer>{
+		string mark;
 		public Position position;
 		public BasicAbility basicAbility;
 		public int hp, mp;
 		public List<Item> weapons;
+		public List<Item> storage;
 		public Description currentWork;
 		public long workFinishedTime;
 		public bool IsWorking{
@@ -97,6 +99,18 @@ namespace Common
 		}
 		public void ClearWork(){
 			workFinishedTime = 0;
+		}
+		public static MapPlayer UnknowPlayer = new MapPlayer{
+			mark = "unknow"
+		};
+		public static MapPlayer PlayerInHome = new MapPlayer{
+			mark = "home", weapons = new List<Item>(), storage = new List<Item>()
+		};
+		public static MapPlayer PlayerInMap = new MapPlayer{
+			mark = "map", weapons = new List<Item>(), storage = new List<Item>()
+		};
+		public bool Equals(MapPlayer other){
+			return mark == other.mark;
 		}
 	}
 
@@ -231,6 +245,8 @@ namespace Common
 
 	public struct FightAbility {
 		public float hp, mp, atk, def, matk, mdef, accuracy, dodge, critical;
+
+		public static FightAbility Zero;
 
 		public FightAbility Add(FightAbility b){
 			var a = this;
@@ -382,6 +398,7 @@ namespace Common
 				var op = 
 					value.IndexOf ("+") != -1 ? "+" :
 					value.IndexOf ("*") != -1 ? "*" :
+					value.IndexOf("@") != -1 ? "enforce" :
 					"unknown";
 				if (op == "unknown") {
 					throw new Exception ("format error:"+value);
@@ -668,7 +685,7 @@ namespace Common
 		IEnumerable<Description> WorkResults{ get; }
 		IEnumerable<Item> StorageInMap{ get; }
 
-		bool IsCanFusionInMap (string prototype);
+		bool IsCanFusion (string prototype, MapPlayer who);
 
 		BasicAbility PlayerBasicAbility (MapPlayer who);
 		FightAbility PlayerFightAbility (MapPlayer who);
@@ -710,9 +727,9 @@ namespace Common
 		void CancelWork ();
 		void ApplyWork();
 
-		void AddItemToStorageInMap(Item item);
-		void FusionInMap (string prototype);
-		void EquipWeaponInMap (Item item);
+		void AddItemToStorage(Item item, MapPlayer who);
+		void Fusion (string prototype, MapPlayer who);
+		void EquipWeapon (Item item, MapPlayer who);
 	}
 
 	public class Common
