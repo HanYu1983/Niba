@@ -6,7 +6,7 @@ using GameView;
 
 public class testView : MonoBehaviour {
 
-	public View View;
+	//public View View;
 
 	// Use this for initialization
 	void Start () {
