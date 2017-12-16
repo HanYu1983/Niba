@@ -3,6 +3,7 @@ using UnityEngine;
 using Common;
 using System.Collections;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace View
 {
@@ -10,6 +11,7 @@ namespace View
 	{
 		public GameObject gridLayout;
 		public GameObject playerLayout;
+		public GameObject[] workBtns;
 
 		public GameObject[] grids;
 
@@ -26,7 +28,52 @@ namespace View
 			}
 		}
 
-		public IEnumerator UpdateUI(IModelGetter model){
+		public IEnumerator UpdateWork(IModelGetter model){
+			Debug.Log ("UpdateWork");
+			foreach (var btn in workBtns) {
+				btn.SetActive (false);
+			}
+			var works = model.Works.ToList ();
+			for (var i = 0; i < works.Count; ++i) {
+				if (i >= workBtns.Length) {
+					Debug.LogWarning ("工作按鈕不夠用，請增加");
+					break;
+				}
+				var btn = workBtns [i];
+				var w = works [i];
+				var msg = "";
+				switch (w.description) {
+				case Description.WorkCollectResource:
+					{
+						var mapObjectId = int.Parse(w.values.Get("mapObjectId"));
+						var mapObject = model.MapObjects[mapObjectId];
+						var mapObjectInfo = model.ResourceInfos[mapObject.infoKey];
+						var config = ConfigResource.Get(mapObjectInfo.type);
+						msg = "采集[" + config.Name + "]";
+					}
+					break;
+				case Description.WorkAttack:
+					{
+						var mapObjectId = int.Parse(w.values.Get("mapObjectId"));
+						var mapObject = model.MapObjects[mapObjectId];
+						var mapObjectInfo = model.MonsterInfos[mapObject.infoKey];
+						var config = ConfigMonster.Get(mapObjectInfo.type);
+						msg = "攻擊[" + config.Name + "]";
+					}
+					break;
+				default:
+					msg = "XX";
+					break;
+				}
+				Debug.Log (w.description);
+				Debug.Log (w.values.Get ("mapObjectId"));
+				btn.GetComponentInChildren<Text> ().text = msg;
+				btn.SetActive (true);
+			}
+			yield return null;
+		}
+
+		public IEnumerator UpdateMap(IModelGetter model){
 			InitGridOnce ();
 			SetTileWithPlayerPositionCenterExpend (model);
 			yield return null;

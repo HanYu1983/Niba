@@ -27,36 +27,15 @@ namespace Model
 					var p = Mathf.PerlinNoise (x/(float)w, y/(float)h);
 					//Debug.Log (p);
 					if (p < 0.8f) {
-						var key = GenObject (MapObjectType.Resource, null);
-						var obj = mapObjects [key];
-						// change position
-						Position pos;
-						pos.x = x;
-						pos.y = y;
-						obj.position = pos;
-						// assign back
-						mapObjects [key] = obj;
-
-						// change type
-						var info = resourceInfo [mapObjects [key].infoKey];
+						var pos = Position.Zero.Add (x, y);
 						if (p < 0.3f) {
-							info.type = ConfigResource.ID_rock;
+							GenResource (player, pos, ConfigResource.ID_rock);
 						} else if (p < 0.8f) {
-							info.type = ConfigResource.ID_grass;
+							GenResource (player, pos, ConfigResource.ID_grass);
 						}
-						// assign back
-						resourceInfo [mapObjects [key].infoKey] = info;
-
 						// gen monster after assign item
 						if (UnityEngine.Random.Range (0, 100) < 25) {
-							if (obj.type == MapObjectType.Resource) {
-								var monsterKey = GenMonster (player, key, false);
-								var monster = mapObjects [monsterKey];
-								// change position
-								monster.position = pos;
-								// assign back
-								mapObjects [monsterKey] = monster;
-							}
+							GenMonster (player, pos, ConfigMonster.ID_ant);
 						}
 					} else {
 						// ignore
@@ -97,25 +76,29 @@ namespace Model
 			mapObjects.Add (item);
 			return item.key;
 		}
-		public int GenMonster(PlayerDataStore player, int objKey, bool assignMonsterType, string monsterType = ""){
-			var obj = mapObjects [objKey];
-			var resInfo = resourceInfo [obj.infoKey];
-			if (resInfo.type == "") {
-				throw new UnityException ("resourceType type not defined. with object key:"+objKey);
-			}
+		public int GenResource(PlayerDataStore player, Position pos, string resourceType){
+			var key = GenObject (MapObjectType.Resource, null);
+			var obj = mapObjects [key];
+			obj.position = pos;
+			mapObjects [key] = obj;
+
+			var info = resourceInfo [mapObjects [key].infoKey];
+			info.type = resourceType;
+			resourceInfo [mapObjects [key].infoKey] = info;
+			return key;
+		}
+		public int GenMonster(PlayerDataStore player, Position pos, string monsterType){
 			var m1Key = GenObject (MapObjectType.Monster, null);
+
 			var m1Object = mapObjects [m1Key];
+			m1Object.position = pos;
+			mapObjects [m1Key] = m1Object;
+
 			var m1Info = monsterInfo [m1Object.infoKey];
-			if (assignMonsterType) {
-				m1Info.type = monsterType;
-			} else {
-				// TODO
-				m1Info.type = ConfigMonster.ID_snack;
-			}
+			m1Info.type = monsterType;
 			var ability = BasicAbility.Get (m1Info).FightAbility;
 			m1Info.hp = (int)ability.hp;
 			m1Info.mp = (int)ability.mp;
-			// assign back
 			monsterInfo [m1Object.infoKey] = m1Info;
 			return m1Key;
 		}
@@ -142,8 +125,11 @@ namespace Model
 				return item.strKey == strKey;
 			});
 		}
-		public IEnumerable<MapObject> FindObjects(Position pos){
+		public IEnumerable<MapObject> FindObjects(Position pos, bool filterDied = true){
 			return mapObjects.Where (item => {
+				if(filterDied & item.died){
+					return false;
+				}
 				return item.position.Equals(pos);
 			});
 		}

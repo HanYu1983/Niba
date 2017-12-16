@@ -3,6 +3,7 @@ using UnityEngine;
 using View;
 using Model;
 using System.Collections;
+using System.Linq;
 
 namespace Common
 {
@@ -26,11 +27,24 @@ namespace Common
 			Debug.LogError (e.Message);
 		}
 
+		Coroutine handleCommandCoroutine;
+
 		void Common_OnEvent (string msg, object args)
 		{
+			if (handleCommandCoroutine != null) {
+				Debug.LogWarning ("上一次的動畫處理還沒完成");
+				return;
+			}
+			handleCommandCoroutine = StartCoroutine (HandleCommand (msg, args));
+		}
+
+		IEnumerator HandleCommand(string msg, object args){
+			Exception e = null;
 			switch (msg) {
 			case "click_home_map":
-				StartCoroutine (OpenMap ());
+				{
+					yield return OpenMap ();
+				}
 				break;
 			case "click_map_down":
 			case "click_map_left":
@@ -49,24 +63,74 @@ namespace Common
 					if (msg == "click_map_up") {
 						model.MoveUp ();
 					}
-					var result = model.MoveResult;
-					if (result.isMoveSuccess) {
-						StartCoroutine (view.ShowInfo (Info.Map, e2 => {
-							if (e2 != null) {
-
-							} else {
-								StartCoroutine(view.ShowInfo(Info.Work, e3=>{
-									if(e3 != null){
-
-									}
-								}));
-							}
-						}));
+					yield return HandleAfterMove ();
+				}
+				break;
+			case "click_map_item":
+				{
+					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
 					}
-					model.ClearMoveResult ();
+				}
+				break;
+			case "click_map_work_0":
+			case "click_map_work_1":
+			case "click_map_work_2":
+			case "click_map_work_3":
+			case "click_map_work_4":
+			case "click_map_work_5":
+			case "click_map_work_6":
+				{
+					var idx = int.Parse(msg.Replace ("click_map_work_", ""));
+					var selectWork = model.Works.ToList () [idx];
+					model.StartWork (selectWork);
+					model.ApplyWork ();
+					yield return view.ShowInfo (Info.WorkResult, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo(Info.Map, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 				}
 				break;
 			}
+			handleCommandCoroutine = null;
+		}
+
+		IEnumerator HandleAfterMove(){
+			Exception e = null;
+			var result = model.MoveResult;
+			if (result.isMoveSuccess) {
+				yield return view.ShowInfo(Info.Map, e2=>{
+					e = e2;
+				});
+				if (e != null) {
+					HandleException (e);
+					yield break;
+				}
+				if (result.HasEvent) {
+					yield return view.ShowInfo(Info.Event, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+			}
+			model.ClearMoveResult ();
 		}
 
 		IEnumerator OpenMap(){
