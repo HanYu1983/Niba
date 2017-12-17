@@ -29,7 +29,6 @@ namespace View
 		}
 
 		public IEnumerator UpdateWork(IModelGetter model){
-			Debug.Log ("UpdateWork");
 			foreach (var btn in workBtns) {
 				btn.SetActive (false);
 			}
@@ -65,8 +64,6 @@ namespace View
 					msg = "XX";
 					break;
 				}
-				Debug.Log (w.description);
-				Debug.Log (w.values.Get ("mapObjectId"));
 				btn.GetComponentInChildren<Text> ().text = msg;
 				btn.SetActive (true);
 			}

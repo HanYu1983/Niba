@@ -15,7 +15,7 @@ namespace Common
 		public IView view;
 		public IModel model;
 
-		void Awake(){
+		void Start(){
 			Common.OnEvent += Common_OnEvent;
 			view = hanView;
 			model = defaultModel;
@@ -39,8 +39,49 @@ namespace Common
 		}
 
 		IEnumerator HandleCommand(string msg, object args){
+			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "hanview_use_item":
+				{
+				}
+				break;
+			case "hanview_equip_item":
+				{
+					var weapon = (Item)args;
+					var err = model.EquipWeapon (weapon, model.MapPlayer);
+					if (err != null) {
+						HandleException (new Exception (err));
+						yield break;
+					}
+					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_itemPopup_use":
+			case "click_itemPopup_nouse":
+			case "click_itemPopup_normalMode":
+			case "click_itemPopup_head":
+			case "click_itemPopup_leftHand":
+			case "click_itemPopup_item_0":
+			case "click_itemPopup_item_1":
+			case "click_itemPopup_item_2":
+			case "click_itemPopup_item_3":
+			case "click_itemPopup_item_4":
+			case "click_itemPopup_item_5":
+			case "click_itemPopup_item_6":
+			case "click_itemPopup_item_7":
+			case "click_itemPopup_item_8":
+			case "click_itemPopup_item_9":
+			case "click_itemPopup_pageup":
+			case "click_itemPopup_pagedown":
+				yield return view.HandleCommand (msg, args);
+				break;
 			case "click_home_map":
 				{
 					yield return OpenMap ();
@@ -130,6 +171,7 @@ namespace Common
 					}
 				}
 			}
+			model.ApplyMoveResult();
 			model.ClearMoveResult ();
 		}
 

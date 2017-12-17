@@ -92,6 +92,12 @@ namespace Model
 			hasMoveResult = false;
 		}
 
+		public void ApplyMoveResult(){
+			if (tempMoveResult.HasEvent) {
+				mapData.ApplyEvents (playerData, tempMoveResult.events);
+			}
+		}
+
 		public void AddItemToStorage(Item item, MapPlayer who){
 			playerData.AddItem (item, who);
 			RequestSavePlayer ();
@@ -105,9 +111,13 @@ namespace Model
 			playerData.Fusion (prototype, who);
 		}
 
-		public void EquipWeapon (Item item, MapPlayer who){
-			playerData.EquipWeapon (item, who);
+		public string EquipWeapon (Item item, MapPlayer who){
+			var err = playerData.EquipWeapon (item, who);
+			if (err != null) {
+				return err;
+			}
 			RequestSavePlayer ();
+			return null;
 		}
 
 		BasicAbility tmpBasic;

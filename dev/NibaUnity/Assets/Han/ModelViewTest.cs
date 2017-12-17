@@ -6,6 +6,7 @@ using HanUtil;
 using GameView;
 using Common;
 using System.Linq;
+using View;
 
 namespace Model
 {
@@ -13,38 +14,27 @@ namespace Model
 	{
 		public HandleDebug debug;
 		public SimpleView gameView;
+		public HanView hanView;
+		public Model defaultModel;
+
+		IView view;
+		IModel model;
 
 		void Start ()
 		{
-			View.ModelGetter = Model;
+			model = defaultModel;
+			view = hanView;
+			view.ModelGetter = model;
+
 			StartCoroutine (TestAll());
 		}
 
-		IModel Model {
-			get {
-				var model = GetComponent<Model> ();
-				if (model == null) {
-					throw new UnityException ("model not found");
-				}
-				return model;
-			}
-		}
-
-		IView View {
-			get {
-				if (gameView == null) {
-					throw new UnityException ("view not found");
-				}
-				return gameView;
-			}
-		}
-
 		IEnumerator TestAll(){
-			yield return TestWeapon (Model, View);
-			yield return TestFight (Model, View);
-			yield return TestFusion (Model, View);
-			yield return TestMap (Model, View);
-			yield return TestShowInfo (Model, View);
+			yield return TestWeapon (model, view);
+			yield return TestFight (model, view);
+			yield return TestFusion (model, view);
+			yield return TestMap (model, view);
+			yield return TestShowInfo (model, view);
 		}
 
 		static IEnumerator TestWeapon(IModel model, IView view){
@@ -279,6 +269,7 @@ namespace Model
 					yield return new WaitForSeconds (2f);
 				}
 			}
+			model.ApplyMoveResult();
 			model.ClearMoveResult();
 
 			yield return view.ShowInfo (Info.Work, e2 => {
@@ -291,7 +282,7 @@ namespace Model
 			view.HideInfo (Info.Work);
 			yield return new WaitForSeconds (2f);
 
-			yield return view.ShowInfo (Info.Ability, e2 => {
+			yield return view.ShowInfo (Info.ItemInMap, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -395,7 +386,7 @@ namespace Model
 							throw e;
 						}
 						yield return new WaitForSeconds (2);
-						view.HideInfo(Info.Map);
+						view.HideInfo(Info.ItemInMap);
 					}
 					break;
 				case Description.WorkAttack:

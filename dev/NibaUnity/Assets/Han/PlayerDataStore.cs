@@ -159,6 +159,24 @@ namespace Model
 				}
 			);
 		}
+		public void ApplyEvents(PlayerDataStore player, IEnumerable<Description> events){
+			foreach (var evt in events) {
+				switch (evt.description) {
+				case Description.EventLucklyFind:
+					{
+						var itemPrototype = evt.values.Get("itemPrototype");
+						var cnt = int.Parse(evt.values.Get("count"));
+						Item item;
+						item.prototype = itemPrototype;
+						item.count = cnt;
+						player.playerInMap.storage = Helper.AddItem (player.playerInMap.storage, item);
+					}
+					break;
+				default:
+					throw new NotImplementedException ("event:"+evt.description);
+				}
+			}
+		}
 		#endregion
 
 		public IEnumerable<Description> ProcessWork(PlayerDataStore player, Description work){
@@ -412,10 +430,10 @@ namespace Model
 			}
 		}
 
-		public void EquipWeapon(Item item, MapPlayer who){
+		public string EquipWeapon(Item item, MapPlayer who){
 			var err = IsCanEquip (item, who);
 			if (err != null) {
-				throw new Exception ("無法裝備，請檢查:"+err);
+				return "無法裝備，請檢查:"+err;
 			}
 			if (who.Equals (player)) {
 				player.storage.Remove (item);
@@ -424,8 +442,9 @@ namespace Model
 				playerInMap.storage.Remove (item);
 				playerInMap.weapons.Add (item);
 			} else {
-				throw new Exception ("無法裝備在unknow");
+				return "無法裝備在unknow";
 			}
+			return null;
 		}
 		#endregion
 

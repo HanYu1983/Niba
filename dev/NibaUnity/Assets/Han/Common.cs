@@ -628,6 +628,7 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
+		IEnumerator HandleCommand(string msg, object args);
 		void HideInfo(Info page);
 	}
 
@@ -722,6 +723,7 @@ namespace Common
 		/// 清除移動結果的暫存
 		/// </summary>
 		void ClearMoveResult();
+		void ApplyMoveResult();
 
 		void StartWork (Description work);
 		void CancelWork ();
@@ -729,7 +731,7 @@ namespace Common
 
 		void AddItemToStorage(Item item, MapPlayer who);
 		void Fusion (string prototype, MapPlayer who);
-		void EquipWeapon (Item item, MapPlayer who);
+		string EquipWeapon (Item item, MapPlayer who);
 	}
 
 	public class Common

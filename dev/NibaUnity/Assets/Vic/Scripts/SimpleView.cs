@@ -115,5 +115,9 @@ namespace GameView
             // implement for test
             yield return ChangePage(Page.Game, callback);
         }
+
+		public IEnumerator HandleCommand(string msg, object args){
+			yield return null;
+		}
     }
 }
