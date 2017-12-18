@@ -566,7 +566,7 @@ namespace Common
 		public IEnumerable<ItemEffect> Effects {
 			get {
 				var cfg = ConfigItem.Get (prototype);
-				if (cfg.Type != "weapon") {
+				if (cfg.Type != ConfigItemType.ID_weapon) {
 					throw new Exception ("必須是武器:"+prototype);
 				}
 				return cfg.Ability.Split (new char[]{ ',' }).Select (v => {
@@ -628,8 +628,9 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
-		IEnumerator HandleCommand(string msg, object args);
 		void HideInfo(Info page);
+		void Alert (string msg);
+		IEnumerator HandleCommand(string msg, object args, Action<Exception> callback);
 	}
 
 	public interface IModelGetter{
@@ -732,6 +733,7 @@ namespace Common
 		void AddItemToStorage(Item item, MapPlayer who);
 		void Fusion (string prototype, MapPlayer who);
 		string EquipWeapon (Item item, MapPlayer who);
+		string UnequipWeapon (Item item, MapPlayer who);
 	}
 
 	public class Common

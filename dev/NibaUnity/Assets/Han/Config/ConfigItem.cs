@@ -9,7 +9,7 @@ public string FusionRequire { get; set; }
 public string SkillRequire { get; set; }
 public string Ability { get; set; }
 public string Position { get; set; }
-public const int ID_COUNT = 16;
+public const int ID_COUNT = 19;
 public const string ID_grass = "grass";
 public const string ID_wood = "wood";
 public const string ID_gravel = "gravel";
@@ -26,6 +26,9 @@ public const string ID_bigIronSword = "bigIronSword";
 public const string ID_nightShield = "nightShield";
 public const string ID_woodKen = "woodKen";
 public const string ID_ironKen = "ironKen";
+public const string ID_woodHelmet = "woodHelmet";
+public const string ID_woodArmor = "woodArmor";
+public const string ID_woodShoe = "woodShoe";
 public static ConfigItem Get(int key){
 switch(key){
 case 0: return new ConfigItem {ID="grass",Name="草",Type="material",MaxCount=99};
@@ -39,11 +42,14 @@ case 7: return new ConfigItem {ID="woodShield",Name="木盾",Type="weapon",MaxCo
 case 8: return new ConfigItem {ID="powerRing",Name="加量戒指",Type="weapon",MaxCount=1,Ability="str+2",Position="accessory"};
 case 9: return new ConfigItem {ID="ironSword",Name="鐵劍",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+4",Position="hand"};
 case 10: return new ConfigItem {ID="ironShield",Name="鐵盾",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="def+4",Position="hand"};
-case 11: return new ConfigItem {ID="arrows",Name="箭矢",Type="weapon",MaxCount=99,FusionRequire="feather,wood,gravel",Position="hand"};
+case 11: return new ConfigItem {ID="arrows",Name="木箭矢",Type="weapon",MaxCount=99,FusionRequire="feather,wood,gravel",Ability="str+1",Position="hand"};
 case 12: return new ConfigItem {ID="bigIronSword",Name="雙手劍",Type="weapon",MaxCount=1,FusionRequire="iron_4",Ability="atk+8,dodge-2",Position="hand"};
 case 13: return new ConfigItem {ID="nightShield",Name="騎士盾",Type="weapon",MaxCount=1,FusionRequire="iron_4",Ability="def+8",Position="hand"};
 case 14: return new ConfigItem {ID="woodKen",Name="木指虎",Type="weapon",MaxCount=1,FusionRequire="wood_1",Ability="atk+1,dodge+2",Position="hand"};
 case 15: return new ConfigItem {ID="ironKen",Name="鐵指虎",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+3,dodge+2",Position="hand"};
+case 16: return new ConfigItem {ID="woodHelmet",Name="木盔",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+2",Position="head"};
+case 17: return new ConfigItem {ID="woodArmor",Name="木甲",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+4",Position="body"};
+case 18: return new ConfigItem {ID="woodShoe",Name="木鞋",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+1",Position="foot"};
 default: throw new Exception("");
 }}public static ConfigItem Get(string key){
 switch(key){
@@ -58,10 +64,13 @@ case "woodShield": return new ConfigItem {ID="woodShield",Name="木盾",Type="we
 case "powerRing": return new ConfigItem {ID="powerRing",Name="加量戒指",Type="weapon",MaxCount=1,Ability="str+2",Position="accessory"};
 case "ironSword": return new ConfigItem {ID="ironSword",Name="鐵劍",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+4",Position="hand"};
 case "ironShield": return new ConfigItem {ID="ironShield",Name="鐵盾",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="def+4",Position="hand"};
-case "arrows": return new ConfigItem {ID="arrows",Name="箭矢",Type="weapon",MaxCount=99,FusionRequire="feather,wood,gravel",Position="hand"};
+case "arrows": return new ConfigItem {ID="arrows",Name="木箭矢",Type="weapon",MaxCount=99,FusionRequire="feather,wood,gravel",Ability="str+1",Position="hand"};
 case "bigIronSword": return new ConfigItem {ID="bigIronSword",Name="雙手劍",Type="weapon",MaxCount=1,FusionRequire="iron_4",Ability="atk+8,dodge-2",Position="hand"};
 case "nightShield": return new ConfigItem {ID="nightShield",Name="騎士盾",Type="weapon",MaxCount=1,FusionRequire="iron_4",Ability="def+8",Position="hand"};
 case "woodKen": return new ConfigItem {ID="woodKen",Name="木指虎",Type="weapon",MaxCount=1,FusionRequire="wood_1",Ability="atk+1,dodge+2",Position="hand"};
 case "ironKen": return new ConfigItem {ID="ironKen",Name="鐵指虎",Type="weapon",MaxCount=1,FusionRequire="iron_2",Ability="atk+3,dodge+2",Position="hand"};
+case "woodHelmet": return new ConfigItem {ID="woodHelmet",Name="木盔",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+2",Position="head"};
+case "woodArmor": return new ConfigItem {ID="woodArmor",Name="木甲",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+4",Position="body"};
+case "woodShoe": return new ConfigItem {ID="woodShoe",Name="木鞋",Type="weapon",MaxCount=1,FusionRequire="wood_2",Ability="def+1",Position="foot"};
 default: throw new Exception("");
 }}}

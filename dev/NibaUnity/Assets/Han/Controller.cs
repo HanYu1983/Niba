@@ -21,10 +21,19 @@ namespace Common
 			model = defaultModel;
 
 			view.ModelGetter = model;
+
+			Item item;
+			item.count = 1;
+			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
+				item.prototype = ConfigItem.Get (i).ID;
+				model.AddItemToStorage (item, model.MapPlayer);
+			}
 		}
 
 		void HandleException(Exception e){
+			view.Alert (e.Message);
 			Debug.LogError (e.Message);
+			handleCommandCoroutine = null;
 		}
 
 		Coroutine handleCommandCoroutine;
@@ -42,11 +51,11 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
-			case "hanview_use_item":
+			case "itemPopup_use_item":
 				{
 				}
 				break;
-			case "hanview_equip_item":
+			case "itemPopup_equip_item":
 				{
 					var weapon = (Item)args;
 					var err = model.EquipWeapon (weapon, model.MapPlayer);
@@ -63,11 +72,36 @@ namespace Common
 					}
 				}
 				break;
+			case "itemPopup_unequip_item":
+				{
+					var weapon = (Item)args;
+					var err = model.UnequipWeapon (weapon, model.MapPlayer);
+					if (err != null) {
+						HandleException (new Exception (err));
+						yield break;
+					}
+					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
 			case "click_itemPopup_use":
 			case "click_itemPopup_nouse":
+			case "click_itemPopup_equip":
+			case "click_itemPopup_unequip":
 			case "click_itemPopup_normalMode":
 			case "click_itemPopup_head":
+			case "click_itemPopup_body":
+			case "click_itemPopup_foot":
+			case "click_itemPopup_rightHand":
 			case "click_itemPopup_leftHand":
+			case "click_itemPopup_a1":
+			case "click_itemPopup_a2":
+			case "click_itemPopup_a3":
 			case "click_itemPopup_item_0":
 			case "click_itemPopup_item_1":
 			case "click_itemPopup_item_2":
@@ -80,7 +114,13 @@ namespace Common
 			case "click_itemPopup_item_9":
 			case "click_itemPopup_pageup":
 			case "click_itemPopup_pagedown":
-				yield return view.HandleCommand (msg, args);
+				yield return view.HandleCommand (msg, args, e2=>{
+					e = e2;
+				});
+				if (e != null) {
+					HandleException (e);
+					yield break;
+				}
 				break;
 			case "click_home_map":
 				{

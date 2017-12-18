@@ -116,8 +116,12 @@ namespace GameView
             yield return ChangePage(Page.Game, callback);
         }
 
-		public IEnumerator HandleCommand(string msg, object args){
+		public IEnumerator HandleCommand(string msg, object args, Action<Exception> callback){
 			yield return null;
+		}
+
+		public void Alert (string msg){
+
 		}
     }
 }

@@ -119,6 +119,14 @@ namespace Model
 			RequestSavePlayer ();
 			return null;
 		}
+		public string UnequipWeapon (Item item, MapPlayer who){
+			var err = playerData.UnequipWeapon (item, who);
+			if (err != null) {
+				return err;
+			}
+			RequestSavePlayer ();
+			return null;
+		}
 
 		BasicAbility tmpBasic;
 		FightAbility tmpFight;

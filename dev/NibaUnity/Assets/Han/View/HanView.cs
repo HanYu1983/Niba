@@ -33,15 +33,20 @@ namespace View
 			switch (info) {
 			case Info.ItemInMap:
 				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
+					try{
+						var popup = itemPopup.GetComponent<ItemPopup> ();
+						if (popup == null) {
+							throw new Exception ("xxxx");
+						}
+						// 先Open才會呼叫Awake
+						mgr.OpenPopup (itemPopup);
+						popup.Data = model.StorageInMap;
+						popup.UpdateDataView (model);
+						popup.CurrItemLabel (model, popup.SelectIndex);
+						callback (null);
+					}catch(Exception e){
+						callback (e);
 					}
-					popup.Data = model.StorageInMap;
-					popup.UpdateUI (model);
-
-					mgr.OpenPopup (itemPopup);
-					callback (null);
 					break;
 				}
 			case Info.Map:
@@ -140,12 +145,13 @@ namespace View
 							throw new NotImplementedException("沒實作的事件:"+evt.description);
 						}
 					}).ToArray ());
+
 					var popup = msgPopup.GetComponent<MessagePopup> ();
 					if (popup == null) {
 						throw new Exception ("xxxx");
 					}
-					popup.Message = msg;
 					mgr.OpenPopup (msgPopup);
+					popup.Message = msg;
 					callback (null);
 				}
 				break;
@@ -189,78 +195,32 @@ namespace View
 			}
 		}
 
-		public int lastSelectItemIndex;
+		public void Alert (string msg){
+			/*
+			var popup = msgPopup.GetComponent<MessagePopup> ();
+			if (popup == null) {
+				throw new Exception ("xxxx");
+			}
+			mgr.OpenPopup (msgPopup);
+			popup.Message = msg;
+			*/
+		}
 
-		public IEnumerator HandleCommand(string msg, object args){
+		public IEnumerator HandleCommand(string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_itemPopup_use":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					var item = popup.Data.ToList () [lastSelectItemIndex];
-					var cfg = ConfigItem.Get (item.prototype);
-					if (cfg.Type == "weapon") {
-						Common.Common.Notify ("hanview_equip_item", item);
-					} else {
-						Common.Common.Notify ("hanview_use_item", item);
-					}
-				}
-				break;
 			case "click_itemPopup_nouse":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					var item = popup.Data.ToList () [lastSelectItemIndex];
-					var cfg = ConfigItem.Get (item.prototype);
-					if (cfg.Type == "weapon") {
-						Common.Common.Notify ("hanview_unequip_item", item);
-					} else {
-						Common.Common.Notify ("hanview_sell_item", item);
-					}
-				}
-				break;
+			case "click_itemPopup_equip":
+			case "click_itemPopup_unequip":
 			case "click_itemPopup_normalMode":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Data = model.StorageInMap;
-					popup.ShowMode = ItemPopup.Mode.Normal;
-					popup.UpdateUI (model);
-				}
-				break;
-			case "click_itemPopup_leftHand":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Data = model.StorageInMap.Where (item => {
-						var cfg = ConfigItem.Get(item.prototype);
-						return cfg.Type == "weapon" && cfg.Position == ConfigWeaponPosition.ID_hand;
-					});
-					popup.ShowMode = ItemPopup.Mode.Equip;
-					popup.UpdateUI (model);
-				}
-				break;
 			case "click_itemPopup_head":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Data = model.StorageInMap.Where (item => {
-						var cfg = ConfigItem.Get(item.prototype);
-						return cfg.Type == "weapon" && cfg.Position == ConfigWeaponPosition.ID_head;
-					});
-					popup.UpdateUI (model);
-				}
-				break;
+			case "click_itemPopup_body":
+			case "click_itemPopup_foot":
+			case "click_itemPopup_rightHand":
+			case "click_itemPopup_leftHand":
+			case "click_itemPopup_a1":
+			case "click_itemPopup_a2":
+			case "click_itemPopup_a3":
 			case "click_itemPopup_item_0":
 			case "click_itemPopup_item_1":
 			case "click_itemPopup_item_2":
@@ -271,47 +231,20 @@ namespace View
 			case "click_itemPopup_item_7":
 			case "click_itemPopup_item_8":
 			case "click_itemPopup_item_9":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					var selectIdx = popup.CurrIndex (msg);
-					popup.CurrItemLabel (model, selectIdx);
-
-					var cfg = ConfigItem.Get (popup.Data.ToList() [selectIdx].prototype);
-					popup.ShowMode = cfg.Type == "weapon" ? ItemPopup.Mode.Equip : ItemPopup.Mode.Normal;
-					popup.UpdateUI (model);
-
-					lastSelectItemIndex = selectIdx;
-
-					//Common.Common.Notify ("click_itemPopup_item_modelIndex", selectIdx);
-				}
-				break;
 			case "click_itemPopup_pageup":
-				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Page -= 1;
-					popup.UpdateUI (model);
-				}
-				break;
 			case "click_itemPopup_pagedown":
 				{
 					var popup = itemPopup.GetComponent<ItemPopup> ();
 					if (popup == null) {
-						throw new Exception ("xxxx");
+						callback(new Exception ("xxxx"));
+						yield break;
 					}
-					popup.Page += 1;
-					popup.UpdateUI (model);
+					yield return popup.HandleCommand (model, msg, args, callback);
 				}
 				break;
 			}
 			yield return null;
 		}
-
 	}
 }
 

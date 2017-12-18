@@ -10,6 +10,12 @@ namespace Model
 	{
 		[MenuItem ("Niba/GenerateConfig")]
 		public static void GenConfig(){
+			GenCode ("ConfigItemType", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+			}, "CSV/gameData - itemType.tsv");
+
 			GenCode ("ConfigMonster", null, new string[]{
 				"ID", "string",
 				"Name", "string",

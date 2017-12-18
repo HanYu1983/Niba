@@ -401,7 +401,7 @@ namespace Model
 		#region weapon
 		public string IsCanEquip(Item item, MapPlayer who){
 			var cfg = ConfigItem.Get (item.prototype);
-			if (cfg.Type != "weapon") {
+			if (cfg.Type != ConfigItemType.ID_weapon) {
 				return "只能裝備weapon類型，請檢查程式";
 			}
 			var weaponPosition = cfg.Position;
@@ -443,6 +443,23 @@ namespace Model
 				playerInMap.weapons.Add (item);
 			} else {
 				return "無法裝備在unknow";
+			}
+			return null;
+		}
+
+		public string UnequipWeapon(Item item, MapPlayer who){
+			var isCanUnequip = who.weapons.IndexOf (item) != -1;
+			if (isCanUnequip == false) {
+				return "無法拆掉：沒有那個裝備";
+			}
+			if (who.Equals (player)) {
+				player.storage.Add (item);
+				player.weapons.Remove (item);
+			} else if (who.Equals (playerInMap)) {
+				playerInMap.storage.Add (item);
+				playerInMap.weapons.Remove (item);
+			} else {
+				return "無法拆掉裝備在unknow";
 			}
 			return null;
 		}

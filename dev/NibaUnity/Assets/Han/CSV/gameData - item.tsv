@@ -10,8 +10,11 @@ woodShield	木盾		weapon	1	wood_3		def+2	hand
 powerRing	加量戒指		weapon	1			str+2	accessory
 ironSword	鐵劍		weapon	1	iron_2		atk+4	hand
 ironShield	鐵盾		weapon	1	iron_2		def+4	hand
-arrows	箭矢		weapon	99	feather,wood,gravel			hand
+arrows	木箭矢		weapon	99	feather,wood,gravel		str+1	hand
 bigIronSword	雙手劍		weapon	1	iron_4		atk+8,dodge-2	hand
 nightShield	騎士盾		weapon	1	iron_4		def+8	hand
 woodKen	木指虎		weapon	1	wood_1		atk+1,dodge+2	hand
 ironKen	鐵指虎		weapon	1	iron_2		atk+3,dodge+2	hand
+woodHelmet	木盔		weapon	1	wood_2		def+2	head
+woodArmor	木甲		weapon	1	wood_2		def+4	body
+woodShoe	木鞋		weapon	1	wood_2		def+1	foot
