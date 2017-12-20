@@ -12,7 +12,9 @@ namespace View
 		public ZUIManager mgr;
 		public Menu menuHome, menuMap;
 		public SideMenu menuInfo;
-		public Popup msgPopup, itemPopup;
+		public Popup itemPopup;
+		public Popup abilityPopup;
+		public Popup fusionPopup;
 
 		IModelGetter model;
 		public IModelGetter ModelGetter{ set{ model = value; } }
@@ -33,27 +35,28 @@ namespace View
 			switch (info) {
 			case Info.ItemInMap:
 				{
-					try{
-						var popup = itemPopup.GetComponent<ItemPopup> ();
-						if (popup == null) {
-							throw new Exception ("xxxx");
-						}
-						// 先Open才會呼叫Awake
-						mgr.OpenPopup (itemPopup);
-						popup.Data = model.StorageInMap;
-						popup.UpdateDataView (model);
-						popup.CurrItemLabel (model, popup.SelectIndex);
-						callback (null);
-					}catch(Exception e){
-						callback (e);
+					var popup = itemPopup.GetComponent<ItemPopup> ();
+					if (popup == null) {
+						callback (new Exception ("你沒有加入ItemPopup Component"));
+						yield break;
 					}
+					// 先Open才會呼叫Awake
+					itemPopup.ChangeVisibility(true);
+
+					popup.ItemView.Data = model.MapPlayer.storage;
+					popup.ItemView.UpdateDataView (model);
+					popup.ItemView.CurrItemLabel (model, popup.SelectIndex);
+					popup.UpdateButtonLabel (model);
+					popup.AbilityView.UpdateAbility(model, model.MapPlayer);
+					callback (null);
 					break;
 				}
 			case Info.Map:
 				{
 					var map = mgr.CurActiveMenu.GetComponent<MenuMap> ();
 					if (map == null) {
-						throw new Exception ("xxxx");
+						callback (new Exception ("你沒有加入MenuMap Component"));
+						yield break;
 					}
 					yield return map.UpdateMap (model);
 					yield return map.UpdateWork (model);
@@ -64,7 +67,8 @@ namespace View
 				{
 					var map = mgr.CurActiveMenu.GetComponent<MenuMap> ();
 					if (map == null) {
-						throw new Exception ("xxxx");
+						callback (new Exception ("你沒有加入MenuMap Component"));
+						yield break;
 					}
 					yield return map.UpdateWork (model);
 					callback (null);
@@ -73,6 +77,11 @@ namespace View
 			case Info.WorkResult:
 				{
 					var results = model.WorkResults;
+					if (results == null) {
+						Debug.LogWarning ("沒有workresults");
+						callback (null);
+						yield break;
+					}
 					var msg = string.Join("\n", results.Select (e => {
 						Debug.LogWarning(e.description);
 						switch (e.description) {
@@ -105,24 +114,8 @@ namespace View
 							throw new NotImplementedException();	
 						}
 					}).ToArray ());
-					var popup = msgPopup.GetComponent<MessagePopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Message = msg;
 
-					mgr.OpenPopup (msgPopup);
-					callback (null);
-				}
-				break;
-			case Info.Ability:
-				{
-					var popup = msgPopup.GetComponent<MessagePopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					popup.Message = model.PlayerFightAbility (model.MapPlayer).ToString();
-					mgr.OpenPopup (msgPopup);
+					Alert (msg);
 					callback (null);
 				}
 				break;
@@ -145,23 +138,39 @@ namespace View
 							throw new NotImplementedException("沒實作的事件:"+evt.description);
 						}
 					}).ToArray ());
-
-					var popup = msgPopup.GetComponent<MessagePopup> ();
-					if (popup == null) {
-						throw new Exception ("xxxx");
-					}
-					mgr.OpenPopup (msgPopup);
-					popup.Message = msg;
+					Alert (msg);
 					callback (null);
 				}
 				break;
+			case Info.Ability:
+				{
+					var ability = abilityPopup.GetComponent<AbilityView> ();
+					if (ability == null) {
+						callback (new Exception ("你沒有加入AbilityPopup Component"));
+						yield break;
+					}
+					abilityPopup.ChangeVisibility (true);
+					ability.UpdateAbility (model, model.MapPlayer);
+				}
+				break;
+			case Info.Fusion:
+				{
+					var popup = fusionPopup.GetComponent<FusionPopup> ();
+					if (popup == null) {
+						callback (new Exception ("你沒有加入FusionPopup Component"));
+						yield break;
+					}
+					popup.UpdateUI (model);
+					fusionPopup.ChangeVisibility (true);
+				}
+				break;
 			default:
-				throw new NotImplementedException ("info:"+info.ToString());
+				throw new NotImplementedException (info.ToString());
 			}
 			yield return null;
 		}
 
-		public void HideInfo(Info page){
+		public IEnumerator HideInfo(Info page){
 			switch (page)
 			{
 			case Info.Map:
@@ -172,79 +181,110 @@ namespace View
 				break;
 			case Info.Event:
 				{
-					mgr.ClosePopup (msgPopup);
+					yield return CloseMsgPopup ();
 				}
 				break;
 			case Info.ItemInMap:
 				{
-					mgr.ClosePopup (itemPopup);
+					itemPopup.ChangeVisibility (false);
 				}
 				break;
 			case Info.WorkResult:
 				{
-					mgr.ClosePopup (msgPopup);
+					yield return CloseMsgPopup ();
 				}
 				break;
 			case Info.Ability:
 				{
-					mgr.ClosePopup (msgPopup);
+					abilityPopup.ChangeVisibility (false);
 				}
 				break;
 			default:
-				throw new NotImplementedException ();
+				throw new NotImplementedException (page.ToString());
 			}
+			yield return null;
 		}
 
 		public void Alert (string msg){
-			/*
-			var popup = msgPopup.GetComponent<MessagePopup> ();
-			if (popup == null) {
-				throw new Exception ("xxxx");
-			}
-			mgr.OpenPopup (msgPopup);
+			var popup = OpenMsgPopup ();
 			popup.Message = msg;
-			*/
 		}
 
 		public IEnumerator HandleCommand(string msg, object args, Action<Exception> callback){
 			switch (msg) {
-			case "click_itemPopup_use":
-			case "click_itemPopup_nouse":
-			case "click_itemPopup_equip":
-			case "click_itemPopup_unequip":
-			case "click_itemPopup_normalMode":
-			case "click_itemPopup_head":
-			case "click_itemPopup_body":
-			case "click_itemPopup_foot":
-			case "click_itemPopup_rightHand":
-			case "click_itemPopup_leftHand":
-			case "click_itemPopup_a1":
-			case "click_itemPopup_a2":
-			case "click_itemPopup_a3":
-			case "click_itemPopup_item_0":
-			case "click_itemPopup_item_1":
-			case "click_itemPopup_item_2":
-			case "click_itemPopup_item_3":
-			case "click_itemPopup_item_4":
-			case "click_itemPopup_item_5":
-			case "click_itemPopup_item_6":
-			case "click_itemPopup_item_7":
-			case "click_itemPopup_item_8":
-			case "click_itemPopup_item_9":
-			case "click_itemPopup_pageup":
-			case "click_itemPopup_pagedown":
+			case "click_abilityPopup_close":
+				abilityPopup.ChangeVisibility (false);
+				break;
+			case "click_itemPopup_close":
+				itemPopup.ChangeVisibility (false);
+				break;
+			case "click_msgPopup_close":
+				yield return CloseMsgPopup ();
+				break;
+			default:
 				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
-					if (popup == null) {
-						callback(new Exception ("xxxx"));
-						yield break;
+					if (msg.Contains ("click_itemPopup")) {
+						var popup = itemPopup.GetComponent<ItemPopup> ();
+						if (popup == null) {
+							callback (new Exception ("xxxx"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
 					}
-					yield return popup.HandleCommand (model, msg, args, callback);
+
+					if (msg.Contains ("click_fusionPopup")) {
+						var popup = fusionPopup.GetComponent<FusionPopup> ();
+						if (popup == null) {
+							callback (new Exception ("xxxx"));
+							yield break;
+						}
+						popup.Who = model.MapPlayer;
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
 				}
 				break;
 			}
 			yield return null;
 		}
+
+		#region msg popup
+		public Popup msgPopObject;
+		public List<Popup> msgPops;
+		public MessagePopup OpenMsgPopup(Transform parent = null){
+			if(parent == null){
+				parent = msgPopObject.transform.parent;
+			}
+			var popup = Instantiate (msgPopObject, parent, false);
+			var info = popup.GetComponent<MessagePopup> ();
+			if (info == null) {
+				throw new Exception ("沒有加入MessagePopup Component");
+			}
+			msgPops.Add (popup);
+			// 注意：
+			// 初始化旗標必須全部重設，不然UIElement中會發生null pointer的情況
+			// 可能是因為沒有按ZUI標準使用方式
+			// 為了讓Popup可以同時出現多種，並一種可以重復出現，這個Popup是沒有透過ZUIManager.OpenPopup打開的
+			popup.Initialized = false;
+			foreach (var i in popup.AnimatedElements) {
+				i.Initialized = false;
+			}
+			popup.ChangeVisibility (true);
+			return info;
+		}
+		public MessagePopup GetTopMsgPopup(){
+			return msgPops.Last ().GetComponent<MessagePopup>();
+		}
+		public IEnumerator CloseMsgPopup(){
+			if (msgPops.Count == 0) {
+				yield break;
+			}
+			var popup = msgPops.Last ();
+			popup.ChangeVisibility (false);
+			msgPops.Remove (popup);
+			yield return new WaitForSeconds (0.5f);
+			Destroy (popup.gameObject);
+		}
+		#endregion
 	}
 }
 

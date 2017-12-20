@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
-using GameView;
 using Common;
 using System.Linq;
 using View;
@@ -13,7 +12,6 @@ namespace Model
 	public class ModelViewTest : MonoBehaviour
 	{
 		public HandleDebug debug;
-		public SimpleView gameView;
 		public HanView hanView;
 		public Model defaultModel;
 
@@ -30,11 +28,31 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestFusionView (model, view);
+			/*
 			yield return TestWeapon (model, view);
 			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
 			yield return TestMap (model, view);
 			yield return TestShowInfo (model, view);
+			*/
+		}
+
+		static IEnumerator TestFusionView(IModel model, IView view){
+			Item item;
+			item.count = 1;
+			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
+				item.prototype = ConfigItem.Get (i).ID;
+				model.AddItemToStorage (item, model.MapPlayer);
+			}
+
+			Exception e = null;
+			yield return view.ShowInfo (Info.Fusion, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
 		}
 
 		static IEnumerator TestWeapon(IModel model, IView view){
@@ -78,7 +96,7 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
-			yield return null;
+			yield return view.HideInfo(Info.Ability);
 		}
 
 		static IEnumerator TestFight(IModel model, IView view){
@@ -116,7 +134,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			view.HideInfo (Info.Ability);
+			yield return view.HideInfo (Info.Ability);
 
 			yield return view.ShowInfo (Info.Work, e2 => {
 				e = e2;
@@ -145,7 +163,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			view.HideInfo (Info.WorkResult);
+			yield return view.HideInfo (Info.WorkResult);
 		}
 
 		static IEnumerator TestFusion(IModel model, IView view){
@@ -174,7 +192,7 @@ namespace Model
 			model.AddItemToStorage (item, model.MapPlayer);
 
 			var canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
-			if (canFusionArrows == true) {
+			if (canFusionArrows > 0) {
 				throw new Exception ("少一個項目不能合成箭矢");
 			}
 
@@ -182,7 +200,7 @@ namespace Model
 			item.count = 5;
 			model.AddItemToStorage (item, model.MapPlayer);
 
-			foreach(var i in model.StorageInMap){
+			foreach(var i in model.MapPlayer.storage){
 				Debug.Log (i);
 			}
 			yield return view.ShowInfo (Info.ItemInMap, e2 => {
@@ -193,19 +211,18 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
-			if (canFusionArrows == false) {
+			if (canFusionArrows <= 0) {
 				throw new Exception ("必須能合成箭矢");
 			}
 
-			view.HideInfo (Info.ItemInMap);
-			yield return new WaitForSeconds (2f);
+			yield return view.HideInfo (Info.ItemInMap);
 
 			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
 			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
-			foreach(var i in model.StorageInMap){
+			foreach(var i in model.MapPlayer.storage){
 				Debug.Log (i);
 			}
-			var arrows = model.StorageInMap.Where(it=>{
+			var arrows = model.MapPlayer.storage.Where(it=>{
 				return it.prototype == ConfigItem.ID_arrows;
 			}).FirstOrDefault();
 			if (arrows.Equals (Common.Item.Empty)) {
@@ -221,7 +238,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			view.HideInfo (Info.ItemInMap);
+			yield return view.HideInfo (Info.ItemInMap);
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){
@@ -265,8 +282,7 @@ namespace Model
 						throw e;
 					}
 					yield return new WaitForSeconds (2f);
-					view.HideInfo (Info.Event);
-					yield return new WaitForSeconds (2f);
+					yield return view.HideInfo (Info.Event);
 				}
 			}
 			model.ApplyMoveResult();
@@ -279,8 +295,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			view.HideInfo (Info.Work);
-			yield return new WaitForSeconds (2f);
+			yield return view.HideInfo (Info.Work);
 
 			yield return view.ShowInfo (Info.ItemInMap, e2 => {
 				e = e2;
@@ -376,7 +391,7 @@ namespace Model
 						if (e != null) {
 							throw e;
 						}
-						foreach (var item in model.StorageInMap) {
+						foreach (var item in model.MapPlayer.storage) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
 						yield return view.ShowInfo (Info.ItemInMap, e2 => {
@@ -386,7 +401,7 @@ namespace Model
 							throw e;
 						}
 						yield return new WaitForSeconds (2);
-						view.HideInfo(Info.ItemInMap);
+						yield return view.HideInfo(Info.ItemInMap);
 					}
 					break;
 				case Description.WorkAttack:

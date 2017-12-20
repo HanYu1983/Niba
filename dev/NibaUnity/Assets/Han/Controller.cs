@@ -41,7 +41,7 @@ namespace Common
 		void Common_OnEvent (string msg, object args)
 		{
 			if (handleCommandCoroutine != null) {
-				Debug.LogWarning ("上一次的動畫處理還沒完成");
+				Debug.LogWarning ("上一次的動畫處理還沒完成:"+msg);
 				return;
 			}
 			handleCommandCoroutine = StartCoroutine (HandleCommand (msg, args));
@@ -89,39 +89,6 @@ namespace Common
 					}
 				}
 				break;
-			case "click_itemPopup_use":
-			case "click_itemPopup_nouse":
-			case "click_itemPopup_equip":
-			case "click_itemPopup_unequip":
-			case "click_itemPopup_normalMode":
-			case "click_itemPopup_head":
-			case "click_itemPopup_body":
-			case "click_itemPopup_foot":
-			case "click_itemPopup_rightHand":
-			case "click_itemPopup_leftHand":
-			case "click_itemPopup_a1":
-			case "click_itemPopup_a2":
-			case "click_itemPopup_a3":
-			case "click_itemPopup_item_0":
-			case "click_itemPopup_item_1":
-			case "click_itemPopup_item_2":
-			case "click_itemPopup_item_3":
-			case "click_itemPopup_item_4":
-			case "click_itemPopup_item_5":
-			case "click_itemPopup_item_6":
-			case "click_itemPopup_item_7":
-			case "click_itemPopup_item_8":
-			case "click_itemPopup_item_9":
-			case "click_itemPopup_pageup":
-			case "click_itemPopup_pagedown":
-				yield return view.HandleCommand (msg, args, e2=>{
-					e = e2;
-				});
-				if (e != null) {
-					HandleException (e);
-					yield break;
-				}
-				break;
 			case "click_home_map":
 				{
 					yield return OpenMap ();
@@ -158,6 +125,17 @@ namespace Common
 					}
 				}
 				break;
+			case "click_map_ability":
+				{
+					yield return view.ShowInfo (Info.Ability, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
 			case "click_map_work_0":
 			case "click_map_work_1":
 			case "click_map_work_2":
@@ -184,6 +162,15 @@ namespace Common
 						HandleException (e);
 						yield break;
 					}
+				}
+				break;
+			default:
+				yield return view.HandleCommand (msg, args, e2=>{
+					e = e2;
+				});
+				if (e != null) {
+					HandleException (e);
+					yield break;
 				}
 				break;
 			}

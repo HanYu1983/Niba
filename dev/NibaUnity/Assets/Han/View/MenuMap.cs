@@ -92,12 +92,12 @@ namespace View
 					var idx = y * 10 + x;
 					var txt = grids [idx].GetComponent<Text> ();
 					var mapObj = mapObjs[x,y];
+					if (mapObj.position.Equals (model.MapPlayer.position)) {
+						playerLayout.transform.SetParent (txt.transform, false);
+					}
 					if(mapObj.type == MapObjectType.Unknown){
 						txt.text = "*";
 						continue;
-					}
-					if (mapObj.position.Equals (model.MapPlayer.position)) {
-						playerLayout.transform.SetParent (txt.transform, false);
 					}
 					var info = model.ResourceInfos [mapObj.infoKey];
 					var cfg = ConfigResource.Get (info.type);

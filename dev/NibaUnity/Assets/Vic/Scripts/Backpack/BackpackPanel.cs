@@ -11,7 +11,7 @@ namespace GameView
         public override void UpdateContent()
         {
             IModelGetter model = View.Instance.Model;
-            var items = model.StorageInMap;
+			var items = model.MapPlayer.storage;
             var workcount = items.Count();
             SetContentHeight(workcount);
             for (int i = 0; i < WorkItems.Count; ++i)

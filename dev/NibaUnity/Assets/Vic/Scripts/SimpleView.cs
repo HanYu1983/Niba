@@ -78,7 +78,7 @@ namespace GameView
             }
         }
 
-		public void HideInfo(Info page)
+		public IEnumerator HideInfo(Info page)
 		{
 			switch (page)
 			{
@@ -108,6 +108,7 @@ namespace GameView
 				}
 				break;
 			}
+			yield return null;
 		}
 
         IEnumerator UpdateMap(Action<Exception> callback)

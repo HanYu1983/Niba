@@ -20,8 +20,6 @@ namespace Model
 			yield return null;
 			mapData.GenMap (type, 10, 10, playerData);
 			playerData.ClearVisibleMapObjects ();
-			playerData.playerInMap.basicAbility = BasicAbility.Default;
-			playerData.playerInMap.position = Position.Zero;
 			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 
 			ClearMoveResult ();
@@ -41,8 +39,6 @@ namespace Model
 		}
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
-		public IEnumerable<Item> StorageInMap{ get { return playerData.playerInMap.storage; }  }
-
 
 		IEnumerable<Description> workResult;
 		public IEnumerable<Description> WorkResults{ get{ return workResult; } }
@@ -103,7 +99,7 @@ namespace Model
 			RequestSavePlayer ();
 		}
 
-		public bool IsCanFusion (string prototype, MapPlayer who){
+		public int IsCanFusion (string prototype, MapPlayer who){
 			return playerData.IsCanFusion (prototype, who);
 		}
 
@@ -139,6 +135,23 @@ namespace Model
 		public FightAbility PlayerFightAbility(MapPlayer who){
 			Helper.CalcAbility (playerData, mapData, who, ref tmpBasic, ref tmpFight);
 			return tmpFight;
+		}
+
+		public IEnumerable<Item> CanFusionItems{ 
+			get { 
+				var ret = new List<Item> ();
+				Item item;
+				item.count = 1;
+				for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
+					var cfg = ConfigItem.Get (i);
+					if (cfg.FusionRequire == null) {
+						continue;
+					}
+					item.prototype = ConfigItem.Get (i).ID;
+					ret.Add (item);
+				}
+				return ret;
+			} 
 		}
 
 		void Move(Position position){

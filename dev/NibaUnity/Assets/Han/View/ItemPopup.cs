@@ -10,43 +10,21 @@ namespace View
 {
 	public class ItemPopup : MonoBehaviour
 	{
-		public GameObject itemParent;
-		public int offset;
-		public int limit;
-		public Text txtCurrItem;
-		public Button[] btns;
+		public ItemView itemView;
+		public AbilityView abilityView;
 
-		public Button[] items;
-
-		void Awake(){
-			if (limit > 10) {
-				throw new Exception ("limit不能大於10");
-			}
-			items = itemParent.GetComponentsInChildren<Button> ();
-		}
-
-		public int Page{
+		public ItemView ItemView{
 			get{
-				return offset / limit;
-			}
-			set{
-				if (value <= 0) {
-					offset = 0;
-					return;
-				}
-				offset = value * limit;
+				return itemView;
 			}
 		}
-		/// <summary>
-		/// 將點選列表觸發的指令還原成道具索引
-		/// 用這個索引呼叫CurrItemLabel來改變狀態列
-		/// </summary>
-		/// <returns>The index.</returns>
-		/// <param name="cmd">Cmd.</param>
-		public int CurrIndex(string cmd) {
-			var idx = int.Parse (cmd.Replace ("click_itemPopup_item_", ""));
-			return idx + offset;
+		public AbilityView AbilityView{
+			get{
+				return abilityView;
+			}
 		}
+
+		public Button[] btns;
 		/// <summary>
 		/// 更新按鈕文字
 		/// 每次道具裝備或拆掉後呼叫
@@ -174,97 +152,7 @@ namespace View
 			}
 		}
 
-		/// <summary>
-		/// 顯示用的資料，在呼叫UpdateUI前要先設定
-		/// </summary>
-		IEnumerable<Item> data;
-		public IEnumerable<Item> Data{
-			set{
-				data = value;
-			}
-			get{
-				return data;
-			}
-		}
 
-		/// <summary>
-		/// 修改狀態列文字
-		/// 指定顯示第currIndex個道具
-		/// </summary>
-		/// <param name="model">Model.</param>
-		/// <param name="currIndex">Curr index.</param>
-		public void CurrItemLabel(IModelGetter model, int currIndex){
-			if (data == null) {
-				Debug.LogWarning ("還沒有設定data");
-				return;
-			}
-			if (currIndex <0 || currIndex >= data.Count ()) {
-				txtCurrItem.text = "你沒有選擇任何道具";
-				return;
-			}
-			var item = data.Skip (currIndex).First ();
-			var cfg = ConfigItem.Get (item.prototype);
-			txtCurrItem.text = string.Format ("你選擇{0}", cfg.Name);
-		}
-
-		public enum Mode{
-			Normal, Equip
-		}
-		public Mode showMode;
-
-		/// <summary>
-		/// 列表文字顯示模式
-		/// 當為Equip時會另外顯示裝備道具效果
-		/// 在點擊到weapon時可以修改這個模式
-		/// </summary>
-		/// <value>The show mode.</value>
-		public Mode ShowMode{
-			set{
-				showMode = value;
-			}
-		}
-
-		/// <summary>
-		/// 更新列表
-		/// 注意要先設定Data
-		/// </summary>
-		/// <param name="model">Model.</param>
-		public void UpdateDataView(IModelGetter model){
-			UpdateButtonLabel (model);
-			if (data == null) {
-				Debug.LogWarning ("還沒有設定data");
-				return;
-			}
-			var modelItems = data.ToList ();
-			for (var i = 0; i < limit; ++i) {
-				var curr = i + offset;
-				var btn = items [i];
-
-				if (curr >= modelItems.Count) {
-					btn.gameObject.SetActive (false);
-					continue;
-				}
-				var modelItem = modelItems [curr];
-				var cfg = ConfigItem.Get (modelItem.prototype);
-
-				var cnt = modelItem.count;
-				var name = cfg.Name;
-				var appendStr = "";
-				switch (showMode) {
-				case Mode.Equip:
-					{
-						if (cfg.Type == ConfigItemType.ID_weapon) {
-							appendStr += "(" + cfg.Ability + ")";
-						}
-					}
-					break;
-				}
-
-				var msg = string.Format ("{0}{1}{2}個", name, appendStr, cnt);
-				btn.gameObject.GetComponentInChildren<Text> ().text = msg;
-				btn.gameObject.SetActive (true);
-			}
-		}
 
 		#region controller
 		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
@@ -277,16 +165,16 @@ namespace View
 					}
 					// 防呆處理
 					// 果為連續按裝備時道具會減少
-					if (Data.Count() == 0) {
+					if (ItemView.Data.Count() == 0) {
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					if (SelectIndex >= Data.Count ()) {
+					if (SelectIndex >= ItemView.Data.Count ()) {
 						ClearSelectIndex ();
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = Data.ToList () [SelectIndex];
+					var item = ItemView.Data.ToList () [SelectIndex];
 					Common.Common.Notify ("itemPopup_equip_item", item);
 				}
 				break;
@@ -318,7 +206,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = Data.ToList () [SelectIndex];
+					var item = ItemView.Data.ToList () [SelectIndex];
 					Common.Common.Notify ("itemPopup_use_item", item);
 				}
 				break;
@@ -328,7 +216,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = Data.ToList () [SelectIndex];
+					var item = ItemView.Data.ToList () [SelectIndex];
 					Common.Common.Notify ("itemPopup_sell_item", item);
 				}
 				break;
@@ -336,9 +224,9 @@ namespace View
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.Data = model.StorageInMap;
-					popup.ShowMode = ItemPopup.Mode.Normal;
-					popup.UpdateDataView (model);
+					popup.ItemView.Data = model.MapPlayer.storage;
+					popup.ItemView.ShowMode = ItemView.Mode.Normal;
+					popup.ItemView.UpdateDataView (model);
 				}
 				break;
 			case "click_itemPopup_head":
@@ -352,23 +240,23 @@ namespace View
 				{
 					var popup = this;
 					// 修改為武器顯示模式
-					popup.ShowMode = ItemPopup.Mode.Equip;
+					popup.ItemView.ShowMode = ItemView.Mode.Equip;
 					// 取得點擊部位
 					var pos = "";
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.Data = model.StorageInMap.Where (item => {
+					popup.ItemView.Data = model.MapPlayer.storage.Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					});
-					popup.Page = 0;
+					popup.ItemView.Page = 0;
 					// 修改列表內容
-					popup.UpdateDataView (model);
+					popup.ItemView.UpdateDataView (model);
 					// 取消列表索引
 					ClearSelectIndex ();
 					// 更新狀態文字
-					popup.CurrItemLabel (model, SelectIndex);
+					popup.ItemView.CurrItemLabel (model, SelectIndex);
 					// 記錄部位
 					RecordLastPosition (msg);
 				}
@@ -384,32 +272,34 @@ namespace View
 			case "click_itemPopup_item_8":
 			case "click_itemPopup_item_9":
 				{
+					/*
 					var popup = this;
 					// 修改狀態文字
-					var selectIdx = popup.CurrIndex (msg);
-					popup.CurrItemLabel (model, selectIdx);
+					var selectIdx = popup.ItemView.CurrIndex (msg);
+					popup.ItemView.CurrItemLabel (model, selectIdx);
 					// 修改列表內容
-					var cfg = ConfigItem.Get (popup.Data.ToList() [selectIdx].prototype);
-					popup.ShowMode = cfg.Type == ConfigItemType.ID_weapon ? ItemPopup.Mode.Equip : ItemPopup.Mode.Normal;
-					popup.UpdateDataView (model);
+					var cfg = ConfigItem.Get (popup.ItemView.Data.ToList() [selectIdx].prototype);
+					popup.ItemView.ShowMode = cfg.Type == ConfigItemType.ID_weapon ? ItemView.Mode.Equip : ItemView.Mode.Normal;
+					popup.ItemView.UpdateDataView (model);
+					popup.UpdateButtonLabel (model);
 					// 記錄最後一次點擊的索引
 					RecordSelectIndex(selectIdx);
 					// 取消部位
 					ClearLastPositionCommand ();
+					*/
+					var selectIdx = itemView.CurrIndex (msg);
+					// 記錄最後一次點擊的索引
+					RecordSelectIndex(selectIdx);
+					// 取消部位
+					ClearLastPositionCommand ();
+					yield return itemView.HandleCommand (model, msg, args, callback);
 				}
 				break;
-			case "click_itemPopup_pageup":
+			default:
 				{
-					var popup = this;
-					popup.Page -= 1;
-					popup.UpdateDataView (model);
-				}
-				break;
-			case "click_itemPopup_pagedown":
-				{
-					var popup = this;
-					popup.Page += 1;
-					popup.UpdateDataView (model);
+					if (msg.Contains (itemView.CommandPrefix)) {
+						yield return itemView.HandleCommand (model, msg, args, callback);
+					}
 				}
 				break;
 			}

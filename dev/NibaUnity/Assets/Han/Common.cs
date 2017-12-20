@@ -104,10 +104,16 @@ namespace Common
 			mark = "unknow"
 		};
 		public static MapPlayer PlayerInHome = new MapPlayer{
-			mark = "home", weapons = new List<Item>(), storage = new List<Item>()
+			mark = "home", 
+			basicAbility = BasicAbility.Default,
+			weapons = new List<Item>(), 
+			storage = new List<Item>()
 		};
 		public static MapPlayer PlayerInMap = new MapPlayer{
-			mark = "map", weapons = new List<Item>(), storage = new List<Item>()
+			mark = "map", 
+			basicAbility = BasicAbility.Default,
+			weapons = new List<Item>(), 
+			storage = new List<Item>()
 		};
 		public bool Equals(MapPlayer other){
 			return mark == other.mark;
@@ -398,6 +404,7 @@ namespace Common
 				var op = 
 					value.IndexOf ("+") != -1 ? "+" :
 					value.IndexOf ("*") != -1 ? "*" :
+					value.IndexOf ("-") != -1 ? "-" :
 					value.IndexOf("@") != -1 ? "enforce" :
 					"unknown";
 				if (op == "unknown") {
@@ -408,7 +415,7 @@ namespace Common
 		}
 		// 請參考Helper.CalcAbility
 		public BasicAbility Effect(BasicAbility ability){
-			var idx = value.Split (new char[]{ '+', '*' });
+			var idx = value.Split (new char[]{ '+', '*', '-' });
 			if (idx.Length != 2) {
 				throw new Exception ("format error:"+value);
 			}
@@ -442,7 +449,33 @@ namespace Common
 					ability.luc += effectValue;
 					break;
 				}
-			} if (EffectOperator == "*") {
+			} 
+
+			if (op == "-") {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str -= effectValue;
+					break;
+				case "vit":
+					ability.vit -= effectValue;
+					break;
+				case "dex":
+					ability.dex -= effectValue;
+					break;
+				case "agi":
+					ability.agi -= effectValue;
+					break;
+				case "int":
+					ability.Int -= effectValue;
+					break;
+				case "luc":
+					ability.luc -= effectValue;
+					break;
+				}
+			} 
+
+			if (EffectOperator == "*") {
 				var effectValue = float.Parse (idx [1]);
 				switch (target) {
 				case "str":
@@ -470,7 +503,7 @@ namespace Common
 
 		// 請參考Helper.CalcAbility
 		public FightAbility Effect(FightAbility ability){
-			var idx = value.Split (new char[]{ '+', '*' });
+			var idx = value.Split (new char[]{ '+', '*', '-' });
 			if (idx.Length != 2) {
 				throw new Exception ("format error:" + value);
 			}
@@ -513,6 +546,40 @@ namespace Common
 					break;
 				}
 			}
+
+			if (op == "-") {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp -= effectValue;
+					break;
+				case "mp":
+					ability.mp -= effectValue;
+					break;
+				case "atk":
+					ability.atk -= effectValue;
+					break;
+				case "def":
+					ability.def -= effectValue;
+					break;
+				case "matk":
+					ability.matk -= effectValue;
+					break;
+				case "mdef":
+					ability.mdef -= effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy -= effectValue;
+					break;
+				case "dodge":
+					ability.dodge -= effectValue;
+					break;
+				case "critical":
+					ability.critical -= effectValue;
+					break;
+				}
+			}
+
 			if (op == "*") {
 				var effectValue = float.Parse (idx [1]);
 				switch (target) {
@@ -609,7 +676,7 @@ namespace Common
 	}
 
 	public enum Info{
-		Unknown, Event, Work, WorkResult, Map, ItemInMap, Ability
+		Unknown, Event, Work, WorkResult, Map, ItemInMap, Ability, Fusion
 	}
 
 	public class MessageException : Exception{
@@ -628,7 +695,7 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
-		void HideInfo(Info page);
+		IEnumerator HideInfo(Info page);
 		void Alert (string msg);
 		IEnumerator HandleCommand(string msg, object args, Action<Exception> callback);
 	}
@@ -685,12 +752,13 @@ namespace Common
 		/// <value>The player actions.</value>
 		IEnumerable<Description> Works{ get; }
 		IEnumerable<Description> WorkResults{ get; }
-		IEnumerable<Item> StorageInMap{ get; }
 
-		bool IsCanFusion (string prototype, MapPlayer who);
+		int IsCanFusion (string prototype, MapPlayer who);
 
 		BasicAbility PlayerBasicAbility (MapPlayer who);
 		FightAbility PlayerFightAbility (MapPlayer who);
+
+		IEnumerable<Item> CanFusionItems{ get; }
 	}
 
 	public interface IModel : IModelGetter{
@@ -743,6 +811,74 @@ namespace Common
         {
             OnEvent(cmd, args);
         }
+
+		public static IEnumerable<Item> ParseItem(string itemString){
+			Func<string, Item> parseOne = str => {
+				var prototype = str;
+				var count = 1;
+				var hasCount = str.IndexOf ("_") != -1;
+				if (hasCount) {
+					var info = str.Split (new char[]{ '_' }, StringSplitOptions.None);
+					prototype = info[0];
+					try{
+						count = int.Parse (info [1]);
+					}catch(Exception){
+						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
+					}
+				}
+				var item = Item.Empty;
+				item.prototype = prototype;
+				item.count = count;
+				return item;
+			};
+			if (itemString == null) {
+				return new List<Item> ();
+			}
+			var hasMulti = itemString.IndexOf (",") != -1;
+			if (hasMulti) {
+				var strs = itemString.Split (new char[]{ ',' }, StringSplitOptions.None);
+				return strs.Select (parseOne);
+			}
+			return Enumerable.Repeat (parseOne (itemString), 1);
+		}
+
+		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
+			var hasItem = string.IsNullOrEmpty (res.Item) == false;
+			if (hasItem == false) {
+				return new List<Item> ();
+			}
+			return ParseItem (res.Item);
+		}
+
+		/// <summary>
+		/// Determines if is can fusion the specified prototype items.
+		/// </summary>
+		/// <returns>
+		/// 	<c>more then 1</c></c> if is can fusion the specified prototype items; otherwise, 
+		/// 	<c>0</c>可以合成，但道具不夠.
+		/// 	</c>-1</c>不能合成
+		/// </returns>
+		/// <param name="prototype">Prototype.</param>
+		/// <param name="items">Items.</param>
+		public static int IsCanFusion(string prototype, IEnumerable<Item> items){
+			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
+			int minCnt = int.MaxValue;
+			foreach (var requireItem in requires) {
+				var search = items.Where (it => {
+					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
+				});
+				var isNotFound = search.Count () == 0;
+				if (isNotFound) {
+					return -1;
+				}
+				var total = search.Sum (it => it.count);
+				var maxFusionCnt = total / requireItem.count;
+				if (minCnt > maxFusionCnt) {
+					minCnt = maxFusionCnt;
+				}
+			}
+			return minCnt;
+		}
 
 		/// <summary>
 		/// 這個方法很像不需要了

@@ -190,7 +190,7 @@ namespace Model
 					mapObjects [mapObjectId] = obj;
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
-					foreach (var item in Helper.ParseItemFromResource(config)) {
+					foreach (var item in Common.Common.ParseItemFromResource(config)) {
 						player.AddItem (item, player.playerInMap);
 					}
 				}
@@ -491,7 +491,7 @@ namespace Model
 		#region fusion
 		public void Fusion(string prototype, MapPlayer who){
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
-				var requires = Helper.ParseItem (ConfigItem.Get (prototype).FusionRequire);
+				var requires = Common.Common.ParseItem (ConfigItem.Get (prototype).FusionRequire);
 				var formatForSubstrct = requires.Select (item => {
 					item.count = -item.count;
 					return item;
@@ -513,13 +513,13 @@ namespace Model
 			}
 		}
 
-		public bool IsCanFusion(string prototype, MapPlayer who){
+		public int IsCanFusion(string prototype, MapPlayer who){
 			if (who.Equals (player)) {
-				return Helper.IsCanFusion (prototype, player.storage);
+				return Common.Common.IsCanFusion (prototype, player.storage);
 			} else if (who.Equals (playerInMap)) {
-				return Helper.IsCanFusion (prototype, playerInMap.storage);
+				return Common.Common.IsCanFusion (prototype, playerInMap.storage);
 			} else {
-				return Helper.IsCanFusion (prototype, storage);
+				return Common.Common.IsCanFusion (prototype, storage);
 			}
 		}
 		#endregion
@@ -572,10 +572,10 @@ namespace Model
 				return;
 			}
 			var effects = who.weapons.SelectMany (it => it.Effects);
-			var addEffect = effects.Where (ef => ef.EffectOperator == "+");
+			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
 			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
 			// 先處理基本能力
-			var tmpBasic = basic;
+			var tmpBasic = who.basicAbility;
 			// 先加減
 			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
 				return curr.Effect(accu);
@@ -606,54 +606,7 @@ namespace Model
 			return (int)(a.atk - b.def);
 		}
 
-		public static IEnumerable<Item> ParseItem(string itemString){
-			Func<string, Item> parseOne = str => {
-				var prototype = str;
-				var count = 1;
-				var hasCount = str.IndexOf ("_") != -1;
-				if (hasCount) {
-					var info = str.Split (new char[]{ '_' }, StringSplitOptions.None);
-					prototype = info[0];
-					try{
-						count = int.Parse (info [1]);
-					}catch(Exception){
-						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
-					}
-				}
-				var item = Item.Empty;
-				item.prototype = prototype;
-				item.count = count;
-				return item;
-			};
-			var hasMulti = itemString.IndexOf (",") != -1;
-			if (hasMulti) {
-				var strs = itemString.Split (new char[]{ ',' }, StringSplitOptions.None);
-				return strs.Select (parseOne);
-			}
-			return Enumerable.Repeat (parseOne (itemString), 1);
-		}
 
-		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
-			var hasItem = string.IsNullOrEmpty (res.Item) == false;
-			if (hasItem == false) {
-				return new List<Item> ();
-			}
-			return ParseItem (res.Item);
-		}
-
-		public static bool IsCanFusion(string prototype, IEnumerable<Item> items){
-			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
-			foreach (var requireItem in requires) {
-				var search = items.Where (it => {
-					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
-				});
-				var isNotFound = search.Count () == 0;
-				if (isNotFound) {
-					return false;
-				}
-			}
-			return true;
-		}
 
 		public static List<Item> AddItem(List<Item> input, Item item){
 			var container = new List<Item> (input);
