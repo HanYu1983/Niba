@@ -37,6 +37,8 @@ namespace Model
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
 		}
+		public List<Item> Storage{ get{ return playerData.storage; } }
+		public MapPlayer HomePlayer { get { return playerData.player; } }
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
 
@@ -103,25 +105,26 @@ namespace Model
 			return playerData.IsCanFusion (prototype, who);
 		}
 
-		public void Fusion (string prototype, MapPlayer who){
-			playerData.Fusion (prototype, who);
+		public void Fusion (Item item, MapPlayer who){
+			playerData.Fusion (item, who);
 		}
 
-		public string EquipWeapon (Item item, MapPlayer who){
-			var err = playerData.EquipWeapon (item, who);
-			if (err != null) {
-				return err;
-			}
+		public void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+			playerData.EquipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
-			return null;
 		}
-		public string UnequipWeapon (Item item, MapPlayer who){
-			var err = playerData.UnequipWeapon (item, who);
-			if (err != null) {
-				return err;
-			}
+		public void UnequipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+			playerData.UnequipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
-			return null;
+		}
+		public void ClearStorage(MapPlayer who){
+			if (who.Equals (playerData.player)) {
+				playerData.player.storage.Clear ();
+			} else if (who.Equals (playerData.playerInMap)) {
+				playerData.playerInMap.storage.Clear ();
+			} else {
+				playerData.storage.Clear ();
+			}
 		}
 
 		BasicAbility tmpBasic;

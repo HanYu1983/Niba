@@ -42,13 +42,6 @@ namespace View{
 			get{ return commandPrefix; }
 		}
 
-		public int fusionCount;
-		public int maxFusionCount;
-
-		public void ClearFusionCount(){
-			fusionCount = 0;
-		}
-
 		public MapPlayer Who{ get; set; }
 		public Item FusionTarget{ get; set; }
 
@@ -57,8 +50,7 @@ namespace View{
 				throw new Exception ("必須先設定FusionTarget");
 			}
 			var targetCfg = ConfigItem.Get (FusionTarget.prototype);
-			var tempFusionCount = Math.Max (fusionCount, 0);
-			txt_fusionTarget.text = string.Format ("{0}{1}個", targetCfg.Name, tempFusionCount);
+			txt_fusionTarget.text = string.Format ("合成{0}{1}個", targetCfg.Name, FusionTarget.count);
 
 			var requireItems = Common.Common.ParseItem (targetCfg.FusionRequire).ToList();
 			for (var i = 0; i < txt_requireItems.Length; ++i) {
@@ -68,11 +60,11 @@ namespace View{
 					continue;
 				}
 				var requireItem = requireItems [i];
-				var total = Who.storage.Where(j=>{
+				var total = Common.Common.Storage(model, Who).Where(j=>{
 					return j.prototype == requireItem.prototype;
 				}).Sum(j=>j.count);
 				var cfg = ConfigItem.Get (requireItem.prototype);
-				txt.text = string.Format ("需要{0}{1}個({2}/{3})", cfg.Name, requireItem.count, tempFusionCount* requireItem.count, total);
+				txt.text = string.Format ("需要{0}{1}個({2})", cfg.Name, FusionTarget.count* requireItem.count, total);
 				txt.gameObject.SetActive (true);
 			}
 
@@ -81,29 +73,54 @@ namespace View{
 		#region controller
 		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
 			if (msg.Contains (CommandPrefix)) {
+				var isNotValidItem = FusionTarget.Equals (Item.Empty);
+				if (isNotValidItem) {
+					callback (new Exception ("你還沒選擇道具"));
+					yield break;
+				}
 				if (msg == commandPrefix + "_add1") {
-					fusionCount += 1;
-					var maxFusionCount = model.IsCanFusion (FusionTarget.prototype, Who);
-					if (fusionCount > maxFusionCount) {
-						fusionCount = maxFusionCount;
-					}
+					var item = FusionTarget;
+					item.count += 1;
+					FusionTarget = item;
 				}
 				if (msg == commandPrefix + "_add10") {
-					fusionCount += 10;
-					var maxFusionCount = model.IsCanFusion (FusionTarget.prototype, Who);
-					if (fusionCount > maxFusionCount) {
-						fusionCount = maxFusionCount;
-					}
+					var item = FusionTarget;
+					item.count += 10;
+					FusionTarget = item;
 				}
 				if (msg == commandPrefix + "_sub1") {
-					fusionCount -= 1;
+					var item = FusionTarget;
+					item.count -= 1;
+					if (item.count < 0) {
+						item.count = 0;
+					}
+					FusionTarget = item;
 				}
 				if (msg == commandPrefix + "_sub10") {
-					fusionCount -= 10;
+					var item = FusionTarget;
+					item.count -= 10;
+					if (item.count < 0) {
+						item.count = 0;
+					}
+					FusionTarget = item;
 				}
 				if (msg == commandPrefix + "_max") {
 					var maxFusionCount = model.IsCanFusion (FusionTarget.prototype, Who);
-					fusionCount = maxFusionCount;
+					var item = FusionTarget;
+					item.count = maxFusionCount;
+					if (item.count < 0) {
+						item.count = 0;
+					}
+					FusionTarget = item;
+				}
+				if (msg == commandPrefix + "_ok") {
+					if (FusionTarget.count == 0) {
+						yield break;
+					}
+					var info = new object[]{
+						FusionTarget, Who
+					};
+					Common.Common.Notify("fusionRequireView_ok", info);
 				}
 				UpdateUI (model);
 			}

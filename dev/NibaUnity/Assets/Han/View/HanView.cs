@@ -20,8 +20,13 @@ namespace View
 		public IModelGetter ModelGetter{ set{ model = value; } }
 		public IEnumerator ChangePage(Page page, Action<Exception> callback){
 			switch (page) {
-			case Page.Title:
+			case Page.Home:
 				mgr.OpenMenu (menuHome);
+				var home = menuHome.GetComponent<MenuHome> ();
+				if (home == null) {
+					throw new Exception ("你沒有加入MenuHome Component");
+				}
+				home.UpdateUI (model, model.HomePlayer);
 				callback (null);
 				break;
 			case Page.Game:
@@ -33,21 +38,24 @@ namespace View
 		}
 		public IEnumerator ShowInfo(Info info, Action<Exception> callback){
 			switch (info) {
-			case Info.ItemInMap:
+			case Info.ItemInHomePocket:
+			case Info.ItemInHome:
+			case Info.Item:
 				{
 					var popup = itemPopup.GetComponent<ItemPopup> ();
 					if (popup == null) {
-						callback (new Exception ("你沒有加入ItemPopup Component"));
-						yield break;
+						throw new Exception ("你沒有加入ItemPopup Component");
 					}
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
-
-					popup.ItemView.Data = model.MapPlayer.storage;
-					popup.ItemView.UpdateDataView (model);
-					popup.ItemView.CurrItemLabel (model, popup.SelectIndex);
-					popup.UpdateButtonLabel (model);
-					popup.AbilityView.UpdateAbility(model, model.MapPlayer);
+					var whosWeapon = info == Info.Item ? MapPlayer.PlayerInMap : MapPlayer.PlayerInHome;
+					var whosStorage = 
+						info == Info.Item ? MapPlayer.PlayerInMap : 
+						info == Info.ItemInHomePocket ? MapPlayer.PlayerInHome :
+						MapPlayer.UnknowPlayer;
+					popup.WhosWeapon = whosWeapon;
+					popup.WhosStorage = whosStorage;
+					popup.UpdateUI (model);
 					callback (null);
 					break;
 				}
@@ -154,14 +162,20 @@ namespace View
 				}
 				break;
 			case Info.Fusion:
+			case Info.FusionInHome:
 				{
 					var popup = fusionPopup.GetComponent<FusionPopup> ();
 					if (popup == null) {
 						callback (new Exception ("你沒有加入FusionPopup Component"));
 						yield break;
 					}
-					popup.UpdateUI (model);
 					fusionPopup.ChangeVisibility (true);
+
+					var who = 
+						info == Info.Fusion ? model.MapPlayer :
+						MapPlayer.UnknowPlayer;
+					popup.Who = who;
+					popup.UpdateUI (model);
 				}
 				break;
 			default:
@@ -184,7 +198,9 @@ namespace View
 					yield return CloseMsgPopup ();
 				}
 				break;
-			case Info.ItemInMap:
+			case Info.Item:
+			case Info.ItemInHome:
+			case Info.ItemInHomePocket:
 				{
 					itemPopup.ChangeVisibility (false);
 				}
@@ -197,6 +213,11 @@ namespace View
 			case Info.Ability:
 				{
 					abilityPopup.ChangeVisibility (false);
+				}
+				break;
+			case Info.Fusion:
+				{
+					fusionPopup.ChangeVisibility (false);
 				}
 				break;
 			default:
@@ -212,11 +233,21 @@ namespace View
 
 		public IEnumerator HandleCommand(string msg, object args, Action<Exception> callback){
 			switch (msg) {
+			case "itemPopup_equip_item":
+			case "itemPopup_unequip_item":
+				menuHome.GetComponent<MenuHome> ().UpdateUI (model, MapPlayer.PlayerInHome);
+				break;
+			case "click_fusionPopup_close":
+				yield return HideInfo (Info.Fusion);
+				callback (null);
+				break;
 			case "click_abilityPopup_close":
-				abilityPopup.ChangeVisibility (false);
+				yield return HideInfo (Info.Ability);
+				callback (null);
 				break;
 			case "click_itemPopup_close":
-				itemPopup.ChangeVisibility (false);
+				yield return HideInfo (Info.Item);
+				callback (null);
 				break;
 			case "click_msgPopup_close":
 				yield return CloseMsgPopup ();
@@ -238,7 +269,6 @@ namespace View
 							callback (new Exception ("xxxx"));
 							yield break;
 						}
-						popup.Who = model.MapPlayer;
 						yield return popup.HandleCommand (model, msg, args, callback);
 					}
 				}

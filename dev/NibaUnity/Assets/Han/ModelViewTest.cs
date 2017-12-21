@@ -28,14 +28,71 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
-			/*
 			yield return TestWeapon (model, view);
 			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
 			yield return TestMap (model, view);
 			yield return TestShowInfo (model, view);
-			*/
+		}
+
+		static IEnumerator TestHomeStorage(IModel model, IView view){
+			Item item;
+			item.count = 1;
+			item.prototype = ConfigItem.ID_grass;
+			model.AddItemToStorage (item, MapPlayer.UnknowPlayer);
+
+			item.prototype = ConfigItem.ID_woodShield;
+			model.AddItemToStorage (item, MapPlayer.UnknowPlayer);
+
+			if (model.Storage.Count != 2) {
+				throw new Exception ("家裡必須有2個道具");
+			}
+
+			Exception e = null;
+			yield return view.ShowInfo(Info.ItemInHome, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (1f);
+			yield return view.HideInfo (Info.ItemInHome);
+
+			item.prototype = ConfigItem.ID_woodSword;
+			model.AddItemToStorage (item, MapPlayer.PlayerInHome);
+			if (model.HomePlayer.storage.Count != 1) {
+				throw new Exception ("口袋必須有1個道具");
+			}
+
+			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.PlayerInHome);
+			if (model.HomePlayer.storage.Count != 0) {
+				throw new Exception ("裝備後口袋必須沒有道具");
+			}
+			// 直接從家裡裝裝備
+			item.prototype = ConfigItem.ID_woodShield;
+			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.UnknowPlayer);
+			if (model.HomePlayer.weapons.Count != 2) {
+				throw new Exception ("裝備後裝備數量必須為2");
+			}
+			yield return view.ShowInfo(Info.ItemInHomePocket, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (1f);
+			yield return view.HideInfo (Info.ItemInHomePocket);
+
+			yield return view.ShowInfo(Info.ItemInHome, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			yield return new WaitForSeconds (1f);
+			yield return view.HideInfo (Info.ItemInHome);
 		}
 
 		static IEnumerator TestFusionView(IModel model, IView view){
@@ -53,10 +110,12 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			yield return view.HideInfo (Info.Fusion);
 		}
 
 		static IEnumerator TestWeapon(IModel model, IView view){
 			Exception e = null;
+			model.ClearStorage (model.MapPlayer);
 
 			var fight = model.PlayerFightAbility(model.MapPlayer);
 			Debug.Log (fight);
@@ -66,27 +125,30 @@ namespace Model
 			weapon.count = 1;
 
 			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
 			try{
-				model.EquipWeapon (weapon, model.MapPlayer);
+				model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+				throw new Exception ("裝備沒有的裝備必須丟出例外");
 			}catch(Exception e2){
 				if (e2.Message.IndexOf ("無法裝備，請檢查:沒有那個道具") == -1) {
-					throw new Exception ("裝備沒有的裝備必須丟出例外");
+					throw new Exception ("裝備沒有的裝備必須丟出特定例外:"+e2.Message);
 				}
 			}
 			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+
+			model.AddItemToStorage (weapon, model.MapPlayer);
 			try{
-				model.AddItemToStorage (weapon, model.MapPlayer);
-				model.EquipWeapon (weapon, model.MapPlayer);
+				model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+				throw new Exception ("裝備超過最大數量限制必須丟出例外");
 			}catch(Exception e2){
 				if (e2.Message.IndexOf ("無法裝備，請檢查:那個位置已經滿") == -1) {
-					throw new Exception ("裝備超過最大數量限制必須丟出例外");
+					throw new Exception ("裝備超過最大數量限制必須丟出特定例外:"+e2.Message);
 				}
 			}
 			weapon.prototype = ConfigItem.ID_powerRing;
 			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer);
+			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
 
 			fight = model.PlayerFightAbility(model.MapPlayer);
 			Debug.Log (fight);
@@ -168,6 +230,7 @@ namespace Model
 
 		static IEnumerator TestFusion(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
+			model.ClearStorage (model.MapPlayer);
 
 			Exception e = null;
 			yield return model.LoadMap (MapType.Unknown, e2 => {
@@ -193,7 +256,13 @@ namespace Model
 
 			var canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
 			if (canFusionArrows > 0) {
-				throw new Exception ("少一個項目不能合成箭矢");
+				yield return view.ShowInfo (Info.Fusion, e2 => {
+					e = e2;
+				});
+				if (e != null) {
+					throw e;
+				}
+				throw new Exception ("現在必須不能合成箭矢，因為道具不該足夠:"+canFusionArrows);
 			}
 
 			item.prototype = ConfigItem.ID_gravel;
@@ -203,7 +272,7 @@ namespace Model
 			foreach(var i in model.MapPlayer.storage){
 				Debug.Log (i);
 			}
-			yield return view.ShowInfo (Info.ItemInMap, e2 => {
+			yield return view.ShowInfo (Info.Item, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -215,10 +284,12 @@ namespace Model
 				throw new Exception ("必須能合成箭矢");
 			}
 
-			yield return view.HideInfo (Info.ItemInMap);
+			yield return view.HideInfo (Info.Item);
 
-			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
-			model.Fusion (ConfigItem.ID_arrows, model.MapPlayer);
+			Item twoArrow;
+			twoArrow.prototype = ConfigItem.ID_arrows;
+			twoArrow.count = 2;
+			model.Fusion (twoArrow, model.MapPlayer);
 			foreach(var i in model.MapPlayer.storage){
 				Debug.Log (i);
 			}
@@ -231,14 +302,14 @@ namespace Model
 			if (arrows.count != 2) {
 				throw new Exception ("箭矢必須有2個");
 			}
-			yield return view.ShowInfo (Info.ItemInMap, e2 => {
+			yield return view.ShowInfo (Info.Item, e2 => {
 				e = e2;
 			});
 			if (e != null) {
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			yield return view.HideInfo (Info.ItemInMap);
+			yield return view.HideInfo (Info.Item);
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){
@@ -297,7 +368,7 @@ namespace Model
 			yield return new WaitForSeconds (2f);
 			yield return view.HideInfo (Info.Work);
 
-			yield return view.ShowInfo (Info.ItemInMap, e2 => {
+			yield return view.ShowInfo (Info.Item, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -394,14 +465,14 @@ namespace Model
 						foreach (var item in model.MapPlayer.storage) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
-						yield return view.ShowInfo (Info.ItemInMap, e2 => {
+						yield return view.ShowInfo (Info.Item, e2 => {
 							e = e2;
 						});
 						if (e != null) {
 							throw e;
 						}
 						yield return new WaitForSeconds (2);
-						yield return view.HideInfo(Info.ItemInMap);
+						yield return view.HideInfo(Info.Item);
 					}
 					break;
 				case Description.WorkAttack:

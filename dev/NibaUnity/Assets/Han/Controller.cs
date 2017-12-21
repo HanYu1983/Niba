@@ -22,17 +22,24 @@ namespace Common
 
 			view.ModelGetter = model;
 
-			Item item;
+			StartCoroutine (view.ChangePage (Page.Home, e => {
+				if (e != null) {
+					HandleException (e);
+				}
+			}));
+
+			/*Item item;
 			item.count = 1;
 			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
 				item.prototype = ConfigItem.Get (i).ID;
 				model.AddItemToStorage (item, model.MapPlayer);
-			}
+			}*/
 		}
 
 		void HandleException(Exception e){
 			view.Alert (e.Message);
 			Debug.LogError (e.Message);
+			Debug.LogError (e.StackTrace);
 			handleCommandCoroutine = null;
 		}
 
@@ -51,19 +58,47 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "fusionRequireView_ok":
+				{
+					var info = (object[])args;
+					var fusionTarget = (Item)info [0];
+					var who = (MapPlayer)info [1];
+					try{
+						model.Fusion (fusionTarget, who);
+					}catch(Exception e2){
+						HandleException(e2);
+						yield break;
+					}
+				}
+				break;
 			case "itemPopup_use_item":
 				{
 				}
 				break;
 			case "itemPopup_equip_item":
 				{
-					var weapon = (Item)args;
-					var err = model.EquipWeapon (weapon, model.MapPlayer);
-					if (err != null) {
-						HandleException (new Exception (err));
+					var info = (object[])args;
+					var weapon = (Item)info [0];
+					var whosWeapon = (MapPlayer)info [1];
+					var whosStorage = (MapPlayer)info [2];
+					try{
+						model.EquipWeapon (weapon, whosWeapon, whosStorage);
+					}catch(Exception e2){
+						HandleException (e2);
 						yield break;
 					}
-					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+					var returnTo = 
+						whosStorage.Equals (MapPlayer.PlayerInMap) ? Info.Item :
+						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						Info.ItemInHome;
+					yield return view.ShowInfo (returnTo, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.HandleCommand (msg, args, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -74,13 +109,28 @@ namespace Common
 				break;
 			case "itemPopup_unequip_item":
 				{
-					var weapon = (Item)args;
-					var err = model.UnequipWeapon (weapon, model.MapPlayer);
-					if (err != null) {
-						HandleException (new Exception (err));
+					var info = (object[])args;
+					var weapon = (Item)info [0];
+					var whosWeapon = (MapPlayer)info [1];
+					var whosStorage = (MapPlayer)info [2];
+					try{
+						model.UnequipWeapon (weapon, whosWeapon, whosStorage);
+					}catch(Exception e2){
+						HandleException (e2);
 						yield break;
 					}
-					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+					var returnTo = 
+						whosStorage.Equals (MapPlayer.UnknowPlayer) ? Info.ItemInHome :
+						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						Info.Item;
+					yield return view.ShowInfo (returnTo, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.HandleCommand (msg, args, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -92,6 +142,61 @@ namespace Common
 			case "click_home_map":
 				{
 					yield return OpenMap ();
+				}
+				break;
+			case "click_home_item":
+				{
+					yield return view.ShowInfo (Info.ItemInHome, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_home_pocket":
+				{
+					yield return view.ShowInfo (Info.ItemInHomePocket, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_home_fusion":
+				{
+					yield return view.ShowInfo (Info.FusionInHome, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_map_home":
+				{
+					yield return view.ChangePage (Page.Home, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_map_fusion":
+				{
+					yield return view.ShowInfo(Info.Fusion, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 				}
 				break;
 			case "click_map_down":
@@ -116,7 +221,7 @@ namespace Common
 				break;
 			case "click_map_item":
 				{
-					yield return view.ShowInfo (Info.ItemInMap, e2 => {
+					yield return view.ShowInfo (Info.Item, e2 => {
 						e = e2;
 					});
 					if (e != null) {

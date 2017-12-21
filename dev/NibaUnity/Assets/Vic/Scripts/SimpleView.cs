@@ -25,7 +25,7 @@ namespace GameView
         {
             switch (page)
             {
-                case Page.Title:
+                case Page.Home:
                     view.OpenTitlePage();
                     break;
                 case Page.Game:
@@ -63,7 +63,7 @@ namespace GameView
 					view.ProcessEvent(events, callback);
 				}
 				break;
-			case Info.ItemInMap:
+			case Info.Item:
 				{
                         view.ShowBackpack();
 				}
@@ -92,7 +92,7 @@ namespace GameView
 					view.CloseMessagePopup ();
 				}
 				break;
-			case Info.ItemInMap:
+			case Info.Item:
 				{
 					view.HidePackpack ();	
 				}

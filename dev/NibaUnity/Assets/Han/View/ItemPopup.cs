@@ -13,7 +13,7 @@ namespace View
 		public ItemView itemView;
 		public AbilityView abilityView;
 
-		public ItemView ItemView{
+		/*public ItemView ItemView{
 			get{
 				return itemView;
 			}
@@ -22,15 +22,45 @@ namespace View
 			get{
 				return abilityView;
 			}
-		}
+		}*/
 
 		public Button[] btns;
+
+		MapPlayer _whosWeapon;
+		public MapPlayer WhosWeapon {
+			get{
+				if (_whosWeapon.Equals (MapPlayer.PlayerInHome)) {
+					return _whosWeapon;
+				}
+				if (_whosWeapon.Equals (MapPlayer.PlayerInMap)) {
+					return _whosWeapon;
+				}
+				throw new Exception ("沒有指定正確的WhosWeapon");
+			}
+			set{
+				_whosWeapon = value;
+			}
+		}
+
+		public MapPlayer WhosStorage {
+			get;
+			set;
+		}
+
+		public void UpdateUI(IModelGetter model){
+			var popup = this;
+			popup.itemView.Data = Common.Common.Storage (model, WhosStorage);
+			popup.itemView.UpdateDataView (model);
+			popup.itemView.CurrItemLabel (model, popup.SelectIndex);
+			popup.UpdateButtonLabel (model, WhosWeapon);
+			popup.abilityView.UpdateAbility(model, WhosWeapon);
+		}
 		/// <summary>
 		/// 更新按鈕文字
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateButtonLabel(IModelGetter model){
+		public void UpdateButtonLabel(IModelGetter model, MapPlayer who){
 			// 頭
 			var btn_head = btns.Where (btn => {
 				return btn.gameObject.name == "btn_head";
@@ -39,7 +69,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_head.GetComponentInChildren<Text> ().text = "頭";
-			var head = model.MapPlayer.weapons.Where (item => {
+			var head = who.weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_head;
 			}).FirstOrDefault ();
@@ -55,7 +85,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_body.GetComponentInChildren<Text> ().text = "身";
-			var body = model.MapPlayer.weapons.Where (item => {
+			var body = who.weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_body;
 			}).FirstOrDefault ();
@@ -71,7 +101,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_foot.GetComponentInChildren<Text> ().text = "腳";
-			var foot = model.MapPlayer.weapons.Where (item => {
+			var foot = who.weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_foot;
 			}).FirstOrDefault ();
@@ -99,7 +129,7 @@ namespace View
 			rightHandBtn.GetComponentInChildren<Text> ().text = "右";
 
 			var handBtns = new Button[]{ leftHandBtn, rightHandBtn };
-			var handWeapons = model.MapPlayer.weapons.Where (item => {
+			var handWeapons = who.weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_hand;
 			}).ToList();
@@ -135,7 +165,7 @@ namespace View
 			a2Btn.GetComponentInChildren<Text> ().text = "配件2";
 			a3Btn.GetComponentInChildren<Text> ().text = "配件3";
 
-			var aWeapons = model.MapPlayer.weapons.Where (item => {
+			var aWeapons = who.weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_accessory;
 			}).ToList();
@@ -165,17 +195,20 @@ namespace View
 					}
 					// 防呆處理
 					// 果為連續按裝備時道具會減少
-					if (ItemView.Data.Count() == 0) {
+					if (itemView.Data.Count() == 0) {
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					if (SelectIndex >= ItemView.Data.Count ()) {
+					if (SelectIndex >= itemView.Data.Count ()) {
 						ClearSelectIndex ();
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = ItemView.Data.ToList () [SelectIndex];
-					Common.Common.Notify ("itemPopup_equip_item", item);
+					var item = itemView.Data.ToList () [SelectIndex];
+					var info = new object[] {
+						item, WhosWeapon, WhosStorage
+					};
+					Common.Common.Notify ("itemPopup_equip_item", info);
 				}
 				break;
 			case "click_itemPopup_unequip":
@@ -188,7 +221,8 @@ namespace View
 					var idx = 0;
 					LastPosition(ref pos, ref idx);
 
-					var item = model.MapPlayer.weapons.Where (i => {
+					var who = WhosWeapon;
+					var item = who.weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;
 					}).Skip(idx).FirstOrDefault();
@@ -197,7 +231,10 @@ namespace View
 						callback (new Exception ("該部位沒有裝備"));
 						yield break;
 					}
-					Common.Common.Notify ("itemPopup_unequip_item", item);
+					var info = new object[] {
+						item, WhosWeapon, WhosStorage
+					};
+					Common.Common.Notify ("itemPopup_unequip_item", info);
 				}
 				break;
 			case "click_itemPopup_use":
@@ -206,7 +243,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = ItemView.Data.ToList () [SelectIndex];
+					var item = itemView.Data.ToList () [SelectIndex];
 					Common.Common.Notify ("itemPopup_use_item", item);
 				}
 				break;
@@ -216,7 +253,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = ItemView.Data.ToList () [SelectIndex];
+					var item = itemView.Data.ToList () [SelectIndex];
 					Common.Common.Notify ("itemPopup_sell_item", item);
 				}
 				break;
@@ -224,9 +261,9 @@ namespace View
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.ItemView.Data = model.MapPlayer.storage;
-					popup.ItemView.ShowMode = ItemView.Mode.Normal;
-					popup.ItemView.UpdateDataView (model);
+					popup.itemView.Data = Common.Common.Storage(model, WhosStorage);
+					popup.itemView.ShowMode = ItemView.Mode.Normal;
+					popup.itemView.UpdateDataView (model);
 				}
 				break;
 			case "click_itemPopup_head":
@@ -240,23 +277,23 @@ namespace View
 				{
 					var popup = this;
 					// 修改為武器顯示模式
-					popup.ItemView.ShowMode = ItemView.Mode.Equip;
+					popup.itemView.ShowMode = ItemView.Mode.Equip;
 					// 取得點擊部位
 					var pos = "";
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.ItemView.Data = model.MapPlayer.storage.Where (item => {
+					popup.itemView.Data = Common.Common.Storage(model, WhosStorage).Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					});
-					popup.ItemView.Page = 0;
+					popup.itemView.Page = 0;
 					// 修改列表內容
-					popup.ItemView.UpdateDataView (model);
+					popup.itemView.UpdateDataView (model);
 					// 取消列表索引
 					ClearSelectIndex ();
 					// 更新狀態文字
-					popup.ItemView.CurrItemLabel (model, SelectIndex);
+					popup.itemView.CurrItemLabel (model, SelectIndex);
 					// 記錄部位
 					RecordLastPosition (msg);
 				}

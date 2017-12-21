@@ -65,7 +65,7 @@ namespace View
 			try{
 				var idx = int.Parse (cmd.Replace (commandPrefix+"_item_", ""));
 				return idx + offset;
-			}catch(Exception e){
+			}catch(Exception){
 				throw new Exception ("指令格式錯誤:"+cmd);
 			}
 		}

@@ -147,8 +147,8 @@ namespace Model
 							var des = Description.Empty;
 							des.description = Description.EventLucklyFind;
 							des.values = new NameValueCollection();
-							des.values.Add("itemPrototype", ConfigItem.ID_arrows);
-							des.values.Add("count", 2+"");
+							des.values.Add("itemPrototype", ConfigItem.ID_wood);
+							des.values.Add("count", 10+"");
 							accu.Add(des);
 						}
 						break;
@@ -399,7 +399,10 @@ namespace Model
 		public MapPlayer playerInMap = MapPlayer.PlayerInMap;
 
 		#region weapon
-		public string IsCanEquip(Item item, MapPlayer who){
+		public string IsCanEquip(Item item, MapPlayer who, MapPlayer whosStorage){
+			if (who.Equals (MapPlayer.UnknowPlayer)) {
+				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
+			}
 			var cfg = ConfigItem.Get (item.prototype);
 			if (cfg.Type != ConfigItemType.ID_weapon) {
 				return "只能裝備weapon類型，請檢查程式";
@@ -417,51 +420,61 @@ namespace Model
 					return ConfigItem.Get (i.prototype).Position == weaponPosition;
 				});
 				if(alreadyEquipCount >= maxCount){
-					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition;
+					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+who;
 				}
 				return null;
 			};
-			if (who.Equals (player)) {
-				return canEquip (player.weapons, player.storage);
-			} else if (who.Equals (playerInMap)) {
-				return canEquip (playerInMap.weapons, playerInMap.storage);
-			} else {
-				return canEquip (player.weapons, storage);
-			}
+			var useStorage = 
+				whosStorage.Equals (player) ? player.storage :
+				whosStorage.Equals (playerInMap) ? playerInMap.storage :
+				storage;
+			var useWeapon = 
+				who.Equals (player) ? player.weapons :
+				playerInMap.weapons;
+			return canEquip (useWeapon, useStorage);
 		}
 
-		public string EquipWeapon(Item item, MapPlayer who){
-			var err = IsCanEquip (item, who);
+		public void EquipWeapon(Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+			var err = IsCanEquip (item, whosWeapon, whosStorage);
 			if (err != null) {
-				return "無法裝備，請檢查:"+err;
+				throw new Exception("無法裝備，請檢查:"+err);
 			}
-			if (who.Equals (player)) {
+			if (whosStorage.Equals (player)) {
 				player.storage.Remove (item);
-				player.weapons.Add (item);
-			} else if (who.Equals (playerInMap)) {
+			} else if (whosStorage.Equals (playerInMap)) {
 				playerInMap.storage.Remove (item);
+			} else {
+				storage.Remove (item);
+			}
+
+			if (whosWeapon.Equals (player)) {
+				player.weapons.Add (item);
+			} else if (whosWeapon.Equals (playerInMap)) {
 				playerInMap.weapons.Add (item);
 			} else {
-				return "無法裝備在unknow";
+				throw new Exception ("無法裝備在UnknowPlayer");
 			}
-			return null;
 		}
 
-		public string UnequipWeapon(Item item, MapPlayer who){
-			var isCanUnequip = who.weapons.IndexOf (item) != -1;
+		public void UnequipWeapon(Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+			var isCanUnequip = whosWeapon.weapons.IndexOf (item) != -1;
 			if (isCanUnequip == false) {
-				return "無法拆掉：沒有那個裝備";
+				throw new Exception ("無法拆掉：沒有那個裝備");
 			}
-			if (who.Equals (player)) {
-				player.storage.Add (item);
+			if (whosWeapon.Equals (player)) {
 				player.weapons.Remove (item);
-			} else if (who.Equals (playerInMap)) {
-				playerInMap.storage.Add (item);
+			} else if (whosWeapon.Equals (playerInMap)) {
 				playerInMap.weapons.Remove (item);
 			} else {
-				return "無法拆掉裝備在unknow";
+				throw new Exception ("無法拆掉裝備在unknow");
 			}
-			return null;
+			if (whosStorage.Equals (player)) {
+				player.storage.Add (item);
+			} else if (whosStorage.Equals (playerInMap)) {
+				playerInMap.storage.Add (item);
+			} else {
+				storage.Add (item);
+			}
 		}
 		#endregion
 
@@ -489,23 +502,21 @@ namespace Model
 		#endregion
 
 		#region fusion
-		public void Fusion(string prototype, MapPlayer who){
+		public void Fusion(Item fusionTarget, MapPlayer who){
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
-				var requires = Common.Common.ParseItem (ConfigItem.Get (prototype).FusionRequire);
+				var requires = Common.Common.ParseItem (ConfigItem.Get (fusionTarget.prototype).FusionRequire);
 				var formatForSubstrct = requires.Select (item => {
-					item.count = -item.count;
+					item.count = -(item.count*fusionTarget.count);
 					return item;
 				});
 				var tempStorage = Enumerable.Aggregate (formatForSubstrct, storage_, Helper.AddItem);
 
-				var fusionItem = Item.Empty;
-				fusionItem.prototype = prototype;
-				fusionItem.count = 1;
+				var fusionItem = fusionTarget;
 				tempStorage = Helper.AddItem (tempStorage, fusionItem);
 				return tempStorage;
 			};
 			if (who.Equals (player)) {
-				player.storage = fusion (player.storage);
+				throw new Exception("不能在口袋里合成");
 			} else if (who.Equals (playerInMap)) {
 				playerInMap.storage = fusion (playerInMap.storage);
 			} else {

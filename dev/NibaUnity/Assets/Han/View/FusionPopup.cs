@@ -37,7 +37,6 @@ namespace View{
 								callback (new Exception ("無法合成:"+cfg.Name));
 								yield break;
 							}*/
-							fusionRequireView.ClearFusionCount ();
 							fusionRequireView.Who = Who;
 							fusionRequireView.FusionTarget = item;
 							fusionRequireView.UpdateUI (model);

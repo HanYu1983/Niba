@@ -2,12 +2,20 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Common;
+using System.Linq;
 
 namespace View
 {
 	public class AbilityView : MonoBehaviour
 	{
+		public GameObject[] searchTexts;
 		public Text[] texts;
+
+		void Awake(){
+			texts = searchTexts.SelectMany (obj => {
+				return obj.GetComponentsInChildren<Text>();
+			}).ToArray();
+		}
 
 		public Text Search(string id){
 			foreach (var i in texts) {
