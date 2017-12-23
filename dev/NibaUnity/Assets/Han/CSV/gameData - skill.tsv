@@ -1,0 +1,11 @@
+id	name	description	skill require	require weapon	effect	values
+seiken	正拳		karate_5	1	atk{0}倍，爆擊率提升{1}百分比	1.2,20
+tripleKick	三段踢		karate_10	1	atk{0}倍，爆擊率提升{1}百分比	1.4,20
+renzokugen	無呼吸連打		karate_20	1	atk{0}倍，爆擊率提升{1}百分比	2,20
+hanngeki	迎擊		karate_30		機率修正{0}倍。取消對方的攻擊，並對對方造成{1}倍普攻傷害.	0.2,1.1
+tiauci	調息		karate_20		每執行一次互動{0}增加{1}	hp,5%
+zengmianpi	正面劈		fencingArt_5	1		
+zyuzizan	十字斬		fencingArt_10	1		
+zihazan	居合斬		fencingArt_20	1		
+bukikakuto	武器格檔		fencingArt_10		機率修正{0}倍。取消對方的攻擊.	0.5
+bokyoryokuhakai	防禦力破壞		fencingArt_10		對象防禦力下降{0}倍。	0.1

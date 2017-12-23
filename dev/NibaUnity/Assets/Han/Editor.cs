@@ -41,12 +41,48 @@ namespace Model
 				"Name", "string",
 				"Description", "string", 
 				"Type","string",
+				"SkillType","string",
 				"MaxCount","int",
 				"FusionRequire","string",
 				"SkillRequire","string",
 				"Ability","string",
 				"Position","string",
+				"UseCount","int",
 			}, "CSV/gameData - item.tsv");
+
+			GenCode ("ConfigSkillType", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+			}, "CSV/gameData - skillType.tsv");
+
+			GenCode ("ConfigSkill", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+				"SkillRequire", "string",
+				"IsRequireWeapon", "string",
+				"Effect", "string",
+				"Values", "string",
+			}, "CSV/gameData - skill.tsv");
+
+			GenCode ("ConfigNpc", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+			}, "CSV/gameData - npc.tsv");
+
+			GenCode ("ConfigNpcMission", null, new string[]{
+				"ID", "string",
+				"Npc", "string",
+				"Level", "int",
+				"RequireItem", "string",
+				"RequireKill", "string",
+				"RequireStatus", "string",
+				"Reward", "string",
+				"Dependency", "string",
+				"Dialog", "string",
+			}, "CSV/gameData - npcMission.tsv");
 
 			GenCode ("ConfigAbility", null, new string[]{
 				"ID", "string",

@@ -28,6 +28,7 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
+			yield return TestNpcMission (model, view);
 			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
 			yield return TestWeapon (model, view);
@@ -37,7 +38,59 @@ namespace Model
 			yield return TestShowInfo (model, view);
 		}
 
+		static IEnumerator TestNpcMission(IModel model, IView view){
+			var ms = model.AvailableNpcMissions;
+			var grass10Mission = ms
+				.Select (ConfigNpcMission.Get)
+				.Where (m => m.Dialog == "幫我拿10個草")
+				.FirstOrDefault ();
+			if (string.IsNullOrEmpty(grass10Mission.ID)) {
+				foreach (var m in ms) {
+					var cfg = ConfigNpcMission.Get (m);
+					Debug.Log (cfg.Dialog);
+				}
+				throw new Exception ("必須有草任務");
+			}
+			Debug.Log ("領取草任務");
+			model.AcceptMission (grass10Mission.ID);
+
+			Debug.Log ("獲得草10個");
+			var grass10 = new Item {
+				prototype = ConfigItem.ID_grass,
+				count = 10
+			};
+			model.AddItemToStorage (grass10, MapPlayer.UnknowPlayer);
+
+			Debug.Log ("判斷任務");
+			var completedMs = model.CheckMissionStatus ();
+			if (completedMs.Count == 0) {
+				throw new Exception ("必須有過任務");
+			}
+			var hasGrass10 = completedMs.Exists (id => id == grass10Mission.ID);
+			if (hasGrass10 == false) {
+				throw new Exception ("必須過了草任務");
+			}
+			var rewards = completedMs.SelectMany (model.CompleteMission);
+			foreach (var r in rewards) {
+				Debug.LogError (r.prototype);
+			}
+			ms = model.AvailableNpcMissions;
+			var wood10Mission = ms
+				.Select (ConfigNpcMission.Get)
+				.Where (m => m.Dialog == "幫我拿10個木")
+				.FirstOrDefault ();
+			if (string.IsNullOrEmpty(wood10Mission.ID)) {
+				foreach (var m in ms) {
+					var cfg = ConfigNpcMission.Get (m);
+					Debug.Log (cfg.Dialog);
+				}
+				throw new Exception ("解完草任務必須有木任務");
+			}
+			yield return null;
+		}
+
 		static IEnumerator TestHomeStorage(IModel model, IView view){
+			Debug.Log ("加入2個道具");
 			Item item;
 			item.count = 1;
 			item.prototype = ConfigItem.ID_grass;
@@ -46,6 +99,7 @@ namespace Model
 			item.prototype = ConfigItem.ID_woodShield;
 			model.AddItemToStorage (item, MapPlayer.UnknowPlayer);
 
+			Debug.Log ("判斷道具是否存在");
 			if (model.Storage.Count != 2) {
 				throw new Exception ("家裡必須有2個道具");
 			}
@@ -60,17 +114,20 @@ namespace Model
 			yield return new WaitForSeconds (1f);
 			yield return view.HideInfo (Info.ItemInHome);
 
+			Debug.Log ("加入道具到口袋");
 			item.prototype = ConfigItem.ID_woodSword;
 			model.AddItemToStorage (item, MapPlayer.PlayerInHome);
 			if (model.HomePlayer.storage.Count != 1) {
 				throw new Exception ("口袋必須有1個道具");
 			}
 
+			Debug.Log ("將口袋道具裝到身上");
 			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.PlayerInHome);
 			if (model.HomePlayer.storage.Count != 0) {
 				throw new Exception ("裝備後口袋必須沒有道具");
 			}
-			// 直接從家裡裝裝備
+
+			Debug.Log ("直接從家裡裝裝備");
 			item.prototype = ConfigItem.ID_woodShield;
 			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.UnknowPlayer);
 			if (model.HomePlayer.weapons.Count != 2) {

@@ -126,6 +126,23 @@ namespace Model
 				playerData.storage.Clear ();
 			}
 		}
+		public IEnumerable<string> AvailableNpcMissions {
+			get {
+				return playerData.AvailableNpcMissions;
+			}
+		}
+		public void AcceptMission(string id){
+			playerData.AcceptMission (id);
+			RequestSavePlayer ();
+		}
+		public List<string> CheckMissionStatus(){
+			return playerData.CheckMissionStatus ();
+		}
+		public IEnumerable<AbstractItem> CompleteMission (string id){
+			var ret = playerData.CompleteMission (id);
+			RequestSavePlayer ();
+			return ret;
+		}
 
 		BasicAbility tmpBasic;
 		FightAbility tmpFight;

@@ -498,6 +498,8 @@ namespace Model
 			} else {
 				storage = Helper.AddItem (storage, item);
 			}
+			// 更新任務
+			NotifyMissionAddItem (item);
 		}
 		#endregion
 
@@ -513,6 +515,9 @@ namespace Model
 
 				var fusionItem = fusionTarget;
 				tempStorage = Helper.AddItem (tempStorage, fusionItem);
+
+				// 更新任務
+				NotifyMissionAddItem (fusionItem);
 				return tempStorage;
 			};
 			if (who.Equals (player)) {
@@ -563,6 +568,180 @@ namespace Model
 		public void ClearVisibleMapObjects(){
 			isPositionVisible.Clear ();
 		}
+		#endregion
+
+		#region status
+		public int money;
+		public int advLevel;
+		#endregion
+
+		#region mission
+		public List<string> missions = new List<string>();
+		public List<string> completedMission = new List<string>();
+		public List<NpcMission> missionStatus = new List<NpcMission>();
+
+		public bool MissionCompleted(string id){
+			return completedMission.Contains (id);
+		}
+
+		public IEnumerable<string> AvailableNpcMissions {
+			get {
+				return 
+					Enumerable.Range (0, ConfigNpcMission.ID_COUNT)
+						.Select (ConfigNpcMission.Get)
+						//.Where (cfg => cfg.Level <= advLevel)
+						.Where(cfg=>cfg.Npc != null)
+						.Where(cfg=>MissionCompleted(cfg.ID) == false)
+						.Where (cfg => {
+							if (cfg.Dependency != null) {
+								var items = Common.Common.ParseAbstractItem (cfg.Dependency);
+								foreach (var item in items) {
+									var missionId = item.prototype;
+									var isCompleted = MissionCompleted (missionId);
+									if (isCompleted == false) {
+										return false;
+									}
+								}
+								return true;
+							}
+							return true;
+						})
+						.Select (cfg => cfg.ID);
+			}
+		}
+		/// <summary>
+		/// 領取任務
+		/// </summary>
+		/// <param name="id">Identifier.</param>
+		public void AcceptMission(string id){
+			var cfg = ConfigNpcMission.Get(id);
+			// TODO 判斷冒險者等級
+			if (cfg.Level > 1) {
+				throw new Exception ("等級不足");
+			}
+			if (missions.Exists (i => {
+				return i == id;
+			})) {
+				throw new Exception ("任務已領取");
+			}
+			missions.Add (id);
+
+			var mission = NpcMission.Default;
+			mission.prototype = id;
+			missionStatus.Add (mission);
+		}
+
+		public void NotifyMissionAddItem(Item item){
+			for (var i = 0; i < missionStatus.Count; ++i) {
+				missionStatus [i].itemGot.Add (item);
+			}
+		}
+
+		public void NotifyMissionMonsterKill(string monsterPrototype){
+			for (var i = 0; i < missionStatus.Count; ++i) {
+				missionStatus [i].monsterSkilled.Add (monsterPrototype);
+			}
+		}
+
+		/// <summary>
+		/// 判斷任務是否完成，每次互動後可以呼叫一次
+		/// </summary>
+		/// <returns>完成的任務</returns>
+		public List<string> CheckMissionStatus(){
+			var completedMission = new List<string> ();
+			for (var i = 0; i < missionStatus.Count; ++i) {
+				var mission = missionStatus [i];
+				var cfg = ConfigNpcMission.Get (mission.prototype);
+				if (cfg.RequireItem != null) {
+					var isCompleted = true;
+					var requireItems = Common.Common.ParseItem (cfg.RequireItem);
+					foreach (var requireItem in requireItems) {
+						var itemCount = mission.itemGot
+							.Where(item=>item.prototype == requireItem.prototype)
+							.Sum(item=>item.count);
+						if (itemCount < requireItem.count) {
+							isCompleted = false;
+							break;
+						}
+					}
+					if (isCompleted) {
+						completedMission.Add (mission.prototype);
+					}
+				}
+
+				if (cfg.RequireKill != null) {
+					var isCompleted = true;
+					var requireItems = Common.Common.ParseAbstractItem (cfg.RequireKill);
+					foreach (var requireItem in requireItems) {
+						var itemCount = mission.monsterSkilled
+							.Where (id => id == requireItem.prototype)
+							.Count ();
+						if (itemCount < requireItem.count) {
+							isCompleted = false;
+							break;
+						}
+					}
+					if (isCompleted) {
+						completedMission.Add (mission.prototype);
+					}
+				}
+
+				if (cfg.RequireStatus != null) {
+					var isCompleted = true;
+					var requireItems = Common.Common.ParseAbstractItem (cfg.RequireKill);
+					foreach (var requireItem in requireItems) {
+						if (requireItem.prototype == "money") {
+							// TODO
+						}
+					}
+					if (isCompleted) {
+						completedMission.Add (mission.prototype);
+					}
+				}
+			}
+			return completedMission;
+		}
+
+		/// <summary>
+		/// 將呼叫CheckMissionStatus取得的任務輸入這個方法，完成那個任務並取得獲得的獎勵資訊
+		/// </summary>
+		/// <returns>The mission.</returns>
+		/// <param name="id">Identifier.</param>
+		public IEnumerable<AbstractItem> CompleteMission(string id){
+			if (missions.Contains (id) == false) {
+				throw new Exception ("這個任務沒有領取:"+id);
+			}
+			if (completedMission.Contains (id)) {
+				throw new Exception ("這個任務已完成過了:"+id);
+			}
+			completedMission.Add (id);
+			// 刪去任務狀態
+			for (var i = 0; i < missionStatus.Count; ++i) {
+				var m = missionStatus [i];
+				if (m.prototype == id) {
+					missionStatus.RemoveAt (i);
+					break;
+				}
+			}
+			var cfg = ConfigNpcMission.Get (id);
+			var rewards = Common.Common.ParseAbstractItem (cfg.Reward);
+			foreach (var reward in rewards) {
+				switch (reward.prototype) {
+				case "money":
+					{
+						// TODO
+					}
+					break;
+				default:
+					{
+						AddItem (reward.Item, MapPlayer.UnknowPlayer);
+					}
+					break;
+				}
+			}
+			return rewards;
+		}
+
 		#endregion
 
 		#region store

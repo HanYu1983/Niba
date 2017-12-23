@@ -674,6 +674,33 @@ namespace Common
 		*/
 	}
 
+	public struct AbstractItem{
+		public string prototype;
+		public int count;
+		public Item Item{
+			get{
+				Item ret;
+				ret.prototype = prototype;
+				ret.count = count;
+				return ret;
+			}
+		}
+	}
+
+	public struct NPC{
+		public string prototype;
+	}
+
+	public struct NpcMission{
+		public string prototype;
+		public List<string> monsterSkilled;
+		public List<Item> itemGot;
+		public static NpcMission Default = new NpcMission {
+			monsterSkilled = new List<string> (),
+			itemGot = new List<Item> ()
+		};
+	}
+
 	public enum Page{
 		Unknown, Home, Game
 	}
@@ -681,7 +708,8 @@ namespace Common
 	public enum Info{
 		Unknown, 
 		Event, Work, WorkResult, Map, Ability, Item, Fusion,
-		ItemInHomePocket, FusionInHome, ItemInHome
+		FusionInHome, ItemInHome, Npc,
+		ItemInHomePocket
 	}
 
 	public class MessageException : Exception{
@@ -766,6 +794,8 @@ namespace Common
 		FightAbility PlayerFightAbility (MapPlayer who);
 
 		IEnumerable<Item> CanFusionItems{ get; }
+
+		IEnumerable<string> AvailableNpcMissions{ get; }
 	}
 
 	public interface IModel : IModelGetter{
@@ -810,6 +840,10 @@ namespace Common
 		void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);
 		void UnequipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);
 		void ClearStorage (MapPlayer who);
+
+		void AcceptMission(string id);
+		List<string> CheckMissionStatus();
+		IEnumerable<AbstractItem> CompleteMission (string id);
 	}
 
 	public class Common
@@ -830,8 +864,8 @@ namespace Common
 			return model.Storage;
 		}
 
-		public static IEnumerable<Item> ParseItem(string itemString){
-			Func<string, Item> parseOne = str => {
+		public static IEnumerable<AbstractItem> ParseAbstractItem(string itemString){
+			Func<string, AbstractItem> parseOne = str => {
 				var prototype = str;
 				var count = 1;
 				var hasCount = str.IndexOf ("_") != -1;
@@ -844,13 +878,13 @@ namespace Common
 						throw new Exception ("Resource中的Item欄位格式定義錯誤:"+str);
 					}
 				}
-				var item = Item.Empty;
+				AbstractItem item;
 				item.prototype = prototype;
 				item.count = count;
 				return item;
 			};
 			if (itemString == null) {
-				return new List<Item> ();
+				return new List<AbstractItem> ();
 			}
 			var hasMulti = itemString.IndexOf (",") != -1;
 			if (hasMulti) {
@@ -858,6 +892,10 @@ namespace Common
 				return strs.Select (parseOne);
 			}
 			return Enumerable.Repeat (parseOne (itemString), 1);
+		}
+
+		public static IEnumerable<Item> ParseItem(string itemString){
+			return ParseAbstractItem (itemString).Select (i => i.Item);
 		}
 
 		public static IEnumerable<Item> ParseItemFromResource(ConfigResource res){
