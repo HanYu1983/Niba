@@ -7,6 +7,7 @@ public string SkillRequire { get; set; }
 public string IsRequireWeapon { get; set; }
 public string Effect { get; set; }
 public string Values { get; set; }
+public float TriggerBouns { get; set; }
 public const int ID_COUNT = 10;
 public const string ID_seiken = "seiken";
 public const string ID_tripleKick = "tripleKick";

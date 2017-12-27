@@ -82,14 +82,24 @@ namespace Common
 		Unknown = 0
 	}
 
+	public class Tuple2<T,T2>{
+		public T t1;
+		public T2 t2;
+		public Tuple2(T t1, T2 t2){
+			this.t1 = t1;
+			this.t2 = t2;
+		}
+	}
+
 	[Serializable]
 	public struct MapPlayer : IEquatable<MapPlayer>{
 		public string id;
 		public Position position;
 		public BasicAbility basicAbility;
+		public SkillExp skillExp;
 		public int hp, mp;
-		public List<Item> weapons;
 		public List<Item> storage;
+
 		public Description currentWork;
 		public long workFinishedTime;
 		public bool IsWorking{
@@ -100,6 +110,31 @@ namespace Common
 		public void ClearWork(){
 			workFinishedTime = 0;
 		}
+
+		public List<Item> weapons;
+		public IEnumerable<Item> CheckHandWeaponBroken(){
+			return weapons
+				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
+				.Where (info => info.t2.Position == ConfigWeaponPosition.ID_hand)
+				.Select (info => new Tuple2<Item, int> (info.t1, (int)((1.0f / info.t2.UseCount) * 100)))
+				.Where (info => {
+				var dice = UnityEngine.Random.Range (1, 101);
+				return dice < info.t2;
+			})
+				.Select (info => info.t1);
+		}
+		public IEnumerable<Item> CheckElseWeaponBroken(){
+			return weapons
+				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
+				.Where (info => info.t2.Position != ConfigWeaponPosition.ID_hand)
+				.Select (info => new Tuple2<Item, int> (info.t1, (int)((1.0f / info.t2.UseCount) * 100)))
+				.Where (info => {
+					var dice = UnityEngine.Random.Range (1, 101);
+					return dice < info.t2;
+				})
+				.Select (info => info.t1);
+		}
+
 		public override string ToString(){
 			return "player(" + id + ")";
 		}
@@ -128,8 +163,10 @@ namespace Common
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
-		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}";
+		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}. hp remain {hp}";
 		public const string InfoMonsterAttack = "[info]{mapObjectId} attack you and deal damage {damage}";
+		public const string InfoWeaponBroken = "[info]{items} is broken.";	// items is array of json string
+		public const string InfoUseSkill = "[info]you use {skills}.";
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
@@ -619,6 +656,7 @@ namespace Common
 		}
 	}
 
+	[Serializable]
 	public struct Item : IEquatable<Item>{
 		public string prototype;
 		public int count;
@@ -687,10 +725,12 @@ namespace Common
 		}
 	}
 
+	[Serializable]
 	public struct NPC{
 		public string prototype;
 	}
 
+	[Serializable]
 	public struct NpcMission{
 		public string prototype;
 		public List<string> monsterSkilled;
@@ -699,6 +739,22 @@ namespace Common
 			monsterSkilled = new List<string> (),
 			itemGot = new List<Item> ()
 		};
+	}
+
+	[Serializable]
+	public struct SkillExp{
+		public int karate;
+		public int fencingArt;
+		public int Exp(string skillType){
+			switch(skillType){
+			case ConfigSkillType.ID_karate:
+				return karate;
+			case ConfigSkillType.ID_fencingArt:
+				return fencingArt;
+			default:
+				throw new NotImplementedException ("未確定的類型:"+skillType);	
+			}
+		}
 	}
 
 	public enum Page{
@@ -916,7 +972,19 @@ namespace Common
 		/// </returns>
 		/// <param name="prototype">Prototype.</param>
 		/// <param name="items">Items.</param>
-		public static int IsCanFusion(string prototype, IEnumerable<Item> items){
+		public static int IsCanFusion(MapPlayer who, string prototype, IEnumerable<Item> items){
+			var cfg = ConfigItem.Get (prototype);
+			// 判斷技能經驗是否符合
+			var ais = ParseAbstractItem (cfg.SkillRequire);
+			foreach (var ai in ais) {
+				var st = ai.prototype;
+				var needExp = ai.count;
+				var haveExp = who.skillExp.Exp (st);
+				if (haveExp < needExp) {
+					return -1;
+				}
+			}
+			// 判斷所需道具數量
 			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
 			int minCnt = int.MaxValue;
 			foreach (var requireItem in requires) {

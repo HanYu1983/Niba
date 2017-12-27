@@ -64,6 +64,7 @@ namespace Model
 				"IsRequireWeapon", "string",
 				"Effect", "string",
 				"Values", "string",
+				"TriggerBouns", "float",
 			}, "CSV/gameData - skill.tsv");
 
 			GenCode ("ConfigNpc", null, new string[]{

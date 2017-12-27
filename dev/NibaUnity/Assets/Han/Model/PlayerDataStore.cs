@@ -200,9 +200,10 @@ namespace Model
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var mapObject = mapObjects [mapObjectId];
 					var monsterInf = monsterInfo[mapObject.infoKey];
+
+					// === 計算傷害 === //
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
@@ -213,22 +214,80 @@ namespace Model
 						// TODO 實做針對性能力
 						return playerAbility;
 					});
+					// 技能加成
+					var skills = Helper.AvailableSkills (player, player.playerInMap);
+					skills = skills.Where (s => s.IsRequireWeapon == "1");
+					var triggered = skills.Where (s => {
+						var rate = (int)(Helper.ComputeSkillTriggerRate (player.playerInMap, s) * 100);
+						return UnityEngine.Random.Range(1, 101) < rate;
+					});
+					playerAbility = triggered.Aggregate(playerAbility, (v,skill)=>{
+						switch(skill.Effect){
+						case "atk{0}倍，爆擊率提升{1}百分比":
+							{
+								var info = skill.Values.Split(new char[]{','});
+								var atkRate = float.Parse(info[0]);
+								var criRate = float.Parse(info[1]);
+								playerAbility.atk *= atkRate;
+								playerAbility.critical *= criRate;
+							}
+							break;
+						default:
+							throw new NotImplementedException("未確定的招式:"+skill.Effect);
+						}
+						return playerAbility;
+					});
+					// 總傷害
 					var damage = playerAbility.Damage (monsterAbility);
-
+					// === 套用傷害 === //
 					monsterInf.hp -= damage;
 					if (monsterInf.IsDied) {
 						mapObject.died = true;
 					}
-					// assign back
+					// === 套用結果 === //
 					monsterInfo [mapObject.infoKey] = monsterInf;
 					mapObjects [mapObjectId] = mapObject;
 
+					// === 處理武器壞掉 === //
+					var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ();
+					// 刪除壞掉武器
+					foreach (var broken in brokenWeapons) {
+						player.playerInMap.weapons.Remove (broken);
+					}
+						
+					// ====== 以下處理回傳 ====== //
 					var des = Description.Empty;
+					// === 回傳使用招式 === //
+					if (triggered.Count () > 0) {
+						des = Description.Empty;
+						des.description = Description.InfoUseSkill;
+						des.values = new NameValueCollection ();
+						foreach (var s in triggered) {
+							des.values.Add ("skill", s.ID);
+						}
+						ret.Add (des);
+					}
+
+					// === 回傳攻擊資訊 === //
+					des = Description.Empty;
 					des.description = Description.InfoAttack;
 					des.values = new NameValueCollection ();
 					des.values.Set ("mapObjectId", mapObjectId+"");
 					des.values.Set ("damage", damage+"");
+					des.values.Set ("hp", monsterInf.hp+"");
 					ret.Add (des);
+
+					// === 回傳壞掉資訊 === //
+					if (brokenWeapons.Count () > 0) {
+						des = Description.Empty;
+						des.description = Description.InfoWeaponBroken;
+						des.values = new NameValueCollection ();
+						foreach (var broken in brokenWeapons) {
+							var jsonstr = JsonUtility.ToJson (broken);
+							des.values.Add ("item", jsonstr);
+						}
+						ret.Add (des);
+					}
 				}
 				break;
 			case Description.EventMonsterAttackYou:
@@ -531,11 +590,11 @@ namespace Model
 
 		public int IsCanFusion(string prototype, MapPlayer who){
 			if (who.Equals (player)) {
-				return Common.Common.IsCanFusion (prototype, player.storage);
+				return Common.Common.IsCanFusion (player, prototype, player.storage);
 			} else if (who.Equals (playerInMap)) {
-				return Common.Common.IsCanFusion (prototype, playerInMap.storage);
+				return Common.Common.IsCanFusion (playerInMap, prototype, playerInMap.storage);
 			} else {
-				return Common.Common.IsCanFusion (prototype, storage);
+				return Common.Common.IsCanFusion (player, prototype, storage);
 			}
 		}
 		#endregion
@@ -756,7 +815,89 @@ namespace Model
 	}
 
 	public class Helper{
+		/// <summary>
+		/// 計算招式發動率
+		/// </summary>
+		/// <returns>The trigger rate.</returns>
+		/// <param name="who">Who.</param>
+		/// <param name="skill">Skill.</param>
+		public static float ComputeSkillTriggerRate(MapPlayer who, ConfigSkill skill){
+			var ais = Common.Common.ParseAbstractItem (skill.SkillRequire);
+			var needExp = ais.Sum (ai => ai.count);
+			var maxExp = needExp << 1;
+			var haveExp = ais.Sum (ai => who.skillExp.Exp(ai.prototype));
+			var rate = (float)(haveExp - needExp) / (maxExp - needExp);
+			var bouns = skill.TriggerBouns;
+			return rate + bouns;
+		}
 
+		/// <summary>
+		/// 取得可用招式列表
+		/// </summary>
+		/// <returns>The skills.</returns>
+		/// <param name="player">Player.</param>
+		/// <param name="who">Who.</param>
+		public static IEnumerable<ConfigSkill> AvailableSkills(PlayerDataStore player, MapPlayer who){
+			var skills = Enumerable
+				.Range(0, ConfigSkill.ID_COUNT)
+				.Select(ConfigSkill.Get);
+			var weapons = who.weapons;
+			var useWeaponTypes = weapons.Select (i => ConfigItem.Get (i.prototype).SkillType);
+			return skills.Where (cfg => {
+				// 判斷技能類型需求
+				// 比如：需要拳術5級和劍術3級
+				var ais = Common.Common.ParseAbstractItem(cfg.SkillRequire);
+				foreach(var ai in ais){
+					var skillType = ai.prototype;
+					var skillLevel = ai.count;
+					// 其中一項不符就回傳
+					switch(skillType){
+					case ConfigSkillType.ID_karate:
+						{
+							if(who.skillExp.karate < skillLevel){
+								return false;
+							}
+						}
+						break;
+					case ConfigSkillType.ID_fencingArt:
+						{
+							if(who.skillExp.fencingArt < skillLevel){
+								return false;
+							}
+						}
+						break;
+					default:
+						throw new NotImplementedException("未判斷的招式類型:"+skillType);
+					}
+				}
+				// 判斷這個技能是不是需要武器
+				var isNeedWeapon = string.IsNullOrEmpty(cfg.IsRequireWeapon) == false;
+				if(isNeedWeapon == true){
+					// 以第一個需求技能的代表武器為主
+					var firstSkill = ais.FirstOrDefault();
+					// 有需要武器一定要有所需技能類型
+					var isInvalidConfig = firstSkill.Item.Equals(Item.Empty);
+					if(isInvalidConfig){
+						throw new Exception("錯誤的設定:"+cfg.SkillRequire);
+					}
+					var skillType = firstSkill.prototype;
+					// 判斷有沒有裝備該類技能類型的武器
+					var isMatch = useWeaponTypes.Where(st=>st==skillType).Count()>0;
+					if(isMatch == false){
+						return false;
+					}
+				}
+				return true;
+			});
+		}
+		/// <summary>
+		/// 計算基礎能力和戰鬥能力
+		/// </summary>
+		/// <param name="player">Player.</param>
+		/// <param name="map">Map.</param>
+		/// <param name="who">Who.</param>
+		/// <param name="basic">Basic.</param>
+		/// <param name="fight">Fight.</param>
 		public static void CalcAbility(PlayerDataStore player, MapDataStore map,MapPlayer who, ref BasicAbility basic, ref FightAbility fight){
 			if (who.weapons == null) {
 				return;
@@ -788,16 +929,25 @@ namespace Model
 			basic = tmpBasic;
 			fight = tmpFight;
 		}
-
+		/// <summary>
+		/// 計算普攻傷害
+		/// </summary>
+		/// <returns>The basic damage.</returns>
+		/// <param name="player">Player.</param>
+		/// <param name="map">Map.</param>
+		/// <param name="mapObjectId">Map object identifier.</param>
 		public static int GetBasicDamage(PlayerDataStore player, MapDataStore map, int mapObjectId){
 			var a = player.playerInMap.basicAbility.FightAbility;
 			var monsterInfo = map.monsterInfo [map.mapObjects [mapObjectId].infoKey];
 			var b = BasicAbility.Get (monsterInfo).FightAbility;
 			return (int)(a.atk - b.def);
 		}
-
-
-
+		/// <summary>
+		/// 加入道具到指定列表
+		/// </summary>
+		/// <returns>The item.</returns>
+		/// <param name="input">Input.</param>
+		/// <param name="item">Item.</param>
 		public static List<Item> AddItem(List<Item> input, Item item){
 			var container = new List<Item> (input);
 			var shouldArrange = true;
