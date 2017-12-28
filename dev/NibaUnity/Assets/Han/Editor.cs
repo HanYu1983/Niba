@@ -60,12 +60,19 @@ namespace Model
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
-				"SkillRequire", "string",
-				"IsRequireWeapon", "string",
+				"SkillTypeRequire", "string",
+				"TriggerBouns", "float",
+				"Condition", "string",
+				"SlotCount", "int",
 				"Effect", "string",
 				"Values", "string",
-				"TriggerBouns", "float",
 			}, "CSV/gameData - skill.tsv");
+
+			GenCode ("ConfigConditionType", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+			}, "CSV/gameData - conditionType.tsv");
 
 			GenCode ("ConfigNpc", null, new string[]{
 				"ID", "string",
@@ -141,7 +148,7 @@ namespace Model
 							var id = i-1;
 							str += string.Format ("case {0}: return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv));
 						}
-						str += "default: throw new Exception(\"\");\n";
+						str += "default: throw new Exception(key+\"\");\n";
 					}
 					str += "}";
 				}
@@ -155,7 +162,7 @@ namespace Model
 							var id = csv [i][0];
 							str += string.Format ("case \"{0}\": return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv));
 						}
-						str += "default: throw new Exception(\"\");\n";
+						str += "default: throw new Exception(key);\n";
 					}
 					str += "}";
 				}

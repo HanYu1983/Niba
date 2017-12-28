@@ -163,7 +163,8 @@ namespace Common
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
-		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}. hp remain {hp}";
+		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}.";
+		public const string InfoMonsterDied = "[info]{mapObjectId} is died. you get {rewards}"; // rewards is array of json string
 		public const string InfoMonsterAttack = "[info]{mapObjectId} attack you and deal damage {damage}";
 		public const string InfoWeaponBroken = "[info]{items} is broken.";	// items is array of json string
 		public const string InfoUseSkill = "[info]you use {skills}.";
@@ -447,9 +448,9 @@ namespace Common
 					value.IndexOf ("-") != -1 ? "-" :
 					value.IndexOf("@") != -1 ? "enforce" :
 					"unknown";
-				if (op == "unknown") {
+				/*if (op == "unknown") {
 					throw new Exception ("format error:"+value);
-				}
+				}*/
 				return op;
 			}
 		}
@@ -910,6 +911,14 @@ namespace Common
             OnEvent(cmd, args);
         }
 
+		public static IEnumerable<ItemEffect> Effect(ConfigSkill skill){
+			return skill.Effect.Split (new char[]{ ',' }).Select (v => {
+				ItemEffect ef;
+				ef.value = v;
+				return ef;
+			});
+		}
+
 		public static List<Item> Storage(IModelGetter model, MapPlayer who){
 			if (who.Equals (MapPlayer.PlayerInHome)) {
 				return model.HomePlayer.storage;
@@ -939,7 +948,7 @@ namespace Common
 				item.count = count;
 				return item;
 			};
-			if (itemString == null) {
+			if (string.IsNullOrEmpty(itemString)) {
 				return new List<AbstractItem> ();
 			}
 			var hasMulti = itemString.IndexOf (",") != -1;

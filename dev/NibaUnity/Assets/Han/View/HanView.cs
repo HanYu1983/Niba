@@ -119,7 +119,7 @@ namespace View
 								return string.Format ("{0}對你造成{1}傷害", objCfg.Name, damage);
 							}
 						default:
-							throw new NotImplementedException();	
+							throw new NotImplementedException(e.description);	
 						}
 					}).ToArray ());
 

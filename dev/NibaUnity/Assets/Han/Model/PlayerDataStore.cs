@@ -216,24 +216,29 @@ namespace Model
 					});
 					// 技能加成
 					var skills = Helper.AvailableSkills (player, player.playerInMap);
-					skills = skills.Where (s => s.IsRequireWeapon == "1");
+					// 只計算攻擊性技能
+					skills = skills.Where (s => s.Condition == ConfigConditionType.ID_attack);
+					// 取出發動的技能
 					var triggered = skills.Where (s => {
 						var rate = (int)(Helper.ComputeSkillTriggerRate (player.playerInMap, s) * 100);
 						return UnityEngine.Random.Range(1, 101) < rate;
 					});
-					playerAbility = triggered.Aggregate(playerAbility, (v,skill)=>{
-						switch(skill.Effect){
-						case "atk{0}倍，爆擊率提升{1}百分比":
+					// 取出技能效果
+					var triggeredEffect = triggered.SelectMany (Common.Common.Effect);
+					playerAbility = triggeredEffect.Aggregate(playerAbility, (v,effect)=>{
+						switch(effect.EffectOperator){
+						case "unknown":
 							{
-								var info = skill.Values.Split(new char[]{','});
-								var atkRate = float.Parse(info[0]);
-								var criRate = float.Parse(info[1]);
-								playerAbility.atk *= atkRate;
-								playerAbility.critical *= criRate;
+								switch(effect.value){
+								default:
+									throw new NotImplementedException("未確定的招式:"+effect.value);
+								}
+							}
+						default:
+							{
+								playerAbility = effect.Effect(playerAbility);
 							}
 							break;
-						default:
-							throw new NotImplementedException("未確定的招式:"+skill.Effect);
 						}
 						return playerAbility;
 					});
@@ -243,6 +248,9 @@ namespace Model
 					monsterInf.hp -= damage;
 					if (monsterInf.IsDied) {
 						mapObject.died = true;
+						// 獲得獎勵
+						var rewards = Common.Common.ParseItem (monsterCfg.Item);
+						player.playerInMap.storage = rewards.Aggregate (player.playerInMap.storage, Helper.AddItem);
 					}
 					// === 套用結果 === //
 					monsterInfo [mapObject.infoKey] = monsterInf;
@@ -274,8 +282,21 @@ namespace Model
 					des.values = new NameValueCollection ();
 					des.values.Set ("mapObjectId", mapObjectId+"");
 					des.values.Set ("damage", damage+"");
-					des.values.Set ("hp", monsterInf.hp+"");
 					ret.Add (des);
+
+					// === 回傳怪物死亡 === //
+					if (monsterInf.IsDied) {
+						des = Description.Empty;
+						des.description = Description.InfoMonsterDied;
+						des.values = new NameValueCollection ();
+						des.values.Set ("mapObjectId", mapObjectId+"");
+						// 獎勵資訊
+						var rewards = Common.Common.ParseItem (monsterCfg.Item);
+						foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
+							des.values.Add ("reward", damage+"");
+						}
+						ret.Add (des);
+					}
 
 					// === 回傳壞掉資訊 === //
 					if (brokenWeapons.Count () > 0) {
@@ -822,7 +843,7 @@ namespace Model
 		/// <param name="who">Who.</param>
 		/// <param name="skill">Skill.</param>
 		public static float ComputeSkillTriggerRate(MapPlayer who, ConfigSkill skill){
-			var ais = Common.Common.ParseAbstractItem (skill.SkillRequire);
+			var ais = Common.Common.ParseAbstractItem (skill.SkillTypeRequire);
 			var needExp = ais.Sum (ai => ai.count);
 			var maxExp = needExp << 1;
 			var haveExp = ais.Sum (ai => who.skillExp.Exp(ai.prototype));
@@ -846,7 +867,7 @@ namespace Model
 			return skills.Where (cfg => {
 				// 判斷技能類型需求
 				// 比如：需要拳術5級和劍術3級
-				var ais = Common.Common.ParseAbstractItem(cfg.SkillRequire);
+				var ais = Common.Common.ParseAbstractItem(cfg.SkillTypeRequire);
 				foreach(var ai in ais){
 					var skillType = ai.prototype;
 					var skillLevel = ai.count;
@@ -871,14 +892,14 @@ namespace Model
 					}
 				}
 				// 判斷這個技能是不是需要武器
-				var isNeedWeapon = string.IsNullOrEmpty(cfg.IsRequireWeapon) == false;
+				var isNeedWeapon = cfg.SlotCount == 0;
 				if(isNeedWeapon == true){
 					// 以第一個需求技能的代表武器為主
 					var firstSkill = ais.FirstOrDefault();
 					// 有需要武器一定要有所需技能類型
 					var isInvalidConfig = firstSkill.Item.Equals(Item.Empty);
 					if(isInvalidConfig){
-						throw new Exception("錯誤的設定:"+cfg.SkillRequire);
+						throw new Exception("錯誤的設定:"+cfg.SkillTypeRequire);
 					}
 					var skillType = firstSkill.prototype;
 					// 判斷有沒有裝備該類技能類型的武器
