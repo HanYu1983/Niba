@@ -7,9 +7,10 @@ using Common;
 
 namespace Model
 {
+	// 下[Serializable]的話，會自動存入本機和自動讀取，真是奇怪(方便?)的功能
+	// 不使用上述的功能
 	// 地圖的部分另外存，因為資料量比較大
 	// 所以把比較長變動的資料移到PlayerDataStore
-	[Serializable]
 	public class MapDataStore{
 		#region map
 		// Dictionary無法Serializable
@@ -35,7 +36,7 @@ namespace Model
 						}
 						// gen monster after assign item
 						if (UnityEngine.Random.Range (0, 100) < 25) {
-							GenMonster (player, pos, ConfigMonster.ID_ant);
+							GenMonster (player, pos, ConfigMonster.ID_bear);
 						}
 					} else {
 						// ignore
@@ -144,12 +145,14 @@ namespace Model
 					switch(obj.type){
 					case MapObjectType.Resource:
 						{
+							/*
 							var des = Description.Empty;
 							des.description = Description.EventLucklyFind;
 							des.values = new NameValueCollection();
 							des.values.Add("itemPrototype", ConfigItem.ID_wood);
 							des.values.Add("count", 10+"");
 							accu.Add(des);
+							*/
 						}
 						break;
 					case MapObjectType.Monster:
@@ -214,7 +217,7 @@ namespace Model
 						// TODO 實做針對性能力
 						return playerAbility;
 					});
-					// 技能加成
+					// === 技能加成 === //
 					var skills = Helper.AvailableSkills (player, player.playerInMap);
 					// 只計算攻擊性技能
 					skills = skills.Where (s => s.Condition == ConfigConditionType.ID_attack);
@@ -242,72 +245,103 @@ namespace Model
 						}
 						return playerAbility;
 					});
-					// 總傷害
-					var damage = playerAbility.Damage (monsterAbility);
-					// === 套用傷害 === //
-					monsterInf.hp -= damage;
-					if (monsterInf.IsDied) {
-						mapObject.died = true;
-						// 獲得獎勵
-						var rewards = Common.Common.ParseItem (monsterCfg.Item);
-						player.playerInMap.storage = rewards.Aggregate (player.playerInMap.storage, Helper.AddItem);
-					}
-					// === 套用結果 === //
-					monsterInfo [mapObject.infoKey] = monsterInf;
-					mapObjects [mapObjectId] = mapObject;
 
-					// === 處理武器壞掉 === //
-					var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ();
-					// 刪除壞掉武器
-					foreach (var broken in brokenWeapons) {
-						player.playerInMap.weapons.Remove (broken);
-					}
-						
-					// ====== 以下處理回傳 ====== //
-					var des = Description.Empty;
-					// === 回傳使用招式 === //
-					if (triggered.Count () > 0) {
-						des = Description.Empty;
-						des.description = Description.InfoUseSkill;
-						des.values = new NameValueCollection ();
-						foreach (var s in triggered) {
-							des.values.Add ("skill", s.ID);
+					// 判斷是否命中
+					var accuracyRate = playerAbility.AccuracyRate (monsterAbility);
+					var isHit = UnityEngine.Random.Range (1, 101) < (int)(accuracyRate * 100);
+					if (isHit == false) {
+						var des = Description.Empty;
+						// === 回傳使用招式 === //
+						if (triggered.Count () > 0) {
+							des = Description.Empty;
+							des.description = Description.InfoUseSkill;
+							des.values = new NameValueCollection ();
+							foreach (var s in triggered) {
+								des.values.Add ("skills", s.ID);
+							}
+							ret.Add (des);
 						}
-						ret.Add (des);
-					}
 
-					// === 回傳攻擊資訊 === //
-					des = Description.Empty;
-					des.description = Description.InfoAttack;
-					des.values = new NameValueCollection ();
-					des.values.Set ("mapObjectId", mapObjectId+"");
-					des.values.Set ("damage", damage+"");
-					ret.Add (des);
-
-					// === 回傳怪物死亡 === //
-					if (monsterInf.IsDied) {
+						// === 回傳怪物回避攻擊 === //
 						des = Description.Empty;
-						des.description = Description.InfoMonsterDied;
+						des.description = Description.InfoMonsterDodge;
 						des.values = new NameValueCollection ();
-						des.values.Set ("mapObjectId", mapObjectId+"");
-						// 獎勵資訊
-						var rewards = Common.Common.ParseItem (monsterCfg.Item);
-						foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
-							des.values.Add ("reward", damage+"");
+						des.values.Set ("mapObjectId", mapObjectId + "");
+						ret.Add (des);
+					} else {
+						// 總傷害
+						var damage = playerAbility.Damage (monsterAbility);
+						var criRate = playerAbility.CriticalHitRate (monsterAbility);
+						var isCriHit = UnityEngine.Random.Range (1, 101) < (int)(criRate * 100);
+						if (isCriHit) {
+							damage = (int)(damage*1.5f);
 						}
-						ret.Add (des);
-					}
+						// === 套用傷害 === //
+						monsterInf.hp -= Math.Max (0, damage);
+						if (monsterInf.IsDied) {
+							mapObject.died = true;
+							// 獲得獎勵
+							var rewards = Common.Common.ParseItem (monsterCfg.Item);
+							player.playerInMap.storage = rewards.Aggregate (player.playerInMap.storage, Helper.AddItem);
+						}
+						// === 套用結果 === //
+						monsterInfo [mapObject.infoKey] = monsterInf;
+						mapObjects [mapObjectId] = mapObject;
 
-					// === 回傳壞掉資訊 === //
-					if (brokenWeapons.Count () > 0) {
-						des = Description.Empty;
-						des.description = Description.InfoWeaponBroken;
-						des.values = new NameValueCollection ();
+						// === 處理武器壞掉 === //
+						// 注意：使用ToList將陣列Copy
+						var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ().ToList ();
+						// 刪除壞掉武器
 						foreach (var broken in brokenWeapons) {
-							var jsonstr = JsonUtility.ToJson (broken);
-							des.values.Add ("item", jsonstr);
+							player.playerInMap.weapons.Remove (broken);
 						}
+						// ====== 以下處理回傳 ====== //
+						var des = Description.Empty;
+						// === 回傳使用招式 === //
+						if (triggered.Count () > 0) {
+							des = Description.Empty;
+							des.description = Description.InfoUseSkill;
+							des.values = new NameValueCollection ();
+							foreach (var s in triggered) {
+								des.values.Add ("skills", s.ID);
+							}
+							ret.Add (des);
+						}
+
+						// === 回傳攻擊資訊 === //
+						des = Description.Empty;
+						des.description = Description.InfoAttack;
+						des.values = new NameValueCollection ();
+						des.values.Set ("mapObjectId", mapObjectId + "");
+						des.values.Set ("damage", damage + "");
+						des.values.Set ("isCriHit", isCriHit ? "1": "0");
 						ret.Add (des);
+
+						// === 回傳怪物死亡 === //
+						if (monsterInf.IsDied) {
+							des = Description.Empty;
+							des.description = Description.InfoMonsterDied;
+							des.values = new NameValueCollection ();
+							des.values.Set ("mapObjectId", mapObjectId + "");
+							// 獎勵資訊
+							var rewards = Common.Common.ParseItem (monsterCfg.Item);
+							foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
+								des.values.Add ("rewards", json);
+							}
+							ret.Add (des);
+						}
+
+						// === 回傳壞掉資訊 === //
+						if (brokenWeapons.Count () > 0) {
+							des = Description.Empty;
+							des.description = Description.InfoWeaponBroken;
+							des.values = new NameValueCollection ();
+							foreach (var broken in brokenWeapons) {
+								var jsonstr = JsonUtility.ToJson (broken);
+								des.values.Add ("items", jsonstr);
+							}
+							ret.Add (des);
+						}
 					}
 				}
 				break;
@@ -316,9 +350,13 @@ namespace Model
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var mapObject = mapObjects [mapObjectId];
 					var monsterInf = monsterInfo[mapObject.infoKey];
+					// 怪物已死亡，不必處理任何事，回傳
+					if (monsterInf.IsDied) {
+						break;
+					}
+
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
-
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
@@ -329,15 +367,56 @@ namespace Model
 						// TODO 實做針對性能力
 						return playerAbility;
 					});
-					var damage = monsterAbility.Damage (playerAbility);
-					player.playerInMap.hp -= damage;
+					// 判斷是否命中
+					var accuracyRate = playerAbility.AccuracyRate (monsterAbility);
+					var isHit = UnityEngine.Random.Range (1, 101) < (int)(accuracyRate * 100);
+					if (isHit == false) {
+						// === 回傳回避攻擊 === //
+						var des = Description.Empty;
+						des.description = Description.InfoDodge;
+						des.values = new NameValueCollection ();
+						des.values.Set ("mapObjectId", mapObjectId + "");
+						ret.Add (des);
 
-					var des = Description.Empty;
-					des.description = Description.InfoMonsterAttack;
-					des.values = new NameValueCollection ();
-					des.values.Set ("mapObjectId", mapObjectId+"");
-					des.values.Set ("damage", damage+"");
-					ret.Add (des);
+					} else {
+
+						// === 技能加成 === //
+						var skills = Helper.AvailableSkills (player, player.playerInMap);
+						// 只計算防禦性技能
+						skills = skills.Where (s => s.Condition == ConfigConditionType.ID_deffence);
+						// 取出發動的技能
+						var triggered = skills.Where (s => {
+							var rate = (int)(Helper.ComputeSkillTriggerRate (player.playerInMap, s) * 100);
+							return UnityEngine.Random.Range(1, 101) < rate;
+						});
+						if (triggered.Count () > 0) {
+							var onlyOneSkillCanTrigger = triggered.First ();
+							switch (onlyOneSkillCanTrigger.Effect) {
+							case "取消對方的攻擊，並對對方造成{1}倍普攻傷害.":
+								{
+									// TODO
+								}
+								break;
+							}
+						}
+
+
+						var damage = monsterAbility.Damage (playerAbility);
+						var criRate = playerAbility.CriticalHitRate (monsterAbility);
+						var isCriHit = UnityEngine.Random.Range (1, 101) < (int)(criRate * 100);
+						if (isCriHit) {
+							damage = (int)(damage*1.5f);
+						}
+						player.playerInMap.hp -= Math.Max (0, damage);
+
+						var des = Description.Empty;
+						des.description = Description.InfoMonsterAttack;
+						des.values = new NameValueCollection ();
+						des.values.Set ("mapObjectId", mapObjectId + "");
+						des.values.Set ("damage", damage + "");
+						des.values.Set ("isCriHit", isCriHit ? "1": "0");
+						ret.Add (des);
+					}
 				}
 				break;
 			}
@@ -417,8 +496,11 @@ namespace Model
 				throw new MessageException ("沒有工作，不能應用");
 			}
 			player.playerInMap.ClearWork ();
-
+			// 回合性招式
+			var turnSkills = Helper.AvailableSkills (player, player.playerInMap).Where(s=>s.Condition == ConfigConditionType.ID_turn);
+			// TODO 轉換成使用招式的work
 			var work = player.playerInMap.currentWork;
+			//return ProcessWork (player, work);
 			// 將工作轉為互動
 			var interaction = MakeInteraction (player, work);
 			// 取得場景互動
@@ -427,7 +509,6 @@ namespace Model
 			var allInter = envirInteraction.Concat (Enumerable.Repeat (interaction, 1));
 			// 依優先權處理互動
 			return ApplyInteraction (player, allInter);
-			//return ProcessWork (player, work);
 		}
 
 		public IEnumerable<Description> GetWorks(PlayerDataStore player){
@@ -472,7 +553,6 @@ namespace Model
 		#endregion
 	}
 
-	[Serializable]
 	public class PlayerDataStore
 	{
 		public MapPlayer player = MapPlayer.PlayerInHome;
@@ -907,6 +987,9 @@ namespace Model
 					if(isMatch == false){
 						return false;
 					}
+				} else {
+					// slot的招式
+					// TODO 判斷有沒有裝備這個招式
 				}
 				return true;
 			});

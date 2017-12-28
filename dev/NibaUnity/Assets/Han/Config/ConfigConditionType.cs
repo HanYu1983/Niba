@@ -14,12 +14,12 @@ case 0: return new ConfigConditionType {ID="attack",Name="攻擊時"};
 case 1: return new ConfigConditionType {ID="deffence",Name="防守時"};
 case 2: return new ConfigConditionType {ID="turn",Name="回合自動"};
 case 3: return new ConfigConditionType {ID="menu",Name="選單"};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigConditionType Get(string key){
 switch(key){
 case "attack": return new ConfigConditionType {ID="attack",Name="攻擊時"};
 case "deffence": return new ConfigConditionType {ID="deffence",Name="防守時"};
 case "turn": return new ConfigConditionType {ID="turn",Name="回合自動"};
 case "menu": return new ConfigConditionType {ID="menu",Name="選單"};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

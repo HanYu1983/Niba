@@ -64,7 +64,7 @@ case 21: return new ConfigItem {ID="ironWork",Name="鍊鋼廠",Type="important",
 case 22: return new ConfigItem {ID="buhuku",Name="布服",Type="weapon",MaxCount=1};
 case 23: return new ConfigItem {ID="bumau",Name="布帽",Type="weapon",MaxCount=1};
 case 24: return new ConfigItem {ID="piken",Name="皮製拳套",Type="weapon",MaxCount=1};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigItem Get(string key){
 switch(key){
 case "grass": return new ConfigItem {ID="grass",Name="草",Type="material",MaxCount=99};
@@ -92,5 +92,5 @@ case "ironWork": return new ConfigItem {ID="ironWork",Name="鍊鋼廠",Type="imp
 case "buhuku": return new ConfigItem {ID="buhuku",Name="布服",Type="weapon",MaxCount=1};
 case "bumau": return new ConfigItem {ID="bumau",Name="布帽",Type="weapon",MaxCount=1};
 case "piken": return new ConfigItem {ID="piken",Name="皮製拳套",Type="weapon",MaxCount=1};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

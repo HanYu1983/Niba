@@ -16,7 +16,7 @@ case 1: return new ConfigSkillType {ID="woodworker",Name="木工"};
 case 2: return new ConfigSkillType {ID="ironworker",Name="鐵匠"};
 case 3: return new ConfigSkillType {ID="fencingArt",Name="劍術"};
 case 4: return new ConfigSkillType {ID="karate",Name="拳術"};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigSkillType Get(string key){
 switch(key){
 case "tailor": return new ConfigSkillType {ID="tailor",Name="裁縫"};
@@ -24,5 +24,5 @@ case "woodworker": return new ConfigSkillType {ID="woodworker",Name="木工"};
 case "ironworker": return new ConfigSkillType {ID="ironworker",Name="鐵匠"};
 case "fencingArt": return new ConfigSkillType {ID="fencingArt",Name="劍術"};
 case "karate": return new ConfigSkillType {ID="karate",Name="拳術"};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

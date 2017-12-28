@@ -25,6 +25,22 @@ namespace Model
 			ClearMoveResult ();
 			RequestSaveMap ();
 			RequestSavePlayer ();
+
+			/*
+			playerData.playerInMap.skillExp.karate = 25;
+
+			playerData.playerInMap.basicAbility.str = 20;
+			playerData.playerInMap.basicAbility.vit = 20;
+			playerData.playerInMap.basicAbility.agi = 20;
+			playerData.playerInMap.basicAbility.dex = 20;
+			playerData.playerInMap.basicAbility.Int = 20;
+			playerData.playerInMap.basicAbility.luc = 20;
+			Item item;
+			item.count = 1;
+			item.prototype = ConfigItem.ID_ironKen;
+			playerData.playerInMap.weapons.Clear ();
+			playerData.playerInMap.weapons.Add (item);
+			*/
 			callback (null);
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }

@@ -14,12 +14,12 @@ case 0: return new ConfigItemType {ID="material",Name="原料"};
 case 1: return new ConfigItemType {ID="weapon",Name="武器"};
 case 2: return new ConfigItemType {ID="food",Name="食物"};
 case 3: return new ConfigItemType {ID="important",Name="重要"};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigItemType Get(string key){
 switch(key){
 case "material": return new ConfigItemType {ID="material",Name="原料"};
 case "weapon": return new ConfigItemType {ID="weapon",Name="武器"};
 case "food": return new ConfigItemType {ID="food",Name="食物"};
 case "important": return new ConfigItemType {ID="important",Name="重要"};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

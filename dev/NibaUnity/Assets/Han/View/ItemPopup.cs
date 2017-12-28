@@ -134,6 +134,10 @@ namespace View
 				return cfg.Position == ConfigWeaponPosition.ID_hand;
 			}).ToList();
 
+			if (handWeapons.Count () > 2) {
+				throw new Exception ("手上武器應該不可能超過2個，請檢查程式:"+handWeapons.Count());
+			}
+
 			for (var i = 0; i < handWeapons.Count; ++i) {
 				var btn = handBtns [i];
 				var weapon = handWeapons [i];

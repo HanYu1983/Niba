@@ -27,6 +27,7 @@ namespace Model
 				"Dex", "int", 
 				"Int","int",
 				"Luc","int",
+				"Char","string",
 			}, "CSV/gameData - monster.tsv");
 
 			GenCode ("ConfigResource", null, new string[]{

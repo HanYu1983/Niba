@@ -90,6 +90,10 @@ namespace Model
 		}
 
 		static IEnumerator TestHomeStorage(IModel model, IView view){
+			model.ClearStorage (MapPlayer.UnknowPlayer);
+			model.ClearStorage (MapPlayer.PlayerInHome);
+			model.ClearStorage (MapPlayer.PlayerInMap);
+
 			Debug.Log ("加入2個道具");
 			Item item;
 			item.count = 1;

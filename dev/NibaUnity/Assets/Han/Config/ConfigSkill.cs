@@ -32,7 +32,7 @@ case 6: return new ConfigSkill {ID="zyuzizan",Name="十字斬",SkillTypeRequire=
 case 7: return new ConfigSkill {ID="zihazan",Name="居合斬",SkillTypeRequire="fencingArt_20",Condition="attack"};
 case 8: return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBouns=0.3f,Condition="deffence",SlotCount=1,Effect="取消對方的攻擊."};
 case 9: return new ConfigSkill {ID="bokyoryokuhakai",Name="防禦力破壞",SkillTypeRequire="fencingArt_10",Condition="menu",SlotCount=1,Effect="對象防禦力下降{0}倍。",Values="0.1"};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigSkill Get(string key){
 switch(key){
 case "seiken": return new ConfigSkill {ID="seiken",Name="正拳",SkillTypeRequire="karate_5",Condition="attack",Effect="atk*1.2, critical*1.2"};
@@ -45,5 +45,5 @@ case "zyuzizan": return new ConfigSkill {ID="zyuzizan",Name="十字斬",SkillTyp
 case "zihazan": return new ConfigSkill {ID="zihazan",Name="居合斬",SkillTypeRequire="fencingArt_20",Condition="attack"};
 case "bukikakuto": return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBouns=0.3f,Condition="deffence",SlotCount=1,Effect="取消對方的攻擊."};
 case "bokyoryokuhakai": return new ConfigSkill {ID="bokyoryokuhakai",Name="防禦力破壞",SkillTypeRequire="fencingArt_10",Condition="menu",SlotCount=1,Effect="對象防禦力下降{0}倍。",Values="0.1"};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

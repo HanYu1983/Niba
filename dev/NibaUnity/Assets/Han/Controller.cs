@@ -39,7 +39,6 @@ namespace Common
 		void HandleException(Exception e){
 			view.Alert (e.Message);
 			Debug.LogError (e.Message);
-			Debug.LogError (e.StackTrace);
 			handleCommandCoroutine = null;
 		}
 

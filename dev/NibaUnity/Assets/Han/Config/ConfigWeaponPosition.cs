@@ -16,7 +16,7 @@ case 1: return new ConfigWeaponPosition {ID="body",Name="身",SlotCount=1};
 case 2: return new ConfigWeaponPosition {ID="foot",Name="腳",SlotCount=1};
 case 3: return new ConfigWeaponPosition {ID="hand",Name="手",SlotCount=2};
 case 4: return new ConfigWeaponPosition {ID="accessory",Name="配件",SlotCount=3};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigWeaponPosition Get(string key){
 switch(key){
 case "head": return new ConfigWeaponPosition {ID="head",Name="頭",SlotCount=1};
@@ -24,5 +24,5 @@ case "body": return new ConfigWeaponPosition {ID="body",Name="身",SlotCount=1};
 case "foot": return new ConfigWeaponPosition {ID="foot",Name="腳",SlotCount=1};
 case "hand": return new ConfigWeaponPosition {ID="hand",Name="手",SlotCount=2};
 case "accessory": return new ConfigWeaponPosition {ID="accessory",Name="配件",SlotCount=3};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

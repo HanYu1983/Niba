@@ -163,8 +163,10 @@ namespace Common
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
-		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}.";
+		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}. {isCriHit}";
+		public const string InfoDodge = "[info]you dodge the attack from {mapObjectId}";
 		public const string InfoMonsterDied = "[info]{mapObjectId} is died. you get {rewards}"; // rewards is array of json string
+		public const string InfoMonsterDodge = "[info]{mapObjectId} is dodge.";
 		public const string InfoMonsterAttack = "[info]{mapObjectId} attack you and deal damage {damage}";
 		public const string InfoWeaponBroken = "[info]{items} is broken.";	// items is array of json string
 		public const string InfoUseSkill = "[info]you use {skills}.";
@@ -323,6 +325,14 @@ namespace Common
 				a.critical = -critical;
 				return a;
 			}
+		}
+
+		public float CriticalHitRate(FightAbility other){
+			return critical / other.mdef;
+		}
+
+		public float AccuracyRate(FightAbility other){
+			return accuracy / other.dodge;
 		}
 
 		public int Damage(FightAbility other){

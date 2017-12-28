@@ -28,7 +28,7 @@ case 5: return new ConfigAbility {ID="mdef",Vit=1.5f,Dex=0.5f,Int=2f};
 case 6: return new ConfigAbility {ID="accuracy",Agi=1f,Dex=3f,Luc=1.5f};
 case 7: return new ConfigAbility {ID="dodge",Agi=3f,Dex=1f,Luc=1.5f};
 case 8: return new ConfigAbility {ID="critical",Dex=1f,Luc=3f};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigAbility Get(string key){
 switch(key){
 case "hp": return new ConfigAbility {ID="hp",Str=1f,Vit=3f};
@@ -40,5 +40,5 @@ case "mdef": return new ConfigAbility {ID="mdef",Vit=1.5f,Dex=0.5f,Int=2f};
 case "accuracy": return new ConfigAbility {ID="accuracy",Agi=1f,Dex=3f,Luc=1.5f};
 case "dodge": return new ConfigAbility {ID="dodge",Agi=3f,Dex=1f,Luc=1.5f};
 case "critical": return new ConfigAbility {ID="critical",Dex=1f,Luc=3f};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

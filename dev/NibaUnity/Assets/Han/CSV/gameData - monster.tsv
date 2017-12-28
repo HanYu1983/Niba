@@ -1,4 +1,5 @@
-id	name	description	item	atk	def	spd
-ant	螞蟻		1	1	1	1
-bird	小鳥		1	2	1	3
-snack	蛇		1	3	3	2
+id	name	description	item	str	vit	spd	dex	int	luck	char
+ant	螞蟻			1	1	1	1	1	1	fly
+bird	小鳥		feather_10	2	1	3	3	1	1	
+snack	蛇			3	3	3	3	1	1	
+bear	熊			30	50	10	20	0	0	boss

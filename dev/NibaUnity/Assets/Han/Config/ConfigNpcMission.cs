@@ -54,7 +54,7 @@ case 17: return new ConfigNpcMission {ID="17"};
 case 18: return new ConfigNpcMission {ID="18"};
 case 19: return new ConfigNpcMission {ID="19"};
 case 20: return new ConfigNpcMission {ID="20"};
-default: throw new Exception("");
+default: throw new Exception(key+"");
 }}public static ConfigNpcMission Get(string key){
 switch(key){
 case "0": return new ConfigNpcMission {ID="0",Npc="guide",Level=1,RequireItem="grass_10",Dialog="幫我拿10個草"};
@@ -78,5 +78,5 @@ case "17": return new ConfigNpcMission {ID="17"};
 case "18": return new ConfigNpcMission {ID="18"};
 case "19": return new ConfigNpcMission {ID="19"};
 case "20": return new ConfigNpcMission {ID="20"};
-default: throw new Exception("");
+default: throw new Exception(key);
 }}}

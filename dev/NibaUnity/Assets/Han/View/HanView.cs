@@ -107,7 +107,16 @@ namespace View
 								var objInfo = model.MonsterInfos [mapObj.infoKey];
 								var objCfg = ConfigMonster.Get (objInfo.type);
 								var damage = int.Parse (e.values.Get ("damage"));
-								return string.Format ("你攻擊{0}造成{1}傷害", objCfg.Name, damage);
+								var isCriHit = e.values.Get("isCriHit") == "1";
+								return string.Format ("你攻擊{0}造成{1}{2}傷害", objCfg.Name, damage, isCriHit ? "暴擊":"");
+							}
+						case Description.InfoDodge:
+							{
+								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+								var mapObj = model.MapObjects [mapObjectId];
+								var objInfo = model.MonsterInfos [mapObj.infoKey];
+								var objCfg = ConfigMonster.Get (objInfo.type);
+								return string.Format ("你閃避了{0}的攻擊", objCfg.Name);
 							}
 						case Description.InfoMonsterAttack:
 							{
@@ -117,6 +126,40 @@ namespace View
 								var objCfg = ConfigMonster.Get (objInfo.type);
 								var damage = int.Parse (e.values.Get ("damage"));
 								return string.Format ("{0}對你造成{1}傷害", objCfg.Name, damage);
+							}
+						case Description.InfoMonsterDied:
+							{
+								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+								var mapObj = model.MapObjects [mapObjectId];
+								var objInfo = model.MonsterInfos [mapObj.infoKey];
+								var objCfg = ConfigMonster.Get (objInfo.type);
+
+								var show = "";
+								show += string.Format("{0}死亡. ", objCfg.Name);
+								var hasReward = e.values.AllKeys.Contains("rewards");
+								if(hasReward){
+									var rewards = e.values.GetValues("rewards").Select(JsonUtility.FromJson<Item>);
+									show += string.Format("你獲得{0}", string.Join(",", rewards.Select(i=>i.ToString()).ToArray()));
+								}
+								return show;
+							}
+						case Description.InfoWeaponBroken:
+							{
+								var weapons = e.values.GetValues("items").Select(JsonUtility.FromJson<Item>);
+								return string.Format("{0}壞掉了!", string.Join(",", weapons.Select(i=>i.ToString()).ToArray()));
+							}
+						case Description.InfoUseSkill:
+							{
+								var skills = e.values.GetValues("skills").Select(ConfigSkill.Get).Select(cfg=>cfg.Name);
+								return string.Format("你使出了{0}!", string.Join(",", skills.ToArray()));
+							}
+						case Description.InfoMonsterDodge:
+							{
+								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+								var mapObj = model.MapObjects [mapObjectId];
+								var objInfo = model.MonsterInfos [mapObj.infoKey];
+								var objCfg = ConfigMonster.Get (objInfo.type);
+								return string.Format ("{0}閃過你的攻擊", objCfg.Name);
 							}
 						default:
 							throw new NotImplementedException(e.description);	
