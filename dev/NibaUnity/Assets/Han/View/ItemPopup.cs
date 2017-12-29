@@ -60,7 +60,10 @@ namespace View
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateButtonLabel(IModelGetter model, MapPlayer who){
+		public void UpdateButtonLabel(IModelGetter model, MapPlayer who_){
+			MapPlayer who = 
+				who_.Equals(MapPlayer.PlayerInHome) ? model.HomePlayer :
+				model.MapPlayer;
 			// 頭
 			var btn_head = btns.Where (btn => {
 				return btn.gameObject.name == "btn_head";
@@ -191,6 +194,28 @@ namespace View
 		#region controller
 		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
+			case "click_itemPopup_move":
+				{
+					if (WhosStorage.Equals (MapPlayer.PlayerInMap)) {
+						callback (new Exception ("冒險時不能移動道具"));
+						yield break;
+					}
+					if (IsSelectNothing) {
+						callback (new Exception ("你沒有選擇任何道具"));
+						yield break;
+					}
+					// 防呆處理
+					if (itemView.Data.Count() == 0) {
+						callback (new Exception ("你沒有選擇任何道具"));
+						yield break;
+					}
+					var item = itemView.Data.ToList () [SelectIndex];
+					var info = new object[] {
+						item, WhosWeapon, WhosStorage
+					};
+					Common.Common.Notify ("itemPopup_move_item", info);
+				}
+				break;
 			case "click_itemPopup_equip":
 				{
 					if (IsSelectNothing) {

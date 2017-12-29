@@ -10,7 +10,7 @@ namespace View
 	public class HanView : MonoBehaviour, IView
 	{
 		public ZUIManager mgr;
-		public Menu menuHome, menuMap;
+		public Menu menuTitle, menuHome, menuMap;
 		public SideMenu menuInfo;
 		public Popup itemPopup;
 		public Popup abilityPopup;
@@ -20,6 +20,12 @@ namespace View
 		public IModelGetter ModelGetter{ set{ model = value; } }
 		public IEnumerator ChangePage(Page page, Action<Exception> callback){
 			switch (page) {
+			case Page.Title:
+				{
+					mgr.OpenMenu (menuTitle);
+					callback (null);
+				}
+				break;
 			case Page.Home:
 				mgr.OpenMenu (menuHome);
 				var home = menuHome.GetComponent<MenuHome> ();
@@ -48,7 +54,9 @@ namespace View
 					}
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
-					var whosWeapon = info == Info.Item ? MapPlayer.PlayerInMap : MapPlayer.PlayerInHome;
+					var whosWeapon = 
+						info == Info.Item ? MapPlayer.PlayerInMap : 
+						MapPlayer.PlayerInHome;
 					var whosStorage = 
 						info == Info.Item ? MapPlayer.PlayerInMap : 
 						info == Info.ItemInHomePocket ? MapPlayer.PlayerInHome :

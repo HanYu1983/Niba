@@ -186,6 +186,15 @@ namespace Common
 				.Select (info => info.t1);
 		}
 
+		public void GetData(MapPlayer other){
+			basicAbility = other.basicAbility;
+			skillExp = other.skillExp;
+			hp = other.hp;
+			mp = other.mp;
+			storage = new List<Item> (other.storage);
+			weapons = new List<Item> (other.weapons);
+		}
+
 		public override string ToString(){
 			return "player(" + id + ")";
 		}
@@ -825,7 +834,7 @@ namespace Common
 	}
 
 	public enum Page{
-		Unknown, Home, Game
+		Unknown, Title, Home, Game
 	}
 
 	public enum Info{
@@ -833,6 +842,10 @@ namespace Common
 		Event, Work, WorkResult, Map, Ability, Item, Fusion,
 		FusionInHome, ItemInHome, Npc,
 		ItemInHomePocket
+	}
+
+	public enum PlayState{
+		Home, Play
 	}
 
 	public class MessageException : Exception{
@@ -919,10 +932,13 @@ namespace Common
 		IEnumerable<Item> CanFusionItems{ get; }
 
 		IEnumerable<string> AvailableNpcMissions{ get; }
+
+		PlayState PlayState{ get; }
 	}
 
 	public interface IModel : IModelGetter{
 		void NewGame();
+		bool LoadGame();
 		/// <summary>
 		/// 讀取地圖
 		/// 任何一張地圖就是臨時創建的
@@ -932,7 +948,9 @@ namespace Common
 		/// <returns>The map.</returns>
 		/// <param name="type">Type.</param>
 		/// <param name="callback">Callback.</param>
-		IEnumerator LoadMap(MapType type, Action<Exception> callback);
+		IEnumerator NewMap(MapType type, Action<Exception> callback);
+		void EnterMap ();
+		void ExitMap ();
 		/// <summary>
 		/// 向上移動一格
 		/// </summary>
@@ -960,6 +978,7 @@ namespace Common
 		void ApplyWork();
 
 		void AddItemToStorage(Item item, MapPlayer who);
+		void MoveItem (MapPlayer a, MapPlayer b, Item item);
 		void Fusion (Item item, MapPlayer who);
 		void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);
 		void UnequipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);

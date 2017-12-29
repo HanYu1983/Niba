@@ -706,13 +706,17 @@ namespace Model
 		}
 
 		public void UnequipWeapon(Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
-			var isCanUnequip = whosWeapon.weapons.IndexOf (item) != -1;
-			if (isCanUnequip == false) {
-				throw new Exception ("無法拆掉：沒有那個裝備");
-			}
 			if (whosWeapon.Equals (player)) {
+				var isCanUnequip = player.weapons.IndexOf (item) != -1;
+				if (isCanUnequip == false) {
+					throw new Exception ("無法拆掉：沒有那個裝備");
+				}
 				player.weapons.Remove (item);
 			} else if (whosWeapon.Equals (playerInMap)) {
+				var isCanUnequip = playerInMap.weapons.IndexOf (item) != -1;
+				if (isCanUnequip == false) {
+					throw new Exception ("無法拆掉：沒有那個裝備");
+				}
 				playerInMap.weapons.Remove (item);
 			} else {
 				throw new Exception ("無法拆掉裝備在unknow");
@@ -751,6 +755,29 @@ namespace Model
 			NotifyMissionAddItem (item);
 		}
 		#endregion
+
+		public void MoveItem(MapPlayer a, MapPlayer b, Item item){
+			List<Item> fromStorage;
+			if (a.Equals (player)) {
+				fromStorage = player.storage;
+			} else if (a.Equals (playerInMap)) {
+				throw new Exception ("冒險中不能移動道具");
+			} else {
+				fromStorage = storage;
+			}
+			if (fromStorage.Contains (item) == false) {
+				throw new Exception ("沒有這個道具，不能移動:"+item);
+			}
+			fromStorage.Remove (item);
+
+			if (b.Equals (player)) {
+				player.storage = Helper.AddItem (player.storage, item);
+			} else if (a.Equals (playerInMap)) {
+				throw new Exception ("道具不能直接移動到冒險者");
+			} else {
+				storage = Helper.AddItem (storage, item);
+			}
+		}
 
 		#region fusion
 		public void Fusion(Item fusionTarget, MapPlayer who){
@@ -822,6 +849,24 @@ namespace Model
 		#region status
 		public int money;
 		public int advLevel;
+		public PlayState playState;
+
+		public void EnterMap(int visibleExtendLength){
+			if (playState != PlayState.Home) {
+				throw new Exception ("這時必須是Home狀態，請檢查程式:"+playState.ToString());
+			}
+			playerInMap.GetData (player);
+			playerInMap.position = Position.Zero;
+
+			ClearVisibleMapObjects ();
+			VisitPosition (playerInMap.position, visibleExtendLength);
+			playState = PlayState.Play;
+		}
+
+		public void ExitMap(){
+			player.GetData (playerInMap);
+			playState = PlayState.Home;
+		}
 		#endregion
 
 		#region mission

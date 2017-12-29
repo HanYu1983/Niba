@@ -18,12 +18,15 @@ namespace Model
 		IView view;
 		IModel model;
 
-		void Start ()
-		{
+		void Awake(){
 			model = defaultModel;
 			view = hanView;
 			view.ModelGetter = model;
+		}
 
+		void Start ()
+		{
+			model.NewGame ();
 			StartCoroutine (TestAll());
 		}
 
@@ -225,12 +228,13 @@ namespace Model
 		static IEnumerator TestFight(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
 			Exception e = null;
-			yield return model.LoadMap (MapType.Unknown, e2 => {
+			yield return model.NewMap (MapType.Unknown, e2 => {
 				e = e2;
 			});
 			if (e != null) {
 				throw e;
 			}
+			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
 			});
@@ -294,7 +298,7 @@ namespace Model
 			model.ClearStorage (model.MapPlayer);
 
 			Exception e = null;
-			yield return model.LoadMap (MapType.Unknown, e2 => {
+			yield return model.NewMap (MapType.Unknown, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -377,7 +381,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			yield return model.LoadMap (MapType.Unknown, e2 => {
+			yield return model.NewMap (MapType.Unknown, e2 => {
 				e = e2;
 			});
 			if (e != null) {
@@ -441,7 +445,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			yield return model.LoadMap (MapType.Unknown, e2 => {
+			yield return model.NewMap (MapType.Unknown, e2 => {
 				e = e2;
 			});
 			if (e != null) {

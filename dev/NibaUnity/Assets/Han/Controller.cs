@@ -15,14 +15,15 @@ namespace Common
 		public IView view;
 		public IModel model;
 
-		void Start(){
-			Common.OnEvent += Common_OnEvent;
+		void Awake(){
 			view = hanView;
 			model = defaultModel;
-
 			view.ModelGetter = model;
+		}
 
-			StartCoroutine (view.ChangePage (Page.Home, e => {
+		void Start(){
+			Common.OnEvent += Common_OnEvent;
+			StartCoroutine (view.ChangePage (Page.Title, e => {
 				if (e != null) {
 					HandleException (e);
 				}
@@ -57,6 +58,44 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "click_title_newgame":
+				{
+					model.NewGame ();
+					yield return view.ChangePage (Page.Home, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_title_load":
+				{
+					if (model.LoadGame () == false) {
+						HandleException (new Exception ("你沒有存檔"));
+						yield break;
+					}
+					var nextPage = model.PlayState == PlayState.Play ?
+						Page.Game : Page.Home;
+					yield return view.ChangePage (nextPage, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					if (nextPage == Page.Game) {
+						yield return view.ShowInfo(Info.Map, e2=>{
+							e = e2;
+						});
+						if (e != null) {
+							HandleException (e);
+							yield break;
+						}
+					}
+				}
+				break;
 			case "fusionRequireView_ok":
 				{
 					var info = (object[])args;
@@ -66,6 +105,35 @@ namespace Common
 						model.Fusion (fusionTarget, who);
 					}catch(Exception e2){
 						HandleException(e2);
+						yield break;
+					}
+				}
+				break;
+			case "itemPopup_move_item":
+				{
+					var info = (object[])args;
+					var item = (Item)info [0];
+					//var whosWeapon = (MapPlayer)info [1];
+					var whosStorage = (MapPlayer)info [2];
+					// 如果現在是家裡箱子，就移動到口袋
+					// 反之就相反
+					var toStorage = whosStorage.Equals (MapPlayer.PlayerInHome) ?
+						MapPlayer.UnknowPlayer : MapPlayer.PlayerInHome;
+					try{
+						model.MoveItem(whosStorage, toStorage, item);
+					}catch(Exception e2){
+						HandleException(e2);
+						yield break;
+					}
+					var returnTo = 
+						whosStorage.Equals (MapPlayer.PlayerInMap) ? Info.Item :
+						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						Info.ItemInHome;
+					yield return view.ShowInfo (returnTo, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
 						yield break;
 					}
 				}
@@ -140,7 +208,30 @@ namespace Common
 				break;
 			case "click_home_map":
 				{
-					yield return OpenMap ();
+					// 創新地圖
+					yield return model.NewMap (MapType.Unknown, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					// 再進入
+					model.EnterMap ();
+					yield return view.ChangePage (Page.Game, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo(Info.Map, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 				}
 				break;
 			case "click_home_item":
@@ -185,6 +276,7 @@ namespace Common
 						HandleException (e);
 						yield break;
 					}
+					model.ExitMap ();
 				}
 				break;
 			case "click_map_fusion":
@@ -304,31 +396,6 @@ namespace Common
 			}
 			model.ApplyMoveResult();
 			model.ClearMoveResult ();
-		}
-
-		IEnumerator OpenMap(){
-			Exception e = null;
-			yield return view.ChangePage (Page.Game, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				HandleException (e);
-				yield break;
-			}
-			yield return model.LoadMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				HandleException (e);
-				yield break;
-			}
-			yield return view.ShowInfo(Info.Map, e2=>{
-				e = e2;
-			});
-			if (e != null) {
-				HandleException (e);
-				yield break;
-			}
 		}
 	}
 }

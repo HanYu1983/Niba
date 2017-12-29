@@ -5,6 +5,8 @@ using UnityEngine;
 using HanUtil;
 using Common;
 using System.Linq;
+using System.IO;
+using System.Threading;
 
 namespace Model
 {
@@ -32,6 +34,14 @@ namespace Model
 			playerData.playerInMap.weapons.Clear ();
 			playerData.playerInMap.weapons.Add (item);
 			*/
+			/*
+			Item item;
+			item.count = 1;
+			item.prototype = ConfigItem.ID_ironKen;
+			playerData.player.weapons.Add (item);
+			playerData.player.weapons.Add (item);
+			*/
+
 			mapData.ClearMap ();
 			playerData.ClearVisibleMapObjects ();
 			ClearMoveResult ();
@@ -39,16 +49,23 @@ namespace Model
 			RequestSavePlayer ();
 		}
 
-		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
+		public bool LoadGame(){
+			return Load ();
+		}
+
+		public IEnumerator NewMap(MapType type, Action<Exception> callback){
 			yield return null;
 			mapData.GenMap (type, 10, 10, playerData);
-			playerData.ClearVisibleMapObjects ();
-			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
-
 			ClearMoveResult ();
-			RequestSaveMap ();
-			RequestSavePlayer ();
 			callback (null);
+		}
+		public void EnterMap (){
+			playerData.EnterMap (visibleExtendLength);
+			RequestSavePlayer ();
+		}
+		public void ExitMap (){
+			playerData.ExitMap ();
+			RequestSavePlayer ();
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
@@ -70,12 +87,16 @@ namespace Model
 
 		public void StartWork (Description work){
 			mapData.StartWork (playerData, work);
+			RequestSaveMap ();
 		}
 		public void CancelWork (){
 			mapData.CancelWork (playerData);
+			RequestSaveMap ();
 		}
 		public void ApplyWork(){
 			workResult = mapData.ApplyWork (playerData);
+			RequestSaveMap ();
+			RequestSavePlayer ();
 		}
 
 		MoveResult tempMoveResult;
@@ -124,12 +145,18 @@ namespace Model
 			RequestSavePlayer ();
 		}
 
+		public void MoveItem(MapPlayer a, MapPlayer b, Item item){
+			playerData.MoveItem (a, b, item);
+			RequestSavePlayer ();
+		}
+
 		public int IsCanFusion (string prototype, MapPlayer who){
 			return playerData.IsCanFusion (prototype, who);
 		}
 
 		public void Fusion (Item item, MapPlayer who){
 			playerData.Fusion (item, who);
+			RequestSavePlayer ();
 		}
 
 		public void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
@@ -197,9 +224,18 @@ namespace Model
 			} 
 		}
 
+		public PlayState PlayState{ 
+			get{
+				return playerData.playState;
+			}
+		}
+
 		void Move(Position position){
+			if (playerData.playState != PlayState.Play) {
+				throw new Exception ("這時必須是Play狀態，請檢查程式:"+playerData.playState.ToString());
+			}
 			if (hasMoveResult) {
-				throw new UnityException ("必須先處理之前的move result並且呼叫ClearMoveResult");
+				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
 			}
 			MoveResult rs = MoveResult.Empty;
 			var newPos = playerData.playerInMap.position;
@@ -226,12 +262,71 @@ namespace Model
 				RequestSaveMap ();
 			}
 		}
-		void RequestSavePlayer(){
 
+		#region persistent
+		bool Load(){
+			var persistentDataPath = Application.persistentDataPath;
+			var playerPath = persistentDataPath + "/playerData.json";
+			var mapPath = persistentDataPath + "/mapData.json";
+			if (File.Exists (playerPath) == false) {
+				return false;
+			}
+			if (File.Exists (mapPath) == false) {
+				return false;
+			}
+			var playerMemoto = File.ReadAllText (playerPath);
+			var mapMemoto = File.ReadAllText (mapPath);
+			playerData = PlayerDataStore.FromMemonto (playerMemoto);
+			mapData = MapDataStore.FromMemonto (mapMemoto);
+			return true;
+		}
+		HashSet<string> saveTargets = new HashSet<string>();
+		void RequestSavePlayer(){
+			SavePlayerDiskWorker (Application.persistentDataPath);
+			saveTargets.Add ("player");
+			lock (saveTargets) {
+				Monitor.PulseAll (saveTargets);
+			}
 		}
 		void RequestSaveMap(){
-
+			SavePlayerDiskWorker (Application.persistentDataPath);
+			saveTargets.Add ("map");
+			lock (saveTargets) {
+				Monitor.PulseAll (saveTargets);
+			}
 		}
+		Thread savingThread;
+		void SavePlayerDiskWorker(string persistentDataPath){
+			if (savingThread != null) {
+				return;
+			}
+			savingThread = new Thread (() => {
+				while(true){
+					if(saveTargets.Contains("player")){
+						Debug.LogWarning("save player...");
+						var memonto = playerData.GetMemonto ();
+						var path = persistentDataPath + "/playerData.json";
+						File.WriteAllText(path, memonto);
+						saveTargets.Remove("player");
+					}
+					if(saveTargets.Contains("map")){
+						Debug.LogWarning("save map...");
+						var memonto = mapData.GetMemonto ();
+						var path = persistentDataPath + "/mapData.json";
+						File.WriteAllText(path, memonto);
+						saveTargets.Remove("map");
+					}
+					lock (saveTargets) {
+						if(saveTargets.Count == 0){
+							Debug.LogWarning("waiting for save...");
+							Monitor.Wait(saveTargets);
+						}
+					}
+				}
+			});
+			savingThread.Start ();
+		}
+		#endregion
 	}
 }
 
