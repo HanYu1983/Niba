@@ -100,6 +100,11 @@ namespace View
 								var config = ConfigItem.Get (itemPrototype);
 								return "獲得item:" + config.Name + " 數量:" + count;
 							}
+						case Description.InfoCollectResource:
+							{
+								var items = e.values.GetValues("items").Select(JsonUtility.FromJson<Item>);
+								return string.Format("你採集了{0}", string.Join(",", items.Select(i=>i.ToString()).ToArray()));
+							}
 						case Description.InfoAttack:
 							{
 								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
@@ -160,6 +165,22 @@ namespace View
 								var objInfo = model.MonsterInfos [mapObj.infoKey];
 								var objCfg = ConfigMonster.Get (objInfo.type);
 								return string.Format ("{0}閃過你的攻擊", objCfg.Name);
+							}
+						case Description.InfoMonsterEscape:
+							{
+								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+								var mapObj = model.MapObjects [mapObjectId];
+								var objInfo = model.MonsterInfos [mapObj.infoKey];
+								var objCfg = ConfigMonster.Get (objInfo.type);
+								return string.Format ("{0}逃走了", objCfg.Name);
+							}
+						case Description.InfoMonsterIdle:
+							{
+								var mapObjectId = int.Parse (e.values.Get ("mapObjectId"));
+								var mapObj = model.MapObjects [mapObjectId];
+								var objInfo = model.MonsterInfos [mapObj.infoKey];
+								var objCfg = ConfigMonster.Get (objInfo.type);
+								return string.Format ("{0}沒有理你", objCfg.Name);
 							}
 						default:
 							throw new NotImplementedException(e.description);	

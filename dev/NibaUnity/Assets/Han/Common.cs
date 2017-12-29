@@ -69,11 +69,62 @@ namespace Common
 		public static ResourceInfo Empty;
 	}
 
+	public enum MonsterThinking{
+		None, AttackYou, Escape
+	}
+
 	[Serializable]
 	public struct MonsterInfo {
 		public string type;
 		public int hp, mp;
 		public bool IsDied{ get { return hp <= 0; } }
+		/// <summary>
+		/// 勇氣值-0.5~0.5
+		/// </summary>
+		float brave;
+		public float NormalBrave {
+			get {
+				return Mathf.Max (0.5f, Mathf.Min (-0.5f, brave + 0.5f));
+			}
+		}
+		// 打你越痛勇氣值越高
+		public void AttackYou(FightAbility you, int damage){
+			var maxHp = you.hp;
+			var rate = Mathf.Max(0, Mathf.Min(1, damage / maxHp)) - 0.5f;
+			brave += rate;
+		}
+		// 每回合勇氣值會自動增減
+		public void StepBrave(){
+			var offset = (brave - 0) / 10f;
+			brave += offset;
+		}
+		/// <summary>
+		/// 仇恨值0~1
+		/// </summary>
+		float hate;
+		public float NormalHate {
+			get {
+				return Mathf.Max (0, Mathf.Min (1, hate));
+			}
+		}
+		// 越痛仇恨值越大
+		public void BeAttacked(int damage){
+			var rate = Mathf.Max(0, Mathf.Min(1, (float)damage / MaxHP));
+			hate += rate;
+		}
+		public void StepHate(){
+			hate -= 0.05f;
+			if (hate < 0) {
+				hate = 0;
+			}
+		}
+
+		public int MaxHP{
+			get{
+				return (int)BasicAbility.Get (ConfigMonster.Get (type)).FightAbility.hp;
+			}
+		}
+
 		public static MonsterInfo Empty;
 	}
 
@@ -163,13 +214,18 @@ namespace Common
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
+		public const string EventMonsterEscape = "[event]{mapObjectId} escape you";
+		public const string EventMonsterIdle = "[event]{mapObjectId} idle";
 		public const string InfoAttack = "[info]you attack {mapObjectId} and deal damage {damage}. {isCriHit}";
 		public const string InfoDodge = "[info]you dodge the attack from {mapObjectId}";
 		public const string InfoMonsterDied = "[info]{mapObjectId} is died. you get {rewards}"; // rewards is array of json string
 		public const string InfoMonsterDodge = "[info]{mapObjectId} is dodge.";
+		public const string InfoMonsterEscape = "[info]{mapObjectId} is escape.";
+		public const string InfoMonsterIdle = "[info]{mapObjectId} is idle.";
 		public const string InfoMonsterAttack = "[info]{mapObjectId} attack you and deal damage {damage}";
 		public const string InfoWeaponBroken = "[info]{items} is broken.";	// items is array of json string
 		public const string InfoUseSkill = "[info]you use {skills}.";
+		public const string InfoCollectResource = "[info]you collect {items}."; // items is array of json string
 		public string description;
 		public NameValueCollection values;
 		public static Description Empty;
@@ -866,6 +922,7 @@ namespace Common
 	}
 
 	public interface IModel : IModelGetter{
+		void NewGame();
 		/// <summary>
 		/// 讀取地圖
 		/// 任何一張地圖就是臨時創建的

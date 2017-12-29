@@ -193,9 +193,17 @@ namespace Model
 					mapObjects [mapObjectId] = obj;
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
-					foreach (var item in Common.Common.ParseItemFromResource(config)) {
+					var items = Common.Common.ParseItemFromResource (config);
+					foreach (var item in items) {
 						player.AddItem (item, player.playerInMap);
 					}
+					var des = Description.Empty;
+					des.description = Description.InfoCollectResource;
+					des.values = new NameValueCollection ();
+					foreach (var itemJson in items.Select(i=>JsonUtility.ToJson(i))) {
+						des.values.Add ("items", itemJson);
+					}
+					ret.Add (des);
 				}
 				break;
 			case Description.WorkAttack:
@@ -203,7 +211,11 @@ namespace Model
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var mapObject = mapObjects [mapObjectId];
 					var monsterInf = monsterInfo[mapObject.infoKey];
-
+					// 怪物逃走了
+					if (monsterInf.IsDied) {
+						Debug.LogWarning ("怪物已逃走");
+						break;
+					}
 					// === 計算傷害 === //
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
@@ -278,6 +290,8 @@ namespace Model
 						}
 						// === 套用傷害 === //
 						monsterInf.hp -= Math.Max (0, damage);
+						// 計算仇恨值
+						monsterInf.BeAttacked (Math.Max (0, damage));
 						if (monsterInf.IsDied) {
 							mapObject.died = true;
 							// 獲得獎勵
@@ -350,10 +364,6 @@ namespace Model
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
 					var mapObject = mapObjects [mapObjectId];
 					var monsterInf = monsterInfo[mapObject.infoKey];
-					// 怪物已死亡，不必處理任何事，回傳
-					if (monsterInf.IsDied) {
-						break;
-					}
 
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
 					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
@@ -408,6 +418,10 @@ namespace Model
 							damage = (int)(damage*1.5f);
 						}
 						player.playerInMap.hp -= Math.Max (0, damage);
+						// 計算仇恨值
+						monsterInf.AttackYou (playerAbility, Math.Max (0, damage));
+						// 套用
+						monsterInfo [mapObject.infoKey] = monsterInf;
 
 						var des = Description.Empty;
 						des.description = Description.InfoMonsterAttack;
@@ -419,6 +433,38 @@ namespace Model
 					}
 				}
 				break;
+			case Description.EventMonsterEscape:
+				{
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					monsterInf.hp = 0;
+					monsterInfo [mapObject.infoKey] = monsterInf;
+
+					var des = Description.Empty;
+					des.description = Description.InfoMonsterEscape;
+					des.values = new NameValueCollection ();
+					des.values.Set ("mapObjectId", mapObjectId + "");
+					ret.Add (des);
+				}
+				break;
+			case Description.EventMonsterIdle:
+				{
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					monsterInf.hp = 0;
+					monsterInfo [mapObject.infoKey] = monsterInf;
+
+					var des = Description.Empty;
+					des.description = Description.InfoMonsterIdle;
+					des.values = new NameValueCollection ();
+					des.values.Set ("mapObjectId", mapObjectId + "");
+					ret.Add (des);
+				}
+				break;
+			default:
+				throw new NotImplementedException (work.description);
 			}
 			return ret;
 		}
@@ -451,19 +497,62 @@ namespace Model
 					case MapObjectType.Monster:
 						{
 							var info = monsterInfo[currItem.infoKey];
+							// 怪物已死亡，不產生任何動作
+							if (info.IsDied) {
+								break;
+							}
+							// 增減勇氣值
+							info.StepBrave();
+							info.StepHate();
+							monsterInfo[currItem.infoKey] = info;
+
 							var cfg = ConfigMonster.Get(info.type);
 							var ability = BasicAbility.Get(cfg);
 							var fightAbility = ability.FightAbility;
+							var priority = fightAbility.dodge;
 
-							var action = Description.Empty;
-							action.description = Description.EventMonsterAttackYou;
-							action.values = new NameValueCollection();
-							action.values.Add("mapObjectId", currItem.key+"");
+							var thinking = Helper.MonsterThink(this, player, currItem.key);
+							switch(thinking){
+							case MonsterThinking.None:
+								{
+									var action = Description.Empty;
+									action.description = Description.EventMonsterIdle;
+									action.values = new NameValueCollection();
+									action.values.Add("mapObjectId", currItem.key+"");
 
-							var ret = Interaction.Empty;
-							ret.description = action;
-							ret.priority = fightAbility.dodge;
-							actions.Add(ret);
+									var ret = Interaction.Empty;
+									ret.description = action;
+									ret.priority = priority;
+									actions.Add(ret);
+								}
+								break;
+							case MonsterThinking.AttackYou:
+								{
+									var action = Description.Empty;
+									action.description = Description.EventMonsterAttackYou;
+									action.values = new NameValueCollection();
+									action.values.Add("mapObjectId", currItem.key+"");
+
+									var ret = Interaction.Empty;
+									ret.description = action;
+									ret.priority = priority;
+									actions.Add(ret);
+								}
+								break;
+							case MonsterThinking.Escape:
+								{
+									var action = Description.Empty;
+									action.description = Description.EventMonsterEscape;
+									action.values = new NameValueCollection();
+									action.values.Add("mapObjectId", currItem.key+"");
+
+									var ret = Interaction.Empty;
+									ret.description = action;
+									ret.priority = priority;
+									actions.Add(ret);
+								}
+								break;
+							}
 						}
 						break;
 					}
@@ -916,6 +1005,35 @@ namespace Model
 	}
 
 	public class Helper{
+		public static MonsterThinking MonsterThink(MapDataStore map, PlayerDataStore player, int monsterId){
+			var objInfo = map.mapObjects [monsterId];
+			var monsterInfo = map.monsterInfo [objInfo.infoKey];
+			//var cfg = ConfigMonster.Get (monsterInfo.type);
+			// 想要攻擊主要是仇恨值
+			var wantAttack = 
+				monsterInfo.NormalHate * 0.8f + 
+				monsterInfo.NormalHate > 0 ? (monsterInfo.NormalBrave*0.2f) : 0;
+			var wantEscape = 1 - (
+				monsterInfo.NormalBrave * (2/3f) +
+				monsterInfo.NormalHate * (1/3f)
+			);
+
+			var actions = new MonsterThinking[] {
+				MonsterThinking.AttackYou, MonsterThinking.Escape
+			};
+			var values = new float[]{ wantAttack, wantEscape };
+			var selectValue = values.OrderByDescending (v => v).First ();
+			if (selectValue < 0.2) {
+				return MonsterThinking.None;
+			}
+			for (var i = 0; i < values.Length; ++i) {
+				if (selectValue == values [i]) {
+					return actions [i];
+				}
+			}
+			throw new Exception ("必須要回傳一個動作");
+		}
+
 		/// <summary>
 		/// 計算招式發動率
 		/// </summary>

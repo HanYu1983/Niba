@@ -16,16 +16,7 @@ namespace Model
 		MapDataStore mapData = new MapDataStore();
 		PlayerDataStore playerData = new PlayerDataStore();
 
-		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
-			yield return null;
-			mapData.GenMap (type, 10, 10, playerData);
-			playerData.ClearVisibleMapObjects ();
-			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
-
-			ClearMoveResult ();
-			RequestSaveMap ();
-			RequestSavePlayer ();
-
+		public void NewGame(){
 			/*
 			playerData.playerInMap.skillExp.karate = 25;
 
@@ -41,6 +32,22 @@ namespace Model
 			playerData.playerInMap.weapons.Clear ();
 			playerData.playerInMap.weapons.Add (item);
 			*/
+			mapData.ClearMap ();
+			playerData.ClearVisibleMapObjects ();
+			ClearMoveResult ();
+			RequestSaveMap ();
+			RequestSavePlayer ();
+		}
+
+		public IEnumerator LoadMap(MapType type, Action<Exception> callback){
+			yield return null;
+			mapData.GenMap (type, 10, 10, playerData);
+			playerData.ClearVisibleMapObjects ();
+			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+
+			ClearMoveResult ();
+			RequestSaveMap ();
+			RequestSavePlayer ();
 			callback (null);
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
