@@ -25,10 +25,6 @@ namespace View
 
 		Button[] items;
 		void PrepareButtonsAndEvents(){
-			if (limit > 10) {
-				throw new Exception ("limit不能大於10");
-			}
-
 			items = itemParent.GetComponentsInChildren<Button> ();
 			for(var i=0; i<items.Length; ++i){
 				Func<int,UnityEngine.Events.UnityAction> closure = idx=>{
@@ -38,14 +34,17 @@ namespace View
 				};
 				items [i].onClick.AddListener (closure (i));
 			}
+			if (btnPageUp != null) {
+				btnPageUp.onClick.AddListener (() => {
+					Common.Common.Notify (commandPrefix + "_pageup", null);
+				});
+			}
 
-			btnPageUp.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pageup", null);
-			});
-
-			btnPageDown.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pagedown", null);
-			});
+			if (btnPageDown != null) {
+				btnPageDown.onClick.AddListener (() => {
+					Common.Common.Notify (commandPrefix + "_pagedown", null);
+				});
+			}
 		}
 		/// <summary>
 		/// 將點選列表觸發的指令還原成道具索引
@@ -64,8 +63,8 @@ namespace View
 
 		public interface IDataProvider{
 			int DataCount{ get; }
-			void ShowData(GameObject ui, int idx);
-			void ShowSelect (GameObject ui, int idx);
+			void ShowData(IModelGetter model, GameObject ui, int idx);
+			void ShowSelect (IModelGetter model, GameObject ui, int idx);
 		}
 
 		public IDataProvider DataProvider{ get; set; }
@@ -80,7 +79,7 @@ namespace View
 				Debug.LogWarning ("你還沒設定DataProvider");
 				return;
 			}
-			DataProvider.ShowSelect (objDetail, currIndex);
+			DataProvider.ShowSelect (model, objDetail, currIndex);
 		}
 		/// <summary>
 		/// 更新列表
@@ -99,7 +98,7 @@ namespace View
 					btn.gameObject.SetActive (false);
 					continue;
 				}
-				DataProvider.ShowData (btn.gameObject, curr);
+				DataProvider.ShowData (model, btn.gameObject, curr);
 			}
 		}
 		public int Page{

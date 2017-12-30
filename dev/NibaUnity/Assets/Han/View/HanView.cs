@@ -59,6 +59,7 @@ namespace View
 						throw new Exception ("你沒有加入MissionPopup Component");
 					}
 					missionPopup.ChangeVisibility (true);
+					popup.UpdateMissionList (model);
 					callback (null);
 				}
 				break;
@@ -373,6 +374,15 @@ namespace View
 
 					if (msg.Contains ("click_fusionPopup")) {
 						var popup = fusionPopup.GetComponent<FusionPopup> ();
+						if (popup == null) {
+							callback (new Exception ("xxxx"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
+
+					if (msg.Contains ("click_missionPopup")) {
+						var popup = missionPopup.GetComponent<MissionPopup> ();
 						if (popup == null) {
 							callback (new Exception ("xxxx"));
 							yield break;

@@ -15,7 +15,7 @@ namespace View
 			}
 		}
 
-		public void ShowData(GameObject ui, int idx){
+		public void ShowData(IModelGetter model, GameObject ui, int idx){
 			var modelItem = data [idx];
 			var cfg = ConfigItem.Get (modelItem.prototype);
 
@@ -37,7 +37,7 @@ namespace View
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (GameObject ui, int idx){
+		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
 			if (idx <0 || idx >= DataCount) {
 				ui.GetComponent<Text>().text = "你沒有選擇任何道具";
 				return;
