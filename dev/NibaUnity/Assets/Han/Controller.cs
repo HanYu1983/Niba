@@ -267,6 +267,28 @@ namespace Common
 					}
 				}
 				break;
+			case "click_home_mission":
+				{
+					yield return view.ShowInfo (Info.Mission, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "click_home_skill":
+				{
+					yield return view.ShowInfo (Info.Skill, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
 			case "click_map_home":
 				{
 					yield return view.ChangePage (Page.Home, e2 => {

@@ -15,6 +15,8 @@ namespace View
 		public Popup itemPopup;
 		public Popup abilityPopup;
 		public Popup fusionPopup;
+		public Popup missionPopup;
+		public Popup skillPopup;
 
 		IModelGetter model;
 		public IModelGetter ModelGetter{ set{ model = value; } }
@@ -44,11 +46,27 @@ namespace View
 		}
 		public IEnumerator ShowInfo(Info info, Action<Exception> callback){
 			switch (info) {
+			case Info.Skill:
+				{
+					skillPopup.ChangeVisibility (true);
+					callback (null);
+				}
+				break;
+			case Info.Mission:
+				{
+					var popup = missionPopup.GetComponent<MissionPopup> ();
+					if (popup == null) {
+						throw new Exception ("你沒有加入MissionPopup Component");
+					}
+					missionPopup.ChangeVisibility (true);
+					callback (null);
+				}
+				break;
 			case Info.ItemInHomePocket:
 			case Info.ItemInHome:
 			case Info.Item:
 				{
-					var popup = itemPopup.GetComponent<ItemPopup> ();
+					var popup = itemPopup.GetComponent<ItemPopup2> ();
 					if (popup == null) {
 						throw new Exception ("你沒有加入ItemPopup Component");
 					}
@@ -270,6 +288,16 @@ namespace View
 					yield return CloseMsgPopup ();
 				}
 				break;
+			case Info.Skill:
+				{
+					skillPopup.ChangeVisibility (false);
+				}
+				break;
+			case Info.Mission:
+				{
+					missionPopup.ChangeVisibility (false);
+				}
+				break;
 			case Info.Item:
 			case Info.ItemInHome:
 			case Info.ItemInHomePocket:
@@ -309,6 +337,14 @@ namespace View
 			case "itemPopup_unequip_item":
 				menuHome.GetComponent<MenuHome> ().UpdateUI (model, MapPlayer.PlayerInHome);
 				break;
+			case "click_skillPopup_close":
+				yield return HideInfo (Info.Skill);
+				callback (null);
+				break;
+			case "click_missionPopup_close":
+				yield return HideInfo (Info.Mission);
+				callback (null);
+				break;
 			case "click_fusionPopup_close":
 				yield return HideInfo (Info.Fusion);
 				callback (null);
@@ -327,7 +363,7 @@ namespace View
 			default:
 				{
 					if (msg.Contains ("click_itemPopup")) {
-						var popup = itemPopup.GetComponent<ItemPopup> ();
+						var popup = itemPopup.GetComponent<ItemPopup2> ();
 						if (popup == null) {
 							callback (new Exception ("xxxx"));
 							yield break;

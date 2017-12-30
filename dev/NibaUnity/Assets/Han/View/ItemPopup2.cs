@@ -8,11 +8,16 @@ using System.Collections;
 
 namespace View
 {
-	public class ItemPopup : MonoBehaviour
+	public class ItemPopup2 : MonoBehaviour
 	{
-		public ItemView itemView;
+		public ListView listView;
+		public ItemDataProvider itemDataProvider;
 		public AbilityView abilityView;
 		public Button[] btns;
+
+		void Awake(){
+			listView.DataProvider = itemDataProvider;
+		}
 
 		MapPlayer _whosWeapon;
 		public MapPlayer WhosWeapon {
@@ -37,9 +42,9 @@ namespace View
 
 		public void UpdateUI(IModelGetter model){
 			var popup = this;
-			popup.itemView.Data = Common.Common.Storage (model, WhosStorage);
-			popup.itemView.UpdateDataView (model);
-			popup.itemView.CurrItemLabel (model, popup.SelectIndex);
+			popup.itemDataProvider.Data = Common.Common.Storage (model, WhosStorage);
+			popup.listView.UpdateDataView (model);
+			popup.listView.CurrItemLabel (model, popup.SelectIndex);
 			popup.UpdateButtonLabel (model, WhosWeapon);
 			popup.abilityView.UpdateAbility(model, WhosWeapon);
 		}
@@ -193,11 +198,11 @@ namespace View
 						yield break;
 					}
 					// 防呆處理
-					if (itemView.Data.Count() == 0) {
+					if (itemDataProvider.DataCount == 0) {
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = itemView.Data.ToList () [SelectIndex];
+					var item = itemDataProvider.Data[SelectIndex];
 					var info = new object[] {
 						item, WhosWeapon, WhosStorage
 					};
@@ -212,16 +217,16 @@ namespace View
 					}
 					// 防呆處理
 					// 果為連續按裝備時道具會減少
-					if (itemView.Data.Count() == 0) {
+					if (itemDataProvider.DataCount == 0) {
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					if (SelectIndex >= itemView.Data.Count ()) {
+					if (SelectIndex >= itemDataProvider.DataCount) {
 						ClearSelectIndex ();
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = itemView.Data.ToList () [SelectIndex];
+					var item = itemDataProvider.Data[SelectIndex];
 					var info = new object[] {
 						item, WhosWeapon, WhosStorage
 					};
@@ -260,7 +265,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = itemView.Data.ToList () [SelectIndex];
+					var item = itemDataProvider.Data[SelectIndex];
 					Common.Common.Notify ("itemPopup_use_item", item);
 				}
 				break;
@@ -270,7 +275,7 @@ namespace View
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
 					}
-					var item = itemView.Data.ToList () [SelectIndex];
+					var item = itemDataProvider.Data[SelectIndex];
 					Common.Common.Notify ("itemPopup_sell_item", item);
 				}
 				break;
@@ -278,9 +283,9 @@ namespace View
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.itemView.Data = Common.Common.Storage(model, WhosStorage);
-					popup.itemView.ShowMode = ItemView.Mode.Normal;
-					popup.itemView.UpdateDataView (model);
+					popup.itemDataProvider.Data = Common.Common.Storage(model, WhosStorage);
+					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Normal;
+					popup.listView.UpdateDataView (model);
 				}
 				break;
 			case "click_itemPopup_head":
@@ -294,23 +299,23 @@ namespace View
 				{
 					var popup = this;
 					// 修改為武器顯示模式
-					popup.itemView.ShowMode = ItemView.Mode.Equip;
+					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Equip;
 					// 取得點擊部位
 					var pos = "";
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.itemView.Data = Common.Common.Storage(model, WhosStorage).Where (item => {
+					popup.itemDataProvider.Data = Common.Common.Storage(model, WhosStorage).Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
-					});
-					popup.itemView.Page = 0;
+					}).ToList();
+					popup.listView.Page = 0;
 					// 修改列表內容
-					popup.itemView.UpdateDataView (model);
+					popup.listView.UpdateDataView (model);
 					// 取消列表索引
 					ClearSelectIndex ();
 					// 更新狀態文字
-					popup.itemView.CurrItemLabel (model, SelectIndex);
+					popup.listView.CurrItemLabel (model, SelectIndex);
 					// 記錄部位
 					RecordLastPosition (msg);
 				}
@@ -326,33 +331,22 @@ namespace View
 			case "click_itemPopup_item_8":
 			case "click_itemPopup_item_9":
 				{
-					/*
-					var popup = this;
-					// 修改狀態文字
-					var selectIdx = popup.ItemView.CurrIndex (msg);
-					popup.ItemView.CurrItemLabel (model, selectIdx);
-					// 修改列表內容
-					var cfg = ConfigItem.Get (popup.ItemView.Data.ToList() [selectIdx].prototype);
-					popup.ItemView.ShowMode = cfg.Type == ConfigItemType.ID_weapon ? ItemView.Mode.Equip : ItemView.Mode.Normal;
-					popup.ItemView.UpdateDataView (model);
-					popup.UpdateButtonLabel (model);
+					var selectIdx = listView.CurrIndex (msg);
 					// 記錄最後一次點擊的索引
 					RecordSelectIndex(selectIdx);
 					// 取消部位
 					ClearLastPositionCommand ();
-					*/
-					var selectIdx = itemView.CurrIndex (msg);
-					// 記錄最後一次點擊的索引
-					RecordSelectIndex(selectIdx);
-					// 取消部位
-					ClearLastPositionCommand ();
-					yield return itemView.HandleCommand (model, msg, args, callback);
+					// 若選到武器，修改顯示模式
+					var cfg = ConfigItem.Get (itemDataProvider.Data[selectIdx].prototype);
+					itemDataProvider.ShowMode = cfg.Type == ConfigItemType.ID_weapon ? ItemDataProvider.Mode.Equip : ItemDataProvider.Mode.Normal;
+					listView.UpdateDataView (model);
+					yield return listView.HandleCommand (model, msg, args, callback);
 				}
 				break;
 			default:
 				{
-					if (msg.Contains (itemView.CommandPrefix)) {
-						yield return itemView.HandleCommand (model, msg, args, callback);
+					if (msg.Contains (listView.CommandPrefix)) {
+						yield return listView.HandleCommand (model, msg, args, callback);
 					}
 				}
 				break;

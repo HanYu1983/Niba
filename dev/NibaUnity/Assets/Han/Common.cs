@@ -839,7 +839,7 @@ namespace Common
 
 	public enum Info{
 		Unknown, 
-		Event, Work, WorkResult, Map, Ability, Item, Fusion,
+		Event, Work, WorkResult, Map, Ability, Item, Fusion, Mission, Skill,
 		FusionInHome, ItemInHome, Npc,
 		ItemInHomePocket
 	}
