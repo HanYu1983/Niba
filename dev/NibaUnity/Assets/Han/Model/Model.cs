@@ -181,6 +181,9 @@ namespace Model
 				return playerData.AvailableNpcMissions;
 			}
 		}
+		public IEnumerable<string> AvailableSkills(MapPlayer who){
+			return Helper.AvailableSkills (playerData, who).Select(cfg=>cfg.ID);
+		}
 		public void AcceptMission(string id){
 			playerData.AcceptMission (id);
 			RequestSavePlayer ();

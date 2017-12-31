@@ -29,7 +29,8 @@ namespace View
 		public void ShowData(IModelGetter model, GameObject ui, int idx){
 			var item = data [idx];
 			var cfg = ConfigNpcMission.Get (item);
-			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = cfg.Npc;
+			var npc = ConfigNpc.Get (cfg.Npc);
+			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Dialog;
 			ui.SetActive (true);
 		}

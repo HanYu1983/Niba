@@ -932,6 +932,7 @@ namespace Common
 		IEnumerable<Item> CanFusionItems{ get; }
 
 		IEnumerable<string> AvailableNpcMissions{ get; }
+		IEnumerable<string> AvailableSkills(MapPlayer who);
 
 		PlayState PlayState{ get; }
 	}

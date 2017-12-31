@@ -48,7 +48,12 @@ namespace View
 			switch (info) {
 			case Info.Skill:
 				{
+					var popup = skillPopup.GetComponent<SkillPopup> ();
+					if (popup == null) {
+						throw new Exception ("你沒有加入SkillPopup Component");
+					}
 					skillPopup.ChangeVisibility (true);
+					popup.UpdateSkillList (model);
 					callback (null);
 				}
 				break;
@@ -383,6 +388,15 @@ namespace View
 
 					if (msg.Contains ("click_missionPopup")) {
 						var popup = missionPopup.GetComponent<MissionPopup> ();
+						if (popup == null) {
+							callback (new Exception ("xxxx"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
+
+					if (msg.Contains ("click_skillPopup")) {
+						var popup = skillPopup.GetComponent<SkillPopup> ();
 						if (popup == null) {
 							callback (new Exception ("xxxx"));
 							yield break;
