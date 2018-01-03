@@ -17,7 +17,8 @@ namespace Model
 		public List<MapObject> mapObjects = new List<MapObject>();
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
-		public int width, height;
+		//public int width, height;
+		/*
 		public void GenMap(MapType type, int w, int h, PlayerDataStore player){
 			ClearMap ();
 
@@ -44,11 +45,47 @@ namespace Model
 				}
 			}
 		}
+*/
+		MapType genMapType;
+		public void GenMapStart(MapType type){
+			genMapType = type;
+		}
+
+		public void GenMapWithPlayerVisible(PlayerDataStore player){
+			GenMapWithPositions (mapObjects.Select (o => o.position), player);
+		}
+
+		public void GenMapWithPositions(IEnumerable<Position> posList, PlayerDataStore player){
+			var factor = 1 / 10f;
+			var alreadyPos = new HashSet<Position> (posList);
+			foreach (var pos in player.isPositionVisible) {
+				if (alreadyPos.Contains (pos)) {
+					continue;
+				}
+				alreadyPos.Add (pos);
+				var p = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
+				//Debug.Log (p);
+				if (p < 0.8f) {
+					if (p < 0.3f) {
+						GenResource (player, pos, ConfigResource.ID_rock);
+					} else if (p < 0.8f) {
+						GenResource (player, pos, ConfigResource.ID_grass);
+					}
+					// gen monster after assign item
+					if (UnityEngine.Random.Range (0, 100) < 25) {
+						GenMonster (player, pos, ConfigMonster.ID_bear);
+					}
+				} else {
+					// ignore
+				}
+			}
+		}
 		public void ClearMap(){
 			mapObjects.Clear ();
 			resourceInfo.Clear ();
 			monsterInfo.Clear ();
-			width = height = 0;
+			//width = height = 0;
+			genMapType = MapType.Unknown;
 		}
 		public int GenObject(MapObjectType type, string strKey){
 			if (strKey != null) {
@@ -851,19 +888,15 @@ namespace Model
 		public int advLevel;
 		public PlayState playState;
 
-		public void EnterMap(int visibleExtendLength){
+		public void CopyItemAndEnterMap(){
 			if (playState != PlayState.Home) {
 				throw new Exception ("這時必須是Home狀態，請檢查程式:"+playState.ToString());
 			}
 			playerInMap.GetData (player);
-			playerInMap.position = Position.Zero;
-
-			ClearVisibleMapObjects ();
-			VisitPosition (playerInMap.position, visibleExtendLength);
 			playState = PlayState.Play;
 		}
 
-		public void ExitMap(){
+		public void CopyItemAndExitMap(){
 			player.GetData (playerInMap);
 			playState = PlayState.Home;
 		}

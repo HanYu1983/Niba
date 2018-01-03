@@ -11,9 +11,6 @@ namespace Common
 	[Serializable]
 	public struct Position : IEquatable<Position>{
 		public int x, y;
-		public bool Equals(Position other){
-			return x == other.x && y == other.y;
-		}
 		public Position Add(int x, int y){
 			var ret = this;
 			ret.x += x;
@@ -37,6 +34,27 @@ namespace Common
 			ret.x = Math.Min (x, this.x);
 			ret.y = Math.Min (y, this.y);
 			return ret;
+		}
+		public bool Equals(Position other){
+			return x == other.x && y == other.y;
+		}
+		// 向下相容
+		public override bool Equals(object obj){
+			if (!(obj is Position)){
+				return false;
+			}
+			Position other = (Position) obj;
+			return this.Equals(other);
+		}
+		// 必須同Equals(object)一同實做
+		public override int GetHashCode(){
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 23 + x.GetHashCode();
+				hash = hash * 23 + y.GetHashCode();
+				return hash;
+			}
 		}
 		public override string ToString(){
 			return string.Format ("({0}, {1})", x, y);
@@ -163,6 +181,10 @@ namespace Common
 		}
 
 		public List<Item> weapons;
+		/// <summary>
+		/// 判斷武器有沒有壞，每次擊中對手時呼叫
+		/// </summary>
+		/// <returns>壞掉的武器</returns>
 		public IEnumerable<Item> CheckHandWeaponBroken(){
 			return weapons
 				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
@@ -174,6 +196,10 @@ namespace Common
 			})
 				.Select (info => info.t1);
 		}
+		/// <summary>
+		/// 判斷防具有沒有壞，每次被擊中時呼叫
+		/// </summary>
+		/// <returns>壞掉的防具</returns>
 		public IEnumerable<Item> CheckElseWeaponBroken(){
 			return weapons
 				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
@@ -890,8 +916,10 @@ namespace Common
 		List<MapObject> MapObjects{ get; }
 		List<ResourceInfo> ResourceInfos{ get; }
 		List<MonsterInfo> MonsterInfos{ get; }
+		/*
 		int MapWidth{ get; }
 		int MapHeight{ get; }
+		*/
 		/// <summary>
 		/// 取得移動結果
 		/// 呼叫任何移動後就必須處理MoveResult，並呼叫ClearMoveResult來清除暫存

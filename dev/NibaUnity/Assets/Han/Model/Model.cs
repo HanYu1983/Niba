@@ -55,24 +55,34 @@ namespace Model
 
 		public IEnumerator NewMap(MapType type, Action<Exception> callback){
 			yield return null;
-			mapData.GenMap (type, 10, 10, playerData);
+			//mapData.GenMap (type, 10, 10, playerData);
 			ClearMoveResult ();
 			callback (null);
 		}
 		public void EnterMap (){
-			playerData.EnterMap (visibleExtendLength);
+			// 重設位置
+			playerData.playerInMap.position = Position.Zero;
+			// 先探明初始視野
+			playerData.ClearVisibleMapObjects ();
+			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			// 自動生成視野內的地圖
+			mapData.GenMapWithPlayerVisible (playerData);
+			// 進入地圖
+			playerData.CopyItemAndEnterMap ();
 			RequestSavePlayer ();
+			RequestSaveMap ();
 		}
 		public void ExitMap (){
-			playerData.ExitMap ();
+			playerData.CopyItemAndExitMap ();
 			RequestSavePlayer ();
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
-
+		/*
 		public int MapWidth{ get{ return mapData.width; } }
 		public int MapHeight{ get{ return mapData.height; } }
+		*/
 		public IEnumerable<MapObject> VisibleMapObjects{ get { return playerData.VisibleMapObjects(mapData); } }
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
@@ -244,7 +254,7 @@ namespace Model
 			var newPos = playerData.playerInMap.position;
 			newPos.x += position.x;
 			newPos.y += position.y;
-			newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
+			//newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
 			var isPositionDirty = newPos.Equals (playerData.playerInMap.position) == false;
 			// 移動位置
 			playerData.MovePlayerTo (newPos);
@@ -252,6 +262,10 @@ namespace Model
 			var isMapDirty = playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
 			// 產生事件
 			var events = mapData.GenEvent (playerData, newPos);
+			if (isMapDirty) {
+				// 生成新地圖
+				mapData.GenMapWithPlayerVisible (playerData);
+			}
 			// 準備回傳物件
 			rs.isMoveSuccess = isPositionDirty;
 			rs.events = events.ToList();

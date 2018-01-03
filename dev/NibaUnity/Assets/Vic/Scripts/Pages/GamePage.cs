@@ -26,8 +26,10 @@ namespace GameView{
             CreatureLayer.ClearAllItem();
 
 			MapObject[,] mapObjs;
-			var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
-			var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
+			//var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
+			//var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
+			var leftTop = model.MapPlayer.position.Add (-5, -5);//.Max (0, 0);
+			var rightBottom = leftTop.Add(10, 10);//.Min(model.MapWidth, model.MapHeight);
 			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
 				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
