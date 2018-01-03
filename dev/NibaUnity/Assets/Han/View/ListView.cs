@@ -113,6 +113,12 @@ namespace View
 				offset = value * limit;
 			}
 		}
+		public int lastSelectIdx = -1;
+		public int LastSelectIndex{
+			get{
+				return lastSelectIdx;
+			}
+		}
 		#endregion
 
 		#region controller
@@ -129,6 +135,7 @@ namespace View
 				// 修改狀態文字
 				var selectIdx = CurrIndex (msg);
 				CurrItemLabel (model, selectIdx);
+				lastSelectIdx = selectIdx;
 			}
 			yield return null;
 		}

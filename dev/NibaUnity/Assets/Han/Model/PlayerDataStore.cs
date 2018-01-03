@@ -241,6 +241,10 @@ namespace Model
 						des.values.Add ("items", itemJson);
 					}
 					ret.Add (des);
+
+					foreach (var item in items) {
+						player.NotifyMissionAddItemFromCollect (item);
+					}
 				}
 				break;
 			case Description.WorkAttack:
@@ -787,9 +791,9 @@ namespace Model
 				playerInMap.storage = Helper.AddItem (playerInMap.storage, item);
 			} else {
 				storage = Helper.AddItem (storage, item);
+				// 從家裡新增的Item才要更新任務
+				NotifyMissionAddItem (item);
 			}
-			// 更新任務
-			NotifyMissionAddItem (item);
 		}
 		#endregion
 
@@ -829,8 +833,10 @@ namespace Model
 				var fusionItem = fusionTarget;
 				tempStorage = Helper.AddItem (tempStorage, fusionItem);
 
-				// 更新任務
-				NotifyMissionAddItem (fusionItem);
+				if(who.Equals(MapPlayer.UnknowPlayer)){
+					// 從家裡新增的Item才要更新任務
+					NotifyMissionAddItem (fusionItem);
+				}
 				return tempStorage;
 			};
 			if (who.Equals (player)) {
@@ -903,8 +909,11 @@ namespace Model
 		#endregion
 
 		#region mission
+		// 領取過的任務
 		public List<string> missions = new List<string>();
+		// 完成的任務
 		public List<string> completedMission = new List<string>();
+		// 執行中的任務與狀態，完成後要從這個列表移除
 		public List<NpcMission> missionStatus = new List<NpcMission>();
 
 		public bool MissionCompleted(string id){
@@ -916,8 +925,7 @@ namespace Model
 				return 
 					Enumerable.Range (0, ConfigNpcMission.ID_COUNT)
 						.Select (ConfigNpcMission.Get)
-						//.Where (cfg => cfg.Level <= advLevel)
-						.Where(cfg=>cfg.Npc != null)
+						.Where (cfg => cfg.Level <= advLevel)
 						.Where(cfg=>MissionCompleted(cfg.ID) == false)
 						.Where (cfg => {
 							if (cfg.Dependency != null) {
@@ -942,14 +950,14 @@ namespace Model
 		/// <param name="id">Identifier.</param>
 		public void AcceptMission(string id){
 			var cfg = ConfigNpcMission.Get(id);
-			// TODO 判斷冒險者等級
-			if (cfg.Level > 1) {
+			if (cfg.Level > advLevel) {
 				throw new Exception ("等級不足");
 			}
 			if (missions.Exists (i => {
 				return i == id;
 			})) {
-				throw new Exception ("任務已領取");
+				Debug.LogWarning ("任務已領取:"+id);
+				return;
 			}
 			missions.Add (id);
 
@@ -958,10 +966,14 @@ namespace Model
 			missionStatus.Add (mission);
 		}
 
-		public void NotifyMissionAddItem(Item item){
+		public void NotifyMissionAddItemFromCollect(Item item){
 			for (var i = 0; i < missionStatus.Count; ++i) {
 				missionStatus [i].itemGot.Add (item);
 			}
+		}
+
+		public void NotifyMissionAddItem(Item item){
+			// ignore
 		}
 
 		public void NotifyMissionMonsterKill(string monsterPrototype){
@@ -1028,7 +1040,6 @@ namespace Model
 			}
 			return completedMission;
 		}
-
 		/// <summary>
 		/// 將呼叫CheckMissionStatus取得的任務輸入這個方法，完成那個任務並取得獲得的獎勵資訊
 		/// </summary>
@@ -1040,6 +1051,10 @@ namespace Model
 			}
 			if (completedMission.Contains (id)) {
 				throw new Exception ("這個任務已完成過了:"+id);
+			}
+			var checkAgain = CheckMissionStatus ().Contains (id);
+			if (checkAgain == false) {
+				throw new Exception ("這個任務還沒達成條件:"+id);
 			}
 			completedMission.Add (id);
 			// 刪去任務狀態

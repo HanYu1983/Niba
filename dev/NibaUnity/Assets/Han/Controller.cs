@@ -68,6 +68,10 @@ namespace Common
 						HandleException (e);
 						yield break;
 					}
+					// 自動領取任務
+					foreach (var m in model.AvailableNpcMissions) {
+						model.AcceptMission (m);
+					}
 				}
 				break;
 			case "click_title_load":
@@ -198,6 +202,32 @@ namespace Common
 						yield break;
 					}
 					yield return view.HandleCommand (msg, args, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "missionPopup_completeMission":
+				{
+					if (model.PlayState != PlayState.Home) {
+						HandleException (new Exception ("在家裡才能完成任務"));
+						yield break;
+					}
+					var id = (string)args;
+					try{
+						var rewards = model.CompleteMission (id);
+						view.Alert(string.Join(",", rewards.Select(i=>i.ToString()).ToArray()));
+					}catch(Exception e2){
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo (Info.Mission, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -379,6 +409,10 @@ namespace Common
 					if (e != null) {
 						HandleException (e);
 						yield break;
+					}
+					var missionOK = model.CheckMissionStatus ();
+					if (missionOK.Count > 0) {
+						view.Alert ("mission ok");
 					}
 				}
 				break;

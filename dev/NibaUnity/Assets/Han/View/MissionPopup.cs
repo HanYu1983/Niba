@@ -17,11 +17,18 @@ namespace View{
 		public void UpdateMissionList(IModelGetter model){
 			missionDataProvider.Data = model.AvailableNpcMissions.ToList ();
 			listView.UpdateDataView (model);
-			listView.CurrItemLabel (model, listView.offset);
+			listView.CurrItemLabel (model, listView.LastSelectIndex);
 		}
 
 		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
+			case "click_missionPopup_complete":
+				{
+					var selectIdx = listView.LastSelectIndex;
+					var missionId = missionDataProvider.Data [selectIdx];
+					Common.Common.Notify ("missionPopup_completeMission", missionId);
+				}
+				break;
 			default:
 				{
 					if (msg.Contains (listView.CommandPrefix)) {

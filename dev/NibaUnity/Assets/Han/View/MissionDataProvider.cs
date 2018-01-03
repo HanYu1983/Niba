@@ -27,10 +27,15 @@ namespace View
 		}
 
 		public void ShowData(IModelGetter model, GameObject ui, int idx){
+			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = "";
+			ui.transform.Find ("txt_des").GetComponent<Text> ().text = "";
+
 			var item = data [idx];
 			var cfg = ConfigNpcMission.Get (item);
-			var npc = ConfigNpc.Get (cfg.Npc);
-			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
+			if (cfg.Npc != null) {
+				var npc = ConfigNpc.Get (cfg.Npc);
+				ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
+			}
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Dialog;
 			ui.SetActive (true);
 		}
