@@ -243,7 +243,8 @@ namespace View
 					var idx = 0;
 					LastPosition(ref pos, ref idx);
 
-					var who = WhosWeapon;
+					var who = 
+						WhosWeapon.Equals(MapPlayer.PlayerInHome) ? model.HomePlayer : model.MapPlayer;
 					var item = who.weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;

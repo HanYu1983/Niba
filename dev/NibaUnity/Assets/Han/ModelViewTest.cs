@@ -31,14 +31,16 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
-			yield return TestNpcMission (model, view);
+			//yield return TestMap (model, view);
+			yield return TestWeapon (model, view);
+			//yield return TestNpcMission (model, view);
+			/*
 			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
-			yield return TestWeapon (model, view);
 			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
-			yield return TestMap (model, view);
 			yield return TestShowInfo (model, view);
+			*/
 		}
 
 		static IEnumerator TestNpcMission(IModel model, IView view){
@@ -179,6 +181,20 @@ namespace Model
 
 		static IEnumerator TestWeapon(IModel model, IView view){
 			Exception e = null;
+			yield return model.NewMap (MapType.Unknown, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+			model.EnterMap ();
+			yield return view.ChangePage (Page.Game, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				throw e;
+			}
+
 			model.ClearStorage (model.MapPlayer);
 
 			var fight = model.PlayerFightAbility(model.MapPlayer);
@@ -457,6 +473,7 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			model.EnterMap ();
 			Debug.Log ("向右移20步");
 			for (var i = 0; i < 20; ++i) {
 				model.MoveRight ();
@@ -563,6 +580,7 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			model.ExitMap ();
 		}
 	}
 }

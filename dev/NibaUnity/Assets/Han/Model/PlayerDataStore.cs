@@ -1163,6 +1163,10 @@ namespace Model
 					var skillType = ai.prototype;
 					var skillLevel = ai.count;
 					// 其中一項不符就回傳
+					if(who.skillExp.Exp(skillType) < skillLevel){
+						return false;
+					}
+					/*
 					switch(skillType){
 					case ConfigSkillType.ID_karate:
 						{
@@ -1180,7 +1184,7 @@ namespace Model
 						break;
 					default:
 						throw new NotImplementedException("未判斷的招式類型:"+skillType);
-					}
+					}*/
 				}
 				// 判斷這個技能是不是需要武器
 				var isNeedWeapon = cfg.SlotCount == 0;
@@ -1257,17 +1261,29 @@ namespace Model
 			var b = BasicAbility.Get (monsterInfo).FightAbility;
 			return (int)(a.atk - b.def);
 		}
+
+		public static Func<int> GetMaxCountFromItem(Item item){
+			return () => {
+				var config = ConfigItem.Get (item.prototype);
+				var maxCount = config.MaxCount;
+				return maxCount;
+			};
+		}
+
+		public static List<Item> AddItem(List<Item> input, Item item){
+			return AddItemWithFn (input, item, GetMaxCountFromItem (item));
+		}
+
 		/// <summary>
 		/// 加入道具到指定列表
 		/// </summary>
 		/// <returns>The item.</returns>
 		/// <param name="input">Input.</param>
 		/// <param name="item">Item.</param>
-		public static List<Item> AddItem(List<Item> input, Item item){
+		public static List<Item> AddItemWithFn(List<Item> input, Item item, Func<int> maxCountFn){
 			var container = new List<Item> (input);
 			var shouldArrange = true;
-			var config = ConfigItem.Get (item.prototype);
-			var maxCount = config.MaxCount;
+			var maxCount = maxCountFn ();
 			if (item.count < 0) {
 				// 處理減
 				var allCount = input.Sum (it => {

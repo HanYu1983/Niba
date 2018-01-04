@@ -56,6 +56,7 @@ namespace Model
 		public IEnumerator NewMap(MapType type, Action<Exception> callback){
 			yield return null;
 			//mapData.GenMap (type, 10, 10, playerData);
+			mapData.GenMapStart(type);
 			ClearMoveResult ();
 			callback (null);
 		}

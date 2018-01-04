@@ -341,7 +341,9 @@ namespace View
 			switch (msg) {
 			case "itemPopup_equip_item":
 			case "itemPopup_unequip_item":
-				menuHome.GetComponent<MenuHome> ().UpdateUI (model, MapPlayer.PlayerInHome);
+				if (menuHome.isActiveAndEnabled) {
+					menuHome.GetComponent<MenuHome> ().UpdateUI (model, MapPlayer.PlayerInHome);
+				}
 				break;
 			case "click_skillPopup_close":
 				yield return HideInfo (Info.Skill);

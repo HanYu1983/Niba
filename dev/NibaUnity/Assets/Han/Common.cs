@@ -765,6 +765,14 @@ namespace Common
 		public bool Equals(Item other){
 			return prototype == other.prototype && count == other.count;
 		}
+		public AbstractItem AbstractItem{
+			get{
+				AbstractItem ret;
+				ret.prototype = prototype;
+				ret.count = count;
+				return ret;
+			}
+		}
 		public Item Negative{
 			get{
 				var a = this;
@@ -814,9 +822,12 @@ namespace Common
 		*/
 	}
 
-	public struct AbstractItem{
+	public struct AbstractItem : IEquatable<AbstractItem>{
 		public string prototype;
 		public int count;
+		public bool Equals(AbstractItem other){
+			return prototype == other.prototype && count == other.count;
+		}
 		public Item Item{
 			get{
 				Item ret;
@@ -825,6 +836,7 @@ namespace Common
 				return ret;
 			}
 		}
+		public static AbstractItem Empty;
 	}
 
 	[Serializable]
@@ -845,17 +857,27 @@ namespace Common
 
 	[Serializable]
 	public struct SkillExp{
-		public int karate;
-		public int fencingArt;
-		public int Exp(string skillType){
-			switch(skillType){
-			case ConfigSkillType.ID_karate:
-				return karate;
-			case ConfigSkillType.ID_fencingArt:
-				return fencingArt;
-			default:
-				throw new NotImplementedException ("未確定的類型:"+skillType);	
+		List<AbstractItem> exps;
+		public void AddExp(string id, int exp){
+			if (exps == null) {
+				exps = new List<AbstractItem> ();
 			}
+			var ai = new Item () {
+				prototype = id,
+				count = exp
+			};
+			exps = Model.Helper.AddItemWithFn (
+				exps.Select (i => i.Item).ToList(), 
+				ai, 
+				() => int.MaxValue
+			).Select(i=>i.AbstractItem).ToList();
+		}
+		public int Exp(string skillType){
+			var ai = exps.Where (i => i.prototype == skillType).FirstOrDefault ();
+			if (ai.Equals (AbstractItem.Empty)) {
+				return 0;
+			}
+			return ai.count;
 		}
 	}
 
