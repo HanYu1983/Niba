@@ -31,16 +31,14 @@ namespace Model
 		}
 
 		IEnumerator TestAll(){
-			//yield return TestMap (model, view);
-			yield return TestWeapon (model, view);
 			//yield return TestNpcMission (model, view);
-			/*
 			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
 			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
 			yield return TestShowInfo (model, view);
-			*/
+			yield return TestMap (model, view);
+			yield return TestWeapon (model, view);
 		}
 
 		static IEnumerator TestNpcMission(IModel model, IView view){
@@ -194,7 +192,11 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
-
+			Debug.Log ("先拆除所有裝備");
+			foreach (var w in model.MapPlayer.weapons.ToList()) {
+				model.UnequipWeapon (w, model.MapPlayer, model.MapPlayer);
+			}
+			Debug.Log ("先丟掉所有道具");
 			model.ClearStorage (model.MapPlayer);
 
 			var fight = model.PlayerFightAbility(model.MapPlayer);
@@ -239,6 +241,7 @@ namespace Model
 				throw e;
 			}
 			yield return view.HideInfo(Info.Ability);
+			model.ExitMap ();
 		}
 
 		static IEnumerator TestFight(IModel model, IView view){
@@ -307,6 +310,7 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			yield return view.HideInfo (Info.WorkResult);
+			model.ExitMap ();
 		}
 
 		static IEnumerator TestFusion(IModel model, IView view){
@@ -416,6 +420,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
+			model.EnterMap ();
 
 			model.MoveRight ();
 			var result = model.MoveResult;
@@ -455,6 +460,7 @@ namespace Model
 			if (e != null) {
 				throw e;
 			}
+			model.ExitMap ();
 		}
 
 		static IEnumerator TestMap(IModel model, IView view){

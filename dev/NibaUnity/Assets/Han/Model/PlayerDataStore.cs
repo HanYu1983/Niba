@@ -242,8 +242,17 @@ namespace Model
 					}
 					ret.Add (des);
 
+					// 發送任務更新
 					foreach (var item in items) {
 						player.NotifyMissionAddItemFromCollect (item);
+					}
+
+					// 增加採集經驗
+					foreach (var item in items) {
+						var cfg = ConfigItem.Get (item.prototype);
+						if (cfg.SkillType != null) {
+							player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+						}
 					}
 				}
 				break;
@@ -343,6 +352,16 @@ namespace Model
 						monsterInfo [mapObject.infoKey] = monsterInf;
 						mapObjects [mapObjectId] = mapObject;
 
+						// 增加武器經驗
+						foreach (var item in player.playerInMap.weapons) {
+							var cfg = ConfigItem.Get (item.prototype);
+							if (cfg.Position != ConfigWeaponPosition.ID_hand) {
+								continue;
+							}
+							if (cfg.SkillType != null) {
+								player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+							}
+						}
 						// === 處理武器壞掉 === //
 						// 注意：使用ToList將陣列Copy
 						var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ().ToList ();
@@ -428,6 +447,8 @@ namespace Model
 						des.values = new NameValueCollection ();
 						des.values.Set ("mapObjectId", mapObjectId + "");
 						ret.Add (des);
+						// 回避會增加速度經驗
+						player.playerInMap.skillExp.AddExp (ConfigAbility.ID_speed, 1);
 
 					} else {
 
@@ -471,6 +492,17 @@ namespace Model
 						des.values.Set ("damage", damage + "");
 						des.values.Set ("isCriHit", isCriHit ? "1": "0");
 						ret.Add (des);
+
+						// 增加防具經驗
+						foreach (var item in player.playerInMap.weapons) {
+							var cfg = ConfigItem.Get (item.prototype);
+							if (cfg.Position == ConfigWeaponPosition.ID_hand) {
+								continue;
+							}
+							if (cfg.SkillType != null) {
+								player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+							}
+						}
 					}
 				}
 				break;
@@ -1217,15 +1249,40 @@ namespace Model
 		/// <param name="who">Who.</param>
 		/// <param name="basic">Basic.</param>
 		/// <param name="fight">Fight.</param>
-		public static void CalcAbility(PlayerDataStore player, MapDataStore map,MapPlayer who, ref BasicAbility basic, ref FightAbility fight){
+		public static void CalcAbility(PlayerDataStore player, MapDataStore map, MapPlayer who_, ref BasicAbility basic, ref FightAbility fight){
+			if (who_.Equals (MapPlayer.UnknowPlayer)) {
+				throw new Exception ("計算能力時不能傳入UnknowPlayer");
+			}
+			var who = 
+				who_.Equals (MapPlayer.PlayerInHome) ? player.player : player.playerInMap;
+
+			var tmpBasic = BasicAbility.Default;
+			var skillbonus = Enumerable.Range (0, ConfigSkillType.ID_COUNT).Select (ConfigSkillType.Get)
+				.Select (cfg => cfg.ID).Select (ConfigAbility.Get)
+				.Select (cfg => {
+					var exp = who.skillExp.Exp(cfg.ID);
+					var bonus = new BasicAbility(){
+						str = cfg.Str,
+						vit = cfg.Vit,
+						agi = cfg.Agi,
+						dex = cfg.Dex,
+						Int = cfg.Int,
+						luc = cfg.Luc
+					};
+					return bonus.Multiply(exp);
+			})
+				.Aggregate (BasicAbility.Zero, (total, cur) => {
+					return total.Add(cur);
+			});
+			tmpBasic = tmpBasic.Add(skillbonus);
+			tmpBasic = tmpBasic.Add(who.basicAbility);
 			if (who.weapons == null) {
-				return;
+				throw new Exception ("weapon不該為null");
 			}
 			var effects = who.weapons.SelectMany (it => it.Effects);
 			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
 			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
 			// 先處理基本能力
-			var tmpBasic = who.basicAbility;
 			// 先加減
 			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
 				return curr.Effect(accu);

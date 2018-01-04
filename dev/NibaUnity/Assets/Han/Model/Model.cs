@@ -267,6 +267,10 @@ namespace Model
 				// 生成新地圖
 				mapData.GenMapWithPlayerVisible (playerData);
 			}
+			if (isPositionDirty) {
+				// 增加移動經驗
+				playerData.playerInMap.skillExp.AddExp (ConfigAbility.ID_move, 1);
+			}
 			// 準備回傳物件
 			rs.isMoveSuccess = isPositionDirty;
 			rs.events = events.ToList();

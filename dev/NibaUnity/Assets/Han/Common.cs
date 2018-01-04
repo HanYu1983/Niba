@@ -8,6 +8,7 @@ using System.Linq;
 
 namespace Common
 {
+	// 有Serializable才能json字串化
 	[Serializable]
 	public struct Position : IEquatable<Position>{
 		public int x, y;
@@ -229,13 +230,11 @@ namespace Common
 		};
 		public static MapPlayer PlayerInHome = new MapPlayer{
 			id = "home", 
-			basicAbility = BasicAbility.Default,
 			weapons = new List<Item>(), 
 			storage = new List<Item>()
 		};
 		public static MapPlayer PlayerInMap = new MapPlayer{
 			id = "map", 
-			basicAbility = BasicAbility.Default,
 			weapons = new List<Item>(), 
 			storage = new List<Item>()
 		};
@@ -272,8 +271,9 @@ namespace Common
 		public static Interaction Empty;
 	}
 
+	[Serializable]
 	public struct BasicAbility {
-		public int str, vit, agi, dex, Int, luc;
+		public float str, vit, agi, dex, Int, luc;
 
 		public static BasicAbility Zero;
 
@@ -314,19 +314,25 @@ namespace Common
 			return a;
 		}
 
-		string int2bar(int v){
+		public BasicAbility Multiply(float b){
+			var a = this;
+			a.str *= b;
+			a.vit *= b;
+			a.agi *= b;
+			a.dex *= b;
+			a.Int *= b;
+			a.luc *= b;
+			return a;
+		}
+
+		/*string int2bar(int v){
 			return Enumerable.Repeat ("I", v).Aggregate ("", (accu, curr) => {
 				return accu + curr;
 			});
-		}
+		}*/
 
 		public override string ToString(){
-			return string.Format (@"腕力:{0}
-體質:{1}
-敏捷:{2}
-技巧:{3}
-知識:{4}
-幸運:{5}", int2bar(str), int2bar(vit), int2bar(agi), int2bar(dex), int2bar(Int), int2bar(luc));
+			return string.Format (@"腕力:{0} 體質:{1} 敏捷:{2} 技巧:{3} 知識:{4} 幸運:{5}", str, vit, agi, dex, Int, luc);
 		}
 
 		public static BasicAbility Get(MonsterInfo info){
@@ -822,6 +828,7 @@ namespace Common
 		*/
 	}
 
+	[Serializable]
 	public struct AbstractItem : IEquatable<AbstractItem>{
 		public string prototype;
 		public int count;
@@ -857,7 +864,7 @@ namespace Common
 
 	[Serializable]
 	public struct SkillExp{
-		List<AbstractItem> exps;
+		public List<AbstractItem> exps;
 		public void AddExp(string id, int exp){
 			if (exps == null) {
 				exps = new List<AbstractItem> ();
@@ -873,6 +880,9 @@ namespace Common
 			).Select(i=>i.AbstractItem).ToList();
 		}
 		public int Exp(string skillType){
+			if (exps == null) {
+				exps = new List<AbstractItem> ();
+			}
 			var ai = exps.Where (i => i.prototype == skillType).FirstOrDefault ();
 			if (ai.Equals (AbstractItem.Empty)) {
 				return 0;
