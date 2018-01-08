@@ -104,7 +104,7 @@ namespace Common
 				{
 					var info = (object[])args;
 					var fusionTarget = (Item)info [0];
-					var who = (MapPlayer)info [1];
+					var who = (Place)info [1];
 					try{
 						model.Fusion (fusionTarget, who);
 					}catch(Exception e2){
@@ -118,11 +118,11 @@ namespace Common
 					var info = (object[])args;
 					var item = (Item)info [0];
 					//var whosWeapon = (MapPlayer)info [1];
-					var whosStorage = (MapPlayer)info [2];
+					var whosStorage = (Place)info [2];
 					// 如果現在是家裡箱子，就移動到口袋
 					// 反之就相反
-					var toStorage = whosStorage.Equals (MapPlayer.PlayerInHome) ?
-						MapPlayer.UnknowPlayer : MapPlayer.PlayerInHome;
+					var toStorage = whosStorage == Place.Pocket ?
+						Place.Home : Place.Pocket;
 					try{
 						model.MoveItem(whosStorage, toStorage, item);
 					}catch(Exception e2){
@@ -130,8 +130,8 @@ namespace Common
 						yield break;
 					}
 					var returnTo = 
-						whosStorage.Equals (MapPlayer.PlayerInMap) ? Info.Item :
-						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						whosStorage == Place.Map ? Info.Item :
+						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
 						Info.ItemInHome;
 					yield return view.ShowInfo (returnTo, e2 => {
 						e = e2;
@@ -150,8 +150,8 @@ namespace Common
 				{
 					var info = (object[])args;
 					var weapon = (Item)info [0];
-					var whosWeapon = (MapPlayer)info [1];
-					var whosStorage = (MapPlayer)info [2];
+					var whosWeapon = (Place)info [1];
+					var whosStorage = (Place)info [2];
 					try{
 						model.EquipWeapon (weapon, whosWeapon, whosStorage);
 					}catch(Exception e2){
@@ -159,8 +159,8 @@ namespace Common
 						yield break;
 					}
 					var returnTo = 
-						whosStorage.Equals (MapPlayer.PlayerInMap) ? Info.Item :
-						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						whosStorage == Place.Map ? Info.Item :
+						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
 						Info.ItemInHome;
 					yield return view.ShowInfo (returnTo, e2 => {
 						e = e2;
@@ -182,8 +182,8 @@ namespace Common
 				{
 					var info = (object[])args;
 					var weapon = (Item)info [0];
-					var whosWeapon = (MapPlayer)info [1];
-					var whosStorage = (MapPlayer)info [2];
+					var whosWeapon = (Place)info [1];
+					var whosStorage = (Place)info [2];
 					try{
 						model.UnequipWeapon (weapon, whosWeapon, whosStorage);
 					}catch(Exception e2){
@@ -191,8 +191,8 @@ namespace Common
 						yield break;
 					}
 					var returnTo = 
-						whosStorage.Equals (MapPlayer.UnknowPlayer) ? Info.ItemInHome :
-						whosStorage.Equals (MapPlayer.PlayerInHome) ? Info.ItemInHomePocket :
+						whosStorage == Place.Home ? Info.ItemInHome :
+						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
 						Info.Item;
 					yield return view.ShowInfo (returnTo, e2 => {
 						e = e2;

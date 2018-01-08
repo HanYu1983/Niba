@@ -88,9 +88,14 @@ namespace Model
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
 		}
-		public List<Item> Storage{ get{ return playerData.storage; } }
+		//public List<Item> Storage{ get{ return playerData.storage; } }
+		/*
 		public MapPlayer HomePlayer { get { return playerData.player; } }
 		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
+		*/
+		public MapPlayer GetMapPlayer (Place place){
+			return playerData.GetMapPlayer (place);
+		}
 		public IEnumerable<Description> Works{ get { return mapData.GetWorks (playerData); } }
 
 		IEnumerable<Description> workResult;
@@ -151,40 +156,40 @@ namespace Model
 			}
 		}
 
-		public void AddItemToStorage(Item item, MapPlayer who){
+		public void AddItemToStorage(Item item, Place who){
 			playerData.AddItem (item, who);
 			RequestSavePlayer ();
 		}
 
-		public void MoveItem(MapPlayer a, MapPlayer b, Item item){
+		public void MoveItem(Place a, Place b, Item item){
 			playerData.MoveItem (a, b, item);
 			RequestSavePlayer ();
 		}
 
-		public int IsCanFusion (string prototype, MapPlayer who){
+		public int IsCanFusion (string prototype, Place who){
 			return playerData.IsCanFusion (prototype, who);
 		}
 
-		public void Fusion (Item item, MapPlayer who){
+		public void Fusion (Item item, Place who){
 			playerData.Fusion (item, who);
 			RequestSavePlayer ();
 		}
 
-		public void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+		public void EquipWeapon (Item item, Place whosWeapon, Place whosStorage){
 			playerData.EquipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
 		}
-		public void UnequipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
+		public void UnequipWeapon (Item item, Place whosWeapon, Place whosStorage){
 			playerData.UnequipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
 		}
-		public void ClearStorage(MapPlayer who){
-			if (who.Equals (playerData.player)) {
+		public void ClearStorage(Place who){
+			if (who == Place.Pocket) {
 				playerData.player.storage.Clear ();
-			} else if (who.Equals (playerData.playerInMap)) {
+			} else if (who == Place.Map) {
 				playerData.playerInMap.storage.Clear ();
 			} else {
-				playerData.storage.Clear ();
+				playerData.playerInStorage.storage.Clear ();
 			}
 		}
 		public IEnumerable<string> AvailableNpcMissions {
@@ -192,7 +197,7 @@ namespace Model
 				return playerData.AvailableNpcMissions;
 			}
 		}
-		public IEnumerable<string> AvailableSkills(MapPlayer who){
+		public IEnumerable<string> AvailableSkills(Place who){
 			return Helper.AvailableSkills (playerData, who).Select(cfg=>cfg.ID);
 		}
 		public void AcceptMission(string id){
@@ -211,12 +216,12 @@ namespace Model
 		BasicAbility tmpBasic;
 		FightAbility tmpFight;
 
-		public BasicAbility PlayerBasicAbility(MapPlayer who){
+		public BasicAbility PlayerBasicAbility(Place who){
 			Helper.CalcAbility (playerData, mapData, who, ref tmpBasic, ref tmpFight);
 			return tmpBasic;
 		}
 
-		public FightAbility PlayerFightAbility(MapPlayer who){
+		public FightAbility PlayerFightAbility(Place who){
 			Helper.CalcAbility (playerData, mapData, who, ref tmpBasic, ref tmpFight);
 			return tmpFight;
 		}

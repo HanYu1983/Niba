@@ -7,7 +7,7 @@ using Common;
 public class MenuHome : MonoBehaviour {
 	public AbilityView abilityView;
 
-	public void UpdateUI(IModelGetter model, MapPlayer who){
+	public void UpdateUI(IModelGetter model, Place who){
 		abilityView.UpdateAbility (model, who);
 	}
 }

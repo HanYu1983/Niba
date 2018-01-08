@@ -86,7 +86,7 @@ namespace View
 			MapObject[,] mapObjs;
 			//var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
 			//var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
-			var leftTop = model.MapPlayer.position.Add (-5, -5);
+			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
 			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
@@ -94,7 +94,7 @@ namespace View
 					var idx = y * 10 + x;
 					var txt = grids [idx].GetComponent<Text> ();
 					var mapObj = mapObjs[x,y];
-					if (mapObj.position.Equals (model.MapPlayer.position)) {
+					if (mapObj.position.Equals (model.GetMapPlayer(Place.Map).position)) {
 						playerLayout.transform.SetParent (txt.transform, false);
 					}
 					if(mapObj.type == MapObjectType.Unknown){

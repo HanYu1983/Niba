@@ -34,7 +34,7 @@ namespace View
 				if (home == null) {
 					throw new Exception ("你沒有加入MenuHome Component");
 				}
-				home.UpdateUI (model, model.HomePlayer);
+				home.UpdateUI (model, Place.Pocket);
 				callback (null);
 				break;
 			case Page.Game:
@@ -79,12 +79,12 @@ namespace View
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
 					var whosWeapon = 
-						info == Info.Item ? MapPlayer.PlayerInMap : 
-						MapPlayer.PlayerInHome;
+						info == Info.Item ? Place.Map :
+						Place.Pocket;
 					var whosStorage = 
-						info == Info.Item ? MapPlayer.PlayerInMap : 
-						info == Info.ItemInHomePocket ? MapPlayer.PlayerInHome :
-						MapPlayer.UnknowPlayer;
+						info == Info.Item ? Place.Map :
+						info == Info.ItemInHomePocket ? Place.Pocket :
+						Place.Home;
 					popup.WhosWeapon = whosWeapon;
 					popup.WhosStorage = whosStorage;
 					popup.UpdateUI (model);
@@ -254,7 +254,7 @@ namespace View
 						yield break;
 					}
 					abilityPopup.ChangeVisibility (true);
-					ability.UpdateAbility (model, model.MapPlayer);
+					ability.UpdateAbility (model, Place.Map);
 				}
 				break;
 			case Info.Fusion:
@@ -268,8 +268,7 @@ namespace View
 					fusionPopup.ChangeVisibility (true);
 
 					var who = 
-						info == Info.Fusion ? model.MapPlayer :
-						MapPlayer.UnknowPlayer;
+						info == Info.Fusion ? Place.Map : Place.Pocket;
 					popup.Who = who;
 					popup.UpdateUI (model);
 				}
@@ -342,7 +341,7 @@ namespace View
 			case "itemPopup_equip_item":
 			case "itemPopup_unequip_item":
 				if (menuHome.isActiveAndEnabled) {
-					menuHome.GetComponent<MenuHome> ().UpdateUI (model, MapPlayer.PlayerInHome);
+					menuHome.GetComponent<MenuHome> ().UpdateUI (model, Place.Pocket);
 				}
 				break;
 			case "click_skillPopup_close":

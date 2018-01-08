@@ -19,13 +19,13 @@ namespace View
 			listView.DataProvider = itemDataProvider;
 		}
 
-		MapPlayer _whosWeapon;
-		public MapPlayer WhosWeapon {
+		Place _whosWeapon;
+		public Place WhosWeapon {
 			get{
-				if (_whosWeapon.Equals (MapPlayer.PlayerInHome)) {
+				if (_whosWeapon == Place.Pocket) {
 					return _whosWeapon;
 				}
-				if (_whosWeapon.Equals (MapPlayer.PlayerInMap)) {
+				if (_whosWeapon == Place.Map) {
 					return _whosWeapon;
 				}
 				throw new Exception ("沒有指定正確的WhosWeapon");
@@ -35,14 +35,14 @@ namespace View
 			}
 		}
 
-		public MapPlayer WhosStorage {
+		public Place WhosStorage {
 			get;
 			set;
 		}
 
 		public void UpdateUI(IModelGetter model){
 			var popup = this;
-			popup.itemDataProvider.Data = Common.Common.Storage (model, WhosStorage);
+			popup.itemDataProvider.Data = model.GetMapPlayer (WhosStorage).storage;
 			popup.listView.UpdateDataView (model);
 			popup.listView.CurrItemLabel (model, popup.SelectIndex);
 			popup.UpdateButtonLabel (model, WhosWeapon);
@@ -53,10 +53,8 @@ namespace View
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateButtonLabel(IModelGetter model, MapPlayer who_){
-			MapPlayer who = 
-				who_.Equals(MapPlayer.PlayerInHome) ? model.HomePlayer :
-				model.MapPlayer;
+		public void UpdateButtonLabel(IModelGetter model, Place who_){
+			var who = model.GetMapPlayer (who_);
 			// 頭
 			var btn_head = btns.Where (btn => {
 				return btn.gameObject.name == "btn_head";
@@ -189,7 +187,7 @@ namespace View
 			switch (msg) {
 			case "click_itemPopup_move":
 				{
-					if (WhosStorage.Equals (MapPlayer.PlayerInMap)) {
+					if (WhosStorage == Place.Map) {
 						callback (new Exception ("冒險時不能移動道具"));
 						yield break;
 					}
@@ -200,6 +198,10 @@ namespace View
 					// 防呆處理
 					if (itemDataProvider.DataCount == 0) {
 						callback (new Exception ("你沒有選擇任何道具"));
+						yield break;
+					}
+					if (SelectIndex >= itemDataProvider.Data.Count) {
+						callback (new Exception ("索引超多數量:"+SelectIndex));
 						yield break;
 					}
 					var item = itemDataProvider.Data[SelectIndex];
@@ -243,8 +245,7 @@ namespace View
 					var idx = 0;
 					LastPosition(ref pos, ref idx);
 
-					var who = 
-						WhosWeapon.Equals(MapPlayer.PlayerInHome) ? model.HomePlayer : model.MapPlayer;
+					var who = model.GetMapPlayer (WhosWeapon);
 					var item = who.weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;
@@ -284,7 +285,7 @@ namespace View
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.itemDataProvider.Data = Common.Common.Storage(model, WhosStorage);
+					popup.itemDataProvider.Data = model.GetMapPlayer(WhosStorage).storage;
 					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Normal;
 					popup.listView.UpdateDataView (model);
 				}
@@ -306,7 +307,7 @@ namespace View
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.itemDataProvider.Data = Common.Common.Storage(model, WhosStorage).Where (item => {
+					popup.itemDataProvider.Data = model.GetMapPlayer(WhosStorage).storage.Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					}).ToList();

@@ -62,7 +62,7 @@ namespace Model
 				prototype = ConfigItem.ID_grass,
 				count = 10
 			};
-			model.AddItemToStorage (grass10, MapPlayer.UnknowPlayer);
+			model.AddItemToStorage (grass10, Place.Home);
 
 			Debug.Log ("判斷任務");
 			var completedMs = model.CheckMissionStatus ();
@@ -93,22 +93,22 @@ namespace Model
 		}
 
 		static IEnumerator TestHomeStorage(IModel model, IView view){
-			model.ClearStorage (MapPlayer.UnknowPlayer);
-			model.ClearStorage (MapPlayer.PlayerInHome);
-			model.ClearStorage (MapPlayer.PlayerInMap);
+			model.ClearStorage (Place.Home);
+			model.ClearStorage (Place.Pocket);
+			model.ClearStorage (Place.Map);
 
 			Debug.Log ("加入2個道具");
 			Item item;
 			item.count = 1;
 			item.prototype = ConfigItem.ID_grass;
-			model.AddItemToStorage (item, MapPlayer.UnknowPlayer);
+			model.AddItemToStorage (item, Place.Home);
 
 			item.prototype = ConfigItem.ID_woodShield;
-			model.AddItemToStorage (item, MapPlayer.UnknowPlayer);
+			model.AddItemToStorage (item, Place.Home);
 
 			Debug.Log ("判斷道具是否存在");
-			if (model.Storage.Count != 2) {
-				throw new Exception ("家裡必須有2個道具");
+			if (model.GetMapPlayer(Place.Home).storage.Count != 2) {
+				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Home).storage.Count);
 			}
 
 			Exception e = null;
@@ -123,21 +123,21 @@ namespace Model
 
 			Debug.Log ("加入道具到口袋");
 			item.prototype = ConfigItem.ID_woodSword;
-			model.AddItemToStorage (item, MapPlayer.PlayerInHome);
-			if (model.HomePlayer.storage.Count != 1) {
+			model.AddItemToStorage (item, Place.Pocket);
+			if (model.GetMapPlayer(Place.Pocket).storage.Count != 1) {
 				throw new Exception ("口袋必須有1個道具");
 			}
 
 			Debug.Log ("將口袋道具裝到身上");
-			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.PlayerInHome);
-			if (model.HomePlayer.storage.Count != 0) {
+			model.EquipWeapon (item, Place.Pocket, Place.Pocket);
+			if (model.GetMapPlayer(Place.Pocket).storage.Count != 0) {
 				throw new Exception ("裝備後口袋必須沒有道具");
 			}
 
 			Debug.Log ("直接從家裡裝裝備");
 			item.prototype = ConfigItem.ID_woodShield;
-			model.EquipWeapon (item, MapPlayer.PlayerInHome, MapPlayer.UnknowPlayer);
-			if (model.HomePlayer.weapons.Count != 2) {
+			model.EquipWeapon (item, Place.Pocket, Place.Home);
+			if (model.GetMapPlayer(Place.Pocket).weapons.Count != 2) {
 				throw new Exception ("裝備後裝備數量必須為2");
 			}
 			yield return view.ShowInfo(Info.ItemInHomePocket, e2 => {
@@ -164,7 +164,7 @@ namespace Model
 			item.count = 1;
 			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
 				item.prototype = ConfigItem.Get (i).ID;
-				model.AddItemToStorage (item, model.MapPlayer);
+				model.AddItemToStorage (item, Place.Map);
 			}
 
 			Exception e = null;
@@ -193,35 +193,35 @@ namespace Model
 				throw e;
 			}
 			Debug.Log ("先拆除所有裝備");
-			foreach (var w in model.MapPlayer.weapons.ToList()) {
-				model.UnequipWeapon (w, model.MapPlayer, model.MapPlayer);
+			foreach (var w in model.GetMapPlayer(Place.Map).weapons.ToList()) {
+				model.UnequipWeapon (w, Place.Map, Place.Map);
 			}
 			Debug.Log ("先丟掉所有道具");
-			model.ClearStorage (model.MapPlayer);
+			model.ClearStorage (Place.Map);
 
-			var fight = model.PlayerFightAbility(model.MapPlayer);
+			var fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 
 			var weapon = Common.Item.Empty;
 			weapon.prototype = ConfigItem.ID_woodSword;
 			weapon.count = 1;
 
-			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+			model.AddItemToStorage (weapon, Place.Map);
+			model.EquipWeapon (weapon, Place.Map, Place.Map);
 			try{
-				model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+				model.EquipWeapon (weapon, Place.Map, Place.Map);
 				throw new Exception ("裝備沒有的裝備必須丟出例外");
 			}catch(Exception e2){
 				if (e2.Message.IndexOf ("無法裝備，請檢查:沒有那個道具") == -1) {
 					throw new Exception ("裝備沒有的裝備必須丟出特定例外:"+e2.Message);
 				}
 			}
-			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+			model.AddItemToStorage (weapon, Place.Map);
+			model.EquipWeapon (weapon, Place.Map, Place.Map);
 
-			model.AddItemToStorage (weapon, model.MapPlayer);
+			model.AddItemToStorage (weapon, Place.Map);
 			try{
-				model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+				model.EquipWeapon (weapon, Place.Map, Place.Map);
 				throw new Exception ("裝備超過最大數量限制必須丟出例外");
 			}catch(Exception e2){
 				if (e2.Message.IndexOf ("無法裝備，請檢查:那個位置已經滿") == -1) {
@@ -229,10 +229,10 @@ namespace Model
 				}
 			}
 			weapon.prototype = ConfigItem.ID_powerRing;
-			model.AddItemToStorage (weapon, model.MapPlayer);
-			model.EquipWeapon (weapon, model.MapPlayer, model.MapPlayer);
+			model.AddItemToStorage (weapon, Place.Map);
+			model.EquipWeapon (weapon, Place.Map, Place.Map);
 
-			fight = model.PlayerFightAbility(model.MapPlayer);
+			fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 			yield return view.ShowInfo (Info.Ability, e2 => {
 				e = e2;
@@ -315,7 +315,7 @@ namespace Model
 
 		static IEnumerator TestFusion(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
-			model.ClearStorage (model.MapPlayer);
+			model.ClearStorage (Place.Map);
 
 			Exception e = null;
 			yield return model.NewMap (MapType.Unknown, e2 => {
@@ -333,13 +333,13 @@ namespace Model
 			var item = Common.Item.Empty;
 			item.prototype = ConfigItem.ID_feather;
 			item.count = 5;
-			model.AddItemToStorage (item, model.MapPlayer);
+			model.AddItemToStorage (item, Place.Map);
 
 			item.prototype = ConfigItem.ID_wood;
 			item.count = 5;
-			model.AddItemToStorage (item, model.MapPlayer);
+			model.AddItemToStorage (item, Place.Map);
 
-			var canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
+			var canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, Place.Map);
 			if (canFusionArrows > 0) {
 				yield return view.ShowInfo (Info.Fusion, e2 => {
 					e = e2;
@@ -352,9 +352,9 @@ namespace Model
 
 			item.prototype = ConfigItem.ID_gravel;
 			item.count = 5;
-			model.AddItemToStorage (item, model.MapPlayer);
+			model.AddItemToStorage (item, Place.Map);
 
-			foreach(var i in model.MapPlayer.storage){
+			foreach(var i in model.GetMapPlayer(Place.Map).storage){
 				Debug.Log (i);
 			}
 			yield return view.ShowInfo (Info.Item, e2 => {
@@ -364,7 +364,7 @@ namespace Model
 				throw e;
 			}
 			yield return new WaitForSeconds (2f);
-			canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, model.MapPlayer);
+			canFusionArrows = model.IsCanFusion (ConfigItem.ID_arrows, Place.Map);
 			if (canFusionArrows <= 0) {
 				throw new Exception ("必須能合成箭矢");
 			}
@@ -374,11 +374,11 @@ namespace Model
 			Item twoArrow;
 			twoArrow.prototype = ConfigItem.ID_arrows;
 			twoArrow.count = 2;
-			model.Fusion (twoArrow, model.MapPlayer);
-			foreach(var i in model.MapPlayer.storage){
+			model.Fusion (twoArrow, Place.Map);
+			foreach(var i in model.GetMapPlayer(Place.Map).storage){
 				Debug.Log (i);
 			}
-			var arrows = model.MapPlayer.storage.Where(it=>{
+			var arrows = model.GetMapPlayer(Place.Map).storage.Where(it=>{
 				return it.prototype == ConfigItem.ID_arrows;
 			}).FirstOrDefault();
 			if (arrows.Equals (Common.Item.Empty)) {
@@ -510,15 +510,15 @@ namespace Model
 				model.ClearMoveResult();
 				yield return new WaitForSeconds (0f);
 			}
-			Debug.Log ("目前位置:" + model.MapPlayer.position);
-			var objs = model.MapObjectsAt (model.MapPlayer.position);
+			Debug.Log ("目前位置:" + model.GetMapPlayer(Place.Map).position);
+			var objs = model.MapObjectsAt (model.GetMapPlayer(Place.Map).position);
 			foreach (var obj in objs) {
 				Debug.Log ("有物件:" + obj.type);
 			}
 			var works = model.Works;
 			Debug.Log ("取得目前工作數量:" + works.Count ());
 			if (works.Count () > 0) {
-				if (model.MapPlayer.IsWorking) {
+				if (model.GetMapPlayer(Place.Map).IsWorking) {
 					throw new Exception ("現在必須沒有工作在身");
 				}
 
@@ -526,10 +526,10 @@ namespace Model
 				Debug.Log ("開始第一件工作，工作為:"+firstWork.description);
 				model.StartWork (firstWork);
 
-				if (model.MapPlayer.IsWorking == false) {
+				if (model.GetMapPlayer(Place.Map).IsWorking == false) {
 					throw new Exception ("現在必須有工作在身");
 				}
-				var finishedTime = new DateTime (model.MapPlayer.workFinishedTime);
+				var finishedTime = new DateTime (model.GetMapPlayer(Place.Map).workFinishedTime);
 				Debug.Log ("工作結束時間為:"+finishedTime);
 
 				model.ApplyWork ();
@@ -550,7 +550,7 @@ namespace Model
 						if (e != null) {
 							throw e;
 						}
-						foreach (var item in model.MapPlayer.storage) {
+						foreach (var item in model.GetMapPlayer(Place.Map).storage) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
 						yield return view.ShowInfo (Info.Item, e2 => {

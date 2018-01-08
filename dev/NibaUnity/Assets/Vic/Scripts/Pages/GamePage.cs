@@ -22,6 +22,7 @@ namespace GameView{
 
 		public void SetTileWithPlayerPositionCenterExpend(IModelGetter model)
 		{
+			/*
             TileLayer.ClearAllItem();
             CreatureLayer.ClearAllItem();
 
@@ -51,6 +52,7 @@ namespace GameView{
 					CreatureLayer.PutItemWithXY (mapObj, x, y);
 				}
 			}
+			*/
 		}
         
 	}

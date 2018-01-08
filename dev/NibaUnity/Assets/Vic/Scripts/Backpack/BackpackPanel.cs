@@ -10,6 +10,7 @@ namespace GameView
     {
         public override void UpdateContent()
         {
+			/*
             IModelGetter model = View.Instance.Model;
 			var items = model.MapPlayer.storage;
             var workcount = items.Count();
@@ -30,7 +31,7 @@ namespace GameView
                     workitem.BackpackItemModel = itemModel;
                 }
             }
-            
+            */
         }
     }
 }

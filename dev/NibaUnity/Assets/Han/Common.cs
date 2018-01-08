@@ -161,9 +161,12 @@ namespace Common
 		}
 	}
 
+	public enum Place{
+		Home, Pocket, Map
+	}
+
 	[Serializable]
-	public struct MapPlayer : IEquatable<MapPlayer>{
-		public string id;
+	public struct MapPlayer{
 		public Position position;
 		public BasicAbility basicAbility;
 		public int hp, mp;
@@ -278,32 +281,17 @@ namespace Common
 		/// <param name="other">Other.</param>
 		public void GetData(MapPlayer other){
 			basicAbility = other.basicAbility;
-			exps = new List<AbstractItem>(other.exps);
+			exps = new List<AbstractItem> (other.exps);
 			hp = other.hp;
 			mp = other.mp;
 			storage = new List<Item> (other.storage);
 			weapons = new List<Item> (other.weapons);
 		}
-
-		public override string ToString(){
-			return "player(" + id + ")";
-		}
-		public static MapPlayer UnknowPlayer = new MapPlayer{
-			id = "unknow"
-		};
-		public static MapPlayer PlayerInHome = new MapPlayer{
-			id = "home", 
+		public static MapPlayer Empty = new MapPlayer{
 			weapons = new List<Item>(), 
-			storage = new List<Item>()
+			storage = new List<Item>(),
+			exps = new List<AbstractItem>()
 		};
-		public static MapPlayer PlayerInMap = new MapPlayer{
-			id = "map", 
-			weapons = new List<Item>(), 
-			storage = new List<Item>()
-		};
-		public bool Equals(MapPlayer other){
-			return id == other.id;
-		}
 	}
 
 	public struct Description{
@@ -1008,16 +996,7 @@ namespace Common
 		/// <returns>The <see cref="System.Collections.Generic.IEnumerable`1[[Common.MapObject]]"/>.</returns>
 		/// <param name="pos">Position.</param>
 		IEnumerable<MapObject> MapObjectsAt (Position pos);
-		List<Item> Storage{ get; }
-		MapPlayer HomePlayer { get; }
-		/// <summary>
-		/// 取得玩家在地圖中的狀態
-		/// 注意：回傳的是struct，千萬不要暫存它，不然會取得不正確的資料
-		/// </summary>
-		/// <value>The map player.</value>
-		MapPlayer MapPlayer{ get; }
-
-		// MapPlayer PlayerAtPlayState (PlayState state);
+		MapPlayer GetMapPlayer (Place place);
 		/// <summary>
 		/// 取得玩家所在格的工作列表
 		/// </summary>
@@ -1025,15 +1004,15 @@ namespace Common
 		IEnumerable<Description> Works{ get; }
 		IEnumerable<Description> WorkResults{ get; }
 
-		int IsCanFusion (string prototype, MapPlayer who);
+		int IsCanFusion (string prototype, Place who);
 
-		BasicAbility PlayerBasicAbility (MapPlayer who);
-		FightAbility PlayerFightAbility (MapPlayer who);
+		BasicAbility PlayerBasicAbility (Place who);
+		FightAbility PlayerFightAbility (Place who);
 
 		IEnumerable<Item> CanFusionItems{ get; }
 
 		IEnumerable<string> AvailableNpcMissions{ get; }
-		IEnumerable<string> AvailableSkills(MapPlayer who);
+		IEnumerable<string> AvailableSkills(Place who);
 
 		PlayState PlayState{ get; }
 	}
@@ -1079,12 +1058,13 @@ namespace Common
 		void CancelWork ();
 		void ApplyWork();
 
-		void AddItemToStorage(Item item, MapPlayer who);
-		void MoveItem (MapPlayer a, MapPlayer b, Item item);
-		void Fusion (Item item, MapPlayer who);
-		void EquipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);
-		void UnequipWeapon (Item item, MapPlayer whosWeapon, MapPlayer whosStorage);
-		void ClearStorage (MapPlayer who);
+		void AddItemToStorage(Item item, Place who);
+		void MoveItem (Place a, Place b, Item item);
+
+		void Fusion (Item item, Place who);
+		void EquipWeapon (Item item, Place whosWeapon, Place whosStorage);
+		void UnequipWeapon (Item item, Place whosWeapon, Place whosStorage);
+		void ClearStorage (Place who);
 
 		void AcceptMission(string id);
 		List<string> CheckMissionStatus();
@@ -1107,7 +1087,7 @@ namespace Common
 			});
 		}
 
-		public static List<Item> Storage(IModelGetter model, MapPlayer who){
+		/*public static List<Item> Storage(IModelGetter model, MapPlayer who){
 			if (who.Equals (MapPlayer.PlayerInHome)) {
 				return model.HomePlayer.storage;
 			}
@@ -1115,7 +1095,7 @@ namespace Common
 				return model.MapPlayer.storage;
 			}
 			return model.Storage;
-		}
+		}*/
 
 		public static IEnumerable<AbstractItem> ParseAbstractItem(string itemString){
 			Func<string, AbstractItem> parseOne = str => {

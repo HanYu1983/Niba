@@ -154,7 +154,7 @@ namespace Model
 			// assign back
 			mapObjects [objKey] = obj;
 			foreach (var item in ret) {
-				player.AddItem (item, player.playerInMap);
+				player.AddItem (item, Place.Map);
 			}
 			return ret;
 		}
@@ -232,7 +232,7 @@ namespace Model
 					var config = ConfigResource.Get (info.type);
 					var items = Common.Common.ParseItemFromResource (config);
 					foreach (var item in items) {
-						player.AddItem (item, player.playerInMap);
+						player.AddItem (item, Place.Map);
 					}
 					var des = Description.Empty;
 					des.description = Description.InfoCollectResource;
@@ -272,7 +272,7 @@ namespace Model
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
-					Helper.CalcAbility (player, this, player.playerInMap, ref playerBasic, ref playerAbility);
+					Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
 					// 計算針對怪物的能力，例：如果對像是鳥，攻擊力*1.1之類
 					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
 					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
@@ -280,7 +280,7 @@ namespace Model
 						return playerAbility;
 					});
 					// === 技能加成 === //
-					var skills = Helper.AvailableSkills (player, player.playerInMap);
+					var skills = Helper.AvailableSkills (player, Place.Map);
 					// 只計算攻擊性技能
 					skills = skills.Where (s => s.Condition == ConfigConditionType.ID_attack);
 					// 取出發動的技能
@@ -430,7 +430,7 @@ namespace Model
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
-					Helper.CalcAbility (player, this, player.playerInMap, ref playerBasic, ref playerAbility);
+					Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
 					// 計算針對怪物的能力，例：如果對像是鳥，防禦力*1.1之類
 					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
 					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
@@ -453,7 +453,7 @@ namespace Model
 					} else {
 
 						// === 技能加成 === //
-						var skills = Helper.AvailableSkills (player, player.playerInMap);
+						var skills = Helper.AvailableSkills (player, Place.Map);
 						// 只計算防禦性技能
 						skills = skills.Where (s => s.Condition == ConfigConditionType.ID_deffence);
 						// 取出發動的技能
@@ -659,7 +659,7 @@ namespace Model
 			}
 			player.playerInMap.ClearWork ();
 			// 回合性招式
-			var turnSkills = Helper.AvailableSkills (player, player.playerInMap).Where(s=>s.Condition == ConfigConditionType.ID_turn);
+			var turnSkills = Helper.AvailableSkills (player, Place.Map).Where(s=>s.Condition == ConfigConditionType.ID_turn);
 			// TODO 轉換成使用招式的work
 			var work = player.playerInMap.currentWork;
 			//return ProcessWork (player, work);
@@ -717,10 +717,24 @@ namespace Model
 
 	public class PlayerDataStore
 	{
-		public MapPlayer player = MapPlayer.PlayerInHome;
-		public MapPlayer playerInMap = MapPlayer.PlayerInMap;
+		public MapPlayer playerInStorage = MapPlayer.Empty;
+		public MapPlayer player = MapPlayer.Empty;
+		public MapPlayer playerInMap = MapPlayer.Empty;
+
+		public MapPlayer GetMapPlayer (Place place){
+			switch (place) {
+			case Place.Home:
+				return playerInStorage;
+			case Place.Pocket:
+				return player;
+			case Place.Map:
+				return playerInMap;
+			}
+			throw new Exception ("xxx:"+place.ToString());
+		}
 
 		#region weapon
+		/*
 		public string IsCanEquip(Item item, MapPlayer who, MapPlayer whosStorage){
 			if (who.Equals (MapPlayer.UnknowPlayer)) {
 				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
@@ -802,6 +816,89 @@ namespace Model
 				storage.Add (item);
 			}
 		}
+		*/
+
+		public string IsCanEquip(Item item, Place who, Place whosStorage){
+			if (who == Place.Home) {
+				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
+			}
+			var cfg = ConfigItem.Get (item.prototype);
+			if (cfg.Type != ConfigItemType.ID_weapon) {
+				return "只能裝備weapon類型，請檢查程式";
+			}
+			var weaponPosition = cfg.Position;
+			var maxCount = ConfigWeaponPosition.Get (weaponPosition).SlotCount;
+			Func<List<Item>, List<Item>, string> canEquip = (weapons, items) => {
+				var haveCount = items.Count(i=>{
+					return i.Equals(item);
+				});
+				if(haveCount <1){
+					return "沒有那個道具:"+item;
+				}
+				var alreadyEquipCount = weapons.Count(i=>{
+					return ConfigItem.Get (i.prototype).Position == weaponPosition;
+				});
+				if(alreadyEquipCount >= maxCount){
+					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+who;
+				}
+				return null;
+			};
+			var useStorage = 
+				whosStorage == Place.Pocket ? player.storage :
+				whosStorage == Place.Map ? playerInMap.storage :
+				playerInStorage.storage;
+			var useWeapon = 
+				whosStorage == Place.Pocket ? player.weapons :
+				playerInMap.weapons;
+			return canEquip (useWeapon, useStorage);
+		}
+
+		public void EquipWeapon(Item item, Place whosWeapon, Place whosStorage){
+			var err = IsCanEquip (item, whosWeapon, whosStorage);
+			if (err != null) {
+				throw new Exception("無法裝備，請檢查:"+err);
+			}
+			if (whosStorage == Place.Pocket) {
+				player.storage.Remove (item);
+			} else if (whosStorage == Place.Map) {
+				playerInMap.storage.Remove (item);
+			} else {
+				playerInStorage.storage.Remove (item);
+			}
+
+			if (whosWeapon == Place.Pocket) {
+				player.weapons.Add (item);
+			} else if (whosWeapon == Place.Map) {
+				playerInMap.weapons.Add (item);
+			} else {
+				throw new Exception ("無法裝備在Place.Home");
+			}
+		}
+
+		public void UnequipWeapon(Item item, Place whosWeapon, Place whosStorage){
+			if (whosWeapon == Place.Pocket) {
+				var isCanUnequip = player.weapons.IndexOf (item) != -1;
+				if (isCanUnequip == false) {
+					throw new Exception ("無法拆掉：沒有那個裝備");
+				}
+				player.weapons.Remove (item);
+			} else if (whosWeapon == Place.Map) {
+				var isCanUnequip = playerInMap.weapons.IndexOf (item) != -1;
+				if (isCanUnequip == false) {
+					throw new Exception ("無法拆掉：沒有那個裝備");
+				}
+				playerInMap.weapons.Remove (item);
+			} else {
+				throw new Exception ("無法拆掉裝備在unknow");
+			}
+			if (whosStorage == Place.Pocket) {
+				player.storage.Add (item);
+			} else if (whosStorage == Place.Map) {
+				playerInMap.storage.Add (item);
+			} else {
+				playerInStorage.storage.Add (item);
+			}
+		}
 		#endregion
 
 		#region playerInMap
@@ -815,45 +912,58 @@ namespace Model
 		#endregion
 
 		#region storage
-		public List<Item> storage = new List<Item>();
-		public void AddItem(Item item, MapPlayer who){
-			if (who.Equals (player)) {
-				player.storage = Helper.AddItem (player.storage, item);
-			} else if (who.Equals (playerInMap)) {
-				playerInMap.storage = Helper.AddItem (playerInMap.storage, item);
-			} else {
-				storage = Helper.AddItem (storage, item);
+		//public List<Item> storage = new List<Item>();
+		public void AddItem(Item item, Place who){
+			switch (who) {
+			case Place.Home:
+				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
 				// 從家裡新增的Item才要更新任務
 				NotifyMissionAddItem (item);
+				break;
+			case Place.Pocket:
+				player.storage = Helper.AddItem (player.storage, item);
+				break;
+			case Place.Map:
+				playerInMap.storage = Helper.AddItem (playerInMap.storage, item);
+				break;
+			default:
+				throw new Exception (who.ToString ());
 			}
 		}
-		#endregion
-
-		public void MoveItem(MapPlayer a, MapPlayer b, Item item){
+		public void MoveItem(Place a, Place b, Item item){
 			List<Item> fromStorage;
-			if (a.Equals (player)) {
+			switch (a) {
+			case Place.Home:
+				fromStorage = playerInStorage.storage;
+				break;
+			case Place.Pocket:
 				fromStorage = player.storage;
-			} else if (a.Equals (playerInMap)) {
+				break;
+			case Place.Map:
 				throw new Exception ("冒險中不能移動道具");
-			} else {
-				fromStorage = storage;
+			default:
+				throw new Exception ("XXX");
 			}
 			if (fromStorage.Contains (item) == false) {
 				throw new Exception ("沒有這個道具，不能移動:"+item);
 			}
 			fromStorage.Remove (item);
-
-			if (b.Equals (player)) {
+			switch (b) {
+			case Place.Home:
+				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
+				break;
+			case Place.Pocket:
 				player.storage = Helper.AddItem (player.storage, item);
-			} else if (a.Equals (playerInMap)) {
+				break;
+			case Place.Map:
 				throw new Exception ("道具不能直接移動到冒險者");
-			} else {
-				storage = Helper.AddItem (storage, item);
+			default:
+				throw new Exception ("XXX");
 			}
 		}
-
+		#endregion
 		#region fusion
-		public void Fusion(Item fusionTarget, MapPlayer who){
+		public void Fusion(Item fusionTarget, Place who){
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
 				var requires = Common.Common.ParseItem (ConfigItem.Get (fusionTarget.prototype).FusionRequire);
 				var formatForSubstrct = requires.Select (item => {
@@ -865,28 +975,29 @@ namespace Model
 				var fusionItem = fusionTarget;
 				tempStorage = Helper.AddItem (tempStorage, fusionItem);
 
-				if(who.Equals(MapPlayer.UnknowPlayer)){
+				if(who == Place.Home){
 					// 從家裡新增的Item才要更新任務
 					NotifyMissionAddItem (fusionItem);
 				}
 				return tempStorage;
 			};
-			if (who.Equals (player)) {
+			if (who == Place.Pocket) {
 				throw new Exception("不能在口袋里合成");
-			} else if (who.Equals (playerInMap)) {
+				//player.storage = fusion (player.storage);
+			} else if (who == Place.Map) {
 				playerInMap.storage = fusion (playerInMap.storage);
 			} else {
-				storage = fusion (storage);
+				playerInStorage.storage = fusion (playerInStorage.storage);
 			}
 		}
 
-		public int IsCanFusion(string prototype, MapPlayer who){
-			if (who.Equals (player)) {
+		public int IsCanFusion(string prototype, Place who){
+			if (who == Place.Pocket) {
 				return Common.Common.IsCanFusion (player, prototype, player.storage);
-			} else if (who.Equals (playerInMap)) {
+			} else if (who == Place.Map) {
 				return Common.Common.IsCanFusion (playerInMap, prototype, playerInMap.storage);
 			} else {
-				return Common.Common.IsCanFusion (player, prototype, storage);
+				return Common.Common.IsCanFusion (playerInStorage, prototype, playerInStorage.storage);
 			}
 		}
 		#endregion
@@ -1108,7 +1219,7 @@ namespace Model
 					break;
 				default:
 					{
-						AddItem (reward.Item, MapPlayer.UnknowPlayer);
+						AddItem (reward.Item, Place.Pocket);
 					}
 					break;
 				}
@@ -1181,10 +1292,11 @@ namespace Model
 		/// <returns>The skills.</returns>
 		/// <param name="player">Player.</param>
 		/// <param name="who">Who.</param>
-		public static IEnumerable<ConfigSkill> AvailableSkills(PlayerDataStore player, MapPlayer who){
+		public static IEnumerable<ConfigSkill> AvailableSkills(PlayerDataStore player, Place who_){
 			var skills = Enumerable
 				.Range(0, ConfigSkill.ID_COUNT)
 				.Select(ConfigSkill.Get);
+			var who = player.GetMapPlayer (who_);
 			var weapons = who.weapons;
 			var useWeaponTypes = weapons.Select (i => ConfigItem.Get (i.prototype).SkillType);
 			return skills.Where (cfg => {
@@ -1249,12 +1361,11 @@ namespace Model
 		/// <param name="who">Who.</param>
 		/// <param name="basic">Basic.</param>
 		/// <param name="fight">Fight.</param>
-		public static void CalcAbility(PlayerDataStore player, MapDataStore map, MapPlayer who_, ref BasicAbility basic, ref FightAbility fight){
-			if (who_.Equals (MapPlayer.UnknowPlayer)) {
+		public static void CalcAbility(PlayerDataStore player, MapDataStore map, Place who_, ref BasicAbility basic, ref FightAbility fight){
+			if (who_ == Place.Home) {
 				throw new Exception ("計算能力時不能傳入UnknowPlayer");
 			}
-			var who = 
-				who_.Equals (MapPlayer.PlayerInHome) ? player.player : player.playerInMap;
+			var who = player.GetMapPlayer (who_);
 
 			var tmpBasic = BasicAbility.Default;
 			var skillbonus = Enumerable.Range (0, ConfigSkillType.ID_COUNT).Select (ConfigSkillType.Get)

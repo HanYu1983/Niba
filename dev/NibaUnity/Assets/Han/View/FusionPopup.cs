@@ -10,7 +10,7 @@ namespace View{
 		public ItemView itemView;
 		public FusionRequireView fusionRequireView;
 
-		public MapPlayer Who{ get; set; }
+		public Place Who{ get; set; }
 
 		public void UpdateUI(IModelGetter model){
 			itemView.Data = model.CanFusionItems;

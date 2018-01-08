@@ -26,14 +26,13 @@ namespace View
 			throw new Exception ("沒有找到:"+id);
 		}
 
-		public void UpdateAbility(IModelGetter model, MapPlayer who_){
-			if (who_.Equals (MapPlayer.UnknowPlayer)) {
-				throw new Exception ("計算能力時不能傳入UnknowPlayer");
+		public void UpdateAbility(IModelGetter model, Place who_){
+			if (who_ == Place.Home) {
+				throw new Exception ("計算能力時不能傳入Place.Home");
 			}
-			var who = 
-				who_.Equals (MapPlayer.PlayerInHome) ? model.HomePlayer : model.MapPlayer;
+			var who = model.GetMapPlayer (who_);
 			var oriBasic = BasicAbility.Default.Add(who.basicAbility);
-			var basic = model.PlayerBasicAbility(who);
+			var basic = model.PlayerBasicAbility(who_);
 
 			var offsetBasic = basic.Add (oriBasic.Negative);
 			Search ("str").text = string.Format ("力:{0}({1})", (int)basic.str, (int)offsetBasic.str);
@@ -44,7 +43,7 @@ namespace View
 			Search ("luc").text = string.Format ("運:{0}({1})", (int)basic.luc, (int)offsetBasic.luc);
 
 			var oriFight = basic.FightAbility;
-			var fight = model.PlayerFightAbility (who);
+			var fight = model.PlayerFightAbility (who_);
 			var offsetFight = fight.Add (oriFight.Negative);
 			Search ("hp").text = string.Format ("耐久:{0}({1})", (int)fight.hp, (int)offsetFight.hp);
 			Search ("mp").text = string.Format ("魔力:{0}({1})", (int)fight.mp, (int)offsetFight.mp);
