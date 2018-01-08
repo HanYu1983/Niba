@@ -251,7 +251,7 @@ namespace Model
 					foreach (var item in items) {
 						var cfg = ConfigItem.Get (item.prototype);
 						if (cfg.SkillType != null) {
-							player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+							player.playerInMap.AddExp (cfg.SkillType, 1);
 						}
 					}
 				}
@@ -359,7 +359,7 @@ namespace Model
 								continue;
 							}
 							if (cfg.SkillType != null) {
-								player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+								player.playerInMap.AddExp (cfg.SkillType, 1);
 							}
 						}
 						// === 處理武器壞掉 === //
@@ -448,7 +448,7 @@ namespace Model
 						des.values.Set ("mapObjectId", mapObjectId + "");
 						ret.Add (des);
 						// 回避會增加速度經驗
-						player.playerInMap.skillExp.AddExp (ConfigAbility.ID_speed, 1);
+						player.playerInMap.AddExp (ConfigAbility.ID_speed, 1);
 
 					} else {
 
@@ -500,7 +500,7 @@ namespace Model
 								continue;
 							}
 							if (cfg.SkillType != null) {
-								player.playerInMap.skillExp.AddExp (cfg.SkillType, 1);
+								player.playerInMap.AddExp (cfg.SkillType, 1);
 							}
 						}
 					}
@@ -1169,7 +1169,7 @@ namespace Model
 			var ais = Common.Common.ParseAbstractItem (skill.SkillTypeRequire);
 			var needExp = ais.Sum (ai => ai.count);
 			var maxExp = needExp << 1;
-			var haveExp = ais.Sum (ai => who.skillExp.Exp(ai.prototype));
+			var haveExp = ais.Sum (ai => who.Exp(ai.prototype));
 			var rate = (float)(haveExp - needExp) / (maxExp - needExp);
 			var bouns = skill.TriggerBouns;
 			return rate + bouns;
@@ -1195,7 +1195,7 @@ namespace Model
 					var skillType = ai.prototype;
 					var skillLevel = ai.count;
 					// 其中一項不符就回傳
-					if(who.skillExp.Exp(skillType) < skillLevel){
+					if(who.Exp(skillType) < skillLevel){
 						return false;
 					}
 					/*
@@ -1260,7 +1260,7 @@ namespace Model
 			var skillbonus = Enumerable.Range (0, ConfigSkillType.ID_COUNT).Select (ConfigSkillType.Get)
 				.Select (cfg => cfg.ID).Select (ConfigAbility.Get)
 				.Select (cfg => {
-					var exp = who.skillExp.Exp(cfg.ID);
+					var exp = who.Exp(cfg.ID);
 					var bonus = new BasicAbility(){
 						str = cfg.Str,
 						vit = cfg.Vit,

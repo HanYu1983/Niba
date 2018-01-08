@@ -9,14 +9,35 @@ namespace View{
 	public class SkillPopup : MonoBehaviour {
 		public ListView skillListView;
 		public SkillDataProvider skillDataProvider;
+		public bool filterApply;
+		public bool filterKarate;
+		public bool filterFencingArt;
 
 		void Awake(){
 			skillListView.DataProvider = skillDataProvider;
 		}
 
 		public void UpdateSkillList(IModelGetter model){
-			var skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get).Select(cfg=>cfg.ID);
-			skillDataProvider.Data = skills.ToList();
+			var skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
+
+			if (filterApply) {
+				
+			}
+
+			if (filterKarate) {
+				skills = skills.Where (cfg => {
+					return cfg.SkillTypeRequire.Contains(ConfigSkillType.ID_karate);
+				});
+			}
+
+			if (filterFencingArt) {
+				skills = skills.Where (cfg => {
+					return cfg.SkillTypeRequire.Contains(ConfigSkillType.ID_fencingArt);
+				});
+			}
+
+			var skillIds = skills.Select(cfg=>cfg.ID);
+			skillDataProvider.Data = skillIds.ToList();
 			skillListView.UpdateDataView (model);
 			skillListView.CurrItemLabel (model, skillListView.offset);
 		}

@@ -166,11 +166,10 @@ namespace Common
 		public string id;
 		public Position position;
 		public BasicAbility basicAbility;
-		public SkillExp skillExp;
 		public int hp, mp;
 		public List<Item> storage;
-
-		public Description currentWork;
+		// === work === //
+ 		public Description currentWork;
 		public long workFinishedTime;
 		public bool IsWorking{
 			get{
@@ -180,7 +179,7 @@ namespace Common
 		public void ClearWork(){
 			workFinishedTime = 0;
 		}
-
+		// === weapon === //
 		public List<Item> weapons;
 		/// <summary>
 		/// 判斷武器有沒有壞，每次擊中對手時呼叫
@@ -212,10 +211,74 @@ namespace Common
 				})
 				.Select (info => info.t1);
 		}
+		// === skill exp === //
+		public List<AbstractItem> exps;
+		public void AddExp(string id, int exp){
+			if (exps == null) {
+				exps = new List<AbstractItem> ();
+			}
+			var ai = new Item () {
+				prototype = id,
+				count = exp
+			};
+			exps = Model.Helper.AddItemWithFn (
+				exps.Select (i => i.Item).ToList(), 
+				ai, 
+				() => int.MaxValue
+			).Select(i=>i.AbstractItem).ToList();
+		}
+		public int Exp(string skillType){
+			if (exps == null) {
+				exps = new List<AbstractItem> ();
+			}
+			var ai = exps.Where (i => i.prototype == skillType).FirstOrDefault ();
+			if (ai.Equals (AbstractItem.Empty)) {
+				return 0;
+			}
+			return ai.count;
+		}
+		public int MaxSkillSlotCount {
+			get {
+				if (exps == null) {
+					Debug.LogWarning ("exps還沒初始化, 回傳0");
+					return 0;
+				}
+				var total = exps.Sum (i => i.count);
+				return total;
+			}
+		}
 
+		// === skill === //
+		public List<string> skills;
+		public void AddSkill(string id){
+			if (skills == null) {
+				skills = new List<string> ();
+			}
+			if (skills.Contains (id)) {
+				throw new Exception (string.Format("招式已裝備:{0}", id));
+			}
+			var cfg = ConfigSkill.Get (id);
+			var totalCnt = cfg.SlotCount + SkillSlotUsed;
+			if (totalCnt >= MaxSkillSlotCount) {
+				throw new Exception (string.Format("招式欄位不足:{0}/{1}, 所新加招式為{2}", totalCnt, MaxSkillSlotCount, id));
+			}
+			skills.Add (id);
+		}
+
+		public int SkillSlotUsed {
+			get {
+				return skills.Select (ConfigSkill.Get).Select(cfg=>cfg.SlotCount).Sum();
+			}
+		}
+
+		/// <summary>
+		/// 這個方法很重要
+		/// 必須要注意那些資料要deep copy
+		/// </summary>
+		/// <param name="other">Other.</param>
 		public void GetData(MapPlayer other){
 			basicAbility = other.basicAbility;
-			skillExp = other.skillExp;
+			exps = new List<AbstractItem>(other.exps);
 			hp = other.hp;
 			mp = other.mp;
 			storage = new List<Item> (other.storage);
@@ -864,31 +927,7 @@ namespace Common
 
 	[Serializable]
 	public struct SkillExp{
-		public List<AbstractItem> exps;
-		public void AddExp(string id, int exp){
-			if (exps == null) {
-				exps = new List<AbstractItem> ();
-			}
-			var ai = new Item () {
-				prototype = id,
-				count = exp
-			};
-			exps = Model.Helper.AddItemWithFn (
-				exps.Select (i => i.Item).ToList(), 
-				ai, 
-				() => int.MaxValue
-			).Select(i=>i.AbstractItem).ToList();
-		}
-		public int Exp(string skillType){
-			if (exps == null) {
-				exps = new List<AbstractItem> ();
-			}
-			var ai = exps.Where (i => i.prototype == skillType).FirstOrDefault ();
-			if (ai.Equals (AbstractItem.Empty)) {
-				return 0;
-			}
-			return ai.count;
-		}
+		
 	}
 
 	public enum Page{
@@ -977,6 +1016,8 @@ namespace Common
 		/// </summary>
 		/// <value>The map player.</value>
 		MapPlayer MapPlayer{ get; }
+
+		// MapPlayer PlayerAtPlayState (PlayState state);
 		/// <summary>
 		/// 取得玩家所在格的工作列表
 		/// </summary>
@@ -1135,7 +1176,7 @@ namespace Common
 			foreach (var ai in ais) {
 				var st = ai.prototype;
 				var needExp = ai.count;
-				var haveExp = who.skillExp.Exp (st);
+				var haveExp = who.Exp (st);
 				if (haveExp < needExp) {
 					return -1;
 				}
