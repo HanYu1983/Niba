@@ -4,33 +4,52 @@ using UnityEngine;
 using Common;
 using System;
 using System.Linq;
+using UnityEngine.UI;
 
 namespace View{
 	public class SkillPopup : MonoBehaviour {
 		public ListView skillListView;
 		public SkillDataProvider skillDataProvider;
-		public bool filterApply;
-		public bool filterKarate;
-		public bool filterFencingArt;
+		public GameObject filterBtns;
+		public Text txtSlotUse;
+
+		public Toggle[] toggles;
 
 		void Awake(){
 			skillListView.DataProvider = skillDataProvider;
+			toggles = filterBtns.GetComponentsInChildren<Toggle> ();
+			foreach (var t in toggles) {
+				t.isOn = false;
+			}
+		}
+
+		public void UpdateUI(IModelGetter model){
+			UpdateSkillList (model);
+			UpdateSlotCount (model);
+		}
+
+		public void UpdateSlotCount(IModelGetter model){
+			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
 		public void UpdateSkillList(IModelGetter model){
-			var skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
+			IEnumerable<ConfigSkill> skills = null;
 
-			if (filterApply) {
-				
+			if (CheckToggleValue (0)) {
+				var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+				skills = who.skills.Select (ConfigSkill.Get);
+			} else {
+				skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
 			}
 
-			if (filterKarate) {
+			if (CheckToggleValue (1)) {
 				skills = skills.Where (cfg => {
 					return cfg.SkillTypeRequire.Contains(ConfigSkillType.ID_karate);
 				});
 			}
 
-			if (filterFencingArt) {
+			if (CheckToggleValue (2)) {
 				skills = skills.Where (cfg => {
 					return cfg.SkillTypeRequire.Contains(ConfigSkillType.ID_fencingArt);
 				});
@@ -42,8 +61,48 @@ namespace View{
 			skillListView.CurrItemLabel (model, skillListView.offset);
 		}
 
+		public bool CheckToggleValue(int num){
+			if (num >= toggles.Length) {
+				Debug.LogWarning ("XXXX");
+				return false;
+			}
+			return toggles [num].isOn;
+		}
+
 		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
+			case "click_skillPopup_active":
+				{
+					var idx = skillListView.LastSelectIndex;
+					if (idx < 0) {
+						yield break;
+					}
+					if (idx >= skillDataProvider.Data.Count) {
+						callback(new Exception("idx >= skillDataProvider.Data.Count"));
+						yield break;
+					}
+					var selectSkill = skillDataProvider.Data [idx];
+					Common.Common.Notify ("skillPopup_active", selectSkill);
+				}
+				break;
+			case "click_skillPopup_inactive":
+				{
+					var idx = skillListView.LastSelectIndex;
+					if (idx < 0) {
+						yield break;
+					}
+					if (idx >= skillDataProvider.Data.Count) {
+						callback(new Exception("idx >= skillDataProvider.Data.Count")); 
+						yield break;
+					}
+					var selectSkill = skillDataProvider.Data [idx];
+					Common.Common.Notify ("skillPopup_inactive", selectSkill);
+				}
+				break;
+			case "click_skillPopup_filter":
+				UpdateSkillList (model);
+				callback(null);
+				break;
 			default:
 				{
 					if (msg.Contains (skillListView.CommandPrefix)) {

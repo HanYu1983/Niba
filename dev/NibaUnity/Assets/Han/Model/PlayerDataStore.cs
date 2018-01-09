@@ -733,6 +733,36 @@ namespace Model
 			throw new Exception ("xxx:"+place.ToString());
 		}
 
+		#region skill
+		public void EquipSkill (Place who, string skillId){
+			switch (who) {
+			case Place.Home:
+			case Place.Pocket:
+				player.AddSkill (skillId);
+				break;
+			case Place.Map:
+				playerInMap.AddSkill (skillId);
+				break;
+			default:
+				throw new Exception ("EquipSkill:"+skillId);
+			}
+		}
+
+		public void UnequipSkill (Place who, string skillId){
+			switch (who) {
+			case Place.Home:
+			case Place.Pocket:
+				player.RemoveSkill (skillId);
+				break;
+			case Place.Map:
+				playerInMap.RemoveSkill (skillId);
+				break;
+			default:
+				throw new Exception ("EquipSkill:"+skillId);
+			}
+		}
+		#endregion
+
 		#region weapon
 		/*
 		public string IsCanEquip(Item item, MapPlayer who, MapPlayer whosStorage){
@@ -1037,6 +1067,9 @@ namespace Model
 		public int advLevel;
 		public PlayState playState;
 
+		public void ClearPlayState(){
+			playState = PlayState.Home;
+		}
 		public void CopyItemAndEnterMap(){
 			if (playState != PlayState.Home) {
 				throw new Exception ("這時必須是Home狀態，請檢查程式:"+playState.ToString());

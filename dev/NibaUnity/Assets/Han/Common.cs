@@ -217,9 +217,6 @@ namespace Common
 		// === skill exp === //
 		public List<AbstractItem> exps;
 		public void AddExp(string id, int exp){
-			if (exps == null) {
-				exps = new List<AbstractItem> ();
-			}
 			var ai = new Item () {
 				prototype = id,
 				count = exp
@@ -231,9 +228,6 @@ namespace Common
 			).Select(i=>i.AbstractItem).ToList();
 		}
 		public int Exp(string skillType){
-			if (exps == null) {
-				exps = new List<AbstractItem> ();
-			}
 			var ai = exps.Where (i => i.prototype == skillType).FirstOrDefault ();
 			if (ai.Equals (AbstractItem.Empty)) {
 				return 0;
@@ -254,9 +248,6 @@ namespace Common
 		// === skill === //
 		public List<string> skills;
 		public void AddSkill(string id){
-			if (skills == null) {
-				skills = new List<string> ();
-			}
 			if (skills.Contains (id)) {
 				throw new Exception (string.Format("招式已裝備:{0}", id));
 			}
@@ -266,6 +257,12 @@ namespace Common
 				throw new Exception (string.Format("招式欄位不足:{0}/{1}, 所新加招式為{2}", totalCnt, MaxSkillSlotCount, id));
 			}
 			skills.Add (id);
+		}
+		public void RemoveSkill(string id){
+			if (skills.Contains (id) == false) {
+				throw new Exception (string.Format("招式已取消", id));
+			}
+			skills.Remove (id);
 		}
 
 		public int SkillSlotUsed {
@@ -286,11 +283,13 @@ namespace Common
 			mp = other.mp;
 			storage = new List<Item> (other.storage);
 			weapons = new List<Item> (other.weapons);
+			skills = new List<string> (other.skills);
 		}
 		public static MapPlayer Empty = new MapPlayer{
 			weapons = new List<Item>(), 
 			storage = new List<Item>(),
-			exps = new List<AbstractItem>()
+			exps = new List<AbstractItem>(),
+			skills = new List<string>()
 		};
 	}
 
@@ -1069,6 +1068,9 @@ namespace Common
 		void AcceptMission(string id);
 		List<string> CheckMissionStatus();
 		IEnumerable<AbstractItem> CompleteMission (string id);
+
+		void EquipSkill (Place who, string skillId);
+		void UnequipSkill (Place who, string skillId);
 	}
 
 	public class Common
@@ -1250,6 +1252,17 @@ namespace Common
 					var first = sg.FirstOrDefault ();
 					data [x, y] = first;
 				}
+			}
+		}
+
+		public static Place PlaceAt(PlayState state){
+			switch (state) {
+			case PlayState.Home:
+				return Place.Pocket;
+			case PlayState.Play:
+				return Place.Map;
+			default:
+				throw new Exception ("PlaceAt:"+state);
 			}
 		}
 	}

@@ -53,7 +53,7 @@ namespace View
 						throw new Exception ("你沒有加入SkillPopup Component");
 					}
 					skillPopup.ChangeVisibility (true);
-					popup.UpdateSkillList (model);
+					popup.UpdateUI (model);
 					callback (null);
 				}
 				break;

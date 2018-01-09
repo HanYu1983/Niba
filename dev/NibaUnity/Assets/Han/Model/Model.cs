@@ -19,9 +19,11 @@ namespace Model
 		PlayerDataStore playerData = new PlayerDataStore();
 
 		public void NewGame(){
-			/*
-			playerData.playerInMap.skillExp.karate = 25;
+			playerData.playerInStorage.AddExp (ConfigAbility.ID_karate, 10);
+			playerData.player.AddExp (ConfigAbility.ID_karate, 20);
+			playerData.playerInMap.AddExp (ConfigAbility.ID_karate, 30);
 
+			/*
 			playerData.playerInMap.basicAbility.str = 20;
 			playerData.playerInMap.basicAbility.vit = 20;
 			playerData.playerInMap.basicAbility.agi = 20;
@@ -43,6 +45,7 @@ namespace Model
 			*/
 
 			mapData.ClearMap ();
+			playerData.ClearPlayState ();
 			playerData.ClearVisibleMapObjects ();
 			ClearMoveResult ();
 			RequestSaveMap ();
@@ -211,6 +214,16 @@ namespace Model
 			var ret = playerData.CompleteMission (id);
 			RequestSavePlayer ();
 			return ret;
+		}
+
+		public void EquipSkill (Place who, string skillId){
+			playerData.EquipSkill (who, skillId);
+			RequestSavePlayer ();
+		}
+
+		public void UnequipSkill (Place who, string skillId){
+			playerData.UnequipSkill (who, skillId);
+			RequestSavePlayer ();
 		}
 
 		BasicAbility tmpBasic;

@@ -19,6 +19,13 @@ namespace View
 			var cfg = ConfigSkill.Get (modelItem);
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
 
+			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+			var isEquip = who.skills.Contains (cfg.ID);
+			var btn = ui.GetComponent<Button> ();
+			var colors = btn.colors;
+			colors.normalColor = colors.highlightedColor = isEquip ? Color.yellow : Color.white;
+			btn.colors = colors;
+
 			ui.transform.Find ("txt_name").GetComponent<Text> ().text = cfg.Name;
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Effect;
 			ui.transform.Find ("txt_condition").GetComponent<Text> ().text = conditionCfg.Name;

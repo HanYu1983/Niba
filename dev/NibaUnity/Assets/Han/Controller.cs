@@ -58,6 +58,48 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "skillPopup_active":
+				{
+					var skill = (string)args;
+					try{
+						model.EquipSkill(Common.PlaceAt (model.PlayState), skill);
+					}catch(Exception e2){
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo(Info.Skill, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
+			case "skillPopup_inactive":
+				{
+					var skill = (string)args;
+					try{
+						model.UnequipSkill(Common.PlaceAt (model.PlayState), skill);
+					}catch(Exception e2){
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo(Info.Skill, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
 			case "click_title_newgame":
 				{
 					model.NewGame ();
