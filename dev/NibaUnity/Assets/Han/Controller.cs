@@ -389,17 +389,25 @@ namespace Common
 			case "click_map_right":
 			case "click_map_up":
 				{
-					if (msg == "click_map_down") {
-						model.MoveDown ();
+					try{
+						if (msg == "click_map_down") {
+							model.MoveDown ();
+						}
+						if (msg == "click_map_left") {
+							model.MoveLeft ();
+						}
+						if (msg == "click_map_right") {
+							model.MoveRight ();
+						}
+						if (msg == "click_map_up") {
+							model.MoveUp ();
+						}
+					}catch(Exception e2){
+						e = e2;
 					}
-					if (msg == "click_map_left") {
-						model.MoveLeft ();
-					}
-					if (msg == "click_map_right") {
-						model.MoveRight ();
-					}
-					if (msg == "click_map_up") {
-						model.MoveUp ();
+					if (e != null) {
+						HandleException (e);
+						yield break;
 					}
 					yield return HandleAfterMove ();
 				}
@@ -436,8 +444,16 @@ namespace Common
 				{
 					var idx = int.Parse(msg.Replace ("click_map_work_", ""));
 					var selectWork = model.Works.ToList () [idx];
-					model.StartWork (selectWork);
-					model.ApplyWork ();
+					try{
+						model.StartWork (selectWork);
+						model.ApplyWork ();
+					}catch(Exception e2){
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 					yield return view.ShowInfo (Info.WorkResult, e2 => {
 						e = e2;
 					});
@@ -450,6 +466,10 @@ namespace Common
 					});
 					if (e != null) {
 						HandleException (e);
+						yield break;
+					}
+					if (model.GetMapPlayer (Place.Map).IsDied) {
+						view.Alert ("冒險者掛了");
 						yield break;
 					}
 					var missionOK = model.CheckMissionStatus ();

@@ -141,6 +141,21 @@ namespace Model
 			return m1Key;
 		}
 
+		public int WorkConsumpation(PlayerDataStore player, Description work){
+			return 2;
+		}
+
+		public int MoveConsumption(PlayerDataStore player, Position a, Position b){
+			if (a.Equals (b)) {
+				return 0;
+			}
+			var offset = b.Add (a.Negative);
+			if (Math.Abs (offset.x) > 1 || Math.Abs (offset.y) > 1) {
+				return int.MaxValue;
+			}
+			return 10;
+		}
+
 		public List<Item> Collect(PlayerDataStore player, int objKey){
 			var ret = new List<Item> ();
 			var obj = mapObjects [objKey];
@@ -221,7 +236,26 @@ namespace Model
 
 		public IEnumerable<Description> ProcessWork(PlayerDataStore player, Description work){
 			var ret = new List<Description>();
+			LabelProcessWork:
 			switch (work.description) {
+			case Description.WorkUseTurnSkill:
+				{
+					var skillId = work.values.Get ("skillId");
+					var skill = ConfigSkill.Get (skillId);
+					switch (skill.Effect) {
+					case "{0}+{1}":
+						player.playerInMap.hp += 20;
+						var des = Description.Empty;
+						des.description = Description.InfoUseSkill;
+						des.values = new NameValueCollection ();
+						des.values.Add ("skills", skill.Name);
+						ret.Add (des);
+						break;
+					default:
+						throw new Exception ("未處理的回合性招式:"+skill.ID);
+					}
+				}
+				break;
 			case Description.WorkCollectResource:
 				{
 					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
@@ -319,7 +353,7 @@ namespace Model
 							des.description = Description.InfoUseSkill;
 							des.values = new NameValueCollection ();
 							foreach (var s in triggered) {
-								des.values.Add ("skills", s.ID);
+								des.values.Add ("skills", s.Name);
 							}
 							ret.Add (des);
 						}
@@ -377,7 +411,7 @@ namespace Model
 							des.description = Description.InfoUseSkill;
 							des.values = new NameValueCollection ();
 							foreach (var s in triggered) {
-								des.values.Add ("skills", s.ID);
+								des.values.Add ("skills", s.Name);
 							}
 							ret.Add (des);
 						}
@@ -451,6 +485,7 @@ namespace Model
 						player.playerInMap.AddExp (ConfigAbility.ID_speed, 1);
 
 					} else {
+						var des = Description.Empty;
 
 						// === 技能加成 === //
 						var skills = Helper.AvailableSkills (player, Place.Map);
@@ -466,9 +501,30 @@ namespace Model
 							switch (onlyOneSkillCanTrigger.Effect) {
 							case "取消對方的攻擊，並對對方造成{1}倍普攻傷害.":
 								{
-									// TODO
+									var counterDamage = playerAbility.Damage (monsterAbility);
+									monsterInf.hp -= counterDamage;
+									if (monsterInf.IsDied) {
+										mapObject.died = true;
+									}
+									mapObjects [mapObjectId] = mapObject;
+									monsterInfo [mapObject.infoKey] = monsterInf;
+
+									des = Description.Empty;
+									des.description = Description.InfoUseSkill;
+									des.values = new NameValueCollection ();
+									des.values.Add ("skills", onlyOneSkillCanTrigger.Name);
+									ret.Add (des);
 								}
-								break;
+								goto LabelProcessWork;
+							case "取消對方的攻擊.":
+								{
+									des = Description.Empty;
+									des.description = Description.InfoUseSkill;
+									des.values = new NameValueCollection ();
+									des.values.Add ("skills", onlyOneSkillCanTrigger.Name);
+									ret.Add (des);
+								}
+								goto LabelProcessWork;
 							}
 						}
 
@@ -485,7 +541,6 @@ namespace Model
 						// 套用
 						monsterInfo [mapObject.infoKey] = monsterInf;
 
-						var des = Description.Empty;
 						des.description = Description.InfoMonsterAttack;
 						des.values = new NameValueCollection ();
 						des.values.Set ("mapObjectId", mapObjectId + "");
@@ -493,14 +548,16 @@ namespace Model
 						des.values.Set ("isCriHit", isCriHit ? "1": "0");
 						ret.Add (des);
 
-						// 增加防具經驗
-						foreach (var item in player.playerInMap.weapons) {
-							var cfg = ConfigItem.Get (item.prototype);
-							if (cfg.Position == ConfigWeaponPosition.ID_hand) {
-								continue;
-							}
-							if (cfg.SkillType != null) {
-								player.playerInMap.AddExp (cfg.SkillType, 1);
+						if (player.playerInMap.IsDied == false) {
+							// 增加防具經驗
+							foreach (var item in player.playerInMap.weapons) {
+								var cfg = ConfigItem.Get (item.prototype);
+								if (cfg.Position == ConfigWeaponPosition.ID_hand) {
+									continue;
+								}
+								if (cfg.SkillType != null) {
+									player.playerInMap.AddExp (cfg.SkillType, 1);
+								}
 							}
 						}
 					}
@@ -635,11 +692,17 @@ namespace Model
 		}
 		#endregion
 
-
 		#region works
 		public void StartWork(PlayerDataStore player, Description work){
+			if (player.playerInMap.IsDied) {
+				throw new Exception ("冒險掛點，無法工作");
+			}
 			if (player.playerInMap.IsWorking) {
 				throw new MessageException ("目前有工作在身:"+work.description);
+			}
+			var consumpation = WorkConsumpation (player, work);
+			if (player.playerInMap.hp <= consumpation) {
+				throw new Exception ("體力不足，無法工作");
 			}
 			player.playerInMap.currentWork = work;
 			player.playerInMap.workFinishedTime = DateTime.Now.Add (TimeSpan.FromSeconds (5)).Ticks;
@@ -654,23 +717,39 @@ namespace Model
 		}
 
 		public IEnumerable<Description> ApplyWork(PlayerDataStore player){
+			if (player.playerInMap.IsDied) {
+				throw new Exception ("冒險掛點，無法工作");
+			}
 			if (player.playerInMap.IsWorking == false) {
 				throw new MessageException ("沒有工作，不能應用");
 			}
 			player.playerInMap.ClearWork ();
 			// 回合性招式
-			var turnSkills = Helper.AvailableSkills (player, Place.Map).Where(s=>s.Condition == ConfigConditionType.ID_turn);
-			// TODO 轉換成使用招式的work
+			var turnSkills = 
+				Helper.AvailableSkills (player, Place.Map)
+					.Where(s=>s.Condition == ConfigConditionType.ID_turn)
+					.Select(MakeTurnSkillWork)
+					.Select(w=>MakeInteraction(player,w));
 			var work = player.playerInMap.currentWork;
-			//return ProcessWork (player, work);
 			// 將工作轉為互動
 			var interaction = MakeInteraction (player, work);
 			// 取得場景互動
 			var envirInteraction = GetInteraction (player);
 			// 匯總所有互動
-			var allInter = envirInteraction.Concat (Enumerable.Repeat (interaction, 1));
+			var allInter = envirInteraction.Concat (Enumerable.Repeat (interaction, 1)).Concat(turnSkills);
 			// 依優先權處理互動
-			return ApplyInteraction (player, allInter);
+			var ret = ApplyInteraction (player, allInter);
+			// 減體力, 這裡可能導致冒險者死亡
+			var consumpation = WorkConsumpation (player, work);
+			player.AddPlayerHp (this, -consumpation);
+			return ret;
+		}
+
+		static Description MakeTurnSkillWork(ConfigSkill skill){
+			var des = Description.Empty;
+			des.description = Description.WorkUseTurnSkill;
+			des.values.Set ("skillId", skill.ID);
+			return des;
 		}
 
 		public IEnumerable<Description> GetWorks(PlayerDataStore player){
@@ -733,6 +812,20 @@ namespace Model
 			throw new Exception ("xxx:"+place.ToString());
 		}
 
+		public void AddPlayerHp(MapDataStore map, int v){
+			var basic = BasicAbility.Zero;
+			var fight = FightAbility.Zero;
+			Helper.CalcAbility (this, map, Place.Map, ref basic, ref fight);
+			var maxHp = (int)fight.hp;
+			playerInMap.hp += v;
+			if (playerInMap.hp >= maxHp) {
+				playerInMap.hp = maxHp;
+			}
+			if (playerInMap.hp < 0) {
+				playerInMap.hp = 0;
+			}
+		}
+
 		#region skill
 		public void EquipSkill (Place who, string skillId){
 			switch (who) {
@@ -764,90 +857,6 @@ namespace Model
 		#endregion
 
 		#region weapon
-		/*
-		public string IsCanEquip(Item item, MapPlayer who, MapPlayer whosStorage){
-			if (who.Equals (MapPlayer.UnknowPlayer)) {
-				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
-			}
-			var cfg = ConfigItem.Get (item.prototype);
-			if (cfg.Type != ConfigItemType.ID_weapon) {
-				return "只能裝備weapon類型，請檢查程式";
-			}
-			var weaponPosition = cfg.Position;
-			var maxCount = ConfigWeaponPosition.Get (weaponPosition).SlotCount;
-			Func<List<Item>, List<Item>, string> canEquip = (weapons, items) => {
-				var haveCount = items.Count(i=>{
-					return i.Equals(item);
-				});
-				if(haveCount <1){
-					return "沒有那個道具:"+item;
-				}
-				var alreadyEquipCount = weapons.Count(i=>{
-					return ConfigItem.Get (i.prototype).Position == weaponPosition;
-				});
-				if(alreadyEquipCount >= maxCount){
-					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+who;
-				}
-				return null;
-			};
-			var useStorage = 
-				whosStorage.Equals (player) ? player.storage :
-				whosStorage.Equals (playerInMap) ? playerInMap.storage :
-				storage;
-			var useWeapon = 
-				who.Equals (player) ? player.weapons :
-				playerInMap.weapons;
-			return canEquip (useWeapon, useStorage);
-		}
-
-		public void EquipWeapon(Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
-			var err = IsCanEquip (item, whosWeapon, whosStorage);
-			if (err != null) {
-				throw new Exception("無法裝備，請檢查:"+err);
-			}
-			if (whosStorage.Equals (player)) {
-				player.storage.Remove (item);
-			} else if (whosStorage.Equals (playerInMap)) {
-				playerInMap.storage.Remove (item);
-			} else {
-				storage.Remove (item);
-			}
-
-			if (whosWeapon.Equals (player)) {
-				player.weapons.Add (item);
-			} else if (whosWeapon.Equals (playerInMap)) {
-				playerInMap.weapons.Add (item);
-			} else {
-				throw new Exception ("無法裝備在UnknowPlayer");
-			}
-		}
-
-		public void UnequipWeapon(Item item, MapPlayer whosWeapon, MapPlayer whosStorage){
-			if (whosWeapon.Equals (player)) {
-				var isCanUnequip = player.weapons.IndexOf (item) != -1;
-				if (isCanUnequip == false) {
-					throw new Exception ("無法拆掉：沒有那個裝備");
-				}
-				player.weapons.Remove (item);
-			} else if (whosWeapon.Equals (playerInMap)) {
-				var isCanUnequip = playerInMap.weapons.IndexOf (item) != -1;
-				if (isCanUnequip == false) {
-					throw new Exception ("無法拆掉：沒有那個裝備");
-				}
-				playerInMap.weapons.Remove (item);
-			} else {
-				throw new Exception ("無法拆掉裝備在unknow");
-			}
-			if (whosStorage.Equals (player)) {
-				player.storage.Add (item);
-			} else if (whosStorage.Equals (playerInMap)) {
-				playerInMap.storage.Add (item);
-			} else {
-				storage.Add (item);
-			}
-		}
-		*/
-
 		public string IsCanEquip(Item item, Place who, Place whosStorage){
 			if (who == Place.Home) {
 				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
@@ -936,8 +945,44 @@ namespace Model
 			playerInMap.position.x = 5;
 			playerInMap.position.y = 3;
 		}
-		public void MovePlayerTo(Position pos){
-			playerInMap.position = pos;
+		public MoveResult Move(MapDataStore mapData, Position offset, ref bool mapDirtyFlag, ref bool playerDirtyFlag){
+			if (playerInMap.IsDied) {
+				throw new Exception ("冒險者掛點，無法移動");
+			}
+			if (playState != PlayState.Play) {
+				throw new Exception ("這時必須是Play狀態，請檢查程式:"+playState.ToString());
+			}
+			var originPos = playerInMap.position;
+			var newPos = originPos.Add (offset);
+			var moveConsumpation = mapData.MoveConsumption (this, originPos, newPos);
+			if (playerInMap.hp - moveConsumpation < 0) {
+				throw new Exception ("體力不足，無法移動:"+playerInMap.hp);
+			}
+			MoveResult rs = MoveResult.Empty;
+			var isPositionDirty = newPos.Equals (playerInMap.position) == false;
+			// 移動位置
+			playerInMap.position = newPos;
+			// 新增視野
+			var isMapDirty = VisitPosition (playerInMap.position, 3);
+			// 產生事件
+			var events = mapData.GenEvent (this, newPos);
+			if (isMapDirty) {
+				// 生成新地圖
+				mapData.GenMapWithPlayerVisible (this);
+			}
+			if (isPositionDirty) {
+				// 增加移動經驗
+				playerInMap.AddExp (ConfigAbility.ID_move, 1);
+				// 體力減少
+				playerInMap.hp -= moveConsumpation;
+			}
+			// 準備回傳物件
+			rs.isMoveSuccess = isPositionDirty;
+			rs.events = events.ToList();
+
+			mapDirtyFlag = isMapDirty;
+			playerDirtyFlag = isPositionDirty;
+			return rs;
 		}
 		#endregion
 
@@ -1070,15 +1115,18 @@ namespace Model
 		public void ClearPlayState(){
 			playState = PlayState.Home;
 		}
-		public void CopyItemAndEnterMap(){
+		public void EnterMap(MapDataStore map){
 			if (playState != PlayState.Home) {
 				throw new Exception ("這時必須是Home狀態，請檢查程式:"+playState.ToString());
 			}
+			// 轉移道具
 			playerInMap.GetData (player);
+			// 回滿體力
+			AddPlayerHp (map, 99999999);
 			playState = PlayState.Play;
 		}
 
-		public void CopyItemAndExitMap(){
+		public void ExitMap(){
 			player.GetData (playerInMap);
 			playState = PlayState.Home;
 		}
@@ -1326,6 +1374,26 @@ namespace Model
 		/// <param name="player">Player.</param>
 		/// <param name="who">Who.</param>
 		public static IEnumerable<ConfigSkill> AvailableSkills(PlayerDataStore player, Place who_){
+			var who = player.GetMapPlayer (who_);
+			// 先取得欄位上的招式
+			var slotSkills = who.skills.Select (ConfigSkill.Get);
+			var handWeapons = who.weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
+			var hasHandWeapons = handWeapons.Count () > 0;
+			if (hasHandWeapons == false) {
+				return slotSkills;
+			}
+			// 再取得武器本身的招式
+			var skills = Enumerable
+				.Range(0, ConfigSkill.ID_COUNT)
+				.Select(ConfigSkill.Get);
+			var weaponSkills = handWeapons.SelectMany (w => {
+				return skills.Where(s=>{
+					return s.SlotCount == 0 && s.SkillTypeRequire.Contains(w.SkillType);
+				});
+			}).Distinct();
+			return slotSkills.Concat (weaponSkills);
+
+			/*
 			var skills = Enumerable
 				.Range(0, ConfigSkill.ID_COUNT)
 				.Select(ConfigSkill.Get);
@@ -1343,25 +1411,6 @@ namespace Model
 					if(who.Exp(skillType) < skillLevel){
 						return false;
 					}
-					/*
-					switch(skillType){
-					case ConfigSkillType.ID_karate:
-						{
-							if(who.skillExp.karate < skillLevel){
-								return false;
-							}
-						}
-						break;
-					case ConfigSkillType.ID_fencingArt:
-						{
-							if(who.skillExp.fencingArt < skillLevel){
-								return false;
-							}
-						}
-						break;
-					default:
-						throw new NotImplementedException("未判斷的招式類型:"+skillType);
-					}*/
 				}
 				// 判斷這個技能是不是需要武器
 				var isNeedWeapon = cfg.SlotCount == 0;
@@ -1385,6 +1434,7 @@ namespace Model
 				}
 				return true;
 			});
+			*/
 		}
 		/// <summary>
 		/// 計算基礎能力和戰鬥能力

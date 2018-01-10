@@ -98,8 +98,7 @@ namespace View
 						callback (new Exception ("你沒有加入MenuMap Component"));
 						yield break;
 					}
-					yield return map.UpdateMap (model);
-					yield return map.UpdateWork (model);
+					map.UpdateUI (model);
 					callback (null);
 				}
 				break;
@@ -110,7 +109,7 @@ namespace View
 						callback (new Exception ("你沒有加入MenuMap Component"));
 						yield break;
 					}
-					yield return map.UpdateWork (model);
+					map.UpdateWork (model);
 					callback (null);
 				}
 				break;

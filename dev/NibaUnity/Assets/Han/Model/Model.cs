@@ -72,12 +72,12 @@ namespace Model
 			// 自動生成視野內的地圖
 			mapData.GenMapWithPlayerVisible (playerData);
 			// 進入地圖
-			playerData.CopyItemAndEnterMap ();
+			playerData.EnterMap (mapData);
 			RequestSavePlayer ();
 			RequestSaveMap ();
 		}
 		public void ExitMap (){
-			playerData.CopyItemAndExitMap ();
+			playerData.ExitMap ();
 			RequestSavePlayer ();
 		}
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
@@ -262,17 +262,38 @@ namespace Model
 			}
 		}
 
-		void Move(Position position){
+		void Move(Position offset){
+			if (hasMoveResult) {
+				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
+			}
+			var isPositionDirty = false;
+			var isMapDirty = false;
+			tempMoveResult = playerData.Move (mapData, offset, ref isMapDirty, ref isPositionDirty);
+			hasMoveResult = true;
+			// 有更動就儲存
+			if (isPositionDirty) {
+				RequestSavePlayer ();
+			}
+			if (isMapDirty) {
+				RequestSaveMap ();
+			}
+			/*
+			if (playerData.playerInMap.IsDied) {
+				throw new Exception ("冒險者掛點，無法移動");
+			}
 			if (playerData.playState != PlayState.Play) {
 				throw new Exception ("這時必須是Play狀態，請檢查程式:"+playerData.playState.ToString());
 			}
 			if (hasMoveResult) {
 				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
 			}
+			var originPos = playerData.playerInMap.position;
+			var newPos = originPos.Add (position);
+			var moveConsumpation = mapData.MoveConsumption (playerData, originPos, newPos);
+			if (playerData.playerInMap.hp - moveConsumpation < 0) {
+				throw new Exception ("體力不足，無法移動:"+playerData.playerInMap.hp);
+			}
 			MoveResult rs = MoveResult.Empty;
-			var newPos = playerData.playerInMap.position;
-			newPos.x += position.x;
-			newPos.y += position.y;
 			//newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
 			var isPositionDirty = newPos.Equals (playerData.playerInMap.position) == false;
 			// 移動位置
@@ -288,6 +309,8 @@ namespace Model
 			if (isPositionDirty) {
 				// 增加移動經驗
 				playerData.playerInMap.AddExp (ConfigAbility.ID_move, 1);
+				// 體力減少
+				playerData.playerInMap.hp -= moveConsumpation;
 			}
 			// 準備回傳物件
 			rs.isMoveSuccess = isPositionDirty;
@@ -301,6 +324,7 @@ namespace Model
 			if (isMapDirty) {
 				RequestSaveMap ();
 			}
+			*/
 		}
 
 		#region persistent

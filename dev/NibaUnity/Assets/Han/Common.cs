@@ -21,6 +21,11 @@ namespace Common
 		public Position Add(Position b){
 			return Add (b.x, b.y);
 		}
+		public Position Negative{
+			get{
+				return Zero.Add (-x, -y);
+			}
+		}
 		public Position Max(int x, int y){
 			var ret = this;
 			ret.x = Math.Max (x, this.x);
@@ -170,6 +175,11 @@ namespace Common
 		public Position position;
 		public BasicAbility basicAbility;
 		public int hp, mp;
+		public bool IsDied {
+			get {
+				return hp <= 0;
+			}
+		}
 		public List<Item> storage;
 		// === work === //
  		public Description currentWork;
@@ -279,8 +289,6 @@ namespace Common
 		public void GetData(MapPlayer other){
 			basicAbility = other.basicAbility;
 			exps = new List<AbstractItem> (other.exps);
-			hp = other.hp;
-			mp = other.mp;
 			storage = new List<Item> (other.storage);
 			weapons = new List<Item> (other.weapons);
 			skills = new List<string> (other.skills);
@@ -295,6 +303,7 @@ namespace Common
 
 	public struct Description{
 		public const string WorkAttack = "[work]attack {mapObjectId}";
+		public const string WorkUseTurnSkill = "[work]use turn skill {skillId}";
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";

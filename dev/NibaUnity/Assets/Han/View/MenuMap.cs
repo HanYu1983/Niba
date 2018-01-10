@@ -12,13 +12,11 @@ namespace View
 		public GameObject gridLayout;
 		public GameObject playerLayout;
 		public GameObject[] workBtns;
+		public Text txtInfo;
 
-		public GameObject[] grids;
+		GameObject[] grids;
 
-		void InitGridOnce(){
-			if (grids.Length == 100) {
-				return;
-			}
+		void Awake(){
 			grids = new GameObject[100];
 			var gridParent = gridLayout.transform.parent;
 			for (var i = 0; i<grids.Length; ++i) {
@@ -28,7 +26,19 @@ namespace View
 			}
 		}
 
-		public IEnumerator UpdateWork(IModelGetter model){
+		public void UpdateUI(IModelGetter model){
+			UpdateInfo (model);
+			UpdateWork (model);
+			UpdateMap (model);
+		}
+
+		public void UpdateInfo(IModelGetter model){
+			var player = model.GetMapPlayer (Place.Map);
+			var fight = model.PlayerFightAbility (Place.Map);
+			txtInfo.text = string.Format ("hp:{0}/{1}", player.hp, (int)fight.hp);
+		}
+
+		public void UpdateWork(IModelGetter model){
 			foreach (var btn in workBtns) {
 				btn.SetActive (false);
 			}
@@ -67,13 +77,10 @@ namespace View
 				btn.GetComponentInChildren<Text> ().text = msg;
 				btn.SetActive (true);
 			}
-			yield return null;
 		}
 
-		public IEnumerator UpdateMap(IModelGetter model){
-			InitGridOnce ();
+		public void UpdateMap(IModelGetter model){
 			SetTileWithPlayerPositionCenterExpend (model);
-			yield return null;
 		}
 
 		void SetTileWithPlayerPositionCenterExpend(IModelGetter model){
