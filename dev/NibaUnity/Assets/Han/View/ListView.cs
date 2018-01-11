@@ -23,7 +23,7 @@ namespace View
 		public Button btnPageUp, btnPageDown;
 		public string CommandPrefix{ get { return commandPrefix; } }
 
-		Button[] items;
+		public Button[] items;
 		void PrepareButtonsAndEvents(){
 			items = itemParent.GetComponentsInChildren<Button> ();
 			for(var i=0; i<items.Length; ++i){

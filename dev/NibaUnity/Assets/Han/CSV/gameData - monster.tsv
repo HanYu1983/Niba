@@ -1,4 +1,4 @@
-id	name	description	item	str	vit	spd	dex	int	luck	char
+id	name	description	item	str	vit	spd	dex	int	luck	characteristic
 ant	螞蟻			1	1	1	1	1	1	fly
 bird	小鳥		feather_10	2	1	3	3	1	1	
 snack	蛇			3	3	3	3	1	1	

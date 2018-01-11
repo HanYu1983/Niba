@@ -17,6 +17,7 @@ namespace View
 		public Popup fusionPopup;
 		public Popup missionPopup;
 		public Popup skillPopup;
+		public Popup selectSkillPopup;
 
 		IModelGetter model;
 		public IModelGetter ModelGetter{ set{ model = value; } }
@@ -44,6 +45,28 @@ namespace View
 			}
 			yield return null;
 		}
+
+		public IEnumerator ShowInfo(Info info, object args, Action<Exception> callback){
+			switch (info) {
+			case Info.SelectSkill:
+				{
+					var popup = selectSkillPopup.GetComponent<SelectSkillPopup> ();
+					if (popup == null) {
+						throw new Exception ("你沒有加入SelectSkillPopup Component");
+					}
+					selectSkillPopup.ChangeVisibility (true);
+					var d = (Description)args;
+					popup.Work = d;
+					popup.UpdateUI (model);
+					callback (null);
+				}
+				break;
+			default:
+				yield return ShowInfo (info, callback);
+				break;
+			}
+		}
+
 		public IEnumerator ShowInfo(Info info, Action<Exception> callback){
 			switch (info) {
 			case Info.Skill:
@@ -292,6 +315,11 @@ namespace View
 					yield return CloseMsgPopup ();
 				}
 				break;
+			case Info.SelectSkill:
+				{
+					selectSkillPopup.ChangeVisibility (false);
+				}
+				break;
 			case Info.Skill:
 				{
 					skillPopup.ChangeVisibility (false);
@@ -343,6 +371,10 @@ namespace View
 					menuHome.GetComponent<MenuHome> ().UpdateUI (model, Place.Pocket);
 				}
 				break;
+			case "click_selectSkillPopup":
+				yield return HideInfo (Info.SelectSkill);
+				callback (null);
+				break;
 			case "click_skillPopup_close":
 				yield return HideInfo (Info.Skill);
 				callback (null);
@@ -368,10 +400,19 @@ namespace View
 				break;
 			default:
 				{
+					if (msg.Contains ("click_selectSkillPopup")) {
+						var popup = selectSkillPopup.GetComponent<SelectSkillPopup> ();
+						if (popup == null) {
+							callback (new Exception ("SelectSkillPopup is null"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
+
 					if (msg.Contains ("click_itemPopup")) {
 						var popup = itemPopup.GetComponent<ItemPopup2> ();
 						if (popup == null) {
-							callback (new Exception ("xxxx"));
+							callback (new Exception ("ItemPopup2 is null"));
 							yield break;
 						}
 						yield return popup.HandleCommand (model, msg, args, callback);
@@ -380,7 +421,7 @@ namespace View
 					if (msg.Contains ("click_fusionPopup")) {
 						var popup = fusionPopup.GetComponent<FusionPopup> ();
 						if (popup == null) {
-							callback (new Exception ("xxxx"));
+							callback (new Exception ("FusionPopup is null"));
 							yield break;
 						}
 						yield return popup.HandleCommand (model, msg, args, callback);
@@ -389,7 +430,7 @@ namespace View
 					if (msg.Contains ("click_missionPopup")) {
 						var popup = missionPopup.GetComponent<MissionPopup> ();
 						if (popup == null) {
-							callback (new Exception ("xxxx"));
+							callback (new Exception ("MissionPopup is null"));
 							yield break;
 						}
 						yield return popup.HandleCommand (model, msg, args, callback);
@@ -398,7 +439,7 @@ namespace View
 					if (msg.Contains ("click_skillPopup")) {
 						var popup = skillPopup.GetComponent<SkillPopup> ();
 						if (popup == null) {
-							callback (new Exception ("xxxx"));
+							callback (new Exception ("SkillPopup is null"));
 							yield break;
 						}
 						yield return popup.HandleCommand (model, msg, args, callback);

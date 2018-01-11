@@ -98,9 +98,35 @@ namespace Common
 	}
 
 	[Serializable]
+	public struct Buf{
+		public int turn;
+		public string skillId;
+		public IEnumerable<ItemEffect> Effects {
+			get {
+				var ret = new List<ItemEffect> ();
+				var skill = ConfigSkill.Get (skillId);
+				switch (skill.ID) {
+				case ConfigSkill.ID_bokyoryokuhakai:
+					ret.Add (new ItemEffect () {
+						value = "def*0.7"
+					});
+					break;
+				}
+				return ret;
+			}
+		}
+	}
+
+	[Serializable]
 	public struct MonsterInfo {
 		public string type;
 		public int hp, mp;
+		public BasicAbility basicAbility;
+		public List<Buf> bufs;
+		public void AddBuf(Buf buf){
+			bufs.Add (buf);
+		}
+
 		public bool IsDied{ get { return hp <= 0; } }
 		/// <summary>
 		/// 勇氣值-0.5~0.5
@@ -304,6 +330,8 @@ namespace Common
 	public struct Description{
 		public const string WorkAttack = "[work]attack {mapObjectId}";
 		public const string WorkUseTurnSkill = "[work]use turn skill {skillId}";
+		public const string WorkSelectSkillForEnemy = "[work]select {skillId} in {skillIds} for {mapObjectId}";
+		public const string WorkUseSkillForEnemyAll = "[work]use {skillId} for {mapObjectIds}";
 		public const string WorkCollectResource = "[work]collect resource {mapObjectId}";
 		public const string EventLucklyFind = "[event]luckly find {itemPrototype} {count}";
 		public const string EventMonsterAttackYou = "[event]{mapObjectId} attack you";
@@ -932,7 +960,7 @@ namespace Common
 
 	public enum Info{
 		Unknown, 
-		Event, Work, WorkResult, Map, Ability, Item, Fusion, Mission, Skill,
+		Event, Work, WorkResult, Map, Ability, Item, Fusion, Mission, Skill, SelectSkill, 
 		FusionInHome, ItemInHome, Npc,
 		ItemInHomePocket
 	}
@@ -957,6 +985,7 @@ namespace Common
 		/// <param name="callback">Callback.</param>
 		IEnumerator ChangePage(Page page, Action<Exception> callback);
 		IEnumerator ShowInfo(Info page, Action<Exception> callback);
+		IEnumerator ShowInfo(Info page, object args, Action<Exception> callback);
 		IEnumerator HideInfo(Info page);
 		void Alert (string msg);
 		IEnumerator HandleCommand(string msg, object args, Action<Exception> callback);

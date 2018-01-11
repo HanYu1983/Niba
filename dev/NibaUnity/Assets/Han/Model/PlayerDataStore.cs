@@ -73,7 +73,7 @@ namespace Model
 					}
 					// gen monster after assign item
 					if (UnityEngine.Random.Range (0, 100) < 25) {
-						GenMonster (player, pos, ConfigMonster.ID_bear);
+						GenMonster (player, pos, ConfigMonster.ID_snack);
 					}
 				} else {
 					// ignore
@@ -134,9 +134,12 @@ namespace Model
 
 			var m1Info = monsterInfo [m1Object.infoKey];
 			m1Info.type = monsterType;
-			var ability = BasicAbility.Get (m1Info).FightAbility;
-			m1Info.hp = (int)ability.hp;
-			m1Info.mp = (int)ability.mp;
+			var basic = BasicAbility.Get (m1Info);
+			var fight = basic.FightAbility;
+			m1Info.hp = (int)fight.hp;
+			m1Info.mp = (int)fight.mp;
+			m1Info.basicAbility = basic;
+			m1Info.bufs = new List<Buf> ();
 			monsterInfo [m1Object.infoKey] = m1Info;
 			return m1Key;
 		}
@@ -238,6 +241,32 @@ namespace Model
 			var ret = new List<Description>();
 			LabelProcessWork:
 			switch (work.description) {
+			case Description.WorkSelectSkillForEnemy:
+				{
+					var skillId = work.values.Get ("skillId");
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					// 怪物逃走了
+					/*if (monsterInf.IsDied) {
+						Debug.LogWarning ("怪物已逃走");
+						break;
+					}*/
+					var skill = ConfigSkill.Get (skillId);
+					switch (skill.ID) {
+					case ConfigSkill.ID_bokyoryokuhakai:
+						monsterInf.AddBuf (Helper.GetBuf(skill));
+						monsterInfo [mapObject.infoKey] = monsterInf;
+						break;
+					}
+
+					var des = Description.Empty;
+					des.description = Description.InfoUseSkill;
+					des.values = new NameValueCollection ();
+					des.values.Add ("skills", skill.ID);
+					ret.Add (des);
+				}
+				break;
 			case Description.WorkUseTurnSkill:
 				{
 					var skillId = work.values.Get ("skillId");
@@ -248,7 +277,7 @@ namespace Model
 						var des = Description.Empty;
 						des.description = Description.InfoUseSkill;
 						des.values = new NameValueCollection ();
-						des.values.Add ("skills", skill.Name);
+						des.values.Add ("skills", skill.ID);
 						ret.Add (des);
 						break;
 					default:
@@ -302,7 +331,7 @@ namespace Model
 					}
 					// === 計算傷害 === //
 					var monsterCfg = ConfigMonster.Get(monsterInf.type);
-					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
+					var monsterAbility = Helper.CalcMonsterAbility (player, this, mapObjectId).FightAbility;
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
@@ -353,7 +382,7 @@ namespace Model
 							des.description = Description.InfoUseSkill;
 							des.values = new NameValueCollection ();
 							foreach (var s in triggered) {
-								des.values.Add ("skills", s.Name);
+								des.values.Add ("skills", s.ID);
 							}
 							ret.Add (des);
 						}
@@ -411,7 +440,7 @@ namespace Model
 							des.description = Description.InfoUseSkill;
 							des.values = new NameValueCollection ();
 							foreach (var s in triggered) {
-								des.values.Add ("skills", s.Name);
+								des.values.Add ("skills", s.ID);
 							}
 							ret.Add (des);
 						}
@@ -459,8 +488,8 @@ namespace Model
 					var mapObject = mapObjects [mapObjectId];
 					var monsterInf = monsterInfo[mapObject.infoKey];
 
-					var monsterCfg = ConfigMonster.Get(monsterInf.type);
-					var monsterAbility = BasicAbility.Get(monsterCfg).FightAbility;
+					//var monsterCfg = ConfigMonster.Get(monsterInf.type);
+					var monsterAbility = Helper.CalcMonsterAbility (player, this, mapObjectId).FightAbility;
 					var playerBasic = BasicAbility.Zero;
 					var playerAbility = FightAbility.Zero;
 					// 先計算非針對怪物的能力
@@ -512,7 +541,7 @@ namespace Model
 									des = Description.Empty;
 									des.description = Description.InfoUseSkill;
 									des.values = new NameValueCollection ();
-									des.values.Add ("skills", onlyOneSkillCanTrigger.Name);
+									des.values.Add ("skills", onlyOneSkillCanTrigger.ID);
 									ret.Add (des);
 								}
 								goto LabelProcessWork;
@@ -521,7 +550,7 @@ namespace Model
 									des = Description.Empty;
 									des.description = Description.InfoUseSkill;
 									des.values = new NameValueCollection ();
-									des.values.Add ("skills", onlyOneSkillCanTrigger.Name);
+									des.values.Add ("skills", onlyOneSkillCanTrigger.ID);
 									ret.Add (des);
 								}
 								goto LabelProcessWork;
@@ -753,7 +782,7 @@ namespace Model
 		}
 
 		public IEnumerable<Description> GetWorks(PlayerDataStore player){
-			return FindObjects (player.playerInMap.position).Aggregate (
+			var works = FindObjects (player.playerInMap.position).Aggregate (
 				new List<Description> (),
 				(actions, currItem) => {
 					switch(currItem.type){
@@ -779,6 +808,77 @@ namespace Model
 					return actions;
 				}
 			);
+			var monsters = FindObjects (player.playerInMap.position).Where (i => i.type == MapObjectType.Monster);
+			var hasMonster = monsters.Count () > 0;
+			// 這格沒怪物就直接回傳
+			if (hasMonster == false) {
+				return works;
+			}
+			// 判斷有沒有單體招式
+			var oneEnemySkills = Helper.AvailableSkills (player, Place.Map)
+				.Where (s => s.Condition == ConfigConditionType.ID_menu)
+				.Where (s => s.Characteristic != null)
+				.Where (s => s.Characteristic.Contains (ConfigCharacteristic.ID_enemy));
+			var hasOneEnemySkill = oneEnemySkills.Count () > 0;
+			if (hasOneEnemySkill) {
+				var skillWorks = monsters.Select (m => {
+					var monInfo = monsterInfo[m.infoKey];
+					var monCfg = ConfigMonster.Get(monInfo.type);
+					var canUseSkill = oneEnemySkills.Where(s=>{
+						// 由怪物特徵來算，這樣剛好能忽略ID_enemy特徵的比對
+						var charItem = Common.Common.ParseAbstractItem(monCfg.Characteristic);
+						// 技能特徵必須包含所有怪物特徵
+						foreach(var ci in charItem){
+							if(s.Characteristic.Contains(ci.prototype) == false){
+								return false;
+							}
+						}
+						return true;
+					});
+					var d = Description.Empty;
+					d.description = Description.WorkSelectSkillForEnemy;
+					d.values = new NameValueCollection();
+					foreach(var sid in canUseSkill.Select(s=>s.ID)){
+						d.values.Add("skillIds", sid);
+					}
+					d.values.Set("mapObjectId", m.key+"");
+					return d;
+				});
+				works.AddRange (skillWorks);
+			}
+			// 判斷有沒有全體招式
+			var allEnemySkills = Helper.AvailableSkills (player, Place.Map)
+				.Where (s => s.Condition == ConfigConditionType.ID_menu)
+				.Where (s => s.Characteristic != null)
+				.Where (s => s.Characteristic.Contains (ConfigCharacteristic.ID_enemyAll));
+			var hasAllEnemySkill = allEnemySkills.Count () > 0;
+			if (hasAllEnemySkill) {
+				var skillWorks = allEnemySkills.Select (s => {
+					var canTarget = monsters.Where (m => {
+						var monInfo = monsterInfo [m.infoKey];
+						var monCfg = ConfigMonster.Get (monInfo.type);
+						// 由怪物特徵來算，這樣剛好能忽略ID_enemy特徵的比對
+						var charItem = Common.Common.ParseAbstractItem (monCfg.Characteristic);
+						// 技能特徵必須包含所有怪物特徵
+						foreach (var ci in charItem) {
+							if (s.Characteristic.Contains (ci.prototype) == false) {
+								return false;
+							}
+						}
+						return true;
+					});
+					var d = Description.Empty;
+					d.description = Description.WorkUseSkillForEnemyAll;
+					d.values = new NameValueCollection();
+					foreach(var m in canTarget){
+						d.values.Add("mapObjectIds", m.key+"");
+					}
+					d.values.Set("skillId", s.ID+"");
+					return d;
+				});
+				works.AddRange (skillWorks);
+			}
+			return works;
 		}
 		#endregion
 
@@ -1322,7 +1422,22 @@ namespace Model
 	}
 
 	public class Helper{
+		public static Buf GetBuf(ConfigSkill skill){
+			switch (skill.ID) {
+			case ConfigSkill.ID_bokyoryokuhakai:
+				return new Buf(){
+					skillId = skill.ID,
+					turn = 3
+				};
+			default:
+				throw new Exception ("這招沒buf:"+skill.ID);
+			}
+		}
+
 		public static MonsterThinking MonsterThink(MapDataStore map, PlayerDataStore player, int monsterId){
+			if (true) {
+				return MonsterThinking.AttackYou;
+			}
 			var objInfo = map.mapObjects [monsterId];
 			var monsterInfo = map.monsterInfo [objInfo.infoKey];
 			//var cfg = ConfigMonster.Get (monsterInfo.type);
@@ -1377,12 +1492,12 @@ namespace Model
 			var who = player.GetMapPlayer (who_);
 			// 先取得欄位上的招式
 			var slotSkills = who.skills.Select (ConfigSkill.Get);
+			// 再取得武器本身的招式
 			var handWeapons = who.weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
 			var hasHandWeapons = handWeapons.Count () > 0;
 			if (hasHandWeapons == false) {
 				return slotSkills;
 			}
-			// 再取得武器本身的招式
 			var skills = Enumerable
 				.Range(0, ConfigSkill.ID_COUNT)
 				.Select(ConfigSkill.Get);
@@ -1498,6 +1613,25 @@ namespace Model
 			});
 			basic = tmpBasic;
 			fight = tmpFight;
+		}
+
+		public static BasicAbility CalcMonsterAbility(PlayerDataStore player, MapDataStore map, int mapObjectId){
+			var mapObject = map.mapObjects [mapObjectId];
+			var monsterInfo = map.monsterInfo [mapObject.infoKey];
+			var tmpBasic = monsterInfo.basicAbility;
+			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
+			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
+			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
+			// 先處理基本能力
+			// 先加減
+			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
+				return curr.Effect(accu);
+			});
+			// 後乘除
+			tmpBasic = multiEffect.Aggregate (tmpBasic, (accu, curr) => {
+				return curr.Effect(accu);
+			});
+			return tmpBasic;
 		}
 		/// <summary>
 		/// 計算普攻傷害

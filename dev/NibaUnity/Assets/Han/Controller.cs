@@ -58,6 +58,44 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "selectSkillPopup_selectSkill":
+				{
+					var work = (Description)args;
+					yield return view.HideInfo (Info.SelectSkill);
+					try {
+						model.StartWork (work);
+						model.ApplyWork ();
+					} catch (Exception e2) {
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo (Info.WorkResult, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo (Info.Map, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					if (model.GetMapPlayer (Place.Map).IsDied) {
+						view.Alert ("冒險者掛了");
+						yield break;
+					}
+					var missionOK = model.CheckMissionStatus ();
+					if (missionOK.Count > 0) {
+						view.Alert ("mission ok");
+					}
+				}
+				break;
 			case "skillPopup_active":
 				{
 					var skill = (string)args;
@@ -444,37 +482,47 @@ namespace Common
 				{
 					var idx = int.Parse(msg.Replace ("click_map_work_", ""));
 					var selectWork = model.Works.ToList () [idx];
-					try{
-						model.StartWork (selectWork);
-						model.ApplyWork ();
-					}catch(Exception e2){
-						e = e2;
-					}
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
-					yield return view.ShowInfo (Info.WorkResult, e2 => {
-						e = e2;
-					});
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
-					yield return view.ShowInfo(Info.Map, e2=>{
-						e = e2;
-					});
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
-					if (model.GetMapPlayer (Place.Map).IsDied) {
-						view.Alert ("冒險者掛了");
-						yield break;
-					}
-					var missionOK = model.CheckMissionStatus ();
-					if (missionOK.Count > 0) {
-						view.Alert ("mission ok");
+					if (selectWork.description == Description.WorkSelectSkillForEnemy) {
+						yield return view.ShowInfo (Info.SelectSkill, selectWork, e2 => {
+							e = e2;
+						});
+						if (e != null) {
+							HandleException (e);
+							yield break;
+						}
+					} else {
+						try {
+							model.StartWork (selectWork);
+							model.ApplyWork ();
+						} catch (Exception e2) {
+							e = e2;
+						}
+						if (e != null) {
+							HandleException (e);
+							yield break;
+						}
+						yield return view.ShowInfo (Info.WorkResult, e2 => {
+							e = e2;
+						});
+						if (e != null) {
+							HandleException (e);
+							yield break;
+						}
+						yield return view.ShowInfo (Info.Map, e2 => {
+							e = e2;
+						});
+						if (e != null) {
+							HandleException (e);
+							yield break;
+						}
+						if (model.GetMapPlayer (Place.Map).IsDied) {
+							view.Alert ("冒險者掛了");
+							yield break;
+						}
+						var missionOK = model.CheckMissionStatus ();
+						if (missionOK.Count > 0) {
+							view.Alert ("mission ok");
+						}
 					}
 				}
 				break;

@@ -27,7 +27,7 @@ namespace Model
 				"Dex", "int", 
 				"Int","int",
 				"Luc","int",
-				"Char","string",
+				"Characteristic","string",
 			}, "CSV/gameData - monster.tsv");
 
 			GenCode ("ConfigResource", null, new string[]{
@@ -67,7 +67,14 @@ namespace Model
 				"SlotCount", "int",
 				"Effect", "string",
 				"Values", "string",
+				"Characteristic","string",
 			}, "CSV/gameData - skill.tsv");
+
+			GenCode ("ConfigCharacteristic", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string",
+			}, "CSV/gameData - Characteristic.tsv");
 
 			GenCode ("ConfigConditionType", null, new string[]{
 				"ID", "string",

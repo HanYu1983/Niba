@@ -18,9 +18,11 @@ namespace View{
 		void Awake(){
 			skillListView.DataProvider = skillDataProvider;
 			toggles = filterBtns.GetComponentsInChildren<Toggle> ();
-			foreach (var t in toggles) {
+			// 直接改變isOn會自動觸發按下事件，而導致bug
+			// 所以改為在場景設定
+			/*foreach (var t in toggles) {
 				t.isOn = false;
-			}
+			}*/
 		}
 
 		public void UpdateUI(IModelGetter model){

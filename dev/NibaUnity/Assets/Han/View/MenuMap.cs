@@ -70,9 +70,25 @@ namespace View
 						msg = "攻擊[" + config.Name + "]";
 					}
 					break;
-				default:
-					msg = "XX";
+				case Description.WorkSelectSkillForEnemy:
+					{
+						var mapObjectId = int.Parse(w.values.Get("mapObjectId")); 
+						var mapObject = model.MapObjects[mapObjectId];
+						var mapObjectInfo = model.MonsterInfos[mapObject.infoKey];
+						var config = ConfigMonster.Get(mapObjectInfo.type);
+						var skillIds = w.values.GetValues ("skillIds");
+						msg = "選擇招式攻擊[" + config.Name + "]";
+					}
 					break;
+				case Description.WorkUseSkillForEnemyAll:
+					{
+						var skillId = w.values.Get ("skillId");
+						var cfg = ConfigSkill.Get (skillId);
+						msg = string.Format ("使用{0}攻擊符合條件的目標", cfg.Name);
+					}
+					break;
+				default:
+					throw new NotImplementedException (w.description);
 				}
 				btn.GetComponentInChildren<Text> ().text = msg;
 				btn.SetActive (true);

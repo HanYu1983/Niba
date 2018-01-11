@@ -36,6 +36,10 @@ namespace GameView
             yield return null;
         }
 
+		public IEnumerator ShowInfo(Info page, object args, Action<Exception> callback){
+			yield return null;
+		}
+
         public IEnumerator ShowInfo(Info page, Action<Exception> callback)
         {
             switch (page)

@@ -19,9 +19,8 @@ namespace Model
 		PlayerDataStore playerData = new PlayerDataStore();
 
 		public void NewGame(){
-			playerData.playerInStorage.AddExp (ConfigAbility.ID_karate, 10);
-			playerData.player.AddExp (ConfigAbility.ID_karate, 20);
-			playerData.playerInMap.AddExp (ConfigAbility.ID_karate, 30);
+			playerData.player.AddExp (ConfigAbility.ID_karate, 100);
+			playerData.player.AddExp (ConfigAbility.ID_fencingArt, 100);
 
 			/*
 			playerData.playerInMap.basicAbility.str = 20;
