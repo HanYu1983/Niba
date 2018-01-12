@@ -77,14 +77,14 @@ namespace View
 						var mapObjectInfo = model.MonsterInfos[mapObject.infoKey];
 						var config = ConfigMonster.Get(mapObjectInfo.type);
 						var skillIds = w.values.GetValues ("skillIds");
-						msg = "選擇招式攻擊[" + config.Name + "]";
+						msg = "招式[" + config.Name + "]";
 					}
 					break;
 				case Description.WorkUseSkillForEnemyAll:
 					{
 						var skillId = w.values.Get ("skillId");
 						var cfg = ConfigSkill.Get (skillId);
-						msg = string.Format ("使用{0}攻擊符合條件的目標", cfg.Name);
+						msg = string.Format ("{0}攻擊", cfg.Name);
 					}
 					break;
 				default:

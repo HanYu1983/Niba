@@ -19,34 +19,13 @@ namespace Model
 		PlayerDataStore playerData = new PlayerDataStore();
 
 		public void NewGame(){
-			playerData.player.AddExp (ConfigAbility.ID_karate, 100);
-			playerData.player.AddExp (ConfigAbility.ID_fencingArt, 100);
-
-			/*
-			playerData.playerInMap.basicAbility.str = 20;
-			playerData.playerInMap.basicAbility.vit = 20;
-			playerData.playerInMap.basicAbility.agi = 20;
-			playerData.playerInMap.basicAbility.dex = 20;
-			playerData.playerInMap.basicAbility.Int = 20;
-			playerData.playerInMap.basicAbility.luc = 20;
-			Item item;
-			item.count = 1;
-			item.prototype = ConfigItem.ID_ironKen;
-			playerData.playerInMap.weapons.Clear ();
-			playerData.playerInMap.weapons.Add (item);
-			*/
-			/*
-			Item item;
-			item.count = 1;
-			item.prototype = ConfigItem.ID_ironKen;
-			playerData.player.weapons.Add (item);
-			playerData.player.weapons.Add (item);
-			*/
-
-			mapData.ClearMap ();
-			playerData.ClearPlayState ();
-			playerData.ClearVisibleMapObjects ();
 			ClearMoveResult ();
+			mapData = new MapDataStore();
+			playerData = new PlayerDataStore();
+
+			playerData.player.AddExp (ConfigAbility.ID_karate, 5);
+			playerData.player.AddExp (ConfigAbility.ID_tailor, 1);
+
 			RequestSaveMap ();
 			RequestSavePlayer ();
 		}
@@ -57,17 +36,18 @@ namespace Model
 
 		public IEnumerator NewMap(MapType type, Action<Exception> callback){
 			yield return null;
-			//mapData.GenMap (type, 10, 10, playerData);
 			mapData.GenMapStart(type);
-			ClearMoveResult ();
 			callback (null);
 		}
 		public void EnterMap (){
+			ClearMoveResult ();
 			// 重設位置
 			playerData.playerInMap.position = Position.Zero;
 			// 先探明初始視野
 			playerData.ClearVisibleMapObjects ();
 			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			// 清除地圖
+			mapData.ClearMap();
 			// 自動生成視野內的地圖
 			mapData.GenMapWithPlayerVisible (playerData);
 			// 進入地圖
@@ -213,6 +193,9 @@ namespace Model
 			var ret = playerData.CompleteMission (id);
 			RequestSavePlayer ();
 			return ret;
+		}
+		public void ClearMissionStatus(){
+			playerData.ClearMissionStatus ();
 		}
 
 		public void EquipSkill (Place who, string skillId){

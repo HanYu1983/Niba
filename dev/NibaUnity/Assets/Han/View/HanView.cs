@@ -91,8 +91,19 @@ namespace View
 					callback (null);
 				}
 				break;
-			case Info.ItemInHomePocket:
-			case Info.ItemInHome:
+			case Info.Storage:
+				{
+					var popup = itemPopup.GetComponent<ItemPopup2> ();
+					if (popup == null) {
+						throw new Exception ("你沒有加入ItemPopup Component");
+					}
+					// 先Open才會呼叫Awake
+					itemPopup.ChangeVisibility(true);
+					popup.Who = Place.Storage;
+					popup.UpdateUI (model);
+					callback (null);
+				}
+				break;
 			case Info.Item:
 				{
 					var popup = itemPopup.GetComponent<ItemPopup2> ();
@@ -101,15 +112,7 @@ namespace View
 					}
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
-					var whosWeapon = 
-						info == Info.Item ? Place.Map :
-						Place.Pocket;
-					var whosStorage = 
-						info == Info.Item ? Place.Map :
-						info == Info.ItemInHomePocket ? Place.Pocket :
-						Place.Home;
-					popup.WhosWeapon = whosWeapon;
-					popup.WhosStorage = whosStorage;
+					popup.Who = Common.Common.PlaceAt(model.PlayState);
 					popup.UpdateUI (model);
 					callback (null);
 					break;
@@ -280,7 +283,6 @@ namespace View
 				}
 				break;
 			case Info.Fusion:
-			case Info.FusionInHome:
 				{
 					var popup = fusionPopup.GetComponent<FusionPopup> ();
 					if (popup == null) {
@@ -288,10 +290,6 @@ namespace View
 						yield break;
 					}
 					fusionPopup.ChangeVisibility (true);
-
-					var who = 
-						info == Info.Fusion ? Place.Map : Place.Pocket;
-					popup.Who = who;
 					popup.UpdateUI (model);
 				}
 				break;
@@ -331,8 +329,7 @@ namespace View
 				}
 				break;
 			case Info.Item:
-			case Info.ItemInHome:
-			case Info.ItemInHomePocket:
+			case Info.Storage:
 				{
 					itemPopup.ChangeVisibility (false);
 				}

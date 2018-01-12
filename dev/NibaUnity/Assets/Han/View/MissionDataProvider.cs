@@ -13,7 +13,7 @@ namespace View
 		public AbstractItemDataProvider requireItemDataProvider;
 
 		public ListView rewardListView;
-		public ItemDataProvider rewardDataProvider;
+		public AbstractItemDataProvider rewardDataProvider;
 
 		void Awake(){
 			requireListView.DataProvider = requireItemDataProvider;
@@ -58,7 +58,7 @@ namespace View
 				requireItem.AddRange (Common.Common.ParseAbstractItem (cfg.RequireStatus));
 			}
 			requireItemDataProvider.Data = requireItem;
-			rewardDataProvider.Data = Common.Common.ParseItem (cfg.Reward).ToList ();
+			rewardDataProvider.Data = Common.Common.ParseAbstractItem (cfg.Reward).ToList ();
 
 			requireListView.UpdateDataView (model);
 			rewardListView.UpdateDataView (model);

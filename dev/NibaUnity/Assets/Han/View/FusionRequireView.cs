@@ -60,9 +60,6 @@ namespace View{
 					continue;
 				}
 				var requireItem = requireItems [i];
-				/*var total = Common.Common.Storage(model, Who).Where(j=>{
-					return j.prototype == requireItem.prototype;
-				}).Sum(j=>j.count);*/
 				var total = model.GetMapPlayer(Who).storage.Where(j=>{
 					return j.prototype == requireItem.prototype;
 				}).Sum(j=>j.count);

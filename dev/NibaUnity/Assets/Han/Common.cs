@@ -193,11 +193,22 @@ namespace Common
 	}
 
 	public enum Place{
-		Home, Pocket, Map
+		Storage, 	// 倉庫
+		Pocket,		// 準備中的背包或口袋
+		Map			// 地圖中
 	}
 
+	/// <summary>
+	/// 使用Serializable在struct時，對JsonUtility.FromJson的支援度很像不太完整
+	/// 會有其怪的問題，比如
+	/// class A{
+	/// 	MapPlayer a, b; // MapPlayer is struct
+	/// }
+	/// 在解析回來後，裡面如果有陣列的話，陣列的值很像會指到同一個
+	/// 所以要將MapPlayer改為class
+	/// </summary>
 	[Serializable]
-	public struct MapPlayer{
+	public class MapPlayer{
 		public Position position;
 		public BasicAbility basicAbility;
 		public int hp, mp;
@@ -276,7 +287,7 @@ namespace Common
 					Debug.LogWarning ("exps還沒初始化, 回傳0");
 					return 0;
 				}
-				var total = exps.Sum (i => i.count);
+				var total = exps.Sum (i => i.count)/5;
 				return total;
 			}
 		}
@@ -319,14 +330,23 @@ namespace Common
 			weapons = new List<Item> (other.weapons);
 			skills = new List<string> (other.skills);
 		}
+		/*
 		public static MapPlayer Empty = new MapPlayer{
 			weapons = new List<Item>(), 
 			storage = new List<Item>(),
 			exps = new List<AbstractItem>(),
 			skills = new List<string>()
 		};
+		*/
+		public MapPlayer(){
+			weapons = new List<Item> (); 
+			storage = new List<Item> ();
+			exps = new List<AbstractItem> ();
+			skills = new List<string> ();
+		}
 	}
 
+	[Serializable]
 	public struct Description{
 		public const string WorkAttack = "[work]attack {mapObjectId}";
 		public const string WorkUseTurnSkill = "[work]use turn skill {skillId}";
@@ -367,12 +387,12 @@ namespace Common
 		public static BasicAbility Default{
 			get{
 				BasicAbility ret;
-				ret.str = 3;
-				ret.vit = 5;
-				ret.agi = 3;
-				ret.dex = 1;
-				ret.Int = 0;
-				ret.luc = 0;
+				ret.str = 8;
+				ret.vit = 10;
+				ret.agi = 5;
+				ret.dex = 5;
+				ret.Int = 8;
+				ret.luc = 5;
 				return ret;
 			}
 		}
@@ -960,9 +980,18 @@ namespace Common
 
 	public enum Info{
 		Unknown, 
-		Event, Work, WorkResult, Map, Ability, Item, Fusion, Mission, Skill, SelectSkill, 
-		FusionInHome, ItemInHome, Npc,
-		ItemInHomePocket
+		Event, 
+		Work, 
+		WorkResult, 
+		Map, 
+		Ability, 
+		Item, 
+		Fusion, 
+		Mission, 
+		Skill, 
+		SelectSkill, 
+		Storage, 
+		Npc
 	}
 
 	public enum PlayState{
@@ -1106,6 +1135,7 @@ namespace Common
 		void AcceptMission(string id);
 		List<string> CheckMissionStatus();
 		IEnumerable<AbstractItem> CompleteMission (string id);
+		void ClearMissionStatus();
 
 		void EquipSkill (Place who, string skillId);
 		void UnequipSkill (Place who, string skillId);

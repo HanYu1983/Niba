@@ -62,7 +62,7 @@ namespace Model
 				prototype = ConfigItem.ID_grass,
 				count = 10
 			};
-			model.AddItemToStorage (grass10, Place.Home);
+			model.AddItemToStorage (grass10, Place.Storage);
 
 			Debug.Log ("判斷任務");
 			var completedMs = model.CheckMissionStatus ();
@@ -93,7 +93,7 @@ namespace Model
 		}
 
 		static IEnumerator TestHomeStorage(IModel model, IView view){
-			model.ClearStorage (Place.Home);
+			model.ClearStorage (Place.Storage);
 			model.ClearStorage (Place.Pocket);
 			model.ClearStorage (Place.Map);
 
@@ -101,25 +101,25 @@ namespace Model
 			Item item;
 			item.count = 1;
 			item.prototype = ConfigItem.ID_grass;
-			model.AddItemToStorage (item, Place.Home);
+			model.AddItemToStorage (item, Place.Storage);
 
-			item.prototype = ConfigItem.ID_woodShield;
-			model.AddItemToStorage (item, Place.Home);
+			item.prototype = ConfigItem.ID_woodSword;
+			model.AddItemToStorage (item, Place.Storage);
 
 			Debug.Log ("判斷道具是否存在");
-			if (model.GetMapPlayer(Place.Home).storage.Count != 2) {
-				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Home).storage.Count);
+			if (model.GetMapPlayer(Place.Storage).storage.Count != 2) {
+				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Storage).storage.Count);
 			}
 
 			Exception e = null;
-			yield return view.ShowInfo(Info.ItemInHome, e2 => {
+			yield return view.ShowInfo(Info.Storage, e2 => {
 				e = e2;
 			});
 			if (e != null) {
 				throw e;
 			}
 			yield return new WaitForSeconds (1f);
-			yield return view.HideInfo (Info.ItemInHome);
+			yield return view.HideInfo (Info.Storage);
 
 			Debug.Log ("加入道具到口袋");
 			item.prototype = ConfigItem.ID_woodSword;
@@ -135,28 +135,28 @@ namespace Model
 			}
 
 			Debug.Log ("直接從家裡裝裝備");
-			item.prototype = ConfigItem.ID_woodShield;
-			model.EquipWeapon (item, Place.Pocket, Place.Home);
+			item.prototype = ConfigItem.ID_woodSword;
+			model.EquipWeapon (item, Place.Pocket, Place.Storage);
 			if (model.GetMapPlayer(Place.Pocket).weapons.Count != 2) {
 				throw new Exception ("裝備後裝備數量必須為2");
 			}
-			yield return view.ShowInfo(Info.ItemInHomePocket, e2 => {
+			yield return view.ShowInfo(Info.Item, e2 => {
 				e = e2;
 			});
 			if (e != null) {
 				throw e;
 			}
 			yield return new WaitForSeconds (1f);
-			yield return view.HideInfo (Info.ItemInHomePocket);
+			yield return view.HideInfo (Info.Item);
 
-			yield return view.ShowInfo(Info.ItemInHome, e2 => {
+			yield return view.ShowInfo(Info.Storage, e2 => {
 				e = e2;
 			});
 			if (e != null) {
 				throw e;
 			}
 			yield return new WaitForSeconds (1f);
-			yield return view.HideInfo (Info.ItemInHome);
+			yield return view.HideInfo (Info.Storage);
 		}
 
 		static IEnumerator TestFusionView(IModel model, IView view){
@@ -228,7 +228,7 @@ namespace Model
 					throw new Exception ("裝備超過最大數量限制必須丟出特定例外:"+e2.Message);
 				}
 			}
-			weapon.prototype = ConfigItem.ID_powerRing;
+			weapon.prototype = ConfigItem.ID_grassKen;
 			model.AddItemToStorage (weapon, Place.Map);
 			model.EquipWeapon (weapon, Place.Map, Place.Map);
 
@@ -314,6 +314,8 @@ namespace Model
 		}
 
 		static IEnumerator TestFusion(IModel model, IView view){
+			yield return null;
+			/*
 			UnityEngine.Random.InitState (1);
 			model.ClearStorage (Place.Map);
 
@@ -395,6 +397,7 @@ namespace Model
 			}
 			yield return new WaitForSeconds (2f);
 			yield return view.HideInfo (Info.Item);
+			*/
 		}
 
 		static IEnumerator TestShowInfo(IModel model, IView view){

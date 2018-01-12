@@ -1,22 +1,6 @@
-id	npc	level	requireItem	requireKill	requireStatus	reward	dependancy	dialog
-0	guide	1	grass_10					幫我拿10個草
-1	guide	1	wood_10			woodworkerBook1	0	幫我拿10個木
-2	guide	1		ant_10				幫殺10隻螞蟻
-3	guide	2			money_1000			請存到1000元
-4	guide	2			atk_100			請將攻擊力加到100
-5								
-6								
-7								
-8								
-9								
-10								
-11								
-12								
-13								
-14								
-15								
-16								
-17								
-18								
-19								
-20								
+id	npc	level	requireItem	requireKill	requireStatus	reward	dependency	dialog
+0	guide	0	grass_50			money_100		去採50個草
+1	guide	0	wood_10			woodworkerBook1	0	去採10個木
+2	guide	0		ant_10				去殺10隻螞蟻
+3	guide	1			money_1000			請存到1000元
+4	guide	1			atk_10			請將攻擊力加到10

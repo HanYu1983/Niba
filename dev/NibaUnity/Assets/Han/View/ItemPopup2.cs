@@ -18,42 +18,30 @@ namespace View
 		void Awake(){
 			listView.DataProvider = itemDataProvider;
 		}
-
-		Place _whosWeapon;
-		public Place WhosWeapon {
-			get{
-				if (_whosWeapon == Place.Pocket) {
-					return _whosWeapon;
-				}
-				if (_whosWeapon == Place.Map) {
-					return _whosWeapon;
-				}
-				throw new Exception ("沒有指定正確的WhosWeapon");
-			}
-			set{
-				_whosWeapon = value;
-			}
-		}
-
-		public Place WhosStorage {
+			
+		public Place Who {
 			get;
 			set;
 		}
 
 		public void UpdateUI(IModelGetter model){
 			var popup = this;
-			popup.itemDataProvider.Data = model.GetMapPlayer (WhosStorage).storage;
+			popup.itemDataProvider.Data = model.GetMapPlayer (Who).storage;
 			popup.listView.UpdateDataView (model);
 			popup.listView.CurrItemLabel (model, popup.SelectIndex);
-			popup.UpdateButtonLabel (model, WhosWeapon);
-			popup.abilityView.UpdateAbility(model, WhosWeapon);
+			popup.UpdateButtonLabel (model, Who);
+			popup.abilityView.UpdateAbility(model, Who);
 		}
 		/// <summary>
 		/// 更新按鈕文字
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateButtonLabel(IModelGetter model, Place who_){
+		void UpdateButtonLabel(IModelGetter model, Place who_){
+			if (who_ == Place.Storage) {
+				Debug.LogWarning ("倉庫中不顯示裝備");
+				return;
+			}
 			var who = model.GetMapPlayer (who_);
 			// 頭
 			var btn_head = btns.Where (btn => {
@@ -187,7 +175,7 @@ namespace View
 			switch (msg) {
 			case "click_itemPopup_move":
 				{
-					if (WhosStorage == Place.Map) {
+					if (Who == Place.Map) {
 						callback (new Exception ("冒險時不能移動道具"));
 						yield break;
 					}
@@ -206,13 +194,17 @@ namespace View
 					}
 					var item = itemDataProvider.Data[SelectIndex];
 					var info = new object[] {
-						item, WhosWeapon, WhosStorage
+						item, Who
 					};
 					Common.Common.Notify ("itemPopup_move_item", info);
 				}
 				break;
 			case "click_itemPopup_equip":
 				{
+					if (Who == Place.Storage) {
+						callback(new Exception ("倉庫中不能裝備"));
+						yield break;
+					}
 					if (IsSelectNothing) {
 						callback (new Exception ("你沒有選擇任何道具"));
 						yield break;
@@ -230,13 +222,17 @@ namespace View
 					}
 					var item = itemDataProvider.Data[SelectIndex];
 					var info = new object[] {
-						item, WhosWeapon, WhosStorage
+						item, Who
 					};
 					Common.Common.Notify ("itemPopup_equip_item", info);
 				}
 				break;
 			case "click_itemPopup_unequip":
 				{
+					if (Who == Place.Storage) {
+						callback(new Exception ("倉庫中不能裝備"));
+						yield break;
+					}
 					if (HasLastPosition == false) {
 						callback (new Exception ("你沒有選擇任何部位"));
 						yield break;
@@ -245,7 +241,7 @@ namespace View
 					var idx = 0;
 					LastPosition(ref pos, ref idx);
 
-					var who = model.GetMapPlayer (WhosWeapon);
+					var who = model.GetMapPlayer (Who);
 					var item = who.weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;
@@ -256,7 +252,7 @@ namespace View
 						yield break;
 					}
 					var info = new object[] {
-						item, WhosWeapon, WhosStorage
+						item, Who
 					};
 					Common.Common.Notify ("itemPopup_unequip_item", info);
 				}
@@ -285,7 +281,7 @@ namespace View
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(WhosStorage).storage;
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage;
 					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Normal;
 					popup.listView.UpdateDataView (model);
 				}
@@ -299,6 +295,10 @@ namespace View
 			case "click_itemPopup_a2":
 			case "click_itemPopup_a3":
 				{
+					if (Who == Place.Storage) {
+						callback(new Exception ("倉庫中不能裝備"));
+						yield break;
+					}
 					var popup = this;
 					// 修改為武器顯示模式
 					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Equip;
@@ -307,7 +307,7 @@ namespace View
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(WhosStorage).storage.Where (item => {
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage.Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					}).ToList();

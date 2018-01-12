@@ -10,8 +10,6 @@ namespace View{
 		public ItemView itemView;
 		public FusionRequireView fusionRequireView;
 
-		public Place Who{ get; set; }
-
 		public void UpdateUI(IModelGetter model){
 			itemView.Data = model.CanFusionItems;
 			itemView.UpdateDataView (model);
@@ -30,14 +28,7 @@ namespace View{
 							// 修改狀態文字
 							var selectIdx = itemView.CurrIndex (msg);
 							var item = itemView.Data.ToList () [selectIdx];
-							/*
-							var isCanFusion = model.IsCanFusion (item.prototype, Who);
-							if (isCanFusion <= 0) {
-								var cfg = ConfigItem.Get (item.prototype);
-								callback (new Exception ("無法合成:"+cfg.Name));
-								yield break;
-							}*/
-							fusionRequireView.Who = Who;
+							fusionRequireView.Who = Common.Common.PlaceAt (model.PlayState);
 							fusionRequireView.FusionTarget = item;
 							fusionRequireView.UpdateUI (model);
 						}

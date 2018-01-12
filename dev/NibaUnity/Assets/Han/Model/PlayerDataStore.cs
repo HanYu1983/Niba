@@ -56,18 +56,36 @@ namespace Model
 		}
 
 		public void GenMapWithPositions(IEnumerable<Position> posList, PlayerDataStore player){
-			var factor = 1 / 10f;
+			//var factor = 1 / 10f;
 			var alreadyPos = new HashSet<Position> (posList);
 			foreach (var pos in player.isPositionVisible) {
 				if (alreadyPos.Contains (pos)) {
 					continue;
 				}
 				alreadyPos.Add (pos);
+
+				for (var i = 0; i < ConfigResource.ID_COUNT; ++i) {
+					var dice = UnityEngine.Random.Range (0, 100);
+					if (dice < 60) {
+						var id = ConfigResource.Get (i).ID;
+						GenResource (player, pos, id);
+					}
+				}
+
+				for (var i = 0; i < ConfigMonster.ID_COUNT; ++i) {
+					var dice = UnityEngine.Random.Range (0, 100);
+					if (dice < 60) {
+						var id = ConfigMonster.Get (i).ID;
+						GenMonster (player, pos, id);
+					}
+				}
+
+				/*
 				var p = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
 				//Debug.Log (p);
 				if (p < 0.8f) {
 					if (p < 0.3f) {
-						GenResource (player, pos, ConfigResource.ID_rock);
+						GenResource (player, pos, ConfigResource.ID_tree);
 					} else if (p < 0.8f) {
 						GenResource (player, pos, ConfigResource.ID_grass);
 					}
@@ -78,6 +96,7 @@ namespace Model
 				} else {
 					// ignore
 				}
+				*/
 			}
 		}
 		public void ClearMap(){
@@ -401,10 +420,11 @@ namespace Model
 						if (isCriHit) {
 							damage = (int)(damage*1.5f);
 						}
+						damage = Math.Max (0, damage);
 						// === 套用傷害 === //
-						monsterInf.hp -= Math.Max (0, damage);
+						monsterInf.hp -= damage;
 						// 計算仇恨值
-						monsterInf.BeAttacked (Math.Max (0, damage));
+						monsterInf.BeAttacked (damage);
 						if (monsterInf.IsDied) {
 							mapObject.died = true;
 							// 獲得獎勵
@@ -564,7 +584,8 @@ namespace Model
 						if (isCriHit) {
 							damage = (int)(damage*1.5f);
 						}
-						player.playerInMap.hp -= Math.Max (0, damage);
+						damage = Math.Max (0, damage);
+						player.playerInMap.hp -= damage;
 						// 計算仇恨值
 						monsterInf.AttackYou (playerAbility, Math.Max (0, damage));
 						// 套用
@@ -896,13 +917,13 @@ namespace Model
 
 	public class PlayerDataStore
 	{
-		public MapPlayer playerInStorage = MapPlayer.Empty;
-		public MapPlayer player = MapPlayer.Empty;
-		public MapPlayer playerInMap = MapPlayer.Empty;
+		public MapPlayer playerInStorage = new MapPlayer();
+		public MapPlayer player = new MapPlayer();
+		public MapPlayer playerInMap = new MapPlayer();
 
 		public MapPlayer GetMapPlayer (Place place){
 			switch (place) {
-			case Place.Home:
+			case Place.Storage:
 				return playerInStorage;
 			case Place.Pocket:
 				return player;
@@ -928,8 +949,21 @@ namespace Model
 
 		#region skill
 		public void EquipSkill (Place who, string skillId){
+			var cfg = ConfigSkill.Get (skillId);
+			if (cfg.SkillTypeRequire != null) {
+				var requires = Common.Common.ParseAbstractItem (cfg.SkillTypeRequire);
+				foreach (var r in requires) {
+					var skillTypeRequire = r.prototype;
+					var levelRequire = r.count;
+					var skillExp = GetMapPlayer (who).Exp (skillTypeRequire);
+					if (skillExp <= levelRequire) {
+						var skillTypeName = ConfigSkillType.Get (skillTypeRequire).Name;
+						throw new Exception ("技能需求經驗不足:"+skillTypeName);
+					}
+				}
+			}
 			switch (who) {
-			case Place.Home:
+			case Place.Storage:
 			case Place.Pocket:
 				player.AddSkill (skillId);
 				break;
@@ -943,7 +977,7 @@ namespace Model
 
 		public void UnequipSkill (Place who, string skillId){
 			switch (who) {
-			case Place.Home:
+			case Place.Storage:
 			case Place.Pocket:
 				player.RemoveSkill (skillId);
 				break;
@@ -958,7 +992,7 @@ namespace Model
 
 		#region weapon
 		public string IsCanEquip(Item item, Place who, Place whosStorage){
-			if (who == Place.Home) {
+			if (who == Place.Storage) {
 				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
 			}
 			var cfg = ConfigItem.Get (item.prototype);
@@ -1055,7 +1089,7 @@ namespace Model
 			var originPos = playerInMap.position;
 			var newPos = originPos.Add (offset);
 			var moveConsumpation = mapData.MoveConsumption (this, originPos, newPos);
-			if (playerInMap.hp - moveConsumpation < 0) {
+			if (playerInMap.hp - moveConsumpation <= 0) {
 				throw new Exception ("體力不足，無法移動:"+playerInMap.hp);
 			}
 			MoveResult rs = MoveResult.Empty;
@@ -1090,7 +1124,7 @@ namespace Model
 		//public List<Item> storage = new List<Item>();
 		public void AddItem(Item item, Place who){
 			switch (who) {
-			case Place.Home:
+			case Place.Storage:
 				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
 				// 從家裡新增的Item才要更新任務
 				NotifyMissionAddItem (item);
@@ -1108,7 +1142,7 @@ namespace Model
 		public void MoveItem(Place a, Place b, Item item){
 			List<Item> fromStorage;
 			switch (a) {
-			case Place.Home:
+			case Place.Storage:
 				fromStorage = playerInStorage.storage;
 				break;
 			case Place.Pocket:
@@ -1124,7 +1158,7 @@ namespace Model
 			}
 			fromStorage.Remove (item);
 			switch (b) {
-			case Place.Home:
+			case Place.Storage:
 				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
 				break;
 			case Place.Pocket:
@@ -1139,6 +1173,9 @@ namespace Model
 		#endregion
 		#region fusion
 		public void Fusion(Item fusionTarget, Place who){
+			if (who == Place.Storage) {
+				throw new Exception("不能在倉庫里合成");
+			}
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
 				var requires = Common.Common.ParseItem (ConfigItem.Get (fusionTarget.prototype).FusionRequire);
 				var formatForSubstrct = requires.Select (item => {
@@ -1150,19 +1187,16 @@ namespace Model
 				var fusionItem = fusionTarget;
 				tempStorage = Helper.AddItem (tempStorage, fusionItem);
 
-				if(who == Place.Home){
+				if(who == Place.Storage){
 					// 從家裡新增的Item才要更新任務
 					NotifyMissionAddItem (fusionItem);
 				}
 				return tempStorage;
 			};
 			if (who == Place.Pocket) {
-				throw new Exception("不能在口袋里合成");
-				//player.storage = fusion (player.storage);
+				player.storage = fusion (player.storage);
 			} else if (who == Place.Map) {
 				playerInMap.storage = fusion (playerInMap.storage);
-			} else {
-				playerInStorage.storage = fusion (playerInStorage.storage);
 			}
 		}
 
@@ -1306,6 +1340,12 @@ namespace Model
 			}
 		}
 
+		public void ClearMissionStatus(){
+			for (var i = 0; i < missionStatus.Count; ++i) {
+				missionStatus [i].itemGot.Clear ();
+				missionStatus [i].monsterSkilled.Clear ();
+			}
+		}
 		/// <summary>
 		/// 判斷任務是否完成，每次互動後可以呼叫一次
 		/// </summary>
@@ -1560,7 +1600,7 @@ namespace Model
 		/// <param name="basic">Basic.</param>
 		/// <param name="fight">Fight.</param>
 		public static void CalcAbility(PlayerDataStore player, MapDataStore map, Place who_, ref BasicAbility basic, ref FightAbility fight){
-			if (who_ == Place.Home) {
+			if (who_ == Place.Storage) {
 				throw new Exception ("計算能力時不能傳入UnknowPlayer");
 			}
 			var who = player.GetMapPlayer (who_);

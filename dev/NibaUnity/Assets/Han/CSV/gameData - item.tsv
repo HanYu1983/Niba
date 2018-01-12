@@ -1,26 +1,8 @@
-id	name	description	type	skill type	max count	fusion require	skill require	ability	position	useCount
+id	name	description	type	skill type	max count	fusion require	skill type require	ability	position	useCount
 grass	草		material	tailor	99					
 wood	木		material	woodworker	10					
-gravel	礫石		material	tailor	10					
-feather	羽毛		material	tailor	99					
-bred	木板		material	woodworker	10	wood_2				
-iron	鐵		material	ironworker	10					
-woodSword	木劍		weapon	fencingArt	1	wood_3	woodworker_1	atk+2	hand	10
-woodShield	木盾		weapon	shield	1	wood_3	woodworker_2	def+2	hand	10
-powerRing	加量戒指		weapon	subtle	1			str+2	accessory	100
-ironSword	鐵劍		weapon	fencingArt	1	iron_2	ironworker_1	atk+4	hand	15
-ironShield	鐵盾		weapon	shield	1	iron_2	ironworker_1	def+4	hand	15
-arrows	木箭矢		weapon	subtle	99	feather,wood,gravel		str+1	hand	0
-bigIronSword	雙手劍		weapon	fencingArt	1	iron_4		atk+8,dodge-2	hand	20
-nightShield	騎士盾		weapon	shield	1	iron_4		def+8	hand	20
-woodKen	木指虎		weapon	karate	1	wood_1		atk+1,dodge+2	hand	10
-ironKen	鐵指虎		weapon	karate	1	iron_2		atk+3,dodge+2	hand	15
-woodHelmet	木盔		weapon	armor	1	wood_2		def+2	head	100
-woodArmor	木甲		weapon	armor	1	wood_2		def+4	body	100
-woodShoe	木鞋		weapon	armor	1	wood_2		def+1	foot	100
-woodworkerBook1	木工知識1		important		10			woodworker+1		
-studio	工作間		important		1	wood_10,iron_10	woodworker_3	woodworker+1		
-ironWork	鍊鋼廠		important		1	wood_10,iron_20	woodworker_5	ironworker+1		
-buhuku	布服		weapon	speed	1					
-bumau	布帽		weapon	speed	1					
-piken	皮製拳套		weapon	karate	1					
+grassHat	草帽		weapon	speed	1	grass_10	tailor_1	def+2	hand	20
+grassBody	布衣		weapon	speed	1	grass_30	tailor_1	def+4	body	20
+grassShoe	草鞋		weapon	speed	1	grass_10	tailor_1	def+2	foot	20
+grassKen	布拳套		weapon	karate	1	grass_10	tailor_1	atk+2	hand	20
+woodSword	木劍		weapon	fencingArt	1	wood_5	woodworker_1	atk+5	head	40

@@ -94,10 +94,18 @@ namespace Common
 					if (missionOK.Count > 0) {
 						view.Alert ("mission ok");
 					}
+					model.ClearMissionStatus ();
 				}
 				break;
 			case "skillPopup_active":
 				{
+					if (model.PlayState == PlayState.Play) {
+						e = new Exception ("冒險中不能修改招式");
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 					var skill = (string)args;
 					try{
 						model.EquipSkill(Common.PlaceAt (model.PlayState), skill);
@@ -119,6 +127,13 @@ namespace Common
 				break;
 			case "skillPopup_inactive":
 				{
+					if (model.PlayState == PlayState.Play) {
+						e = new Exception ("冒險中不能修改招式");
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
 					var skill = (string)args;
 					try{
 						model.UnequipSkill(Common.PlaceAt (model.PlayState), skill);
@@ -197,12 +212,11 @@ namespace Common
 				{
 					var info = (object[])args;
 					var item = (Item)info [0];
-					//var whosWeapon = (MapPlayer)info [1];
-					var whosStorage = (Place)info [2];
+					var whosStorage = (Place)info [1];
 					// 如果現在是家裡箱子，就移動到口袋
 					// 反之就相反
 					var toStorage = whosStorage == Place.Pocket ?
-						Place.Home : Place.Pocket;
+						Place.Storage : Place.Pocket;
 					try{
 						model.MoveItem(whosStorage, toStorage, item);
 					}catch(Exception e2){
@@ -210,9 +224,7 @@ namespace Common
 						yield break;
 					}
 					var returnTo = 
-						whosStorage == Place.Map ? Info.Item :
-						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
-						Info.ItemInHome;
+						whosStorage == Place.Storage ? Info.Storage : Info.Item;
 					yield return view.ShowInfo (returnTo, e2 => {
 						e = e2;
 					});
@@ -230,19 +242,24 @@ namespace Common
 				{
 					var info = (object[])args;
 					var weapon = (Item)info [0];
-					var whosWeapon = (Place)info [1];
-					var whosStorage = (Place)info [2];
+					var whosStorage = (Place)info [1];
 					try{
-						model.EquipWeapon (weapon, whosWeapon, whosStorage);
+						model.EquipWeapon (weapon, whosStorage, whosStorage);
 					}catch(Exception e2){
-						HandleException (e2);
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
 						yield break;
 					}
-					var returnTo = 
-						whosStorage == Place.Map ? Info.Item :
-						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
-						Info.ItemInHome;
-					yield return view.ShowInfo (returnTo, e2 => {
+					if (whosStorage == Place.Storage) {
+						e = new Exception ("裝備時不可能在倉庫");
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo (Info.Item, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -262,19 +279,24 @@ namespace Common
 				{
 					var info = (object[])args;
 					var weapon = (Item)info [0];
-					var whosWeapon = (Place)info [1];
-					var whosStorage = (Place)info [2];
+					var whosStorage = (Place)info [1];
 					try{
-						model.UnequipWeapon (weapon, whosWeapon, whosStorage);
+						model.UnequipWeapon (weapon, whosStorage, whosStorage);
 					}catch(Exception e2){
-						HandleException (e2);
+						e = e2;
+					}
+					if (e != null) {
+						HandleException (e);
 						yield break;
 					}
-					var returnTo = 
-						whosStorage == Place.Home ? Info.ItemInHome :
-						whosStorage == Place.Pocket ? Info.ItemInHomePocket :
-						Info.Item;
-					yield return view.ShowInfo (returnTo, e2 => {
+					if (whosStorage == Place.Storage) {
+						e = new Exception ("裝備時不可能在倉庫");
+					}
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo (Info.Item, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -346,7 +368,7 @@ namespace Common
 				break;
 			case "click_home_item":
 				{
-					yield return view.ShowInfo (Info.ItemInHome, e2 => {
+					yield return view.ShowInfo (Info.Storage, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -357,7 +379,7 @@ namespace Common
 				break;
 			case "click_home_pocket":
 				{
-					yield return view.ShowInfo (Info.ItemInHomePocket, e2 => {
+					yield return view.ShowInfo (Info.Item, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -368,7 +390,7 @@ namespace Common
 				break;
 			case "click_home_fusion":
 				{
-					yield return view.ShowInfo (Info.FusionInHome, e2 => {
+					yield return view.ShowInfo (Info.Fusion, e2 => {
 						e = e2;
 					});
 					if (e != null) {
@@ -523,6 +545,7 @@ namespace Common
 						if (missionOK.Count > 0) {
 							view.Alert ("mission ok");
 						}
+						model.ClearMissionStatus ();
 					}
 				}
 				break;
