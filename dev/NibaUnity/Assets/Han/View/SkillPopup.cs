@@ -35,10 +35,12 @@ namespace View{
 			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
+		static int FilterIDApply = 0;
+
 		public void UpdateSkillList(IModelGetter model){
 			IEnumerable<ConfigSkill> skills = null;
 
-			if (CheckToggleValue (0)) {
+			if (CheckToggleValue (FilterIDApply)) {
 				var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
 				skills = who.skills.Select (ConfigSkill.Get);
 			} else {
@@ -102,6 +104,10 @@ namespace View{
 				}
 				break;
 			case "click_skillPopup_filter":
+				// 如果點擊"已裝備"，要把索引重設為0，不然招式列表會看不見
+				if (CheckToggleValue (FilterIDApply)) {
+					skillListView.offset = 0;
+				}
 				UpdateSkillList (model);
 				callback(null);
 				break;

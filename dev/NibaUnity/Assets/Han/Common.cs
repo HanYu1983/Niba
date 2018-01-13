@@ -300,7 +300,7 @@ namespace Common
 			}
 			var cfg = ConfigSkill.Get (id);
 			var totalCnt = cfg.SlotCount + SkillSlotUsed;
-			if (totalCnt >= MaxSkillSlotCount) {
+			if (totalCnt > MaxSkillSlotCount) {
 				throw new Exception (string.Format("招式欄位不足:{0}/{1}, 所新加招式為{2}", totalCnt, MaxSkillSlotCount, id));
 			}
 			skills.Add (id);

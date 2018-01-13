@@ -504,7 +504,8 @@ namespace Common
 				{
 					var idx = int.Parse(msg.Replace ("click_map_work_", ""));
 					var selectWork = model.Works.ToList () [idx];
-					if (selectWork.description == Description.WorkSelectSkillForEnemy) {
+					if (selectWork.description == Description.WorkSelectSkillForEnemy ||
+						selectWork.description == Description.WorkUseSkillForEnemyAll) {
 						yield return view.ShowInfo (Info.SelectSkill, selectWork, e2 => {
 							e = e2;
 						});

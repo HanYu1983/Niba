@@ -168,7 +168,7 @@ namespace View
 								var mapObj = model.MapObjects [mapObjectId];
 								var objInfo = model.MonsterInfos [mapObj.infoKey];
 								var objCfg = ConfigMonster.Get (objInfo.type);
-								var damage = int.Parse (e.values.Get ("damage"));
+								var damage = float.Parse (e.values.Get ("damage"));
 								var isCriHit = e.values.Get("isCriHit") == "1";
 								return string.Format ("你攻擊{0}造成{1}{2}傷害", objCfg.Name, damage, isCriHit ? "暴擊":"");
 							}

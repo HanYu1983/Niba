@@ -36,16 +36,30 @@ namespace View
 		public Description Work {
 			set{
 				var d = value;
-				if (d.description != Description.WorkSelectSkillForEnemy) {
-					new Exception ("錯誤的參數:" + d.description);
+				switch (d.description) {
+				case Description.WorkSelectSkillForEnemy:
+					{
+						if (d.values.AllKeys.Contains ("skillIds") != false) {
+							var skills = d.values.GetValues ("skillIds").ToList();
+							Skills = skills;
+						}
+						var mapObjectId = int.Parse(d.values.Get ("mapObjectId"));
+						MapObjectIds = new List<int>(){mapObjectId};
+					}
+					break;
+				case Description.WorkUseSkillForEnemyAll:
+					{
+						var skillId = d.values.Get ("skillId");
+						var mapObjectIds = d.values.GetValues ("mapObjectIds");
+						Skills = new List<string> () {
+							skillId
+						};
+						MapObjectIds = mapObjectIds.Select (int.Parse).ToList ();
+					}
+					break;
+				default:
+					throw new Exception ("錯誤的參數:" + d.description);
 				}
-				if (d.values.AllKeys.Contains ("skillIds") != false) {
-					var skills = d.values.GetValues ("skillIds").ToList();
-					Skills = skills;
-				}
-				var mapObjectId = int.Parse(d.values.Get ("mapObjectId"));
-				MapObjectIds = new List<int>(){mapObjectId};
-
 				work = d;
 			}
 			get{

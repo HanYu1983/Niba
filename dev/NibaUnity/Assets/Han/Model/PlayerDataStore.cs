@@ -260,30 +260,105 @@ namespace Model
 			var ret = new List<Description>();
 			LabelProcessWork:
 			switch (work.description) {
-			case Description.WorkSelectSkillForEnemy:
+			case Description.WorkUseSkillForEnemyAll:
 				{
 					var skillId = work.values.Get ("skillId");
-					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
-					var mapObject = mapObjects [mapObjectId];
-					var monsterInf = monsterInfo[mapObject.infoKey];
-					// 怪物逃走了
-					/*if (monsterInf.IsDied) {
-						Debug.LogWarning ("怪物已逃走");
-						break;
-					}*/
+					var mapObjectIds = work.values.GetValues ("mapObjectIds").Select (int.Parse).ToList ();
 					var skill = ConfigSkill.Get (skillId);
-					switch (skill.ID) {
-					case ConfigSkill.ID_bokyoryokuhakai:
-						monsterInf.AddBuf (Helper.GetBuf(skill));
-						monsterInfo [mapObject.infoKey] = monsterInf;
-						break;
-					}
+
+					var playerBasic = BasicAbility.Zero;
+					var playerAbility = FightAbility.Zero;
+					Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
+					var damage = playerBasic.agi * playerBasic.dex;
+					damage = Math.Max (0, damage);
 
 					var des = Description.Empty;
 					des.description = Description.InfoUseSkill;
 					des.values = new NameValueCollection ();
 					des.values.Add ("skills", skill.ID);
 					ret.Add (des);
+
+					foreach (var mapObjectId in mapObjectIds) {
+						var mapObject = mapObjects [mapObjectId];
+						var monsterInf = monsterInfo[mapObject.infoKey];
+						if (monsterInf.IsDied) {
+							Debug.LogWarning ("怪物已無法戰鬥");
+							continue;
+						}
+						switch (skill.ID) {
+						case ConfigSkill.ID_spinAttack:
+							{
+								monsterInf.hp -= (int)damage;
+								if (monsterInf.IsDied) {
+									mapObject.died = true;
+								}
+								monsterInfo [mapObject.infoKey] = monsterInf;
+								mapObjects [mapObjectId] = mapObject;
+
+								des = Description.Empty;
+								des.description = Description.InfoAttack;
+								des.values = new NameValueCollection ();
+								des.values.Set ("mapObjectId", mapObjectId + "");
+								des.values.Set ("damage", damage + "");
+								des.values.Set ("isCriHit", "0");
+								ret.Add (des);
+							}
+							break;
+						}
+					}
+				}
+				break;
+			case Description.WorkSelectSkillForEnemy:
+				{
+					var skillId = work.values.Get ("skillId");
+					var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
+					var mapObject = mapObjects [mapObjectId];
+					var monsterInf = monsterInfo[mapObject.infoKey];
+					if (monsterInf.IsDied) {
+						Debug.LogWarning ("怪物已無法戰鬥");
+						goto LabelProcessWork;
+					}
+
+					var des = Description.Empty;
+					des.description = Description.InfoUseSkill;
+					des.values = new NameValueCollection ();
+					des.values.Add ("skills", skillId);
+					ret.Add (des);
+
+					var skill = ConfigSkill.Get (skillId);
+					switch (skill.ID) {
+					case ConfigSkill.ID_karadaAttack:
+						{
+							// 身體撞擊
+							var playerBasic = BasicAbility.Zero;
+							var playerAbility = FightAbility.Zero;
+							Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
+							var damage = playerBasic.agi * playerAbility.def;
+							damage = (int)Math.Max (0, damage);
+							monsterInf.hp -= (int)damage;
+							if (monsterInf.IsDied) {
+								mapObject.died = true;
+							}
+							monsterInfo [mapObject.infoKey] = monsterInf;
+							mapObjects [mapObjectId] = mapObject;
+
+							des = Description.Empty;
+							des.description = Description.InfoAttack;
+							des.values = new NameValueCollection ();
+							des.values.Set ("mapObjectId", mapObjectId + "");
+							des.values.Set ("damage", damage + "");
+							des.values.Set ("isCriHit", "0");
+							ret.Add (des);
+						}
+						break;
+					case ConfigSkill.ID_bokyoryokuhakai:
+						{
+							// 防禦破壞
+							monsterInf.AddBuf (Helper.GetBuf (skill));
+							monsterInfo [mapObject.infoKey] = monsterInf;
+						}
+						break;
+					}
 				}
 				break;
 			case Description.WorkUseTurnSkill:
