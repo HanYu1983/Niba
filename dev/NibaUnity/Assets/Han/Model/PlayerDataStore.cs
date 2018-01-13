@@ -256,6 +256,76 @@ namespace Model
 		}
 		#endregion
 
+		// 武器壞掉
+		IEnumerable<Description> ProcessWeaponBroken(PlayerDataStore player){			
+			// 注意：使用ToList將陣列Copy
+			var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ().ToList ();
+			// 刪除壞掉武器
+			foreach (var broken in brokenWeapons) {
+				player.playerInMap.weapons.Remove (broken);
+			}
+			// === 回傳壞掉資訊 === //
+			if (brokenWeapons.Count () == 0) {
+				return new List<Description> ();
+			}
+			var des = Description.Empty;
+			des.description = Description.InfoWeaponBroken;
+			des.values = new NameValueCollection ();
+			foreach (var broken in brokenWeapons) {
+				var jsonstr = JsonUtility.ToJson (broken);
+				des.values.Add ("items", jsonstr);
+			}
+			return new List<Description> (){ des };
+		}
+
+		// 傷害
+		IEnumerable<Description> ProccessDamageWork(PlayerDataStore player, int mapObjectId, int damage){
+			var ret = new List<Description>();
+
+			var mapObject = mapObjects [mapObjectId];
+			var monsterInf = monsterInfo[mapObject.infoKey];
+			var monsterCfg = ConfigMonster.Get (monsterInf.type);
+
+			monsterInf.hp -= damage;
+			// 計算仇恨值
+			monsterInf.BeAttacked (damage);
+			if (monsterInf.IsDied) {
+				mapObject.died = true;
+				// 獎勵
+				var rewards = Common.Common.ParseItem (monsterCfg.Item);
+				foreach (var reward in rewards) {
+					player.playerInMap.storage = Helper.AddItem (player.playerInMap.storage, reward);
+				}
+			}
+			monsterInfo [mapObject.infoKey] = monsterInf;
+			mapObjects [mapObjectId] = mapObject;
+
+			// 傷害事件
+			var des = Description.Empty;
+			des.description = Description.InfoAttack;
+			des.values = new NameValueCollection ();
+			des.values.Set ("mapObjectId", mapObjectId + "");
+			des.values.Set ("damage", damage + "");
+			des.values.Set ("isCriHit", "0");
+			ret.Add (des);
+
+			// 怪物死亡事件
+			if (monsterInf.IsDied) {
+				des = Description.Empty;
+				des.description = Description.InfoMonsterDied;
+				des.values = new NameValueCollection ();
+				des.values.Set ("mapObjectId", mapObjectId + "");
+				// 獎勵資訊
+				var rewards = Common.Common.ParseItem (monsterCfg.Item);
+				foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
+					des.values.Add ("rewards", json);
+				}
+				ret.Add (des);
+			}
+
+			return ret;
+		}
+
 		public IEnumerable<Description> ProcessWork(PlayerDataStore player, Description work){
 			var ret = new List<Description>();
 			LabelProcessWork:
@@ -288,20 +358,10 @@ namespace Model
 						switch (skill.ID) {
 						case ConfigSkill.ID_spinAttack:
 							{
-								monsterInf.hp -= (int)damage;
-								if (monsterInf.IsDied) {
-									mapObject.died = true;
-								}
-								monsterInfo [mapObject.infoKey] = monsterInf;
-								mapObjects [mapObjectId] = mapObject;
+								var infos = ProccessDamageWork (player, mapObjectId, (int)damage);
+								infos.Concat (ProcessWeaponBroken (player));
 
-								des = Description.Empty;
-								des.description = Description.InfoAttack;
-								des.values = new NameValueCollection ();
-								des.values.Set ("mapObjectId", mapObjectId + "");
-								des.values.Set ("damage", damage + "");
-								des.values.Set ("isCriHit", "0");
-								ret.Add (des);
+								ret.AddRange (infos);
 							}
 							break;
 						}
@@ -335,20 +395,9 @@ namespace Model
 							Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
 							var damage = playerBasic.agi * playerAbility.def;
 							damage = (int)Math.Max (0, damage);
-							monsterInf.hp -= (int)damage;
-							if (monsterInf.IsDied) {
-								mapObject.died = true;
-							}
-							monsterInfo [mapObject.infoKey] = monsterInf;
-							mapObjects [mapObjectId] = mapObject;
 
-							des = Description.Empty;
-							des.description = Description.InfoAttack;
-							des.values = new NameValueCollection ();
-							des.values.Set ("mapObjectId", mapObjectId + "");
-							des.values.Set ("damage", damage + "");
-							des.values.Set ("isCriHit", "0");
-							ret.Add (des);
+							var infos = ProccessDamageWork (player, mapObjectId, (int)damage);
+							ret.AddRange (infos);
 						}
 						break;
 					case ConfigSkill.ID_bokyoryokuhakai:
@@ -497,18 +546,9 @@ namespace Model
 						}
 						damage = Math.Max (0, damage);
 						// === 套用傷害 === //
-						monsterInf.hp -= damage;
-						// 計算仇恨值
-						monsterInf.BeAttacked (damage);
-						if (monsterInf.IsDied) {
-							mapObject.died = true;
-							// 獲得獎勵
-							var rewards = Common.Common.ParseItem (monsterCfg.Item);
-							player.playerInMap.storage = rewards.Aggregate (player.playerInMap.storage, Helper.AddItem);
-						}
-						// === 套用結果 === //
-						monsterInfo [mapObject.infoKey] = monsterInf;
-						mapObjects [mapObjectId] = mapObject;
+						ret.AddRange (ProccessDamageWork(player, mapObjectId, damage));
+						// === 處理武器壞掉 === //
+						ret.AddRange (ProcessWeaponBroken (player));
 
 						// 增加武器經驗
 						foreach (var item in player.playerInMap.weapons) {
@@ -520,13 +560,7 @@ namespace Model
 								player.playerInMap.AddExp (cfg.SkillType, 1);
 							}
 						}
-						// === 處理武器壞掉 === //
-						// 注意：使用ToList將陣列Copy
-						var brokenWeapons = player.playerInMap.CheckHandWeaponBroken ().ToList ();
-						// 刪除壞掉武器
-						foreach (var broken in brokenWeapons) {
-							player.playerInMap.weapons.Remove (broken);
-						}
+
 						// ====== 以下處理回傳 ====== //
 						var des = Description.Empty;
 						// === 回傳使用招式 === //
@@ -536,41 +570,6 @@ namespace Model
 							des.values = new NameValueCollection ();
 							foreach (var s in triggered) {
 								des.values.Add ("skills", s.ID);
-							}
-							ret.Add (des);
-						}
-
-						// === 回傳攻擊資訊 === //
-						des = Description.Empty;
-						des.description = Description.InfoAttack;
-						des.values = new NameValueCollection ();
-						des.values.Set ("mapObjectId", mapObjectId + "");
-						des.values.Set ("damage", damage + "");
-						des.values.Set ("isCriHit", isCriHit ? "1": "0");
-						ret.Add (des);
-
-						// === 回傳怪物死亡 === //
-						if (monsterInf.IsDied) {
-							des = Description.Empty;
-							des.description = Description.InfoMonsterDied;
-							des.values = new NameValueCollection ();
-							des.values.Set ("mapObjectId", mapObjectId + "");
-							// 獎勵資訊
-							var rewards = Common.Common.ParseItem (monsterCfg.Item);
-							foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
-								des.values.Add ("rewards", json);
-							}
-							ret.Add (des);
-						}
-
-						// === 回傳壞掉資訊 === //
-						if (brokenWeapons.Count () > 0) {
-							des = Description.Empty;
-							des.description = Description.InfoWeaponBroken;
-							des.values = new NameValueCollection ();
-							foreach (var broken in brokenWeapons) {
-								var jsonstr = JsonUtility.ToJson (broken);
-								des.values.Add ("items", jsonstr);
 							}
 							ret.Add (des);
 						}
