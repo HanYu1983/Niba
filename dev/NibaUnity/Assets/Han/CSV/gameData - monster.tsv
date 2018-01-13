@@ -1,4 +1,7 @@
 id	name	description	item	str	vit	spd	dex	int	luck	characteristic
 ant	螞蟻			3	3	2	0	3	0	
-snack	蛇			3	5	5	5	3	5	
-bear	熊			8	10	8	5	1	0	
+snack	蛇			10	5	5	20	1	5	
+bear	熊			20	20	10	10	1	0	
+bird	鳥			10	10	30	20	0	5	
+toxinSnack	毒蛇			40	10	10	20	1	10	
+bigBear	大熊			25	40	15	5	0	0	
