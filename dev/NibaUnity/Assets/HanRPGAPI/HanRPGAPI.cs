@@ -179,12 +179,12 @@ namespace HanRPGAPI{
 			}
 			var idx = value.Split (new char[]{ '+', '*', '-' });
 			if (idx.Length != 2) {
-				throw new Exception ("format error:"+value);
+				throw new HanRPGAPIException ("格式錯誤:"+value, null);
 			}
 			try{
 				float.Parse (idx[1]);
 			}catch{
-				throw new Exception ("format error:"+value);
+				throw new HanRPGAPIException ("格式錯誤:"+value, null);
 			}
 			var target = idx [0];
 			if (op == ItemEffectType.Plus) {
@@ -282,12 +282,12 @@ namespace HanRPGAPI{
 			}
 			var idx = value.Split (new char[]{ '+', '*', '-' });
 			if (idx.Length != 2) {
-				throw new Exception ("format error:"+value);
+				throw new HanRPGAPIException ("格式錯誤:"+value, null);
 			}
 			try{
 				float.Parse (idx[1]);
 			}catch{
-				throw new Exception ("format error:"+value);
+				throw new HanRPGAPIException ("格式錯誤:"+value, null);
 			}
 			var target = idx [0];
 			if (op == ItemEffectType.Plus) {
@@ -791,6 +791,7 @@ namespace HanRPGAPI{
 
 	#region weapon and skill
 	public partial class Alg{
+		
 		public static IEnumerable<string> AvailableSkills(IEnumerable<string> slotSkills, List<Item> weapons){
 			// 再取得武器本身的招式
 			var handWeapons = weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
@@ -850,6 +851,22 @@ namespace HanRPGAPI{
 				return true;
 			});
 			*/
+		}
+
+		public static string IsCanEquip(List<Item> weapons, Item weapon){
+			var cfg = ConfigItem.Get (weapon.prototype);
+			if (cfg.Type != ConfigItemType.ID_weapon) {
+				return "只能裝備weapon類型，請檢查程式";
+			}
+			var weaponPosition = cfg.Position;
+			var maxCount = ConfigWeaponPosition.Get (weaponPosition).SlotCount;
+			var alreadyEquipCount = weapons.Count(i=>{
+				return ConfigItem.Get (i.prototype).Position == weaponPosition;
+			});
+			if(alreadyEquipCount >= maxCount){
+				return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+cfg.Name;
+			}
+			return null;
 		}
 		/// <summary>
 		/// 判斷武器有沒有壞，每次擊中對手時呼叫

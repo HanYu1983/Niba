@@ -1066,10 +1066,13 @@ namespace Model
 		#endregion
 
 		#region weapon
+
+
 		public string IsCanEquip(Item item, Place who, Place whosStorage){
 			if (who == Place.Storage) {
 				throw new Exception ("只能裝備在家裡口袋或出門的冒險者");
 			}
+			/*
 			var cfg = ConfigItem.Get (item.prototype);
 			if (cfg.Type != ConfigItemType.ID_weapon) {
 				return "只能裝備weapon類型，請檢查程式";
@@ -1090,6 +1093,15 @@ namespace Model
 					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+who;
 				}
 				return null;
+			};*/
+			Func<List<Item>, List<Item>, string> canEquip = (weapons, items) => {
+				var haveCount = items.Count(i=>{
+					return i.Equals(item);
+				});
+				if(haveCount <1){
+					return "沒有那個道具:"+item;
+				}
+				return HanRPGAPI.Alg.IsCanEquip(weapons, item);
 			};
 			var useStorage = 
 				whosStorage == Place.Pocket ? player.storage :
