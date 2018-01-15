@@ -6,6 +6,7 @@ using HanUtil;
 using Common;
 using System.Linq;
 using View;
+using HanRPGAPI;
 
 namespace Model
 {
@@ -202,7 +203,7 @@ namespace Model
 			var fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 
-			var weapon = Common.Item.Empty;
+			var weapon = HanRPGAPI.Item.Empty;
 			weapon.prototype = ConfigItem.ID_woodSword;
 			weapon.count = 1;
 

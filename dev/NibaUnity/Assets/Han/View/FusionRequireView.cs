@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Common;
 using System;
 using System.Linq;
+using HanRPGAPI;
 
 namespace View{
 	public class FusionRequireView : MonoBehaviour {
@@ -52,7 +53,7 @@ namespace View{
 			var targetCfg = ConfigItem.Get (FusionTarget.prototype);
 			txt_fusionTarget.text = string.Format ("合成{0}{1}個", targetCfg.Name, FusionTarget.count);
 
-			var requireItems = Common.Common.ParseItem (targetCfg.FusionRequire).ToList();
+			var requireItems = HanRPGAPI.Alg.ParseItem (targetCfg.FusionRequire).ToList();
 			for (var i = 0; i < txt_requireItems.Length; ++i) {
 				var txt = txt_requireItems [i];
 				if (i >= requireItems.Count) {

@@ -5,7 +5,7 @@ namespace GameView
 {
     public class BackpackItem : BasicItem
     {
-        public Common.Item BackpackItemModel
+		public HanRPGAPI.Item BackpackItemModel
         {
             get;
             set;

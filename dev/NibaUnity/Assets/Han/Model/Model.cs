@@ -7,6 +7,7 @@ using Common;
 using System.Linq;
 using System.IO;
 using System.Threading;
+using HanRPGAPI;
 
 namespace Model
 {

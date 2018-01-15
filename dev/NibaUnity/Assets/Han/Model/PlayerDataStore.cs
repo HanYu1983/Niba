@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using UnityEngine;
 using System.Linq;
 using Common;
+using HanRPGAPI;
 
 namespace Model
 {
@@ -153,7 +154,7 @@ namespace Model
 
 			var m1Info = monsterInfo [m1Object.infoKey];
 			m1Info.type = monsterType;
-			var basic = BasicAbility.Get (m1Info);
+			var basic = Common.Common.GetBasicAbility (m1Info);
 			var fight = basic.FightAbility;
 			m1Info.hp = (int)fight.hp;
 			m1Info.mp = (int)fight.mp;
@@ -246,7 +247,7 @@ namespace Model
 						Item item;
 						item.prototype = itemPrototype;
 						item.count = cnt;
-						player.playerInMap.storage = Common.Common.AddItem (player.playerInMap.storage, item);
+						player.playerInMap.storage = HanRPGAPI.Alg.AddItem (player.playerInMap.storage, item);
 					}
 					break;
 				default:
@@ -292,9 +293,9 @@ namespace Model
 			if (monsterInf.IsDied) {
 				mapObject.died = true;
 				// 獎勵
-				var rewards = Common.Common.ParseItem (monsterCfg.Item);
+				var rewards = HanRPGAPI.Alg.ParseItem (monsterCfg.Item);
 				foreach (var reward in rewards) {
-					player.playerInMap.storage = Common.Common.AddItem (player.playerInMap.storage, reward);
+					player.playerInMap.storage = HanRPGAPI.Alg.AddItem (player.playerInMap.storage, reward);
 				}
 			}
 			monsterInfo [mapObject.infoKey] = monsterInf;
@@ -316,7 +317,7 @@ namespace Model
 				des.values = new NameValueCollection ();
 				des.values.Set ("mapObjectId", mapObjectId + "");
 				// 獎勵資訊
-				var rewards = Common.Common.ParseItem (monsterCfg.Item);
+				var rewards = HanRPGAPI.Alg.ParseItem (monsterCfg.Item);
 				foreach (var json in rewards.Select(i=>JsonUtility.ToJson(i))) {
 					des.values.Add ("rewards", json);
 				}
@@ -436,7 +437,7 @@ namespace Model
 					mapObjects [mapObjectId] = obj;
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
-					var items = Common.Common.ParseItemFromResource (config);
+					var items = HanRPGAPI.Alg.ParseItemFromResource (config);
 					foreach (var item in items) {
 						player.AddItem (item, Place.Map);
 					}
@@ -495,7 +496,7 @@ namespace Model
 						return UnityEngine.Random.Range(1, 101) < rate;
 					});
 					// 取出技能效果
-					var triggeredEffect = triggered.SelectMany (Common.Common.Effect);
+					var triggeredEffect = triggered.SelectMany (HanRPGAPI.Alg.Effect);
 					playerAbility = triggeredEffect.Aggregate(playerAbility, (v,effect)=>{
 						switch(effect.EffectOperator){
 						case "unknown":
@@ -761,7 +762,7 @@ namespace Model
 							monsterInfo[currItem.infoKey] = info;
 
 							var cfg = ConfigMonster.Get(info.type);
-							var ability = BasicAbility.Get(cfg);
+							var ability = HanRPGAPI.Alg.GetBasicAbility(cfg);
 							var fightAbility = ability.FightAbility;
 							var priority = fightAbility.dodge;
 
@@ -921,7 +922,7 @@ namespace Model
 					var monCfg = ConfigMonster.Get(monInfo.type);
 					var canUseSkill = oneEnemySkills.Where(s=>{
 						// 由怪物特徵來算，這樣剛好能忽略ID_enemy特徵的比對
-						var charItem = Common.Common.ParseAbstractItem(monCfg.Characteristic);
+						var charItem = HanRPGAPI.Alg.ParseAbstractItem(monCfg.Characteristic);
 						// 技能特徵必須包含所有怪物特徵
 						foreach(var ci in charItem){
 							if(s.Characteristic.Contains(ci.prototype) == false){
@@ -953,7 +954,7 @@ namespace Model
 						var monInfo = monsterInfo [m.infoKey];
 						var monCfg = ConfigMonster.Get (monInfo.type);
 						// 由怪物特徵來算，這樣剛好能忽略ID_enemy特徵的比對
-						var charItem = Common.Common.ParseAbstractItem (monCfg.Characteristic);
+						var charItem = HanRPGAPI.Alg.ParseAbstractItem (monCfg.Characteristic);
 						// 技能特徵必須包含所有怪物特徵
 						foreach (var ci in charItem) {
 							if (s.Characteristic.Contains (ci.prototype) == false) {
@@ -1025,7 +1026,7 @@ namespace Model
 		public void EquipSkill (Place who, string skillId){
 			var cfg = ConfigSkill.Get (skillId);
 			if (cfg.SkillTypeRequire != null) {
-				var requires = Common.Common.ParseAbstractItem (cfg.SkillTypeRequire);
+				var requires = HanRPGAPI.Alg.ParseAbstractItem (cfg.SkillTypeRequire);
 				foreach (var r in requires) {
 					var skillTypeRequire = r.prototype;
 					var levelRequire = r.count;
@@ -1199,15 +1200,15 @@ namespace Model
 		public void AddItem(Item item, Place who){
 			switch (who) {
 			case Place.Storage:
-				playerInStorage.storage = Common.Common.AddItem (playerInStorage.storage, item);
+				playerInStorage.storage = HanRPGAPI.Alg.AddItem (playerInStorage.storage, item);
 				// 從家裡新增的Item才要更新任務
 				NotifyMissionAddItem (item);
 				break;
 			case Place.Pocket:
-				player.storage = Common.Common.AddItem (player.storage, item);
+				player.storage = HanRPGAPI.Alg.AddItem (player.storage, item);
 				break;
 			case Place.Map:
-				playerInMap.storage = Common.Common.AddItem (playerInMap.storage, item);
+				playerInMap.storage = HanRPGAPI.Alg.AddItem (playerInMap.storage, item);
 				break;
 			default:
 				throw new Exception (who.ToString ());
@@ -1233,10 +1234,10 @@ namespace Model
 			fromStorage.Remove (item);
 			switch (b) {
 			case Place.Storage:
-				playerInStorage.storage = Common.Common.AddItem (playerInStorage.storage, item);
+				playerInStorage.storage = HanRPGAPI.Alg.AddItem (playerInStorage.storage, item);
 				break;
 			case Place.Pocket:
-				player.storage = Common.Common.AddItem (player.storage, item);
+				player.storage = HanRPGAPI.Alg.AddItem (player.storage, item);
 				break;
 			case Place.Map:
 				throw new Exception ("道具不能直接移動到冒險者");
@@ -1251,11 +1252,11 @@ namespace Model
 				throw new Exception("不能在倉庫里合成");
 			}
 			if (who == Place.Pocket) {
-				player.storage = Common.Common.Fusion (fusionTarget, player.storage);
+				player.storage = HanRPGAPI.Alg.Fusion (fusionTarget, player.storage);
 				// 從家裡新增的Item才要更新任務
 				NotifyMissionAddItem (fusionTarget);
 			} else if (who == Place.Map) {
-				playerInMap.storage = Common.Common.Fusion (fusionTarget, playerInMap.storage);
+				playerInMap.storage = HanRPGAPI.Alg.Fusion (fusionTarget, playerInMap.storage);
 			}
 			/*
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
@@ -1363,7 +1364,7 @@ namespace Model
 
 		public IEnumerable<string> AvailableNpcMissions {
 			get {
-				return Common.Common.AvailableNpcMissions (MissionCompleted, advLevel);
+				return HanRPGAPI.Alg.AvailableNpcMissions (MissionCompleted, advLevel);
 				/*
 				return 
 					Enumerable.Range (0, ConfigNpcMission.ID_COUNT)
@@ -1443,7 +1444,7 @@ namespace Model
 				var cfg = ConfigNpcMission.Get (mission.prototype);
 				if (cfg.RequireItem != null) {
 					var isCompleted = true;
-					var requireItems = Common.Common.ParseItem (cfg.RequireItem);
+					var requireItems = HanRPGAPI.Alg.ParseItem (cfg.RequireItem);
 					foreach (var requireItem in requireItems) {
 						var itemCount = mission.itemGot
 							.Where(item=>item.prototype == requireItem.prototype)
@@ -1460,7 +1461,7 @@ namespace Model
 
 				if (cfg.RequireKill != null) {
 					var isCompleted = true;
-					var requireItems = Common.Common.ParseAbstractItem (cfg.RequireKill);
+					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
 					foreach (var requireItem in requireItems) {
 						var itemCount = mission.monsterSkilled
 							.Where (id => id == requireItem.prototype)
@@ -1477,7 +1478,7 @@ namespace Model
 
 				if (cfg.RequireStatus != null) {
 					var isCompleted = true;
-					var requireItems = Common.Common.ParseAbstractItem (cfg.RequireKill);
+					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
 					foreach (var requireItem in requireItems) {
 						if (requireItem.prototype == "money") {
 							// TODO
@@ -1516,7 +1517,7 @@ namespace Model
 				}
 			}
 			var cfg = ConfigNpcMission.Get (id);
-			var rewards = Common.Common.ParseAbstractItem (cfg.Reward);
+			var rewards = HanRPGAPI.Alg.ParseAbstractItem (cfg.Reward);
 			foreach (var reward in rewards) {
 				switch (reward.prototype) {
 				case "money":
@@ -1599,7 +1600,7 @@ namespace Model
 		/// <param name="who">Who.</param>
 		/// <param name="skill">Skill.</param>
 		public static float ComputeSkillTriggerRate(MapPlayer who, ConfigSkill skill){
-			var ais = Common.Common.ParseAbstractItem (skill.SkillTypeRequire);
+			var ais = HanRPGAPI.Alg.ParseAbstractItem (skill.SkillTypeRequire);
 			var needExp = ais.Sum (ai => ai.count);
 			var maxExp = needExp << 1;
 			var haveExp = ais.Sum (ai => who.Exp(ai.prototype));
@@ -1618,7 +1619,7 @@ namespace Model
 			var who = player.GetMapPlayer (who_);
 			// 先取得欄位上的招式
 			var slotSkills = who.skills;
-			return Common.Common.AvailableSkills (slotSkills, who.weapons).Select(ConfigSkill.Get);
+			return HanRPGAPI.Alg.AvailableSkills (slotSkills, who.weapons).Select(ConfigSkill.Get);
 			/*
 			// 再取得武器本身的招式
 			var handWeapons = who.weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
@@ -1654,7 +1655,7 @@ namespace Model
 				throw new Exception ("weapon不該為null");
 			}
 			var tmpFight = FightAbility.Zero;
-			var tmpBasic = Common.Common.CalcAbility (Common.Common.SkillExpFn(who), who.weapons, who.basicAbility, ref tmpFight);
+			var tmpBasic = HanRPGAPI.Alg.CalcAbility (Common.Common.SkillExpFn(who), who.weapons, null, who.basicAbility, ref tmpFight);
 			basic = tmpBasic;
 			fight = tmpFight;
 			/*
@@ -1739,7 +1740,7 @@ namespace Model
 		public static int GetBasicDamage(PlayerDataStore player, MapDataStore map, int mapObjectId){
 			var a = player.playerInMap.basicAbility.FightAbility;
 			var monsterInfo = map.monsterInfo [map.mapObjects [mapObjectId].infoKey];
-			var b = BasicAbility.Get (monsterInfo).FightAbility;
+			var b = Common.Common.GetBasicAbility (monsterInfo).FightAbility;
 			return (int)(a.atk - b.def);
 		}
 

@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Common;
 using System.Linq;
+using HanRPGAPI;
 
 namespace View
 {

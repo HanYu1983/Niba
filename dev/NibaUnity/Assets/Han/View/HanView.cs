@@ -4,6 +4,7 @@ using Common;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using HanRPGAPI;
 
 namespace View
 {

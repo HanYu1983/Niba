@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using HanRPGAPI;
 
 namespace View
 {
@@ -49,16 +50,16 @@ namespace View
 
 			var requireItem = new List<AbstractItem> ();
 			if (cfg.RequireItem != null) {
-				requireItem.AddRange (Common.Common.ParseAbstractItem (cfg.RequireItem));
+				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireItem));
 			}
 			if (cfg.RequireKill != null) {
-				requireItem.AddRange (Common.Common.ParseAbstractItem (cfg.RequireKill));
+				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill));
 			}
 			if (cfg.RequireStatus != null) {
-				requireItem.AddRange (Common.Common.ParseAbstractItem (cfg.RequireStatus));
+				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireStatus));
 			}
 			requireItemDataProvider.Data = requireItem;
-			rewardDataProvider.Data = Common.Common.ParseAbstractItem (cfg.Reward).ToList ();
+			rewardDataProvider.Data = HanRPGAPI.Alg.ParseAbstractItem (cfg.Reward).ToList ();
 
 			requireListView.UpdateDataView (model);
 			rewardListView.UpdateDataView (model);

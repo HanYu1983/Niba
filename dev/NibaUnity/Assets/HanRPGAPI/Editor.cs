@@ -4,11 +4,11 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor;
 
-namespace Model
+namespace HanRPGAPI
 {
 	public class Editor
 	{
-		[MenuItem ("Niba/GenerateConfig")]
+		[MenuItem ("HanRPGAPI/GenerateConfig")]
 		public static void GenConfig(){
 			GenCode ("ConfigItemType", null, new string[]{
 				"ID", "string",
@@ -122,17 +122,19 @@ namespace Model
 		public static void GenCode(string clzName, string parent, string[] typeInfo, string fileName){
 			var csv = ReadCSV (Application.dataPath+"/Han/"+fileName, '\t');
 			var code = WriteClass (
-				           clzName + (parent != null ? (" :" + parent) : ""), 
-				           clzName, 
-				           typeInfo,
-				           csv
-			           );
+				"HanRPGAPI",
+				clzName + (parent != null ? (" :" + parent) : ""), 
+				clzName, 
+				typeInfo,
+				csv
+			);
 			File.WriteAllText(Application.dataPath + "/Han/Config/"+clzName+".cs", code);
 		}
 
-		public static string WriteClass(string clz, string retClz, string[] typeInfo, string[][] csv){
+		public static string WriteClass(string ns, string clz, string retClz, string[] typeInfo, string[][] csv){
 			var str = "";
 			str += "using System;\n";
+			str += string.Format("namespace {0}{{\n", ns);
 			str += string.Format("public class {0} {{\n", clz);
 			{
 				// getter setter
@@ -176,6 +178,7 @@ namespace Model
 				}
 				str += "}";
 			}
+			str += "}";
 			str += "}";
 			return str;
 		}
