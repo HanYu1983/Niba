@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigAbility {
 public string ID { get; set; }
 public float Str { get; set; }
@@ -71,4 +72,4 @@ case "speed": return new ConfigAbility {ID="speed",Vit=0.1f,Agi=0.3f};
 case "move": return new ConfigAbility {ID="move",Vit=0.1f,Agi=0.05f};
 case "subtle": return new ConfigAbility {ID="subtle",Int=0.1f,Luc=0.1f};
 default: throw new Exception(key);
-}}}
+}}}}

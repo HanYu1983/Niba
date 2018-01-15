@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigResource {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -23,4 +24,4 @@ case "tree": return new ConfigResource {ID="tree",Name="樹",Item="wood_1"};
 case "stone": return new ConfigResource {ID="stone",Name="石",Item="stone_1"};
 case "iron": return new ConfigResource {ID="iron",Name="鐵礦",Item="iron_1"};
 default: throw new Exception(key);
-}}}
+}}}}

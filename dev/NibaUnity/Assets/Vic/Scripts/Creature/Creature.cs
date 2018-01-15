@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Common;
 using System;
+using HanRPGAPI;
 
 namespace GameView
 {

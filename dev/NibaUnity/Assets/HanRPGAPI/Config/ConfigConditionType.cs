@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigConditionType {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -22,4 +23,4 @@ case "deffence": return new ConfigConditionType {ID="deffence",Name="防守時"}
 case "turn": return new ConfigConditionType {ID="turn",Name="回合自動"};
 case "menu": return new ConfigConditionType {ID="menu",Name="選單"};
 default: throw new Exception(key);
-}}}
+}}}}

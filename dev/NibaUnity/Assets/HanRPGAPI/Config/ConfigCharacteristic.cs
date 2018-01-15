@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigCharacteristic {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -25,4 +26,4 @@ case "enemyAll": return new ConfigCharacteristic {ID="enemyAll",Name="敵全體"
 case "fly": return new ConfigCharacteristic {ID="fly",Name="飛行"};
 case "boss": return new ConfigCharacteristic {ID="boss",Name="魔王"};
 default: throw new Exception(key);
-}}}
+}}}}

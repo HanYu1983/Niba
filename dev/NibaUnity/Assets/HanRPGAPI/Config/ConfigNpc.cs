@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigNpc {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -13,4 +14,4 @@ default: throw new Exception(key+"");
 switch(key){
 case "guide": return new ConfigNpc {ID="guide",Name="新手指引"};
 default: throw new Exception(key);
-}}}
+}}}}

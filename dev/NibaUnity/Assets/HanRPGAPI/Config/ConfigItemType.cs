@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigItemType {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -22,4 +23,4 @@ case "weapon": return new ConfigItemType {ID="weapon",Name="武器"};
 case "food": return new ConfigItemType {ID="food",Name="食物"};
 case "important": return new ConfigItemType {ID="important",Name="重要"};
 default: throw new Exception(key);
-}}}
+}}}}

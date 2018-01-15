@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Model;
 using Common;
 using System;
+using HanRPGAPI;
 
 namespace GameView {
     public class Tile : Item

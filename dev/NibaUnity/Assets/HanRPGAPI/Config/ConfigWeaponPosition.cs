@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigWeaponPosition {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -25,4 +26,4 @@ case "foot": return new ConfigWeaponPosition {ID="foot",Name="腳",SlotCount=1};
 case "hand": return new ConfigWeaponPosition {ID="hand",Name="手",SlotCount=2};
 case "accessory": return new ConfigWeaponPosition {ID="accessory",Name="配件",SlotCount=3};
 default: throw new Exception(key);
-}}}
+}}}}

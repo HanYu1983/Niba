@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigNpcMission {
 public string ID { get; set; }
 public string Npc { get; set; }
@@ -31,4 +32,4 @@ case "2": return new ConfigNpcMission {ID="2",Npc="guide",Level=0,RequireKill="a
 case "3": return new ConfigNpcMission {ID="3",Npc="guide",Level=1,RequireStatus="money_1000",Dialog="請存到1000元"};
 case "4": return new ConfigNpcMission {ID="4",Npc="guide",Level=1,RequireStatus="atk_10",Dialog="請將攻擊力加到10"};
 default: throw new Exception(key);
-}}}
+}}}}

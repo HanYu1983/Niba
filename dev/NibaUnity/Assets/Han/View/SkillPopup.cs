@@ -5,6 +5,7 @@ using Common;
 using System;
 using System.Linq;
 using UnityEngine.UI;
+using HanRPGAPI;
 
 namespace View{
 	public class SkillPopup : MonoBehaviour {

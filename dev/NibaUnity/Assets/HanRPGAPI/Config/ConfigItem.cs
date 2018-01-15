@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigItem {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -45,4 +46,4 @@ case "grassShoe": return new ConfigItem {ID="grassShoe",Name="草鞋",Type="weap
 case "grassKen": return new ConfigItem {ID="grassKen",Name="布拳套",Type="weapon",SkillType="karate",MaxCount=1,FusionRequire="grass_10",SkillRequire="tailor_1",Ability="atk+2",Position="hand",UseCount=20};
 case "woodSword": return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",SkillType="fencingArt",MaxCount=1,FusionRequire="wood_5",SkillRequire="woodworker_1",Ability="atk+5",Position="head",UseCount=40};
 default: throw new Exception(key);
-}}}
+}}}}

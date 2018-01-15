@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigSkill {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -53,4 +54,4 @@ case "bokyoryokuhakai": return new ConfigSkill {ID="bokyoryokuhakai",Name="防�
 case "karadaAttack": return new ConfigSkill {ID="karadaAttack",Name="身體撞擊",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemy"};
 case "spinAttack": return new ConfigSkill {ID="spinAttack",Name="回轉拳",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemyAll"};
 default: throw new Exception(key);
-}}}
+}}}}

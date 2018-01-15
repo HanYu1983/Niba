@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigSkillType {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -40,4 +41,4 @@ case "speed": return new ConfigSkillType {ID="speed",Name="輕裝"};
 case "move": return new ConfigSkillType {ID="move",Name="移動"};
 case "subtle": return new ConfigSkillType {ID="subtle",Name="細微"};
 default: throw new Exception(key);
-}}}
+}}}}

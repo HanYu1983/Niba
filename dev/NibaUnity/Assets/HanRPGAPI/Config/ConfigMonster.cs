@@ -1,4 +1,5 @@
 using System;
+namespace HanRPGAPI{
 public class ConfigMonster {
 public string ID { get; set; }
 public string Name { get; set; }
@@ -36,4 +37,4 @@ case "bird": return new ConfigMonster {ID="bird",Name="鳥",Str=10,Vit=10,Agi=30
 case "toxinSnack": return new ConfigMonster {ID="toxinSnack",Name="毒蛇",Str=40,Vit=10,Agi=10,Dex=20,Int=1,Luc=10};
 case "bigBear": return new ConfigMonster {ID="bigBear",Name="大熊",Str=25,Vit=40,Agi=15,Dex=5,Int=0,Luc=0};
 default: throw new Exception(key);
-}}}
+}}}}

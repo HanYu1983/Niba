@@ -1,20 +1,43 @@
 ﻿using System;
 using System.IO;
-using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine;
 using UnityEditor;
 
 namespace HanRPGAPI
 {
+	public class ConfigInfo : ScriptableObject{
+		public static string ASSET_PATH = "Assets/HanRPGAPI/HanRPGAPIConfig.asset";
+
+		public string csvPath;
+		public string classPath;
+		[MenuItem ("HanRPGAPI/CreateConfigAsset")]
+		public static ConfigInfo GenConfigAsset(){
+			var configInfo = CreateInstance<ConfigInfo> ();
+			configInfo.classPath = Application.dataPath + "/HanRPGAPI/Config";
+			configInfo.csvPath = Application.dataPath + "/HanRPGAPI/CSV";
+			AssetDatabase.CreateAsset (configInfo, ASSET_PATH);
+			AssetDatabase.Refresh ();
+			return configInfo;
+		}
+	}
+
 	public class HanRPGAPIEditor
 	{
-		[MenuItem ("HanRPGAPI/GenerateConfig")]
+		[MenuItem ("HanRPGAPI/CSV2Class")]
 		public static void GenConfig(){
+			var config = AssetDatabase.LoadAssetAtPath<ConfigInfo> (ConfigInfo.ASSET_PATH);
+			if (config == null) {
+				throw new Exception ("請先執行:HanRPGAPI/CreateConfigAsset");
+			}
+			var path = config.classPath;
+			var csvPath = config.csvPath;
+
 			GenCode ("ConfigItemType", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
-			}, "CSV/gameData - itemType.tsv");
+			}, csvPath+"/gameData - itemType.tsv", path);
 
 			GenCode ("ConfigMonster", null, new string[]{
 				"ID", "string",
@@ -28,14 +51,14 @@ namespace HanRPGAPI
 				"Int","int",
 				"Luc","int",
 				"Characteristic","string",
-			}, "CSV/gameData - monster.tsv");
+			}, csvPath+"/gameData - monster.tsv", path);
 
 			GenCode ("ConfigResource", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
 				"Item","string",
-			}, "CSV/gameData - resource.tsv");
+			}, csvPath+"/gameData - resource.tsv", path);
 
 			GenCode ("ConfigItem", null, new string[]{
 				"ID", "string",
@@ -49,13 +72,13 @@ namespace HanRPGAPI
 				"Ability","string",
 				"Position","string",
 				"UseCount","int",
-			}, "CSV/gameData - item.tsv");
+			}, csvPath+"/gameData - item.tsv", path);
 
 			GenCode ("ConfigSkillType", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
-			}, "CSV/gameData - skillType.tsv");
+			}, csvPath+"/gameData - skillType.tsv", path);
 
 			GenCode ("ConfigSkill", null, new string[]{
 				"ID", "string",
@@ -68,25 +91,25 @@ namespace HanRPGAPI
 				"Effect", "string",
 				"Values", "string",
 				"Characteristic","string",
-			}, "CSV/gameData - skill.tsv");
+			}, csvPath+"/gameData - skill.tsv", path);
 
 			GenCode ("ConfigCharacteristic", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string",
-			}, "CSV/gameData - Characteristic.tsv");
+			}, csvPath+"/gameData - Characteristic.tsv", path);
 
 			GenCode ("ConfigConditionType", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
-			}, "CSV/gameData - conditionType.tsv");
+			}, csvPath+"/gameData - conditionType.tsv", path);
 
 			GenCode ("ConfigNpc", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"Description", "string", 
-			}, "CSV/gameData - npc.tsv");
+			}, csvPath+"/gameData - npc.tsv", path);
 
 			GenCode ("ConfigNpcMission", null, new string[]{
 				"ID", "string",
@@ -98,7 +121,7 @@ namespace HanRPGAPI
 				"Reward", "string",
 				"Dependency", "string",
 				"Dialog", "string",
-			}, "CSV/gameData - npcMission.tsv");
+			}, csvPath+"/gameData - npcMission.tsv", path);
 
 			GenCode ("ConfigAbility", null, new string[]{
 				"ID", "string",
@@ -108,19 +131,19 @@ namespace HanRPGAPI
 				"Dex", "float", 
 				"Int","float",
 				"Luc","float",
-			}, "CSV/gameData - ability.tsv");
+			}, csvPath+"/gameData - ability.tsv", path);
 
 			GenCode ("ConfigWeaponPosition", null, new string[]{
 				"ID", "string",
 				"Name", "string",
 				"SlotCount", "int",
-			}, "CSV/gameData - weaponPosition.tsv");
+			}, csvPath+"/gameData - weaponPosition.tsv", path);
 
 			AssetDatabase.Refresh();
 		}
 
-		public static void GenCode(string clzName, string parent, string[] typeInfo, string fileName){
-			var csv = ReadCSV (Application.dataPath+"/Han/"+fileName, '\t');
+		public static void GenCode(string clzName, string parent, string[] typeInfo, string fileName, string savePath){
+			var csv = ReadCSV (fileName, '\t');
 			var code = WriteClass (
 				"HanRPGAPI",
 				clzName + (parent != null ? (" :" + parent) : ""), 
@@ -128,7 +151,7 @@ namespace HanRPGAPI
 				typeInfo,
 				csv
 			);
-			File.WriteAllText(Application.dataPath + "/Han/Config/"+clzName+".cs", code);
+			File.WriteAllText(savePath+"/"+clzName+".cs", code);
 		}
 
 		public static string WriteClass(string ns, string clz, string retClz, string[] typeInfo, string[][] csv){
