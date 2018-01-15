@@ -246,7 +246,7 @@ namespace Model
 						Item item;
 						item.prototype = itemPrototype;
 						item.count = cnt;
-						player.playerInMap.storage = Helper.AddItem (player.playerInMap.storage, item);
+						player.playerInMap.storage = Common.Common.AddItem (player.playerInMap.storage, item);
 					}
 					break;
 				default:
@@ -294,7 +294,7 @@ namespace Model
 				// 獎勵
 				var rewards = Common.Common.ParseItem (monsterCfg.Item);
 				foreach (var reward in rewards) {
-					player.playerInMap.storage = Helper.AddItem (player.playerInMap.storage, reward);
+					player.playerInMap.storage = Common.Common.AddItem (player.playerInMap.storage, reward);
 				}
 			}
 			monsterInfo [mapObject.infoKey] = monsterInf;
@@ -1199,15 +1199,15 @@ namespace Model
 		public void AddItem(Item item, Place who){
 			switch (who) {
 			case Place.Storage:
-				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
+				playerInStorage.storage = Common.Common.AddItem (playerInStorage.storage, item);
 				// 從家裡新增的Item才要更新任務
 				NotifyMissionAddItem (item);
 				break;
 			case Place.Pocket:
-				player.storage = Helper.AddItem (player.storage, item);
+				player.storage = Common.Common.AddItem (player.storage, item);
 				break;
 			case Place.Map:
-				playerInMap.storage = Helper.AddItem (playerInMap.storage, item);
+				playerInMap.storage = Common.Common.AddItem (playerInMap.storage, item);
 				break;
 			default:
 				throw new Exception (who.ToString ());
@@ -1233,10 +1233,10 @@ namespace Model
 			fromStorage.Remove (item);
 			switch (b) {
 			case Place.Storage:
-				playerInStorage.storage = Helper.AddItem (playerInStorage.storage, item);
+				playerInStorage.storage = Common.Common.AddItem (playerInStorage.storage, item);
 				break;
 			case Place.Pocket:
-				player.storage = Helper.AddItem (player.storage, item);
+				player.storage = Common.Common.AddItem (player.storage, item);
 				break;
 			case Place.Map:
 				throw new Exception ("道具不能直接移動到冒險者");
@@ -1250,16 +1250,24 @@ namespace Model
 			if (who == Place.Storage) {
 				throw new Exception("不能在倉庫里合成");
 			}
+			if (who == Place.Pocket) {
+				player.storage = Common.Common.Fusion (fusionTarget, player.storage);
+				// 從家裡新增的Item才要更新任務
+				NotifyMissionAddItem (fusionTarget);
+			} else if (who == Place.Map) {
+				playerInMap.storage = Common.Common.Fusion (fusionTarget, playerInMap.storage);
+			}
+			/*
 			Func<List<Item>, List<Item>> fusion = (storage_)=>{
 				var requires = Common.Common.ParseItem (ConfigItem.Get (fusionTarget.prototype).FusionRequire);
 				var formatForSubstrct = requires.Select (item => {
 					item.count = -(item.count*fusionTarget.count);
 					return item;
 				});
-				var tempStorage = Enumerable.Aggregate (formatForSubstrct, storage_, Helper.AddItem);
+				var tempStorage = Enumerable.Aggregate (formatForSubstrct, storage_, Common.Common.AddItem);
 
 				var fusionItem = fusionTarget;
-				tempStorage = Helper.AddItem (tempStorage, fusionItem);
+				tempStorage = Common.Common.AddItem (tempStorage, fusionItem);
 
 				if(who == Place.Storage){
 					// 從家裡新增的Item才要更新任務
@@ -1272,6 +1280,7 @@ namespace Model
 			} else if (who == Place.Map) {
 				playerInMap.storage = fusion (playerInMap.storage);
 			}
+			*/
 		}
 
 		public int IsCanFusion(string prototype, Place who){
@@ -1354,6 +1363,8 @@ namespace Model
 
 		public IEnumerable<string> AvailableNpcMissions {
 			get {
+				return Common.Common.AvailableNpcMissions (MissionCompleted, advLevel);
+				/*
 				return 
 					Enumerable.Range (0, ConfigNpcMission.ID_COUNT)
 						.Select (ConfigNpcMission.Get)
@@ -1374,6 +1385,7 @@ namespace Model
 							return true;
 						})
 						.Select (cfg => cfg.ID);
+				*/
 			}
 		}
 		/// <summary>
@@ -1605,7 +1617,9 @@ namespace Model
 		public static IEnumerable<ConfigSkill> AvailableSkills(PlayerDataStore player, Place who_){
 			var who = player.GetMapPlayer (who_);
 			// 先取得欄位上的招式
-			var slotSkills = who.skills.Select (ConfigSkill.Get);
+			var slotSkills = who.skills;
+			return Common.Common.AvailableSkills (slotSkills, who.weapons).Select(ConfigSkill.Get);
+			/*
 			// 再取得武器本身的招式
 			var handWeapons = who.weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
 			var hasHandWeapons = handWeapons.Count () > 0;
@@ -1621,48 +1635,6 @@ namespace Model
 				});
 			}).Distinct();
 			return slotSkills.Concat (weaponSkills);
-
-			/*
-			var skills = Enumerable
-				.Range(0, ConfigSkill.ID_COUNT)
-				.Select(ConfigSkill.Get);
-			var who = player.GetMapPlayer (who_);
-			var weapons = who.weapons;
-			var useWeaponTypes = weapons.Select (i => ConfigItem.Get (i.prototype).SkillType);
-			return skills.Where (cfg => {
-				// 判斷技能類型需求
-				// 比如：需要拳術5級和劍術3級
-				var ais = Common.Common.ParseAbstractItem(cfg.SkillTypeRequire);
-				foreach(var ai in ais){
-					var skillType = ai.prototype;
-					var skillLevel = ai.count;
-					// 其中一項不符就回傳
-					if(who.Exp(skillType) < skillLevel){
-						return false;
-					}
-				}
-				// 判斷這個技能是不是需要武器
-				var isNeedWeapon = cfg.SlotCount == 0;
-				if(isNeedWeapon == true){
-					// 以第一個需求技能的代表武器為主
-					var firstSkill = ais.FirstOrDefault();
-					// 有需要武器一定要有所需技能類型
-					var isInvalidConfig = firstSkill.Item.Equals(Item.Empty);
-					if(isInvalidConfig){
-						throw new Exception("錯誤的設定:"+cfg.SkillTypeRequire);
-					}
-					var skillType = firstSkill.prototype;
-					// 判斷有沒有裝備該類技能類型的武器
-					var isMatch = useWeaponTypes.Where(st=>st==skillType).Count()>0;
-					if(isMatch == false){
-						return false;
-					}
-				} else {
-					// slot的招式
-					// TODO 判斷有沒有裝備這個招式
-				}
-				return true;
-			});
 			*/
 		}
 		/// <summary>
@@ -1678,7 +1650,14 @@ namespace Model
 				throw new Exception ("計算能力時不能傳入UnknowPlayer");
 			}
 			var who = player.GetMapPlayer (who_);
-
+			if (who.weapons == null) {
+				throw new Exception ("weapon不該為null");
+			}
+			var tmpFight = FightAbility.Zero;
+			var tmpBasic = Common.Common.CalcAbility (Common.Common.SkillExpFn(who), who.weapons, who.basicAbility, ref tmpFight);
+			basic = tmpBasic;
+			fight = tmpFight;
+			/*
 			var tmpBasic = BasicAbility.Default;
 			var skillbonus = Enumerable.Range (0, ConfigSkillType.ID_COUNT).Select (ConfigSkillType.Get)
 				.Select (cfg => cfg.ID).Select (ConfigAbility.Get)
@@ -1699,9 +1678,6 @@ namespace Model
 			});
 			tmpBasic = tmpBasic.Add(skillbonus);
 			tmpBasic = tmpBasic.Add(who.basicAbility);
-			if (who.weapons == null) {
-				throw new Exception ("weapon不該為null");
-			}
 			var effects = who.weapons.SelectMany (it => it.Effects);
 			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
 			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
@@ -1727,11 +1703,16 @@ namespace Model
 			});
 			basic = tmpBasic;
 			fight = tmpFight;
+			*/
 		}
+
+
 
 		public static BasicAbility CalcMonsterAbility(PlayerDataStore player, MapDataStore map, int mapObjectId){
 			var mapObject = map.mapObjects [mapObjectId];
 			var monsterInfo = map.monsterInfo [mapObject.infoKey];
+			return Common.Common.CalcMonsterAbility (monsterInfo);
+			/*
 			var tmpBasic = monsterInfo.basicAbility;
 			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
 			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
@@ -1746,6 +1727,7 @@ namespace Model
 				return curr.Effect(accu);
 			});
 			return tmpBasic;
+			*/
 		}
 		/// <summary>
 		/// 計算普攻傷害
@@ -1761,85 +1743,6 @@ namespace Model
 			return (int)(a.atk - b.def);
 		}
 
-		public static Func<int> GetMaxCountFromItem(Item item){
-			return () => {
-				var config = ConfigItem.Get (item.prototype);
-				var maxCount = config.MaxCount;
-				return maxCount;
-			};
-		}
 
-		public static List<Item> AddItem(List<Item> input, Item item){
-			return AddItemWithFn (input, item, GetMaxCountFromItem (item));
-		}
-
-		/// <summary>
-		/// 加入道具到指定列表
-		/// </summary>
-		/// <returns>The item.</returns>
-		/// <param name="input">Input.</param>
-		/// <param name="item">Item.</param>
-		public static List<Item> AddItemWithFn(List<Item> input, Item item, Func<int> maxCountFn){
-			var container = new List<Item> (input);
-			var shouldArrange = true;
-			var maxCount = maxCountFn ();
-			if (item.count < 0) {
-				// 處理減
-				var allCount = input.Sum (it => {
-					return it.prototype == item.prototype ? it.count : 0;
-				});
-				var isEnougth = allCount + item.count >= 0;
-				if (isEnougth == false) {
-					throw new MessageException ("道具數量不足");
-				}
-				shouldArrange = true;
-			} else {
-				// 處理加
-				for (var i = 0; i < container.Count; ++i) {
-					var adjItem = container [i];
-					if (adjItem.prototype != item.prototype) {
-						continue;
-					}
-					if (adjItem.count + item.count > maxCount) {
-						continue;
-					}
-					adjItem.count += item.count;
-					container [i] = adjItem;
-					shouldArrange = false;
-					break;
-				}
-			}
-			if (shouldArrange == false) {
-				return container;
-			}
-			container.Add (item);
-			// 計算同一種類的道具總數
-			var sumOfCount = container.Where (obj => {
-				return obj.prototype == item.prototype;
-			}).Aggregate (0, (sum, obj) => {
-				return sum + obj.count;
-			});
-			// 一個道具在一格中的最大數量限制
-			var maxOfItem = maxCount;
-			// 依最大限制重新計算分組
-			var num = sumOfCount / maxOfItem;
-			// 最後一個剩餘
-			var remain = sumOfCount % maxOfItem;
-			// 將拿來計算的道具抽出來
-			var itemExcludeAddedItemPrototype = container.Where (obj => {
-				return obj.prototype != item.prototype;
-			});
-			// 重建要新加入的道具
-			var originItem = item;
-			originItem.count = maxOfItem;
-			var itemsShouldReAdd = Enumerable.Repeat (originItem, num);
-			if (remain > 0) {
-				originItem.count = remain;
-				itemsShouldReAdd = itemsShouldReAdd.Concat (Enumerable.Repeat (originItem, 1));
-			}
-			// 加回去
-			var newItems = itemExcludeAddedItemPrototype.Concat (itemsShouldReAdd);
-			return newItems.ToList();
-		}
 	}
 }
