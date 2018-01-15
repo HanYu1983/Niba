@@ -6,7 +6,7 @@ using UnityEditor;
 
 namespace HanRPGAPI
 {
-	public class Editor
+	public class HanRPGAPIEditor
 	{
 		[MenuItem ("HanRPGAPI/GenerateConfig")]
 		public static void GenConfig(){

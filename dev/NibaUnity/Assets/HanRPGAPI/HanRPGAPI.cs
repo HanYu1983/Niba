@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace HanRPGAPI{
 	#region ability
+	/// <summary>
+	/// 基礎能力
+	/// 可用來升級加點
+	/// </summary>
 	[Serializable]
 	public struct BasicAbility {
 		public float str, vit, agi, dex, Int, luc;
@@ -58,6 +62,10 @@ namespace HanRPGAPI{
 			return string.Format (@"腕力:{0} 體質:{1} 敏捷:{2} 技巧:{3} 知識:{4} 幸運:{5}", str, vit, agi, dex, Int, luc);
 		}
 
+		/// <summary>
+		/// 轉換成戰鬥能力
+		/// </summary>
+		/// <value>The fight ability.</value>
 		public FightAbility FightAbility{
 			get{
 				ConfigAbility config = null;
@@ -94,6 +102,10 @@ namespace HanRPGAPI{
 		}
 	}
 
+	/// <summary>
+	/// 戰鬥能力
+	/// 用來計算戰鬥傷害結果
+	/// </summary>
 	public struct FightAbility {
 		public float hp, mp, atk, def, matk, mdef, accuracy, dodge, critical;
 
@@ -139,6 +151,244 @@ namespace HanRPGAPI{
 
 		public int Damage(FightAbility other){
 			return (int)(atk - other.def);
+		}
+	}
+
+	public enum ItemEffectType{
+		Unknown, Plus, Multiply, Minus, Enforce
+	}
+
+	public struct ItemEffect{
+		public string value;
+		public ItemEffectType EffectOperator{
+			get{
+				var op = 
+					value.IndexOf ("+") != -1 ? ItemEffectType.Plus :
+					value.IndexOf ("*") != -1 ? ItemEffectType.Multiply :
+					value.IndexOf ("-") != -1 ? ItemEffectType.Minus :
+					value.IndexOf("@") != -1 ? ItemEffectType.Enforce :
+					ItemEffectType.Unknown;
+				return op;
+			}
+		}
+		// 請參考CalcAbility
+		public BasicAbility Effect(BasicAbility ability){
+			var op = EffectOperator;
+			if (op == ItemEffectType.Enforce) {
+				throw new HanRPGAPIException ("強化效果不能來這裡計算", null);
+			}
+			var idx = value.Split (new char[]{ '+', '*', '-' });
+			if (idx.Length != 2) {
+				throw new Exception ("format error:"+value);
+			}
+			try{
+				float.Parse (idx[1]);
+			}catch{
+				throw new Exception ("format error:"+value);
+			}
+			var target = idx [0];
+			if (op == ItemEffectType.Plus) {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str += effectValue;
+					break;
+				case "vit":
+					ability.vit += effectValue;
+					break;
+				case "dex":
+					ability.dex += effectValue;
+					break;
+				case "agi":
+					ability.agi += effectValue;
+					break;
+				case "int":
+					ability.Int += effectValue;
+					break;
+				case "luc":
+					ability.luc += effectValue;
+					break;
+				}
+			} 
+
+			if (op == ItemEffectType.Minus) {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str -= effectValue;
+					break;
+				case "vit":
+					ability.vit -= effectValue;
+					break;
+				case "dex":
+					ability.dex -= effectValue;
+					break;
+				case "agi":
+					ability.agi -= effectValue;
+					break;
+				case "int":
+					ability.Int -= effectValue;
+					break;
+				case "luc":
+					ability.luc -= effectValue;
+					break;
+				}
+			} 
+
+			if (EffectOperator == ItemEffectType.Multiply) {
+				var effectValue = float.Parse (idx [1]);
+				switch (target) {
+				case "str":
+					ability.str = (int)(ability.str * effectValue);
+					break;
+				case "vit":
+					ability.vit = (int)(ability.vit * effectValue);
+					break;
+				case "dex":
+					ability.dex = (int)(ability.dex * effectValue);
+					break;
+				case "agi":
+					ability.agi = (int)(ability.agi * effectValue);
+					break;
+				case "int":
+					ability.Int = (int)(ability.Int * effectValue);
+					break;
+				case "luc":
+					ability.luc = (int)(ability.luc * effectValue);
+					break;
+				}
+			}
+			return ability;
+		}
+
+		// 請參考Helper.CalcAbility
+		public FightAbility Effect(FightAbility ability){
+			/*
+			var idx = value.Split (new char[]{ '+', '*', '-' });
+			if (idx.Length != 2) {
+				throw new Exception ("format error:" + value);
+			}
+			try {
+				float.Parse (idx [1]);
+			} catch {
+				throw new Exception ("format error:" + value);
+			}
+			var target = idx [0];
+			var op = EffectOperator;
+			*/
+			var op = EffectOperator;
+			if (op == ItemEffectType.Enforce) {
+				throw new HanRPGAPIException ("強化效果不能來這裡計算", null);
+			}
+			var idx = value.Split (new char[]{ '+', '*', '-' });
+			if (idx.Length != 2) {
+				throw new Exception ("format error:"+value);
+			}
+			try{
+				float.Parse (idx[1]);
+			}catch{
+				throw new Exception ("format error:"+value);
+			}
+			var target = idx [0];
+			if (op == ItemEffectType.Plus) {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp += effectValue;
+					break;
+				case "mp":
+					ability.mp += effectValue;
+					break;
+				case "atk":
+					ability.atk += effectValue;
+					break;
+				case "def":
+					ability.def += effectValue;
+					break;
+				case "matk":
+					ability.matk += effectValue;
+					break;
+				case "mdef":
+					ability.mdef += effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy += effectValue;
+					break;
+				case "dodge":
+					ability.dodge += effectValue;
+					break;
+				case "critical":
+					ability.critical += effectValue;
+					break;
+				}
+			}
+
+			if (op == ItemEffectType.Minus) {
+				var effectValue = int.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp -= effectValue;
+					break;
+				case "mp":
+					ability.mp -= effectValue;
+					break;
+				case "atk":
+					ability.atk -= effectValue;
+					break;
+				case "def":
+					ability.def -= effectValue;
+					break;
+				case "matk":
+					ability.matk -= effectValue;
+					break;
+				case "mdef":
+					ability.mdef -= effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy -= effectValue;
+					break;
+				case "dodge":
+					ability.dodge -= effectValue;
+					break;
+				case "critical":
+					ability.critical -= effectValue;
+					break;
+				}
+			}
+
+			if (op == ItemEffectType.Minus) {
+				var effectValue = float.Parse (idx [1]);
+				switch (target) {
+				case "hp":
+					ability.hp *= effectValue;
+					break;
+				case "mp":
+					ability.mp *= effectValue;
+					break;
+				case "atk":
+					ability.atk *= effectValue;
+					break;
+				case "def":
+					ability.def *= effectValue;
+					break;
+				case "matk":
+					ability.matk *= effectValue;
+					break;
+				case "mdef":
+					ability.mdef *= effectValue;
+					break;
+				case "accuracy":
+					ability.accuracy *= effectValue;
+					break;
+				case "dodge":
+					ability.dodge *= effectValue;
+					break;
+				case "critical":
+					ability.critical *= effectValue;
+					break;
+				}
+			}
+			return ability;
 		}
 	}
 
@@ -190,8 +440,8 @@ namespace HanRPGAPI{
 				effects = effects.Concat (bufs);
 			}
 			// 分類效果
-			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
-			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
+			var addEffect = effects.Where (ef => ef.EffectOperator == ItemEffectType.Plus || ef.EffectOperator == ItemEffectType.Minus);
+			var multiEffect = effects.Where (ef => ef.EffectOperator == ItemEffectType.Multiply);
 			// 準備初值
 			var tmpBasic = BasicAbility.Default;
 			tmpBasic = tmpBasic.Add(skillbonus);
@@ -220,225 +470,6 @@ namespace HanRPGAPI{
 			return tmpBasic;
 		}
 	}
-
-	public struct ItemEffect{
-		public string value;
-		public string EffectOperator{
-			get{
-				var op = 
-					value.IndexOf ("+") != -1 ? "+" :
-					value.IndexOf ("*") != -1 ? "*" :
-					value.IndexOf ("-") != -1 ? "-" :
-					value.IndexOf("@") != -1 ? "enforce" :
-					"unknown";
-				/*if (op == "unknown") {
-					throw new Exception ("format error:"+value);
-				}*/
-				return op;
-			}
-		}
-		// 請參考Helper.CalcAbility
-		public BasicAbility Effect(BasicAbility ability){
-			var idx = value.Split (new char[]{ '+', '*', '-' });
-			if (idx.Length != 2) {
-				throw new Exception ("format error:"+value);
-			}
-			try{
-				float.Parse (idx[1]);
-			}catch{
-				throw new Exception ("format error:"+value);
-			}
-
-			var target = idx [0];
-			var op = EffectOperator;
-			if (op == "+") {
-				var effectValue = int.Parse (idx [1]);
-				switch (target) {
-				case "str":
-					ability.str += effectValue;
-					break;
-				case "vit":
-					ability.vit += effectValue;
-					break;
-				case "dex":
-					ability.dex += effectValue;
-					break;
-				case "agi":
-					ability.agi += effectValue;
-					break;
-				case "int":
-					ability.Int += effectValue;
-					break;
-				case "luc":
-					ability.luc += effectValue;
-					break;
-				}
-			} 
-
-			if (op == "-") {
-				var effectValue = int.Parse (idx [1]);
-				switch (target) {
-				case "str":
-					ability.str -= effectValue;
-					break;
-				case "vit":
-					ability.vit -= effectValue;
-					break;
-				case "dex":
-					ability.dex -= effectValue;
-					break;
-				case "agi":
-					ability.agi -= effectValue;
-					break;
-				case "int":
-					ability.Int -= effectValue;
-					break;
-				case "luc":
-					ability.luc -= effectValue;
-					break;
-				}
-			} 
-
-			if (EffectOperator == "*") {
-				var effectValue = float.Parse (idx [1]);
-				switch (target) {
-				case "str":
-					ability.str = (int)(ability.str * effectValue);
-					break;
-				case "vit":
-					ability.vit = (int)(ability.vit * effectValue);
-					break;
-				case "dex":
-					ability.dex = (int)(ability.dex * effectValue);
-					break;
-				case "agi":
-					ability.agi = (int)(ability.agi * effectValue);
-					break;
-				case "int":
-					ability.Int = (int)(ability.Int * effectValue);
-					break;
-				case "luc":
-					ability.luc = (int)(ability.luc * effectValue);
-					break;
-				}
-			}
-			return ability;
-		}
-
-		// 請參考Helper.CalcAbility
-		public FightAbility Effect(FightAbility ability){
-			var idx = value.Split (new char[]{ '+', '*', '-' });
-			if (idx.Length != 2) {
-				throw new Exception ("format error:" + value);
-			}
-			try {
-				float.Parse (idx [1]);
-			} catch {
-				throw new Exception ("format error:" + value);
-			}
-			var target = idx [0];
-			var op = EffectOperator;
-			if (op == "+") {
-				var effectValue = int.Parse (idx [1]);
-				switch (target) {
-				case "hp":
-					ability.hp += effectValue;
-					break;
-				case "mp":
-					ability.mp += effectValue;
-					break;
-				case "atk":
-					ability.atk += effectValue;
-					break;
-				case "def":
-					ability.def += effectValue;
-					break;
-				case "matk":
-					ability.matk += effectValue;
-					break;
-				case "mdef":
-					ability.mdef += effectValue;
-					break;
-				case "accuracy":
-					ability.accuracy += effectValue;
-					break;
-				case "dodge":
-					ability.dodge += effectValue;
-					break;
-				case "critical":
-					ability.critical += effectValue;
-					break;
-				}
-			}
-
-			if (op == "-") {
-				var effectValue = int.Parse (idx [1]);
-				switch (target) {
-				case "hp":
-					ability.hp -= effectValue;
-					break;
-				case "mp":
-					ability.mp -= effectValue;
-					break;
-				case "atk":
-					ability.atk -= effectValue;
-					break;
-				case "def":
-					ability.def -= effectValue;
-					break;
-				case "matk":
-					ability.matk -= effectValue;
-					break;
-				case "mdef":
-					ability.mdef -= effectValue;
-					break;
-				case "accuracy":
-					ability.accuracy -= effectValue;
-					break;
-				case "dodge":
-					ability.dodge -= effectValue;
-					break;
-				case "critical":
-					ability.critical -= effectValue;
-					break;
-				}
-			}
-
-			if (op == "*") {
-				var effectValue = float.Parse (idx [1]);
-				switch (target) {
-				case "hp":
-					ability.hp *= effectValue;
-					break;
-				case "mp":
-					ability.mp *= effectValue;
-					break;
-				case "atk":
-					ability.atk *= effectValue;
-					break;
-				case "def":
-					ability.def *= effectValue;
-					break;
-				case "matk":
-					ability.matk *= effectValue;
-					break;
-				case "mdef":
-					ability.mdef *= effectValue;
-					break;
-				case "accuracy":
-					ability.accuracy *= effectValue;
-					break;
-				case "dodge":
-					ability.dodge *= effectValue;
-					break;
-				case "critical":
-					ability.critical *= effectValue;
-					break;
-				}
-			}
-			return ability;
-		}
-	}
 	#endregion
 
 	#region item
@@ -457,6 +488,10 @@ namespace HanRPGAPI{
 				return ret;
 			}
 		}
+		/// <summary>
+		/// 方便用來計量道具減量
+		/// </summary>
+		/// <value>The negative.</value>
 		public Item Negative{
 			get{
 				var a = this;
@@ -524,6 +559,12 @@ namespace HanRPGAPI{
 			};
 		}
 
+		/// <summary>
+		///  新增道具，使用List強制Copy列表
+		/// </summary>
+		/// <returns>The item.</returns>
+		/// <param name="input">Input.</param>
+		/// <param name="item">Item.</param>
 		public static List<Item> AddItem(List<Item> input, Item item){
 			return AddItemWithFn (input, item, GetMaxCountFromItem (item));
 		}
@@ -545,7 +586,7 @@ namespace HanRPGAPI{
 				});
 				var isEnougth = allCount + item.count >= 0;
 				if (isEnougth == false) {
-					throw new MessageException ("道具數量不足");
+					throw new HanRPGAPIException ("道具數量不足", null);
 				}
 				shouldArrange = true;
 			} else {
@@ -598,7 +639,6 @@ namespace HanRPGAPI{
 		}
 	}
 	#endregion
-
 
 	#region fusion
 	public partial class Alg{
@@ -688,6 +728,63 @@ namespace HanRPGAPI{
 						return true;
 					})
 					.Select (cfg => cfg.ID);
+		}
+
+		/// <summary>
+		/// 判斷任務是否完成，每次互動後可以呼叫一次
+		/// </summary>
+		/// <returns>完成的任務</returns>
+		public static List<string> CheckMissionStatus(IEnumerable<NpcMission> missionStatus){
+			return missionStatus.Aggregate (new List<string> (), (ret, mission) => {
+				var cfg = ConfigNpcMission.Get (mission.prototype);
+				if (cfg.RequireItem != null) {
+					var isCompleted = true;
+					var requireItems = HanRPGAPI.Alg.ParseItem (cfg.RequireItem);
+					foreach (var requireItem in requireItems) {
+						var itemCount = mission.itemGot
+							.Where(item=>item.prototype == requireItem.prototype)
+							.Sum(item=>item.count);
+						if (itemCount < requireItem.count) {
+							isCompleted = false;
+							break;
+						}
+					}
+					if (isCompleted) {
+						ret.Add (mission.prototype);
+					}
+				}
+
+				if (cfg.RequireKill != null) {
+					var isCompleted = true;
+					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
+					foreach (var requireItem in requireItems) {
+						var itemCount = mission.monsterSkilled
+							.Where (id => id == requireItem.prototype)
+							.Count ();
+						if (itemCount < requireItem.count) {
+							isCompleted = false;
+							break;
+						}
+					}
+					if (isCompleted) {
+						ret.Add (mission.prototype);
+					}
+				}
+
+				if (cfg.RequireStatus != null) {
+					var isCompleted = true;
+					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
+					foreach (var requireItem in requireItems) {
+						if (requireItem.prototype == "money") {
+							// TODO
+						}
+					}
+					if (isCompleted) {
+						ret.Add (mission.prototype);
+					}
+				}
+				return ret;
+			});
 		}
 	}
 	#endregion
@@ -807,9 +904,8 @@ namespace HanRPGAPI{
 		public static AbstractItem Empty;
 	}
 
-	public class MessageException : Exception{
-		public MessageException(string msg) : base(msg){}
-		public MessageException(string msg, Exception inner) : base(msg, inner){}
+	public class HanRPGAPIException : Exception{
+		public HanRPGAPIException(string msg, Exception inner) : base(msg, inner){}
 	}
 
 	public class Tuple2<T,T2>{

@@ -183,10 +183,10 @@ namespace Model
 			var ret = new List<Item> ();
 			var obj = mapObjects [objKey];
 			if (obj.died == true) {
-				throw new MessageException ("不能採集已消除的物件:"+objKey);
+				throw new Exception ("不能採集已消除的物件:"+objKey);
 			}
 			if (obj.type != MapObjectType.Resource) {
-				throw new MessageException ("非資源不得採集:"+obj.type);
+				throw new Exception ("非資源不得採集:"+obj.type);
 			}
 			obj.died = true;
 			// assign back
@@ -481,7 +481,7 @@ namespace Model
 					// 先計算非針對怪物的能力
 					Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
 					// 計算針對怪物的能力，例：如果對像是鳥，攻擊力*1.1之類
-					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
+					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator==ItemEffectType.Enforce);
 					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
 						// TODO 實做針對性能力
 						return playerAbility;
@@ -499,7 +499,7 @@ namespace Model
 					var triggeredEffect = triggered.SelectMany (HanRPGAPI.Alg.Effect);
 					playerAbility = triggeredEffect.Aggregate(playerAbility, (v,effect)=>{
 						switch(effect.EffectOperator){
-						case "unknown":
+						case ItemEffectType.Unknown:
 							{
 								switch(effect.value){
 								default:
@@ -590,7 +590,7 @@ namespace Model
 					// 先計算非針對怪物的能力
 					Helper.CalcAbility (player, this, Place.Map, ref playerBasic, ref playerAbility);
 					// 計算針對怪物的能力，例：如果對像是鳥，防禦力*1.1之類
-					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator=="enforce");
+					var enforceEff = player.playerInMap.weapons.SelectMany (it => it.Effects).Where(it=>it.EffectOperator==ItemEffectType.Enforce);
 					playerAbility = enforceEff.Aggregate (playerAbility, (accu, curr) => {
 						// TODO 實做針對性能力
 						return playerAbility;
@@ -823,7 +823,7 @@ namespace Model
 				throw new Exception ("冒險掛點，無法工作");
 			}
 			if (player.playerInMap.IsWorking) {
-				throw new MessageException ("目前有工作在身:"+work.description);
+				throw new Exception ("目前有工作在身:"+work.description);
 			}
 			var consumpation = WorkConsumpation (player, work);
 			if (player.playerInMap.hp <= consumpation) {
@@ -846,7 +846,7 @@ namespace Model
 				throw new Exception ("冒險掛點，無法工作");
 			}
 			if (player.playerInMap.IsWorking == false) {
-				throw new MessageException ("沒有工作，不能應用");
+				throw new Exception ("沒有工作，不能應用");
 			}
 			player.playerInMap.ClearWork ();
 			// 回合性招式
@@ -1438,6 +1438,8 @@ namespace Model
 		/// </summary>
 		/// <returns>完成的任務</returns>
 		public List<string> CheckMissionStatus(){
+			return HanRPGAPI.Alg.CheckMissionStatus (missionStatus);
+			/*
 			var completedMission = new List<string> ();
 			for (var i = 0; i < missionStatus.Count; ++i) {
 				var mission = missionStatus [i];
@@ -1490,6 +1492,7 @@ namespace Model
 				}
 			}
 			return completedMission;
+			*/
 		}
 		/// <summary>
 		/// 將呼叫CheckMissionStatus取得的任務輸入這個方法，完成那個任務並取得獲得的獎勵資訊
