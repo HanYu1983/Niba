@@ -18,35 +18,7 @@ namespace Model
 		public List<MapObject> mapObjects = new List<MapObject>();
 		public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
-		//public int width, height;
-		/*
-		public void GenMap(MapType type, int w, int h, PlayerDataStore player){
-			ClearMap ();
 
-			width = w;
-			height = h;
-			for (var y = 0; y < h; ++y) {
-				for (var x = 0; x < w; ++x) {
-					var p = Mathf.PerlinNoise (x/(float)w, y/(float)h);
-					//Debug.Log (p);
-					if (p < 0.8f) {
-						var pos = Position.Zero.Add (x, y);
-						if (p < 0.3f) {
-							GenResource (player, pos, ConfigResource.ID_rock);
-						} else if (p < 0.8f) {
-							GenResource (player, pos, ConfigResource.ID_grass);
-						}
-						// gen monster after assign item
-						if (UnityEngine.Random.Range (0, 100) < 25) {
-							GenMonster (player, pos, ConfigMonster.ID_bear);
-						}
-					} else {
-						// ignore
-					}
-				}
-			}
-		}
-*/
 		MapType genMapType;
 		public void GenMapStart(MapType type){
 			genMapType = type;
@@ -57,7 +29,9 @@ namespace Model
 		}
 
 		public void GenMapWithPositions(IEnumerable<Position> posList, PlayerDataStore player){
-			//var factor = 1 / 10f;
+			if (genMapType == MapType.Unknown) {
+				throw new Exception ("還沒指定地圖類型");
+			}
 			var alreadyPos = new HashSet<Position> (posList);
 			foreach (var pos in player.isPositionVisible) {
 				if (alreadyPos.Contains (pos)) {
@@ -65,39 +39,58 @@ namespace Model
 				}
 				alreadyPos.Add (pos);
 
-				for (var i = 0; i < ConfigResource.ID_COUNT; ++i) {
-					var dice = UnityEngine.Random.Range (0, 100);
-					if (dice < 60) {
-						var id = ConfigResource.Get (i).ID;
-						GenResource (player, pos, id);
-					}
-				}
+				switch (genMapType) {
+				case MapType.Random:
+					{
+						for (var i = 0; i < ConfigResource.ID_COUNT; ++i) {
+							var dice = UnityEngine.Random.Range (0, 100);
+							if (dice < 60) {
+								var id = ConfigResource.Get (i).ID;
+								GenResource (player, pos, id);
+							}
+						}
 
-				for (var i = 0; i < ConfigMonster.ID_COUNT; ++i) {
-					var dice = UnityEngine.Random.Range (0, 100);
-					if (dice < 60) {
-						var id = ConfigMonster.Get (i).ID;
-						GenMonster (player, pos, id);
+						for (var i = 0; i < ConfigMonster.ID_COUNT; ++i) {
+							var dice = UnityEngine.Random.Range (0, 100);
+							if (dice < 60) {
+								var id = ConfigMonster.Get (i).ID;
+								GenMonster (player, pos, id);
+							}
+						}
 					}
-				}
+					break;
+				case MapType.Pattern:
+					{
+						var factor = 1 / 10f;
+						var heightFactor = 1 / 8000f;
 
-				/*
-				var p = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
-				//Debug.Log (p);
-				if (p < 0.8f) {
-					if (p < 0.3f) {
-						GenResource (player, pos, ConfigResource.ID_tree);
-					} else if (p < 0.8f) {
-						GenResource (player, pos, ConfigResource.ID_grass);
+						var seaHeight = 0.5;
+						var mountantHeight = 0.7;
+						var temperature = 20f;
+
+						var height = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
+						var temperatureSea = temperature - ((seaHeight - height) / heightFactor / 100) * 5;
+						var temperatureMountant = temperature - ((1 - height) / heightFactor / 100) * 1;
+
+						var terr = 
+							height < seaHeight - 2 ? "deep sea" :
+							height < seaHeight ? "shallow sea" :
+							height > 1 ? "mountant" :
+							"plain";
+
+						switch (terr) {
+						case "deep sea":
+							break;
+						case "shallow sea":
+							break;
+						case "mountant":
+							break;
+						case "plain":
+							break;
+						}
 					}
-					// gen monster after assign item
-					if (UnityEngine.Random.Range (0, 100) < 25) {
-						GenMonster (player, pos, ConfigMonster.ID_snack);
-					}
-				} else {
-					// ignore
+					break;
 				}
-				*/
 			}
 		}
 		public void ClearMap(){

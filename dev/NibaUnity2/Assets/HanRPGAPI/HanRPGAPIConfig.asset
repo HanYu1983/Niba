@@ -11,5 +11,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834d647f04cde4d75aaca87a8adf9734, type: 3}
   m_Name: HanRPGAPIConfig
   m_EditorClassIdentifier: 
-  csvPath: /Users/hanyu/Documents/GIT/Niba/dev/NibaUnity2/Assets/HanRPGAPI/CSV/
+  csvPath: /Users/hanyu/Documents/GIT/Niba/dev/NibaUnity2/Assets/Han/CSV/
   classPath: /Users/hanyu/Documents/GIT/Niba/dev/NibaUnity2/Assets/HanRPGAPI/Config/

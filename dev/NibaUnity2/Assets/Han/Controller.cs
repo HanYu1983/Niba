@@ -345,7 +345,7 @@ namespace Common
 			case "click_home_map":
 				{
 					// 創新地圖
-					yield return model.NewMap (MapType.Unknown, e2 => {
+					yield return model.NewMap (MapType.Random, e2 => {
 						e = e2;
 					});
 					if (e != null) {

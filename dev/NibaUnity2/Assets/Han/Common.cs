@@ -181,7 +181,7 @@ namespace Common
 
 	[Serializable]
 	public enum MapType{
-		Unknown = 0
+		Unknown, Random, Pattern
 	}
 
 
