@@ -88,7 +88,10 @@ namespace Common
 						yield break;
 					}
 					if (model.GetMapPlayer (Place.Map).IsDied) {
-						view.Alert ("冒險者掛了");
+						e = new Exception ("冒險者掛了");
+					}
+					if (e != null) {
+						HandleException (e);
 						yield break;
 					}
 					var missionOK = model.CheckMissionStatus ();
@@ -540,7 +543,10 @@ namespace Common
 							yield break;
 						}
 						if (model.GetMapPlayer (Place.Map).IsDied) {
-							view.Alert ("冒險者掛了");
+							e = new Exception("冒險者掛了");
+						}
+						if (e != null) {
+							HandleException (e);
 							yield break;
 						}
 						var missionOK = model.CheckMissionStatus ();
