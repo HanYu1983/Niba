@@ -20,8 +20,11 @@ namespace Model
 		public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
 
 		MapType genMapType;
-		public void GenMapStart(MapType type){
-			genMapType = type;
+
+
+		public void GenMapStart(MapType mapType){
+			genMapType = mapType;
+
 		}
 
 		public void GenMapWithPlayerVisible(PlayerDataStore player){
@@ -32,6 +35,17 @@ namespace Model
 			if (genMapType == MapType.Unknown) {
 				throw new Exception ("還沒指定地圖類型");
 			}
+			Func<Position, IEnumerable<AbstractItem>> genResFn = null;
+			Func<Position, IEnumerable<AbstractItem>, IEnumerable<AbstractItem>> genMonFn = null;
+			switch (genMapType) {
+			case MapType.Pattern:
+				{
+					genResFn = HanRPGAPI.Alg.GenResourcePattern(4000, 25);
+				}
+				break;
+			}
+			genMonFn = HanRPGAPI.Alg.GenMonsterPattern;
+
 			var alreadyPos = new HashSet<Position> (posList);
 			foreach (var pos in player.isPositionVisible) {
 				if (alreadyPos.Contains (pos)) {
@@ -61,44 +75,28 @@ namespace Model
 					break;
 				case MapType.Pattern:
 					{
-						var factor = 1 / 10f;
-						var heightFactor = 1 / 8000f;
-
-						var seaHeight = 0.5;
-						var mountantHeight = 0.7;
-						var temperature = 20f;
-
-						var height = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
-						var temperatureSea = temperature - ((seaHeight - height) / heightFactor / 100) * 5;
-						var temperatureMountant = temperature - ((1 - height) / heightFactor / 100) * 1;
-
-						var terr = 
-							height < seaHeight - 2 ? "deep sea" :
-							height < seaHeight ? "shallow sea" :
-							height > 1 ? "mountant" :
-							"plain";
-
-						switch (terr) {
-						case "deep sea":
-							break;
-						case "shallow sea":
-							break;
-						case "mountant":
-							break;
-						case "plain":
-							break;
+						var res = genResFn (pos);
+						var mon = genMonFn (pos, res);
+						foreach (var ai in res) {
+							for (var i = 0; i < ai.count; ++i) {
+								GenResource (player, pos, ai.prototype);
+							}
+						}
+						foreach (var ai in mon) {
+							for (var i = 0; i < ai.count; ++i) {
+								GenMonster (player, pos, ai.prototype);
+							}
 						}
 					}
 					break;
 				}
 			}
 		}
+
 		public void ClearMap(){
 			mapObjects.Clear ();
 			resourceInfo.Clear ();
 			monsterInfo.Clear ();
-			//width = height = 0;
-			genMapType = MapType.Unknown;
 		}
 		public int GenObject(MapObjectType type, string strKey){
 			if (strKey != null) {
@@ -158,7 +156,7 @@ namespace Model
 		}
 
 		public int WorkConsumpation(PlayerDataStore player, Description work){
-			return 2;
+			return ConfigConst.Get(ConfigConst.ID_workConsumpation).Int;
 		}
 
 		public int MoveConsumption(PlayerDataStore player, Position a, Position b){
@@ -169,7 +167,7 @@ namespace Model
 			if (Math.Abs (offset.x) > 1 || Math.Abs (offset.y) > 1) {
 				return int.MaxValue;
 			}
-			return 10;
+			return ConfigConst.Get(ConfigConst.ID_moveConsumpation).Int;;
 		}
 
 		public List<Item> Collect(PlayerDataStore player, int objKey){
@@ -430,29 +428,32 @@ namespace Model
 					mapObjects [mapObjectId] = obj;
 					var info = resourceInfo [obj.infoKey];
 					var config = ConfigResource.Get (info.type);
-					var items = HanRPGAPI.Alg.ParseItemFromResource (config);
-					foreach (var item in items) {
-						player.AddItem (item, Place.Map);
-					}
-					var des = Description.Empty;
-					des.description = Description.InfoCollectResource;
-					des.values = new NameValueCollection ();
-					foreach (var itemJson in items.Select(i=>JsonUtility.ToJson(i))) {
-						des.values.Add ("items", itemJson);
-					}
-					ret.Add (des);
-
-					// 發送任務更新
-					foreach (var item in items) {
-						player.NotifyMissionAddItemFromCollect (item);
-					}
-
-					// 增加採集經驗
-					foreach (var item in items) {
-						var cfg = ConfigItem.Get (item.prototype);
-						if (cfg.SkillType != null) {
-							player.playerInMap.AddExp (cfg.SkillType, 1);
+					var hasItem = config.Item != null;
+					if (hasItem) {
+						var items = HanRPGAPI.Alg.ParseItemFromResource (config);
+						foreach (var item in items) {
+							player.AddItem (item, Place.Map);
 						}
+						// 增加採集經驗
+						foreach (var item in items) {
+							var cfg = ConfigItem.Get (item.prototype);
+							if (cfg.SkillType != null) {
+								player.playerInMap.AddExp (cfg.SkillType, 1);
+							}
+						}
+
+						// 發送任務更新
+						foreach (var item in items) {
+							player.NotifyMissionAddItemFromCollect (item);
+						}
+
+						var des = Description.Empty;
+						des.description = Description.InfoCollectResource;
+						des.values = new NameValueCollection ();
+						foreach (var itemJson in items.Select(i=>JsonUtility.ToJson(i))) {
+							des.values.Add ("items", itemJson);
+						}
+						ret.Add (des);
 					}
 				}
 				break;
@@ -1168,6 +1169,24 @@ namespace Model
 			}
 			var originPos = playerInMap.position;
 			var newPos = originPos.Add (offset);
+
+			var infoList = mapData.FindObjects (newPos)
+				.Where (obj => obj.type == MapObjectType.Resource)
+				.Select (obj => mapData.resourceInfo [obj.infoKey])
+				.Select (info => new AbstractItem () {
+					prototype = info.type,
+					count = 1
+			});;
+			var terrianId = HanRPGAPI.Alg.Terrian (infoList);
+			var terrian = ConfigTerrian.Get (terrianId);
+			if (terrian.MoveRequire != null) {
+				var moveRequire = HanRPGAPI.Alg.ParseAbstractItem (terrian.MoveRequire);
+				var isMatch = HanRPGAPI.Alg.IsCanFusion (moveRequire, playerInMap.storage.Select(i=>i.AbstractItem));
+				if (isMatch <= HanRPGAPI.Alg.REQUIREMENT_NOT_ALLOW) {
+					throw new Exception ("缺少必要交通工具，無法移動");
+				}
+			}
+
 			var moveConsumpation = mapData.MoveConsumption (this, originPos, newPos);
 			if (playerInMap.hp - moveConsumpation <= 0) {
 				throw new Exception ("體力不足，無法移動:"+playerInMap.hp);
@@ -1177,7 +1196,7 @@ namespace Model
 			// 移動位置
 			playerInMap.position = newPos;
 			// 新增視野
-			var isMapDirty = VisitPosition (playerInMap.position, 3);
+			var isMapDirty = VisitPosition (playerInMap.position);
 			// 產生事件
 			var events = mapData.GenEvent (this, newPos);
 			if (isMapDirty) {
@@ -1309,7 +1328,8 @@ namespace Model
 			});
 			return visiblePosition;
 		}
-		public bool VisitPosition(Position pos, int expend){
+		public bool VisitPosition(Position pos){
+			var expend = ConfigConst.Get (ConfigConst.ID_visibleRange).Int;
 			var posSet = new HashSet<Position> (isPositionVisible);
 			for (var x = -expend; x <= expend; ++x) {
 				var yexpend = expend - Math.Abs (x);
@@ -1751,6 +1771,7 @@ namespace Model
 			var b = Common.Common.GetBasicAbility (monsterInfo).FightAbility;
 			return (int)(a.atk - b.def);
 		}
+
 
 
 	}

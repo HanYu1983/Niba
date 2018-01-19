@@ -19,6 +19,7 @@ namespace View
 		public Popup missionPopup;
 		public Popup skillPopup;
 		public Popup selectSkillPopup;
+		public Popup selectMapPopup;
 
 		IModelGetter model;
 		public IModelGetter ModelGetter{ set{ model = value; } }
@@ -70,6 +71,17 @@ namespace View
 
 		public IEnumerator ShowInfo(Info info, Action<Exception> callback){
 			switch (info) {
+			case Info.SelectMap:
+				{
+					var popup = selectMapPopup.GetComponent<SelectMapPopup> ();
+					if (popup == null) {
+						throw new Exception ("你沒有加入SelectSkillPopup Component");
+					}
+					selectMapPopup.ChangeVisibility (true);
+					popup.UpdateUI (model);
+					callback (null);
+				}
+				break;
 			case Info.Skill:
 				{
 					var popup = skillPopup.GetComponent<SkillPopup> ();
@@ -314,6 +326,11 @@ namespace View
 					yield return CloseMsgPopup ();
 				}
 				break;
+			case Info.SelectMap:
+				{
+					selectMapPopup.ChangeVisibility (false);
+				}
+				break;
 			case Info.SelectSkill:
 				{
 					selectSkillPopup.ChangeVisibility (false);
@@ -373,6 +390,10 @@ namespace View
 				yield return HideInfo (Info.SelectSkill);
 				callback (null);
 				break;
+			case "click_selectMapPopup_close":
+				yield return HideInfo (Info.SelectMap);
+				callback (null);
+				break;
 			case "click_skillPopup_close":
 				yield return HideInfo (Info.Skill);
 				callback (null);
@@ -398,6 +419,25 @@ namespace View
 				break;
 			default:
 				{
+					if (msg.Contains ("click_menuMap")) {
+						var popup = menuMap.GetComponent<MenuMap> ();
+						if (popup == null) {
+							callback (new Exception ("MenuMap is null"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
+
+					if (msg.Contains ("click_selectMapPopup")) {
+						var popup = selectMapPopup.GetComponent<SelectMapPopup> ();
+						if (popup == null) {
+							callback (new Exception ("SelectMapPopup is null"));
+							yield break;
+						}
+						yield return popup.HandleCommand (model, msg, args, callback);
+					}
+
+
 					if (msg.Contains ("click_selectSkillPopup")) {
 						var popup = selectSkillPopup.GetComponent<SelectSkillPopup> ();
 						if (popup == null) {

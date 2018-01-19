@@ -654,6 +654,9 @@ namespace HanRPGAPI{
 			return tempStorage;
 		}
 
+		public static int CAN_NOT = -1;
+		public static int REQUIREMENT_NOT_ALLOW = 0;
+
 		public static int IsCanFusion(Func<string, int> expFn, string prototype, IEnumerable<Item> items){
 			var cfg = ConfigItem.Get (prototype);
 			// 判斷技能經驗是否符合
@@ -663,11 +666,13 @@ namespace HanRPGAPI{
 				var needExp = ai.count;
 				var haveExp = expFn (st);
 				if (haveExp < needExp) {
-					return -1;
+					return CAN_NOT;
 				}
 			}
 			// 判斷所需道具數量
 			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
+			return IsCanFusion (requires.Select (i => i.AbstractItem), items.Select (i => i.AbstractItem));
+			/*
 			int minCnt = int.MaxValue;
 			foreach (var requireItem in requires) {
 				var search = items.Where (it => {
@@ -675,7 +680,28 @@ namespace HanRPGAPI{
 				});
 				var isNotFound = search.Count () == 0;
 				if (isNotFound) {
-					return -1;
+					return CAN_NOT;
+				}
+				var total = search.Sum (it => it.count);
+				var maxFusionCnt = total / requireItem.count;
+				if (minCnt > maxFusionCnt) {
+					minCnt = maxFusionCnt;
+				}
+			}
+			return minCnt;
+			*/
+		}
+
+		public static int IsCanFusion(IEnumerable<AbstractItem> requires, IEnumerable<AbstractItem> items){
+			// 判斷所需道具數量
+			int minCnt = int.MaxValue;
+			foreach (var requireItem in requires) {
+				var search = items.Where (it => {
+					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
+				});
+				var isNotFound = search.Count () == 0;
+				if (isNotFound) {
+					return CAN_NOT;
 				}
 				var total = search.Sum (it => it.count);
 				var maxFusionCnt = total / requireItem.count;
@@ -900,6 +926,216 @@ namespace HanRPGAPI{
 		}
 	}
 
+	#endregion
+
+	#region map
+
+	// 有Serializable才能json字串化
+	[Serializable]
+	public struct Position : IEquatable<Position>{
+		public int x, y;
+		public Position Add(int x, int y){
+			var ret = this;
+			ret.x += x;
+			ret.y += y;
+			return ret;
+		}
+		public Position Add(Position b){
+			return Add (b.x, b.y);
+		}
+		public Position Negative{
+			get{
+				return Zero.Add (-x, -y);
+			}
+		}
+		public Position Max(int x, int y){
+			var ret = this;
+			ret.x = Math.Max (x, this.x);
+			ret.y = Math.Max (y, this.y);
+			return ret;
+		}
+		public Position Max(Position b){
+			return Max (b.x, b.y);
+		}
+		public Position Min(int x, int y){
+			var ret = this;
+			ret.x = Math.Min (x, this.x);
+			ret.y = Math.Min (y, this.y);
+			return ret;
+		}
+		public bool Equals(Position other){
+			return x == other.x && y == other.y;
+		}
+		// 向下相容
+		public override bool Equals(object obj){
+			if (!(obj is Position)){
+				return false;
+			}
+			Position other = (Position) obj;
+			return this.Equals(other);
+		}
+		// 必須同Equals(object)一同實做
+		public override int GetHashCode(){
+			unchecked
+			{
+				int hash = 17;
+				hash = hash * 23 + x.GetHashCode();
+				hash = hash * 23 + y.GetHashCode();
+				return hash;
+			}
+		}
+		public override string ToString(){
+			return string.Format ("({0}, {1})", x, y);
+		}
+		public static Position Zero;
+	}
+
+	public partial class Alg{
+		public static string Terrian(IEnumerable<AbstractItem> infoList){
+			if (infoList.Count () == 0) {
+				throw new Exception ("沒有合適的地形");
+			}
+
+			// 將地上物轉為虛擬物件，方便計算是否符合地形需求
+			var resList = infoList.Select (info => info.Item).Aggregate (new List<Item> (), (ret, i) => {
+				return HanRPGAPI.Alg.AddItemWithFn(ret, i, ()=>9999999);
+			}).Select(i=>i.AbstractItem);
+
+			// 地形判斷依Class為優先順序判斷
+			var checkTypes = Enumerable.Range (0, ConfigTerrian.ID_COUNT)
+				.Select (ConfigTerrian.Get)
+				.OrderByDescending (cfg => cfg.Class);
+
+			var terrians = checkTypes.SkipWhile (t => {
+				var resRequire = HanRPGAPI.Alg.ParseAbstractItem (t.Require);
+				var check = HanRPGAPI.Alg.IsCanFusion (resRequire, resList);
+				if (check <= HanRPGAPI.Alg.REQUIREMENT_NOT_ALLOW) {
+					return true;
+				}
+				return false;
+			});
+
+			var isNoMatch = terrians.Count () == 0;
+			if (isNoMatch) {
+				throw new Exception ("沒有合適的地形");
+			}
+
+			return terrians.First ().ID;
+		}
+
+		/// <summary>
+		/// AbstractItem{
+		/// 	prototype // ConfigResource.ID
+		/// 	count // amount
+		/// }
+		/// </summary>
+		/// <returns>The monster2.</returns>
+		/// <param name="pos">Position.</param>
+		/// <param name="genInfo">Gen info.</param>
+		public static IEnumerable<AbstractItem> GenMonsterPattern(Position pos, IEnumerable<AbstractItem> genInfo){
+			var ret = new List<string>();
+			// 生成怪物
+			var terrianId = Terrian (genInfo);
+			for (var i = 0; i < ConfigMonster.ID_COUNT; ++i) {
+				var monster = ConfigMonster.Get (i);
+				if (monster.Terrian != null) {
+					if (monster.Terrian.Contains (terrianId)) {
+						var dice = UnityEngine.Random.Range (0, 100);
+						if (dice < 20) {
+							ret.Add (monster.ID);
+						}
+					}
+				}
+			}
+			return ret.Select(str=>new AbstractItem{
+				prototype = str,
+				count = 1
+			}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
+				return HanRPGAPI.Alg.AddItemWithFn(total, i, ()=>999999);
+			}).Select(i=>i.AbstractItem);
+		}
+
+		/// <summary>
+		/// AbstractItem{
+		/// 	prototype // ConfigResource.ID
+		/// 	count // amount
+		/// }
+		/// </summary>
+		/// <returns>The resource2.</returns>
+		/// <param name="sea">Sea.</param>
+		/// <param name="temperature">Temperature.</param>
+		public static Func<Position, IEnumerable<AbstractItem>> GenResourcePattern(float sea = 2000f, float temperature = 20f){
+			var heightFactor = 1 / 8000f;
+			var factor = 1 / 10f;
+
+			return (Position pos) => {
+				var ret = new List<string>();
+
+				var seaHeight = sea*heightFactor;
+				var height = Mathf.PerlinNoise (pos.x * factor, pos.y * factor);
+
+				var heightOffset = height - seaHeight;
+				var currTemp = temperature + (heightOffset / heightFactor / 100);
+
+				// 加入氣溫
+				if (currTemp < 10) {
+					ret.Add(ConfigResource.ID_temperature1);
+				} else if (currTemp < 30) {
+					ret.Add(ConfigResource.ID_temperature2);
+				} else {
+					ret.Add(ConfigResource.ID_temperature3);
+				}
+
+				// 隨機加水
+				var waterNoisePos = pos.Add (50, 50);
+				var waterWeight = Mathf.PerlinNoise (waterNoisePos.x * factor, waterNoisePos.y * factor);
+				var waterCnt = (int)(waterWeight / 0.4f);
+				for (var i = 0; i < waterCnt; ++i) {
+					ret.Add(ConfigResource.ID_water);
+				}
+				// 隨機山丘
+				var mountantNoisePos = pos.Add (100, 50);
+				var mountantWeight = Mathf.PerlinNoise (mountantNoisePos.x * factor, mountantNoisePos.y * factor);
+				var mountantCnt = (int)(mountantWeight / 0.4f);
+				for (var i = 0; i < mountantCnt; ++i) {
+					ret.Add(ConfigResource.ID_smallMountain);
+				}
+
+				// 小於海平面，加二個水
+				if (height <= seaHeight) {
+					ret.Add(ConfigResource.ID_water);
+					ret.Add(ConfigResource.ID_water);
+
+				} else if(height - seaHeight >= 0.5){
+					ret.Add(ConfigResource.ID_smallMountain);
+					ret.Add(ConfigResource.ID_smallMountain);
+
+				} else {
+					for (var i = 0; i < 3; ++i) {
+						var dice = UnityEngine.Random.Range (0, 100);
+						if (dice < 20) {
+							ret.Add(ConfigResource.ID_grass);
+						}
+						dice = UnityEngine.Random.Range (0, 100);
+						if (dice < 20) {
+							ret.Add(ConfigResource.ID_tree);
+						}
+						dice = UnityEngine.Random.Range (0, 100);
+						if (dice < 20) {
+							ret.Add(ConfigResource.ID_stone);
+						}
+					}
+				}
+
+				return ret.Select(str=>new AbstractItem{
+					prototype = str,
+					count = 1
+				}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
+					return HanRPGAPI.Alg.AddItemWithFn(total, i, ()=>999999);
+				}).Select(i=>i.AbstractItem);
+			};
+		}
+	}
 	#endregion
 
 	#region util

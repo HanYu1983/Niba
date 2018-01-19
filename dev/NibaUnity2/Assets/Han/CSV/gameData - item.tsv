@@ -8,3 +8,4 @@ grassBody	布衣		weapon	speed	1	grass_30	tailor_1	def+4	body	20
 grassShoe	草鞋		weapon	speed	1	grass_10	tailor_1	def+2	foot	20
 grassKen	布拳套		weapon	karate	1	grass_10	tailor_1	atk+2	hand	20
 woodSword	木劍		weapon	fencingArt	1	wood_5	woodworker_1	atk+5	head	40
+woodBoat	木伐		material	woodworker	1	wood_10				

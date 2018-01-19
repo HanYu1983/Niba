@@ -9,65 +9,7 @@ using HanRPGAPI;
 
 namespace Common
 {
-	// 有Serializable才能json字串化
-	[Serializable]
-	public struct Position : IEquatable<Position>{
-		public int x, y;
-		public Position Add(int x, int y){
-			var ret = this;
-			ret.x += x;
-			ret.y += y;
-			return ret;
-		}
-		public Position Add(Position b){
-			return Add (b.x, b.y);
-		}
-		public Position Negative{
-			get{
-				return Zero.Add (-x, -y);
-			}
-		}
-		public Position Max(int x, int y){
-			var ret = this;
-			ret.x = Math.Max (x, this.x);
-			ret.y = Math.Max (y, this.y);
-			return ret;
-		}
-		public Position Max(Position b){
-			return Max (b.x, b.y);
-		}
-		public Position Min(int x, int y){
-			var ret = this;
-			ret.x = Math.Min (x, this.x);
-			ret.y = Math.Min (y, this.y);
-			return ret;
-		}
-		public bool Equals(Position other){
-			return x == other.x && y == other.y;
-		}
-		// 向下相容
-		public override bool Equals(object obj){
-			if (!(obj is Position)){
-				return false;
-			}
-			Position other = (Position) obj;
-			return this.Equals(other);
-		}
-		// 必須同Equals(object)一同實做
-		public override int GetHashCode(){
-			unchecked
-			{
-				int hash = 17;
-				hash = hash * 23 + x.GetHashCode();
-				hash = hash * 23 + y.GetHashCode();
-				return hash;
-			}
-		}
-		public override string ToString(){
-			return string.Format ("({0}, {1})", x, y);
-		}
-		public static Position Zero;
-	}
+	
 
 	[Serializable]
 	public enum MapObjectType{
@@ -424,7 +366,8 @@ namespace Common
 		Skill, 
 		SelectSkill, 
 		Storage, 
-		Npc
+		Npc,
+		SelectMap
 	}
 
 	public enum PlayState{
@@ -523,7 +466,7 @@ namespace Common
 		/// <returns>The map.</returns>
 		/// <param name="type">Type.</param>
 		/// <param name="callback">Callback.</param>
-		IEnumerator NewMap(MapType type, Action<Exception> callback);
+		void NewMap(MapType type);
 		void EnterMap ();
 		void ExitMap ();
 		/// <summary>
@@ -672,6 +615,75 @@ namespace Common
 					}
 					var first = sg.FirstOrDefault ();
 					data [x, y] = first;
+				}
+			}
+		}
+
+		public static void Terrian(IModelGetter model, Position leftTop, Position rightBottom, out string[,] data){
+			var w = rightBottom.x - leftTop.x;
+			var h = rightBottom.y - leftTop.y;
+			data = new string[w, h];
+			for (var x = 0; x < w; ++x) {
+				for (var y = 0; y < h; ++y) {
+					var curr = Position.Zero.Add(x, y).Add(leftTop);
+					var infoList = model.VisibleMapObjects.Where (obj => {
+						return obj.type == MapObjectType.Resource && obj.position.Equals (curr);
+					}).Select (o => {
+						var info = model.ResourceInfos [o.infoKey];
+						return info;
+					}).Select (info => new AbstractItem {
+						prototype = info.type,
+						count = 1
+					});;
+
+					var isNotVisible = infoList.Count () == 0;
+					if (isNotVisible) {
+						data [x, y] = null;
+						continue;
+					}
+
+					data [x, y] = HanRPGAPI.Alg.Terrian (infoList);
+					// 將地上物轉為虛擬物件，方便計算是否符合地形需求
+					/*
+					var resList = model.VisibleMapObjects.Where (obj => {
+						return obj.type == MapObjectType.Resource && obj.position.Equals (curr);
+					}).Select (o => {
+						var info = model.ResourceInfos [o.infoKey];
+						return new Item () {
+							prototype = info.type,
+							count = 1
+						};
+					}).Aggregate (new List<Item> (), (ret, i) => {
+						return HanRPGAPI.Alg.AddItemWithFn(ret, i, ()=>{ return 9999; });
+					}).Select(i=>i.AbstractItem);
+
+					var isNotVisible = resList.Count () == 0;
+					if (isNotVisible) {
+						data [x, y] = null;
+						continue;
+					}
+
+					// 地形判斷依Class為優先順序判斷
+					var checkTypes = Enumerable.Range (0, ConfigTerrian.ID_COUNT)
+						.Select (ConfigTerrian.Get)
+						.OrderByDescending (cfg => cfg.Class);
+					
+					var terrians = checkTypes.SkipWhile (t => {
+						var resRequire = HanRPGAPI.Alg.ParseAbstractItem (t.Require);
+						var check = HanRPGAPI.Alg.IsCanFusion (resRequire, resList);
+						if (check <= HanRPGAPI.Alg.REQUIREMENT_NOT_ALLOW) {
+							return true;
+						}
+						return false;
+					});
+
+					var isNoMatch = terrians.Count () == 0;
+					if (isNoMatch) {
+						throw new Exception ("沒有合適的地形");
+					}
+
+					data [x, y] = terrians.First().ID;
+					*/
 				}
 			}
 		}

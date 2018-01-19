@@ -180,12 +180,7 @@ namespace Model
 
 		static IEnumerator TestWeapon(IModel model, IView view){
 			Exception e = null;
-			yield return model.NewMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
+			model.NewMap (MapType.Unknown);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -248,12 +243,7 @@ namespace Model
 		static IEnumerator TestFight(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
 			Exception e = null;
-			yield return model.NewMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
+			model.NewMap (MapType.Unknown);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -405,12 +395,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			yield return model.NewMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
-			if (e != null) {
-				throw e;
-			}
+			model.NewMap (MapType.Unknown);
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
 			});
@@ -471,9 +456,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			yield return model.NewMap (MapType.Unknown, e2 => {
-				e = e2;
-			});
+			model.NewMap (MapType.Unknown);
 			if (e != null) {
 				throw e;
 			}

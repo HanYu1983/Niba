@@ -31,6 +31,13 @@ namespace HanRPGAPI
 			var path = config.classPath;
 			var csvPath = config.csvPath;
 
+			GenCode ("ConfigConst", null, new string[]{
+				"ID", "string",
+				"Float", "float",
+				"Int", "int", 
+				"String", "string", 
+			}, csvPath+"/gameData - const.tsv", path);
+
 			GenCode ("ConfigItemType", null, new string[]{
 				"ID", "string",
 				"Name", "string",
@@ -42,6 +49,7 @@ namespace HanRPGAPI
 				"Name", "string",
 				"Description", "string", 
 				"Item","string",
+				"Terrian", "string",
 				"Str", "int",
 				"Vit", "int",
 				"Agi", "int",
@@ -56,7 +64,17 @@ namespace HanRPGAPI
 				"Name", "string",
 				"Description", "string", 
 				"Item","string",
+				"UseCount", "int"
 			}, csvPath+"/gameData - resource.tsv", path);
+
+			GenCode ("ConfigTerrian", null, new string[]{
+				"ID", "string",
+				"Name", "string",
+				"Description", "string", 
+				"Require","string",
+				"Class","int",
+				"MoveRequire", "string"
+			}, csvPath+"/gameData - terrian.tsv", path);
 
 			GenCode ("ConfigItem", null, new string[]{
 				"ID", "string",

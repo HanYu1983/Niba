@@ -59,6 +59,31 @@ namespace Common
 			Debug.Log ("[Controller]:"+msg);
 			Exception e = null;
 			switch (msg) {
+			case "selectMapPopup_selectMap":
+				{
+					yield return view.HideInfo (Info.SelectMap);
+
+					var mt = (MapType)args;
+					// 創新地圖
+					model.NewMap (mt);
+					// 再進入
+					model.EnterMap ();
+					yield return view.ChangePage (Page.Game, e2 => {
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+					yield return view.ShowInfo(Info.Map, e2=>{
+						e = e2;
+					});
+					if (e != null) {
+						HandleException (e);
+						yield break;
+					}
+				}
+				break;
 			case "selectSkillPopup_selectSkill":
 				{
 					var work = (Description)args;
@@ -344,14 +369,12 @@ namespace Common
 				break;
 			case "click_home_map":
 				{
-					// 創新地圖
-					yield return model.NewMap (MapType.Random, e2 => {
+					yield return view.ShowInfo (Info.SelectMap, e2 => {
 						e = e2;
 					});
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
+					/*
+					// 創新地圖
+					model.NewMap (MapType.Random);
 					// 再進入
 					model.EnterMap ();
 					yield return view.ChangePage (Page.Game, e2 => {
@@ -368,6 +391,7 @@ namespace Common
 						HandleException (e);
 						yield break;
 					}
+					*/
 				}
 				break;
 			case "click_home_item":
@@ -498,6 +522,7 @@ namespace Common
 					}
 				}
 				break;
+				/*
 			case "click_map_work_0":
 			case "click_map_work_1":
 			case "click_map_work_2":
@@ -505,9 +530,14 @@ namespace Common
 			case "click_map_work_4":
 			case "click_map_work_5":
 			case "click_map_work_6":
+				*/
+			case "menuMap_work":
 				{
+					var selectWork = (Description)args;
+					/*
 					var idx = int.Parse(msg.Replace ("click_map_work_", ""));
 					var selectWork = model.Works.ToList () [idx];
+					*/
 					if (selectWork.description == Description.WorkSelectSkillForEnemy ||
 						selectWork.description == Description.WorkUseSkillForEnemyAll) {
 						yield return view.ShowInfo (Info.SelectSkill, selectWork, e2 => {

@@ -23,10 +23,15 @@ namespace Model
 			ClearMoveResult ();
 			mapData = new MapDataStore();
 			playerData = new PlayerDataStore();
-
+			playerData.player.basicAbility.vit = 100;
+			playerData.AddItem (new Item () {
+				prototype = ConfigItem.ID_woodBoat,
+				count = 1
+			}, Place.Storage);
+			/*
 			playerData.player.AddExp (ConfigAbility.ID_karate, 5);
 			playerData.player.AddExp (ConfigAbility.ID_tailor, 1);
-
+			*/
 			RequestSaveMap ();
 			RequestSavePlayer ();
 		}
@@ -35,10 +40,8 @@ namespace Model
 			return Load ();
 		}
 
-		public IEnumerator NewMap(MapType type, Action<Exception> callback){
-			yield return null;
+		public void NewMap(MapType type){
 			mapData.GenMapStart(type);
-			callback (null);
 		}
 		public void EnterMap (){
 			ClearMoveResult ();
@@ -46,7 +49,7 @@ namespace Model
 			playerData.playerInMap.position = Position.Zero;
 			// 先探明初始視野
 			playerData.ClearVisibleMapObjects ();
-			playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
+			playerData.VisitPosition (playerData.playerInMap.position);
 			// 清除地圖
 			mapData.ClearMap();
 			// 自動生成視野內的地圖

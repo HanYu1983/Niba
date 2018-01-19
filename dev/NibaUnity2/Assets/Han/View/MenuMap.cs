@@ -12,7 +12,8 @@ namespace View
 	{
 		public GameObject gridLayout;
 		public GameObject playerLayout;
-		public GameObject[] workBtns;
+		public ListView workListView;
+		public WorkDataProvider workDataProvider;
 		public Text txtInfo;
 
 		GameObject[] grids;
@@ -25,6 +26,7 @@ namespace View
 				go.SetActive (true);
 				grids [i] = go;
 			}
+			workListView.DataProvider = workDataProvider;
 		}
 
 		public void UpdateUI(IModelGetter model){
@@ -40,6 +42,10 @@ namespace View
 		}
 
 		public void UpdateWork(IModelGetter model){
+			workDataProvider.Data = model.Works.ToList ();
+			workListView.UpdateDataView (model);
+
+			/*
 			foreach (var btn in workBtns) {
 				btn.SetActive (false);
 			}
@@ -94,6 +100,7 @@ namespace View
 				btn.GetComponentInChildren<Text> ().text = msg;
 				btn.SetActive (true);
 			}
+			*/
 		}
 
 		public void UpdateMap(IModelGetter model){
@@ -107,9 +114,30 @@ namespace View
 				grids [i].GetComponent<Text> ().text = "*";
 			}
 
+			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
+			var rightBottom = leftTop.Add(10, 10);
+			string[,] terrians;
+			Common.Common.Terrian (model, leftTop, rightBottom, out terrians);
+			for (var x = 0; x < terrians.GetLength (0); ++x) {
+				for (var y = 0; y < terrians.GetLength (1); ++y) {
+					var idx = y * 10 + x;
+					var txt = grids [idx].GetComponent<Text> ();
+					var currPos = Position.Zero.Add (x, y).Add (leftTop);
+					if (currPos.Equals (model.GetMapPlayer(Place.Map).position)) {
+						playerLayout.transform.SetParent (txt.transform, false);
+					}
+					var isNotVisible = terrians [x, y] == null;
+					if (isNotVisible) {
+						txt.text = "*";
+						continue;
+					}
+					var cfg = ConfigTerrian.Get (terrians [x, y]);
+					txt.text = cfg.Name;
+				}
+			}
+
+			/*
 			MapObject[,] mapObjs;
-			//var leftTop = model.MapPlayer.position.Add (-5, -5).Max (0, 0);
-			//var rightBottom = leftTop.Add(10, 10).Min(model.MapWidth, model.MapHeight);
 			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
 			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
@@ -142,7 +170,25 @@ namespace View
 					}
 
 				}
+			}*/
+		}
+
+		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+			switch (msg) {
+			default:
+				{
+					if (msg.Contains (workListView.CommandPrefix+"_item_")) {
+						// 修改狀態文字
+						var selectIdx = workListView.CurrIndex (msg);
+						var work = workDataProvider.Data [selectIdx];
+						Common.Common.Notify ("menuMap_work", work);
+					} else if (msg.Contains (workListView.CommandPrefix)) {
+						yield return workListView.HandleCommand (model, msg, args, callback);
+					}
+				}
+				break;
 			}
+			yield return null;
 		}
 	}
 }
