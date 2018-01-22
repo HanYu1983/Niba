@@ -14,6 +14,16 @@ namespace View{
 			listView.DataProvider = missionDataProvider;
 		}
 
+		public int CurrMissionIndex(string cmd) {
+			return listView.CurrIndex (cmd);
+		}
+
+		public List<string> CurrMissionData{
+			get{
+				return missionDataProvider.Data;
+			}
+		}
+
 		public void UpdateMissionList(IModelGetter model){
 			missionDataProvider.Data = model.AvailableNpcMissions.ToList ();
 			listView.UpdateDataView (model);

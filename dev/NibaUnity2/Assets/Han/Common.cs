@@ -388,6 +388,7 @@ namespace Common
 		IEnumerator ShowInfo(Info page, object args, Action<Exception> callback);
 		IEnumerator HideInfo(Info page);
 		void Alert (string msg);
+		IEnumerator MissionDialog (string mid);
 		IEnumerator HandleCommand(string msg, object args, Action<Exception> callback);
 	}
 
@@ -449,6 +450,8 @@ namespace Common
 		IEnumerable<Item> CanFusionItems{ get; }
 
 		IEnumerable<string> AvailableNpcMissions{ get; }
+		IEnumerable<string> CheckMissionNotification ();
+
 		IEnumerable<string> AvailableSkills(Place who);
 
 		PlayState PlayState{ get; }
@@ -507,6 +510,7 @@ namespace Common
 		List<string> CheckMissionStatus();
 		IEnumerable<AbstractItem> CompleteMission (string id);
 		void ClearMissionStatus();
+		void MarkMissionNotification (string mid);
 
 		void EquipSkill (Place who, string skillId);
 		void UnequipSkill (Place who, string skillId);

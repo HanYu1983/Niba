@@ -14,10 +14,9 @@ namespace Model
 	public class Model : MonoBehaviour, IModel
 	{
 		public HandleDebug debug;
-		public int visibleExtendLength = 3;
-
 		MapDataStore mapData = new MapDataStore();
 		PlayerDataStore playerData = new PlayerDataStore();
+		UserSettings user = new UserSettings();
 
 		public void NewGame(){
 			ClearMoveResult ();
@@ -34,6 +33,7 @@ namespace Model
 			*/
 			RequestSaveMap ();
 			RequestSavePlayer ();
+			RequestSaveUserSettings ();
 		}
 
 		public bool LoadGame(){
@@ -43,6 +43,21 @@ namespace Model
 		public void NewMap(MapType type){
 			mapData.GenMapStart(type);
 		}
+
+		public IEnumerable<string> CheckMissionNotification(){
+			var ret = new List<string> ();
+			var missions = AvailableNpcMissions.Where(m=>{
+				return user.IsMark("MissionNotify_"+m) == false;
+			});
+			ret.AddRange (missions);
+			return ret;
+		}
+
+		public void MarkMissionNotification(string mid){
+			user.Mark ("MissionNotify_"+mid);
+			RequestSaveUserSettings ();
+		}
+
 		public void EnterMap (){
 			ClearMoveResult ();
 			// 重設位置
@@ -66,19 +81,10 @@ namespace Model
 		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
 		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
 		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
-		/*
-		public int MapWidth{ get{ return mapData.width; } }
-		public int MapHeight{ get{ return mapData.height; } }
-		*/
 		public IEnumerable<MapObject> VisibleMapObjects{ get { return playerData.VisibleMapObjects(mapData); } }
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
 		}
-		//public List<Item> Storage{ get{ return playerData.storage; } }
-		/*
-		public MapPlayer HomePlayer { get { return playerData.player; } }
-		public MapPlayer MapPlayer { get { return playerData.playerInMap; } }
-		*/
 		public MapPlayer GetMapPlayer (Place place){
 			return playerData.GetMapPlayer (place);
 		}
@@ -263,71 +269,36 @@ namespace Model
 			if (isMapDirty) {
 				RequestSaveMap ();
 			}
-			/*
-			if (playerData.playerInMap.IsDied) {
-				throw new Exception ("冒險者掛點，無法移動");
-			}
-			if (playerData.playState != PlayState.Play) {
-				throw new Exception ("這時必須是Play狀態，請檢查程式:"+playerData.playState.ToString());
-			}
-			if (hasMoveResult) {
-				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
-			}
-			var originPos = playerData.playerInMap.position;
-			var newPos = originPos.Add (position);
-			var moveConsumpation = mapData.MoveConsumption (playerData, originPos, newPos);
-			if (playerData.playerInMap.hp - moveConsumpation < 0) {
-				throw new Exception ("體力不足，無法移動:"+playerData.playerInMap.hp);
-			}
-			MoveResult rs = MoveResult.Empty;
-			//newPos = newPos.Max (Position.Zero).Min (mapData.width-1, mapData.height-1);
-			var isPositionDirty = newPos.Equals (playerData.playerInMap.position) == false;
-			// 移動位置
-			playerData.MovePlayerTo (newPos);
-			// 新增視野
-			var isMapDirty = playerData.VisitPosition (playerData.playerInMap.position, visibleExtendLength);
-			// 產生事件
-			var events = mapData.GenEvent (playerData, newPos);
-			if (isMapDirty) {
-				// 生成新地圖
-				mapData.GenMapWithPlayerVisible (playerData);
-			}
-			if (isPositionDirty) {
-				// 增加移動經驗
-				playerData.playerInMap.AddExp (ConfigAbility.ID_move, 1);
-				// 體力減少
-				playerData.playerInMap.hp -= moveConsumpation;
-			}
-			// 準備回傳物件
-			rs.isMoveSuccess = isPositionDirty;
-			rs.events = events.ToList();
-			tempMoveResult = rs;
-			hasMoveResult = true;
-			// 有更動就儲存
-			if (isPositionDirty) {
-				RequestSavePlayer ();
-			}
-			if (isMapDirty) {
-				RequestSaveMap ();
-			}
-			*/
 		}
 
 		#region persistent
 		bool Load(){
 			var persistentDataPath = Application.persistentDataPath;
+
 			var playerPath = persistentDataPath + "/playerData.json";
-			var mapPath = persistentDataPath + "/mapData.json";
 			if (File.Exists (playerPath) == false) {
 				return false;
+			} else {
+				var playerMemoto = File.ReadAllText (playerPath);
+				playerData = PlayerDataStore.FromMemonto (playerMemoto);
 			}
+
+			var mapPath = persistentDataPath + "/mapData.json";
 			if (File.Exists (mapPath) == false) {
 				return false;
+			} else {
+				var mapMemoto = File.ReadAllText (mapPath);
+				mapData = MapDataStore.FromMemonto (mapMemoto);
 			}
-			var playerMemoto = File.ReadAllText (playerPath);
-			var mapMemoto = File.ReadAllText (mapPath);
-			playerData = PlayerDataStore.FromMemonto (playerMemoto);
-			mapData = MapDataStore.FromMemonto (mapMemoto);
+
+			var userSettingsPath = persistentDataPath + "/userSettings.json";
+			// userSettings不存在的話沒差
+			if (File.Exists (userSettingsPath) == false) {
+				// ignore
+			} else {
+				var userMemoto = File.ReadAllText (userSettingsPath);
+				user = UserSettings.FromMemonto (userMemoto);	
+			}
 			return true;
 		}
 		HashSet<string> saveTargets = new HashSet<string>();
@@ -345,6 +316,13 @@ namespace Model
 				Monitor.PulseAll (saveTargets);
 			}
 		}
+		void RequestSaveUserSettings(){
+			SavePlayerDiskWorker (Application.persistentDataPath);
+			saveTargets.Add ("user");
+			lock (saveTargets) {
+				Monitor.PulseAll (saveTargets);
+			}
+		}
 		Thread savingThread;
 		void SavePlayerDiskWorker(string persistentDataPath){
 			if (savingThread != null) {
@@ -352,6 +330,13 @@ namespace Model
 			}
 			savingThread = new Thread (() => {
 				while(true){
+					if(saveTargets.Contains("user")){
+						Debug.LogWarning("save user settings...");
+						var memonto = playerData.GetMemonto ();
+						var path = persistentDataPath + "/userSettings.json";
+						File.WriteAllText(path, memonto);
+						saveTargets.Remove("user");
+					}
 					if(saveTargets.Contains("player")){
 						Debug.LogWarning("save player...");
 						var memonto = playerData.GetMemonto ();

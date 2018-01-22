@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using HanRPGAPI;
+using Fungus;
 
 namespace View
 {
@@ -20,6 +21,7 @@ namespace View
 		public Popup skillPopup;
 		public Popup selectSkillPopup;
 		public Popup selectMapPopup;
+		public HandleFungus handleFungus;
 
 		IModelGetter model;
 		public IModelGetter ModelGetter{ set{ model = value; } }
@@ -471,6 +473,11 @@ namespace View
 							callback (new Exception ("MissionPopup is null"));
 							yield break;
 						}
+						/*if (msg.Contains ("click_missionPopup_item_")) {
+							var selectIdx = popup.CurrMissionIndex(msg);
+							var mid = popup.CurrMissionData [selectIdx];
+							yield return MissionDialog (mid);
+						}*/
 						yield return popup.HandleCommand (model, msg, args, callback);
 					}
 
@@ -486,6 +493,13 @@ namespace View
 				break;
 			}
 			yield return null;
+		}
+
+		public IEnumerator MissionDialog(string mid){
+			var cfg = ConfigNpcMission.Get (mid);
+			var npcCfg = ConfigNpc.Get (cfg.Npc);
+			var dialog = string.Format("{0}:{1}", npcCfg.Name, cfg.Dialog);
+			yield return handleFungus.MissionDialog (dialog);
 		}
 
 		#region msg popup

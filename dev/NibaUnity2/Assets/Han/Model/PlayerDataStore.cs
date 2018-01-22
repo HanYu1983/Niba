@@ -1576,6 +1576,26 @@ namespace Model
 		#endregion
 	}
 
+	public class UserSettings{
+		public List<string> mark = new List<string>();
+		public void Mark(string v){
+			if (IsMark (v)) {
+				return;
+			}
+			mark.Add (v);
+		}
+		public bool IsMark(string v){
+			return mark.Contains (v);
+		}
+		public string GetMemonto(){
+			string json = JsonUtility.ToJson(this);
+			return json;
+		}
+		public static UserSettings FromMemonto(string json){
+			return JsonUtility.FromJson<UserSettings>(json);
+		}
+	}
+
 	public class Helper{
 		public static Buf GetBuf(ConfigSkill skill){
 			switch (skill.ID) {

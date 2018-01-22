@@ -5,6 +5,7 @@ using Model;
 using System.Collections;
 using System.Linq;
 using HanRPGAPI;
+using Fungus;
 
 namespace Common
 {
@@ -29,7 +30,6 @@ namespace Common
 					HandleException (e);
 				}
 			}));
-
 			/*Item item;
 			item.count = 1;
 			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
@@ -185,17 +185,7 @@ namespace Common
 			case "click_title_newgame":
 				{
 					model.NewGame ();
-					yield return view.ChangePage (Page.Home, e2 => {
-						e = e2;
-					});
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
-					// 自動領取任務
-					foreach (var m in model.AvailableNpcMissions) {
-						model.AcceptMission (m);
-					}
+					yield return OpenPage (Page.Home);
 				}
 				break;
 			case "click_title_load":
@@ -451,13 +441,7 @@ namespace Common
 				break;
 			case "click_map_home":
 				{
-					yield return view.ChangePage (Page.Home, e2 => {
-						e = e2;
-					});
-					if (e != null) {
-						HandleException (e);
-						yield break;
-					}
+					yield return OpenPage (Page.Home);
 					model.ExitMap ();
 				}
 				break;
@@ -623,6 +607,28 @@ namespace Common
 			}
 			model.ApplyMoveResult();
 			model.ClearMoveResult ();
+		}
+
+		IEnumerator OpenPage(Page page){
+			Exception e = null;
+			yield return view.ChangePage (page, e2 => {
+				e = e2;
+			});
+			if (e != null) {
+				HandleException (e);
+				yield break;
+			}
+			if (page == Page.Home) {
+				// 自動領取任務
+				foreach (var m in model.AvailableNpcMissions) {
+					model.AcceptMission (m);
+				}
+				var misNot = model.CheckMissionNotification ();
+				foreach (var m in misNot) {
+					yield return view.MissionDialog (m);
+					model.MarkMissionNotification (m);
+				}
+			}
 		}
 	}
 }
