@@ -232,18 +232,20 @@ namespace HanCardAPI
                 return score;
             }
 
-            // 遊戲一開始, 主動玩家立刻呼叫GetMissions, 取得當前能做的所有事情
-            public static List<Mission> GetMissions(Context ctx, int playerId)
+            // 遊戲一開始, 主動玩家立刻呼叫GetWorkingMissions, 取得未處理的事情
+            public static Mission GetWorkingMissions(Context ctx, int playerId)
             {
-                var ret = new List<Mission>();
-                // 先查看有沒有玩家任務未處理
-                // 注意:任務所有者未必是主動玩家
                 if (ctx.missions.Count > 0)
                 {
-                    var topMission = ctx.missions[ctx.missions.Count - 1];
-                    ret.Add(topMission);
-                    return ret;
+                    return ctx.missions[ctx.missions.Count - 1];
                 }
+                return null;
+            }
+
+            // 取得當前能做的所有事情
+            public static List<Mission> NewMissions(Context ctx, int playerId)
+            {
+                var ret = new List<Mission>();
                 // 若不是主動玩家就沒事可做
                 if (ctx.currPlayer != playerId)
                 {
