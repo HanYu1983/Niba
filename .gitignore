@@ -45,6 +45,7 @@ dev/NibaUnity2/obj/
 dev/NibaUnity2/ProjectSettings/
 dev/NibaUnity2/Temp/
 dev/NibaUnity2/UnityPackageManager/
+dev/NibaUnity2/Build/
 
 android/NibaUnity/.*/
 android/NibaUnity/build/

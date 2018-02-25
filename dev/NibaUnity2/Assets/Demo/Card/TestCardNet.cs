@@ -48,28 +48,89 @@ namespace CardGame
             {
                 return;
             }
-            GUILayout.BeginArea(new Rect(100, 100, 500, 500));
+            GUILayout.BeginArea(new Rect(200, 20, 500, 500));
             GUILayout.Label("guid:" + guid);
             GUILayout.Label("hasContext:" + (clientCtx != null));
             if (isServer)
             {
-                if (GUILayout.Button("create card table"))
+                if (clientCtx == null)
                 {
-                    CreateCardTable();
+                    if (GUILayout.Button("create card table"))
+                    {
+                        CreateCardTable();
+                    }
                 }
             }
-            GUILayout.Label("Hand");
             if (clientCtx != null)
             {
+                var isActivePlayer = (clientCtx.currPlayer == playerId);
+                GUILayout.Label("isActivePlayer:"+isActivePlayer);
+
+                if (GUILayout.Button("get work"))
+                {
+                    workingWork = PokeAlg.GetWorkingMissions(clientCtx, playerId);
+                    if (workingWork == null)
+                    {
+                        works = PokeAlg.NewMissions(clientCtx, playerId);
+                    }
+                }
+                if (works != null)
+                {
+                    for (var i = 0; i < works.Count; ++i)
+                    {
+                        var w = works[i];
+                        GUILayout.Button("work "+i);
+                        for(var j=0; j<w.goals.Count; ++j)
+                        {
+                            var t = (j==w.currGoal) ? "[*]":"[ ]";
+                            t += w.goals[j].text;
+                            GUILayout.Label(t);
+                        }
+                    }
+                }
+
+                GUILayout.Label("================ Hand ================");
                 var cs = clientCtx.table.stacks[clientCtx.playerHandStack[playerId]].cards;
                 foreach (var c in cs)
                 {
                     var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
-                    GUILayout.Label(p.shape.ToString() + p.number);
+                    if(GUILayout.Button(p.shape.ToString() + p.number))
+                    {
+                        var canEat = PokeAlg.MatchCard(clientCtx, c);
+                        this.canEat = canEat;
+                        selectCard = c;
+                    }
+                }
+
+                GUILayout.Label("================ Sea ================");
+                cs = clientCtx.table.stacks[clientCtx.seaStack].cards;
+                foreach (var c in cs)
+                {
+                    var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
+                    
+                    if(canEat != null)
+                    {
+                        if (canEat.Contains(c))
+                        {
+                            if (GUILayout.Button(p.shape.ToString() + p.number))
+                            {
+
+                            }
+                        }
+                        else
+                        {
+                            GUILayout.Label(p.shape.ToString() + p.number);
+                        }
+                    }
                 }
             }
             GUILayout.EndArea();
         }
+
+        public List<int> canEat;
+        public int selectCard;
+        public Mission workingWork;
+        public List<Mission> works= new List<Mission>();
 
         public static List<TestCardNet> clients = new List<TestCardNet>();
         [Command]
@@ -110,13 +171,7 @@ namespace CardGame
             }
             Ask("QueryContext", System.Guid.NewGuid().ToString(), (answer, args2) =>
             {
-                Debug.Log(answer);
                 var ctx = JsonUtility.FromJson<Context>(answer);
-                var cs = ctx.table.stacks[ctx.playerHandStack[playerId]].cards;
-                foreach (var c in cs)
-                {
-                    Debug.Log(ctx.table.cards[c].prototype);
-                }
                 clientCtx = ctx;
             });
         }
