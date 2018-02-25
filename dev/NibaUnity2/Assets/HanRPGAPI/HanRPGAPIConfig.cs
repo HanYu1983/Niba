@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HanRPGAPIConfig : ScriptableObject{
 	public string csvPath;

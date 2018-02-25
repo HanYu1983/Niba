@@ -8,19 +8,22 @@ namespace HanCardAPI
 {
     namespace Core
     {
+        [Serializable]
         public class Card
         {
             public int key;
             public bool faceUp;
-            public string id;
+            public string prototype;
         }
 
+        [Serializable]
         public class CardStack
         {
             public int key;
             public List<int> cards = new List<int>();
         }
 
+        [Serializable]
         public class Table
         {
             public List<Card> cards = new List<Card>();
@@ -34,7 +37,7 @@ namespace HanCardAPI
                 var c = new Card();
                 var key = table.cards.Count;
                 c.key = key;
-                c.id = id;
+                c.prototype = id;
                 table.cards.Add(c);
                 table.stacks[stack].cards.Add(key);
                 return key;
@@ -73,7 +76,7 @@ namespace HanCardAPI
                 var ret = new List<int>();
                 for (var i = 0; i < cnt; ++i)
                 {
-                    var idx = stackCardCnt - i;
+                    var idx = (stackCardCnt-1) - i;
                     if (inverse)
                     {
                         idx = i;

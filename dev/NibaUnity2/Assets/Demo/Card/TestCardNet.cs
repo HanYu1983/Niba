@@ -9,6 +9,7 @@ namespace CardGame
 {
     public class TestCardNet : NetworkBehaviour
     {
+        [SyncVar]
         public string guid;
 
         public override void OnStartServer()
@@ -34,6 +35,8 @@ namespace CardGame
             {
                 return;
             }
+
+            CmdAddClient(guid);
         }
 
 
@@ -45,8 +48,9 @@ namespace CardGame
             {
                 return;
             }
-
             GUILayout.BeginArea(new Rect(100, 100, 500, 500));
+            GUILayout.Label("guid:" + guid);
+            GUILayout.Label("hasContext:" + (clientCtx != null));
             if (isServer)
             {
                 if (GUILayout.Button("create card table"))
@@ -54,38 +58,66 @@ namespace CardGame
                     CreateCardTable();
                 }
             }
-            if (GUILayout.Button("up"))
+            GUILayout.Label("Hand");
+            if (clientCtx != null)
             {
-                
+                var cs = clientCtx.table.stacks[clientCtx.playerHandStack[playerId]].cards;
+                foreach (var c in cs)
+                {
+                    var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
+                    GUILayout.Label(p.shape.ToString() + p.number);
+                }
             }
             GUILayout.EndArea();
         }
 
-        public Context ctx;
+        public static List<TestCardNet> clients = new List<TestCardNet>();
+        [Command]
+        void CmdAddClient(string guid)
+        {
+            this.playerId = clients.Count;
+            this.guid = guid;
+            clients.Add(this);
+        }
+
+        [SyncVar]
+        public int playerId;
+
+        static Context serverCtx;
+        static Context clientCtx;
+        
         
         void CreateCardTable()
         {
-            ctx = PokeAlg.CreateContext(4, 0);
-            // create view and spawn in client
+            var playerCnt = clients.Count;
+            serverCtx = PokeAlg.CreateContext(playerCnt, 0);
+            // create view and spawn in client   
 
-            RpcGameStart();
+            // 傳給所有對應的client
+            foreach(var c in clients)
+            {
+                c.RpcGameStart();
+            }
         }
 
         [ClientRpc]
-        void RpcGameStart()
+        public void RpcGameStart()
         {
+            Debug.Log("RpcGameStart:"+this.guid);
             if (isLocalPlayer == false)
             {
                 return;
             }
-            Ask("getWorkingMission", "xxx", (answer, args) =>
+            Ask("QueryContext", System.Guid.NewGuid().ToString(), (answer, args2) =>
             {
-                // show mission
-
-                Ask("newMission", "XXX", (a, ar) =>
+                Debug.Log(answer);
+                var ctx = JsonUtility.FromJson<Context>(answer);
+                var cs = ctx.table.stacks[ctx.playerHandStack[playerId]].cards;
+                foreach (var c in cs)
                 {
-                    // show mission
-                });
+                    Debug.Log(ctx.table.cards[c].prototype);
+                }
+                clientCtx = ctx;
             });
         }
 
@@ -93,23 +125,38 @@ namespace CardGame
         void CmdPushMission(string playerId, string missionJson)
         {
             var mis = JsonUtility.FromJson<Mission>(missionJson);
-            PokeAlg.PushMission(ctx, mis);
+            PokeAlg.PushMission(serverCtx, mis);
         }
+
+        Dictionary<string, System.Action<string, string[]>> callbackPool = new Dictionary<string, System.Action<string, string[]>>();
 
         public void Ask(string question, string askId, System.Action<string, string[]> callback)
         {
-            CmdAsk("user", question, askId);
+            CmdAsk(guid, question, askId);
+            callbackPool[askId] = callback;
         }
 
-        public void Answer(string question, string[] args, string askId)
+        public void Answer(string answer, string[] args, string askId)
         {
-            // call callback and remove
+            if (callbackPool.ContainsKey(askId) == false)
+            {
+                return;
+            }
+            callbackPool[askId](answer, args);
+            callbackPool.Remove(askId);
         }
 
         [Command]
-        public void CmdAsk(string user, string question, string askId)
+        public void CmdAsk(string guid, string question, string askId)
         {
-            RpcAnswer("", null, askId);
+            switch (question)
+            {
+                case "QueryContext":
+                    var json = JsonUtility.ToJson(serverCtx);
+                    RpcAnswer(json, null, askId);
+                    break;
+            }
+            
         }
 
         [ClientRpc]

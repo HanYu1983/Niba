@@ -168,7 +168,7 @@ namespace HanCardAPI
                     for (var j = 0; j < playerCnt; ++j)
                     {
                         var top = Core.Alg.PeekCard(ctx.table, ctx.drawStack, 1);
-                        if (top.Count < 0)
+                        if (top.Count <= 0)
                         {
                             break;
                         }
@@ -196,10 +196,10 @@ namespace HanCardAPI
             public static List<int> MatchCard(Context ctx, int card)
             {
                 var cs = ctx.table.stacks[ctx.seaStack];
-                var p1 = GetPrototype(ctx.table.cards[card].id);
+                var p1 = GetPrototype(ctx.table.cards[card].prototype);
                 return cs.cards.FindAll(c =>
                 {
-                    var p2 = GetPrototype(ctx.table.cards[c].id);
+                    var p2 = GetPrototype(ctx.table.cards[c].prototype);
                     return MatchCard(p1, p2);
                 });
             }
@@ -221,7 +221,7 @@ namespace HanCardAPI
                 var score = 0;
                 foreach (var c in cards)
                 {
-                    var p = GetPrototype(ctx.table.cards[c].id);
+                    var p = GetPrototype(ctx.table.cards[c].prototype);
                     var isRed = GetColor(p.shape) == Color.Red;
                     if (isRed == false)
                     {
