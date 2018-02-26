@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace HanCardAPI
 {
@@ -27,37 +28,76 @@ namespace HanCardAPI
         {
             public Shape shape;
             public int number;
+            public int Score
+            {
+                get
+                {
+                    return Math.Min(number, 10);
+                }
+            }
         }
 
+        [Serializable]
         public class Goal
         {
             public const string EAT_ONE_CARD = "出1張牌(0)撿紅點(1),若無法撿則到海底[cardId,cardId]";
+            public const string EAT_ONE_CARD_FINISHED = "出1張牌(0)撿紅點(1),若無法撿則到海底[cardId,cardId], Finished";
             public const string DRAW_ONE_CARD = "抽1張牌(0)[cardId]";
             public const string PASS = "PASS";
             public string text;
             public List<int> refs = new List<int>();
+            public bool isIgnoreCheckValue;
         }
 
+        [Serializable]
         public class Mission
         {
+            public static int keyCnt;
+            public int key = keyCnt++;
             public int owner;
 
             public List<Goal> goals = new List<Goal>();
             public int currGoal;
             public List<string> values = new List<string>();
 
+            public void AssignDataWithSameKey(Mission mis)
+            {
+                if(key != mis.key)
+                {
+                    throw new System.Exception("XXXX");
+                }
+                goals = mis.goals;
+                currGoal = mis.currGoal;
+                values = mis.values;
+            }
+
             public bool IsReady
             {
                 get
                 {
-                    foreach (var v in values)
+                    var g = goals[currGoal];
+                    if (g.isIgnoreCheckValue)
                     {
-                        if (v == null)
+                        return true;
+                    }
+                    foreach(var r in g.refs)
+                    {
+                        if (string.IsNullOrEmpty(values[r]))
                         {
                             return false;
                         }
                     }
                     return true;
+                    /*
+                    foreach (var v in values)
+                    {
+                        if (string.IsNullOrEmpty(v))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
+                    */
                 }
             }
 
@@ -67,7 +107,7 @@ namespace HanCardAPI
                 {
                     return false;
                 }
-                return values[valueRef] != null;
+                return string.IsNullOrEmpty(values[valueRef]) == false;
             }
 
             public int NewValueRef()
@@ -227,7 +267,7 @@ namespace HanCardAPI
                     {
                         continue;
                     }
-                    score += p.number;
+                    score += p.Score;
                 }
                 return score;
             }
@@ -261,6 +301,7 @@ namespace HanCardAPI
                             var d = new Goal();
                             d.text = Goal.EAT_ONE_CARD;
                             d.refs.Add(m.NewValueRef());
+                            d.refs.Add(m.NewValueRef());
                             m.goals.Add(d);
 
                             ret.Add(m);
@@ -273,13 +314,16 @@ namespace HanCardAPI
 
                             var d = new Goal();
                             d.text = Goal.DRAW_ONE_CARD;
+                            d.isIgnoreCheckValue = true;
+
                             var drawCardRef = m.NewValueRef();
                             d.refs.Add(drawCardRef);
                             m.goals.Add(d);
 
                             d = new Goal();
-                            d.text = Goal.EAT_ONE_CARD;
+                            d.text = Goal.EAT_ONE_CARD_FINISHED;
                             d.refs.Add(drawCardRef);
+                            d.refs.Add(m.NewValueRef());
                             m.goals.Add(d);
 
                             ret.Add(m);
@@ -301,40 +345,69 @@ namespace HanCardAPI
                 return ret;
             }
 
+            static Mission UpdateMissionWithSameKey(Context ctx, Mission mission)
+            {
+                foreach(var m in ctx.missions)
+                {
+                    if(m.key == mission.key)
+                    {
+                        m.AssignDataWithSameKey(mission);
+                        return m;
+                    }
+                }
+                throw new System.Exception("XXX");
+            }
+
             // 主動玩家選一個任務後必須呼叫PushMission
             public static void PushMission(Context ctx, Mission mission)
             {
-                ctx.missions.Add(mission);
+                //ctx.missions.Add(mission);
+                var find = ctx.missions.Find(m =>
+                {
+                    return m.key == mission.key;
+                });
+                if(find != null)
+                {
+                    UpdateMissionWithSameKey(ctx, mission);
+                }
+                else
+                {
+                    ctx.missions.Add(mission);
+                }
             }
 
             // 執行選取的任務
-            public static bool ApplyMission(Context ctx, int player, Mission mission)
+            public static Mission ApplyMission(Context ctx, int player, Mission mission)
             {
+                Debug.Log("ApplyMission:"+JsonUtility.ToJson(mission));
+
                 var topMission = ctx.missions[ctx.missions.Count - 1];
-                if (mission != topMission)
+                if (mission.key != topMission.key)
                 {
                     throw new System.Exception("只能先處理堆疊頂端的任務");
                 }
-                var isUserMission = mission.owner >= 0;
-                if (isUserMission && mission.owner != player)
+                var isUserMission = topMission.owner >= 0;
+                if (isUserMission && topMission.owner != player)
                 {
                     throw new System.Exception("只能處理自己的任務");
                 }
-                if (mission.IsReady == false)
-                {
-                    throw new System.Exception("任務所需的參數不能為空值");
-                }
-                if (mission.currGoal >= mission.goals.Count)
+                if (topMission.currGoal >= topMission.goals.Count)
                 {
                     throw new System.Exception("任務已執行完成, 請將任務從堆疊中刪掉");
                 }
-                var goal = mission.goals[mission.currGoal];
+                if (topMission.IsReady == false)
+                {
+                    Debug.LogWarning("任務所需的參數不能為空值, 請補上值");
+                    return null;
+                }
+                var goal = topMission.goals[topMission.currGoal];
                 switch (goal.text)
                 {
                     case Goal.EAT_ONE_CARD:
+                    case Goal.EAT_ONE_CARD_FINISHED:
                         {
-                            var card1 = int.Parse(mission.values[goal.refs[0]]);
-                            var card2 = int.Parse(mission.values[goal.refs[1]]);
+                            var card1 = int.Parse(topMission.values[goal.refs[0]]);
+                            var card2 = int.Parse(topMission.values[goal.refs[1]]);
                             var isMatch = MatchCard(ctx, card1).Contains(card2);
                             ctx.table.cards[card1].faceUp = true;
 
@@ -347,9 +420,16 @@ namespace HanCardAPI
                             {
                                 Core.Alg.MoveCard(ctx.table, card1, ctx.playerHandStack[player], ctx.playerEatStack[player]);
                                 Core.Alg.MoveCard(ctx.table, card2, ctx.seaStack, ctx.playerEatStack[player]);
-                                ctx.phase = Phase.Draw;
+                                if (goal.text == Goal.EAT_ONE_CARD_FINISHED)
+                                {
+                                    ctx.phase = Phase.End;
+                                }
+                                else
+                                {
+                                    ctx.phase = Phase.Draw;
+                                }
                             }
-                            mission.currGoal += 1;
+                            topMission.currGoal += 1;
                         }
                         break;
                     case Goal.DRAW_ONE_CARD:
@@ -358,22 +438,33 @@ namespace HanCardAPI
                             if (cs.Count == 0)
                             {
                                 // game over
-                                return false;
+                                return null;
                             }
                             var card1 = cs[0];
                             Core.Alg.MoveCard(ctx.table, card1, ctx.drawStack, ctx.playerHandStack[player]);
-                            mission.values[goal.refs[0]] = card1.ToString();
-                            mission.currGoal += 1;
+                            topMission.values[goal.refs[0]] = card1.ToString();
+                            topMission.currGoal += 1;
                         }
                         break;
                     case Goal.PASS:
                         {
                             ctx.phase = Phase.Eat;
                             ctx.currPlayer = (ctx.currPlayer + 1) % ctx.playerCnt;
+                            topMission.currGoal += 1;
                         }
                         break;
                 }
-                return true;
+                var isFinished = topMission.currGoal == topMission.goals.Count;
+                if (isFinished)
+                {
+                    ctx.missions.Remove(topMission);
+                    if(ctx.missions.Count == 0)
+                    {
+                        return null;
+                    }
+                    topMission = ctx.missions[ctx.missions.Count - 1];
+                }
+                return topMission;
             }
         }
     }

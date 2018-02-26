@@ -9,8 +9,9 @@ namespace CardGame
 {
     public class TestCardNet : NetworkBehaviour
     {
-        [SyncVar]
         public string guid;
+        [SyncVar]
+        public int playerId;
 
         public override void OnStartServer()
         {
@@ -48,7 +49,7 @@ namespace CardGame
             {
                 return;
             }
-            GUILayout.BeginArea(new Rect(200, 20, 500, 500));
+            GUILayout.BeginArea(new Rect(200, 0, 700, 700));
             GUILayout.Label("guid:" + guid);
             GUILayout.Label("hasContext:" + (clientCtx != null));
             if (isServer)
@@ -65,21 +66,25 @@ namespace CardGame
             {
                 var isActivePlayer = (clientCtx.currPlayer == playerId);
                 GUILayout.Label("isActivePlayer:"+isActivePlayer);
+                GUILayout.Label("phase:" + clientCtx.phase);
+                GUILayout.Label("score:" + score);
 
-                if (GUILayout.Button("get work"))
-                {
-                    workingWork = PokeAlg.GetWorkingMissions(clientCtx, playerId);
-                    if (workingWork == null)
-                    {
-                        works = PokeAlg.NewMissions(clientCtx, playerId);
-                    }
-                }
                 if (works != null)
                 {
                     for (var i = 0; i < works.Count; ++i)
                     {
                         var w = works[i];
-                        GUILayout.Button("work "+i);
+                        if (isActivePlayer)
+                        {
+                            if (GUILayout.Button("work " + i))
+                            {
+                                selectWork = w;
+                            }
+                        }
+                        else
+                        {
+                            GUILayout.Label("work " + i);
+                        }
                         for(var j=0; j<w.goals.Count; ++j)
                         {
                             var t = (j==w.currGoal) ? "[*]":"[ ]";
@@ -89,17 +94,80 @@ namespace CardGame
                     }
                 }
 
+                if(selectWork != null)
+                {
+                    var g = selectWork.goals[selectWork.currGoal];
+                    switch (g.text)
+                    {
+                        case Goal.EAT_ONE_CARD:
+                        case Goal.EAT_ONE_CARD_FINISHED:
+                            {
+                                GUILayout.Label("================ Select Hand ================");
+                                var hasSelectOne = selectWork.HasValue(g.refs[0]);
+                                if (hasSelectOne == false)
+                                {
+                                    var cs2 = clientCtx.table.stacks[clientCtx.playerHandStack[playerId]].cards;
+                                    foreach (var c in cs2)
+                                    {
+                                        var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
+                                        if (GUILayout.Button(p.shape.ToString() + p.number))
+                                        {
+                                            selectCard = c;
+                                            var canEat = PokeAlg.MatchCard(clientCtx, selectCard);
+                                            this.canEat = canEat;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    selectCard = int.Parse(selectWork.values[g.refs[0]]);
+                                    var canEat = PokeAlg.MatchCard(clientCtx, selectCard);
+                                    this.canEat = canEat;
+                                }
+
+                                if (GUILayout.Button("put sea"))
+                                {
+                                    selectCard2 = -1;
+
+                                    selectWork.values[g.refs[0]] = selectCard.ToString();
+                                    selectWork.values[g.refs[1]] = selectCard2.ToString();
+
+                                    Debug.Log(JsonUtility.ToJson(selectWork));
+                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                }
+                            }
+                            break;
+                        case Goal.DRAW_ONE_CARD:
+                            {
+                                if (GUILayout.Button("draw"))
+                                {
+                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                }
+                            }
+                            break;
+                        case Goal.PASS:
+                            {
+                                if (GUILayout.Button("pass"))
+                                {
+                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                }
+                            }
+                            break;
+                    }
+                }
+
                 GUILayout.Label("================ Hand ================");
                 var cs = clientCtx.table.stacks[clientCtx.playerHandStack[playerId]].cards;
                 foreach (var c in cs)
                 {
                     var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
-                    if(GUILayout.Button(p.shape.ToString() + p.number))
+                    GUILayout.Label(p.shape.ToString() + p.number);
+                    /*if (GUILayout.Button(p.shape.ToString() + p.number))
                     {
                         var canEat = PokeAlg.MatchCard(clientCtx, c);
                         this.canEat = canEat;
                         selectCard = c;
-                    }
+                    }*/
                 }
 
                 GUILayout.Label("================ Sea ================");
@@ -114,7 +182,18 @@ namespace CardGame
                         {
                             if (GUILayout.Button(p.shape.ToString() + p.number))
                             {
+                                selectCard2 = c;
+                                var isValid = selectWork.goals[selectWork.currGoal].text == Goal.EAT_ONE_CARD || selectWork.goals[selectWork.currGoal].text == Goal.EAT_ONE_CARD_FINISHED;
+                                if (isValid == false)
+                                {
+                                    throw new System.Exception("no valid status");
+                                }
+                                var g = selectWork.goals[selectWork.currGoal];
+                                selectWork.values[g.refs[0]] = selectCard.ToString();
+                                selectWork.values[g.refs[1]] = selectCard2.ToString();
 
+                                Debug.Log(JsonUtility.ToJson(selectWork));
+                                CmdPushMission(guid, JsonUtility.ToJson(selectWork));
                             }
                         }
                         else
@@ -128,9 +207,10 @@ namespace CardGame
         }
 
         public List<int> canEat;
-        public int selectCard;
-        public Mission workingWork;
+        public int selectCard, selectCard2;
         public List<Mission> works= new List<Mission>();
+        public Mission selectWork;
+        public int score;
 
         public static List<TestCardNet> clients = new List<TestCardNet>();
         [Command]
@@ -141,23 +221,47 @@ namespace CardGame
             clients.Add(this);
         }
 
-        [SyncVar]
-        public int playerId;
+        
 
         static Context serverCtx;
         static Context clientCtx;
-        
         
         void CreateCardTable()
         {
             var playerCnt = clients.Count;
             serverCtx = PokeAlg.CreateContext(playerCnt, 0);
-            // create view and spawn in client   
 
+            var json = JsonUtility.ToJson(serverCtx);
             // 傳給所有對應的client
-            foreach(var c in clients)
+            foreach (var c in clients)
             {
+                c.RpcUpdateContext(json);
                 c.RpcGameStart();
+            }
+        }
+
+        [ClientRpc]
+        void RpcUpdateContext(string json)
+        {
+            Debug.Log("RpcUpdateContext:" + json);
+
+            var ctx = JsonUtility.FromJson<Context>(json);
+            clientCtx = ctx;
+            canEat.Clear();
+            works = null;
+            selectWork = null;
+
+            score = PokeAlg.CalcScore(clientCtx, clientCtx.table.stacks[clientCtx.playerEatStack[playerId]].cards);
+
+            var w = PokeAlg.GetWorkingMissions(clientCtx, playerId);
+            if (w != null)
+            {
+                works = new List<Mission>();
+                works.Add(w);
+            }
+            else
+            {
+                works = PokeAlg.NewMissions(clientCtx, playerId);
             }
         }
 
@@ -169,18 +273,31 @@ namespace CardGame
             {
                 return;
             }
+            /*
             Ask("QueryContext", System.Guid.NewGuid().ToString(), (answer, args2) =>
             {
                 var ctx = JsonUtility.FromJson<Context>(answer);
                 clientCtx = ctx;
             });
+            */
         }
 
         [Command]
-        void CmdPushMission(string playerId, string missionJson)
+        void CmdPushMission(string guid, string missionJson)
         {
             var mis = JsonUtility.FromJson<Mission>(missionJson);
             PokeAlg.PushMission(serverCtx, mis);
+            var next = mis;
+            do
+            {
+                next = PokeAlg.ApplyMission(serverCtx, playerId, next);
+            }
+            while (next != null);
+
+            foreach(var c in clients)
+            {
+                c.RpcUpdateContext(JsonUtility.ToJson(serverCtx));
+            }
         }
 
         Dictionary<string, System.Action<string, string[]>> callbackPool = new Dictionary<string, System.Action<string, string[]>>();
