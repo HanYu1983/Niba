@@ -9,10 +9,6 @@ namespace CardGame
 {
     public class TestCardNet : NetworkBehaviour
     {
-        public string guid;
-        [SyncVar]
-        public int playerId;
-
         public override void OnStartServer()
         {
             var id = GetComponent<NetworkIdentity>();
@@ -27,8 +23,6 @@ namespace CardGame
 
         public override void OnStartLocalPlayer()
         {
-            guid = System.Guid.NewGuid().ToString();
-
             var id = GetComponent<NetworkIdentity>();
             Debug.Log("OnStartLocalPlayer:" + id.playerControllerId + ":isLocalPlayer=" + isLocalPlayer);
 
@@ -36,21 +30,100 @@ namespace CardGame
             {
                 return;
             }
-
-            CmdAddClient(guid);
+            CmdAddClient();
         }
 
+        void OnGUI()
+        {
+            DrawDebugView();
+        }
 
+        #region client manager
+        [SyncVar]
+        public int playerId;
+        public static List<TestCardNet> clients = new List<TestCardNet>();
+        [Command]
+        void CmdAddClient()
+        {
+            this.playerId = clients.Count;
+            clients.Add(this);
+        }
+        #endregion
 
+        static Context serverCtx;
+        void CreateCardTable()
+        {
+            var playerCnt = clients.Count;
+            serverCtx = PokeAlg.CreateContext(playerCnt, 0);
 
-        private void OnGUI()
+            var json = JsonUtility.ToJson(serverCtx);
+            // 傳給所有對應的client
+            foreach (var c in clients)
+            {
+                c.RpcUpdateContext(json);
+            }
+        }
+
+        Context clientCtx;
+        public List<int> canEat;
+        public int selectCard, selectCard2;
+        public List<Mission> works = new List<Mission>();
+        public Mission selectWork;
+        public int score;
+        [ClientRpc]
+        void RpcUpdateContext(string json)
+        {
+            Debug.Log("RpcUpdateContext:" + json);
+            if(isLocalPlayer == false)
+            {
+                return;
+            }
+
+            var ctx = JsonUtility.FromJson<Context>(json);
+            clientCtx = ctx;
+            canEat.Clear();
+            works = null;
+            selectWork = null;
+
+            score = PokeAlg.CalcScore(clientCtx, clientCtx.table.stacks[clientCtx.playerEatStack[playerId]].cards);
+
+            var w = PokeAlg.GetWorkingMissions(clientCtx, playerId);
+            if (w != null)
+            {
+                works = new List<Mission>();
+                works.Add(w);
+            }
+            else
+            {
+                works = PokeAlg.NewMissions(clientCtx, playerId);
+            }
+        }
+
+        [Command]
+        void CmdPushMission(string missionJson)
+        {
+            var mis = JsonUtility.FromJson<Mission>(missionJson);
+            PokeAlg.PushMission(serverCtx, mis);
+            var next = mis;
+            do
+            {
+                next = PokeAlg.ApplyMission(serverCtx, playerId, next);
+            }
+            while (next != null);
+
+            foreach(var c in clients)
+            {
+                c.RpcUpdateContext(JsonUtility.ToJson(serverCtx));
+            }
+        }
+
+        void DrawDebugView()
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
             GUILayout.BeginArea(new Rect(200, 0, 700, 700));
-            GUILayout.Label("guid:" + guid);
             GUILayout.Label("hasContext:" + (clientCtx != null));
             if (isServer)
             {
@@ -65,7 +138,7 @@ namespace CardGame
             if (clientCtx != null)
             {
                 var isActivePlayer = (clientCtx.currPlayer == playerId);
-                GUILayout.Label("isActivePlayer:"+isActivePlayer);
+                GUILayout.Label("isActivePlayer:" + isActivePlayer);
                 GUILayout.Label("phase:" + clientCtx.phase);
                 GUILayout.Label("score:" + score);
 
@@ -85,16 +158,16 @@ namespace CardGame
                         {
                             GUILayout.Label("work " + i);
                         }
-                        for(var j=0; j<w.goals.Count; ++j)
+                        for (var j = 0; j < w.goals.Count; ++j)
                         {
-                            var t = (j==w.currGoal) ? "[*]":"[ ]";
+                            var t = (j == w.currGoal) ? "[*]" : "[ ]";
                             t += w.goals[j].text;
                             GUILayout.Label(t);
                         }
                     }
                 }
 
-                if(selectWork != null)
+                if (selectWork != null)
                 {
                     var g = selectWork.goals[selectWork.currGoal];
                     switch (g.text)
@@ -133,7 +206,7 @@ namespace CardGame
                                     selectWork.values[g.refs[1]] = selectCard2.ToString();
 
                                     Debug.Log(JsonUtility.ToJson(selectWork));
-                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                    CmdPushMission(JsonUtility.ToJson(selectWork));
                                 }
                             }
                             break;
@@ -141,7 +214,7 @@ namespace CardGame
                             {
                                 if (GUILayout.Button("draw"))
                                 {
-                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                    CmdPushMission(JsonUtility.ToJson(selectWork));
                                 }
                             }
                             break;
@@ -149,7 +222,7 @@ namespace CardGame
                             {
                                 if (GUILayout.Button("pass"))
                                 {
-                                    CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                    CmdPushMission(JsonUtility.ToJson(selectWork));
                                 }
                             }
                             break;
@@ -162,12 +235,6 @@ namespace CardGame
                 {
                     var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
                     GUILayout.Label(p.shape.ToString() + p.number);
-                    /*if (GUILayout.Button(p.shape.ToString() + p.number))
-                    {
-                        var canEat = PokeAlg.MatchCard(clientCtx, c);
-                        this.canEat = canEat;
-                        selectCard = c;
-                    }*/
                 }
 
                 GUILayout.Label("================ Sea ================");
@@ -175,8 +242,8 @@ namespace CardGame
                 foreach (var c in cs)
                 {
                     var p = PokeAlg.GetPrototype(clientCtx.table.cards[c].prototype);
-                    
-                    if(canEat != null)
+
+                    if (canEat != null)
                     {
                         if (canEat.Contains(c))
                         {
@@ -193,7 +260,7 @@ namespace CardGame
                                 selectWork.values[g.refs[1]] = selectCard2.ToString();
 
                                 Debug.Log(JsonUtility.ToJson(selectWork));
-                                CmdPushMission(guid, JsonUtility.ToJson(selectWork));
+                                CmdPushMission(JsonUtility.ToJson(selectWork));
                             }
                         }
                         else
@@ -206,100 +273,7 @@ namespace CardGame
             GUILayout.EndArea();
         }
 
-        public List<int> canEat;
-        public int selectCard, selectCard2;
-        public List<Mission> works= new List<Mission>();
-        public Mission selectWork;
-        public int score;
-
-        public static List<TestCardNet> clients = new List<TestCardNet>();
-        [Command]
-        void CmdAddClient(string guid)
-        {
-            this.playerId = clients.Count;
-            this.guid = guid;
-            clients.Add(this);
-        }
-
-        
-
-        static Context serverCtx;
-        static Context clientCtx;
-        
-        void CreateCardTable()
-        {
-            var playerCnt = clients.Count;
-            serverCtx = PokeAlg.CreateContext(playerCnt, 0);
-
-            var json = JsonUtility.ToJson(serverCtx);
-            // 傳給所有對應的client
-            foreach (var c in clients)
-            {
-                c.RpcUpdateContext(json);
-                c.RpcGameStart();
-            }
-        }
-
-        [ClientRpc]
-        void RpcUpdateContext(string json)
-        {
-            Debug.Log("RpcUpdateContext:" + json);
-
-            var ctx = JsonUtility.FromJson<Context>(json);
-            clientCtx = ctx;
-            canEat.Clear();
-            works = null;
-            selectWork = null;
-
-            score = PokeAlg.CalcScore(clientCtx, clientCtx.table.stacks[clientCtx.playerEatStack[playerId]].cards);
-
-            var w = PokeAlg.GetWorkingMissions(clientCtx, playerId);
-            if (w != null)
-            {
-                works = new List<Mission>();
-                works.Add(w);
-            }
-            else
-            {
-                works = PokeAlg.NewMissions(clientCtx, playerId);
-            }
-        }
-
-        [ClientRpc]
-        public void RpcGameStart()
-        {
-            Debug.Log("RpcGameStart:"+this.guid);
-            if (isLocalPlayer == false)
-            {
-                return;
-            }
-            /*
-            Ask("QueryContext", System.Guid.NewGuid().ToString(), (answer, args2) =>
-            {
-                var ctx = JsonUtility.FromJson<Context>(answer);
-                clientCtx = ctx;
-            });
-            */
-        }
-
-        [Command]
-        void CmdPushMission(string guid, string missionJson)
-        {
-            var mis = JsonUtility.FromJson<Mission>(missionJson);
-            PokeAlg.PushMission(serverCtx, mis);
-            var next = mis;
-            do
-            {
-                next = PokeAlg.ApplyMission(serverCtx, playerId, next);
-            }
-            while (next != null);
-
-            foreach(var c in clients)
-            {
-                c.RpcUpdateContext(JsonUtility.ToJson(serverCtx));
-            }
-        }
-
+        /*
         Dictionary<string, System.Action<string, string[]>> callbackPool = new Dictionary<string, System.Action<string, string[]>>();
 
         public void Ask(string question, string askId, System.Action<string, string[]> callback)
@@ -336,5 +310,6 @@ namespace CardGame
         {
             Answer(question, args, askId);
         }
+        */
     }
 }

@@ -202,8 +202,9 @@ namespace HanCardAPI
                     // 移到海底
                     Core.Alg.MoveCard(ctx.table, c, ctx.drawStack, ctx.seaStack);
                 }
-                // 不管玩家數量, 每個人發6張, 發到完為止
-                for (var i = 0; i < 6; ++i)
+                var total = 24;
+                var numPerPeople = total / playerCnt;
+                for (var i = 0; i < numPerPeople; ++i)
                 {
                     for (var j = 0; j < playerCnt; ++j)
                     {
@@ -226,7 +227,7 @@ namespace HanCardAPI
 
             public static bool MatchCard(CardPrototype p1, CardPrototype p2)
             {
-                if (p1.number > 10)
+                if (p1.number >= 10)
                 {
                     return p1.number == p2.number;
                 }
