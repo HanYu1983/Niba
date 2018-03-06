@@ -351,23 +351,25 @@ namespace NightmarketAssistant
                 }
             }
 
+            var boothEarns = storage.earns.Where(earn =>
+            {
+                if (earn.booth != booth)
+                {
+                    return false;
+                }
+                return true;
+            }).OrderBy(earn =>
+            {
+                return earn.date;
+            });
+
             var ret = new List<EarnsInRange>();
             for (var i = 0; i < ranges.Count; i += 2)
             {
                 var openTime = new DateTime(ranges[i]);
                 var closeTime = new DateTime(ranges[i + 1]);
 
-                var earns = storage.earns.Where(earn =>
-                {
-                    if (earn.booth != booth)
-                    {
-                        return false;
-                    }
-                    return true;
-                }).OrderBy(earn =>
-                {
-                    return earn.date;
-                }).SkipWhile(earn =>
+                var earns = boothEarns.SkipWhile(earn =>
                 {
                     var earnTime = new DateTime(earn.date);
                     var isBeforeOpen = DateTime.Compare(earnTime, openTime) < 0;
@@ -380,6 +382,20 @@ namespace NightmarketAssistant
                 });
 
                 var er = new EarnsInRange(openTime, closeTime);
+                er.earns.AddRange(earns);
+                ret.Add(er);
+            }
+
+            if(currState == Progress.Open)
+            {
+                var openTime = new DateTime(timeStart);
+                var earns = boothEarns.SkipWhile(earn =>
+                {
+                    var earnTime = new DateTime(earn.date);
+                    var isBeforeOpen = DateTime.Compare(earnTime, openTime) < 0;
+                    return isBeforeOpen;
+                });
+                var er = new EarnsInRange(openTime);
                 er.earns.AddRange(earns);
                 ret.Add(er);
             }

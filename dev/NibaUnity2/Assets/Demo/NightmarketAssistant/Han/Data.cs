@@ -76,10 +76,17 @@ namespace NightmarketAssistant
     {
         public DateTime open, close;
         public List<Earn> earns = new List<Earn>();
+        public bool IsProgressing;
+        public EarnsInRange(DateTime open)
+        {
+            this.open = open;
+            IsProgressing = true;
+        }
         public EarnsInRange(DateTime open, DateTime close)
         {
             this.open = open;
             this.close = close;
+            IsProgressing = false;
         }
     }
 

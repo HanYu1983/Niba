@@ -10,6 +10,7 @@ namespace NightmarketAssistant
         public PageManager pageManager;
         public string initPage;
         public BoothRef boothSelection;
+        public EarnsInRangeRef earnsInRangeSelection;
 
         private void Start()
         {
@@ -17,6 +18,12 @@ namespace NightmarketAssistant
             {
                 ChangePage(initPage);
             }
+        }
+
+        public void ClickEarnsInRange(EarnsInRangeRef e)
+        {
+            earnsInRangeSelection.refType = ObjectRefType.Ref;
+            earnsInRangeSelection.objectRef = e;
         }
 
         public void ClickBoothView(BoothRef booth)
