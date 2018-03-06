@@ -71,6 +71,34 @@ namespace NightmarketAssistant
         }
     }
 
+    [Serializable]
+    public class EarnsInRange
+    {
+        public DateTime open, close;
+        public List<Earn> earns = new List<Earn>();
+        public EarnsInRange(DateTime open, DateTime close)
+        {
+            this.open = open;
+            this.close = close;
+        }
+    }
+
+    public interface IModelGetter
+    {
+        List<Booth> Booths { get; }
+        List<EarnsInRange> GroupEarns(string booth);
+    }
+
+    public interface IModel : IModelGetter
+    {
+
+    }
+
+    public interface INeedModel
+    {
+        IModelGetter IModel { get; set; }
+    }
+
     public class Data : MonoBehaviour
     {
         

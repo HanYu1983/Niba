@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace NightmarketAssistant
 {
-    public class CreateBoothRow : MonoBehaviour, INeedModel
+    public class CreateRangeRow : MonoBehaviour, INeedModel
     {
+        public BoothRef boothRef;
         public GameObject rowLayout;
         public List<GameObject> rows;
 
@@ -51,17 +52,18 @@ namespace NightmarketAssistant
             }
             rows.Clear();
 
-            for (var i = 0; i < model.Booths.Count; ++i)
+            var ranges = model.GroupEarns(boothRef.Ref.Key);
+            for (var i = 0; i < ranges.Count; ++i)
             {
                 var row = Instantiate(rowLayout, transform, false);
-                var objRef = row.GetComponent<BoothRef>();
-                if (objRef == null)
+                var objRef = row.GetComponent<EarnsInRangeRef>();
+                if(objRef == null)
                 {
-                    Debug.LogWarning("BoothRef not found");
+                    Debug.LogWarning("EarnsInRangeRef not found");
                     continue;
                 }
                 objRef.refType = ObjectRefType.Array;
-                objRef.array = model.Booths;
+                objRef.array = ranges;
                 objRef.idx = i;
                 row.SetActive(true);
                 rows.Add(row);

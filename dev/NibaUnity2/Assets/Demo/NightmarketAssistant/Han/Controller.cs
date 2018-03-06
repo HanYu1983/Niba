@@ -7,11 +7,9 @@ namespace NightmarketAssistant
     public class Controller : MonoBehaviour
     {
         public StorageComponent storage;
-        public List<string> pageNames;
-        public GameObject[] pages;
-        public GameObject currPage;
-
+        public PageManager pageManager;
         public string initPage;
+        public BoothRef boothSelection;
 
         private void Start()
         {
@@ -21,55 +19,22 @@ namespace NightmarketAssistant
             }
         }
 
-        private void OnEnable()
+        public void ClickBoothView(BoothRef booth)
         {
-            Start();
-        }
-
-        private void OnDisable()
-        {
-            
+            boothSelection.refType = ObjectRefType.Ref;
+            boothSelection.objectRef = booth;
+            ChangePage("StartBoothPage");
         }
 
         public void ChangePage(string name)
         {
-            if (currPage != null)
-            {
-                currPage.SetActive(false);
-                currPage = null;
-            }
-            var idx = pageNames.IndexOf(name);
-            if (idx == -1)
-            {
-                throw new System.Exception("XXXX");
-            }
-            currPage = pages[idx];
-            currPage.SetActive(true);
-
-            /*
-            if(currPage != null)
-            {
-                Destroy(currPage);
-                currPage = null;
-            }
-            var idx = pageNames.IndexOf(name);
-            if(idx == -1)
-            {
-                throw new System.Exception("XXXX");
-            }
-            currPage = Instantiate(pages[idx], pages[idx].transform.parent, false);
-            currPage.SetActive(true);
-            */
+            pageManager.ChangePage(name);
         }
 
-        public void DeleteBooth(BoothHolder booth)
+        public void DeleteBooth(BoothRef booth)
         {
-            storage.storage.RemoveBooth(booth.booth.Key);
-            if (currPage != null)
-            {
-                currPage.SetActive(false);
-                currPage.SetActive(true);
-            }
+            storage.storage.RemoveBooth(booth.Ref.Key);
+            NMAEvent.OnBoothListChange();
         }
     }
 }

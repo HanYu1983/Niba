@@ -7,13 +7,14 @@ namespace NightmarketAssistant
 {
     public class ShowBooth : MonoBehaviour
     {
-        public BoothHolder booth;
+        public BoothRef boothRef;
         public Text text;
         public string format;
 
         private void Start()
         {
-            text.text = string.Format(format, booth.booth.name, booth.booth.rent, booth.booth.comment);
+            var booth = boothRef.Ref;
+            text.text = string.Format(format, booth.name, booth.rent, booth.comment);
         }
 
         private void OnEnable()

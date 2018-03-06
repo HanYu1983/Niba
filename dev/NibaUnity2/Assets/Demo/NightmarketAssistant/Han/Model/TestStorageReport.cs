@@ -8,7 +8,7 @@ namespace NightmarketAssistant
     public class TestStorageReport : MonoBehaviour
     {
         public StorageComponent storage;
-        public List<Alg.EarnsInRange> earnsInRange;
+        public List<EarnsInRange> earnsInRange;
 
         [ContextMenu("UpdateEditor")]
         void UpdateEditor()

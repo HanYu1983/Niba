@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace NightmarketAssistant
 {
-    public class BoothListHolder : MonoBehaviour
+    public class BoothRef : ObjectRef<Booth>
     {
-        public List<Booth> list;
+        
     }
 }

@@ -296,18 +296,6 @@ namespace NightmarketAssistant
             }).ToList();
         }
 
-        [Serializable]
-        public class EarnsInRange
-        {
-            public DateTime open, close;
-            public List<Earn> earns = new List<Earn>();
-            public EarnsInRange(DateTime open, DateTime close)
-            {
-                this.open = open;
-                this.close = close;
-            }
-        }
-
         public static List<EarnsInRange> GroupEarns(Storage storage, string booth)
         {
             var currState = Progress.Pending;
