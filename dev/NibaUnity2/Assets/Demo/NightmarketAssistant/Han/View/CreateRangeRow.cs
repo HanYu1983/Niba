@@ -52,6 +52,11 @@ namespace NightmarketAssistant
             }
             rows.Clear();
 
+            if(boothRef.IsValid == false)
+            {
+                return;
+            }
+
             var ranges = model.GroupEarns(boothRef.Ref.Key);
             for (var i = 0; i < ranges.Count; ++i)
             {

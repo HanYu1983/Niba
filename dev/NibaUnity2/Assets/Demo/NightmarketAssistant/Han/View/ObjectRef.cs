@@ -17,6 +17,22 @@ namespace NightmarketAssistant
         public int idx;
         public MonoBehaviour objectRef;
 
+        public bool IsValid
+        {
+            get
+            {
+                try
+                {
+                    var ignore = Ref;
+                    return true;
+                }
+                catch (System.Exception)
+                {
+                    return false;
+                }
+            }
+        }
+
         public T Ref
         {
             get
@@ -25,8 +41,16 @@ namespace NightmarketAssistant
                 {
                     default:
                     case ObjectRefType.Static:
+                        if(value == null)
+                        {
+                            throw new System.Exception("XXXX");
+                        }
                         return value;
                     case ObjectRefType.Array:
+                        if(idx <0 || idx >= array.Count)
+                        {
+                            throw new System.Exception("Array Count="+array.Count+", idx="+idx);
+                        }
                         return array[idx];
                     case ObjectRefType.Ref:
                         {
