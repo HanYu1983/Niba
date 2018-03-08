@@ -74,16 +74,19 @@ namespace NightmarketAssistant
     [Serializable]
     public class EarnsInRange
     {
+        public string booth;
         public DateTime open, close;
         public List<Earn> earns = new List<Earn>();
         public bool IsProgressing;
-        public EarnsInRange(DateTime open)
+        public EarnsInRange(string booth, DateTime open)
         {
+            this.booth = booth;
             this.open = open;
             IsProgressing = true;
         }
-        public EarnsInRange(DateTime open, DateTime close)
+        public EarnsInRange(string booth, DateTime open, DateTime close)
         {
+            this.booth = booth;
             this.open = open;
             this.close = close;
             IsProgressing = false;
@@ -93,7 +96,10 @@ namespace NightmarketAssistant
     public interface IModelGetter
     {
         List<Booth> Booths { get; }
+        List<BoothState> States { get;  }
         List<EarnsInRange> GroupEarns(string booth);
+        List<Earn> GetEarn(string booth, DateTime after);
+        BoothState GetBoothStateByBooth(string key);
     }
 
     public interface IModel : IModelGetter

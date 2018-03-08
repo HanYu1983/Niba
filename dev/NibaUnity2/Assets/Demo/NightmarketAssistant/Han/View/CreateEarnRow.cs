@@ -1,30 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace NightmarketAssistant
 {
-    public class CreateBoothRow : MonoBehaviour, INeedModel
+    public class CreateEarnRow : MonoBehaviour, INeedModel
     {
+        public BoothRef boothRef;
         public GameObject rowLayout;
         public List<GameObject> rows;
 
         void Start()
         {
             NMAEvent.OnComponentStart(this);
-            NMAEvent.OnBoothListChange += UpdateView;
+            NMAEvent.OnEarnListChange += UpdateView;
         }
 
         void OnDestroy()
         {
             NMAEvent.OnComponentDestroy(this);
-            NMAEvent.OnBoothListChange -= UpdateView;
+            NMAEvent.OnEarnListChange -= UpdateView;
         }
 
         private void OnEnable()
         {
             // 這時可能model還沒注入
-            if(model == null)
+            if (model == null)
             {
                 return;
             }
@@ -56,17 +58,27 @@ namespace NightmarketAssistant
             }
             rows.Clear();
 
-            for (var i = 0; i < model.Booths.Count; ++i)
+            if (boothRef.IsValid == false)
             {
-                var row = Instantiate(rowLayout, transform, false);
-                var objRef = row.GetComponent<BoothRef>();
+                return;
+            }
+
+            var booth = boothRef.Ref;
+            var bs = model.GetBoothStateByBooth(booth.Key);
+            var earns = model.GetEarn(booth.Key, new DateTime(bs.date));
+
+            for (var i = 0; i < earns.Count; ++i)
+            {
+                var layout = rowLayout;
+                var row = Instantiate(layout, transform, false);
+                var objRef = row.GetComponent<EarnRef>();
                 if (objRef == null)
                 {
-                    Debug.LogWarning("BoothRef not found");
+                    Debug.LogWarning("EarnRef not found");
                     continue;
                 }
                 objRef.refType = ObjectRefType.Array;
-                objRef.array = model.Booths;
+                objRef.array = earns;
                 objRef.idx = i;
                 row.SetActive(true);
                 rows.Add(row);

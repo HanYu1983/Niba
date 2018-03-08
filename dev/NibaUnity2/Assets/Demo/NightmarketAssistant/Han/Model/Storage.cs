@@ -77,6 +77,19 @@ namespace NightmarketAssistant
             return null;
         }
 
+        public List<Earn> GetEarns(string booth, DateTime start)
+        {
+            return earns.Where(e =>
+            {
+                return e.booth == booth;
+            }).SkipWhile(e =>
+            {
+                var t = new DateTime(e.date);
+                var isBefore = DateTime.Compare(t, start) < 0;
+                return isBefore;
+            }).ToList();
+        }
+
         public List<BoothState> states = new List<BoothState>();
         public BoothState GetBoothStateByBooth(string booth)
         {
@@ -230,11 +243,19 @@ namespace NightmarketAssistant
 
         public static int AverageEarn(List<Earn> earns)
         {
+            if(earns.Count == 0)
+            {
+                return 0;
+            }
             return TotalEarn(earns) / earns.Count;
         }
 
         public static int MaxEarn(List<Earn> earns)
         {
+            if (earns.Count == 0)
+            {
+                return 0;
+            }
             return earns.Max(earn =>
             {
                 return earn.money;
@@ -243,13 +264,17 @@ namespace NightmarketAssistant
 
         public static int MinEarn(List<Earn> earns)
         {
+            if (earns.Count == 0)
+            {
+                return 0;
+            }
             return earns.Min(earn =>
             {
                 return earn.money;
             });
         }
 
-        public static long AverageTimeBetweenEarn(Storage storage, List<Earn> earns)
+        public static long AverageTimeBetweenEarn(List<BoothState> states, List<Earn> earns)
         {
             if(earns.Count == 0)
             {
@@ -258,7 +283,7 @@ namespace NightmarketAssistant
             if(earns.Count == 1)
             {
                 var onlyOne = earns[0];
-                var openTime = storage.states.Where(s =>
+                var openTime = states.Where(s =>
                 {
                     return s.booth != onlyOne.booth;
                 }).OrderBy(s =>
@@ -324,7 +349,7 @@ namespace NightmarketAssistant
                         {
                             if (s.progress == Progress.Open)
                             {
-                                throw new Exception("XXX");
+                                throw new Exception("不能有兩次Open");
                             }
                             if (s.progress == Progress.Close)
                             {
@@ -339,7 +364,7 @@ namespace NightmarketAssistant
                         {
                             if (s.progress == Progress.Close)
                             {
-                                throw new Exception("XXX");
+                                throw new Exception("不能有兩次Close");
                             }
                             if (s.progress == Progress.Open)
                             {
@@ -381,7 +406,7 @@ namespace NightmarketAssistant
                     return isBeforeClose;
                 });
 
-                var er = new EarnsInRange(openTime, closeTime);
+                var er = new EarnsInRange(booth, openTime, closeTime);
                 er.earns.AddRange(earns);
                 ret.Add(er);
             }
@@ -395,7 +420,7 @@ namespace NightmarketAssistant
                     var isBeforeOpen = DateTime.Compare(earnTime, openTime) < 0;
                     return isBeforeOpen;
                 });
-                var er = new EarnsInRange(openTime);
+                var er = new EarnsInRange(booth, openTime);
                 er.earns.AddRange(earns);
                 ret.Add(er);
             }

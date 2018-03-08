@@ -34,9 +34,27 @@ namespace NightmarketAssistant
             get { return storage.booths; }
         }
 
+        public List<BoothState> States
+        {
+            get
+            {
+                return storage.states;
+            }
+        }
+
         public List<EarnsInRange> GroupEarns(string booth)
         {
             return Alg.GroupEarns(storage, booth);
+        }
+
+        public List<Earn> GetEarn(string booth, DateTime after)
+        {
+            return storage.GetEarns(booth, after);
+        }
+
+        public BoothState GetBoothStateByBooth(string key)
+        {
+            return storage.GetBoothStateByBooth(key);
         }
 
         [ContextMenu("Run Test")]
@@ -65,13 +83,13 @@ namespace NightmarketAssistant
         }
 
         [ContextMenu("Save")]
-        void Save()
+        public void Save()
         {
             storage.Save(saveDir);
         }
 
         [ContextMenu("Load")]
-        void Load()
+        public void Load()
         {
             storage.Load(saveDir, Math.Max(1, loadMonth));
         }

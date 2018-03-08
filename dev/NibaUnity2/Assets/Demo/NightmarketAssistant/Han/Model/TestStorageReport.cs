@@ -31,7 +31,7 @@ namespace NightmarketAssistant
             var earns = earnsInRange[curr];
             totalEarn = Alg.TotalEarn(earns.earns);
             avgEarn = Alg.AverageEarn(earns.earns);
-            avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(storage.storage, earns.earns)).Seconds.ToString();
+            avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(storage.storage.states, earns.earns)).Seconds.ToString();
         }
 
         [ContextMenu("Prev")]

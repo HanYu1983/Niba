@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace NightmarketAssistant
 {
@@ -16,6 +17,12 @@ namespace NightmarketAssistant
         public List<T> array;
         public int idx;
         public MonoBehaviour objectRef;
+        public Action OnValueChange = delegate { };
+
+        public void NotifyValueChange()
+        {
+            OnValueChange();
+        }
 
         public bool IsValid
         {
@@ -26,8 +33,9 @@ namespace NightmarketAssistant
                     var ignore = Ref;
                     return true;
                 }
-                catch (System.Exception)
+                catch (System.Exception e)
                 {
+                    Debug.LogWarning(e.Message+" in "+gameObject.name);
                     return false;
                 }
             }
@@ -43,7 +51,7 @@ namespace NightmarketAssistant
                     case ObjectRefType.Static:
                         if(value == null)
                         {
-                            throw new System.Exception("XXXX");
+                            throw new System.Exception("value == null");
                         }
                         return value;
                     case ObjectRefType.Array:
@@ -57,7 +65,7 @@ namespace NightmarketAssistant
                             var or = objectRef as ObjectRef<T>;
                             if(or == null)
                             {
-                                throw new System.Exception("XXXX");
+                                throw new System.Exception("objectRef is null");
                             }
                             return or.Ref;
                         }

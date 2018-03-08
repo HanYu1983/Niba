@@ -7,23 +7,30 @@ namespace NightmarketAssistant
     public class CreateRangeRow : MonoBehaviour, INeedModel
     {
         public BoothRef boothRef;
-        public GameObject rowLayout;
+        public GameObject rowLayout, rowLayoutIsProgressing;
         public List<GameObject> rows;
 
         void Start()
         {
             NMAEvent.OnComponentStart(this);
-            NMAEvent.OnBoothListChange += OnBoothListChange;
+            boothRef.OnValueChange += UpdateView;
+            NMAEvent.OnEarnListChange += UpdateView;
         }
 
         void OnDestroy()
         {
             NMAEvent.OnComponentDestroy(this);
-            NMAEvent.OnBoothListChange -= OnBoothListChange;
+            boothRef.OnValueChange -= UpdateView;
+            NMAEvent.OnEarnListChange -= UpdateView;
         }
 
-        void OnBoothListChange()
+        private void OnEnable()
         {
+            // 這時可能model還沒注入
+            if (model == null)
+            {
+                return;
+            }
             UpdateView();
         }
 
@@ -58,9 +65,13 @@ namespace NightmarketAssistant
             }
 
             var ranges = model.GroupEarns(boothRef.Ref.Key);
+            Debug.Log(boothRef.Ref.Key);
+            Debug.Log(ranges.Count);
             for (var i = 0; i < ranges.Count; ++i)
             {
-                var row = Instantiate(rowLayout, transform, false);
+                var range = ranges[i];
+                var layout = range.IsProgressing ? rowLayoutIsProgressing : rowLayout;
+                var row = Instantiate(layout, transform, false);
                 var objRef = row.GetComponent<EarnsInRangeRef>();
                 if(objRef == null)
                 {
