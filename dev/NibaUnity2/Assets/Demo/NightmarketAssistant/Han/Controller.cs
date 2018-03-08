@@ -124,6 +124,10 @@ namespace NightmarketAssistant
             try
             {
                 var booth = editBoothControl.boothRef.Ref;
+                if (string.IsNullOrEmpty(booth.name))
+                {
+                    throw new Exception("新填上攤位名稱");
+                }
                 var newBooth = storage.storage.NewBooth(booth.name);
                 newBooth.comment = booth.comment;
                 newBooth.rent = booth.rent;
@@ -238,7 +242,7 @@ namespace NightmarketAssistant
                 Debug.LogWarning(content);
                 return;
             }
-            view.UpdateView("System", content);
+            view.UpdateView(null, content);
         }
     }
 }

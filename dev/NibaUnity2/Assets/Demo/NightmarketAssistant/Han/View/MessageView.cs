@@ -11,7 +11,10 @@ namespace NightmarketAssistant
 
         public void UpdateView(string title, string content)
         {
-            txt_title.text = title;
+            if (title != null)
+            {
+                txt_title.text = title;
+            }
             txt_content.text = content;
         }
     }

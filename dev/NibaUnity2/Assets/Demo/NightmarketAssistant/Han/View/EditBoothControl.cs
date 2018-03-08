@@ -33,7 +33,13 @@ namespace NightmarketAssistant
         {
             var b = boothRef.Ref;
             b.name = txt_name.text;
-            b.rent = int.Parse(txt_rent.text);
+            try
+            {
+                b.rent = int.Parse(txt_rent.text);
+            }catch(Exception e)
+            {
+                // ignore
+            }
             b.comment = txt_comment.text;
             OnEnter(this);
         }
