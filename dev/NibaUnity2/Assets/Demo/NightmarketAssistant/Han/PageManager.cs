@@ -9,6 +9,7 @@ namespace NightmarketAssistant
         public List<string> pageNames;
         public GameObject[] pages;
         public GameObject currPage;
+        public ZUIManager zuiMgr;
 
         public void ChangePage(string name)
         {
@@ -23,7 +24,20 @@ namespace NightmarketAssistant
                 throw new System.Exception("沒有這個頁:"+name);
             }
             currPage = pages[idx];
-            currPage.SetActive(true);
+            if (zuiMgr != null)
+            {
+                var zui = currPage.GetComponent<Menu>();
+                if (zui != null)
+                {
+                    zuiMgr.OpenMenu(zui);
+                } else
+                {
+                    currPage.SetActive(true);
+                }
+            } else
+            {
+                currPage.SetActive(true);
+            }
         }
     }
 }

@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 namespace NightmarketAssistant
 {
@@ -57,6 +59,18 @@ namespace NightmarketAssistant
             return storage.GetBoothStateByBooth(key);
         }
 
+        public void Save()
+        {
+            storage.Save(saveDir);
+        }
+
+        public void Load()
+        {
+            storage = new Storage();
+            storage.Load(saveDir, Math.Max(1, loadMonth));
+        }
+
+#if UNITY_EDITOR
         [ContextMenu("Run Test")]
         void Test()
         {
@@ -83,17 +97,18 @@ namespace NightmarketAssistant
         }
 
         [ContextMenu("Save")]
-        public void Save()
+        public void EditorSave()
         {
             storage.Save(saveDir);
         }
 
         [ContextMenu("Load")]
-        public void Load()
+        public void EditorLoad()
         {
             storage = new Storage();
             storage.Load(saveDir, Math.Max(1, loadMonth));
         }
+
 
         IEnumerator TestBasic()
         {
@@ -169,15 +184,6 @@ namespace NightmarketAssistant
 
             yield return null; 
         }
-
-        /*private void OnGUI()
-        {
-            GUILayout.BeginArea(new Rect(10, 10, 500, 500));
-            if (GUILayout.Button(""))
-            {
-
-            }
-            GUILayout.EndArea();
-        }*/
+#endif
     }
 }
