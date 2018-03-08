@@ -41,6 +41,14 @@ namespace NightmarketAssistant
             {
                 return;
             }
+            earns = earns.Where(e =>
+            {
+                return e.booth != key;
+            }).ToList();
+            states = states.Where(s =>
+            {
+                return s.booth != key;
+            }).ToList();
             booths.Remove(b);
         }
 

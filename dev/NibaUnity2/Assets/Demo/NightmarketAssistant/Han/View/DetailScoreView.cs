@@ -51,7 +51,7 @@ namespace NightmarketAssistant
             var maxEarn = Alg.MaxEarn(earns);
             var minEarn = Alg.MinEarn(earns);
             txt_total.text = total + "";
-            txt_avgTime.text = avgTime.Minutes+" mins";
+            txt_avgTime.text = avgTime.Seconds+" seconds";
             txt_avgEarn.text = avgEarn+"";
             txt_maxEarn.text = maxEarn+"";
             txt_minEarn.text = minEarn+"";
