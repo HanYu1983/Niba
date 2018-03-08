@@ -11,10 +11,14 @@ namespace NightmarketAssistant
         public Action<EditBoothControl> OnEnter = delegate { };
         public BoothRef boothRef;
         public InputField txt_name, txt_rent, txt_comment;
+        public bool autoUpdateOnStart;
 
         private void Start()
         {
-            UpdateView();
+            if (autoUpdateOnStart)
+            {
+                UpdateView();
+            }
         }
 
         public void UpdateView()

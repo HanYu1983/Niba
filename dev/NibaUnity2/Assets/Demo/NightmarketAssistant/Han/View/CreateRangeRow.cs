@@ -65,8 +65,6 @@ namespace NightmarketAssistant
             }
 
             var ranges = model.GroupEarns(boothRef.Ref.Key);
-            Debug.Log(boothRef.Ref.Key);
-            Debug.Log(ranges.Count);
             for (var i = 0; i < ranges.Count; ++i)
             {
                 var range = ranges[i];

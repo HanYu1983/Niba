@@ -22,8 +22,6 @@ namespace NightmarketAssistant
 
         void OnComponentStart(MonoBehaviour c)
         {
-            Debug.Log("OnComponentStart:"+c.name);
-
             if( c is INeedModel)
             {
                 var ns = c as INeedModel;
