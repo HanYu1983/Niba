@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace NightmarketAssistant
 {
@@ -10,12 +11,18 @@ namespace NightmarketAssistant
         public PageManager pageManager;
         public string initPage;
         public BoothRef boothSelection;
-        public EarnsInRangeRef earnsInRangeSelection;
+        public EarnListRef earnListSelection;
         public NumPadControl numPadControl;
         public EditBoothControl editBoothControl;
+        public bool loadOnStart;
 
         private void Start()
         {
+            if (loadOnStart)
+            {
+                storage.Load();
+            }
+
             if (string.IsNullOrEmpty(initPage) == false)
             {
                 ChangePage(initPage);
@@ -79,8 +86,8 @@ namespace NightmarketAssistant
 
         public void ClickEarnsInRangeView(EarnsInRangeRef e)
         {
-            earnsInRangeSelection.refType = ObjectRefType.Ref;
-            earnsInRangeSelection.objectRef = e;
+            earnListSelection.refType = ObjectRefType.Static;
+            earnListSelection.value = e.Ref.earns;
             ChangePage("DetailScorePage");
         }
 
@@ -92,6 +99,8 @@ namespace NightmarketAssistant
                 storage.storage.earns.Remove(earn);
             }
             NMAEvent.OnEarnListChange();
+
+            storage.Save();
         }
 
         public void ClickEarnsInRangeContinue(EarnsInRangeRef e)
@@ -101,10 +110,17 @@ namespace NightmarketAssistant
 
         public void ClickBoothView(BoothRef booth)
         {
-            boothSelection.refType = ObjectRefType.Ref;
-            boothSelection.objectRef = booth;
+            boothSelection.refType = ObjectRefType.Static;
+            boothSelection.value = booth.Ref;
             boothSelection.NotifyValueChange();
             ChangePage("StartBoothPage");
+        }
+
+        public void ClickBoothScore(BoothRef booth)
+        {
+            earnListSelection.refType = ObjectRefType.Static;
+            earnListSelection.value = storage.storage.GetEarns(booth.Ref.Key, DateTime.MinValue);
+            ChangePage("ScorePage");
         }
 
         public void ChangePage(string name)
@@ -116,6 +132,8 @@ namespace NightmarketAssistant
         {
             storage.storage.RemoveBooth(booth.Ref.Key);
             NMAEvent.OnBoothListChange();
+
+            storage.Save();
         }
     }
 }

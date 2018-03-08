@@ -91,6 +91,7 @@ namespace NightmarketAssistant
         [ContextMenu("Load")]
         public void Load()
         {
+            storage = new Storage();
             storage.Load(saveDir, Math.Max(1, loadMonth));
         }
 

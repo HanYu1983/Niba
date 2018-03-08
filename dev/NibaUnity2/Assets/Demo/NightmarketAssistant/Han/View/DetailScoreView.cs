@@ -9,7 +9,7 @@ namespace NightmarketAssistant
     public class DetailScoreView : MonoBehaviour, INeedModel
     {
         public Text txt_total, txt_avgTime, txt_avgEarn, txt_maxEarn, txt_minEarn;
-        public EarnsInRangeRef rangeRef;
+        public EarnListRef rangeRef;
 
         void Start()
         {
@@ -44,12 +44,12 @@ namespace NightmarketAssistant
 
         public void UpdateView()
         {
-            var range = rangeRef.Ref;
-            var total = Alg.TotalEarn(range.earns);
-            var avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(model.States, range.earns));
-            var avgEarn = Alg.AverageEarn(range.earns);
-            var maxEarn = Alg.MaxEarn(range.earns);
-            var minEarn = Alg.MinEarn(range.earns);
+            var earns = rangeRef.Ref;
+            var total = Alg.TotalEarn(earns);
+            var avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(model.States, earns));
+            var avgEarn = Alg.AverageEarn(earns);
+            var maxEarn = Alg.MaxEarn(earns);
+            var minEarn = Alg.MinEarn(earns);
             txt_total.text = total + "";
             txt_avgTime.text = avgTime.Minutes+" mins";
             txt_avgEarn.text = avgEarn+"";

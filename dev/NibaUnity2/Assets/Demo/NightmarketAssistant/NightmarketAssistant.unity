@@ -3754,7 +3754,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 596402987}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 933019613}
+        m_MethodName: ClickBoothScore
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 107826628}
+          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.BoothRef, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &596402987
@@ -5517,9 +5528,10 @@ MonoBehaviour:
   pageManager: {fileID: 62693661}
   initPage: BoothListPage
   boothSelection: {fileID: 1032426285}
-  earnsInRangeSelection: {fileID: 1809147571}
+  earnListSelection: {fileID: 993541652}
   numPadControl: {fileID: 1308609069}
   editBoothControl: {fileID: 1434618970}
+  loadOnStart: 1
 --- !u!4 &933019614
 Transform:
   m_ObjectHideFlags: 0
@@ -5874,6 +5886,50 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 987694197}
+--- !u!1 &993541651
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 993541653}
+  - component: {fileID: 993541652}
+  m_Layer: 0
+  m_Name: EarnListSelection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &993541652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 993541651}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 233f358170c55264c88aa207c55fc42d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  refType: 0
+  value: []
+  idx: 0
+  objectRef: {fileID: 0}
+--- !u!4 &993541653
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 993541651}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 753.35547, y: 464.96893, z: 7.6560855}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1005183551
 GameObject:
   m_ObjectHideFlags: 0
@@ -6337,6 +6393,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1161281166}
+  - component: {fileID: 1161281167}
   m_Layer: 5
   m_Name: ScorePage
   m_TagString: Untagged
@@ -6365,6 +6422,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1161281167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1161281165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5005db21f27148c4e8e9ebe58b43447b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objs:
+  - {fileID: 1415582648}
 --- !u!1 &1164282119
 GameObject:
   m_ObjectHideFlags: 0
@@ -8015,6 +8085,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1415582649}
+  - component: {fileID: 1415582650}
   m_Layer: 5
   m_Name: InfoContainer
   m_TagString: Untagged
@@ -8045,6 +8116,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0.000045776367, y: 710.00006}
   m_SizeDelta: {x: 1697.8948, y: 1400}
   m_Pivot: {x: 0.5, y: 1}
+--- !u!114 &1415582650
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1415582648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0e3ebebf7362e4044997efea04abfa8f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  txt_total: {fileID: 1429298604}
+  txt_avgTime: {fileID: 651605667}
+  txt_avgEarn: {fileID: 801632347}
+  txt_maxEarn: {fileID: 1190385524}
+  txt_minEarn: {fileID: 171702834}
+  rangeRef: {fileID: 993541652}
 --- !u!1 &1417201800
 GameObject:
   m_ObjectHideFlags: 0
@@ -9798,7 +9886,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1694038495}
-  - component: {fileID: 1694038496}
   - component: {fileID: 1694038497}
   m_Layer: 5
   m_Name: DetailScorePage
@@ -9828,25 +9915,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1694038496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1694038494}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 367b5bdc6df5bcb4fa2b7dbea4096e23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  refType: 2
-  value:
-    booth: 
-    earns: []
-    IsProgressing: 0
-  array: []
-  idx: 0
-  objectRef: {fileID: 1809147571}
 --- !u!114 &1694038497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10180,7 +10248,7 @@ MonoBehaviour:
   txt_avgEarn: {fileID: 1508867310}
   txt_maxEarn: {fileID: 585201999}
   txt_minEarn: {fileID: 1804074838}
-  rangeRef: {fileID: 1694038496}
+  rangeRef: {fileID: 993541652}
 --- !u!1 &1767000963
 GameObject:
   m_ObjectHideFlags: 0
@@ -10514,7 +10582,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1809147571
 MonoBehaviour:
   m_ObjectHideFlags: 0

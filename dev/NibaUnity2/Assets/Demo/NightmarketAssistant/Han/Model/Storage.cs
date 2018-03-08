@@ -280,37 +280,44 @@ namespace NightmarketAssistant
             {
                 return 0;
             }
-            if(earns.Count == 1)
+
+            var ordered = earns.OrderBy(e =>
             {
-                var onlyOne = earns[0];
-                var openTime = states.Where(s =>
-                {
-                    return s.booth != onlyOne.booth;
-                }).OrderBy(s =>
-                {
-                    return s.date;
-                }).TakeWhile(s =>
-                {
-                    return s.date <= onlyOne.date;
-                }).ToList();
-                if(openTime.Count == 0)
-                {
-                    throw new Exception("XXXXX");
-                }
-                var offsetTime = onlyOne.date - openTime[0].date;
-                return offsetTime;
+                return e.date;
+            }).ToList();
+
+            var onlyOne = ordered[0];
+            var openTime = states.Where(s =>
+            {
+                return s.booth == onlyOne.booth;
+            }).OrderBy(s =>
+            {
+                return s.date;
+            }).TakeWhile(s =>
+            {
+                return s.date <= onlyOne.date;
+            }).ToList();
+            if (openTime.Count == 0)
+            {
+                throw new Exception("找不到開市的資料:" + onlyOne.booth + " at " + onlyOne.date);
+            }
+            var offsetTimeAtFirst = onlyOne.date - openTime[0].date;
+            if (earns.Count == 1)
+            {
+                return offsetTimeAtFirst;
             }
             var offsetTimes = new List<long>();
+            offsetTimes.Add(offsetTimeAtFirst);         
 
-            var first = earns[0];
-            for(var i=1; i<earns.Count; ++i)
+            var first = ordered[0];
+            for(var i=1; i< ordered.Count; ++i)
             {
                 var second = earns[i];
                 var offsetTime = second.date - first.date;
                 offsetTimes.Add(offsetTime);
             }
 
-            return (long)offsetTimes.Average();
+            return offsetTimes.Sum() / offsetTimes.Count;
         }
 
         public static List<Earn> BoothEarns(Storage storage, string booth)
