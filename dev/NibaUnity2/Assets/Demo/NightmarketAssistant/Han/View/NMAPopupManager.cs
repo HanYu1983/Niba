@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace NightmarketAssistant
 {
-    public class PopupManager : MonoBehaviour
+    public class NMAPopupManager : MonoBehaviour
     {
         public List<string> popupNames;
         public GameObject[] popups;
@@ -39,6 +39,7 @@ namespace NightmarketAssistant
                 return;
             }
             var top = activePopups[activePopups.Count - 1];
+            activePopups.Remove(top);
             Destroy(top);
         }
     }

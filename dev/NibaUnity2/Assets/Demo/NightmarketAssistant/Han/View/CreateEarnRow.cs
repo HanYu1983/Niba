@@ -65,6 +65,11 @@ namespace NightmarketAssistant
 
             var booth = boothRef.Ref;
             var bs = model.GetBoothStateByBooth(booth.Key);
+            if(bs == null)
+            {
+                Debug.LogWarning("開市資料已被刪除:無法CreateEarnRow");
+                return;
+            }
             var earns = model.GetEarn(booth.Key, new DateTime(bs.date));
 
             for (var i = 0; i < earns.Count; ++i)

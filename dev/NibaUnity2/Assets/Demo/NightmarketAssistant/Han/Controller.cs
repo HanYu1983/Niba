@@ -9,7 +9,7 @@ namespace NightmarketAssistant
     {
         public StorageComponent storage;
         public PageManager pageManager;
-        public PopupManager popupManager;
+        public NMAPopupManager popupManager;
         public string initPage;
         public BoothRef boothSelection;
         public EarnListRef earnListSelection;
@@ -53,6 +53,18 @@ namespace NightmarketAssistant
 
         public void ClickEarnEdit(EarnRef e)
         {
+            var isShouldReEnter = numPadControl.Num == 0;
+            if (isShouldReEnter)
+            {
+                OpenMessagePopup("請輸入大於0的數字");
+                return;
+            }
+            var isSameNum = numPadControl.Num == e.Ref.money;
+            if (isSameNum)
+            {
+                OpenMessagePopup("請輸入不一樣的值");
+                return;
+            }
             Action cmd = () =>
             {
                 e.Ref.money = numPadControl.Num;
@@ -151,17 +163,31 @@ namespace NightmarketAssistant
         {
             Action cmd = () =>
             {
-                var range = e.Ref;
-                foreach (var earn in range.earns)
+                try
                 {
-                    storage.storage.earns.Remove(earn);
-                }
-                NMAEvent.OnEarnListChange();
+                    var range = e.Ref;
+                    if (range.IsProgressing)
+                    {
+                        storage.storage.DeleteLastOpenState(range.booth);
+                    }
+                    else
+                    {
+                        storage.storage.DeleteStateAtTargetRange(range.booth, range.open.Ticks, range.close.Ticks);
+                    }
+                    foreach (var earn in range.earns)
+                    {
+                        storage.storage.earns.Remove(earn);
+                    }
+                    NMAEvent.OnEarnListChange();
 
-                storage.Save();
+                    storage.Save();
+                }
+                catch(Exception e2)
+                {
+                    OnException(e2);
+                }
             };
             StoreCommand("是否確定刪除"+e.Ref.earns.Count+"筆資料", cmd);
-
         }
 
         public void ClickEarnsInRangeContinue(EarnsInRangeRef e)
@@ -230,6 +256,7 @@ namespace NightmarketAssistant
         
         void OnException(Exception e)
         {
+            Debug.LogWarning("OnException:"+e.Message);
             OpenMessagePopup(e.Message);
         }
         void OpenMessagePopup(string content)

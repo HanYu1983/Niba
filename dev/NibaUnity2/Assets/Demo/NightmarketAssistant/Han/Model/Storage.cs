@@ -168,6 +168,42 @@ namespace NightmarketAssistant
             return null;
         }
 
+        public void DeleteLastOpenState(string booth)
+        {
+            var s = GetBoothStateByBooth(booth);
+            if(s.progress != Progress.Open)
+            {
+                throw new Exception("即將刪除的最後一個狀態並不是開市狀態:"+booth);
+            }
+            states.Remove(s);
+        }
+
+        public void DeleteStateAtTargetRange(string booth, long openTime, long closeTime)
+        {
+            var row1 = new BoothState(openTime, booth);
+            var row1InStorage = GetBoothState(row1.Key);
+            if (row1InStorage == null)
+            {
+                throw new Exception("沒有開市資料:"+booth+" "+openTime);
+            }
+            if (row1InStorage.progress != Progress.Open)
+            {
+                throw new Exception("要刪除的開市狀態並不是開市狀態:" + booth + " " + openTime);
+            }
+            var row2 = new BoothState(closeTime, booth);
+            var row2InStorage = GetBoothState(row2.Key);
+            if (row2InStorage == null)
+            {
+                throw new Exception("沒有結市資料:" + booth + " " + closeTime);
+            }
+            if (row2InStorage.progress != Progress.Close)
+            {
+                throw new Exception("要刪除的結市狀態並不是結市狀態:" + booth + " " + closeTime);
+            }
+            states.Remove(row1InStorage);
+            states.Remove(row2InStorage);
+        }
+
         struct SaveMain
         {
             public List<Booth> booths;
