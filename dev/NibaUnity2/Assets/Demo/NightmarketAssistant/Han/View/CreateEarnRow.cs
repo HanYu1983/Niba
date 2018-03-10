@@ -2,35 +2,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace NightmarketAssistant
 {
     public class CreateEarnRow : MonoBehaviour, INeedModel
     {
         public BoothRef boothRef;
+        public EarnsInRangeRef earnsInRangeSelection;
         public GameObject rowLayout;
         public List<GameObject> rows;
 
         void Start()
         {
-            NMAEvent.OnComponentStart(this);
-            NMAEvent.OnEarnListChange += UpdateView;
-        }
-
-        void OnDestroy()
-        {
-            NMAEvent.OnComponentDestroy(this);
-            NMAEvent.OnEarnListChange -= UpdateView;
+            OnEnable();
         }
 
         private void OnEnable()
         {
+            NMAEvent.OnComponentStart(this);
+            NMAEvent.OnEarnListChange += UpdateView;
             // 這時可能model還沒注入
             if (model == null)
             {
                 return;
             }
             UpdateView();
+        }
+
+        void OnDisable()
+        {
+            NMAEvent.OnComponentDestroy(this);
+            NMAEvent.OnEarnListChange -= UpdateView;
         }
 
         IModelGetter model;
@@ -57,7 +60,7 @@ namespace NightmarketAssistant
                 Destroy(r);
             }
             rows.Clear();
-
+            /*
             if (boothRef.IsValid == false)
             {
                 return;
@@ -71,7 +74,27 @@ namespace NightmarketAssistant
                 return;
             }
             var earns = model.GetEarn(booth.Key, new DateTime(bs.date));
-
+            */
+            var earns = new List<Earn>();
+            var range = earnsInRangeSelection.Ref;
+            if (range.IsProgressing)
+            {
+                earns.AddRange(model.GetEarn(range.booth, range.open));
+            }
+            else
+            {
+                var all = model.GetEarn(range.booth, range.open);
+                var beforeClose = all.Where(e =>
+                {
+                    var isBefore = DateTime.Compare(new DateTime(e.date), range.close) < 0;
+                    return isBefore;
+                });
+                earns.AddRange(beforeClose);
+            }
+            earns = earns.OrderByDescending(e =>
+            {
+                return e.date;
+            }).ToList();
             for (var i = 0; i < earns.Count; ++i)
             {
                 var layout = rowLayout;

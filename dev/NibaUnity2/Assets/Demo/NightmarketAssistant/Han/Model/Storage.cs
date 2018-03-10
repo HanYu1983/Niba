@@ -41,6 +41,25 @@ namespace NightmarketAssistant
             {
                 return;
             }
+            var delEarns = earns.Where(e =>
+            {
+                return e.booth == key;
+            }).ToList();
+            foreach(var e in delEarns)
+            {
+                earns.Remove(e);
+            }
+
+            var delS = states.Where(s =>
+            {
+                return s.booth == key;
+            }).ToList();
+            foreach (var e in delS)
+            {
+                states.Remove(e);
+            }
+
+            /*
             earns = earns.Where(e =>
             {
                 return e.booth != key;
@@ -49,6 +68,7 @@ namespace NightmarketAssistant
             {
                 return s.booth != key;
             }).ToList();
+            */
             booths.Remove(b);
         }
 

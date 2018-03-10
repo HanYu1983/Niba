@@ -22,6 +22,7 @@ namespace NightmarketAssistant
         }
         
         public Action<NumPadControl> OnEnter = delegate { };
+        public Action<NumPadControl> OnExpend = delegate { };
         public string num;
         public int Num
         {
@@ -35,6 +36,20 @@ namespace NightmarketAssistant
             this.num = this.num + num;
             UpdateView();
         }
+        public void ClickZero2()
+        {
+            this.num = this.num + "00";
+            UpdateView();
+        }
+        public void ClickBack()
+        {
+            if (num.Length <= 0)
+            {
+                return;
+            }
+            num = num.Substring(0, num.Length - 1);
+            UpdateView();
+        }
         public void ClickClear()
         {
             num = "0";
@@ -43,6 +58,10 @@ namespace NightmarketAssistant
         public void ClickEnter()
         {
             OnEnter(this);
+        }
+        public void ClickExpend()
+        {
+            OnExpend(this);
         }
     }
 }

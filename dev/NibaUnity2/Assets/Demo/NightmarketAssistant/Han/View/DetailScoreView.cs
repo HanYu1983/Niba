@@ -14,11 +14,13 @@ namespace NightmarketAssistant
         void Start()
         {
             NMAEvent.OnComponentStart(this);
+            rangeRef.OnValueChange += UpdateView;
         }
 
         void OnDestroy()
         {
             NMAEvent.OnComponentDestroy(this);
+            rangeRef.OnValueChange -= UpdateView;
         }
 
         private void OnEnable()

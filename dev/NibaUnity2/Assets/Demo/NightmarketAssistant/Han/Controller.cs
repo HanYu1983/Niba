@@ -12,7 +12,9 @@ namespace NightmarketAssistant
         public NMAPopupManager popupManager;
         public string initPage;
         public BoothRef boothSelection;
+        public EarnsInRangeRef earnsInRangeSelection;
         public EarnListRef earnListSelection;
+        public EarnRef earnSelection;
         public NumPadControl numPadControl;
         public EditBoothControl editBoothControl;
         public bool loadOnStart;
@@ -25,6 +27,7 @@ namespace NightmarketAssistant
             }
             
             numPadControl.OnEnter += ClickNumPadEnter;
+            numPadControl.OnExpend += ClickNumPadExpend;
             editBoothControl.OnEnter += ClickEditBoothEnter;
             // 使用ZUI的換頁, 要比Start晚才行
             StartCoroutine(StartInitPage());
@@ -45,6 +48,9 @@ namespace NightmarketAssistant
             {
                 storage.storage.earns.Remove(e.Ref);
                 NMAEvent.OnEarnListChange();
+
+                earnListSelection.Ref.Remove(e.Ref);
+                earnListSelection.OnValueChange();
 
                 storage.Save();
             };
@@ -70,9 +76,18 @@ namespace NightmarketAssistant
                 e.Ref.money = numPadControl.Num;
                 NMAEvent.OnEarnListChange();
 
+                earnListSelection.OnValueChange();
+
                 storage.Save();
             };
             StoreCommand("是否確定修改" + e.Ref.money +" => " + numPadControl.Num, cmd);
+        }
+
+        public void ClickEarnMemo(EarnRef earn)
+        {
+            earnSelection.refType = ObjectRefType.Static;
+            earnSelection.value = earn.Ref;
+            popupManager.OpenPopup("MemoPopup");
         }
 
         public void ClickStartBooth()
@@ -80,6 +95,12 @@ namespace NightmarketAssistant
             try
             {
                 storage.storage.OpenBooth(boothSelection.Ref.Key);
+
+                var s = storage.storage.GetBoothStateByBooth(boothSelection.Ref.Key);
+                earnsInRangeSelection.refType = ObjectRefType.Static;
+                earnsInRangeSelection.value = new EarnsInRange(boothSelection.Ref.Key, new DateTime(s.date));
+
+
                 ChangePage("CloseBoothPage");
 
                 storage.Save();
@@ -113,19 +134,60 @@ namespace NightmarketAssistant
         {
             try
             {
+                if (earnsInRangeSelection.Ref.IsProgressing == false)
+                {
+                    throw new Exception("開市中的才能新增");
+                }
+
                 var num = numPadControl.Num;
                 if (num == 0)
                 {
                     Debug.LogWarning("輸入為0, 所以忽略新增");
                     return;
                 }
+
                 var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
                 earn.money = num;
                 numPadControl.ClickClear();
                 NMAEvent.OnEarnListChange();
 
+                earnListSelection.Ref.Add(earn);
+                earnListSelection.OnValueChange();
+
                 storage.Save();
             }catch(Exception e)
+            {
+                OnException(e);
+            }
+        }
+
+        public void ClickNumPadExpend(NumPadControl c)
+        {
+            try
+            {
+                if (earnsInRangeSelection.Ref.IsProgressing == false)
+                {
+                    throw new Exception("開市中的才能新增");
+                }
+
+                var num = numPadControl.Num;
+                if (num == 0)
+                {
+                    Debug.LogWarning("輸入為0, 所以忽略新增");
+                    return;
+                }
+
+                var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
+                earn.money = -num;
+                numPadControl.ClickClear();
+                NMAEvent.OnEarnListChange();
+
+                earnListSelection.Ref.Add(earn);
+                earnListSelection.OnValueChange();
+
+                storage.Save();
+            }
+            catch (Exception e)
             {
                 OnException(e);
             }
@@ -154,9 +216,22 @@ namespace NightmarketAssistant
 
         public void ClickEarnsInRangeView(EarnsInRangeRef e)
         {
+            earnsInRangeSelection.refType = ObjectRefType.Static;
+            earnsInRangeSelection.value = e.Ref;
+
             earnListSelection.refType = ObjectRefType.Static;
             earnListSelection.value = e.Ref.earns;
-            ChangePage("DetailScorePage");
+            ChangePage("CloseBoothPage");
+        }
+
+        public void ClickEarnsInRangeContinue(EarnsInRangeRef e)
+        {
+            earnsInRangeSelection.refType = ObjectRefType.Static;
+            earnsInRangeSelection.value = e.Ref;
+
+            earnListSelection.refType = ObjectRefType.Static;
+            earnListSelection.value = e.Ref.earns;
+            ChangePage("CloseBoothPage");
         }
 
         public void ClickEarnsInRangeDelete(EarnsInRangeRef e)
@@ -188,11 +263,6 @@ namespace NightmarketAssistant
                 }
             };
             StoreCommand("是否確定刪除"+e.Ref.earns.Count+"筆資料", cmd);
-        }
-
-        public void ClickEarnsInRangeContinue(EarnsInRangeRef e)
-        {
-            ChangePage("CloseBoothPage");
         }
 
         public void ClickBoothView(BoothRef booth)
@@ -253,11 +323,24 @@ namespace NightmarketAssistant
             command = null;
             popupManager.ClosePopup();
         }
-        
+
+        public void ClickMemoEnter(MemoView memoView)
+        {
+            earnSelection.Ref.comment = memoView.Memo;
+            NMAEvent.OnEarnListChange();
+
+            storage.Save();
+
+            popupManager.ClosePopup();
+        }
+
         void OnException(Exception e)
         {
             Debug.LogWarning("OnException:"+e.Message);
             OpenMessagePopup(e.Message);
+#if UNITY_EDITOR
+            throw e;
+#endif
         }
         void OpenMessagePopup(string content)
         {
