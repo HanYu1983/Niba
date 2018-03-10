@@ -21,6 +21,8 @@ namespace NightmarketAssistant
 
         private void Start()
         {
+            Application.runInBackground = true;
+
             if (loadOnStart)
             {
                 storage.Load();
