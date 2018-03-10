@@ -28,7 +28,7 @@ namespace NightmarketAssistant
             }
             foreach (var o in enableList)
             {
-                o.enabled = shouldOn;
+                o.interactable = shouldOn;
             }
         }
 
@@ -48,7 +48,7 @@ namespace NightmarketAssistant
         {
             foreach (var o in enableList)
             {
-                o.enabled = o.enabled == false;
+                o.interactable = o.IsInteractable() == false;
             }
         }
     }

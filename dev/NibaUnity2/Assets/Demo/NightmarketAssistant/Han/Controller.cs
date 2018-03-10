@@ -76,6 +76,7 @@ namespace NightmarketAssistant
             Action cmd = () =>
             {
                 e.Ref.money = numPadControl.Num;
+                numPadControl.ClickClear();
                 NMAEvent.OnEarnListChange();
 
                 earnListSelection.OnValueChange();
@@ -102,6 +103,10 @@ namespace NightmarketAssistant
                 earnsInRangeSelection.refType = ObjectRefType.Static;
                 earnsInRangeSelection.value = new EarnsInRange(boothSelection.Ref.Key, new DateTime(s.date));
 
+                earnListSelection.Ref.Clear();
+                earnListSelection.OnValueChange();
+
+                numPadControl.ClickClear();
 
                 ChangePage("CloseBoothPage");
 
@@ -223,6 +228,8 @@ namespace NightmarketAssistant
 
             earnListSelection.refType = ObjectRefType.Static;
             earnListSelection.value = e.Ref.earns;
+
+            numPadControl.ClickClear();
             ChangePage("CloseBoothPage");
         }
 
@@ -233,6 +240,8 @@ namespace NightmarketAssistant
 
             earnListSelection.refType = ObjectRefType.Static;
             earnListSelection.value = e.Ref.earns;
+
+            numPadControl.ClickClear();
             ChangePage("CloseBoothPage");
         }
 
@@ -242,6 +251,9 @@ namespace NightmarketAssistant
             {
                 try
                 {
+                    earnListSelection.Ref.Clear();
+                    earnListSelection.OnValueChange();
+
                     var range = e.Ref;
                     if (range.IsProgressing)
                     {

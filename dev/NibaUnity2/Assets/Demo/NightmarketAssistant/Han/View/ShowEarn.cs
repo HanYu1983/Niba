@@ -21,7 +21,7 @@ namespace NightmarketAssistant
         {
             var earn = earnRef.Ref;
             var openTime = new DateTime(earn.date);
-            text.text = string.Format(format, openTime.ToLocalTime(), earn.money);
+            text.text = string.Format(format, openTime.ToLocalTime(), earn.money, earn.comment);
         }
     }
 }
