@@ -13,12 +13,7 @@ namespace NightmarketAssistant
 
         void Start()
         {
-            OnEnable();
-        }
-
-        void OnDestroy()
-        {
-            OnDisable();
+            UpdateView();
         }
 
         private void OnEnable()

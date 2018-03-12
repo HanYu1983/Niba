@@ -15,7 +15,7 @@ namespace NightmarketAssistant
 
         void Start()
         {
-            OnEnable();
+            UpdateView();
         }
 
         private void OnEnable()

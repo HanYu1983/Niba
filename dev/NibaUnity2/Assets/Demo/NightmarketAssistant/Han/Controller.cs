@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 namespace NightmarketAssistant
 {
@@ -346,6 +347,42 @@ namespace NightmarketAssistant
             storage.Save();
 
             popupManager.ClosePopup();
+        }
+
+        public void ClickCalculateFinish(CalculatePage calc)
+        {
+            var sum = calc.GetIncomeEarn().Sum(e=>e.money);
+            calc.ClearEarns();
+            try
+            {
+                if (earnsInRangeSelection.Ref.IsProgressing == false)
+                {
+                    throw new Exception("開市中的才能新增");
+                }
+
+                var num = sum;
+                if (num == 0)
+                {
+                    Debug.LogWarning("輸入為0, 所以忽略新增");
+                    return;
+                }
+
+                var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
+                earn.money = num;
+                numPadControl.ClickClear();
+                NMAEvent.OnEarnListChange();
+
+                earnListSelection.Ref.Add(earn);
+                earnListSelection.OnValueChange();
+
+                storage.Save();
+
+                ChangePage("CloseBoothPage");
+            }
+            catch (Exception e)
+            {
+                OnException(e);
+            }
         }
 
         void OnException(Exception e)

@@ -11,10 +11,6 @@ namespace NightmarketAssistant
         public GameObject[] onList, offList;
         public Button[] enableList;
 
-        void Start()
-        {
-            OnEnable();
-        }
         private void OnEnable()
         {
             var shouldOn = selection.Ref.IsProgressing;

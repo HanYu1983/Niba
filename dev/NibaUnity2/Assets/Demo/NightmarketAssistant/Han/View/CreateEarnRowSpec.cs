@@ -1,12 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Linq;
 
 namespace NightmarketAssistant
 {
-    public class CreateBoothRow : MonoBehaviour
+    public class CreateEarnRowSpec : MonoBehaviour
     {
-        public StorageComponent model;
+        public EarnListRef earnListRef;
         public GameObject rowLayout;
         public List<GameObject> rows;
 
@@ -14,16 +16,16 @@ namespace NightmarketAssistant
         {
             UpdateView();
         }
-
+        
         private void OnEnable()
         {
-            NMAEvent.OnBoothListChange += UpdateView;
+            earnListRef.OnValueChange += UpdateView;
             UpdateView();
         }
 
-        private void OnDisable()
+        void OnDisable()
         {
-            NMAEvent.OnBoothListChange -= UpdateView;
+            earnListRef.OnValueChange -= UpdateView;
         }
 
         void UpdateView()
@@ -40,17 +42,19 @@ namespace NightmarketAssistant
             }
             rows.Clear();
 
-            for (var i = 0; i < model.Booths.Count; ++i)
+            var earns = earnListRef.Ref;
+            for (var i = 0; i < earns.Count; ++i)
             {
-                var row = Instantiate(rowLayout, transform, false);
-                var objRef = row.GetComponent<BoothRef>();
+                var layout = rowLayout;
+                var row = Instantiate(layout, transform, false);
+                var objRef = row.GetComponent<EarnRef>();
                 if (objRef == null)
                 {
-                    Debug.LogWarning("BoothRef not found");
+                    Debug.LogWarning("EarnRef not found");
                     continue;
                 }
                 objRef.refType = ObjectRefType.Array;
-                objRef.array = model.Booths;
+                objRef.array = earns;
                 objRef.idx = i;
                 row.SetActive(true);
                 rows.Add(row);
