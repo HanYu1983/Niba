@@ -4,42 +4,31 @@ using UnityEngine;
 
 namespace NightmarketAssistant
 {
-    public class CreateBoothRow : MonoBehaviour, INeedModel
+    public class CreateBoothRow : MonoBehaviour
     {
+        public StorageComponent model;
         public GameObject rowLayout;
         public List<GameObject> rows;
 
         void Start()
         {
-            NMAEvent.OnComponentStart(this);
-            NMAEvent.OnBoothListChange += UpdateView;
+            OnEnable();
         }
 
         void OnDestroy()
         {
-            NMAEvent.OnComponentDestroy(this);
-            NMAEvent.OnBoothListChange -= UpdateView;
+            OnDisable();
         }
 
         private void OnEnable()
         {
-            // 這時可能model還沒注入
-            if(model == null)
-            {
-                return;
-            }
+            NMAEvent.OnBoothListChange += UpdateView;
             UpdateView();
         }
 
-        IModelGetter model;
-        public IModelGetter IModel
+        private void OnDisable()
         {
-            get { return model; }
-            set
-            {
-                this.model = value;
-                UpdateView();
-            }
+            NMAEvent.OnBoothListChange -= UpdateView;
         }
 
         void UpdateView()

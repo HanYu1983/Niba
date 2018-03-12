@@ -6,8 +6,9 @@ using System;
 
 namespace NightmarketAssistant
 {
-    public class DetailScoreView : MonoBehaviour, INeedModel
+    public class DetailScoreView : MonoBehaviour
     {
+        public StorageComponent model;
         public Text txt_total, txt_avgTime, txt_avgEarn, txt_maxEarn, txt_minEarn, txt_earnCount;
         public EarnListRef rangeRef;
 
@@ -23,31 +24,13 @@ namespace NightmarketAssistant
 
         private void OnEnable()
         {
-            NMAEvent.OnComponentStart(this);
             rangeRef.OnValueChange += UpdateView;
-            // 這時可能model還沒注入
-            if (model == null)
-            {
-                return;
-            }
             UpdateView();
         }
 
         private void OnDisable()
         {
-            NMAEvent.OnComponentDestroy(this);
             rangeRef.OnValueChange -= UpdateView;
-        }
-
-        IModelGetter model;
-        public IModelGetter IModel
-        {
-            get { return model; }
-            set
-            {
-                this.model = value;
-                UpdateView();
-            }
         }
 
         public void UpdateView()

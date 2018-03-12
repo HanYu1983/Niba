@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace NightmarketAssistant
 {
-    public class CreateEarnRow : MonoBehaviour, INeedModel
+    public class CreateEarnRow : MonoBehaviour
     {
-        public BoothRef boothRef;
+        public StorageComponent model;
         public EarnsInRangeRef earnsInRangeSelection;
         public GameObject rowLayout;
         public List<GameObject> rows;
@@ -20,31 +20,13 @@ namespace NightmarketAssistant
 
         private void OnEnable()
         {
-            NMAEvent.OnComponentStart(this);
             NMAEvent.OnEarnListChange += UpdateView;
-            // 這時可能model還沒注入
-            if (model == null)
-            {
-                return;
-            }
             UpdateView();
         }
 
         void OnDisable()
         {
-            NMAEvent.OnComponentDestroy(this);
             NMAEvent.OnEarnListChange -= UpdateView;
-        }
-
-        IModelGetter model;
-        public IModelGetter IModel
-        {
-            get { return model; }
-            set
-            {
-                this.model = value;
-                UpdateView();
-            }
         }
 
         void UpdateView()
@@ -60,21 +42,7 @@ namespace NightmarketAssistant
                 Destroy(r);
             }
             rows.Clear();
-            /*
-            if (boothRef.IsValid == false)
-            {
-                return;
-            }
 
-            var booth = boothRef.Ref;
-            var bs = model.GetBoothStateByBooth(booth.Key);
-            if(bs == null)
-            {
-                Debug.LogWarning("開市資料已被刪除:無法CreateEarnRow");
-                return;
-            }
-            var earns = model.GetEarn(booth.Key, new DateTime(bs.date));
-            */
             var earns = new List<Earn>();
             var range = earnsInRangeSelection.Ref;
             if (range.IsProgressing)

@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace NightmarketAssistant
 {
-    public class StorageComponent : MonoBehaviour, IModel
+    public class StorageComponent : MonoBehaviour
     {
         public string saveDir;
         public Storage storage = new Storage();
@@ -17,16 +17,6 @@ namespace NightmarketAssistant
         private void Awake()
         {
             saveDir = Application.persistentDataPath + "/NightmarketAssistant";
-            NMAEvent.OnComponentStart += OnComponentStart;
-        }
-
-        void OnComponentStart(MonoBehaviour c)
-        {
-            if( c is INeedModel)
-            {
-                var ns = c as INeedModel;
-                ns.IModel = this;
-            }
         }
 
         public List<Booth> Booths

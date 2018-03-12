@@ -4,46 +4,36 @@ using UnityEngine;
 
 namespace NightmarketAssistant
 {
-    public class CreateRangeRow : MonoBehaviour, INeedModel
+    public class CreateRangeRow : MonoBehaviour
     {
+        public StorageComponent model;
         public BoothRef boothRef;
         public GameObject rowLayout, rowLayoutIsProgressing;
         public List<GameObject> rows;
 
         void Start()
         {
-            NMAEvent.OnComponentStart(this);
-            boothRef.OnValueChange += UpdateView;
-            NMAEvent.OnEarnListChange += UpdateView;
+            OnEnable();
         }
 
         void OnDestroy()
         {
-            NMAEvent.OnComponentDestroy(this);
-            boothRef.OnValueChange -= UpdateView;
-            NMAEvent.OnEarnListChange -= UpdateView;
+            OnDisable();
         }
 
         private void OnEnable()
         {
-            // 這時可能model還沒注入
-            if (model == null)
-            {
-                return;
-            }
+            boothRef.OnValueChange += UpdateView;
+            NMAEvent.OnEarnListChange += UpdateView;
             UpdateView();
         }
 
-        IModelGetter model;
-        public IModelGetter IModel
+        private void OnDisable()
         {
-            get { return model; }
-            set
-            {
-                this.model = value;
-                UpdateView();
-            }
+            boothRef.OnValueChange -= UpdateView;
+            NMAEvent.OnEarnListChange -= UpdateView;
         }
+
 
         void UpdateView()
         {

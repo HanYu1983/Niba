@@ -93,25 +93,6 @@ namespace NightmarketAssistant
         }
     }
 
-    public interface IModelGetter
-    {
-        List<Booth> Booths { get; }
-        List<BoothState> States { get;  }
-        List<EarnsInRange> GroupEarns(string booth);
-        List<Earn> GetEarn(string booth, DateTime after);
-        BoothState GetBoothStateByBooth(string key);
-    }
-
-    public interface IModel : IModelGetter
-    {
-
-    }
-
-    public interface INeedModel
-    {
-        IModelGetter IModel { get; set; }
-    }
-
     public class Data : MonoBehaviour
     {
         
