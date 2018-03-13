@@ -56,7 +56,7 @@ namespace NightmarketAssistant
             }
             var earn = new Earn(DateTime.Now.Ticks, "temp");
             earn.money = -o.Num;
-            earn.comment = "價格";
+            earn.comment = "價錢";
             earnList.Ref.Add(earn);
             earnList.OnValueChange();
 
@@ -72,7 +72,7 @@ namespace NightmarketAssistant
             }
             var earn = new Earn(DateTime.Now.Ticks, "temp");
             earn.money = o.Num;
-            earn.comment = "支付";
+            earn.comment = "客人支付";
             earnList.Ref.Add(earn);
             earnList.OnValueChange();
 
