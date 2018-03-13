@@ -58,34 +58,28 @@ namespace NightmarketAssistant
             {
                 states.Remove(e);
             }
-
-            /*
-            earns = earns.Where(e =>
-            {
-                return e.booth != key;
-            }).ToList();
-            states = states.Where(s =>
-            {
-                return s.booth != key;
-            }).ToList();
-            */
             booths.Remove(b);
         }
 
         public List<Earn> earns = new List<Earn>();
-        public Earn NewEarn(string booth)
+        public List<Earn> costEarns = new List<Earn>();
+
+        public Earn NewEarn(List<Earn> earns, string booth, bool checkState = true)
         {
             if(GetBooth(booth) == null)
             {
                 throw new Exception("沒有這個攤位:" + booth);
             }
-            var bs = GetBoothStateByBooth(booth);
-            if(bs == null || bs.progress != Progress.Open)
+            if (checkState)
             {
-                throw new Exception("攤位未開市:" + booth);
+                var bs = GetBoothStateByBooth(booth);
+                if (bs == null || bs.progress != Progress.Open)
+                {
+                    throw new Exception("攤位未開市:" + booth);
+                }
             }
             var b = new Earn(DateTime.Now.Ticks, booth);
-            if(GetEarn(b.Key) != null)
+            if(GetEarn(earns, b.Key) != null)
             {
                 throw new Exception("鍵值已存在:"+b.Key);
             }
@@ -93,7 +87,7 @@ namespace NightmarketAssistant
             return b;
         }
 
-        public Earn GetEarn(string key)
+        public Earn GetEarn(List<Earn> earns, string key)
         {
             foreach (var b in earns)
             {
@@ -105,7 +99,7 @@ namespace NightmarketAssistant
             return null;
         }
 
-        public List<Earn> GetEarns(string booth, DateTime start)
+        public List<Earn> GetEarns(List<Earn> earns, string booth, DateTime start)
         {
             return earns.Where(e =>
             {
@@ -227,6 +221,7 @@ namespace NightmarketAssistant
         struct SaveMain
         {
             public List<Booth> booths;
+            public List<Earn> costEarns;
         }
 
         struct SaveSub
@@ -247,7 +242,7 @@ namespace NightmarketAssistant
         {
             PrepareDir(dir);
 
-            var mainJson = JsonUtility.ToJson(new SaveMain() { booths = booths });
+            var mainJson = JsonUtility.ToJson(new SaveMain() { booths = booths, costEarns = costEarns });
             var path = dir + "/booth.json";
             File.WriteAllText(path, mainJson);
             // 只寫這個月的
@@ -272,6 +267,7 @@ namespace NightmarketAssistant
                 var json = File.ReadAllText(path);
                 var main = JsonUtility.FromJson<SaveMain>(json);
                 booths = main.booths;
+                costEarns = main.costEarns;
             }
             // 讀取這個月加上前幾個月
             var date = DateTime.Now;
@@ -344,44 +340,34 @@ namespace NightmarketAssistant
             {
                 return 0;
             }
-
-            var ordered = earns.OrderBy(e =>
-            {
-                return e.date;
-            }).ToList();
-
-            var onlyOne = ordered[0];
-            var openTime = states.Where(s =>
-            {
-                return s.booth == onlyOne.booth;
-            }).OrderBy(s =>
-            {
-                return s.date;
-            }).TakeWhile(s =>
-            {
-                return s.date <= onlyOne.date;
-            }).ToList();
-            if (openTime.Count == 0)
+            var onlyOne = earns.OrderBy(e => e.date).First();
+            var openTime = states.Where(s => s.booth == onlyOne.booth)
+                .OrderBy(s => s.date)
+                .TakeWhile(s => s.date < onlyOne.date)
+                .Last();
+            if(openTime.progress != Progress.Open)
             {
                 throw new Exception("找不到開市的資料:" + onlyOne.booth + " at " + onlyOne.date);
             }
-            var offsetTimeAtFirst = onlyOne.date - openTime[0].date;
             if (earns.Count == 1)
             {
-                return offsetTimeAtFirst;
+                return onlyOne.date - openTime.date;
             }
-            var offsetTimes = new List<long>();
-            offsetTimes.Add(offsetTimeAtFirst);         
+            var onlyLast = earns.OrderBy(e => e.date).Last();
+            var closeTime = states.Where(s => s.booth == onlyLast.booth)
+                .OrderBy(s => s.date)
+                .SkipWhile(s => s.date <= onlyLast.date)
+                .FirstOrDefault();
 
-            var first = ordered[0];
-            for(var i=1; i< ordered.Count; ++i)
+            if(closeTime == null)
             {
-                var second = earns[i];
-                var offsetTime = second.date - first.date;
-                offsetTimes.Add(offsetTime);
+                return (onlyLast.date - openTime.date) / earns.Count;
             }
-
-            return offsetTimes.Sum() / offsetTimes.Count;
+            if(closeTime.progress != Progress.Close)
+            {
+                throw new Exception("沒有找到結市資料, 資料有誤:"+onlyLast.booth+" at "+onlyLast.date);
+            }
+            return (closeTime.date - openTime.date) / earns.Count;
         }
 
         public static List<Earn> BoothEarns(Storage storage, string booth)

@@ -39,7 +39,7 @@ namespace NightmarketAssistant
 
         public List<Earn> GetEarn(string booth, DateTime after)
         {
-            return storage.GetEarns(booth, after);
+            return storage.GetEarns(storage.earns, booth, after);
         }
 
         public BoothState GetBoothStateByBooth(string key)
@@ -68,7 +68,7 @@ namespace NightmarketAssistant
         [ContextMenu("New Earn")]
         void NewEarn()
         {
-            var e = storage.NewEarn("樂華市場");
+            var e = storage.NewEarn(storage.earns, "樂華市場");
             e.money = (int)UnityEngine.Random.Range(100, 5000);
         }
 
@@ -103,7 +103,7 @@ namespace NightmarketAssistant
             Exception e = null;
             try
             {
-                storage.NewEarn("abc");
+                storage.NewEarn(storage.earns, "abc");
             }catch(Exception e2)
             {
                 e = e2;
@@ -159,12 +159,12 @@ namespace NightmarketAssistant
             }
             e = null;
 
-            var earn = storage.NewEarn(lehuaMarket);
+            var earn = storage.NewEarn(storage.earns, lehuaMarket);
             earn.money = 300;
 
             yield return new WaitForEndOfFrame();
 
-            earn = storage.NewEarn(lehuaMarket);
+            earn = storage.NewEarn(storage.earns, lehuaMarket);
             earn.money = 200;
 
             yield return new WaitForEndOfFrame();

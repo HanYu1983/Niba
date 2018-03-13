@@ -28,7 +28,15 @@ namespace NightmarketAssistant
         {
             get
             {
-                return int.Parse(num);
+                try
+                {
+                    return int.Parse(num);
+                }
+                catch (Exception)
+                {
+                    Debug.LogWarning("invalid num:"+num+". return 0");
+                    return 0;
+                }
             }
         }
         public void ClickNum(int num)

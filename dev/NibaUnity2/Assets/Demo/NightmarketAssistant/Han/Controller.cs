@@ -18,6 +18,8 @@ namespace NightmarketAssistant
         public EarnRef earnSelection;
         public NumPadControl numPadControl;
         public EditBoothControl editBoothControl;
+        public EarnListRef scoreEarnListSelection;
+        public NumPadControl scoreNumPadControl;
         public bool loadOnStart;
 
         private void Start()
@@ -31,10 +33,88 @@ namespace NightmarketAssistant
             
             numPadControl.OnEnter += ClickNumPadEnter;
             numPadControl.OnExpend += ClickNumPadExpend;
+            scoreNumPadControl.OnEnter += ClickScoreNumPadEnter;
+            scoreNumPadControl.OnExpend += ClickScoreNumPadExpend;
             editBoothControl.OnEnter += ClickEditBoothEnter;
             // 使用ZUI的換頁, 要比Start晚才行
             StartCoroutine(StartInitPage());
         }
+
+        #region score earn
+        void UpdateCostEarnSelection(BoothRef boothSelection)
+        {
+            var costEarn = storage.storage.GetEarns(storage.storage.costEarns, boothSelection.Ref.Key, DateTime.MinValue);
+            scoreEarnListSelection.value = costEarn;
+            scoreEarnListSelection.OnValueChange();
+        }
+
+        Earn CalcEarn(string booth)
+        {
+            var earns = storage.storage.GetEarns(storage.storage.earns, booth, DateTime.MinValue);
+            var total = earns.Sum(e => e.money);
+            return new Earn(DateTime.Now.Ticks, booth) { money = total, comment = "收入" };
+        }
+
+        void ClickScoreNumPadEnter(NumPadControl c)
+        {
+            if(c.Num == 0)
+            {
+                Debug.LogWarning("ignore 0");
+                return;
+            }
+            try
+            {
+                var earn = storage.storage.NewEarn(storage.storage.costEarns, boothSelection.Ref.Key, false);
+                earn.money = c.Num;
+                c.ClickClear();
+
+                storage.Save();
+
+                UpdateCostEarnSelection(boothSelection);
+            }
+            catch(Exception e)
+            {
+                OnException(e);
+            }
+        }
+
+        void ClickScoreNumPadExpend(NumPadControl c)
+        {
+            if (c.Num == 0)
+            {
+                Debug.LogWarning("ignore 0");
+                return;
+            }
+            try {
+                var earn = storage.storage.NewEarn(storage.storage.costEarns, boothSelection.Ref.Key, false);
+                earn.money = -c.Num;
+                c.ClickClear();
+
+                storage.Save();
+
+                UpdateCostEarnSelection(boothSelection);
+            }
+            catch (Exception e)
+            {
+                OnException(e);
+            }
+        }
+
+        public void ClickScoreEarnDelete(EarnRef earnRef)
+        {
+            try
+            {
+                storage.storage.costEarns.Remove(earnRef.Ref);
+                storage.Save();
+
+                UpdateCostEarnSelection(boothSelection);
+            }
+            catch (Exception e)
+            {
+                OnException(e);
+            }
+        }
+        #endregion
 
         IEnumerator StartInitPage()
         {
@@ -154,7 +234,7 @@ namespace NightmarketAssistant
                     return;
                 }
 
-                var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
+                var earn = storage.storage.NewEarn(storage.storage.earns, boothSelection.Ref.Key);
                 earn.money = num;
                 numPadControl.ClickClear();
                 NMAEvent.OnEarnListChange();
@@ -185,7 +265,7 @@ namespace NightmarketAssistant
                     return;
                 }
 
-                var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
+                var earn = storage.storage.NewEarn(storage.storage.earns, boothSelection.Ref.Key);
                 earn.money = -num;
                 numPadControl.ClickClear();
                 NMAEvent.OnEarnListChange();
@@ -290,8 +370,16 @@ namespace NightmarketAssistant
 
         public void ClickBoothScore(BoothRef booth)
         {
+            boothSelection.refType = ObjectRefType.Static;
+            boothSelection.value = booth.Ref;
+            boothSelection.NotifyValueChange();
+
+            scoreEarnListSelection.refType = ObjectRefType.Static;
+            UpdateCostEarnSelection(boothSelection);
+
             earnListSelection.refType = ObjectRefType.Static;
-            earnListSelection.value = storage.storage.GetEarns(booth.Ref.Key, DateTime.MinValue);
+            earnListSelection.value = storage.storage.GetEarns(storage.storage.earns, boothSelection.Ref.Key, DateTime.MinValue);
+
             ChangePage("ScorePage");
         }
 
@@ -367,7 +455,7 @@ namespace NightmarketAssistant
                     return;
                 }
 
-                var earn = storage.storage.NewEarn(boothSelection.Ref.Key);
+                var earn = storage.storage.NewEarn(storage.storage.earns, boothSelection.Ref.Key);
                 earn.money = num;
                 numPadControl.ClickClear();
                 NMAEvent.OnEarnListChange();

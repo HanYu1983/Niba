@@ -6,9 +6,9 @@ using System.Linq;
 
 namespace NightmarketAssistant
 {
-    public class ShowCalculateResult : MonoBehaviour
+    public class ShowCostEarnResult : MonoBehaviour
     {
-        public EarnListRef earnListRef;
+        public EarnListRef costList, earnList;
         public Text txt_result;
         public string format;
 
@@ -19,28 +19,22 @@ namespace NightmarketAssistant
 
         private void OnEnable()
         {
-            earnListRef.OnValueChange += UpdateView;
+            costList.OnValueChange += UpdateView;
+            earnList.OnValueChange += UpdateView;
             UpdateView();
         }
 
         private void OnDisable()
         {
-            earnListRef.OnValueChange -= UpdateView;
+            costList.OnValueChange -= UpdateView;
+            earnList.OnValueChange += UpdateView;
         }
 
         void UpdateView()
         {
-            var income = earnListRef.Ref.Where(e =>
-            {
-                return e.money > 0;
-            }).Sum(e => e.money);
-
-            var outcome = Mathf.Abs(earnListRef.Ref.Where(e =>
-            {
-                return e.money < 0;
-            }).Sum(e => e.money));
-
-            var result = income - outcome;
+            var income = earnList.Ref.Sum(e => e.money);
+            var outcome = costList.Ref.Sum(e => e.money);
+            var result = income + outcome;
             txt_result.text = string.Format(format, income, outcome, result);
         }
     }

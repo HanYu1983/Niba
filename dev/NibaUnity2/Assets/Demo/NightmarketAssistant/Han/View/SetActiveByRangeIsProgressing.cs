@@ -13,7 +13,11 @@ namespace NightmarketAssistant
 
         private void OnEnable()
         {
-            var shouldOn = selection.Ref.IsProgressing;
+            var shouldOn = true;
+            if(selection != null)
+            {
+                shouldOn = selection.Ref.IsProgressing;
+            }
             foreach (var o in onList)
             {
                 o.SetActive(shouldOn);
