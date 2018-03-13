@@ -64,19 +64,27 @@ namespace NightmarketAssistant
         public List<Earn> earns = new List<Earn>();
         public List<Earn> costEarns = new List<Earn>();
 
-        public Earn NewEarn(List<Earn> earns, string booth, bool checkState = true)
+        public Earn ForceNewEarn(List<Earn> earns)
+        {
+            var b = new Earn(DateTime.Now.Ticks, "__costEarn__");
+            if (GetEarn(earns, b.Key) != null)
+            {
+                throw new Exception("鍵值已存在:" + b.Key);
+            }
+            earns.Add(b);
+            return b;
+        }
+
+        public Earn NewEarn(List<Earn> earns, string booth)
         {
             if(GetBooth(booth) == null)
             {
                 throw new Exception("沒有這個攤位:" + booth);
             }
-            if (checkState)
+            var bs = GetBoothStateByBooth(booth);
+            if (bs == null || bs.progress != Progress.Open)
             {
-                var bs = GetBoothStateByBooth(booth);
-                if (bs == null || bs.progress != Progress.Open)
-                {
-                    throw new Exception("攤位未開市:" + booth);
-                }
+                throw new Exception("攤位未開市:" + booth);
             }
             var b = new Earn(DateTime.Now.Ticks, booth);
             if(GetEarn(earns, b.Key) != null)
@@ -344,8 +352,8 @@ namespace NightmarketAssistant
             var openTime = states.Where(s => s.booth == onlyOne.booth)
                 .OrderBy(s => s.date)
                 .TakeWhile(s => s.date < onlyOne.date)
-                .Last();
-            if(openTime.progress != Progress.Open)
+                .LastOrDefault();
+            if(openTime == null || openTime.progress != Progress.Open)
             {
                 throw new Exception("找不到開市的資料:" + onlyOne.booth + " at " + onlyOne.date);
             }
