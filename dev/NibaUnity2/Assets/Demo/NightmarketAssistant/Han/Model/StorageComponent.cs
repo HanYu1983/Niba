@@ -12,6 +12,8 @@ namespace NightmarketAssistant
     {
         public string saveDir;
         public Storage storage = new Storage();
+
+        [Range(0, 120)]
         public int loadMonth = 3;
 
         private void Awake()

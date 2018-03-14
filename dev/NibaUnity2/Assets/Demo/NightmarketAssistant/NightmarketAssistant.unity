@@ -263,7 +263,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1189678357}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -946,7 +946,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -1425,7 +1425,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -2258,7 +2258,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &185360353
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4086,7 +4086,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickEnter
         m_Mode: 1
         m_Arguments:
@@ -6348,7 +6348,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -6522,6 +6522,7 @@ GameObject:
   - component: {fileID: 386374570}
   - component: {fileID: 386374572}
   - component: {fileID: 386374573}
+  - component: {fileID: 386374571}
   m_Layer: 5
   m_Name: CloseBoothPage
   m_TagString: Untagged
@@ -6569,6 +6570,51 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controller: {fileID: 933019613}
   page: StartBoothPage
+--- !u!114 &386374571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 386374568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ef47c9c0f0ede4c82d39ae04c10234, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 894414812}
+  onClickRight:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 933019613}
+        m_MethodName: ClickNumPadEnter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 386374571}
+          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.NumPadControl, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  onClickLeft:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 933019613}
+        m_MethodName: ClickNumPadExpend
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 386374571}
+          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.NumPadControl, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  num: 0
 --- !u!114 &386374572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6699,7 +6745,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickBack
         m_Mode: 1
         m_Arguments:
@@ -7768,7 +7814,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -8321,7 +8367,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.00015690831}
+  m_AnchoredPosition: {x: 0, y: 0.00022874278}
   m_SizeDelta: {x: 1080, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &448291332
@@ -10674,7 +10720,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 14
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &585201997
 GameObject:
@@ -11334,7 +11380,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -12151,7 +12197,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 15
+  m_RootOrder: 14
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &667949860
 GameObject:
@@ -12845,7 +12891,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickZero2
         m_Mode: 1
         m_Arguments:
@@ -14194,7 +14240,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickClear
         m_Mode: 1
         m_Arguments:
@@ -15440,7 +15486,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -16506,7 +16552,7 @@ MonoBehaviour:
   earnsInRangeSelection: {fileID: 1733774060}
   earnListSelection: {fileID: 993541652}
   earnSelection: {fileID: 572288801}
-  numPadControl: {fileID: 1308609069}
+  numPadControl: {fileID: 386374571}
   costEarnListSelection: {fileID: 665478151}
   loadOnStart: 1
 --- !u!4 &933019614
@@ -17770,7 +17816,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1005183551
 GameObject:
@@ -18695,8 +18741,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1848604676}
   m_HandleRect: {fileID: 1848604675}
   m_Direction: 0
-  m_Value: 0.49999642
-  m_Size: 0.98425925
+  m_Value: 0.5
+  m_Size: 0.98425937
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -23702,7 +23748,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -23896,88 +23942,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1430700044}
---- !u!1 &1434618968
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1434618971}
-  - component: {fileID: 1434618970}
-  - component: {fileID: 1434618969}
-  m_Layer: 0
-  m_Name: EditBoothControl
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1434618969
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1434618968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa0aec5783e7ec54a865ce2e687afa28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  refType: 0
-  value:
-    name: 123
-    rent: 0
-    comment: 123
-  array: []
-  idx: 0
-  objectRef: {fileID: 0}
---- !u!114 &1434618970
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1434618968}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e174b5b977b21fd41a7a7ec0a76f7b3c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boothRef: {fileID: 1434618969}
-  txt_name: {fileID: 721780822}
-  txt_rent: {fileID: 0}
-  txt_comment: {fileID: 430809054}
-  autoUpdateOnStart: 0
-  onClickEnter:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 933019613}
-        m_MethodName: ClickEditBoothEnter
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1434618970}
-          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.EditBoothControl,
-            Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
---- !u!4 &1434618971
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1434618968}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 682.99506, y: 450.92853, z: 8.625}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 11
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1448802288
 GameObject:
   m_ObjectHideFlags: 0
@@ -25767,8 +25731,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
-        m_MethodName: ClickNum
+      - m_Target: {fileID: 386374568}
+        m_MethodName: 
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -27973,7 +27937,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -29053,7 +29017,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1735341671
 GameObject:
@@ -29679,7 +29643,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickNum
         m_Mode: 3
         m_Arguments:
@@ -30555,7 +30519,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1308609069}
+      - m_Target: {fileID: 386374571}
         m_MethodName: ClickExpend
         m_Mode: 1
         m_Arguments:

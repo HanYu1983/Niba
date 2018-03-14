@@ -8,10 +8,14 @@ namespace NightmarketAssistant
 {
     public class Controller : MonoBehaviour
     {
+        [Header("持久性資料")]
         public StorageComponent storage;
+        [Header("基本功能")]
         public PageManager pageManager;
         public NMAPopupManager popupManager;
+        [Header("首頁:可以留空")]
         public string initPage;
+        [Header("暫存區")]
         public BoothRef boothSelection;
         public EarnsInRangeRef earnsInRangeSelection;
         public EarnListRef earnListSelection;
