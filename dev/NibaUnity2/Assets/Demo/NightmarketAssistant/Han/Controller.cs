@@ -17,9 +17,7 @@ namespace NightmarketAssistant
         public EarnListRef earnListSelection;
         public EarnRef earnSelection;
         public NumPadControl numPadControl;
-        public EditBoothControl editBoothControl;
         public EarnListRef costEarnListSelection;
-        public NumPadControl costNumPadControl;
         public bool loadOnStart;
 
         private void Start()
@@ -30,12 +28,6 @@ namespace NightmarketAssistant
             {
                 storage.Load();
             }
-            
-            numPadControl.OnEnter += ClickNumPadEnter;
-            numPadControl.OnExpend += ClickNumPadExpend;
-            costNumPadControl.OnEnter += ClickCostNumPadEnter;
-            costNumPadControl.OnExpend += ClickCostNumPadExpend;
-            editBoothControl.OnEnter += ClickEditBoothEnter;
             // 使用ZUI的換頁, 要比Start晚才行
             StartCoroutine(StartInitPage());
         }
@@ -48,7 +40,7 @@ namespace NightmarketAssistant
             return new Earn(DateTime.Now.Ticks, booth) { money = total, comment = "收入" };
         }
 
-        void ClickCostNumPadEnter(NumPadControl c)
+        public void ClickCostNumPadEnter(NumPadControl c)
         {
             if(c.Num == 0)
             {
@@ -72,7 +64,7 @@ namespace NightmarketAssistant
             }
         }
 
-        void ClickCostNumPadExpend(NumPadControl c)
+        public void ClickCostNumPadExpend(NumPadControl c)
         {
             if (c.Num == 0)
             {
@@ -97,18 +89,22 @@ namespace NightmarketAssistant
 
         public void ClickCostEarnDelete(EarnRef earnRef)
         {
-            try
+            Action cmd = () =>
             {
-                storage.storage.costEarns.Remove(earnRef.Ref);
-                storage.Save();
+                try
+                {
+                    storage.storage.costEarns.Remove(earnRef.Ref);
+                    storage.Save();
 
-                costEarnListSelection.value = storage.storage.costEarns;
-                costEarnListSelection.OnValueChange();
-            }
-            catch (Exception e)
-            {
-                OnException(e);
-            }
+                    costEarnListSelection.value = storage.storage.costEarns;
+                    costEarnListSelection.OnValueChange();
+                }
+                catch (Exception e)
+                {
+                    OnException(e);
+                }
+            };
+            StoreCommand("是否確定刪除" + earnRef.Ref.money, cmd);
         }
 
         public void ClickCostEarnMemo(EarnRef earn)
@@ -288,7 +284,7 @@ namespace NightmarketAssistant
         {
             try
             {
-                var booth = editBoothControl.boothRef.Ref;
+                var booth = c.boothRef.Ref;
                 if (string.IsNullOrEmpty(booth.name))
                 {
                     throw new Exception("新填上攤位名稱");
@@ -452,15 +448,16 @@ namespace NightmarketAssistant
 
         public void ClickCalculateFinish(CalculatePage calc)
         {
-            var sum = calc.GetIncomeEarn().Sum(e=>e.money);
-            calc.ClearEarns();
+            // toList()讓它立即求值, 不然很像會有奇怪的情況
+            var earns = calc.GetIncomeEarn().ToList();
+            var sum = earns.Sum(e=>e.money);
+            var comment = string.Join("+", earns.Select(e => e.money+"").ToArray());
             try
             {
                 if (earnsInRangeSelection.Ref.IsProgressing == false)
                 {
                     throw new Exception("開市中的才能新增");
                 }
-
                 var num = sum;
                 if (num == 0)
                 {
@@ -470,13 +467,17 @@ namespace NightmarketAssistant
 
                 var earn = storage.storage.NewEarn(storage.storage.earns, boothSelection.Ref.Key);
                 earn.money = num;
+                earn.comment = comment;
+
+                storage.Save();
+
                 numPadControl.ClickClear();
+                calc.ClearEarns();
+
                 NMAEvent.OnEarnListChange();
 
                 earnListSelection.Ref.Add(earn);
                 earnListSelection.OnValueChange();
-
-                storage.Save();
 
                 ChangePage("CloseBoothPage");
             }

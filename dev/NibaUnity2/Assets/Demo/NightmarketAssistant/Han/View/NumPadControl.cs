@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace NightmarketAssistant
 {
@@ -21,6 +24,15 @@ namespace NightmarketAssistant
             }
         }
         
+        [FormerlySerializedAs("onClickRight")]
+        [SerializeField]
+        private UnityEvent onClickRight = new UnityEvent();
+
+        [FormerlySerializedAs("onClickLeft")]
+        [SerializeField]
+        private UnityEvent onClickLeft = new UnityEvent();
+
+
         public Action<NumPadControl> OnEnter = delegate { };
         public Action<NumPadControl> OnExpend = delegate { };
         public string num;
@@ -65,11 +77,13 @@ namespace NightmarketAssistant
         }
         public void ClickEnter()
         {
-            OnEnter(this);
+            //OnEnter(this);
+            onClickRight.Invoke();
         }
         public void ClickExpend()
         {
-            OnExpend(this);
+            //OnExpend(this);
+            onClickLeft.Invoke();
         }
     }
 }

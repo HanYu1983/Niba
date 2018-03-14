@@ -3,15 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace NightmarketAssistant
 {
     public class EditBoothControl : MonoBehaviour
     {
-        public Action<EditBoothControl> OnEnter = delegate { };
         public BoothRef boothRef;
         public InputField txt_name, txt_rent, txt_comment;
         public bool autoUpdateOnStart;
+
+        [FormerlySerializedAs("onClickEnter")]
+        [SerializeField]
+        private UnityEvent onClickEnter = new UnityEvent();
 
         private void Start()
         {
@@ -41,7 +47,7 @@ namespace NightmarketAssistant
                 // ignore
             }
             b.comment = txt_comment.text;
-            OnEnter(this);
+            onClickEnter.Invoke();
         }
     }
 }
