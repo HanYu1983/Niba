@@ -12,6 +12,12 @@ namespace NightmarketAssistant
     public class NumPadControl : MonoBehaviour
     {
         public Text text;
+        public string num;
+        [SerializeField]
+        private UnityEvent onClickRight = new UnityEvent();
+        [SerializeField]
+        private UnityEvent onClickLeft = new UnityEvent();
+
         void UpdateView()
         {
             try
@@ -23,19 +29,7 @@ namespace NightmarketAssistant
                 text.text = "0";
             }
         }
-        
-        [FormerlySerializedAs("onClickRight")]
-        [SerializeField]
-        private UnityEvent onClickRight = new UnityEvent();
 
-        [FormerlySerializedAs("onClickLeft")]
-        [SerializeField]
-        private UnityEvent onClickLeft = new UnityEvent();
-
-
-        public Action<NumPadControl> OnEnter = delegate { };
-        public Action<NumPadControl> OnExpend = delegate { };
-        public string num;
         public int Num
         {
             get

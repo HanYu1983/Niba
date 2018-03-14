@@ -8,20 +8,7 @@ namespace NightmarketAssistant
 {
     public class CalculatePage : MonoBehaviour
     {
-        public NumPadControl numPad;
         public EarnListRef earnList;
-
-        private void OnEnable()
-        {
-            numPad.OnEnter += OnNumPadEnter;
-            numPad.OnExpend += OnNumPadExpend;
-        }
-
-        private void OnDisable()
-        {
-            numPad.OnEnter -= OnNumPadEnter;
-            numPad.OnExpend -= OnNumPadExpend;
-        }
 
         public void ClickEarnDelete(EarnRef earnRef)
         {
@@ -47,7 +34,7 @@ namespace NightmarketAssistant
             });
         }
 
-        void OnNumPadEnter(NumPadControl o)
+        public void OnNumPadEnter(NumPadControl o)
         {
             if (o.Num == 0)
             {
@@ -60,10 +47,10 @@ namespace NightmarketAssistant
             earnList.Ref.Add(earn);
             earnList.OnValueChange();
 
-            numPad.ClickClear();
+            o.ClickClear();
         }
 
-        void OnNumPadExpend(NumPadControl o)
+        public void OnNumPadExpend(NumPadControl o)
         {
             if(o.Num == 0)
             {
@@ -76,7 +63,7 @@ namespace NightmarketAssistant
             earnList.Ref.Add(earn);
             earnList.OnValueChange();
 
-            numPad.ClickClear();
+            o.ClickClear();
         }
     }
 }

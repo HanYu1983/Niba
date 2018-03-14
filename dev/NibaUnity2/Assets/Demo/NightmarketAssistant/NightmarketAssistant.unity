@@ -6582,6 +6582,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 894414812}
+  num: 0
   onClickRight:
     m_PersistentCalls:
       m_Calls:
@@ -6614,7 +6615,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  num: 0
 --- !u!114 &386374572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19745,6 +19745,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1926287329}
+  num: 
   onClickRight:
     m_PersistentCalls:
       m_Calls:
@@ -19777,7 +19778,6 @@ MonoBehaviour:
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  num: 
 --- !u!114 &1161281170
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33762,17 +33762,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 1728298011}
+  num: 
   onClickRight:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1983378686}
+        m_MethodName: OnNumPadEnter
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1983378684}
+          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.NumPadControl, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   onClickLeft:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1983378686}
+        m_MethodName: OnNumPadExpend
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1983378684}
+          m_ObjectArgumentAssemblyTypeName: NightmarketAssistant.NumPadControl, Assembly-CSharp
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
-  num: 
 --- !u!114 &1983378685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33799,7 +33821,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3a4f9a3ca3f92b4bb1a589a4a8851e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  numPad: {fileID: 1983378684}
   earnList: {fileID: 1983378685}
 --- !u!1 &1984450330
 GameObject:
