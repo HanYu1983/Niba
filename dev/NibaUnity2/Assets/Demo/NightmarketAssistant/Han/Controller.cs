@@ -13,16 +13,18 @@ namespace NightmarketAssistant
         [Header("基本功能")]
         public PageManager pageManager;
         public NMAPopupManager popupManager;
-        [Header("首頁:可以留空")]
+        [Tooltip("首頁, 可以留空")]
         public string initPage;
+        [Tooltip("是否自動讀取資料")]
+        public bool loadOnStart;
         [Header("暫存區")]
         public BoothRef boothSelection;
         public EarnsInRangeRef earnsInRangeSelection;
         public EarnListRef earnListSelection;
         public EarnRef earnSelection;
-        public NumPadControl numPadControl;
         public EarnListRef costEarnListSelection;
-        public bool loadOnStart;
+        [Header("外部引用")]
+        public NumPadControl numPadControl;
 
         private void Start()
         {
