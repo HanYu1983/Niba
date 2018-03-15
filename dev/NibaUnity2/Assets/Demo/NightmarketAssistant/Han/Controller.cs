@@ -373,6 +373,40 @@ namespace NightmarketAssistant
             ChangePage("StartBoothPage");
         }
 
+        public void ClickBoothContinue(BoothRef booth)
+        {
+            try
+            {
+                boothSelection.refType = ObjectRefType.Static;
+                boothSelection.value = booth.Ref;
+                boothSelection.NotifyValueChange();
+
+                var ranges = Alg.GroupEarns(storage.storage, booth.Ref.Key);
+                if (ranges.Count == 0)
+                {
+                    throw new Exception("必須有開結市資料, 程式有誤, 請等待程式更新");
+                }
+                var lastRange = ranges[ranges.Count - 1];
+                if (lastRange.IsProgressing == false)
+                {
+                    throw new Exception("必須是開市狀態, 程式有誤, 請等待程式更新");
+                }
+                
+                earnsInRangeSelection.refType = ObjectRefType.Static;
+                earnsInRangeSelection.value = lastRange;
+
+                earnListSelection.refType = ObjectRefType.Static;
+                earnListSelection.value = lastRange.earns;
+
+                numPadControl.ClickClear();
+                ChangePage("CloseBoothPage");
+            }
+            catch(Exception e)
+            {
+                OnException(e);
+            }
+        }
+
         public void ClickBoothScore(BoothRef booth)
         {
             boothSelection.refType = ObjectRefType.Static;
