@@ -7,7 +7,7 @@ namespace NightmarketAssistant
     public class CreateBoothRow : MonoBehaviour
     {
         public StorageComponent model;
-        public GameObject rowLayout;
+        public GameObject rowLayout, rowLayoutIsProgressing;
         public List<GameObject> rows;
 
         void Start()
@@ -42,7 +42,10 @@ namespace NightmarketAssistant
 
             for (var i = 0; i < model.Booths.Count; ++i)
             {
-                var row = Instantiate(rowLayout, transform, false);
+                var state = model.GetBoothStateByBooth(model.Booths[i].Key);
+                var isProgressing = state != null && state.progress == Progress.Open;
+                var prefab = isProgressing ? rowLayoutIsProgressing : rowLayout;
+                var row = Instantiate(prefab, transform, false);
                 var objRef = row.GetComponent<BoothRef>();
                 if (objRef == null)
                 {
