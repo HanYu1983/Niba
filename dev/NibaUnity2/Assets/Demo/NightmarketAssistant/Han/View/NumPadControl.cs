@@ -24,9 +24,10 @@ namespace NightmarketAssistant
             {
                 text.text = int.Parse(num) + "";
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                text.text = "0";
+                Debug.LogWarning(e.Message);
+                text.text = "NaN";
             }
         }
 
