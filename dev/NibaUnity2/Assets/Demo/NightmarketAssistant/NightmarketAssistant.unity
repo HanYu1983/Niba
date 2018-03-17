@@ -6789,6 +6789,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 894414812}
   num: 0
+  textLength: 5
   onClickRight:
     m_PersistentCalls:
       m_Calls:
@@ -20163,6 +20164,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 1926287329}
   num: 
+  textLength: 5
   onClickRight:
     m_PersistentCalls:
       m_Calls:
@@ -34581,6 +34583,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: {fileID: 1728298011}
   num: 
+  textLength: 5
   onClickRight:
     m_PersistentCalls:
       m_Calls:
