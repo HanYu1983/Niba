@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+namespace Temp{
 public class EntityManager : MonoBehaviour {
 
     public interface IEntitySystem
@@ -45,4 +46,5 @@ public class EntityManager : MonoBehaviour {
             s.OnRemoveEntity(entity.gameObject);
         }
     }
+}
 }

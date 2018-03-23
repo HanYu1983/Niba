@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Temp{
 public class TankSystem : MonoBehaviour, EntityManager.IEntitySystem {
     public List<GameObject> tanks;
 
@@ -26,4 +27,5 @@ public class TankSystem : MonoBehaviour, EntityManager.IEntitySystem {
         Debug.Log("go:" + id + ":" + avg);
         return 10;
     }
+}
 }
