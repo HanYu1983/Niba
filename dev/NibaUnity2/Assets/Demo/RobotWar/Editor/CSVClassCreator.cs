@@ -4,6 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 using UnityEditor;
+using UnityEngine.Serialization;
 
 namespace HanUtil
 {
@@ -34,10 +35,12 @@ namespace HanUtil
     [Serializable]
     public class CSVFile
     {
+        [Tooltip("generateClassName")]
+        public string key;
         public string fileName;
-        public string generateClassName;
         public List<KeyType> types;
-        public string[] format
+
+        public string[] Format
         {
             get
             {
@@ -91,11 +94,11 @@ namespace HanUtil
             foreach(var f in csvFiles)
             {
                 Debug.Log("generate "+f.fileName);
-                if (string.IsNullOrEmpty(f.generateClassName))
+                if (string.IsNullOrEmpty(f.key))
                 {
                     throw new Exception("enter generateClassName");
                 }
-                GenCode(split, ns, f.generateClassName, null, f.format, csvPath + "/"+ f.fileName, generatePath);
+                GenCode(split, ns, f.key, null, f.Format, csvPath + "/"+ f.fileName, generatePath);
             }
             
         }
