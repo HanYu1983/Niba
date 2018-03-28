@@ -5,7 +5,7 @@ namespace HanPathFindingAPI
 {
     class DijkstraPathfinding : IPathfinding
     {
-        public static Dictionary<T, List<T>> FindAllPaths<T>(GetNeigboursFn<T> GetNeigbours, T originNode) where T : IGraphNode
+        public static Dictionary<T, List<T>> FindAllPaths<T>(GetNeigboursFn<T> GetNeigbours, int movePower, T originNode) where T : IGraphNode
         {
             IPriorityQueue<T> frontier = new HeapPriorityQueue<T>();
             frontier.Enqueue(originNode, 0);
@@ -18,6 +18,10 @@ namespace HanPathFindingAPI
             while (frontier.Count != 0)
             {
                 var current = frontier.Dequeue();
+                if(costSoFar[current] >= movePower)
+                {
+                    continue;
+                }
                 var neighbours = GetNeigbours(current);
                 foreach (var neighbour in neighbours.Keys)
                 {

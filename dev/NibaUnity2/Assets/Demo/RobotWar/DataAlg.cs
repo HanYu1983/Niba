@@ -10,16 +10,17 @@ namespace RobotWar
     public class Grid : IGraphNode, IEquatable<Grid>
     {
         public readonly Vector2Int pos;
+        public string prototype;
+        public Grid(Vector2Int pos)
+        {
+            this.pos = pos;
+        }
         public string Key
         {
             get
             {
                 return pos.y + "_" + pos.x;
             }
-        }
-        public Grid(Vector2Int pos)
-        {
-            this.pos = pos;
         }
         public int GetDistance(IGraphNode other)
         {
@@ -53,6 +54,7 @@ namespace RobotWar
     {
         public string key;
         public string prototype;
+        public int owner;
         public int hp, en;
         public Unit(string key)
         {
@@ -109,10 +111,10 @@ namespace RobotWar
 
     public class Context
     {
-        public Dictionary<string, Grid> grids = new Dictionary<string, Grid>();
         public Dictionary<string, Unit> units = new Dictionary<string, Unit>();
         public Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>();
         public Dictionary<string, Pilot> pilots = new Dictionary<string, Pilot>();
+        public Dictionary<string, Grid> grids = new Dictionary<string, Grid>();
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Polot = new Dictionary<string, string>();
     }
@@ -131,18 +133,49 @@ namespace RobotWar
             {
                 var ret = new Dictionary<Grid, int>();
                 var oriPos = curr.pos;
-                foreach(var v in dirs)
+                var oriData = new ConfigGrid();
+                var cost = 1;// oriData.cost;
+                foreach (var v in dirs)
                 {
                     var newPos = oriPos + v;
-                    var cost = 1;
                     var gk = new Grid(newPos).Key;
                     if (ctx.grids.ContainsKey(gk) == false)
                     {
-                        // continue
+                        continue;
                     }
                     if(ctx.grid2Unit.ContainsKey(gk))
                     {
-                        // continue
+                        continue;
+                    }
+                    var g = ctx.grids[gk];
+                    ret.Add(g, cost);
+                }
+                return ret;
+            };
+        }
+
+        public static IPathfinding.GetNeigboursFn<Grid> GetNeigboursForRangeAttack(Context ctx)
+        {
+            var dirs = new Vector2Int[]
+            {
+                new Vector2Int(1, 0),new Vector2Int(0, 1),new Vector2Int(-1, 0),new Vector2Int(0, -1)
+            };
+            return (Grid curr) =>
+            {
+                var ret = new Dictionary<Grid, int>();
+                var oriPos = curr.pos;
+                var cost = 1;
+                foreach (var v in dirs)
+                {
+                    var newPos = oriPos + v;
+                    var gk = new Grid(newPos).Key;
+                    if (ctx.grids.ContainsKey(gk) == false)
+                    {
+                        continue;
+                    }
+                    if (ctx.grid2Unit.ContainsKey(gk))
+                    {
+                        continue;
                     }
                     var g = ctx.grids[gk];
                     ret.Add(g, cost);
@@ -168,16 +201,36 @@ namespace RobotWar
             return pathFiniding.FindPath(GetNeigbours(ctx), grids[sk], grids[ek]);
         }
 
-        public static Dictionary<Grid, List<Grid>> FindAllPath(Context ctx, Vector2Int s)
+        public static Dictionary<Grid, List<Grid>> FindAllPath(Context ctx, int movePower, Vector2Int s)
         {
             var sk = new Grid(s).Key;
 
             var grids = ctx.grids;
             if (grids.ContainsKey(sk) == false)
             {
-                throw new Exception("xxx");
+                throw new Exception("grid not found:"+sk);
             }
-            return DijkstraPathfinding.FindAllPaths(GetNeigbours(ctx), grids[sk]);
+            return DijkstraPathfinding.FindAllPaths(GetNeigbours(ctx), movePower, grids[sk]);
+        }
+
+        public static Dictionary<Grid, List<Grid>> FindAllRange(Context ctx, int min, int max, Vector2Int s)
+        {
+            var sk = new Grid(s).Key;
+
+            var grids = ctx.grids;
+            if (grids.ContainsKey(sk) == false)
+            {
+                throw new Exception("grid not found:" + sk);
+            }
+            var paths = DijkstraPathfinding.FindAllPaths(GetNeigboursForRangeAttack(ctx), max, grids[sk]);
+            foreach(var k in new Dictionary<Grid, List<Grid>>(paths).Keys)
+            {
+                if(paths[k].Count < min)
+                {
+                    paths.Remove(k);
+                }
+            }
+            return paths;
         }
 
         public static List<Weapon> GetWeaponList(Context ctx, string unit)
@@ -200,17 +253,9 @@ namespace RobotWar
             ctx.unit2Polot.Add(unit, pilot);
         }
 
-        public static IEnumerator LoadMap(Context ctx, string path)
+        public static int GetMovePower(Context ctx, string unit)
         {
-            var request = Resources.LoadAsync<MapData>(path);
-            yield return request;
-            var data = request.asset as MapData;
-            ctx.grids.Clear();
-            foreach(var g in data.grids)
-            {
-                var ret = new Grid(g.pos);
-                ctx.grids.Add(ret.Key, ret);
-            }
+            return 10;
         }
     }
 }

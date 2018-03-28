@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: CSV2Class
   m_EditorClassIdentifier: 
   csvPath: 
-  generatePath: C:/Users/johny/Documents/git/Niba/dev/NibaUnity2/Assets/Demo/RobotWar/Config
+  generatePath: C:/Users/johny/Documents/git/Niba/dev/NibaUnity2/Assets/Demo/RobotWar/Model/Config
   csvFiles:
   - key: ConfigUnit
     fileName: 
@@ -66,6 +66,21 @@ MonoBehaviour:
       type: 0
     - key: ability
       type: 2
+  - key: ConfigGrid
+    fileName: 
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: cost
+      type: 0
+    - key: deffence
+      type: 1
+    - key: energy
+      type: 1
   splitType: 0
   split: 
   ns: RobotWar

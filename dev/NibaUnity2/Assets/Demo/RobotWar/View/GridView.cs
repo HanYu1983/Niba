@@ -7,12 +7,30 @@ namespace RobotWar
 {
     public class GridView : MonoBehaviour
     {
-        public static Action<GridView> OnStart = delegate { };
+        public static Action<GridView> OnClick = delegate { };
         public Vector2Int coord;
 
-        private void Start()
+        public string Key
         {
-            OnStart(this);
+            get
+            {
+                return coord.y + "_" + coord.x;
+            }
+        }
+
+        protected virtual void OnMouseEnter()
+        {
+            GetComponent<Renderer>().material.color = Color.gray;
+        }
+        protected virtual void OnMouseExit()
+        {
+            GetComponent<Renderer>().material.color = Color.white;
+        }
+
+        void OnMouseDown()
+        {
+            Debug.Log("OnPointerClick");
+            OnClick(this);
         }
     }
 }
