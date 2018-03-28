@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HanPathFindingAPI;
 using System;
+using System.Linq;
 
 namespace RobotWar
 {
@@ -197,6 +198,19 @@ namespace RobotWar
                 throw new System.Exception("unitNotFound");
             }
             ctx.unit2Polot.Add(unit, pilot);
+        }
+
+        public static IEnumerator LoadMap(Context ctx, string path)
+        {
+            var request = Resources.LoadAsync<MapData>(path);
+            yield return request;
+            var data = request.asset as MapData;
+            ctx.grids.Clear();
+            foreach(var g in data.grids)
+            {
+                var ret = new Grid(g.pos);
+                ctx.grids.Add(ret.Key, ret);
+            }
         }
     }
 }
