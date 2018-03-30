@@ -148,10 +148,43 @@ namespace RobotWar
         public virtual void OnUpdate(float t) { }
     }
 
+    public class ProcessTaskState : DefaultControlState
+    {
+        Task task;
+        public ProcessTaskState(Task task)
+        {
+            this.task = task;
+        }
+        public override void OnUpdate(float t)
+        {
+            switch (task.description)
+            {
+                case Task.UnitAttack:
+                    {
+                        var unitKey = task.values[0];
+                        var weaponKey = task.values[1];
+                        var targets = task.values[2].Split(',');
+                        DataAlg.CompleteTask(Model.ctx, task);
+                        Debug.Log("process Attak");
+                    }
+                    break;
+            }
+            Holder.ChangeState(new UpdateCTState());
+        }
+    }
+
+
     public class UpdateCTState : DefaultControlState
     {
         public override void OnUpdate(float t)
         {
+            var task = DataAlg.GetTopTask(Model.ctx);
+            if (task != null)
+            {
+                Holder.ChangeState(new ProcessTaskState(task));
+                return;
+            }
+            
             // 取得可行動單位
             var topCTUnit = DataAlg.GetTopCTUnit(Model.ctx);
             if (topCTUnit == null)
@@ -404,14 +437,9 @@ namespace RobotWar
         {
             GridView.OnClick -= OnClick;
         }
-
-        Coroutine cor;
+        
         void OnClick(GridView gv)
         {
-            if(cor != null)
-            {
-                return;
-            }
             // if the weapon is map, change direction
 
             // if the weapon is single, check target
@@ -423,15 +451,12 @@ namespace RobotWar
                 var target = Model.ctx.units[targetKey];
                 if(unit != target && unit.owner != target.owner)
                 {
+                    var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
+                    DataAlg.PushTask(Model.ctx, task);
                     DataAlg.PassUnit(Model.ctx, unit.Key);
-                    cor = View.StartCoroutine(ComputeDamageAndTargetReactor(unit, target, weapon));
+                    Holder.ChangeState(new UpdateCTState());
                 }
             }
-        }
-        IEnumerator ComputeDamageAndTargetReactor(Unit unit, Unit target, string weapon)
-        {
-            Holder.ChangeState(new UpdateCTState());
-            yield return 0;
         }
     }
 }

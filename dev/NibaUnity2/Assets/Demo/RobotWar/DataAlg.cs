@@ -116,6 +116,15 @@ namespace RobotWar
         public bool isAI;
     }
 
+    public class Task
+    {
+        public const string UnitAttack = "Unit{0} use Weapon{1} attack {2}";
+        public string description;
+        public List<string> values = new List<string>();
+        public float ct;
+        public string owner;
+    }
+
     public class Context
     {
         public Dictionary<string, Unit> units = new Dictionary<string, Unit>();
@@ -126,6 +135,7 @@ namespace RobotWar
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Polot = new Dictionary<string, string>();
+        public List<Task> tasks = new List<Task>();
 
         public List<Player> players = new List<Player>();
         public int turn;
@@ -268,7 +278,7 @@ namespace RobotWar
 
         public static float Speed2CT(float speed)
         {
-            return 0;
+            return 0.1f;
         }
 
         public static float UnitSpeed(Context ctx, string unitKey)
@@ -284,13 +294,23 @@ namespace RobotWar
                 var cfg = new ConfigUnit();
                 u.ct += Speed2CT(UnitSpeed(ctx, u.Key));
             }
+            foreach(var t in ctx.tasks)
+            {
+                t.ct -= Speed2CT(UnitSpeed(ctx, t.owner));
+            }
             ctx.turn += 1;
+        }
+
+        public static Task GetTopTask(Context ctx)
+        {
+            var ret = ctx.tasks;
+            return ret.OrderBy(u => u.ct).Where(u=> u.ct<=0).FirstOrDefault();
         }
 
         public static Unit GetTopCTUnit(Context ctx)
         {
             var ret = new List<Unit>(ctx.units.Values);
-            return ret.OrderByDescending(u => u.ct).FirstOrDefault();
+            return ret.OrderByDescending(u => u.ct).Where(u=> u.ct>=1).FirstOrDefault();
         }
 
         public static void PassUnit(Context ctx, string unitKey)
@@ -342,6 +362,29 @@ namespace RobotWar
             w.ownerUnit = unitKey;
             ctx.weapons.Add(w.Key, w);
             return w;
+        }
+
+        public static Task CreateAttackTask(Context ctx, string unitKey, string weaponKey, List<string> targets)
+        {
+            var t = new Task();
+            t.description = Task.UnitAttack;
+            t.values.Add(unitKey);
+            t.values.Add(weaponKey);
+            t.values.Add(string.Join(",", targets.ToArray()));
+
+            var cfg = new ConfigWeapon();
+            t.ct = cfg.prepareTime;
+            return t;
+        }
+
+        public static void PushTask(Context ctx, Task task)
+        {
+            ctx.tasks.Add(task);
+        }
+
+        public static void CompleteTask(Context ctx, Task task)
+        {
+            ctx.tasks.Remove(task);
         }
     }
 }
