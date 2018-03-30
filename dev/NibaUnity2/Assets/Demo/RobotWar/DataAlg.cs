@@ -62,7 +62,7 @@ namespace RobotWar
         {
             if (string.IsNullOrEmpty(key))
             {
-                this.key = new System.Guid().ToString();
+                this.key = Guid.NewGuid().ToString();
             } else
             {
                 this.key = key;
@@ -86,7 +86,7 @@ namespace RobotWar
 
         public Weapon()
         {
-            key = new System.Guid().ToString();
+            key = Guid.NewGuid().ToString();
         }
         public string Key
         {
@@ -309,9 +309,34 @@ namespace RobotWar
             {
                 throw new Exception("already move");
             }
+            var hasOldGrid = ctx.unit2Grid.ContainsKey(unitKey);
+            if(hasOldGrid == false)
+            {
+                throw new Exception("XXX");
+            }
+            // clear old pos
+            var oldGrid = ctx.unit2Grid[unitKey];
+            ctx.grid2Unit.Remove(oldGrid);
+            // change to new pos
             ctx.unit2Grid[unitKey] = new Grid(dist).Key;
             ctx.grid2Unit[new Grid(dist).Key] = unitKey;
             ctx.units[unitKey].alreadyMove = true;
+        }
+
+        public static Unit SpawnUnit(Context ctx, Vector2Int pos, string prototype)
+        {
+            var gk = new Grid(pos).Key;
+            var hasUnit = ctx.grid2Unit.ContainsKey(gk);
+            if (hasUnit)
+            {
+                throw new System.Exception("has unit:"+gk);
+            }
+            var unit = new Unit(null);
+            unit.prototype = prototype;
+            ctx.units.Add(unit.Key, unit);
+            ctx.grid2Unit[gk] = unit.Key;
+            ctx.unit2Grid[unit.Key] = gk;
+            return unit;
         }
     }
 }

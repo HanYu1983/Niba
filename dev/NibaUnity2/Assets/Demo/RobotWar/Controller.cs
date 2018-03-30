@@ -25,7 +25,14 @@ namespace RobotWar
             yield return request;
             var data = request.asset as MapData;
             model.CreateMap(data);
-            view.CreateMap(data);
+            view.Sync(model);
+        }
+
+        void CreateUnit(int owner, Vector2Int pos)
+        {
+            var unit = DataAlg.SpawnUnit(model.ctx, pos, "");
+            unit.owner = owner;
+            view.CreateUnit(model, unit.Key, pos);
         }
 
         public void StartPlay()
@@ -37,6 +44,7 @@ namespace RobotWar
         IControlState controlState;
         public void ChangeState(IControlState next)
         {
+            Debug.Log("ChangeState:" + next);
             if(controlState != null)
             {
                 controlState.OnExitState();
@@ -58,16 +66,34 @@ namespace RobotWar
         #endregion
 
         #region test
-        [ContextMenu("TestPlay")]
-        public void TestPlay()
-        {
-            StartPlay();
-        }
+        
 
         [ContextMenu("TestLoadMap")]
         public void TestLoadMap()
         {
             StartCoroutine(LoadMap("Map/map01"));
+        }
+        [ContextMenu("TestPlay")]
+        public void TestPlay()
+        {
+            StartPlay();
+        }
+        [ContextMenu("TestCreateUnit")]
+        public void TestCreateUnit()
+        {
+            for(var i=0; i<5; ++i)
+            {
+                CreateUnit(0, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            }
+        }
+
+        [ContextMenu("TestCreateEnemy")]
+        public void TestCreateEnemy()
+        {
+            for (var i = 0; i < 5; ++i)
+            {
+                CreateUnit(1, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            }
         }
 
         [ContextMenu("TestCanMove")]
@@ -154,6 +180,11 @@ namespace RobotWar
         {
             this.unit = unit;
         }
+        public override void OnUpdate(float t)
+        {
+            DataAlg.PassUnit(Model.ctx, unit.Key);
+            Holder.ChangeState(new UpdateCTState());
+        }
     }
 
     public class SelectUnitActionState : DefaultControlState
@@ -174,20 +205,19 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            View.SetGridColor(null, Color.white);
-            var movePower = DataAlg.GetMovePower(Model.ctx, unit.Key);
-            var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-            var paths = DataAlg.FindAllPath(Model.ctx, movePower, pos);
-            View.SetGridColor(paths.Keys, Color.green);
-            this.paths = paths;
-
+            if (unit.owner != 0 || unit.alreadyMove == false)
+            {
+                View.SetGridColor(null, Color.white);
+                var movePower = DataAlg.GetMovePower(Model.ctx, unit.Key);
+                var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                var paths = DataAlg.FindAllPath(Model.ctx, movePower, pos);
+                View.SetGridColor(paths.Keys, Color.green);
+                this.paths = paths;
+            }
+            
             if (unit.owner == 0)
             {
                 var menu = View.GetUnitMenu();
-                if (unit.alreadyMove)
-                {
-                    // remove move menu
-                }
                 menu.OnSelect += OnSelect;
             }
         }
@@ -202,10 +232,25 @@ namespace RobotWar
             switch (item)
             {
                 case UnitMenuItem.Move:
+                    if (unit.alreadyMove)
+                    {
+                        Debug.LogWarning("already move");
+                        return;
+                    }
                     Holder.ChangeState(new SelectMoveDistState(unit, paths));
                     break;
                 case UnitMenuItem.Attack:
+                    var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key);
+                    if(weapons.Count == 0)
+                    {
+                        Debug.LogWarning("no weapons");
+                        return;
+                    }
                     Holder.ChangeState(new SelectWeaponState(unit));
+                    break;
+                case UnitMenuItem.Pass:
+                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                    Holder.ChangeState(new UpdateCTState());
                     break;
                 case UnitMenuItem.Cancel:
                     Holder.ChangeState(new IdleState());
@@ -219,6 +264,7 @@ namespace RobotWar
         public override void OnEnterState()
         {
             GridView.OnClick += OnClick;
+            View.SetGridColor(null, Color.white);
         }
         public override void OnExitState()
         {
@@ -268,12 +314,24 @@ namespace RobotWar
             {
                 return;
             }
-            DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
-            moveCor = View.StartCoroutine(AnimateUnitMove(gv));
+            var gk = new Grid(gv.coord).Key;
+            var g = Model.ctx.grids[gk];
+            if (paths.ContainsKey(g))
+            {
+                DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
+                moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
+            }
+            else
+            {
+                Debug.LogWarning("can not reach");
+            }
         }
-        IEnumerator AnimateUnitMove(GridView gv)
+        IEnumerator AnimateUnitMove(List<Grid> path)
         {
-            yield return View.AnimateUnitMove(unit.Key, gv.coord);
+            View.SetGridColor(null, Color.white);
+            View.SetGridColor(path, Color.red);
+            yield return View.AnimateUnitMove(unit.Key, path);
+            View.SetGridColor(null, Color.white);
             Holder.ChangeState(new SelectUnitActionState(unit));
         }
     }

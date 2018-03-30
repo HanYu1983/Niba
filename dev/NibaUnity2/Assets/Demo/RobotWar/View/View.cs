@@ -16,16 +16,18 @@ namespace RobotWar
         }
         #endregion
 
+        
+
         #region map
         public GameObject gridPrefab;
         public Transform gridRoot;
         public int gridWidth, gridHeight;
         Dictionary<string, GridView> gridView = new Dictionary<string, GridView>();
 
-        public void CreateMap(MapData mapData)
+        public void Sync(Model model)
         {
             gridView.Clear();
-            foreach(var g in mapData.grids)
+            foreach (var g in model.ctx.grids.Values)
             {
                 var go = Instantiate(gridPrefab, gridRoot, false);
                 var pos = go.transform.localPosition;
@@ -60,21 +62,61 @@ namespace RobotWar
         #endregion
 
         #region unit
-        public IEnumerator AnimateUnitMove(string key, Vector2Int dist)
+        public GameObject unitPrefab;
+        public Transform unitRoot;
+        Dictionary<string, GameObject> unitView = new Dictionary<string, GameObject>();
+        public void CreateUnit(Model model, string unit, Vector2Int pos)
         {
-            yield return 0;
+            var go = Instantiate(unitPrefab, unitRoot, false);
+            var newPos = go.transform.localPosition;
+            newPos.x = pos.x * gridWidth;
+            newPos.z = pos.y * gridHeight;
+            go.transform.localPosition = newPos;
+            unitView.Add(unit, go);
+
+            var u = model.ctx.units[unit];
+            if(u.owner == 1)
+            {
+                go.GetComponent<Renderer>().material.color = Color.red;
+            }
+            go.SetActive(true);
+        }
+        #endregion
+
+        #region unit
+        public float MovementSpeed;
+        public IEnumerator AnimateUnitMove(string key, List<Grid> path)
+        {
+            var unit = unitView[key];
+            path.Reverse();
+            foreach (var cell in path)
+            {
+                var pos = cell.pos;
+                var x = pos.x * gridWidth;
+                var z = pos.y * gridHeight;
+                Vector3 destination_pos = new Vector3(x, transform.localPosition.y, z);
+                while (unit.transform.localPosition != destination_pos)
+                {
+                    unit.transform.localPosition = Vector3.MoveTowards(unit.transform.localPosition, destination_pos, Time.deltaTime * MovementSpeed);
+                    yield return 0;
+                }
+            }
         }
         #endregion
 
         #region popup
+        public UnitMenu unitMenu;
         public UnitMenu GetUnitMenu()
         {
-            return null;
+            unitMenu.gameObject.SetActive(true);
+            return unitMenu;
         }
 
+        public WeaponMenu weaponMenu;
         public WeaponMenu GetWeaponMenu()
         {
-            return null;
+            weaponMenu.gameObject.SetActive(true);
+            return weaponMenu;
         }
         #endregion
     }

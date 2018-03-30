@@ -20,11 +20,11 @@ namespace RobotWar
 
         protected virtual void OnMouseEnter()
         {
-            GetComponent<Renderer>().material.color = Color.gray;
+            //GetComponent<Renderer>().material.color = Color.gray;
         }
         protected virtual void OnMouseExit()
         {
-            GetComponent<Renderer>().material.color = Color.white;
+            //GetComponent<Renderer>().material.color = Color.white;
         }
 
         void OnMouseDown()
