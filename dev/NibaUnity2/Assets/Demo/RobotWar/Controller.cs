@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace RobotWar
 {
@@ -32,6 +33,8 @@ namespace RobotWar
         {
             var unit = DataAlg.SpawnUnit(model.ctx, pos, "");
             unit.owner = owner;
+
+            DataAlg.CreateWeapon(model.ctx, unit.Key, "");
             view.CreateUnit(model, unit.Key, pos);
         }
 
@@ -345,7 +348,9 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
+            var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key).Select(w=>w.Key).ToList();
             var menu = View.GetWeaponMenu();
+            menu.CreateMenu(Model, weapons);
             menu.OnSelect += OnSelect;
         }
         public override void OnExitState()
@@ -368,9 +373,13 @@ namespace RobotWar
 
                 var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
                 var cfg = new ConfigWeapon();
-                var ranges = DataAlg.FindAllRange(Model.ctx, cfg.minRange, cfg.maxRange, pos);
-                View.SetGridColor(ranges.Keys, Color.red);
-                lastRange = new List<Grid>(ranges.Keys);
+                var isSingle = string.IsNullOrEmpty(cfg.shape);
+                if (isSingle)
+                {
+                    var ranges = DataAlg.FindAllRange(Model.ctx, 2, 6, pos);
+                    View.SetGridColor(ranges.Keys, Color.red);
+                    lastRange = new List<Grid>(ranges.Keys);
+                }
             }
             lastSelectWeapon = weapon;
         }
@@ -414,6 +423,7 @@ namespace RobotWar
                 var target = Model.ctx.units[targetKey];
                 if(unit != target && unit.owner != target.owner)
                 {
+                    DataAlg.PassUnit(Model.ctx, unit.Key);
                     cor = View.StartCoroutine(ComputeDamageAndTargetReactor(unit, target, weapon));
                 }
             }

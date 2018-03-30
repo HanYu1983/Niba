@@ -126,9 +126,8 @@ namespace RobotWar
         public Action<Menu<T>> OnSelect = delegate { };
         public T selected;
         public List<T> menu;
-        public Model model;
 
-        public void Select(int idx)
+        public virtual void Select(int idx)
         {
             if (menu.Count <= idx)
             {

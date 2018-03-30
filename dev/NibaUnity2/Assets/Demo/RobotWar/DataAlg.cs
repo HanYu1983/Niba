@@ -185,10 +185,6 @@ namespace RobotWar
                     {
                         continue;
                     }
-                    if (ctx.grid2Unit.ContainsKey(gk))
-                    {
-                        continue;
-                    }
                     var g = ctx.grids[gk];
                     ret.Add(g, cost);
                 }
@@ -337,6 +333,15 @@ namespace RobotWar
             ctx.grid2Unit[gk] = unit.Key;
             ctx.unit2Grid[unit.Key] = gk;
             return unit;
+        }
+
+        public static Weapon CreateWeapon(Context ctx, string unitKey, string prototype)
+        {
+            var w = new Weapon();
+            w.prototype = prototype;
+            w.ownerUnit = unitKey;
+            ctx.weapons.Add(w.Key, w);
+            return w;
         }
     }
 }
