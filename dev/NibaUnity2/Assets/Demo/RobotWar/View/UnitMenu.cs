@@ -5,41 +5,13 @@ using System;
 
 namespace RobotWar
 {
-    [Serializable]
     public enum UnitMenuItem
     {
-        Pending, Move, Attack, Status
+        Pending, Move, Attack, Status, Cancel
     }
 
-    public class UnitMenu : MonoBehaviour
+    public class UnitMenu : Menu<UnitMenuItem>
     {
-        public UnitMenuItem selected;
-        public List<UnitMenuItem> menu;
-
-        public void Select(int idx)
-        {
-            if(menu.Count <= idx)
-            {
-                throw new Exception("XXX");
-            }
-            selected = menu[idx];
-        }
-
-        public UnitMenuItem Selected
-        {
-            get
-            {
-                return selected;
-            }
-        }
-
-        public IEnumerator WaitForResult()
-        {
-            selected = UnitMenuItem.Pending;
-            yield return new WaitUntil(() =>
-            {
-                return selected != UnitMenuItem.Pending;
-            });
-        }
+        
     }
 }
