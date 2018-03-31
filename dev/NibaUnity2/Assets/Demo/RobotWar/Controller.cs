@@ -241,26 +241,35 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
+            if(unit.owner != 0)
+            {
+                return;
+            }
             // 如果單位沒移動過, 才顯示移動範圍並可以點地圖
             if (unit.alreadyMove == false)
             {
+                // 顯示移動範圍
                 View.SetGridColor(null, Color.white);
                 var movePower = DataAlg.GetMovePower(Model.ctx, unit.Key);
                 var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
                 var paths = DataAlg.FindAllPath(Model.ctx, movePower, pos);
                 View.SetGridColor(paths.Keys, Color.green);
+                // 暫存所有最短路徑, 這樣就不必計算2次
                 this.paths = paths;
+                // 監聽地圖點擊, 因為要移動單位
                 GridView.OnClick += OnClick;
             }
-
+            // 準備菜單
             var menuItems = new List<UnitMenuItem>()
             {
                 UnitMenuItem.Attack, UnitMenuItem.Status, UnitMenuItem.Pass, UnitMenuItem.Cancel
             };
+            // 若單位移動過, 多一個取消移動的選項
             if (unit.alreadyMove)
             {
                 menuItems.Add(UnitMenuItem.CancelMove);
             }
+            // 打開菜單
             var menu = View.GetUnitMenu();
             menu.CreateMenu(Model, menuItems);
             menu.OnSelect += OnSelect;
@@ -274,28 +283,35 @@ namespace RobotWar
         Coroutine moveCor;
         void OnClick(GridView gv)
         {
+            // 動畫沒結束前不能點擊
             if (moveCor != null)
             {
+                Debug.LogWarning("動畫播放中, 不能點擊");
                 return;
             }
+            // 判斷是否點到移動範圍內的方塊
             var gk = new Grid(gv.coord).Key;
             var g = Model.ctx.grids[gk];
-            if (paths.ContainsKey(g))
+            var isInRange = paths.ContainsKey(g);
+            if (isInRange)
             {
+                // 關閉菜單
                 View.GetUnitMenu().gameObject.SetActive(false);
-
+                // 移動單位
                 DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
                 moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
             }
             else
             {
-                Debug.LogWarning("can not reach");
+                Debug.LogWarning("不合法的位置");
             }
         }
         IEnumerator AnimateUnitMove(List<Grid> path)
         {
+            // 顯示所選的路徑
             View.SetGridColor(null, Color.white);
             View.SetGridColor(path, Color.red);
+            // 播放移動單位動畫
             yield return View.AnimateUnitMove(unit.Key, path);
             View.SetGridColor(null, Color.white);
             Holder.ChangeState(new SelectUnitActionState(unit));
@@ -305,14 +321,14 @@ namespace RobotWar
             var item = menu.Selected;
             switch (item)
             {
-                case UnitMenuItem.Move:
+                /*case UnitMenuItem.Move:
                     if (unit.alreadyMove)
                     {
                         Debug.LogWarning("already move");
                         return;
                     }
                     Holder.ChangeState(new SelectMoveDistState(unit, paths));
-                    break;
+                    break;*/
                 case UnitMenuItem.CancelMove:
                     {
                         var pos = DataAlg.CancelMoveUnit(Model.ctx, unit.Key);
@@ -404,7 +420,7 @@ namespace RobotWar
     {
         Unit unit;
         Dictionary<Grid, List<Grid>> paths;
-        public SelectMoveDistState(Unit unit, Dictionary<Grid, List<Grid>> paths)
+        private SelectMoveDistState(Unit unit, Dictionary<Grid, List<Grid>> paths)
         {
             this.unit = unit;
             this.paths = paths;
