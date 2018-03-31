@@ -98,21 +98,19 @@ namespace HanUtil
                 {
                     throw new Exception("enter generateClassName");
                 }
-                GenCode(split, ns, f.key, null, f.Format, csvPath + "/"+ f.fileName, generatePath);
+                var filePath = Application.dataPath + "/" + csvPath +"/"+f.fileName;
+                var generatePath = Application.dataPath + "/" + this.generatePath;
+                GenCode(split, ns, f.key, null, f.Format, filePath, generatePath);
             }
-            
+            AssetDatabase.Refresh();
         }
 
         [MenuItem("HanUtil/CSVClassCreator")]
         static void CreateExampleAssetInstance()
         {
             var exampleAsset = CreateInstance<CSVClassCreator>();
-            exampleAsset.csvPath = Application.dataPath;
-            exampleAsset.generatePath = Application.dataPath;
             AssetDatabase.CreateAsset(exampleAsset, "Assets/CSVClassCreator.asset");
             AssetDatabase.Refresh();
-
-
             EditorUtility.FocusProjectWindow();
             Selection.activeObject = exampleAsset;
         }

@@ -156,8 +156,8 @@ namespace RobotWar
             {
                 var ret = new Dictionary<Grid, int>();
                 var oriPos = curr.pos;
-                var oriData = new ConfigGrid();
-                var cost = 1;// oriData.cost;
+                var oriData = ConfigGrid.Get(ConfigGrid.ID_plain);
+                var cost = oriData.cost;
                 foreach (var v in dirs)
                 {
                     var newPos = oriPos + v;
@@ -274,7 +274,11 @@ namespace RobotWar
 
         public static int GetMovePower(Context ctx, string unit)
         {
-            return 10;
+            var unitObj = ctx.units[unit];
+            var cfg = ConfigUnit.Get(unitObj.prototype);
+            var weight = GetWeaponList(ctx, unit).Select(w => ConfigWeapon.Get(w.prototype)).Sum(w => w.unitPowerCost);
+            var power = cfg.power - weight;
+            return power;
         }
 
         public static float Speed2CT(float speed)
@@ -284,7 +288,8 @@ namespace RobotWar
 
         public static float UnitSpeed(Context ctx, string unitKey)
         {
-            var cfg = new ConfigUnit();
+            var unit = ctx.units[unitKey];
+            var cfg = ConfigUnit.Get(unit.prototype);
             return cfg.speed;
         }
 
@@ -292,7 +297,7 @@ namespace RobotWar
         {
             foreach(var u in ctx.units.Values)
             {
-                var cfg = new ConfigUnit();
+                var cfg = ConfigUnit.Get(u.prototype);
                 u.ct += Speed2CT(UnitSpeed(ctx, u.Key));
             }
             foreach(var t in ctx.tasks)
@@ -389,7 +394,8 @@ namespace RobotWar
             t.values.Add(weaponKey);
             t.values.Add(string.Join(",", targets.ToArray()));
 
-            var cfg = new ConfigWeapon();
+            var weaponObj = ctx.weapons[weaponKey];
+            var cfg = ConfigWeapon.Get(weaponObj.prototype);
             t.ct = cfg.prepareTime;
             return t;
         }

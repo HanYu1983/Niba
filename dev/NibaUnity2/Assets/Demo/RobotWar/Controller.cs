@@ -31,10 +31,11 @@ namespace RobotWar
 
         void CreateUnit(int owner, Vector2Int pos)
         {
-            var unit = DataAlg.CreateUnit(model.ctx, pos, "");
+            var unit = DataAlg.CreateUnit(model.ctx, pos, ConfigUnit.ID_jimu);
             unit.owner = owner;
 
-            DataAlg.CreateWeapon(model.ctx, unit.Key, "");
+            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_handGun);
+            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_lightSword);
             view.CreateUnit(model, unit.Key, pos);
         }
 
@@ -506,11 +507,12 @@ namespace RobotWar
                     View.SetGridColor(null, Color.white);
 
                     var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-                    var cfg = new ConfigWeapon();
+                    var weaponObj = Model.ctx.weapons[weapon];
+                    var cfg = ConfigWeapon.Get(weaponObj.prototype);
                     var isSingle = string.IsNullOrEmpty(cfg.shape);
                     if (isSingle)
                     {
-                        var ranges = DataAlg.FindAllRange(Model.ctx, 2, 6, pos);
+                        var ranges = DataAlg.FindAllRange(Model.ctx, cfg.minRange, cfg.maxRange, pos);
                         View.SetGridColor(ranges.Keys, Color.red);
                         lastRange = new List<Grid>(ranges.Keys);
                     }

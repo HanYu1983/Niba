@@ -36,7 +36,6 @@ namespace RobotWar
             {
                 var w = menu[i];
                 var row = Instantiate(rowPrefab, rowRoot, false);
-                var cfg = new ConfigWeapon();
                 var title = w.ToString();
                 row.GetComponentInChildren<Text>().text = title;
                 row.GetComponent<Button>().onClick.AddListener(Fn(i));

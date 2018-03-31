@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
   m_Name: CSV2Class
   m_EditorClassIdentifier: 
-  csvPath: 
-  generatePath: C:/Users/johny/Documents/git/Niba/dev/NibaUnity2/Assets/Demo/RobotWar/Model/Config
+  csvPath: Demo/RobotWar/csv
+  generatePath: Demo/RobotWar/Model/Config
   csvFiles:
   - key: ConfigUnit
-    fileName: 
+    fileName: RobotWar - unit.tsv
     types:
     - key: id
       type: 2
@@ -34,7 +34,7 @@ MonoBehaviour:
     - key: power
       type: 0
   - key: ConfigWeapon
-    fileName: 
+    fileName: RobotWar - weapon.tsv
     types:
     - key: id
       type: 2
@@ -67,7 +67,7 @@ MonoBehaviour:
     - key: ability
       type: 2
   - key: ConfigGrid
-    fileName: 
+    fileName: RobotWar - grid.tsv
     types:
     - key: id
       type: 2
