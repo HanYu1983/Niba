@@ -63,7 +63,7 @@ MonoBehaviour:
     - key: ATPower
       type: 0
     - key: prepareTime
-      type: 0
+      type: 1
     - key: ability
       type: 2
   - key: ConfigGrid

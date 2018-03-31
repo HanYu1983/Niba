@@ -12,6 +12,9 @@ namespace RobotWar
 
         private void Start()
         {
+            DataAlg.CreatePlayer(model.ctx, 0, false);
+            DataAlg.CreatePlayer(model.ctx, 1, false);
+            DataAlg.CreatePlayer(model.ctx, 1, false);
             TestLoadMap();
         }
 
@@ -31,9 +34,7 @@ namespace RobotWar
 
         void CreateUnit(int owner, Vector2Int pos)
         {
-            var unit = DataAlg.CreateUnit(model.ctx, pos, ConfigUnit.ID_jimu);
-            unit.owner = owner;
-
+            var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner, pos);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_handGun);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_lightSword);
             view.CreateUnit(model, unit.Key, pos);
@@ -41,7 +42,7 @@ namespace RobotWar
 
         public void StartPlay()
         {
-            ChangeState(new UpdateCTState());
+            ChangeState(new SystemState());
         }
 
         #region control state
@@ -97,6 +98,15 @@ namespace RobotWar
             for (var i = 0; i < 5; ++i)
             {
                 CreateUnit(1, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            }
+        }
+
+        [ContextMenu("TestCreateEnemy2")]
+        public void TestCreateEnemy2()
+        {
+            for (var i = 0; i < 5; ++i)
+            {
+                CreateUnit(2, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             }
         }
 
@@ -158,6 +168,7 @@ namespace RobotWar
         }
         public override void OnUpdate(float t)
         {
+            Debug.Log("***process Task***:" + task.description);
             switch (task.description)
             {
                 case Task.UnitAttack:
@@ -166,7 +177,6 @@ namespace RobotWar
                         var weaponKey = task.values[1];
                         var targets = task.values[2].Split(',');
                         DataAlg.CompleteTask(Model.ctx, task);
-                        Debug.Log("process Attak");
                     }
                     break;
             }
@@ -196,13 +206,12 @@ namespace RobotWar
             else
             {
                 // 判斷可行動單位是玩家還是AI
-                var isPlayer = topCTUnit.owner == 0;
-                var isAI = isPlayer == false;
-                if (isPlayer)
+                var playerObj = Model.ctx.players[topCTUnit.owner];
+                if (playerObj.isAI == false)
                 {
                     Holder.ChangeState(new SelectUnitActionState(topCTUnit));
                 }
-                if (isAI)
+                else
                 {
                     Holder.ChangeState(new AIState(topCTUnit));
                 }
@@ -220,7 +229,7 @@ namespace RobotWar
         public override void OnUpdate(float t)
         {
             DataAlg.PassUnit(Model.ctx, unit.Key);
-            Holder.ChangeState(new UpdateCTState());
+            Holder.ChangeState(new SystemState());
         }
     }
 
@@ -234,7 +243,8 @@ namespace RobotWar
         }
         public override void OnUpdate(float t)
         {
-            if (unit.owner != 0)
+            var playerObj = Model.ctx.players[unit.owner];
+            if (playerObj.isAI)
             {
                 Holder.ChangeState(new UpdateCTState());
                 return;
@@ -242,7 +252,8 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            if(unit.owner != 0)
+            var playerObj = Model.ctx.players[unit.owner];
+            if (playerObj.isAI)
             {
                 return;
             }
@@ -348,12 +359,39 @@ namespace RobotWar
                     break;
                 case UnitMenuItem.Pass:
                     DataAlg.PassUnit(Model.ctx, unit.Key);
-                    Holder.ChangeState(new UpdateCTState());
+                    Holder.ChangeState(new SystemState());
                     break;
                 case UnitMenuItem.Cancel:
                     Holder.ChangeState(new IdleState());
                     break;
             }
+        }
+    }
+
+    // 用來計算暫時資料的狀態, 可以顯示讀取圖示
+    // 這個狀態結束後自動切回UpdateCTState
+    // 每次有改變單位位置或新增單位都要切換成這個狀態
+    public class SystemState : DefaultControlState
+    {
+        public override void OnUpdate(float t)
+        {
+            View.StartCoroutine(Compute());
+        }
+        IEnumerator Compute()
+        {
+            yield return 0;
+            // 計算火力移動消費
+            var dict = new HashSet<int>();
+            foreach(var p in Model.ctx.players)
+            {
+                dict.Add(p.team);
+            }
+            foreach(var team in dict)
+            {
+                DataAlg.CalcFileCost(Model.ctx, team);
+                yield return 0;
+            }
+            Holder.ChangeState(new UpdateCTState());
         }
     }
 
@@ -405,7 +443,8 @@ namespace RobotWar
                 View.SetGridColor(null, Color.white);
                 View.SetGridColor(moveRange.Keys, Color.green);
 
-                if (target.owner == 0)
+                var playerObj = Model.ctx.players[target.owner];
+                if (playerObj.isAI == false)
                 {
                     var isTop = DataAlg.GetTopCTUnit(Model.ctx) == target;
                     if (isTop)
@@ -536,6 +575,9 @@ namespace RobotWar
         public override void OnEnterState()
         {
             GridView.OnClick += OnClick;
+
+            View.SetGridColor(null, Color.white);
+            View.SetGridColor(ranges, Color.red);
         }
         public override void OnExitState()
         {
@@ -544,21 +586,34 @@ namespace RobotWar
         
         void OnClick(GridView gv)
         {
+            var gk = new Grid(gv.coord).Key;
+            var g = Model.ctx.grids[gk];
+            var isValidPos = ranges.Contains(g);
+            if(isValidPos == false)
+            {
+                Debug.LogWarning("不合法的位置");
+                return;
+            }
             // if the weapon is map, change direction
 
             // if the weapon is single, check target
-            var gk = new Grid(gv.coord).Key;
+            
             var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
             if (hasUnit)
             {
                 var targetKey = Model.ctx.grid2Unit[gk];
                 var target = Model.ctx.units[targetKey];
-                if(unit != target && unit.owner != target.owner)
+                var ownerObj = Model.ctx.players[unit.owner];
+                var targetOwnerObj = Model.ctx.players[target.owner];
+                if(unit != target && ownerObj.team != targetOwnerObj.team)
                 {
                     var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
                     DataAlg.PushTask(Model.ctx, task);
                     DataAlg.PassUnit(Model.ctx, unit.Key);
                     Holder.ChangeState(new UpdateCTState());
+                } else
+                {
+                    Debug.LogWarning("不合法的目標");
                 }
             }
             else

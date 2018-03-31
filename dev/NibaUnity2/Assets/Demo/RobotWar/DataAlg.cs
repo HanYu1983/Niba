@@ -113,7 +113,14 @@ namespace RobotWar
 
     public class Player
     {
+        public int key;
+        public Player(int key)
+        {
+            this.key = key;
+        }
+        public int Key { get { return key;  } }
         public bool isAI;
+        public int team;
     }
 
     public class Task
@@ -136,18 +143,22 @@ namespace RobotWar
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Polot = new Dictionary<string, string>();
         public List<Task> tasks = new List<Task>();
-        public string lastUnitPos;
-
         public List<Player> players = new List<Player>();
         public int turn;
+        public string lastUnitPos;
+        // tmp
+        public List<Dictionary<string, int>> fireCost = new List<Dictionary<string, int>>();
     }
 
     public class DataAlg
     {
         static AStarPathfinding pathFiniding = new AStarPathfinding();
 
-        public static IPathfinding.GetNeigboursFn<Grid> GetNeigbours(Context ctx)
+        public static IPathfinding.GetNeigboursFn<Grid> GetNeigbours(Context ctx, Vector2Int pos)
         {
+            var unitKey = ctx.grid2Unit[new Grid(pos).Key];
+            var unit = ctx.units[unitKey];
+            var player = ctx.players[unit.owner];
             var dirs = new Vector2Int[]
             {
                 new Vector2Int(1, 0),new Vector2Int(0, 1),new Vector2Int(-1, 0),new Vector2Int(0, -1)
@@ -158,6 +169,12 @@ namespace RobotWar
                 var oriPos = curr.pos;
                 var oriData = ConfigGrid.Get(ConfigGrid.ID_plain);
                 var cost = oriData.cost;
+                var posKey = new Grid(oriPos).Key;
+                if (ctx.fireCost.Count > player.team && ctx.fireCost[player.team].ContainsKey(posKey))
+                {
+                    var fireCost = ctx.fireCost[player.team][posKey];
+                    cost += fireCost;
+                }
                 foreach (var v in dirs)
                 {
                     var newPos = oriPos + v;
@@ -217,7 +234,7 @@ namespace RobotWar
             {
                 throw new Exception("xxx");
             }
-            return pathFiniding.FindPath(GetNeigbours(ctx), grids[sk], grids[ek]);
+            return pathFiniding.FindPath(GetNeigbours(ctx, s), grids[sk], grids[ek]);
         }
 
         public static Dictionary<Grid, List<Grid>> FindAllPath(Context ctx, int movePower, Vector2Int s)
@@ -229,7 +246,7 @@ namespace RobotWar
             {
                 throw new Exception("grid not found:"+sk);
             }
-            return DijkstraPathfinding.FindAllPaths(GetNeigbours(ctx), movePower, grids[sk]);
+            return DijkstraPathfinding.FindAllPaths(GetNeigbours(ctx, s), movePower, grids[sk]);
         }
 
         public static Dictionary<Grid, List<Grid>> FindAllRange(Context ctx, int min, int max, Vector2Int s)
@@ -325,6 +342,57 @@ namespace RobotWar
             ctx.units[unitKey].alreadyMove = false;
         }
 
+        public static Player CreatePlayer(Context ctx, int team, bool isAI)
+        {
+            var p = new Player(ctx.players.Count);
+            p.team = team;
+            p.isAI = isAI;
+            ctx.players.Add(p);
+            return p;
+        }
+
+        public static Dictionary<string, int> GetFileCostDict(Context ctx, int team)
+        {
+            if(ctx.fireCost.Count < team + 1)
+            {
+                var shouldAddCount = team + 1 - ctx.fireCost.Count;
+                for (var i=0; i<shouldAddCount; ++i)
+                {
+                    ctx.fireCost.Add(new Dictionary<string, int>());
+                }
+            }
+            return ctx.fireCost[team];
+        }
+
+        public static void CalcFileCost(Context ctx, int team)
+        {
+            var fireDict = GetFileCostDict(ctx, team);
+            fireDict.Clear();
+            foreach (var unitObj in ctx.units.Values)
+            {
+                var ownerObj = ctx.players[unitObj.owner];
+                var grid = ctx.grids[ctx.unit2Grid[unitObj.Key]];
+                var isEnemy = team != ownerObj.team;
+                if(isEnemy == false)
+                {
+                    continue;
+                }
+                foreach(var weaponObj in GetWeaponList(ctx, unitObj.Key))
+                {
+                    var cfg = ConfigWeapon.Get(weaponObj.prototype);
+                    var allRange = FindAllRange(ctx, cfg.minRange, cfg.maxRange, grid.pos);
+                    foreach(var g in allRange.Keys)
+                    {
+                        if (fireDict.ContainsKey(g.Key) == false)
+                        {
+                            fireDict[g.Key] = 0;
+                        }
+                        fireDict[g.Key] += 5;
+                    }
+                }
+            }
+        }
+
         public static void MoveUnit(Context ctx, Vector2Int dist, string unitKey, bool force = false)
         {
             if(force == false && ctx.units[unitKey].alreadyMove)
@@ -361,8 +429,12 @@ namespace RobotWar
             return ctx.lastUnitPos;
         }
 
-        public static Unit CreateUnit(Context ctx, Vector2Int pos, string prototype)
+        public static Unit CreateUnit(Context ctx, string prototype, int owner, Vector2Int pos)
         {
+            if(ctx.players.Count < owner+1)
+            {
+                throw new Exception("player not exist:"+owner);
+            }
             var gk = new Grid(pos).Key;
             var hasUnit = ctx.grid2Unit.ContainsKey(gk);
             if (hasUnit)
@@ -371,6 +443,7 @@ namespace RobotWar
             }
             var unit = new Unit(null);
             unit.prototype = prototype;
+            unit.owner = owner;
             ctx.units.Add(unit.Key, unit);
             ctx.grid2Unit[gk] = unit.Key;
             ctx.unit2Grid[unit.Key] = gk;
@@ -390,6 +463,7 @@ namespace RobotWar
         {
             var t = new Task();
             t.description = Task.UnitAttack;
+            t.owner = unitKey;
             t.values.Add(unitKey);
             t.values.Add(weaponKey);
             t.values.Add(string.Join(",", targets.ToArray()));
