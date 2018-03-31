@@ -11,6 +11,7 @@ namespace RobotWar
     {
         public GameObject rowPrefab;
         public Transform rowRoot;
+        public const string MENU_CANCEL = "MENU_CANCEL";
 
         public override void Select(int idx)
         {
@@ -30,10 +31,17 @@ namespace RobotWar
             for(var i=0; i<menu.Count; ++i)
             {
                 var w = menu[i];
-                var cfg = new ConfigWeapon();
-                var title = string.Format("{0} {1}~{2} {3}", cfg.name, cfg.minRange, cfg.maxRange, cfg.shape);
                 var row = Instantiate(rowPrefab, rowRoot, false);
-                row.GetComponentInChildren<Text>().text = title;
+                if (w == MENU_CANCEL)
+                {
+                    row.GetComponentInChildren<Text>().text = "Cancel";
+                }
+                else
+                {
+                    var cfg = new ConfigWeapon();
+                    var title = string.Format("{0} {1}~{2} {3}", cfg.name, cfg.minRange, cfg.maxRange, cfg.shape);
+                    row.GetComponentInChildren<Text>().text = title;
+                }
                 row.GetComponent<Button>().onClick.AddListener(Fn(i));
                 rows.Add(row);
                 row.SetActive(true);

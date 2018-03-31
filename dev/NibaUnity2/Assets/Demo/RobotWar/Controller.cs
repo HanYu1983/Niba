@@ -31,7 +31,7 @@ namespace RobotWar
 
         void CreateUnit(int owner, Vector2Int pos)
         {
-            var unit = DataAlg.SpawnUnit(model.ctx, pos, "");
+            var unit = DataAlg.CreateUnit(model.ctx, pos, "");
             unit.owner = owner;
 
             DataAlg.CreateWeapon(model.ctx, unit.Key, "");
@@ -301,6 +301,7 @@ namespace RobotWar
         {
             GridView.OnClick += OnClick;
             View.SetGridColor(null, Color.white);
+            View.GetUnitMenu().gameObject.SetActive(false);
         }
         public override void OnExitState()
         {
@@ -314,6 +315,11 @@ namespace RobotWar
             {
                 var targetKey = Model.ctx.grid2Unit[gk];
                 var target = Model.ctx.units[targetKey];
+
+                var moveRange = DataAlg.FindAllPath(Model.ctx, DataAlg.GetMovePower(Model.ctx, targetKey), gv.coord);
+                View.SetGridColor(null, Color.white);
+                View.SetGridColor(moveRange.Keys, Color.green);
+
                 if (target.owner == 0)
                 {
                     var isTop = DataAlg.GetTopCTUnit(Model.ctx) == target;
@@ -382,6 +388,8 @@ namespace RobotWar
         public override void OnEnterState()
         {
             var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key).Select(w=>w.Key).ToList();
+            weapons.Add(WeaponMenu.MENU_CANCEL);
+
             var menu = View.GetWeaponMenu();
             menu.CreateMenu(Model, weapons);
             menu.OnSelect += OnSelect;
@@ -389,32 +397,42 @@ namespace RobotWar
         public override void OnExitState()
         {
             var menu = View.GetWeaponMenu();
+            menu.gameObject.SetActive(false);
             menu.OnSelect -= OnSelect;
+            View.SetGridColor(null, Color.white);
         }
         string lastSelectWeapon;
         List<Grid> lastRange;
         void OnSelect(Menu<string> menu)
         {
-            var weapon = menu.Selected;
-            if(lastSelectWeapon == weapon)
+            var item = menu.Selected;
+            if (item == WeaponMenu.MENU_CANCEL)
             {
-                Holder.ChangeState(new SelectWeaponTargetState(unit, weapon, lastRange));
+                Holder.ChangeState(new SelectUnitActionState(unit));
             }
             else
             {
-                View.SetGridColor(null, Color.white);
-
-                var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-                var cfg = new ConfigWeapon();
-                var isSingle = string.IsNullOrEmpty(cfg.shape);
-                if (isSingle)
+                var weapon = item;
+                if (lastSelectWeapon == weapon)
                 {
-                    var ranges = DataAlg.FindAllRange(Model.ctx, 2, 6, pos);
-                    View.SetGridColor(ranges.Keys, Color.red);
-                    lastRange = new List<Grid>(ranges.Keys);
+                    Holder.ChangeState(new SelectWeaponTargetState(unit, weapon, lastRange));
                 }
+                else
+                {
+                    View.SetGridColor(null, Color.white);
+
+                    var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                    var cfg = new ConfigWeapon();
+                    var isSingle = string.IsNullOrEmpty(cfg.shape);
+                    if (isSingle)
+                    {
+                        var ranges = DataAlg.FindAllRange(Model.ctx, 2, 6, pos);
+                        View.SetGridColor(ranges.Keys, Color.red);
+                        lastRange = new List<Grid>(ranges.Keys);
+                    }
+                }
+                lastSelectWeapon = weapon;
             }
-            lastSelectWeapon = weapon;
         }
     }
 
@@ -456,6 +474,10 @@ namespace RobotWar
                     DataAlg.PassUnit(Model.ctx, unit.Key);
                     Holder.ChangeState(new UpdateCTState());
                 }
+            }
+            else
+            {
+                Holder.ChangeState(new SelectWeaponState(unit));
             }
         }
     }

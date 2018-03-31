@@ -339,7 +339,7 @@ namespace RobotWar
             ctx.units[unitKey].alreadyMove = true;
         }
 
-        public static Unit SpawnUnit(Context ctx, Vector2Int pos, string prototype)
+        public static Unit CreateUnit(Context ctx, Vector2Int pos, string prototype)
         {
             var gk = new Grid(pos).Key;
             var hasUnit = ctx.grid2Unit.ContainsKey(gk);
