@@ -241,7 +241,8 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            if (unit.owner != 0 || unit.alreadyMove == false)
+            // 如果單位沒移動過, 才顯示移動範圍並可以點地圖
+            if (unit.alreadyMove == false)
             {
                 View.SetGridColor(null, Color.white);
                 var movePower = DataAlg.GetMovePower(Model.ctx, unit.Key);
@@ -249,18 +250,55 @@ namespace RobotWar
                 var paths = DataAlg.FindAllPath(Model.ctx, movePower, pos);
                 View.SetGridColor(paths.Keys, Color.green);
                 this.paths = paths;
+                GridView.OnClick += OnClick;
             }
-            
-            if (unit.owner == 0)
+
+            var menuItems = new List<UnitMenuItem>()
             {
-                var menu = View.GetUnitMenu();
-                menu.OnSelect += OnSelect;
+                UnitMenuItem.Attack, UnitMenuItem.Status, UnitMenuItem.Pass, UnitMenuItem.Cancel
+            };
+            if (unit.alreadyMove)
+            {
+                menuItems.Add(UnitMenuItem.CancelMove);
             }
+            var menu = View.GetUnitMenu();
+            menu.CreateMenu(Model, menuItems);
+            menu.OnSelect += OnSelect;
         }
         public override void OnExitState()
         {
             var menu = View.GetUnitMenu();
             menu.OnSelect -= OnSelect;
+            GridView.OnClick -= OnClick;
+        }
+        Coroutine moveCor;
+        void OnClick(GridView gv)
+        {
+            if (moveCor != null)
+            {
+                return;
+            }
+            var gk = new Grid(gv.coord).Key;
+            var g = Model.ctx.grids[gk];
+            if (paths.ContainsKey(g))
+            {
+                View.GetUnitMenu().gameObject.SetActive(false);
+
+                DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
+                moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
+            }
+            else
+            {
+                Debug.LogWarning("can not reach");
+            }
+        }
+        IEnumerator AnimateUnitMove(List<Grid> path)
+        {
+            View.SetGridColor(null, Color.white);
+            View.SetGridColor(path, Color.red);
+            yield return View.AnimateUnitMove(unit.Key, path);
+            View.SetGridColor(null, Color.white);
+            Holder.ChangeState(new SelectUnitActionState(unit));
         }
         void OnSelect(Menu<UnitMenuItem> menu)
         {
@@ -274,6 +312,13 @@ namespace RobotWar
                         return;
                     }
                     Holder.ChangeState(new SelectMoveDistState(unit, paths));
+                    break;
+                case UnitMenuItem.CancelMove:
+                    {
+                        var pos = DataAlg.CancelMoveUnit(Model.ctx, unit.Key);
+                        View.SetUnitPos(unit.Key, Model.ctx.grids[pos]);
+                        Holder.ChangeState(new SelectUnitActionState(unit));
+                    }
                     break;
                 case UnitMenuItem.Attack:
                     var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key);
@@ -302,10 +347,33 @@ namespace RobotWar
             GridView.OnClick += OnClick;
             View.SetGridColor(null, Color.white);
             View.GetUnitMenu().gameObject.SetActive(false);
+
+            var menu = View.GetUnitMenu();
+            menu.CreateMenu(Model, new List<UnitMenuItem>()
+            {
+                UnitMenuItem.Cancel
+            });
+            menu.OnSelect += OnSelect;
         }
         public override void OnExitState()
         {
             GridView.OnClick -= OnClick;
+
+            var menu = View.GetUnitMenu();
+            menu.OnSelect -= OnSelect;
+            menu.gameObject.SetActive(false);
+        }
+        void OnSelect(Menu<UnitMenuItem> menu)
+        {
+            switch (menu.Selected)
+            {
+                case UnitMenuItem.Cancel:
+                    {
+                        var unit = DataAlg.GetTopCTUnit(Model.ctx);
+                        Holder.ChangeState(new SelectUnitActionState(unit));
+                    }
+                    break;
+            }
         }
         void OnClick(GridView gv)
         {

@@ -136,6 +136,7 @@ namespace RobotWar
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Polot = new Dictionary<string, string>();
         public List<Task> tasks = new List<Task>();
+        public string lastUnitPos;
 
         public List<Player> players = new List<Player>();
         public int turn;
@@ -337,6 +338,22 @@ namespace RobotWar
             ctx.unit2Grid[unitKey] = new Grid(dist).Key;
             ctx.grid2Unit[new Grid(dist).Key] = unitKey;
             ctx.units[unitKey].alreadyMove = true;
+            if (force == false)
+            {
+                ctx.lastUnitPos = oldGrid;
+            }
+        }
+
+        public static string CancelMoveUnit(Context ctx, string unitKey)
+        {
+            var isNotValidPos = string.IsNullOrEmpty(ctx.lastUnitPos);
+            if (isNotValidPos)
+            {
+                throw new Exception("XXXX");
+            }
+            MoveUnit(ctx, ctx.grids[ctx.lastUnitPos].pos, unitKey, true);
+            ctx.units[unitKey].alreadyMove = false;
+            return ctx.lastUnitPos;
         }
 
         public static Unit CreateUnit(Context ctx, Vector2Int pos, string prototype)

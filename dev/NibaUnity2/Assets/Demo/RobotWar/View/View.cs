@@ -94,13 +94,22 @@ namespace RobotWar
                 var pos = cell.pos;
                 var x = pos.x * gridWidth;
                 var z = pos.y * gridHeight;
-                Vector3 destination_pos = new Vector3(x, transform.localPosition.y, z);
+                Vector3 destination_pos = new Vector3(x, unit.transform.localPosition.y, z);
                 while (unit.transform.localPosition != destination_pos)
                 {
                     unit.transform.localPosition = Vector3.MoveTowards(unit.transform.localPosition, destination_pos, Time.deltaTime * MovementSpeed);
                     yield return 0;
                 }
             }
+        }
+        public void SetUnitPos(string key, Grid cell)
+        {
+            var unit = unitView[key];
+            var pos = cell.pos;
+            var x = pos.x * gridWidth;
+            var z = pos.y * gridHeight;
+            Vector3 destination_pos = new Vector3(x, unit.transform.localPosition.y, z);
+            unit.transform.localPosition = destination_pos;
         }
         #endregion
 
