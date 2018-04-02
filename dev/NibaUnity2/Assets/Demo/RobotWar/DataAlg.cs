@@ -144,8 +144,7 @@ namespace RobotWar
     {
         public string weaponBulletType;
         public int weaponMaxRange;
-        public int weaponHEPower;
-        public int weaponATPower;
+        public int weaponPower;
         public float distance;
 
         public float GetHitRate(DeffendValue b)
@@ -157,16 +156,7 @@ namespace RobotWar
 
         public int Damage(DeffendValue b)
         {
-            var atDamage = weaponATPower - b.unitArmor;
-            var heDamage = weaponHEPower * GetHitRate(b);
-
-            switch (weaponBulletType)
-            {
-                case "AT":
-                    break;
-                case "HE":
-                    break;
-            }
+            var atDamage = weaponPower - b.unitArmor;
             return 0;
         }
     }
@@ -691,9 +681,7 @@ namespace RobotWar
             fv.pilotLucky = pilotCfg.lucky;
             fv.pilotShooting = pilotCfg.shooting;
             fv.pilotTechnique = pilotCfg.technique;
-            fv.weaponBulletType = weaponCfg.bulletType;
-            fv.weaponHEPower = weaponCfg.HEPower;
-            fv.weaponATPower = weaponCfg.ATPower;
+            fv.weaponPower = weaponCfg.power;
             fv.weaponMaxRange = weaponCfg.maxRange;
             fv.distance = Vector2Int.Distance(pos1, pos2);
             return fv;

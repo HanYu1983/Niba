@@ -561,7 +561,7 @@ namespace RobotWar
                     }
                     else
                     {
-
+                        
                     }
                 }
                 lastSelectWeapon = weapon;
@@ -602,32 +602,50 @@ namespace RobotWar
                 Debug.LogWarning("不合法的位置");
                 return;
             }
-            // if the weapon is map, change direction
+            var weaponCfg = ConfigWeapon.Get(Model.ctx.weapons[weapon].prototype);
+            switch (weaponCfg.shape)
+            {
+                case ConfigShape.ID_center:
+                    {
+                        DataAlg.GetCenterVecs(weaponCfg.shapeRange);
 
-            // if the weapon is single, check target
+                    }
+                    break;
+                case ConfigShape.ID_forward:
+                    {
+
+                    }
+                    break;
+                default:
+                    {
+                        // if the weapon is single, check target
+                        var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
+                        if (hasUnit)
+                        {
+                            var targetKey = Model.ctx.grid2Unit[gk];
+                            var target = Model.ctx.units[targetKey];
+                            var ownerObj = Model.ctx.players[unit.owner];
+                            var targetOwnerObj = Model.ctx.players[target.owner];
+                            if (unit != target && ownerObj.team != targetOwnerObj.team)
+                            {
+                                var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
+                                DataAlg.PushTask(Model.ctx, task);
+                                DataAlg.PassUnit(Model.ctx, unit.Key);
+                                Holder.ChangeState(new UpdateCTState());
+                            }
+                            else
+                            {
+                                Debug.LogWarning("不合法的目標");
+                            }
+                        }
+                        else
+                        {
+                            Holder.ChangeState(new SelectWeaponState(unit));
+                        }
+                    }
+                    break;
+            }
             
-            var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
-            if (hasUnit)
-            {
-                var targetKey = Model.ctx.grid2Unit[gk];
-                var target = Model.ctx.units[targetKey];
-                var ownerObj = Model.ctx.players[unit.owner];
-                var targetOwnerObj = Model.ctx.players[target.owner];
-                if(unit != target && ownerObj.team != targetOwnerObj.team)
-                {
-                    var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
-                    DataAlg.PushTask(Model.ctx, task);
-                    DataAlg.PassUnit(Model.ctx, unit.Key);
-                    Holder.ChangeState(new UpdateCTState());
-                } else
-                {
-                    Debug.LogWarning("不合法的目標");
-                }
-            }
-            else
-            {
-                Holder.ChangeState(new SelectWeaponState(unit));
-            }
         }
     }
 }

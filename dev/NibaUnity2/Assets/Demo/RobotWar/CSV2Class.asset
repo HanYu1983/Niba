@@ -58,7 +58,7 @@ MonoBehaviour:
       type: 0
     - key: shape
       type: 2
-    - key: pressure
+    - key: shapeRange
       type: 0
     - key: power
       type: 0
@@ -102,6 +102,15 @@ MonoBehaviour:
       type: 0
     - key: lucky
       type: 0
+  - key: ConfigShape
+    fileName: RobotWar - shape.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
   splitType: 0
   split: 
   ns: RobotWar
