@@ -4,6 +4,7 @@ using UnityEngine;
 using HanPathFindingAPI;
 using System;
 using System.Linq;
+using UnityEngine.Assertions;
 
 namespace RobotWar
 {
@@ -124,6 +125,50 @@ namespace RobotWar
         public int Key { get { return key;  } }
         public bool isAI;
         public int team;
+    }
+
+    public class DeffendValue
+    {
+        public int unitArmor;
+        public int unitSpeed;
+        public int unitPower;
+        public int pilotFighting;
+        public int pilotShooting;
+        public int pilotHitRate;
+        public int pilotAvoidanceRate;
+        public int pilotTechnique;
+        public int pilotLucky;
+    }
+
+    public class FightValue : DeffendValue
+    {
+        public string weaponBulletType;
+        public int weaponMaxRange;
+        public int weaponHEPower;
+        public int weaponATPower;
+        public float distance;
+
+        public float GetHitRate(DeffendValue b)
+        {
+            var hitPoint = pilotHitRate + unitSpeed + pilotLucky;
+            var avoidanceRate = b.pilotAvoidanceRate + b.unitSpeed + b.pilotLucky;
+            return 0;
+        }
+
+        public int Damage(DeffendValue b)
+        {
+            var atDamage = weaponATPower - b.unitArmor;
+            var heDamage = weaponHEPower * GetHitRate(b);
+
+            switch (weaponBulletType)
+            {
+                case "AT":
+                    break;
+                case "HE":
+                    break;
+            }
+            return 0;
+        }
     }
 
     public class Task
@@ -274,9 +319,88 @@ namespace RobotWar
             return paths;
         }
 
+        public static List<Vector2Int> GetCenterVecs(int range)
+        {
+            var ret = new List<Vector2Int>();
+            for(var x=-range; x<range; x += 1)
+            {
+                var pos = new Vector2Int(x, 0);
+                ret.Add(pos);
+
+                var yrange = range - (int)Mathf.Abs(x);
+                for (var y = -yrange; y < yrange; y += 1)
+                {
+                    pos = new Vector2Int(x, y);
+                    ret.Add(pos);
+                }
+            }
+            return ret;
+        }
+
+        public enum Direction
+        {
+            Up, Down, Left, Right
+        }
+
+        public static List<Vector2Int> GetForward(int min, int max, int width, Direction dir)
+        {
+            var ret = new List<Vector2Int>();
+            for (var x=-width; x < width; ++x)
+            {
+                for(var y=min; y<max; ++y)
+                {
+                    var pos = new Vector2Int(x, 0);
+                    ret.Add(pos);
+                }
+            }
+            switch (dir)
+            {
+                case Direction.Down:
+                    {
+                        for (var i = 0; i < ret.Count; ++i)
+                        {
+                            var newPos = ret[i];
+                            newPos.y = -newPos.y;
+                            ret[i] = newPos;
+                        }
+                    }
+                    break;
+                case Direction.Right:
+                    {
+                        for (var i = 0; i < ret.Count; ++i)
+                        {
+                            var newPos = ret[i];
+                            var tmp = newPos.x;
+                            newPos.x = newPos.y;
+                            newPos.y = tmp;
+                            ret[i] = newPos;
+                        }
+                    }
+                    break;
+                case Direction.Left:
+                    {
+                        for (var i = 0; i < ret.Count; ++i)
+                        {
+                            var newPos = ret[i];
+                            var tmp = newPos.x;
+                            newPos.x = newPos.y;
+                            newPos.y = tmp;
+                            ret[i] = newPos;
+                        }
+                        for (var i = 0; i < ret.Count; ++i)
+                        {
+                            var newPos = ret[i];
+                            newPos.x = -newPos.x;
+                            ret[i] = newPos;
+                        }
+                    }
+                    break;
+            }
+            return ret;
+        }
+        
         public static List<Weapon> GetWeaponList(Context ctx, string unit)
         {
-            //return new List<Weapon>(ctx.weapons.Values).FindAll(w => w.ownerUnit == unit);
             return ctx.weapon2Unit.Keys.Where(k => ctx.weapon2Unit[k] == unit).Select(k => ctx.weapons[k]).ToList();
         }
 
@@ -516,6 +640,63 @@ namespace RobotWar
         public static void CompleteTask(Context ctx, Task task)
         {
             ctx.tasks.Remove(task);
+        }
+
+        public static DeffendValue GetDeffendValue(Context ctx, string unit)
+        {
+            var pilot = GetPilot(ctx, unit);
+            Assert.IsNull(pilot, "XXXX");
+            Assert.IsFalse(ctx.units.ContainsKey(unit), "XXX");
+            Assert.IsFalse(ctx.unit2Grid.ContainsKey(unit), "eES");
+
+            var unitCfg = ConfigUnit.Get(ctx.units[unit].prototype);
+            var pilotCfg = ConfigPilot.Get(pilot.prototype);
+
+            var fv = new DeffendValue();
+            fv.unitArmor = unitCfg.armor;
+            fv.unitPower = unitCfg.power;
+            fv.unitSpeed = unitCfg.speed;
+            fv.pilotAvoidanceRate = pilotCfg.avoidanceRate;
+            fv.pilotFighting = pilotCfg.fighting;
+            fv.pilotHitRate = pilotCfg.hitRate;
+            fv.pilotLucky = pilotCfg.lucky;
+            fv.pilotShooting = pilotCfg.shooting;
+            fv.pilotTechnique = pilotCfg.technique;
+            return fv;
+        }
+
+        public static FightValue GetFightValue(Context ctx, string unit, string targetUnit, string weapon)
+        {
+            var pilot = GetPilot(ctx, unit);
+            Assert.IsNull(pilot, "XXXX");
+            Assert.IsFalse(ctx.units.ContainsKey(unit), "XXX");
+            Assert.IsFalse(ctx.units.ContainsKey(targetUnit), "XXX2");
+            Assert.IsFalse(ctx.weapons.ContainsKey(weapon), "eES");
+            Assert.IsFalse(ctx.unit2Grid.ContainsKey(unit), "eES");
+            Assert.IsFalse(ctx.unit2Grid.ContainsKey(targetUnit), "eES");
+
+            var unitCfg = ConfigUnit.Get(ctx.units[unit].prototype);
+            var pilotCfg = ConfigPilot.Get(pilot.prototype);
+            var weaponCfg = ConfigWeapon.Get(ctx.weapons[weapon].prototype);
+            var pos1 = ctx.grids[ctx.unit2Grid[unit]].pos;
+            var pos2 = ctx.grids[ctx.unit2Grid[targetUnit]].pos;
+
+            var fv = new FightValue();
+            fv.unitArmor = unitCfg.armor;
+            fv.unitPower = unitCfg.power;
+            fv.unitSpeed = unitCfg.speed;
+            fv.pilotAvoidanceRate = pilotCfg.avoidanceRate;
+            fv.pilotFighting = pilotCfg.fighting;
+            fv.pilotHitRate = pilotCfg.hitRate;
+            fv.pilotLucky = pilotCfg.lucky;
+            fv.pilotShooting = pilotCfg.shooting;
+            fv.pilotTechnique = pilotCfg.technique;
+            fv.weaponBulletType = weaponCfg.bulletType;
+            fv.weaponHEPower = weaponCfg.HEPower;
+            fv.weaponATPower = weaponCfg.ATPower;
+            fv.weaponMaxRange = weaponCfg.maxRange;
+            fv.distance = Vector2Int.Distance(pos1, pos2);
+            return fv;
         }
     }
 }

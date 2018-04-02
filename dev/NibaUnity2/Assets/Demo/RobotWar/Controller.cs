@@ -559,6 +559,10 @@ namespace RobotWar
                         View.SetGridColor(ranges.Keys, Color.red);
                         lastRange = new List<Grid>(ranges.Keys);
                     }
+                    else
+                    {
+
+                    }
                 }
                 lastSelectWeapon = weapon;
             }

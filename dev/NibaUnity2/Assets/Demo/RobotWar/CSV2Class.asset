@@ -44,23 +44,23 @@ MonoBehaviour:
       type: 2
     - key: unitPowerCost
       type: 0
-    - key: bulletType
-      type: 2
+    - key: bulletCount
+      type: 0
     - key: weaponType
       type: 2
     - key: cost
       type: 0
-    - key: useTime
-      type: 0
+    - key: hitRateBonus
+      type: 1
     - key: minRange
       type: 0
     - key: maxRange
       type: 0
     - key: shape
       type: 2
-    - key: HEPower
+    - key: pressure
       type: 0
-    - key: ATPower
+    - key: power
       type: 0
     - key: prepareTime
       type: 1
