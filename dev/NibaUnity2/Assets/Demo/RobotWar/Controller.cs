@@ -37,6 +37,10 @@ namespace RobotWar
             var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner, pos);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_handGun);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_lightSword);
+
+            var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
+            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
+
             view.CreateUnit(model, unit.Key, pos);
         }
 

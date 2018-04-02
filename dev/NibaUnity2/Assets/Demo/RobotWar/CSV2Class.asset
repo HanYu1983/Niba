@@ -81,6 +81,27 @@ MonoBehaviour:
       type: 1
     - key: energy
       type: 1
+  - key: ConfigPilot
+    fileName: RobotWar - pilot.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: fighting
+      type: 0
+    - key: shooting
+      type: 0
+    - key: hitRate
+      type: 0
+    - key: avoidanceRate
+      type: 0
+    - key: technique
+      type: 0
+    - key: lucky
+      type: 0
   splitType: 0
   split: 
   ns: RobotWar

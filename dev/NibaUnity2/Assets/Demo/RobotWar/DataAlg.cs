@@ -82,7 +82,6 @@ namespace RobotWar
         public string key;
         public string prototype;
         public int level;
-        public string ownerUnit;
 
         public Weapon()
         {
@@ -102,6 +101,10 @@ namespace RobotWar
         public string key;
         public string prototype;
         public int exp;
+        public Pilot()
+        {
+            key = Guid.NewGuid().ToString();
+        }
         public string Key
         {
             get
@@ -134,14 +137,16 @@ namespace RobotWar
 
     public class Context
     {
+        // home
         public Dictionary<string, Unit> units = new Dictionary<string, Unit>();
         public Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>();
         public Dictionary<string, Pilot> pilots = new Dictionary<string, Pilot>();
-
+        public Dictionary<string, string> weapon2Unit = new Dictionary<string, string>();
+        public Dictionary<string, string> pilot2Unit = new Dictionary<string, string>();
+        // map
         public Dictionary<string, Grid> grids = new Dictionary<string, Grid>();
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
-        public Dictionary<string, string> unit2Polot = new Dictionary<string, string>();
         public List<Task> tasks = new List<Task>();
         public List<Player> players = new List<Player>();
         public int turn;
@@ -271,7 +276,8 @@ namespace RobotWar
 
         public static List<Weapon> GetWeaponList(Context ctx, string unit)
         {
-            return new List<Weapon>(ctx.weapons.Values).FindAll(w => w.ownerUnit == unit);
+            //return new List<Weapon>(ctx.weapons.Values).FindAll(w => w.ownerUnit == unit);
+            return ctx.weapon2Unit.Keys.Where(k => ctx.weapon2Unit[k] == unit).Select(k => ctx.weapons[k]).ToList();
         }
 
         public static void AssignPilot(Context ctx, string pilot, string unit)
@@ -286,7 +292,21 @@ namespace RobotWar
             {
                 throw new System.Exception("unitNotFound");
             }
-            ctx.unit2Polot.Add(unit, pilot);
+            if (ctx.pilot2Unit.ContainsKey(pilot))
+            {
+                // 駕駛切換座機
+                ctx.pilot2Unit[pilot] = unit;
+            }
+            else
+            {
+                // 無座機的駕駛指派座機
+                ctx.pilot2Unit.Add(pilot, unit);
+            }
+        }
+
+        public static Pilot GetPilot(Context ctx, string unit)
+        {
+            return ctx.pilot2Unit.Keys.Where(k => ctx.pilot2Unit[k] == unit).Select(p => ctx.pilots[p]).FirstOrDefault();
         }
 
         public static int GetMovePower(Context ctx, string unit)
@@ -300,11 +320,17 @@ namespace RobotWar
 
         public static float Speed2CT(float speed)
         {
-            return 0.1f;
+            return speed;
         }
 
         public static float UnitSpeed(Context ctx, string unitKey)
         {
+            // 沒有駕駛員不能行動
+            var pilot = GetPilot(ctx, unitKey);
+            if(pilot == null)
+            {
+                return 0;
+            }
             var unit = ctx.units[unitKey];
             var cfg = ConfigUnit.Get(unit.prototype);
             return cfg.speed;
@@ -454,9 +480,17 @@ namespace RobotWar
         {
             var w = new Weapon();
             w.prototype = prototype;
-            w.ownerUnit = unitKey;
             ctx.weapons.Add(w.Key, w);
+            ctx.weapon2Unit.Add(w.Key, unitKey);
             return w;
+        }
+
+        public static Pilot CreatePilot(Context ctx, string prototype)
+        {
+            var p = new Pilot();
+            p.prototype = prototype;
+            ctx.pilots.Add(p.Key, p);
+            return p;
         }
 
         public static Task CreateAttackTask(Context ctx, string unitKey, string weaponKey, List<string> targets)
