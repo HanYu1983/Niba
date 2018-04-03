@@ -9,7 +9,7 @@ namespace RobotWar
 {
     public enum UnitMenuItem
     {
-        Pending, Move, Attack, Status, Pass, Cancel, CancelMove
+        Pending, Move, Attack, Status, Pass, Cancel, CancelMove, Confirm
     }
 
     public class UnitMenu : Menu<UnitMenuItem>

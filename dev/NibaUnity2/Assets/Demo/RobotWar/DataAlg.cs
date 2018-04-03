@@ -51,6 +51,11 @@ namespace RobotWar
         }
     }
 
+    public enum Direction
+    {
+        Up, Down, Left, Right
+    }
+
     public class Unit
     {
         public string key;
@@ -58,6 +63,7 @@ namespace RobotWar
         public int owner;
         public int hp, en;
         public float ct;
+        public Direction direction;
         public bool alreadyMove;
         public Unit(string key)
         {
@@ -163,7 +169,8 @@ namespace RobotWar
 
     public class Task
     {
-        public const string UnitAttack = "Unit{0} use Weapon{1} attack {2}";
+        public const string UnitAttack = "Unit{0} use Weapon{1} attack unit{2}";
+        public const string UnitRangeAttack = "Unit{0} use Weapon{1} range attack grid{2}";
         public string description;
         public List<string> values = new List<string>();
         public float ct;
@@ -312,13 +319,13 @@ namespace RobotWar
         public static List<Vector2Int> GetCenterVecs(int range)
         {
             var ret = new List<Vector2Int>();
-            for(var x=-range; x<range; x += 1)
+            for(var x=-range; x<=range; x += 1)
             {
                 var pos = new Vector2Int(x, 0);
                 ret.Add(pos);
 
                 var yrange = range - (int)Mathf.Abs(x);
-                for (var y = -yrange; y < yrange; y += 1)
+                for (var y = -yrange; y <= yrange; y += 1)
                 {
                     pos = new Vector2Int(x, y);
                     ret.Add(pos);
@@ -327,19 +334,16 @@ namespace RobotWar
             return ret;
         }
 
-        public enum Direction
-        {
-            Up, Down, Left, Right
-        }
+        
 
-        public static List<Vector2Int> GetForward(int min, int max, int width, Direction dir)
+        public static List<Vector2Int> GetForward(int min, int max, int expend, Direction dir)
         {
             var ret = new List<Vector2Int>();
-            for (var x=-width; x < width; ++x)
+            for (var x=-expend; x <= expend; ++x)
             {
-                for(var y=min; y<max; ++y)
+                for(var y=min; y<=max; ++y)
                 {
-                    var pos = new Vector2Int(x, 0);
+                    var pos = new Vector2Int(x, y);
                     ret.Add(pos);
                 }
             }
@@ -434,7 +438,7 @@ namespace RobotWar
 
         public static float Speed2CT(float speed)
         {
-            return speed;
+            return speed/100;
         }
 
         public static float UnitSpeed(Context ctx, string unitKey)
@@ -443,6 +447,7 @@ namespace RobotWar
             var pilot = GetPilot(ctx, unitKey);
             if(pilot == null)
             {
+                Debug.LogWarning("沒有駕駛員不能行動");
                 return 0;
             }
             var unit = ctx.units[unitKey];
@@ -466,13 +471,23 @@ namespace RobotWar
 
         public static Task GetTopTask(Context ctx)
         {
+            //Debug.Log("GetTopTask");
             var ret = ctx.tasks;
+            /*foreach(var t in ret)
+            {
+                Debug.Log(t.ct + ":" + t.description);
+            }*/
             return ret.OrderBy(u => u.ct).Where(u=> u.ct<=0).FirstOrDefault();
         }
 
         public static Unit GetTopCTUnit(Context ctx)
         {
+            //Debug.Log("GetTopCTUnit");
             var ret = new List<Unit>(ctx.units.Values);
+            /*foreach (var t in ret)
+            {
+                Debug.Log(t.ct + ":" + t.Key);
+            }*/
             return ret.OrderByDescending(u => u.ct).Where(u=> u.ct>=1).FirstOrDefault();
         }
 
@@ -622,6 +637,21 @@ namespace RobotWar
             return t;
         }
 
+        public static Task CreateRangeAttackTask(Context ctx, string unitKey, string weaponKey, Vector2Int pos)
+        {
+            var t = new Task();
+            t.description = Task.UnitRangeAttack;
+            t.owner = unitKey;
+            t.values.Add(unitKey);
+            t.values.Add(weaponKey);
+            t.values.Add(new Grid(pos).Key);
+
+            var weaponObj = ctx.weapons[weaponKey];
+            var cfg = ConfigWeapon.Get(weaponObj.prototype);
+            t.ct = cfg.prepareTime;
+            return t;
+        }
+
         public static void PushTask(Context ctx, Task task)
         {
             ctx.tasks.Add(task);
@@ -630,6 +660,31 @@ namespace RobotWar
         public static void CompleteTask(Context ctx, Task task)
         {
             ctx.tasks.Remove(task);
+        }
+
+        public static Direction GetDirection(Vector2Int a, Vector2Int b)
+        {
+            var yoffset = b.y - a.y;
+            var xoffset = b.x - a.x;
+            if(Mathf.Abs(yoffset) > Mathf.Abs(xoffset))
+            {
+                if(yoffset >= 0)
+                {
+                    return Direction.Up;
+                }
+                else
+                {
+                    return Direction.Down;
+                }
+            }
+            if(xoffset >= 0)
+            {
+                return Direction.Right;
+            }
+            else
+            {
+                return Direction.Left;
+            }
         }
 
         public static DeffendValue GetDeffendValue(Context ctx, string unit)

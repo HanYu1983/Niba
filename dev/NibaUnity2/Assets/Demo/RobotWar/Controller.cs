@@ -37,6 +37,8 @@ namespace RobotWar
             var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner, pos);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_handGun);
             DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_lightSword);
+            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_bomb);
+            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_bigGun);
 
             var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
             DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
@@ -180,6 +182,67 @@ namespace RobotWar
                         var unitKey = task.values[0];
                         var weaponKey = task.values[1];
                         var targets = task.values[2].Split(',');
+                        DataAlg.CompleteTask(Model.ctx, task);
+                    }
+                    break;
+                case Task.UnitRangeAttack:
+                    {
+                        var unitKey = task.values[0];
+                        var weaponKey = task.values[1];
+                        var gridKey = task.values[2];
+
+                        var unit = Model.ctx.units[unitKey];
+                        var atkPlayer = Model.ctx.players[unit.owner];
+                        var clickPos = Model.ctx.grids[gridKey].pos;
+                        var weaponObj = Model.ctx.weapons[weaponKey];
+                        var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
+                        switch (weaponCfg.shape)
+                        {
+                            case ConfigShape.ID_center:
+                                {
+                                    var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
+                                    var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                                    var units = Model.ctx.units.Values.Where(u =>
+                                    {
+                                        if(Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                        {
+                                            return false;
+                                        }
+                                        var dfdPlayer = Model.ctx.players[u.owner];
+                                        if(atkPlayer.team == dfdPlayer.team)
+                                        {
+                                            return false;
+                                        }
+                                        var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                        return centerRange.Contains(unitGrid);
+                                    });
+                                }
+                                break;
+                            case ConfigShape.ID_forward:
+                                {
+                                    var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                                    var dir = DataAlg.GetDirection(pos, clickPos);
+
+                                    var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
+                                    var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+
+                                    var units = Model.ctx.units.Values.Where(u =>
+                                    {
+                                        if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                        {
+                                            return false;
+                                        }
+                                        var dfdPlayer = Model.ctx.players[u.owner];
+                                        if (atkPlayer.team == dfdPlayer.team)
+                                        {
+                                            return false;
+                                        }
+                                        var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                        return ranges.Contains(unitGrid);
+                                    });
+                                }
+                                break;
+                        }
                         DataAlg.CompleteTask(Model.ctx, task);
                     }
                     break;
@@ -529,8 +592,8 @@ namespace RobotWar
             menu.OnSelect -= OnSelect;
             View.SetGridColor(null, Color.white);
         }
-        string lastSelectWeapon;
-        List<Grid> lastRange;
+        //string lastSelectWeapon;
+        //List<Grid> lastRange;
         void OnSelect(Menu<string> menu)
         {
             var item = menu.Selected;
@@ -540,6 +603,9 @@ namespace RobotWar
             }
             else
             {
+                var weapon = item;
+                Holder.ChangeState(new SelectWeaponTargetState(unit, weapon));
+                /*
                 var weapon = item;
                 if (lastSelectWeapon == weapon)
                 {
@@ -565,6 +631,7 @@ namespace RobotWar
                     }
                 }
                 lastSelectWeapon = weapon;
+                */
             }
         }
     }
@@ -574,54 +641,168 @@ namespace RobotWar
         Unit unit;
         string weapon;
         List<Grid> ranges;
-        public SelectWeaponTargetState(Unit unit, string weapon, List<Grid> range)
+        bool isReady;
+        Grid selectedGrid;
+
+        public SelectWeaponTargetState(Unit unit, string weapon)
         {
             this.unit = unit;
             this.weapon = weapon;
-            this.ranges = range;
         }
         public override void OnEnterState()
         {
             GridView.OnClick += OnClick;
 
             View.SetGridColor(null, Color.white);
-            View.SetGridColor(ranges, Color.red);
+            var weaponObj = Model.ctx.weapons[weapon];
+            var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
+            var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+
+            switch (weaponCfg.shape)
+            {
+                case ConfigShape.ID_forward:
+                    {
+                        var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, Direction.Up);
+                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+
+                        View.SetGridColor(ranges, Color.red);
+                        this.ranges = new List<Grid>(ranges);
+                    }
+                    break;
+                default:
+                    {
+                        var ranges = DataAlg.FindAllRange(Model.ctx, weaponCfg.minRange, weaponCfg.maxRange, pos);
+                        View.SetGridColor(ranges.Keys, Color.red);
+                        this.ranges = new List<Grid>(ranges.Keys);
+                    }
+                    break;
+            }
+
+            var menu = View.GetUnitMenu();
+            menu.CreateMenu(Model, new List<UnitMenuItem>()
+            {
+                UnitMenuItem.Confirm,
+                UnitMenuItem.Cancel
+            });
+            menu.OnSelect += OnSelect;
         }
         public override void OnExitState()
         {
             GridView.OnClick -= OnClick;
+            var menu = View.GetUnitMenu();
+            menu.OnSelect -= OnSelect;
+            menu.gameObject.SetActive(false);
+        }
+        void OnSelect(Menu<UnitMenuItem> menu)
+        {
+            switch (menu.Selected)
+            {
+                case UnitMenuItem.Cancel:
+                    Holder.ChangeState(new SelectWeaponState(unit));
+                    break;
+                case UnitMenuItem.Confirm:
+                    {
+                        if (isReady == false)
+                        {
+                            Debug.LogWarning("XXXX");
+                            return;
+                        }
+                        var weaponObj = Model.ctx.weapons[weapon];
+                        var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
+                        switch (weaponCfg.shape)
+                        {
+                            case ConfigShape.ID_forward:
+                            case ConfigShape.ID_center:
+                                {
+                                    var task = DataAlg.CreateRangeAttackTask(Model.ctx, unit.Key, weapon, selectedGrid.pos);
+                                    DataAlg.PushTask(Model.ctx, task);
+                                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                                    Holder.ChangeState(new UpdateCTState());
+                                }
+                                break;
+                            default:
+                                {
+                                    var targetKey = Model.ctx.grid2Unit[selectedGrid.Key];
+                                    var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
+                                    DataAlg.PushTask(Model.ctx, task);
+                                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                                    Holder.ChangeState(new UpdateCTState());
+                                }
+                                break;
+                        }
+                    }
+                    break;
+            }
         }
         
         void OnClick(GridView gv)
         {
             var gk = new Grid(gv.coord).Key;
             var g = Model.ctx.grids[gk];
-            var isValidPos = ranges.Contains(g);
-            if(isValidPos == false)
-            {
-                Debug.LogWarning("不合法的位置");
-                return;
-            }
+
+            isReady = false;
+            selectedGrid = g;
+
+            var clickPos = gv.coord;
             var weaponCfg = ConfigWeapon.Get(Model.ctx.weapons[weapon].prototype);
             switch (weaponCfg.shape)
             {
                 case ConfigShape.ID_center:
                     {
-                        DataAlg.GetCenterVecs(weaponCfg.shapeRange);
+                        var isValidPos = ranges.Contains(g);
+                        if (isValidPos == false)
+                        {
+                            Debug.LogWarning("不合法的位置");
+                            return;
+                        }
+                        var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
+                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k=>Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
 
+                        View.SetGridColor(null, Color.white);
+                        View.SetGridColor(this.ranges, Color.red);
+                        View.SetGridColor(centerRange, Color.magenta);
+                        
+                        isReady = true;
                     }
                     break;
                 case ConfigShape.ID_forward:
                     {
+                        var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                        var dir = DataAlg.GetDirection(pos, clickPos);
 
+                        var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
+                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+
+                        View.SetGridColor(null, Color.white);
+                        View.SetGridColor(ranges, Color.red);
+                        this.ranges = new List<Grid>(ranges);
+                        
+                        isReady = true;
                     }
                     break;
                 default:
                     {
+                        var isValidPos = ranges.Contains(g);
+                        if (isValidPos == false)
+                        {
+                            Debug.LogWarning("不合法的位置");
+                            return;
+                        }
                         // if the weapon is single, check target
                         var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
                         if (hasUnit)
                         {
+                            var targetKey = Model.ctx.grid2Unit[gk];
+                            var target = Model.ctx.units[targetKey];
+                            var ownerObj = Model.ctx.players[unit.owner];
+                            var targetOwnerObj = Model.ctx.players[target.owner];
+                            if (unit != target && ownerObj.team != targetOwnerObj.team)
+                            {
+                                isReady = true;
+                            }
+
+                            
+                            /*
                             var targetKey = Model.ctx.grid2Unit[gk];
                             var target = Model.ctx.units[targetKey];
                             var ownerObj = Model.ctx.players[unit.owner];
@@ -636,11 +817,7 @@ namespace RobotWar
                             else
                             {
                                 Debug.LogWarning("不合法的目標");
-                            }
-                        }
-                        else
-                        {
-                            Holder.ChangeState(new SelectWeaponState(unit));
+                            }*/
                         }
                     }
                     break;
