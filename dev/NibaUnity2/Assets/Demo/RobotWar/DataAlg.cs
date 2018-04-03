@@ -61,7 +61,7 @@ namespace RobotWar
         public string key;
         public string prototype;
         public int owner;
-        public int hp, en;
+        public int usedHp, usedEn;
         public float ct;
         public Direction direction;
         public bool alreadyMove;
@@ -89,6 +89,7 @@ namespace RobotWar
         public string key;
         public string prototype;
         public int level;
+        public int usedBulletCount;
 
         public Weapon()
         {
@@ -685,6 +686,44 @@ namespace RobotWar
             {
                 return Direction.Left;
             }
+        }
+
+        public static bool ConsumeWeapon(Context ctx, string unit, string weapon, ref string reason)
+        {
+            if (ctx.weapon2Unit[weapon] != unit)
+            {
+                reason = "武器的擁有者遺失";
+                return false;
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            var unitObj = ctx.units[unit];
+
+            switch (cfg.weaponType)
+            {
+                case ConfigWeaponType.ID_bullet:
+                    {
+                        if(obj.usedBulletCount >= cfg.bulletCount)
+                        {
+                            reason = "彈藥不足";
+                            return false;
+                        }
+                        obj.usedBulletCount += 1;
+                    }
+                    break;
+                case ConfigWeaponType.ID_energy:
+                    {
+                        if(unitObj.usedEn >= cfg.cost)
+                        {
+                            reason = "能量不足";
+                            return false;
+                        }
+                        var en = cfg.cost;
+                        unitObj.usedEn += en;
+                    }
+                    break;
+            }
+            return true;
         }
 
         public static DeffendValue GetDeffendValue(Context ctx, string unit)

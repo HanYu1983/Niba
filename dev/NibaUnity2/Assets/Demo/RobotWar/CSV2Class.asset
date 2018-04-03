@@ -111,6 +111,15 @@ MonoBehaviour:
       type: 2
     - key: description
       type: 2
+  - key: ConfigWeaponType
+    fileName: RobotWar - weaponType.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
   splitType: 0
   split: 
   ns: RobotWar

@@ -181,7 +181,18 @@ namespace RobotWar
                     {
                         var unitKey = task.values[0];
                         var weaponKey = task.values[1];
-                        var targets = task.values[2].Split(',');
+
+                        var reason = "";
+                        var consumWeapon = DataAlg.ConsumeWeapon(Model.ctx, unitKey, weaponKey, ref reason);
+                        if (consumWeapon)
+                        {
+                            var targets = task.values[2].Split(',');
+                            DataAlg.CompleteTask(Model.ctx, task);
+                        }
+                        else
+                        {
+                            Debug.LogWarning(reason);
+                        }
                         DataAlg.CompleteTask(Model.ctx, task);
                     }
                     break;
@@ -191,57 +202,66 @@ namespace RobotWar
                         var weaponKey = task.values[1];
                         var gridKey = task.values[2];
 
-                        var unit = Model.ctx.units[unitKey];
-                        var atkPlayer = Model.ctx.players[unit.owner];
-                        var clickPos = Model.ctx.grids[gridKey].pos;
-                        var weaponObj = Model.ctx.weapons[weaponKey];
-                        var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
-                        switch (weaponCfg.shape)
+                        var reason = "";
+                        var consumWeapon = DataAlg.ConsumeWeapon(Model.ctx, unitKey, weaponKey, ref reason);
+                        if (consumWeapon)
                         {
-                            case ConfigShape.ID_center:
-                                {
-                                    var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
-                                    var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
-                                    var units = Model.ctx.units.Values.Where(u =>
+                            var unit = Model.ctx.units[unitKey];
+                            var atkPlayer = Model.ctx.players[unit.owner];
+                            var clickPos = Model.ctx.grids[gridKey].pos;
+                            var weaponObj = Model.ctx.weapons[weaponKey];
+                            var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
+                            switch (weaponCfg.shape)
+                            {
+                                case ConfigShape.ID_center:
                                     {
-                                        if(Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                        var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
+                                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                                        var units = Model.ctx.units.Values.Where(u =>
                                         {
-                                            return false;
-                                        }
-                                        var dfdPlayer = Model.ctx.players[u.owner];
-                                        if(atkPlayer.team == dfdPlayer.team)
-                                        {
-                                            return false;
-                                        }
-                                        var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
-                                        return centerRange.Contains(unitGrid);
-                                    });
-                                }
-                                break;
-                            case ConfigShape.ID_forward:
-                                {
-                                    var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-                                    var dir = DataAlg.GetDirection(pos, clickPos);
-
-                                    var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
-                                    var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
-
-                                    var units = Model.ctx.units.Values.Where(u =>
+                                            if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                            {
+                                                return false;
+                                            }
+                                            var dfdPlayer = Model.ctx.players[u.owner];
+                                            if (atkPlayer.team == dfdPlayer.team)
+                                            {
+                                                return false;
+                                            }
+                                            var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                            return centerRange.Contains(unitGrid);
+                                        });
+                                    }
+                                    break;
+                                case ConfigShape.ID_forward:
                                     {
-                                        if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                        var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                                        var dir = DataAlg.GetDirection(pos, clickPos);
+
+                                        var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
+                                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+
+                                        var units = Model.ctx.units.Values.Where(u =>
                                         {
-                                            return false;
-                                        }
-                                        var dfdPlayer = Model.ctx.players[u.owner];
-                                        if (atkPlayer.team == dfdPlayer.team)
-                                        {
-                                            return false;
-                                        }
-                                        var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
-                                        return ranges.Contains(unitGrid);
-                                    });
-                                }
-                                break;
+                                            if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
+                                            {
+                                                return false;
+                                            }
+                                            var dfdPlayer = Model.ctx.players[u.owner];
+                                            if (atkPlayer.team == dfdPlayer.team)
+                                            {
+                                                return false;
+                                            }
+                                            var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                            return ranges.Contains(unitGrid);
+                                        });
+                                    }
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning(reason);
                         }
                         DataAlg.CompleteTask(Model.ctx, task);
                     }
