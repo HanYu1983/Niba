@@ -149,6 +149,41 @@ namespace RobotWar
             var paths = DataAlg.FindAllRange(model.ctx, Random.Range(1, 5), Random.Range(5, 10), new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             view.SetGridColor(paths.Keys, Color.red);
         }
+
+        [ContextMenu("TestPolar")]
+        public void TestPolar()
+        {
+            var region = PolarVector.Region(5);
+            var p1 = new PolarVector(1, 0);
+            var w1 = PolarVector.WhereRegion(region, p1.angle);
+
+            var p2 = new PolarVector(1, region);
+            var w2 = PolarVector.WhereRegion(region, p2.angle);
+
+            var p3 = new PolarVector(1, 2 * region);
+            var w3 = PolarVector.WhereRegion(region, p3.angle);
+
+            Debug.Log(w1);
+            Debug.Log(w2);
+            Debug.Log(w3);
+
+            var angle = PolarVector.Angle(p1, p2);
+            var offset = PolarVector.WhereRegion(region, angle);
+            Debug.Log(angle);
+            Debug.Log(offset);
+
+            var area = PolarVector.Area(p1, p2);
+            Debug.Log(area);
+
+            Debug.Log("----");
+            angle = PolarVector.Angle(p1, p3);
+            offset = PolarVector.WhereRegion(region, angle);
+            Debug.Log(angle);
+            Debug.Log(offset);
+
+            area = PolarVector.Area(p1, p3);
+            Debug.Log(area);
+        }
         #endregion
     }
 

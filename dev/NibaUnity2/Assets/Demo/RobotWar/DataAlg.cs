@@ -12,6 +12,12 @@ namespace RobotWar
     {
         public float radius, angle;
 
+        public PolarVector(float radius, float angle)
+        {
+            this.radius = radius;
+            this.angle = angle;
+        }
+
         public static float NormalizeAngle(float angle)
         {
             var ret = angle;
@@ -233,7 +239,7 @@ namespace RobotWar
         public int pilotLucky;
     }
 
-    public class FightValue : DeffendValue
+    public class AttackValue : DeffendValue
     {
         public string weaponBulletType;
         public int weaponMaxRange;
@@ -244,13 +250,47 @@ namespace RobotWar
         {
             var hitPoint = pilotHitRate + unitSpeed + pilotLucky;
             var avoidanceRate = b.pilotAvoidanceRate + b.unitSpeed + b.pilotLucky;
-            return 0;
+            return hitPoint/2*avoidanceRate;
+        }
+
+        public Dictionary<string, float> GetAttackAbility(DeffendValue b)
+        {
+            return null;
+        }
+
+        public Dictionary<string, float> GetDeffendAbility(DeffendValue b)
+        {
+            return null;
         }
 
         public int Damage(DeffendValue b)
         {
-            var atDamage = weaponPower - b.unitArmor;
-            return 0;
+            var damage = weaponPower - b.unitArmor;
+
+            var power2 = 0f;
+
+            var region = PolarVector.Region(5);
+            var wp = new PolarVector();
+            var tp = new PolarVector();
+            var angle = PolarVector.Angle(wp, tp);
+
+            var isBad = angle < region;
+            var isGood = region < angle && angle < (2 * region);
+            if (isBad)
+            {
+                power2 = 100 * PolarVector.Area(wp, tp);
+            }
+
+            if (isGood)
+            {
+                power2 = 100 * PolarVector.Area(wp, tp);
+            }
+            var damage2 = (power2 * power2) / (power2 + b.unitArmor);
+            if (isBad)
+            {
+                damage2 = -damage2;
+            }
+            return (int)(damage*0.7 + damage2*0.3);
         }
     }
 
@@ -984,7 +1024,7 @@ namespace RobotWar
             return fv;
         }
 
-        public static FightValue GetFightValue(Context ctx, string unit, string targetUnit, string weapon)
+        public static AttackValue GetAttackValue(Context ctx, string unit, string targetUnit, string weapon)
         {
             var pilot = GetPilot(ctx, unit);
             Assert.IsNull(pilot, "XXXX");
@@ -1000,7 +1040,7 @@ namespace RobotWar
             var pos1 = ctx.grids[ctx.unit2Grid[unit]].pos;
             var pos2 = ctx.grids[ctx.unit2Grid[targetUnit]].pos;
 
-            var fv = new FightValue();
+            var fv = new AttackValue();
             fv.unitArmor = unitCfg.armor;
             fv.unitPower = unitCfg.power;
             fv.unitSpeed = unitCfg.speed;
@@ -1014,6 +1054,33 @@ namespace RobotWar
             fv.weaponMaxRange = weaponCfg.maxRange;
             fv.distance = Vector2Int.Distance(pos1, pos2);
             return fv;
+        }
+
+        public static void DamageUnit(Context ctx, string unit, string targetUnit, string weapon)
+        {
+            var atk = GetAttackValue(ctx, unit, targetUnit, weapon);
+            var dfd = GetDeffendValue(ctx, targetUnit);
+
+            var damage = atk.Damage(dfd);
+            var hitRate = atk.GetHitRate(dfd);
+            var aa = atk.GetAttackAbility(dfd);
+            var da = atk.GetDeffendAbility(dfd);
+            // handle ability
+            atk.pilotHitRate += 30;
+            atk.pilotShooting += 10;
+
+            hitRate = atk.GetHitRate(dfd);
+            atk.Damage(dfd);
+
+            var isHit = UnityEngine.Random.Range(0, 1) <= hitRate;
+            if (isHit == false) {
+                return;
+            }
+            damage = atk.Damage(dfd);
+            // handle ability
+            damage /= 2;
+
+            ctx.units[targetUnit].usedHp += damage;
         }
     }
 }
