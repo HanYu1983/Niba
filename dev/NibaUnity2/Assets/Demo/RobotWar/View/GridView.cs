@@ -9,6 +9,7 @@ namespace RobotWar
     {
         public static Action<GridView> OnClick = delegate { };
         public Vector2Int coord;
+        public GameObject top;
 
         public string Key
         {
@@ -18,14 +19,41 @@ namespace RobotWar
             }
         }
 
-        protected virtual void OnMouseEnter()
+        public void UpdateView(Model model)
         {
-            //GetComponent<Renderer>().material.color = Color.gray;
+            var gk = new Grid(coord).Key;
+            var g = model.ctx.grids[gk];
+            switch (g.prototype)
+            {
+                case "deepOcean":
+                    top.GetComponent<Renderer>().material.color = Color.blue;
+                    break;
+                case "ocean":
+                    top.GetComponent<Renderer>().material.color = Color.Lerp(Color.blue, Color.white, 0.5f);
+                    break;
+                case "plain":
+                    top.GetComponent<Renderer>().material.color = Color.green;
+                    break;
+                case "city":
+                    top.GetComponent<Renderer>().material.color = Color.gray;
+                    break;
+                case "mori":
+                    top.GetComponent<Renderer>().material.color = Color.Lerp(Color.green, Color.black, 0.5f);
+                    break;
+                case "mountain":
+                    top.GetComponent<Renderer>().material.color = Color.yellow;
+                    break;
+            }
+        }
+
+        /*protected virtual void OnMouseEnter()
+        {
+            GetComponent<Renderer>().material.color = Color.gray;
         }
         protected virtual void OnMouseExit()
         {
-            //GetComponent<Renderer>().material.color = Color.white;
-        }
+            GetComponent<Renderer>().material.color = Color.white;
+        }*/
 
         void OnMouseDown()
         {

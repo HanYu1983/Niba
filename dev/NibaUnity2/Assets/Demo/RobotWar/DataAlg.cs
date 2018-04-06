@@ -180,6 +180,16 @@ namespace RobotWar
         }
     }
 
+    public class Item
+    {
+        public string key;
+        public string prototype;
+        public Item()
+        {
+            key = Guid.NewGuid().ToString();
+        }
+    }
+
     public class Pilot
     {
         public string key;
@@ -260,8 +270,10 @@ namespace RobotWar
         public Dictionary<string, Unit> units = new Dictionary<string, Unit>();
         public Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>();
         public Dictionary<string, Pilot> pilots = new Dictionary<string, Pilot>();
+        public Dictionary<string, Item> items = new Dictionary<string, Item>();
         public Dictionary<string, string> weapon2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> pilot2Unit = new Dictionary<string, string>();
+        public Dictionary<string, string> item2Unit = new Dictionary<string, string>();
         // map
         public Dictionary<string, Grid> grids = new Dictionary<string, Grid>();
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
@@ -273,7 +285,7 @@ namespace RobotWar
         // tmp
         public List<Dictionary<string, int>> fireCost = new List<Dictionary<string, int>>();
     }
-
+    
     public class DataAlg
     {
         static AStarPathfinding pathFiniding = new AStarPathfinding();
@@ -291,13 +303,25 @@ namespace RobotWar
             {
                 var ret = new Dictionary<Grid, int>();
                 var oriPos = curr.pos;
-                var oriData = ConfigGrid.Get(ConfigGrid.ID_plain);
+                var oriData = ConfigGrid.Get(curr.prototype);
                 var cost = oriData.cost;
                 var posKey = new Grid(oriPos).Key;
                 if (ctx.fireCost.Count > player.team && ctx.fireCost[player.team].ContainsKey(posKey))
                 {
                     var fireCost = ctx.fireCost[player.team][posKey];
                     cost += fireCost;
+                }
+                if (curr.prototype == ConfigGrid.ID_mountain)
+                {
+                    cost += 100;
+                }
+                if (curr.prototype == ConfigGrid.ID_ocean)
+                {
+                    cost += 100;
+                }
+                if (curr.prototype == ConfigGrid.ID_deepOcean)
+                {
+                    cost += 100;
                 }
                 foreach (var v in dirs)
                 {
@@ -411,8 +435,6 @@ namespace RobotWar
             return ret;
         }
 
-        
-
         public static List<Vector2Int> GetForward(int min, int max, int expend, Direction dir)
         {
             var ret = new List<Vector2Int>();
@@ -469,7 +491,76 @@ namespace RobotWar
             }
             return ret;
         }
-        
+
+        public static int GetPowerCost(Context ctx, string unit)
+        {
+            var weaponPowerCost = GetWeaponList(ctx, unit).Sum(w=>ConfigWeapon.Get(w.prototype).unitPowerCost);
+            var itemPowerCost = GetItemList(ctx, unit).Sum(w => ConfigItem.Get(w.prototype).unitPowerCost);
+            var totalPowerCost = weaponPowerCost + itemPowerCost;
+            return totalPowerCost;
+        }
+
+        public static void AssignItem(Context ctx, string unit, string item)
+        {
+            var itemNotFound = ctx.items.ContainsKey(item) == false;
+            if (itemNotFound)
+            {
+                throw new System.Exception("itemNotFound");
+            }
+            var unitNotFound = ctx.units.ContainsKey(unit) == false;
+            if (unitNotFound)
+            {
+                throw new System.Exception("unitNotFound");
+            }
+            var power = ConfigUnit.Get(ctx.units[unit].prototype).power;
+            var powerCost = GetPowerCost(ctx, unit) + ConfigItem.Get(ctx.items[item].prototype).unitPowerCost;
+            if(powerCost > power)
+            {
+                throw new System.Exception("power is not enougth");
+            }
+            if (ctx.item2Unit.ContainsKey(item))
+            {
+                ctx.item2Unit[item] = unit;
+            }
+            else
+            {
+                ctx.item2Unit.Add(item, unit);
+            }
+        }
+
+        public static void AssignWeapon(Context ctx, string unit, string weapon)
+        {
+            var itemNotFound = ctx.weapons.ContainsKey(weapon) == false;
+            if (itemNotFound)
+            {
+                throw new System.Exception("itemNotFound");
+            }
+            var unitNotFound = ctx.units.ContainsKey(unit) == false;
+            if (unitNotFound)
+            {
+                throw new System.Exception("unitNotFound");
+            }
+            var power = ConfigUnit.Get(ctx.units[unit].prototype).power;
+            var powerCost = GetPowerCost(ctx, unit) + ConfigWeapon.Get(ctx.weapons[weapon].prototype).unitPowerCost;
+            if (powerCost > power)
+            {
+                throw new System.Exception("power is not enougth");
+            }
+            if (ctx.weapon2Unit.ContainsKey(weapon))
+            {
+                ctx.weapon2Unit[weapon] = unit;
+            }
+            else
+            {
+                ctx.weapon2Unit.Add(weapon, unit);
+            }
+        }
+
+        public static List<Item> GetItemList(Context ctx, string unit)
+        {
+            return ctx.item2Unit.Keys.Where(k => ctx.item2Unit[k] == unit).Select(k => ctx.items[k]).ToList();
+        }
+
         public static List<Weapon> GetWeaponList(Context ctx, string unit)
         {
             return ctx.weapon2Unit.Keys.Where(k => ctx.weapon2Unit[k] == unit).Select(k => ctx.weapons[k]).ToList();
@@ -506,11 +597,14 @@ namespace RobotWar
 
         public static int GetMovePower(Context ctx, string unit)
         {
+            return 100;
+            /*
             var unitObj = ctx.units[unit];
             var cfg = ConfigUnit.Get(unitObj.prototype);
             var weight = GetWeaponList(ctx, unit).Select(w => ConfigWeapon.Get(w.prototype)).Sum(w => w.unitPowerCost);
             var power = cfg.power - weight;
             return power;
+            */
         }
 
         public static float Speed2CT(float speed)
@@ -682,12 +776,11 @@ namespace RobotWar
             return unit;
         }
 
-        public static Weapon CreateWeapon(Context ctx, string unitKey, string prototype)
+        public static Weapon CreateWeapon(Context ctx, string prototype)
         {
             var w = new Weapon();
             w.prototype = prototype;
             ctx.weapons.Add(w.Key, w);
-            ctx.weapon2Unit.Add(w.Key, unitKey);
             return w;
         }
 
@@ -800,6 +893,72 @@ namespace RobotWar
                     break;
             }
             return true;
+        }
+
+        public static string ProcedureMap(float x, float y, float deepOcean, float ocean, float mountain, int cityGridCnt, float city, float cx, float cy, float mori, float mx, float my)
+        {
+            var height = Mathf.PerlinNoise(x, y);
+            if (height < deepOcean)
+            {
+                return "deepOcean";
+            }
+            if (height < ocean)
+            {
+                return "ocean";
+            }
+            if(height > mountain)
+            {
+                return "mountain";
+            }
+            var factor = 1 / (float)cityGridCnt;
+            var value = Mathf.PerlinNoise(x + cx, y + cy);
+            value = ((int)(value / factor)) * factor;
+            if (value > city)
+            {
+                return "city";
+            }
+            value = Mathf.PerlinNoise(x + mx, y+my);
+            if (value > mori)
+            {
+                return "mori";
+            }
+            return "plain";
+        }
+
+        public static void GenMap(Context ctx, int width, int height)
+        {
+            ctx.grids.Clear();
+
+            var deepOcean = UnityEngine.Random.Range(0, 0.3f);
+            var ocean = deepOcean + UnityEngine.Random.Range(0, 0.4f);
+            var mountain = 1 - UnityEngine.Random.Range(0, 0.3f);
+            var city = UnityEngine.Random.Range(0, 1f);
+            var mori = UnityEngine.Random.Range(0, 1f);
+            var factor = UnityEngine.Random.Range(1, 10f);
+
+            var xr = UnityEngine.Random.Range(0, 100f);
+            var yr = UnityEngine.Random.Range(0, 100f);
+
+            var cxr = UnityEngine.Random.Range(0, 100f);
+            var cyr = UnityEngine.Random.Range(0, 100f);
+
+            var mxr = UnityEngine.Random.Range(0, 100f);
+            var myr = UnityEngine.Random.Range(0, 100f);
+
+            var max = Mathf.Max(width, height);
+            var offset = 1 / (float)max;
+            for(var x=0; x<width; ++x)
+            {
+                for (var y = 0; y<height; ++y)
+                {
+                    var xf = xr + x * offset * factor;
+                    var yf = yr + y * offset * factor;
+                    var prototype = ProcedureMap(xf, yf, deepOcean, ocean, mountain, max, city, cxr, cyr, mori, mxr, myr);
+                    var grid = new Grid(new Vector2Int(x, y));
+                    grid.prototype = prototype;
+                    ctx.grids.Add(grid.Key, grid);
+                }
+            }
         }
 
         public static DeffendValue GetDeffendValue(Context ctx, string unit)

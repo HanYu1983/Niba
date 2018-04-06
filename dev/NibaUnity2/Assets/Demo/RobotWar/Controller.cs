@@ -25,20 +25,32 @@ namespace RobotWar
 
         public IEnumerator LoadMap(string path)
         {
+            /*
             var request = Resources.LoadAsync<MapData>(path);
             yield return request;
             var data = request.asset as MapData;
             model.CreateMap(data);
             view.Sync(model);
+            */
+            DataAlg.GenMap(model.ctx, 20, 20);
+            view.Sync(model);
+            yield return null;
         }
 
         void CreateUnit(int owner, Vector2Int pos)
         {
             var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner, pos);
-            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_handGun);
-            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_lightSword);
-            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_bomb);
-            DataAlg.CreateWeapon(model.ctx, unit.Key, ConfigWeapon.ID_bigGun);
+            var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
+            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
+            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bomb);
+            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bigGun);
+            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
 
             var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
             DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);

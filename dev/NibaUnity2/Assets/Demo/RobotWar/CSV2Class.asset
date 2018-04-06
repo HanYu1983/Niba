@@ -120,6 +120,17 @@ MonoBehaviour:
       type: 2
     - key: description
       type: 2
+  - key: ConfigItem
+    fileName: 
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: unitPowerCost
+      type: 0
   splitType: 0
   split: 
   ns: RobotWar

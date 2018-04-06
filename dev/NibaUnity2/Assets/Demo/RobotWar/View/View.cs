@@ -37,6 +37,7 @@ namespace RobotWar
 
                 var gv = go.GetComponent<GridView>();
                 gv.coord = g.pos;
+                gv.UpdateView(model);
                 gridView.Add(gv.Key, gv);
 
                 go.SetActive(true);
