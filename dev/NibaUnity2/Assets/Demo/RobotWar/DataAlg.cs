@@ -8,6 +8,82 @@ using UnityEngine.Assertions;
 
 namespace RobotWar
 {
+    public struct PolarVector
+    {
+        public float radius, angle;
+
+        public static float NormalizeAngle(float angle)
+        {
+            var ret = angle;
+            while (ret < 0)
+            {
+                ret += 2 * Mathf.PI;
+            }
+            ret = ret % Mathf.PI;
+            return ret;
+        }
+
+        public static float Angle(PolarVector a, PolarVector b)
+        {
+            var ret = Mathf.Abs(NormalizeAngle(a.angle) - NormalizeAngle(b.angle));
+            if(ret > Mathf.PI)
+            {
+                return 2 * Mathf.PI - ret;
+            }
+            return ret;
+        }
+
+        public static Vector2 Polar2Vector2(PolarVector p)
+        {
+            return new Vector2(Mathf.Cos(p.angle) * p.radius, Mathf.Sign(p.angle) * p.radius);
+        }
+
+        public static Vector2 NormalVector2(Vector2 v)
+        {
+            var n = Vector3.Cross(Vector3.forward, v);
+            return new Vector2(n.x, n.y).normalized;
+        }
+
+        public static float DistanceBetweenLineAndDot(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            var line = p2 - p1;
+            var line2 = p3 - p1;
+            return Vector2.Dot(line2, NormalVector2(line));
+        }
+
+        public static float Area(PolarVector a, PolarVector b)
+        {
+            var d1 = Polar2Vector2(a);
+            var d2 = Polar2Vector2(b);
+            if(d1 == Vector2.zero)
+            {
+                return 0;
+            }
+            if (d2 == Vector2.zero)
+            {
+                return 0;
+            }
+            var l1 = d1 - Vector2.zero;
+            var l2 = d2 - Vector2.zero;
+            var l1n = l1.normalized;
+            var len1 = Vector2.Dot(l2, l1n);
+            var len2 = l1.magnitude - len1;
+            var h = Mathf.Abs(DistanceBetweenLineAndDot(Vector2.zero, d1, d2));
+            return (len1 * h) / 2 + (len2 * h) / 2;
+        }
+
+        public static float Region(int num)
+        {
+            return (2 * Mathf.PI) / num;
+        }
+
+        public static float WhereRegion(float region, float angle)
+        {
+            return angle / region;
+        }
+    }
+
+
     public class Grid : IGraphNode, IEquatable<Grid>
     {
         public readonly Vector2Int pos;
