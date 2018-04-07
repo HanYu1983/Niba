@@ -9,11 +9,12 @@ namespace RobotWar
 {
     public class ShowUnitList : ShowPageList<string, KeyRef>
     {
-        private void Start()
+        void Start()
         {
+            UpdateView();
             Model.OnUnitListChange += UpdateView;
         }
-        private void OnDestroy()
+        void OnDestroy()
         {
             Model.OnUnitListChange -= UpdateView;
         }

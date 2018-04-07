@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace HanUtil
 {
@@ -8,19 +9,8 @@ namespace HanUtil
     {
         public Transform root;
         public int offset;
-        public int selected;
-
-        public bool autoUpdate;
-
-        private void Start()
-        {
-            if (autoUpdate)
-            {
-                UpdateView();
-            }
-        }
-
-
+        public Ref selectedKeyRef;
+        public UnityEvent onSelect = new UnityEvent();
 
         public int DataCountPerPage
         {
@@ -32,7 +22,13 @@ namespace HanUtil
 
         public void Select(Ref r)
         {
-            selected = r.idx;
+            if(r.IsValid == false)
+            {
+                return;
+            }
+            selectedKeyRef.value = r.Ref;
+            selectedKeyRef.NotifyValueChange();
+            onSelect.Invoke();
         }
 
         public void Left()
@@ -69,9 +65,10 @@ namespace HanUtil
                 r.OnValueChange();
             }
         }
-
+        
         public void UpdateView()
         {
+            Debug.Log("UpdateView");
             var list = GetList();
             for(var i=0; i< DataCountPerPage; ++i)
             {

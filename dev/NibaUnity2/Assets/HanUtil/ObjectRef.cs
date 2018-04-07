@@ -16,8 +16,27 @@ namespace HanUtil
         public T value;
         public List<T> array;
         public int idx;
-        public MonoBehaviour objectRef;
+        public ObjectRef<T> objectRef;
         public Action OnValueChange = delegate { };
+
+        private void Awake()
+        {
+            if(refType == ObjectRefType.Ref)
+            {
+                if(objectRef != null)
+                {
+                    objectRef.OnValueChange += NotifyValueChange;
+                }
+            }
+        }
+
+        private void OnDestroy()
+        {
+            if (objectRef != null)
+            {
+                objectRef.OnValueChange -= NotifyValueChange;
+            }
+        }
 
         public void NotifyValueChange()
         {
@@ -35,7 +54,7 @@ namespace HanUtil
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogWarning(e.Message + " in " + gameObject.name);
+                    //Debug.LogWarning(e.Message + " in " + gameObject.name);
                     return false;
                 }
             }
@@ -62,7 +81,7 @@ namespace HanUtil
                         return array[idx];
                     case ObjectRefType.Ref:
                         {
-                            var or = objectRef as ObjectRef<T>;
+                            var or = objectRef;
                             if (or == null)
                             {
                                 throw new System.Exception("objectRef is null");
