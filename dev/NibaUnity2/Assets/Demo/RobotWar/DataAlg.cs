@@ -138,6 +138,7 @@ namespace RobotWar
         Up, Down, Left, Right
     }
 
+    [Serializable]
     public class Unit
     {
         public string key;
@@ -765,22 +766,27 @@ namespace RobotWar
             {
                 throw new Exception("already move");
             }
+            var gk = new Grid(dist).Key;
+            var hasUnit = ctx.grid2Unit.ContainsKey(gk);
+            if (hasUnit)
+            {
+                throw new Exception("has unit:"+gk);
+            }
+            // clear old pos
             var hasOldGrid = ctx.unit2Grid.ContainsKey(unitKey);
             if(hasOldGrid == false)
             {
-                throw new Exception("XXX");
+                var oldGrid = ctx.unit2Grid[unitKey];
+                ctx.grid2Unit.Remove(oldGrid);
+                if (force == false)
+                {
+                    ctx.lastUnitPos = oldGrid;
+                }
             }
-            // clear old pos
-            var oldGrid = ctx.unit2Grid[unitKey];
-            ctx.grid2Unit.Remove(oldGrid);
             // change to new pos
-            ctx.unit2Grid[unitKey] = new Grid(dist).Key;
-            ctx.grid2Unit[new Grid(dist).Key] = unitKey;
+            ctx.unit2Grid[unitKey] = gk;
+            ctx.grid2Unit[gk] = unitKey;
             ctx.units[unitKey].alreadyMove = true;
-            if (force == false)
-            {
-                ctx.lastUnitPos = oldGrid;
-            }
         }
 
         public static string CancelMoveUnit(Context ctx, string unitKey)
@@ -795,24 +801,16 @@ namespace RobotWar
             return ctx.lastUnitPos;
         }
 
-        public static Unit CreateUnit(Context ctx, string prototype, int owner, Vector2Int pos)
+        public static Unit CreateUnit(Context ctx, string prototype, int owner)
         {
             if(ctx.players.Count < owner+1)
             {
                 throw new Exception("player not exist:"+owner);
             }
-            var gk = new Grid(pos).Key;
-            var hasUnit = ctx.grid2Unit.ContainsKey(gk);
-            if (hasUnit)
-            {
-                throw new System.Exception("has unit:"+gk);
-            }
             var unit = new Unit(null);
             unit.prototype = prototype;
             unit.owner = owner;
             ctx.units.Add(unit.Key, unit);
-            ctx.grid2Unit[gk] = unit.Key;
-            ctx.unit2Grid[unit.Key] = gk;
             return unit;
         }
 
