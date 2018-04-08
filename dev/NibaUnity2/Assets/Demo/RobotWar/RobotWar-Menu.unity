@@ -5386,6 +5386,7 @@ GameObject:
   - component: {fileID: 1457069565}
   - component: {fileID: 1457069564}
   - component: {fileID: 1457069563}
+  - component: {fileID: 1457069566}
   m_Layer: 0
   m_Name: btn_pilot
   m_TagString: Untagged
@@ -5490,6 +5491,18 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1457069561}
+--- !u!114 &1457069566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1457069561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e70958d28d7162b4998e52ef224fc99d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SceneName: Pilot
 --- !u!1 &1458753993
 GameObject:
   m_ObjectHideFlags: 0

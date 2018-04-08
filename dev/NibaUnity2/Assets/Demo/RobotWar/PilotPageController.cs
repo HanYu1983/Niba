@@ -56,6 +56,7 @@ namespace RobotWar
                 DataAlg.AssignPilot(model.ctx, pilot, null);
             }
             pilotList.UpdateView();
+            selectPilotKeyRef.NotifyValueChange();
         }
 
         public void CancelUnit()
