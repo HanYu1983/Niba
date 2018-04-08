@@ -15,12 +15,12 @@ namespace RobotWar
         private void Start()
         {
             keyRef.OnValueChange += UpdateView;
-            unitKeyRef.OnValueChange += UpdateView;
+            //unitKeyRef.OnValueChange += UpdateView;
         }
 
         void OnDestroy()
         {
-            unitKeyRef.OnValueChange -= UpdateView;
+            //unitKeyRef.OnValueChange -= UpdateView;
             keyRef.OnValueChange -= UpdateView;
         }
 
@@ -36,7 +36,7 @@ namespace RobotWar
             var obj = model.ctx.weapons[key];
             var cfg = ConfigWeapon.Get(obj.prototype);
             txt_name.text = cfg.name;
-
+            /*
             if (unitKeyRef.IsValid)
             {
                 var unitKey = unitKeyRef.Ref;
@@ -50,6 +50,7 @@ namespace RobotWar
                     }
                 }
             }
+            */
         }
     }
 }

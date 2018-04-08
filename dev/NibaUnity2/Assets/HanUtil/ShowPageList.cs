@@ -5,6 +5,11 @@ using UnityEngine.Events;
 
 namespace HanUtil
 {
+    public interface IShowPageListDataProvider<T>
+    {
+        List<T> GetData();
+    }
+
     public class ShowPageList<T, Ref> : MonoBehaviour where Ref : ObjectRef<T>
     {
         public Transform root;
@@ -68,9 +73,15 @@ namespace HanUtil
         
         public void UpdateView()
         {
-            Debug.Log("UpdateView");
-            var list = GetList();
-            for(var i=0; i< DataCountPerPage; ++i)
+            var provider = GetComponent<IShowPageListDataProvider<T>>();
+            Debug.Log("UpdateView:"+provider);
+            if (provider == null)
+            {
+                Debug.LogWarning("no data provider");
+                return;
+            }
+            var list = provider.GetData();
+            for (var i=0; i< DataCountPerPage; ++i)
             {
                 var idx = offset + i;
                 UpdateView(root.GetChild(i).gameObject, list, idx);

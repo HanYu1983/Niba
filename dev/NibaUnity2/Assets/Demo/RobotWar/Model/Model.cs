@@ -11,6 +11,11 @@ namespace RobotWar
         public static Action OnUnitListChange = delegate { };
         public static Action OnWeaponListChange = delegate { };
 
+        private void Start()
+        {
+            CreateStartValue();
+        }
+
         public void CreateStartValue()
         {
             DataAlg.CreatePlayer(ctx, 0, false);
