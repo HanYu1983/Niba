@@ -68,6 +68,13 @@ namespace HanUtil
                 {
                     default:
                     case ObjectRefType.Static:
+                        if(typeof(T) == typeof(string))
+                        {
+                            if (string.IsNullOrEmpty(value as string))
+                            {
+                                throw new System.Exception("value == null");
+                            }
+                        }
                         if (value == null)
                         {
                             throw new System.Exception("value == null");

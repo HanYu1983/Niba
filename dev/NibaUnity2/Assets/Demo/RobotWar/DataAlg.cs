@@ -614,19 +614,31 @@ namespace RobotWar
             {
                 throw new System.Exception("pilotNotFound");
             }
+            if(unit == null)
+            {
+                // 取消駕駛
+                ctx.pilot2Unit.Remove(pilot);
+                return;
+            }
             var unitNotFound = ctx.units.ContainsKey(unit) == false;
             if (unitNotFound)
             {
                 throw new System.Exception("unitNotFound");
             }
+            // 取消原駕駛
+            var oldPilot = GetPilot(ctx, unit);
+            if(oldPilot != null)
+            {
+                ctx.pilot2Unit.Remove(oldPilot.Key);
+            }
             if (ctx.pilot2Unit.ContainsKey(pilot))
             {
-                // 駕駛切換座機
+                // 新駕駛切換座機
                 ctx.pilot2Unit[pilot] = unit;
             }
             else
             {
-                // 無座機的駕駛指派座機
+                // 無座機的新駕駛指派座機
                 ctx.pilot2Unit.Add(pilot, unit);
             }
         }

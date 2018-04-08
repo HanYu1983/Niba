@@ -37,10 +37,19 @@ namespace RobotWar
 
         public string selectUnit;
 
+        public bool HasSelectUnit
+        {
+            get
+            {
+                return string.IsNullOrEmpty(selectUnit) == false;
+            }
+        }
+
         public void SelectUnit(KeyRef unitKeyRef)
         {
             if(unitKeyRef.IsValid == false)
             {
+                selectUnit = null;
                 return;
             }
             selectUnit = unitKeyRef.Ref;
