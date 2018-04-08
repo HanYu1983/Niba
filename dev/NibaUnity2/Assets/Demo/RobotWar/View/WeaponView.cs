@@ -9,8 +9,9 @@ namespace RobotWar
     public class WeaponView : MonoBehaviour
     {
         public KeyRef keyRef;
-        public KeyRef unitKeyRef;
+        //public KeyRef unitKeyRef;
         public Text txt_name;
+        public Text txt_unit;
 
         private void Start()
         {
@@ -26,9 +27,13 @@ namespace RobotWar
 
         void UpdateView()
         {
+            txt_name.text = "";
+            if(txt_unit != null)
+            {
+                txt_unit.text = "";
+            }
             if (keyRef.IsValid == false)
             {
-                txt_name.text = "";
                 return;
             }
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
@@ -36,6 +41,16 @@ namespace RobotWar
             var obj = model.ctx.weapons[key];
             var cfg = ConfigWeapon.Get(obj.prototype);
             txt_name.text = cfg.name;
+
+            if (txt_unit != null)
+            {
+                var hasUnit = model.ctx.weapon2Unit.ContainsKey(key);
+                if (hasUnit)
+                {
+                    var unitCfg = ConfigUnit.Get(model.ctx.weapon2Unit[key]);
+                    txt_unit.text = unitCfg.name;
+                }
+            }
             /*
             if (unitKeyRef.IsValid)
             {

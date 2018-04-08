@@ -20,5 +20,12 @@ namespace RobotWar
             model.SelectUnit(unitKeyRef);
             GameManager.LoadSceneWithTransitions("Pilot");
         }
+
+        public void SelectUnitWeapon(KeyRef unitKeyRef)
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            model.SelectUnit(unitKeyRef);
+            GameManager.LoadSceneWithTransitions("Weapon");
+        }
     }
 }
