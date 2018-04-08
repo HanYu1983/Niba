@@ -36,7 +36,7 @@ namespace RobotWar
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             var weaponKey = r.Ref;
 
-            DataAlg.AssignWeapon(model.ctx, unitKey, weaponKey);
+            DataAlg.AssignWeapon(model.ctx, weaponKey, unitKey);
         }
         public override List<string> GetList()
         {

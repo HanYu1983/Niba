@@ -10,6 +10,7 @@ namespace RobotWar
     public class WeaponDataProvider : MonoBehaviour, IShowPageListDataProvider<string>
     {
         public bool filterNotAssign;
+        public string ownerUnit;
 
         public List<string> GetData()
         {
@@ -18,6 +19,11 @@ namespace RobotWar
             if (filterNotAssign)
             {
                 weapons = weapons.Where(w => model.ctx.weapon2Unit.ContainsKey(w) == false);
+            }
+            var filterOwner = string.IsNullOrEmpty(ownerUnit) == false;
+            if (filterOwner)
+            {
+                weapons = weapons.Where(w => model.ctx.weapon2Unit.ContainsKey(w)).Where(w => model.ctx.weapon2Unit[w] == ownerUnit);
             }
             return weapons.ToList();
         }

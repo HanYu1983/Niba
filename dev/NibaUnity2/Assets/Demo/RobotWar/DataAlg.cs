@@ -569,12 +569,17 @@ namespace RobotWar
             }
         }
 
-        public static void AssignWeapon(Context ctx, string unit, string weapon)
+        public static void AssignWeapon(Context ctx, string weapon, string unit)
         {
-            var itemNotFound = ctx.weapons.ContainsKey(weapon) == false;
-            if (itemNotFound)
+            var weaponNotFound = ctx.weapons.ContainsKey(weapon) == false;
+            if (weaponNotFound)
             {
-                throw new System.Exception("itemNotFound");
+                throw new System.Exception("weaponNotFound");
+            }
+            if(unit == null)
+            {
+                ctx.weapon2Unit.Remove(weapon);
+                return;
             }
             var unitNotFound = ctx.units.ContainsKey(unit) == false;
             if (unitNotFound)

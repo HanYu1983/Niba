@@ -41,20 +41,20 @@ namespace RobotWar
         {
             var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner);
             var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
-            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
             DataAlg.MoveUnit(model.ctx, pos, unit.Key);
 
             w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
-            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
 
             w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bomb);
-            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
 
             w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bigGun);
-            DataAlg.AssignWeapon(model.ctx, unit.Key, w.Key);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
 
             var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
-            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
+            DataAlg.AssignPilot(model.ctx, w.Key, p.Key);
 
             view.CreateUnit(model, unit.Key, pos);
         }
