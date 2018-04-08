@@ -11,7 +11,7 @@ namespace RobotWar
         {
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             model.SelectUnit(unitKeyRef);
-            GameManager.LoadSceneWithTransitions("");
+            GameManager.LoadSceneWithTransitions("Unit");
         }
 
         public void SelectUnitPilot(KeyRef unitKeyRef)
@@ -26,6 +26,13 @@ namespace RobotWar
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             model.SelectUnit(unitKeyRef);
             GameManager.LoadSceneWithTransitions("Weapon");
+        }
+
+        public void SelectUnitItem(KeyRef unitKeyRef)
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            model.SelectUnit(unitKeyRef);
+            GameManager.LoadSceneWithTransitions("Item");
         }
     }
 }
