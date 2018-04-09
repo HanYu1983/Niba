@@ -7,19 +7,17 @@ namespace RobotWar
 {
     public class KeyShowPageList : ShowPageList<string, KeyRef>
     {
-        void Start()
+        void Awake()
         {
             Model.OnUnitListChange += UpdateView;
-            StartCoroutine(DelayUpdateView());
+        }
+        private void Start()
+        {
+            UpdateView();
         }
         void OnDestroy()
         {
             Model.OnUnitListChange -= UpdateView;
-        }
-        IEnumerator DelayUpdateView()
-        {
-            yield return 0;
-            UpdateView();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace RobotWar
         public bool filterNotAssign;
         public KeyRef unitKeyRef;
 
-        private void Start()
+        private void Awake()
         {
             Model.OnWeaponListChange += UpdateView;
         }

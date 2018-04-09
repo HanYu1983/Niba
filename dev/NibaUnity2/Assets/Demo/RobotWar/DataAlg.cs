@@ -138,6 +138,11 @@ namespace RobotWar
         Up, Down, Left, Right
     }
 
+    public struct UnitLevels
+    {
+        public int hp, en, armor, speed, power;
+    }
+
     [Serializable]
     public class Unit
     {
@@ -148,6 +153,7 @@ namespace RobotWar
         public float ct;
         public Direction direction;
         public bool alreadyMove;
+        public UnitLevels levels;
         public Unit(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -308,6 +314,7 @@ namespace RobotWar
     public class Context
     {
         // home
+        public int money;
         public Dictionary<string, Unit> units = new Dictionary<string, Unit>();
         public Dictionary<string, Weapon> weapons = new Dictionary<string, Weapon>();
         public Dictionary<string, Pilot> pilots = new Dictionary<string, Pilot>();
@@ -329,6 +336,15 @@ namespace RobotWar
     
     public class DataAlg
     {
+        public static void AddMoney(Context ctx, int money)
+        {
+            ctx.money += money;
+            if(ctx.money < 0)
+            {
+                ctx.money = 0;
+            }
+        }
+
         static AStarPathfinding pathFiniding = new AStarPathfinding();
 
         public static IPathfinding.GetNeigboursFn<Grid> GetNeigbours(Context ctx, Vector2Int pos)
@@ -948,6 +964,67 @@ namespace RobotWar
                     break;
             }
             return true;
+        }
+
+        public static int GetUpgradeWeaponCost(Context ctx, string weapon)
+        {
+            if(ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            if(obj.level < 2)
+            {
+                return 500;
+            }
+            if(obj.level < 4)
+            {
+                return 1000;
+            }
+            return 2000;
+        }
+
+        public static void UpgradeWeapon(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            if(obj.level >= 7)
+            {
+                throw new Exception("xxx");
+            }
+            var cost = GetUpgradeWeaponCost(ctx, weapon);
+            var isNotEnough = ctx.money < cost;
+            if (isNotEnough)
+            {
+                throw new Exception("錢不夠");
+            }
+            ctx.money -= cost;
+            obj.level += 1;
+        }
+
+        public static int WeaponPowerWithLevel(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            return cfg.power + obj.level * 5;
+        }
+
+        public static int WeaponRangeWithLevel(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            return cfg.maxRange;
         }
 
         public static string ProcedureMap(float x, float y, float deepOcean, float ocean, float mountain, int cityGridCnt, float city, float cx, float cy, float mori, float mx, float my)

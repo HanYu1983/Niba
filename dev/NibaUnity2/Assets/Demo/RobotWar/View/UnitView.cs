@@ -16,7 +16,7 @@ namespace RobotWar
         public Text txt_weapon;
         public Text txt_items;
 
-        private void Start()
+        private void Awake()
         {
             keyRef.OnValueChange += UpdateView;
         }

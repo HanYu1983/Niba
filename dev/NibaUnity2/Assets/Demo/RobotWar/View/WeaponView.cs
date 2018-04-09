@@ -11,8 +11,9 @@ namespace RobotWar
         public KeyRef keyRef;
         public Text txt_name;
         public Text txt_unit;
+        public Text txt_desc;
 
-        private void Start()
+        private void Awake()
         {
             keyRef.OnValueChange += UpdateView;
         }
@@ -28,6 +29,10 @@ namespace RobotWar
             if(txt_unit != null)
             {
                 txt_unit.text = "";
+            }
+            if (txt_desc != null)
+            {
+                txt_desc.text = "";
             }
             if (keyRef.IsValid == false)
             {
@@ -50,21 +55,16 @@ namespace RobotWar
                     txt_unit.text = unitCfg.name;
                 }
             }
-            /*
-            if (unitKeyRef.IsValid)
+
+            if(txt_desc != null)
             {
-                var unitKey = unitKeyRef.Ref;
-                var hasOwner = model.ctx.weapon2Unit.ContainsKey(key);
-                if (hasOwner)
-                {
-                    var owner = model.ctx.weapon2Unit[key];
-                    if(owner == unitKey)
-                    {
-                        // change color
-                    }
-                }
+                var power = DataAlg.WeaponPowerWithLevel(model.ctx, key);
+                var minRange = cfg.minRange;
+                var maxRange = DataAlg.WeaponRangeWithLevel(model.ctx, key);
+                var level = obj.level;
+                var msg = string.Format("{0} {1}~{2} Lv{3}", power , minRange, maxRange, level+1);
+                txt_desc.text = msg;
             }
-            */
         }
     }
 }

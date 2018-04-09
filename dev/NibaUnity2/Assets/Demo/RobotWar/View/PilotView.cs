@@ -12,7 +12,7 @@ namespace RobotWar
         public Text txt_name;
         public Text txt_unit;
 
-        private void Start()
+        private void Awake()
         {
             keyRef.OnValueChange += UpdateView;
         }
