@@ -33,6 +33,11 @@ namespace RobotWar
 
             DataAlg.AssignPilot(ctx, kira.Key, unit.Key);
 
+            DataAlg.CreateItem(ctx, ConfigItem.ID_1);
+            DataAlg.CreateItem(ctx, ConfigItem.ID_2);
+            DataAlg.CreateItem(ctx, ConfigItem.ID_3);
+            DataAlg.CreateItem(ctx, ConfigItem.ID_4);
+
             OnUnitListChange();
             OnWeaponListChange();
         }

@@ -200,6 +200,13 @@ namespace RobotWar
         {
             key = Guid.NewGuid().ToString();
         }
+        public string Key
+        {
+            get
+            {
+                return key;
+            }
+        }
     }
 
     public class Pilot
@@ -331,6 +338,19 @@ namespace RobotWar
         public string lastUnitPos;
         // tmp
         public List<Dictionary<string, int>> fireCost = new List<Dictionary<string, int>>();
+
+        public Context Copy()
+        {
+            var ret = new Context();
+            ret.units = new Dictionary<string, Unit>(units);
+            ret.weapons = new Dictionary<string, Weapon>(weapons);
+            ret.pilots = new Dictionary<string, Pilot>(pilots);
+            ret.items = new Dictionary<string, Item>(items);
+            ret.weapon2Unit = new Dictionary<string, string>(weapon2Unit);
+            ret.pilot2Unit = new Dictionary<string, string>(pilot2Unit);
+            ret.item2Unit = new Dictionary<string, string>(item2Unit);
+            return ret;
+        }
     }
     
     public class DataAlg
@@ -561,12 +581,17 @@ namespace RobotWar
             return totalPowerCost;
         }
 
-        public static void AssignItem(Context ctx, string unit, string item)
+        public static void AssignItem(Context ctx, string item, string unit)
         {
             var itemNotFound = ctx.items.ContainsKey(item) == false;
             if (itemNotFound)
             {
                 throw new System.Exception("itemNotFound");
+            }
+            if (unit == null)
+            {
+                ctx.item2Unit.Remove(item);
+                return;
             }
             var unitNotFound = ctx.units.ContainsKey(unit) == false;
             if (unitNotFound)
@@ -883,6 +908,14 @@ namespace RobotWar
             var p = new Pilot();
             p.prototype = prototype;
             ctx.pilots.Add(p.Key, p);
+            return p;
+        }
+
+        public static Item CreateItem(Context ctx, string prototype)
+        {
+            var p = new Item();
+            p.prototype = prototype;
+            ctx.items.Add(p.Key, p);
             return p;
         }
 

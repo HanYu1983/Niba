@@ -121,7 +121,7 @@ MonoBehaviour:
     - key: description
       type: 2
   - key: ConfigItem
-    fileName: 
+    fileName: RobotWar - item.tsv
     types:
     - key: id
       type: 2

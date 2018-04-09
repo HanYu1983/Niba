@@ -6,15 +6,15 @@ using GameFramework.GameStructure;
 
 namespace RobotWar
 {
-    public class WeaponPageController : MonoBehaviour
+    public class ItemPageController : MonoBehaviour
     {
         public KeyRef selectUnitKeyRef;
-        public KeyRef selectWeaponKeyRef;
+        public KeyRef selectItemKeyRef;
         
         public KeyShowPageList unitList;
-        public KeyShowPageList weaponList;
+        public KeyShowPageList itemList;
 
-        public WeaponDataProvider weaponDataProvider;
+        public ItemDataProvider itemDataProvider;
 
         private void Start()
         {
@@ -30,32 +30,33 @@ namespace RobotWar
                 var selectUnit = model.selectUnit;
                 selectUnitKeyRef.value = selectUnit;
                 selectUnitKeyRef.NotifyValueChange();
-
-                weaponDataProvider.ownerUnit = selectUnit;
-                weaponList.UpdateView();
+                /*
+                itemDataProvider.ownerUnit = selectUnit;
+                itemList.UpdateView();
+                */
             }
         }
 
         public void Confirm()
         {
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
-            if (selectWeaponKeyRef.IsValid == false)
+            if (selectItemKeyRef.IsValid == false)
             {
-                Debug.LogWarning("沒有指定武器");
+                Debug.LogWarning("沒有指定道具");
                 return;
             }
-            var weapon = selectWeaponKeyRef.Ref;
+            var item = selectItemKeyRef.Ref;
             if (selectUnitKeyRef.IsValid)
             {
                 var unit = selectUnitKeyRef.Ref;
-                DataAlg.AssignWeapon(model.ctx, weapon, unit);
+                DataAlg.AssignItem(model.ctx, item, unit);
             }
             else
             {
-                DataAlg.AssignWeapon(model.ctx, weapon, null);
+                DataAlg.AssignItem(model.ctx, item, null);
             }
-            weaponList.UpdateView();
-            selectWeaponKeyRef.NotifyValueChange();
+            itemList.UpdateView();
+            selectItemKeyRef.NotifyValueChange();
         }
 
         public void CancelUnit()
@@ -63,8 +64,8 @@ namespace RobotWar
             selectUnitKeyRef.value = null;
             selectUnitKeyRef.NotifyValueChange();
 
-            weaponDataProvider.ownerUnit = null;
-            weaponList.UpdateView();
+            itemDataProvider.ownerUnit = null;
+            itemList.UpdateView();
         }
 
         public void FilterOwner()
@@ -74,8 +75,8 @@ namespace RobotWar
                 Debug.LogWarning("XX");
                 return;
             }
-            weaponDataProvider.ownerUnit = selectUnitKeyRef.Ref;
-            weaponList.UpdateView();
+            itemDataProvider.ownerUnit = selectUnitKeyRef.Ref;
+            itemList.UpdateView();
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using GameFramework.GameStructure;
 
 namespace RobotWar
 {
@@ -12,6 +13,9 @@ namespace RobotWar
 
         private void Start()
         {
+            var stageModel = GameManager.Instance.gameObject.GetComponent<Model>();
+            model.ctx = stageModel.ctx.Copy();
+
             DataAlg.CreatePlayer(model.ctx, 0, false);
             DataAlg.CreatePlayer(model.ctx, 1, false);
             DataAlg.CreatePlayer(model.ctx, 1, false);
