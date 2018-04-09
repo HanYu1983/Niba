@@ -1040,6 +1040,30 @@ namespace RobotWar
             return 2000;
         }
 
+        public static void BuyWeapon(Context ctx, string weaponConfigId)
+        {
+            var cfg = ConfigWeapon.Get(weaponConfigId);
+            var isNotEnough = ctx.money < cfg.moneyCost;
+            if (isNotEnough)
+            {
+                throw new Exception("isNotEnough");
+            }
+            ctx.money -= cfg.moneyCost;
+            CreateWeapon(ctx, weaponConfigId);
+        }
+
+        public static void BuyItem(Context ctx, string cid)
+        {
+            var cfg = ConfigItem.Get(cid);
+            var isNotEnough = ctx.money < cfg.moneyCost;
+            if (isNotEnough)
+            {
+                throw new Exception("isNotEnough");
+            }
+            ctx.money -= cfg.moneyCost;
+            CreateItem(ctx, cid);
+        }
+
         public static void UpgradeWeapon(Context ctx, string weapon)
         {
             if (ctx.weapons.ContainsKey(weapon) == false)

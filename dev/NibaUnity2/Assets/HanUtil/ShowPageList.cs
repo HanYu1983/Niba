@@ -74,7 +74,7 @@ namespace HanUtil
         public void UpdateView()
         {
             var provider = GetComponent<IShowPageListDataProvider<T>>();
-            Debug.Log("UpdateView:"+provider);
+            //Debug.Log("UpdateView:"+provider);
             if (provider == null)
             {
                 Debug.LogWarning("no data provider");

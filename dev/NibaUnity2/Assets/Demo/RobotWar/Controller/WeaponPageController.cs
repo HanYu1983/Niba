@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.GameStructure;
-
+using GameFramework.UI.Dialogs.Components;
+using System;
 
 namespace RobotWar
 {
@@ -39,24 +40,31 @@ namespace RobotWar
 
         public void Confirm()
         {
-            var model = GameManager.Instance.gameObject.GetComponent<Model>();
-            if (selectWeaponKeyRef.IsValid == false)
+            try
             {
-                Debug.LogWarning("沒有指定武器");
-                return;
+                var model = GameManager.Instance.gameObject.GetComponent<Model>();
+                if (selectWeaponKeyRef.IsValid == false)
+                {
+                    Debug.LogWarning("沒有指定武器");
+                    return;
+                }
+                var weapon = selectWeaponKeyRef.Ref;
+                if (selectUnitKeyRef.IsValid)
+                {
+                    var unit = selectUnitKeyRef.Ref;
+                    DataAlg.AssignWeapon(model.ctx, weapon, unit);
+                }
+                else
+                {
+                    DataAlg.AssignWeapon(model.ctx, weapon, null);
+                }
+                weaponList.UpdateView();
+                selectWeaponKeyRef.NotifyValueChange();
             }
-            var weapon = selectWeaponKeyRef.Ref;
-            if (selectUnitKeyRef.IsValid)
+            catch (Exception e)
             {
-                var unit = selectUnitKeyRef.Ref;
-                DataAlg.AssignWeapon(model.ctx, weapon, unit);
+                ModelController.OnException(e);
             }
-            else
-            {
-                DataAlg.AssignWeapon(model.ctx, weapon, null);
-            }
-            weaponList.UpdateView();
-            selectWeaponKeyRef.NotifyValueChange();
         }
 
         public void CancelUnit()

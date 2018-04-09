@@ -9,10 +9,12 @@ namespace RobotWar
     public class ItemView : MonoBehaviour
     {
         public KeyRef keyRef;
+        public bool isConfigId;
+
         public Text txt_name;
         public Text txt_unit;
         public Text txt_desc;
-
+        
         private void Awake()
         {
             keyRef.OnValueChange += UpdateView;
@@ -39,28 +41,37 @@ namespace RobotWar
                 return;
             }
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
-            var key = keyRef.Ref;
-            var obj = model.ctx.items[key];
-            var cfg = ConfigItem.Get(obj.prototype);
-            txt_name.text = cfg.name;
-
-            if (txt_unit != null)
+            ConfigItem cfg = null;
+            if (isConfigId)
             {
-                var hasUnit = model.ctx.item2Unit.ContainsKey(key);
-                if (hasUnit)
+                var key = keyRef.Ref;
+                cfg = ConfigItem.Get(key);
+            }
+            else
+            {
+                var key = keyRef.Ref;
+                var obj = model.ctx.items[key];
+                cfg = ConfigItem.Get(obj.prototype);
+
+                if (txt_unit != null)
                 {
-                    var unitKey = model.ctx.item2Unit[key];
-                    var unit = model.ctx.units[unitKey];
-                    var unitCfg = ConfigUnit.Get(unit.prototype);
-                    txt_unit.text = unitCfg.name;
+                    var hasUnit = model.ctx.item2Unit.ContainsKey(key);
+                    if (hasUnit)
+                    {
+                        var unitKey = model.ctx.item2Unit[key];
+                        var unit = model.ctx.units[unitKey];
+                        var unitCfg = ConfigUnit.Get(unit.prototype);
+                        txt_unit.text = unitCfg.name;
+                    }
+                }
+
+                if (txt_desc != null)
+                {
+                    var msg = string.Format("cost {0}", cfg.moneyCost);
+                    txt_desc.text = msg;
                 }
             }
-
-            if (txt_desc != null)
-            {
-                var msg = "";
-                txt_desc.text = msg;
-            }
+            txt_name.text = cfg.name;
         }
     }
 }

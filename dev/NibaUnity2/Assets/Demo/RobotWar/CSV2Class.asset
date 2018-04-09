@@ -50,8 +50,8 @@ MonoBehaviour:
       type: 2
     - key: cost
       type: 0
-    - key: hitRateBonus
-      type: 1
+    - key: moneyCost
+      type: 0
     - key: minRange
       type: 0
     - key: maxRange
@@ -63,6 +63,8 @@ MonoBehaviour:
     - key: power
       type: 0
     - key: prepareTime
+      type: 1
+    - key: hitRateBonus
       type: 1
     - key: ability
       type: 2
@@ -130,6 +132,8 @@ MonoBehaviour:
     - key: description
       type: 2
     - key: unitPowerCost
+      type: 0
+    - key: moneyCost
       type: 0
   splitType: 0
   split: 

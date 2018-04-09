@@ -58,6 +58,46 @@ namespace RobotWar
             });
         }
 
+        public void BuyWeapon(KeyRef weaponRef)
+        {
+            Alarm(DialogInstance.DialogButtonsType.OkCancel, "是否購買?", "afafa", dialog =>
+            {
+                if (dialog.DialogResult == DialogInstance.DialogResultType.Ok)
+                {
+                    try
+                    {
+                        var model = GameManager.Instance.gameObject.GetComponent<Model>();
+                        DataAlg.BuyWeapon(model.ctx, weaponRef.Ref);
+                        weaponRef.NotifyValueChange();
+                    }
+                    catch (Exception e)
+                    {
+                        OnException(e);
+                    }
+                }
+            });
+        }
+
+        public void BuyItem(KeyRef itemRef)
+        {
+            Alarm(DialogInstance.DialogButtonsType.OkCancel, "是否購買?", "afafa", dialog =>
+            {
+                if (dialog.DialogResult == DialogInstance.DialogResultType.Ok)
+                {
+                    try
+                    {
+                        var model = GameManager.Instance.gameObject.GetComponent<Model>();
+                        DataAlg.BuyItem(model.ctx, itemRef.Ref);
+                        itemRef.NotifyValueChange();
+                    }
+                    catch (Exception e)
+                    {
+                        OnException(e);
+                    }
+                }
+            });
+        }
+
         public static void OnException(Exception e)
         {
             Alarm(DialogInstance.DialogButtonsType.Ok, "System", e.Message, null);
