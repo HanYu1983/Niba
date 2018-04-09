@@ -142,8 +142,7 @@ namespace RobotWar
     {
         public int hp, en, armor, speed, power;
     }
-
-    [Serializable]
+    
     public class Unit
     {
         public string key;
@@ -349,7 +348,12 @@ namespace RobotWar
 
         public static IPathfinding.GetNeigboursFn<Grid> GetNeigbours(Context ctx, Vector2Int pos)
         {
-            var unitKey = ctx.grid2Unit[new Grid(pos).Key];
+            var gk = new Grid(pos).Key;
+            if(ctx.grid2Unit.ContainsKey(gk) == false)
+            {
+                throw new Exception("指定的地點不存在:"+gk);
+            }
+            var unitKey = ctx.grid2Unit[gk];
             var unit = ctx.units[unitKey];
             var player = ctx.players[unit.owner];
             var dirs = new Vector2Int[]
@@ -383,16 +387,16 @@ namespace RobotWar
                 foreach (var v in dirs)
                 {
                     var newPos = oriPos + v;
-                    var gk = new Grid(newPos).Key;
-                    if (ctx.grids.ContainsKey(gk) == false)
+                    var ngk = new Grid(newPos).Key;
+                    if (ctx.grids.ContainsKey(ngk) == false)
                     {
                         continue;
                     }
-                    if(ctx.grid2Unit.ContainsKey(gk))
+                    if(ctx.grid2Unit.ContainsKey(ngk))
                     {
                         continue;
                     }
-                    var g = ctx.grids[gk];
+                    var g = ctx.grids[ngk];
                     ret.Add(g, cost);
                 }
                 return ret;
@@ -671,7 +675,7 @@ namespace RobotWar
 
         public static int GetMovePower(Context ctx, string unit)
         {
-            return 100;
+            return 200;
             /*
             var unitObj = ctx.units[unit];
             var cfg = ConfigUnit.Get(unitObj.prototype);
@@ -702,8 +706,9 @@ namespace RobotWar
 
         public static void StepCT(Context ctx)
         {
-            foreach(var u in ctx.units.Values)
+            foreach(var uk in ctx.unit2Grid.Keys)
             {
+                var u = ctx.units[uk];
                 var cfg = ConfigUnit.Get(u.prototype);
                 u.ct += Speed2CT(UnitSpeed(ctx, u.Key));
             }
@@ -768,8 +773,14 @@ namespace RobotWar
         {
             var fireDict = GetFileCostDict(ctx, team);
             fireDict.Clear();
-            foreach (var unitObj in ctx.units.Values)
+            foreach (var unitKey in ctx.unit2Grid.Keys)
             {
+                var isInMap = ctx.unit2Grid.ContainsKey(unitKey);
+                if(isInMap == false)
+                {
+                    continue;
+                }
+                var unitObj = ctx.units[unitKey];
                 var ownerObj = ctx.players[unitObj.owner];
                 var grid = ctx.grids[ctx.unit2Grid[unitObj.Key]];
                 var isEnemy = team != ownerObj.team;
@@ -793,9 +804,22 @@ namespace RobotWar
             }
         }
 
-        public static void MoveUnit(Context ctx, Vector2Int dist, string unitKey, bool force = false)
+        public static void PutUnit(Context ctx, Vector2Int dist, string unitKey)
         {
-            if(force == false && ctx.units[unitKey].alreadyMove)
+            var hasOldGrid = ctx.unit2Grid.ContainsKey(unitKey);
+            if (hasOldGrid)
+            {
+                var oldGrid = ctx.unit2Grid[unitKey];
+                ctx.grid2Unit.Remove(oldGrid);
+            }
+            var gk = new Grid(dist).Key;
+            ctx.unit2Grid[unitKey] = gk;
+            ctx.grid2Unit[gk] = unitKey;
+        }
+
+        public static void MoveUnit(Context ctx, Vector2Int dist, string unitKey)
+        {
+            if(ctx.units[unitKey].alreadyMove)
             {
                 throw new Exception("already move");
             }
@@ -809,13 +833,12 @@ namespace RobotWar
             var hasOldGrid = ctx.unit2Grid.ContainsKey(unitKey);
             if(hasOldGrid == false)
             {
-                var oldGrid = ctx.unit2Grid[unitKey];
-                ctx.grid2Unit.Remove(oldGrid);
-                if (force == false)
-                {
-                    ctx.lastUnitPos = oldGrid;
-                }
+                throw new Exception("has unit:" + gk);
             }
+            // remove last grid and record it
+            var oldGrid = ctx.unit2Grid[unitKey];
+            ctx.grid2Unit.Remove(oldGrid);
+            ctx.lastUnitPos = oldGrid;
             // change to new pos
             ctx.unit2Grid[unitKey] = gk;
             ctx.grid2Unit[gk] = unitKey;
@@ -827,9 +850,9 @@ namespace RobotWar
             var isNotValidPos = string.IsNullOrEmpty(ctx.lastUnitPos);
             if (isNotValidPos)
             {
-                throw new Exception("XXXX");
+                throw new Exception("機體未移動");
             }
-            MoveUnit(ctx, ctx.grids[ctx.lastUnitPos].pos, unitKey, true);
+            PutUnit(ctx, ctx.grids[ctx.lastUnitPos].pos, unitKey);
             ctx.units[unitKey].alreadyMove = false;
             return ctx.lastUnitPos;
         }

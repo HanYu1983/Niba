@@ -42,7 +42,7 @@ namespace RobotWar
             var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner);
             var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
             DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-            DataAlg.MoveUnit(model.ctx, pos, unit.Key);
+            DataAlg.PutUnit(model.ctx, pos, unit.Key);
 
             w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
             DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
@@ -54,7 +54,7 @@ namespace RobotWar
             DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
 
             var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
-            DataAlg.AssignPilot(model.ctx, w.Key, p.Key);
+            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
 
             view.CreateUnit(model, unit.Key, pos);
         }
@@ -265,12 +265,9 @@ namespace RobotWar
                                     {
                                         var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
                                         var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
-                                        var units = Model.ctx.units.Values.Where(u =>
+                                        var units = Model.ctx.unit2Grid.Keys.Where(uk =>
                                         {
-                                            if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
-                                            {
-                                                return false;
-                                            }
+                                            var u = Model.ctx.units[uk];
                                             var dfdPlayer = Model.ctx.players[u.owner];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
@@ -289,12 +286,9 @@ namespace RobotWar
                                         var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
                                         var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
 
-                                        var units = Model.ctx.units.Values.Where(u =>
+                                        var units = Model.ctx.unit2Grid.Keys.Where(uk =>
                                         {
-                                            if (Model.ctx.unit2Grid.ContainsKey(u.Key) == false)
-                                            {
-                                                return false;
-                                            }
+                                            var u = Model.ctx.units[uk];
                                             var dfdPlayer = Model.ctx.players[u.owner];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
