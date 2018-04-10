@@ -311,6 +311,7 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public class Task
     {
         public const string UnitAttack = "Unit{0} use Weapon{1} attack unit{2}";
@@ -339,7 +340,6 @@ namespace RobotWar
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
         public List<Task> tasks = new List<Task>();
-        
         public int turn;
         public string lastUnitPos;
         // tmp
@@ -358,6 +358,15 @@ namespace RobotWar
             public List<string> weapon2Unit;
             public List<string> pilot2Unit;
             public List<string> item2Unit;
+
+            public List<Player> players;
+            public List<string> unit2Player;
+            public List<Grid> grids;
+            public List<string> grid2Unit;
+            public List<string> unit2Grid;
+            public List<Task> tasks;
+            public int turn;
+            public string lastUnitPos;
         }
         
         public static string GetMemonto(Context ctx)
@@ -370,6 +379,15 @@ namespace RobotWar
             tmp.weapon2Unit = ctx.weapon2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.weapon2Unit[k] }; }).ToList();
             tmp.pilot2Unit = ctx.pilot2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.pilot2Unit[k] }; }).ToList();
             tmp.item2Unit = ctx.item2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.item2Unit[k] }; }).ToList();
+
+            tmp.players = ctx.players;
+            tmp.unit2Player = ctx.unit2Player.Keys.SelectMany(k => { return new List<string>() { k, ctx.unit2Player[k].ToString() }; }).ToList();
+            tmp.grids = new List<Grid>(ctx.grids.Values);
+            tmp.grid2Unit = ctx.grid2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.grid2Unit[k] }; }).ToList();
+            tmp.unit2Grid = ctx.unit2Grid.Keys.SelectMany(k => { return new List<string>() { k, ctx.unit2Grid[k] }; }).ToList();
+            tmp.tasks = ctx.tasks;
+            tmp.turn = ctx.turn;
+            tmp.lastUnitPos = ctx.lastUnitPos;
             return JsonUtility.ToJson(tmp);
         }
 
@@ -417,8 +435,39 @@ namespace RobotWar
                 var v = tmp.item2Unit[i + 1];
                 ctx.item2Unit.Add(k, v);
             }
+            ctx.players = tmp.players;
+            ctx.unit2Player.Clear();
+            for (var i = 0; i < tmp.unit2Player.Count; i += 2)
+            {
+                var k = tmp.unit2Player[i];
+                var v = int.Parse(tmp.unit2Player[i + 1]);
+                ctx.unit2Player.Add(k, v);
+            }
+            ctx.grids.Clear();
+            foreach (var u in tmp.grids)
+            {
+                ctx.grids.Add(u.Key, u);
+            }
+            ctx.grid2Unit.Clear();
+            for (var i = 0; i < tmp.grid2Unit.Count; i += 2)
+            {
+                var k = tmp.grid2Unit[i];
+                var v = tmp.grid2Unit[i + 1];
+                ctx.grid2Unit.Add(k, v);
+            }
+            ctx.unit2Grid.Clear();
+            for (var i = 0; i < tmp.unit2Grid.Count; i += 2)
+            {
+                var k = tmp.unit2Grid[i];
+                var v = tmp.unit2Grid[i + 1];
+                ctx.unit2Grid.Add(k, v);
+            }
+            ctx.tasks = tmp.tasks;
+            ctx.turn = tmp.turn;
+            ctx.lastUnitPos = tmp.lastUnitPos;
         }
         #endregion
+
         public static void AddMoney(Context ctx, int money)
         {
             ctx.money += money;
@@ -428,7 +477,148 @@ namespace RobotWar
             }
         }
 
+        #region map
         static AStarPathfinding pathFiniding = new AStarPathfinding();
+
+        public static Direction GetDirection(Vector2Int a, Vector2Int b)
+        {
+            var yoffset = b.y - a.y;
+            var xoffset = b.x - a.x;
+            if (Mathf.Abs(yoffset) > Mathf.Abs(xoffset))
+            {
+                if (yoffset >= 0)
+                {
+                    return Direction.Up;
+                }
+                else
+                {
+                    return Direction.Down;
+                }
+            }
+            if (xoffset >= 0)
+            {
+                return Direction.Right;
+            }
+            else
+            {
+                return Direction.Left;
+            }
+        }
+
+        public static string ProcedureMap(float x, float y, float deepOcean, float ocean, float mountain, int cityGridCnt, float city, float cx, float cy, float mori, float mx, float my)
+        {
+            var height = Mathf.PerlinNoise(x, y);
+            if (height < deepOcean)
+            {
+                return "deepOcean";
+            }
+            if (height < ocean)
+            {
+                return "ocean";
+            }
+            if (height > mountain)
+            {
+                return "mountain";
+            }
+            var factor = 1 / (float)cityGridCnt;
+            var value = Mathf.PerlinNoise(x + cx, y + cy);
+            value = ((int)(value / factor)) * factor;
+            if (value > city)
+            {
+                return "city";
+            }
+            value = Mathf.PerlinNoise(x + mx, y + my);
+            if (value > mori)
+            {
+                return "mori";
+            }
+            return "plain";
+        }
+
+        public static void GenMap(Context ctx, int width, int height)
+        {
+            ctx.grids.Clear();
+
+            var deepOcean = UnityEngine.Random.Range(0, 0.3f);
+            var ocean = deepOcean + UnityEngine.Random.Range(0, 0.4f);
+            var mountain = 1 - UnityEngine.Random.Range(0, 0.3f);
+            var city = UnityEngine.Random.Range(0, 1f);
+            var mori = UnityEngine.Random.Range(0, 1f);
+            var factor = UnityEngine.Random.Range(1, 10f);
+
+            var xr = UnityEngine.Random.Range(0, 100f);
+            var yr = UnityEngine.Random.Range(0, 100f);
+
+            var cxr = UnityEngine.Random.Range(0, 100f);
+            var cyr = UnityEngine.Random.Range(0, 100f);
+
+            var mxr = UnityEngine.Random.Range(0, 100f);
+            var myr = UnityEngine.Random.Range(0, 100f);
+
+            var max = Mathf.Max(width, height);
+            var offset = 1 / (float)max;
+            for (var x = 0; x < width; ++x)
+            {
+                for (var y = 0; y < height; ++y)
+                {
+                    var xf = xr + x * offset * factor;
+                    var yf = yr + y * offset * factor;
+                    var prototype = ProcedureMap(xf, yf, deepOcean, ocean, mountain, max, city, cxr, cyr, mori, mxr, myr);
+                    var grid = new Grid(new Vector2Int(x, y));
+                    grid.prototype = prototype;
+                    ctx.grids.Add(grid.Key, grid);
+                }
+            }
+        }
+
+        public static Dictionary<string, int> GetFileCostDict(Context ctx, int team)
+        {
+            if (ctx.fireCost.Count < team + 1)
+            {
+                var shouldAddCount = team + 1 - ctx.fireCost.Count;
+                for (var i = 0; i < shouldAddCount; ++i)
+                {
+                    ctx.fireCost.Add(new Dictionary<string, int>());
+                }
+            }
+            return ctx.fireCost[team];
+        }
+
+        public static void CalcFileCost(Context ctx, int team)
+        {
+            var fireDict = GetFileCostDict(ctx, team);
+            fireDict.Clear();
+            foreach (var unitKey in ctx.unit2Grid.Keys)
+            {
+                var isInMap = ctx.unit2Grid.ContainsKey(unitKey);
+                if (isInMap == false)
+                {
+                    continue;
+                }
+                var unitObj = ctx.units[unitKey];
+                var owner = ctx.unit2Player[unitKey];
+                var ownerObj = ctx.players[owner];
+                var grid = ctx.grids[ctx.unit2Grid[unitObj.Key]];
+                var isEnemy = team != ownerObj.team;
+                if (isEnemy == false)
+                {
+                    continue;
+                }
+                foreach (var weaponObj in GetWeaponList(ctx, unitObj.Key))
+                {
+                    var cfg = ConfigWeapon.Get(weaponObj.prototype);
+                    var allRange = FindAllRange(ctx, cfg.minRange, cfg.maxRange, grid.pos);
+                    foreach (var g in allRange.Keys)
+                    {
+                        if (fireDict.ContainsKey(g.Key) == false)
+                        {
+                            fireDict[g.Key] = 0;
+                        }
+                        fireDict[g.Key] += 5;
+                    }
+                }
+            }
+        }
 
         public static IPathfinding.GetNeigboursFn<Grid> GetNeigbours(Context ctx, Vector2Int pos)
         {
@@ -562,6 +752,108 @@ namespace RobotWar
             }
             return paths;
         }
+        #endregion
+
+        #region player
+        public static Player CreatePlayer(Context ctx, int team, bool isAI)
+        {
+            var p = new Player(ctx.players.Count);
+            p.team = team;
+            p.isAI = isAI;
+            ctx.players.Add(p);
+            return p;
+        }
+        #endregion
+
+        #region weapon
+        public static Weapon CreateWeapon(Context ctx, string prototype)
+        {
+            var w = new Weapon();
+            w.prototype = prototype;
+            ctx.weapons.Add(w.Key, w);
+            return w;
+        }
+
+        public static void UpgradeWeapon(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            if (obj.level >= 7)
+            {
+                throw new Exception("xxx");
+            }
+            var cost = GetUpgradeWeaponCost(ctx, weapon);
+            var isNotEnough = ctx.money < cost;
+            if (isNotEnough)
+            {
+                throw new Exception("錢不夠");
+            }
+            ctx.money -= cost;
+            obj.level += 1;
+        }
+
+        public static int WeaponPowerWithLevel(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            return cfg.power + obj.level * 5;
+        }
+
+        public static int WeaponRangeWithLevel(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            return cfg.maxRange;
+        }
+
+        public static void AssignWeapon(Context ctx, string weapon, string unit)
+        {
+            var weaponNotFound = ctx.weapons.ContainsKey(weapon) == false;
+            if (weaponNotFound)
+            {
+                throw new System.Exception("weaponNotFound");
+            }
+            if (unit == null)
+            {
+                ctx.weapon2Unit.Remove(weapon);
+                return;
+            }
+            var unitNotFound = ctx.units.ContainsKey(unit) == false;
+            if (unitNotFound)
+            {
+                throw new System.Exception("unitNotFound");
+            }
+            var power = ConfigUnit.Get(ctx.units[unit].prototype).power;
+            var powerCost = GetPowerCost(ctx, unit) + ConfigWeapon.Get(ctx.weapons[weapon].prototype).unitPowerCost;
+            if (powerCost > power)
+            {
+                throw new System.Exception("power is not enougth");
+            }
+            if (ctx.weapon2Unit.ContainsKey(weapon))
+            {
+                ctx.weapon2Unit[weapon] = unit;
+            }
+            else
+            {
+                ctx.weapon2Unit.Add(weapon, unit);
+            }
+        }
+
+        public static List<Weapon> GetWeaponList(Context ctx, string unit)
+        {
+            return ctx.weapon2Unit.Keys.Where(k => ctx.weapon2Unit[k] == unit).Select(k => ctx.weapons[k]).ToList();
+        }
 
         public static List<Vector2Int> GetCenterVecs(int range)
         {
@@ -638,12 +930,114 @@ namespace RobotWar
             return ret;
         }
 
+        public static bool ConsumeWeapon(Context ctx, string unit, string weapon, ref string reason)
+        {
+            if (ctx.weapon2Unit[weapon] != unit)
+            {
+                reason = "武器的擁有者遺失";
+                return false;
+            }
+            var obj = ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(obj.prototype);
+            var unitObj = ctx.units[unit];
+
+            switch (cfg.weaponType)
+            {
+                case ConfigWeaponType.ID_bullet:
+                    {
+                        if (obj.usedBulletCount >= cfg.bulletCount)
+                        {
+                            reason = "彈藥不足";
+                            return false;
+                        }
+                        obj.usedBulletCount += 1;
+                    }
+                    break;
+                case ConfigWeaponType.ID_energy:
+                    {
+                        if (unitObj.usedEn >= cfg.cost)
+                        {
+                            reason = "能量不足";
+                            return false;
+                        }
+                        var en = cfg.cost;
+                        unitObj.usedEn += en;
+                    }
+                    break;
+            }
+            return true;
+        }
+
+        public static int GetUpgradeWeaponCost(Context ctx, string weapon)
+        {
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("XXX");
+            }
+            var obj = ctx.weapons[weapon];
+            if (obj.level < 2)
+            {
+                return 500;
+            }
+            if (obj.level < 4)
+            {
+                return 1000;
+            }
+            return 2000;
+        }
+
+        public static void BuyWeapon(Context ctx, string weaponConfigId)
+        {
+            var cfg = ConfigWeapon.Get(weaponConfigId);
+            var isNotEnough = ctx.money < cfg.moneyCost;
+            if (isNotEnough)
+            {
+                throw new Exception("isNotEnough");
+            }
+            ctx.money -= cfg.moneyCost;
+            CreateWeapon(ctx, weaponConfigId);
+        }
+        #endregion
+
+        #region unit
+        public static Unit CreateUnit(Context ctx, string prototype)
+        {
+            var unit = new Unit(null);
+            unit.prototype = prototype;
+            ctx.units.Add(unit.Key, unit);
+            Debug.Log("CreateUnit:" + ctx.units.Count);
+            return unit;
+        }
+
         public static int GetPowerCost(Context ctx, string unit)
         {
             var weaponPowerCost = GetWeaponList(ctx, unit).Sum(w=>ConfigWeapon.Get(w.prototype).unitPowerCost);
             var itemPowerCost = GetItemList(ctx, unit).Sum(w => ConfigItem.Get(w.prototype).unitPowerCost);
             var totalPowerCost = weaponPowerCost + itemPowerCost;
             return totalPowerCost;
+        }
+
+        #endregion
+
+        #region item
+        public static Item CreateItem(Context ctx, string prototype)
+        {
+            var p = new Item();
+            p.prototype = prototype;
+            ctx.items.Add(p.Key, p);
+            return p;
+        }
+
+        public static void BuyItem(Context ctx, string cid)
+        {
+            var cfg = ConfigItem.Get(cid);
+            var isNotEnough = ctx.money < cfg.moneyCost;
+            if (isNotEnough)
+            {
+                throw new Exception("isNotEnough");
+            }
+            ctx.money -= cfg.moneyCost;
+            CreateItem(ctx, cid);
         }
 
         public static void AssignItem(Context ctx, string item, string unit)
@@ -679,47 +1073,19 @@ namespace RobotWar
             }
         }
 
-        public static void AssignWeapon(Context ctx, string weapon, string unit)
-        {
-            var weaponNotFound = ctx.weapons.ContainsKey(weapon) == false;
-            if (weaponNotFound)
-            {
-                throw new System.Exception("weaponNotFound");
-            }
-            if(unit == null)
-            {
-                ctx.weapon2Unit.Remove(weapon);
-                return;
-            }
-            var unitNotFound = ctx.units.ContainsKey(unit) == false;
-            if (unitNotFound)
-            {
-                throw new System.Exception("unitNotFound");
-            }
-            var power = ConfigUnit.Get(ctx.units[unit].prototype).power;
-            var powerCost = GetPowerCost(ctx, unit) + ConfigWeapon.Get(ctx.weapons[weapon].prototype).unitPowerCost;
-            if (powerCost > power)
-            {
-                throw new System.Exception("power is not enougth");
-            }
-            if (ctx.weapon2Unit.ContainsKey(weapon))
-            {
-                ctx.weapon2Unit[weapon] = unit;
-            }
-            else
-            {
-                ctx.weapon2Unit.Add(weapon, unit);
-            }
-        }
-
         public static List<Item> GetItemList(Context ctx, string unit)
         {
             return ctx.item2Unit.Keys.Where(k => ctx.item2Unit[k] == unit).Select(k => ctx.items[k]).ToList();
         }
+        #endregion
 
-        public static List<Weapon> GetWeaponList(Context ctx, string unit)
+        #region pilot
+        public static Pilot CreatePilot(Context ctx, string prototype)
         {
-            return ctx.weapon2Unit.Keys.Where(k => ctx.weapon2Unit[k] == unit).Select(k => ctx.weapons[k]).ToList();
+            var p = new Pilot();
+            p.prototype = prototype;
+            ctx.pilots.Add(p.Key, p);
+            return p;
         }
 
         public static void AssignPilot(Context ctx, string pilot, string unit)
@@ -762,17 +1128,16 @@ namespace RobotWar
         {
             return ctx.pilot2Unit.Keys.Where(k => ctx.pilot2Unit[k] == unit).Select(p => ctx.pilots[p]).FirstOrDefault();
         }
+        #endregion
 
+        #region unit map interaction
         public static int GetMovePower(Context ctx, string unit)
         {
-            return 200;
-            /*
             var unitObj = ctx.units[unit];
             var cfg = ConfigUnit.Get(unitObj.prototype);
             var weight = GetWeaponList(ctx, unit).Select(w => ConfigWeapon.Get(w.prototype)).Sum(w => w.unitPowerCost);
             var power = cfg.power - weight;
             return power;
-            */
         }
 
         public static float Speed2CT(float speed)
@@ -822,13 +1187,7 @@ namespace RobotWar
 
         public static Unit GetTopCTUnit(Context ctx)
         {
-            //Debug.Log("GetTopCTUnit");
-            var ret = new List<Unit>(ctx.units.Values);
-            /*foreach (var t in ret)
-            {
-                Debug.Log(t.ct + ":" + t.Key);
-            }*/
-            return ret.OrderByDescending(u => u.ct).Where(u=> u.ct>=1).FirstOrDefault();
+            return ctx.unit2Grid.Keys.Select(k=>ctx.units[k]).OrderByDescending(u => u.ct).Where(u=> u.ct>=1).FirstOrDefault();
         }
 
         public static void PassUnit(Context ctx, string unitKey)
@@ -836,64 +1195,7 @@ namespace RobotWar
             ctx.units[unitKey].ct -= 1;
             ctx.units[unitKey].alreadyMove = false;
         }
-
-        public static Player CreatePlayer(Context ctx, int team, bool isAI)
-        {
-            var p = new Player(ctx.players.Count);
-            p.team = team;
-            p.isAI = isAI;
-            ctx.players.Add(p);
-            return p;
-        }
-
-        public static Dictionary<string, int> GetFileCostDict(Context ctx, int team)
-        {
-            if(ctx.fireCost.Count < team + 1)
-            {
-                var shouldAddCount = team + 1 - ctx.fireCost.Count;
-                for (var i=0; i<shouldAddCount; ++i)
-                {
-                    ctx.fireCost.Add(new Dictionary<string, int>());
-                }
-            }
-            return ctx.fireCost[team];
-        }
-
-        public static void CalcFileCost(Context ctx, int team)
-        {
-            var fireDict = GetFileCostDict(ctx, team);
-            fireDict.Clear();
-            foreach (var unitKey in ctx.unit2Grid.Keys)
-            {
-                var isInMap = ctx.unit2Grid.ContainsKey(unitKey);
-                if(isInMap == false)
-                {
-                    continue;
-                }
-                var unitObj = ctx.units[unitKey];
-                var owner = ctx.unit2Player[unitKey];
-                var ownerObj = ctx.players[owner];
-                var grid = ctx.grids[ctx.unit2Grid[unitObj.Key]];
-                var isEnemy = team != ownerObj.team;
-                if(isEnemy == false)
-                {
-                    continue;
-                }
-                foreach(var weaponObj in GetWeaponList(ctx, unitObj.Key))
-                {
-                    var cfg = ConfigWeapon.Get(weaponObj.prototype);
-                    var allRange = FindAllRange(ctx, cfg.minRange, cfg.maxRange, grid.pos);
-                    foreach(var g in allRange.Keys)
-                    {
-                        if (fireDict.ContainsKey(g.Key) == false)
-                        {
-                            fireDict[g.Key] = 0;
-                        }
-                        fireDict[g.Key] += 5;
-                    }
-                }
-            }
-        }
+        
 
         public static void PutUnit(Context ctx, Vector2Int dist, int player, string unitKey)
         {
@@ -963,39 +1265,7 @@ namespace RobotWar
             ctx.units[unitKey].alreadyMove = false;
             return ctx.lastUnitPos;
         }
-
-        public static Unit CreateUnit(Context ctx, string prototype)
-        {
-            var unit = new Unit(null);
-            unit.prototype = prototype;
-            ctx.units.Add(unit.Key, unit);
-            Debug.Log("CreateUnit:" + ctx.units.Count);
-            return unit;
-        }
-
-        public static Weapon CreateWeapon(Context ctx, string prototype)
-        {
-            var w = new Weapon();
-            w.prototype = prototype;
-            ctx.weapons.Add(w.Key, w);
-            return w;
-        }
-
-        public static Pilot CreatePilot(Context ctx, string prototype)
-        {
-            var p = new Pilot();
-            p.prototype = prototype;
-            ctx.pilots.Add(p.Key, p);
-            return p;
-        }
-
-        public static Item CreateItem(Context ctx, string prototype)
-        {
-            var p = new Item();
-            p.prototype = prototype;
-            ctx.items.Add(p.Key, p);
-            return p;
-        }
+        
 
         public static Task CreateAttackTask(Context ctx, string unitKey, string weaponKey, List<string> targets)
         {
@@ -1037,220 +1307,9 @@ namespace RobotWar
             ctx.tasks.Remove(task);
         }
 
-        public static Direction GetDirection(Vector2Int a, Vector2Int b)
-        {
-            var yoffset = b.y - a.y;
-            var xoffset = b.x - a.x;
-            if(Mathf.Abs(yoffset) > Mathf.Abs(xoffset))
-            {
-                if(yoffset >= 0)
-                {
-                    return Direction.Up;
-                }
-                else
-                {
-                    return Direction.Down;
-                }
-            }
-            if(xoffset >= 0)
-            {
-                return Direction.Right;
-            }
-            else
-            {
-                return Direction.Left;
-            }
-        }
+        #endregion
 
-        public static bool ConsumeWeapon(Context ctx, string unit, string weapon, ref string reason)
-        {
-            if (ctx.weapon2Unit[weapon] != unit)
-            {
-                reason = "武器的擁有者遺失";
-                return false;
-            }
-            var obj = ctx.weapons[weapon];
-            var cfg = ConfigWeapon.Get(obj.prototype);
-            var unitObj = ctx.units[unit];
-
-            switch (cfg.weaponType)
-            {
-                case ConfigWeaponType.ID_bullet:
-                    {
-                        if(obj.usedBulletCount >= cfg.bulletCount)
-                        {
-                            reason = "彈藥不足";
-                            return false;
-                        }
-                        obj.usedBulletCount += 1;
-                    }
-                    break;
-                case ConfigWeaponType.ID_energy:
-                    {
-                        if(unitObj.usedEn >= cfg.cost)
-                        {
-                            reason = "能量不足";
-                            return false;
-                        }
-                        var en = cfg.cost;
-                        unitObj.usedEn += en;
-                    }
-                    break;
-            }
-            return true;
-        }
-
-        public static int GetUpgradeWeaponCost(Context ctx, string weapon)
-        {
-            if(ctx.weapons.ContainsKey(weapon) == false)
-            {
-                throw new Exception("XXX");
-            }
-            var obj = ctx.weapons[weapon];
-            if(obj.level < 2)
-            {
-                return 500;
-            }
-            if(obj.level < 4)
-            {
-                return 1000;
-            }
-            return 2000;
-        }
-
-        public static void BuyWeapon(Context ctx, string weaponConfigId)
-        {
-            var cfg = ConfigWeapon.Get(weaponConfigId);
-            var isNotEnough = ctx.money < cfg.moneyCost;
-            if (isNotEnough)
-            {
-                throw new Exception("isNotEnough");
-            }
-            ctx.money -= cfg.moneyCost;
-            CreateWeapon(ctx, weaponConfigId);
-        }
-
-        public static void BuyItem(Context ctx, string cid)
-        {
-            var cfg = ConfigItem.Get(cid);
-            var isNotEnough = ctx.money < cfg.moneyCost;
-            if (isNotEnough)
-            {
-                throw new Exception("isNotEnough");
-            }
-            ctx.money -= cfg.moneyCost;
-            CreateItem(ctx, cid);
-        }
-
-        public static void UpgradeWeapon(Context ctx, string weapon)
-        {
-            if (ctx.weapons.ContainsKey(weapon) == false)
-            {
-                throw new Exception("XXX");
-            }
-            var obj = ctx.weapons[weapon];
-            if(obj.level >= 7)
-            {
-                throw new Exception("xxx");
-            }
-            var cost = GetUpgradeWeaponCost(ctx, weapon);
-            var isNotEnough = ctx.money < cost;
-            if (isNotEnough)
-            {
-                throw new Exception("錢不夠");
-            }
-            ctx.money -= cost;
-            obj.level += 1;
-        }
-
-        public static int WeaponPowerWithLevel(Context ctx, string weapon)
-        {
-            if (ctx.weapons.ContainsKey(weapon) == false)
-            {
-                throw new Exception("XXX");
-            }
-            var obj = ctx.weapons[weapon];
-            var cfg = ConfigWeapon.Get(obj.prototype);
-            return cfg.power + obj.level * 5;
-        }
-
-        public static int WeaponRangeWithLevel(Context ctx, string weapon)
-        {
-            if (ctx.weapons.ContainsKey(weapon) == false)
-            {
-                throw new Exception("XXX");
-            }
-            var obj = ctx.weapons[weapon];
-            var cfg = ConfigWeapon.Get(obj.prototype);
-            return cfg.maxRange;
-        }
-
-        public static string ProcedureMap(float x, float y, float deepOcean, float ocean, float mountain, int cityGridCnt, float city, float cx, float cy, float mori, float mx, float my)
-        {
-            var height = Mathf.PerlinNoise(x, y);
-            if (height < deepOcean)
-            {
-                return "deepOcean";
-            }
-            if (height < ocean)
-            {
-                return "ocean";
-            }
-            if(height > mountain)
-            {
-                return "mountain";
-            }
-            var factor = 1 / (float)cityGridCnt;
-            var value = Mathf.PerlinNoise(x + cx, y + cy);
-            value = ((int)(value / factor)) * factor;
-            if (value > city)
-            {
-                return "city";
-            }
-            value = Mathf.PerlinNoise(x + mx, y+my);
-            if (value > mori)
-            {
-                return "mori";
-            }
-            return "plain";
-        }
-
-        public static void GenMap(Context ctx, int width, int height)
-        {
-            ctx.grids.Clear();
-
-            var deepOcean = UnityEngine.Random.Range(0, 0.3f);
-            var ocean = deepOcean + UnityEngine.Random.Range(0, 0.4f);
-            var mountain = 1 - UnityEngine.Random.Range(0, 0.3f);
-            var city = UnityEngine.Random.Range(0, 1f);
-            var mori = UnityEngine.Random.Range(0, 1f);
-            var factor = UnityEngine.Random.Range(1, 10f);
-
-            var xr = UnityEngine.Random.Range(0, 100f);
-            var yr = UnityEngine.Random.Range(0, 100f);
-
-            var cxr = UnityEngine.Random.Range(0, 100f);
-            var cyr = UnityEngine.Random.Range(0, 100f);
-
-            var mxr = UnityEngine.Random.Range(0, 100f);
-            var myr = UnityEngine.Random.Range(0, 100f);
-
-            var max = Mathf.Max(width, height);
-            var offset = 1 / (float)max;
-            for(var x=0; x<width; ++x)
-            {
-                for (var y = 0; y<height; ++y)
-                {
-                    var xf = xr + x * offset * factor;
-                    var yf = yr + y * offset * factor;
-                    var prototype = ProcedureMap(xf, yf, deepOcean, ocean, mountain, max, city, cxr, cyr, mori, mxr, myr);
-                    var grid = new Grid(new Vector2Int(x, y));
-                    grid.prototype = prototype;
-                    ctx.grids.Add(grid.Key, grid);
-                }
-            }
-        }
-
+        #region damage
         public static DeffendValue GetDeffendValue(Context ctx, string unit)
         {
             var pilot = GetPilot(ctx, unit);
@@ -1332,5 +1391,7 @@ namespace RobotWar
 
             ctx.units[targetUnit].usedHp += damage;
         }
+        #endregion
+
     }
 }
