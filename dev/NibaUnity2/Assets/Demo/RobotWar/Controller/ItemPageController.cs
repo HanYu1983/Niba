@@ -57,6 +57,8 @@ namespace RobotWar
                 {
                     DataAlg.AssignItem(model.ctx, item, null);
                 }
+                model.RequestSaveHome();
+
                 itemList.UpdateView();
                 selectItemKeyRef.NotifyValueChange();
             }

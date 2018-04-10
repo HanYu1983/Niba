@@ -22,7 +22,7 @@ namespace RobotWar
         public void UpdateView(Model model)
         {
             var gk = new Grid(coord).Key;
-            var g = model.ctx.grids[gk];
+            var g = model.mapCtx.grids[gk];
             switch (g.prototype)
             {
                 case "deepOcean":

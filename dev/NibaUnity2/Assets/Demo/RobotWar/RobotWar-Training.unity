@@ -276,7 +276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ba7683f3a87e5f42adc3cd98cee175d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 1090700140}
+  model: {fileID: 0}
   view: {fileID: 1253087672}
 --- !u!4 &297120092
 Transform:
@@ -1596,6 +1596,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1579505915}
   - component: {fileID: 1579505917}
+  - component: {fileID: 1579505916}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -1616,6 +1617,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1579505916
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1579505914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e139d9e8689427408ea243afe50e65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Enable: 2
+  Disable: 0
 --- !u!114 &1579505917
 MonoBehaviour:
   m_ObjectHideFlags: 0

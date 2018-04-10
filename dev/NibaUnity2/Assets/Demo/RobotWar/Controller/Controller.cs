@@ -13,13 +13,8 @@ namespace RobotWar
 
         private void Start()
         {
-            var stageModel = GameManager.Instance.gameObject.GetComponent<Model>();
-            // deep copy
-            var json = DataAlg.GetMemonto(stageModel.ctx);
-            DataAlg.SetMemonto(model.ctx, json);
-
-            
-            TestLoadMap();
+            model = GameManager.Instance.gameObject.GetComponent<Model>();
+            view.Sync(model);
         }
 
         void Update()
@@ -27,43 +22,8 @@ namespace RobotWar
             StateUpdate(Time.deltaTime);
         }
 
-        IEnumerator LoadMap(string path)
-        {
-            /*
-            var request = Resources.LoadAsync<MapData>(path);
-            yield return request;
-            var data = request.asset as MapData;
-            model.CreateMap(data);
-            view.Sync(model);
-            */
-            DataAlg.GenMap(model.ctx, 20, 20);
-            view.Sync(model);
-            yield return null;
-        }
-
         public void StartPlay()
         {
-            var me = DataAlg.CreatePlayer(model.ctx, 0, false);
-            var enemy = DataAlg.CreatePlayer(model.ctx, 1, false);
-
-            foreach (var unit in model.ctx.units.Values)
-            {
-                var hasPilot = DataAlg.GetPilot(model.ctx, unit.Key) != null;
-                if(hasPilot == false)
-                {
-                    continue;
-                }
-                var cfg = ConfigUnit.Get(unit.prototype);
-                var pos = new Vector2Int(Random.Range(0, 10), Random.Range(0, 10));
-                DataAlg.PutUnit(model.ctx, pos, me.Key, unit.Key);
-                view.CreateUnit(model, unit.Key, pos);
-            }
-
-            for (var i = 0; i < 5; ++i)
-            {
-                CreateUnit(enemy.Key, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
-            }
-
             ChangeState(new SystemState());
         }
 
@@ -93,24 +53,38 @@ namespace RobotWar
         #endregion
 
         #region test
+        IEnumerator CreateMap(string path)
+        {
+            /*
+            var request = Resources.LoadAsync<MapData>(path);
+            yield return request;
+            var data = request.asset as MapData;
+            model.CreateMap(data);
+            view.Sync(model);
+            */
+            DataAlg.GenMap(model.mapCtx, 20, 20);
+            view.Sync(model);
+            yield return null;
+        }
+
         void CreateUnit(int owner, Vector2Int pos)
         {
-            var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01);
-            var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-            DataAlg.PutUnit(model.ctx, pos, owner, unit.Key);
+            var unit = DataAlg.CreateUnit(model.mapCtx, ConfigUnit.ID_test01);
+            var w = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_handGun);
+            DataAlg.AssignWeapon(model.mapCtx, w.Key, unit.Key);
+            DataAlg.PutUnit(model.mapCtx, pos, owner, unit.Key);
 
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+            w = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_lightSword);
+            DataAlg.AssignWeapon(model.mapCtx, w.Key, unit.Key);
 
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bomb);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+            w = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_bomb);
+            DataAlg.AssignWeapon(model.mapCtx, w.Key, unit.Key);
 
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bigGun);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+            w = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_bigGun);
+            DataAlg.AssignWeapon(model.mapCtx, w.Key, unit.Key);
 
-            var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
-            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
+            var p = DataAlg.CreatePilot(model.mapCtx, ConfigPilot.ID_solider1);
+            DataAlg.AssignPilot(model.mapCtx, p.Key, unit.Key);
 
             view.CreateUnit(model, unit.Key, pos);
         }
@@ -118,7 +92,7 @@ namespace RobotWar
         [ContextMenu("TestLoadMap")]
         public void TestLoadMap()
         {
-            StartCoroutine(LoadMap("Map/map01"));
+            StartCoroutine(CreateMap("Map/map01"));
         }
         [ContextMenu("TestPlay")]
         public void TestPlay()
@@ -128,27 +102,20 @@ namespace RobotWar
         [ContextMenu("TestCreateUnit")]
         public void TestCreateUnit()
         {
-            for(var i=0; i<5; ++i)
+            var p = DataAlg.CreatePlayer(model.mapCtx, 0, false);
+            for (var i=0; i<5; ++i)
             {
-                CreateUnit(0, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+                CreateUnit(p.Key, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             }
         }
 
         [ContextMenu("TestCreateEnemy")]
         public void TestCreateEnemy()
         {
+            var p = DataAlg.CreatePlayer(model.mapCtx, 1, false);
             for (var i = 0; i < 5; ++i)
             {
-                CreateUnit(1, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
-            }
-        }
-
-        [ContextMenu("TestCreateEnemy2")]
-        public void TestCreateEnemy2()
-        {
-            for (var i = 0; i < 5; ++i)
-            {
-                CreateUnit(2, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+                CreateUnit(p.Key, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             }
         }
 
@@ -157,7 +124,7 @@ namespace RobotWar
         {
             view.SetGridColor(null, Color.white);
 
-            var paths = DataAlg.FindAllPath(model.ctx, Random.Range(3, 10), new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            var paths = DataAlg.FindAllPath(model.mapCtx, Random.Range(3, 10), new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             view.SetGridColor(paths.Keys, Color.green);
 
             var dis = new Grid[paths.Keys.Count];
@@ -170,7 +137,7 @@ namespace RobotWar
         public void TestAttackRange()
         {
             view.SetGridColor(null, Color.white);
-            var paths = DataAlg.FindAllRange(model.ctx, Random.Range(1, 5), Random.Range(5, 10), new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            var paths = DataAlg.FindAllRange(model.mapCtx, Random.Range(1, 5), Random.Range(5, 10), new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             view.SetGridColor(paths.Keys, Color.red);
         }
 
@@ -254,17 +221,17 @@ namespace RobotWar
                         var weaponKey = task.values[1];
 
                         var reason = "";
-                        var consumWeapon = DataAlg.ConsumeWeapon(Model.ctx, unitKey, weaponKey, ref reason);
+                        var consumWeapon = DataAlg.ConsumeWeapon(Model.mapCtx, unitKey, weaponKey, ref reason);
                         if (consumWeapon)
                         {
                             var targets = task.values[2].Split(',');
-                            DataAlg.CompleteTask(Model.ctx, task);
+                            DataAlg.CompleteTask(Model.mapCtx, task);
                         }
                         else
                         {
                             Debug.LogWarning(reason);
                         }
-                        DataAlg.CompleteTask(Model.ctx, task);
+                        DataAlg.CompleteTask(Model.mapCtx, task);
                     }
                     break;
                 case Task.UnitRangeAttack:
@@ -274,53 +241,53 @@ namespace RobotWar
                         var gridKey = task.values[2];
 
                         var reason = "";
-                        var consumWeapon = DataAlg.ConsumeWeapon(Model.ctx, unitKey, weaponKey, ref reason);
+                        var consumWeapon = DataAlg.ConsumeWeapon(Model.mapCtx, unitKey, weaponKey, ref reason);
                         if (consumWeapon)
                         {
-                            var unit = Model.ctx.units[unitKey];
-                            var owner = Model.ctx.unit2Player[unitKey];
-                            var atkPlayer = Model.ctx.players[owner];
-                            var clickPos = Model.ctx.grids[gridKey].pos;
-                            var weaponObj = Model.ctx.weapons[weaponKey];
+                            var unit = Model.mapCtx.units[unitKey];
+                            var owner = Model.mapCtx.unit2Player[unitKey];
+                            var atkPlayer = Model.mapCtx.players[owner];
+                            var clickPos = Model.mapCtx.grids[gridKey].pos;
+                            var weaponObj = Model.mapCtx.weapons[weaponKey];
                             var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
                             switch (weaponCfg.shape)
                             {
                                 case ConfigShape.ID_center:
                                     {
                                         var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
-                                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
-                                        var units = Model.ctx.unit2Grid.Keys.Where(uk =>
+                                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k => Model.mapCtx.grids.ContainsKey(k)).Select(k => Model.mapCtx.grids[k]).ToList();
+                                        var units = Model.mapCtx.unit2Grid.Keys.Where(uk =>
                                         {
-                                            var u = Model.ctx.units[uk];
-                                            var owner2 = Model.ctx.unit2Player[uk];
-                                            var dfdPlayer = Model.ctx.players[owner2];
+                                            var u = Model.mapCtx.units[uk];
+                                            var owner2 = Model.mapCtx.unit2Player[uk];
+                                            var dfdPlayer = Model.mapCtx.players[owner2];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
                                                 return false;
                                             }
-                                            var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                            var unitGrid = Model.mapCtx.grids[Model.mapCtx.unit2Grid[u.Key]];
                                             return centerRange.Contains(unitGrid);
                                         });
                                     }
                                     break;
                                 case ConfigShape.ID_forward:
                                     {
-                                        var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                                        var pos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
                                         var dir = DataAlg.GetDirection(pos, clickPos);
 
                                         var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
-                                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.mapCtx.grids.ContainsKey(k)).Select(k => Model.mapCtx.grids[k]).ToList();
 
-                                        var units = Model.ctx.unit2Grid.Keys.Where(uk =>
+                                        var units = Model.mapCtx.unit2Grid.Keys.Where(uk =>
                                         {
-                                            var u = Model.ctx.units[uk];
-                                            var owner2 = Model.ctx.unit2Player[unitKey];
-                                            var dfdPlayer = Model.ctx.players[owner2];
+                                            var u = Model.mapCtx.units[uk];
+                                            var owner2 = Model.mapCtx.unit2Player[unitKey];
+                                            var dfdPlayer = Model.mapCtx.players[owner2];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
                                                 return false;
                                             }
-                                            var unitGrid = Model.ctx.grids[Model.ctx.unit2Grid[u.Key]];
+                                            var unitGrid = Model.mapCtx.grids[Model.mapCtx.unit2Grid[u.Key]];
                                             return ranges.Contains(unitGrid);
                                         });
                                     }
@@ -331,7 +298,7 @@ namespace RobotWar
                         {
                             Debug.LogWarning(reason);
                         }
-                        DataAlg.CompleteTask(Model.ctx, task);
+                        DataAlg.CompleteTask(Model.mapCtx, task);
                     }
                     break;
             }
@@ -344,7 +311,7 @@ namespace RobotWar
     {
         public override void OnUpdate(float t)
         {
-            var task = DataAlg.GetTopTask(Model.ctx);
+            var task = DataAlg.GetTopTask(Model.mapCtx);
             if (task != null)
             {
                 Holder.ChangeState(new ProcessTaskState(task));
@@ -352,17 +319,17 @@ namespace RobotWar
             }
             
             // 取得可行動單位
-            var topCTUnit = DataAlg.GetTopCTUnit(Model.ctx);
+            var topCTUnit = DataAlg.GetTopCTUnit(Model.mapCtx);
             if (topCTUnit == null)
             {
-                DataAlg.StepCT(Model.ctx);
+                DataAlg.StepCT(Model.mapCtx);
                 View.UpdateState(Model);
             }
             else
             {
                 // 判斷可行動單位是玩家還是AI
-                var owner = Model.ctx.unit2Player[topCTUnit.Key];
-                var playerObj = Model.ctx.players[owner];
+                var owner = Model.mapCtx.unit2Player[topCTUnit.Key];
+                var playerObj = Model.mapCtx.players[owner];
                 if (playerObj.isAI == false)
                 {
                     Holder.ChangeState(new SelectUnitActionState(topCTUnit));
@@ -384,7 +351,7 @@ namespace RobotWar
         }
         public override void OnUpdate(float t)
         {
-            DataAlg.PassUnit(Model.ctx, unit.Key);
+            DataAlg.PassUnit(Model.mapCtx, unit.Key);
             Holder.ChangeState(new SystemState());
         }
     }
@@ -399,8 +366,8 @@ namespace RobotWar
         }
         public override void OnUpdate(float t)
         {
-            var owner = Model.ctx.unit2Player[unit.Key];
-            var playerObj = Model.ctx.players[owner];
+            var owner = Model.mapCtx.unit2Player[unit.Key];
+            var playerObj = Model.mapCtx.players[owner];
             if (playerObj.isAI)
             {
                 Holder.ChangeState(new UpdateCTState());
@@ -409,8 +376,8 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            var owner = Model.ctx.unit2Player[unit.Key];
-            var playerObj = Model.ctx.players[owner];
+            var owner = Model.mapCtx.unit2Player[unit.Key];
+            var playerObj = Model.mapCtx.players[owner];
             if (playerObj.isAI)
             {
                 return;
@@ -420,9 +387,9 @@ namespace RobotWar
             {
                 // 顯示移動範圍
                 View.SetGridColor(null, Color.white);
-                var movePower = DataAlg.GetMovePower(Model.ctx, unit.Key);
-                var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-                var paths = DataAlg.FindAllPath(Model.ctx, movePower, pos);
+                var movePower = DataAlg.GetMovePower(Model.mapCtx, unit.Key);
+                var pos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
+                var paths = DataAlg.FindAllPath(Model.mapCtx, movePower, pos);
                 View.SetGridColor(paths.Keys, Color.green);
                 // 暫存所有最短路徑, 這樣就不必計算2次
                 this.paths = paths;
@@ -461,14 +428,14 @@ namespace RobotWar
             }
             // 判斷是否點到移動範圍內的方塊
             var gk = new Grid(gv.coord).Key;
-            var g = Model.ctx.grids[gk];
+            var g = Model.mapCtx.grids[gk];
             var isInRange = paths.ContainsKey(g);
             if (isInRange)
             {
                 // 關閉菜單
                 View.GetUnitMenu().gameObject.SetActive(false);
                 // 移動單位
-                DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
+                DataAlg.MoveUnit(Model.mapCtx, gv.coord, unit.Key);
                 moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
             }
             else
@@ -501,13 +468,13 @@ namespace RobotWar
                     break;*/
                 case UnitMenuItem.CancelMove:
                     {
-                        var pos = DataAlg.CancelMoveUnit(Model.ctx, unit.Key);
-                        View.SetUnitPos(unit.Key, Model.ctx.grids[pos]);
+                        var pos = DataAlg.CancelMoveUnit(Model.mapCtx, unit.Key);
+                        View.SetUnitPos(unit.Key, Model.mapCtx.grids[pos]);
                         Holder.ChangeState(new SelectUnitActionState(unit));
                     }
                     break;
                 case UnitMenuItem.Attack:
-                    var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key);
+                    var weapons = DataAlg.GetWeaponList(Model.mapCtx, unit.Key);
                     if(weapons.Count == 0)
                     {
                         Debug.LogWarning("no weapons");
@@ -516,7 +483,7 @@ namespace RobotWar
                     Holder.ChangeState(new SelectWeaponState(unit));
                     break;
                 case UnitMenuItem.Pass:
-                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
                     Holder.ChangeState(new SystemState());
                     break;
                 case UnitMenuItem.Cancel:
@@ -535,18 +502,22 @@ namespace RobotWar
         {
             View.StartCoroutine(Compute());
         }
+        public override void OnEnterState()
+        {
+            Model.RequestSaveMap();
+        }
         IEnumerator Compute()
         {
             yield return 0;
             // 計算火力移動消費
             var dict = new HashSet<int>();
-            foreach(var p in Model.ctx.players)
+            foreach(var p in Model.mapCtx.players)
             {
                 dict.Add(p.team);
             }
             foreach(var team in dict)
             {
-                DataAlg.CalcFileCost(Model.ctx, team);
+                DataAlg.CalcFileCost(Model.mapCtx, team);
                 yield return 0;
             }
             Holder.ChangeState(new UpdateCTState());
@@ -582,7 +553,7 @@ namespace RobotWar
             {
                 case UnitMenuItem.Cancel:
                     {
-                        var unit = DataAlg.GetTopCTUnit(Model.ctx);
+                        var unit = DataAlg.GetTopCTUnit(Model.mapCtx);
                         Holder.ChangeState(new SelectUnitActionState(unit));
                     }
                     break;
@@ -591,21 +562,21 @@ namespace RobotWar
         void OnClick(GridView gv)
         {
             var gk = new Grid(gv.coord).Key;
-            var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
+            var hasUnit = Model.mapCtx.grid2Unit.ContainsKey(gk);
             if (hasUnit)
             {
-                var targetKey = Model.ctx.grid2Unit[gk];
-                var target = Model.ctx.units[targetKey];
+                var targetKey = Model.mapCtx.grid2Unit[gk];
+                var target = Model.mapCtx.units[targetKey];
 
-                var moveRange = DataAlg.FindAllPath(Model.ctx, DataAlg.GetMovePower(Model.ctx, targetKey), gv.coord);
+                var moveRange = DataAlg.FindAllPath(Model.mapCtx, DataAlg.GetMovePower(Model.mapCtx, targetKey), gv.coord);
                 View.SetGridColor(null, Color.white);
                 View.SetGridColor(moveRange.Keys, Color.green);
 
-                var owner = Model.ctx.unit2Player[target.Key];
-                var playerObj = Model.ctx.players[owner];
+                var owner = Model.mapCtx.unit2Player[target.Key];
+                var playerObj = Model.mapCtx.players[owner];
                 if (playerObj.isAI == false)
                 {
-                    var isTop = DataAlg.GetTopCTUnit(Model.ctx) == target;
+                    var isTop = DataAlg.GetTopCTUnit(Model.mapCtx) == target;
                     if (isTop)
                     {
                         Holder.ChangeState(new SelectUnitActionState(target));
@@ -640,10 +611,10 @@ namespace RobotWar
                 return;
             }
             var gk = new Grid(gv.coord).Key;
-            var g = Model.ctx.grids[gk];
+            var g = Model.mapCtx.grids[gk];
             if (paths.ContainsKey(g))
             {
-                DataAlg.MoveUnit(Model.ctx, gv.coord, unit.Key);
+                DataAlg.MoveUnit(Model.mapCtx, gv.coord, unit.Key);
                 moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
             }
             else
@@ -670,7 +641,7 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            var weapons = DataAlg.GetWeaponList(Model.ctx, unit.Key).Select(w=>w.Key).ToList();
+            var weapons = DataAlg.GetWeaponList(Model.mapCtx, unit.Key).Select(w=>w.Key).ToList();
             weapons.Add(WeaponMenu.MENU_CANCEL);
 
             var menu = View.GetWeaponMenu();
@@ -707,13 +678,13 @@ namespace RobotWar
                 {
                     View.SetGridColor(null, Color.white);
 
-                    var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
-                    var weaponObj = Model.ctx.weapons[weapon];
+                    var pos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
+                    var weaponObj = Model.mapCtx.weapons[weapon];
                     var cfg = ConfigWeapon.Get(weaponObj.prototype);
                     var isSingle = string.IsNullOrEmpty(cfg.shape);
                     if (isSingle)
                     {
-                        var ranges = DataAlg.FindAllRange(Model.ctx, cfg.minRange, cfg.maxRange, pos);
+                        var ranges = DataAlg.FindAllRange(Model.mapCtx, cfg.minRange, cfg.maxRange, pos);
                         View.SetGridColor(ranges.Keys, Color.red);
                         lastRange = new List<Grid>(ranges.Keys);
                     }
@@ -746,16 +717,16 @@ namespace RobotWar
             GridView.OnClick += OnClick;
 
             View.SetGridColor(null, Color.white);
-            var weaponObj = Model.ctx.weapons[weapon];
+            var weaponObj = Model.mapCtx.weapons[weapon];
             var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
-            var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+            var pos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
 
             switch (weaponCfg.shape)
             {
                 case ConfigShape.ID_forward:
                     {
                         var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, Direction.Up);
-                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.mapCtx.grids.ContainsKey(k)).Select(k => Model.mapCtx.grids[k]).ToList();
 
                         View.SetGridColor(ranges, Color.red);
                         this.ranges = new List<Grid>(ranges);
@@ -763,7 +734,7 @@ namespace RobotWar
                     break;
                 default:
                     {
-                        var ranges = DataAlg.FindAllRange(Model.ctx, weaponCfg.minRange, weaponCfg.maxRange, pos);
+                        var ranges = DataAlg.FindAllRange(Model.mapCtx, weaponCfg.minRange, weaponCfg.maxRange, pos);
                         View.SetGridColor(ranges.Keys, Color.red);
                         this.ranges = new List<Grid>(ranges.Keys);
                     }
@@ -799,25 +770,25 @@ namespace RobotWar
                             Debug.LogWarning("XXXX");
                             return;
                         }
-                        var weaponObj = Model.ctx.weapons[weapon];
+                        var weaponObj = Model.mapCtx.weapons[weapon];
                         var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
                         switch (weaponCfg.shape)
                         {
                             case ConfigShape.ID_forward:
                             case ConfigShape.ID_center:
                                 {
-                                    var task = DataAlg.CreateRangeAttackTask(Model.ctx, unit.Key, weapon, selectedGrid.pos);
-                                    DataAlg.PushTask(Model.ctx, task);
-                                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                                    var task = DataAlg.CreateRangeAttackTask(Model.mapCtx, unit.Key, weapon, selectedGrid.pos);
+                                    DataAlg.PushTask(Model.mapCtx, task);
+                                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
                             default:
                                 {
-                                    var targetKey = Model.ctx.grid2Unit[selectedGrid.Key];
-                                    var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
-                                    DataAlg.PushTask(Model.ctx, task);
-                                    DataAlg.PassUnit(Model.ctx, unit.Key);
+                                    var targetKey = Model.mapCtx.grid2Unit[selectedGrid.Key];
+                                    var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
+                                    DataAlg.PushTask(Model.mapCtx, task);
+                                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
@@ -830,13 +801,13 @@ namespace RobotWar
         void OnClick(GridView gv)
         {
             var gk = new Grid(gv.coord).Key;
-            var g = Model.ctx.grids[gk];
+            var g = Model.mapCtx.grids[gk];
 
             isReady = false;
             selectedGrid = g;
 
             var clickPos = gv.coord;
-            var weaponCfg = ConfigWeapon.Get(Model.ctx.weapons[weapon].prototype);
+            var weaponCfg = ConfigWeapon.Get(Model.mapCtx.weapons[weapon].prototype);
             switch (weaponCfg.shape)
             {
                 case ConfigShape.ID_center:
@@ -848,7 +819,7 @@ namespace RobotWar
                             return;
                         }
                         var vecs = DataAlg.GetCenterVecs(weaponCfg.shapeRange);
-                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k=>Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                        var centerRange = vecs.Select(v => v + clickPos).Select(v => new Grid(v).Key).Where(k=>Model.mapCtx.grids.ContainsKey(k)).Select(k => Model.mapCtx.grids[k]).ToList();
 
                         View.SetGridColor(null, Color.white);
                         View.SetGridColor(this.ranges, Color.red);
@@ -859,11 +830,11 @@ namespace RobotWar
                     break;
                 case ConfigShape.ID_forward:
                     {
-                        var pos = Model.ctx.grids[Model.ctx.unit2Grid[unit.Key]].pos;
+                        var pos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
                         var dir = DataAlg.GetDirection(pos, clickPos);
 
                         var vecs = DataAlg.GetForward(weaponCfg.minRange, weaponCfg.maxRange, weaponCfg.shapeRange, dir);
-                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.ctx.grids.ContainsKey(k)).Select(k => Model.ctx.grids[k]).ToList();
+                        var ranges = vecs.Select(v => v + pos).Select(v => new Grid(v).Key).Where(k => Model.mapCtx.grids.ContainsKey(k)).Select(k => Model.mapCtx.grids[k]).ToList();
 
                         View.SetGridColor(null, Color.white);
                         View.SetGridColor(ranges, Color.red);
@@ -881,15 +852,15 @@ namespace RobotWar
                             return;
                         }
                         // if the weapon is single, check target
-                        var hasUnit = Model.ctx.grid2Unit.ContainsKey(gk);
+                        var hasUnit = Model.mapCtx.grid2Unit.ContainsKey(gk);
                         if (hasUnit)
                         {
-                            var targetKey = Model.ctx.grid2Unit[gk];
-                            var target = Model.ctx.units[targetKey];
-                            var unitOwner = Model.ctx.unit2Player[unit.Key];
-                            var unitOwnerObj = Model.ctx.players[unitOwner];
-                            var targetOwner = Model.ctx.unit2Player[targetKey];
-                            var targetOwnerObj = Model.ctx.players[targetOwner];
+                            var targetKey = Model.mapCtx.grid2Unit[gk];
+                            var target = Model.mapCtx.units[targetKey];
+                            var unitOwner = Model.mapCtx.unit2Player[unit.Key];
+                            var unitOwnerObj = Model.mapCtx.players[unitOwner];
+                            var targetOwner = Model.mapCtx.unit2Player[targetKey];
+                            var targetOwnerObj = Model.mapCtx.players[targetOwner];
                             if (unit != target && unitOwnerObj.team != targetOwnerObj.team)
                             {
                                 isReady = true;
@@ -897,15 +868,15 @@ namespace RobotWar
 
                             
                             /*
-                            var targetKey = Model.ctx.grid2Unit[gk];
-                            var target = Model.ctx.units[targetKey];
-                            var ownerObj = Model.ctx.players[unit.owner];
-                            var targetOwnerObj = Model.ctx.players[target.owner];
+                            var targetKey = Model.mapCtx.grid2Unit[gk];
+                            var target = Model.mapCtx.units[targetKey];
+                            var ownerObj = Model.mapCtx.players[unit.owner];
+                            var targetOwnerObj = Model.mapCtx.players[target.owner];
                             if (unit != target && ownerObj.team != targetOwnerObj.team)
                             {
-                                var task = DataAlg.CreateAttackTask(Model.ctx, unit.Key, weapon, new List<string>() { targetKey });
-                                DataAlg.PushTask(Model.ctx, task);
-                                DataAlg.PassUnit(Model.ctx, unit.Key);
+                                var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
+                                DataAlg.PushTask(Model.mapCtx, task);
+                                DataAlg.PassUnit(Model.mapCtx, unit.Key);
                                 Holder.ChangeState(new UpdateCTState());
                             }
                             else

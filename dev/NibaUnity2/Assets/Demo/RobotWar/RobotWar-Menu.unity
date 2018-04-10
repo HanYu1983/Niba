@@ -1343,6 +1343,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 308008758}
+  isConfigId: 0
   txt_name: {fileID: 910524531}
   txt_pilot: {fileID: 249912296}
   txt_desc: {fileID: 304292299}
@@ -1832,6 +1833,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 444761356}
+  isConfigId: 0
   txt_name: {fileID: 1526956543}
   txt_pilot: {fileID: 893292506}
   txt_desc: {fileID: 248608044}
@@ -3953,6 +3955,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1014793589}
+  isConfigId: 0
   txt_name: {fileID: 352362388}
   txt_pilot: {fileID: 1153285406}
   txt_desc: {fileID: 1017689086}
@@ -6798,6 +6801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1688532982}
+  isConfigId: 0
   txt_name: {fileID: 708307004}
   txt_pilot: {fileID: 1470316497}
   txt_desc: {fileID: 694664308}
@@ -7043,6 +7047,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1715920481}
+  isConfigId: 0
   txt_name: {fileID: 644649693}
   txt_pilot: {fileID: 255453821}
   txt_desc: {fileID: 4548103}
@@ -7148,7 +7153,6 @@ GameObject:
   - component: {fileID: 1722318578}
   - component: {fileID: 1722318577}
   - component: {fileID: 1722318576}
-  - component: {fileID: 1722318579}
   m_Layer: 0
   m_Name: btn_training
   m_TagString: Untagged
@@ -7215,7 +7219,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1722318577}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149116350}
+        m_MethodName: Training
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1722318577
@@ -7253,18 +7268,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1722318574}
---- !u!114 &1722318579
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1722318574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e70958d28d7162b4998e52ef224fc99d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneName: Training
 --- !u!1 &1837728023
 GameObject:
   m_ObjectHideFlags: 0
@@ -8070,6 +8073,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 2046701904}
+  isConfigId: 0
   txt_name: {fileID: 873664302}
   txt_pilot: {fileID: 1283456659}
   txt_desc: {fileID: 1262574450}

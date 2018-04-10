@@ -10,6 +10,37 @@ namespace RobotWar
 {
     public class ModelController : MonoBehaviour
     {
+        public void LoadOrStart()
+        {
+            StartCoroutine(LoadOrStartAsync());
+        }
+
+        public IEnumerator LoadOrStartAsync()
+        {
+            yield return 0;
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            var success = model.Load();
+            if (success == false)
+            {
+                model.CreateStartValue();
+                model.RequestSaveHome();
+                GameManager.LoadSceneWithTransitions("Menu");
+                yield break;
+            }
+            success = model.LoadMap();
+            if (success)
+            {
+                GameManager.LoadSceneWithTransitions("Training");
+                yield break;
+            }
+            Debug.Log("load complete");
+        }
+
+        public void EnterGame()
+        {
+            LoadOrStart();
+        }
+
         public void SelectUnit(KeyRef unitKeyRef)
         {
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
@@ -38,6 +69,13 @@ namespace RobotWar
             GameManager.LoadSceneWithTransitions("Item");
         }
 
+        public void Training()
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            model.EnterTraining();
+            GameManager.LoadSceneWithTransitions("Training");
+        }
+
         public static Action OnBasicValueChange = delegate { };
 
         public void UpgradeWeapon(KeyRef weaponKeyRef)
@@ -50,6 +88,8 @@ namespace RobotWar
                     try
                     {
                         DataAlg.UpgradeWeapon(model.ctx, weaponKeyRef.Ref);
+                        model.RequestSaveHome();
+
                         OnBasicValueChange();
                         weaponKeyRef.NotifyValueChange();
                     }
@@ -71,6 +111,8 @@ namespace RobotWar
                     {
                         var model = GameManager.Instance.gameObject.GetComponent<Model>();
                         DataAlg.BuyUnit(model.ctx, keyRef.Ref);
+                        model.RequestSaveHome();
+
                         OnBasicValueChange();
                         keyRef.NotifyValueChange();
                     }
@@ -92,6 +134,8 @@ namespace RobotWar
                     {
                         var model = GameManager.Instance.gameObject.GetComponent<Model>();
                         DataAlg.BuyWeapon(model.ctx, weaponRef.Ref);
+                        model.RequestSaveHome();
+
                         OnBasicValueChange();
                         weaponRef.NotifyValueChange();
                     }
@@ -113,6 +157,8 @@ namespace RobotWar
                     {
                         var model = GameManager.Instance.gameObject.GetComponent<Model>();
                         DataAlg.BuyItem(model.ctx, itemRef.Ref);
+                        model.RequestSaveHome();
+
                         itemRef.NotifyValueChange();
                     }
                     catch (Exception e)

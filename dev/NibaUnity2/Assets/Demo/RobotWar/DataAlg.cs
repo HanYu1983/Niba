@@ -92,7 +92,7 @@ namespace RobotWar
     [Serializable]
     public class Grid : IGraphNode, IEquatable<Grid>
     {
-        public readonly Vector2Int pos;
+        public Vector2Int pos;
         public string prototype;
         public Grid(Vector2Int pos)
         {
@@ -351,6 +351,8 @@ namespace RobotWar
         #region persistance
         public struct Tmp
         {
+            public int money;
+
             public List<Unit> units;
             public List<Weapon> weapons;
             public List<Pilot> pilots;
@@ -372,6 +374,7 @@ namespace RobotWar
         public static string GetMemonto(Context ctx)
         {
             Tmp tmp;
+            tmp.money = ctx.money;
             tmp.units = new List<Unit>(ctx.units.Values);
             tmp.weapons = new List<Weapon>(ctx.weapons.Values);
             tmp.pilots = new List<Pilot>(ctx.pilots.Values);
@@ -1211,6 +1214,10 @@ namespace RobotWar
                 throw new Exception("玩家還沒定義, 請先呼叫CreatePlayer:"+player);
             }
             var gk = new Grid(dist).Key;
+            if (ctx.grid2Unit.ContainsKey(gk))
+            {
+                throw new Exception("這個格子已有機體:"+gk);
+            }
             ctx.unit2Grid.Add(unitKey, gk);
             ctx.grid2Unit.Add(gk, unitKey);
             ctx.unit2Player.Add(unitKey, player);
@@ -1403,6 +1410,58 @@ namespace RobotWar
             {
                 ctx.money = 0;
             }
+        }
+
+        public static void GenTrainingData(Context ctx)
+        {
+            ctx.players.Clear();
+            ctx.grid2Unit.Clear();
+            ctx.unit2Grid.Clear();
+            ctx.turn = 0;
+            ctx.grids.Clear();
+            ctx.lastUnitPos = null;
+            ctx.tasks.Clear();
+
+            GenMap(ctx, 20, 20);
+            DataAlg.CreatePlayer(ctx, 0, false);
+            DataAlg.CreatePlayer(ctx, 1, false);
+
+            foreach (var unit in ctx.units.Values)
+            {
+                var hasPilot = DataAlg.GetPilot(ctx, unit.Key) != null;
+                if (hasPilot == false)
+                {
+                    continue;
+                }
+                var cfg = ConfigUnit.Get(unit.prototype);
+                var pos = new Vector2Int(UnityEngine.Random.Range(0, 10), UnityEngine.Random.Range(0, 10));
+                DataAlg.PutUnit(ctx, pos, 0, unit.Key);
+            }
+
+            for (var i = 0; i < 5; ++i)
+            {
+                CreateRandomUnit(ctx, 1, new Vector2Int(UnityEngine.Random.Range(0, 10), UnityEngine.Random.Range(0, 10)));
+            }
+        }
+
+        public static void CreateRandomUnit(Context ctx, int owner, Vector2Int pos)
+        {
+            var unit = DataAlg.CreateUnit(ctx, ConfigUnit.ID_test01);
+            var w = DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_handGun);
+            DataAlg.AssignWeapon(ctx, w.Key, unit.Key);
+            DataAlg.PutUnit(ctx, pos, owner, unit.Key);
+
+            w = DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_lightSword);
+            DataAlg.AssignWeapon(ctx, w.Key, unit.Key);
+
+            w = DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_bomb);
+            DataAlg.AssignWeapon(ctx, w.Key, unit.Key);
+
+            w = DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_bigGun);
+            DataAlg.AssignWeapon(ctx, w.Key, unit.Key);
+
+            var p = DataAlg.CreatePilot(ctx, ConfigPilot.ID_solider1);
+            DataAlg.AssignPilot(ctx, p.Key, unit.Key);
         }
     }
 }

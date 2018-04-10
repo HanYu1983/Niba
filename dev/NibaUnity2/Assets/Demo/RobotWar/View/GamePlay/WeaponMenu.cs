@@ -38,7 +38,7 @@ namespace RobotWar
                 }
                 else
                 {
-                    var weaponObj = model.ctx.weapons[w];
+                    var weaponObj = model.mapCtx.weapons[w];
                     var cfg = ConfigWeapon.Get(weaponObj.prototype);
                     var title = string.Format("{0} {1}~{2} {3}", cfg.name, cfg.minRange, cfg.maxRange, cfg.shape);
                     row.GetComponentInChildren<Text>().text = title;

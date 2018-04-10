@@ -27,7 +27,7 @@ namespace RobotWar
         public void Sync(Model model)
         {
             gridView.Clear();
-            foreach (var g in model.ctx.grids.Values)
+            foreach (var g in model.mapCtx.grids.Values)
             {
                 var go = Instantiate(gridPrefab, gridRoot, false);
                 var pos = go.transform.localPosition;
@@ -41,6 +41,12 @@ namespace RobotWar
                 gridView.Add(gv.Key, gv);
 
                 go.SetActive(true);
+            }
+            foreach(var uk in model.mapCtx.unit2Grid.Keys)
+            {
+                var gk = model.mapCtx.unit2Grid[uk];
+                var g = model.mapCtx.grids[gk];
+                CreateUnit(model, uk, g.pos);
             }
         }
 
@@ -75,9 +81,9 @@ namespace RobotWar
             go.transform.localPosition = newPos;
             unitView.Add(unit, go);
 
-            var u = model.ctx.units[unit];
-            var owner = model.ctx.unit2Player[u.Key];
-            var playerObj = model.ctx.players[owner];
+            var u = model.mapCtx.units[unit];
+            var owner = model.mapCtx.unit2Player[u.Key];
+            var playerObj = model.mapCtx.players[owner];
             if (playerObj.Key == 1)
             {
                 go.GetComponent<Renderer>().material.color = Color.red;

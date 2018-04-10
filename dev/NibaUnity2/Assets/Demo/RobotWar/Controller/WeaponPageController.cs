@@ -58,6 +58,8 @@ namespace RobotWar
                 {
                     DataAlg.AssignWeapon(model.ctx, weapon, null);
                 }
+                model.RequestSaveHome();
+
                 weaponList.UpdateView();
                 selectWeaponKeyRef.NotifyValueChange();
             }
