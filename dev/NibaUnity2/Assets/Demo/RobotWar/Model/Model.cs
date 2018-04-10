@@ -11,7 +11,7 @@ namespace RobotWar
         public static Action OnUnitListChange = delegate { };
         public static Action OnWeaponListChange = delegate { };
 
-        private void Start()
+        private void Awake()
         {
             CreateStartValue();
         }
@@ -20,9 +20,8 @@ namespace RobotWar
         {
             DataAlg.AddMoney(ctx, 5000);
 
-            DataAlg.CreatePlayer(ctx, 0, false);
-            var unit = DataAlg.CreateUnit(ctx, ConfigUnit.ID_jimu, 0);
-            DataAlg.CreateUnit(ctx, ConfigUnit.ID_test01, 0);
+            var unit = DataAlg.CreateUnit(ctx, ConfigUnit.ID_jimu);
+            DataAlg.CreateUnit(ctx, ConfigUnit.ID_test01);
 
             DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_bigGun);
             DataAlg.CreateWeapon(ctx, ConfigWeapon.ID_bomb);

@@ -76,7 +76,8 @@ namespace RobotWar
             unitView.Add(unit, go);
 
             var u = model.ctx.units[unit];
-            var playerObj = model.ctx.players[u.owner];
+            var owner = model.ctx.unit2Player[u.Key];
+            var playerObj = model.ctx.players[owner];
             if (playerObj.Key == 1)
             {
                 go.GetComponent<Renderer>().material.color = Color.red;
@@ -123,6 +124,14 @@ namespace RobotWar
         public UnitMenu unitMenu;
         public UnitMenu GetUnitMenu()
         {
+            if(unitMenu == null)
+            {
+                Debug.LogError("unitMenu == null");
+            }
+            if (unitMenu.gameObject == null)
+            {
+                Debug.LogError("unitMenu.gameObject == null");
+            }
             unitMenu.gameObject.SetActive(true);
             return unitMenu;
         }

@@ -89,7 +89,7 @@ namespace RobotWar
         }
     }
 
-
+    [Serializable]
     public class Grid : IGraphNode, IEquatable<Grid>
     {
         public readonly Vector2Int pos;
@@ -143,11 +143,11 @@ namespace RobotWar
         public int hp, en, armor, speed, power;
     }
     
+    [Serializable]
     public class Unit
     {
         public string key;
         public string prototype;
-        public int owner;
         public int usedHp, usedEn;
         public float ct;
         public Direction direction;
@@ -172,6 +172,7 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public class Weapon
     {
         public string key;
@@ -192,6 +193,7 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public class Item
     {
         public string key;
@@ -209,6 +211,7 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public class Pilot
     {
         public string key;
@@ -227,6 +230,7 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public class Player
     {
         public int key;
@@ -329,32 +333,92 @@ namespace RobotWar
         public Dictionary<string, string> pilot2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> item2Unit = new Dictionary<string, string>();
         // map
+        public List<Player> players = new List<Player>();
+        public Dictionary<string, int> unit2Player = new Dictionary<string, int>();
         public Dictionary<string, Grid> grids = new Dictionary<string, Grid>();
         public Dictionary<string, string> grid2Unit = new Dictionary<string, string>();
         public Dictionary<string, string> unit2Grid = new Dictionary<string, string>();
         public List<Task> tasks = new List<Task>();
-        public List<Player> players = new List<Player>();
+        
         public int turn;
         public string lastUnitPos;
         // tmp
         public List<Dictionary<string, int>> fireCost = new List<Dictionary<string, int>>();
-
-        public Context Copy()
-        {
-            var ret = new Context();
-            ret.units = new Dictionary<string, Unit>(units);
-            ret.weapons = new Dictionary<string, Weapon>(weapons);
-            ret.pilots = new Dictionary<string, Pilot>(pilots);
-            ret.items = new Dictionary<string, Item>(items);
-            ret.weapon2Unit = new Dictionary<string, string>(weapon2Unit);
-            ret.pilot2Unit = new Dictionary<string, string>(pilot2Unit);
-            ret.item2Unit = new Dictionary<string, string>(item2Unit);
-            return ret;
-        }
     }
     
     public class DataAlg
     {
+        #region persistance
+        public struct Tmp
+        {
+            public List<Unit> units;
+            public List<Weapon> weapons;
+            public List<Pilot> pilots;
+            public List<Item> items;
+            public List<string> weapon2Unit;
+            public List<string> pilot2Unit;
+            public List<string> item2Unit;
+        }
+        
+        public static string GetMemonto(Context ctx)
+        {
+            Tmp tmp;
+            tmp.units = new List<Unit>(ctx.units.Values);
+            tmp.weapons = new List<Weapon>(ctx.weapons.Values);
+            tmp.pilots = new List<Pilot>(ctx.pilots.Values);
+            tmp.items = new List<Item>(ctx.items.Values);
+            tmp.weapon2Unit = ctx.weapon2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.weapon2Unit[k] }; }).ToList();
+            tmp.pilot2Unit = ctx.pilot2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.pilot2Unit[k] }; }).ToList();
+            tmp.item2Unit = ctx.item2Unit.Keys.SelectMany(k => { return new List<string>() { k, ctx.item2Unit[k] }; }).ToList();
+            return JsonUtility.ToJson(tmp);
+        }
+
+        public static void SetMemonto(Context ctx, string memonto)
+        {
+            var tmp = JsonUtility.FromJson<Tmp>(memonto);
+            ctx.units.Clear();
+            foreach(var u in tmp.units)
+            {
+                ctx.units.Add(u.Key, u);
+            }
+            ctx.pilots.Clear();
+            foreach (var u in tmp.pilots)
+            {
+                ctx.pilots.Add(u.Key, u);
+            }
+            ctx.weapons.Clear();
+            foreach (var u in tmp.weapons)
+            {
+                ctx.weapons.Add(u.Key, u);
+            }
+            ctx.items.Clear();
+            foreach (var u in tmp.items)
+            {
+                ctx.items.Add(u.Key, u);
+            }
+            ctx.weapon2Unit.Clear();
+            for (var i=0; i<tmp.weapon2Unit.Count; i += 2)
+            {
+                var k = tmp.weapon2Unit[i];
+                var v = tmp.weapon2Unit[i + 1];
+                ctx.weapon2Unit.Add(k, v);
+            }
+            ctx.pilot2Unit.Clear();
+            for (var i = 0; i < tmp.pilot2Unit.Count; i += 2)
+            {
+                var k = tmp.pilot2Unit[i];
+                var v = tmp.pilot2Unit[i + 1];
+                ctx.pilot2Unit.Add(k, v);
+            }
+            ctx.item2Unit.Clear();
+            for (var i = 0; i < tmp.item2Unit.Count; i += 2)
+            {
+                var k = tmp.item2Unit[i];
+                var v = tmp.item2Unit[i + 1];
+                ctx.item2Unit.Add(k, v);
+            }
+        }
+        #endregion
         public static void AddMoney(Context ctx, int money)
         {
             ctx.money += money;
@@ -375,7 +439,8 @@ namespace RobotWar
             }
             var unitKey = ctx.grid2Unit[gk];
             var unit = ctx.units[unitKey];
-            var player = ctx.players[unit.owner];
+            var owner = ctx.unit2Player[unitKey];
+            var player = ctx.players[owner];
             var dirs = new Vector2Int[]
             {
                 new Vector2Int(1, 0),new Vector2Int(0, 1),new Vector2Int(-1, 0),new Vector2Int(0, -1)
@@ -806,7 +871,8 @@ namespace RobotWar
                     continue;
                 }
                 var unitObj = ctx.units[unitKey];
-                var ownerObj = ctx.players[unitObj.owner];
+                var owner = ctx.unit2Player[unitKey];
+                var ownerObj = ctx.players[owner];
                 var grid = ctx.grids[ctx.unit2Grid[unitObj.Key]];
                 var isEnemy = team != ownerObj.team;
                 if(isEnemy == false)
@@ -829,7 +895,23 @@ namespace RobotWar
             }
         }
 
-        public static void PutUnit(Context ctx, Vector2Int dist, string unitKey)
+        public static void PutUnit(Context ctx, Vector2Int dist, int player, string unitKey)
+        {
+            if (ctx.unit2Grid.ContainsKey(unitKey))
+            {
+                throw new Exception("這個時候機體必須沒在地圖上, 請先將unit2Grid清空:"+unitKey);
+            }
+            if(ctx.players.Count < player+1)
+            {
+                throw new Exception("玩家還沒定義, 請先呼叫CreatePlayer:"+player);
+            }
+            var gk = new Grid(dist).Key;
+            ctx.unit2Grid.Add(unitKey, gk);
+            ctx.grid2Unit.Add(gk, unitKey);
+            ctx.unit2Player.Add(unitKey, player);
+        }
+
+        public static void ForceUnitTo(Context ctx, Vector2Int dist, string unitKey)
         {
             var hasOldGrid = ctx.unit2Grid.ContainsKey(unitKey);
             if (hasOldGrid)
@@ -877,21 +959,17 @@ namespace RobotWar
             {
                 throw new Exception("機體未移動");
             }
-            PutUnit(ctx, ctx.grids[ctx.lastUnitPos].pos, unitKey);
+            ForceUnitTo(ctx, ctx.grids[ctx.lastUnitPos].pos, unitKey);
             ctx.units[unitKey].alreadyMove = false;
             return ctx.lastUnitPos;
         }
 
-        public static Unit CreateUnit(Context ctx, string prototype, int owner)
+        public static Unit CreateUnit(Context ctx, string prototype)
         {
-            if(ctx.players.Count < owner+1)
-            {
-                throw new Exception("player not exist:"+owner);
-            }
             var unit = new Unit(null);
             unit.prototype = prototype;
-            unit.owner = owner;
             ctx.units.Add(unit.Key, unit);
+            Debug.Log("CreateUnit:" + ctx.units.Count);
             return unit;
         }
 

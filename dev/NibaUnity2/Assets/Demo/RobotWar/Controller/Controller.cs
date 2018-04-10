@@ -14,11 +14,11 @@ namespace RobotWar
         private void Start()
         {
             var stageModel = GameManager.Instance.gameObject.GetComponent<Model>();
-            model.ctx = stageModel.ctx.Copy();
+            // deep copy
+            var json = DataAlg.GetMemonto(stageModel.ctx);
+            DataAlg.SetMemonto(model.ctx, json);
 
-            DataAlg.CreatePlayer(model.ctx, 0, false);
-            DataAlg.CreatePlayer(model.ctx, 1, false);
-            DataAlg.CreatePlayer(model.ctx, 1, false);
+            
             TestLoadMap();
         }
 
@@ -27,7 +27,7 @@ namespace RobotWar
             StateUpdate(Time.deltaTime);
         }
 
-        public IEnumerator LoadMap(string path)
+        IEnumerator LoadMap(string path)
         {
             /*
             var request = Resources.LoadAsync<MapData>(path);
@@ -41,30 +41,29 @@ namespace RobotWar
             yield return null;
         }
 
-        void CreateUnit(int owner, Vector2Int pos)
-        {
-            var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01, owner);
-            var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-            DataAlg.PutUnit(model.ctx, pos, unit.Key);
-
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bomb);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-
-            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bigGun);
-            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
-
-            var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
-            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
-
-            view.CreateUnit(model, unit.Key, pos);
-        }
-
         public void StartPlay()
         {
+            var me = DataAlg.CreatePlayer(model.ctx, 0, false);
+            var enemy = DataAlg.CreatePlayer(model.ctx, 1, false);
+
+            foreach (var unit in model.ctx.units.Values)
+            {
+                var hasPilot = DataAlg.GetPilot(model.ctx, unit.Key) != null;
+                if(hasPilot == false)
+                {
+                    continue;
+                }
+                var cfg = ConfigUnit.Get(unit.prototype);
+                var pos = new Vector2Int(Random.Range(0, 10), Random.Range(0, 10));
+                DataAlg.PutUnit(model.ctx, pos, me.Key, unit.Key);
+                view.CreateUnit(model, unit.Key, pos);
+            }
+
+            for (var i = 0; i < 5; ++i)
+            {
+                CreateUnit(enemy.Key, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
+            }
+
             ChangeState(new SystemState());
         }
 
@@ -94,7 +93,27 @@ namespace RobotWar
         #endregion
 
         #region test
-        
+        void CreateUnit(int owner, Vector2Int pos)
+        {
+            var unit = DataAlg.CreateUnit(model.ctx, ConfigUnit.ID_test01);
+            var w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_handGun);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+            DataAlg.PutUnit(model.ctx, pos, owner, unit.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_lightSword);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bomb);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+
+            w = DataAlg.CreateWeapon(model.ctx, ConfigWeapon.ID_bigGun);
+            DataAlg.AssignWeapon(model.ctx, w.Key, unit.Key);
+
+            var p = DataAlg.CreatePilot(model.ctx, ConfigPilot.ID_solider1);
+            DataAlg.AssignPilot(model.ctx, p.Key, unit.Key);
+
+            view.CreateUnit(model, unit.Key, pos);
+        }
 
         [ContextMenu("TestLoadMap")]
         public void TestLoadMap()
@@ -259,7 +278,8 @@ namespace RobotWar
                         if (consumWeapon)
                         {
                             var unit = Model.ctx.units[unitKey];
-                            var atkPlayer = Model.ctx.players[unit.owner];
+                            var owner = Model.ctx.unit2Player[unitKey];
+                            var atkPlayer = Model.ctx.players[owner];
                             var clickPos = Model.ctx.grids[gridKey].pos;
                             var weaponObj = Model.ctx.weapons[weaponKey];
                             var weaponCfg = ConfigWeapon.Get(weaponObj.prototype);
@@ -272,7 +292,8 @@ namespace RobotWar
                                         var units = Model.ctx.unit2Grid.Keys.Where(uk =>
                                         {
                                             var u = Model.ctx.units[uk];
-                                            var dfdPlayer = Model.ctx.players[u.owner];
+                                            var owner2 = Model.ctx.unit2Player[uk];
+                                            var dfdPlayer = Model.ctx.players[owner2];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
                                                 return false;
@@ -293,7 +314,8 @@ namespace RobotWar
                                         var units = Model.ctx.unit2Grid.Keys.Where(uk =>
                                         {
                                             var u = Model.ctx.units[uk];
-                                            var dfdPlayer = Model.ctx.players[u.owner];
+                                            var owner2 = Model.ctx.unit2Player[unitKey];
+                                            var dfdPlayer = Model.ctx.players[owner2];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
                                                 return false;
@@ -339,7 +361,8 @@ namespace RobotWar
             else
             {
                 // 判斷可行動單位是玩家還是AI
-                var playerObj = Model.ctx.players[topCTUnit.owner];
+                var owner = Model.ctx.unit2Player[topCTUnit.Key];
+                var playerObj = Model.ctx.players[owner];
                 if (playerObj.isAI == false)
                 {
                     Holder.ChangeState(new SelectUnitActionState(topCTUnit));
@@ -376,7 +399,8 @@ namespace RobotWar
         }
         public override void OnUpdate(float t)
         {
-            var playerObj = Model.ctx.players[unit.owner];
+            var owner = Model.ctx.unit2Player[unit.Key];
+            var playerObj = Model.ctx.players[owner];
             if (playerObj.isAI)
             {
                 Holder.ChangeState(new UpdateCTState());
@@ -385,7 +409,8 @@ namespace RobotWar
         }
         public override void OnEnterState()
         {
-            var playerObj = Model.ctx.players[unit.owner];
+            var owner = Model.ctx.unit2Player[unit.Key];
+            var playerObj = Model.ctx.players[owner];
             if (playerObj.isAI)
             {
                 return;
@@ -576,7 +601,8 @@ namespace RobotWar
                 View.SetGridColor(null, Color.white);
                 View.SetGridColor(moveRange.Keys, Color.green);
 
-                var playerObj = Model.ctx.players[target.owner];
+                var owner = Model.ctx.unit2Player[target.Key];
+                var playerObj = Model.ctx.players[owner];
                 if (playerObj.isAI == false)
                 {
                     var isTop = DataAlg.GetTopCTUnit(Model.ctx) == target;
@@ -860,9 +886,11 @@ namespace RobotWar
                         {
                             var targetKey = Model.ctx.grid2Unit[gk];
                             var target = Model.ctx.units[targetKey];
-                            var ownerObj = Model.ctx.players[unit.owner];
-                            var targetOwnerObj = Model.ctx.players[target.owner];
-                            if (unit != target && ownerObj.team != targetOwnerObj.team)
+                            var unitOwner = Model.ctx.unit2Player[unit.Key];
+                            var unitOwnerObj = Model.ctx.players[unitOwner];
+                            var targetOwner = Model.ctx.unit2Player[targetKey];
+                            var targetOwnerObj = Model.ctx.players[targetOwner];
+                            if (unit != target && unitOwnerObj.team != targetOwnerObj.team)
                             {
                                 isReady = true;
                             }
