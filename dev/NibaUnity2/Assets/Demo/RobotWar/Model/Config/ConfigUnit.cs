@@ -9,6 +9,7 @@ public int en { get; set; }
 public int armor { get; set; }
 public int speed { get; set; }
 public int power { get; set; }
+public int moneyCost { get; set; }
 public const int ID_COUNT = 2;
 public const string ID_test01 = "test01";
 public const string ID_jimu = "jimu";

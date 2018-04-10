@@ -468,15 +468,6 @@ namespace RobotWar
         }
         #endregion
 
-        public static void AddMoney(Context ctx, int money)
-        {
-            ctx.money += money;
-            if(ctx.money < 0)
-            {
-                ctx.money = 0;
-            }
-        }
-
         #region map
         static AStarPathfinding pathFiniding = new AStarPathfinding();
 
@@ -1009,6 +1000,18 @@ namespace RobotWar
             return unit;
         }
 
+        public static void BuyUnit(Context ctx, string configId)
+        {
+            var cfg = ConfigUnit.Get(configId);
+            var isNotEnough = ctx.money < cfg.moneyCost;
+            if (isNotEnough)
+            {
+                throw new Exception("isNotEnough");
+            }
+            ctx.money -= cfg.moneyCost;
+            CreateUnit(ctx, configId);
+        }
+
         public static int GetPowerCost(Context ctx, string unit)
         {
             var weaponPowerCost = GetWeaponList(ctx, unit).Sum(w=>ConfigWeapon.Get(w.prototype).unitPowerCost);
@@ -1393,5 +1396,13 @@ namespace RobotWar
         }
         #endregion
 
+        public static void AddMoney(Context ctx, int money)
+        {
+            ctx.money += money;
+            if (ctx.money < 0)
+            {
+                ctx.money = 0;
+            }
+        }
     }
 }

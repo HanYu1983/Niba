@@ -33,6 +33,8 @@ MonoBehaviour:
       type: 0
     - key: power
       type: 0
+    - key: moneyCost
+      type: 0
   - key: ConfigWeapon
     fileName: RobotWar - weapon.tsv
     types:

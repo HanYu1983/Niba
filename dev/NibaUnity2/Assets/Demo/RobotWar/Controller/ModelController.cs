@@ -38,6 +38,8 @@ namespace RobotWar
             GameManager.LoadSceneWithTransitions("Item");
         }
 
+        public static Action OnBasicValueChange = delegate { };
+
         public void UpgradeWeapon(KeyRef weaponKeyRef)
         {
             Alarm(DialogInstance.DialogButtonsType.OkCancel, "是否升級?", "afafa",dialog =>
@@ -48,7 +50,29 @@ namespace RobotWar
                     try
                     {
                         DataAlg.UpgradeWeapon(model.ctx, weaponKeyRef.Ref);
+                        OnBasicValueChange();
                         weaponKeyRef.NotifyValueChange();
+                    }
+                    catch (Exception e)
+                    {
+                        OnException(e);
+                    }
+                }
+            });
+        }
+
+        public void BuyUnit(KeyRef keyRef)
+        {
+            Alarm(DialogInstance.DialogButtonsType.OkCancel, "是否購買?", "afafa", dialog =>
+            {
+                if (dialog.DialogResult == DialogInstance.DialogResultType.Ok)
+                {
+                    try
+                    {
+                        var model = GameManager.Instance.gameObject.GetComponent<Model>();
+                        DataAlg.BuyUnit(model.ctx, keyRef.Ref);
+                        OnBasicValueChange();
+                        keyRef.NotifyValueChange();
                     }
                     catch (Exception e)
                     {
@@ -68,6 +92,7 @@ namespace RobotWar
                     {
                         var model = GameManager.Instance.gameObject.GetComponent<Model>();
                         DataAlg.BuyWeapon(model.ctx, weaponRef.Ref);
+                        OnBasicValueChange();
                         weaponRef.NotifyValueChange();
                     }
                     catch (Exception e)
