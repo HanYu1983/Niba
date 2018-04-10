@@ -13,6 +13,9 @@ namespace RobotWar
 
         private void Start()
         {
+            // GameFramework的Pause按鈕一按下去後Time.timeScale會設為0, 之後就變不回為1
+            // 還沒去研究GameFramework的正確使用方式, 先在這裡用偷懒解法
+            Time.timeScale = 1;
             model = GameManager.Instance.gameObject.GetComponent<Model>();
             view.Sync(model);
         }
@@ -423,7 +426,7 @@ namespace RobotWar
             // 動畫沒結束前不能點擊
             if (moveCor != null)
             {
-                Debug.LogWarning("動畫播放中, 不能點擊");
+                Debug.LogWarning("動畫播放中, 不能點擊:"+Time.timeScale);
                 return;
             }
             // 判斷是否點到移動範圍內的方塊

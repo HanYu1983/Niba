@@ -33,6 +33,7 @@ namespace RobotWar
                 GameManager.LoadSceneWithTransitions("Training");
                 yield break;
             }
+            GameManager.LoadSceneWithTransitions("Menu");
             Debug.Log("load complete");
         }
 
@@ -74,6 +75,13 @@ namespace RobotWar
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             model.EnterTraining();
             GameManager.LoadSceneWithTransitions("Training");
+        }
+
+        public void ExitMap()
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            model.ExitMap();
+            GameManager.LoadSceneWithTransitions("Menu");
         }
 
         public static Action OnBasicValueChange = delegate { };

@@ -26,6 +26,12 @@ namespace RobotWar
             RequestSaveMap();
         }
 
+        public void ExitMap()
+        {
+            mapCtx = new Context();
+            ClearSaveMap();
+        }
+
         public void CreateStartValue()
         {
             DataAlg.AddMoney(ctx, 5000);
@@ -135,6 +141,16 @@ namespace RobotWar
             {
                 Monitor.PulseAll(saveTargets);
             }
+        }
+        public void ClearSaveMap()
+        {
+            var persistentDataPath = Application.persistentDataPath;
+            var mapPath = persistentDataPath + "/map.json";
+            if (File.Exists(mapPath) == false)
+            {
+                return;
+            }
+            File.Delete(mapPath);
         }
         Thread savingThread;
         void SavePlayerDiskWorker(string persistentDataPath)

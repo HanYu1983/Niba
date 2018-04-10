@@ -999,7 +999,6 @@ namespace RobotWar
             var unit = new Unit(null);
             unit.prototype = prototype;
             ctx.units.Add(unit.Key, unit);
-            Debug.Log("CreateUnit:" + ctx.units.Count);
             return unit;
         }
 
@@ -1440,7 +1439,13 @@ namespace RobotWar
 
             for (var i = 0; i < 5; ++i)
             {
-                CreateRandomUnit(ctx, 1, new Vector2Int(UnityEngine.Random.Range(0, 10), UnityEngine.Random.Range(0, 10)));
+                try
+                {
+                    CreateRandomUnit(ctx, 1, new Vector2Int(UnityEngine.Random.Range(0, 10), UnityEngine.Random.Range(0, 10)));
+                }catch(Exception e)
+                {
+                    Debug.LogWarning(e.Message);
+                }
             }
         }
 

@@ -994,7 +994,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1090700140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1597,6 +1597,7 @@ GameObject:
   - component: {fileID: 1579505915}
   - component: {fileID: 1579505917}
   - component: {fileID: 1579505916}
+  - component: {fileID: 1579505918}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -1649,6 +1650,17 @@ MonoBehaviour:
   GameWonWhenAllStarsGot: 0
   GameWonWhenTargetScoreReached: 0
   GameWonWhenTargetCoinsReached: 0
+--- !u!114 &1579505918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1579505914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d99463160090bae4a9c90e2c2fa5f53d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1643596179
 Prefab:
   m_ObjectHideFlags: 0
@@ -1751,6 +1763,14 @@ Prefab:
     - target: {fileID: 11486134, guid: 01b561837e00a7a4db0945b86cd2a088, type: 2}
       propertyPath: _alwaysResetTimeScale
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11461970, guid: 01b561837e00a7a4db0945b86cd2a088, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1579505918}
+    - target: {fileID: 11461970, guid: 01b561837e00a7a4db0945b86cd2a088, type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ExitMap
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 01b561837e00a7a4db0945b86cd2a088, type: 2}
