@@ -34,7 +34,7 @@ namespace RobotWar
 
         public void CreateStartValue()
         {
-            DataAlg.AddMoney(ctx, 5000);
+            DataAlg.AddMoney(ctx, 1000000000);
 
             var unit = DataAlg.CreateUnit(ctx, ConfigUnit.ID_jimu);
             DataAlg.CreateUnit(ctx, ConfigUnit.ID_test01);

@@ -34,7 +34,6 @@ namespace RobotWar
                 yield break;
             }
             GameManager.LoadSceneWithTransitions("Menu");
-            Debug.Log("load complete");
         }
 
         public void EnterGame()
@@ -68,6 +67,25 @@ namespace RobotWar
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             model.SelectUnit(unitKeyRef);
             GameManager.LoadSceneWithTransitions("Item");
+        }
+
+        public void SellUnit(KeyRef unitKeyRef)
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            Alarm(DialogInstance.DialogButtonsType.OkCancel, "System", "Sell?", (dialog) =>
+            {
+                if(dialog.DialogResult == DialogInstance.DialogResultType.Ok)
+                {
+                    try
+                    {
+                        DataAlg.SellUnit(model.ctx, unitKeyRef.Ref);
+                        Model.OnUnitListChange();
+                    }catch(Exception e)
+                    {
+                        OnException(e);
+                    }
+                }
+            });
         }
 
         public void Training()

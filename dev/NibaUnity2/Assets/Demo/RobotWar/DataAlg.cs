@@ -1009,6 +1009,27 @@ namespace RobotWar
             CreateUnit(ctx, configId);
         }
 
+        public static void SellUnit(Context ctx, string unit)
+        {
+            if (ctx.units.ContainsKey(unit) == false)
+            {
+                throw new Exception("unit not found");
+            }
+            var cfg = ConfigUnit.Get(ctx.units[unit].prototype);
+            ctx.money += cfg.moneyCost/5;
+            ctx.units.Remove(unit);
+            var ps = ctx.pilot2Unit.Keys.Where(p => ctx.pilot2Unit[p] == unit).ToList();
+            foreach(var p in ps)
+            {
+                ctx.pilot2Unit.Remove(p);
+            }
+            var ws = ctx.weapon2Unit.Keys.Where(p => ctx.weapon2Unit[p] == unit).ToList();
+            foreach (var w in ws)
+            {
+                ctx.weapon2Unit.Remove(w);
+            }
+        }
+
         public static int GetPowerCost(Context ctx, string unit)
         {
             var weaponPowerCost = GetWeaponList(ctx, unit).Sum(w=>ConfigWeapon.Get(w.prototype).unitPowerCost);
