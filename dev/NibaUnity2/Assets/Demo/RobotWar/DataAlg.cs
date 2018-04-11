@@ -273,6 +273,11 @@ namespace RobotWar
             return hitPoint/2*avoidanceRate;
         }
 
+        public float GetCriticalRate(DeffendValue b)
+        {
+            return 0.2f;
+        }
+
         public Dictionary<string, float> GetAttackAbility(DeffendValue b)
         {
             return null;
@@ -283,34 +288,16 @@ namespace RobotWar
             return null;
         }
 
-        public int Damage(DeffendValue b)
+        public int Damage(DeffendValue b, bool criticle)
         {
             var damage = weaponPower - b.unitArmor;
-
-            var power2 = 0f;
-
-            var region = PolarVector.Region(5);
-            var wp = new PolarVector();
-            var tp = new PolarVector();
-            var angle = PolarVector.Angle(wp, tp);
-
-            var isBad = angle < region;
-            var isGood = region < angle && angle < (2 * region);
-            if (isBad)
+            var damage2 = weaponPower * weaponPower / (weaponPower + b.unitArmor);
+            var total = (damage*0.7 + damage2*0.3);
+            if (criticle)
             {
-                power2 = 100 * PolarVector.Area(wp, tp);
+                total *= 1.5;
             }
-
-            if (isGood)
-            {
-                power2 = 100 * PolarVector.Area(wp, tp);
-            }
-            var damage2 = (power2 * power2) / (power2 + b.unitArmor);
-            if (isBad)
-            {
-                damage2 = -damage2;
-            }
-            return (int)(damage*0.7 + damage2*0.3);
+            return (int)total;
         }
     }
 
@@ -936,6 +923,11 @@ namespace RobotWar
             }
             var obj = ctx.weapons[weapon];
             var cfg = ConfigWeapon.Get(obj.prototype);
+            var isMelee = cfg.minRange == 1;
+            if (isMelee)
+            {
+                return true;
+            }
             var unitObj = ctx.units[unit];
 
             switch (cfg.weaponType)
@@ -1023,6 +1015,20 @@ namespace RobotWar
             var itemPowerCost = GetItemList(ctx, unit).Sum(w => ConfigItem.Get(w.prototype).unitPowerCost);
             var totalPowerCost = weaponPowerCost + itemPowerCost;
             return totalPowerCost;
+        }
+
+        public static int GetMaxHp(Context ctx, string unit)
+        {
+            var u = ctx.units[unit];
+            var cfg = ConfigUnit.Get(u.prototype);
+            var addHp = u.levels.hp * 20;
+            return cfg.hp + addHp;
+        }
+
+        public static bool IsUnitDied(Context ctx, string unit)
+        {
+            var u = ctx.units[unit];
+            return u.usedHp >= GetMaxHp(ctx, unit);
         }
 
         #endregion
@@ -1141,11 +1147,14 @@ namespace RobotWar
         #region unit map interaction
         public static int GetMovePower(Context ctx, string unit)
         {
+            return 100;
+            /*
             var unitObj = ctx.units[unit];
             var cfg = ConfigUnit.Get(unitObj.prototype);
             var weight = GetWeaponList(ctx, unit).Select(w => ConfigWeapon.Get(w.prototype)).Sum(w => w.unitPowerCost);
             var power = cfg.power - weight;
             return power;
+            */
         }
 
         public static float Speed2CT(float speed)
@@ -1171,6 +1180,10 @@ namespace RobotWar
         {
             foreach(var uk in ctx.unit2Grid.Keys)
             {
+                if(IsUnitDied(ctx, uk))
+                {
+                    continue;
+                }
                 var u = ctx.units[uk];
                 var cfg = ConfigUnit.Get(u.prototype);
                 u.ct += Speed2CT(UnitSpeed(ctx, u.Key));
@@ -1184,18 +1197,23 @@ namespace RobotWar
 
         public static Task GetTopTask(Context ctx)
         {
-            //Debug.Log("GetTopTask");
+            Debug.Log("GetTopTask");
             var ret = ctx.tasks;
-            /*foreach(var t in ret)
+            foreach(var t in ret)
             {
                 Debug.Log(t.ct + ":" + t.description);
-            }*/
+            }
             return ret.OrderBy(u => u.ct).Where(u=> u.ct<=0).FirstOrDefault();
         }
 
         public static Unit GetTopCTUnit(Context ctx)
         {
-            return ctx.unit2Grid.Keys.Select(k=>ctx.units[k]).OrderByDescending(u => u.ct).Where(u=> u.ct>=1).FirstOrDefault();
+            return ctx.unit2Grid.Keys
+                .Where(k=>IsUnitDied(ctx, k) == false)
+                .Select(k=>ctx.units[k])
+                .OrderByDescending(u => u.ct)
+                .Where(u=> u.ct>=1)
+                .FirstOrDefault();
         }
 
         public static void PassUnit(Context ctx, string unitKey)
@@ -1337,9 +1355,18 @@ namespace RobotWar
         public static DeffendValue GetDeffendValue(Context ctx, string unit)
         {
             var pilot = GetPilot(ctx, unit);
-            Assert.IsNull(pilot, "XXXX");
-            Assert.IsFalse(ctx.units.ContainsKey(unit), "XXX");
-            Assert.IsFalse(ctx.unit2Grid.ContainsKey(unit), "eES");
+            if (pilot == null)
+            {
+                throw new Exception("找不到駕駛員");
+            }
+            if (ctx.units.ContainsKey(unit) == false)
+            {
+                throw new Exception("找不到機體:" + unit);
+            }
+            if (ctx.unit2Grid.ContainsKey(unit) == false)
+            {
+                throw new Exception("機體不存在地圖上:" + unit);
+            }
 
             var unitCfg = ConfigUnit.Get(ctx.units[unit].prototype);
             var pilotCfg = ConfigPilot.Get(pilot.prototype);
@@ -1360,12 +1387,30 @@ namespace RobotWar
         public static AttackValue GetAttackValue(Context ctx, string unit, string targetUnit, string weapon)
         {
             var pilot = GetPilot(ctx, unit);
-            Assert.IsNull(pilot, "XXXX");
-            Assert.IsFalse(ctx.units.ContainsKey(unit), "XXX");
-            Assert.IsFalse(ctx.units.ContainsKey(targetUnit), "XXX2");
-            Assert.IsFalse(ctx.weapons.ContainsKey(weapon), "eES");
-            Assert.IsFalse(ctx.unit2Grid.ContainsKey(unit), "eES");
-            Assert.IsFalse(ctx.unit2Grid.ContainsKey(targetUnit), "eES");
+            if(pilot == null)
+            {
+                throw new Exception("找不到駕駛員");
+            }
+            if (ctx.units.ContainsKey(unit) == false)
+            {
+                throw new Exception("找不到攻擊機體:"+unit);
+            }
+            if (ctx.units.ContainsKey(targetUnit) == false)
+            {
+                throw new Exception("找不到防守機體:"+targetUnit);
+            }
+            if (ctx.weapons.ContainsKey(weapon) == false)
+            {
+                throw new Exception("找不到指定武器:"+weapon);
+            }
+            if (ctx.unit2Grid.ContainsKey(unit) == false)
+            {
+                throw new Exception("攻擊機體不存在地圖上:"+unit);
+            }
+            if (ctx.unit2Grid.ContainsKey(targetUnit) == false)
+            {
+                throw new Exception("防守機體不存在地圖上:"+targetUnit);
+            }
 
             var unitCfg = ConfigUnit.Get(ctx.units[unit].prototype);
             var pilotCfg = ConfigPilot.Get(pilot.prototype);
@@ -1388,7 +1433,7 @@ namespace RobotWar
             fv.distance = Vector2Int.Distance(pos1, pos2);
             return fv;
         }
-
+        /*
         public static void DamageUnit(Context ctx, string unit, string targetUnit, string weapon)
         {
             var atk = GetAttackValue(ctx, unit, targetUnit, weapon);
@@ -1405,7 +1450,7 @@ namespace RobotWar
             hitRate = atk.GetHitRate(dfd);
             atk.Damage(dfd);
 
-            var isHit = UnityEngine.Random.Range(0, 1) <= hitRate;
+            var isHit = UnityEngine.Random.Range(0, 1) < hitRate;
             if (isHit == false) {
                 return;
             }
@@ -1415,6 +1460,7 @@ namespace RobotWar
 
             ctx.units[targetUnit].usedHp += damage;
         }
+        */
         #endregion
 
         public static void AddMoney(Context ctx, int money)
@@ -1452,7 +1498,7 @@ namespace RobotWar
                 DataAlg.PutUnit(ctx, pos, 0, unit.Key);
             }
 
-            for (var i = 0; i < 5; ++i)
+            for (var i = 0; i < 2; ++i)
             {
                 try
                 {

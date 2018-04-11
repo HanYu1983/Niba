@@ -51,7 +51,7 @@ namespace RobotWar
                 UnitMenuItem.Status, UnitMenuItem.Pass, UnitMenuItem.Cancel
             };
             // 若單位移動過, 多一個取消移動的選項
-            if (unit.alreadyMove)
+            if (unit.alreadyMove && unit.alreadyAttack == false)
             {
                 menuItems.Add(UnitMenuItem.CancelMove);
             }

@@ -23,6 +23,18 @@ namespace RobotWar
             menu.CreateMenu(Model, menuItems);
             menu.OnSelect += OnSelect;
             GridView.OnClick += OnClick;
+
+            if (string.IsNullOrEmpty(Model.mapCtx.lastUnitPos) == false)
+            {
+                var lastPos = Model.mapCtx.grids[Model.mapCtx.lastUnitPos].pos;
+                var currPos = Model.mapCtx.grids[Model.mapCtx.unit2Grid[unit.Key]].pos;
+                this.dir = DataAlg.GetDirection(lastPos, currPos);
+            }
+            else
+            {
+                this.dir = unit.dir;
+            }
+            Debug.Log("direction ="+dir);
         }
         public override void OnExitState()
         {
