@@ -1607,6 +1607,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 541393909}
+  isConfigId: 0
   txt_name: {fileID: 1443141655}
   txt_unit: {fileID: 832111481}
   txt_desc: {fileID: 333248467}
@@ -1846,6 +1847,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 619903846}
+  isConfigId: 0
   txt_name: {fileID: 414702916}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -2085,6 +2087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 706893435}
+  isConfigId: 0
   txt_name: {fileID: 1740122159}
   txt_unit: {fileID: 611121504}
   txt_desc: {fileID: 59292433}
@@ -2798,6 +2801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 794130063}
+  isConfigId: 0
   txt_name: {fileID: 540972772}
   txt_unit: {fileID: 1597675615}
   txt_desc: {fileID: 2078162415}
@@ -3117,6 +3121,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 824694908}
+  isConfigId: 0
   txt_name: {fileID: 160353960}
   txt_unit: {fileID: 802255411}
   txt_desc: {fileID: 1823785202}
@@ -3280,6 +3285,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 826252554}
+  isConfigId: 0
   txt_name: {fileID: 1988538926}
   txt_unit: {fileID: 1460541875}
   txt_desc: {fileID: 2041144732}
@@ -3510,11 +3516,11 @@ MonoBehaviour:
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
+  m_ReferenceResolution: {x: 1024, y: 768}
+  m_ScreenMatchMode: 1
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
@@ -3617,6 +3623,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 852532302}
+  isConfigId: 0
   txt_name: {fileID: 431334884}
   txt_unit: {fileID: 764270397}
   txt_desc: {fileID: 1806330635}
@@ -3905,6 +3912,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 920758937}
+  isConfigId: 0
   txt_name: {fileID: 493763812}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -4224,6 +4232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 999012463}
+  isConfigId: 0
   txt_name: {fileID: 423420857}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -4594,6 +4603,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1110260862}
+  isConfigId: 0
   txt_name: {fileID: 395604741}
   txt_unit: {fileID: 1772484745}
   txt_desc: {fileID: 723538392}
@@ -4829,6 +4839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1129256860}
+  isConfigId: 0
   txt_name: {fileID: 1350600458}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -5399,6 +5410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 319316856}
+  isConfigId: 0
   txt_name: {fileID: 756012121}
   txt_unit: {fileID: 806759846}
   txt_desc: {fileID: 0}
@@ -5706,6 +5718,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1262992916}
+  isConfigId: 0
   txt_name: {fileID: 2109949736}
   txt_unit: {fileID: 1231905118}
   txt_desc: {fileID: 177883965}
@@ -5867,6 +5880,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1281234174}
+  isConfigId: 0
   txt_name: {fileID: 720408851}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -6391,6 +6405,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1420816747}
+  isConfigId: 0
   txt_name: {fileID: 1877463252}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -7069,6 +7084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1650351216}
+  isConfigId: 0
   txt_name: {fileID: 1159523209}
   txt_unit: {fileID: 965330383}
   txt_desc: {fileID: 1414732374}
@@ -7673,6 +7689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 892380982}
+  isConfigId: 0
   txt_name: {fileID: 949452910}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -8513,6 +8530,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 2089250615}
+  isConfigId: 0
   txt_name: {fileID: 1349396726}
   txt_unit: {fileID: 1482611430}
   txt_desc: {fileID: 1482403346}
@@ -8754,6 +8772,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 2124769598}
+  isConfigId: 0
   txt_name: {fileID: 2059436539}
   txt_unit: {fileID: 773692256}
   txt_desc: {fileID: 627972064}

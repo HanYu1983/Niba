@@ -79,6 +79,7 @@ namespace RobotWar
                     try
                     {
                         DataAlg.SellUnit(model.ctx, unitKeyRef.Ref);
+                        model.RequestSaveHome();
                         Model.OnUnitListChange();
                     }catch(Exception e)
                     {

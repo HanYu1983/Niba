@@ -387,6 +387,7 @@ namespace RobotWar
         public static void SetMemonto(Context ctx, string memonto)
         {
             var tmp = JsonUtility.FromJson<Tmp>(memonto);
+            ctx.money = tmp.money;
             ctx.units.Clear();
             foreach(var u in tmp.units)
             {
