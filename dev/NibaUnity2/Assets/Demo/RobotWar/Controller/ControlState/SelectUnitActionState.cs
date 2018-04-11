@@ -48,12 +48,17 @@ namespace RobotWar
             // 準備菜單
             var menuItems = new List<UnitMenuItem>()
             {
-                UnitMenuItem.Attack, UnitMenuItem.Status, UnitMenuItem.Pass, UnitMenuItem.Cancel
+                UnitMenuItem.Status, UnitMenuItem.Pass, UnitMenuItem.Cancel
             };
             // 若單位移動過, 多一個取消移動的選項
             if (unit.alreadyMove)
             {
                 menuItems.Add(UnitMenuItem.CancelMove);
+            }
+            // 沒有攻擊過才有攻擊選項
+            if (unit.alreadyAttack == false)
+            {
+                menuItems.Insert(0, UnitMenuItem.Attack);
             }
             // 打開菜單
             var menu = View.GetUnitMenu();
@@ -132,8 +137,7 @@ namespace RobotWar
                     Holder.ChangeState(new SelectWeaponState(unit));
                     break;
                 case UnitMenuItem.Pass:
-                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
-                    Holder.ChangeState(new SystemState());
+                    Holder.ChangeState(new SelectDirectionState(unit));
                     break;
                 case UnitMenuItem.Cancel:
                     Holder.ChangeState(new IdleState());

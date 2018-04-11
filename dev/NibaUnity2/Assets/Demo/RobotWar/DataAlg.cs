@@ -135,7 +135,7 @@ namespace RobotWar
 
     public enum Direction
     {
-        Up, Down, Left, Right
+        Pending, Up, Down, Left, Right
     }
 
     public struct UnitLevels
@@ -148,11 +148,14 @@ namespace RobotWar
     {
         public string key;
         public string prototype;
+        public UnitLevels levels;
+
         public int usedHp, usedEn;
         public float ct;
-        public Direction direction;
+        public bool alreadyAttack;
         public bool alreadyMove;
-        public UnitLevels levels;
+        public Direction dir = Direction.Down;
+        
         public Unit(string key)
         {
             if (string.IsNullOrEmpty(key))
@@ -1199,6 +1202,7 @@ namespace RobotWar
         {
             ctx.units[unitKey].ct -= 1;
             ctx.units[unitKey].alreadyMove = false;
+            ctx.units[unitKey].alreadyAttack = false;
         }
         
 
@@ -1288,6 +1292,8 @@ namespace RobotWar
             var weaponObj = ctx.weapons[weaponKey];
             var cfg = ConfigWeapon.Get(weaponObj.prototype);
             t.ct = cfg.prepareTime;
+
+            var u = ctx.units[unitKey];
             return t;
         }
 
@@ -1306,8 +1312,17 @@ namespace RobotWar
             return t;
         }
 
-        public static void PushTask(Context ctx, Task task)
+        public static void PushTask(Context ctx, Task task, bool isUnitAttack = false)
         {
+            if (isUnitAttack)
+            {
+                var u = ctx.units[task.owner];
+                if (u.alreadyAttack)
+                {
+                    throw new Exception("XXX");
+                }
+                u.alreadyAttack = true;
+            }
             ctx.tasks.Add(task);
         }
 

@@ -73,7 +73,7 @@ namespace RobotWar
                     {
                         if (isReady == false)
                         {
-                            Debug.LogWarning("XXXX");
+                            Debug.LogWarning("請先點擊正確的目標");
                             return;
                         }
                         var weaponObj = Model.mapCtx.weapons[weapon];
@@ -84,8 +84,7 @@ namespace RobotWar
                             case ConfigShape.ID_center:
                                 {
                                     var task = DataAlg.CreateRangeAttackTask(Model.mapCtx, unit.Key, weapon, selectedGrid.pos);
-                                    DataAlg.PushTask(Model.mapCtx, task);
-                                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
+                                    DataAlg.PushTask(Model.mapCtx, task, true);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
@@ -93,8 +92,7 @@ namespace RobotWar
                                 {
                                     var targetKey = Model.mapCtx.grid2Unit[selectedGrid.Key];
                                     var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
-                                    DataAlg.PushTask(Model.mapCtx, task);
-                                    DataAlg.PassUnit(Model.mapCtx, unit.Key);
+                                    DataAlg.PushTask(Model.mapCtx, task, true);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
