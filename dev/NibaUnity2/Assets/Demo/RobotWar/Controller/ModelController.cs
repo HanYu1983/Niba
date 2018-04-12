@@ -103,6 +103,31 @@ namespace RobotWar
             GameManager.LoadSceneWithTransitions("Menu");
         }
 
+        public void UpgradUnit(UnitLevelsView view)
+        {
+            var unit = view.unitKeyRef.Ref;
+            var levels = view.currLevels;
+            Alarm(DialogInstance.DialogButtonsType.OkCancel, "是否升級?", "afafa", dialog =>
+            {
+                if (dialog.DialogResult == DialogInstance.DialogResultType.Ok)
+                {
+                    var model = GameManager.Instance.gameObject.GetComponent<Model>();
+                    try
+                    {
+                        DataAlg.UpgradeUnit(model.ctx, unit, levels);
+                        model.RequestSaveHome();
+
+                        OnBasicValueChange();
+                        view.unitKeyRef.NotifyValueChange();
+                    }
+                    catch (Exception e)
+                    {
+                        OnException(e);
+                    }
+                }
+            });
+        }
+
         public static Action OnBasicValueChange = delegate { };
 
         public void UpgradeWeapon(KeyRef weaponKeyRef)
@@ -211,6 +236,13 @@ namespace RobotWar
                 sprite: null,
                 doneCallback: cb,
                 dialogButtons: type);
+        }
+
+        public void FullMoney()
+        {
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            DataAlg.AddMoney(model.ctx, 5000000);
+            model.RequestSaveHome();
         }
     }
 }

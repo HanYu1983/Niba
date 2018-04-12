@@ -133,11 +133,13 @@ namespace RobotWar
         }
     }
 
+    [Serializable]
     public enum Direction
     {
         Pending, Up, Down, Left, Right
     }
 
+    [Serializable]
     public struct UnitLevels
     {
         public int hp, en, armor, speed, power;
@@ -996,6 +998,44 @@ namespace RobotWar
             unit.prototype = prototype;
             ctx.units.Add(unit.Key, unit);
             return unit;
+        }
+
+        public static int GetUpgradeUnitCost(Context ctx, string unit, UnitLevels levels)
+        {
+            if(ctx.units.ContainsKey(unit) == false)
+            {
+                throw new Exception("xxx");
+            }
+            var money = 0;
+            var unitObj = ctx.units[unit];
+            var offset = levels.armor - unitObj.levels.armor;
+            money += offset * 500;
+
+            offset = levels.power - unitObj.levels.power;
+            money += offset * 500;
+
+            offset = levels.hp - unitObj.levels.hp;
+            money += offset * 500;
+
+            offset = levels.en - unitObj.levels.en;
+            money += offset * 500;
+
+            offset = levels.speed - unitObj.levels.speed;
+            money += offset * 500;
+
+            return money;
+        }
+
+        public static void UpgradeUnit(Context ctx, string unit, UnitLevels levels)
+        {
+            var cost = GetUpgradeUnitCost(ctx, unit, levels);
+            if(ctx.money < cost)
+            {
+                throw new Exception("money is not enough");
+            }
+            ctx.money -= cost;
+            var unitObj = ctx.units[unit];
+            unitObj.levels = levels;
         }
 
         public static void BuyUnit(Context ctx, string configId)

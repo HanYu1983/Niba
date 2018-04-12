@@ -326,6 +326,7 @@ GameObject:
   - component: {fileID: 149116349}
   - component: {fileID: 149116348}
   - component: {fileID: 149116350}
+  - component: {fileID: 149116351}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -369,6 +370,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d99463160090bae4a9c90e2c2fa5f53d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &149116351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 149116347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e139d9e8689427408ea243afe50e65f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Enable: 1
+  Disable: 0
 --- !u!1 &198874388
 GameObject:
   m_ObjectHideFlags: 0
@@ -8537,7 +8551,6 @@ GameObject:
   - component: {fileID: 1966033051}
   - component: {fileID: 1966033050}
   - component: {fileID: 1966033049}
-  - component: {fileID: 1966033052}
   m_Layer: 0
   m_Name: btn_howtoplay
   m_TagString: Untagged
@@ -8604,7 +8617,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1966033050}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 149116350}
+        m_MethodName: FullMoney
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &1966033050
@@ -8642,18 +8666,6 @@ CanvasRenderer:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1966033047}
---- !u!114 &1966033052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1966033047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e70958d28d7162b4998e52ef224fc99d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SceneName: HowToPlay
 --- !u!1 &1972862078
 GameObject:
   m_ObjectHideFlags: 0
