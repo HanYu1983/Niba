@@ -270,7 +270,7 @@ namespace RobotWar
         {
             var hitPoint = pilotHitRate + unitSpeed + pilotLucky;
             var avoidanceRate = b.pilotAvoidanceRate + b.unitSpeed + b.pilotLucky;
-            return hitPoint/2*avoidanceRate;
+            return hitPoint/(2.0f*avoidanceRate);
         }
 
         public float GetCriticalRate(DeffendValue b)

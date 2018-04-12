@@ -146,7 +146,7 @@ namespace RobotWar
                                         var units = Model.mapCtx.unit2Grid.Keys.Where(uk =>
                                         {
                                             var u = Model.mapCtx.units[uk];
-                                            var owner2 = Model.mapCtx.unit2Player[unitKey];
+                                            var owner2 = Model.mapCtx.unit2Player[uk];
                                             var dfdPlayer = Model.mapCtx.players[owner2];
                                             if (atkPlayer.team == dfdPlayer.team)
                                             {
