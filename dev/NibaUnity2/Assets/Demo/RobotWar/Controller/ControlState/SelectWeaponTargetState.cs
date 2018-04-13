@@ -74,7 +74,7 @@ namespace RobotWar
             menu.OnSelect -= OnSelect;
             menu.gameObject.SetActive(false);
             // 清除預測
-            Controller.SetUTWList(null);
+            View.SetUTWList(null);
             // 清除射程顯示
             View.SetGridColor(null, Color.white);
         }
@@ -122,7 +122,7 @@ namespace RobotWar
         {
             // 每點擊一次都重新計算是否依武器類型點擊到正確的目標
             isReady = false;
-            Controller.SetUTWList(null);
+            View.SetUTWList(null);
 
             var gk = new Grid(gv.coord).Key;
             var g = Model.mapCtx.grids[gk];
@@ -173,7 +173,7 @@ namespace RobotWar
                             utw.weapon = weapon;
                             return utw;
                         }).ToList();
-                        Controller.SetUTWList(utwList);
+                        View.SetUTWList(utwList);
                     }
                     break;
                 case ConfigShape.ID_forward:
@@ -214,7 +214,7 @@ namespace RobotWar
                             utw.weapon = weapon;
                             return utw;
                         }).ToList();
-                        Controller.SetUTWList(utwList);
+                        View.SetUTWList(utwList);
                     }
                     break;
                 default:
@@ -248,7 +248,7 @@ namespace RobotWar
                             utw.weapon = weapon;
                             var list = new List<UnitTargetWeapon>();
                             list.Add(utw);
-                            Controller.SetUTWList(list);
+                            View.SetUTWList(list);
 
                             /*
                             var targetKey = Model.mapCtx.grid2Unit[gk];

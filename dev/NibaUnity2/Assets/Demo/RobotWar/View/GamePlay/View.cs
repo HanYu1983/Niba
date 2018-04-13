@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using HanUtil;
 
 namespace RobotWar
 {
-    
-
     public class View : MonoBehaviour
     {
         #region state
@@ -147,6 +146,25 @@ namespace RobotWar
         {
             weaponMenu.gameObject.SetActive(true);
             return weaponMenu;
+        }
+        #endregion
+
+        #region predict
+        public UnitTargetWeaponListRef utwRef;
+        public void SetUTWList(List<UnitTargetWeapon> list)
+        {
+            if (utwRef.refType != ObjectRefType.Static)
+            {
+                throw new System.Exception("XXX");
+            }
+            if (list == null)
+            {
+                utwRef.value.Clear();
+                utwRef.OnValueChange();
+                return;
+            }
+            utwRef.value = list;
+            utwRef.OnValueChange();
         }
         #endregion
     }

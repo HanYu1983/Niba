@@ -30,24 +30,6 @@ namespace RobotWar
         {
             ChangeState(new SystemState());
         }
-        #region predict
-        public UnitTargetWeaponListRef utwRef;
-        public void SetUTWList(List<UnitTargetWeapon> list)
-        {
-            if(utwRef.refType != ObjectRefType.Static)
-            {
-                throw new System.Exception("XXX");
-            }
-            if(list == null)
-            {
-                utwRef.value.Clear();
-                utwRef.OnValueChange();
-                return;
-            }
-            utwRef.value = list;
-            utwRef.OnValueChange();
-        }
-        #endregion
 
         #region control state
         IControlState controlState;
@@ -61,7 +43,6 @@ namespace RobotWar
             next.Holder = this;
             next.Model = model;
             next.View = view;
-            next.Controller = this;
             next.OnEnterState();
             controlState = next;
         }
@@ -211,7 +192,6 @@ namespace RobotWar
         IControlStateHolder Holder { set; }
         Model Model { set; }
         View View { set; }
-        Controller Controller { set; }
         void OnEnterState();
         void OnExitState();
         void OnUpdate(float t);
@@ -222,7 +202,6 @@ namespace RobotWar
         public IControlStateHolder Holder { set; get; }
         public Model Model { set; get; }
         public View View { set; get; }
-        public Controller Controller { set; get; }
         public virtual void OnEnterState() { }
         public virtual void OnExitState() { }
         public virtual void OnUpdate(float t) { }

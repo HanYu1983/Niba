@@ -278,7 +278,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   model: {fileID: 0}
   view: {fileID: 1253087672}
-  utwRef: {fileID: 1245292535}
 --- !u!4 &297120092
 Transform:
   m_ObjectHideFlags: 0
@@ -1484,6 +1483,7 @@ MonoBehaviour:
   MovementSpeed: 10
   unitMenu: {fileID: 865124622}
   weaponMenu: {fileID: 148479481}
+  utwRef: {fileID: 1245292535}
 --- !u!4 &1253087673
 Transform:
   m_ObjectHideFlags: 0
