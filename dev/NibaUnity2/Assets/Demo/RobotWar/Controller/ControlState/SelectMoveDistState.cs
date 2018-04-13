@@ -45,13 +45,13 @@ namespace RobotWar
                 Debug.LogWarning("can not reach");
             }
         }
-        IEnumerator AnimateUnitMove(List<Grid> path)
+        /*IEnumerator AnimateUnitMove(List<Grid> path)
         {
             View.SetGridColor(null, Color.white);
             View.SetGridColor(path, Color.red);
             yield return View.AnimateUnitMove(unit.Key, path);
             View.SetGridColor(null, Color.white);
             Holder.ChangeState(new SelectUnitActionState(unit));
-        }
+        }*/
     }
 }

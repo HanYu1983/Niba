@@ -19,6 +19,7 @@ namespace RobotWar
             // 還沒去研究GameFramework的正確使用方式, 先在這裡用偷懒解法
             Time.timeScale = 1;
             model = GameManager.Instance.gameObject.GetComponent<Model>();
+            DataAlg.GenMap(model.mapCtx, 20, 20);
         }
 
         void Update()
@@ -79,7 +80,7 @@ namespace RobotWar
             model.CreateMap(data);
             view.Sync(model);
             */
-            DataAlg.GenMap(model.mapCtx, 20, 20);
+            
             view.Sync(model);
             yield return null;
         }
@@ -106,10 +107,13 @@ namespace RobotWar
             view.CreateUnit(model, unit.Key, pos);
         }
 
-        [ContextMenu("TestLoadMap")]
+        [ContextMenu("SyncMap")]
         public void TestLoadMap()
         {
-            StartCoroutine(CreateMap("Map/map01"));
+            foreach(var c in RobotWarClient.clients)
+            {
+                c.RpcSyncMap();
+            }
         }
         [ContextMenu("TestPlay")]
         public void TestPlay()
