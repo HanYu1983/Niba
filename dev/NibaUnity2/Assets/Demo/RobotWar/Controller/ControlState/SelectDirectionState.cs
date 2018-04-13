@@ -34,12 +34,12 @@ namespace RobotWar
             {
                 this.dir = unit.dir;
             }
-            Debug.Log("direction ="+dir);
         }
         public override void OnExitState()
         {
             var menu = View.GetUnitMenu();
             menu.OnSelect -= OnSelect;
+            menu.gameObject.SetActive(false);
             GridView.OnClick -= OnClick;
         }
         void OnSelect(Menu<UnitMenuItem> menu)
@@ -51,7 +51,16 @@ namespace RobotWar
             }
             Holder.ClientSetUnitDirection(Holder.Player, unit.Key, dir);
             Holder.ClientPassUnit(Holder.Player, unit.Key);
-            Holder.ChangeState(new SystemState());
+            if(Holder.Player == 0)
+            {
+                Holder.ChangeState(new SystemState());
+            }
+            else
+            {
+                Holder.ClientNotifyServerState("SystemState");
+                Holder.ChangeState(new WaitState());
+            }
+            
         }
         void OnClick(GridView gv)
         {
@@ -67,7 +76,6 @@ namespace RobotWar
             }
             var unitGrid = Model.mapCtx.grids[unitGridKey];
             this.dir = DataAlg.GetDirection(unitGrid.pos, clickPos);
-            Debug.Log("direction:" + dir);
         }
     }
 }

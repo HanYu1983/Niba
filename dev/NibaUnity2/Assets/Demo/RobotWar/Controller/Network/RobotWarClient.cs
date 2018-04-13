@@ -12,7 +12,6 @@ namespace RobotWar
     {
         public override void OnStartLocalPlayer()
         {
-            Debug.Log("OnStartLocalPlayer");
             if (isLocalPlayer == false)
             {
                 return;
@@ -45,23 +44,34 @@ namespace RobotWar
         [ClientRpc]
         void RpcSetClient(int playerId)
         {
-            Debug.Log("RpcSetClient");
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
             this.playerId = playerId;
             var ctr = FindObjectOfType<MultiController>();
             if (ctr != null)
             {
                 ctr.client = this;
             }
-            CmdAddUnit(ConfigUnit.ID_jimu);
-            CmdAddUnit(ConfigUnit.ID_jimu);
-            CmdAddUnit(ConfigUnit.ID_jimu);
+            CmdAddUnit(playerId, ConfigUnit.ID_test01);
+            CmdAddUnit(playerId, ConfigUnit.ID_test01);
+            //CmdAddUnit(playerId, ConfigUnit.ID_jimu);
         }
         [Command]
-        public void CmdAddUnit(string prototype)
+        public void CmdAddUnit(int playerId, string prototype)
         {
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             var unit = DataAlg.CreateUnit(model.mapCtx, prototype);
             var pilot = DataAlg.CreatePilot(model.mapCtx, ConfigPilot.ID_kira);
+            var weapon = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_bomb);
+            var weapon2 = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_bigSword);
+            var weapon3 = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_lightSword);
+            var weapon4 = DataAlg.CreateWeapon(model.mapCtx, ConfigWeapon.ID_bigGun);
+            DataAlg.AssignWeapon(model.mapCtx, weapon.Key, unit.Key);
+            DataAlg.AssignWeapon(model.mapCtx, weapon2.Key, unit.Key);
+            DataAlg.AssignWeapon(model.mapCtx, weapon3.Key, unit.Key);
+            DataAlg.AssignWeapon(model.mapCtx, weapon4.Key, unit.Key);
             DataAlg.AssignPilot(model.mapCtx, pilot.Key, unit.Key);
             DataAlg.PutUnit(model.mapCtx, new Vector2Int(Random.Range(0, 20), Random.Range(0, 20)), playerId, unit.Key);
             model.RequestSaveMap();
@@ -83,6 +93,20 @@ namespace RobotWar
             foreach (var c in clients)
             {
                 c.RpcSyncContext(memonto);
+            }
+        }
+        [Command]
+        public void CmdNotifyServerState(string state)
+        {
+            if(state == "SystemState")
+            {
+                var ctr = FindObjectOfType<MultiController>();
+                ctr.ChangeState(new SystemState());
+            }
+            if(state == "UpdateCTState")
+            {
+                var ctr = FindObjectOfType<MultiController>();
+                ctr.ChangeState(new UpdateCTState());
             }
         }
         [Command]
@@ -191,6 +215,28 @@ namespace RobotWar
             }
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
             DataAlg.SetMemonto(model.mapCtx, memonto);
+        }
+
+        [ClientRpc]
+        public void RpcNotifySelectUnitAction(int unitOwner, string unitKey)
+        {
+            if(isLocalPlayer == false)
+            {
+                return;
+            }
+            Debug.Log("RpcNotifySelectUnitAction:"+unitOwner);
+
+            var ctr = FindObjectOfType<MultiController>();
+            var model = GameManager.Instance.gameObject.GetComponent<Model>();
+            if (this.playerId == unitOwner)
+            {
+                var unit = model.mapCtx.units[unitKey];
+                ctr.ChangeState(new SelectUnitActionState(unit));
+            }
+            else
+            {
+                ctr.ChangeState(new WaitState());
+            }
         }
     }
 }

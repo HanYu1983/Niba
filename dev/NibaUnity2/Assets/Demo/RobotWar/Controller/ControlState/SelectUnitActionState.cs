@@ -70,6 +70,7 @@ namespace RobotWar
             var menu = View.GetUnitMenu();
             menu.OnSelect -= OnSelect;
             GridView.OnClick -= OnClick;
+            View.SetGridColor(null, Color.white);
         }
         Coroutine moveCor;
         void OnClick(GridView gv)
@@ -89,15 +90,18 @@ namespace RobotWar
                 // 關閉菜單
                 View.GetUnitMenu().gameObject.SetActive(false);
                 // 移動單位
-                DataAlg.MoveUnit(Model.mapCtx, gv.coord, unit.Key);
-                moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
+                //DataAlg.MoveUnit(Model.mapCtx, gv.coord, unit.Key);
+                //moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
+
+                Holder.ClientMoveUnit(Holder.Player, unit.Key, gv.coord);
+                Holder.ChangeState(new SelectUnitActionState(unit));
             }
             else
             {
                 Debug.LogWarning("不合法的位置");
             }
         }
-        IEnumerator AnimateUnitMove(List<Grid> path)
+        /*IEnumerator AnimateUnitMove(List<Grid> path)
         {
             // 顯示所選的路徑
             View.SetGridColor(null, Color.white);
@@ -106,7 +110,7 @@ namespace RobotWar
             yield return View.AnimateUnitMove(unit.Key, path);
             View.SetGridColor(null, Color.white);
             Holder.ChangeState(new SelectUnitActionState(unit));
-        }
+        }*/
         void OnSelect(Menu<UnitMenuItem> menu)
         {
             var item = menu.Selected;

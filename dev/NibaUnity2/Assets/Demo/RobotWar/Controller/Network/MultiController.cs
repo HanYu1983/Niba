@@ -39,26 +39,57 @@ namespace RobotWar
         {
             client.ServerAlert(title, msg);
         }
+        public override void ServerNotifySelectUnitAction(int unitOwner, string unitKey)
+        {
+            foreach(var c in RobotWarClient.clients)
+            {
+                c.RpcNotifySelectUnitAction(unitOwner, unitKey);
+            }
+        }
 
         public override void ClientMoveUnit(int playerId, string unit, Vector2Int pos)
         {
+            if(Player != 0)
+            {
+                DataAlg.MoveUnit(model.mapCtx, pos, unit);
+            }
             client.CmdMoveUnit(playerId, unit, new Grid(pos).Key);
         }
         public override void ClientCancelMoveUnit(int playerId, string unit)
         {
+            if (Player != 0)
+            {
+                DataAlg.CancelMoveUnit(model.mapCtx, unit);
+            }
             client.CmdCancelMoveUnit(playerId, unit);
         }
         public override void ClientPushTask(int playerId, Task task, bool isAttack)
         {
+            if (Player != 0)
+            {
+                DataAlg.PushTask(model.mapCtx, task, isAttack);
+            }
             client.CmdPushTask(playerId, JsonUtility.ToJson(task), isAttack);
         }
         public override void ClientSetUnitDirection(int playerId, string unit, Direction dir)
         {
+            if (Player != 0)
+            {
+                model.mapCtx.units[unit].dir = dir;
+            }
             client.CmdSetUnitDirection(playerId, unit, dir);
         }
         public override void ClientPassUnit(int playerId, string unit)
         {
+            if (Player != 0)
+            {
+                DataAlg.PassUnit(model.mapCtx, unit);
+            }
             client.CmdPassUnit(playerId, unit);
+        }
+        public override void ClientNotifyServerState(string state)
+        {
+            client.CmdNotifyServerState(state);
         }
 
         #region IController impl

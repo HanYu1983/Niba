@@ -107,7 +107,12 @@ namespace RobotWar
         }
         public int GetDistance(IGraphNode other)
         {
-            return GetDistance(other as Grid);
+            var g = other as Grid;
+            if(g == null)
+            {
+                return 0;
+            }
+            return (int)Vector2Int.Distance(g.pos, pos);
         }
 
         public bool Equals(Grid other)
@@ -1259,12 +1264,12 @@ namespace RobotWar
 
         public static Task GetTopTask(Context ctx)
         {
-            Debug.Log("GetTopTask");
+            //Debug.Log("GetTopTask");
             var ret = ctx.tasks;
-            foreach(var t in ret)
+            /*foreach(var t in ret)
             {
                 Debug.Log(t.ct + ":" + t.description);
-            }
+            }*/
             return ret.OrderBy(u => u.ct).Where(u=> u.ct<=0).FirstOrDefault();
         }
 

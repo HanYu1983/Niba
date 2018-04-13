@@ -102,7 +102,15 @@ namespace RobotWar
                                     var task = DataAlg.CreateRangeAttackTask(Model.mapCtx, unit.Key, weapon, selectedGrid.pos);
                                     //DataAlg.PushTask(Model.mapCtx, task, true);
                                     Holder.ClientPushTask(Holder.Player, task, true);
-                                    Holder.ChangeState(new UpdateCTState());
+                                    if(Holder.Player == 0)
+                                    {
+                                        Holder.ChangeState(new UpdateCTState());
+                                    }
+                                    else
+                                    {
+                                        Holder.ChangeState(new WaitState());
+                                        Holder.ClientNotifyServerState("UpdateCTState");
+                                    }
                                 }
                                 break;
                             default:
@@ -111,7 +119,15 @@ namespace RobotWar
                                     var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
                                     //DataAlg.PushTask(Model.mapCtx, task, true);
                                     Holder.ClientPushTask(Holder.Player, task, true);
-                                    Holder.ChangeState(new UpdateCTState());
+                                    if (Holder.Player == 0)
+                                    {
+                                        Holder.ChangeState(new UpdateCTState());
+                                    }
+                                    else
+                                    {
+                                        Holder.ChangeState(new WaitState());
+                                        Holder.ClientNotifyServerState("UpdateCTState");
+                                    }
                                 }
                                 break;
                         }

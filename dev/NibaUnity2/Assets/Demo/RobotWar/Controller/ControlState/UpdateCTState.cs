@@ -35,13 +35,7 @@ namespace RobotWar
                 var playerObj = Model.mapCtx.players[owner];
                 if (playerObj.isAI == false)
                 {
-                    if(Holder.Player == 0)
-                    {
-                        Holder.ChangeState(new SelectUnitActionState(topCTUnit));
-                    } else
-                    {
-                        Holder.ChangeState(new WaitState());
-                    }
+                    Holder.ServerNotifySelectUnitAction(playerObj.Key, topCTUnit.Key);
                 }
                 else
                 {
