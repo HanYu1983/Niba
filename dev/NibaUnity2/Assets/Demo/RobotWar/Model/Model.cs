@@ -154,7 +154,7 @@ namespace RobotWar
 
         #endregion
 
-#if UNITY_EDITOR || UNITY_STANDALONE
+#if UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID || UNITY_EDITOR
         public static string PersistentDataPath()
         {
             return Application.persistentDataPath;
