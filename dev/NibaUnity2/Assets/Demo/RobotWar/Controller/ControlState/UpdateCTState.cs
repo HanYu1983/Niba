@@ -9,6 +9,12 @@ namespace RobotWar
     {
         public override void OnUpdate(float t)
         {
+            if(Holder.Player != 0)
+            {
+                Holder.ChangeState(new WaitState());
+                return;
+            }
+
             var task = DataAlg.GetTopTask(Model.mapCtx);
             if (task != null)
             {
@@ -21,7 +27,6 @@ namespace RobotWar
             if (topCTUnit == null)
             {
                 DataAlg.StepCT(Model.mapCtx);
-                View.UpdateState(Model);
             }
             else
             {
@@ -30,7 +35,13 @@ namespace RobotWar
                 var playerObj = Model.mapCtx.players[owner];
                 if (playerObj.isAI == false)
                 {
-                    Holder.ChangeState(new SelectUnitActionState(topCTUnit));
+                    if(Holder.Player == 0)
+                    {
+                        Holder.ChangeState(new SelectUnitActionState(topCTUnit));
+                    } else
+                    {
+                        Holder.ChangeState(new WaitState());
+                    }
                 }
                 else
                 {

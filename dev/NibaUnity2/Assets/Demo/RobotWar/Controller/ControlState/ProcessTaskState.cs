@@ -57,12 +57,17 @@ namespace RobotWar
                                     msgs.Add(sub);
                                 }
                             }
-                            ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", string.Join("\n", msgs.ToArray()), null);
+                            var msg = string.Join("\n", msgs.ToArray());
+                            Holder.ServerAlart("System", msg);
+                            //ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", msg, null);
                             DataAlg.CompleteTask(Model.mapCtx, task);
                         }
                         else
                         {
-                            ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", reason, null);
+                            var msg = reason;
+                            Holder.ServerAlart("System", msg);
+
+                            //ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", reason, null);
                         }
                         DataAlg.CompleteTask(Model.mapCtx, task);
                     }
@@ -132,7 +137,10 @@ namespace RobotWar
                                                 msgs.Add(sub);
                                             }
                                         }
-                                        ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", string.Join("\n", msgs.ToArray()), null);
+                                        var msg = string.Join("\n", msgs.ToArray());
+                                        Holder.ServerAlart("System", msg);
+
+                                        //ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", string.Join("\n", msgs.ToArray()), null);
                                     }
                                     break;
                                 case ConfigShape.ID_forward:
@@ -186,14 +194,19 @@ namespace RobotWar
                                                 msgs.Add(sub);
                                             }
                                         }
-                                        ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", string.Join("\n", msgs.ToArray()), null);
+
+                                        var msg = string.Join("\n", msgs.ToArray());
+                                        Holder.ServerAlart("System", msg);
+                                        //ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", string.Join("\n", msgs.ToArray()), null);
                                     }
                                     break;
                             }
                         }
                         else
                         {
-                            ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", reason, null);
+                            var msg = reason;
+                            Holder.ServerAlart("System", msg);
+                            //ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "System", reason, null);
                         }
                         DataAlg.CompleteTask(Model.mapCtx, task);
                     }

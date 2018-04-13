@@ -112,18 +112,13 @@ namespace RobotWar
             var item = menu.Selected;
             switch (item)
             {
-                /*case UnitMenuItem.Move:
-                    if (unit.alreadyMove)
-                    {
-                        Debug.LogWarning("already move");
-                        return;
-                    }
-                    Holder.ChangeState(new SelectMoveDistState(unit, paths));
-                    break;*/
                 case UnitMenuItem.CancelMove:
                     {
+                        Holder.ClientCancelMoveUnit(Holder.Player, unit.Key);
+                        /*
                         var pos = DataAlg.CancelMoveUnit(Model.mapCtx, unit.Key);
                         View.SetUnitPos(unit.Key, Model.mapCtx.grids[pos]);
+                        */
                         Holder.ChangeState(new SelectUnitActionState(unit));
                     }
                     break;

@@ -100,7 +100,8 @@ namespace RobotWar
                             case ConfigShape.ID_center:
                                 {
                                     var task = DataAlg.CreateRangeAttackTask(Model.mapCtx, unit.Key, weapon, selectedGrid.pos);
-                                    DataAlg.PushTask(Model.mapCtx, task, true);
+                                    //DataAlg.PushTask(Model.mapCtx, task, true);
+                                    Holder.ClientPushTask(Holder.Player, task, true);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
@@ -108,7 +109,8 @@ namespace RobotWar
                                 {
                                     var targetKey = Model.mapCtx.grid2Unit[selectedGrid.Key];
                                     var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
-                                    DataAlg.PushTask(Model.mapCtx, task, true);
+                                    //DataAlg.PushTask(Model.mapCtx, task, true);
+                                    Holder.ClientPushTask(Holder.Player, task, true);
                                     Holder.ChangeState(new UpdateCTState());
                                 }
                                 break;
@@ -249,23 +251,6 @@ namespace RobotWar
                             var list = new List<UnitTargetWeapon>();
                             list.Add(utw);
                             View.SetUTWList(list);
-
-                            /*
-                            var targetKey = Model.mapCtx.grid2Unit[gk];
-                            var target = Model.mapCtx.units[targetKey];
-                            var ownerObj = Model.mapCtx.players[unit.owner];
-                            var targetOwnerObj = Model.mapCtx.players[target.owner];
-                            if (unit != target && ownerObj.team != targetOwnerObj.team)
-                            {
-                                var task = DataAlg.CreateAttackTask(Model.mapCtx, unit.Key, weapon, new List<string>() { targetKey });
-                                DataAlg.PushTask(Model.mapCtx, task);
-                                DataAlg.PassUnit(Model.mapCtx, unit.Key);
-                                Holder.ChangeState(new UpdateCTState());
-                            }
-                            else
-                            {
-                                Debug.LogWarning("不合法的目標");
-                            }*/
                         }
                     }
                     break;

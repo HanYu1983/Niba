@@ -1,58 +1,128 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using GameFramework.GameStructure;
-using HanUtil;
+using GameFramework.UI.Dialogs.Components;
+using System.Linq;
 
 namespace RobotWar
 {
-    public class Controller : MonoBehaviour, IControlStateHolder
+    public class SingleController : DefaultController
     {
-        public Model model;
         public View view;
+        public Model model;
 
-        private void Start()
+        void Start()
         {
             // GameFramework的Pause按鈕一按下去後Time.timeScale會設為0, 之後就變不回為1
             // 還沒去研究GameFramework的正確使用方式, 先在這裡用偷懒解法
             Time.timeScale = 1;
+
             model = GameManager.Instance.gameObject.GetComponent<Model>();
             view.Sync(model);
         }
 
         void Update()
         {
-            StateUpdate(Time.deltaTime);
+            Step(Time.deltaTime);
         }
 
         public void StartPlay()
         {
             ChangeState(new SystemState());
         }
-
-        #region control state
-        IControlState controlState;
-        public void ChangeState(IControlState next)
+        public override void ServerAlart(string title, string msg)
         {
-            Debug.Log("ChangeState:" + next);
-            if(controlState != null)
-            {
-                controlState.OnExitState();
-            }
-            next.Holder = this;
-            next.Model = model;
-            next.View = view;
-            next.OnEnterState();
-            controlState = next;
+            RpcAlert(title, msg);
         }
-        public void StateUpdate(float t)
+
+        public override void ClientMoveUnit(int playerId, string unit, Vector2Int pos)
         {
-            if(controlState == null)
-            {
-                return;
-            }
-            controlState.OnUpdate(t);
+            CmdMoveUnit(playerId, unit, pos);
+        }
+        public override void ClientCancelMoveUnit(int playerId, string unit)
+        {
+            CmdCancelMoveUnit(playerId, unit);
+        }
+        public override void ClientPushTask(int playerId, Task task, bool isAttack)
+        {
+            CmdPushTask(playerId, JsonUtility.ToJson(task), isAttack);
+        }
+        public override void ClientSetUnitDirection(int playerId, string unit, Direction dir)
+        {
+            CmdSetUnitDirection(playerId, unit, dir);
+        }
+        public override void ClientPassUnit(int playerId, string unit)
+        {
+            CmdPassUnit(playerId, unit);
+        }
+
+        void CmdPassUnit(int playerId, string unit)
+        {
+            DataAlg.PassUnit(model.mapCtx, unit);
+            model.RequestSaveMap();
+        }
+
+        void CmdMoveUnit(int playerId, string unit, Vector2Int pos)
+        {
+            var s = model.mapCtx.grids[model.mapCtx.unit2Grid[unit]].pos;
+            var e = pos;
+            var path = DataAlg.FindPath(model.mapCtx, s, e).Select(g=>g.Key).ToArray();
+            DataAlg.MoveUnit(model.mapCtx, pos, unit);
+            model.RequestSaveMap();
+
+            RpcAnimateUnitMove(unit, path);
+        }
+
+        void CmdCancelMoveUnit(int playerId, string unit)
+        {
+            var pos = DataAlg.CancelMoveUnit(Model.mapCtx, unit);
+            model.RequestSaveMap();
+
+            RpcSetUnitPos(unit, pos);
+        }
+
+        void CmdPushTask(int playerId, string taskJson, bool isAttack)
+        {
+            var task = JsonUtility.FromJson<Task>(taskJson);
+            DataAlg.PushTask(Model.mapCtx, task, isAttack);
+            model.RequestSaveMap();
+        }
+
+        void CmdSetUnitDirection(int playerId, string unit, Direction dir)
+        {
+            model.mapCtx.units[unit].dir = dir;
+            model.RequestSaveMap();
+            RpcAnimateUnitDirection(unit, dir);
+        }
+
+        void RpcAlert(string title, string msg)
+        {
+            ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, title, msg, null);
+        }
+
+        void RpcAnimateUnitDirection(string unit, Direction dir)
+        {
+
+        }
+
+        void RpcAnimateUnitMove(string unit, string[] path)
+        {
+            var grids = path.Select(k => model.mapCtx.grids[k]).ToList();
+            View.StartCoroutine(View.AnimateUnitMove(unit, grids));
+        }
+
+        void RpcSetUnitPos(string unit, string pos)
+        {
+            View.SetUnitPos(unit, Model.mapCtx.grids[pos]);
+        }
+
+        #region IController impl
+        public override Model Model { get { return model; } }
+        public override View View { get { return view; } }
+        public override int Player
+        {
+            get { return 0; }
         }
         #endregion
 
@@ -107,7 +177,7 @@ namespace RobotWar
         public void TestCreateUnit()
         {
             var p = DataAlg.CreatePlayer(model.mapCtx, 0, false);
-            for (var i=0; i<5; ++i)
+            for (var i = 0; i < 5; ++i)
             {
                 CreateUnit(p.Key, new Vector2Int(Random.Range(0, 10), Random.Range(0, 10)));
             }
@@ -180,30 +250,5 @@ namespace RobotWar
             Debug.Log(area);
         }
         #endregion
-    }
-
-    public interface IControlStateHolder
-    {
-        void ChangeState(IControlState state);
-    }
-
-    public interface IControlState
-    {
-        IControlStateHolder Holder { set; }
-        Model Model { set; }
-        View View { set; }
-        void OnEnterState();
-        void OnExitState();
-        void OnUpdate(float t);
-    }
-
-    public abstract class DefaultControlState : IControlState
-    {
-        public IControlStateHolder Holder { set; get; }
-        public Model Model { set; get; }
-        public View View { set; get; }
-        public virtual void OnEnterState() { }
-        public virtual void OnExitState() { }
-        public virtual void OnUpdate(float t) { }
     }
 }

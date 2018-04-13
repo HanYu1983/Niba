@@ -12,11 +12,19 @@ namespace RobotWar
     {
         public override void OnUpdate(float t)
         {
+            if (Holder.Player != 0)
+            {
+                Holder.ChangeState(new WaitState());
+                return;
+            }
             View.StartCoroutine(Compute());
         }
         public override void OnEnterState()
         {
-            Model.RequestSaveMap();
+            if (Holder.Player == 0)
+            {
+                Model.RequestSaveMap();
+            }
         }
         IEnumerator Compute()
         {

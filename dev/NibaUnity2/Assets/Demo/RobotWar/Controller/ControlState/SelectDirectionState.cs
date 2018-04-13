@@ -49,8 +49,8 @@ namespace RobotWar
                 ModelController.Alarm(DialogInstance.DialogButtonsType.Ok, "請選擇方向", "", null);
                 return;
             }
-            unit.dir = dir;
-            DataAlg.PassUnit(Model.mapCtx, unit.Key);
+            Holder.ClientSetUnitDirection(Holder.Player, unit.Key, dir);
+            Holder.ClientPassUnit(Holder.Player, unit.Key);
             Holder.ChangeState(new SystemState());
         }
         void OnClick(GridView gv)

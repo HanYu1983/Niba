@@ -12,8 +12,7 @@ namespace RobotWar
     {
         public Context ctx = new Context();
         public Context mapCtx = new Context();
-
-#region controller
+        #region home
         public static Action OnUnitListChange = delegate { };
         public static Action OnWeaponListChange = delegate { };
 
@@ -57,9 +56,7 @@ namespace RobotWar
             OnUnitListChange();
             OnWeaponListChange();
         }
-#endregion
 
-#region ui
         public string selectUnit;
 
         public bool HasSelectUnit
@@ -89,6 +86,72 @@ namespace RobotWar
                 ctx.grids.Add(ret.Key, ret);
             }
         }
+        #endregion
+
+        #region persistent
+        public bool Load()
+        {
+            Debug.Log("log");
+            var persistentDataPath = PersistentDataPath();
+            var homePath = persistentDataPath + "/home.json";
+            Debug.LogWarning("loading..." + homePath);
+            if (IsFileExist(homePath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var homeMemonto = ReadAllText(homePath);
+                DataAlg.SetMemonto(ctx, homeMemonto);
+            }
+            return true;
+        }
+
+        public bool LoadMap()
+        {
+            Debug.Log("LoadMap");
+            var persistentDataPath = PersistentDataPath();
+            var mapPath = persistentDataPath + "/map.json";
+            if (IsFileExist(mapPath) == false)
+            {
+                return false;
+            }
+            Debug.LogWarning("loading..." + mapPath);
+            var mapMemoto = ReadAllText(mapPath);
+            DataAlg.SetMemonto(mapCtx, mapMemoto);
+            return true;
+        }
+        public void RequestSaveHome()
+        {
+#if UNITY_EDITOR
+            SRequestSaveHome(this);
+#elif UNITY_WEBGL
+            var memonto = DataAlg.GetMemonto(ctx);
+            var path = PersistentDataPath() + "/home.json";
+            WriteAllText(path, memonto);
+#endif
+        }
+        public void RequestSaveMap()
+        {
+#if UNITY_EDITOR
+            SRequestSaveMap(this);
+#elif UNITY_WEBGL
+            var memonto = DataAlg.GetMemonto(mapCtx);
+            var path = PersistentDataPath() + "/map.json";
+            WriteAllText(path, memonto);
+#endif
+        }
+        public void ClearSaveMap()
+        {
+            var persistentDataPath = PersistentDataPath();
+            var mapPath = persistentDataPath + "/map.json";
+            if (IsFileExist(mapPath) == false)
+            {
+                return;
+            }
+            DeleteFile(mapPath);
+        }
+
         #endregion
 
 #if UNITY_EDITOR || UNITY_STANDALONE
@@ -181,71 +244,5 @@ namespace RobotWar
         [DllImport("__Internal")]
         public static extern void WriteAllText(string path, string data);
 #endif
-
-        #region persistent
-        public bool Load()
-        {
-            Debug.Log("log");
-            var persistentDataPath = PersistentDataPath();
-            var homePath = persistentDataPath + "/home.json";
-            Debug.LogWarning("loading..." + homePath);
-            if (IsFileExist(homePath) == false)
-            {
-                return false;
-            }
-            else
-            {
-                var homeMemonto = ReadAllText(homePath);
-                DataAlg.SetMemonto(ctx, homeMemonto);
-            }
-            return true;
-        }
-
-        public bool LoadMap()
-        {
-            Debug.Log("LoadMap");
-            var persistentDataPath = PersistentDataPath();
-            var mapPath = persistentDataPath + "/map.json";
-            if (IsFileExist(mapPath) == false)
-            {
-                return false;
-            }
-            Debug.LogWarning("loading..." + mapPath);
-            var mapMemoto = ReadAllText(mapPath);
-            DataAlg.SetMemonto(mapCtx, mapMemoto);
-            return true;
-        }
-        public void RequestSaveHome()
-        {
-#if UNITY_EDITOR
-            SRequestSaveHome(this);
-#elif UNITY_WEBGL
-            var memonto = DataAlg.GetMemonto(ctx);
-            var path = PersistentDataPath() + "/home.json";
-            WriteAllText(path, memonto);
-#endif
-        }
-        public void RequestSaveMap()
-        {
-#if UNITY_EDITOR
-            SRequestSaveMap(this);
-#elif UNITY_WEBGL
-            var memonto = DataAlg.GetMemonto(mapCtx);
-            var path = PersistentDataPath() + "/map.json";
-            WriteAllText(path, memonto);
-#endif
-        }
-        public void ClearSaveMap()
-        {
-            var persistentDataPath = PersistentDataPath();
-            var mapPath = persistentDataPath + "/map.json";
-            if (IsFileExist(mapPath) == false)
-            {
-                return;
-            }
-            DeleteFile(mapPath);
-        }
-        
-#endregion
     }
 }

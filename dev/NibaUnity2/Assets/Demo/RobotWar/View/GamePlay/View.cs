@@ -3,20 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using HanUtil;
+using System.Linq;
 
 namespace RobotWar
 {
     public class View : MonoBehaviour
     {
-        #region state
-        public void UpdateState(Model model)
-        {
-
-        }
-        #endregion
-
-        
-
         #region map
         public GameObject gridPrefab;
         public Transform gridRoot;
@@ -93,12 +85,13 @@ namespace RobotWar
             }
             go.SetActive(true);
         }
-        #endregion
 
-        #region unit
         public float MovementSpeed;
         public IEnumerator AnimateUnitMove(string key, List<Grid> path)
         {
+            SetGridColor(null, Color.white);
+            SetGridColor(path, Color.red);
+
             var unit = unitView[key];
             path.Reverse();
             foreach (var cell in path)
@@ -113,6 +106,8 @@ namespace RobotWar
                     yield return 0;
                 }
             }
+
+            SetGridColor(null, Color.white);
         }
         public void SetUnitPos(string key, Grid cell)
         {

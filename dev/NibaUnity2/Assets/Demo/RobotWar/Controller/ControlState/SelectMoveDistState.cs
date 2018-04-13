@@ -33,8 +33,12 @@ namespace RobotWar
             var g = Model.mapCtx.grids[gk];
             if (paths.ContainsKey(g))
             {
+                Holder.ClientMoveUnit(Holder.Player, unit.Key, gv.coord);
+                Holder.ChangeState(new SelectUnitActionState(unit));
+                /*
                 DataAlg.MoveUnit(Model.mapCtx, gv.coord, unit.Key);
                 moveCor = View.StartCoroutine(AnimateUnitMove(paths[g]));
+                */
             }
             else
             {
