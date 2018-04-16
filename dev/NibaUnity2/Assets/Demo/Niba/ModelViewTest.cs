@@ -35,11 +35,13 @@ namespace Model
 			//yield return TestNpcMission (model, view);
 			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
-			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
 			yield return TestShowInfo (model, view);
 			yield return TestMap (model, view);
 			yield return TestWeapon (model, view);
+
+            // 過時的
+            // yield return TestFight (model, view);
 		}
 
 		static IEnumerator TestNpcMission(IModel model, IView view){
@@ -180,7 +182,7 @@ namespace Model
 
 		static IEnumerator TestWeapon(IModel model, IView view){
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -243,7 +245,7 @@ namespace Model
 		static IEnumerator TestFight(IModel model, IView view){
 			UnityEngine.Random.InitState (1);
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -395,7 +397,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
 			});
@@ -456,7 +458,7 @@ namespace Model
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			if (e != null) {
 				throw e;
 			}
