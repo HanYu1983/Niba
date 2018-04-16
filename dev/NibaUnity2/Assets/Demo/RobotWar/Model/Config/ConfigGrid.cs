@@ -1,12 +1,12 @@
 using System;
 namespace RobotWar{
-public class ConfigGrid {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
-public int cost { get; set; }
-public float deffence { get; set; }
-public float energy { get; set; }
+public struct ConfigGrid {
+        public string id;
+        public string name;
+        public string description;
+        public int cost;
+        public float deffence;
+        public float energy;
 public const int ID_COUNT = 6;
 public const string ID_plain = "plain";
 public const string ID_city = "city";

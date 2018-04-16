@@ -35,7 +35,11 @@ namespace RobotWar
         {
             RpcAlert(title, msg);
         }
-
+        public override void ServerNotifySelectUnitAction(int playerId, string unit)
+        {
+            var u = model.mapCtx.units[unit];
+            ChangeState(new SelectUnitActionState(u));
+        }
         public override void ClientMoveUnit(int playerId, string unit, Vector2Int pos)
         {
             CmdMoveUnit(playerId, unit, pos);
@@ -55,6 +59,10 @@ namespace RobotWar
         public override void ClientPassUnit(int playerId, string unit)
         {
             CmdPassUnit(playerId, unit);
+        }
+        public override void ClientNotifyServerState(string state)
+        {
+            // ignore
         }
 
         void CmdPassUnit(int playerId, string unit)

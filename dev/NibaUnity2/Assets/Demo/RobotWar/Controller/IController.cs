@@ -29,14 +29,14 @@ namespace RobotWar
         public abstract Model Model { get; }
         public abstract View View { get; }
         public abstract int Player { get; }
-        public virtual void ServerAlart(string title, string msg) { }
-        public virtual void ServerNotifySelectUnitAction(int playerId, string unit) { }
-        public virtual void ClientMoveUnit(int playerId, string unit, Vector2Int pos) { }
-        public virtual void ClientCancelMoveUnit(int playerId, string unit) { }
-        public virtual void ClientPushTask(int playerId, Task task, bool isAttack) { }
-        public virtual void ClientSetUnitDirection(int playerId, string unit, Direction dir) { }
-        public virtual void ClientPassUnit(int playerId, string unit) { }
-        public virtual void ClientNotifyServerState(string state) { }
+        public abstract void ServerAlart(string title, string msg);
+        public abstract void ServerNotifySelectUnitAction(int playerId, string unit);
+        public abstract void ClientMoveUnit(int playerId, string unit, Vector2Int pos);
+        public abstract void ClientCancelMoveUnit(int playerId, string unit);
+        public abstract void ClientPushTask(int playerId, Task task, bool isAttack);
+        public abstract void ClientSetUnitDirection(int playerId, string unit, Direction dir);
+        public abstract void ClientPassUnit(int playerId, string unit);
+        public abstract void ClientNotifyServerState(string state);
         IControlState controlState;
         public void ChangeState(IControlState next)
         {
