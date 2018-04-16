@@ -1,18 +1,18 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigMonster {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
-public string Item { get; set; }
-public string Terrian { get; set; }
-public int Str { get; set; }
-public int Vit { get; set; }
-public int Agi { get; set; }
-public int Dex { get; set; }
-public int Int { get; set; }
-public int Luc { get; set; }
-public string Characteristic { get; set; }
+public struct ConfigMonster {
+public string ID;
+public string Name;
+public string Description;
+public string Item;
+public string Terrian;
+public int Str;
+public int Vit;
+public int Agi;
+public int Dex;
+public int Int;
+public int Luc;
+public string Characteristic;
 public const int ID_COUNT = 6;
 public const string ID_ant = "ant";
 public const string ID_snack = "snack";

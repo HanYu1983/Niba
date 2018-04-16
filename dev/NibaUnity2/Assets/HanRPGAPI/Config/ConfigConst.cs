@@ -1,10 +1,10 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigConst {
-public string ID { get; set; }
-public float Float { get; set; }
-public int Int { get; set; }
-public string String { get; set; }
+public struct ConfigConst {
+public string ID;
+public float Float;
+public int Int;
+public string String;
 public const int ID_COUNT = 3;
 public const string ID_moveConsumpation = "moveConsumpation";
 public const string ID_workConsumpation = "workConsumpation";

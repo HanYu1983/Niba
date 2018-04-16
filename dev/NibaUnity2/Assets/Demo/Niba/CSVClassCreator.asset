@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Name: CSVClassCreator
   m_EditorClassIdentifier: 
   csvPath: Demo/Niba/CSV
-  generatePath: Demo/Niba/Model/Config
+  generatePath: HanRPGAPI/Config
   csvFiles:
   - key: ConfigConst
     fileName: gameData - const.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: float
       type: 1
@@ -28,7 +28,7 @@ MonoBehaviour:
   - key: ConfigTerrian
     fileName: gameData - terrian.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -43,7 +43,7 @@ MonoBehaviour:
   - key: ConfigResource
     fileName: gameData - resource.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -56,7 +56,7 @@ MonoBehaviour:
   - key: ConfigItem
     fileName: gameData - item.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -70,7 +70,7 @@ MonoBehaviour:
       type: 0
     - key: fusionRequire
       type: 2
-    - key: skillTypeRequire
+    - key: skillRequire
       type: 2
     - key: ability
       type: 2
@@ -81,7 +81,7 @@ MonoBehaviour:
   - key: ConfigMonster
     fileName: gameData - monster.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -95,20 +95,20 @@ MonoBehaviour:
       type: 0
     - key: vit
       type: 0
-    - key: spd
+    - key: agi
       type: 0
     - key: dex
       type: 0
     - key: int
       type: 0
-    - key: luck
+    - key: luc
       type: 0
     - key: characteristic
       type: 2
   - key: ConfigSkill
     fileName: gameData - skill.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -131,7 +131,7 @@ MonoBehaviour:
   - key: ConfigNpcMission
     fileName: gameData - npcMission.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: npc
       type: 2
@@ -152,7 +152,7 @@ MonoBehaviour:
   - key: ConfigAbility
     fileName: gameData - ability.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: str
       type: 1
@@ -169,7 +169,7 @@ MonoBehaviour:
   - key: ConfigSkillType
     fileName: gameData - skillType.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -178,7 +178,7 @@ MonoBehaviour:
   - key: ConfigItemType
     fileName: gameData - itemType.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -187,16 +187,16 @@ MonoBehaviour:
   - key: ConfigWeaponPosition
     fileName: gameData - weaponPosition.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
-    - key: description
-      type: 2
+    - key: slotCount
+      type: 0
   - key: ConfigCharacteristic
     fileName: gameData - characteristic.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -205,7 +205,7 @@ MonoBehaviour:
   - key: ConfigConditionType
     fileName: gameData - conditionType.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -214,7 +214,7 @@ MonoBehaviour:
   - key: ConfigNpc
     fileName: gameData - npc.tsv
     types:
-    - key: id
+    - key: ID
       type: 2
     - key: name
       type: 2
@@ -223,6 +223,6 @@ MonoBehaviour:
   splitType: 0
   split: 
   isFirstLetterUpper: 1
-  ns: 
+  ns: HanRPGAPI
   selectFile: ConfigItem
   selectRow: useCount

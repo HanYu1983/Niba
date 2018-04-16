@@ -1,15 +1,15 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigNpcMission {
-public string ID { get; set; }
-public string Npc { get; set; }
-public int Level { get; set; }
-public string RequireItem { get; set; }
-public string RequireKill { get; set; }
-public string RequireStatus { get; set; }
-public string Reward { get; set; }
-public string Dependency { get; set; }
-public string Dialog { get; set; }
+public struct ConfigNpcMission {
+public string ID;
+public string Npc;
+public int Level;
+public string RequireItem;
+public string RequireKill;
+public string RequireStatus;
+public string Reward;
+public string Dependency;
+public string Dialog;
 public const int ID_COUNT = 5;
 public const string ID_0 = "0";
 public const string ID_1 = "1";

@@ -1,16 +1,16 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigSkill {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
-public string SkillTypeRequire { get; set; }
-public float TriggerBouns { get; set; }
-public string Condition { get; set; }
-public int SlotCount { get; set; }
-public string Effect { get; set; }
-public string Values { get; set; }
-public string Characteristic { get; set; }
+public struct ConfigSkill {
+public string ID;
+public string Name;
+public string Description;
+public string SkillTypeRequire;
+public float TriggerBonus;
+public string Condition;
+public int SlotCount;
+public string Effect;
+public string Values;
+public string Characteristic;
 public const int ID_COUNT = 12;
 public const string ID_seiken = "seiken";
 public const string ID_tripleKick = "tripleKick";
@@ -34,7 +34,7 @@ case 4: return new ConfigSkill {ID="tiauci",Name="調息",SkillTypeRequire="kara
 case 5: return new ConfigSkill {ID="zengmianpi",Name="正面劈",SkillTypeRequire="fencingArt_5",Condition="attack"};
 case 6: return new ConfigSkill {ID="zyuzizan",Name="十字斬",SkillTypeRequire="fencingArt_10",Condition="attack"};
 case 7: return new ConfigSkill {ID="zihazan",Name="居合斬",SkillTypeRequire="fencingArt_20",Condition="attack"};
-case 8: return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBouns=0.3f,Condition="deffence",SlotCount=3,Effect="取消對方的攻擊."};
+case 8: return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBonus=0.3f,Condition="deffence",SlotCount=3,Effect="取消對方的攻擊."};
 case 9: return new ConfigSkill {ID="bokyoryokuhakai",Name="防禦力破壞",SkillTypeRequire="fencingArt_10",Condition="menu",SlotCount=3,Effect="對象防禦力下降{0}倍。",Values="0.1",Characteristic="enemy"};
 case 10: return new ConfigSkill {ID="karadaAttack",Name="身體撞擊",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemy"};
 case 11: return new ConfigSkill {ID="spinAttack",Name="回轉拳",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemyAll"};
@@ -49,7 +49,7 @@ case "tiauci": return new ConfigSkill {ID="tiauci",Name="調息",SkillTypeRequir
 case "zengmianpi": return new ConfigSkill {ID="zengmianpi",Name="正面劈",SkillTypeRequire="fencingArt_5",Condition="attack"};
 case "zyuzizan": return new ConfigSkill {ID="zyuzizan",Name="十字斬",SkillTypeRequire="fencingArt_10",Condition="attack"};
 case "zihazan": return new ConfigSkill {ID="zihazan",Name="居合斬",SkillTypeRequire="fencingArt_20",Condition="attack"};
-case "bukikakuto": return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBouns=0.3f,Condition="deffence",SlotCount=3,Effect="取消對方的攻擊."};
+case "bukikakuto": return new ConfigSkill {ID="bukikakuto",Name="武器格檔",SkillTypeRequire="fencingArt_10",TriggerBonus=0.3f,Condition="deffence",SlotCount=3,Effect="取消對方的攻擊."};
 case "bokyoryokuhakai": return new ConfigSkill {ID="bokyoryokuhakai",Name="防禦力破壞",SkillTypeRequire="fencingArt_10",Condition="menu",SlotCount=3,Effect="對象防禦力下降{0}倍。",Values="0.1",Characteristic="enemy"};
 case "karadaAttack": return new ConfigSkill {ID="karadaAttack",Name="身體撞擊",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemy"};
 case "spinAttack": return new ConfigSkill {ID="spinAttack",Name="回轉拳",SkillTypeRequire="karate",Condition="menu",SlotCount=2,Characteristic="enemyAll"};

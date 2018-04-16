@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigNpc {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
+public struct ConfigNpc {
+public string ID;
+public string Name;
+public string Description;
 public const int ID_COUNT = 1;
 public const string ID_guide = "guide";
 public static ConfigNpc Get(int key){

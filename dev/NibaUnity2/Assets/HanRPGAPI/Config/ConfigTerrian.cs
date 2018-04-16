@@ -1,12 +1,12 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigTerrian {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
-public string Require { get; set; }
-public int Class { get; set; }
-public string MoveRequire { get; set; }
+public struct ConfigTerrian {
+public string ID;
+public string Name;
+public string Description;
+public string Require;
+public int Class;
+public string MoveRequire;
 public const int ID_COUNT = 11;
 public const string ID_wasteland = "wasteland";
 public const string ID_frozenSoil = "frozenSoil";

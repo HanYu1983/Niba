@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigItemType {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
+public struct ConfigItemType {
+public string ID;
+public string Name;
+public string Description;
 public const int ID_COUNT = 4;
 public const string ID_material = "material";
 public const string ID_weapon = "weapon";

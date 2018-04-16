@@ -1,11 +1,11 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigResource {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
-public string Item { get; set; }
-public int UseCount { get; set; }
+public struct ConfigResource {
+public string ID;
+public string Name;
+public string Description;
+public string Item;
+public int UseCount;
 public const int ID_COUNT = 9;
 public const string ID_grass = "grass";
 public const string ID_tree = "tree";

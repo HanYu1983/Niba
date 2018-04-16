@@ -68,7 +68,7 @@ namespace HanRPGAPI{
 		/// <value>The fight ability.</value>
 		public FightAbility FightAbility{
 			get{
-				ConfigAbility config = null;
+				ConfigAbility config;
 				FightAbility ret;
 
 				config = ConfigAbility.Get (ConfigAbility.ID_hp);

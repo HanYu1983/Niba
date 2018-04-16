@@ -1,13 +1,13 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigAbility {
-public string ID { get; set; }
-public float Str { get; set; }
-public float Vit { get; set; }
-public float Agi { get; set; }
-public float Dex { get; set; }
-public float Int { get; set; }
-public float Luc { get; set; }
+public struct ConfigAbility {
+public string ID;
+public float Str;
+public float Vit;
+public float Agi;
+public float Dex;
+public float Int;
+public float Luc;
 public const int ID_COUNT = 19;
 public const string ID_hp = "hp";
 public const string ID_mp = "mp";

@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigSkillType {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
+public struct ConfigSkillType {
+public string ID;
+public string Name;
+public string Description;
 public const int ID_COUNT = 10;
 public const string ID_tailor = "tailor";
 public const string ID_woodworker = "woodworker";

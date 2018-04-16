@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigWeaponPosition {
-public string ID { get; set; }
-public string Name { get; set; }
-public int SlotCount { get; set; }
+public struct ConfigWeaponPosition {
+public string ID;
+public string Name;
+public int SlotCount;
 public const int ID_COUNT = 5;
 public const string ID_head = "head";
 public const string ID_body = "body";

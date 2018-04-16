@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigCharacteristic {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
+public struct ConfigCharacteristic {
+public string ID;
+public string Name;
+public string Description;
 public const int ID_COUNT = 5;
 public const string ID_me = "me";
 public const string ID_enemy = "enemy";

@@ -1653,7 +1653,7 @@ namespace Model
 			var maxExp = needExp << 1;
 			var haveExp = ais.Sum (ai => who.Exp(ai.prototype));
 			var rate = (float)(haveExp - needExp) / (maxExp - needExp);
-			var bouns = skill.TriggerBouns;
+			var bouns = skill.TriggerBonus;
 			return rate + bouns;
 		}
 

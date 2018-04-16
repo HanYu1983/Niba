@@ -1,9 +1,9 @@
 using System;
 namespace HanRPGAPI{
-public class ConfigConditionType {
-public string ID { get; set; }
-public string Name { get; set; }
-public string Description { get; set; }
+public struct ConfigConditionType {
+public string ID;
+public string Name;
+public string Description;
 public const int ID_COUNT = 4;
 public const string ID_attack = "attack";
 public const string ID_deffence = "deffence";
