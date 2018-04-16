@@ -61,8 +61,85 @@ namespace HanUtil
         public List<CSVFile> csvFiles;
         public CSVSplitType splitType;
         public string split;
+        public bool isFirstLetterUpper;
         public string ns;
 
+        public string selectFile;
+        public string selectRow;
+        [ContextMenu("FileMoveUp")]
+        public void FileMoveUp()
+        {
+            var find = csvFiles.Find(f => f.key == selectFile);
+            if(find == null)
+            {
+                Debug.LogWarning("xxx");
+                return;
+            }
+            var idx = csvFiles.IndexOf(find);
+            if(idx == 0)
+            {
+                return;
+            }
+            var prevFile = csvFiles[idx - 1];
+            csvFiles[idx] = prevFile;
+            csvFiles[idx - 1] = find;
+        }
+        [ContextMenu("FileMoveDown")]
+        public void FileMoveDown()
+        {
+            var find = csvFiles.Find(f => f.key == selectFile);
+            if (find == null)
+            {
+                Debug.LogWarning("xxx");
+                return;
+            }
+            var idx = csvFiles.IndexOf(find);
+            if (idx == csvFiles.Count-1)
+            {
+                return;
+            }
+            var nextFile = csvFiles[idx + 1];
+            csvFiles[idx] = nextFile;
+            csvFiles[idx + 1] = find;
+        }
+        [ContextMenu("RowMoveUp")]
+        public void RowMoveUp()
+        {
+            var find = csvFiles.Find(f => f.key == selectFile);
+            if (find == null)
+            {
+                Debug.LogWarning("xxx");
+                return;
+            }
+            var findRow = find.types.Find(f => f.key == selectRow);
+            var idx = find.types.IndexOf(findRow);
+            if (idx == 0)
+            {
+                return;
+            }
+            var prevRow = find.types[idx - 1];
+            find.types[idx] = prevRow;
+            find.types[idx - 1] = findRow;
+        }
+        [ContextMenu("RowMoveDown")]
+        public void RowMoveDown()
+        {
+            var find = csvFiles.Find(f => f.key == selectFile);
+            if (find == null)
+            {
+                Debug.LogWarning("xxx");
+                return;
+            }
+            var findRow = find.types.Find(f => f.key == selectRow);
+            var idx = find.types.IndexOf(findRow);
+            if (idx == find.types.Count - 1)
+            {
+                return;
+            }
+            var nextRow = find.types[idx + 1];
+            find.types[idx] = nextRow;
+            find.types[idx + 1] = findRow;
+        }
         [ContextMenu("Generate")]
         public void Generate()
         {
@@ -100,7 +177,7 @@ namespace HanUtil
                 }
                 var filePath = Application.dataPath + "/" + csvPath +"/"+f.fileName;
                 var generatePath = Application.dataPath + "/" + this.generatePath;
-                GenCode(split, ns, f.key, null, f.Format, filePath, generatePath);
+                GenCode(split, ns, f.key, null, f.Format, filePath, generatePath, isFirstLetterUpper);
             }
             AssetDatabase.Refresh();
         }
@@ -115,7 +192,7 @@ namespace HanUtil
             Selection.activeObject = exampleAsset;
         }
 
-        public static void GenCode(string split, string ns, string clzName, string parent, string[] typeInfo, string fileName, string savePath)
+        public static void GenCode(string split, string ns, string clzName, string parent, string[] typeInfo, string fileName, string savePath, bool isFirstLetterUpper)
         {
             try
             {
@@ -125,7 +202,8 @@ namespace HanUtil
                     clzName + (parent != null ? (" :" + parent) : ""),
                     clzName,
                     typeInfo,
-                    csv
+                    csv,
+                    isFirstLetterUpper
                 );
                 File.WriteAllText(savePath + "/" + clzName + ".cs", code);
             }
@@ -139,13 +217,14 @@ namespace HanUtil
                     clzName + (parent != null ? (" :" + parent) : ""),
                     clzName,
                     typeInfo,
-                    new string[][] { }
+                    new string[][] { },
+                    isFirstLetterUpper
                 );
                 File.WriteAllText(savePath + "/" + clzName + ".cs", code2);
             }
         }
 
-        public static string WriteClass(string ns, string clz, string retClz, string[] typeInfo, string[][] csv)
+        public static string WriteClass(string ns, string clz, string retClz, string[] typeInfo, string[][] csv, bool isFirstLetterUpper)
         {
             var str = "";
             str += "using System;\n";
@@ -156,6 +235,10 @@ namespace HanUtil
                 for (var i = 0; i < typeInfo.Length; i += 2)
                 {
                     var key = typeInfo[i];
+                    if (isFirstLetterUpper)
+                    {
+                        key = FirstLetterToUpper(key);
+                    }
                     var type = typeInfo[i + 1];
                     str += string.Format("public {0} {1};\n", type, key);
                 }
@@ -174,7 +257,7 @@ namespace HanUtil
                         for (var i = 1; i < csv.Length; ++i)
                         {
                             var id = i - 1;
-                            str += string.Format("case {0}: return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv));
+                            str += string.Format("case {0}: return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv, isFirstLetterUpper));
                         }
                         str += "default: throw new Exception(key+\"\");\n";
                     }
@@ -189,7 +272,7 @@ namespace HanUtil
                         for (var i = 1; i < csv.Length; ++i)
                         {
                             var id = csv[i][0];
-                            str += string.Format("case \"{0}\": return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv));
+                            str += string.Format("case \"{0}\": return new {1} {{{2}}};\n", id, clz, WriteAssignment(typeInfo, i, csv, isFirstLetterUpper));
                         }
                         str += "default: throw new Exception(key);\n";
                     }
@@ -202,7 +285,7 @@ namespace HanUtil
             return str;
         }
 
-        public static string WriteAssignment(string[] info, int i, string[][] data)
+        public static string WriteAssignment(string[] info, int i, string[][] data, bool isFirstLetterUpper)
         {
             var fieldsAry = new List<string>();
             for (var j = 0; j < data[0].Length; ++j)
@@ -218,6 +301,10 @@ namespace HanUtil
                 }
                 var key = info[j * 2];
                 var type = info[j * 2 + 1];
+                if (isFirstLetterUpper)
+                {
+                    key = FirstLetterToUpper(key);
+                }
                 switch (type)
                 {
                     case "float":
@@ -299,6 +386,17 @@ namespace HanUtil
                 }
             }
             return strArray;
+        }
+
+        public static string FirstLetterToUpper(string str)
+        {
+            if (str == null)
+                return null;
+
+            if (str.Length > 1)
+                return char.ToUpper(str[0]) + str.Substring(1);
+
+            return str.ToUpper();
         }
     }
 }

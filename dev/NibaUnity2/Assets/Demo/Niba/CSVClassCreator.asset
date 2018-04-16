@@ -1,0 +1,228 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
+  m_Name: CSVClassCreator
+  m_EditorClassIdentifier: 
+  csvPath: Demo/Niba/CSV
+  generatePath: Demo/Niba/Model/Config
+  csvFiles:
+  - key: ConfigConst
+    fileName: gameData - const.tsv
+    types:
+    - key: id
+      type: 2
+    - key: float
+      type: 1
+    - key: int
+      type: 0
+    - key: string
+      type: 2
+  - key: ConfigTerrian
+    fileName: gameData - terrian.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: require
+      type: 2
+    - key: class
+      type: 0
+    - key: moveRequire
+      type: 2
+  - key: ConfigResource
+    fileName: gameData - resource.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: item
+      type: 2
+    - key: useCount
+      type: 0
+  - key: ConfigItem
+    fileName: gameData - item.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: type
+      type: 2
+    - key: skillType
+      type: 2
+    - key: maxCount
+      type: 0
+    - key: fusionRequire
+      type: 2
+    - key: skillTypeRequire
+      type: 2
+    - key: ability
+      type: 2
+    - key: position
+      type: 2
+    - key: useCount
+      type: 0
+  - key: ConfigMonster
+    fileName: gameData - monster.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: item
+      type: 2
+    - key: terrian
+      type: 2
+    - key: str
+      type: 0
+    - key: vit
+      type: 0
+    - key: spd
+      type: 0
+    - key: dex
+      type: 0
+    - key: int
+      type: 0
+    - key: luck
+      type: 0
+    - key: characteristic
+      type: 2
+  - key: ConfigSkill
+    fileName: gameData - skill.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: skillTypeRequire
+      type: 2
+    - key: triggerBonus
+      type: 1
+    - key: condition
+      type: 2
+    - key: slotCount
+      type: 0
+    - key: effect
+      type: 2
+    - key: values
+      type: 2
+    - key: characteristic
+      type: 2
+  - key: ConfigNpcMission
+    fileName: gameData - npcMission.tsv
+    types:
+    - key: id
+      type: 2
+    - key: npc
+      type: 2
+    - key: level
+      type: 0
+    - key: requireItem
+      type: 2
+    - key: requireKill
+      type: 2
+    - key: requireStatus
+      type: 2
+    - key: reward
+      type: 2
+    - key: dependency
+      type: 2
+    - key: dialog
+      type: 2
+  - key: ConfigAbility
+    fileName: gameData - ability.tsv
+    types:
+    - key: id
+      type: 2
+    - key: str
+      type: 1
+    - key: vit
+      type: 1
+    - key: agi
+      type: 1
+    - key: dex
+      type: 1
+    - key: int
+      type: 1
+    - key: luc
+      type: 1
+  - key: ConfigSkillType
+    fileName: gameData - skillType.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigItemType
+    fileName: gameData - itemType.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigWeaponPosition
+    fileName: gameData - weaponPosition.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigCharacteristic
+    fileName: gameData - characteristic.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigConditionType
+    fileName: gameData - conditionType.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigNpc
+    fileName: gameData - npc.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  splitType: 0
+  split: 
+  isFirstLetterUpper: 1
+  ns: 
+  selectFile: ConfigItem
+  selectRow: useCount
