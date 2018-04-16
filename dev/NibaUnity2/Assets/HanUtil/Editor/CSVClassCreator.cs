@@ -128,7 +128,8 @@ namespace HanUtil
                     csv
                 );
                 File.WriteAllText(savePath + "/" + clzName + ".cs", code);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.LogWarning(e.Message);
 
@@ -149,14 +150,14 @@ namespace HanUtil
             var str = "";
             str += "using System;\n";
             str += string.Format("namespace {0}{{\n", ns);
-            str += string.Format("public class {0} {{\n", clz);
+            str += string.Format("public struct {0} {{\n", clz);
             {
                 // getter setter
                 for (var i = 0; i < typeInfo.Length; i += 2)
                 {
                     var key = typeInfo[i];
                     var type = typeInfo[i + 1];
-                    str += string.Format("public {0} {1} {{ get; set; }}\n", type, key);
+                    str += string.Format("public {0} {1};\n", type, key);
                 }
                 // count
                 str += "public const int ID_COUNT = " + (csv.Length - 1) + ";\n";

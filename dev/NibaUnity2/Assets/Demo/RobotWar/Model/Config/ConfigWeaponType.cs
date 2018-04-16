@@ -1,9 +1,9 @@
 using System;
 namespace RobotWar{
-public class ConfigWeaponType {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
+public struct ConfigWeaponType {
+public string id;
+public string name;
+public string description;
 public const int ID_COUNT = 2;
 public const string ID_energy = "energy";
 public const string ID_bullet = "bullet";

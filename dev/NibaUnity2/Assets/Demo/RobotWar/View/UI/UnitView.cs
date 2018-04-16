@@ -51,7 +51,7 @@ namespace RobotWar
                 return;
             }
             var model = GameManager.Instance.gameObject.GetComponent<Model>();
-            ConfigUnit cfg = null;
+            ConfigUnit cfg;
             if (isConfigId)
             {
                 cfg = ConfigUnit.Get(keyRef.Ref);

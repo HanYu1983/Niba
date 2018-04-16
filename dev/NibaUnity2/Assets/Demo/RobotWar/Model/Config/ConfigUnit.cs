@@ -1,15 +1,15 @@
 using System;
 namespace RobotWar{
-public class ConfigUnit {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
-public int hp { get; set; }
-public int en { get; set; }
-public int armor { get; set; }
-public int speed { get; set; }
-public int power { get; set; }
-public int moneyCost { get; set; }
+public struct ConfigUnit {
+public string id;
+public string name;
+public string description;
+public int hp;
+public int en;
+public int armor;
+public int speed;
+public int power;
+public int moneyCost;
 public const int ID_COUNT = 2;
 public const string ID_test01 = "test01";
 public const string ID_jimu = "jimu";

@@ -1,9 +1,9 @@
 using System;
 namespace RobotWar{
-public class ConfigShape {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
+public struct ConfigShape {
+public string id;
+public string name;
+public string description;
 public const int ID_COUNT = 2;
 public const string ID_center = "center";
 public const string ID_forward = "forward";

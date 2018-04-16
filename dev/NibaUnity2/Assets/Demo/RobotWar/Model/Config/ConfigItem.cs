@@ -1,11 +1,11 @@
 using System;
 namespace RobotWar{
-public class ConfigItem {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
-public int unitPowerCost { get; set; }
-public int moneyCost { get; set; }
+public struct ConfigItem {
+public string id;
+public string name;
+public string description;
+public int unitPowerCost;
+public int moneyCost;
 public const int ID_COUNT = 5;
 public const string ID_1 = "1";
 public const string ID_2 = "2";

@@ -1,22 +1,22 @@
 using System;
 namespace RobotWar{
-public class ConfigWeapon {
-public string id { get; set; }
-public string name { get; set; }
-public string description { get; set; }
-public int unitPowerCost { get; set; }
-public int bulletCount { get; set; }
-public string weaponType { get; set; }
-public int cost { get; set; }
-public int moneyCost { get; set; }
-public int minRange { get; set; }
-public int maxRange { get; set; }
-public string shape { get; set; }
-public int shapeRange { get; set; }
-public int power { get; set; }
-public float prepareTime { get; set; }
-public float hitRateBonus { get; set; }
-public string ability { get; set; }
+public struct ConfigWeapon {
+public string id;
+public string name;
+public string description;
+public int unitPowerCost;
+public int bulletCount;
+public string weaponType;
+public int cost;
+public int moneyCost;
+public int minRange;
+public int maxRange;
+public string shape;
+public int shapeRange;
+public int power;
+public float prepareTime;
+public float hitRateBonus;
+public string ability;
 public const int ID_COUNT = 8;
 public const string ID_lightSword = "lightSword";
 public const string ID_lightGun = "lightGun";
