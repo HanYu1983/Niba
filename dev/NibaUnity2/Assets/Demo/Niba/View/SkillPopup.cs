@@ -31,7 +31,7 @@ namespace Niba
 		}
 
 		public void UpdateSlotCount(IModelGetter model){
-			var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
+			var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
 			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
@@ -41,7 +41,7 @@ namespace Niba
 			IEnumerable<ConfigSkill> skills = null;
 
 			if (CheckToggleValue (FilterIDApply)) {
-				var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
+				var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
 				skills = who.Skills.Select (ConfigSkill.Get);
 			} else {
 				skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);

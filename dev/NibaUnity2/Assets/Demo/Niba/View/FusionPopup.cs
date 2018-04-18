@@ -28,7 +28,7 @@ namespace Niba{
 							// 修改狀態文字
 							var selectIdx = itemView.CurrIndex (msg);
 							var item = itemView.Data.ToList () [selectIdx];
-							fusionRequireView.Who = Niba.Common.PlaceAt (model.PlayState);
+							fusionRequireView.Who = Helper.PlaceAt (model.PlayState);
 							fusionRequireView.FusionTarget = item;
 							fusionRequireView.UpdateUI (model);
 						}

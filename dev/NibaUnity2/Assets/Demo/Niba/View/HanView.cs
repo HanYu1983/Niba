@@ -124,7 +124,7 @@ namespace Niba
 					}
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
-					popup.Who = Niba.Common.PlaceAt(model.PlayState);
+					popup.Who = Helper.PlaceAt(model.PlayState);
 					popup.UpdateUI (model);
 					callback (null);
 					break;

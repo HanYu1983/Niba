@@ -18,7 +18,7 @@ namespace Niba
 			var cfg = ConfigSkill.Get (modelItem);
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
 
-			var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
+			var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
 			var isEquip = who.Skills.Contains (cfg.ID);
 			var btn = ui.GetComponent<Button> ();
 			var colors = btn.colors;
