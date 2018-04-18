@@ -457,8 +457,8 @@ namespace Niba
 		void ClearMissionStatus();
 		void MarkMissionNotification (string mid);
 
-		void EquipSkill (Place who, string skillId);
-		void UnequipSkill (Place who, string skillId);
+		void EquipSkill (PlayState who, string skillId);
+		void UnequipSkill (PlayState who, string skillId);
 	}
 
 	public class Common

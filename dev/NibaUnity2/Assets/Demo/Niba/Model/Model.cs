@@ -197,12 +197,12 @@ namespace Niba
 			playerData.ClearMissionStatus ();
 		}
 
-		public void EquipSkill (Place who, string skillId){
+		public void EquipSkill (PlayState who, string skillId){
 			playerData.EquipSkill (who, skillId);
 			RequestSavePlayer ();
 		}
 
-		public void UnequipSkill (Place who, string skillId){
+		public void UnequipSkill (PlayState who, string skillId){
 			playerData.UnequipSkill (who, skillId);
 			RequestSavePlayer ();
 		}

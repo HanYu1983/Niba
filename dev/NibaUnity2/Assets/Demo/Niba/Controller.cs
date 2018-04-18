@@ -133,7 +133,7 @@ namespace Niba
 					}
 					var skill = (string)args;
 					try{
-						model.EquipSkill(Common.PlaceAt (model.PlayState), skill);
+						model.EquipSkill(model.PlayState, skill);
 					}catch(Exception e2){
 						e = e2;
 					}
@@ -161,7 +161,7 @@ namespace Niba
 					}
 					var skill = (string)args;
 					try{
-						model.UnequipSkill(Common.PlaceAt (model.PlayState), skill);
+						model.UnequipSkill(model.PlayState, skill);
 					}catch(Exception e2){
 						e = e2;
 					}

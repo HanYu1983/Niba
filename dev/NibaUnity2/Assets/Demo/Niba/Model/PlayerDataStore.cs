@@ -20,11 +20,9 @@ namespace Niba
 
         MapType genMapType;
 
-
         public void GenMapStart(MapType mapType)
         {
             genMapType = mapType;
-
         }
 
         public void GenMapWithPlayerVisible(PlayerDataStore player)
@@ -114,6 +112,7 @@ namespace Niba
             resourceInfo.Clear();
             monsterInfo.Clear();
         }
+
         public int GenObject(MapObjectType type, string strKey)
         {
             if (strKey != null)
@@ -146,6 +145,7 @@ namespace Niba
             mapObjects.Add(item);
             return item.key;
         }
+
         public int GenResource(PlayerDataStore player, Position pos, string resourceType)
         {
             var key = GenObject(MapObjectType.Resource, null);
@@ -158,6 +158,7 @@ namespace Niba
             resourceInfo[mapObjects[key].infoKey] = info;
             return key;
         }
+
         public int GenMonster(PlayerDataStore player, Position pos, string monsterType)
         {
             var m1Key = GenObject(MapObjectType.Monster, null);
@@ -216,6 +217,7 @@ namespace Niba
             }
             return ret;
         }
+
         public MapObject FindObject(string strKey)
         {
             return mapObjects.Find(item =>
@@ -234,6 +236,7 @@ namespace Niba
                 return item.position.Equals(pos);
             });
         }
+
         #endregion
 
         #region event
@@ -313,7 +316,6 @@ namespace Niba
             }
             return new List<Description>() { des };
         }
-
         // 傷害
         IEnumerable<Description> ProccessDamageWork(PlayerDataStore player, int mapObjectId, int damage)
         {
@@ -1099,7 +1101,6 @@ namespace Niba
         }
         #endregion
 
-
         #region store
         public string GetMemonto()
         {
@@ -1151,8 +1152,9 @@ namespace Niba
         }
 
         #region skill
-        public void EquipSkill(Place who, string skillId)
+        public void EquipSkill(PlayState state, string skillId)
         {
+            var who = GetMapPlayer(Common.PlaceAt(state));
             var cfg = ConfigSkill.Get(skillId);
             if (cfg.SkillTypeRequire != null)
             {
@@ -1161,7 +1163,7 @@ namespace Niba
                 {
                     var skillTypeRequire = r.prototype;
                     var levelRequire = r.count;
-                    var skillExp = GetMapPlayer(who).Exp(skillTypeRequire);
+                    var skillExp = who.Exp(skillTypeRequire);
                     if (skillExp <= levelRequire)
                     {
                         var skillTypeName = ConfigSkillType.Get(skillTypeRequire).Name;
@@ -1169,68 +1171,22 @@ namespace Niba
                     }
                 }
             }
-            switch (who)
-            {
-                case Place.Storage:
-                case Place.Pocket:
-                    player.AddSkill(skillId);
-                    break;
-                case Place.Map:
-                    playerInMap.AddSkill(skillId);
-                    break;
-                default:
-                    throw new Exception("EquipSkill:" + skillId);
-            }
+            who.AddSkill(skillId);
         }
 
-        public void UnequipSkill(Place who, string skillId)
+        public void UnequipSkill(PlayState state, string skillId)
         {
-            switch (who)
-            {
-                case Place.Storage:
-                case Place.Pocket:
-                    player.RemoveSkill(skillId);
-                    break;
-                case Place.Map:
-                    playerInMap.RemoveSkill(skillId);
-                    break;
-                default:
-                    throw new Exception("EquipSkill:" + skillId);
-            }
+            GetMapPlayer(Common.PlaceAt(state)).RemoveSkill(skillId);
         }
         #endregion
 
         #region weapon
-
-
         public string IsCanEquip(Item item, Place who, Place whosStorage)
         {
             if (who == Place.Storage)
             {
                 throw new Exception("只能裝備在家裡口袋或出門的冒險者");
             }
-            /*
-			var cfg = ConfigItem.Get (item.prototype);
-			if (cfg.Type != ConfigItemType.ID_weapon) {
-				return "只能裝備weapon類型，請檢查程式";
-			}
-			var weaponPosition = cfg.Position;
-			var maxCount = ConfigWeaponPosition.Get (weaponPosition).SlotCount;
-			Func<List<Item>, List<Item>, string> canEquip = (weapons, items) => {
-				var haveCount = items.Count(i=>{
-					return i.Equals(item);
-				});
-				if(haveCount <1){
-					return "沒有那個道具:"+item;
-				}
-				var alreadyEquipCount = weapons.Count(i=>{
-					return ConfigItem.Get (i.prototype).Position == weaponPosition;
-				});
-				if(alreadyEquipCount >= maxCount){
-					return "那個位置已經滿, 最大為"+maxCount+":"+weaponPosition+". 所使用Weapon:"+who;
-				}
-				return null;
-			};*/
             Func<List<Item>, List<Item>, string> canEquip = (weapons, items) =>
             {
                 var haveCount = items.Count(i =>
@@ -1243,14 +1199,7 @@ namespace Niba
                 }
                 return Alg.IsCanEquip(weapons, item);
             };
-            var useStorage =
-                whosStorage == Place.Pocket ? player.Storage :
-                whosStorage == Place.Map ? playerInMap.Storage :
-                playerInStorage.Storage;
-            var useWeapon =
-                whosStorage == Place.Pocket ? player.Weapons :
-                playerInMap.Weapons;
-            return canEquip(useWeapon, useStorage);
+            return canEquip(GetMapPlayer(who).Weapons, GetMapPlayer(whosStorage).Storage);
         }
 
         public void EquipWeapon(Item item, Place whosWeapon, Place whosStorage)
@@ -1260,69 +1209,25 @@ namespace Niba
             {
                 throw new Exception("無法裝備，請檢查:" + err);
             }
-            if (whosStorage == Place.Pocket)
+            if(whosWeapon == Place.Storage)
             {
-                player.Storage.Remove(item);
+                throw new Exception("無法裝備在Place.Storage");
             }
-            else if (whosStorage == Place.Map)
-            {
-                playerInMap.Storage.Remove(item);
-            }
-            else
-            {
-                playerInStorage.Storage.Remove(item);
-            }
-
-            if (whosWeapon == Place.Pocket)
-            {
-                player.Weapons.Add(item);
-            }
-            else if (whosWeapon == Place.Map)
-            {
-                playerInMap.Weapons.Add(item);
-            }
-            else
-            {
-                throw new Exception("無法裝備在Place.Home");
-            }
+            GetMapPlayer(whosStorage).Storage.Remove(item);
+            GetMapPlayer(whosWeapon).Weapons.Add(item);
         }
 
         public void UnequipWeapon(Item item, Place whosWeapon, Place whosStorage)
         {
-            if (whosWeapon == Place.Pocket)
+            var fromPlayer = GetMapPlayer(whosWeapon);
+            var toPlayer = GetMapPlayer(whosStorage);
+            var isCanUnequip = fromPlayer.Weapons.IndexOf(item) != -1;
+            if (isCanUnequip == false)
             {
-                var isCanUnequip = player.Weapons.IndexOf(item) != -1;
-                if (isCanUnequip == false)
-                {
-                    throw new Exception("無法拆掉：沒有那個裝備");
-                }
-                player.Weapons.Remove(item);
+                throw new Exception("無法拆掉：沒有那個裝備");
             }
-            else if (whosWeapon == Place.Map)
-            {
-                var isCanUnequip = playerInMap.Weapons.IndexOf(item) != -1;
-                if (isCanUnequip == false)
-                {
-                    throw new Exception("無法拆掉：沒有那個裝備");
-                }
-                playerInMap.Weapons.Remove(item);
-            }
-            else
-            {
-                throw new Exception("無法拆掉裝備在unknow");
-            }
-            if (whosStorage == Place.Pocket)
-            {
-                player.Storage.Add(item);
-            }
-            else if (whosStorage == Place.Map)
-            {
-                playerInMap.Storage.Add(item);
-            }
-            else
-            {
-                playerInStorage.Storage.Add(item);
-            }
+            fromPlayer.Weapons.Remove(item);
+            Alg.AddItem(toPlayer.Storage, item);
         }
         #endregion
 
@@ -1401,7 +1306,6 @@ namespace Niba
         #endregion
 
         #region storage
-        //public List<Item> storage = new List<Item>();
         public void AddItem(Item item, Place who)
         {
             Alg.AddItem(GetMapPlayer(who).Storage, item);
@@ -1433,6 +1337,7 @@ namespace Niba
             Alg.AddItem(toPlayer.Storage, item);
         }
         #endregion
+
         #region fusion
         public void Fusion(Item fusionTarget, Place who)
         {
@@ -1450,18 +1355,8 @@ namespace Niba
 
         public int IsCanFusion(string prototype, Place who)
         {
-            if (who == Place.Pocket)
-            {
-                return Common.IsCanFusion(player, prototype, player.Storage);
-            }
-            else if (who == Place.Map)
-            {
-                return Common.IsCanFusion(playerInMap, prototype, playerInMap.Storage);
-            }
-            else
-            {
-                return Common.IsCanFusion(playerInStorage, prototype, playerInStorage.Storage);
-            }
+            var player = GetMapPlayer(who);
+            return Common.IsCanFusion(player, prototype, player.Storage);
         }
         #endregion
 
@@ -1549,28 +1444,6 @@ namespace Niba
             get
             {
                 return Alg.AvailableNpcMissions(MissionCompleted, advLevel);
-                /*
-				return 
-					Enumerable.Range (0, ConfigNpcMission.ID_COUNT)
-						.Select (ConfigNpcMission.Get)
-						.Where (cfg => cfg.Level <= advLevel)
-						.Where(cfg=>MissionCompleted(cfg.ID) == false)
-						.Where (cfg => {
-							if (cfg.Dependency != null) {
-								var items = Common.ParseAbstractItem (cfg.Dependency);
-								foreach (var item in items) {
-									var missionId = item.prototype;
-									var isCompleted = MissionCompleted (missionId);
-									if (isCompleted == false) {
-										return false;
-									}
-								}
-								return true;
-							}
-							return true;
-						})
-						.Select (cfg => cfg.ID);
-				*/
             }
         }
         /// <summary>
@@ -1635,60 +1508,6 @@ namespace Niba
         public List<string> CheckMissionStatus()
         {
             return Alg.CheckMissionStatus(missionStatus);
-            /*
-			var completedMission = new List<string> ();
-			for (var i = 0; i < missionStatus.Count; ++i) {
-				var mission = missionStatus [i];
-				var cfg = ConfigNpcMission.Get (mission.prototype);
-				if (cfg.RequireItem != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseItem (cfg.RequireItem);
-					foreach (var requireItem in requireItems) {
-						var itemCount = mission.itemGot
-							.Where(item=>item.prototype == requireItem.prototype)
-							.Sum(item=>item.count);
-						if (itemCount < requireItem.count) {
-							isCompleted = false;
-							break;
-						}
-					}
-					if (isCompleted) {
-						completedMission.Add (mission.prototype);
-					}
-				}
-
-				if (cfg.RequireKill != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
-					foreach (var requireItem in requireItems) {
-						var itemCount = mission.monsterSkilled
-							.Where (id => id == requireItem.prototype)
-							.Count ();
-						if (itemCount < requireItem.count) {
-							isCompleted = false;
-							break;
-						}
-					}
-					if (isCompleted) {
-						completedMission.Add (mission.prototype);
-					}
-				}
-
-				if (cfg.RequireStatus != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
-					foreach (var requireItem in requireItems) {
-						if (requireItem.prototype == "money") {
-							// TODO
-						}
-					}
-					if (isCompleted) {
-						completedMission.Add (mission.prototype);
-					}
-				}
-			}
-			return completedMission;
-			*/
         }
         /// <summary>
         /// 將呼叫CheckMissionStatus取得的任務輸入這個方法，完成那個任務並取得獲得的獎勵資訊
@@ -1866,23 +1685,6 @@ namespace Niba
             // 先取得欄位上的招式
             var slotSkills = who.Skills;
             return Alg.AvailableSkills(slotSkills, who.Weapons).Select(ConfigSkill.Get);
-            /*
-			// 再取得武器本身的招式
-			var handWeapons = who.weapons.Select(i=>ConfigItem.Get(i.prototype)).Where(i=>i.Position == ConfigWeaponPosition.ID_hand);
-			var hasHandWeapons = handWeapons.Count () > 0;
-			if (hasHandWeapons == false) {
-				return slotSkills;
-			}
-			var skills = Enumerable
-				.Range(0, ConfigSkill.ID_COUNT)
-				.Select(ConfigSkill.Get);
-			var weaponSkills = handWeapons.SelectMany (w => {
-				return skills.Where(s=>{
-					return s.SlotCount == 0 && s.SkillTypeRequire.Contains(w.SkillType);
-				});
-			}).Distinct();
-			return slotSkills.Concat (weaponSkills);
-			*/
         }
         /// <summary>
         /// 計算基礎能力和戰鬥能力
@@ -1903,78 +1705,13 @@ namespace Niba
             var tmpBasic = Alg.CalcAbility(Common.SkillExpFn(who), who.Weapons, null, who.basicAbility, ref tmpFight);
             basic = tmpBasic;
             fight = tmpFight;
-            /*
-			var tmpBasic = BasicAbility.Default;
-			var skillbonus = Enumerable.Range (0, ConfigSkillType.ID_COUNT).Select (ConfigSkillType.Get)
-				.Select (cfg => cfg.ID).Select (ConfigAbility.Get)
-				.Select (cfg => {
-					var exp = who.Exp(cfg.ID);
-					var bonus = new BasicAbility(){
-						str = cfg.Str,
-						vit = cfg.Vit,
-						agi = cfg.Agi,
-						dex = cfg.Dex,
-						Int = cfg.Int,
-						luc = cfg.Luc
-					};
-					return bonus.Multiply(exp);
-			})
-				.Aggregate (BasicAbility.Zero, (total, cur) => {
-					return total.Add(cur);
-			});
-			tmpBasic = tmpBasic.Add(skillbonus);
-			tmpBasic = tmpBasic.Add(who.basicAbility);
-			var effects = who.weapons.SelectMany (it => it.Effects);
-			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
-			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
-			// 先處理基本能力
-			// 先加減
-			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			// 後乘除
-			tmpBasic = multiEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			// 處理後的基本能力轉成戰鬥力
-			// 再處理戰鬥力
-			var tmpFight = tmpBasic.FightAbility;
-			// 先加減
-			tmpFight = addEffect.Aggregate (tmpFight, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			// 後乘除
-			tmpFight = multiEffect.Aggregate (tmpFight, (accu, curr) => {
-				return curr.Effect (accu);
-			});
-			basic = tmpBasic;
-			fight = tmpFight;
-			*/
         }
-
-
 
         public static BasicAbility CalcMonsterAbility(PlayerDataStore player, MapDataStore map, int mapObjectId)
         {
             var mapObject = map.mapObjects[mapObjectId];
             var monsterInfo = map.monsterInfo[mapObject.infoKey];
             return Common.CalcMonsterAbility(monsterInfo);
-            /*
-			var tmpBasic = monsterInfo.basicAbility;
-			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
-			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
-			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
-			// 先處理基本能力
-			// 先加減
-			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			// 後乘除
-			tmpBasic = multiEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			return tmpBasic;
-			*/
         }
         /// <summary>
         /// 計算普攻傷害
@@ -1990,8 +1727,5 @@ namespace Niba
             var b = Common.GetBasicAbility(monsterInfo).FightAbility;
             return (int)(a.atk - b.def);
         }
-
-
-
     }
 }
