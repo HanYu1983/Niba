@@ -493,9 +493,14 @@ namespace Niba
 		}
 
 		public IEnumerator MissionDialog(string mid){
-			var cfg = ConfigNpcMission.Get (mid);
-			var npcCfg = ConfigNpc.Get (cfg.Npc);
-			var dialog = string.Format("{0}:{1}", npcCfg.Name, cfg.Dialog);
+            var cfg = ConfigNpcMission.Get(mid);
+            var npcCfg = ConfigNpc.Get(cfg.Npc);
+            var dialog = string.Format("{0}:{1}", npcCfg.Name, cfg.Dialog);
+            if (handleFungus == null)
+            {
+                Alert(dialog);
+                yield break;
+            }
 			yield return handleFungus.MissionDialog (dialog);
 		}
 

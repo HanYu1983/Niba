@@ -1134,7 +1134,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8927039, y: 0.8927039}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 24.5, y: 19.299805}
+  m_AnchoredPosition: {x: 24.5, y: 19.25}
   m_SizeDelta: {x: -49.1, y: -38.6}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &45061653
@@ -10782,7 +10782,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8927039, y: 0.8927039}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11.600098, y: 14.200195}
+  m_AnchoredPosition: {x: 11.5, y: 14.25}
   m_SizeDelta: {x: -23.2, y: -28.4}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &514048200
@@ -26422,7 +26422,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1220234764}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f84830d62ea194517adba76041b40fa7, type: 3}
   m_Name: 
@@ -26452,7 +26452,7 @@ MonoBehaviour:
   skillPopup: {fileID: 1411846898}
   selectSkillPopup: {fileID: 928053618}
   selectMapPopup: {fileID: 98411985}
-  handleFungus: {fileID: 1220234769}
+  handleFungus: {fileID: 0}
   msgPopObject: {fileID: 1104188523}
   msgPops: []
 --- !u!4 &1220234768
@@ -36178,7 +36178,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.8927039, y: 0.8927039}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 21.100098}
+  m_AnchoredPosition: {x: 0, y: 21}
   m_SizeDelta: {x: 0, y: -42.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672645471
@@ -39601,7 +39601,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1850513798
 MonoBehaviour:
   m_ObjectHideFlags: 0

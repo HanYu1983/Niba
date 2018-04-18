@@ -36,7 +36,7 @@ namespace Niba
 			yield return TestShowInfo (model, view);
 			yield return TestMap (model, view);
 			yield return TestWeapon (model, view);
-
+            Debug.Log("end test");
             // 過時的
             // yield return TestFight (model, view);
 		}
@@ -223,10 +223,11 @@ namespace Niba
 					throw new Exception ("裝備超過最大數量限制必須丟出特定例外:"+e2.Message);
 				}
 			}
-			weapon.prototype = ConfigItem.ID_grassKen;
-			model.AddItemToStorage (weapon, Place.Map);
-			model.EquipWeapon (weapon, Place.Map, Place.Map);
-
+            var handEquipCount = model.GetMapPlayer(Place.Map).Weapons.Where(w => ConfigItem.Get(w.prototype).Position == ConfigWeaponPosition.ID_hand).Count();
+            if(handEquipCount != 2)
+            {
+                throw new Exception("這時手上要有2個武器");
+            }
 			fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 			yield return view.ShowInfo (Info.Ability, e2 => {
