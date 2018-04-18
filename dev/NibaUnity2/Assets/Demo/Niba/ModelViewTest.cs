@@ -93,11 +93,11 @@ namespace Niba
 		}
 
 		static IEnumerator TestHomeStorage(IModel model, IView view){
-			model.ClearStorage (Place.Storage);
-			model.ClearStorage (Place.Pocket);
-			model.ClearStorage (Place.Map);
+            model.GetMapPlayer(Place.Storage).Storage.Clear();
+			model.GetMapPlayer(Place.Map).Storage.Clear();
+            model.GetMapPlayer(Place.Pocket).Storage.Clear();
 
-			Debug.Log ("加入2個道具");
+            Debug.Log ("加入2個道具");
 			Item item;
 			item.count = 1;
 			item.prototype = ConfigItem.ID_grass;
@@ -107,8 +107,8 @@ namespace Niba
 			model.AddItemToStorage (item, Place.Storage);
 
 			Debug.Log ("判斷道具是否存在");
-			if (model.GetMapPlayer(Place.Storage).storage.Count != 2) {
-				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Storage).storage.Count);
+			if (model.GetMapPlayer(Place.Storage).Storage.Count != 2) {
+				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Storage).Storage.Count);
 			}
 
 			Exception e = null;
@@ -124,20 +124,20 @@ namespace Niba
 			Debug.Log ("加入道具到口袋");
 			item.prototype = ConfigItem.ID_woodSword;
 			model.AddItemToStorage (item, Place.Pocket);
-			if (model.GetMapPlayer(Place.Pocket).storage.Count != 1) {
+			if (model.GetMapPlayer(Place.Pocket).Storage.Count != 1) {
 				throw new Exception ("口袋必須有1個道具");
 			}
 
 			Debug.Log ("將口袋道具裝到身上");
 			model.EquipWeapon (item, Place.Pocket, Place.Pocket);
-			if (model.GetMapPlayer(Place.Pocket).storage.Count != 0) {
+			if (model.GetMapPlayer(Place.Pocket).Storage.Count != 0) {
 				throw new Exception ("裝備後口袋必須沒有道具");
 			}
 
 			Debug.Log ("直接從家裡裝裝備");
 			item.prototype = ConfigItem.ID_woodSword;
 			model.EquipWeapon (item, Place.Pocket, Place.Storage);
-			if (model.GetMapPlayer(Place.Pocket).weapons.Count != 2) {
+			if (model.GetMapPlayer(Place.Pocket).Weapons.Count != 2) {
 				throw new Exception ("裝備後裝備數量必須為2");
 			}
 			yield return view.ShowInfo(Info.Item, e2 => {
@@ -188,11 +188,11 @@ namespace Niba
 				throw e;
 			}
 			Debug.Log ("先拆除所有裝備");
-			foreach (var w in model.GetMapPlayer(Place.Map).weapons.ToList()) {
+			foreach (var w in model.GetMapPlayer(Place.Map).Weapons.ToList()) {
 				model.UnequipWeapon (w, Place.Map, Place.Map);
 			}
 			Debug.Log ("先丟掉所有道具");
-			model.ClearStorage (Place.Map);
+            model.GetMapPlayer(Place.Map).Storage.Clear();
 
 			var fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
@@ -536,7 +536,7 @@ namespace Niba
 						if (e != null) {
 							throw e;
 						}
-						foreach (var item in model.GetMapPlayer(Place.Map).storage) {
+						foreach (var item in model.GetMapPlayer(Place.Map).Storage) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
 						yield return view.ShowInfo (Info.Item, e2 => {

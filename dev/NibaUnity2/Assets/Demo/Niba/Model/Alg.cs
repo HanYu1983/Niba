@@ -558,7 +558,21 @@ namespace Niba{
 				return maxCount;
 			};
 		}
+        public static List<Item> AddItem(List<Item> input, Item item)
+        {
+            var idx = input.IndexOf(item);
+            if(idx == -1)
+            {
+                input.Add(item);
+                return input;
+            }
+            var origin = input[idx];
+            origin.count += item.count;
+            input[idx] = origin;
+            return input;
+        }
 
+        /*
 		/// <summary>
 		///  新增道具，使用List強制Copy列表
 		/// </summary>
@@ -637,7 +651,8 @@ namespace Niba{
 			var newItems = itemExcludeAddedItemPrototype.Concat (itemsShouldReAdd);
 			return newItems.ToList();
 		}
-	}
+        */
+    }
 	#endregion
 
 	#region fusion
@@ -648,10 +663,10 @@ namespace Niba{
 				item.count = -(item.count*fusionTarget.count);
 				return item;
 			});
-			var tempStorage = Enumerable.Aggregate (formatForSubstrct, storage, AddItem);
+			Enumerable.Aggregate (formatForSubstrct, storage, AddItem);
 			var fusionItem = fusionTarget;
-			tempStorage = AddItem (tempStorage, fusionItem);
-			return tempStorage;
+			AddItem (storage, fusionItem);
+			return storage;
 		}
 
 		public static int CAN_NOT = -1;
@@ -713,7 +728,6 @@ namespace Niba{
 		}
 	}
 	#endregion
-
 
 	#region npc
 	[Serializable]
@@ -997,9 +1011,7 @@ namespace Niba{
 			}
 
 			// 將地上物轉為虛擬物件，方便計算是否符合地形需求
-			var resList = infoList.Select (info => info.Item).Aggregate (new List<Item> (), (ret, i) => {
-				return Alg.AddItemWithFn(ret, i, ()=>9999999);
-			}).Select(i=>i.AbstractItem);
+			var resList = infoList.Select (info => info.Item).Aggregate (new List<Item> (), AddItem).Select(i=>i.AbstractItem);
 
 			// 地形判斷依Class為優先順序判斷
 			var checkTypes = Enumerable.Range (0, ConfigTerrian.ID_COUNT)
@@ -1047,12 +1059,10 @@ namespace Niba{
 					}
 				}
 			}
-			return ret.Select(str=>new AbstractItem{
+			return ret.Select(str=>new Item{
 				prototype = str,
 				count = 1
-			}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
-				return Alg.AddItemWithFn(total, i, ()=>999999);
-			}).Select(i=>i.AbstractItem);
+			}).Aggregate(new List<Item>(), AddItem).Select(i=>i.AbstractItem);
 		}
 
 		/// <summary>
@@ -1127,12 +1137,10 @@ namespace Niba{
 					}
 				}
 
-				return ret.Select(str=>new AbstractItem{
+				return ret.Select(str=>new Item{
 					prototype = str,
 					count = 1
-				}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
-					return Alg.AddItemWithFn(total, i, ()=>999999);
-				}).Select(i=>i.AbstractItem);
+				}).Aggregate(new List<Item>(), Alg.AddItem).Select(i=>i.AbstractItem);
 			};
 		}
 	}

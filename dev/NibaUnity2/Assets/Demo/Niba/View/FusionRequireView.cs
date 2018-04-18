@@ -60,7 +60,7 @@ namespace Niba
 					continue;
 				}
 				var requireItem = requireItems [i];
-				var total = model.GetMapPlayer(Who).storage.Where(j=>{
+				var total = model.GetMapPlayer(Who).Storage.Where(j=>{
 					return j.prototype == requireItem.prototype;
 				}).Sum(j=>j.count);
 				var cfg = ConfigItem.Get (requireItem.prototype);

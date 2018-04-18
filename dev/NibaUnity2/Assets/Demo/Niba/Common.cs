@@ -58,14 +58,16 @@ namespace Niba
 	}
 
 	[Serializable]
-	public struct MonsterInfo {
+	public class MonsterInfo {
 		public string type;
 		public int hp, mp;
 		public BasicAbility basicAbility;
-		public List<Buf> bufs;
+
+        List<Buf> bufs = new List<Buf>();
 		public void AddBuf(Buf buf){
 			bufs.Add (buf);
 		}
+        public List<Buf> Bufs { get { return bufs;  } }
 
 		public bool IsDied{ get { return hp <= 0; } }
 		/// <summary>
@@ -114,8 +116,6 @@ namespace Niba
 				return (int)Alg.GetBasicAbility (ConfigMonster.Get (type)).FightAbility.hp;
 			}
 		}
-
-		public static MonsterInfo Empty;
 	}
 
     [Serializable]
@@ -149,7 +149,8 @@ namespace Niba
 				return hp <= 0;
 			}
 		}
-		public List<Item> storage;
+		List<Item> storage = new List<Item>();
+        public List<Item> Storage { get { return storage; } }
 		// === work === //
  		public Description currentWork;
 		public long workFinishedTime;
@@ -162,7 +163,8 @@ namespace Niba
 			workFinishedTime = 0;
 		}
 		// === weapon === //
-		public List<Item> weapons;
+		List<Item> weapons = new List<Item>();
+        public List<Item> Weapons { get { return weapons; } }
 		/// <summary>
 		/// 判斷武器有沒有壞，每次擊中對手時呼叫
 		/// </summary>
@@ -178,16 +180,15 @@ namespace Niba
 			return Alg.CheckElseWeaponBroken (weapons);
 		}
 		// === skill exp === //
-		public List<AbstractItem> exps;
+		List<AbstractItem> exps = new List<AbstractItem>();
 		public void AddExp(string id, int exp){
 			var ai = new Item () {
 				prototype = id,
 				count = exp
 			};
-			exps = Alg.AddItemWithFn (
+			exps = Alg.AddItem (
 				exps.Select (i => i.Item).ToList(), 
-				ai, 
-				() => int.MaxValue
+				ai
 			).Select(i=>i.AbstractItem).ToList();
 		}
 		public int Exp(string skillType){
@@ -209,7 +210,8 @@ namespace Niba
 		}
 
 		// === skill === //
-		public List<string> skills;
+		List<string> skills = new List<string>();
+        public List<string> Skills { get { return skills; } }
 		public void AddSkill(string id){
 			if (skills.Contains (id)) {
 				throw new Exception (string.Format("招式已裝備:{0}", id));
@@ -246,14 +248,6 @@ namespace Niba
 			weapons = new List<Item> (other.weapons);
 			skills = new List<string> (other.skills);
 		}
-		/*
-		public static MapPlayer Empty = new MapPlayer{
-			weapons = new List<Item>(), 
-			storage = new List<Item>(),
-			exps = new List<AbstractItem>(),
-			skills = new List<string>()
-		};
-		*/
 		public MapPlayer(){
 			weapons = new List<Item> (); 
 			storage = new List<Item> ();
@@ -456,7 +450,6 @@ namespace Niba
 		void Fusion (Item item, Place who);
 		void EquipWeapon (Item item, Place whosWeapon, Place whosStorage);
 		void UnequipWeapon (Item item, Place whosWeapon, Place whosStorage);
-		void ClearStorage (Place who);
 
 		void AcceptMission(string id);
 		List<string> CheckMissionStatus();
@@ -585,7 +578,7 @@ namespace Niba
 
 		public static BasicAbility CalcMonsterAbility(MonsterInfo monsterInfo){
 			var tmpBasic = monsterInfo.basicAbility;
-			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
+			var effects = monsterInfo.Bufs.SelectMany (it => it.Effects);
 			var fight = FightAbility.Zero;
 			return Alg.CalcAbility (null, null, effects, tmpBasic, ref fight);
 		}

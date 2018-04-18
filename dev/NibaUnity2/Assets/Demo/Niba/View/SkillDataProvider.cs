@@ -19,7 +19,7 @@ namespace Niba
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
 
 			var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
-			var isEquip = who.skills.Contains (cfg.ID);
+			var isEquip = who.Skills.Contains (cfg.ID);
 			var btn = ui.GetComponent<Button> ();
 			var colors = btn.colors;
 			colors.normalColor = colors.highlightedColor = isEquip ? Color.yellow : Color.white;

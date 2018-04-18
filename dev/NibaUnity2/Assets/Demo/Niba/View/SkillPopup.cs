@@ -42,7 +42,7 @@ namespace Niba
 
 			if (CheckToggleValue (FilterIDApply)) {
 				var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
-				skills = who.skills.Select (ConfigSkill.Get);
+				skills = who.Skills.Select (ConfigSkill.Get);
 			} else {
 				skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
 			}

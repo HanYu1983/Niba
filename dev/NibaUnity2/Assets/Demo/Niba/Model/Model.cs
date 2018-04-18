@@ -173,15 +173,6 @@ namespace Niba
 			playerData.UnequipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
 		}
-		public void ClearStorage(Place who){
-			if (who == Place.Pocket) {
-				playerData.player.storage.Clear ();
-			} else if (who == Place.Map) {
-				playerData.playerInMap.storage.Clear ();
-			} else {
-				playerData.playerInStorage.storage.Clear ();
-			}
-		}
 		public IEnumerable<string> AvailableNpcMissions {
 			get {
 				return playerData.AvailableNpcMissions;

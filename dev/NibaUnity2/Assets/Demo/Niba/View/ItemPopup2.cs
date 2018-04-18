@@ -25,7 +25,7 @@ namespace Niba
 
 		public void UpdateUI(IModelGetter model){
 			var popup = this;
-			popup.itemDataProvider.Data = model.GetMapPlayer (Who).storage;
+			popup.itemDataProvider.Data = model.GetMapPlayer (Who).Storage;
 			popup.listView.UpdateDataView (model);
 			popup.listView.CurrItemLabel (model, popup.SelectIndex);
 			popup.UpdateButtonLabel (model, Who);
@@ -50,7 +50,7 @@ namespace Niba
 				throw new Exception ("xxx");
 			}
 			btn_head.GetComponentInChildren<Text> ().text = "頭";
-			var head = who.weapons.Where (item => {
+			var head = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_head;
 			}).FirstOrDefault ();
@@ -66,7 +66,7 @@ namespace Niba
 				throw new Exception ("xxx");
 			}
 			btn_body.GetComponentInChildren<Text> ().text = "身";
-			var body = who.weapons.Where (item => {
+			var body = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_body;
 			}).FirstOrDefault ();
@@ -82,7 +82,7 @@ namespace Niba
 				throw new Exception ("xxx");
 			}
 			btn_foot.GetComponentInChildren<Text> ().text = "腳";
-			var foot = who.weapons.Where (item => {
+			var foot = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_foot;
 			}).FirstOrDefault ();
@@ -110,7 +110,7 @@ namespace Niba
 			rightHandBtn.GetComponentInChildren<Text> ().text = "右";
 
 			var handBtns = new Button[]{ leftHandBtn, rightHandBtn };
-			var handWeapons = who.weapons.Where (item => {
+			var handWeapons = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_hand;
 			}).ToList();
@@ -150,7 +150,7 @@ namespace Niba
 			a2Btn.GetComponentInChildren<Text> ().text = "配件2";
 			a3Btn.GetComponentInChildren<Text> ().text = "配件3";
 
-			var aWeapons = who.weapons.Where (item => {
+			var aWeapons = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_accessory;
 			}).ToList();
@@ -241,7 +241,7 @@ namespace Niba
 					LastPosition(ref pos, ref idx);
 
 					var who = model.GetMapPlayer (Who);
-					var item = who.weapons.Where (i => {
+					var item = who.Weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;
 					}).Skip(idx).FirstOrDefault();
@@ -280,7 +280,7 @@ namespace Niba
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage;
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).Storage;
 					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Normal;
 					popup.listView.UpdateDataView (model);
 				}
@@ -306,7 +306,7 @@ namespace Niba
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage.Where (item => {
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).Storage.Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					}).ToList();
