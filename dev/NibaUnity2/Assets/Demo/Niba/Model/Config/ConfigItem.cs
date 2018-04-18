@@ -1,5 +1,5 @@
 using System;
-namespace HanRPGAPI{
+namespace Niba{
 public struct ConfigItem {
 public string ID;
 public string Name;

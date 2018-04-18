@@ -5,9 +5,8 @@ using System.Collections.Specialized;
 using System.Text;
 using UnityEngine;
 using System.Linq;
-using HanRPGAPI;
 
-namespace Common
+namespace Niba
 {
 	
 
@@ -114,7 +113,7 @@ namespace Common
 
 		public int MaxHP{
 			get{
-				return (int)HanRPGAPI.Alg.GetBasicAbility (ConfigMonster.Get (type)).FightAbility.hp;
+				return (int)Alg.GetBasicAbility (ConfigMonster.Get (type)).FightAbility.hp;
 			}
 		}
 
@@ -172,7 +171,7 @@ namespace Common
 		/// </summary>
 		/// <returns>壞掉的武器</returns>
 		public IEnumerable<Item> CheckHandWeaponBroken(){
-			return HanRPGAPI.Alg.CheckHandWeaponBroken (weapons);
+			return Alg.CheckHandWeaponBroken (weapons);
 			/*
 			return weapons
 				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
@@ -190,18 +189,7 @@ namespace Common
 		/// </summary>
 		/// <returns>壞掉的防具</returns>
 		public IEnumerable<Item> CheckElseWeaponBroken(){
-			return HanRPGAPI.Alg.CheckElseWeaponBroken (weapons);
-			/*
-			return weapons
-				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
-				.Where (info => info.t2.Position != ConfigWeaponPosition.ID_hand)
-				.Select (info => new Tuple2<Item, int> (info.t1, (int)((1.0f / info.t2.UseCount) * 100)))
-				.Where (info => {
-					var dice = UnityEngine.Random.Range (1, 101);
-					return dice < info.t2;
-				})
-				.Select (info => info.t1);
-				*/
+			return Alg.CheckElseWeaponBroken (weapons);
 		}
 		// === skill exp === //
 		public List<AbstractItem> exps;
@@ -210,7 +198,7 @@ namespace Common
 				prototype = id,
 				count = exp
 			};
-			exps = HanRPGAPI.Alg.AddItemWithFn (
+			exps = Alg.AddItemWithFn (
 				exps.Select (i => i.Item).ToList(), 
 				ai, 
 				() => int.MaxValue
@@ -540,7 +528,7 @@ namespace Common
 		/// <param name="prototype">Prototype.</param>
 		/// <param name="items">Items.</param>
 		public static int IsCanFusion(MapPlayer who, string prototype, IEnumerable<Item> items){
-			return HanRPGAPI.Alg.IsCanFusion (SkillExpFn (who), prototype, items);
+			return Alg.IsCanFusion (SkillExpFn (who), prototype, items);
 			/*
 			var cfg = ConfigItem.Get (prototype);
 			// 判斷技能經驗是否符合
@@ -646,7 +634,7 @@ namespace Common
 						continue;
 					}
 
-					data [x, y] = HanRPGAPI.Alg.Terrian (infoList);
+					data [x, y] = Alg.Terrian (infoList);
 					// 將地上物轉為虛擬物件，方便計算是否符合地形需求
 					/*
 					var resList = model.VisibleMapObjects.Where (obj => {
@@ -658,7 +646,7 @@ namespace Common
 							count = 1
 						};
 					}).Aggregate (new List<Item> (), (ret, i) => {
-						return HanRPGAPI.Alg.AddItemWithFn(ret, i, ()=>{ return 9999; });
+						return Alg.AddItemWithFn(ret, i, ()=>{ return 9999; });
 					}).Select(i=>i.AbstractItem);
 
 					var isNotVisible = resList.Count () == 0;
@@ -673,9 +661,9 @@ namespace Common
 						.OrderByDescending (cfg => cfg.Class);
 					
 					var terrians = checkTypes.SkipWhile (t => {
-						var resRequire = HanRPGAPI.Alg.ParseAbstractItem (t.Require);
-						var check = HanRPGAPI.Alg.IsCanFusion (resRequire, resList);
-						if (check <= HanRPGAPI.Alg.REQUIREMENT_NOT_ALLOW) {
+						var resRequire = Alg.ParseAbstractItem (t.Require);
+						var check = Alg.IsCanFusion (resRequire, resList);
+						if (check <= Alg.REQUIREMENT_NOT_ALLOW) {
 							return true;
 						}
 						return false;
@@ -707,7 +695,7 @@ namespace Common
 			var tmpBasic = monsterInfo.basicAbility;
 			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
 			var fight = FightAbility.Zero;
-			return HanRPGAPI.Alg.CalcAbility (null, null, effects, tmpBasic, ref fight);
+			return Alg.CalcAbility (null, null, effects, tmpBasic, ref fight);
 			/*
 			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
 			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
@@ -728,7 +716,7 @@ namespace Common
 			if (string.IsNullOrEmpty (info.type)) {
 				throw new Exception ("沒有指定type:"+info.type);
 			}
-			return HanRPGAPI.Alg.GetBasicAbility (ConfigMonster.Get (info.type));
+			return Alg.GetBasicAbility (ConfigMonster.Get (info.type));
 		}
 	}
 

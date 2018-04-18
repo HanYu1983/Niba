@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
-using Common;
 using System.Linq;
 using System.IO;
 using System.Threading;
-using HanRPGAPI;
 
-namespace Model
+namespace Niba
 {
 	public class Model : MonoBehaviour, IModel
 	{

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Name: CSVClassCreator
   m_EditorClassIdentifier: 
   csvPath: Demo/Niba/CSV
-  generatePath: HanRPGAPI/Config
+  generatePath: Demo/Niba/Model/Config
   csvFiles:
   - key: ConfigConst
     fileName: gameData - const.tsv
@@ -223,6 +223,6 @@ MonoBehaviour:
   splitType: 0
   split: 
   isFirstLetterUpper: 1
-  ns: HanRPGAPI
+  ns: Niba
   selectFile: ConfigItem
   selectRow: useCount

@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class SkillDataProvider : MonoBehaviour, ListView.IDataProvider
 	{
@@ -20,7 +18,7 @@ namespace View
 			var cfg = ConfigSkill.Get (modelItem);
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
 
-			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+			var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
 			var isEquip = who.skills.Contains (cfg.ID);
 			var btn = ui.GetComponent<Button> ();
 			var colors = btn.colors;

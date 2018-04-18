@@ -3,12 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
-using Common;
 using System.Linq;
-using View;
-using HanRPGAPI;
 
-namespace Model
+namespace Niba
 {
 	public class ModelViewTest : MonoBehaviour
 	{
@@ -200,7 +197,7 @@ namespace Model
 			var fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 
-			var weapon = HanRPGAPI.Item.Empty;
+			var weapon = Item.Empty;
 			weapon.prototype = ConfigItem.ID_woodSword;
 			weapon.count = 1;
 

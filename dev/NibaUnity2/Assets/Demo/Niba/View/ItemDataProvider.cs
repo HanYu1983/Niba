@@ -1,12 +1,8 @@
-﻿using System;
-using Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Linq;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class ItemDataProvider : MonoBehaviour, ListView.IDataProvider
 	{

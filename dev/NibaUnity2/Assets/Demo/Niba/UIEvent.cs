@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Common
+namespace Niba
 {
 	public class UIEvent : MonoBehaviour
 	{

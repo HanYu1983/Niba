@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using Common;
+using Niba;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
-namespace View
+namespace Niba
 {
 	public class SelectSkillPopup : MonoBehaviour
 	{
@@ -87,7 +87,7 @@ namespace View
 					}
 					var skill = skillDataProvider.Data [idx];
 					work.values.Set ("skillId", skill);
-					Common.Common.Notify ("selectSkillPopup_selectSkill", work);
+                    Niba.Common.Notify ("selectSkillPopup_selectSkill", work);
 				}
 				break;
 			default:

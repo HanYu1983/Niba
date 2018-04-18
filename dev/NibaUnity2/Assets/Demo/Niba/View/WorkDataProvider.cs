@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Common;
 using System.Collections.Generic;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class WorkDataProvider : MonoBehaviour, ListView.IDataProvider
 	{

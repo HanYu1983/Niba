@@ -1,12 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using Common;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class MonsterDataProvider : MonoBehaviour, ListView.IDataProvider
 	{

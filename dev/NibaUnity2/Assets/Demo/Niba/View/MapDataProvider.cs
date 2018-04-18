@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using UnityEngine.UI;
 
-namespace View{
+namespace Niba
+{
 	public class MapDataProvider : MonoBehaviour, ListView.IDataProvider {
 		
 		public int DataCount{ 

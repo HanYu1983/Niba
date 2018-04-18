@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
 using System;
 using System.Linq;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View{
+namespace Niba
+{
 	public class SkillPopup : MonoBehaviour {
 		public ListView skillListView;
 		public SkillDataProvider skillDataProvider;
@@ -32,7 +31,7 @@ namespace View{
 		}
 
 		public void UpdateSlotCount(IModelGetter model){
-			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+			var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
 			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
@@ -42,7 +41,7 @@ namespace View{
 			IEnumerable<ConfigSkill> skills = null;
 
 			if (CheckToggleValue (FilterIDApply)) {
-				var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+				var who = model.GetMapPlayer (Niba.Common.PlaceAt (model.PlayState));
 				skills = who.skills.Select (ConfigSkill.Get);
 			} else {
 				skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
@@ -87,7 +86,7 @@ namespace View{
 						yield break;
 					}
 					var selectSkill = skillDataProvider.Data [idx];
-					Common.Common.Notify ("skillPopup_active", selectSkill);
+					Niba.Common.Notify ("skillPopup_active", selectSkill);
 				}
 				break;
 			case "click_skillPopup_inactive":
@@ -101,7 +100,7 @@ namespace View{
 						yield break;
 					}
 					var selectSkill = skillDataProvider.Data [idx];
-					Common.Common.Notify ("skillPopup_inactive", selectSkill);
+					Niba.Common.Notify ("skillPopup_inactive", selectSkill);
 				}
 				break;
 			case "click_skillPopup_filter":

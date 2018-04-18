@@ -1,18 +1,14 @@
 ﻿using System;
 using UnityEngine;
-using View;
-using Model;
 using System.Collections;
 using System.Linq;
-using HanRPGAPI;
-using Fungus;
 
-namespace Common
+namespace Niba
 {
 	public class Controller : MonoBehaviour
 	{
 		public HanView hanView;
-		public Model.Model defaultModel;
+		public Model defaultModel;
 
 		public IView view;
 		public IModel model;

@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Common;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class ItemPopup2 : MonoBehaviour
 	{
@@ -197,7 +195,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_move_item", info);
+					Niba.Common.Notify ("itemPopup_move_item", info);
 				}
 				break;
 			case "click_itemPopup_equip":
@@ -225,7 +223,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_equip_item", info);
+					Niba.Common.Notify ("itemPopup_equip_item", info);
 				}
 				break;
 			case "click_itemPopup_unequip":
@@ -255,7 +253,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_unequip_item", info);
+					Niba.Common.Notify ("itemPopup_unequip_item", info);
 				}
 				break;
 			case "click_itemPopup_use":
@@ -265,7 +263,7 @@ namespace View
 						yield break;
 					}
 					var item = itemDataProvider.Data[SelectIndex];
-					Common.Common.Notify ("itemPopup_use_item", item);
+					Niba.Common.Notify ("itemPopup_use_item", item);
 				}
 				break;
 			case "click_itemPopup_nouse":
@@ -275,7 +273,7 @@ namespace View
 						yield break;
 					}
 					var item = itemDataProvider.Data[SelectIndex];
-					Common.Common.Notify ("itemPopup_sell_item", item);
+					Niba.Common.Notify ("itemPopup_sell_item", item);
 				}
 				break;
 			case "click_itemPopup_normalMode":

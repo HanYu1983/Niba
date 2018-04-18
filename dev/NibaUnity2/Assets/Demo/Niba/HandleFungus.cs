@@ -3,7 +3,7 @@ using Fungus;
 using UnityEngine;
 using System.Collections;
 
-namespace Common
+namespace Niba
 {
 	public class HandleFungus : MonoBehaviour
 	{

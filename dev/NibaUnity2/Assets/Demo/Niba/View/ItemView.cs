@@ -2,12 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Common;
 using System.Linq;
 using System.Collections;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class ItemView : MonoBehaviour
 	{
@@ -34,18 +32,18 @@ namespace View
 			for(var i=0; i<items.Length; ++i){
 				Func<int,UnityEngine.Events.UnityAction> closure = idx=>{
 					return ()=>{
-						Common.Common.Notify(string.Format("{0}_item_{1}",commandPrefix, idx), null);
+						Niba.Common.Notify(string.Format("{0}_item_{1}",commandPrefix, idx), null);
 					};
 				};
 				items [i].onClick.AddListener (closure (i));
 			}
 
 			btnPageUp.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pageup", null);
+				Niba.Common.Notify(commandPrefix+"_pageup", null);
 			});
 
 			btnPageDown.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pagedown", null);
+				Niba.Common.Notify(commandPrefix+"_pagedown", null);
 			});
 		}
 		/// <summary>

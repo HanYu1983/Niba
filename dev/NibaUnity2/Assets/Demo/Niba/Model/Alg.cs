@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace HanRPGAPI{
+namespace Niba{
 	#region ability
 	/// <summary>
 	/// 基礎能力
@@ -548,7 +548,7 @@ namespace HanRPGAPI{
 			if (hasItem == false) {
 				return new List<Item> ();
 			}
-			return HanRPGAPI.Alg.ParseItem (res.Item);
+			return Alg.ParseItem (res.Item);
 		}
 
 		public static Func<int> GetMaxCountFromItem(Item item){
@@ -765,7 +765,7 @@ namespace HanRPGAPI{
 				var cfg = ConfigNpcMission.Get (mission.prototype);
 				if (cfg.RequireItem != null) {
 					var isCompleted = true;
-					var requireItems = HanRPGAPI.Alg.ParseItem (cfg.RequireItem);
+					var requireItems = Alg.ParseItem (cfg.RequireItem);
 					foreach (var requireItem in requireItems) {
 						var itemCount = mission.itemGot
 							.Where(item=>item.prototype == requireItem.prototype)
@@ -782,7 +782,7 @@ namespace HanRPGAPI{
 
 				if (cfg.RequireKill != null) {
 					var isCompleted = true;
-					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
+					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
 					foreach (var requireItem in requireItems) {
 						var itemCount = mission.monsterSkilled
 							.Where (id => id == requireItem.prototype)
@@ -799,7 +799,7 @@ namespace HanRPGAPI{
 
 				if (cfg.RequireStatus != null) {
 					var isCompleted = true;
-					var requireItems = HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill);
+					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
 					foreach (var requireItem in requireItems) {
 						if (requireItem.prototype == "money") {
 							// TODO
@@ -998,7 +998,7 @@ namespace HanRPGAPI{
 
 			// 將地上物轉為虛擬物件，方便計算是否符合地形需求
 			var resList = infoList.Select (info => info.Item).Aggregate (new List<Item> (), (ret, i) => {
-				return HanRPGAPI.Alg.AddItemWithFn(ret, i, ()=>9999999);
+				return Alg.AddItemWithFn(ret, i, ()=>9999999);
 			}).Select(i=>i.AbstractItem);
 
 			// 地形判斷依Class為優先順序判斷
@@ -1007,9 +1007,9 @@ namespace HanRPGAPI{
 				.OrderByDescending (cfg => cfg.Class);
 
 			var terrians = checkTypes.SkipWhile (t => {
-				var resRequire = HanRPGAPI.Alg.ParseAbstractItem (t.Require);
-				var check = HanRPGAPI.Alg.IsCanFusion (resRequire, resList);
-				if (check <= HanRPGAPI.Alg.REQUIREMENT_NOT_ALLOW) {
+				var resRequire = Alg.ParseAbstractItem (t.Require);
+				var check = Alg.IsCanFusion (resRequire, resList);
+				if (check <= Alg.REQUIREMENT_NOT_ALLOW) {
 					return true;
 				}
 				return false;
@@ -1051,7 +1051,7 @@ namespace HanRPGAPI{
 				prototype = str,
 				count = 1
 			}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
-				return HanRPGAPI.Alg.AddItemWithFn(total, i, ()=>999999);
+				return Alg.AddItemWithFn(total, i, ()=>999999);
 			}).Select(i=>i.AbstractItem);
 		}
 
@@ -1131,7 +1131,7 @@ namespace HanRPGAPI{
 					prototype = str,
 					count = 1
 				}).Select(i=>i.Item).Aggregate(new List<Item>(), (total,i)=>{
-					return HanRPGAPI.Alg.AddItemWithFn(total, i, ()=>999999);
+					return Alg.AddItemWithFn(total, i, ()=>999999);
 				}).Select(i=>i.AbstractItem);
 			};
 		}

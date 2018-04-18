@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using System;
 
-namespace View{
+namespace Niba
+{
 	public class SelectMapPopup : MonoBehaviour {
 		public ListView mapListView;
 		public MapDataProvider mapDataProvider;
@@ -30,7 +31,7 @@ namespace View{
 						yield break;
 					}
 					var mapType = mapDataProvider.Data [idx];
-					Common.Common.Notify ("selectMapPopup_selectMap", mapType);
+                    Niba.Common.Notify ("selectMapPopup_selectMap", mapType);
 				}
 				break;
 			default:

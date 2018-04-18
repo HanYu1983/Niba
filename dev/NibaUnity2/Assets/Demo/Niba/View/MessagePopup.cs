@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace View
+namespace Niba
 {
 	public class MessagePopup : MonoBehaviour
 	{

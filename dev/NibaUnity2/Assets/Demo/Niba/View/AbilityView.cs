@@ -1,11 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Common;
-using System.Linq;
-using HanRPGAPI;
-
-namespace View
+namespace Niba
 {
 	public class AbilityView : MonoBehaviour
 	{

@@ -1,13 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
-using HanRPGAPI;
-using Fungus;
 
-namespace View
+namespace Niba
 {
 	public class HanView : MonoBehaviour, IView
 	{
@@ -127,7 +124,7 @@ namespace View
 					}
 					// 先Open才會呼叫Awake
 					itemPopup.ChangeVisibility(true);
-					popup.Who = Common.Common.PlaceAt(model.PlayState);
+					popup.Who = Niba.Common.PlaceAt(model.PlayState);
 					popup.UpdateUI (model);
 					callback (null);
 					break;

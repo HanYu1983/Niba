@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using System;
 using System.Linq;
 
-namespace View{
+namespace Niba{
 	public class FusionPopup : MonoBehaviour {
 		public ItemView itemView;
 		public FusionRequireView fusionRequireView;
@@ -28,7 +28,7 @@ namespace View{
 							// 修改狀態文字
 							var selectIdx = itemView.CurrIndex (msg);
 							var item = itemView.Data.ToList () [selectIdx];
-							fusionRequireView.Who = Common.Common.PlaceAt (model.PlayState);
+							fusionRequireView.Who = Niba.Common.PlaceAt (model.PlayState);
 							fusionRequireView.FusionTarget = item;
 							fusionRequireView.UpdateUI (model);
 						}

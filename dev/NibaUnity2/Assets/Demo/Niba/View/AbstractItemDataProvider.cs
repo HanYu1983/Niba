@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class AbstractItemDataProvider : MonoBehaviour, ListView.IDataProvider
 	{

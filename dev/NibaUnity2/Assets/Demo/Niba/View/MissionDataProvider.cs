@@ -1,12 +1,9 @@
-﻿using System;
-using Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class MissionDataProvider : MonoBehaviour, ListView.IDataProvider
 	{
@@ -50,16 +47,16 @@ namespace View
 
 			var requireItem = new List<AbstractItem> ();
 			if (cfg.RequireItem != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireItem));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireItem));
 			}
 			if (cfg.RequireKill != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireKill));
 			}
 			if (cfg.RequireStatus != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireStatus));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireStatus));
 			}
 			requireItemDataProvider.Data = requireItem;
-			rewardDataProvider.Data = HanRPGAPI.Alg.ParseAbstractItem (cfg.Reward).ToList ();
+			rewardDataProvider.Data = Alg.ParseAbstractItem (cfg.Reward).ToList ();
 
 			requireListView.UpdateDataView (model);
 			rewardListView.UpdateDataView (model);

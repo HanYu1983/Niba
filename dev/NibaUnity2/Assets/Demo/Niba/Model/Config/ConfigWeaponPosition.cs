@@ -1,5 +1,5 @@
 using System;
-namespace HanRPGAPI{
+namespace Niba{
 public struct ConfigWeaponPosition {
 public string ID;
 public string Name;

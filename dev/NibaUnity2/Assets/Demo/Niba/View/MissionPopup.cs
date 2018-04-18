@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using System.Linq;
 using System;
 
-namespace View{
+namespace Niba
+{
 	public class MissionPopup : MonoBehaviour {
 		public ListView listView;
 		public MissionDataProvider missionDataProvider;
@@ -36,7 +37,7 @@ namespace View{
 				{
 					var selectIdx = listView.LastSelectIndex;
 					var missionId = missionDataProvider.Data [selectIdx];
-					Common.Common.Notify ("missionPopup_completeMission", missionId);
+                    Niba.Common.Notify ("missionPopup_completeMission", missionId);
 				}
 				break;
 			default:

@@ -1,12 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections;
 using UnityEngine.UI;
 using System.Linq;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class MenuMap : MonoBehaviour
 	{
@@ -117,7 +115,7 @@ namespace View
 			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
 			string[,] terrians;
-			Common.Common.Terrian (model, leftTop, rightBottom, out terrians);
+			Niba.Common.Terrian (model, leftTop, rightBottom, out terrians);
 			for (var x = 0; x < terrians.GetLength (0); ++x) {
 				for (var y = 0; y < terrians.GetLength (1); ++y) {
 					var idx = y * 10 + x;
@@ -140,7 +138,7 @@ namespace View
 			MapObject[,] mapObjs;
 			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
-			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
+			Niba.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
 				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
 					var idx = y * 10 + x;
@@ -161,7 +159,7 @@ namespace View
 				}
 			}
 
-			Common.Common.FlattenMapObjects(model, MapObjectType.Monster, leftTop, rightBottom, out mapObjs);
+			Niba.Common.FlattenMapObjects(model, MapObjectType.Monster, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
 				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
 					var mapObj = mapObjs[x,y];
@@ -181,7 +179,7 @@ namespace View
 						// 修改狀態文字
 						var selectIdx = workListView.CurrIndex (msg);
 						var work = workDataProvider.Data [selectIdx];
-						Common.Common.Notify ("menuMap_work", work);
+						Niba.Common.Notify ("menuMap_work", work);
 					} else if (msg.Contains (workListView.CommandPrefix)) {
 						yield return workListView.HandleCommand (model, msg, args, callback);
 					}
