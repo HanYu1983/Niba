@@ -8,8 +8,6 @@ using System.Linq;
 
 namespace Niba
 {
-	
-
 	[Serializable]
 	public enum MapObjectType{
 		Unknown = 0, 
@@ -120,12 +118,11 @@ namespace Niba
 		public static MonsterInfo Empty;
 	}
 
-	[Serializable]
-	public enum MapType{
-		Unknown, Random, Pattern
-	}
-
-
+    [Serializable]
+    public enum MapType
+    {
+        Unknown, Random, Pattern
+    }
 
 	public enum Place{
 		Storage, 	// 倉庫
@@ -172,17 +169,6 @@ namespace Niba
 		/// <returns>壞掉的武器</returns>
 		public IEnumerable<Item> CheckHandWeaponBroken(){
 			return Alg.CheckHandWeaponBroken (weapons);
-			/*
-			return weapons
-				.Select (i => new Tuple2<Item, ConfigItem> (i, ConfigItem.Get (i.prototype)))
-				.Where (info => info.t2.Position == ConfigWeaponPosition.ID_hand)
-				.Select (info => new Tuple2<Item, int> (info.t1, (int)((1.0f / info.t2.UseCount) * 100)))
-				.Where (info => {
-				var dice = UnityEngine.Random.Range (1, 101);
-				return dice < info.t2;
-			})
-				.Select (info => info.t1);
-			*/
 		}
 		/// <summary>
 		/// 判斷防具有沒有壞，每次被擊中時呼叫
@@ -316,24 +302,6 @@ namespace Niba
 				return events != null && events.Count > 0;
 			}
 		}
-		/*public List<string> events;
-		public bool HasEvent{
-			get{
-				return events != null && events.Count > 0;
-			}
-		}
-		public static string BuildEvent(String eventName, NameValueCollection args){
-			return string.Format ("?eventName={0}&{1}", eventName, args.ToString ());
-		}
-		public static string ParseEvent(string eventDescription, NameValueCollection args){
-			HanUtil.Native.ParseQueryString (eventDescription, Encoding.UTF8, args);
-			var hasEventName = new List<string> (args.AllKeys).Contains("eventName");
-			if (hasEventName == false) {
-				throw new UnityException ("unknown event");
-			}
-			var eventName = args.Get ("eventName");
-			return eventName;
-		}*/
 		public static MoveResult Empty;
 	}
 
@@ -401,10 +369,6 @@ namespace Niba
 		List<MapObject> MapObjects{ get; }
 		List<ResourceInfo> ResourceInfos{ get; }
 		List<MonsterInfo> MonsterInfos{ get; }
-		/*
-		int MapWidth{ get; }
-		int MapHeight{ get; }
-		*/
 		/// <summary>
 		/// 取得移動結果
 		/// 呼叫任何移動後就必須處理MoveResult，並呼叫ClearMoveResult來清除暫存
@@ -529,37 +493,6 @@ namespace Niba
 		/// <param name="items">Items.</param>
 		public static int IsCanFusion(MapPlayer who, string prototype, IEnumerable<Item> items){
 			return Alg.IsCanFusion (SkillExpFn (who), prototype, items);
-			/*
-			var cfg = ConfigItem.Get (prototype);
-			// 判斷技能經驗是否符合
-			var ais = ParseAbstractItem (cfg.SkillRequire);
-			foreach (var ai in ais) {
-				var st = ai.prototype;
-				var needExp = ai.count;
-				var haveExp = who.Exp (st);
-				if (haveExp < needExp) {
-					return -1;
-				}
-			}
-			// 判斷所需道具數量
-			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
-			int minCnt = int.MaxValue;
-			foreach (var requireItem in requires) {
-				var search = items.Where (it => {
-					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
-				});
-				var isNotFound = search.Count () == 0;
-				if (isNotFound) {
-					return -1;
-				}
-				var total = search.Sum (it => it.count);
-				var maxFusionCnt = total / requireItem.count;
-				if (minCnt > maxFusionCnt) {
-					minCnt = maxFusionCnt;
-				}
-			}
-			return minCnt;
-			*/
 		}
 		/// <summary>
 		/// 平面化地圖物件
@@ -633,49 +566,8 @@ namespace Niba
 						data [x, y] = null;
 						continue;
 					}
-
-					data [x, y] = Alg.Terrian (infoList);
-					// 將地上物轉為虛擬物件，方便計算是否符合地形需求
-					/*
-					var resList = model.VisibleMapObjects.Where (obj => {
-						return obj.type == MapObjectType.Resource && obj.position.Equals (curr);
-					}).Select (o => {
-						var info = model.ResourceInfos [o.infoKey];
-						return new Item () {
-							prototype = info.type,
-							count = 1
-						};
-					}).Aggregate (new List<Item> (), (ret, i) => {
-						return Alg.AddItemWithFn(ret, i, ()=>{ return 9999; });
-					}).Select(i=>i.AbstractItem);
-
-					var isNotVisible = resList.Count () == 0;
-					if (isNotVisible) {
-						data [x, y] = null;
-						continue;
-					}
-
-					// 地形判斷依Class為優先順序判斷
-					var checkTypes = Enumerable.Range (0, ConfigTerrian.ID_COUNT)
-						.Select (ConfigTerrian.Get)
-						.OrderByDescending (cfg => cfg.Class);
-					
-					var terrians = checkTypes.SkipWhile (t => {
-						var resRequire = Alg.ParseAbstractItem (t.Require);
-						var check = Alg.IsCanFusion (resRequire, resList);
-						if (check <= Alg.REQUIREMENT_NOT_ALLOW) {
-							return true;
-						}
-						return false;
-					});
-
-					var isNoMatch = terrians.Count () == 0;
-					if (isNoMatch) {
-						throw new Exception ("沒有合適的地形");
-					}
-
-					data [x, y] = terrians.First().ID;
-					*/
+                    // 將地上物轉為虛擬物件，方便計算是否符合地形需求
+                    data[x, y] = Alg.Terrian (infoList);
 				}
 			}
 		}
@@ -696,20 +588,6 @@ namespace Niba
 			var effects = monsterInfo.bufs.SelectMany (it => it.Effects);
 			var fight = FightAbility.Zero;
 			return Alg.CalcAbility (null, null, effects, tmpBasic, ref fight);
-			/*
-			var addEffect = effects.Where (ef => ef.EffectOperator == "+" || ef.EffectOperator == "-");
-			var multiEffect = effects.Where (ef => ef.EffectOperator == "*");
-			// 先處理基本能力
-			// 先加減
-			tmpBasic = addEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			// 後乘除
-			tmpBasic = multiEffect.Aggregate (tmpBasic, (accu, curr) => {
-				return curr.Effect(accu);
-			});
-			return tmpBasic;
-			*/
 		}
 
 		public static BasicAbility GetBasicAbility(MonsterInfo info){
