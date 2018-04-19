@@ -6,11 +6,6 @@ using Poke = HanCardAPI.Poke;
 namespace WordCard
 {
 
-    public struct CardPrototype
-    {
-        
-    }
-
     public class Context : Poke.Context
     {
 
@@ -18,24 +13,18 @@ namespace WordCard
 
     public class DataAlg
     {
-        public static CardPrototype GetPrototype(string id)
+        public static bool MatchCard(ConfigCard p1, ConfigCard p2)
         {
-            CardPrototype p;
-            return p;
-        }
-
-        public static bool MatchCard(CardPrototype p1, CardPrototype p2)
-        {
-            return false;
+            return p1.Match == p2.Id || p2.Match == p1.Id;
         }
 
         public static List<int> MatchCard(Context ctx, int card)
         {
             var cs = ctx.table.stacks[ctx.seaStack];
-            var p1 = GetPrototype(ctx.table.cards[card].prototype);
+            var p1 = ConfigCard.Get(ctx.table.cards[card].prototype);
             return cs.cards.FindAll(c =>
             {
-                var p2 = GetPrototype(ctx.table.cards[c].prototype);
+                var p2 = ConfigCard.Get(ctx.table.cards[c].prototype);
                 return MatchCard(p1, p2);
             });
         }
@@ -67,7 +56,8 @@ namespace WordCard
 
                         if (isMatch == false)
                         {
-                            Alg.MoveCard(ctx.table, card1, ctx.playerHandStack[player], ctx.seaStack);
+                            // 配對錯誤, 無法出牌
+                            // 只切換階段
                             ctx.phase = Poke.Phase.End;
                         }
                         else
