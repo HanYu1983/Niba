@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using HanCardAPI.Poke;
+using HanCardAPI.Core;
 using PokeAlg = HanCardAPI.Poke.Alg;
+using CoreAlg = HanCardAPI.Core.Alg;
 
 namespace CardGame
 {
@@ -87,7 +89,7 @@ namespace CardGame
 
             score = PokeAlg.CalcScore(clientCtx, clientCtx.table.stacks[clientCtx.playerEatStack[playerId]].cards);
 
-            var w = PokeAlg.GetWorkingMissions(clientCtx, playerId);
+            var w = CoreAlg.GetWorkingMissions(clientCtx.missions, playerId);
             if (w != null)
             {
                 works = new List<Mission>();
@@ -103,14 +105,24 @@ namespace CardGame
         void CmdPushMission(string missionJson)
         {
             var mis = JsonUtility.FromJson<Mission>(missionJson);
-            PokeAlg.PushMission(serverCtx, mis);
-            var next = mis;
+            CoreAlg.PushOrUpdateMission(serverCtx.missions, mis);
+            while (true)
+            {
+                var top = CoreAlg.GetWorkingMissions(serverCtx.missions);
+                if(top == null)
+                {
+                    break;
+                }
+                PokeAlg.ProcessMission(serverCtx, top);
+            }
+            /*
+            var next = CoreAlg.GetWorkingMissions(serverCtx.missions);
             do
             {
                 next = PokeAlg.ApplyMission(serverCtx, playerId, next);
             }
             while (next != null);
-
+            */
             foreach(var c in clients)
             {
                 c.RpcUpdateContext(JsonUtility.ToJson(serverCtx));
@@ -158,10 +170,10 @@ namespace CardGame
                         {
                             GUILayout.Label("work " + i);
                         }
-                        for (var j = 0; j < w.goals.Count; ++j)
+                        for (var j = 0; j < w.Goals.Count; ++j)
                         {
                             var t = (j == w.currGoal) ? "[*]" : "[ ]";
-                            t += w.goals[j].text;
+                            t += w.Goals[j].text;
                             GUILayout.Label(t);
                         }
                     }
@@ -169,11 +181,11 @@ namespace CardGame
 
                 if (selectWork != null)
                 {
-                    var g = selectWork.goals[selectWork.currGoal];
+                    var g = selectWork.Goals[selectWork.currGoal];
                     switch (g.text)
                     {
-                        case Goal.EAT_ONE_CARD:
-                        case Goal.EAT_ONE_CARD_FINISHED:
+                        case GoalText.EAT_ONE_CARD:
+                        case GoalText.EAT_ONE_CARD_FINISHED:
                             {
                                 GUILayout.Label("================ Select Hand ================");
                                 var hasSelectOne = selectWork.HasValue(g.refs[0]);
@@ -193,7 +205,7 @@ namespace CardGame
                                 }
                                 else
                                 {
-                                    selectCard = int.Parse(selectWork.values[g.refs[0]]);
+                                    selectCard = int.Parse(selectWork.Values[g.refs[0]]);
                                     var canEat = PokeAlg.MatchCard(clientCtx, selectCard);
                                     this.canEat = canEat;
                                 }
@@ -202,15 +214,14 @@ namespace CardGame
                                 {
                                     selectCard2 = -1;
 
-                                    selectWork.values[g.refs[0]] = selectCard.ToString();
-                                    selectWork.values[g.refs[1]] = selectCard2.ToString();
-
+                                    selectWork.Values[g.refs[0]] = selectCard.ToString();
+                                    selectWork.Values[g.refs[1]] = selectCard2.ToString();
                                     Debug.Log(JsonUtility.ToJson(selectWork));
                                     CmdPushMission(JsonUtility.ToJson(selectWork));
                                 }
                             }
                             break;
-                        case Goal.DRAW_ONE_CARD:
+                        case GoalText.DRAW_ONE_CARD:
                             {
                                 if (GUILayout.Button("draw"))
                                 {
@@ -218,7 +229,7 @@ namespace CardGame
                                 }
                             }
                             break;
-                        case Goal.PASS:
+                        case GoalText.PASS:
                             {
                                 if (GUILayout.Button("pass"))
                                 {
@@ -250,15 +261,14 @@ namespace CardGame
                             if (GUILayout.Button(p.shape.ToString() + p.number))
                             {
                                 selectCard2 = c;
-                                var isValid = selectWork.goals[selectWork.currGoal].text == Goal.EAT_ONE_CARD || selectWork.goals[selectWork.currGoal].text == Goal.EAT_ONE_CARD_FINISHED;
+                                var isValid = selectWork.Goals[selectWork.currGoal].text == GoalText.EAT_ONE_CARD || selectWork.Goals[selectWork.currGoal].text == GoalText.EAT_ONE_CARD_FINISHED;
                                 if (isValid == false)
                                 {
                                     throw new System.Exception("no valid status");
                                 }
-                                var g = selectWork.goals[selectWork.currGoal];
-                                selectWork.values[g.refs[0]] = selectCard.ToString();
-                                selectWork.values[g.refs[1]] = selectCard2.ToString();
-
+                                var g = selectWork.Goals[selectWork.currGoal];
+                                selectWork.Values[g.refs[0]] = selectCard.ToString();
+                                selectWork.Values[g.refs[1]] = selectCard2.ToString();
                                 Debug.Log(JsonUtility.ToJson(selectWork));
                                 CmdPushMission(JsonUtility.ToJson(selectWork));
                             }
