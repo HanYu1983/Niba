@@ -8,11 +8,87 @@ namespace WordCard
 
     public class Context : Poke.Context
     {
-
+        public List<int> isAIPlayer = new List<int>();
     }
 
     public class DataAlg
     {
+        public static IEnumerator ProcessAI(Context ctx)
+        {
+            while (true)
+            {
+                var playerId = ctx.currPlayer;
+                if(ctx.isAIPlayer.Contains(playerId) == false)
+                {
+                    yield break;
+                }
+
+                var top = Alg.GetWorkingMissions(ctx.missions, playerId);
+                if (top == null)
+                {
+                    var mis = NewMissions(ctx, playerId);
+                    if (mis.Count == 0)
+                    {
+                        yield break;
+                    }
+                    // select best mission
+                    top = mis[0];
+                }
+                
+                var goal = top.Goals[top.currGoal];
+                switch (goal.text)
+                {
+                    default:
+                        Alg.PushOrUpdateMission(ctx.missions, top);
+                        break;
+                    case Poke.GoalText.EAT_ONE_CARD:
+                    case Poke.GoalText.EAT_ONE_CARD_FINISHED:
+                        {
+                            var hasMatch = false;
+                            var handCards = ctx.table.stacks[ctx.playerHandStack[playerId]].cards;
+                            if (handCards.Count == 0)
+                            {
+                                top.currGoal = top.Goals.Count;
+                                Alg.PushOrUpdateMission(ctx.missions, top);
+                                break;
+                            }
+                            foreach (var c in handCards)
+                            {
+                                var matchs = MatchCard(ctx, c);
+                                if(matchs.Count == 0)
+                                {
+                                    continue;
+                                }
+                                hasMatch = true;
+                                var target = matchs[0];
+                                top.Values[goal.refs[0]] = c+"";
+                                top.Values[goal.refs[1]] = target + "";
+                                Alg.PushOrUpdateMission(ctx.missions, top);
+                                break;
+                            }
+                            if(hasMatch == false)
+                            {
+                                top.Values[goal.refs[0]] = handCards[0] + "";
+                                top.Values[goal.refs[1]] = -1+"";
+                                Alg.PushOrUpdateMission(ctx.missions, top);
+                            }
+                        }
+                        break;
+                }
+
+                while (true)
+                {
+                    yield return 0;
+                    var sysTop = Alg.GetWorkingMissions(ctx.missions);
+                    if(sysTop == null)
+                    {
+                        break;
+                    }
+                    ProcessMission(ctx, sysTop);
+                }
+            }
+        }
+
         public static bool MatchCard(ConfigCard p1, ConfigCard p2)
         {
             return p1.Match == p2.Id || p2.Match == p1.Id;
