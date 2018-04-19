@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
+  m_Name: CSVClassCreator
+  m_EditorClassIdentifier: 
+  csvPath: 
+  generatePath: Demo/WordCard/Model/Config
+  csvFiles:
+  - key: ConfigCard
+    fileName: 
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: match
+      type: 2
+  splitType: 0
+  split: 
+  isFirstLetterUpper: 1
+  ns: WordCard
+  selectFile: 
+  selectRow: 

@@ -88,9 +88,8 @@ namespace HanCardAPI
                 return p;
             }
 
-            public static Context CreateContext(int playerCnt, int startPlayer)
+            public static Context CreateContext(Context ctx, int playerCnt, int startPlayer)
             {
-                var ctx = new Context();
                 ctx.playerCnt = playerCnt;
                 ctx.currPlayer = startPlayer;
                 // 先建立卡堆
@@ -123,7 +122,7 @@ namespace HanCardAPI
                     // 移到海底
                     Core.Alg.MoveCard(ctx.table, c, ctx.drawStack, ctx.seaStack);
                 }
-                var total = 6;// 24;
+                var total = 24;
                 var numPerPeople = total / playerCnt;
                 for (var i = 0; i < numPerPeople; ++i)
                 {

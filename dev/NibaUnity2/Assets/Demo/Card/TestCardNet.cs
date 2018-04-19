@@ -56,7 +56,7 @@ namespace CardGame
         void CreateCardTable()
         {
             var playerCnt = clients.Count;
-            serverCtx = PokeAlg.CreateContext(playerCnt, 0);
+            serverCtx = PokeAlg.CreateContext(new Context(), playerCnt, 0);
 
             var json = JsonUtility.ToJson(serverCtx);
             // 傳給所有對應的client
