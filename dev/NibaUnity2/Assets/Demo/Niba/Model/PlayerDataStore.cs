@@ -68,15 +68,12 @@ namespace Niba
         List<AbstractItem> exps = new List<AbstractItem>();
         public void AddExp(string id, int exp)
         {
-            var ai = new Item()
+            var ai = new AbstractItem()
             {
                 prototype = id,
                 count = exp
             };
-            exps = Alg.AddItem(
-                exps.Select(i => i.Item).ToList(),
-                ai
-            ).Select(i => i.AbstractItem).ToList();
+            Alg.AddItem(exps, ai);
         }
         public int Exp(string skillType)
         {

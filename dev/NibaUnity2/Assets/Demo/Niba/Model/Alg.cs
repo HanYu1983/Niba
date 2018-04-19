@@ -551,28 +551,110 @@ namespace Niba{
 			return Alg.ParseItem (res.Item);
 		}
 
-		public static Func<int> GetMaxCountFromItem(Item item){
-			return () => {
-				var config = ConfigItem.Get (item.prototype);
-				var maxCount = config.MaxCount;
-				return maxCount;
-			};
-		}
-        public static List<Item> AddItem(List<Item> input, Item item)
+        public static List<AbstractItem> AddItem(List<AbstractItem> input, AbstractItem item)
         {
-            var idx = input.IndexOf(item);
-            if(idx == -1)
+            var find = input.Where(i => i.prototype == item.prototype).FirstOrDefault();
+            if (find.Equals(Item.Empty))
             {
                 input.Add(item);
                 return input;
             }
+            var idx = input.IndexOf(find);
             var origin = input[idx];
             origin.count += item.count;
             input[idx] = origin;
             return input;
         }
 
+        public static List<Item> AddItem(List<Item> input, Item item)
+        {
+            var container = new List<Item>(input);
+            var shouldArrange = true;
+            var config = ConfigItem.Get(item.prototype);
+            var maxCount = config.MaxCount;
+            if (item.count < 0)
+            {
+                // 處理減
+                // 這裡只判斷數量夠不夠, 實際的減在後面
+                var allCount = input.Sum(it => {
+                    return it.prototype == item.prototype ? it.count : 0;
+                });
+                var isEnougth = allCount + item.count >= 0;
+                if (isEnougth == false)
+                {
+                    throw new HanRPGAPIException("道具數量不足", null);
+                }
+                shouldArrange = true;
+            }
+            else
+            {
+                // 處理加
+                // 如果沒有超過最大, 就直接增加COUNT並回傳
+                for (var i = 0; i < container.Count; ++i)
+                {
+                    var adjItem = container[i];
+                    if (adjItem.prototype != item.prototype)
+                    {
+                        continue;
+                    }
+                    if (adjItem.count + item.count > maxCount)
+                    {
+                        continue;
+                    }
+                    adjItem.count += item.count;
+                    container[i] = adjItem;
+                    shouldArrange = false;
+                    break;
+                }
+            }
+            if (shouldArrange == false)
+            {
+                input.Clear();
+                input.AddRange(container);
+                return input;
+            }
+            // 先加入列表再計算總數, 所以一並處理的減的部分
+            container.Add(item);
+            // 計算同一種類的道具總數
+            var sumOfCount = container.Where(obj => {
+                return obj.prototype == item.prototype;
+            }).Aggregate(0, (sum, obj) => {
+                return sum + obj.count;
+            });
+            // 一個道具在一格中的最大數量限制
+            var maxOfItem = maxCount;
+            // 依最大限制重新計算分組
+            var num = sumOfCount / maxOfItem;
+            // 最後一個剩餘
+            var remain = sumOfCount % maxOfItem;
+            // 將拿來計算的道具抽出來
+            var itemExcludeAddedItemPrototype = container.Where(obj => {
+                return obj.prototype != item.prototype;
+            });
+            // 重建要新加入的道具
+            var originItem = item;
+            originItem.count = maxOfItem;
+            var itemsShouldReAdd = Enumerable.Repeat(originItem, num);
+            if (remain > 0)
+            {
+                originItem.count = remain;
+                itemsShouldReAdd = itemsShouldReAdd.Concat(Enumerable.Repeat(originItem, 1));
+            }
+            // 加回去
+            var newItems = itemExcludeAddedItemPrototype.Concat(itemsShouldReAdd);
+            input.Clear();
+            input.AddRange(newItems);
+            return input;
+        }
+
         /*
+        public static Func<int> GetMaxCountFromItem(Item item){
+			return () => {
+				var config = ConfigItem.Get (item.prototype);
+				var maxCount = config.MaxCount;
+				return maxCount;
+			};
+		}
 		/// <summary>
 		///  新增道具，使用List強制Copy列表
 		/// </summary>
@@ -653,10 +735,10 @@ namespace Niba{
 		}
         */
     }
-	#endregion
+    #endregion
 
-	#region fusion
-	public partial class Alg{
+    #region fusion
+    public partial class Alg{
 		public static List<Item> Fusion(Item fusionTarget, List<Item> storage){
 			var requires = ParseItem (ConfigItem.Get (fusionTarget.prototype).FusionRequire);
 			var formatForSubstrct = requires.Select (item => {
@@ -1011,7 +1093,7 @@ namespace Niba{
 			}
 
 			// 將地上物轉為虛擬物件，方便計算是否符合地形需求
-			var resList = infoList.Select (info => info.Item).Aggregate (new List<Item> (), AddItem).Select(i=>i.AbstractItem);
+			var resList = infoList.Aggregate (new List<AbstractItem> (), AddItem);
 
 			// 地形判斷依Class為優先順序判斷
 			var checkTypes = Enumerable.Range (0, ConfigTerrian.ID_COUNT)
@@ -1059,10 +1141,11 @@ namespace Niba{
 					}
 				}
 			}
-			return ret.Select(str=>new Item{
+			return ret.Select(str=>new AbstractItem
+            {
 				prototype = str,
 				count = 1
-			}).Aggregate(new List<Item>(), AddItem).Select(i=>i.AbstractItem);
+			}).Aggregate(new List<AbstractItem>(), AddItem);
 		}
 
 		/// <summary>
@@ -1137,10 +1220,11 @@ namespace Niba{
 					}
 				}
 
-				return ret.Select(str=>new Item{
+				return ret.Select(str=>new AbstractItem
+                {
 					prototype = str,
 					count = 1
-				}).Aggregate(new List<Item>(), Alg.AddItem).Select(i=>i.AbstractItem);
+				}).Aggregate(new List<AbstractItem>(), Alg.AddItem);
 			};
 		}
 	}

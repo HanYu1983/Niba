@@ -25,11 +25,25 @@ namespace Niba
 				prototype = ConfigItem.ID_woodBoat,
 				count = 1
 			}, Place.Storage);
-			/*
+
+            Item item;
+            item.count = 1;
+            for (var i = 0; i < ConfigItem.ID_COUNT; ++i)
+            {
+                item.prototype = ConfigItem.Get(i).ID;
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+            }
+
+            /*
 			playerData.player.AddExp (ConfigAbility.ID_karate, 5);
 			playerData.player.AddExp (ConfigAbility.ID_tailor, 1);
 			*/
-			RequestSaveMap ();
+            RequestSaveMap ();
 			RequestSavePlayer ();
 			RequestSaveUserSettings ();
 		}

@@ -26,12 +26,6 @@ namespace Niba
 					HandleException (e);
 				}
 			}));
-			/*Item item;
-			item.count = 1;
-			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
-				item.prototype = ConfigItem.Get (i).ID;
-				model.AddItemToStorage (item, model.MapPlayer);
-			}*/
 		}
 
 		void HandleException(Exception e){
