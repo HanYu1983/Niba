@@ -6,6 +6,7 @@ using HanCardAPI.Poke;
 using HanCardAPI.Core;
 using PokeAlg = HanCardAPI.Poke.Alg;
 using CoreAlg = HanCardAPI.Core.Alg;
+using System;
 
 namespace CardGame
 {
@@ -85,12 +86,12 @@ namespace CardGame
             clientCtx = ctx;
             canEat.Clear();
             works = null;
-            selectWork = null;
+            selectWork = Mission.Empty;
 
             score = PokeAlg.CalcScore(clientCtx, clientCtx.table.stacks[clientCtx.playerEatStack[playerId]].cards);
 
             var w = CoreAlg.GetWorkingMissions(clientCtx.missions, playerId);
-            if (w != null)
+            if (w.Equals(Mission.Empty) == false)
             {
                 works = new List<Mission>();
                 works.Add(w);
@@ -106,23 +107,24 @@ namespace CardGame
         {
             var mis = JsonUtility.FromJson<Mission>(missionJson);
             CoreAlg.PushOrUpdateMission(serverCtx.missions, mis);
-            while (true)
+
+            try
             {
-                var top = CoreAlg.GetWorkingMissions(serverCtx.missions);
-                if(top == null)
+                while (true)
                 {
-                    break;
+                    var top = CoreAlg.GetWorkingMissions(serverCtx.missions);
+                    if (top.Equals(Mission.Empty))
+                    {
+                        break;
+                    }
+                    top = PokeAlg.ProcessMission(serverCtx, top);
+                    CoreAlg.UpdateMissionWithSameKey(serverCtx.missions, top);
                 }
-                PokeAlg.ProcessMission(serverCtx, top);
             }
-            /*
-            var next = CoreAlg.GetWorkingMissions(serverCtx.missions);
-            do
+            catch(Exception e)
             {
-                next = PokeAlg.ApplyMission(serverCtx, playerId, next);
+                Debug.LogWarning(e.Message);
             }
-            while (next != null);
-            */
             foreach(var c in clients)
             {
                 c.RpcUpdateContext(JsonUtility.ToJson(serverCtx));
@@ -179,7 +181,7 @@ namespace CardGame
                     }
                 }
 
-                if (selectWork != null)
+                if (selectWork.Equals(Mission.Empty) == false)
                 {
                     var g = selectWork.Goals[selectWork.currGoal];
                     switch (g.text)
@@ -208,6 +210,14 @@ namespace CardGame
                                     selectCard = int.Parse(selectWork.Values[g.refs[0]]);
                                     var canEat = PokeAlg.MatchCard(clientCtx, selectCard);
                                     this.canEat = canEat;
+
+                                    if(g.text == GoalText.EAT_ONE_CARD)
+                                    {
+                                        if (GUILayout.Button("cancel"))
+                                        {
+                                            selectWork.Values[g.refs[0]] = null;
+                                        }
+                                    }
                                 }
 
                                 if (GUILayout.Button("put sea"))

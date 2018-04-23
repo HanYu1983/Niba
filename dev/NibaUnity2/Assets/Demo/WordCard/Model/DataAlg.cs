@@ -24,7 +24,7 @@ namespace WordCard
                 }
 
                 var top = Alg.GetWorkingMissions(ctx.missions, playerId);
-                if (top == null)
+                if (top.Equals(Mission.Empty))
                 {
                     var mis = NewMissions(ctx, playerId);
                     if (mis.Count == 0)
@@ -80,7 +80,7 @@ namespace WordCard
                 {
                     yield return 0;
                     var sysTop = Alg.GetWorkingMissions(ctx.missions);
-                    if(sysTop == null)
+                    if(sysTop.Equals(Mission.Empty))
                     {
                         break;
                     }
@@ -89,9 +89,20 @@ namespace WordCard
             }
         }
 
+        public static void CreateContext(Context ctx, int playerCnt, int startPlayer)
+        {
+            Poke.Alg.CreateContext(ctx, playerCnt, startPlayer);
+        }
+
+        static List<string> ParseMatch(string str)
+        {
+            return new List<string>(str.Split(','));
+        }
+
         public static bool MatchCard(ConfigCard p1, ConfigCard p2)
         {
-            return p1.Match == p2.Id || p2.Match == p1.Id;
+            var matchs = ParseMatch(p1.Match);
+            return matchs.Contains(p2.Id);
         }
 
         public static List<int> MatchCard(Context ctx, int card)
@@ -115,7 +126,7 @@ namespace WordCard
             }
         }
 
-        public static void ProcessMission(Context ctx, Mission topMission)
+        public static Mission ProcessMission(Context ctx, Mission topMission)
         {
             var goal = topMission.Goals[topMission.currGoal];
             var player = topMission.Owner;
@@ -154,10 +165,10 @@ namespace WordCard
                     break;
                 default:
                     {
-                        Poke.Alg.ProcessMission(ctx, topMission);
+                        return Poke.Alg.ProcessMission(ctx, topMission);
                     }
-                    break;
             }
+            return topMission;
         }
     }
 }

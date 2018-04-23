@@ -11,7 +11,13 @@ namespace HanCardAPI
         [Serializable]
         public class Card
         {
-            public int key;
+            [SerializeField]
+            int key;
+            public Card(int key)
+            {
+                this.key = key;
+            }
+            public int Key { get { return key; } }
             public bool faceUp;
             public string prototype;
         }
@@ -19,7 +25,13 @@ namespace HanCardAPI
         [Serializable]
         public class CardStack
         {
-            public int key;
+            [SerializeField]
+            int key;
+            public CardStack(int key)
+            {
+                this.key = key;
+            }
+            public int Key { get { return key; } }
             public List<int> cards = new List<int>();
         }
 
@@ -40,16 +52,16 @@ namespace HanCardAPI
         }
 
         [Serializable]
-        public class Mission
+        public struct Mission : IEquatable<Mission>
         {
             [SerializeField]
-            string key = Guid.NewGuid().ToString();
+            string key;
             [SerializeField]
             int owner;
             [SerializeField]
-            List<Goal> goals = new List<Goal>();
+            List<Goal> goals;
             [SerializeField]
-            List<string> values = new List<string>();
+            List<string> values;
 
             public int currGoal;
             public int currPermissionOwner;
@@ -61,18 +73,25 @@ namespace HanCardAPI
 
             public Mission(int player)
             {
+                key = Guid.NewGuid().ToString();
+                goals = new List<Goal>();
+                values = new List<string>();
                 owner = currPermissionOwner = player;
+                currGoal = 0;
             }
 
-            public void AssignDataWithSameKey(Mission mis)
+            public bool Equals(Mission other)
+            {
+                return key == other.key;
+            }
+
+            public static Mission Empty;
+
+            /*public void AssignDataWithSameKey(Mission mis)
             {
                 if (key != mis.key)
                 {
                     throw new System.Exception("XXXX");
-                }
-                if(this == mis)
-                {
-                    return;
                 }
                 goals.Clear();
                 goals.AddRange(mis.goals);
@@ -82,7 +101,7 @@ namespace HanCardAPI
 
                 values.Clear();
                 values.AddRange(mis.values);
-            }
+            }*/
 
             public bool IsReady
             {
@@ -126,16 +145,22 @@ namespace HanCardAPI
             }
         }
 
+        public class Observer
+        {
+            public static Action<Table, int, int> OnAddCard = delegate { };
+            public static Action<Table, int, int, int> OnCardMove = delegate { };
+        }
+
         public class Alg
         {
-            public static int AddCard(Table table, int stack, string id)
+            public static int AddCard(Table table, int stack, string prototype)
             {
-                var c = new Card();
                 var key = table.cards.Count;
-                c.key = key;
-                c.prototype = id;
+                var c = new Card(key);
+                c.prototype = prototype;
                 table.cards.Add(c);
                 table.stacks[stack].cards.Add(key);
+                Observer.OnAddCard(table, stack, c.Key);
                 return key;
             }
 
@@ -153,8 +178,7 @@ namespace HanCardAPI
             public static int AddStack(Table table)
             {
                 var key = table.stacks.Count;
-                var cs = new CardStack();
-                cs.key = key;
+                var cs = new CardStack(key);
                 table.stacks.Add(cs);
                 return key;
             }
@@ -190,6 +214,10 @@ namespace HanCardAPI
             {
                 var fs = table.stacks[fromStack];
                 var ts = table.stacks[toStack];
+                if(fs.cards.Contains(key) == false)
+                {
+                    throw new Exception("no card:"+key);
+                }
                 fs.cards.Remove(key);
                 if (inverse)
                 {
@@ -199,6 +227,7 @@ namespace HanCardAPI
                 {
                     ts.cards.Add(key);
                 }
+                Observer.OnCardMove(table, fromStack, toStack, key);
             }
 
             // 遊戲一開始, 主動玩家立刻呼叫GetWorkingMissions, 取得未處理的事情
@@ -212,14 +241,22 @@ namespace HanCardAPI
                 return null;
             }*/
 
-            static Mission UpdateMissionWithSameKey(List<Mission> missions, Mission mission)
+            public static void UpdateMissionWithSameKey(List<Mission> missions, Mission mission)
             {
-                foreach (var m in missions)
+                /*foreach (var m in missions)
                 {
                     if (m.Key == mission.Key)
                     {
                         m.AssignDataWithSameKey(mission);
                         return m;
+                    }
+                }*/
+                for(var i=0; i<missions.Count; ++i)
+                {
+                    if(missions[i].Key == mission.Key)
+                    {
+                        missions[i] = mission;
+                        return;
                     }
                 }
                 throw new System.Exception("XXX");
@@ -228,7 +265,7 @@ namespace HanCardAPI
             // 主動玩家選一個任務後必須呼叫PushMission
             public static void PushOrUpdateMission(List<Mission> missions, Mission mission)
             {
-                if(mission == null)
+                if(mission.Equals(Mission.Empty))
                 {
                     throw new Exception("can no t null");
                 }
@@ -236,7 +273,7 @@ namespace HanCardAPI
                 {
                     return m.Key == mission.Key;
                 });
-                if (find != null)
+                if (find.Equals(Mission.Empty) == false)
                 {
                     UpdateMissionWithSameKey(missions, mission);
                 }
@@ -251,7 +288,7 @@ namespace HanCardAPI
             {
                 if(missions.Count == 0)
                 {
-                    return null;
+                    return Mission.Empty;
                 }
                 var topMission = missions[missions.Count - 1];
                 if (topMission.currGoal >= topMission.Goals.Count)
@@ -259,7 +296,7 @@ namespace HanCardAPI
                     missions.Remove(topMission);
                     if (missions.Count == 0)
                     {
-                        return null;
+                        return Mission.Empty;
                     }
                     topMission = missions[missions.Count - 1];
                 }
@@ -271,12 +308,12 @@ namespace HanCardAPI
                         return topMission;
                     } else
                     {
-                        return null;
+                        return Mission.Empty;
                     }
                 }
                 if (topMission.IsReady == false)
                 {
-                    return null;
+                    return Mission.Empty;
                 }
                 return topMission;
             }

@@ -122,7 +122,7 @@ namespace HanCardAPI
                     // 移到海底
                     Core.Alg.MoveCard(ctx.table, c, ctx.drawStack, ctx.seaStack);
                 }
-                var total = 24;
+                var total = 6;// 24;
                 var numPerPeople = total / playerCnt;
                 for (var i = 0; i < numPerPeople; ++i)
                 {
@@ -253,7 +253,7 @@ namespace HanCardAPI
                 return ret;
             }
 
-            public static void ProcessMission(Context ctx, Mission topMission)
+            public static Mission ProcessMission(Context ctx, Mission topMission)
             {
                 var goal = topMission.Goals[topMission.currGoal];
                 var player = topMission.Owner;
@@ -295,7 +295,7 @@ namespace HanCardAPI
                             if (cs.Count == 0)
                             {
                                 // game over
-                                return;
+                                return topMission;
                             }
                             var card1 = cs[0];
                             Core.Alg.MoveCard(ctx.table, card1, ctx.drawStack, ctx.playerHandStack[player]);
@@ -311,6 +311,7 @@ namespace HanCardAPI
                         }
                         break;
                 }
+                return topMission;
             }
             /*
             // 執行選取的任務
