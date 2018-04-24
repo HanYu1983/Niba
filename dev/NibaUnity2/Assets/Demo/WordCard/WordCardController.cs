@@ -88,6 +88,7 @@ namespace WordCard
         #endregion
 
         CardAPI.Mission selectMis = CardAPI.Mission.Empty;
+        int selectCard1 = -1;
 
         public void onSelectMission(string misKey)
         {
