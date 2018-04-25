@@ -207,6 +207,7 @@ namespace HanCardAPI
                     case Phase.Eat:
                         {
                             var m = new Mission(playerId);
+                            m.description = "撿牌";
 
                             var d = new Goal();
                             d.text = GoalText.EAT_ONE_CARD;
@@ -220,6 +221,7 @@ namespace HanCardAPI
                     case Phase.Draw:
                         {
                             var m = new Mission(playerId);
+                            m.description = "抽一張並撿牌";
 
                             var d = new Goal();
                             d.text = GoalText.DRAW_ONE_CARD;
@@ -241,6 +243,7 @@ namespace HanCardAPI
                     case Phase.End:
                         {
                             var m = new Mission(playerId);
+                            m.description = "讓過";
 
                             var d = new Goal();
                             d.text = GoalText.PASS;

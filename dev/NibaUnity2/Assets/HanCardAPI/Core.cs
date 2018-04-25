@@ -65,6 +65,7 @@ namespace HanCardAPI
 
             public int currGoal;
             public int currPermissionOwner;
+            public string description;
 
             public string Key { get { return key; } }
             public int Owner { get { return owner; } }
@@ -78,6 +79,7 @@ namespace HanCardAPI
                 values = new List<string>();
                 owner = currPermissionOwner = player;
                 currGoal = 0;
+                description = "";
             }
 
             public bool Equals(Mission other)
@@ -164,12 +166,12 @@ namespace HanCardAPI
                 return key;
             }
 
-            public static List<int> AddCards(Table table, int stack, string id, int count)
+            public static List<int> AddCards(Table table, int stack, string prototype, int count)
             {
                 var ret = new List<int>();
                 for (var i = 0; i < count; ++i)
                 {
-                    var key = AddCard(table, stack, id);
+                    var key = AddCard(table, stack, prototype);
                     ret.Add(key);
                 }
                 return ret;

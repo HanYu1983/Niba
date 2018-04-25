@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
   m_Name: CSVClassCreator
   m_EditorClassIdentifier: 
-  csvPath: 
+  csvPath: Demo/WordCard/csv
   generatePath: Demo/WordCard/Model/Config
   csvFiles:
   - key: ConfigCard
-    fileName: 
+    fileName: Data - card.tsv
     types:
     - key: id
       type: 2

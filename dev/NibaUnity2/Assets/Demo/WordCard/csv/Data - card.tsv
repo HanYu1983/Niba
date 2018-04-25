@@ -1,0 +1,4 @@
+id	name	description	match
+strong	strong	強力	power,robust
+power	power	強力	strong,robust
+robust	robut	強力	power,strong

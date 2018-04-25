@@ -4,12 +4,13 @@ using UnityEngine;
 using CardAPI = HanCardAPI.Core;
 using Poke = HanCardAPI.Poke;
 using System;
+using System.Linq;
 
 namespace WordCard
 {
     public class WordCardController : MonoBehaviour
     {
-        public WorldCardModel model;
+        public WordCardModel model;
 
         private void Start()
         {
@@ -17,7 +18,7 @@ namespace WordCard
         }
 
         #region server
-        void StartGame()
+        public void StartGame()
         {
             CardAPI.Observer.OnCardMove += OnCardMove;
             CardAPI.Observer.OnAddCard += OnCardAdd;
@@ -46,6 +47,7 @@ namespace WordCard
                     {
                         break;
                     }
+                    Debug.Log("process:" + top.description);
                     top = DataAlg.ProcessMission(model.ctx, top);
                     CardAPI.Alg.UpdateMissionWithSameKey(model.ctx.missions, top);
                 }
@@ -61,12 +63,12 @@ namespace WordCard
         #region view
         void RpcAnimateCardAdd(int stack, int card)
         {
-
+            Debug.Log("RpcAnimateCardAdd");
         }
 
         void RpcAnimateCardMove(int fromStack, int toStack, int card)
         {
-
+            Debug.Log("RpcAnimateCardMove");
         }
 
         void RpcSyncView()
@@ -81,11 +83,77 @@ namespace WordCard
             yield return 0;
         }
 
-        IEnumerator ShowCardSelection(string card)
+        List<int> storeCards;
+        IEnumerator ShowCardSelection(List<int> cards)
         {
+            storeCards = cards;
             yield return 0;
         }
         #endregion
+
+
+        private void OnGUI()
+        {
+            GUILayout.BeginArea(new Rect(100, 0, 500, 500));
+            GUILayout.Label("currPlayer:" + model.ctx.currPlayer);
+            GUILayout.Label("=== mission ===");
+            if (storeMissions != null)
+            {
+                foreach (var m in storeMissions)
+                {
+                    if (GUILayout.Button(m.description))
+                    {
+                        onSelectMission(m.Key);
+                    }
+                }
+            }
+
+            if(selectMis.Equals(CardAPI.Mission.Empty) == false)
+            {
+                if (selectMis.IsReady)
+                {
+                    if(GUILayout.Button("Commit:" + selectMis.description))
+                    {
+                        CmdPushMission(selectMis);
+                        selectMis = CardAPI.Mission.Empty;
+                    }
+                }
+                else
+                {
+                    GUILayout.Label("Process:" + selectMis.description);
+                }
+            }
+
+            GUILayout.Label("=== hand ===");
+            if (storeCards != null)
+            {
+                foreach (var cid in storeCards)
+                {
+                    var c = model.ctx.table.cards[cid];
+                    var cfg = ConfigCard.Get(c.prototype);
+                    if (GUILayout.Button(cfg.Name))
+                    {
+                        onSelectCard1(c.Key);
+                    }
+                }
+            }
+
+            GUILayout.Label("=== sea ===");
+            foreach (var cid in model.ctx.table.stacks[model.ctx.seaStack].cards)
+            {
+                var c = model.ctx.table.cards[cid];
+                var cfg = ConfigCard.Get(c.prototype);
+                if (GUILayout.Button(cfg.Name + "[" + cfg.Description + "]"))
+                {
+                    onSelectCard2(c.Key);
+                }
+            }
+            
+
+
+            GUILayout.EndArea();
+        }
+
 
         CardAPI.Mission selectMis = CardAPI.Mission.Empty;
         int selectCard1 = -1;
@@ -96,19 +164,42 @@ namespace WordCard
             {
                 return;
             }
-            var m = storeMissions[0];
+            var m = storeMissions.Where(mis => mis.Key == misKey).FirstOrDefault();
+            if (m.Equals(CardAPI.Mission.Empty))
+            {
+                throw new Exception("XXXX:" + misKey);
+            }
             var g = m.Goals[m.currGoal];
             switch (g.text)
             {
                 case Poke.GoalText.EAT_ONE_CARD:
+                    StartCoroutine(ShowCardSelection(model.ctx.table.stacks[model.ctx.playerHandStack[Player]].cards));
                     break;
                 case Poke.GoalText.EAT_ONE_CARD_FINISHED:
                     break;
             }
             selectMis = m;
         }
+        
+        public void onSelectCard1(int cardKey)
+        {
+            if (selectMis.Equals(CardAPI.Mission.Empty))
+            {
+                return;
+            }
+            var m = selectMis;
+            var g = m.Goals[m.currGoal];
+            switch (g.text)
+            {
+                case Poke.GoalText.EAT_ONE_CARD:
+                    {
+                        m.Values[g.refs[0]] = cardKey + "";
+                    }
+                    break;
+            }
+        }
 
-        public void onSelectCard(string cardKey)
+        public void onSelectCard2(int cardKey)
         {
             if (selectMis.Equals(CardAPI.Mission.Empty))
             {
@@ -121,24 +212,25 @@ namespace WordCard
                 case Poke.GoalText.EAT_ONE_CARD:
                 case Poke.GoalText.EAT_ONE_CARD_FINISHED:
                     {
-                        
+                        m.Values[g.refs[1]] = cardKey + "";
                     }
                     break;
             }
         }
-
-        
 
         void RpcSyncContext(Context ctx)
         {
             var top = CardAPI.Alg.GetWorkingMissions(ctx.missions, Player);
             if (top.Equals(CardAPI.Mission.Empty))
             {
+                Debug.Log("0");
                 var mis = DataAlg.NewMissions(ctx, Player);
-                if(mis.Count == 1)
+                Debug.Log("1:"+mis.Count);
+                if (mis.Count == 1)
                 {
                     var m = mis[0];
                     var g = m.Goals[m.currGoal];
+                    Debug.Log(g.text);
                     switch (g.text)
                     {
                         case Poke.GoalText.PASS:
@@ -150,10 +242,7 @@ namespace WordCard
                             }
                     }
                 }
-                else
-                {
-                    StartCoroutine(ShowMissionMenu(mis));
-                }
+                StartCoroutine(ShowMissionMenu(mis));
             }
             else
             {
@@ -164,7 +253,7 @@ namespace WordCard
 
         int Player {
             get{
-                return 0;
+                return model.ctx.currPlayer;
             }
         }
 

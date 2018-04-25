@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace WordCard
 {
-    public class WorldCardModel : MonoBehaviour
+    public class WordCardModel : MonoBehaviour
     {
         public Context ctx = new Context();
     }

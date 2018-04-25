@@ -91,7 +91,59 @@ namespace WordCard
 
         public static void CreateContext(Context ctx, int playerCnt, int startPlayer)
         {
-            Poke.Alg.CreateContext(ctx, playerCnt, startPlayer);
+            ctx.playerCnt = playerCnt;
+            ctx.currPlayer = startPlayer;
+            // 先建立卡堆
+            for (var i = 0; i < playerCnt; ++i)
+            {
+                // 玩家手牌
+                ctx.playerHandStack.Add(Alg.AddStack(ctx.table));
+                // 玩家撿到的牌
+                ctx.playerEatStack.Add(Alg.AddStack(ctx.table));
+            }
+            // 海底
+            ctx.seaStack = Alg.AddStack(ctx.table);
+            // 抽牌堆
+            ctx.drawStack = Alg.AddStack(ctx.table);
+
+            // 再建立撲克牌
+            for (var i = 0; i < 52; ++i)
+            {
+                var proto = ConfigCard.Get(i % ConfigCard.ID_COUNT).Id;
+                // 放入抽牌堆
+                Alg.AddCard(ctx.table, ctx.drawStack, proto);
+            }
+            // 洗牌
+            Alg.Shuffle(ctx.table, ctx.drawStack);
+            // 取出4張
+            var top4cards = Alg.PeekCard(ctx.table, ctx.drawStack, 4);
+            foreach (var c in top4cards)
+            {
+                // 翻開
+                ctx.table.cards[c].faceUp = true;
+                // 移到海底
+                Alg.MoveCard(ctx.table, c, ctx.drawStack, ctx.seaStack);
+            }
+            var total = 6;// 24;
+            var numPerPeople = total / playerCnt;
+            for (var i = 0; i < numPerPeople; ++i)
+            {
+                for (var j = 0; j < playerCnt; ++j)
+                {
+                    var top = Alg.PeekCard(ctx.table, ctx.drawStack, 1);
+                    if (top.Count <= 0)
+                    {
+                        break;
+                    }
+                    Alg.MoveCard(ctx.table, top[0], ctx.drawStack, ctx.playerHandStack[j]);
+                }
+            }
+            // 將玩家手牌整理
+            for (var j = 0; j < playerCnt; ++j)
+            {
+                var s = ctx.playerHandStack[j];
+                ctx.table.stacks[s].cards.Sort();
+            }
         }
 
         static List<string> ParseMatch(string str)
@@ -146,6 +198,7 @@ namespace WordCard
                             // 配對錯誤, 無法出牌
                             // 只切換階段
                             ctx.phase = Poke.Phase.End;
+                            Debug.Log("配對錯誤, 無法出牌");
                         }
                         else
                         {
