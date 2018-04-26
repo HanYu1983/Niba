@@ -554,7 +554,7 @@ namespace Niba{
         public static List<AbstractItem> AddItem(List<AbstractItem> input, AbstractItem item)
         {
             var find = input.Where(i => i.prototype == item.prototype).FirstOrDefault();
-            if (find.Equals(Item.Empty))
+            if (find.Equals(AbstractItem.Empty))
             {
                 input.Add(item);
                 return input;
