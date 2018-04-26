@@ -34,10 +34,16 @@ namespace WordCard
         void OnCardAdd(int stack, int card)
         {
             RpcAnimateCardAdd(stack, card);
+            
         }
         void OnCardMove(int fromStack, int toStack, int card)
         {
             RpcAnimateCardMove(fromStack, toStack, card);
+            if (model.ctx.playerHandStack[Player] == toStack)
+            {
+                var cfg = ConfigCard.Get(model.ctx.table.cards[card].prototype);
+                RpcMessage(string.Format("你抽到:"+cfg.Name));
+            }
         }
         
         void CmdPushMission(CardAPI.Mission mis)
@@ -111,9 +117,10 @@ namespace WordCard
         }
         #endregion
 
+        public Font font;
+        private void OnGUI(){
+            GUI.skin.font = font;
 
-        private void OnGUI()
-        {
             GUILayout.BeginArea(new Rect(100, 0, 500, 800));
             GUILayout.Label("currPlayer:" + model.ctx.currPlayer);
             GUILayout.Label("=== mission ===");
@@ -197,7 +204,6 @@ namespace WordCard
 
 
         CardAPI.Mission selectMis = CardAPI.Mission.Empty;
-        int selectCard1 = -1;
 
         public void onSelectMission(string misKey)
         {

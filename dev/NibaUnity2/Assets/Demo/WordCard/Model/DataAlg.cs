@@ -149,12 +149,22 @@ namespace WordCard
 
         static List<string> ParseMatch(string str)
         {
-            return new List<string>(str.Split(','));
+            var ret = new List<string>(str.Split(','));
+            /*if(ret.Count == 0)
+            {
+                return new List<string>() { str };
+            }*/
+            return ret;
         }
 
         public static bool MatchCard(ConfigCard p1, ConfigCard p2)
         {
             var matchs = ParseMatch(p1.Match);
+            Debug.Log("------");
+            foreach(var m in matchs)
+            {
+                Debug.Log(m);
+            }
             return matchs.Contains(p2.Id);
         }
 
@@ -199,7 +209,9 @@ namespace WordCard
                         }
                         else
                         {
-                            var isMatch = MatchCard(ctx, card1).Contains(card2);
+                            var c1 = ctx.table.cards[card1];
+                            var c2 = ctx.table.cards[card2];
+                            var isMatch = MatchCard(ConfigCard.Get(c1.prototype), ConfigCard.Get(c2.prototype));
                             ctx.table.cards[card1].faceUp = true;
 
                             if (isMatch == false)
