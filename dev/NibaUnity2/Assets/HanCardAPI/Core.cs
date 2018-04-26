@@ -40,6 +40,9 @@ namespace HanCardAPI
         {
             public List<Card> cards = new List<Card>();
             public List<CardStack> stacks = new List<CardStack>();
+
+            public Action<int, int> OnAddCard = delegate { };
+            public Action<int, int, int> OnCardMove = delegate { };
         }
 
         [Serializable]
@@ -147,12 +150,6 @@ namespace HanCardAPI
             }
         }
 
-        public class Observer
-        {
-            public static Action<Table, int, int> OnAddCard = delegate { };
-            public static Action<Table, int, int, int> OnCardMove = delegate { };
-        }
-
         public class Alg
         {
             public static int AddCard(Table table, int stack, string prototype)
@@ -162,7 +159,7 @@ namespace HanCardAPI
                 c.prototype = prototype;
                 table.cards.Add(c);
                 table.stacks[stack].cards.Add(key);
-                Observer.OnAddCard(table, stack, c.Key);
+                table.OnAddCard(stack, c.Key);
                 return key;
             }
 
@@ -229,7 +226,7 @@ namespace HanCardAPI
                 {
                     ts.cards.Add(key);
                 }
-                Observer.OnCardMove(table, fromStack, toStack, key);
+                table.OnCardMove(fromStack, toStack, key);
             }
 
             // 遊戲一開始, 主動玩家立刻呼叫GetWorkingMissions, 取得未處理的事情

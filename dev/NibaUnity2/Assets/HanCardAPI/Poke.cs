@@ -54,6 +54,7 @@ namespace HanCardAPI
 
             public int playerCnt;
             public int currPlayer;
+            public Action<int,int> OnPlayerChange = delegate { };
 
             public Phase phase = Phase.Eat;
 
@@ -308,8 +309,12 @@ namespace HanCardAPI
                         break;
                     case GoalText.PASS:
                         {
+                            var oldPlayer = ctx.currPlayer;
+
                             ctx.phase = Phase.Eat;
                             ctx.currPlayer = (ctx.currPlayer + 1) % ctx.playerCnt;
+
+                            ctx.OnPlayerChange(oldPlayer, ctx.currPlayer);
                             topMission.currGoal += 1;
                         }
                         break;

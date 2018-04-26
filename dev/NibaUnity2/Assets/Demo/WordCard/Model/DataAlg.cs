@@ -84,7 +84,8 @@ namespace WordCard
                     {
                         break;
                     }
-                    ProcessMission(ctx, sysTop);
+                    var info = "";
+                    ProcessMission(ctx, sysTop, ref info);
                 }
             }
         }
@@ -178,7 +179,7 @@ namespace WordCard
             }
         }
 
-        public static Mission ProcessMission(Context ctx, Mission topMission)
+        public static Mission ProcessMission(Context ctx, Mission topMission, ref string info)
         {
             var goal = topMission.Goals[topMission.currGoal];
             var player = topMission.Owner;
@@ -190,27 +191,37 @@ namespace WordCard
                     {
                         var card1 = int.Parse(topMission.Values[goal.refs[0]]);
                         var card2 = int.Parse(topMission.Values[goal.refs[1]]);
-                        var isMatch = MatchCard(ctx, card1).Contains(card2);
-                        ctx.table.cards[card1].faceUp = true;
-
-                        if (isMatch == false)
+                        if(card2 == -1)
                         {
-                            // 配對錯誤, 無法出牌
-                            // 只切換階段
+                            // 丟到海底
+                            Alg.MoveCard(ctx.table, card1, ctx.playerHandStack[player], ctx.seaStack);
                             ctx.phase = Poke.Phase.End;
-                            Debug.Log("配對錯誤, 無法出牌");
                         }
                         else
                         {
-                            Alg.MoveCard(ctx.table, card1, ctx.playerHandStack[player], ctx.playerEatStack[player]);
-                            Alg.MoveCard(ctx.table, card2, ctx.seaStack, ctx.playerEatStack[player]);
-                            if (goal.text == Poke.GoalText.EAT_ONE_CARD_FINISHED)
+                            var isMatch = MatchCard(ctx, card1).Contains(card2);
+                            ctx.table.cards[card1].faceUp = true;
+
+                            if (isMatch == false)
                             {
+                                // 配對錯誤, 無法出牌
+                                // 只切換階段
                                 ctx.phase = Poke.Phase.End;
+                                info = "不符配對規則. 罰無法出牌";
+                                Debug.Log(info);
                             }
                             else
                             {
-                                ctx.phase = Poke.Phase.Draw;
+                                Alg.MoveCard(ctx.table, card1, ctx.playerHandStack[player], ctx.playerEatStack[player]);
+                                Alg.MoveCard(ctx.table, card2, ctx.seaStack, ctx.playerEatStack[player]);
+                                if (goal.text == Poke.GoalText.EAT_ONE_CARD_FINISHED)
+                                {
+                                    ctx.phase = Poke.Phase.End;
+                                }
+                                else
+                                {
+                                    ctx.phase = Poke.Phase.Draw;
+                                }
                             }
                         }
                         topMission.currGoal += 1;

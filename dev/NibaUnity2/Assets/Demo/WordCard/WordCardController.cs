@@ -20,17 +20,22 @@ namespace WordCard
         #region server
         public void StartGame()
         {
-            CardAPI.Observer.OnCardMove += OnCardMove;
-            CardAPI.Observer.OnAddCard += OnCardAdd;
+            model.ctx.table.OnCardMove += OnCardMove;
+            model.ctx.table.OnAddCard += OnCardAdd;
+            model.ctx.OnPlayerChange += OnPlayerChange;
             DataAlg.CreateContext(model.ctx, 2, 0);
             RpcSyncContext(model.ctx);
             RpcSyncView();
         }
-        void OnCardAdd(CardAPI.Table table, int stack, int card)
+        void OnPlayerChange(int old, int curr)
+        {
+            RpcMessage("輪到玩家:"+curr);
+        }
+        void OnCardAdd(int stack, int card)
         {
             RpcAnimateCardAdd(stack, card);
         }
-        void OnCardMove(CardAPI.Table table, int fromStack, int toStack, int card)
+        void OnCardMove(int fromStack, int toStack, int card)
         {
             RpcAnimateCardMove(fromStack, toStack, card);
         }
@@ -48,27 +53,42 @@ namespace WordCard
                         break;
                     }
                     Debug.Log("process:" + top.description);
-                    top = DataAlg.ProcessMission(model.ctx, top);
+                    var info = "";
+                    top = DataAlg.ProcessMission(model.ctx, top, ref info);
                     CardAPI.Alg.UpdateMissionWithSameKey(model.ctx.missions, top);
+
+                    if(info != "")
+                    {
+                        RpcMessage(info);
+                    }
                 }
             }
             catch (Exception e)
             {
                 Debug.LogWarning(e.Message);
+                RpcMessage(e.Message);
             }
             RpcSyncContext(model.ctx);
         }
         #endregion
 
         #region view
+        List<string> animateList = new List<string>();
         void RpcAnimateCardAdd(int stack, int card)
         {
             Debug.Log("RpcAnimateCardAdd");
+            animateList.Insert(0, "RpcAnimateCardAdd");
         }
 
         void RpcAnimateCardMove(int fromStack, int toStack, int card)
         {
             Debug.Log("RpcAnimateCardMove");
+            animateList.Insert(0, "RpcAnimateCardMove");
+        }
+
+        void RpcMessage(string msg)
+        {
+            animateList.Insert(0, "RpcMessage:"+msg);
         }
 
         void RpcSyncView()
@@ -94,7 +114,7 @@ namespace WordCard
 
         private void OnGUI()
         {
-            GUILayout.BeginArea(new Rect(100, 0, 500, 500));
+            GUILayout.BeginArea(new Rect(100, 0, 500, 800));
             GUILayout.Label("currPlayer:" + model.ctx.currPlayer);
             GUILayout.Label("=== mission ===");
             if (storeMissions != null)
@@ -112,7 +132,7 @@ namespace WordCard
             {
                 if (selectMis.IsReady)
                 {
-                    if(GUILayout.Button("Commit:" + selectMis.description))
+                    if(GUILayout.Button("確認:" + selectMis.description))
                     {
                         CmdPushMission(selectMis);
                         selectMis = CardAPI.Mission.Empty;
@@ -120,8 +140,20 @@ namespace WordCard
                 }
                 else
                 {
-                    GUILayout.Label("Process:" + selectMis.description);
+                    GUILayout.Label("玩家思考中:" + selectMis.description);
                 }
+
+                if (selectMis.Equals(CardAPI.Mission.Empty) == false)
+                {
+                    foreach (var g in selectMis.Goals)
+                    {
+                        GUILayout.Label(string.Format("[{0}]{1}", g == selectMis.Goals[selectMis.currGoal] ? "*" : "", g.text));
+                    }
+                }
+            }
+            else
+            {
+                GUILayout.Label("請選擇一個任務");
             }
 
             GUILayout.Label("=== hand ===");
@@ -136,9 +168,14 @@ namespace WordCard
                         onSelectCard1(c.Key);
                     }
                 }
+                
             }
 
             GUILayout.Label("=== sea ===");
+            if (GUILayout.Button("海底"))
+            {
+                onSelectCard2(-1);
+            }
             foreach (var cid in model.ctx.table.stacks[model.ctx.seaStack].cards)
             {
                 var c = model.ctx.table.cards[cid];
@@ -148,8 +185,12 @@ namespace WordCard
                     onSelectCard2(c.Key);
                 }
             }
-            
 
+            GUILayout.Label("=== animate ===");
+            foreach(var s in animateList)
+            {
+                GUILayout.Label(s);
+            }
 
             GUILayout.EndArea();
         }
@@ -162,12 +203,13 @@ namespace WordCard
         {
             if(storeMissions == null)
             {
+                Debug.LogWarning("storeMissions == null");
                 return;
             }
             var m = storeMissions.Where(mis => mis.Key == misKey).FirstOrDefault();
             if (m.Equals(CardAPI.Mission.Empty))
             {
-                throw new Exception("XXXX:" + misKey);
+                throw new Exception("mission not found:" + misKey);
             }
             var g = m.Goals[m.currGoal];
             switch (g.text)
@@ -176,6 +218,7 @@ namespace WordCard
                     StartCoroutine(ShowCardSelection(model.ctx.table.stacks[model.ctx.playerHandStack[Player]].cards));
                     break;
                 case Poke.GoalText.EAT_ONE_CARD_FINISHED:
+                    StartCoroutine(ShowCardSelection(new List<int>()));
                     break;
             }
             selectMis = m;
@@ -196,7 +239,15 @@ namespace WordCard
                         m.Values[g.refs[0]] = cardKey + "";
                     }
                     break;
+                case Poke.GoalText.EAT_ONE_CARD_FINISHED:
+                    {
+                        Debug.LogWarning("can not select card1");
+                    }
+                    break;
             }
+            var c = model.ctx.table.cards[cardKey];
+            var cfg = ConfigCard.Get(c.prototype);
+            RpcMessage(string.Format("你將要丟出{0}", cfg.Name));
         }
 
         public void onSelectCard2(int cardKey)
@@ -216,6 +267,16 @@ namespace WordCard
                     }
                     break;
             }
+            if(cardKey < 0)
+            {
+                RpcMessage("你將要丟到海底");
+            }
+            else
+            {
+                var c = model.ctx.table.cards[cardKey];
+                var cfg = ConfigCard.Get(c.prototype);
+                RpcMessage(string.Format("你將要配對{0}", cfg.Name));
+            }
         }
 
         void RpcSyncContext(Context ctx)
@@ -223,19 +284,15 @@ namespace WordCard
             var top = CardAPI.Alg.GetWorkingMissions(ctx.missions, Player);
             if (top.Equals(CardAPI.Mission.Empty))
             {
-                Debug.Log("0");
                 var mis = DataAlg.NewMissions(ctx, Player);
-                Debug.Log("1:"+mis.Count);
                 if (mis.Count == 1)
                 {
                     var m = mis[0];
                     var g = m.Goals[m.currGoal];
-                    Debug.Log(g.text);
                     switch (g.text)
                     {
                         case Poke.GoalText.PASS:
                         case Poke.GoalText.DRAW_ONE_CARD:
-                        case Poke.GoalText.EAT_ONE_CARD_FINISHED:
                             {
                                 CmdPushMission(m);
                                 return;
@@ -246,9 +303,17 @@ namespace WordCard
             }
             else
             {
-                StartCoroutine(ShowMissionMenu(new List<CardAPI.Mission>() { top }));
+                //StartCoroutine(ShowMissionMenu(new List<CardAPI.Mission>() { top }));
+                //onSelectMission(top.Key);
+                StartCoroutine(ShowMissionAndSelect(new List<CardAPI.Mission>() { top }, top.Key));
             }
            
+        }
+
+        IEnumerator ShowMissionAndSelect(List<CardAPI.Mission> mis, string misKey)
+        {
+            yield return ShowMissionMenu(mis);
+            onSelectMission(misKey);
         }
 
         int Player {
