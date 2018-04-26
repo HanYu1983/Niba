@@ -6001,6 +6001,7 @@ GameObject:
   - component: {fileID: 1308769473}
   - component: {fileID: 1308769472}
   - component: {fileID: 1308769475}
+  - component: {fileID: 1308769476}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -6060,6 +6061,18 @@ MonoBehaviour:
   unitList: {fileID: 1931082943}
   weaponList: {fileID: 2085434096}
   weaponDataProvider: {fileID: 2085434097}
+--- !u!114 &1308769476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1308769471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f286bc1e50eb45f4ea6cbc7834f60d68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  font: {fileID: 12800000, guid: 794d1459020cad04380a4bb4974b55d8, type: 3}
 --- !u!1 &1349396724
 GameObject:
   m_ObjectHideFlags: 0

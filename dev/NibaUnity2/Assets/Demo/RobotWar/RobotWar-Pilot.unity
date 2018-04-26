@@ -245,6 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 2889053}
+  isConfigId: 0
   txt_name: {fileID: 1048783688}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -486,6 +487,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 98124677}
+  isConfigId: 0
   txt_name: {fileID: 1412284395}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -1234,6 +1236,7 @@ GameObject:
   - component: {fileID: 214695482}
   - component: {fileID: 214695481}
   - component: {fileID: 214695484}
+  - component: {fileID: 214695485}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -1292,6 +1295,18 @@ MonoBehaviour:
   selectPilotKeyRef: {fileID: 587733247}
   pilotList: {fileID: 294053902}
   unitList: {fileID: 1081997049}
+--- !u!114 &214695485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 214695480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f286bc1e50eb45f4ea6cbc7834f60d68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  font: {fileID: 12800000, guid: 794d1459020cad04380a4bb4974b55d8, type: 3}
 --- !u!1 &264638020
 GameObject:
   m_ObjectHideFlags: 0
@@ -1652,6 +1667,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 391645664}
+  isConfigId: 0
   txt_name: {fileID: 1956526332}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -2901,6 +2917,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 902904787}
+  isConfigId: 0
   txt_name: {fileID: 42958099}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -3124,6 +3141,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 915787471}
+  isConfigId: 0
   txt_name: {fileID: 2040481584}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -3883,6 +3901,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 1081375297}
+  isConfigId: 0
   txt_name: {fileID: 2085081567}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}
@@ -6665,6 +6684,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   keyRef: {fileID: 687711703}
+  isConfigId: 0
   txt_name: {fileID: 1300119675}
   txt_pilot: {fileID: 0}
   txt_desc: {fileID: 0}

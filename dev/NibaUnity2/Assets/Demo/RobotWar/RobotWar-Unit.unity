@@ -2990,6 +2990,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitKeyRef: {fileID: 619903846}
+  currLevels:
+    hp: 0
+    en: 0
+    armor: 0
+    speed: 0
+    power: 0
   txt_hp: {fileID: 1662759327}
   txt_en: {fileID: 30549743}
   txt_power: {fileID: 319755361}
@@ -4964,6 +4970,7 @@ GameObject:
   - component: {fileID: 1308769474}
   - component: {fileID: 1308769473}
   - component: {fileID: 1308769472}
+  - component: {fileID: 1308769475}
   m_Layer: 0
   m_Name: _SceneScope
   m_TagString: Untagged
@@ -5007,6 +5014,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1308769475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1308769471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f286bc1e50eb45f4ea6cbc7834f60d68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  font: {fileID: 12800000, guid: 794d1459020cad04380a4bb4974b55d8, type: 3}
 --- !u!1 &1340511275
 GameObject:
   m_ObjectHideFlags: 0

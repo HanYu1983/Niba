@@ -6,6 +6,7 @@ using HanUtil;
 using System.Linq;
 using System.IO;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Niba
 {
@@ -274,37 +275,50 @@ namespace Niba
 			}
 		}
 
-		#region persistent
-		bool Load(){
-			var persistentDataPath = Application.persistentDataPath;
+        #region persistent
 
-			var playerPath = persistentDataPath + "/playerData.json";
-			if (File.Exists (playerPath) == false) {
-				return false;
-			} else {
-				var playerMemoto = File.ReadAllText (playerPath);
-				playerData = PlayerDataStore.FromMemonto (playerMemoto);
-			}
+#if UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID || UNITY_EDITOR
+        bool Load()
+        {
+            var persistentDataPath = Application.persistentDataPath;
 
-			var mapPath = persistentDataPath + "/mapData.json";
-			if (File.Exists (mapPath) == false) {
-				return false;
-			} else {
-				var mapMemoto = File.ReadAllText (mapPath);
-				mapData = MapDataStore.FromMemonto (mapMemoto);
-			}
+            var playerPath = persistentDataPath + "/playerData.json";
+            if (File.Exists(playerPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var playerMemoto = File.ReadAllText(playerPath);
+                playerData = PlayerDataStore.FromMemonto(playerMemoto);
+            }
 
-			var userSettingsPath = persistentDataPath + "/userSettings.json";
-			// userSettings不存在的話沒差
-			if (File.Exists (userSettingsPath) == false) {
-				// ignore
-			} else {
-				var userMemoto = File.ReadAllText (userSettingsPath);
-				user = UserSettings.FromMemonto (userMemoto);	
-			}
-			return true;
-		}
-		HashSet<string> saveTargets = new HashSet<string>();
+            var mapPath = persistentDataPath + "/mapData.json";
+            if (File.Exists(mapPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var mapMemoto = File.ReadAllText(mapPath);
+                mapData = MapDataStore.FromMemonto(mapMemoto);
+            }
+
+            var userSettingsPath = persistentDataPath + "/userSettings.json";
+            // userSettings不存在的話沒差
+            if (File.Exists(userSettingsPath) == false)
+            {
+                // ignore
+            }
+            else
+            {
+                var userMemoto = File.ReadAllText(userSettingsPath);
+                user = UserSettings.FromMemonto(userMemoto);
+            }
+            return true;
+        }
+
+        HashSet<string> saveTargets = new HashSet<string>();
 		void RequestSavePlayer(){
 			SavePlayerDiskWorker (Application.persistentDataPath);
 			saveTargets.Add ("player");
@@ -364,7 +378,76 @@ namespace Niba
 			});
 			savingThread.Start ();
 		}
-		#endregion
-	}
+#elif UNITY_WEBGL
+        [DllImport("__Internal")]
+        public static extern string PersistentDataPath();
+        [DllImport("__Internal")]
+        public static extern bool IsFileExist(string path);
+        [DllImport("__Internal")]
+        public static extern string ReadAllText(string path);
+        [DllImport("__Internal")]
+        public static extern void DeleteFile(string path);
+        [DllImport("__Internal")]
+        public static extern void WriteAllText(string path, string data);
+
+        bool Load()
+        {
+            var persistentDataPath = "niba";
+
+            var playerPath = persistentDataPath + "/playerData.json";
+            if (IsFileExist(playerPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var playerMemoto = ReadAllText(playerPath);
+                playerData = PlayerDataStore.FromMemonto(playerMemoto);
+            }
+
+            var mapPath = persistentDataPath + "/mapData.json";
+            if (IsFileExist(mapPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var mapMemoto = ReadAllText(mapPath);
+                mapData = MapDataStore.FromMemonto(mapMemoto);
+            }
+
+            var userSettingsPath = persistentDataPath + "/userSettings.json";
+            // userSettings不存在的話沒差
+            if (IsFileExist(userSettingsPath) == false)
+            {
+                // ignore
+            }
+            else
+            {
+                var userMemoto = ReadAllText(userSettingsPath);
+                user = UserSettings.FromMemonto(userMemoto);
+            }
+            return true;
+        }
+
+        void RequestSavePlayer()
+        {
+            var memonto = playerData.GetMemonto();
+            WriteAllText("niba/playerData.json", memonto);
+        }
+        void RequestSaveMap()
+        {
+            var memonto = mapData.GetMemonto();
+            WriteAllText("niba/mapData.json", memonto);
+        }
+        void RequestSaveUserSettings()
+        {
+            var memonto = user.GetMemonto();
+            WriteAllText("niba/userSettings.json", memonto);
+        }
+#endif
+
+            #endregion
+        }
 }
 
