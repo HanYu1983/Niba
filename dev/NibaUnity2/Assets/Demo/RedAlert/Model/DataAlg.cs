@@ -100,6 +100,28 @@ namespace RedAlert
             }
         }
 
+        // 取得建物列表
+        public static IEnumerable<Building> GetBuildingMenu(Context ctx, int player)
+        {
+            return ctx.buildings.Values.Where(b =>
+            {
+                if(b.player != player)
+                {
+                    return false;
+                }
+                var hasUnitCanBuild = GetEntities("unit").Any(u => u.HostBuilding == b.prototype);
+                return hasUnitCanBuild;
+            });
+        }
+        
+        // 依建物取得可建列表, 包含建物和單位
+        public static IEnumerable<ConfigEntity> GetBuildMenu(Context ctx, int player, int building)
+        {
+            var b = ctx.buildings[building];
+            return GetEntities().Where(e => e.HostBuilding == b.prototype);
+        }
+
+        // 發射武器, 回傳true代表發射成功
         public static bool FireWeapon(Context ctx, int weapon)
         {
             var w = ctx.weapons[weapon];
@@ -111,49 +133,46 @@ namespace RedAlert
             return true;
         }
 
+        // 取得單位的武器
         public static IEnumerable<Weapon> GetUnitWeapon(Context ctx, int player, int unit)
         {
             var u = ctx.units[unit];
-            var ownTechs = ctx.techs.Values.Where(t => t.player == player);
-            var weapons = ctx.weapons.Values.Where(w =>
-            {
-                if(w.unit != u.Key)
-                {
-                    return false;
-                }
-                var wcfg = ConfigWeapon.Get(w.prototype);
-                var requestTechs = wcfg.TechDependencies.Split(',');
-                var isMatchRequest = ownTechs.TakeWhile(t => requestTechs.Contains(t.prototype)).All(t => t.enabled);
-                return isMatchRequest;
-            });
+            var weapons = ctx.weapons.Values.Where(w => w.unit == u.Key);
             return weapons;
         }
-         
-        public static void Research(Context ctx, int player, int techKey)
+        
+        // 是否能研發
+        public static string IsCanResearch(Context ctx, int player, int techKey)
         {
             var tech = ctx.techs[techKey];
             if (tech.enabled)
             {
-                throw new System.Exception("already enable");
+                return "已研發完成";
             }
+            // 判斷前置科技
             var cfg = ConfigTech.Get(tech.prototype);
-            var dep = cfg.TechDependencies.Split(',');
-            foreach(var d in dep)
+            if(string.IsNullOrEmpty(cfg.TechDependencies) == false)
             {
-                var hasDepend = ctx.techs.Values.Where(t => t.prototype == d && t.enabled).FirstOrDefault() != null;
-                if(hasDepend == false)
+                var dep = cfg.TechDependencies.Split(',');
+                foreach (var d in dep)
                 {
-                    throw new System.Exception("depends on "+d);
+                    var hasDepend = ctx.techs.Values.Where(t => t.prototype == d && t.enabled).FirstOrDefault() != null;
+                    if (hasDepend == false)
+                    {
+                        return "缺少前置科技:"+d;
+                    }
                 }
             }
+            // 消費
             if(ctx.money[player] < cfg.Cost)
             {
-                throw new System.Exception("money is not enough");
+                return "錢不夠";
             }
-            ctx.money[player] -= cfg.Cost;
-            tech.enabled = true;
+            return null;
         }
 
+        // 取得建物的科技
+        // 同prototype的建物會取得同樣的科技
         public static IEnumerable<Tech> GetBuildingTech(Context ctx, int player, string buildingPrototype)
         {
             return ctx.techs.Values.Where(t =>
@@ -171,35 +190,51 @@ namespace RedAlert
             });
         }
 
-        public static bool IsCanBuild(Context ctx, int player, string entityPrototype)
+        // 是否可建造
+        public static string IsCanBuild(Context ctx, int player, string entityPrototype)
         {
-            var requestTechs = ConfigEntity.Get(entityPrototype).TechDependencies.Split(',');
-            var ownTechs = ctx.techs.Values.Where(t => t.player == player);
-            var isMatchRequest = ownTechs.TakeWhile(t => requestTechs.Contains(t.prototype)).All(t => t.enabled);
-            return isMatchRequest;
+            // 需求科技
+            var requestTechs = string.IsNullOrEmpty(ConfigEntity.Get(entityPrototype).TechDependencies) ?
+                ConfigEntity.Get(entityPrototype).TechDependencies.Split(',') : 
+                new string[0];
+            // 擁有建物
+            var ownBuilds = ctx.buildings.Values.Where(b=>b.player == player).Select(b => b.prototype).Distinct().ToList();
+            foreach(var r in requestTechs)
+            {
+                // 取得現有科技
+                var ownTech = ctx.techs.Values.Where(t => t.prototype == r).FirstOrDefault();
+                if(ownTech == null)
+                {
+                    return "科技不足:"+r;
+                }
+                // 如果現有科技的建物不存在就不能建造
+                var ownTechCfg = ConfigTech.Get(ownTech.prototype);
+                if (ownBuilds.Contains(ownTechCfg.HostEntity) == false)
+                {
+                    return "科技建物已不存在:" + ownTechCfg.HostEntity;
+                }
+                // 如果科技還沒研發完成不能建造
+                if(ownTech.enabled == false)
+                {
+                    return "科技還沒研發完成:" + r;
+                }
+            }
+            return null;
         }
 
+        // 刪除建物
+        // 注意: 這裡不能將建物的科技刪除
         public static void DestroyBuilding(Context ctx, int key)
         {
             if(ctx.buildings.ContainsKey(key) == false)
             {
                 throw new System.Exception("XXX:" + key);
             }
-            foreach(var t in new List<Tech>(ctx.techs.Values))
-            {
-                if(t.player != ctx.buildings[key].player)
-                {
-                    continue;
-                }
-                var cfg = ConfigTech.Get(t.prototype);
-                if(cfg.HostEntity == ctx.buildings[key].prototype)
-                {
-                    ctx.techs.Remove(t.Key);
-                }
-            }
             ctx.buildings.Remove(key);
         }
 
+        // 刪除單位
+        // 會一並刪除單的擁有的武器
         public static void DestroyUnit(Context ctx, int key)
         {
             if (ctx.units.ContainsKey(key) == false)
@@ -217,11 +252,13 @@ namespace RedAlert
             ctx.units.Remove(key);
         }
 
+        // 建造
         public static int Build(Context ctx, int player, string entityPrototype)
         {
-            if(IsCanBuild(ctx, player, entityPrototype) == false)
+            var error = IsCanBuild(ctx, player, entityPrototype);
+            if (error != null)
             {
-                throw new System.Exception("can not build:"+entityPrototype);
+                throw new System.Exception("can not build:"+error);
             }
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)
@@ -232,6 +269,11 @@ namespace RedAlert
                         en.player = player;
                         ctx.buildings.Add(en.Key, en);
 
+                        // 加入建物的科技, 包含未研發的科技
+                        // 研發費用為0的代表會自動標記為研發完成
+                        // 注意:
+                        // 同一個建物不會把同樣的科技再加入一次
+                        // 科技一加入後就不會消失, 已研發的科技也不會因為建物消失而消失
                         var techs = GetTechs(entityPrototype);
                         foreach(var t in techs)
                         {
@@ -257,6 +299,7 @@ namespace RedAlert
                         en.player = player;
                         ctx.units.Add(en.Key, en);
 
+                        // 加入單位的武器
                         var weapons = GetWeapons(entityPrototype);
                         foreach (var w in weapons)
                         {
@@ -271,7 +314,7 @@ namespace RedAlert
             }
         }
 
-        public static IEnumerable<ConfigEntity> GetEntities(string type)
+        public static IEnumerable<ConfigEntity> GetEntities(string type = null)
         {
             var ret = Enumerable.Range(0, ConfigEntity.ID_COUNT).Select(ConfigEntity.Get);
             if(type != null)
@@ -289,7 +332,14 @@ namespace RedAlert
 
         public static IEnumerable<ConfigWeapon> GetWeapons(string entityPrototype)
         { 
-            var ret = Enumerable.Range(0, ConfigWeapon.ID_COUNT).Select(ConfigWeapon.Get).Where(t => t.HostEntity == entityPrototype);
+            var ret = Enumerable.Range(0, ConfigWeapon.ID_COUNT).Select(ConfigWeapon.Get).Where(t =>
+            {
+                if (string.IsNullOrEmpty(t.HostEntities))
+                {
+                    return false;
+                }
+                return t.HostEntities.Split(',').Contains(entityPrototype);
+            });
             return ret;
         }
     }

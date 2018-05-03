@@ -10,6 +10,7 @@ public string TechDependencies;
 public string ArmorType;
 public float ArmorPower;
 public int Hp;
+public string HostBuilding;
 public const int ID_COUNT = -1;
 public static ConfigEntity Get(int key){
 switch(key){

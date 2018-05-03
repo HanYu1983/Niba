@@ -35,6 +35,8 @@ MonoBehaviour:
       type: 1
     - key: hp
       type: 0
+    - key: hostBuilding
+      type: 2
   - key: ConfigEntityType
     fileName: 
     types:
@@ -78,7 +80,7 @@ MonoBehaviour:
       type: 2
     - key: bulletPower
       type: 1
-    - key: hostEntity
+    - key: hostEntities
       type: 2
     - key: techDependencies
       type: 2

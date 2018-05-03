@@ -9,7 +9,7 @@ public float MinRange;
 public float MaxRange;
 public string BulletType;
 public float BulletPower;
-public string HostEntity;
+public string HostEntities;
 public string TechDependencies;
 public float CostHot;
 public const int ID_COUNT = -1;
