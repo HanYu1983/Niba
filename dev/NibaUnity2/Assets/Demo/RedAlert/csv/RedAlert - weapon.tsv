@@ -1,0 +1,2 @@
+id	name	description	rangeType	minRange	maxRange	bulletType	bulletPower	hostEntities	costHot
+105mm	tankPao			0.5	3		1000	gdiTank	5

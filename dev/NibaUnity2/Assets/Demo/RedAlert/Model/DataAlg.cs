@@ -99,6 +99,73 @@ namespace RedAlert
                 }
             }
         }
+        
+        public static void SetPlayerCount(Context ctx, int cnt)
+        {
+            ctx.money = new List<int>(cnt);
+        }
+
+        public static Tech GetTechWithTechPrototype(Context ctx, int player, string techPrototype)
+        {
+            return ctx.techs.Values.Where(t =>
+            {
+                if(t.player != player)
+                {
+                    return false;
+                }
+                if(t.prototype != techPrototype)
+                {
+                    return false;
+                }
+                return true;
+            }).FirstOrDefault();
+        }
+
+        public static bool StolenBuilding(Context ctx, int player, int building)
+        {
+            var b = ctx.buildings[building];
+            if(b.player == player)
+            {
+                return false;
+            }
+            b.player = player;
+            // 偷建物必須把科技重新加入一次
+            // 請參照Build
+            var techs = GetTechs(b.prototype);
+            foreach (var t in techs)
+            {
+                var alreadyHas = ctx.techs.Values.Where(ownTech => ownTech.player == player && ownTech.prototype == t.Id).FirstOrDefault() != null;
+                if (alreadyHas)
+                {
+                    continue;
+                }
+                var newT = new Tech(t.Id);
+                newT.player = player;
+                if (t.Cost == 0)
+                {
+                    newT.enabled = true;
+                }
+                ctx.techs.Add(newT.Key, newT);
+            }
+            return true;
+        }
+
+        public static IEnumerable<ConfigTech> GetUnitTechMenu(string entityPrototype)
+        {
+            var ec = ConfigEntity.Get(entityPrototype);
+            if (ec.EntityType != ConfigEntityType.ID_unit)
+            {
+                throw new System.Exception("XXX");
+            }
+            return Enumerable.Range(0, ConfigTech.ID_COUNT).Select(ConfigTech.Get).Where(cfg =>
+            {
+                if (string.IsNullOrEmpty(cfg.EffectEntities))
+                {
+                    return false;
+                }
+                return cfg.EffectEntities.Split(',').Contains(entityPrototype);
+            });
+        }
 
         // 取得建物列表
         public static IEnumerable<Building> GetBuildingMenu(Context ctx, int player)
@@ -109,7 +176,7 @@ namespace RedAlert
                 {
                     return false;
                 }
-                var hasUnitCanBuild = GetEntities("unit").Any(u => u.HostBuilding == b.prototype);
+                var hasUnitCanBuild = GetEntities().Any(u => u.HostBuilding == b.prototype);
                 return hasUnitCanBuild;
             });
         }
@@ -173,8 +240,13 @@ namespace RedAlert
 
         // 取得建物的科技
         // 同prototype的建物會取得同樣的科技
-        public static IEnumerable<Tech> GetBuildingTech(Context ctx, int player, string buildingPrototype)
+        public static IEnumerable<Tech> GetBuildingTechMenu(Context ctx, int player, string buildingPrototype)
         {
+            var ec = ConfigEntity.Get(buildingPrototype);
+            if (ec.EntityType != ConfigEntityType.ID_building)
+            {
+                throw new System.Exception("XXX");
+            }
             return ctx.techs.Values.Where(t =>
             {
                 if(t.player != player)
@@ -195,8 +267,8 @@ namespace RedAlert
         {
             // 需求科技
             var requestTechs = string.IsNullOrEmpty(ConfigEntity.Get(entityPrototype).TechDependencies) ?
-                ConfigEntity.Get(entityPrototype).TechDependencies.Split(',') : 
-                new string[0];
+                new string[0] :
+                ConfigEntity.Get(entityPrototype).TechDependencies.Split(',');            
             // 擁有建物
             var ownBuilds = ctx.buildings.Values.Where(b=>b.player == player).Select(b => b.prototype).Distinct().ToList();
             foreach(var r in requestTechs)
@@ -263,7 +335,7 @@ namespace RedAlert
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)
             {
-                case "building":
+                case ConfigEntityType.ID_building:
                     {
                         var en = new Building(entityPrototype);
                         en.player = player;
@@ -293,7 +365,7 @@ namespace RedAlert
 
                         return en.Key;
                     }
-                case "unit":
+                case ConfigEntityType.ID_unit:
                     {
                         var en = new Unit(entityPrototype);
                         en.player = player;

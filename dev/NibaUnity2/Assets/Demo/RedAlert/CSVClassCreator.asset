@@ -11,11 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
   m_Name: CSVClassCreator
   m_EditorClassIdentifier: 
-  csvPath: 
+  csvPath: Demo/RedAlert/csv
   generatePath: Demo/RedAlert/Model/Config
   csvFiles:
   - key: ConfigEntity
-    fileName: 
+    fileName: RedAlert - entity.tsv
     types:
     - key: id
       type: 2
@@ -38,7 +38,7 @@ MonoBehaviour:
     - key: hostBuilding
       type: 2
   - key: ConfigEntityType
-    fileName: 
+    fileName: RedAlert - entityType.tsv
     types:
     - key: id
       type: 2
@@ -47,7 +47,7 @@ MonoBehaviour:
     - key: description
       type: 2
   - key: ConfigTech
-    fileName: 
+    fileName: RedAlert - tech.tsv
     types:
     - key: id
       type: 2
@@ -61,8 +61,10 @@ MonoBehaviour:
       type: 2
     - key: techDependencies
       type: 2
+    - key: effectEntities
+      type: 2
   - key: ConfigWeapon
-    fileName: 
+    fileName: RedAlert - weapon.tsv
     types:
     - key: id
       type: 2
@@ -81,8 +83,6 @@ MonoBehaviour:
     - key: bulletPower
       type: 1
     - key: hostEntities
-      type: 2
-    - key: techDependencies
       type: 2
     - key: costHot
       type: 1
