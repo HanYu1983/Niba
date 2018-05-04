@@ -19,12 +19,12 @@ namespace RedAlert
             var p = DataAlg.GetBuildingProgress(model.ctx, player, host, entityPrototype);
             if (p != null)
             {
-                if (p.state == BuildingProgressState.Building)
+                /*if (p.state == BuildingProgressState.Building)
                 {
                     var key = new BuildingProgress(player, host, entityPrototype).Key;
                     Holder.ClientCancelBuilding(player, key);
                     return;
-                }
+                }*/
                 if (p.state == BuildingProgressState.Complete)
                 {
                     var state = GetComponent<PutBuildingState>();

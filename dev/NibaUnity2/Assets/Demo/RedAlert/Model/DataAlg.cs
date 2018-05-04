@@ -123,6 +123,7 @@ namespace RedAlert
         public Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
         public List<int> money = new List<int>();
         public Dictionary<string, BuildingProgress> progress = new Dictionary<string, BuildingProgress>();
+        public List<BuildingProgress> pendingProgress = new List<BuildingProgress>();
     }
 
     class SaveTmp
@@ -133,6 +134,7 @@ namespace RedAlert
         public List<Weapon> weapons;
         public List<int> money;
         public List<BuildingProgress> progress;
+        public List<BuildingProgress> pendingProgress;
     }
 
     public class DataAlg : MonoBehaviour
@@ -146,6 +148,7 @@ namespace RedAlert
             st.weapons = new List<Weapon>(ctx.weapons.Values);
             st.money = ctx.money;
             st.progress = new List<BuildingProgress>(ctx.progress.Values);
+            st.pendingProgress = ctx.pendingProgress;
 
             var json = JsonUtility.ToJson(st);
             return json;
@@ -160,7 +163,8 @@ namespace RedAlert
             ctx.weapons.Clear();
             ctx.money.Clear();
             ctx.progress.Clear();
-            foreach(var i in st.building)
+            ctx.pendingProgress.Clear();
+            foreach (var i in st.building)
             {
                 ctx.buildings.Add(i.Key, i);
             }
@@ -183,6 +187,10 @@ namespace RedAlert
             foreach (var i in st.progress)
             {
                 ctx.progress.Add(i.Key, i);
+            }
+            foreach (var i in st.pendingProgress)
+            {
+                ctx.pendingProgress.Add(i);
             }
         }
 
@@ -243,7 +251,16 @@ namespace RedAlert
             var nowBuilding = ctx.progress.ContainsKey(wantBuild.Key);
             if (nowBuilding)
             {
-                throw new System.Exception("building now:"+entityPrototype);
+                var cfg = ConfigEntity.Get(entityPrototype);
+                if(cfg.EntityType != ConfigEntityType.ID_building)
+                {
+                    ctx.pendingProgress.Add(wantBuild);
+                    return;
+                }
+                else
+                {
+                    throw new System.Exception("building now:" + entityPrototype);
+                }
             }
             ctx.progress.Add(wantBuild.Key, wantBuild);
         }
@@ -281,6 +298,22 @@ namespace RedAlert
                 throw new System.Exception("xxx");
             }
             ctx.progress.Remove(key);
+
+            // add pending
+            foreach(var p in new List<BuildingProgress>(ctx.pendingProgress))
+            {
+                if (ctx.progress.ContainsKey(p.Key))
+                {
+                    continue;
+                }
+                ctx.pendingProgress.Remove(p);
+                ctx.progress.Add(p.Key, p);
+            }
+        }
+
+        public static int GetPendingBuildingProgressCount(Context ctx, string key)
+        {
+            return ctx.pendingProgress.Where(p => p.Key == key).Count();
         }
 
         public static Tech GetTechWithTechPrototype(Context ctx, int player, string techPrototype)

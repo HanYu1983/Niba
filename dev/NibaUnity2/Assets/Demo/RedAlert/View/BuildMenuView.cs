@@ -45,7 +45,8 @@ namespace RedAlert
             {
                 var p = progress.Progress;
                 var building = ConfigEntity.Get(prototype);
-                txt_name.text = string.Format("{0} {1} {2:000}%", building.Name, building.Cost, p);
+                var pendingCnt = DataAlg.GetPendingBuildingProgressCount(model.ctx, progress.Key) + 1;
+                txt_name.text = string.Format("{0} {1} {2:000}% pending:{3}", building.Name, building.Cost, p, pendingCnt);
                 gameObject.SetActive(true);
             }
         }
