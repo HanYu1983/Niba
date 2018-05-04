@@ -48,6 +48,10 @@ namespace RedAlert
                     CmdCancelBuilding(player, entityPrototype);
                     return;
                 }
+                if(p.state == BuildingProgressState.Complete)
+                {
+                    return;
+                }
             }
             // client simulation
             DataAlg.Building(clientModel.ctx, player, entityPrototype);
