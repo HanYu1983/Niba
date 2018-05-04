@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
 using System;
+using System.Linq;
 
 namespace RedAlert
 {
@@ -36,11 +37,12 @@ namespace RedAlert
             // server是真正的model
             DataAlg.Step(clientModel.ctx, Time.deltaTime);
             DataAlg.Step(serverModel.ctx, Time.deltaTime);
+            CheckNewEntity();
         }
 
         void CheckNewEntity()
         {
-            var ps = DataAlg.GetBuildingProgress(serverModel.ctx, Player);
+            var ps = DataAlg.GetBuildingProgress(serverModel.ctx, Player).ToList();
             foreach(var p in ps)
             {
                 if(p.state != BuildingProgressState.Complete)
@@ -54,6 +56,9 @@ namespace RedAlert
                 }
                 var host = p.host;
                 var prototype = p.entityPrototype;
+                var hostBuilding = serverModel.ctx.buildings[host];
+                var pos = hostBuilding.position;
+                CmdCreateEntity(Player, host, prototype, pos);
             }
         }
 
@@ -112,6 +117,15 @@ namespace RedAlert
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
                 var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
+                var cfg = ConfigEntity.Get(prototype);
+                switch (cfg.EntityType)
+                {
+                    case ConfigEntityType.ID_building:
+                        {
+                            serverModel.ctx.buildings[key].position = pos;
+                        }
+                        break;
+                }
                 SyncModel();
 
                 RpcCreateEntity(key, prototype, pos);

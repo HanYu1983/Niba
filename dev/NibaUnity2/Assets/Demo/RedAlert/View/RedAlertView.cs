@@ -10,6 +10,7 @@ namespace RedAlert
         public MoveCameraWithMouse moveCamera;
         public GameObject puttingPrefab;
         public GameObject puttingObj;
+        public GameObject unitPrefab;
         public Dictionary<int, RedAlertEntity> entities = new Dictionary<int, RedAlertEntity>();
 
         #region putting building
@@ -41,7 +42,13 @@ namespace RedAlert
 
         public void SpawnEntity(int key, string prototype, Vector3 pos)
         {
-            var go = Instantiate(puttingPrefab, transform, false);
+            GameObject prefab = puttingPrefab;
+            var cfg = ConfigEntity.Get(prototype);
+            if(cfg.EntityType == ConfigEntityType.ID_unit)
+            {
+                prefab = unitPrefab;
+            }
+            var go = Instantiate(prefab, transform, false);
             var entity = go.GetComponent<RedAlertEntity>();
             if(entity == null)
             {

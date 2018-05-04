@@ -25,6 +25,10 @@ namespace RedAlert
         public string prototype;
         public int player;
         public int usedHp;
+        [SerializeField]
+        public Vector3 position;
+        [SerializeField]
+        public Vector3 rotation;
     }
 
     [Serializable]
