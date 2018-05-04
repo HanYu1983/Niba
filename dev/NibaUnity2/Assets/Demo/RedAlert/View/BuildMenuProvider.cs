@@ -21,7 +21,8 @@ namespace RedAlert
         public List<string> GetData()
         {
             var buildingKey = buildingKeyRef.Ref;
-            return DataAlg.GetBuildMenu(model.ctx, playerHolder.player, buildingKey).Select(b => b.Id).ToList();
+            var prototype = model.ctx.buildings[buildingKey].prototype;
+            return DataAlg.GetBuildMenu(model.ctx, playerHolder.player, prototype).Select(b => b.Id).ToList();
         }
     }
 }

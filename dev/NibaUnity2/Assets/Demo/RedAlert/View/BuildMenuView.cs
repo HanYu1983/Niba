@@ -8,14 +8,15 @@ namespace RedAlert
 {
     public class BuildMenuView : MonoBehaviour
     {
-        public StrRef keyRef;
+        public IntRef hostRef;
+        public StrRef prototypeRef;
         public Text txt_name;
         public RedAlertModel model;
         public PlayerHolder playerHolder;
 
         void Awake()
         {
-            keyRef.OnValueChange += UpdateView;
+            prototypeRef.OnValueChange += UpdateView;
         }
 
         private void Update()
@@ -26,23 +27,24 @@ namespace RedAlert
         void UpdateView()
         {
             txt_name.text = "";
-            if (keyRef.IsValid == false)
+            if (prototypeRef.IsValid == false)
             {
                 gameObject.SetActive(false);
                 return;
             }
-            var key = keyRef.Ref;
-            var progress = DataAlg.GetBuildingProgress(model.ctx, playerHolder.player, key);
+            var host = hostRef.Ref;
+            var prototype = prototypeRef.Ref;
+            var progress = DataAlg.GetBuildingProgress(model.ctx, playerHolder.player, host, prototype);
             if(progress == null)
             {
-                var building = ConfigEntity.Get(key);
+                var building = ConfigEntity.Get(prototype);
                 txt_name.text = string.Format("{0} {1}", building.Name, building.Cost);
                 gameObject.SetActive(true);
             }
             else
             {
                 var p = progress.Progress;
-                var building = ConfigEntity.Get(key);
+                var building = ConfigEntity.Get(prototype);
                 txt_name.text = string.Format("{0} {1} {2:000}%", building.Name, building.Cost, p);
                 gameObject.SetActive(true);
             }

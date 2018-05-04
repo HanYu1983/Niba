@@ -24,7 +24,7 @@ namespace RedAlert
             {
                 Debug.Log(b.prototype);
 
-                var buildMenus2 = DataAlg.GetBuildMenu(ctx, 0, b.Key);
+                var buildMenus2 = DataAlg.GetBuildMenu(ctx, 0, b.prototype);
                 foreach (var b2 in buildMenus2)
                 {
                     Debug.Log(b2.Name);
@@ -48,12 +48,12 @@ namespace RedAlert
                 }
             }
 
-            var factory = DataAlg.CreateEntity(ctx, 0, ConfigEntity.ID_gdiFactory);
+            /*var factory = DataAlg.CreateEntity(ctx, 0, ConfigEntity.ID_gdiFactory);
             var buildMenus = DataAlg.GetBuildMenu(ctx, 0, factory);
             foreach (var b2 in buildMenus)
             {
                 Debug.Log(b2.Name);
-            }
+            }*/
 
             OnBuildingChange();
             onMoneyChange();

@@ -87,16 +87,19 @@ namespace RedAlert
     {
         [SerializeField]
         string key;
-        public BuildingProgress(int player, string entityPrototype)
+        public BuildingProgress(int player, int host, string entityPrototype)
         {
-            key = player + ":" + entityPrototype;
+            key = player + ":" + host +":"+ entityPrototype;
             this.player = player;
+            this.host = host;
             this.entityPrototype = entityPrototype;
         }
         public string Key { get { return key; } }
-        public string entityPrototype;
-        public int useMoney;
         public int player;
+        public int host;
+        public string entityPrototype;
+
+        public int useMoney;
         public BuildingProgressState state;
         public float Progress
         {
@@ -230,9 +233,9 @@ namespace RedAlert
             }
         }
 
-        public static void Building(Context ctx, int player, string entityPrototype)
+        public static void Building(Context ctx, int player, int host, string entityPrototype)
         {
-            var wantBuild = new BuildingProgress(player, entityPrototype);
+            var wantBuild = new BuildingProgress(player, host, entityPrototype);
             var nowBuilding = ctx.progress.ContainsKey(wantBuild.Key);
             if (nowBuilding)
             {
@@ -241,9 +244,9 @@ namespace RedAlert
             ctx.progress.Add(wantBuild.Key, wantBuild);
         }
 
-        public static BuildingProgress GetBuildingProgress(Context ctx, int player, string entityPrototype)
+        public static BuildingProgress GetBuildingProgress(Context ctx, int player, int host, string entityPrototype)
         {
-            var key = new BuildingProgress(player, entityPrototype).Key;
+            var key = new BuildingProgress(player, host, entityPrototype).Key;
             if(ctx.progress.ContainsKey(key) == false)
             {
                 return null;
@@ -264,6 +267,15 @@ namespace RedAlert
             }
             var p = ctx.progress[key];
             ctx.money[p.player] += p.useMoney;
+            ctx.progress.Remove(key);
+        }
+
+        public static void RemoveBuildingProgress(Context ctx, string key)
+        {
+            if (ctx.progress.ContainsKey(key) == false)
+            {
+                throw new System.Exception("xxx");
+            }
             ctx.progress.Remove(key);
         }
 
@@ -344,18 +356,9 @@ namespace RedAlert
         }
         
         // 依建物取得可建列表, 包含建物和單位
-        public static IEnumerable<ConfigEntity> GetBuildMenu(Context ctx, int player, int building)
+        public static IEnumerable<ConfigEntity> GetBuildMenu(Context ctx, int player, string entityPrototype)
         {
-            if(ctx.buildings.ContainsKey(building) == false)
-            {
-                foreach (var b2 in ctx.buildings.Values)
-                {
-                    Debug.Log(b2.Key+":"+b2.prototype);
-                }
-                throw new System.Exception("building not found:"+building);
-            }
-            var b = ctx.buildings[building];
-            return GetEntities().Where(e => e.HostBuilding == b.prototype);
+            return GetEntities().Where(e => e.HostBuilding == entityPrototype);
         }
 
         // 發射武器, 回傳true代表發射成功
