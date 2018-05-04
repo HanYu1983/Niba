@@ -15,6 +15,7 @@ namespace HanUtil
         public Transform root;
         public int offset;
         public Ref selectedKeyRef;
+        public bool ignoreInvalidArrayIndex;
         public UnityEvent onSelect = new UnityEvent();
 
         public int DataCountPerPage
@@ -55,9 +56,9 @@ namespace HanUtil
 
         public void UpdateView(GameObject go, List<T> list, int idx)
         {
-            var r = go.GetComponent<Ref>();
-            if (idx < list.Count)
+            if (ignoreInvalidArrayIndex)
             {
+                var r = go.GetComponent<Ref>();
                 r.refType = ObjectRefType.Array;
                 r.idx = idx;
                 r.array = list;
@@ -65,9 +66,20 @@ namespace HanUtil
             }
             else
             {
-                r.refType = ObjectRefType.Static;
-                r.value = default(T);
-                r.OnValueChange();
+                var r = go.GetComponent<Ref>();
+                if (idx < list.Count)
+                {
+                    r.refType = ObjectRefType.Array;
+                    r.idx = idx;
+                    r.array = list;
+                    r.OnValueChange();
+                }
+                else
+                {
+                    r.refType = ObjectRefType.Static;
+                    r.value = default(T);
+                    r.OnValueChange();
+                }
             }
         }
         

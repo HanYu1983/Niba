@@ -3,25 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.UI;
+using HanUtil;
 
 namespace RedAlert
 {
-    public class BuildingMenuProvider : MonoBehaviour, IDataProvider
+    public class BuildingMenuProvider : MonoBehaviour, IShowPageListDataProvider<int>
     {
-        public AbstractMenu menuHost;
+        public IntShowPageList pageList;
         public RedAlertModel model;
         public PlayerHolder playerHolder;
 
-        List<Building> menu;
-        public void Prepared()
+        void Awake()
         {
-            menu = DataAlg.GetBuildingMenu(model.ctx, playerHolder.player).ToList();
+            model.OnBuildingChange += pageList.UpdateView;
         }
-        public int Count { get { return menu.Count; } }
-        public void UpdateView(int i, GameObject row)
+
+        public List<int> GetData()
         {
-            var data = menu[i];
-            row.GetComponent<Text>().text = ConfigEntity.Get(data.prototype).Name;
+            return DataAlg.GetBuildingMenu(model.ctx, playerHolder.player).Select(b=>b.Key).ToList();
         }
     }
 }

@@ -37,6 +37,8 @@ MonoBehaviour:
       type: 0
     - key: hostBuilding
       type: 2
+    - key: buildTime
+      type: 1
   - key: ConfigEntityType
     fileName: RedAlert - entityType.tsv
     types:

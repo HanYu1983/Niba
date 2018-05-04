@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 namespace RedAlert
 {
@@ -10,6 +11,7 @@ namespace RedAlert
         public static int counter;
     }
 
+    [Serializable]
     public class Building
     {
         [SerializeField]
@@ -23,9 +25,9 @@ namespace RedAlert
         public string prototype;
         public int player;
         public int usedHp;
-        public string transformJson;
     }
 
+    [Serializable]
     public class Unit
     {
         [SerializeField]
@@ -39,9 +41,9 @@ namespace RedAlert
         public string prototype;
         public int player;
         public int usedHp;
-        public string transformJson;
     }
 
+    [Serializable]
     public class Tech
     {
         [SerializeField]
@@ -57,6 +59,7 @@ namespace RedAlert
         public bool enabled;
     }
 
+    [Serializable]
     public class Weapon
     {
         [SerializeField]
@@ -74,6 +77,37 @@ namespace RedAlert
         public float hot;
     }
 
+    public enum BuildingProgressState
+    {
+        Building, Complete, Hold
+    }
+
+    [Serializable]
+    public class BuildingProgress
+    {
+        [SerializeField]
+        string key;
+        public BuildingProgress(int player, string entityPrototype)
+        {
+            key = player + ":" + entityPrototype;
+            this.player = player;
+            this.entityPrototype = entityPrototype;
+        }
+        public string Key { get { return key; } }
+        public string entityPrototype;
+        public int useMoney;
+        public int player;
+        public BuildingProgressState state;
+        public float Progress
+        {
+            get
+            {
+                var cfg = ConfigEntity.Get(entityPrototype);
+                return Mathf.Min(1, useMoney / (float)cfg.Cost) * 100;
+            }
+        }
+    }
+
     public class Context
     {
         public Dictionary<int, Building> buildings = new Dictionary<int, Building>();
@@ -81,28 +115,156 @@ namespace RedAlert
         public Dictionary<int, Tech> techs = new Dictionary<int, Tech>();
         public Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
         public List<int> money = new List<int>();
+        public Dictionary<string, BuildingProgress> progress = new Dictionary<string, BuildingProgress>();
+    }
+
+    class SaveTmp
+    {
+        public List<Building> building;
+        public List<Unit> units;
+        public List<Tech> techs;
+        public List<Weapon> weapons;
+        public List<int> money;
+        public List<BuildingProgress> progress;
     }
 
     public class DataAlg : MonoBehaviour
     {
+        public static string Memonto(Context ctx)
+        {
+            var st = new SaveTmp();
+            st.building = new List<Building>(ctx.buildings.Values);
+            st.units = new List<Unit>(ctx.units.Values);
+            st.techs = new List<Tech>(ctx.techs.Values);
+            st.weapons = new List<Weapon>(ctx.weapons.Values);
+            st.money = ctx.money;
+            st.progress = new List<BuildingProgress>(ctx.progress.Values);
+
+            var json = JsonUtility.ToJson(st);
+            return json;
+        }
+
+        public static void SetMemonto(Context ctx, string json)
+        {
+            var st = JsonUtility.FromJson<SaveTmp>(json);
+            ctx.buildings.Clear();
+            ctx.units.Clear();
+            ctx.techs.Clear();
+            ctx.weapons.Clear();
+            ctx.money.Clear();
+            ctx.progress.Clear();
+            foreach(var i in st.building)
+            {
+                ctx.buildings.Add(i.Key, i);
+            }
+            foreach (var i in st.units)
+            {
+                ctx.units.Add(i.Key, i);
+            }
+            foreach (var i in st.techs)
+            {
+                ctx.techs.Add(i.Key, i);
+            }
+            foreach (var i in st.weapons)
+            {
+                ctx.weapons.Add(i.Key, i);
+            }
+            foreach (var i in st.money)
+            {
+                ctx.money.Add(i);
+            }
+            foreach (var i in st.progress)
+            {
+                ctx.progress.Add(i.Key, i);
+            }
+        }
+
         public static void Step(Context ctx, float dt)
         {
-            foreach(var w in ctx.weapons.Values)
+            foreach (var w in ctx.weapons.Values)
             {
-                if(w.hot > 0)
+                if (w.hot > 0)
                 {
                     w.hot -= dt;
-                    if(w.hot < 0)
+                    if (w.hot < 0)
                     {
                         w.hot = 0;
                     }
                 }
             }
+
+            foreach (var p in ctx.progress.Values)
+            {
+                if(p.state == BuildingProgressState.Complete)
+                {
+                    continue;
+                }
+                var buildCfg = ConfigEntity.Get(p.entityPrototype);
+                var cost = buildCfg.Cost;
+                var buildTime = buildCfg.BuildTime;
+                // 計算每次更新週期的花費
+                var costPerDeltaTime = cost;
+                if (buildTime > 0)
+                {
+                    costPerDeltaTime = (int)(dt * cost / buildTime);
+                }
+                // 若金錢不足就跳到這一個
+                if(ctx.money[p.player] < costPerDeltaTime)
+                {
+                    continue;
+                }
+                // 計算在這個項目中花了多少錢
+                p.useMoney += costPerDeltaTime;
+                // 花錢
+                ctx.money[p.player] -= costPerDeltaTime;
+                // 若花足了代表建完了
+                if (p.useMoney > cost)
+                {
+                    // 把多扣的金額加回去
+                    var offset = p.useMoney - cost;
+                    ctx.money[p.player] += offset;
+                    // 完成
+                    p.state = BuildingProgressState.Complete;
+                    continue;
+                }
+            }
         }
-        
-        public static void SetPlayerCount(Context ctx, int cnt)
+
+        public static void Building(Context ctx, int player, string entityPrototype)
         {
-            ctx.money = new List<int>(cnt);
+            var wantBuild = new BuildingProgress(player, entityPrototype);
+            var nowBuilding = ctx.progress.ContainsKey(wantBuild.Key);
+            if (nowBuilding)
+            {
+                throw new System.Exception("building now:"+entityPrototype);
+            }
+            ctx.progress.Add(wantBuild.Key, wantBuild);
+        }
+
+        public static BuildingProgress GetBuildingProgress(Context ctx, int player, string entityPrototype)
+        {
+            var key = new BuildingProgress(player, entityPrototype).Key;
+            if(ctx.progress.ContainsKey(key) == false)
+            {
+                return null;
+            }
+            return ctx.progress[key];
+        }
+
+        public static IEnumerable<BuildingProgress> GetBuildingProgress(Context ctx, int player)
+        {
+            return ctx.progress.Values.Where(p => p.player == player);
+        }
+
+        public static void CancelBuildingProgress(Context ctx, string key)
+        {
+            if(ctx.progress.ContainsKey(key) == false)
+            {
+                throw new System.Exception("xxx");
+            }
+            var p = ctx.progress[key];
+            ctx.money[p.player] += p.useMoney;
+            ctx.progress.Remove(key);
         }
 
         public static Tech GetTechWithTechPrototype(Context ctx, int player, string techPrototype)
@@ -184,6 +346,14 @@ namespace RedAlert
         // 依建物取得可建列表, 包含建物和單位
         public static IEnumerable<ConfigEntity> GetBuildMenu(Context ctx, int player, int building)
         {
+            if(ctx.buildings.ContainsKey(building) == false)
+            {
+                foreach (var b2 in ctx.buildings.Values)
+                {
+                    Debug.Log(b2.Key+":"+b2.prototype);
+                }
+                throw new System.Exception("building not found:"+building);
+            }
             var b = ctx.buildings[building];
             return GetEntities().Where(e => e.HostBuilding == b.prototype);
         }
@@ -324,8 +494,8 @@ namespace RedAlert
             ctx.units.Remove(key);
         }
 
-        // 建造
-        public static int Build(Context ctx, int player, string entityPrototype)
+        // 
+        public static int CreateEntity(Context ctx, int player, string entityPrototype)
         {
             var error = IsCanBuild(ctx, player, entityPrototype);
             if (error != null)
