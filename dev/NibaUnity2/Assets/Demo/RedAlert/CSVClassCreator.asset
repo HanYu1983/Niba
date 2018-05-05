@@ -39,6 +39,8 @@ MonoBehaviour:
       type: 2
     - key: buildTime
       type: 1
+    - key: energy
+      type: 0
   - key: ConfigEntityType
     fileName: RedAlert - entityType.tsv
     types:
@@ -88,6 +90,19 @@ MonoBehaviour:
       type: 2
     - key: costHot
       type: 1
+  - key: ConfigResource
+    fileName: RedAlert - resource.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: amount
+      type: 0
+    - key: value
+      type: 0
   splitType: 0
   split: 
   isFirstLetterUpper: 1

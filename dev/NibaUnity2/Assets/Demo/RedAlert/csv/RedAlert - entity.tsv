@@ -1,7 +1,9 @@
-id	name	description	entityType	cost	techDependencies	armorType	armorPower	hp	hostBuilding	buildTime
-gdiHome	GDI Home		building	3000				1000		10
-gdiPowerPlent	GDI 電廠		building	500	gdiFoundation				gdiHome	3
-gdiFactory	GDI Factory		building	1000	gdiFoundation				gdiHome	5
-gdiTank	Tank		unit	700	gdiArmorFoundation				gdiFactory	1
-gdiFireTank	FireTank		unit	1100	gdiFireTech					5
-gdiFireBase	炮塔		building	1500	gdiFoundation					5
+id	name	description	entityType	cost	techDependencies	armorType	armorPower	hp	hostBuilding	buildTime	energy
+gdiHome	GDI Home		building	3000				1000		10	10
+gdiPowerPlent	GDI 電廠		building	500	gdiFoundation			500	gdiHome	3	10
+gdiFactory	GDI Factory		building	1000	gdiFoundation			800	gdiHome	3	-5
+gdiTank	Tank		unit	700	gdiArmorFoundation			200	gdiFactory	1	
+gdiFireTank	FireTank		unit	1100	gdiFireTech			200	gdiFactory	3	
+gdiFireBase	炮塔		building	1500	gdiFoundation			500	gdiHome	3	-1
+gdiGoldFactory	GDI Gold Factory		building	1500	gdiFoundation			800	gdiHome	3	-3
+gdiGoldCollector	gdiGoldCollector		unit	700	gdiFoundation			500	gdiFactory	3	

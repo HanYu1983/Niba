@@ -16,6 +16,8 @@ namespace RedAlert
         public void TestData()
         {
             ctx.money.Add(10000);
+            ctx.money.Add(10000);
+            /*
 
             DataAlg.CreateEntity(ctx, 0, ConfigEntity.ID_gdiHome);
 
@@ -47,16 +49,17 @@ namespace RedAlert
                     Debug.Log(t2.prototype + ":" + t2.enabled);
                 }
             }
-
+            */
             /*var factory = DataAlg.CreateEntity(ctx, 0, ConfigEntity.ID_gdiFactory);
             var buildMenus = DataAlg.GetBuildMenu(ctx, 0, factory);
             foreach (var b2 in buildMenus)
             {
                 Debug.Log(b2.Name);
             }*/
-
+            /*
             OnBuildingChange();
             onMoneyChange();
+            */
         }
     }
 }

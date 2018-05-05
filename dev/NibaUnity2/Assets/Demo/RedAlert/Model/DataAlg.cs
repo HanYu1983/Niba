@@ -45,6 +45,9 @@ namespace RedAlert
         public string prototype;
         public int player;
         public int usedHp;
+        public Vector3 position;
+        public Vector3 rotation;
+        public int amount;
     }
 
     [Serializable]
@@ -115,6 +118,22 @@ namespace RedAlert
         }
     }
 
+    [Serializable]
+    public class Resource
+    {
+        [SerializeField]
+        int key;
+        public Resource(string prototype)
+        {
+            key = Tmp.counter++;
+            this.prototype = prototype;
+        }
+        public int Key { get { return key; } }
+        public string prototype;
+        public Vector3 position;
+        public int usedAmount;
+    }
+
     public class Context
     {
         public Dictionary<int, Building> buildings = new Dictionary<int, Building>();
@@ -124,6 +143,8 @@ namespace RedAlert
         public List<int> money = new List<int>();
         public Dictionary<string, BuildingProgress> progress = new Dictionary<string, BuildingProgress>();
         public List<BuildingProgress> pendingProgress = new List<BuildingProgress>();
+        public Dictionary<int, Resource> resources = new Dictionary<int, Resource>();
+
     }
 
     class SaveTmp
@@ -135,6 +156,7 @@ namespace RedAlert
         public List<int> money;
         public List<BuildingProgress> progress;
         public List<BuildingProgress> pendingProgress;
+        public List<Resource> resources;
     }
 
     public class DataAlg : MonoBehaviour
@@ -149,7 +171,7 @@ namespace RedAlert
             st.money = ctx.money;
             st.progress = new List<BuildingProgress>(ctx.progress.Values);
             st.pendingProgress = ctx.pendingProgress;
-
+            st.resources = new List<Resource>(ctx.resources.Values);
             var json = JsonUtility.ToJson(st);
             return json;
         }
@@ -164,6 +186,7 @@ namespace RedAlert
             ctx.money.Clear();
             ctx.progress.Clear();
             ctx.pendingProgress.Clear();
+            ctx.resources.Clear();
             foreach (var i in st.building)
             {
                 ctx.buildings.Add(i.Key, i);
@@ -191,6 +214,10 @@ namespace RedAlert
             foreach (var i in st.pendingProgress)
             {
                 ctx.pendingProgress.Add(i);
+            }
+            foreach (var i in st.resources)
+            {
+                ctx.resources.Add(i.Key, i);
             }
         }
 
@@ -534,13 +561,34 @@ namespace RedAlert
             ctx.units.Remove(key);
         }
 
-        // 
-        public static int CreateEntity(Context ctx, int player, string entityPrototype)
+        public static bool CollectResource(Context ctx, int entity, int resource, int amount)
         {
-            var error = IsCanBuild(ctx, player, entityPrototype);
-            if (error != null)
+            var u = ctx.units[entity];
+            var r = ctx.resources[resource];
+            var total = ConfigResource.Get(r.prototype).Amount;
+            amount = Mathf.Min(amount, total - r.usedAmount);
+            r.usedAmount += amount;
+            u.amount += amount;
+            return amount > 0;
+        }
+
+        public static int CreateResource(Context ctx, string prototype)
+        {
+            var r = new Resource(prototype);
+            ctx.resources.Add(r.Key, r);
+            return r.Key;
+        }
+
+        // 
+        public static int CreateEntity(Context ctx, int player, string entityPrototype, bool force = false)
+        {
+            if (force == false)
             {
-                throw new System.Exception("can not build:"+error);
+                var error = IsCanBuild(ctx, player, entityPrototype);
+                if (error != null)
+                {
+                    throw new System.Exception("can not build:" + error);
+                }
             }
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)

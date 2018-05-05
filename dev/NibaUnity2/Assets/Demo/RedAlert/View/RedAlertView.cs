@@ -11,6 +11,7 @@ namespace RedAlert
         public GameObject puttingPrefab;
         public GameObject puttingObj;
         public GameObject unitPrefab;
+        public GameObject root;
         public Dictionary<int, RedAlertEntity> entities = new Dictionary<int, RedAlertEntity>();
 
         #region putting building
@@ -48,7 +49,7 @@ namespace RedAlert
             {
                 prefab = unitPrefab;
             }
-            var go = Instantiate(prefab, transform, false);
+            var go = Instantiate(prefab, root.transform, false);
             var entity = go.GetComponent<RedAlertEntity>();
             if(entity == null)
             {
