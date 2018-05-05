@@ -27,21 +27,8 @@ namespace RedAlert
                         var entity = gameObject.AddComponent<RedAlertEntity>();
                         entity.key = key;
                         var cfg = ConfigEntity.Get(prototype);
-                        switch (cfg.EntityType)
-                        {
-                            case ConfigEntityType.ID_building:
-                                {
-                                    model.ctx.buildings[key].position = pos;
-                                    model.ctx.buildings[key].player = player;
-                                }
-                                break;
-                            default:
-                                {
-                                    model.ctx.units[key].position = pos;
-                                    model.ctx.units[key].player = player;
-                                }
-                                break;
-                        }
+                        model.ctx.entities[key].position = pos;
+                        model.ctx.entities[key].player = player;
                     }
                     break;
                 case CreateEntityType.Resource:

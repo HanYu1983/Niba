@@ -56,7 +56,7 @@ namespace RedAlert
                 }
                 var host = p.host;
                 var prototype = p.entityPrototype;
-                var hostBuilding = serverModel.ctx.buildings[host];
+                var hostBuilding = serverModel.ctx.entities[host];
                 var pos = hostBuilding.position;
                 CmdCreateEntity(Player, host, prototype, pos);
             }
@@ -122,7 +122,7 @@ namespace RedAlert
                 {
                     case ConfigEntityType.ID_building:
                         {
-                            serverModel.ctx.buildings[key].position = pos;
+                            serverModel.ctx.entities[key].position = pos;
                         }
                         break;
                 }

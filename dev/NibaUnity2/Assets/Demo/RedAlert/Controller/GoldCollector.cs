@@ -54,16 +54,16 @@ namespace RedAlert
                     {
                         
                         DataAlg.CollectResource(model.ctx, self, resource.Key, 5);
-                        if (model.ctx.units[self].amount >= 20)
+                        if (model.ctx.entities[self].amount >= 20)
                         {
                             break;
                         }
                         yield return new WaitForSeconds(0.2f);
                     }
 
-                    var backBuilding = model.ctx.buildings.Values.Where(b =>
+                    var backBuilding = model.ctx.entities.Values.Where(b =>
                     {
-                        if (b.player != model.ctx.units[self].player)
+                        if (b.player != model.ctx.entities[self].player)
                         {
                             return false;
                         }

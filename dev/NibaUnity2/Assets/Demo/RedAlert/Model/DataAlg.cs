@@ -12,31 +12,11 @@ namespace RedAlert
     }
 
     [Serializable]
-    public class Building
+    public class Entity
     {
         [SerializeField]
         int key;
-        public Building(string prototype)
-        {
-            key = Tmp.counter++;
-            this.prototype = prototype;
-        }
-        public int Key { get { return key; } }
-        public string prototype;
-        public int player;
-        public int usedHp;
-        [SerializeField]
-        public Vector3 position;
-        [SerializeField]
-        public Vector3 rotation;
-    }
-
-    [Serializable]
-    public class Unit
-    {
-        [SerializeField]
-        int key;
-        public Unit(string prototype)
+        public Entity(string prototype)
         {
             key = Tmp.counter++;
             this.prototype = prototype;
@@ -136,8 +116,7 @@ namespace RedAlert
 
     public class Context
     {
-        public Dictionary<int, Building> buildings = new Dictionary<int, Building>();
-        public Dictionary<int, Unit> units = new Dictionary<int, Unit>();
+        public Dictionary<int, Entity> entities = new Dictionary<int, Entity>();
         public Dictionary<int, Tech> techs = new Dictionary<int, Tech>();
         public Dictionary<int, Weapon> weapons = new Dictionary<int, Weapon>();
         public List<int> money = new List<int>();
@@ -149,8 +128,7 @@ namespace RedAlert
 
     class SaveTmp
     {
-        public List<Building> building;
-        public List<Unit> units;
+        public List<Entity> entities;
         public List<Tech> techs;
         public List<Weapon> weapons;
         public List<int> money;
@@ -164,8 +142,7 @@ namespace RedAlert
         public static string Memonto(Context ctx)
         {
             var st = new SaveTmp();
-            st.building = new List<Building>(ctx.buildings.Values);
-            st.units = new List<Unit>(ctx.units.Values);
+            st.entities = new List<Entity>(ctx.entities.Values);
             st.techs = new List<Tech>(ctx.techs.Values);
             st.weapons = new List<Weapon>(ctx.weapons.Values);
             st.money = ctx.money;
@@ -179,21 +156,16 @@ namespace RedAlert
         public static void SetMemonto(Context ctx, string json)
         {
             var st = JsonUtility.FromJson<SaveTmp>(json);
-            ctx.buildings.Clear();
-            ctx.units.Clear();
+            ctx.entities.Clear();
             ctx.techs.Clear();
             ctx.weapons.Clear();
             ctx.money.Clear();
             ctx.progress.Clear();
             ctx.pendingProgress.Clear();
             ctx.resources.Clear();
-            foreach (var i in st.building)
+            foreach (var i in st.entities)
             {
-                ctx.buildings.Add(i.Key, i);
-            }
-            foreach (var i in st.units)
-            {
-                ctx.units.Add(i.Key, i);
+                ctx.entities.Add(i.Key, i);
             }
             foreach (var i in st.techs)
             {
@@ -361,7 +333,7 @@ namespace RedAlert
 
         public static bool StolenBuilding(Context ctx, int player, int building)
         {
-            var b = ctx.buildings[building];
+            var b = ctx.entities[building];
             if(b.player == player)
             {
                 return false;
@@ -406,9 +378,9 @@ namespace RedAlert
         }
 
         // 取得建物列表
-        public static IEnumerable<Building> GetBuildingMenu(Context ctx, int player)
+        public static IEnumerable<Entity> GetBuildingMenu(Context ctx, int player)
         {
-            return ctx.buildings.Values.Where(b =>
+            return ctx.entities.Values.Where(b =>
             {
                 if(b.player != player)
                 {
@@ -440,7 +412,7 @@ namespace RedAlert
         // 取得單位的武器
         public static IEnumerable<Weapon> GetUnitWeapon(Context ctx, int player, int unit)
         {
-            var u = ctx.units[unit];
+            var u = ctx.entities[unit];
             var weapons = ctx.weapons.Values.Where(w => w.unit == u.Key);
             return weapons;
         }
@@ -507,7 +479,7 @@ namespace RedAlert
                 new string[0] :
                 ConfigEntity.Get(entityPrototype).TechDependencies.Split(',');            
             // 擁有建物
-            var ownBuilds = ctx.buildings.Values.Where(b=>b.player == player).Select(b => b.prototype).Distinct().ToList();
+            var ownBuilds = ctx.entities.Values.Where(b=>b.player == player).Select(b => b.prototype).Distinct().ToList();
             foreach(var r in requestTechs)
             {
                 // 取得現有科技
@@ -533,20 +505,10 @@ namespace RedAlert
 
         // 刪除建物
         // 注意: 這裡不能將建物的科技刪除
+        // 會一並刪除單的擁有的武器
         public static void DestroyBuilding(Context ctx, int key)
         {
-            if(ctx.buildings.ContainsKey(key) == false)
-            {
-                throw new System.Exception("XXX:" + key);
-            }
-            ctx.buildings.Remove(key);
-        }
-
-        // 刪除單位
-        // 會一並刪除單的擁有的武器
-        public static void DestroyUnit(Context ctx, int key)
-        {
-            if (ctx.units.ContainsKey(key) == false)
+            if(ctx.entities.ContainsKey(key) == false)
             {
                 throw new System.Exception("XXX:" + key);
             }
@@ -558,12 +520,12 @@ namespace RedAlert
                 }
                 ctx.weapons.Remove(w.Key);
             }
-            ctx.units.Remove(key);
+            ctx.entities.Remove(key);
         }
 
         public static bool CollectResource(Context ctx, int entity, int resource, int amount)
         {
-            var u = ctx.units[entity];
+            var u = ctx.entities[entity];
             var r = ctx.resources[resource];
             var total = ConfigResource.Get(r.prototype).Amount;
             amount = Mathf.Min(amount, total - r.usedAmount);
@@ -593,11 +555,12 @@ namespace RedAlert
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)
             {
+                case ConfigEntityType.ID_unit:
                 case ConfigEntityType.ID_building:
                     {
-                        var en = new Building(entityPrototype);
+                        var en = new Entity(entityPrototype);
                         en.player = player;
-                        ctx.buildings.Add(en.Key, en);
+                        ctx.entities.Add(en.Key, en);
 
                         // 加入建物的科技, 包含未研發的科技
                         // 研發費用為0的代表會自動標記為研發完成
@@ -620,14 +583,6 @@ namespace RedAlert
                             }
                             ctx.techs.Add(newT.Key, newT);
                         }
-
-                        return en.Key;
-                    }
-                case ConfigEntityType.ID_unit:
-                    {
-                        var en = new Unit(entityPrototype);
-                        en.player = player;
-                        ctx.units.Add(en.Key, en);
 
                         // 加入單位的武器
                         var weapons = GetWeapons(entityPrototype);

@@ -25,7 +25,7 @@ namespace RedAlert
                 return;
             }
             var key = keyRef.Ref;
-            var building = model.ctx.buildings[key];
+            var building = model.ctx.entities[key];
             txt_name.text = ConfigEntity.Get(building.prototype).Name;
         }
     }
