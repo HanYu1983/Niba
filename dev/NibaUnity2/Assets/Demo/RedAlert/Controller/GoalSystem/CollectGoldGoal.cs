@@ -37,6 +37,10 @@ namespace RedAlert
                 Terminate();
                 return GoalState.Running;
             }
+            if(result == GoalState.Fail)
+            {
+
+            }
             return result;
         }
 
