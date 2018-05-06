@@ -24,6 +24,16 @@ namespace RedAlert
             self.GetComponent<NavMeshAgent>().isStopped = false;
         }
 
+        public override GoalState Process()
+        {
+            var dist = Vector3.Distance(self.transform.localPosition, dest);
+            if(dist < 3)
+            {
+                return GoalState.Success;
+            }
+            return base.Process();
+        }
+
         public override void Terminate()
         {
             self.GetComponent<NavMeshAgent>().isStopped = true;

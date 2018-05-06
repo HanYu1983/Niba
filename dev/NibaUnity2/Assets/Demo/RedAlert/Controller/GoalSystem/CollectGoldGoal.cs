@@ -23,20 +23,25 @@ namespace RedAlert
             base.Activate();
             Injector.Inject(this);
 
-            var model = ClientModel;
-            var hasResource = model.ctx.resources.Count > 0;
-            if (hasResource == false)
-            {
-                return;
-            }
+            //AddGoal(new PutGoldGoal());
+            AddGoal(new MoveToBuildingGoal(self, 0, ConfigEntity.ID_gdiGoldFactory));
+            //AddGoal(new GetGoldGoal());
+            AddGoal(new MoveToGoldGoal(self));
+        }
 
-            var resource = model.ctx.resources.Values.First();
-            AddGoal(new MoveToGoal(self, resource.position));
+        public override GoalState Process()
+        {
+            var result = base.Process();
+            if(result == GoalState.Success)
+            {
+                Terminate();
+                return GoalState.Running;
+            }
+            return result;
         }
 
         public override void Terminate()
         {
-
             base.Terminate();
         }
     }

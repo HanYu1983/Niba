@@ -627,5 +627,34 @@ namespace RedAlert
             });
             return ret;
         }
+
+        public static IEnumerable<Resource> GetClosestResource(Context ctx, Vector3 origin)
+        {
+            return ctx.resources.Values.OrderBy(r =>
+            {
+                var dist = Vector3.Distance(origin, r.position);
+                return dist;
+            });
+        }
+
+        public static IEnumerable<Entity> GetClosestEntity(Context ctx, int player, string prototype, Vector3 origin)
+        {
+            return ctx.entities.Values.Where(r =>
+            {
+                if(r.player != player)
+                {
+                    return false;
+                }
+                if(r.prototype != prototype)
+                {
+                    return false;
+                }
+                return true;
+            }).OrderBy(r =>
+            {
+                var dist = Vector3.Distance(origin, r.position);
+                return dist;
+            });
+        }
     }
 }

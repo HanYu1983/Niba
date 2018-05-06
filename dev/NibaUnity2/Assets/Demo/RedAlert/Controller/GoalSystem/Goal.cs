@@ -37,7 +37,7 @@ namespace HanUtil
             {
                 Activate();
             }
-            return GoalState.Fail;
+            return GoalState.Running;
         }
         public virtual void AddGoal(IGoal goal)
         {
@@ -73,12 +73,31 @@ namespace HanUtil
 
         public override void Terminate()
         {
-            if (goals.Count == 0)
+            if (goals.Count != 0)
             {
-                return;
+                goals[0].Terminate();
             }
-            goals[0].Terminate();
             base.Terminate();
+        }
+
+        public IGoal CurrentGoal {
+            get
+            {
+                if(goals.Count == 0)
+                {
+                    return null;
+                }
+                return goals[0];
+            }
+        }
+
+        public void ClearAllGoals()
+        {
+            foreach(var g in goals)
+            {
+                g.Terminate();
+            }
+            goals.Clear();
         }
 
         List<IGoal> goals = new List<IGoal>();
@@ -87,11 +106,7 @@ namespace HanUtil
             if(goals.Count > 0)
             {
                 var first = goals[0];
-                if(first is CompositeGoal)
-                {
-                    (first as CompositeGoal).AddGoal(goal);
-                    return;
-                }
+                first.Terminate();
             }
             goals.Insert(0, goal);
         }
