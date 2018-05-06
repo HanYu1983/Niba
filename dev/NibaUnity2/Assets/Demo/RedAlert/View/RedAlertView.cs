@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HanUtil;
 
 namespace RedAlert
 {
@@ -12,6 +13,10 @@ namespace RedAlert
         public GameObject puttingObj;
         public GameObject unitPrefab;
         public GameObject root;
+
+        public IntShowPageList buildingMenu;
+        public StrShowPageList buildMenu;
+
         public Dictionary<int, RedAlertEntity> entities = new Dictionary<int, RedAlertEntity>();
 
         #region putting building

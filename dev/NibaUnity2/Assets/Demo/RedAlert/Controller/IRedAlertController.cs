@@ -9,6 +9,7 @@ namespace RedAlert
         IRedAlertController Holder { get; set; }
         void OnEnter();
         void OnExit();
+        void OnUpdate(float dt);
     }
 
     public interface IRedAlertController
@@ -23,7 +24,7 @@ namespace RedAlert
         void ClientCreateEntity(int player, int host, string prototype, Vector3 pos);
     }
 
-    public class DefaultRedAlertControllerState : MonoBehaviour, IRedAlertControllerState
+    public class DefaultRedAlertControllerState : IRedAlertControllerState
     {
         public IRedAlertController Holder { get; set; }
         public virtual void OnEnter()
@@ -31,6 +32,10 @@ namespace RedAlert
 
         }
         public virtual void OnExit()
+        {
+
+        }
+        public virtual void OnUpdate(float dt)
         {
 
         }

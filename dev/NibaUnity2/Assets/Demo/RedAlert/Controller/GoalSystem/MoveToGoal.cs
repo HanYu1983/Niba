@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 namespace RedAlert
 {
-    public class MoveToGoal : Goal
+    public class MoveToGoal : Goal, IGoalListener
     {
         GameObject self;
         Vector3 dest;
@@ -15,29 +15,34 @@ namespace RedAlert
         {
             this.self = self;
             this.dest = dest;
+            this.Listener = this;
         }
 
-        public override void Activate()
+        public void OnActivate(IGoal _)
         {
-            base.Activate();
             self.GetComponent<NavMeshAgent>().SetDestination(dest);
             self.GetComponent<NavMeshAgent>().isStopped = false;
         }
 
-        public override GoalState Process()
+        public void OnProcess(IGoal _)
         {
             var dist = Vector3.Distance(self.transform.localPosition, dest);
             if(dist < 3)
             {
-                return GoalState.Success;
+                State = GoalState.Success;
+                return;
             }
-            return base.Process();
+            State = GoalState.Running;
         }
 
-        public override void Terminate()
+        public void OnMessage(IGoal _, string msg)
+        {
+
+        }
+
+        public void OnTerminate(IGoal _)
         {
             self.GetComponent<NavMeshAgent>().isStopped = true;
-            base.Terminate();
         }
     }
 }

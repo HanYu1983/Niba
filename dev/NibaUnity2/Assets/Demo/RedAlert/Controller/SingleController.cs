@@ -25,12 +25,13 @@ namespace RedAlert
             // 每秒同步一次資料
             StartCoroutine(SyncModelEverySecond());
             // 開始
-            var state = GetComponent<NormalState>();
+            var state = new NormalState();
             ChangeState(state);
         }
 
         private void Update()
         {
+            StepState();
             // 這裡模仿client-server架構
             // 所以兩個要一起更新
             // client用來預先計算
@@ -148,6 +149,14 @@ namespace RedAlert
         }
 
         #region basic control state implementaion
+        public void StepState()
+        {
+            if (state != null)
+            {
+                state.OnUpdate(Time.deltaTime);
+            }
+        }
+
         IRedAlertControllerState state;
 
         public RedAlertModel Model { get { return clientModel; } }

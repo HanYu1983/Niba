@@ -12,63 +12,105 @@ namespace HanUtil
 
     public interface IGoal
     {
+        IGoalListener Listener { get; set; }
         void AddGoal(IGoal goal);
         void Activate();
         void Terminate();
-        GoalState Process();
+        void Process();
+        GoalState State { get; }
         void Message(string msg);
+    }
+
+    public interface IGoalListener
+    {
+        void OnActivate(IGoal goal);
+        void OnTerminate(IGoal goal);
+        void OnProcess(IGoal goal);
+        void OnMessage(IGoal goal, string msg);
     }
 
     public class Goal : IGoal
     {
-        bool notifyActivate;
+        bool notifyActivate = true;
 
-        public virtual void Activate()
+        public GoalState State { get; set; }
+        public IGoalListener Listener { get; set; }
+
+        public void Activate()
         {
-            notifyActivate = false;
+            if (notifyActivate)
+            {
+                notifyActivate = false;
+                State = GoalState.Running;
+                if (Listener != null)
+                {
+                    Listener.OnActivate(this);
+                }
+            }
         }
         public virtual void Terminate()
         {
             notifyActivate = true;
-        }
-        public virtual GoalState Process()
-        {
-            if(notifyActivate)
+            if (Listener != null)
             {
-                Activate();
+                Listener.OnTerminate(this);
             }
-            return GoalState.Running;
         }
+        public virtual void Process()
+        {
+            Activate();
+            if (Listener != null)
+            {
+                Listener.OnProcess(this);
+            }
+        }
+
         public virtual void AddGoal(IGoal goal)
         {
             throw new InvalidOperationException("");
         }
         public virtual void Message(string msg)
         {
-
+            if (Listener != null)
+            {
+                Listener.OnMessage(this, msg);
+            }
         }
     }
 
     public class CompositeGoal : Goal
     {
-        public override GoalState Process()
+        public override void Process()
         {
-            base.Process();
-            if (goals.Count == 0)
+            Activate();
+            if(State == GoalState.Success || State == GoalState.Fail)
             {
-                return GoalState.Success;
+                return;
+            }
+            if(goals.Count == 0)
+            {
+                State = GoalState.Success;
+                return;
             }
             var first = goals[0];
-            var result = first.Process();
-            if(result == GoalState.Fail)
+            first.Process();
+            LastProcessGoal = first;
+            if (first.State == GoalState.Fail)
             {
-                return result;
+                State = GoalState.Fail;
             }
-            if(result == GoalState.Success)
+            if(first.State == GoalState.Success)
             {
                 goals.Remove(first);
+                if (goals.Count == 0)
+                {
+                    State = GoalState.Success;
+                }
             }
-            return GoalState.Running;
+            if (Listener != null)
+            {
+                Listener.OnProcess(this);
+            }
         }
 
         public override void Terminate()
@@ -77,18 +119,14 @@ namespace HanUtil
             {
                 goals[0].Terminate();
             }
-            base.Terminate();
+            else
+            {
+                base.Terminate();
+            }
         }
 
-        public IGoal CurrentGoal {
-            get
-            {
-                if(goals.Count == 0)
-                {
-                    return null;
-                }
-                return goals[0];
-            }
+        public IGoal LastProcessGoal {
+            get; set;
         }
 
         public void ClearAllGoals()

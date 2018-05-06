@@ -7,20 +7,20 @@ using System.Linq;
 
 namespace RedAlert
 {
-    public class CollectGoldGoal : CompositeGoal, IInjectClientModel
+    public class CollectGoldGoal : CompositeGoal, IInjectClientModel, IGoalListener
     {
         GameObject self;
 
         public CollectGoldGoal(GameObject self)
         {
             this.self = self;
+            Listener = this;
         }
 
         public RedAlertModel ClientModel { set; get; }
 
-        public override void Activate()
+        public void OnActivate(IGoal _)
         {
-            base.Activate();
             Injector.Inject(this);
 
             //AddGoal(new PutGoldGoal());
@@ -29,24 +29,19 @@ namespace RedAlert
             AddGoal(new MoveToGoldGoal(self));
         }
 
-        public override GoalState Process()
+        public void OnProcess(IGoal _)
         {
-            var result = base.Process();
-            if(result == GoalState.Success)
-            {
-                Terminate();
-                return GoalState.Running;
-            }
-            if(result == GoalState.Fail)
-            {
 
-            }
-            return result;
         }
 
-        public override void Terminate()
+        public void OnMessage(IGoal _, string msg)
         {
-            base.Terminate();
+
+        }
+
+        public void OnTerminate(IGoal _)
+        {
+
         }
     }
 }

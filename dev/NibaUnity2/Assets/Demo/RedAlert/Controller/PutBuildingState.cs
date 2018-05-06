@@ -5,15 +5,21 @@ namespace RedAlert
 {
     public class PutBuildingState : DefaultRedAlertControllerState
     {
-        public int host;
-        public string prototype;
+        int host;
+        string prototype;
 
-        private void Update()
+        public PutBuildingState(int host, string prototype)
+        {
+            this.host = host;
+            this.prototype = prototype;
+        }
+
+        public override void OnUpdate(float dt)
         {
             Holder.View.SyncPuttingEntityPosition(Holder.View.selectionManager.pointer.localPosition);
             if (Input.GetMouseButtonUp(1))
             {
-                Holder.ChangeState(GetComponent<NormalState>());
+                Holder.ChangeState(new NormalState());
             }
         }
 
@@ -25,8 +31,7 @@ namespace RedAlert
                 throw new System.Exception("must building");
             }
             Holder.View.SpawnPuttingEntity(prototype, Holder.View.selectionManager.pointer.localPosition);
-            StartCoroutine(DelayAddListener());
-            enabled = true;
+            Holder.View.StartCoroutine(DelayAddListener());
         }
 
         IEnumerator DelayAddListener()
@@ -39,14 +44,13 @@ namespace RedAlert
         {
             Holder.View.selectionManager.OnSelect -= OnSelect;
             Holder.View.RemovePuttingObject();
-            enabled = false;
         }
 
         void OnSelect(SelectionManager mgr)
         {
             Holder.View.RemovePuttingObject();
             Holder.ClientCreateEntity(Holder.Player, host, prototype, Holder.View.selectionManager.pointer.localPosition);
-            Holder.ChangeState(GetComponent<NormalState>());
+            Holder.ChangeState(new NormalState());
         }
     }
 }

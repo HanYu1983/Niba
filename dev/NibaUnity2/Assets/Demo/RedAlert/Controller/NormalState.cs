@@ -7,15 +7,12 @@ namespace RedAlert
 {
     public class NormalState : DefaultRedAlertControllerState
     {
-        public IntShowPageList buildingMenu;
-        public StrShowPageList buildMenu;
-
         public void OnSelectBuild()
         {
-            var host = buildingMenu.selectedKeyRef.Ref;
+            var host = Holder.View.buildingMenu.selectedKeyRef.Ref;
             var model = Holder.Model;
             var player = Holder.Player;
-            var entityPrototype = buildMenu.selectedKeyRef.Ref;
+            var entityPrototype = Holder.View.buildMenu.selectedKeyRef.Ref;
             var p = DataAlg.GetBuildingProgress(model.ctx, player, host, entityPrototype);
             if (p != null)
             {
@@ -27,10 +24,7 @@ namespace RedAlert
                 }*/
                 if (p.state == BuildingProgressState.Complete)
                 {
-                    var state = GetComponent<PutBuildingState>();
-                    state.host = p.host;
-                    state.prototype = entityPrototype;
-                    Holder.ChangeState(state);
+                    Holder.ChangeState(new PutBuildingState(p.host, entityPrototype));
                     return;
                 }
             }
@@ -41,11 +35,11 @@ namespace RedAlert
 
         public override void OnEnter()
         {
-            buildMenu.onSelect.AddListener(OnSelectBuild);
+            Holder.View.buildMenu.onSelect.AddListener(OnSelectBuild);
         }
         public override void OnExit()
         {
-            buildMenu.onSelect.RemoveListener(OnSelectBuild);
+            Holder.View.buildMenu.onSelect.RemoveListener(OnSelectBuild);
         }
         void OnSelect(SelectionManager mgr)
         {

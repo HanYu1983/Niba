@@ -7,10 +7,9 @@ using System.Linq;
 
 namespace RedAlert
 {
-    public class MoveToGoldGoal : CompositeGoal, IInjectClientModel
+    public class MoveToGoldGoal : CompositeGoal, IInjectClientModel, IGoalListener
     {
         GameObject self;
-        bool giveUp;
         Resource currentTarget;
 
         public RedAlertModel ClientModel { set; get; }
@@ -18,48 +17,43 @@ namespace RedAlert
         public MoveToGoldGoal(GameObject self)
         {
             this.self = self;
+            Listener = this;
         }
 
-        public override void Activate()
+        public void OnActivate(IGoal goal)
         {
-            base.Activate();
             Injector.Inject(this);
             
             var r = DataAlg.GetClosestResource(ClientModel.ctx, self.transform.localPosition).FirstOrDefault();
             if(r == null)
             {
-                giveUp = true;
+                State = GoalState.Fail;
                 return;
             }
             currentTarget = r;
             AddGoal(new MoveToGoal(self, r.position));
         }
 
-        public override GoalState Process()
+        public void OnProcess(IGoal goal)
         {
-            if (giveUp)
+            // 如果建物消失了
+            var isExist = ClientModel.ctx.resources.ContainsKey(currentTarget.Key);
+            if (isExist == false)
             {
-                return GoalState.Fail;
-            }
-            else
-            {
-                // 如果建物消失了
-                var isExist = ClientModel.ctx.resources.ContainsKey(currentTarget.Key);
-                if (isExist == false)
-                {
-                    ClearAllGoals();
-                    // 中止目標, 重找一個最近的建物
-                    Terminate();
-                    return GoalState.Running;
-                }
-                return base.Process();
+                ClearAllGoals();
+                // 中止目標, 重找一個最近的建物
+                Terminate();
             }
         }
 
-        public override void Terminate()
+        public void OnTerminate(IGoal goal)
         {
-            giveUp = false;
-            base.Terminate();
+
+        }
+
+        public void OnMessage(IGoal goal, string msg)
+        {
+
         }
     }
 }
