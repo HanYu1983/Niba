@@ -52,6 +52,25 @@ namespace RedAlert
             if (isGoldExist == false)
             {
                 Terminate();
+                return;
+            }
+            if(State == GoalState.Fail)
+            {
+                if(LastProcessGoal is CollectGoldGoal)
+                {
+                    Terminate();
+                    return;
+                }
+                if(LastProcessGoal is MoveToBuildingGoal)
+                {
+                    var m = LastProcessGoal as MoveToBuildingGoal;
+                    if(m.BuildingPrototype != ConfigEntity.ID_gdiHome)
+                    {
+                        ClearAllGoals();
+                        AddGoal(new MoveToBuildingGoal(self, 0, ConfigEntity.ID_gdiHome));
+                        State = GoalState.Running;
+                    }
+                }
             }
         }
 

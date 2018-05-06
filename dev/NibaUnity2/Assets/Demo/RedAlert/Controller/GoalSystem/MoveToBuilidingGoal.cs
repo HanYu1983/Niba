@@ -24,6 +24,8 @@ namespace RedAlert
             this.Listener = this;
         }
 
+        public string BuildingPrototype { get { return prototype; } }
+
         public void OnActivate(IGoal _)
         {
             Injector.Inject(this);

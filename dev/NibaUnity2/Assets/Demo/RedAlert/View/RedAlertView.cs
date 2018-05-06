@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
+using System.Linq;
 
 namespace RedAlert
 {
@@ -46,13 +47,16 @@ namespace RedAlert
         }
         #endregion
 
+        public GameObject[] entityPrefabs;
+
         public void SpawnEntity(int key, string prototype, Vector3 pos)
         {
             GameObject prefab = puttingPrefab;
             var cfg = ConfigEntity.Get(prototype);
-            if(cfg.EntityType == ConfigEntityType.ID_unit)
+            var prefabOverride = entityPrefabs.Where(p => p.name == prototype).FirstOrDefault();
+            if(prefabOverride != null)
             {
-                prefab = unitPrefab;
+                prefab = prefabOverride;
             }
             var go = Instantiate(prefab, root.transform, false);
             var entity = go.GetComponent<RedAlertEntity>();

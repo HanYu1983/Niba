@@ -38,7 +38,9 @@ namespace RedAlert
             if(progress == null)
             {
                 var building = ConfigEntity.Get(prototype);
-                txt_name.text = string.Format("{0} {1}", building.Name, building.Cost);
+                var progressKey = new BuildingProgress(playerHolder.player, host, prototype).Key;
+                var pendingCnt = DataAlg.GetPendingBuildingProgressCount(model.ctx, progressKey);
+                txt_name.text = string.Format("{0} {1} pending:{2}", building.Name, building.Cost, pendingCnt);
                 gameObject.SetActive(true);
             }
             else

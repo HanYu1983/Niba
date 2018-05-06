@@ -247,6 +247,13 @@ namespace RedAlert
         public static void Building(Context ctx, int player, int host, string entityPrototype)
         {
             var wantBuild = new BuildingProgress(player, host, entityPrototype);
+            var isOccupy = ctx.progress.Values.Any(p => p.host == host);
+            if (isOccupy)
+            {
+                ctx.pendingProgress.Add(wantBuild);
+                return;
+            }
+            /*
             var nowBuilding = ctx.progress.ContainsKey(wantBuild.Key);
             if (nowBuilding)
             {
@@ -260,7 +267,7 @@ namespace RedAlert
                 {
                     throw new System.Exception("building now:" + entityPrototype);
                 }
-            }
+            }*/
             ctx.progress.Add(wantBuild.Key, wantBuild);
         }
 
@@ -301,7 +308,16 @@ namespace RedAlert
             // add pending
             foreach(var p in new List<BuildingProgress>(ctx.pendingProgress))
             {
+                /*
                 if (ctx.progress.ContainsKey(p.Key))
+                {
+                    continue;
+                }
+                ctx.pendingProgress.Remove(p);
+                ctx.progress.Add(p.Key, p);
+                */
+                var isOccupy = ctx.progress.Values.Any(p2 => p2.host == p.host);
+                if (isOccupy)
                 {
                     continue;
                 }
