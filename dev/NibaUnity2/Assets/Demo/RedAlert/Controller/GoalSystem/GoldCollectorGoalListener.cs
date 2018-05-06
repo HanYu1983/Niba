@@ -16,11 +16,12 @@ namespace RedAlert
         
         public RedAlertModel ClientModel { set; get; }
 
-        public void OnActivate(IGoal goal)
+        public void OnActivate(IGoal _)
         {
             Injector.Inject(this);
 
-            goal.AddGoal(new CollectGoldGoal(self));
+            var goal = _ as CompositeGoal;
+            goal.AddGoal(new FindAndCollectGoldGoal(self, -1));
             goal.AddGoal(new MoveToGoal(self, self.transform.localPosition + Vector3.forward * 10));
         }
 
@@ -32,7 +33,7 @@ namespace RedAlert
             {
                 goal.State = GoalState.Running;
 
-                if (goal.LastProcessGoal is CollectGoldGoal)
+                if (goal.LastProcessGoal is FindAndCollectGoldGoal)
                 {
                     goal.LastProcessGoal.Terminate();
                     goal.AddGoal(goal.LastProcessGoal);
@@ -43,7 +44,7 @@ namespace RedAlert
                 if (timer > idleDuration)
                 {
                     timer = 0;
-                    goal.AddGoal(new CollectGoldGoal(self));
+                    goal.AddGoal(new FindAndCollectGoldGoal(self, -1));
                 }
             }
         }
