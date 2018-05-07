@@ -29,8 +29,6 @@ namespace RedAlert
             clients.Add(this);
             RpcSetClient(playerId);
         }
-        #endregion
-
         [ClientRpc]
         void RpcSetClient(int playerId)
         {
@@ -47,31 +45,9 @@ namespace RedAlert
             ctr.Player = playerId;
             ctr.Client = this;
         }
+        #endregion
 
-        public void ClientBuilding(int player, int host, string prototype)
-        {
-            CmdBuilding(player, host, prototype);
-        }
-        public void ClientCancelBuilding(int player, string progressKey)
-        {
-            CmdCancelBuilding(player, progressKey);
-        }
-        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
-        {
-            CmdCreateEntity(player, host, prototype, pos);
-        }
-        public void ServerSyncModel()
-        {
-            SyncModel();
-        }
-        public void ServerNotifyUIUpdate()
-        {
-            foreach(var c in clients)
-            {
-                c.RpcNotifyUIUpdate();
-            }
-        }
-
+        // copy below
         [ClientRpc]
         public void RpcSync(string ctxJson)
         {
@@ -177,6 +153,35 @@ namespace RedAlert
                 c.RpcSync(DataAlg.Memonto(serverModel.ctx));
             }
         }
+
+        #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
+
+
+
+        public void ClientBuilding(int player, int host, string prototype)
+        {
+            CmdBuilding(player, host, prototype);
+        }
+        public void ClientCancelBuilding(int player, string progressKey)
+        {
+            CmdCancelBuilding(player, progressKey);
+        }
+        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
+        {
+            CmdCreateEntity(player, host, prototype, pos);
+        }
+        public void ServerSyncModel()
+        {
+            SyncModel();
+        }
+        public void ServerNotifyUIUpdate()
+        {
+            foreach (var c in clients)
+            {
+                c.RpcNotifyUIUpdate();
+            }
+        }
+        #endregion
     }
 }

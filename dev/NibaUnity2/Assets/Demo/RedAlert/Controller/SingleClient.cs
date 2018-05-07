@@ -21,37 +21,8 @@ namespace RedAlert
             ctr.Client = this;
         }
 
-        public List<IClient> Clients {
-            get
-            {
-                return new List<IClient>() { this };
-            }
-        }
-
-        public void ClientBuilding(int player, int host, string prototype)
-        {
-            CmdBuilding(player, host, prototype);
-        }
-        public void ClientCancelBuilding(int player, string progressKey)
-        {
-            CmdCancelBuilding(player, progressKey);
-        }
-        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
-        {
-            CmdCreateEntity(player, host, prototype, pos);
-        }
-        public void ServerSyncModel()
-        {
-            SyncModel();
-        }
-        public void ServerNotifyUIUpdate()
-        {
-            foreach (var c in clients)
-            {
-                c.RpcNotifyUIUpdate();
-            }
-        }
-
+        // past to below
+      
         public void RpcSync(string ctxJson)
         {
             if (isLocalPlayer == false)
@@ -64,16 +35,29 @@ namespace RedAlert
 
         public void RpcMessage(int player, string msg)
         {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
             // alert
         }
 
         public void RpcCreateEntity(int key, string prototype, Vector3 pos)
         {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            Debug.Log("RpcCreateEntity:" + key + ":" + pos);
             RedAlertController.View.SpawnEntity(key, prototype, pos);
         }
 
         public void RpcNotifyUIUpdate()
         {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
             RedAlertController.Model.OnBuildingChange();
         }
 
@@ -93,7 +77,8 @@ namespace RedAlert
 
         public void CmdBuilding(int player, int host, string entityPrototype)
         {
-            try {
+            try
+            {
                 var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
                 DataAlg.Building(serverModel.ctx, player, host, entityPrototype);
                 SyncModel();
@@ -106,7 +91,8 @@ namespace RedAlert
 
         public void CmdCreateEntity(int player, int host, string prototype, Vector3 pos)
         {
-            try {
+            try
+            {
                 var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
@@ -133,16 +119,43 @@ namespace RedAlert
                 clients[player].RpcMessage(player, e.Message);
             }
         }
-
         public void SyncModel()
         {
             var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-            foreach(var c in clients)
+            foreach (var c in clients)
             {
                 c.RpcSync(DataAlg.Memonto(serverModel.ctx));
             }
         }
 
+        #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
+
+
+
+        public void ClientBuilding(int player, int host, string prototype)
+        {
+            CmdBuilding(player, host, prototype);
+        }
+        public void ClientCancelBuilding(int player, string progressKey)
+        {
+            CmdCancelBuilding(player, progressKey);
+        }
+        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
+        {
+            CmdCreateEntity(player, host, prototype, pos);
+        }
+        public void ServerSyncModel()
+        {
+            SyncModel();
+        }
+        public void ServerNotifyUIUpdate()
+        {
+            foreach (var c in clients)
+            {
+                c.RpcNotifyUIUpdate();
+            }
+        }
+        #endregion
     }
 }
