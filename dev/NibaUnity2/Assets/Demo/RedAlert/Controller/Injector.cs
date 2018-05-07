@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GameFramework.GameStructure;
 
 namespace RedAlert
 {
@@ -12,6 +13,11 @@ namespace RedAlert
     public interface IInjectRedAlertController
     {
         IRedAlertController RedAlertController { set; }
+    }
+
+    public interface IInjectServerModel
+    {
+        RedAlertModel ServerModel { set; }
     }
 
     public class Injector : MonoBehaviour
@@ -43,6 +49,14 @@ namespace RedAlert
                     throw new System.Exception("no redAlertController");
                 }
                 (obj as IInjectRedAlertController).RedAlertController = instance.redAlertController;
+            }
+            if(obj is IInjectServerModel)
+            {
+                if (GameManager.Instance.gameObject.GetComponent<RedAlertModel>() == null)
+                {
+                    throw new System.Exception("no servermodel");
+                }
+                (obj as IInjectServerModel).ServerModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
             }
         }
     }

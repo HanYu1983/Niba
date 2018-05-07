@@ -30,7 +30,7 @@ namespace RedAlert
             }
             // client simulation
             DataAlg.Building(model.ctx, player, host, entityPrototype);
-            Holder.ClientBuilding(player, host, entityPrototype);
+            Holder.Client.ClientBuilding(player, host, entityPrototype);
         }
 
         public override void OnEnter()

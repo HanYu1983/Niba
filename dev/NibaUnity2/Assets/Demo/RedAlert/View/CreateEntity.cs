@@ -10,39 +10,50 @@ namespace RedAlert
         Entity, Resource
     }
 
-    public class CreateEntity : MonoBehaviour
+    public class CreateEntity : MonoBehaviour, IInjectServerModel, IInjectRedAlertController
     {
-        public RedAlertModel model;
         public CreateEntityType createType;
         public string prototype;
         public int player;
 
-        private void Awake()
+        private void Start()
         {
-            var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
+            Injector.Inject(this);
+            if(RedAlertController.Player != 0)
+            {
+                return;
+            }
+
             var pos = transform.localPosition;
             switch (createType)
             {
                 case CreateEntityType.Entity:
                     {
-                        var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype, true);
+                        var key = DataAlg.CreateEntity(ServerModel.ctx, player, prototype, true);
                         var entity = gameObject.AddComponent<RedAlertEntity>();
+                        entity.isUpdatePosition = true;
                         entity.key = key;
                         var cfg = ConfigEntity.Get(prototype);
-                        serverModel.ctx.entities[key].position = pos;
-                        serverModel.ctx.entities[key].player = player;
+                        ServerModel.ctx.entities[key].position = pos;
+                        ServerModel.ctx.entities[key].player = player;
+
+                        RedAlertController.View.entities.Add(key, entity);
                     }
                     break;
                 case CreateEntityType.Resource:
                     {
-                        var key = DataAlg.CreateResource(serverModel.ctx, prototype);
+                        var key = DataAlg.CreateResource(ServerModel.ctx, prototype);
                         var entity = gameObject.AddComponent<RedAlertEntity>();
                         entity.key = key;
-                        serverModel.ctx.resources[key].position = pos;
+                        ServerModel.ctx.resources[key].position = pos;
+
+                        RedAlertController.View.entities.Add(key, entity);
                     }
                     break;
             }
-            
         }
+
+        public RedAlertModel ServerModel { set; get; }
+        public IRedAlertController RedAlertController { set; get; }
     }
 }

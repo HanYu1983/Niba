@@ -156,6 +156,10 @@ namespace RedAlert
                 c.RpcNotifyUIUpdate();
             }
         }
+        public void ServerSyncEntity(int key, Vector3 pos, Vector3 rotation)
+        {
+            
+        }
         #endregion
     }
 }

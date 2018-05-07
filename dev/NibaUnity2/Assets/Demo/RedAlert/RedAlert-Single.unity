@@ -633,7 +633,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412062817727dc04bb3488d7f2b2526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   createType: 1
   prototype: gold
   player: 0
@@ -1113,7 +1112,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000014525053, y: -0.000008579292}
+  m_AnchoredPosition: {x: -0.000014525053, y: -0.00023556806}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &510016504
@@ -1195,7 +1194,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412062817727dc04bb3488d7f2b2526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   createType: 0
   prototype: gdiFactory
   player: 0
@@ -1679,7 +1677,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412062817727dc04bb3488d7f2b2526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   createType: 0
   prototype: gdiHome
   player: 0
@@ -1908,6 +1905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 0
+  isUpdatePosition: 0
 --- !u!1 &616994813
 GameObject:
   m_ObjectHideFlags: 0
@@ -2209,7 +2207,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &791674402
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2318,7 +2316,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &798350780
 GameObject:
@@ -3693,7 +3691,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1077963840
 GameObject:
@@ -3770,8 +3768,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 63267490}
   m_HandleRect: {fileID: 63267489}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.99999964
+  m_Value: 1
+  m_Size: 0.9999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4563,7 +4561,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412062817727dc04bb3488d7f2b2526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   createType: 0
   prototype: gdiGoldCollector
   player: 0
@@ -5188,46 +5185,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   key: 0
---- !u!1 &1543244263
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1543244265}
-  - component: {fileID: 1543244264}
-  m_Layer: 0
-  m_Name: ServerModel
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &1543244264
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1543244263}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27c491a9a7215004380cbb5d29f6b662, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1543244265
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1543244263}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 54.533085, y: 35.00991, z: 100.2794}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  isUpdatePosition: 0
 --- !u!1 &1551031702
 GameObject:
   m_ObjectHideFlags: 0
@@ -5320,7 +5278,7 @@ Transform:
   - {fileID: 1516673679}
   - {fileID: 610585617}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1569156714
 GameObject:
@@ -5574,7 +5532,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1703765622
 MonoBehaviour:
@@ -6021,7 +5979,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1884823410
 GameObject:
@@ -6526,7 +6484,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 412062817727dc04bb3488d7f2b2526c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 0}
   createType: 0
   prototype: gdiGoldFactory
   player: 0
@@ -6598,7 +6555,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2076696597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6621,7 +6578,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2086931939
 GameObject:

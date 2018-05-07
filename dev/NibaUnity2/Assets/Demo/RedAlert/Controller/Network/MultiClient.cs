@@ -2,12 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using GameFramework.GameStructure;
 using System;
 
 namespace RedAlert
 {
-    public class MultiClient : NetworkBehaviour, IClient, IInjectRedAlertController
+    public class MultiClient : NetworkBehaviour, IClient, IInjectRedAlertController, IInjectServerModel
     {
         public override void OnStartLocalPlayer()
         {
@@ -74,7 +73,6 @@ namespace RedAlert
             {
                 return;
             }
-            Debug.Log("RpcCreateEntity:"+key+":"+pos);
             RedAlertController.View.SpawnEntity(key, prototype, pos);
         }
         [ClientRpc]
@@ -86,13 +84,21 @@ namespace RedAlert
             }
             RedAlertController.Model.OnBuildingChange();
         }
+        [ClientRpc]
+        public void RpcSyncEntity(int key, Vector3 pos, Vector3 rotation)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.SyncEntity(key, pos, rotation);
+        }
         [Command]
         public void CmdCancelBuilding(int player, string key)
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-                DataAlg.CancelBuildingProgress(serverModel.ctx, key);
+                DataAlg.CancelBuildingProgress(ServerModel.ctx, key);
                 SyncModel();
             }
             catch (Exception e)
@@ -105,8 +111,7 @@ namespace RedAlert
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-                DataAlg.Building(serverModel.ctx, player, host, entityPrototype);
+                DataAlg.Building(ServerModel.ctx, player, host, entityPrototype);
                 SyncModel();
             }
             catch (Exception e)
@@ -119,7 +124,7 @@ namespace RedAlert
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
+                var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
                 var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
@@ -147,16 +152,15 @@ namespace RedAlert
         }
         public void SyncModel()
         {
-            var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
             foreach (var c in clients)
             {
-                c.RpcSync(DataAlg.Memonto(serverModel.ctx));
+                c.RpcSync(DataAlg.Memonto(ServerModel.ctx));
             }
         }
 
         #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
-
+        public RedAlertModel ServerModel { set; get; }
 
 
         public void ClientBuilding(int player, int host, string prototype)
@@ -180,6 +184,13 @@ namespace RedAlert
             foreach (var c in clients)
             {
                 c.RpcNotifyUIUpdate();
+            }
+        }
+        public void ServerSyncEntity(int key, Vector3 pos, Vector3 rotation)
+        {
+            foreach (var c in clients)
+            {
+                c.RpcSyncEntity(key, pos, rotation);
             }
         }
         #endregion

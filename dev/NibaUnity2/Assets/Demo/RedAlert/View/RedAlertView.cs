@@ -68,5 +68,18 @@ namespace RedAlert
             entity.key = key;
             entities.Add(entity.key, entity);
         }
+
+        public void SyncEntity(int key, Vector3 pos, Vector3 rotation)
+        {
+            var isExist = entities.ContainsKey(key);
+            if(isExist == false)
+            {
+                Debug.LogWarning("entity not found:" + key);
+                return;
+            }
+            var e = entities[key];
+            e.transform.localPosition = pos;
+            e.transform.localRotation = Quaternion.Euler(rotation);
+        }
     }
 }

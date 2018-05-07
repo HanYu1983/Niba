@@ -103,7 +103,7 @@ namespace RedAlert
                 var prototype = p.entityPrototype;
                 var hostBuilding = serverModel.ctx.entities[host];
                 var pos = hostBuilding.position;
-                ClientCreateEntity(Player, host, prototype, pos);
+                Client.ClientCreateEntity(Player, host, prototype, pos);
             }
         }
 
@@ -115,7 +115,7 @@ namespace RedAlert
                 Client.ServerSyncModel();
             }
         }
-
+        /*
         public void ClientBuilding(int player, int host, string prototype)
         {
             Client.ClientBuilding(player, host, prototype);
@@ -128,7 +128,7 @@ namespace RedAlert
         {
             Client.ClientCreateEntity(player, host, prototype, pos);
         }
-
+        */
         #region basic control state implementaion
         public void StepState()
         {

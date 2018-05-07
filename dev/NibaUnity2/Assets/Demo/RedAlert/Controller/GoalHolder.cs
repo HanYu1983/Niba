@@ -7,7 +7,7 @@ using HanUtil;
 
 namespace RedAlert
 {
-    public class GoalHolder : MonoBehaviour, IInjectClientModel
+    public class GoalHolder : MonoBehaviour, IInjectRedAlertController
     {
         CompositeGoal goal = new CompositeGoal();
 
@@ -17,11 +17,19 @@ namespace RedAlert
             goal.Listener = listener;
         }
 
-        void Update()
+        void Start()
         {
-            goal.Process();
+            Injector.Inject(this);
         }
 
-        public RedAlertModel ClientModel { set; get; }
+        void Update()
+        {
+            if (RedAlertController.Player == 0)
+            {
+                goal.Process();
+            }
+        }
+
+        public IRedAlertController RedAlertController { set; get; }
     }
 }
