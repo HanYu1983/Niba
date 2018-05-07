@@ -38,8 +38,6 @@ namespace RedAlert
             this.playerId = playerId;
 
             Injector.Inject(this);
-            Debug.Log(RedAlertController);
-
             var ctr = RedAlertController;
             ctr.Player = playerId;
             ctr.Client = this;

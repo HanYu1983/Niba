@@ -8,6 +8,7 @@ namespace RedAlert
     {
         public int key;
         public bool isUpdatePosition;
+        Vector3 lastPos, lastRot;
 
         void Start()
         {
@@ -21,19 +22,28 @@ namespace RedAlert
                 var isExist = ServerModel.ctx.entities.ContainsKey(key);
                 if (isExist)
                 {
-                    var pos = transform.localPosition;
-                    var rot = transform.localRotation.eulerAngles;
-                    var e = ServerModel.ctx.entities[key];
-                    e.position = pos;
-                    if (isUpdatePosition)
+                    var isDirty = lastPos != transform.localPosition || lastRot != transform.localRotation.eulerAngles;
+                    if (isDirty)
                     {
-                        if (RedAlertController.Client == null)
+                        var pos = transform.localPosition;
+                        var rot = transform.localRotation.eulerAngles;
+
+                        var e = ServerModel.ctx.entities[key];
+                        e.position = pos;
+                        if (isUpdatePosition)
                         {
-                            Debug.LogWarning("Client Not Set");
-                            return;
+                            if (RedAlertController.Client == null)
+                            {
+                                Debug.LogWarning("Client Not Set");
+                                return;
+                            }
+                            RedAlertController.Client.ServerSyncEntity(key, pos, rot);
                         }
-                        RedAlertController.Client.ServerSyncEntity(key, pos, rot);
+
+                        lastPos = pos;
+                        lastRot = rot;
                     }
+                    
                 }
             }
         }
