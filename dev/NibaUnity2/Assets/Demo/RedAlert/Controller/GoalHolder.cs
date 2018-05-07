@@ -30,6 +30,11 @@ namespace RedAlert
             }
         }
 
+        public void Message(string msg)
+        {
+            goal.Message(msg);
+        }
+
         public IRedAlertController RedAlertController { set; get; }
     }
 }

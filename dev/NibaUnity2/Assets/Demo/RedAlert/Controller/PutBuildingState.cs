@@ -37,12 +37,12 @@ namespace RedAlert
         IEnumerator DelayAddListener()
         {
             yield return 0;
-            Holder.View.selectionManager.OnSelect += OnSelect;
+            SelectionManager.OnSelect += OnSelect;
         }
 
         public override void OnExit()
         {
-            Holder.View.selectionManager.OnSelect -= OnSelect;
+            SelectionManager.OnSelect -= OnSelect;
             Holder.View.RemovePuttingObject();
         }
 

@@ -10,7 +10,7 @@ namespace RedAlert
         public LayerMask RaycastLayerMask;
         public Transform pointer;
         public RectTransform selectionRect;
-        public Action<SelectionManager> OnSelect = delegate { };
+        public static Action<SelectionManager> OnSelect = delegate { };
 
         public Vector2 firstMouse;
         public Vector2 secondMouse;

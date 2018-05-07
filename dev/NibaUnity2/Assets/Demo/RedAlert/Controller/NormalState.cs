@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
+using System.Linq;
 
 namespace RedAlert
 {
@@ -36,14 +37,39 @@ namespace RedAlert
         public override void OnEnter()
         {
             Holder.View.buildMenu.onSelect.AddListener(OnSelectBuild);
+            SelectionManager.OnSelect += OnSelect;
         }
         public override void OnExit()
         {
+            SelectionManager.OnSelect -= OnSelect;
             Holder.View.buildMenu.onSelect.RemoveListener(OnSelectBuild);
         }
         void OnSelect(SelectionManager mgr)
         {
+            var objs = Holder.Model.ctx.entities.Values.Where(e =>
+            {
+                if (e.player != Holder.Player)
+                {
+                    return false;
+                }
+                var cfg = ConfigEntity.Get(e.prototype);
+                if (cfg.EntityType == ConfigEntityType.ID_building)
+                {
+                    return false;
+                }
+                var isExistInView = Holder.View.entities.ContainsKey(e.Key);
+                if(isExistInView == false)
+                {
+                    return false;
+                }
+                return true;
+            }).Select(e=>Holder.View.entities[e.Key].gameObject).ToList();
+            objs = mgr.GetSelection(objs);
 
+            if (objs.Count != 0)
+            {
+                Holder.ChangeState(new SelectUnitsState(objs));
+            }
         }
     }
 }
