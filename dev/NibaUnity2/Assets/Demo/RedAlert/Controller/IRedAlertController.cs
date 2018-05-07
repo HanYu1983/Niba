@@ -17,7 +17,8 @@ namespace RedAlert
         void ChangeState(IRedAlertControllerState state);
         RedAlertModel Model { get; }
         RedAlertView View { get; }
-        int Player { get; }
+        int Player { get; set; }
+        IClient Client { get; set; }
 
         void ClientBuilding(int player, int host, string prototype);
         void ClientCancelBuilding(int player, string progressKey);

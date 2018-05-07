@@ -9,9 +9,15 @@ namespace RedAlert
         RedAlertModel ClientModel { set; }
     }
 
+    public interface IInjectRedAlertController
+    {
+        IRedAlertController RedAlertController { set; }
+    }
+
     public class Injector : MonoBehaviour
     {
         public RedAlertModel clientModel;
+        public SingleController redAlertController;
 
         static Injector instance;
 
@@ -20,9 +26,24 @@ namespace RedAlert
             instance = this;
         }
 
-        public static void Inject(IInjectClientModel obj)
+        public static void Inject(object obj)
         {
-            obj.ClientModel = instance.clientModel;
+            if(obj is IInjectClientModel)
+            {
+                if (instance.clientModel == null)
+                {
+                    throw new System.Exception("no clientModel");
+                }
+                (obj as IInjectClientModel).ClientModel = instance.clientModel;
+            }
+            if (obj is IInjectRedAlertController)
+            {
+                if(instance.redAlertController == null)
+                {
+                    throw new System.Exception("no redAlertController");
+                }
+                (obj as IInjectRedAlertController).RedAlertController = instance.redAlertController;
+            }
         }
     }
 }

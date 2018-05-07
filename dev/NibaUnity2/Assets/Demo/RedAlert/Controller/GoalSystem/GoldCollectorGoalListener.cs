@@ -31,14 +31,18 @@ namespace RedAlert
 
             if(goal.State == GoalState.Success)
             {
-                goal.State = GoalState.Running;
-
                 if (goal.LastProcessGoal is FindAndCollectGoldGoal)
                 {
+                    goal.State = GoalState.Running;
                     goal.LastProcessGoal.Terminate();
                     goal.AddGoal(goal.LastProcessGoal);
                     return;
                 }
+            }
+
+            if(goal.State == GoalState.Success || goal.State == GoalState.Fail)
+            {
+                goal.State = GoalState.Running;
 
                 timer += Time.deltaTime;
                 if (timer > idleDuration)
