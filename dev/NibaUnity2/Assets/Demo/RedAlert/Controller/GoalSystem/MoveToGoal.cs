@@ -27,7 +27,7 @@ namespace RedAlert
         public void OnProcess(IGoal _)
         {
             var dist = Vector3.Distance(self.transform.localPosition, dest);
-            if(dist < 3)
+            if(dist < 20)
             {
                 State = GoalState.Success;
                 return;

@@ -58,7 +58,7 @@ namespace RedAlert
                     yield break;
                 }
                 var dist = Vector3.Distance(model.ctx.entities[buildingKey].position, self.transform.localPosition);
-                if (dist > 3)
+                if (dist > 20)
                 {
                     State = GoalState.Fail;
                     yield break;
