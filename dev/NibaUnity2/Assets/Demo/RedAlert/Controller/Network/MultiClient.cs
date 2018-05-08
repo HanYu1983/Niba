@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System;
-
+using System.Linq;
 namespace RedAlert
 {
     public class MultiClient : NetworkBehaviour, IClient, IInjectRedAlertController, IInjectServerModel
@@ -91,6 +91,18 @@ namespace RedAlert
             }
             RedAlertController.View.SyncEntity(key, pos, rotation);
         }
+        [ClientRpc]
+        public void RpcDirectMoveTo(int[] keys, Vector3 pos)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            var units = keys
+                .Where(k => RedAlertController.View.entities.ContainsKey(k))
+                .Select(k => RedAlertController.View.entities[k].gameObject);
+            Injector.OnDirectMoveTo(units.ToList(), pos);
+        }
         [Command]
         public void CmdCancelBuilding(int player, string key)
         {
@@ -172,6 +184,14 @@ namespace RedAlert
         public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
         {
             CmdCreateEntity(player, host, prototype, pos);
+        }
+        public void ClientDirectMoveTo(List<GameObject> objs, Vector3 pos)
+        {
+            var keys = objs.Select(o => o.GetComponent<RedAlertEntity>().key).ToArray();
+            foreach (var c in clients)
+            {
+                c.RpcDirectMoveTo(keys, pos);
+            }
         }
         public void ServerSyncModel()
         {

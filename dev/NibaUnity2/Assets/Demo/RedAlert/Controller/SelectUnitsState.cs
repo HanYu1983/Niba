@@ -27,17 +27,7 @@ namespace RedAlert
             {
                 var sm = Holder.View.selectionManager;
                 var pos = sm.pointer.localPosition;
-
-                foreach(var u in units)
-                {
-                    var goal = u.GetComponent<GoalHolder>();
-                    if(goal == null)
-                    {
-                        Debug.LogWarning("XXXX");
-                        continue;
-                    }
-                    goal.Message("moveTo,");
-                }
+                Holder.Client.ClientDirectMoveTo(units, pos+new Vector3(0,5,0));
             }
         }
 

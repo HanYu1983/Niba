@@ -27,7 +27,7 @@ namespace RedAlert
         public int usedHp;
         public Vector3 position;
         public Vector3 rotation;
-        public int amount;
+        public int goldAmount;
     }
 
     [Serializable]
@@ -111,7 +111,7 @@ namespace RedAlert
         public int Key { get { return key; } }
         public string prototype;
         public Vector3 position;
-        public int usedAmount;
+        public int usedGoldAmount;
     }
 
     public class Context
@@ -539,15 +539,29 @@ namespace RedAlert
             ctx.entities.Remove(key);
         }
 
-        public static bool CollectResource(Context ctx, int entity, int resource, int amount)
+        public static int ConsumeResource(Context ctx, int building, int car, int amount)
+        {
+            var u = ctx.entities[car];
+            amount = Mathf.Min(amount, u.goldAmount);
+            u.goldAmount -= amount;
+
+            var cfg = ConfigResource.Get(ConfigResource.ID_gold);
+            var b = ctx.entities[building];
+            var earn = amount * cfg.Value;
+            ctx.money[b.player] += earn;
+
+            return amount;
+        }
+
+        public static int CollectResource(Context ctx, int entity, int resource, int amount)
         {
             var u = ctx.entities[entity];
             var r = ctx.resources[resource];
             var total = ConfigResource.Get(r.prototype).Amount;
-            amount = Mathf.Min(amount, total - r.usedAmount);
-            r.usedAmount += amount;
-            u.amount += amount;
-            return amount > 0;
+            amount = Mathf.Min(amount, total - r.usedGoldAmount);
+            r.usedGoldAmount += amount;
+            u.goldAmount += amount;
+            return amount;
         }
 
         public static int CreateResource(Context ctx, string prototype)

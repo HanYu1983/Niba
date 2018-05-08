@@ -7,19 +7,17 @@ using System.Linq;
 
 namespace RedAlert
 {
-    public class MoveToBuildingGoal : CompositeGoal, IInjectClientModel, IGoalListener
+    public class MoveToBuildingGoal : CompositeGoal, IInjectServerModel, IGoalListener
     {
         GameObject self;
-        int player;
         string prototype;
         Entity currentTargetEntity;
 
-        public RedAlertModel ClientModel { set; get; }
+        public RedAlertModel ServerModel { set; get; }
 
-        public MoveToBuildingGoal(GameObject self, int player, string prototype)
+        public MoveToBuildingGoal(GameObject self, string prototype)
         {
             this.self = self;
-            this.player = player;
             this.prototype = prototype;
             this.Listener = this;
         }
@@ -30,7 +28,9 @@ namespace RedAlert
         {
             Injector.Inject(this);
 
-            var r = DataAlg.GetClosestEntity(ClientModel.ctx, player, prototype, self.transform.localPosition).FirstOrDefault();
+            var viewEntity = self.GetComponent<RedAlertEntity>();
+            var player = ServerModel.ctx.entities[viewEntity.key].player;
+            var r = DataAlg.GetClosestEntity(ServerModel.ctx, player, prototype, self.transform.localPosition).FirstOrDefault();
             if(r == null)
             {
                 State = GoalState.Fail;
@@ -43,7 +43,7 @@ namespace RedAlert
         public void OnProcess(IGoal _)
         {
             // 如果消失了
-            var isExist = ClientModel.ctx.entities.ContainsKey(currentTargetEntity.Key);
+            var isExist = ServerModel.ctx.entities.ContainsKey(currentTargetEntity.Key);
             if(isExist == false)
             {
                 ClearAllGoals();

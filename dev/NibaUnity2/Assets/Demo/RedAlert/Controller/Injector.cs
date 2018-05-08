@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GameFramework.GameStructure;
+using System;
 
 namespace RedAlert
 {
@@ -31,6 +32,8 @@ namespace RedAlert
         {
             instance = this;
         }
+
+        public static Action<List<GameObject>, Vector3> OnDirectMoveTo = delegate { };
 
         public static void Inject(object obj)
         {

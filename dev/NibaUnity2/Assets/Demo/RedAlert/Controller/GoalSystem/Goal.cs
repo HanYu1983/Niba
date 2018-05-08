@@ -101,6 +101,7 @@ namespace HanUtil
             }
             if(first.State == GoalState.Success)
             {
+                first.Terminate();
                 goals.Remove(first);
                 if (goals.Count == 0)
                 {

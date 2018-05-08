@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace RedAlert
 {
-    public class FindAndCollectGoldGoal : CompositeGoal, IInjectClientModel, IGoalListener
+    public class FindAndCollectGoldGoal : CompositeGoal, IInjectServerModel, IGoalListener
     {
         GameObject self;
         int goldKey;
@@ -21,16 +21,16 @@ namespace RedAlert
 
         public int CurrentGold { get { return goldKey;  } }
 
-        public RedAlertModel ClientModel { set; get; }
+        public RedAlertModel ServerModel { set; get; }
 
         public void OnActivate(IGoal _)
         {
             Injector.Inject(this);
             
-            var isGoldExist = ClientModel.ctx.resources.ContainsKey(goldKey);
+            var isGoldExist = ServerModel.ctx.resources.ContainsKey(goldKey);
             if (isGoldExist == false)
             {
-                var findGold = DataAlg.GetClosestResource(ClientModel.ctx, self.transform.localPosition).FirstOrDefault();
+                var findGold = DataAlg.GetClosestResource(ServerModel.ctx, self.transform.localPosition).FirstOrDefault();
                 if (findGold == null)
                 {
                     State = GoalState.Fail;
@@ -39,16 +39,14 @@ namespace RedAlert
                 goldKey = findGold.Key;
             }
 
-            var gold = ClientModel.ctx.resources[goldKey];
-            //AddGoal(new PutGoldGoal());
-            AddGoal(new MoveToBuildingGoal(self, 0, ConfigEntity.ID_gdiGoldFactory));
+            var gold = ServerModel.ctx.resources[goldKey];
             AddGoal(new CollectGoldGoal(self, gold.Key, null));
             AddGoal(new MoveToGoal(self, gold.position));
         }
 
         public void OnProcess(IGoal _)
         {
-            var isGoldExist = ClientModel.ctx.resources.ContainsKey(goldKey);
+            var isGoldExist = ServerModel.ctx.resources.ContainsKey(goldKey);
             if (isGoldExist == false)
             {
                 Terminate();
@@ -60,16 +58,6 @@ namespace RedAlert
                 {
                     Terminate();
                     return;
-                }
-                if(LastProcessGoal is MoveToBuildingGoal)
-                {
-                    var m = LastProcessGoal as MoveToBuildingGoal;
-                    if(m.BuildingPrototype != ConfigEntity.ID_gdiHome)
-                    {
-                        ClearAllGoals();
-                        AddGoal(new MoveToBuildingGoal(self, 0, ConfigEntity.ID_gdiHome));
-                        State = GoalState.Running;
-                    }
                 }
             }
         }

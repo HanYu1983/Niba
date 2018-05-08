@@ -19,11 +19,6 @@ namespace RedAlert
         RedAlertView View { get; }
         int Player { get; set; }
         IClient Client { get; set; }
-        /*
-        void ClientBuilding(int player, int host, string prototype);
-        void ClientCancelBuilding(int player, string progressKey);
-        void ClientCreateEntity(int player, int host, string prototype, Vector3 pos);
-        */
     }
 
     public class DefaultRedAlertControllerState : IRedAlertControllerState

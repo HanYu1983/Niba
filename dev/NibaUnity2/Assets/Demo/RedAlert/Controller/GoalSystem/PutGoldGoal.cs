@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
 using UnityEngine.AI;
+using System.Linq;
 
 namespace RedAlert
 {
-    public class CollectGoldGoal : Goal, IGoalListener, IInjectRedAlertController, IInjectServerModel
+    public class PutGoldGoal : Goal, IGoalListener, IInjectRedAlertController, IInjectServerModel
     {
         GameObject self;
-        int goldKey;
-        FindAndCollectGoldGoal dynamicGold;
+        int buildingKey;
 
-        public CollectGoldGoal(GameObject self, int goldKey, FindAndCollectGoldGoal dynamicGold)
+        public PutGoldGoal(GameObject self, int buildingKey)
         {
             this.self = self;
-            this.goldKey = goldKey;
-            this.dynamicGold = dynamicGold;
+            this.buildingKey = buildingKey;
             this.Listener = this;
         }
 
@@ -25,25 +24,17 @@ namespace RedAlert
             Injector.Inject(this);
 
             var model = ServerModel;
-            var isGoldExist = model.ctx.resources.ContainsKey(goldKey);
-            if (isGoldExist == false)
+            var isTargetExist = model.ctx.entities.ContainsKey(buildingKey);
+            if (isTargetExist == false)
             {
-                if (dynamicGold != null)
-                {
-                    goldKey = dynamicGold.CurrentGold;
-                }
-
-                isGoldExist = model.ctx.resources.ContainsKey(goldKey);
-                if (isGoldExist == false)
-                {
-                    State = GoalState.Fail;
-                    return;
-                }
+                State = GoalState.Fail;
+                return;
             }
-            if(collectingTask != null)
+            
+            if (puttingTask != null)
             {
-                RedAlertController.View.StopCoroutine(collectingTask);
-                collectingTask = null;
+                RedAlertController.View.StopCoroutine(puttingTask);
+                puttingTask = null;
             }
             RedAlertController.View.StartCoroutine(Collecting());
         }
@@ -53,20 +44,20 @@ namespace RedAlert
 
         }
 
-        Coroutine collectingTask;
+        Coroutine puttingTask;
 
         IEnumerator Collecting()
         {
             while (true)
             {
                 var model = ServerModel;
-                var isGoldExist = model.ctx.resources.ContainsKey(goldKey);
-                if (isGoldExist == false)
+                var isTargetExist = model.ctx.entities.ContainsKey(buildingKey);
+                if (isTargetExist == false)
                 {
                     State = GoalState.Fail;
                     yield break;
                 }
-                var dist = Vector3.Distance(model.ctx.resources[goldKey].position, self.transform.localPosition);
+                var dist = Vector3.Distance(model.ctx.entities[buildingKey].position, self.transform.localPosition);
                 if (dist > 3)
                 {
                     State = GoalState.Fail;
@@ -82,13 +73,14 @@ namespace RedAlert
                 }
                 var entity = model.ctx.entities[viewEntity.key];
 
-                var isFull = entity.goldAmount >= 20;
-                if (isFull)
+                var isPutAll = entity.goldAmount == 0;
+                if (isPutAll)
                 {
                     State = GoalState.Success;
                     yield break;
                 }
-                if (DataAlg.CollectResource(model.ctx, entity.Key, goldKey, 1) == 0)
+                var consumeAmount = DataAlg.ConsumeResource(model.ctx, buildingKey, entity.Key, 1);
+                if (consumeAmount == 0)
                 {
                     Terminate();
                     yield break;
@@ -104,10 +96,10 @@ namespace RedAlert
 
         public void OnTerminate(IGoal _)
         {
-            if (collectingTask != null)
+            if (puttingTask != null)
             {
-                RedAlertController.View.StopCoroutine(collectingTask);
-                collectingTask = null;
+                RedAlertController.View.StopCoroutine(puttingTask);
+                puttingTask = null;
             }
         }
 

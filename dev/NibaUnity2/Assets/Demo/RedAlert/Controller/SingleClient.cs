@@ -160,6 +160,10 @@ namespace RedAlert
         {
             
         }
+        public void ClientDirectMoveTo(List<GameObject> key, Vector3 pos)
+        {
+            
+        }
         #endregion
     }
 }
