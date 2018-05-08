@@ -51,6 +51,7 @@ namespace RedAlert
                     }
                     break;
             }
+            Destroy(this);
         }
 
         public RedAlertModel ServerModel { set; get; }

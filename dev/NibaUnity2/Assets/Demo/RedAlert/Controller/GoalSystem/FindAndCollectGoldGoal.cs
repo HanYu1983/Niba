@@ -39,6 +39,15 @@ namespace RedAlert
                 goldKey = findGold.Key;
             }
 
+            var viewEntity = self.GetComponent<RedAlertEntity>();
+            var entity = ServerModel.ctx.entities[viewEntity.key];
+            var isFull = entity.goldAmount >= 10;
+            if (isFull)
+            {
+                State = GoalState.Success;
+                return;
+            }
+
             var gold = ServerModel.ctx.resources[goldKey];
             AddGoal(new CollectGoldGoal(self, gold.Key, null));
             AddGoal(new MoveToGoal(self, gold.position));
@@ -59,6 +68,10 @@ namespace RedAlert
                     Terminate();
                     return;
                 }
+            }
+            if(Goals.Count == 0)
+            {
+                State = GoalState.Success;
             }
         }
 

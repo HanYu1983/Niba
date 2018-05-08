@@ -10,6 +10,7 @@ namespace RedAlert
     public class GoalHolder : MonoBehaviour, IInjectRedAlertController
     {
         CompositeGoal goal = new CompositeGoal();
+        public CompositeGoal Goal { get { return goal;  } }
 
         void Awake()
         {
@@ -28,11 +29,6 @@ namespace RedAlert
             {
                 goal.Process();
             }
-        }
-
-        public void Message(string msg)
-        {
-            goal.Message(msg);
         }
 
         public IRedAlertController RedAlertController { set; get; }

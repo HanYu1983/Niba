@@ -16,10 +16,18 @@ namespace RedAlert
         IGoal goal;
         public RedAlertModel ServerModel { set; get; }
 
+        void Awake()
+        {
+            if(self == null)
+            {
+                self = gameObject;
+            }
+        }
+
         public void OnActivate(IGoal _)
         {
             Injector.Inject(this);
-            Injector.OnDirectMoveTo += OnDirectMoveTo;
+            //Injector.OnDirectMoveTo += OnDirectMoveTo;
 
             var goal = _ as CompositeGoal;
             goal.AddGoal(new FindAndPutGoldGoal(self, -1));
@@ -29,7 +37,7 @@ namespace RedAlert
             this.goal = goal;
         }
 
-        public void OnDirectMoveTo(List<GameObject> units, Vector3 pos)
+        /*public void OnDirectMoveTo(List<GameObject> units, Vector3 pos)
         {
             if (units.Contains(self) == false)
             {
@@ -37,12 +45,12 @@ namespace RedAlert
             }
             goal.AddGoal(new DelayGoal(self, 5));
             goal.AddGoal(new MoveToGoal(self, pos));
-        }
+        }*/
 
         public void OnProcess(IGoal _)
         {
             var goal = _ as CompositeGoal;
-
+            /*
             if(goal.State == GoalState.Success)
             {
                 if (goal.LastProcessGoal is FindAndPutGoldGoal)
@@ -65,6 +73,29 @@ namespace RedAlert
                     goal.AddGoal(new FindAndPutGoldGoal(self, -1));
                     goal.AddGoal(new FindAndCollectGoldGoal(self, -1));
                 }
+            }*/
+
+            if (goal.Goals.Count == 0)
+            {
+                if (goal.LastProcessGoal is FindAndPutGoldGoal)
+                {
+                    goal.AddGoal(new FindAndPutGoldGoal(self, -1));
+                    goal.AddGoal(new FindAndCollectGoldGoal(self, -1));
+                    return;
+                }
+            }
+
+            if (goal.Goals.Count == 0 || goal.State == GoalState.Fail)
+            {
+                goal.State = GoalState.Running;
+
+                timer += Time.deltaTime;
+                if (timer > idleDuration)
+                {
+                    timer = 0;
+                    goal.AddGoal(new FindAndPutGoldGoal(self, -1));
+                    goal.AddGoal(new FindAndCollectGoldGoal(self, -1));
+                }
             }
         }
 
@@ -75,7 +106,7 @@ namespace RedAlert
 
         public void OnTerminate(IGoal goal)
         {
-            Injector.OnDirectMoveTo -= OnDirectMoveTo;
+            //Injector.OnDirectMoveTo -= OnDirectMoveTo;
         }
 
     }

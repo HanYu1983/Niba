@@ -68,6 +68,10 @@ namespace RedAlert
                     State = GoalState.Running;
                 }
             }
+            if (Goals.Count == 0)
+            {
+                State = GoalState.Success;
+            }
         }
 
         public void OnMessage(IGoal _, string msg)

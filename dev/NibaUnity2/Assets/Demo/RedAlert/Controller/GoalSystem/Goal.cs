@@ -82,6 +82,7 @@ namespace HanUtil
     {
         public override void Process()
         {
+            /*
             Activate();
             if(State == GoalState.Success || State == GoalState.Fail)
             {
@@ -112,6 +113,31 @@ namespace HanUtil
             {
                 Listener.OnProcess(this);
             }
+            */
+            Activate();
+            if (State == GoalState.Success || State == GoalState.Fail)
+            {
+                return;
+            }
+            if (goals.Count != 0)
+            {
+                var first = goals[0];
+                first.Process();
+                LastProcessGoal = first;
+                if (first.State == GoalState.Fail)
+                {
+                    State = GoalState.Fail;
+                }
+                else if (first.State == GoalState.Success)
+                {
+                    first.Terminate();
+                    goals.Remove(first);
+                }
+            }
+            if (Listener != null)
+            {
+                Listener.OnProcess(this);
+            }
         }
 
         public override void Terminate()
@@ -129,6 +155,8 @@ namespace HanUtil
         public IGoal LastProcessGoal {
             get; set;
         }
+
+        public List<IGoal> Goals { get { return goals; } }
 
         public void ClearAllGoals()
         {

@@ -49,6 +49,11 @@ namespace RedAlert
                 ClearAllGoals();
                 // 中止目標, 重找一個最近的
                 Terminate();
+                return;
+            }
+            if (Goals.Count == 0)
+            {
+                State = GoalState.Success;
             }
         }
 
