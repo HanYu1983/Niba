@@ -281,9 +281,9 @@ namespace RedAlert
             return ctx.progress[key];
         }
 
-        public static IEnumerable<BuildingProgress> GetBuildingProgress(Context ctx, int player)
+        public static IEnumerable<BuildingProgress> GetBuildingProgress(Context ctx)
         {
-            return ctx.progress.Values.Where(p => p.player == player);
+            return ctx.progress.Values;
         }
 
         public static void CancelBuildingProgress(Context ctx, string key)

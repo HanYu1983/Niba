@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
 using System.Linq;
+using System;
+using GameFramework.UI.Dialogs.Components;
+using UnityEngine.Assertions;
 
 namespace RedAlert
 {
@@ -80,6 +83,23 @@ namespace RedAlert
             var e = entities[key];
             e.transform.localPosition = pos;
             e.transform.localRotation = Quaternion.Euler(rotation);
+        }
+
+        public void Alert(string msg)
+        {
+            Alert(DialogInstance.DialogButtonsType.Ok, "Warning", msg, (dialog) => { });
+        }
+
+        public static void Alert(DialogInstance.DialogButtonsType type, string title, string text, Action<DialogInstance> cb)
+        {
+            Assert.IsTrue(DialogManager.IsActive, "Ensure that you have added a DialogManager component to your scene before showing a dialog!");
+            var dialogInstance = DialogManager.Instance.Create(null, null, null, null);
+            dialogInstance.Show(title: title,
+                text: text,
+                text2: "",
+                sprite: null,
+                doneCallback: cb,
+                dialogButtons: type);
         }
     }
 }

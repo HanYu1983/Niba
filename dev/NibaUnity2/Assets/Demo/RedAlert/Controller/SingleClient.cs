@@ -164,6 +164,10 @@ namespace RedAlert
         {
             
         }
+        public void ServerCreateEntity(int player, int host, string prototype, Vector3 pos)
+        {
+
+        }
         #endregion
     }
 }

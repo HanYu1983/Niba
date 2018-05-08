@@ -17,6 +17,11 @@ namespace RedAlert
             CmdAddClient();
         }
 
+        void Start()
+        {
+            Injector.Inject(this);
+        }
+
         #region client manager
         public int playerId;
         public static List<MultiClient> clients = new List<MultiClient>();
@@ -37,7 +42,7 @@ namespace RedAlert
             }
             this.playerId = playerId;
 
-            Injector.Inject(this);
+
             var ctr = RedAlertController;
             ctr.Player = playerId;
             ctr.Client = this;
@@ -56,13 +61,13 @@ namespace RedAlert
             DataAlg.SetMemonto(ctr.Model.ctx, ctxJson);
         }
         [ClientRpc]
-        public void RpcMessage(int player, string msg)
+        public void RpcMessage(string msg)
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
-            // alert
+            RedAlertController.View.Alert(msg);
         }
         [ClientRpc]
         public void RpcCreateEntity(int key, string prototype, Vector3 pos)
@@ -76,7 +81,7 @@ namespace RedAlert
         [ClientRpc]
         public void RpcNotifyUIUpdate()
         {
-            if(isLocalPlayer == false)
+            if (isLocalPlayer == false)
             {
                 return;
             }
@@ -113,7 +118,7 @@ namespace RedAlert
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                clients[player].RpcMessage(e.Message);
             }
         }
         [Command]
@@ -126,7 +131,8 @@ namespace RedAlert
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                Debug.Log(e.Message);
+                clients[player].RpcMessage(e.Message);
             }
         }
         [Command]
@@ -157,7 +163,15 @@ namespace RedAlert
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                clients[player].RpcMessage(e.Message);
+            }
+        }
+        [Command]
+        public void CmdDirectMoveTo(int[] keys, Vector3 pos)
+        {
+            foreach (var c in clients)
+            {
+                c.RpcDirectMoveTo(keys, pos);
             }
         }
         public void SyncModel()
@@ -188,10 +202,7 @@ namespace RedAlert
         public void ClientDirectMoveTo(List<GameObject> objs, Vector3 pos)
         {
             var keys = objs.Select(o => o.GetComponent<RedAlertEntity>().key).ToArray();
-            foreach (var c in clients)
-            {
-                c.RpcDirectMoveTo(keys, pos);
-            }
+            CmdDirectMoveTo(keys, pos);
         }
         public void ServerSyncModel()
         {
@@ -210,6 +221,10 @@ namespace RedAlert
             {
                 c.RpcSyncEntity(key, pos, rotation);
             }
+        }
+        public void ServerCreateEntity(int player, int host, string prototype, Vector3 pos)
+        {
+            CmdCreateEntity(player, host, prototype, pos);
         }
         #endregion
     }

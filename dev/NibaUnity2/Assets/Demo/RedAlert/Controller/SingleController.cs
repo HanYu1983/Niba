@@ -27,6 +27,9 @@ namespace RedAlert
             {
                 StartGame();
             }
+            // 開始
+            var state = new NormalState();
+            ChangeState(state);
         }
 
         void OnGUI()
@@ -58,9 +61,6 @@ namespace RedAlert
                 // 每秒同步一次資料
                 StartCoroutine(SyncModelEverySecond());
             }
-            // 開始
-            var state = new NormalState();
-            ChangeState(state);
         }
 
         void Step()
@@ -87,7 +87,7 @@ namespace RedAlert
 
         void CheckNewEntity()
         {
-            var ps = DataAlg.GetBuildingProgress(serverModel.ctx, Player).ToList();
+            var ps = DataAlg.GetBuildingProgress(serverModel.ctx).ToList();
             foreach(var p in ps)
             {
                 if(p.state != BuildingProgressState.Complete)
@@ -99,11 +99,12 @@ namespace RedAlert
                 {
                     continue;
                 }
+                var player = p.player;
                 var host = p.host;
                 var prototype = p.entityPrototype;
                 var hostBuilding = serverModel.ctx.entities[host];
                 var pos = hostBuilding.position;
-                Client.ClientCreateEntity(Player, host, prototype, pos);
+                Client.ServerCreateEntity(player, host, prototype, pos);
             }
         }
 
@@ -115,20 +116,7 @@ namespace RedAlert
                 Client.ServerSyncModel();
             }
         }
-        /*
-        public void ClientBuilding(int player, int host, string prototype)
-        {
-            Client.ClientBuilding(player, host, prototype);
-        }
-        public void ClientCancelBuilding(int player, string progressKey)
-        {
-            Client.ClientCancelBuilding(player, progressKey);
-        }
-        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
-        {
-            Client.ClientCreateEntity(player, host, prototype, pos);
-        }
-        */
+        
         #region basic control state implementaion
         public void StepState()
         {

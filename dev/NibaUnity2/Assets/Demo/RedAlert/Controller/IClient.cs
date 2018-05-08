@@ -13,5 +13,6 @@ namespace RedAlert
         void ServerSyncModel();
         void ServerNotifyUIUpdate();
         void ServerSyncEntity(int key, Vector3 pos, Vector3 rotation);
+        void ServerCreateEntity(int player, int host, string prototype, Vector3 pos);
     }
 }
