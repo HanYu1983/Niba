@@ -145,7 +145,10 @@ namespace RedAlert
                 c.RpcSync(DataAlg.Memonto(ServerModel.ctx));
             }
         }
-
+        public void ServerCreateViewMap()
+        {
+            
+        }
         #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
         public RedAlertModel ServerModel { set; get; }
@@ -190,7 +193,7 @@ namespace RedAlert
         {
             CmdConfirmBuilding(player, host, prototype, pos);
         }
-        public void ServerCreateEntity(int key, string prototype, Vector3 pos, Vector3 rot)
+        public void ServerCreateViewEntity(int key, string prototype, Vector3 pos, Vector3 rot)
         {
             foreach (var c in clients)
             {
@@ -213,7 +216,7 @@ namespace RedAlert
 
                         }
                         var key = DataAlg.CreateBullet(ServerModel.ctx, w.Key, pos, dir1 * speed);
-                        ServerCreateEntity(key, w.prototype, pos, dir1);
+                        ServerCreateViewEntity(key, w.prototype, pos, dir1);
                     }
                     break;
             }

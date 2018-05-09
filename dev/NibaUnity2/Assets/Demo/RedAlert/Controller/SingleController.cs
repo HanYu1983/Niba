@@ -57,7 +57,7 @@ namespace RedAlert
             if (me.player != other.player)
             {
                 Client.ServerRemoveEntity(me.Key);
-                Client.ServerCreateEntity(-1, "ExplosionFx", collision.contacts.First().point, Vector3.zero);
+                Client.ServerCreateViewEntity(-1, "ExplosionFx", collision.contacts.First().point, Vector3.zero);
             }
         }
 
@@ -66,7 +66,7 @@ namespace RedAlert
             GUILayout.BeginArea(new Rect(200, 20, 200, 500));
             if (GUILayout.Button("StartGame"))
             {
-                StartGame();
+                StartCoroutine(StartGame());
             }
             GUILayout.EndArea();
         }
@@ -75,14 +75,17 @@ namespace RedAlert
         {
             Step();
         }
+        
 
-        [ContextMenu("StartGame")]
-        void StartGame()
+        IEnumerator StartGame()
         {
             if(Player == 0)
             {
                 // 建立測試資料
                 serverModel.TestData();
+                // 建立地圖, 地圖上的預設物件也會修改到serverModel
+                Client.ServerCreateViewMap();
+                yield return 0;
                 // 同步到Client
                 Client.ServerSyncModel();
                 // 促使UI菜單更新
@@ -91,6 +94,7 @@ namespace RedAlert
                 StartCoroutine(SyncModelEverySecond());
                 StartCoroutine(CheckBulletDeleteEverySecond());
             }
+            yield return 0;
         }
 
         void Step()

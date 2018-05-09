@@ -19,39 +19,43 @@ namespace RedAlert
         private void Start()
         {
             Injector.Inject(this);
-            if(RedAlertController.Player != 0)
+            if(RedAlertController.Player == 0)
             {
-                return;
+                var pos = transform.localPosition;
+                var rot = transform.localEulerAngles;
+
+                switch (createType)
+                {
+                    case CreateEntityType.Entity:
+                        {
+                            var key = DataAlg.CreateEntity(ServerModel.ctx, player, prototype, true);
+                            ServerModel.ctx.entities[key].position = pos;
+                            ServerModel.ctx.entities[key].player = player;
+                            /*
+                            var entity = gameObject.AddComponent<RedAlertEntity>();
+                            entity.isUpdatePosition = true;
+                            entity.key = key;
+                            var cfg = ConfigEntity.Get(prototype);
+                            RedAlertController.View.entities.Add(key, entity);
+                            */
+                            RedAlertController.Client.ServerCreateViewEntity(key, prototype, pos, rot);
+                        }
+                        break;
+                    case CreateEntityType.Resource:
+                        {
+                            var key = DataAlg.CreateResource(ServerModel.ctx, prototype);
+                            ServerModel.ctx.resources[key].position = pos;
+                            /*
+                            var entity = gameObject.AddComponent<RedAlertEntity>();
+                            entity.key = key;
+                            RedAlertController.View.entities.Add(key, entity);
+                            */
+                            RedAlertController.Client.ServerCreateViewEntity(key, prototype, pos, rot);
+                        }
+                        break;
+                }
             }
-
-            var pos = transform.localPosition;
-            switch (createType)
-            {
-                case CreateEntityType.Entity:
-                    {
-                        var key = DataAlg.CreateEntity(ServerModel.ctx, player, prototype, true);
-                        var entity = gameObject.AddComponent<RedAlertEntity>();
-                        entity.isUpdatePosition = true;
-                        entity.key = key;
-                        var cfg = ConfigEntity.Get(prototype);
-                        ServerModel.ctx.entities[key].position = pos;
-                        ServerModel.ctx.entities[key].player = player;
-
-                        RedAlertController.View.entities.Add(key, entity);
-                    }
-                    break;
-                case CreateEntityType.Resource:
-                    {
-                        var key = DataAlg.CreateResource(ServerModel.ctx, prototype);
-                        var entity = gameObject.AddComponent<RedAlertEntity>();
-                        entity.key = key;
-                        ServerModel.ctx.resources[key].position = pos;
-
-                        RedAlertController.View.entities.Add(key, entity);
-                    }
-                    break;
-            }
-            Destroy(this);
+            Destroy(gameObject);
         }
 
         public RedAlertModel ServerModel { set; get; }

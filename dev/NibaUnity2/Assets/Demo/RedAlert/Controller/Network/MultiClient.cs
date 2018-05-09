@@ -70,7 +70,7 @@ namespace RedAlert
             RedAlertController.View.Alert(msg);
         }
         [ClientRpc]
-        public void RpcCreateEntity(int key, string prototype, Vector3 pos)
+        public void RpcCreateViewEntity(int key, string prototype, Vector3 pos)
         {
             if (isLocalPlayer == false)
             {
@@ -116,6 +116,15 @@ namespace RedAlert
                 return;
             }
             RedAlertController.View.RemoveEntity(key);
+        }
+        [ClientRpc]
+        public void RpcCreateViewMap()
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.CreateMap();
         }
         [Command]
         public void CmdCancelBuilding(int player, string key)
@@ -166,7 +175,7 @@ namespace RedAlert
 
                 foreach (var c in clients)
                 {
-                    c.RpcCreateEntity(key, prototype, pos);
+                    c.RpcCreateViewEntity(key, prototype, pos);
                     c.RpcNotifyUIUpdate();
                 }
             }
@@ -235,11 +244,18 @@ namespace RedAlert
         {
             CmdConfirmBuilding(player, host, prototype, pos);
         }
-        public void ServerCreateEntity(int key, string prototype, Vector3 pos, Vector3 rot)
+        public void ServerCreateViewMap()
+        {
+            foreach(var c in clients)
+            {
+                c.RpcCreateViewMap();
+            }
+        }
+        public void ServerCreateViewEntity(int key, string prototype, Vector3 pos, Vector3 rot)
         {
             foreach (var c in clients)
             {
-                c.RpcCreateEntity(key, prototype, pos);
+                c.RpcCreateViewEntity(key, prototype, pos);
             }
         }
         public void ServerCreateBullet(int weapon, Vector3 pos, Vector3 dest)
@@ -258,7 +274,10 @@ namespace RedAlert
 
                         }
                         var key = DataAlg.CreateBullet(ServerModel.ctx, w.Key, pos, dir1 * speed);
-                        ServerCreateEntity(key, w.prototype, pos, dir1);
+                        foreach (var c in clients)
+                        {
+                            c.RpcCreateViewEntity(key, w.prototype, pos);
+                        }
                     }
                     break;
             }

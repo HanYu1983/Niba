@@ -15,13 +15,24 @@ namespace RedAlert
         public MoveCameraWithMouse moveCamera;
         public GameObject puttingPrefab;
         public GameObject puttingObj;
-        public GameObject unitPrefab;
-        public GameObject root;
+        public GameObject mapPrefab;
 
         public IntShowPageList buildingMenu;
         public StrShowPageList buildMenu;
 
         public Dictionary<int, RedAlertEntity> entities = new Dictionary<int, RedAlertEntity>();
+        public GameObject map;
+
+        public void CreateMap()
+        {
+            if(map != null)
+            {
+                Destroy(map);
+                map = null;
+            }
+            map = Instantiate(mapPrefab, transform, false);
+            map.SetActive(true);
+        }
 
         #region putting building
         public void SpawnPuttingEntity(string prototype, Vector3 pos)
@@ -62,19 +73,18 @@ namespace RedAlert
                 {
                     prefab = prefabOverride;
                 }
-                var go = Instantiate(prefab, root.transform, false);
+                var go = Instantiate(prefab, map.transform, false);
                 go.transform.localPosition = pos;
                 go.SetActive(true);
             }
             else
             {
-                var cfg = ConfigEntity.Get(prototype);
                 var prefabOverride = entityPrefabs.Where(p => p.name == prototype).FirstOrDefault();
                 if (prefabOverride != null)
                 {
                     prefab = prefabOverride;
                 }
-                var go = Instantiate(prefab, root.transform, false);
+                var go = Instantiate(prefab, map.transform, false);
                 go.transform.localPosition = pos;
                 var entity = go.GetComponent<RedAlertEntity>();
                 if (entity == null)
