@@ -29,7 +29,7 @@ namespace RedAlert
             while (true)
             {
                 yield return new WaitForSeconds(1f);
-                if (target == null)
+                if (true)//target == null)
                 {
                     var viewEntity = self.GetComponent<RedAlertEntity>();
                     var isExist = ServerModel.ctx.entities.ContainsKey(viewEntity.key);

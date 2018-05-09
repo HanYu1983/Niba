@@ -24,12 +24,11 @@ namespace RedAlert
                 {
                     var e = ServerModel.ctx.entities[key];
                     var cfg = ConfigEntity.Get(e.prototype);
-                    if(cfg.EntityType == ConfigEntityType.ID_bullet)
+                    if (cfg.EntityType == ConfigEntityType.ID_bullet)
                     {
                         ProjectileHelper.UpdateProjectile(ref e.position, ref e.rotation, -9.81f, Time.deltaTime);
                         transform.localPosition = e.position;
                     }
-
                     var isDirty = lastPos != transform.localPosition || lastRot != transform.localRotation.eulerAngles;
                     if (isDirty)
                     {

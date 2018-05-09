@@ -33,7 +33,6 @@ namespace RedAlert
 
         void OnCollide(GameObject go, Collision collision)
         {
-            Debug.Log("OnCollide");
             if (Player != 0)
             {
                 return;
@@ -49,12 +48,16 @@ namespace RedAlert
             {
                 return;
             }
+            if (serverModel.ctx.entities.ContainsKey(targetViewEntity.key) == false)
+            {
+                return;
+            }
             var me = serverModel.ctx.entities[entity.key];
             var other = serverModel.ctx.entities[targetViewEntity.key];
             if (me.player != other.player)
             {
                 Client.ServerRemoveEntity(me.Key);
-                Client.ServerCreateEntity(-1, "ExplosionFx", go.transform.localPosition, Vector3.zero);
+                Client.ServerCreateEntity(-1, "ExplosionFx", collision.contacts.First().point, Vector3.zero);
             }
         }
 

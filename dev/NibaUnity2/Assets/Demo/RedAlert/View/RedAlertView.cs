@@ -55,24 +55,35 @@ namespace RedAlert
         public void SpawnEntity(int key, string prototype, Vector3 pos)
         {
             GameObject prefab = puttingPrefab;
-            var cfg = ConfigEntity.Get(prototype);
-            var prefabOverride = entityPrefabs.Where(p => p.name == prototype).FirstOrDefault();
-            if(prefabOverride != null)
+            if (key < 0)
             {
-                prefab = prefabOverride;
+                var prefabOverride = entityPrefabs.Where(p => p.name == prototype).FirstOrDefault();
+                if (prefabOverride != null)
+                {
+                    prefab = prefabOverride;
+                }
+                var go = Instantiate(prefab, root.transform, false);
+                go.transform.localPosition = pos;
+                go.SetActive(true);
             }
-            var go = Instantiate(prefab, root.transform, false);
-            go.transform.localPosition = pos;
-            if(key < 0)
+            else
             {
+                var cfg = ConfigEntity.Get(prototype);
+                var prefabOverride = entityPrefabs.Where(p => p.name == prototype).FirstOrDefault();
+                if (prefabOverride != null)
+                {
+                    prefab = prefabOverride;
+                }
+                var go = Instantiate(prefab, root.transform, false);
+                go.transform.localPosition = pos;
                 var entity = go.GetComponent<RedAlertEntity>();
                 if (entity == null)
                 {
                     throw new System.Exception("must add RedAlertEntity");
                 }
-
                 entity.key = key;
                 entities.Add(entity.key, entity);
+                go.SetActive(true);
             }
         }
 

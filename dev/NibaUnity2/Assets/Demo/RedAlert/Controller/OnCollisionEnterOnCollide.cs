@@ -10,7 +10,7 @@ namespace RedAlert
         {
             Injector.Inject(this);
         }
-
+        
         private void OnCollisionEnter(Collision collision)
         {
             Injector.OnCollide(gameObject, collision);
