@@ -30,7 +30,7 @@ namespace RedAlert
 
             var viewEntity = self.GetComponent<RedAlertEntity>();
             var player = ServerModel.ctx.entities[viewEntity.key].player;
-            var r = DataAlg.GetClosestEntity(ServerModel.ctx, player, prototype, self.transform.localPosition).FirstOrDefault();
+            var r = DataAlg.GetClosestEntity(ServerModel.ctx, player, prototype, null, self.transform.localPosition).FirstOrDefault();
             if(r == null)
             {
                 State = GoalState.Fail;

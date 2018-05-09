@@ -31,7 +31,7 @@ namespace RedAlert
             {
                 var viewEntity = self.GetComponent<RedAlertEntity>();
                 var player = model.ctx.entities[viewEntity.key].player;
-                var r = DataAlg.GetClosestEntity(model.ctx, player, ConfigEntity.ID_gdiGoldFactory, self.transform.localPosition).FirstOrDefault();
+                var r = DataAlg.GetClosestEntity(model.ctx, player, ConfigEntity.ID_gdiGoldFactory, null, self.transform.localPosition).FirstOrDefault();
                 if (r == null)
                 {
                     State = GoalState.Fail;

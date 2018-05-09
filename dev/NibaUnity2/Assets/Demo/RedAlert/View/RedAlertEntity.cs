@@ -22,13 +22,20 @@ namespace RedAlert
                 var isExist = ServerModel.ctx.entities.ContainsKey(key);
                 if (isExist)
                 {
+                    var e = ServerModel.ctx.entities[key];
+                    var cfg = ConfigEntity.Get(e.prototype);
+                    if(cfg.EntityType == ConfigEntityType.ID_bullet)
+                    {
+                        ProjectileHelper.UpdateProjectile(ref e.position, ref e.rotation, -9.81f, Time.deltaTime);
+                        transform.localPosition = e.position;
+                    }
+
                     var isDirty = lastPos != transform.localPosition || lastRot != transform.localRotation.eulerAngles;
                     if (isDirty)
                     {
                         var pos = transform.localPosition;
                         var rot = transform.localRotation.eulerAngles;
-
-                        var e = ServerModel.ctx.entities[key];
+                        
                         e.position = pos;
                         if (isUpdatePosition)
                         {

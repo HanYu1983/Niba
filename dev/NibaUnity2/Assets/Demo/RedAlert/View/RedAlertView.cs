@@ -62,14 +62,18 @@ namespace RedAlert
                 prefab = prefabOverride;
             }
             var go = Instantiate(prefab, root.transform, false);
-            var entity = go.GetComponent<RedAlertEntity>();
-            if(entity == null)
-            {
-                throw new System.Exception("must add RedAlertEntity");
-            }
             go.transform.localPosition = pos;
-            entity.key = key;
-            entities.Add(entity.key, entity);
+            if(key < 0)
+            {
+                var entity = go.GetComponent<RedAlertEntity>();
+                if (entity == null)
+                {
+                    throw new System.Exception("must add RedAlertEntity");
+                }
+
+                entity.key = key;
+                entities.Add(entity.key, entity);
+            }
         }
 
         public void SyncEntity(int key, Vector3 pos, Vector3 rotation)
@@ -83,6 +87,17 @@ namespace RedAlert
             var e = entities[key];
             e.transform.localPosition = pos;
             e.transform.localRotation = Quaternion.Euler(rotation);
+        }
+
+        public void RemoveEntity(int key)
+        {
+            if (entities.ContainsKey(key) == false)
+            {
+                return;
+            }
+            var en = entities[key];
+            entities.Remove(key);
+            Destroy(en.gameObject);
         }
 
         public void Alert(string msg)

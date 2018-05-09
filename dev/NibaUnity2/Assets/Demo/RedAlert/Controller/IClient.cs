@@ -8,11 +8,14 @@ namespace RedAlert
     {
         void ClientBuilding(int player, int host, string prototype);
         void ClientCancelBuilding(int player, string progressKey);
-        void ClientCreateEntity(int player, int host, string prototype, Vector3 pos);
+        void ClientConfirmBuilding(int player, int host, string prototype, Vector3 pos);
         void ClientDirectMoveTo(List<GameObject> objs, Vector3 pos);
         void ServerSyncModel();
         void ServerNotifyUIUpdate();
         void ServerSyncEntity(int key, Vector3 pos, Vector3 rotation);
-        void ServerCreateEntity(int player, int host, string prototype, Vector3 pos);
+        void ServerConfirmBuilding(int player, int host, string prototype, Vector3 pos);
+        void ServerCreateEntity(int key, string prototype, Vector3 pos, Vector3 rot);
+        void ServerCreateBullet(int weapon, Vector3 pos, Vector3 dest);
+        void ServerRemoveEntity(int key);
     }
 }

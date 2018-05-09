@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using GameFramework.GameStructure;
+using System.Linq;
 
 namespace RedAlert
 {
@@ -22,7 +23,7 @@ namespace RedAlert
         }
 
         // past to below
-      
+        
         public void RpcSync(string ctxJson)
         {
             if (isLocalPlayer == false)
@@ -32,26 +33,22 @@ namespace RedAlert
             var ctr = RedAlertController;
             DataAlg.SetMemonto(ctr.Model.ctx, ctxJson);
         }
-
-        public void RpcMessage(int player, string msg)
+        public void RpcMessage(string msg)
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
-            // alert
+            RedAlertController.View.Alert(msg);
         }
-
         public void RpcCreateEntity(int key, string prototype, Vector3 pos)
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
-            Debug.Log("RpcCreateEntity:" + key + ":" + pos);
             RedAlertController.View.SpawnEntity(key, prototype, pos);
         }
-
         public void RpcNotifyUIUpdate()
         {
             if (isLocalPlayer == false)
@@ -60,40 +57,55 @@ namespace RedAlert
             }
             RedAlertController.Model.OnBuildingChange();
         }
-
+        public void RpcSyncEntity(int key, Vector3 pos, Vector3 rotation)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.SyncEntity(key, pos, rotation);
+        }
+        public void RpcDirectMoveTo(int[] keys, Vector3 pos)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            var units = keys
+                .Where(k => RedAlertController.View.entities.ContainsKey(k))
+                .Select(k => RedAlertController.View.entities[k].gameObject);
+            Injector.OnDirectMoveTo(units.ToList(), pos);
+        }
         public void CmdCancelBuilding(int player, string key)
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-                DataAlg.CancelBuildingProgress(serverModel.ctx, key);
+                DataAlg.CancelBuildingProgress(ServerModel.ctx, key);
                 SyncModel();
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                clients[player].RpcMessage(e.Message);
             }
         }
-
         public void CmdBuilding(int player, int host, string entityPrototype)
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-                DataAlg.Building(serverModel.ctx, player, host, entityPrototype);
+                DataAlg.Building(ServerModel.ctx, player, host, entityPrototype);
                 SyncModel();
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                Debug.Log(e.Message);
+                clients[player].RpcMessage(e.Message);
             }
         }
-
-        public void CmdCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void CmdConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
             try
             {
-                var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
+                var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
                 var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
@@ -116,21 +128,27 @@ namespace RedAlert
             }
             catch (Exception e)
             {
-                clients[player].RpcMessage(player, e.Message);
+                clients[player].RpcMessage(e.Message);
+            }
+        }
+        public void CmdDirectMoveTo(int[] keys, Vector3 pos)
+        {
+            foreach (var c in clients)
+            {
+                c.RpcDirectMoveTo(keys, pos);
             }
         }
         public void SyncModel()
         {
-            var serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
             foreach (var c in clients)
             {
-                c.RpcSync(DataAlg.Memonto(serverModel.ctx));
+                c.RpcSync(DataAlg.Memonto(ServerModel.ctx));
             }
         }
 
         #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
-
+        public RedAlertModel ServerModel { set; get; }
 
 
         public void ClientBuilding(int player, int host, string prototype)
@@ -141,9 +159,14 @@ namespace RedAlert
         {
             CmdCancelBuilding(player, progressKey);
         }
-        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void ClientConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
-            CmdCreateEntity(player, host, prototype, pos);
+            CmdConfirmBuilding(player, host, prototype, pos);
+        }
+        public void ClientDirectMoveTo(List<GameObject> objs, Vector3 pos)
+        {
+            var keys = objs.Select(o => o.GetComponent<RedAlertEntity>().key).ToArray();
+            CmdDirectMoveTo(keys, pos);
         }
         public void ServerSyncModel()
         {
@@ -158,15 +181,58 @@ namespace RedAlert
         }
         public void ServerSyncEntity(int key, Vector3 pos, Vector3 rotation)
         {
-            
+            foreach (var c in clients)
+            {
+                c.RpcSyncEntity(key, pos, rotation);
+            }
         }
-        public void ClientDirectMoveTo(List<GameObject> key, Vector3 pos)
+        public void ServerConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
-            
+            CmdConfirmBuilding(player, host, prototype, pos);
         }
-        public void ServerCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void ServerCreateEntity(int key, string prototype, Vector3 pos, Vector3 rot)
         {
+            foreach (var c in clients)
+            {
+                c.RpcCreateEntity(key, prototype, pos);
+            }
+        }
+        public void ServerCreateBullet(int weapon, Vector3 pos, Vector3 dest)
+        {
+            var w = ServerModel.ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(w.prototype);
+            switch (cfg.BulletType)
+            {
+                default:
+                    {
+                        var speed = 0.0f;
+                        ProjectileHelper.ComputeSpeedToReachTargetWithElevation(pos, dest, Mathf.PI / 4, -9.81f, ref speed);
+                        Vector3 dir1, dir2;
+                        if (ProjectileHelper.ComputeDirectionToHitTargetWithSpeed(pos, dest, -9.81f, speed, out dir1, out dir2))
+                        {
 
+                        }
+                        var key = DataAlg.CreateBullet(ServerModel.ctx, w.Key, pos, dir1 * speed);
+                        ServerCreateEntity(key, w.prototype, pos, dir1);
+                    }
+                    break;
+            }
+        }
+        public void RpcRemoveViewEntity(int key)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.RemoveEntity(key);
+        }
+        public void ServerRemoveEntity(int key)
+        {
+            ServerModel.ctx.entities.Remove(key);
+            foreach (var c in clients)
+            {
+                c.RpcRemoveViewEntity(key);
+            }
         }
         #endregion
     }

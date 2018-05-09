@@ -36,7 +36,6 @@ namespace RedAlert
             {
                 goalHolder.Goal.ClearAllGoals();
             }
-            Debug.Log("MoveTo");
             goalHolder.Goal.AddGoal(new MoveToGoal(self, pos));
         }
 

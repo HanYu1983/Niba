@@ -108,6 +108,15 @@ namespace RedAlert
                 .Select(k => RedAlertController.View.entities[k].gameObject);
             Injector.OnDirectMoveTo(units.ToList(), pos);
         }
+        [ClientRpc]
+        public void RpcRemoveViewEntity(int key)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.RemoveEntity(key);
+        }
         [Command]
         public void CmdCancelBuilding(int player, string key)
         {
@@ -136,7 +145,7 @@ namespace RedAlert
             }
         }
         [Command]
-        public void CmdCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void CmdConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
             try
             {
@@ -195,9 +204,9 @@ namespace RedAlert
         {
             CmdCancelBuilding(player, progressKey);
         }
-        public void ClientCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void ClientConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
-            CmdCreateEntity(player, host, prototype, pos);
+            CmdConfirmBuilding(player, host, prototype, pos);
         }
         public void ClientDirectMoveTo(List<GameObject> objs, Vector3 pos)
         {
@@ -222,9 +231,45 @@ namespace RedAlert
                 c.RpcSyncEntity(key, pos, rotation);
             }
         }
-        public void ServerCreateEntity(int player, int host, string prototype, Vector3 pos)
+        public void ServerConfirmBuilding(int player, int host, string prototype, Vector3 pos)
         {
-            CmdCreateEntity(player, host, prototype, pos);
+            CmdConfirmBuilding(player, host, prototype, pos);
+        }
+        public void ServerCreateEntity(int key, string prototype, Vector3 pos, Vector3 rot)
+        {
+            foreach (var c in clients)
+            {
+                c.RpcCreateEntity(key, prototype, pos);
+            }
+        }
+        public void ServerCreateBullet(int weapon, Vector3 pos, Vector3 dest)
+        {
+            var w = ServerModel.ctx.weapons[weapon];
+            var cfg = ConfigWeapon.Get(w.prototype);
+            switch (cfg.BulletType)
+            {
+                default:
+                    {
+                        var speed = 0.0f;
+                        ProjectileHelper.ComputeSpeedToReachTargetWithElevation(pos, dest, Mathf.PI / 4, -9.81f, ref speed);
+                        Vector3 dir1, dir2;
+                        if (ProjectileHelper.ComputeDirectionToHitTargetWithSpeed(pos, dest, -9.81f, speed, out dir1, out dir2))
+                        {
+
+                        }
+                        var key = DataAlg.CreateBullet(ServerModel.ctx, w.Key, pos, dir1 * speed);
+                        ServerCreateEntity(key, w.prototype, pos, dir1);
+                    }
+                    break;
+            }
+        }
+        public void ServerRemoveEntity(int key)
+        {
+            ServerModel.ctx.entities.Remove(key);
+            foreach(var c in clients)
+            {
+                c.RpcRemoveViewEntity(key);
+            }
         }
         #endregion
     }

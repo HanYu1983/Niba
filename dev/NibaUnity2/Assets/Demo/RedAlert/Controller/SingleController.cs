@@ -8,7 +8,7 @@ using GameFramework.GameStructure;
 
 namespace RedAlert
 {
-    public class SingleController : MonoBehaviour, IRedAlertController
+    public class SingleController : MonoBehaviour, IRedAlertController, IInjectServerModel
     {
         public PlayerHolder playerHolder;
         public RedAlertModel clientModel;
@@ -16,13 +16,12 @@ namespace RedAlert
         public RedAlertView view;
         public bool isAutoStart;
 
-        void Awake()
-        {
-            serverModel = GameManager.Instance.gameObject.GetComponent<RedAlertModel>();
-        }
-
         void Start()
         {
+            Injector.Inject(this);
+            Injector.OnCollide += OnCollide;
+            serverModel = ServerModel;
+
             if (isAutoStart)
             {
                 StartGame();
@@ -30,6 +29,33 @@ namespace RedAlert
             // 開始
             var state = new NormalState();
             ChangeState(state);
+        }
+
+        void OnCollide(GameObject go, Collision collision)
+        {
+            Debug.Log("OnCollide");
+            if (Player != 0)
+            {
+                return;
+            }
+            var target = collision.gameObject;
+            var targetViewEntity = target.GetComponent<RedAlertEntity>();
+            if (targetViewEntity == null)
+            {
+                return;
+            }
+            var entity = go.GetComponent<RedAlertEntity>();
+            if (serverModel.ctx.entities.ContainsKey(entity.key) == false)
+            {
+                return;
+            }
+            var me = serverModel.ctx.entities[entity.key];
+            var other = serverModel.ctx.entities[targetViewEntity.key];
+            if (me.player != other.player)
+            {
+                Client.ServerRemoveEntity(me.Key);
+                Client.ServerCreateEntity(-1, "ExplosionFx", go.transform.localPosition, Vector3.zero);
+            }
         }
 
         void OnGUI()
@@ -60,6 +86,7 @@ namespace RedAlert
                 Client.ServerNotifyUIUpdate();
                 // 每秒同步一次資料
                 StartCoroutine(SyncModelEverySecond());
+                StartCoroutine(CheckBulletDeleteEverySecond());
             }
         }
 
@@ -85,6 +112,21 @@ namespace RedAlert
             }
         }
 
+        IEnumerator CheckBulletDeleteEverySecond()
+        {
+            while (true)
+            {
+                foreach(var b in new List<Entity>(serverModel.ctx.entities.Values))
+                {
+                    if(b.position.y < -1)
+                    {
+                        Client.ServerRemoveEntity(b.Key);
+                    }
+                }
+                yield return new WaitForSeconds(1);
+            }
+        }
+
         void CheckNewEntity()
         {
             var ps = DataAlg.GetBuildingProgress(serverModel.ctx).ToList();
@@ -104,7 +146,7 @@ namespace RedAlert
                 var prototype = p.entityPrototype;
                 var hostBuilding = serverModel.ctx.entities[host];
                 var pos = hostBuilding.position;
-                Client.ServerCreateEntity(player, host, prototype, pos);
+                Client.ServerConfirmBuilding(player, host, prototype, pos);
             }
         }
 
@@ -146,5 +188,8 @@ namespace RedAlert
         #endregion
 
         public IClient Client { get; set; }
+
+        public RedAlertModel ServerModel { set; get; }
+
     }
 }

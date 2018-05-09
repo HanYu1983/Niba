@@ -114,6 +114,22 @@ namespace RedAlert
         public int usedGoldAmount;
     }
 
+    public class Bullet
+    {
+        [SerializeField]
+        int key;
+        public Bullet(string weaponPrototype)
+        {
+            key = Tmp.counter++;
+            this.weaponPrototype = weaponPrototype;
+        }
+        public int Key { get { return key; } }
+        public string weaponPrototype;
+
+        public Vector3 position;
+        public Vector3 velocity;
+    }
+
     public class Context
     {
         public Dictionary<int, Entity> entities = new Dictionary<int, Entity>();
@@ -123,7 +139,7 @@ namespace RedAlert
         public Dictionary<string, BuildingProgress> progress = new Dictionary<string, BuildingProgress>();
         public List<BuildingProgress> pendingProgress = new List<BuildingProgress>();
         public Dictionary<int, Resource> resources = new Dictionary<int, Resource>();
-
+        //public Dictionary<int, Bullet> bullets = new Dictionary<int, Bullet>();
     }
 
     class SaveTmp
@@ -135,6 +151,7 @@ namespace RedAlert
         public List<BuildingProgress> progress;
         public List<BuildingProgress> pendingProgress;
         public List<Resource> resources;
+        //public List<Bullet> bullets;
     }
 
     public class DataAlg : MonoBehaviour
@@ -149,6 +166,7 @@ namespace RedAlert
             st.progress = new List<BuildingProgress>(ctx.progress.Values);
             st.pendingProgress = ctx.pendingProgress;
             st.resources = new List<Resource>(ctx.resources.Values);
+            //st.bullets = new List<Bullet>(ctx.bullets.Values);
             var json = JsonUtility.ToJson(st);
             return json;
         }
@@ -163,6 +181,7 @@ namespace RedAlert
             ctx.progress.Clear();
             ctx.pendingProgress.Clear();
             ctx.resources.Clear();
+            //ctx.bullets.Clear();
             foreach (var i in st.entities)
             {
                 ctx.entities.Add(i.Key, i);
@@ -191,6 +210,10 @@ namespace RedAlert
             {
                 ctx.resources.Add(i.Key, i);
             }
+            /*foreach (var i in st.bullets)
+            {
+                ctx.bullets.Add(i.Key, i);
+            }*/
         }
 
         public static void Step(Context ctx, float dt)
@@ -425,6 +448,17 @@ namespace RedAlert
             return true;
         }
 
+        public static int CreateBullet(Context ctx, int weapon, Vector3 position, Vector3 velocity)
+        {
+            var w = ctx.weapons[weapon];
+            var u = ctx.entities[w.unit];
+            var ek = CreateEntity(ctx, u.player, w.prototype);
+            var entity = ctx.entities[ek];
+            entity.position = position;
+            entity.rotation = velocity;
+            return ek;
+        }
+
         // 取得單位的武器
         public static IEnumerable<Weapon> GetUnitWeapon(Context ctx, int player, int unit)
         {
@@ -548,6 +582,11 @@ namespace RedAlert
             var cfg = ConfigResource.Get(ConfigResource.ID_gold);
             var b = ctx.entities[building];
             var earn = amount * cfg.Value;
+            if(ctx.money.Count <= b.player)
+            {
+                Debug.LogError("not yet set player money:"+b.player);
+                return 0;
+            }
             ctx.money[b.player] += earn;
 
             return amount;
@@ -585,6 +624,13 @@ namespace RedAlert
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)
             {
+                case ConfigEntityType.ID_bullet:
+                    {
+                        var en = new Entity(entityPrototype);
+                        en.player = player;
+                        ctx.entities.Add(en.Key, en);
+                        return en.Key;
+                    }
                 case ConfigEntityType.ID_unit:
                 case ConfigEntityType.ID_building:
                     {
@@ -667,17 +713,31 @@ namespace RedAlert
             });
         }
 
-        public static IEnumerable<Entity> GetClosestEntity(Context ctx, int player, string prototype, Vector3 origin)
+        public static IEnumerable<Entity> GetClosestEntity(Context ctx, int player, string prototype, string entityType, Vector3 origin)
         {
             return ctx.entities.Values.Where(r =>
             {
-                if(r.player != player)
+                if (player >= 0)
                 {
-                    return false;
+                    if (r.player != player)
+                    {
+                        return false;
+                    }
                 }
-                if(r.prototype != prototype)
+                if (prototype != null)
                 {
-                    return false;
+                    if (r.prototype != prototype)
+                    {
+                        return false;
+                    }
+                }
+                if(entityType != null)
+                {
+                    var cfg = ConfigEntity.Get(r.prototype);
+                    if(cfg.EntityType != entityType)
+                    {
+                        return false;
+                    }
                 }
                 return true;
             }).OrderBy(r =>

@@ -49,7 +49,7 @@ namespace RedAlert
         void OnSelect(SelectionManager mgr)
         {
             Holder.View.RemovePuttingObject();
-            Holder.Client.ClientCreateEntity(Holder.Player, host, prototype, Holder.View.selectionManager.pointer.localPosition);
+            Holder.Client.ClientConfirmBuilding(Holder.Player, host, prototype, Holder.View.selectionManager.pointer.localPosition);
             Holder.ChangeState(new NormalState());
         }
     }

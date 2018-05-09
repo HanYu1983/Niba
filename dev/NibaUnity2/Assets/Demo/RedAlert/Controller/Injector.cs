@@ -34,6 +34,7 @@ namespace RedAlert
         }
 
         public static Action<List<GameObject>, Vector3> OnDirectMoveTo = delegate { };
+        public static Action<GameObject, Collision> OnCollide = delegate { };
 
         public static void Inject(object obj)
         {

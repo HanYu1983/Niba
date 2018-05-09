@@ -57,6 +57,10 @@ namespace RedAlert
                 {
                     return false;
                 }
+                if (cfg.EntityType == ConfigEntityType.ID_bullet)
+                {
+                    return false;
+                }
                 var isExistInView = Holder.View.entities.ContainsKey(e.Key);
                 if(isExistInView == false)
                 {
