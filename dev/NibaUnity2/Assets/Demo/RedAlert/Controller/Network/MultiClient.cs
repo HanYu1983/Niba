@@ -76,7 +76,17 @@ namespace RedAlert
             {
                 return;
             }
-            RedAlertController.View.SpawnEntity(key, prototype, pos);
+            var go = RedAlertController.View.SpawnEntity(key, prototype, pos);
+            // 只有Server要留下Rigidbody, 用來計算碰撞
+            // 其它的將它刪了, 不然位置會被Rigidbody影響
+            if(playerId != 0)
+            {
+                var rigid = go.GetComponent<Rigidbody>();
+                if (rigid != null)
+                {
+                    Destroy(rigid);
+                }
+            }
         }
         [ClientRpc]
         public void RpcNotifyUIUpdate()
@@ -285,7 +295,9 @@ namespace RedAlert
         public void ServerRemoveEntity(int key)
         {
             ServerModel.ctx.entities.Remove(key);
-            foreach(var c in clients)
+            ServerModel.ctx.resources.Remove(key);
+            ServerModel.ctx.bullets.Remove(key);
+            foreach (var c in clients)
             {
                 c.RpcRemoveViewEntity(key);
             }

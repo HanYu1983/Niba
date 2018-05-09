@@ -43,21 +43,22 @@ namespace RedAlert
             {
                 return;
             }
-            var entity = go.GetComponent<RedAlertEntity>();
-            if (serverModel.ctx.entities.ContainsKey(entity.key) == false)
+            var selfViewEntity = go.GetComponent<RedAlertEntity>();
+            if (selfViewEntity == null)
             {
                 return;
             }
-            if (serverModel.ctx.entities.ContainsKey(targetViewEntity.key) == false)
+            var isSelfBullet = serverModel.ctx.bullets.ContainsKey(selfViewEntity.key);
+            var isTargetEntity = serverModel.ctx.entities.ContainsKey(targetViewEntity.key);
+            if(isSelfBullet && isTargetEntity)
             {
-                return;
-            }
-            var me = serverModel.ctx.entities[entity.key];
-            var other = serverModel.ctx.entities[targetViewEntity.key];
-            if (me.player != other.player)
-            {
-                Client.ServerRemoveEntity(me.Key);
-                Client.ServerCreateViewEntity(-1, "ExplosionFx", collision.contacts.First().point, Vector3.zero);
+                var bullet = serverModel.ctx.bullets[selfViewEntity.key];
+                var targetEntity = serverModel.ctx.entities[targetViewEntity.key];
+                if (bullet.player != targetEntity.player)
+                {
+                    Client.ServerRemoveEntity(bullet.Key);
+                    Client.ServerCreateViewEntity(-1, "ExplosionFx", collision.contacts.First().point, Vector3.zero);
+                }
             }
         }
 
@@ -123,7 +124,7 @@ namespace RedAlert
         {
             while (true)
             {
-                foreach(var b in new List<Entity>(serverModel.ctx.entities.Values))
+                foreach(var b in new List<Bullet>(serverModel.ctx.bullets.Values))
                 {
                     if(b.position.y < -1)
                     {

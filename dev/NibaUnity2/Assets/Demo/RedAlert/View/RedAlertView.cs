@@ -63,7 +63,7 @@ namespace RedAlert
 
         public GameObject[] entityPrefabs;
 
-        public void SpawnEntity(int key, string prototype, Vector3 pos)
+        public GameObject SpawnEntity(int key, string prototype, Vector3 pos)
         {
             GameObject prefab = puttingPrefab;
             if (key < 0)
@@ -76,6 +76,7 @@ namespace RedAlert
                 var go = Instantiate(prefab, map.transform, false);
                 go.transform.localPosition = pos;
                 go.SetActive(true);
+                return go;
             }
             else
             {
@@ -94,6 +95,7 @@ namespace RedAlert
                 entity.key = key;
                 entities.Add(entity.key, entity);
                 go.SetActive(true);
+                return go;
             }
         }
 

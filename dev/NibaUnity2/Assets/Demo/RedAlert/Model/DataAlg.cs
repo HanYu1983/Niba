@@ -114,6 +114,7 @@ namespace RedAlert
         public int usedGoldAmount;
     }
 
+    [Serializable]
     public class Bullet
     {
         [SerializeField]
@@ -125,7 +126,7 @@ namespace RedAlert
         }
         public int Key { get { return key; } }
         public string weaponPrototype;
-
+        public int player;
         public Vector3 position;
         public Vector3 velocity;
     }
@@ -139,7 +140,7 @@ namespace RedAlert
         public Dictionary<string, BuildingProgress> progress = new Dictionary<string, BuildingProgress>();
         public List<BuildingProgress> pendingProgress = new List<BuildingProgress>();
         public Dictionary<int, Resource> resources = new Dictionary<int, Resource>();
-        //public Dictionary<int, Bullet> bullets = new Dictionary<int, Bullet>();
+        public Dictionary<int, Bullet> bullets = new Dictionary<int, Bullet>();
     }
 
     class SaveTmp
@@ -151,7 +152,7 @@ namespace RedAlert
         public List<BuildingProgress> progress;
         public List<BuildingProgress> pendingProgress;
         public List<Resource> resources;
-        //public List<Bullet> bullets;
+        public List<Bullet> bullets;
     }
 
     public class DataAlg : MonoBehaviour
@@ -166,7 +167,7 @@ namespace RedAlert
             st.progress = new List<BuildingProgress>(ctx.progress.Values);
             st.pendingProgress = ctx.pendingProgress;
             st.resources = new List<Resource>(ctx.resources.Values);
-            //st.bullets = new List<Bullet>(ctx.bullets.Values);
+            st.bullets = new List<Bullet>(ctx.bullets.Values);
             var json = JsonUtility.ToJson(st);
             return json;
         }
@@ -181,7 +182,7 @@ namespace RedAlert
             ctx.progress.Clear();
             ctx.pendingProgress.Clear();
             ctx.resources.Clear();
-            //ctx.bullets.Clear();
+            ctx.bullets.Clear();
             foreach (var i in st.entities)
             {
                 ctx.entities.Add(i.Key, i);
@@ -210,10 +211,10 @@ namespace RedAlert
             {
                 ctx.resources.Add(i.Key, i);
             }
-            /*foreach (var i in st.bullets)
+            foreach (var i in st.bullets)
             {
                 ctx.bullets.Add(i.Key, i);
-            }*/
+            }
         }
 
         public static void Step(Context ctx, float dt)
@@ -452,11 +453,19 @@ namespace RedAlert
         {
             var w = ctx.weapons[weapon];
             var u = ctx.entities[w.unit];
+            /*
             var ek = CreateEntity(ctx, u.player, w.prototype);
             var entity = ctx.entities[ek];
             entity.position = position;
             entity.rotation = velocity;
             return ek;
+            */
+            var b = new Bullet(w.prototype);
+            b.position = position;
+            b.velocity = velocity;
+            b.player = u.player;
+            ctx.bullets.Add(b.Key, b);
+            return b.Key;
         }
 
         // 取得單位的武器
