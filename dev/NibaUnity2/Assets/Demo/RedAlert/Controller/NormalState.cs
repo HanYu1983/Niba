@@ -33,7 +33,6 @@ namespace RedAlert
             DataAlg.Building(model.ctx, player, host, entityPrototype);
             Holder.Client.ClientBuilding(player, host, entityPrototype);
         }
-
         public override void OnEnter()
         {
             Holder.View.buildMenu.onSelect.AddListener(OnSelectBuild);
@@ -46,28 +45,9 @@ namespace RedAlert
         }
         void OnSelect(SelectionManager mgr)
         {
-            var objs = Holder.Model.ctx.entities.Values.Where(e =>
-            {
-                if (e.player != Holder.Player)
-                {
-                    return false;
-                }
-                var cfg = ConfigEntity.Get(e.prototype);
-                if (cfg.EntityType == ConfigEntityType.ID_building)
-                {
-                    return false;
-                }
-                if (cfg.EntityType == ConfigEntityType.ID_bullet)
-                {
-                    return false;
-                }
-                var isExistInView = Holder.View.entities.ContainsKey(e.Key);
-                if(isExistInView == false)
-                {
-                    return false;
-                }
-                return true;
-            }).Select(e=>Holder.View.entities[e.Key].gameObject).ToList();
+            var objs = Holder.Model.ctx.entities.Values
+                .Where(ControllerHelper.IsUnitCanSelect(Holder.Player, Holder.View))
+                .Select(e=>Holder.View.entities[e.Key].gameObject).ToList();
             objs = mgr.GetSelection(objs);
 
             if (objs.Count != 0)

@@ -18,6 +18,14 @@ namespace HanUtil
         public bool ignoreInvalidArrayIndex;
         public UnityEvent onSelect = new UnityEvent();
 
+        private void Awake()
+        {
+            if(root == null)
+            {
+                root = transform;
+            }
+        }
+
         public int DataCountPerPage
         {
             get

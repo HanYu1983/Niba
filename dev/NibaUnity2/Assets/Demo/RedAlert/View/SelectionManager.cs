@@ -21,6 +21,14 @@ namespace RedAlert
             Step();
         }
 
+        public bool IsSelecting
+        {
+            get
+            {
+                return selectionRect.gameObject.activeSelf;
+            }
+        }
+
         public List<GameObject> GetSelection(List<GameObject> objs)
         {
             var ret = new List<GameObject>();
