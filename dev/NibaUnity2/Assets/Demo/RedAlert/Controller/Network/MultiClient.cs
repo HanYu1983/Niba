@@ -168,6 +168,9 @@ namespace RedAlert
         {
             try
             {
+                Debug.Log("CmdConfirmBuilding");
+                Debug.Log("player:" + player);
+
                 var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
@@ -221,6 +224,9 @@ namespace RedAlert
         {
             try
             {
+                Debug.Log("CmdResearch");
+                Debug.Log("player:"+ player);
+
                 var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, techPrototype);
                 var result = DataAlg.IsCanResearch(ServerModel.ctx, player, tech.Key);
                 if (result != null)

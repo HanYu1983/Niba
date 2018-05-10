@@ -30,6 +30,7 @@ namespace RedAlert
             {
                 return;
             }
+            Debug.Log(ctxJson);
             var ctr = RedAlertController;
             DataAlg.SetMemonto(ctr.Model.ctx, ctxJson);
         }

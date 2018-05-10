@@ -590,7 +590,8 @@ namespace RedAlert
             foreach(var r in requestTechs)
             {
                 // 取得現有科技
-                var ownTech = ctx.techs.Values.Where(t => t.prototype == r).FirstOrDefault();
+                // 注意: 尋找科技時要一並連player一起找, 不然會找到別的玩家的科技
+                var ownTech = ctx.techs.Values.Where(t => t.player == player && t.prototype == r).FirstOrDefault();
                 if(ownTech == null)
                 {
                     return "科技不足:"+r;

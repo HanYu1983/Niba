@@ -33,7 +33,6 @@ namespace RedAlert
                 var obj = selectionMgr.lastClickObj;
                 if(obj != null)
                 {
-                    Debug.Log(obj + ":");
                     var viewEntity = obj.GetComponent<RedAlertEntity>();
                     if (viewEntity != null)
                     {

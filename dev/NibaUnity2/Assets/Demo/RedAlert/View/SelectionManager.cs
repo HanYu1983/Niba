@@ -102,7 +102,6 @@ namespace RedAlert
                 {
                     var hitObj = Hit.collider.gameObject;
                     lastClickObj = hitObj;
-                    Debug.Log(hitObj);
                 }
 
                 OnSelect(this);

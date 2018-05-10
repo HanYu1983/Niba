@@ -14,7 +14,6 @@ namespace RedAlert
             var model = Holder.Model;
             var player = Holder.Player;
             var entityPrototype = Holder.View.buildMenu.selectedKeyRef.Ref;
-
             var result = DataAlg.IsCanBuild(Holder.Model.ctx, player, entityPrototype);
             if (result != null)
             {
