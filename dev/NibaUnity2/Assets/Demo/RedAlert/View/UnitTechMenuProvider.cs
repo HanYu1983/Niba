@@ -12,6 +12,7 @@ namespace RedAlert
         public StrShowPageList pageList;
         public IntRef unitKeyRef;
         public RedAlertModel model;
+        public PlayerHolder playerHolder;
 
         void Awake()
         {
@@ -22,8 +23,21 @@ namespace RedAlert
         {
             var uk = unitKeyRef.Ref;
             var unit = model.ctx.entities[uk];
-            var techs = DataAlg.GetUnitTechMenu(unit.prototype);
-            return techs.Select(t => t.Id).ToList();
+            var cfg = ConfigEntity.Get(unit.prototype);
+            switch (cfg.EntityType)
+            {
+                case ConfigEntityType.ID_building:
+                    {
+                        var techs = DataAlg.GetBuildingTechMenu(model.ctx, playerHolder.player, unit.prototype);
+                        return techs.Select(t => t.prototype).ToList();
+                    }
+                default:
+                    {
+                        var techs = DataAlg.GetUnitTechMenu(unit.prototype);
+                        return techs.Select(t => t.Id).ToList();
+                    }
+            }
+            
         }
     }
 }

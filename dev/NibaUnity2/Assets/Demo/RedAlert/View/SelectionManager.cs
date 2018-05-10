@@ -15,6 +15,7 @@ namespace RedAlert
         public Vector2 firstMouse;
         public Vector2 secondMouse;
         public GameObject lastClickObj;
+        public float dragDuration;
         
         private void Update()
         {
@@ -26,6 +27,12 @@ namespace RedAlert
             get
             {
                 return selectionRect.gameObject.activeSelf;
+            }
+        }
+
+        public bool IsClickOnLastSelect {
+            get{
+                return dragDuration < 0.2f;
             }
         }
 
@@ -72,6 +79,7 @@ namespace RedAlert
             {
                 firstMouse = Input.mousePosition;
                 selectionRect.gameObject.SetActive(true);
+                dragDuration = 0;
             }
 
             if (Input.GetMouseButton(0))
@@ -82,6 +90,8 @@ namespace RedAlert
 
                 var box = secondMouse - firstMouse;
                 selectionRect.sizeDelta = new Vector2(Mathf.Abs(box.x), Mathf.Abs(box.y));
+
+                dragDuration += Time.deltaTime;
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -92,6 +102,7 @@ namespace RedAlert
                 {
                     var hitObj = Hit.collider.gameObject;
                     lastClickObj = hitObj;
+                    Debug.Log(hitObj);
                 }
 
                 OnSelect(this);
