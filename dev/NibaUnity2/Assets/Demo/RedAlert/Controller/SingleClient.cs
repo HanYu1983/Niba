@@ -237,6 +237,10 @@ namespace RedAlert
                 c.RpcRemoveViewEntity(key);
             }
         }
+        public void ClientResearch(int player, string techPrototype)
+        {
+
+        }
         #endregion
     }
 }

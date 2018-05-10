@@ -62,6 +62,11 @@ namespace RedAlert
             }
         }
 
+        public void OnClickTech(StrRef techPrototypeRef)
+        {
+            Client.ClientResearch(Player, techPrototypeRef.Ref);
+        }
+
         void OnGUI()
         {
             GUILayout.BeginArea(new Rect(200, 20, 200, 500));
@@ -144,6 +149,10 @@ namespace RedAlert
                 {
                     continue;
                 }
+                if(p.host == ControllerHelper.TechHost)
+                {
+                    continue;
+                }
                 var cfg = ConfigEntity.Get(p.entityPrototype);
                 if (cfg.EntityType == ConfigEntityType.ID_building)
                 {
@@ -155,6 +164,21 @@ namespace RedAlert
                 var hostBuilding = serverModel.ctx.entities[host];
                 var pos = hostBuilding.position;
                 Client.ServerConfirmBuilding(player, host, prototype, pos);
+            }
+
+            foreach (var p in ps)
+            {
+                if (p.state != BuildingProgressState.Complete)
+                {
+                    continue;
+                }
+                if (p.host != ControllerHelper.TechHost)
+                {
+                    continue;
+                }
+                var player = p.player;
+                var prototype = p.entityPrototype;
+                Client.ServerConfirmBuilding(player, ControllerHelper.TechHost, prototype, Vector3.zero);
             }
         }
 

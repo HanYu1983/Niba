@@ -92,8 +92,16 @@ namespace RedAlert
         {
             get
             {
-                var cfg = ConfigEntity.Get(entityPrototype);
-                return Mathf.Min(1, useMoney / (float)cfg.Cost) * 100;
+                if (host == ControllerHelper.TechHost)
+                {
+                    var cfg = ConfigTech.Get(entityPrototype);
+                    return Mathf.Min(1, useMoney / (float)cfg.Cost) * 100;
+                }
+                else
+                {
+                    var cfg = ConfigEntity.Get(entityPrototype);
+                    return Mathf.Min(1, useMoney / (float)cfg.Cost) * 100;
+                }
             }
         }
     }
@@ -230,10 +238,14 @@ namespace RedAlert
                     }
                 }
             }
-
+            // 這裡處理建物和單位
             foreach (var p in ctx.progress.Values)
             {
                 if(p.state == BuildingProgressState.Complete)
+                {
+                    continue;
+                }
+                if(p.host == ControllerHelper.TechHost)
                 {
                     continue;
                 }
@@ -245,9 +257,52 @@ namespace RedAlert
                 if (buildTime > 0)
                 {
                     costPerDeltaTime = (int)(dt * cost / buildTime);
+                    costPerDeltaTime = Mathf.Max(1, costPerDeltaTime);
                 }
                 // 若金錢不足就跳到這一個
                 if(ctx.money[p.player] < costPerDeltaTime)
+                {
+                    continue;
+                }
+                // 計算在這個項目中花了多少錢
+                p.useMoney += costPerDeltaTime;
+                // 花錢
+                ctx.money[p.player] -= costPerDeltaTime;
+                // 若花足了代表建完了
+                if (p.useMoney > cost)
+                {
+                    // 把多扣的金額加回去
+                    var offset = p.useMoney - cost;
+                    ctx.money[p.player] += offset;
+                    // 完成
+                    p.state = BuildingProgressState.Complete;
+                    continue;
+                }
+            }
+
+            // 這裡處理科技研究
+            foreach (var p in ctx.progress.Values)
+            {
+                if (p.state == BuildingProgressState.Complete)
+                {
+                    continue;
+                }
+                if (p.host != ControllerHelper.TechHost)
+                {
+                    continue;
+                }
+                var cfg = ConfigTech.Get(p.entityPrototype);
+                var cost = cfg.Cost;
+                var buildTime = cfg.BuildTime;
+                // 計算每次更新週期的花費
+                var costPerDeltaTime = cost;
+                if (buildTime > 0)
+                {
+                    costPerDeltaTime = (int)(dt * cost / buildTime);
+                    costPerDeltaTime = Mathf.Max(1, costPerDeltaTime);
+                }
+                // 若金錢不足就跳到這一個
+                if (ctx.money[p.player] < costPerDeltaTime)
                 {
                     continue;
                 }
@@ -453,13 +508,6 @@ namespace RedAlert
         {
             var w = ctx.weapons[weapon];
             var u = ctx.entities[w.unit];
-            /*
-            var ek = CreateEntity(ctx, u.player, w.prototype);
-            var entity = ctx.entities[ek];
-            entity.position = position;
-            entity.rotation = velocity;
-            return ek;
-            */
             var b = new Bullet(w.prototype);
             b.position = position;
             b.velocity = velocity;
@@ -633,13 +681,6 @@ namespace RedAlert
             var cfg = ConfigEntity.Get(entityPrototype);
             switch (cfg.EntityType)
             {
-                case ConfigEntityType.ID_bullet:
-                    {
-                        var en = new Entity(entityPrototype);
-                        en.player = player;
-                        ctx.entities.Add(en.Key, en);
-                        return en.Key;
-                    }
                 case ConfigEntityType.ID_unit:
                 case ConfigEntityType.ID_building:
                     {

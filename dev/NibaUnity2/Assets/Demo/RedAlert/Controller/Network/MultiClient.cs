@@ -171,22 +171,36 @@ namespace RedAlert
                 var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
-                var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
-                var cfg = ConfigEntity.Get(prototype);
-                switch (cfg.EntityType)
+                if (host == ControllerHelper.TechHost)
                 {
-                    case ConfigEntityType.ID_building:
-                        {
-                            serverModel.ctx.entities[key].position = pos;
-                        }
-                        break;
-                }
-                SyncModel();
+                    var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, prototype);
+                    tech.enabled = true;
 
-                foreach (var c in clients)
+                    SyncModel();
+                    foreach (var c in clients)
+                    {
+                        c.RpcNotifyUIUpdate();
+                    }
+                }
+                else
                 {
-                    c.RpcCreateViewEntity(key, prototype, pos);
-                    c.RpcNotifyUIUpdate();
+                    var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
+                    var cfg = ConfigEntity.Get(prototype);
+                    switch (cfg.EntityType)
+                    {
+                        case ConfigEntityType.ID_building:
+                            {
+                                serverModel.ctx.entities[key].position = pos;
+                            }
+                            break;
+                    }
+                    SyncModel();
+
+                    foreach (var c in clients)
+                    {
+                        c.RpcCreateViewEntity(key, prototype, pos);
+                        c.RpcNotifyUIUpdate();
+                    }
                 }
             }
             catch (Exception e)
@@ -200,6 +214,26 @@ namespace RedAlert
             foreach (var c in clients)
             {
                 c.RpcDirectMoveTo(keys, pos);
+            }
+        }
+        [Command]
+        public void CmdResearch(int player, string techPrototype)
+        {
+            try
+            {
+                var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, techPrototype);
+                var result = DataAlg.IsCanResearch(ServerModel.ctx, player, tech.Key);
+                if (result != null)
+                {
+                    throw new Exception(result);
+                }
+                DataAlg.Building(ServerModel.ctx, player, ControllerHelper.TechHost, techPrototype);
+                SyncModel();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+                clients[player].RpcMessage(e.Message);
             }
         }
         public void SyncModel()
@@ -231,6 +265,10 @@ namespace RedAlert
         {
             var keys = objs.Select(o => o.GetComponent<RedAlertEntity>().key).ToArray();
             CmdDirectMoveTo(keys, pos);
+        }
+        public void ClientResearch(int player, string techPrototype)
+        {
+            CmdResearch(player, techPrototype);
         }
         public void ServerSyncModel()
         {

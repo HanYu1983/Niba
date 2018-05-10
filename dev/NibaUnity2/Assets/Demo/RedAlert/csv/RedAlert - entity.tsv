@@ -7,4 +7,3 @@ gdiFireTank	FireTank		unit	1100	gdiFireTech			200	gdiFactory	3
 gdiFireBase	炮塔		building	1500	gdiFoundation			500	gdiHome	3	-1
 gdiGoldFactory	GDI Gold Factory		building	1500	gdiFoundation			800	gdiHome	3	-3
 gdiGoldCollector	gdiGoldCollector		unit	700	gdiFoundation			500	gdiFactory	3	
-105mm	105mmBullet		bullet								

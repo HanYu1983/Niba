@@ -32,10 +32,19 @@ namespace RedAlert
                 gameObject.SetActive(false);
                 return;
             }
-            var key = keyRef.Ref;
-            var cfg = ConfigTech.Get(key);
-            var tech = DataAlg.GetTechWithTechPrototype(model.ctx, playerHolder.player, key);
-            txt_name.text = cfg.Name+":"+tech.enabled;
+            var techPrototype = keyRef.Ref;
+            var cfg = ConfigTech.Get(techPrototype);
+            var tech = DataAlg.GetTechWithTechPrototype(model.ctx, playerHolder.player, techPrototype);
+
+            var progress = DataAlg.GetBuildingProgress(model.ctx, playerHolder.player, ControllerHelper.TechHost, techPrototype);
+            if (progress == null)
+            {
+                txt_name.text = cfg.Name + ":" + tech.enabled;
+            }
+            else
+            {
+                txt_name.text = cfg.Name + ":" + progress.Progress + "%";
+            }
             gameObject.SetActive(true);
         }
     }

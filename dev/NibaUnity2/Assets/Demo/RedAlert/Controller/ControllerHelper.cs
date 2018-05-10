@@ -1,13 +1,11 @@
-﻿using UnityEngine;
-using UnityEditor;
-using System.Collections.Generic;
-using System.Linq;
-using System;
+﻿using System;
 
 namespace RedAlert
 {
     public class ControllerHelper
     {
+        public const int TechHost = -1;
+
         public static Func<Entity, bool> IsUnitCanSelect(int player, RedAlertView view)
         {
             return (e) =>
@@ -18,10 +16,6 @@ namespace RedAlert
                 }
                 var cfg = ConfigEntity.Get(e.prototype);
                 if (cfg.EntityType == ConfigEntityType.ID_building)
-                {
-                    return false;
-                }
-                if (cfg.EntityType == ConfigEntityType.ID_bullet)
                 {
                     return false;
                 }

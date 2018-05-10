@@ -14,6 +14,13 @@ namespace RedAlert
             var model = Holder.Model;
             var player = Holder.Player;
             var entityPrototype = Holder.View.buildMenu.selectedKeyRef.Ref;
+
+            var result = DataAlg.IsCanBuild(Holder.Model.ctx, player, entityPrototype);
+            if (result != null)
+            {
+                Holder.View.Alert(result);
+                return;
+            }
             var p = DataAlg.GetBuildingProgress(model.ctx, player, host, entityPrototype);
             if (p != null)
             {
