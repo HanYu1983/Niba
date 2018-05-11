@@ -24,7 +24,7 @@ namespace RedAlert
     public class Injector : MonoBehaviour
     {
         public RedAlertModel clientModel;
-        public SingleController redAlertController;
+        public RedAlertController redAlertController;
 
         static Injector instance;
 

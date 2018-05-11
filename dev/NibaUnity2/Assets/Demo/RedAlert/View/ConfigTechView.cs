@@ -34,12 +34,16 @@ namespace RedAlert
             }
             var techPrototype = keyRef.Ref;
             var cfg = ConfigTech.Get(techPrototype);
-            var tech = DataAlg.GetTechWithTechPrototype(model.ctx, playerHolder.player, techPrototype);
-
             var progress = DataAlg.GetBuildingProgress(model.ctx, playerHolder.player, ControllerHelper.TechHost, techPrototype);
             if (progress == null)
             {
-                txt_name.text = cfg.Name + ":" + tech.enabled;
+                var enable = false;
+                var tech = DataAlg.GetTechWithTechPrototype(model.ctx, playerHolder.player, techPrototype);
+                if(tech != null)
+                {
+                    enable = tech.enabled;
+                }
+                txt_name.text = cfg.Name + ":" + enable;
             }
             else
             {

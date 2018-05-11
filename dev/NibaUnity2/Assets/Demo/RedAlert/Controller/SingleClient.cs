@@ -7,10 +7,11 @@ using System.Linq;
 
 namespace RedAlert
 {
-    public class SingleClient : MonoBehaviour, IClient, IInjectRedAlertController
+    public class SingleClient : MonoBehaviour, IClient, IInjectRedAlertController, IInjectServerModel
     {
         bool isLocalPlayer = true;
         List<SingleClient> clients = new List<SingleClient>();
+        int playerId = 0;
 
         void Start()
         {
@@ -18,19 +19,17 @@ namespace RedAlert
 
             Injector.Inject(this);
             var ctr = RedAlertController;
-            ctr.Player = 0;
+            ctr.Player = playerId;
             ctr.Client = this;
         }
 
-        // past to below
-        
+        // Copy以下的程式碼到SingleClient, 並將ClientRpc, Command指示去掉就可以支援單機
         public void RpcSync(string ctxJson)
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
-            Debug.Log(ctxJson);
             var ctr = RedAlertController;
             DataAlg.SetMemonto(ctr.Model.ctx, ctxJson);
         }
@@ -42,13 +41,23 @@ namespace RedAlert
             }
             RedAlertController.View.Alert(msg);
         }
-        public void RpcCreateEntity(int key, string prototype, Vector3 pos)
+        public void RpcCreateViewEntity(int key, string prototype, Vector3 pos)
         {
             if (isLocalPlayer == false)
             {
                 return;
             }
-            RedAlertController.View.SpawnEntity(key, prototype, pos);
+            var go = RedAlertController.View.SpawnEntity(key, prototype, pos);
+            // 只有Server要留下Rigidbody, 用來計算碰撞
+            // 其它的將它刪了, 不然位置會被Rigidbody影響
+            if (playerId != 0)
+            {
+                var rigid = go.GetComponent<Rigidbody>();
+                if (rigid != null)
+                {
+                    Destroy(rigid);
+                }
+            }
         }
         public void RpcNotifyUIUpdate()
         {
@@ -76,6 +85,22 @@ namespace RedAlert
                 .Where(k => RedAlertController.View.entities.ContainsKey(k))
                 .Select(k => RedAlertController.View.entities[k].gameObject);
             Injector.OnDirectMoveTo(units.ToList(), pos);
+        }
+        public void RpcRemoveViewEntity(int key)
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.RemoveEntity(key);
+        }
+        public void RpcCreateViewMap()
+        {
+            if (isLocalPlayer == false)
+            {
+                return;
+            }
+            RedAlertController.View.CreateMap();
         }
         public void CmdCancelBuilding(int player, string key)
         {
@@ -109,22 +134,36 @@ namespace RedAlert
                 var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
-                var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
-                var cfg = ConfigEntity.Get(prototype);
-                switch (cfg.EntityType)
+                if (host == ControllerHelper.TechHost)
                 {
-                    case ConfigEntityType.ID_building:
-                        {
-                            serverModel.ctx.entities[key].position = pos;
-                        }
-                        break;
-                }
-                SyncModel();
+                    var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, prototype);
+                    tech.enabled = true;
 
-                foreach (var c in clients)
+                    SyncModel();
+                    foreach (var c in clients)
+                    {
+                        c.RpcNotifyUIUpdate();
+                    }
+                }
+                else
                 {
-                    c.RpcCreateEntity(key, prototype, pos);
-                    c.RpcNotifyUIUpdate();
+                    var key = DataAlg.CreateEntity(serverModel.ctx, player, prototype);
+                    var cfg = ConfigEntity.Get(prototype);
+                    switch (cfg.EntityType)
+                    {
+                        case ConfigEntityType.ID_building:
+                            {
+                                serverModel.ctx.entities[key].position = pos;
+                            }
+                            break;
+                    }
+                    SyncModel();
+
+                    foreach (var c in clients)
+                    {
+                        c.RpcCreateViewEntity(key, prototype, pos);
+                        c.RpcNotifyUIUpdate();
+                    }
                 }
             }
             catch (Exception e)
@@ -139,6 +178,25 @@ namespace RedAlert
                 c.RpcDirectMoveTo(keys, pos);
             }
         }
+        public void CmdResearch(int player, string techPrototype)
+        {
+            try
+            {
+                var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, techPrototype);
+                var result = DataAlg.IsCanResearch(ServerModel.ctx, player, tech.Key);
+                if (result != null)
+                {
+                    throw new Exception(result);
+                }
+                DataAlg.Building(ServerModel.ctx, player, ControllerHelper.TechHost, techPrototype);
+                SyncModel();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning(e.Message);
+                clients[player].RpcMessage(e.Message);
+            }
+        }
         public void SyncModel()
         {
             foreach (var c in clients)
@@ -146,10 +204,7 @@ namespace RedAlert
                 c.RpcSync(DataAlg.Memonto(ServerModel.ctx));
             }
         }
-        public void ServerCreateViewMap()
-        {
-            
-        }
+
         #region implement stuff
         public IRedAlertController RedAlertController { set; get; }
         public RedAlertModel ServerModel { set; get; }
@@ -171,6 +226,10 @@ namespace RedAlert
         {
             var keys = objs.Select(o => o.GetComponent<RedAlertEntity>().key).ToArray();
             CmdDirectMoveTo(keys, pos);
+        }
+        public void ClientResearch(int player, string techPrototype)
+        {
+            CmdResearch(player, techPrototype);
         }
         public void ServerSyncModel()
         {
@@ -194,11 +253,18 @@ namespace RedAlert
         {
             CmdConfirmBuilding(player, host, prototype, pos);
         }
+        public void ServerCreateViewMap()
+        {
+            foreach (var c in clients)
+            {
+                c.RpcCreateViewMap();
+            }
+        }
         public void ServerCreateViewEntity(int key, string prototype, Vector3 pos, Vector3 rot)
         {
             foreach (var c in clients)
             {
-                c.RpcCreateEntity(key, prototype, pos);
+                c.RpcCreateViewEntity(key, prototype, pos);
             }
         }
         public void ServerCreateBullet(int weapon, Vector3 pos, Vector3 dest)
@@ -217,30 +283,23 @@ namespace RedAlert
 
                         }
                         var key = DataAlg.CreateBullet(ServerModel.ctx, w.Key, pos, dir1 * speed);
-                        ServerCreateViewEntity(key, w.prototype, pos, dir1);
+                        foreach (var c in clients)
+                        {
+                            c.RpcCreateViewEntity(key, w.prototype, pos);
+                        }
                     }
                     break;
             }
         }
-        public void RpcRemoveViewEntity(int key)
-        {
-            if (isLocalPlayer == false)
-            {
-                return;
-            }
-            RedAlertController.View.RemoveEntity(key);
-        }
         public void ServerRemoveEntity(int key)
         {
             ServerModel.ctx.entities.Remove(key);
+            ServerModel.ctx.resources.Remove(key);
+            ServerModel.ctx.bullets.Remove(key);
             foreach (var c in clients)
             {
                 c.RpcRemoveViewEntity(key);
             }
-        }
-        public void ClientResearch(int player, string techPrototype)
-        {
-
         }
         #endregion
     }

@@ -410,6 +410,8 @@ namespace RedAlert
             return ctx.pendingProgress.Where(p => p.Key == key).Count();
         }
 
+        // 取得科技物件
+        // 注意: 相關建物還沒建的話, 會回傳空值
         public static Tech GetTechWithTechPrototype(Context ctx, int player, string techPrototype)
         {
             return ctx.techs.Values.Where(t =>

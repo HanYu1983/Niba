@@ -41,15 +41,14 @@ namespace RedAlert
                 return;
             }
             this.playerId = playerId;
-
-
+            // 將對應的Client設定到Controller中
             var ctr = RedAlertController;
             ctr.Player = playerId;
             ctr.Client = this;
         }
         #endregion
 
-        // copy below
+        // Copy以下的程式碼到SingleClient, 並將ClientRpc, Command指示去掉就可以支援單機
         [ClientRpc]
         public void RpcSync(string ctxJson)
         {
@@ -168,9 +167,6 @@ namespace RedAlert
         {
             try
             {
-                Debug.Log("CmdConfirmBuilding");
-                Debug.Log("player:" + player);
-
                 var serverModel = ServerModel;
                 var progressKey = new BuildingProgress(player, host, prototype).Key;
                 DataAlg.RemoveBuildingProgress(serverModel.ctx, progressKey);
@@ -224,9 +220,6 @@ namespace RedAlert
         {
             try
             {
-                Debug.Log("CmdResearch");
-                Debug.Log("player:"+ player);
-
                 var tech = DataAlg.GetTechWithTechPrototype(ServerModel.ctx, player, techPrototype);
                 var result = DataAlg.IsCanResearch(ServerModel.ctx, player, tech.Key);
                 if (result != null)
