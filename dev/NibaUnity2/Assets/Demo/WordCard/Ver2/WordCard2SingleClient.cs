@@ -20,8 +20,9 @@ namespace WordCard
         List<WordCard2SingleClient> clients = new List<WordCard2SingleClient>();
         bool isLocalPlayer = true;
         
-
         public int Player { get { return 0; } }
+
+        // copy below
 
         public void ServerStartGame()
         {
@@ -58,22 +59,47 @@ namespace WordCard
             }
         }
 
-        public void ClientPushMission(CardCore.Mission mis)
-        {
-            Debug.Log("ClientPushMission");
-            CmdPushMission(JsonUtility.ToJson(mis), true);
-        }
-
         public void ServerPushMission(CardCore.Mission mis)
         {
-            Debug.Log("ServerPushMission");
             CmdPushMission(JsonUtility.ToJson(mis), false);
         }
 
+        public void ClientSendWord(string word, int cardKey, CardCore.Mission mis)
+        {
+            CmdSendWord(word, cardKey, JsonUtility.ToJson(mis));
+        }
+
+        public void ClientPushMission(CardCore.Mission mis)
+        {
+            CmdPushMission(JsonUtility.ToJson(mis), true);
+        }
+
+        void CmdSendWord(string word, int cardKey, string jsonMis)
+        {
+            var en = WordCard2Controller.GetWord(ServerModel.ctx.table.cards[cardKey].prototype);
+            var ch = ConfigEn2Ch.Get(en).name;
+            var isRight = word == ch;
+            if (isRight)
+            {
+                CmdPushMission(jsonMis, false);
+            }
+            else
+            {
+                var mis = JsonUtility.FromJson<CardCore.Mission>(jsonMis);
+                mis.currGoal = mis.Goals.Count;
+                ServerPushMission(mis);
+                // 
+                int oldPlayer = ServerModel.ctx.currPlayer;
+                ServerModel.ctx.currPlayer = (ServerModel.ctx.currPlayer + 1) % ServerModel.ctx.playerCnt;
+                ServerModel.ctx.OnPlayerChange(oldPlayer, ServerModel.ctx.currPlayer);
+            }
+            ServerSyncModel();
+            ServerNotifyAction();
+        }
+
+
         void CmdPushMission(string json, bool autoSync)
         {
-            Debug.Log("CmdPushMission:"+json);
-
             var mis = JsonUtility.FromJson<CardCore.Mission>(json);
             CardCore.Alg.PushOrUpdateMission(ServerModel.ctx.missions, mis);
             try
@@ -85,7 +111,6 @@ namespace WordCard
                     {
                         break;
                     }
-                    // notify OnPlayerChange herer!!
                     top = Poke.Alg.ProcessMission(ServerModel.ctx, top);
                     CardCore.Alg.UpdateMissionWithSameKey(ServerModel.ctx.missions, top);
                 }

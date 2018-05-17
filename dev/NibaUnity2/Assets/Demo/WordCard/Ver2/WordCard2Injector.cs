@@ -31,6 +31,7 @@ namespace WordCard
         public static Action<HanCardAPI.Core.Mission> OnSelectMission = delegate { };
         public static Action<HanCardAPI.Core.Card> OnSelectCard = delegate { };
         public static Action<HanCardAPI.Core.Card> OnSelectCard2 = delegate { };
+        public static Action<string> OnSelectWord = delegate { };
         public WordCard2Model clientModel;
         public WordCard2Model serverModel;
         public WordCard2Controller controller;
