@@ -69,7 +69,7 @@ namespace WordCard
                 var c = ClientModel.ctx.table.cards[cid];
                 var shape = Poke.Alg.GetPrototype(c.prototype);
                 var en = WordCard2Controller.GetWord(c.prototype);
-                if (GUILayout.Button(shape.shape+":"+shape.number+":"+en))
+                if (GUILayout.Button(c.Key + ":" + shape.shape+":"+shape.number+":"+en))
                 {
                     WordCard2Injector.OnSelectCard(c);
                 }
@@ -80,7 +80,7 @@ namespace WordCard
                 var c = ClientModel.ctx.table.cards[cid];
                 var shape = Poke.Alg.GetPrototype(c.prototype);
                 var en = WordCard2Controller.GetWord(c.prototype);
-                if (GUILayout.Button(shape.shape + ":" + shape.number + ":" + en))
+                if (GUILayout.Button(c.Key+":"+shape.shape + ":" + shape.number + ":" + en))
                 {
                     WordCard2Injector.OnSelectCard2(c);
                 }

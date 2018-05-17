@@ -149,7 +149,6 @@ namespace WordCard
 
         void RpcSyncModel(string jsonCtx)
         {
-            Debug.Log(jsonCtx);
             if (isLocalPlayer == false)
             {
                 return;
@@ -170,7 +169,6 @@ namespace WordCard
 
         void RpcNotifyAction()
         {
-            Debug.Log("RpcNotifyAction");
             if (isLocalPlayer == false)
             {
                 return;

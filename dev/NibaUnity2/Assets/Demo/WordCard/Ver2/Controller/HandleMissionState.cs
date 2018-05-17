@@ -13,6 +13,7 @@ namespace WordCard
         public HandleMissionState(CardCore.Mission mis)
         {
             this.mis = mis;
+            Debug.Log("HandleMissionState:"+mis.Goals[mis.currGoal].text);
         }
         public override void OnEnter()
         {
