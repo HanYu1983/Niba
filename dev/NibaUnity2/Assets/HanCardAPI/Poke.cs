@@ -123,7 +123,7 @@ namespace HanCardAPI
                     // 移到海底
                     Core.Alg.MoveCard(ctx.table, c, ctx.drawStack, ctx.seaStack);
                 }
-                var total = 6;// 24;
+                var total = 24;
                 var numPerPeople = total / playerCnt;
                 for (var i = 0; i < numPerPeople; ++i)
                 {
