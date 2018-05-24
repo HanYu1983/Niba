@@ -137,6 +137,7 @@ namespace Niba
 		IEnumerable<string> AvailableSkills(Place who);
 
 		PlayState PlayState{ get; }
+        int Money { get; }
 	}
 
 	public interface IModel : IModelGetter{
@@ -195,7 +196,10 @@ namespace Niba
 
 		void EquipSkill (PlayState who, string skillId);
 		void UnequipSkill (PlayState who, string skillId);
-	}
+
+        void AddPlayerHp(int v);
+
+    }
 
 	public class Common
 	{

@@ -45,12 +45,12 @@ namespace Niba
 			var ms = model.AvailableNpcMissions;
 			var grass10Mission = ms
 				.Select (ConfigNpcMission.Get)
-				.Where (m => m.Dialog == "幫我拿10個草")
+				.Where (m => m.Description == "幫我拿10個草")
 				.FirstOrDefault ();
 			if (string.IsNullOrEmpty(grass10Mission.ID)) {
 				foreach (var m in ms) {
 					var cfg = ConfigNpcMission.Get (m);
-					Debug.Log (cfg.Dialog);
+					Debug.Log (cfg.Description);
 				}
 				throw new Exception ("必須有草任務");
 			}
@@ -80,12 +80,12 @@ namespace Niba
 			ms = model.AvailableNpcMissions;
 			var wood10Mission = ms
 				.Select (ConfigNpcMission.Get)
-				.Where (m => m.Dialog == "幫我拿10個木")
+				.Where (m => m.Description == "幫我拿10個木")
 				.FirstOrDefault ();
 			if (string.IsNullOrEmpty(wood10Mission.ID)) {
 				foreach (var m in ms) {
 					var cfg = ConfigNpcMission.Get (m);
-					Debug.Log (cfg.Dialog);
+					Debug.Log (cfg.Description);
 				}
 				throw new Exception ("解完草任務必須有木任務");
 			}

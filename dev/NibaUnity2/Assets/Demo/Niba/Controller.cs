@@ -35,8 +35,10 @@ namespace Niba
         void HandleException(Exception e)
         {
             view.Alert(e.Message);
-            Debug.LogError(e.Message);
             handleCommandCoroutine = null;
+#if UNITY_EDITOR
+            throw e;
+#endif
         }
 
         Coroutine handleCommandCoroutine;
@@ -53,7 +55,7 @@ namespace Niba
 
         IEnumerator HandleCommand(string msg, object args)
         {
-            Debug.Log("[Controller]:" + msg);
+            Debug.LogWarning("[Controller]:" + msg);
             Exception e = null;
             switch (msg)
             {
@@ -299,6 +301,50 @@ namespace Niba
                     break;
                 case "itemPopup_use_item":
                     {
+                        var item = (Item)args;
+                        var useItem = new Item
+                        {
+                            prototype = item.prototype,
+                            count = 1
+                        };
+                        switch (useItem.prototype)
+                        {
+                            case ConfigItem.ID_posion:
+                                {
+                                    if (model.PlayState == PlayState.Home)
+                                    {
+                                        e = new Exception("在家裡不必吃補血");
+                                    }
+                                    if (e != null)
+                                    {
+                                        HandleException(e);
+                                        yield break;
+                                    }
+                                    model.AddPlayerHp(100);
+                                    Alg.AddItem(model.GetMapPlayer(Helper.PlaceAt(PlayState.Play)).Storage, useItem.Negative);
+                                    
+                                    yield return view.ShowInfo(Info.Item, e2 =>
+                                    {
+                                        e = e2;
+                                    });
+                                    if (e != null)
+                                    {
+                                        HandleException(e);
+                                        yield break;
+                                    }
+                                    yield return view.ShowInfo(Info.Map, e2 =>
+                                    {
+                                        e = e2;
+                                    });
+                                    if (e != null)
+                                    {
+                                        HandleException(e);
+                                        yield break;
+                                    }
+                                    view.Alert("回復體力100");
+                                }
+                                break;
+                        }
                     }
                     break;
                 case "itemPopup_equip_item":
@@ -418,6 +464,15 @@ namespace Niba
                             yield break;
                         }
                         yield return view.ShowInfo(Info.Mission, e2 =>
+                        {
+                            e = e2;
+                        });
+                        if (e != null)
+                        {
+                            HandleException(e);
+                            yield break;
+                        }
+                        yield return view.ChangePage(Page.Home, e2 =>
                         {
                             e = e2;
                         });
@@ -679,7 +734,6 @@ namespace Niba
                             {
                                 view.Alert("mission ok");
                             }
-                            model.ClearMissionStatus();
                         }
                     }
                     break;
@@ -754,6 +808,12 @@ namespace Niba
                 {
                     yield return view.MissionDialog(m);
                     model.MarkMissionNotification(m);
+                }
+
+                var missionOK = model.CheckMissionStatus();
+                if (missionOK.Count > 0)
+                {
+                    view.Alert("mission ok");
                 }
             }
         }

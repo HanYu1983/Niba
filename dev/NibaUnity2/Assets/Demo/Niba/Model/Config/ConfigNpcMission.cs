@@ -2,6 +2,8 @@ using System;
 namespace Niba{
 public struct ConfigNpcMission {
 public string ID;
+public string Name;
+public string Description;
 public string Npc;
 public int Level;
 public string RequireItem;
@@ -9,7 +11,6 @@ public string RequireKill;
 public string RequireStatus;
 public string Reward;
 public string Dependency;
-public string Dialog;
 public const int ID_COUNT = 5;
 public const string ID_0 = "0";
 public const string ID_1 = "1";
@@ -18,18 +19,18 @@ public const string ID_3 = "3";
 public const string ID_4 = "4";
 public static ConfigNpcMission Get(int key){
 switch(key){
-case 0: return new ConfigNpcMission {ID="0",Npc="guide",Level=0,RequireItem="grass_50",Reward="money_100",Dialog="去採50個草"};
-case 1: return new ConfigNpcMission {ID="1",Npc="guide",Level=0,RequireItem="wood_10",Reward="woodworkerBook1",Dependency="0",Dialog="去採10個木"};
-case 2: return new ConfigNpcMission {ID="2",Npc="guide",Level=0,RequireKill="ant_10",Dialog="去殺10隻螞蟻"};
-case 3: return new ConfigNpcMission {ID="3",Npc="guide",Level=1,RequireStatus="money_1000",Dialog="請存到1000元"};
-case 4: return new ConfigNpcMission {ID="4",Npc="guide",Level=1,RequireStatus="atk_10",Dialog="請將攻擊力加到10"};
+case 0: return new ConfigNpcMission {ID="0",Name="去採50個草",Description="去採10個草",Npc="guide",Level=0,RequireItem="grass_10",Reward="money_300"};
+case 1: return new ConfigNpcMission {ID="1",Name="去採10個木",Description="去採3個木",Npc="guide",Level=0,RequireItem="wood_3",Reward="woodworkerBook1,money_300",Dependency="0"};
+case 2: return new ConfigNpcMission {ID="2",Name="去殺10隻螞蟻",Description="去殺3隻螞蟻",Npc="guide",Level=0,RequireKill="ant_3",Reward="posion,money_300"};
+case 3: return new ConfigNpcMission {ID="3",Name="請存到1000元",Description="請存到500元",Npc="guide",Level=0,RequireStatus="money_500"};
+case 4: return new ConfigNpcMission {ID="4",Name="請將腕力加到20",Description="請將腕力加到20",Npc="guide",Level=0,RequireStatus="str_20"};
 default: throw new Exception(key+"");
 }}public static ConfigNpcMission Get(string key){
 switch(key){
-case "0": return new ConfigNpcMission {ID="0",Npc="guide",Level=0,RequireItem="grass_50",Reward="money_100",Dialog="去採50個草"};
-case "1": return new ConfigNpcMission {ID="1",Npc="guide",Level=0,RequireItem="wood_10",Reward="woodworkerBook1",Dependency="0",Dialog="去採10個木"};
-case "2": return new ConfigNpcMission {ID="2",Npc="guide",Level=0,RequireKill="ant_10",Dialog="去殺10隻螞蟻"};
-case "3": return new ConfigNpcMission {ID="3",Npc="guide",Level=1,RequireStatus="money_1000",Dialog="請存到1000元"};
-case "4": return new ConfigNpcMission {ID="4",Npc="guide",Level=1,RequireStatus="atk_10",Dialog="請將攻擊力加到10"};
+case "0": return new ConfigNpcMission {ID="0",Name="去採50個草",Description="去採10個草",Npc="guide",Level=0,RequireItem="grass_10",Reward="money_300"};
+case "1": return new ConfigNpcMission {ID="1",Name="去採10個木",Description="去採3個木",Npc="guide",Level=0,RequireItem="wood_3",Reward="woodworkerBook1,money_300",Dependency="0"};
+case "2": return new ConfigNpcMission {ID="2",Name="去殺10隻螞蟻",Description="去殺3隻螞蟻",Npc="guide",Level=0,RequireKill="ant_3",Reward="posion,money_300"};
+case "3": return new ConfigNpcMission {ID="3",Name="請存到1000元",Description="請存到500元",Npc="guide",Level=0,RequireStatus="money_500"};
+case "4": return new ConfigNpcMission {ID="4",Name="請將腕力加到20",Description="請將腕力加到20",Npc="guide",Level=0,RequireStatus="str_20"};
 default: throw new Exception(key);
 }}}}

@@ -248,7 +248,8 @@ namespace Niba
                                     }
                                 case Description.InfoUseSkill:
                                     {
-                                        var skills = e.values.GetValues("skills").Select(ConfigSkill.Get).Select(cfg => cfg.Name);
+                                        var skills = e.values.GetValues("skills");
+                                        var skillNames = skills.Select(ConfigSkill.Get).Select(cfg => cfg.Name);
                                         return string.Format("你使出了{0}!", string.Join(",", skills.ToArray()));
                                     }
                                 case Description.InfoMonsterDodge:
@@ -544,7 +545,7 @@ namespace Niba
         {
             var cfg = ConfigNpcMission.Get(mid);
             var npcCfg = ConfigNpc.Get(cfg.Npc);
-            var dialog = string.Format("{0}:{1}", npcCfg.Name, cfg.Dialog);
+            var dialog = string.Format("{0}:{1}", npcCfg.Name, cfg.Description);
             if (handleFungus == null)
             {
                 Alert(dialog);

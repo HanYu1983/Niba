@@ -271,7 +271,21 @@ namespace Niba
 			}
 		}
 
-		void Move(Position offset){
+        public int Money { get { return playerData.money; } }
+
+        public void AddPlayerHp(int v)
+        {
+            playerData.AddPlayerHp(mapData, v);
+            RequestSavePlayer();
+        }
+
+        public void AddItem(Place place, Item item)
+        {
+            Alg.AddItem(playerData.GetMapPlayer(place).Storage, item);
+            RequestSavePlayer();
+        }
+
+        void Move(Position offset){
 			if (hasMoveResult) {
 				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
 			}
@@ -362,7 +376,7 @@ namespace Niba
 				while(true){
 					if(saveTargets.Contains("user")){
 						Debug.LogWarning("save user settings...");
-						var memonto = playerData.GetMemonto ();
+						var memonto = user.GetMemonto ();
 						var path = persistentDataPath + "/userSettings.json";
 						File.WriteAllText(path, memonto);
 						saveTargets.Remove("user");

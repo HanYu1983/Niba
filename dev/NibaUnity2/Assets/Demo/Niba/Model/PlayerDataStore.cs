@@ -524,10 +524,21 @@ namespace Niba
 
         public void NotifyMissionAddItemFromCollect(Item item)
         {
+            /*
+            Debug.Log("NotifyMissionAddItemFromCollect:" + ConfigItem.Get(item.prototype).Name);
             for (var i = 0; i < missionStatus.Count; ++i)
             {
+                var cfg = ConfigNpcMission.Get(missionStatus[i].prototype);
+                var needItems = Alg.ParseAbstractItem(cfg.RequireItem);
+                var isNeedItem = needItems.Any(it => it.prototype == item.prototype);
+                if(isNeedItem == false)
+                {
+                    continue;
+                }
                 missionStatus[i].itemGot.Add(item);
+                Debug.Log("mission:" + missionStatus[i]);
             }
+            */
         }
 
         public void NotifyMissionAddItem(Item item)
@@ -540,8 +551,15 @@ namespace Niba
             Debug.Log("NotifyMissionMonsterKill:"+ConfigMonster.Get(monsterPrototype).Name);
             for (var i = 0; i < missionStatus.Count; ++i)
             {
-                Debug.Log("missionID:" + missionStatus[i]);
+                var cfg = ConfigNpcMission.Get(missionStatus[i].prototype);
+                var needItems = Alg.ParseAbstractItem(cfg.RequireKill);
+                var isNeedItem = needItems.Any(it => it.prototype == monsterPrototype);
+                if (isNeedItem == false)
+                {
+                    continue;
+                }
                 missionStatus[i].monsterSkilled.Add(monsterPrototype);
+                Debug.Log("mission:" + missionStatus[i]);
             }
         }
 
@@ -559,7 +577,7 @@ namespace Niba
         /// <returns>完成的任務</returns>
         public List<string> CheckMissionStatus()
         {
-            return Alg.CheckMissionStatus(missionStatus);
+            return Alg.CheckMissionStatus(this, missionStatus);
         }
         /// <summary>
         /// 將呼叫CheckMissionStatus取得的任務輸入這個方法，完成那個任務並取得獲得的獎勵資訊
@@ -593,6 +611,12 @@ namespace Niba
                 }
             }
             var cfg = ConfigNpcMission.Get(id);
+            var requireItems = Alg.ParseAbstractItem(cfg.RequireItem);
+            foreach(var i in requireItems)
+            {
+                Alg.AddItem(GetMapPlayer(Place.Pocket).Storage, i.Item.Negative);
+            }
+
             var rewards = Alg.ParseAbstractItem(cfg.Reward);
             foreach (var reward in rewards)
             {
@@ -600,7 +624,7 @@ namespace Niba
                 {
                     case "money":
                         {
-                            // TODO
+                            money += reward.count;
                         }
                         break;
                     default:

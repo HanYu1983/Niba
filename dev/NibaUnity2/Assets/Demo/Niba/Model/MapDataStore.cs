@@ -209,6 +209,7 @@ namespace Niba
                     case MapType.Test1:
                         {
                             GenResource(player, pos, ConfigResource.ID_grass);
+                            GenResource(player, pos, ConfigResource.ID_tree);
                             GenMonster(player, pos, ConfigMonster.ID_ant);
                         }
                         break;
@@ -531,6 +532,17 @@ namespace Niba
             {
                 case Description.WorkUseSkillForEnemyAll:
                     {
+                        var des = Description.Empty;
+                        if (player.GetMapPlayer(Place.Map).IsDied)
+                        {
+                            des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "玩家死亡, 無法行動");
+                            ret.Add(des);
+                            break;
+                        }
+
                         var skillId = work.values.Get("skillId");
                         var mapObjectIds = work.values.GetValues("mapObjectIds").Select(int.Parse).ToList();
                         var skill = ConfigSkill.Get(skillId);
@@ -541,7 +553,7 @@ namespace Niba
                         var damage = playerBasic.agi * playerBasic.dex;
                         damage = Math.Max(0, damage);
 
-                        var des = Description.Empty;
+                        des = Description.Empty;
                         des.description = Description.InfoUseSkill;
                         des.values = new NameValueCollection();
                         des.values.Add("skills", skill.ID);
@@ -572,6 +584,17 @@ namespace Niba
                     break;
                 case Description.WorkSelectSkillForEnemy:
                     {
+                        var des = Description.Empty;
+                        if (player.GetMapPlayer(Place.Map).IsDied)
+                        {
+                            des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "玩家死亡, 無法行動");
+                            ret.Add(des);
+                            break;
+                        }
+
                         var skillId = work.values.Get("skillId");
                         var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
                         var mapObject = mapObjects[mapObjectId];
@@ -582,7 +605,7 @@ namespace Niba
                             goto LabelProcessWork;
                         }
 
-                        var des = Description.Empty;
+                        des = Description.Empty;
                         des.description = Description.InfoUseSkill;
                         des.values = new NameValueCollection();
                         des.values.Add("skills", skillId);
@@ -616,13 +639,23 @@ namespace Niba
                     break;
                 case Description.WorkUseTurnSkill:
                     {
+                        var des = Description.Empty;
+                        if (player.GetMapPlayer(Place.Map).IsDied)
+                        {
+                            des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "玩家死亡, 無法行動");
+                            ret.Add(des);
+                            break;
+                        }
                         var skillId = work.values.Get("skillId");
                         var skill = ConfigSkill.Get(skillId);
                         switch (skill.Effect)
                         {
                             case "{0}+{1}":
                                 player.playerInMap.hp += 20;
-                                var des = Description.Empty;
+                                des = Description.Empty;
                                 des.description = Description.InfoUseSkill;
                                 des.values = new NameValueCollection();
                                 des.values.Add("skills", skill.ID);
@@ -635,6 +668,16 @@ namespace Niba
                     break;
                 case Description.WorkCollectResource:
                     {
+                        var des = Description.Empty;
+                        if (player.GetMapPlayer(Place.Map).IsDied)
+                        {
+                            des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "玩家死亡, 無法行動");
+                            ret.Add(des);
+                            break;
+                        }
                         var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
                         var obj = mapObjects[mapObjectId];
                         obj.died = true;
@@ -665,7 +708,7 @@ namespace Niba
                                 player.NotifyMissionAddItemFromCollect(item);
                             }
 
-                            var des = Description.Empty;
+                            des = Description.Empty;
                             des.description = Description.InfoCollectResource;
                             des.values = new NameValueCollection();
                             foreach (var itemJson in items.Select(i => JsonUtility.ToJson(i)))
@@ -678,9 +721,10 @@ namespace Niba
                     break;
                 case Description.WorkAttack:
                     {
+                        var des = Description.Empty;
                         if (player.GetMapPlayer(Place.Map).IsDied)
                         {
-                            var des = Description.Empty;
+                            des = Description.Empty;
                             des.description = Description.InfoMessage;
                             des.values = new NameValueCollection();
                             des.values.Set("msg", "玩家死亡, 無法行動");
@@ -693,7 +737,7 @@ namespace Niba
                         // 怪物逃走了
                         if (monsterInf.IsDied)
                         {
-                            var des = Description.Empty;
+                            des = Description.Empty;
                             des.description = Description.InfoMessage;
                             des.values = new NameValueCollection();
                             des.values.Set("msg", "怪物已逃走");
@@ -752,7 +796,7 @@ namespace Niba
                         var isHit = UnityEngine.Random.Range(1, 101) < (int)(accuracyRate * 100);
                         if (isHit == false)
                         {
-                            var des = Description.Empty;
+                            des = Description.Empty;
                             // === 回傳使用招式 === //
                             if (triggered.Count() > 0)
                             {
@@ -763,6 +807,7 @@ namespace Niba
                                 {
                                     des.values.Add("skills", s.ID);
                                 }
+                                Debug.Log("use SKILL:"+des.values.GetValues("skills"));
                                 ret.Add(des);
                             }
 
@@ -804,7 +849,7 @@ namespace Niba
                             }
 
                             // ====== 以下處理回傳 ====== //
-                            var des = Description.Empty;
+                            des = Description.Empty;
                             // === 回傳使用招式 === //
                             if (triggered.Count() > 0)
                             {

@@ -135,6 +135,10 @@ MonoBehaviour:
     types:
     - key: ID
       type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
     - key: npc
       type: 2
     - key: level
@@ -148,8 +152,6 @@ MonoBehaviour:
     - key: reward
       type: 2
     - key: dependency
-      type: 2
-    - key: dialog
       type: 2
   - key: ConfigAbility
     fileName: gameData - ability.tsv
@@ -226,5 +228,5 @@ MonoBehaviour:
   split: 
   isFirstLetterUpper: 1
   ns: Niba
-  selectFile: ConfigItem
-  selectRow: useCount
+  selectFile: ConfigNpcMission
+  selectRow: name

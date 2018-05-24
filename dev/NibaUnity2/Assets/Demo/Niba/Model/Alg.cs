@@ -413,6 +413,10 @@ namespace Niba{
 		}
 
 		public static IEnumerable<ItemEffect> Effect(ConfigSkill skill){
+            if (string.IsNullOrEmpty(skill.Effect))
+            {
+                return new List<ItemEffect>();
+            }
 			return skill.Effect.Split (new char[]{ ',' }).Select (v => {
 				ItemEffect ef;
 				ef.value = v;
@@ -514,6 +518,10 @@ namespace Niba{
 				if (cfg.Type != ConfigItemType.ID_weapon) {
 					throw new Exception ("必須是武器:"+prototype);
 				}
+                if (string.IsNullOrEmpty(cfg.Ability))
+                {
+                    return new List<ItemEffect>();
+                }
 				return cfg.Ability.Split (new char[]{ ',' }).Select (v => {
 					ItemEffect ef;
 					ef.value = v;
@@ -579,7 +587,7 @@ namespace Niba{
             var container = new List<Item>(input);
             var shouldArrange = true;
             var config = ConfigItem.Get(item.prototype);
-            var maxCount = config.MaxCount;
+            var maxCount = Math.Max(1, config.MaxCount);
             if (item.count < 0)
             {
                 // 處理減
@@ -868,17 +876,22 @@ namespace Niba{
 		/// 判斷任務是否完成，每次互動後可以呼叫一次
 		/// </summary>
 		/// <returns>完成的任務</returns>
-		public static List<string> CheckMissionStatus(IEnumerable<NpcMission> missionStatus){
+		public static List<string> CheckMissionStatus(PlayerDataStore player, IEnumerable<NpcMission> missionStatus){
 			return missionStatus.Aggregate (new List<string> (), (ret, mission) => {
 				var cfg = ConfigNpcMission.Get (mission.prototype);
 				if (cfg.RequireItem != null) {
 					var isCompleted = true;
 					var requireItems = Alg.ParseItem (cfg.RequireItem);
 					foreach (var requireItem in requireItems) {
+                        /*
 						var itemCount = mission.itemGot
 							.Where(item=>item.prototype == requireItem.prototype)
 							.Sum(item=>item.count);
-						if (itemCount < requireItem.count) {
+                        */
+                        var itemCount = player.GetMapPlayer(Place.Pocket).Storage
+                            .Where(item => item.prototype == requireItem.prototype)
+                            .Sum(item => item.count);
+                        if (itemCount < requireItem.count) {
 							isCompleted = false;
 							break;
 						}
@@ -907,12 +920,29 @@ namespace Niba{
 
 				if (cfg.RequireStatus != null) {
 					var isCompleted = true;
-					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
+					var requireItems = Alg.ParseAbstractItem (cfg.RequireStatus);
 					foreach (var requireItem in requireItems) {
 						if (requireItem.prototype == "money") {
-							// TODO
+							if(player.money < requireItem.count)
+                            {
+                                isCompleted = false;
+                                break;
+                            }
 						}
-					}
+                        else if (requireItem.prototype == "str")
+                        {
+                            var basic = BasicAbility.Default.Add(player.GetMapPlayer(Helper.PlaceAt(PlayState.Home)).basicAbility);
+                            if (basic.str < requireItem.count)
+                            {
+                                isCompleted = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            isCompleted = false;
+                        }
+                    }
 					if (isCompleted) {
 						ret.Add (mission.prototype);
 					}

@@ -34,7 +34,7 @@ namespace Niba
 				var npc = ConfigNpc.Get (cfg.Npc);
 				ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
 			}
-			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Dialog;
+			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Description;
 			ui.SetActive (true);
 		}
 
