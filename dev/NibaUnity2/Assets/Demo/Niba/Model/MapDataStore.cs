@@ -885,7 +885,7 @@ namespace Niba
                             return playerAbility;
                         });
                         // 判斷是否命中
-                        var accuracyRate = playerAbility.AccuracyRate(monsterAbility);
+                        var accuracyRate = monsterAbility.AccuracyRate(playerAbility);
                         var isHit = UnityEngine.Random.Range(1, 101) < (int)(accuracyRate * 100);
                         if (isHit == false)
                         {
@@ -950,7 +950,7 @@ namespace Niba
 
 
                             var damage = monsterAbility.Damage(playerAbility);
-                            var criRate = playerAbility.CriticalHitRate(monsterAbility);
+                            var criRate = monsterAbility.CriticalHitRate(playerAbility);
                             var isCriHit = UnityEngine.Random.Range(1, 101) < (int)(criRate * 100);
                             if (isCriHit)
                             {

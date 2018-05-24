@@ -147,18 +147,25 @@ namespace Niba{
 		}
 
 		public float CriticalHitRate(FightAbility other){
-			return critical / other.mdef;
+			var rate = critical / other.mdef;
+            rate /= 50f;
+            Debug.Log("CriticalHitRate:" + rate + " <= (" + critical + ")(" + other.mdef + ")");
+            return rate;
 		}
 
 		public float AccuracyRate(FightAbility other){
-			return accuracy / (2*other.dodge);
+			var rate = accuracy / (2*other.dodge);
+            Debug.Log("AccuracyRate:" + rate + " <= (" + accuracy + ")(" + other.dodge + ")");
+            return rate;
 		}
 
 		public int Damage(FightAbility other){
             var v1 = (atk * atk) / (other.def + atk);
             var v2 = Math.Max(0, atk - other.def);
-            var weightV1 = 0.5f;
-            return (int)(v1 * weightV1 + v2 * (1 - weightV1));
+            var weightV1 = 0.3f;
+            var damage = (int)(v1 * weightV1 + v2 * (1 - weightV1));
+            Debug.Log("Damage:" + damage + " <= (" + atk + ")(" + other.def+")");
+            return damage;
 		}
 	}
 

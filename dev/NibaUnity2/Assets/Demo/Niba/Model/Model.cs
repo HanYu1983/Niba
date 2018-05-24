@@ -13,8 +13,8 @@ namespace Niba
 	public class Model : MonoBehaviour
 	{
 		public HandleDebug debug;
-		MapDataStore mapData = new MapDataStore();
-		PlayerDataStore playerData = new PlayerDataStore();
+		public MapDataStore mapData = new MapDataStore();
+		public PlayerDataStore playerData = new PlayerDataStore();
 		UserSettings user = new UserSettings();
 
 		public void NewGame(){

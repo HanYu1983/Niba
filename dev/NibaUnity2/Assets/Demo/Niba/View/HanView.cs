@@ -222,7 +222,8 @@ namespace Niba
                                         var objInfo = model.MonsterInfos[mapObj.infoKey];
                                         var objCfg = ConfigMonster.Get(objInfo.type);
                                         var damage = int.Parse(e.values.Get("damage"));
-                                        return string.Format("{0}對你造成{1}傷害", objCfg.Name, damage);
+                                        var isCri = int.Parse(e.values.Get("isCriHit"));
+                                        return string.Format("{0}對你造成{1}{2}傷害", objCfg.Name, damage, isCri ==1 ? "爆擊":"");
                                     }
                                 case Description.InfoMonsterDied:
                                     {
