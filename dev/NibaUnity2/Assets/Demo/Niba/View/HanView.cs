@@ -20,8 +20,8 @@ namespace Niba
         public Popup selectMapPopup;
         public HandleFungus handleFungus;
 
-        IModelGetter model;
-        public IModelGetter ModelGetter { set { model = value; } }
+        Model model;
+        public Model ModelGetter { set { model = value; } }
         public IEnumerator ChangePage(Page page, Action<Exception> callback)
         {
             switch (page)

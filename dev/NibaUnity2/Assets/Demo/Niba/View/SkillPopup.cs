@@ -25,19 +25,19 @@ namespace Niba
 			}*/
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			UpdateSkillList (model);
 			UpdateSlotCount (model);
 		}
 
-		public void UpdateSlotCount(IModelGetter model){
+		public void UpdateSlotCount(Model model){
 			var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
 			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
 		static int FilterIDApply = 0;
 
-		public void UpdateSkillList(IModelGetter model){
+		public void UpdateSkillList(Model model){
 			IEnumerable<ConfigSkill> skills = null;
 
 			if (CheckToggleValue (FilterIDApply)) {
@@ -73,7 +73,7 @@ namespace Niba
 			return toggles [num].isOn;
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_skillPopup_active":
 				{

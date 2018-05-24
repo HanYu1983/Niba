@@ -767,10 +767,8 @@ namespace Niba{
 			return storage;
 		}
 
-		public static int CAN_NOT = -1;
-		public static int REQUIREMENT_NOT_ALLOW = 0;
 
-		public static int IsCanFusion(Func<string, int> expFn, string prototype, IEnumerable<Item> items){
+		public static string IsCanFusion(Func<string, int> expFn, string prototype, IEnumerable<Item> items, ref int fusionCnt){
 			var cfg = ConfigItem.Get (prototype);
 			// 判斷技能經驗是否符合
 			var ais = ParseAbstractItem (cfg.SkillRequire);
@@ -779,50 +777,38 @@ namespace Niba{
 				var needExp = ai.count;
 				var haveExp = expFn (st);
 				if (haveExp < needExp) {
-					return CAN_NOT;
+					return "需求等級不足:"+st+"/"+needExp;
 				}
 			}
 			// 判斷所需道具數量
 			var requires = ParseItem (ConfigItem.Get (prototype).FusionRequire);
-			return IsCanFusion (requires.Select (i => i.AbstractItem), items.Select (i => i.AbstractItem));
-			/*
-			int minCnt = int.MaxValue;
-			foreach (var requireItem in requires) {
-				var search = items.Where (it => {
-					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
-				});
-				var isNotFound = search.Count () == 0;
-				if (isNotFound) {
-					return CAN_NOT;
-				}
-				var total = search.Sum (it => it.count);
-				var maxFusionCnt = total / requireItem.count;
-				if (minCnt > maxFusionCnt) {
-					minCnt = maxFusionCnt;
-				}
-			}
-			return minCnt;
-			*/
+			return IsCanFusion (requires.Select (i => i.AbstractItem), items.Select (i => i.AbstractItem), ref fusionCnt);
 		}
 
-		public static int IsCanFusion(IEnumerable<AbstractItem> requires, IEnumerable<AbstractItem> items){
+		public static string IsCanFusion(IEnumerable<AbstractItem> requires, IEnumerable<AbstractItem> items, ref int fusionCnt)
+        {
 			// 判斷所需道具數量
 			int minCnt = int.MaxValue;
 			foreach (var requireItem in requires) {
 				var search = items.Where (it => {
-					return it.prototype == requireItem.prototype && it.count >= requireItem.count;
+					return it.prototype == requireItem.prototype;
 				});
 				var isNotFound = search.Count () == 0;
 				if (isNotFound) {
-					return CAN_NOT;
+					return "需求道具不存在:"+requireItem.prototype;
 				}
 				var total = search.Sum (it => it.count);
+                if(total < requireItem.count)
+                {
+                    return "需求道具數量不足:" + requireItem.prototype+"/"+total;
+                }
 				var maxFusionCnt = total / requireItem.count;
 				if (minCnt > maxFusionCnt) {
 					minCnt = maxFusionCnt;
 				}
 			}
-			return minCnt;
+            fusionCnt = minCnt;
+            return null;
 		}
 	}
 	#endregion
@@ -940,7 +926,20 @@ namespace Niba{
                         }
                         else
                         {
-                            isCompleted = false;
+                            try
+                            {
+                                ConfigItem.Get(requireItem.prototype);
+                            }
+                            catch (Exception)
+                            {
+                                throw new Exception("no item:"+requireItem.prototype);
+                            }
+                            var itemCount = player.GetMapPlayer(Helper.PlaceAt(PlayState.Home)).Storage.Where(it => it.prototype == requireItem.prototype).Sum(it => it.count);
+                            if(itemCount < requireItem.count)
+                            {
+                                isCompleted = false;
+                                break;
+                            }
                         }
                     }
 					if (isCompleted) {
@@ -1144,8 +1143,9 @@ namespace Niba{
 
 			var terrians = checkTypes.SkipWhile (t => {
 				var resRequire = Alg.ParseAbstractItem (t.Require);
-				var check = Alg.IsCanFusion (resRequire, resList);
-				if (check <= Alg.REQUIREMENT_NOT_ALLOW) {
+                var fusionCnt = 0;
+				var msg = Alg.IsCanFusion (resRequire, resList, ref fusionCnt);
+				if (msg != null) {
 					return true;
 				}
 				return false;

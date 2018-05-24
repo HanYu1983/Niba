@@ -13,7 +13,7 @@ namespace Niba
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var modelItem = data [idx];
 			var cfg = ConfigSkill.Get (modelItem);
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
@@ -32,7 +32,7 @@ namespace Niba
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			if (idx <0 || idx >= DataCount) {
 				ui.GetComponent<Text>().text = "你沒有選擇任何道具";
 				return;

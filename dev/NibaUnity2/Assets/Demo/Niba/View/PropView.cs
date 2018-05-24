@@ -7,7 +7,7 @@ namespace Niba
 	{
         public Text txt_money;
         
-		public void UpdateView(IModelGetter model){
+		public void UpdateView(Model model){
 			if(txt_money != null)
             {
                 txt_money.text = "money:"+model.Money;

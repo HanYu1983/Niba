@@ -9,7 +9,7 @@ namespace Niba
         public AbilityView abilityView;
         public PropView propView;
 
-        public void UpdateUI(IModelGetter model, Place who)
+        public void UpdateUI(Model model, Place who)
         {
             abilityView.UpdateAbility(model, who);
             propView.UpdateView(model);

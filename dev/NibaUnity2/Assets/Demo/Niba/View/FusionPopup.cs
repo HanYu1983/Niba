@@ -10,13 +10,13 @@ namespace Niba{
 		public ItemView itemView;
 		public FusionRequireView fusionRequireView;
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			itemView.Data = model.CanFusionItems;
 			itemView.UpdateDataView (model);
 		}
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			default:
 				{

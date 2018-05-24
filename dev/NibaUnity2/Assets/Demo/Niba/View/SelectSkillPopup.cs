@@ -67,7 +67,7 @@ namespace Niba
 			}
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			if (skillDataProvider.Data != null) {
 				skillListView.UpdateDataView (model);
 			}
@@ -76,7 +76,7 @@ namespace Niba
 			}
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_selectSkillPopup_ok":
 				{

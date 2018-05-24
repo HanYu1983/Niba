@@ -25,13 +25,13 @@ namespace Niba
 			}
 		}
 
-		public void UpdateMissionList(IModelGetter model){
+		public void UpdateMissionList(Model model){
 			missionDataProvider.Data = model.AvailableNpcMissions.ToList ();
 			listView.UpdateDataView (model);
 			listView.CurrItemLabel (model, listView.LastSelectIndex);
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_missionPopup_complete":
 				{

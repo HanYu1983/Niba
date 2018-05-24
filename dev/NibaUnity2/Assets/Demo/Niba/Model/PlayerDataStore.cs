@@ -313,8 +313,9 @@ namespace Niba
             if (terrian.MoveRequire != null)
             {
                 var moveRequire = Alg.ParseAbstractItem(terrian.MoveRequire);
-                var isMatch = Alg.IsCanFusion(moveRequire, playerInMap.Storage.Select(i => i.AbstractItem));
-                if (isMatch <= Alg.REQUIREMENT_NOT_ALLOW)
+                var fusionCnt = 0;
+                var msg = Alg.IsCanFusion(moveRequire, playerInMap.Storage.Select(i => i.AbstractItem), ref fusionCnt);
+                if (msg != null)
                 {
                     throw new Exception("缺少必要交通工具，無法移動");
                 }
@@ -403,10 +404,10 @@ namespace Niba
             }
         }
 
-        public int IsCanFusion(string prototype, Place who)
+        public string IsCanFusion(string prototype, Place who, ref int fusionCnt)
         {
             var player = GetMapPlayer(who);
-            return Common.IsCanFusion(player, prototype, player.Storage);
+            return Alg.IsCanFusion(Common.SkillExpFn(player), prototype, player.Storage, ref fusionCnt);
         }
         #endregion
 

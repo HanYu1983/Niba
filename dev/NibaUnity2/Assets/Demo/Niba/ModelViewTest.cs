@@ -14,7 +14,7 @@ namespace Niba
 		public Model defaultModel;
 
 		IView view;
-		IModel model;
+		Model model;
 
 		void Awake(){
 			model = defaultModel;
@@ -41,7 +41,7 @@ namespace Niba
             // yield return TestFight (model, view);
 		}
 
-		static IEnumerator TestNpcMission(IModel model, IView view){
+		static IEnumerator TestNpcMission(Model model, IView view){
 			var ms = model.AvailableNpcMissions;
 			var grass10Mission = ms
 				.Select (ConfigNpcMission.Get)
@@ -92,7 +92,7 @@ namespace Niba
 			yield return null;
 		}
 
-		static IEnumerator TestHomeStorage(IModel model, IView view){
+		static IEnumerator TestHomeStorage(Model model, IView view){
             model.GetMapPlayer(Place.Storage).Storage.Clear();
 			model.GetMapPlayer(Place.Map).Storage.Clear();
             model.GetMapPlayer(Place.Pocket).Storage.Clear();
@@ -159,7 +159,7 @@ namespace Niba
 			yield return view.HideInfo (Info.Storage);
 		}
 
-		static IEnumerator TestFusionView(IModel model, IView view){
+		static IEnumerator TestFusionView(Model model, IView view){
 			Item item;
 			item.count = 1;
 			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
@@ -177,7 +177,7 @@ namespace Niba
 			yield return view.HideInfo (Info.Fusion);
 		}
 
-		static IEnumerator TestWeapon(IModel model, IView view){
+		static IEnumerator TestWeapon(Model model, IView view){
 			Exception e = null;
 			model.NewMap (MapType.Random);
 			model.EnterMap ();
@@ -240,7 +240,7 @@ namespace Niba
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestFight(IModel model, IView view){
+		static IEnumerator TestFight(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 			Exception e = null;
 			model.NewMap (MapType.Random);
@@ -304,7 +304,7 @@ namespace Niba
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestFusion(IModel model, IView view){
+		static IEnumerator TestFusion(Model model, IView view){
 			yield return null;
 			/*
 			UnityEngine.Random.InitState (1);
@@ -391,7 +391,7 @@ namespace Niba
 			*/
 		}
 
-		static IEnumerator TestShowInfo(IModel model, IView view){
+		static IEnumerator TestShowInfo(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
@@ -452,7 +452,7 @@ namespace Niba
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestMap(IModel model, IView view){
+		static IEnumerator TestMap(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;

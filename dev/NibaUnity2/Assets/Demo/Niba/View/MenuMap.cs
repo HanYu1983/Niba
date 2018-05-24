@@ -27,19 +27,19 @@ namespace Niba
 			workListView.DataProvider = workDataProvider;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			UpdateInfo (model);
 			UpdateWork (model);
 			UpdateMap (model);
 		}
 
-		public void UpdateInfo(IModelGetter model){
+		public void UpdateInfo(Model model){
 			var player = model.GetMapPlayer (Place.Map);
 			var fight = model.PlayerFightAbility (Place.Map);
 			txtInfo.text = string.Format ("hp:{0}/{1}", player.hp, (int)fight.hp);
 		}
 
-		public void UpdateWork(IModelGetter model){
+		public void UpdateWork(Model model){
 			workDataProvider.Data = model.Works.ToList ();
 			workListView.UpdateDataView (model);
 
@@ -101,11 +101,11 @@ namespace Niba
 			*/
 		}
 
-		public void UpdateMap(IModelGetter model){
+		public void UpdateMap(Model model){
 			SetTileWithPlayerPositionCenterExpend (model);
 		}
 
-		void SetTileWithPlayerPositionCenterExpend(IModelGetter model){
+		void SetTileWithPlayerPositionCenterExpend(Model model){
 
 			var gridParent = gridLayout.transform.parent;
 			for (var i = 0; i<grids.Length; ++i) {
@@ -171,7 +171,7 @@ namespace Niba
 			}*/
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			default:
 				{

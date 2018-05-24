@@ -14,14 +14,14 @@ namespace Niba
 			mapListView.DataProvider = mapDataProvider;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			mapDataProvider.Data = new List<MapType> () {
 				MapType.Random, MapType.Pattern, MapType.Test1
 			};
 			mapListView.UpdateDataView (model);
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_selectMapPopup_ok":
 				{

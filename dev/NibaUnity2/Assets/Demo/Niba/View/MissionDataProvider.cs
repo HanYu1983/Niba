@@ -24,7 +24,7 @@ namespace Niba
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = "";
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = "";
 
@@ -38,7 +38,7 @@ namespace Niba
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			if (idx <0 || idx >= DataCount) {
 				return;
 			}

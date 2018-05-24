@@ -14,13 +14,13 @@ namespace Niba
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var mapType = data [idx];
 			ui.GetComponentInChildren<Text> ().text = mapType.ToString();
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			var mapType = data [idx];
 			switch (mapType) {
 			case MapType.Random:

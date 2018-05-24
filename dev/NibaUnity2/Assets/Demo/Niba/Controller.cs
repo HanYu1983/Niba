@@ -11,7 +11,7 @@ namespace Niba
         public Model defaultModel;
 
         public IView view;
-        public IModel model;
+        public Model model;
 
         void Awake()
         {
@@ -321,8 +321,7 @@ namespace Niba
                                         yield break;
                                     }
                                     model.AddPlayerHp(100);
-                                    Alg.AddItem(model.GetMapPlayer(Helper.PlaceAt(PlayState.Play)).Storage, useItem.Negative);
-                                    
+                                    model.AddItemToStorage(useItem.Negative, Helper.PlaceAt(PlayState.Play));
                                     yield return view.ShowInfo(Info.Item, e2 =>
                                     {
                                         e = e2;
@@ -729,10 +728,22 @@ namespace Niba
                                 HandleException(e);
                                 yield break;
                             }
-                            var missionOK = model.CheckMissionStatus();
-                            if (missionOK.Count > 0)
+                            try
                             {
-                                view.Alert("mission ok");
+                                var missionOK = model.CheckMissionStatus();
+                                if (missionOK.Count > 0)
+                                {
+                                    view.Alert("mission ok");
+                                }
+                            }
+                            catch(Exception e2)
+                            {
+                                e = e2;
+                            }
+                            if (e != null)
+                            {
+                                HandleException(e);
+                                yield break;
                             }
                         }
                     }
@@ -810,10 +821,22 @@ namespace Niba
                     model.MarkMissionNotification(m);
                 }
 
-                var missionOK = model.CheckMissionStatus();
-                if (missionOK.Count > 0)
+                try
                 {
-                    view.Alert("mission ok");
+                    var missionOK = model.CheckMissionStatus();
+                    if (missionOK.Count > 0)
+                    {
+                        view.Alert("mission ok");
+                    }
+                }
+                catch (Exception e2)
+                {
+                    e = e2;
+                }
+                if (e != null)
+                {
+                    HandleException(e);
+                    yield break;
                 }
             }
         }

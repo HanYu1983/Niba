@@ -16,7 +16,7 @@ namespace Niba
 			throw new Exception ("沒有找到:"+id);
 		}
 
-		public void UpdateAbility(IModelGetter model, Place who_){
+		public void UpdateAbility(Model model, Place who_){
 			if (who_ == Place.Storage) {
 				Debug.LogWarning("倉庫中不計算能力");
 				return;

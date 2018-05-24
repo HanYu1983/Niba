@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace Niba
 {
-	public class Model : MonoBehaviour, IModel
+	public class Model : MonoBehaviour
 	{
 		public HandleDebug debug;
 		MapDataStore mapData = new MapDataStore();
@@ -30,9 +30,12 @@ namespace Niba
                     {
                         prototype = w.ID,
                         count = w.AutoCreateCount
-                    }, Place.Storage);
+                    }, Place.Pocket);
                 }
             }
+
+            playerData.AddItem(new Item { prototype = ConfigItem.ID_grass, count = 20 }, Place.Pocket);
+
             /*
 			playerData.player.basicAbility.vit = 100;
 			playerData.AddItem (new Item () {
@@ -184,11 +187,17 @@ namespace Niba
 			RequestSavePlayer ();
 		}
 
-		public int IsCanFusion (string prototype, Place who){
-			return playerData.IsCanFusion (prototype, who);
+		public string IsCanFusion (string prototype, Place who, ref int fusionCnt){
+			return playerData.IsCanFusion (prototype, who, ref fusionCnt);
 		}
 
 		public void Fusion (Item item, Place who){
+            var fusionCnt = 0;
+            var msg = IsCanFusion(item.prototype, who, ref fusionCnt);
+            if(msg != null)
+            {
+                throw new Exception(msg);
+            }
 			playerData.Fusion (item, who);
 			RequestSavePlayer ();
 		}
@@ -276,12 +285,6 @@ namespace Niba
         public void AddPlayerHp(int v)
         {
             playerData.AddPlayerHp(mapData, v);
-            RequestSavePlayer();
-        }
-
-        public void AddItem(Place place, Item item)
-        {
-            Alg.AddItem(playerData.GetMapPlayer(place).Storage, item);
             RequestSavePlayer();
         }
 

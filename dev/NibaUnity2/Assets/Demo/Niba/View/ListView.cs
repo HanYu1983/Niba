@@ -59,8 +59,8 @@ namespace Niba
 
 		public interface IDataProvider{
 			int DataCount{ get; }
-			void ShowData(IModelGetter model, GameObject ui, int idx);
-			void ShowSelect (IModelGetter model, GameObject ui, int idx);
+			void ShowData(Model model, GameObject ui, int idx);
+			void ShowSelect (Model model, GameObject ui, int idx);
 		}
 
 		public IDataProvider DataProvider{ get; set; }
@@ -70,7 +70,7 @@ namespace Niba
 		/// </summary>
 		/// <param name="model">Model.</param>
 		/// <param name="currIndex">Curr index.</param>
-		public void CurrItemLabel(IModelGetter model, int currIndex){
+		public void CurrItemLabel(Model model, int currIndex){
 			if (DataProvider == null) {
 				Debug.LogWarning ("你還沒設定DataProvider");
 				return;
@@ -82,7 +82,7 @@ namespace Niba
 		/// 注意要先設定Data
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateDataView(IModelGetter model){
+		public void UpdateDataView(Model model){
 			if (DataProvider == null) {
 				Debug.LogWarning ("你還沒設定DataProvider");
 				return;
@@ -118,7 +118,7 @@ namespace Niba
 		#endregion
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			if (msg == commandPrefix + "_pageup") {
 				Page -= 1;
 				UpdateDataView (model);

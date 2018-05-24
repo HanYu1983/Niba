@@ -13,7 +13,7 @@ namespace Niba
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var mapObjectId = data [idx];
 			var mapObject = model.MapObjects [mapObjectId];
 			if (mapObject.type != MapObjectType.Monster) {
@@ -26,7 +26,7 @@ namespace Niba
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			
 		}
 

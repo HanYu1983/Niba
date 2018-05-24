@@ -23,7 +23,7 @@ namespace Niba
 			set;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			var popup = this;
 			popup.itemDataProvider.Data = model.GetMapPlayer (Who).Storage;
 			popup.listView.UpdateDataView (model);
@@ -36,7 +36,7 @@ namespace Niba
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		void UpdateButtonLabel(IModelGetter model, Place who_){
+		void UpdateButtonLabel(Model model, Place who_){
 			if (who_ == Place.Storage) {
 				Debug.LogWarning ("倉庫中不顯示裝備");
 				return;
@@ -170,7 +170,7 @@ namespace Niba
 
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_itemPopup_move":
 				{

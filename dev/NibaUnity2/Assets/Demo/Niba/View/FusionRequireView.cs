@@ -45,7 +45,7 @@ namespace Niba
 		public Place Who{ get; set; }
 		public Item FusionTarget{ get; set; }
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			if (FusionTarget.Equals (Item.Empty)) {
 				throw new Exception ("必須先設定FusionTarget");
 			}
@@ -71,7 +71,7 @@ namespace Niba
 		}
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			if (msg.Contains (CommandPrefix)) {
 				var isNotValidItem = FusionTarget.Equals (Item.Empty);
 				if (isNotValidItem) {
@@ -105,13 +105,18 @@ namespace Niba
 					FusionTarget = item;
 				}
 				if (msg == commandPrefix + "_max") {
-					var maxFusionCount = model.IsCanFusion (FusionTarget.prototype, Who);
-					var item = FusionTarget;
-					item.count = maxFusionCount;
-					if (item.count < 0) {
-						item.count = 0;
-					}
-					FusionTarget = item;
+                    var maxFusionCount = 0;
+                    var errmsg = model.IsCanFusion (FusionTarget.prototype, Who, ref maxFusionCount);
+                    if(errmsg == null)
+                    {
+                        var item = FusionTarget;
+                        item.count = maxFusionCount;
+                        if (item.count < 0)
+                        {
+                            item.count = 0;
+                        }
+                        FusionTarget = item;
+                    }
 				}
 				if (msg == commandPrefix + "_ok") {
 					if (FusionTarget.count == 0) {
