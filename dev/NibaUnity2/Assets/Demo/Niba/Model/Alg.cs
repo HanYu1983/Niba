@@ -827,7 +827,8 @@ namespace Niba{
 	}
 
 	[Serializable]
-	public struct NpcMission{
+	public struct NpcMission : IEquatable<NpcMission>
+    {
 		public string prototype;
 		public List<string> monsterSkilled;
 		public List<Item> itemGot;
@@ -835,11 +836,16 @@ namespace Niba{
 			monsterSkilled = new List<string> (),
 			itemGot = new List<Item> ()
 		};
+        public static NpcMission Empty;
+        public bool Equals(NpcMission other)
+        {
+            return prototype == other.prototype;
+        }
         public override string ToString()
         {
             return JsonUtility.ToJson(this);
         }
-	}
+    }
 
 	public partial class Alg{
 		public static IEnumerable<string> AvailableNpcMissions(Func<string, bool> missionCompletedFn, int advLevel) {
@@ -865,95 +871,107 @@ namespace Niba{
 					.Select (cfg => cfg.ID);
 		}
 
+        public static List<string> GetMissionWantCompleteMessage(PlayerDataStore player, string missionPrototype)
+        {
+            var errs = new List<string>();
+            var mission = player.GetNpcMission(missionPrototype);
+            if (mission.Equals(NpcMission.Empty))
+            {
+                errs.Add("未接受任務");
+                return errs;
+            }
+            var cfg = ConfigNpcMission.Get(mission.prototype);
+            if (cfg.RequireItem != null)
+            {
+                var requireItems = Alg.ParseItem(cfg.RequireItem);
+                foreach (var requireItem in requireItems)
+                {
+                    var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.playState)).Storage
+                        .Where(item => item.prototype == requireItem.prototype)
+                        .Sum(item => item.count);
+                    if (itemCount < requireItem.count)
+                    {
+                        errs.Add("需求道具不足:"+ requireItem.prototype+"/"+ itemCount);
+                        continue;
+                    }
+                }
+            }
+
+            if (cfg.RequireKill != null)
+            {
+                var requireItems = Alg.ParseAbstractItem(cfg.RequireKill);
+                foreach (var requireItem in requireItems)
+                {
+                    var itemCount = mission.monsterSkilled
+                        .Where(id => id == requireItem.prototype)
+                        .Count();
+                    if (itemCount < requireItem.count)
+                    {
+                        errs.Add("需求屍體不足:" + requireItem.prototype + "/" + itemCount);
+                        continue;
+                    }
+                }
+            }
+
+            if (cfg.RequireStatus != null)
+            {
+                var requireItems = Alg.ParseAbstractItem(cfg.RequireStatus);
+                foreach (var requireItem in requireItems)
+                {
+                    if (requireItem.prototype == "money")
+                    {
+                        if (player.money < requireItem.count)
+                        {
+                            errs.Add("需求金錢不足:" + player.money);
+                            continue;
+                        }
+                    }
+                    else if (requireItem.prototype == "str")
+                    {
+                        var basic = BasicAbility.Default.Add(player.GetMapPlayer(Helper.PlaceAt(player.playState)).basicAbility);
+                        if (basic.str < requireItem.count)
+                        {
+                            errs.Add("需求技能不足:str/" + basic.str);
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            ConfigItem.Get(requireItem.prototype);
+                        }
+                        catch (Exception)
+                        {
+                            throw new Exception("no item:" + requireItem.prototype);
+                        }
+                        var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.playState)).Storage.Where(it => it.prototype == requireItem.prototype).Sum(it => it.count);
+                        if (itemCount < requireItem.count)
+                        {
+                            errs.Add("需求道具不足:" + requireItem.prototype + "/" + itemCount);
+                            continue;
+                        }
+                    }
+                }
+            }
+            if(errs.Count == 0)
+            {
+                return null;
+            }
+            return errs;
+        }
 		/// <summary>
 		/// 判斷任務是否完成，每次互動後可以呼叫一次
 		/// </summary>
 		/// <returns>完成的任務</returns>
 		public static List<string> CheckMissionStatus(PlayerDataStore player, IEnumerable<NpcMission> missionStatus){
 			return missionStatus.Aggregate (new List<string> (), (ret, mission) => {
-				var cfg = ConfigNpcMission.Get (mission.prototype);
-				if (cfg.RequireItem != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseItem (cfg.RequireItem);
-					foreach (var requireItem in requireItems) {
-                        /*
-						var itemCount = mission.itemGot
-							.Where(item=>item.prototype == requireItem.prototype)
-							.Sum(item=>item.count);
-                        */
-                        var itemCount = player.GetMapPlayer(Place.Pocket).Storage
-                            .Where(item => item.prototype == requireItem.prototype)
-                            .Sum(item => item.count);
-                        if (itemCount < requireItem.count) {
-							isCompleted = false;
-							break;
-						}
-					}
-					if (isCompleted) {
-						ret.Add (mission.prototype);
-					}
-				}
-
-				if (cfg.RequireKill != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseAbstractItem (cfg.RequireKill);
-					foreach (var requireItem in requireItems) {
-						var itemCount = mission.monsterSkilled
-							.Where (id => id == requireItem.prototype)
-							.Count ();
-						if (itemCount < requireItem.count) {
-							isCompleted = false;
-							break;
-						}
-					}
-					if (isCompleted) {
-						ret.Add (mission.prototype);
-					}
-				}
-
-				if (cfg.RequireStatus != null) {
-					var isCompleted = true;
-					var requireItems = Alg.ParseAbstractItem (cfg.RequireStatus);
-					foreach (var requireItem in requireItems) {
-						if (requireItem.prototype == "money") {
-							if(player.money < requireItem.count)
-                            {
-                                isCompleted = false;
-                                break;
-                            }
-						}
-                        else if (requireItem.prototype == "str")
-                        {
-                            var basic = BasicAbility.Default.Add(player.GetMapPlayer(Helper.PlaceAt(PlayState.Home)).basicAbility);
-                            if (basic.str < requireItem.count)
-                            {
-                                isCompleted = false;
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            try
-                            {
-                                ConfigItem.Get(requireItem.prototype);
-                            }
-                            catch (Exception)
-                            {
-                                throw new Exception("no item:"+requireItem.prototype);
-                            }
-                            var itemCount = player.GetMapPlayer(Helper.PlaceAt(PlayState.Home)).Storage.Where(it => it.prototype == requireItem.prototype).Sum(it => it.count);
-                            if(itemCount < requireItem.count)
-                            {
-                                isCompleted = false;
-                                break;
-                            }
-                        }
-                    }
-					if (isCompleted) {
-						ret.Add (mission.prototype);
-					}
-				}
-				return ret;
+                var errs = GetMissionWantCompleteMessage(player, mission.prototype);
+                if(errs == null)
+                {
+                    ret.Add(mission.prototype);
+                }
+                return ret;
 			});
 		}
 	}

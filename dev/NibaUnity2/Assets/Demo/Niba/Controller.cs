@@ -729,7 +729,7 @@ namespace Niba
                                 HandleException(e);
                                 yield break;
                             }
-                            try
+                            /*try
                             {
                                 var missionOK = model.CheckMissionStatus();
                                 if (missionOK.Count > 0)
@@ -745,7 +745,7 @@ namespace Niba
                             {
                                 HandleException(e);
                                 yield break;
-                            }
+                            }*/
                         }
                     }
                     break;
@@ -822,7 +822,7 @@ namespace Niba
                     model.MarkMissionNotification(m);
                 }
 
-                try
+                /*try
                 {
                     var missionOK = model.CheckMissionStatus();
                     if (missionOK.Count > 0)
@@ -838,7 +838,7 @@ namespace Niba
                 {
                     HandleException(e);
                     yield break;
-                }
+                }*/
             }
         }
     }

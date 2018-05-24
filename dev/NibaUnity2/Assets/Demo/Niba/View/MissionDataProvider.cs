@@ -29,12 +29,18 @@ namespace Niba
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = "";
 
 			var item = data [idx];
-			var cfg = ConfigNpcMission.Get (item);
+            var cfg = ConfigNpcMission.Get (item);
 			if (cfg.Npc != null) {
 				var npc = ConfigNpc.Get (cfg.Npc);
 				ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
 			}
-			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Description;
+            var des = cfg.Description;
+            var errs = Alg.GetMissionWantCompleteMessage(model.playerData, item);
+            if (errs != null)
+            {
+                des += ":" + string.Join(",", errs.ToArray());
+            }
+            ui.transform.Find("txt_des").GetComponent<Text>().text = des;
 			ui.SetActive (true);
 		}
 

@@ -523,6 +523,12 @@ namespace Niba
             missionStatus.Add(mission);
         }
 
+        public NpcMission GetNpcMission(string id)
+        {
+            var mis = missionStatus.Where(m => m.prototype == id).FirstOrDefault();
+            return mis;
+        }
+
         public void NotifyMissionAddItemFromCollect(Item item)
         {
             /*
@@ -595,10 +601,10 @@ namespace Niba
             {
                 throw new Exception("這個任務已完成過了:" + id);
             }
-            var checkAgain = CheckMissionStatus().Contains(id);
-            if (checkAgain == false)
+            var errs = Alg.GetMissionWantCompleteMessage(this, id);
+            if (errs != null)
             {
-                throw new Exception("這個任務還沒達成條件:" + id);
+                throw new Exception("這個任務還沒達成條件:" + string.Join(",", errs.ToArray()));
             }
             completedMission.Add(id);
             // 刪去任務狀態
