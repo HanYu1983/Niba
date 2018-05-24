@@ -300,20 +300,6 @@ namespace Niba
 				}
 			}
 		}
-
-		public static BasicAbility CalcMonsterAbility(MonsterInfo monsterInfo){
-			var tmpBasic = monsterInfo.basicAbility;
-			var effects = monsterInfo.Bufs.SelectMany (it => it.Effects);
-			var fight = FightAbility.Zero;
-			return Alg.CalcAbility (null, null, effects, tmpBasic, ref fight);
-		}
-
-		public static BasicAbility GetBasicAbility(MonsterInfo info){
-			if (string.IsNullOrEmpty (info.type)) {
-				throw new Exception ("沒有指定type:"+info.type);
-			}
-			return Alg.GetBasicAbility (ConfigMonster.Get (info.type));
-		}
 	}
 
 

@@ -16,7 +16,7 @@ namespace Niba
 
 		public void UpdateUI(IModelGetter model){
 			mapDataProvider.Data = new List<MapType> () {
-				MapType.Random, MapType.Pattern
+				MapType.Random, MapType.Pattern, MapType.Test1
 			};
 			mapListView.UpdateDataView (model);
 		}

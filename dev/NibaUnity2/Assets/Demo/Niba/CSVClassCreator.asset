@@ -78,6 +78,8 @@ MonoBehaviour:
       type: 2
     - key: useCount
       type: 0
+    - key: autoCreateCount
+      type: 0
   - key: ConfigMonster
     fileName: gameData - monster.tsv
     types:

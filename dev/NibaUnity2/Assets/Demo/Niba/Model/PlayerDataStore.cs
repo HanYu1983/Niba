@@ -29,6 +29,8 @@ namespace Niba
                 return hp <= 0;
             }
         }
+        // 注意: 非公開的變數無法序列化成JSON. 必須加上[SerializeField]標示
+        [SerializeField]
         List<Item> storage = new List<Item>();
         public List<Item> Storage { get { return storage; } }
         // === work === //
@@ -46,6 +48,7 @@ namespace Niba
             workFinishedTime = 0;
         }
         // === weapon === //
+        [SerializeField]
         List<Item> weapons = new List<Item>();
         public List<Item> Weapons { get { return weapons; } }
         /// <summary>
@@ -65,6 +68,7 @@ namespace Niba
             return Alg.CheckElseWeaponBroken(weapons);
         }
         // === skill exp === //
+        [SerializeField]
         List<AbstractItem> exps = new List<AbstractItem>();
         public void AddExp(string id, int exp)
         {
@@ -99,6 +103,7 @@ namespace Niba
         }
 
         // === skill === //
+        [SerializeField]
         List<string> skills = new List<string>();
         public List<string> Skills { get { return skills; } }
         public void AddSkill(string id)
@@ -532,8 +537,10 @@ namespace Niba
 
         public void NotifyMissionMonsterKill(string monsterPrototype)
         {
+            Debug.Log("NotifyMissionMonsterKill:"+ConfigMonster.Get(monsterPrototype).Name);
             for (var i = 0; i < missionStatus.Count; ++i)
             {
+                Debug.Log("missionID:" + missionStatus[i]);
                 missionStatus[i].monsterSkilled.Add(monsterPrototype);
             }
         }
@@ -734,7 +741,7 @@ namespace Niba
             }
             var who = player.GetMapPlayer(who_);
             var tmpFight = FightAbility.Zero;
-            var tmpBasic = Alg.CalcAbility(Common.SkillExpFn(who), who.Weapons, null, who.basicAbility, ref tmpFight);
+            var tmpBasic = Alg.CalcAbility(Common.SkillExpFn(who), who.Weapons, null, BasicAbility.Default.Add(who.basicAbility), ref tmpFight);
             basic = tmpBasic;
             fight = tmpFight;
         }
@@ -743,7 +750,10 @@ namespace Niba
         {
             var mapObject = map.mapObjects[mapObjectId];
             var monsterInfo = map.monsterInfo[mapObject.infoKey];
-            return Common.CalcMonsterAbility(monsterInfo);
+            var tmpBasic = Alg.GetBasicAbility(ConfigMonster.Get(monsterInfo.type));
+            var effects = monsterInfo.Bufs.SelectMany(it => it.Effects);
+            var fight = FightAbility.Zero;
+            return Alg.CalcAbility(null, null, effects, tmpBasic, ref fight);
         }
         /// <summary>
         /// 計算普攻傷害
@@ -756,7 +766,7 @@ namespace Niba
         {
             var a = player.playerInMap.basicAbility.FightAbility;
             var monsterInfo = map.monsterInfo[map.mapObjects[mapObjectId].infoKey];
-            var b = Common.GetBasicAbility(monsterInfo).FightAbility;
+            var b = Alg.GetBasicAbility(ConfigMonster.Get(monsterInfo.type)).FightAbility;
             return (int)(a.atk - b.def);
         }
     }

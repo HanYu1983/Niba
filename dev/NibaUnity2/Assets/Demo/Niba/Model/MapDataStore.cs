@@ -44,8 +44,7 @@ namespace Niba
     {
         public string type;
         public int hp, mp;
-        public BasicAbility basicAbility;
-
+        [SerializeField]
         List<Buf> bufs = new List<Buf>();
         public void AddBuf(Buf buf)
         {
@@ -57,7 +56,7 @@ namespace Niba
         /// <summary>
         /// 勇氣值-0.5~0.5
         /// </summary>
-        float brave;
+        [SerializeField] float brave;
         public float NormalBrave
         {
             get
@@ -116,7 +115,7 @@ namespace Niba
     [Serializable]
     public enum MapType
     {
-        Unknown, Random, Pattern
+        Unknown, Random, Pattern, Test1
     }
 
     [Serializable]
@@ -141,6 +140,7 @@ namespace Niba
         public const string InfoWeaponBroken = "[info]{items} is broken.";  // items is array of json string
         public const string InfoUseSkill = "[info]you use {skills}.";
         public const string InfoCollectResource = "[info]you collect {items}."; // items is array of json string
+        public const string InfoMessage = "[info]{msg}";
         public string description;
         public NameValueCollection values;
         public static Description Empty;
@@ -164,6 +164,7 @@ namespace Niba
         public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
         public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
 
+        [SerializeField]
         MapType genMapType;
 
         public void GenMapStart(MapType mapType)
@@ -205,6 +206,12 @@ namespace Niba
 
                 switch (genMapType)
                 {
+                    case MapType.Test1:
+                        {
+                            GenResource(player, pos, ConfigResource.ID_grass);
+                            GenMonster(player, pos, ConfigMonster.ID_ant);
+                        }
+                        break;
                     case MapType.Random:
                         {
                             for (var i = 0; i < ConfigResource.ID_COUNT; ++i)
@@ -315,11 +322,10 @@ namespace Niba
 
             var m1Info = monsterInfo[m1Object.infoKey];
             m1Info.type = monsterType;
-            var basic = Common.GetBasicAbility(m1Info);
+            var basic = Alg.GetBasicAbility(ConfigMonster.Get(m1Info.type));
             var fight = basic.FightAbility;
             m1Info.hp = (int)fight.hp;
             m1Info.mp = (int)fight.mp;
-            m1Info.basicAbility = basic;
             return m1Key;
         }
 
@@ -499,6 +505,8 @@ namespace Niba
             // 怪物死亡事件
             if (monsterInf.IsDied)
             {
+                player.NotifyMissionMonsterKill(monsterInf.type);
+
                 des = Description.Empty;
                 des.description = Description.InfoMonsterDied;
                 des.values = new NameValueCollection();
@@ -670,13 +678,26 @@ namespace Niba
                     break;
                 case Description.WorkAttack:
                     {
+                        if (player.GetMapPlayer(Place.Map).IsDied)
+                        {
+                            var des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "玩家死亡, 無法行動");
+                            ret.Add(des);
+                            break;
+                        }
                         var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
                         var mapObject = mapObjects[mapObjectId];
                         var monsterInf = monsterInfo[mapObject.infoKey];
                         // 怪物逃走了
                         if (monsterInf.IsDied)
                         {
-                            Debug.LogWarning("怪物已逃走");
+                            var des = Description.Empty;
+                            des.description = Description.InfoMessage;
+                            des.values = new NameValueCollection();
+                            des.values.Set("msg", "怪物已逃走");
+                            ret.Add(des);
                             break;
                         }
                         // === 計算傷害 === //
@@ -805,8 +826,8 @@ namespace Niba
                         var mapObject = mapObjects[mapObjectId];
                         var monsterInf = monsterInfo[mapObject.infoKey];
 
-                        //var monsterCfg = ConfigMonster.Get(monsterInf.type);
-                        var monsterAbility = Helper.CalcMonsterAbility(player, this, mapObjectId).FightAbility;
+                        var monsterBasic = Helper.CalcMonsterAbility(player, this, mapObjectId);
+                        var monsterAbility = monsterBasic.FightAbility;
                         var playerBasic = BasicAbility.Zero;
                         var playerAbility = FightAbility.Zero;
                         // 先計算非針對怪物的能力

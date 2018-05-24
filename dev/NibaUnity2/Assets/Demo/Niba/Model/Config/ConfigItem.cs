@@ -12,7 +12,8 @@ public string SkillRequire;
 public string Ability;
 public string Position;
 public int UseCount;
-public const int ID_COUNT = 11;
+public int AutoCreateCount;
+public const int ID_COUNT = 15;
 public const string ID_grass = "grass";
 public const string ID_wood = "wood";
 public const string ID_stone = "stone";
@@ -24,6 +25,10 @@ public const string ID_grassKen = "grassKen";
 public const string ID_woodSword = "woodSword";
 public const string ID_woodBoat = "woodBoat";
 public const string ID_compass = "compass";
+public const string ID_testWeapon = "testWeapon";
+public const string ID_hitRing = "hitRing";
+public const string ID_testBody = "testBody";
+public const string ID_posion = "posion";
 public static ConfigItem Get(int key){
 switch(key){
 case 0: return new ConfigItem {ID="grass",Name="草",Type="material",SkillType="tailor",MaxCount=99};
@@ -37,6 +42,10 @@ case 7: return new ConfigItem {ID="grassKen",Name="布拳套",Type="weapon",Skil
 case 8: return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",SkillType="fencingArt",MaxCount=1,FusionRequire="wood_5",SkillRequire="woodworker_1",Ability="atk+5",Position="hand",UseCount=40};
 case 9: return new ConfigItem {ID="woodBoat",Name="木伐",Description="可以通過淺海",Type="material",SkillType="woodworker",MaxCount=1,FusionRequire="wood_10"};
 case 10: return new ConfigItem {ID="compass",Name="羅盤",Description="通過深海的必要道具",Type="material",SkillType="ironworker",MaxCount=1,FusionRequire="iron,stone"};
+case 11: return new ConfigItem {ID="testWeapon",Name="測試武器",Type="weapon",SkillType="fencingArt",MaxCount=1,Ability="atk+100",Position="hand",AutoCreateCount=1};
+case 12: return new ConfigItem {ID="hitRing",Name="命中指環",Type="weapon",SkillType="subtle",MaxCount=10,Ability="accuracy+100",Position="accessory",AutoCreateCount=1};
+case 13: return new ConfigItem {ID="testBody",Name="測試防具",Type="weapon",SkillType="armor",MaxCount=1,Ability="def+100",Position="body",AutoCreateCount=1};
+case 14: return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=10};
 default: throw new Exception(key+"");
 }}public static ConfigItem Get(string key){
 switch(key){
@@ -51,5 +60,9 @@ case "grassKen": return new ConfigItem {ID="grassKen",Name="布拳套",Type="wea
 case "woodSword": return new ConfigItem {ID="woodSword",Name="木劍",Type="weapon",SkillType="fencingArt",MaxCount=1,FusionRequire="wood_5",SkillRequire="woodworker_1",Ability="atk+5",Position="hand",UseCount=40};
 case "woodBoat": return new ConfigItem {ID="woodBoat",Name="木伐",Description="可以通過淺海",Type="material",SkillType="woodworker",MaxCount=1,FusionRequire="wood_10"};
 case "compass": return new ConfigItem {ID="compass",Name="羅盤",Description="通過深海的必要道具",Type="material",SkillType="ironworker",MaxCount=1,FusionRequire="iron,stone"};
+case "testWeapon": return new ConfigItem {ID="testWeapon",Name="測試武器",Type="weapon",SkillType="fencingArt",MaxCount=1,Ability="atk+100",Position="hand",AutoCreateCount=1};
+case "hitRing": return new ConfigItem {ID="hitRing",Name="命中指環",Type="weapon",SkillType="subtle",MaxCount=10,Ability="accuracy+100",Position="accessory",AutoCreateCount=1};
+case "testBody": return new ConfigItem {ID="testBody",Name="測試防具",Type="weapon",SkillType="armor",MaxCount=1,Ability="def+100",Position="body",AutoCreateCount=1};
+case "posion": return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=10};
 default: throw new Exception(key);
 }}}}

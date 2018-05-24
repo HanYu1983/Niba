@@ -17,12 +17,12 @@ namespace Niba{
 		public static BasicAbility Default{
 			get{
 				BasicAbility ret;
-				ret.str = 8;
+				ret.str = 10;
 				ret.vit = 10;
-				ret.agi = 5;
-				ret.dex = 5;
-				ret.Int = 8;
-				ret.luc = 5;
+				ret.agi = 10;
+				ret.dex = 10;
+				ret.Int = 10;
+				ret.luc = 10;
 				return ret;
 			}
 		}
@@ -111,6 +111,11 @@ namespace Niba{
 
 		public static FightAbility Zero;
 
+        public override string ToString()
+        {
+            return JsonUtility.ToJson(this);
+        }
+
 		public FightAbility Add(FightAbility b){
 			var a = this;
 			a.hp += b.hp;
@@ -146,11 +151,14 @@ namespace Niba{
 		}
 
 		public float AccuracyRate(FightAbility other){
-			return accuracy / other.dodge;
+			return accuracy / (2*other.dodge);
 		}
 
 		public int Damage(FightAbility other){
-			return (int)(atk - other.def);
+            var v1 = (atk * atk) / (other.def + atk);
+            var v2 = Math.Max(0, atk - other.def);
+            var weightV1 = 0.5f;
+            return (int)(v1 * weightV1 + v2 * (1 - weightV1));
 		}
 	}
 
@@ -443,7 +451,7 @@ namespace Niba{
 			var addEffect = effects.Where (ef => ef.EffectOperator == ItemEffectType.Plus || ef.EffectOperator == ItemEffectType.Minus);
 			var multiEffect = effects.Where (ef => ef.EffectOperator == ItemEffectType.Multiply);
 			// 準備初值
-			var tmpBasic = BasicAbility.Default;
+			var tmpBasic = BasicAbility.Zero;
 			tmpBasic = tmpBasic.Add(skillbonus);
 			tmpBasic = tmpBasic.Add(basic);
 			// 先處理基本能力
@@ -826,6 +834,10 @@ namespace Niba{
 			monsterSkilled = new List<string> (),
 			itemGot = new List<Item> ()
 		};
+        public override string ToString()
+        {
+            return JsonUtility.ToJson(this);
+        }
 	}
 
 	public partial class Alg{

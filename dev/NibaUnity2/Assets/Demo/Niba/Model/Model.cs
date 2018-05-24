@@ -21,6 +21,19 @@ namespace Niba
 			ClearMoveResult ();
 			mapData = new MapDataStore();
 			playerData = new PlayerDataStore();
+
+            foreach(var w in Enumerable.Range(0, ConfigItem.ID_COUNT).Select(ConfigItem.Get))
+            {
+                if(w.AutoCreateCount > 0)
+                {
+                    playerData.AddItem(new Item()
+                    {
+                        prototype = w.ID,
+                        count = w.AutoCreateCount
+                    }, Place.Storage);
+                }
+            }
+            /*
 			playerData.player.basicAbility.vit = 100;
 			playerData.AddItem (new Item () {
 				prototype = ConfigItem.ID_woodBoat,
@@ -39,7 +52,7 @@ namespace Niba
                 playerData.AddItem(item, Place.Storage);
                 playerData.AddItem(item, Place.Storage);
             }
-
+            */
             /*
 			playerData.player.AddExp (ConfigAbility.ID_karate, 5);
 			playerData.player.AddExp (ConfigAbility.ID_tailor, 1);
@@ -355,17 +368,17 @@ namespace Niba
 						saveTargets.Remove("user");
 					}
 					if(saveTargets.Contains("player")){
-						Debug.LogWarning("save player...");
 						var memonto = playerData.GetMemonto ();
 						var path = persistentDataPath + "/playerData.json";
-						File.WriteAllText(path, memonto);
+                        Debug.LogWarning("save player:" + path);
+                        File.WriteAllText(path, memonto);
 						saveTargets.Remove("player");
 					}
 					if(saveTargets.Contains("map")){
-						Debug.LogWarning("save map...");
 						var memonto = mapData.GetMemonto ();
 						var path = persistentDataPath + "/mapData.json";
-						File.WriteAllText(path, memonto);
+                        Debug.LogWarning("save map:"+path);
+                        File.WriteAllText(path, memonto);
 						saveTargets.Remove("map");
 					}
 					lock (saveTargets) {
