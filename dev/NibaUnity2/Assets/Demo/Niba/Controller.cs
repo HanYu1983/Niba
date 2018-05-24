@@ -577,8 +577,9 @@ namespace Niba
                     break;
                 case "click_map_home":
                     {
-                        yield return OpenPage(Page.Home);
+                        // 先複製資料到Pocket, 這樣才會顯示最新的資訊
                         model.ExitMap();
+                        yield return OpenPage(Page.Home);
                     }
                     break;
                 case "click_map_fusion":

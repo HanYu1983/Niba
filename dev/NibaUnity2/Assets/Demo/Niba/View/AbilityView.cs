@@ -56,7 +56,7 @@ namespace Niba
 					var id = cfg.ID;
 					var v = who.Exp (id);
 					Search (txtsExp, id).text = string.Format ("{0}:{1}", cfg.Name, v);
-				}
+                }
 			}
 		}
 	}
