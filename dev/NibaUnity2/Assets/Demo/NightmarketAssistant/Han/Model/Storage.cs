@@ -112,7 +112,7 @@ namespace NightmarketAssistant
             return earns.Where(e =>
             {
                 return e.booth == booth;
-            }).SkipWhile(e =>
+            }).OrderBy(e=>e.date).SkipWhile(e =>
             {
                 var t = new DateTime(e.date);
                 var isBefore = DateTime.Compare(t, start) < 0;
@@ -226,13 +226,13 @@ namespace NightmarketAssistant
             states.Remove(row2InStorage);
         }
 
-        struct SaveMain
+        class SaveMain
         {
             public List<Booth> booths;
             public List<Earn> costEarns;
         }
 
-        struct SaveSub
+        class SaveSub
         {
             public List<BoothState> boothStates;
             public List<Earn> earns;
@@ -393,7 +393,7 @@ namespace NightmarketAssistant
             var timeEnd = 0L;
             var ranges = new List<long>();
 
-            foreach (var s in storage.states)
+            foreach (var s in storage.states.OrderBy(s=>s.date))
             {
                 if (s.booth != booth)
                 {
