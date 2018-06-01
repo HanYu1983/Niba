@@ -217,7 +217,7 @@ namespace Niba
                     if (skillExp <= levelRequire)
                     {
                         var skillTypeName = ConfigSkillType.Get(skillTypeRequire).Name;
-                        throw new Exception("技能需求經驗不足:" + skillTypeName);
+                        throw new Exception("技能需求經驗不足:" + skillTypeName +"/"+levelRequire);
                     }
                 }
             }
