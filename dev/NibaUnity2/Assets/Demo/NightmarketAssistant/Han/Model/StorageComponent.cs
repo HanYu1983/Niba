@@ -11,6 +11,7 @@ namespace NightmarketAssistant
     public class StorageComponent : MonoBehaviour
     {
         public string saveDir;
+        public string cloudSaveHost;
         public Storage storage = new Storage();
 
         [Range(0, 120)]
@@ -19,6 +20,7 @@ namespace NightmarketAssistant
         private void Awake()
         {
             saveDir = Application.persistentDataPath + "/NightmarketAssistant";
+            cloudSaveHost = "https://particle-979.appspot.com/nightmarketssistentdbfile2";
         }
 
         public List<Booth> Booths
@@ -54,17 +56,22 @@ namespace NightmarketAssistant
             storage.Save(saveDir);
         }
 
+        public void SaveToCloud()
+        {
+            StartCoroutine(storage.SaveToCloud(saveDir, cloudSaveHost));
+        }
+
         public IEnumerator Load()
         {
             storage = new Storage();
             var success = storage.Load(saveDir, Math.Max(1, loadMonth));
             if(success)
             {
-                yield return storage.SaveToCloud(saveDir);
+                yield return storage.SaveToCloud(saveDir, cloudSaveHost);
             }
             else
             {
-                yield return storage.LoadFromCloud(saveDir);
+                yield return storage.LoadFromCloud(saveDir, cloudSaveHost);
                 var success2 = storage.Load(saveDir, Math.Max(1, loadMonth));
                 if(success2 == false)
                 {
@@ -79,7 +86,7 @@ namespace NightmarketAssistant
         [ContextMenu("LoadFromCloud")]
         void LoadFromCloud()
         {
-            StartCoroutine(storage.LoadFromCloud(saveDir));
+            StartCoroutine(storage.LoadFromCloud(saveDir, cloudSaveHost));
         }
 
         [ContextMenu("Run Test")]

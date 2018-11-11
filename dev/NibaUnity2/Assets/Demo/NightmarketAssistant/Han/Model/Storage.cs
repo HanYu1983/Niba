@@ -282,11 +282,11 @@ namespace NightmarketAssistant
             public TmpFile[] Info;
         }
 
-        public IEnumerator LoadFromCloud(string dir)
+        public IEnumerator LoadFromCloud(string dir, string cloudSaveDir)
         {
             PrepareDir(dir);
-            var cloudfilename = WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier);
-            var filepath = "http://localhost:8080/nightmarketssistentdbfile2/" + cloudfilename;
+            var cloudfilename = "root/NightmarketAssistant/" + WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier);
+            var filepath = cloudSaveDir + "/" + cloudfilename;
             using (UnityWebRequest www = UnityWebRequest.Get(filepath))
             {
                 yield return www.SendWebRequest();
@@ -302,7 +302,7 @@ namespace NightmarketAssistant
                     {
                         //Debug.Log(f.Name);
 
-                        var filepath2 = "http://localhost:8080/nightmarketssistentdbfile2/" + f.Name;
+                        var filepath2 = cloudSaveDir + "/" + f.Name;
                         //Debug.Log(filepath2);
 
                         using (UnityWebRequest www2 = UnityWebRequest.Get(filepath2))
@@ -321,7 +321,7 @@ namespace NightmarketAssistant
                                     Debug.LogWarning("file not found");
                                     continue;
                                 }
-                                var localName = dir + f.Name.Replace(WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier), "");
+                                var localName = dir + f.Name.Replace(cloudfilename, "");
                                 File.WriteAllText(localName, content);
                                 //Debug.Log("replace " + localName + " content is "+content);
                             }
@@ -331,7 +331,7 @@ namespace NightmarketAssistant
             }
         }
 
-        public IEnumerator SaveToCloud(string dir)
+        public IEnumerator SaveToCloud(string dir, string cloudSaveDir)
         {
             var info = new DirectoryInfo(dir+"/earns/");
             var files = info.GetFiles().Select((file) => { return "/earns/" + file.Name; }).ToList();
@@ -344,8 +344,8 @@ namespace NightmarketAssistant
                 string content = reader.ReadToEnd();
                 reader.Close();
 
-                var cloudfilename = WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier) + file;
-                var filepath = "http://localhost:8080/nightmarketssistentdbfile2/" + cloudfilename;
+                var cloudfilename = "root/NightmarketAssistant/" + WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier) + file;
+                var filepath = cloudSaveDir + "/" + cloudfilename;
 
                 WWWForm form = new WWWForm();
                 form.AddField("Content", content);

@@ -33,6 +33,16 @@ namespace NightmarketAssistant
             StartCoroutine(StartInitPage());
         }
 
+        private void Update()
+        {
+            if (Input.GetKey("escape"))
+            {
+                // not working
+                Debug.LogWarning("save to cloud");
+                storage.SaveToCloud();
+            }
+        }
+
         #region score earn
         Earn CalcEarn(string booth)
         {
