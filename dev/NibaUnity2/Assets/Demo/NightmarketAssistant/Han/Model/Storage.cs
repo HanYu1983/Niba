@@ -282,8 +282,9 @@ namespace NightmarketAssistant
             public TmpFile[] Info;
         }
 
-        public IEnumerator LoadFormCloud(string dir)
+        public IEnumerator LoadFromCloud(string dir)
         {
+            PrepareDir(dir);
             var cloudfilename = WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier);
             var filepath = "http://localhost:8080/nightmarketssistentdbfile2/" + cloudfilename;
             using (UnityWebRequest www = UnityWebRequest.Get(filepath))
@@ -292,17 +293,17 @@ namespace NightmarketAssistant
 
                 if (www.isNetworkError || www.isHttpError)
                 {
-                    Debug.Log(www.error);
+                    Debug.LogWarning(www.error);
                 }
                 else
                 {
                     TmpRespones res = JsonUtility.FromJson<TmpRespones>(www.downloadHandler.text);
                     foreach(var f in res.Info)
                     {
-                        Debug.Log(f.Name);
+                        //Debug.Log(f.Name);
 
                         var filepath2 = "http://localhost:8080/nightmarketssistentdbfile2/" + f.Name;
-                        Debug.Log(filepath2);
+                        //Debug.Log(filepath2);
 
                         using (UnityWebRequest www2 = UnityWebRequest.Get(filepath2))
                         {
@@ -310,19 +311,21 @@ namespace NightmarketAssistant
 
                             if (www2.isNetworkError || www.isHttpError)
                             {
-                                Debug.Log(www.error);
+                                Debug.LogWarning(www.error);
                             }
                             else
                             {
                                 var content = www2.downloadHandler.text;
+                                if(content == "file not found")
+                                {
+                                    Debug.LogWarning("file not found");
+                                    continue;
+                                }
                                 var localName = dir + f.Name.Replace(WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier), "");
-                                Debug.Log("replace " + localName + " content is "+content);
-                              
-                                //File.WriteAllText(localName, content);
+                                File.WriteAllText(localName, content);
+                                //Debug.Log("replace " + localName + " content is "+content);
                             }
                         }
-
-                        
                     }
                 }
             }
@@ -335,7 +338,7 @@ namespace NightmarketAssistant
             files.Add("/booth.json");
 
             foreach (var file in files) {
-                Debug.Log(file);
+                // Debug.Log(file);
 
                 StreamReader reader = new StreamReader(dir+file);
                 string content = reader.ReadToEnd();
@@ -353,22 +356,22 @@ namespace NightmarketAssistant
                 request.chunkedTransfer = false;
                 request.uploadHandler = new UploadHandlerRaw(form.data);
                 request.downloadHandler = new DownloadHandlerBuffer();
-                //request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
                 yield return request.SendWebRequest();
 
                 if (request.isNetworkError || request.isHttpError)
                 {
-                    Debug.Log(request.error);
+                    Debug.LogWarning(request.error);
                 }
                 else
                 {
-                    Debug.Log("Form upload complete!, filepath:" + filepath);
+                    //Debug.Log("Form upload complete!, filepath:" + filepath);
                 }
-                Debug.Log(request.downloadHandler.text);
+                //Debug.Log(request.downloadHandler.text);
             }
         }
 
-        public void Load(string dir, int month)
+        public bool Load(string dir, int month)
         {
             var path = dir + "/booth.json";
             if (File.Exists(path))
@@ -377,6 +380,9 @@ namespace NightmarketAssistant
                 var main = JsonUtility.FromJson<SaveMain>(json);
                 booths = main.booths;
                 costEarns = main.costEarns;
+            } else
+            {
+                return false;
             }
             // 讀取這個月加上前幾個月
             var date = DateTime.Now;
@@ -392,6 +398,7 @@ namespace NightmarketAssistant
                 }
                 date = date.AddMonths(-1);
             }
+            return true;
         }
 
         string FileKey(DateTime t)

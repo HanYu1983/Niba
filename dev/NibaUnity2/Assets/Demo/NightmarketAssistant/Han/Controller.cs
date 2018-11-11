@@ -29,11 +29,6 @@ namespace NightmarketAssistant
         private void Start()
         {
             Application.runInBackground = true;
-
-            if (loadOnStart)
-            {
-                storage.Load();
-            }
             // 使用ZUI的換頁, 要比Start晚才行
             StartCoroutine(StartInitPage());
         }
@@ -123,7 +118,12 @@ namespace NightmarketAssistant
 
         IEnumerator StartInitPage()
         {
-            yield return null;
+            if (loadOnStart)
+            {
+                yield return storage.Load();
+                NMAEvent.OnBoothListChange();
+            }
+
             if (string.IsNullOrEmpty(initPage) == false)
             {
                 ChangePage(initPage);
