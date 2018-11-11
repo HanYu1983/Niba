@@ -52,6 +52,7 @@ namespace NightmarketAssistant
         public void Save()
         {
             storage.Save(saveDir);
+            // StartCoroutine(storage.SaveToCloud(saveDir));
         }
 
         public void Load()
@@ -61,6 +62,13 @@ namespace NightmarketAssistant
         }
 
 #if UNITY_EDITOR
+
+        [ContextMenu("LoadFromCloud")]
+        void LoadFromCloud()
+        {
+            StartCoroutine(storage.LoadFormCloud(saveDir));
+        }
+
         [ContextMenu("Run Test")]
         void Test()
         {

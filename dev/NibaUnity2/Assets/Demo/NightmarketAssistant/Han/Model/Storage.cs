@@ -4,6 +4,8 @@ using UnityEngine;
 using System;
 using System.Linq;
 using System.IO;
+using UnityEngine.Networking;
+using System.Text;
 
 namespace NightmarketAssistant
 {
@@ -265,6 +267,105 @@ namespace NightmarketAssistant
             var subJson = JsonUtility.ToJson(new SaveSub() { earns = earnsInThisMonth, boothStates = stateInThisMonth });
             var subPath = dir + "/" + FileKey(DateTime.Now);
             File.WriteAllText(subPath, subJson);
+        }
+
+        [Serializable]
+        struct TmpFile
+        {
+            public String Name;
+            public String Time;
+        }
+
+        [Serializable]
+        struct TmpRespones {
+            public String Error;
+            public TmpFile[] Info;
+        }
+
+        public IEnumerator LoadFormCloud(string dir)
+        {
+            var cloudfilename = WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier);
+            var filepath = "http://localhost:8080/nightmarketssistentdbfile2/" + cloudfilename;
+            using (UnityWebRequest www = UnityWebRequest.Get(filepath))
+            {
+                yield return www.SendWebRequest();
+
+                if (www.isNetworkError || www.isHttpError)
+                {
+                    Debug.Log(www.error);
+                }
+                else
+                {
+                    TmpRespones res = JsonUtility.FromJson<TmpRespones>(www.downloadHandler.text);
+                    foreach(var f in res.Info)
+                    {
+                        Debug.Log(f.Name);
+
+                        var filepath2 = "http://localhost:8080/nightmarketssistentdbfile2/" + f.Name;
+                        Debug.Log(filepath2);
+
+                        using (UnityWebRequest www2 = UnityWebRequest.Get(filepath2))
+                        {
+                            yield return www2.SendWebRequest();
+
+                            if (www2.isNetworkError || www.isHttpError)
+                            {
+                                Debug.Log(www.error);
+                            }
+                            else
+                            {
+                                var content = www2.downloadHandler.text;
+                                var localName = dir + f.Name.Replace(WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier), "");
+                                Debug.Log("replace " + localName + " content is "+content);
+                              
+                                //File.WriteAllText(localName, content);
+                            }
+                        }
+
+                        
+                    }
+                }
+            }
+        }
+
+        public IEnumerator SaveToCloud(string dir)
+        {
+            var info = new DirectoryInfo(dir+"/earns/");
+            var files = info.GetFiles().Select((file) => { return "/earns/" + file.Name; }).ToList();
+            files.Add("/booth.json");
+
+            foreach (var file in files) {
+                Debug.Log(file);
+
+                StreamReader reader = new StreamReader(dir+file);
+                string content = reader.ReadToEnd();
+                reader.Close();
+
+                var cloudfilename = WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier) + file;
+                var filepath = "http://localhost:8080/nightmarketssistentdbfile2/" + cloudfilename;
+
+                WWWForm form = new WWWForm();
+                form.AddField("Content", content);
+                form.AddField("Override", "");
+                var request = new UnityWebRequest(filepath, "POST");
+                // 需要加上這行, POST中資料才能成功上傳
+                // source: https://stackoverflow.com/questions/48627680/unitywebrequest-post-to-php-not-work
+                request.chunkedTransfer = false;
+                request.uploadHandler = new UploadHandlerRaw(form.data);
+                request.downloadHandler = new DownloadHandlerBuffer();
+                //request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError || request.isHttpError)
+                {
+                    Debug.Log(request.error);
+                }
+                else
+                {
+                    Debug.Log("Form upload complete!, filepath:" + filepath);
+                }
+                Debug.Log(request.downloadHandler.text);
+            }
         }
 
         public void Load(string dir, int month)
