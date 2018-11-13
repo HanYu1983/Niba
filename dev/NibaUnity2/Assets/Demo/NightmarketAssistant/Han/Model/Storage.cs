@@ -346,6 +346,7 @@ namespace NightmarketAssistant
 
                 var cloudfilename = "root/NightmarketAssistant/" + WWW.EscapeURL(SystemInfo.deviceUniqueIdentifier) + file;
                 var filepath = cloudSaveDir + "/" + cloudfilename;
+                Debug.Log("saveToCloud:"+filepath);
 
                 WWWForm form = new WWWForm();
                 form.AddField("Content", content);

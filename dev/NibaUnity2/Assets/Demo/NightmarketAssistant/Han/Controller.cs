@@ -131,6 +131,7 @@ namespace NightmarketAssistant
             if (loadOnStart)
             {
                 yield return storage.Load();
+                // update view
                 NMAEvent.OnBoothListChange();
             }
 
@@ -224,6 +225,7 @@ namespace NightmarketAssistant
                     ChangePage("StartBoothPage");
 
                     storage.Save();
+                    storage.SaveToCloud();
                 }
                 catch (Exception e)
                 {
