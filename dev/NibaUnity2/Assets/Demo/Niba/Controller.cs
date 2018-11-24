@@ -451,7 +451,14 @@ namespace Niba
                         try
                         {
                             var rewards = model.CompleteMission(id);
-                            view.Alert(string.Join(",", rewards.Select(i => i.ToString()).ToArray()));
+                            // 自動領取任務
+                            foreach (var m in model.AvailableNpcMissions)
+                            {
+                                model.AcceptMission(m);
+                            }
+                            // view.Alert(string.Join(",", rewards.Select(i => i.ToString()).ToArray()));
+                            var cfg = ConfigNpcMission.Get(id);
+                            view.Alert("完成任務 "+cfg.Name);
                         }
                         catch (Exception e2)
                         {
