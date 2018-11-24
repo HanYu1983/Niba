@@ -232,27 +232,31 @@ namespace Niba
                                 {
                                     prototype = info.type,
                                     count = 1
-                                }); ;
+                                });
 
                             for (var i = 0; i < ConfigMonster.ID_COUNT; ++i)
                             {
                                 var terrianId = Alg.Terrian(infoList);
                                 var monster = ConfigMonster.Get(i);
 
-                                var rate = 30;
-                                var rates = Alg.ParseAbstractItem(monster.AppearRate);
-                                foreach (var appearRate in rates)
+                                if(monster.Terrian != null && monster.Terrian.Contains(terrianId))
                                 {
-                                    if (appearRate.prototype == terrianId)
+                                    var rate = 30;
+                                    var rates = Alg.ParseAbstractItem(monster.AppearRate);
+                                    foreach (var appearRate in rates)
                                     {
-                                        rate = appearRate.count;
+                                        if (appearRate.prototype == terrianId)
+                                        {
+                                            rate = appearRate.count;
+                                        }
                                     }
-                                }
-                                var dice = UnityEngine.Random.Range(0, 100);
-                                if (dice < rate)
-                                {
-                                    var id = ConfigMonster.Get(i).ID;
-                                    GenMonster(player, pos, id);
+
+                                    var dice = UnityEngine.Random.Range(0, 100);
+                                    if (dice < rate)
+                                    {
+                                        var id = monster.ID;
+                                        GenMonster(player, pos, id);
+                                    }
                                 }
                             }
                         }

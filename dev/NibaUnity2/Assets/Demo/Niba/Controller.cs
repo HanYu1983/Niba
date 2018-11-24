@@ -307,6 +307,55 @@ namespace Niba
                             prototype = item.prototype,
                             count = 1
                         };
+                        var cfg = ConfigItem.Get(useItem.prototype);
+                        switch (cfg.Type)
+                        {
+                            case ConfigItemType.ID_food:
+                                if (model.PlayState == PlayState.Home)
+                                {
+                                    e = new Exception("在家裡不必吃補血");
+                                }
+                                if (e != null)
+                                {
+                                    HandleException(e);
+                                    yield break;
+                                }
+                                var effects = Alg.ParseAbstractItem(cfg.Ability);
+                                foreach(var effect in effects)
+                                {
+                                    if(effect.prototype == "hp")
+                                    {
+                                        var addHp = effect.count;
+                                        model.AddPlayerHp(addHp);
+                                        model.AddItemToStorage(useItem.Negative, Helper.PlaceAt(PlayState.Play));
+                                        yield return view.ShowInfo(Info.Item, e2 =>
+                                        {
+                                            e = e2;
+                                        });
+                                        if (e != null)
+                                        {
+                                            HandleException(e);
+                                            yield break;
+                                        }
+                                        yield return view.ShowInfo(Info.Map, e2 =>
+                                        {
+                                            e = e2;
+                                        });
+                                        if (e != null)
+                                        {
+                                            HandleException(e);
+                                            yield break;
+                                        }
+                                        view.Alert("回復體力"+ addHp);
+                                    }
+                                }
+                                view.Alert("你使用了道具" + cfg.Name);
+                                break;
+                            default:
+                                view.Alert("你使用了道具" + cfg.Name+", 沒有效果");
+                                break;
+                        }
+                        /*
                         switch (useItem.prototype)
                         {
                             case ConfigItem.ID_posion:
@@ -344,6 +393,7 @@ namespace Niba
                                 }
                                 break;
                         }
+                        */
                     }
                     break;
                 case "itemPopup_equip_item":

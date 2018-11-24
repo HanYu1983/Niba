@@ -149,6 +149,8 @@ namespace Niba
             storage = new List<Item>(other.storage);
             weapons = new List<Item>(other.weapons);
             skills = new List<string>(other.skills);
+            hp = other.hp;
+            mp = other.mp;
         }
     }
 
