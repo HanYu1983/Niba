@@ -13,6 +13,9 @@ compass	羅盤	通過深海的必要道具	material	ironworker	1	iron,stone	wood
 testWeapon	測試武器		weapon	fencingArt	1			atk+100	hand		1
 hitRing	命中指環		weapon	subtle	1			accuracy+100	accessory		1
 testBody	測試防具		weapon	armor	1			def+100	body		1
-posion	補血藥		food		10						10
+posion	補血藥		food		10						3
 powerRing	力量戒指		weapon	subtle	1			str+30	accessory		1
 woodworkerBook1	木工1		important		1			woodworker+1			
+yizhi	蟻肢		material		99						
+shepi	蛇皮		material		10						
+shedan	蛇膽		food		5						

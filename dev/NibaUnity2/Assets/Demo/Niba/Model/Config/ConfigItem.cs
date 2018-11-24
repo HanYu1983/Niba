@@ -13,7 +13,7 @@ public string Ability;
 public string Position;
 public int UseCount;
 public int AutoCreateCount;
-public const int ID_COUNT = 17;
+public const int ID_COUNT = 20;
 public const string ID_grass = "grass";
 public const string ID_wood = "wood";
 public const string ID_stone = "stone";
@@ -31,6 +31,9 @@ public const string ID_testBody = "testBody";
 public const string ID_posion = "posion";
 public const string ID_powerRing = "powerRing";
 public const string ID_woodworkerBook1 = "woodworkerBook1";
+public const string ID_yizhi = "yizhi";
+public const string ID_shepi = "shepi";
+public const string ID_shedan = "shedan";
 public static ConfigItem Get(int key){
 switch(key){
 case 0: return new ConfigItem {ID="grass",Name="草",Type="material",SkillType="tailor",MaxCount=99};
@@ -47,9 +50,12 @@ case 10: return new ConfigItem {ID="compass",Name="羅盤",Description="通過�
 case 11: return new ConfigItem {ID="testWeapon",Name="測試武器",Type="weapon",SkillType="fencingArt",MaxCount=1,Ability="atk+100",Position="hand",AutoCreateCount=1};
 case 12: return new ConfigItem {ID="hitRing",Name="命中指環",Type="weapon",SkillType="subtle",MaxCount=1,Ability="accuracy+100",Position="accessory",AutoCreateCount=1};
 case 13: return new ConfigItem {ID="testBody",Name="測試防具",Type="weapon",SkillType="armor",MaxCount=1,Ability="def+100",Position="body",AutoCreateCount=1};
-case 14: return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=10};
+case 14: return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=3};
 case 15: return new ConfigItem {ID="powerRing",Name="力量戒指",Type="weapon",SkillType="subtle",MaxCount=1,Ability="str+30",Position="accessory",AutoCreateCount=1};
 case 16: return new ConfigItem {ID="woodworkerBook1",Name="木工1",Type="important",MaxCount=1,Ability="woodworker+1"};
+case 17: return new ConfigItem {ID="yizhi",Name="蟻肢",Type="material",MaxCount=99};
+case 18: return new ConfigItem {ID="shepi",Name="蛇皮",Type="material",MaxCount=10};
+case 19: return new ConfigItem {ID="shedan",Name="蛇膽",Type="food",MaxCount=5};
 default: throw new Exception(key+"");
 }}public static ConfigItem Get(string key){
 switch(key){
@@ -67,8 +73,11 @@ case "compass": return new ConfigItem {ID="compass",Name="羅盤",Description="�
 case "testWeapon": return new ConfigItem {ID="testWeapon",Name="測試武器",Type="weapon",SkillType="fencingArt",MaxCount=1,Ability="atk+100",Position="hand",AutoCreateCount=1};
 case "hitRing": return new ConfigItem {ID="hitRing",Name="命中指環",Type="weapon",SkillType="subtle",MaxCount=1,Ability="accuracy+100",Position="accessory",AutoCreateCount=1};
 case "testBody": return new ConfigItem {ID="testBody",Name="測試防具",Type="weapon",SkillType="armor",MaxCount=1,Ability="def+100",Position="body",AutoCreateCount=1};
-case "posion": return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=10};
+case "posion": return new ConfigItem {ID="posion",Name="補血藥",Type="food",MaxCount=10,AutoCreateCount=3};
 case "powerRing": return new ConfigItem {ID="powerRing",Name="力量戒指",Type="weapon",SkillType="subtle",MaxCount=1,Ability="str+30",Position="accessory",AutoCreateCount=1};
 case "woodworkerBook1": return new ConfigItem {ID="woodworkerBook1",Name="木工1",Type="important",MaxCount=1,Ability="woodworker+1"};
+case "yizhi": return new ConfigItem {ID="yizhi",Name="蟻肢",Type="material",MaxCount=99};
+case "shepi": return new ConfigItem {ID="shepi",Name="蛇皮",Type="material",MaxCount=10};
+case "shedan": return new ConfigItem {ID="shedan",Name="蛇膽",Type="food",MaxCount=5};
 default: throw new Exception(key);
 }}}}

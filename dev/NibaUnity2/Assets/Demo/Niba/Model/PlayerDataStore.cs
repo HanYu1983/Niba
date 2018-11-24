@@ -691,24 +691,30 @@ namespace Niba
 
         public static MonsterThinking MonsterThink(MapDataStore map, PlayerDataStore player, int monsterId)
         {
+            /*
             if (true)
             {
                 return MonsterThinking.AttackYou;
             }
+            */
             var objInfo = map.mapObjects[monsterId];
             var monsterInfo = map.monsterInfo[objInfo.infoKey];
             //var cfg = ConfigMonster.Get (monsterInfo.type);
             // 想要攻擊主要是仇恨值
             var wantAttack =
-                monsterInfo.NormalHate * 0.8f +
-                monsterInfo.NormalHate > 0 ? (monsterInfo.NormalBrave * 0.2f) : 0;
+                monsterInfo.NormalHate * 0.5f + monsterInfo.NormalBrave * 0.5f;
             var wantEscape = 1 - (
                 monsterInfo.NormalBrave * (2 / 3f) +
                 monsterInfo.NormalHate * (1 / 3f)
             );
 
+            Debug.Log(monsterInfo.NormalHate + "/" + monsterInfo.NormalBrave);
+            Debug.Log(monsterId+" attckRate:" + wantAttack);
+            Debug.Log(monsterId + " escape:" + wantEscape);
+
+            // none for test. origin is Escape
             var actions = new MonsterThinking[] {
-                MonsterThinking.AttackYou, MonsterThinking.Escape
+                MonsterThinking.AttackYou, MonsterThinking.None
             };
             var values = new float[] { wantAttack, wantEscape };
             var selectValue = values.OrderByDescending(v => v).First();

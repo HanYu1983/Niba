@@ -107,6 +107,12 @@ MonoBehaviour:
       type: 0
     - key: characteristic
       type: 2
+    - key: activeRate
+      type: 0
+    - key: appearRate
+      type: 2
+    - key: itemAppearRate
+      type: 2
   - key: ConfigSkill
     fileName: gameData - skill.tsv
     types:

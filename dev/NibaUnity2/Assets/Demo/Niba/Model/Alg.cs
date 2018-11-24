@@ -1201,8 +1201,18 @@ namespace Niba{
 				var monster = ConfigMonster.Get (i);
 				if (monster.Terrian != null) {
 					if (monster.Terrian.Contains (terrianId)) {
-						var dice = UnityEngine.Random.Range (0, 100);
-						if (dice < 20) {
+                        var rate = 30;
+                        var rates = Alg.ParseAbstractItem(monster.AppearRate);
+                        foreach(var appearRate in rates)
+                        {
+                            if(appearRate.prototype == terrianId)
+                            {
+                                rate = appearRate.count;
+                            }
+                        }
+						var dice = UnityEngine.Random.Range (0, 99);
+                        Debug.Log("dice:" + dice + " monter rate:" + rate);
+                        if (dice < rate) {
 							ret.Add (monster.ID);
 						}
 					}

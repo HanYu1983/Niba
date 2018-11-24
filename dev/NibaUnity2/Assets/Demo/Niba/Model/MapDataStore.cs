@@ -54,14 +54,14 @@ namespace Niba
 
         public bool IsDied { get { return hp <= 0; } }
         /// <summary>
-        /// 勇氣值-0.5~0.5
+        /// 勇氣值0~1
         /// </summary>
-        [SerializeField] float brave;
+        public float brave;
         public float NormalBrave
         {
             get
             {
-                return Mathf.Max(0.5f, Mathf.Min(-0.5f, brave + 0.5f));
+                return Mathf.Max(0, Mathf.Min(1, brave));
             }
         }
         // 打你越痛勇氣值越高
@@ -74,7 +74,7 @@ namespace Niba
         // 每回合勇氣值會自動增減
         public void StepBrave()
         {
-            var offset = (brave - 0) / 10f;
+            var offset = (brave - 0.5f) / 10f;
             brave += offset;
         }
         /// <summary>
@@ -327,6 +327,7 @@ namespace Niba
             var fight = basic.FightAbility;
             m1Info.hp = (int)fight.hp;
             m1Info.mp = (int)fight.mp;
+            m1Info.brave = ConfigMonster.Get(m1Info.type).ActiveRate / 100.0f;
             return m1Key;
         }
 
@@ -481,14 +482,32 @@ namespace Niba
             monsterInf.hp -= damage;
             // 計算仇恨值
             monsterInf.BeAttacked(damage);
+
+            var getReward = new List<Item>();
             if (monsterInf.IsDied)
             {
                 mapObject.died = true;
                 // 獎勵
                 var rewards = Alg.ParseItem(monsterCfg.Item);
+                var rewardsRate = Alg.ParseItem(monsterCfg.ItemAppearRate);
+
                 foreach (var reward in rewards)
                 {
-                    Alg.AddItem(player.playerInMap.Storage, reward);
+                    var rate = 30;
+                    foreach(var itemRate in rewardsRate)
+                    {
+                        if(itemRate.prototype == reward.prototype)
+                        {
+                            rate = itemRate.count;
+                        }
+                    }
+                    var dice = UnityEngine.Random.Range(0, 99);
+                    Debug.Log("dice:"+dice+" target rate:"+rate);
+                    if(dice < rate)
+                    {
+                        Alg.AddItem(player.playerInMap.Storage, reward);
+                        getReward.Add(reward);
+                    }
                 }
             }
             monsterInfo[mapObject.infoKey] = monsterInf;
@@ -513,7 +532,7 @@ namespace Niba
                 des.values = new NameValueCollection();
                 des.values.Set("mapObjectId", mapObjectId + "");
                 // 獎勵資訊
-                var rewards = Alg.ParseItem(monsterCfg.Item);
+                var rewards = getReward;
                 foreach (var json in rewards.Select(i => JsonUtility.ToJson(i)))
                 {
                     des.values.Add("rewards", json);
@@ -1007,11 +1026,6 @@ namespace Niba
                 case Description.EventMonsterIdle:
                     {
                         var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
-                        var mapObject = mapObjects[mapObjectId];
-                        var monsterInf = monsterInfo[mapObject.infoKey];
-                        monsterInf.hp = 0;
-                        monsterInfo[mapObject.infoKey] = monsterInf;
-
                         var des = Description.Empty;
                         des.description = Description.InfoMonsterIdle;
                         des.values = new NameValueCollection();
