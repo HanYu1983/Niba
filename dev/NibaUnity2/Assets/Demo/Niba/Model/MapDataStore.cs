@@ -225,10 +225,31 @@ namespace Niba
                                 }
                             }
 
+                            var infoList = FindObjects(pos)
+                                .Where(obj => obj.type == MapObjectType.Resource)
+                                .Select(obj => resourceInfo[obj.infoKey])
+                                .Select(info => new AbstractItem()
+                                {
+                                    prototype = info.type,
+                                    count = 1
+                                }); ;
+
                             for (var i = 0; i < ConfigMonster.ID_COUNT; ++i)
                             {
+                                var terrianId = Alg.Terrian(infoList);
+                                var monster = ConfigMonster.Get(i);
+
+                                var rate = 30;
+                                var rates = Alg.ParseAbstractItem(monster.AppearRate);
+                                foreach (var appearRate in rates)
+                                {
+                                    if (appearRate.prototype == terrianId)
+                                    {
+                                        rate = appearRate.count;
+                                    }
+                                }
                                 var dice = UnityEngine.Random.Range(0, 100);
-                                if (dice < 60)
+                                if (dice < rate)
                                 {
                                     var id = ConfigMonster.Get(i).ID;
                                     GenMonster(player, pos, id);
@@ -1056,6 +1077,7 @@ namespace Niba
         {
             var ret = Interaction.Empty;
             ret.description = work;
+            // 依玩家閃避率設定優先權
             ret.priority = player.playerInMap.basicAbility.FightAbility.dodge;
             return ret;
         }
