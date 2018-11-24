@@ -724,10 +724,14 @@ namespace Niba
                         }
                         var mapObjectId = int.Parse(work.values.Get("mapObjectId"));
                         var obj = mapObjects[mapObjectId];
-                        obj.died = true;
-                        mapObjects[mapObjectId] = obj;
                         var info = resourceInfo[obj.infoKey];
                         var config = ConfigResource.Get(info.type);
+                        var breakRate = 100 / config.UseCount;
+                        if(UnityEngine.Random.Range(0, 99) < breakRate)
+                        {
+                            obj.died = true;
+                            mapObjects[mapObjectId] = obj;
+                        }
                         var hasItem = config.Item != null;
                         if (hasItem)
                         {
