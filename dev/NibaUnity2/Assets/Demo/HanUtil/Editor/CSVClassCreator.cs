@@ -209,7 +209,7 @@ namespace HanUtil
             }
             catch (Exception e)
             {
-                Debug.LogWarning(e.Message);
+                Debug.LogWarning(e.StackTrace);
 
                 Debug.LogWarning("XXXX");
                 var code2 = WriteClass(
@@ -295,7 +295,7 @@ namespace HanUtil
                     continue;
                 }
                 var value = data[i][j];
-                if (value.Length == 0)
+                if (value.Trim().Length == 0)
                 {
                     continue;
                 }

@@ -34,7 +34,7 @@ namespace Niba
                 }
             }
 
-            playerData.AddItem(new Item { prototype = ConfigItem.ID_grass, count = 20 }, Place.Pocket);
+            //playerData.AddItem(new Item { prototype = ConfigItem.ID_grass, count = 20 }, Place.Pocket);
 
             /*
 			playerData.player.basicAbility.vit = 100;

@@ -1,7 +1,4 @@
 id	name	description	npc	level	requireItem	requireKill	requireStatus	reward	dependency
-0	請給我10個草	請給我10個草	guide	0	grass_10			money_300	
-1	請給我3個木	請給我3個木	guide	0	wood_3			woodworkerBook1,money_300	0
-2	去殺3隻螞蟻	去殺3隻螞蟻	guide	0		ant_3		posion,money_300	
-3	請存到500元	請存到500元	guide	0			money_500		
-4	請將腕力加到20	請將腕力加到20	guide	0			str_20		
-5	請合成木劍1個	請合成木劍1個	guide	0			woodSword	woodBoat	
+0	請給我12個草	請給我12個草	guide	0	grass_12			money_300	
+1	請給我4個草繩	請給我4個草繩	guide	0	grassLine_4			money_300	0
+2	請給我2個綳帶	請給我2個綳帶	guide	0	bengdai_2			money_300	1

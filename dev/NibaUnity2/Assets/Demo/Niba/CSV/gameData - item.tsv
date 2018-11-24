@@ -3,19 +3,29 @@ grass	草		material	tailor	99
 wood	木		material	woodworker	10						
 stone	石		material	ironworker	10						
 iron	鉄礦		material	ironworker	10						
-grassHat	草帽		weapon	speed	1	grass_10	tailor_1	def+2	hand	20	1
-grassBody	布衣		weapon	speed	1	grass_30	tailor_1	def+4	body	20	1
-grassShoe	草鞋		weapon	speed	1	grass_10	tailor_1	def+2	foot	20	1
-grassKen	布拳套		weapon	karate	1	grass_10	tailor_1	atk+2	hand	20	1
+yizhi	蟻肢		material		99						
+shepi	蛇皮		material		10						
+water	水		material		99						
+_material_											
+grassLine	草繩		material	tailor	99	grass_3					
+bu	布		material	tailor	99	grass_3,wood					
+shepige	蛇皮革		material	tailor	99	shepi_3,wood					
+_product_											
+bengdai	綳帶		food	tailor	20	grassLine_2		hp_15			
+yinyongshui	飲用水		food	fencingArt	99	water_3		hp_5			
+kaoyi	烤蟻		food	cooker	99	yizhi_6,water_2		hp_30			
+grassHat	草帽		weapon	speed	1	grassLine_2,grass_10		def+2	head	20	
+grassShoe	草鞋		weapon	speed	1	grassLine_3,grass_10		def+2	foot	20	
+grassBody	草衣		weapon	speed	1	grassLine_5,grass_30	tailor_1	def+4	body	20	
+grassKen	布拳套		weapon	karate	1	bu_2,grassLine_2	tailor_1	atk+2	hand	20	
+_unplan_											
 woodSword	木劍		weapon	fencingArt	1	wood_5	woodworker_1	atk+5	hand	40	
 woodBoat	木伐	可以通過淺海	material	woodworker	1	wood_10	woodworker_1				
 compass	羅盤	通過深海的必要道具	material	ironworker	1	iron,stone	woodworker_1				
-testWeapon	測試武器		weapon	fencingArt	1			atk+100	hand		1
-hitRing	命中指環		weapon	subtle	1			accuracy+100	accessory		1
-testBody	測試防具		weapon	armor	1			def+100	body		1
-posion	補血藥		food		10						3
-powerRing	力量戒指		weapon	subtle	1			str+30	accessory		1
+testWeapon	測試武器		weapon	fencingArt	1			atk+100	hand		
+hitRing	命中指環		weapon	subtle	1			accuracy+100	accessory		
+testBody	測試防具		weapon	armor	1			def+100	body		
+posion	補血藥		food		10						
+powerRing	力量戒指		weapon	subtle	1			str+30	accessory		
 woodworkerBook1	木工1		important		1			woodworker+1			
-yizhi	蟻肢		material		99						
-shepi	蛇皮		material		10						
 shedan	蛇膽		food		5						

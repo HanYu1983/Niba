@@ -1249,11 +1249,11 @@ namespace Niba{
 
 				// 加入氣溫
 				if (currTemp < 10) {
-					ret.Add(ConfigResource.ID_temperature1);
+					ret.Add(ConfigResource.ID_symTemperature1);
 				} else if (currTemp < 30) {
-					ret.Add(ConfigResource.ID_temperature2);
+					ret.Add(ConfigResource.ID_symTemperature2);
 				} else {
-					ret.Add(ConfigResource.ID_temperature3);
+					ret.Add(ConfigResource.ID_symTemperature3);
 				}
 
 				// 隨機加水
@@ -1268,7 +1268,7 @@ namespace Niba{
 				var mountantWeight = Mathf.PerlinNoise (mountantNoisePos.x * factor, mountantNoisePos.y * factor);
 				var mountantCnt = (int)(mountantWeight / 0.4f);
 				for (var i = 0; i < mountantCnt; ++i) {
-					ret.Add(ConfigResource.ID_smallMountain);
+					ret.Add(ConfigResource.ID_symSmallMountain);
 				}
 
 				// 小於海平面，加二個水
@@ -1277,8 +1277,8 @@ namespace Niba{
 					ret.Add(ConfigResource.ID_water);
 
 				} else if(height - seaHeight >= 0.5){
-					ret.Add(ConfigResource.ID_smallMountain);
-					ret.Add(ConfigResource.ID_smallMountain);
+					ret.Add(ConfigResource.ID_symSmallMountain);
+					ret.Add(ConfigResource.ID_symSmallMountain);
 
 				} else {
 					for (var i = 0; i < 3; ++i) {
