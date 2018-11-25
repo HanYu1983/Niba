@@ -6,10 +6,12 @@ iron	鉄礦		material	ironworker	10
 yizhi	蟻肢		material		99						
 shepi	蛇皮		material		10						
 water	水		material		99						
+xieke	蟹殼		material		20						
 _material_											
 grassLine	草繩		material	tailor	99	grass_3					
 bu	布		material	tailor	99	grass_3,wood					
 shepige	蛇皮革		material	tailor	99	shepi_3,wood					
+xiejiapian	蟹甲片		material	ironworker	20	xieke_3,grassLine					
 _product_											
 bengdai	綳帶		food	tailor	20	grassLine_2		hp_15			
 yinyongshui	飲用水		food	fencingArt	99	water_3		hp_5			
@@ -18,6 +20,7 @@ grassHat	草帽		weapon	speed	1	grassLine_2,grass_10		def+2	head	20
 grassShoe	草鞋		weapon	speed	1	grassLine_3,grass_10		def+2	foot	20	
 grassBody	草衣		weapon	speed	1	grassLine_5,grass_30	tailor_1	def+4	body	20	
 grassKen	布拳套		weapon	karate	1	bu_2,grassLine_2	tailor_1	atk+2	hand	20	
+xiejiaquantao	蟹甲拳套		weapon	karate	1	xiejiapian_3,grassLine_2	ironworker_1	atk+4	hand		
 _unplan_											
 woodSword	木劍		weapon	fencingArt	1	wood_5	woodworker_1	atk+5	hand	40	
 woodBoat	木伐	可以通過淺海	material	woodworker	1	wood_10	woodworker_1				
