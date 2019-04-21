@@ -58,9 +58,9 @@ public class ControlGun : MonoBehaviour {
             rotZ += 0.5f;
         }
 
-        if (true)//Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
         {
-            var dir = Matrix4x4.Rotate(Quaternion.Euler(0, rotZ, 0)).MultiplyVector(Vector3.forward*200);
+            var dir = Matrix4x4.Rotate(Quaternion.Euler(0, rotZ, 0)).MultiplyVector(Vector3.forward*1000);
             MachineGunLine line = guns.Shoot(transform.localPosition, dir, 1, 10, gunSeq, Time.deltaTime);
             if(line.Equals(MachineGunLine.Null) == false)
             {

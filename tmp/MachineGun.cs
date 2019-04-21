@@ -126,9 +126,13 @@ public class MachineGun{
                 return -1;
             }
             var isInLineSeqment = distToHead < line.length.magnitude;
-            
             if (isInLineSeqment == false)
             {
+                var isInLineVelocity = distToHead < line.velocity.magnitude;
+                if (isInLineVelocity)
+                {
+                    return 1;
+                }
                 return -1;
             }
             
