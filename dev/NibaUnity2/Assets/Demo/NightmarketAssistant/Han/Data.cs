@@ -39,13 +39,14 @@ namespace NightmarketAssistant
         {
             get
             {
-                return booth + "_" + date;
+                return booth + "_" + date + "_" + progress;
             }
         }
-        public BoothState(long date, string booth)
+        public BoothState(long date, string booth, Progress progress)
         {
             this.date = date;
             this.booth = booth;
+            this.progress = progress;
         }
     }
 

@@ -150,8 +150,7 @@ namespace NightmarketAssistant
                     throw new Exception("攤位已開市:"+booth);
                 }
             }
-            var s = new BoothState(DateTime.Now.Ticks, booth);
-            s.progress = Progress.Open;
+            var s = new BoothState(DateTime.Now.Ticks, booth, Progress.Open);
             if(GetBoothState(s.Key) != null)
             {
                 throw new Exception("鍵值已存在:" + s.Key);
@@ -171,8 +170,7 @@ namespace NightmarketAssistant
             {
                 throw new Exception("攤位未開市:" + booth);
             }
-            var s = new BoothState(DateTime.Now.Ticks, booth);
-            s.progress = Progress.Close;
+            var s = new BoothState(DateTime.Now.Ticks, booth, Progress.Close);
             if (GetBoothState(s.Key) != null)
             {
                 throw new Exception("鍵值已存在:" + s.Key);
@@ -204,7 +202,7 @@ namespace NightmarketAssistant
 
         public void DeleteStateAtTargetRange(string booth, long openTime, long closeTime)
         {
-            var row1 = new BoothState(openTime, booth);
+            var row1 = new BoothState(openTime, booth, Progress.Open);
             var row1InStorage = GetBoothState(row1.Key);
             if (row1InStorage == null)
             {
@@ -214,7 +212,7 @@ namespace NightmarketAssistant
             {
                 throw new Exception("要刪除的開市狀態並不是開市狀態:" + booth + " " + openTime);
             }
-            var row2 = new BoothState(closeTime, booth);
+            var row2 = new BoothState(closeTime, booth, Progress.Close);
             var row2InStorage = GetBoothState(row2.Key);
             if (row2InStorage == null)
             {
@@ -254,6 +252,7 @@ namespace NightmarketAssistant
 
             var mainJson = JsonUtility.ToJson(new SaveMain() { booths = booths, costEarns = costEarns });
             var path = dir + "/booth.json";
+            Debug.Log("Save:" + path);
             File.WriteAllText(path, mainJson);
             // 只寫這個月的
             var stateInThisMonth = states.Where(s =>
@@ -266,6 +265,7 @@ namespace NightmarketAssistant
             }).ToList();
             var subJson = JsonUtility.ToJson(new SaveSub() { earns = earnsInThisMonth, boothStates = stateInThisMonth });
             var subPath = dir + "/" + FileKey(DateTime.Now);
+            Debug.Log("Save:" + subPath);
             File.WriteAllText(subPath, subJson);
         }
 
@@ -375,6 +375,7 @@ namespace NightmarketAssistant
         public bool Load(string dir, int month)
         {
             var path = dir + "/booth.json";
+            Debug.Log("Load:"+path);
             if (File.Exists(path))
             {
                 var json = File.ReadAllText(path);
@@ -394,8 +395,30 @@ namespace NightmarketAssistant
                 {
                     var json = File.ReadAllText(subPath);
                     var sub = JsonUtility.FromJson<SaveSub>(json);
-                    states.AddRange(sub.boothStates);
-                    earns.AddRange(sub.earns);
+                    //states.AddRange(sub.boothStates);
+                    //earns.AddRange(sub.earns);
+
+                    var closed = new Dictionary<string, bool>();
+                    foreach (var s in sub.boothStates)
+                    {
+                        if (closed.ContainsKey(s.Key))
+                        {
+                            continue;
+                        }
+                        closed.Add(s.Key, true);
+                        states.Add(s);
+                    }
+                    var closed2 = new Dictionary<string, bool>();
+                    var newEarns = new List<Earn>();
+                    foreach (var e in sub.earns)
+                    {
+                        if (closed2.ContainsKey(e.Key))
+                        {
+                            continue;
+                        }
+                        closed2.Add(e.Key, true);
+                        earns.Add(e);
+                    }
                 }
                 date = date.AddMonths(-1);
             }
@@ -501,8 +524,7 @@ namespace NightmarketAssistant
             var timeStart = 0L;
             var timeEnd = 0L;
             var ranges = new List<long>();
-
-            foreach (var s in storage.states.OrderBy(s=>s.date))
+            foreach (var s in storage.states.OrderBy(s => s.date))
             {
                 if (s.booth != booth)
                 {

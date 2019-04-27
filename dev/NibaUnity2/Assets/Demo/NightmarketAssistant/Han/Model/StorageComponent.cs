@@ -67,11 +67,17 @@ namespace NightmarketAssistant
             var success = storage.Load(saveDir, Math.Max(1, loadMonth));
             if(success)
             {
+#if UNITY_EDITOR
+#else
                 yield return storage.SaveToCloud(saveDir, cloudSaveHost);
+#endif
             }
             else
             {
+#if UNITY_EDITOR
+#else
                 yield return storage.LoadFromCloud(saveDir, cloudSaveHost);
+#endif
                 var success2 = storage.Load(saveDir, Math.Max(1, loadMonth));
                 if(success2 == false)
                 {
