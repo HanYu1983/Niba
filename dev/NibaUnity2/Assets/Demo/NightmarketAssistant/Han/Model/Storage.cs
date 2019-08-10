@@ -257,11 +257,13 @@ namespace NightmarketAssistant
             // 只寫這個月的
             var stateInThisMonth = states.Where(s =>
             {
-                return new DateTime(s.date).Month == DateTime.Now.Month;
+                var date = new DateTime(s.date);
+                return date.Month == DateTime.Now.Month && date.Year == DateTime.Now.Year;
             }).ToList();
             var earnsInThisMonth = earns.Where(e =>
             {
-                return new DateTime(e.date).Month == DateTime.Now.Month;
+                var date = new DateTime(e.date);
+                return new DateTime(e.date).Month == DateTime.Now.Month && date.Year == DateTime.Now.Year;
             }).ToList();
             var subJson = JsonUtility.ToJson(new SaveSub() { earns = earnsInThisMonth, boothStates = stateInThisMonth });
             var subPath = dir + "/" + FileKey(DateTime.Now);
@@ -386,19 +388,23 @@ namespace NightmarketAssistant
             {
                 return false;
             }
+
+            // 去掉重複的
+            var closed = new Dictionary<string, bool>();
+            
+            var closed2 = new Dictionary<string, bool>();
+
             // 讀取這個月加上前幾個月
             var date = DateTime.Now;
             for (var i = 0; i < month; ++i)
             {
                 var subPath = dir + "/" + FileKey(date);
+                Debug.Log(subPath);
                 if (File.Exists(subPath))
                 {
                     var json = File.ReadAllText(subPath);
                     var sub = JsonUtility.FromJson<SaveSub>(json);
-                    //states.AddRange(sub.boothStates);
-                    //earns.AddRange(sub.earns);
-
-                    var closed = new Dictionary<string, bool>();
+                    // 去掉重複的
                     foreach (var s in sub.boothStates)
                     {
                         if (closed.ContainsKey(s.Key))
@@ -408,8 +414,9 @@ namespace NightmarketAssistant
                         closed.Add(s.Key, true);
                         states.Add(s);
                     }
-                    var closed2 = new Dictionary<string, bool>();
+                    
                     var newEarns = new List<Earn>();
+                    // 去掉重複的
                     foreach (var e in sub.earns)
                     {
                         if (closed2.ContainsKey(e.Key))
@@ -518,12 +525,62 @@ namespace NightmarketAssistant
             }).ToList();
         }
 
+        // 沒有用到, 但先加上
+        class BoothStateComparer : IEqualityComparer<BoothState>
+        {
+            public bool Equals(BoothState b1, BoothState b2)
+            {
+                if (b2 == null && b1 == null)
+                    return true;
+                else if (b1 == null || b2 == null)
+                    return false;
+                else if (b1.Key == b2.Key)
+                    return true;
+                else
+                    return false;
+            }
+
+            public int GetHashCode(BoothState bx)
+            {
+                return bx.Key.GetHashCode();
+            }
+        }
+
+        // 沒有用到, 但先加上
+        class EarnComparer : IEqualityComparer<Earn>
+        {
+            public bool Equals(Earn b1, Earn b2)
+            {
+                if (b2 == null && b1 == null)
+                    return true;
+                else if (b1 == null || b2 == null)
+                    return false;
+                else if (b1.Key == b2.Key)
+                    return true;
+                else
+                    return false;
+            }
+
+            public int GetHashCode(Earn bx)
+            {
+                return bx.Key.GetHashCode();
+            }
+        }
+
         public static List<EarnsInRange> GroupEarns(Storage storage, string booth)
         {
             var currState = Progress.Pending;
             var timeStart = 0L;
             var timeEnd = 0L;
             var ranges = new List<long>();
+            /*foreach(var s in storage.states.Distinct(new BoothStateComparer()).OrderBy(s => s.date))
+            {
+                if (s.booth != booth)
+                {
+                    continue;
+                }
+                Debug.Log("booth: "+s.booth+" time: "+s.date+"/"+new DateTime(s.date).ToLongDateString()+" :state:"+ s.progress);
+            }*/
             foreach (var s in storage.states.OrderBy(s => s.date))
             {
                 if (s.booth != booth)
@@ -602,6 +659,12 @@ namespace NightmarketAssistant
                     return isBeforeClose;
                 });
 
+                /*Debug.Log("earns");
+                foreach(var s in earns)
+                {
+                    Debug.Log("booth: " + s.booth + " time: " + s.date + "/" + new DateTime(s.date).ToLongDateString() + " :money:" + s.money);
+                }*/
+
                 var er = new EarnsInRange(booth, openTime, closeTime);
                 er.earns.AddRange(earns);
                 ret.Add(er);
@@ -623,95 +686,5 @@ namespace NightmarketAssistant
 
             return ret;
         }
-
-
-        /*public static List<List<Earn>> GroupEarns(Storage storage, string booth)
-        {
-            var currState = Progress.Pending;
-            var timeStart = 0L;
-            var timeEnd = 0L;
-            var ranges = new List<long>();
-
-            foreach (var s in storage.states)
-            {
-                if (s.booth != booth)
-                {
-                    continue;
-                }
-                switch (currState)
-                {
-                    case Progress.Pending:
-                        {
-                            if (s.progress == Progress.Open)
-                            {
-                                currState = Progress.Open;
-                                timeStart = s.date;
-                            }
-                        }
-                        break;
-                    case Progress.Open:
-                        {
-                            if (s.progress == Progress.Open)
-                            {
-                                throw new Exception("XXX");
-                            }
-                            if (s.progress == Progress.Close)
-                            {
-                                currState = Progress.Close;
-                                timeEnd = s.date;
-                                ranges.Add(timeStart);
-                                ranges.Add(timeEnd);
-                            }
-                        }
-                        break;
-                    case Progress.Close:
-                        {
-                            if (s.progress == Progress.Close)
-                            {
-                                throw new Exception("XXX");
-                            }
-                            if (s.progress == Progress.Open)
-                            {
-                                currState = Progress.Open;
-                                timeStart = s.date;
-                            }
-                        }
-                        break;
-                }
-            }
-
-            var ret = new List<List<Earn>>();
-            for (var i = 0; i < ranges.Count; i += 2)
-            {
-                var openTime = new DateTime(ranges[i]);
-                var closeTime = new DateTime(ranges[i + 1]);
-                
-                var earns = storage.earns.Where(earn =>
-                {
-                    if (earn.booth != booth)
-                    {
-                        return false;
-                    }
-                    return true;
-                }).OrderBy(earn =>
-                {
-                    return earn.date;
-                }).SkipWhile(earn =>
-                {
-                    var earnTime = new DateTime(earn.date);
-                    var isAfterOpen = DateTime.Compare(earnTime, openTime) >= 0;
-                    return isAfterOpen;
-                }).TakeWhile(earn =>
-                {
-                    var earnTime = new DateTime(earn.date);
-                    var isBeforeClose = DateTime.Compare(earnTime, closeTime) < 0;
-                    return isBeforeClose;
-                });
-
-                ret.Add(earns.ToList());
-            }
-
-            return ret;
-        }*/
     }
 }
