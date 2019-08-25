@@ -90,10 +90,10 @@ namespace Niba
 		public void EnterMap (){
 			ClearMoveResult ();
 			// 重設位置
-			playerData.playerInMap.position = Position.Zero;
+			playerData.GetMapPlayer(Place.Map).position = Position.Zero;
 			// 先探明初始視野
 			playerData.ClearVisibleMapObjects ();
-			playerData.VisitPosition (playerData.playerInMap.position);
+			playerData.VisitPosition (playerData.GetMapPlayer(Place.Map).position);
 			// 清除地圖
 			mapData.ClearMap();
 			// 自動生成視野內的地圖
@@ -107,9 +107,9 @@ namespace Niba
 			playerData.ExitMap ();
 			RequestSavePlayer ();
 		}
-		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
-		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
-		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
+		public List<MapObject> MapObjects{ get{ return mapData.MapObjects; } }
+		public List<ResourceInfo> ResourceInfos{ get { return mapData.ResourceInfo; } }
+		public List<MonsterInfo> MonsterInfos{ get { return mapData.MonsterInfo; } }
 		public IEnumerable<MapObject> VisibleMapObjects{ get { return playerData.VisibleMapObjects(mapData); } }
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
@@ -276,11 +276,11 @@ namespace Niba
 
 		public PlayState PlayState{ 
 			get{
-				return playerData.playState;
+				return playerData.PlayState;
 			}
 		}
 
-        public int Money { get { return playerData.money; } }
+        public int Money { get { return playerData.Money; } }
 
         public void AddPlayerHp(int v)
         {

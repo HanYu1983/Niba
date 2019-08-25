@@ -886,7 +886,7 @@ namespace Niba{
                 var requireItems = Alg.ParseItem(cfg.RequireItem);
                 foreach (var requireItem in requireItems)
                 {
-                    var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.playState)).Storage
+                    var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.PlayState)).Storage
                         .Where(item => item.prototype == requireItem.prototype)
                         .Sum(item => item.count);
                     if (itemCount < requireItem.count)
@@ -920,15 +920,15 @@ namespace Niba{
                 {
                     if (requireItem.prototype == "money")
                     {
-                        if (player.money < requireItem.count)
+                        if (player.Money < requireItem.count)
                         {
-                            errs.Add("需求金錢不足:" + player.money);
+                            errs.Add("需求金錢不足:" + player.Money);
                             continue;
                         }
                     }
                     else if (requireItem.prototype == "str")
                     {
-                        var basic = BasicAbility.Default.Add(player.GetMapPlayer(Helper.PlaceAt(player.playState)).basicAbility);
+                        var basic = BasicAbility.Default.Add(player.GetMapPlayer(Helper.PlaceAt(player.PlayState)).basicAbility);
                         if (basic.str < requireItem.count)
                         {
                             errs.Add("需求技能不足:str/" + basic.str);
@@ -945,7 +945,7 @@ namespace Niba{
                         {
                             throw new Exception("no item:" + requireItem.prototype);
                         }
-                        var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.playState)).Storage.Where(it => it.prototype == requireItem.prototype).Sum(it => it.count);
+                        var itemCount = player.GetMapPlayer(Helper.PlaceAt(player.PlayState)).Storage.Where(it => it.prototype == requireItem.prototype).Sum(it => it.count);
                         if (itemCount < requireItem.count)
                         {
                             errs.Add("需求道具不足:" + requireItem.prototype + "/" + itemCount);

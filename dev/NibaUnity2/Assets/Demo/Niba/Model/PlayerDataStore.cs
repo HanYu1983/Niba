@@ -168,9 +168,11 @@ namespace Niba
 
     public class PlayerDataStore
     {
-        public MapPlayer playerInStorage = new MapPlayer();
-        public MapPlayer player = new MapPlayer();
-        public MapPlayer playerInMap = new MapPlayer();
+
+        #region player
+        private MapPlayer playerInStorage = new MapPlayer();
+        private MapPlayer player = new MapPlayer();
+        private MapPlayer playerInMap = new MapPlayer();
 
         public MapPlayer GetMapPlayer(Place place)
         {
@@ -202,6 +204,7 @@ namespace Niba
                 playerInMap.hp = 0;
             }
         }
+        #endregion
 
         #region skill
         public void EquipSkill(PlayState state, string skillId)
@@ -304,7 +307,7 @@ namespace Niba
 
             var infoList = mapData.FindObjects(newPos)
                 .Where(obj => obj.type == MapObjectType.Resource)
-                .Select(obj => mapData.resourceInfo[obj.infoKey])
+                .Select(obj => mapData.ResourceInfo[obj.infoKey])
                 .Select(info => new AbstractItem()
                 {
                     prototype = info.type,
@@ -414,11 +417,12 @@ namespace Niba
         #endregion
 
         #region visible map
-        public List<Position> isPositionVisible = new List<Position>();
+        private List<Position> isPositionVisible = new List<Position>();
+        public List<Position> IsPositionVisible { get { return isPositionVisible;  } }
         public IEnumerable<MapObject> VisibleMapObjects(MapDataStore mapData)
         {
             var posSet = new HashSet<Position>(isPositionVisible);
-            var visiblePosition = mapData.mapObjects.Where(obj =>
+            var visiblePosition = mapData.MapObjects.Where(obj =>
             {
                 return obj.died == false && posSet.Contains(obj.position);
             });
@@ -451,9 +455,15 @@ namespace Niba
         #endregion
 
         #region status
-        public int money;
-        public int advLevel;
-        public PlayState playState;
+        private int money;
+        private int advLevel;
+        private PlayState playState;
+        public int Money { get { return money;  } }
+        public PlayState PlayState { get { return playState;  } }
+        public void AddMoney(int v)
+        {
+            money += v;
+        }
 
         public void ClearPlayState()
         {
@@ -481,11 +491,11 @@ namespace Niba
 
         #region mission
         // 領取過的任務
-        public List<string> missions = new List<string>();
+        private List<string> missions = new List<string>();
         // 完成的任務
-        public List<string> completedMission = new List<string>();
+        private List<string> completedMission = new List<string>();
         // 執行中的任務與狀態，完成後要從這個列表移除
-        public List<NpcMission> missionStatus = new List<NpcMission>();
+        private List<NpcMission> missionStatus = new List<NpcMission>();
 
         public bool MissionCompleted(string id)
         {
@@ -699,8 +709,8 @@ namespace Niba
                 return MonsterThinking.AttackYou;
             }
             */
-            var objInfo = map.mapObjects[monsterId];
-            var monsterInfo = map.monsterInfo[objInfo.infoKey];
+            var objInfo = map.MapObjects[monsterId];
+            var monsterInfo = map.MonsterInfo[objInfo.infoKey];
             //var cfg = ConfigMonster.Get (monsterInfo.type);
             // 想要攻擊主要是仇恨值
             var wantAttack =
@@ -787,8 +797,8 @@ namespace Niba
 
         public static BasicAbility CalcMonsterAbility(PlayerDataStore player, MapDataStore map, int mapObjectId)
         {
-            var mapObject = map.mapObjects[mapObjectId];
-            var monsterInfo = map.monsterInfo[mapObject.infoKey];
+            var mapObject = map.MapObjects[mapObjectId];
+            var monsterInfo = map.MonsterInfo[mapObject.infoKey];
             var tmpBasic = Alg.GetBasicAbility(ConfigMonster.Get(monsterInfo.type));
             var effects = monsterInfo.Bufs.SelectMany(it => it.Effects);
             var fight = FightAbility.Zero;
@@ -803,8 +813,8 @@ namespace Niba
         /// <param name="mapObjectId">Map object identifier.</param>
         public static int GetBasicDamage(PlayerDataStore player, MapDataStore map, int mapObjectId)
         {
-            var a = player.playerInMap.basicAbility.FightAbility;
-            var monsterInfo = map.monsterInfo[map.mapObjects[mapObjectId].infoKey];
+            var a = player.GetMapPlayer(Place.Map).basicAbility.FightAbility;
+            var monsterInfo = map.MonsterInfo[map.MapObjects[mapObjectId].infoKey];
             var b = Alg.GetBasicAbility(ConfigMonster.Get(monsterInfo.type)).FightAbility;
             return (int)(a.atk - b.def);
         }

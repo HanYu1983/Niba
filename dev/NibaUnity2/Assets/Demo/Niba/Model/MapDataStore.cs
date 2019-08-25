@@ -160,9 +160,13 @@ namespace Niba
     {
         #region map
         // Dictionary無法Serializable
-        public List<MapObject> mapObjects = new List<MapObject>();
-        public List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
-        public List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
+        private List<MapObject> mapObjects = new List<MapObject>();
+        private List<ResourceInfo> resourceInfo = new List<ResourceInfo>();
+        private List<MonsterInfo> monsterInfo = new List<MonsterInfo>();
+
+        public List<MapObject> MapObjects { get { return mapObjects;  } }
+        public List<ResourceInfo> ResourceInfo { get { return resourceInfo; } }
+        public List<MonsterInfo> MonsterInfo { get { return monsterInfo; } }
 
         [SerializeField]
         MapType genMapType;
@@ -196,7 +200,7 @@ namespace Niba
             genMonFn = Alg.GenMonsterPattern;
 
             var alreadyPos = new HashSet<Position>(posList);
-            foreach (var pos in player.isPositionVisible)
+            foreach (var pos in player.IsPositionVisible)
             {
                 if (alreadyPos.Contains(pos))
                 {
@@ -311,7 +315,7 @@ namespace Niba
             {
                 case MapObjectType.Resource:
                     item.infoKey = resourceInfo.Count;
-                    resourceInfo.Add(ResourceInfo.Empty);
+                    resourceInfo.Add(Niba.ResourceInfo.Empty);
                     break;
                 case MapObjectType.Monster:
                     item.infoKey = monsterInfo.Count;
@@ -460,7 +464,8 @@ namespace Niba
                             Item item;
                             item.prototype = itemPrototype;
                             item.count = cnt;
-                            Alg.AddItem(player.playerInMap.Storage, item);
+                            //Alg.AddItem(player.playerInMap.Storage, item);
+                            Alg.AddItem(player.GetMapPlayer(Place.Map).Storage, item);
                         }
                         break;
                     default:
@@ -470,15 +475,16 @@ namespace Niba
         }
         #endregion
 
+        #region process work
         // 武器壞掉
         IEnumerable<Description> ProcessWeaponBroken(PlayerDataStore player)
         {
             // 注意：使用ToList將陣列Copy
-            var brokenWeapons = player.playerInMap.CheckHandWeaponBroken().ToList();
+            var brokenWeapons = player.GetMapPlayer(Place.Map).CheckHandWeaponBroken().ToList();
             // 刪除壞掉武器
             foreach (var broken in brokenWeapons)
             {
-                player.playerInMap.Weapons.Remove(broken);
+                player.GetMapPlayer(Place.Map).Weapons.Remove(broken);
             }
             // === 回傳壞掉資訊 === //
             if (brokenWeapons.Count() == 0)
@@ -530,7 +536,7 @@ namespace Niba
                     Debug.Log("dice:"+dice+" target rate:"+rate);
                     if(dice < rate)
                     {
-                        Alg.AddItem(player.playerInMap.Storage, reward);
+                        Alg.AddItem(player.GetMapPlayer(Place.Map).Storage, reward);
                         getReward.Add(reward);
                     }
                 }
@@ -698,7 +704,7 @@ namespace Niba
                         switch (skill.Effect)
                         {
                             case "{0}+{1}":
-                                player.playerInMap.hp += 20;
+                                player.GetMapPlayer(Place.Map).hp += 20;
                                 des = Description.Empty;
                                 des.description = Description.InfoUseSkill;
                                 des.values = new NameValueCollection();
@@ -746,7 +752,7 @@ namespace Niba
                                 var cfg = ConfigItem.Get(item.prototype);
                                 if (cfg.SkillType != null)
                                 {
-                                    player.playerInMap.AddExp(cfg.SkillType, 1);
+                                    player.GetMapPlayer(Place.Map).AddExp(cfg.SkillType, 1);
                                 }
                             }
 
@@ -800,7 +806,7 @@ namespace Niba
                         // 先計算非針對怪物的能力
                         Helper.CalcAbility(player, this, Place.Map, ref playerBasic, ref playerAbility);
                         // 計算針對怪物的能力，例：如果對像是鳥，攻擊力*1.1之類
-                        var enforceEff = player.playerInMap.Weapons.SelectMany(it => it.Effects).Where(it => it.EffectOperator == ItemEffectType.Enforce);
+                        var enforceEff = player.GetMapPlayer(Place.Map).Weapons.SelectMany(it => it.Effects).Where(it => it.EffectOperator == ItemEffectType.Enforce);
                         playerAbility = enforceEff.Aggregate(playerAbility, (accu, curr) =>
                         {
                             // TODO 實做針對性能力
@@ -813,7 +819,7 @@ namespace Niba
                         // 取出發動的技能
                         var triggered = skills.Where(s =>
                         {
-                            var rate = (int)(Helper.ComputeSkillTriggerRate(player.playerInMap, s) * 100);
+                            var rate = (int)(Helper.ComputeSkillTriggerRate(player.GetMapPlayer(Place.Map), s) * 100);
                             return UnityEngine.Random.Range(1, 101) < rate;
                         });
                         // 取出技能效果
@@ -883,7 +889,7 @@ namespace Niba
                             ret.AddRange(ProcessWeaponBroken(player));
 
                             // 增加武器經驗
-                            foreach (var item in player.playerInMap.Weapons)
+                            foreach (var item in player.GetMapPlayer(Place.Map).Weapons)
                             {
                                 var cfg = ConfigItem.Get(item.prototype);
                                 if (cfg.Position != ConfigWeaponPosition.ID_hand)
@@ -892,7 +898,7 @@ namespace Niba
                                 }
                                 if (cfg.SkillType != null)
                                 {
-                                    player.playerInMap.AddExp(cfg.SkillType, 1);
+                                    player.GetMapPlayer(Place.Map).AddExp(cfg.SkillType, 1);
                                 }
                             }
 
@@ -926,7 +932,7 @@ namespace Niba
                         // 先計算非針對怪物的能力
                         Helper.CalcAbility(player, this, Place.Map, ref playerBasic, ref playerAbility);
                         // 計算針對怪物的能力，例：如果對像是鳥，防禦力*1.1之類
-                        var enforceEff = player.playerInMap.Weapons.SelectMany(it => it.Effects).Where(it => it.EffectOperator == ItemEffectType.Enforce);
+                        var enforceEff = player.GetMapPlayer(Place.Map).Weapons.SelectMany(it => it.Effects).Where(it => it.EffectOperator == ItemEffectType.Enforce);
                         playerAbility = enforceEff.Aggregate(playerAbility, (accu, curr) =>
                         {
                             // TODO 實做針對性能力
@@ -944,7 +950,7 @@ namespace Niba
                             des.values.Set("mapObjectId", mapObjectId + "");
                             ret.Add(des);
                             // 回避會增加速度經驗
-                            player.playerInMap.AddExp(ConfigAbility.ID_speed, 1);
+                            player.GetMapPlayer(Place.Map).AddExp(ConfigAbility.ID_speed, 1);
 
                         }
                         else
@@ -958,7 +964,7 @@ namespace Niba
                             // 取出發動的技能
                             var triggered = skills.Where(s =>
                             {
-                                var rate = (int)(Helper.ComputeSkillTriggerRate(player.playerInMap, s) * 100);
+                                var rate = (int)(Helper.ComputeSkillTriggerRate(player.GetMapPlayer(Place.Map), s) * 100);
                                 return UnityEngine.Random.Range(1, 101) < rate;
                             });
                             if (triggered.Count() > 0)
@@ -1005,7 +1011,7 @@ namespace Niba
                                 damage = (int)(damage * 1.5f);
                             }
                             damage = Math.Max(0, damage);
-                            player.playerInMap.hp -= damage;
+                            player.GetMapPlayer(Place.Map).hp -= damage;
                             // 計算仇恨值
                             monsterInf.AttackYou(playerAbility, Math.Max(0, damage));
                             // 套用
@@ -1018,10 +1024,10 @@ namespace Niba
                             des.values.Set("isCriHit", isCriHit ? "1" : "0");
                             ret.Add(des);
 
-                            if (player.playerInMap.IsDied == false)
+                            if (player.GetMapPlayer(Place.Map).IsDied == false)
                             {
                                 // 增加防具經驗
-                                foreach (var item in player.playerInMap.Weapons)
+                                foreach (var item in player.GetMapPlayer(Place.Map).Weapons)
                                 {
                                     var cfg = ConfigItem.Get(item.prototype);
                                     if (cfg.Position == ConfigWeaponPosition.ID_hand)
@@ -1030,7 +1036,7 @@ namespace Niba
                                     }
                                     if (cfg.SkillType != null)
                                     {
-                                        player.playerInMap.AddExp(cfg.SkillType, 1);
+                                        player.GetMapPlayer(Place.Map).AddExp(cfg.SkillType, 1);
                                     }
                                 }
                             }
@@ -1067,6 +1073,7 @@ namespace Niba
             }
             return ret;
         }
+        #endregion
 
         #region interaction
         // 應用所有互動並回傳結果
@@ -1086,7 +1093,7 @@ namespace Niba
             var ret = Interaction.Empty;
             ret.description = work;
             // 依玩家閃避率設定優先權
-            ret.priority = player.playerInMap.basicAbility.FightAbility.dodge;
+            ret.priority = player.GetMapPlayer(Place.Map).basicAbility.FightAbility.dodge;
             return ret;
         }
 
@@ -1094,7 +1101,7 @@ namespace Niba
         // 玩家每執行一個互動前都要呼叫這個方法
         public IEnumerable<Interaction> GetInteraction(PlayerDataStore player)
         {
-            return FindObjects(player.playerInMap.position).Aggregate(
+            return FindObjects(player.GetMapPlayer(Place.Map).position).Aggregate(
                 new List<Interaction>(),
                 (actions, currItem) =>
                 {
@@ -1173,51 +1180,51 @@ namespace Niba
         #region works
         public void StartWork(PlayerDataStore player, Description work)
         {
-            if (player.playerInMap.IsDied)
+            if (player.GetMapPlayer(Place.Map).IsDied)
             {
                 throw new Exception("冒險掛點，無法工作");
             }
-            if (player.playerInMap.IsWorking)
+            if (player.GetMapPlayer(Place.Map).IsWorking)
             {
                 throw new Exception("目前有工作在身:" + work.description);
             }
             var consumpation = WorkConsumpation(player, work);
-            if (player.playerInMap.hp <= consumpation)
+            if (player.GetMapPlayer(Place.Map).hp <= consumpation)
             {
                 throw new Exception("體力不足，無法工作");
             }
-            player.playerInMap.currentWork = work;
-            player.playerInMap.workFinishedTime = DateTime.Now.Add(TimeSpan.FromSeconds(5)).Ticks;
+            player.GetMapPlayer(Place.Map).currentWork = work;
+            player.GetMapPlayer(Place.Map).workFinishedTime = DateTime.Now.Add(TimeSpan.FromSeconds(5)).Ticks;
         }
 
         public void CancelWork(PlayerDataStore player)
         {
-            if (player.playerInMap.IsWorking == false)
+            if (player.GetMapPlayer(Place.Map).IsWorking == false)
             {
                 Debug.LogWarning("沒有工作，不必取消");
                 return;
             }
-            player.playerInMap.ClearWork();
+            player.GetMapPlayer(Place.Map).ClearWork();
         }
 
         public IEnumerable<Description> ApplyWork(PlayerDataStore player)
         {
-            if (player.playerInMap.IsDied)
+            if (player.GetMapPlayer(Place.Map).IsDied)
             {
                 throw new Exception("冒險掛點，無法工作");
             }
-            if (player.playerInMap.IsWorking == false)
+            if (player.GetMapPlayer(Place.Map).IsWorking == false)
             {
                 throw new Exception("沒有工作，不能應用");
             }
-            player.playerInMap.ClearWork();
+            player.GetMapPlayer(Place.Map).ClearWork();
             // 回合性招式
             var turnSkills =
                 Helper.AvailableSkills(player, Place.Map)
                     .Where(s => s.Condition == ConfigConditionType.ID_turn)
                     .Select(MakeTurnSkillWork)
                     .Select(w => MakeInteraction(player, w));
-            var work = player.playerInMap.currentWork;
+            var work = player.GetMapPlayer(Place.Map).currentWork;
             // 將工作轉為互動
             var interaction = MakeInteraction(player, work);
             // 取得場景互動
@@ -1242,7 +1249,7 @@ namespace Niba
 
         public IEnumerable<Description> GetWorks(PlayerDataStore player)
         {
-            var works = FindObjects(player.playerInMap.position).Aggregate(
+            var works = FindObjects(player.GetMapPlayer(Place.Map).position).Aggregate(
                 new List<Description>(),
                 (actions, currItem) =>
                 {
@@ -1270,7 +1277,7 @@ namespace Niba
                     return actions;
                 }
             );
-            var monsters = FindObjects(player.playerInMap.position).Where(i => i.type == MapObjectType.Monster);
+            var monsters = FindObjects(player.GetMapPlayer(Place.Map).position).Where(i => i.type == MapObjectType.Monster);
             var hasMonster = monsters.Count() > 0;
             // 這格沒怪物就直接回傳
             if (hasMonster == false)
