@@ -703,12 +703,12 @@ namespace Niba
 
         public static MonsterThinking MonsterThink(MapDataStore map, PlayerDataStore player, int monsterId)
         {
-            /*
+            
             if (true)
             {
                 return MonsterThinking.AttackYou;
             }
-            */
+            
             var objInfo = map.MapObjects[monsterId];
             var monsterInfo = map.MonsterInfo[objInfo.infoKey];
             //var cfg = ConfigMonster.Get (monsterInfo.type);
