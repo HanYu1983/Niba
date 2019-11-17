@@ -11,9 +11,9 @@ public class View : MonoBehaviour {
     {
         foreach (GameObject page in pages)
         {
-            page.SetActive(false);
+            page.GetComponent<IPage>().close();
         }
-        pages[(int)id].SetActive(true);
+        pages[(int)id].GetComponent<IPage>().open();
     }
 
     public void openMainPage()
@@ -24,6 +24,16 @@ public class View : MonoBehaviour {
     public void openCalculatePage()
     {
         openTargetPage(EPage.Calculate);
+    }
+
+    void initPages()
+    {
+        IModel model = new DebugModel();
+        foreach (GameObject page in pages)
+        {
+            page.GetComponent<IPage>().setModel( model );
+            page.GetComponent<IPage>().Init();
+        }
     }
     
 	void Start () {
