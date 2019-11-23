@@ -42,9 +42,9 @@ public class MainPage : Page
         base.Init();
     }
 
-    public override void open()
+    public override void Open()
     {
-        base.open();
+        base.Open();
 
         for ( int i = 0; i < MaxRow; ++i)
         {

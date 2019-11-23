@@ -6,14 +6,9 @@ public class Page : MonoBehaviour, IPage
 {
     IModel model;
 
-    public void close()
+    public void Close()
     {
         this.gameObject.SetActive(false);
-    }
-
-    public IModel getModel()
-    {
-        return model;
     }
 
     public virtual void Init()
@@ -21,13 +16,19 @@ public class Page : MonoBehaviour, IPage
         
     }
 
-    public virtual void open()
+    public virtual void Open()
     {
         this.gameObject.SetActive(true);
     }
-
-    public void setModel(IModel model)
+    
+    public IModel Model
     {
-        this.model = model;
+        get;set;
+    }
+
+    public View View
+    {
+        get;
+        set;
     }
 }

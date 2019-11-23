@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CalculatePage : Page
+public class MemoPage : Page
 {
-    public void InputComplete()
+    public void Confirm()
     {
-        Debug.Log("結帳");
+        Close();
     }
 
     public void Cancel()
     {
-        Debug.Log("取消");
+        Close();
     }
 }

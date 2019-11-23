@@ -7,36 +7,65 @@ public class View : MonoBehaviour {
 
     public GameObject[] pages;
 
-    void openTargetPage(EPage id)
+    void OpenTargetPage(EPage id)
     {
         foreach (GameObject page in pages)
         {
-            page.GetComponent<IPage>().close();
+            page.GetComponent<IPage>().Close();
         }
-        pages[(int)id].GetComponent<IPage>().open();
+        pages[(int)id].GetComponent<IPage>().Open();
     }
 
-    public void openMainPage()
+    public void OpenMainPage()
     {
-        openTargetPage(EPage.Main);
+        OpenTargetPage(EPage.Main);
     }
 
-    public void openCalculatePage()
+    public void OpenCalculatePage()
     {
-        openTargetPage(EPage.Calculate);
+        pages[(int)EPage.Calculate].GetComponent<IPage>().Open();
     }
 
-    void initPages()
+    public void OnCalculatePageConfirm()
+    {
+        pages[(int)EPage.Calculate].GetComponent<CalculatePage>().InputComplete();
+        CloseCalculatePage();
+    }
+
+    public void OnCalculatePageCancel()
+    {
+        pages[(int)EPage.Calculate].GetComponent<CalculatePage>().Cancel();
+        CloseCalculatePage();
+    }
+
+    public void CloseCalculatePage()
+    {
+        pages[(int)EPage.Calculate].GetComponent<IPage>().Close();
+    }
+
+    public void OpenMemoPage()
+    {
+        pages[(int)EPage.Memo].GetComponent<IPage>().Open();
+    }
+
+    public void CloseMemoPage()
+    {
+        pages[(int)EPage.Memo].GetComponent<IPage>().Close();
+    }
+
+    void InitPages()
     {
         IModel model = new DebugModel();
         foreach (GameObject page in pages)
         {
-            page.GetComponent<IPage>().setModel( model );
+            page.GetComponent<IPage>().Model = model;
+            page.GetComponent<IPage>().View = this;
             page.GetComponent<IPage>().Init();
         }
     }
     
 	void Start () {
-        openMainPage();
+        InitPages();
+        OpenMainPage();
 	}
 }
