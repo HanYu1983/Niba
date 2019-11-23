@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class MainPage : Page
+[RequireComponent(typeof(MoneyCar))]
+public class MainPage : Page, IHasMoneyCar
 {
     /*
     ETimeType[] timeTypes = new ETimeType[4]
@@ -20,6 +21,7 @@ public class MainPage : Page
     */
 
     public Text ShowType;
+    public Text Money;
     public GameObject EarnRow;
     public GameObject EarnList;
     public int MaxRow = 20;
@@ -37,6 +39,18 @@ public class MainPage : Page
         ShowType.text = timeTypes[currentTimeType];
     }
 
+    public void Buy()
+    {
+        Debug.Log("支出" + GetCar().ShowMoney());
+        ClearMoney();
+    }
+
+    public void Earn()
+    {
+        Debug.Log("收入" + GetCar().ShowMoney());
+        ClearMoney();
+    }
+
     public override void Init()
     {
         base.Init();
@@ -45,6 +59,8 @@ public class MainPage : Page
     public override void Open()
     {
         base.Open();
+
+        ClearMoney();
 
         for ( int i = 0; i < MaxRow; ++i)
         {
@@ -72,6 +88,7 @@ public class MainPage : Page
         return delegate ()
         {
             print("註解" + er.name);
+            View.OpenMemoPage();
         };
     }
 
@@ -83,4 +100,28 @@ public class MainPage : Page
         };
     }
 
+    public void AddMoney(int money)
+    {
+        Money.text = GetCar().AddMoney(money);
+    }
+
+    public void BackMoney()
+    {
+        Money.text = GetCar().BackMoney();
+    }
+
+    public void ClearMoney()
+    {
+        Money.text = GetCar().ClearMoney();
+    }
+
+    public void DoubleZero()
+    {
+        Money.text = GetCar().DoubleZero();
+    }
+
+    public MoneyCar GetCar()
+    {
+        return GetComponent<MoneyCar>();
+    }
 }

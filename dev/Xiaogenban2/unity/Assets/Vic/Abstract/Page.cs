@@ -6,7 +6,7 @@ public class Page : MonoBehaviour, IPage
 {
     IModel model;
 
-    public void Close()
+    public virtual void Close()
     {
         this.gameObject.SetActive(false);
     }

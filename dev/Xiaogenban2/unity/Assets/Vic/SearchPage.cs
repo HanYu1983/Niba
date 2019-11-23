@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MemoPage : Page
+public class SearchPage : Page
 {
     public void Confirm()
     {

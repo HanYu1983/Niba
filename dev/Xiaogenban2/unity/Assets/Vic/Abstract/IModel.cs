@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using UnityEngine.Events;
+
 public interface IModel
 {
-    List<Item> GetItemList();
+     void GetItemList(UnityAction<object, List<Item>> callback);
 }
