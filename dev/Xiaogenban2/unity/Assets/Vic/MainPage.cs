@@ -19,6 +19,7 @@ public class MainPage : Page, IHasMoneyCar
     public Button BtnBack;
     public Button BtnSearch;
     public Button BtnCar;
+    public Button BtnTime;
 
     bool _isSearch;
     public bool IsSearch
@@ -32,6 +33,7 @@ public class MainPage : Page, IHasMoneyCar
             BtnEarn.interactable = !_isSearch;
             BtnPay.interactable = !_isSearch;
             BtnCar.interactable = !_isSearch;
+            BtnTime.interactable = !_isSearch;
         }
     }
 
