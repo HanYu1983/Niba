@@ -121,6 +121,7 @@ public class Model : MonoBehaviour, IModel{
                     callback(
                         null,
                         earns.Values
+                            .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
                                 var d = new DateTime(earn.createUTC);
@@ -149,6 +150,7 @@ public class Model : MonoBehaviour, IModel{
                     callback(
                         null,
                         earns.Values
+                            .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
                                 var d = new DateTime(earn.createUTC);
@@ -176,6 +178,7 @@ public class Model : MonoBehaviour, IModel{
                     callback(
                         null,
                         earns.Values
+                            .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
                                 var d = new DateTime(earn.createUTC);
