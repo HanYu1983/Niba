@@ -8,6 +8,7 @@ public class View : MonoBehaviour {
 
     public GameObject[] pages;
 
+    public MonoBehaviour model;
     IModel Model;
 
     void OpenTargetPage(EPage id)
@@ -276,7 +277,11 @@ public class View : MonoBehaviour {
 
     void InitPages()
     {
-        Model = new DebugModel();
+        if(model is IModel == false)
+        {
+            throw new Exception("xxxx");
+        }
+        Model = (IModel)model;
         foreach (GameObject page in pages)
         {
             page.GetComponent<IPage>().Model = Model;

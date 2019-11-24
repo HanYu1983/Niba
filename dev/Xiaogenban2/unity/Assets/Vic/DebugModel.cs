@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class DebugModel : IModel
+public class DebugModel : MonoBehaviour, IModel
 {
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
