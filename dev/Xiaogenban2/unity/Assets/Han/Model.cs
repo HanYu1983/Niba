@@ -116,6 +116,87 @@ public class Model : MonoBehaviour, IModel{
                     );
                     return;
                 }
+            case ETimeType.DAY:
+                {
+                    callback(
+                        null,
+                        earns.Values
+                            .GroupBy(earn =>
+                            {
+                                var d = new DateTime(earn.createUTC);
+                                return Tuple.Create(d.Year, d.Month, d.Day);
+                            })
+                            .Select(o =>
+                            {
+                                var year = o.Key.Item1;
+                                var month = o.Key.Item2;
+                                var day = o.Key.Item3;
+
+                                var earn = Earn.empty;
+                                earn.createUTC = new DateTime(year, month, day).Ticks;
+                                earn.money = o.Sum(e => e.money);
+                                earn.memo = new DateTime(year, month, day).ToLocalTime().ToLongDateString();
+                                return earn;
+                            })
+                            .OrderBy(earn => earn.createUTC)
+                            .Take(count)
+                            .Select(Earn2Item).ToList()
+                    );
+                    return;
+                }
+            case ETimeType.MONTH:
+                {
+                    callback(
+                        null,
+                        earns.Values
+                            .GroupBy(earn =>
+                            {
+                                var d = new DateTime(earn.createUTC);
+                                return Tuple.Create(d.Year, d.Month);
+                            })
+                            .Select(o =>
+                            {
+                                var year = o.Key.Item1;
+                                var month = o.Key.Item2;
+
+                                var earn = Earn.empty;
+                                earn.createUTC = new DateTime(year, month, 1).Ticks;
+                                earn.money = o.Sum(e => e.money);
+                                earn.memo = new DateTime(year, month, 1).ToLocalTime().ToLongDateString();
+                                return earn;
+                            })
+                            .OrderBy(earn => earn.createUTC)
+                            .Take(count)
+                            .Select(Earn2Item).ToList()
+                    );
+                    return;
+                }
+            case ETimeType.YEAR:
+                {
+                    callback(
+                        null,
+                        earns.Values
+                            .GroupBy(earn =>
+                            {
+                                var d = new DateTime(earn.createUTC);
+                                return Tuple.Create(d.Year);
+                            })
+                            .Select(o =>
+                            {
+                                var year = o.Key.Item1;
+
+                                var earn = Earn.empty;
+                                earn.createUTC = new DateTime(year, 1, 1).Ticks;
+                                earn.money = o.Sum(e => e.money);
+                                earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToLongDateString();
+                                return earn;
+                            })
+                            .OrderBy(earn => earn.createUTC)
+                            .Take(count)
+                            .Select(Earn2Item).ToList()
+                    );
+                    return;
+                }
             default:
                 {
                     callback(new Exception("not implement yet"), null);
