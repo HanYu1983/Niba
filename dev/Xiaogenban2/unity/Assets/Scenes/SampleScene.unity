@@ -189,7 +189,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2084507848}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4561,6 +4561,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e3ebebf7362e4044997efea04abfa8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &297523638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 297523640}
+  - component: {fileID: 297523639}
+  m_Layer: 0
+  m_Name: Model
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &297523639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 297523638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58a45f1d31eae3943b4cb9bcb556dbee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &297523640
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 297523638}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &308601416
 GameObject:
   m_ObjectHideFlags: 0
@@ -9765,7 +9805,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1540799091}
   m_Direction: 0
   m_Value: 0.5
-  m_Size: 0.9842591
+  m_Size: 0.98425925
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12153,7 +12193,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.00006929902}
+  m_AnchoredPosition: {x: 0, y: -0.000088018634}
   m_SizeDelta: {x: 1080, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &745374953
@@ -14586,7 +14626,7 @@ MonoBehaviour:
   - {fileID: 444601528}
   - {fileID: 1707953958}
   - {fileID: 466951003}
-  model: {fileID: 6917489}
+  model: {fileID: 297523639}
 --- !u!1 &880111212
 GameObject:
   m_ObjectHideFlags: 0

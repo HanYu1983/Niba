@@ -1,7 +1,7 @@
 ﻿class ETimeType
 {
-    public static int ITEM = 0;
-    public static int DAY = 1;
-    public static int MONTH = 2;
-    public static int YEAR = 3;
+    public const int ITEM = 0;
+    public const int DAY = 1;
+    public const int MONTH = 2;
+    public const int YEAR = 3;
 };
