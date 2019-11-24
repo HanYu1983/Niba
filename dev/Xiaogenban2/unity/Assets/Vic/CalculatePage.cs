@@ -20,6 +20,7 @@ public class CalculatePage : Page, IHasMoneyCar
         base.Open();
         ClearMoney();
         ShowCurrentCalculate();
+        UpdateList(Model.GetCarItemListCache());
     }
 
     public override void Close()
@@ -29,41 +30,15 @@ public class CalculatePage : Page, IHasMoneyCar
         ClearMoney();
         ClearRows();
     }
-    /*
-    public void InputComplete()
-    {
-        View.OpenPopPage("確定結帳嗎？", 
-        delegate ()
-        {
-            int[] result = GetCurrentResult();
-            Debug.Log("結帳:" + result.ToString());
 
-            View.CloseCalculatePage();
-            View.ClosePopPage();
-        }, 
-        delegate ()
-        {
-            View.ClosePopPage();
-        });
-    }
-
-    public void Cancel()
-    {
-        View.OpenPopPage("確定離開嗎？",
-        delegate ()
-        {
-            View.CloseCalculatePage();
-            View.ClosePopPage();
-        },
-        delegate ()
-        {
-            View.ClosePopPage();
-        });
-    }
-    */
     public void AddItem()
     {
-        Model.AddItemToCar(GetCar().GetMoney() * -1, "價錢", DateTime.Now.ToString(), delegate (object error, List<Item> list)
+        int money = GetCar().GetMoney();
+        if (money == 0)
+        {
+            return;
+        }
+        Model.AddItemToCar(money * -1, "價錢", DateTime.Now.ToString(), delegate (object error, List<Item> list)
         {
             UpdateList(list);
             ClearMoney();
@@ -73,7 +48,12 @@ public class CalculatePage : Page, IHasMoneyCar
 
     public void GuestPay()
     {
-        Model.AddItemToCar(GetCar().GetMoney(), "客人支付", DateTime.Now.ToString(), delegate (object error, List<Item> list)
+        int money = GetCar().GetMoney();
+        if (money == 0)
+        {
+            return;
+        }
+        Model.AddItemToCar(money, "客人支付", DateTime.Now.ToString(), delegate (object error, List<Item> list)
         {
             UpdateList(list);
             ClearMoney();
@@ -144,7 +124,7 @@ public class CalculatePage : Page, IHasMoneyCar
     void ShowCurrentCalculate()
     {
         object[] result = GetCurrentResult();
-        CurrentCalculate.text = result[0].ToString() + " - " + result[1].ToString() + " = " + result[2];
+        CurrentCalculate.text = result[0].ToString() + " - " + Mathf.Abs((int)result[1]).ToString() + " = " + result[2];
     }
 
     public object[] GetCurrentResult()
@@ -162,19 +142,10 @@ public class CalculatePage : Page, IHasMoneyCar
             else
             {
                 totalMoney += item.Money;
-                memo += "+" + item.Money.ToString();
+                memo += "+" + Mathf.Abs(item.Money).ToString();
             }
         }
-        return new object[] { guestPay, totalMoney, guestPay - totalMoney, memo };
-        /*
-        int earns = 0;
-        foreach (GameObject row in CarRows)
-        {
-            earns += int.Parse(row.GetComponent<CarRow>().Money.text);
-        }
-        int remain = guestPay - earns;
-        return new int[] { guestPay, earns, remain }
-        */
+        return new object[] { guestPay, totalMoney, guestPay + totalMoney, memo };
     }
 
     public int CurrentMoney()

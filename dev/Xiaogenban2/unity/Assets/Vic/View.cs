@@ -25,6 +25,12 @@ public class View : MonoBehaviour {
         OpenTargetPage(EPage.Main);
     }
 
+    public void OnMainPageSearchBackClick()
+    {
+        GetMainPage().IsSearch = false;
+        GetMainPage().RefreshList();
+    }
+
     public void OnMainPageNoteClick()
     {
         OpenMemoPage(0);
@@ -120,11 +126,25 @@ public class View : MonoBehaviour {
 
     public void OnCalculatePageConfirm()
     {
+        object[] result = GetCalculatePage().GetCurrentResult();
+        if((int)result[2] < 0)
+        {
+            OpenPopPage("還沒有輸入客人所付的金錢哦!",
+                delegate ()
+                {
+                    ClosePopPage();
+                },
+                delegate ()
+                {
+                    ClosePopPage();
+                });
+            return;
+        }
         OpenPopPage("確定結帳嗎？",
         delegate ()
         {
-            object[] result = GetCalculatePage().GetCurrentResult();
-            Model.AddEarn((int)result[2], result[3].ToString(), "", delegate (object error, List<Item> list)
+            
+            Model.AddEarn(Math.Abs((int)result[1]), result[3].ToString(), "", delegate (object error, List<Item> list)
             {
                 CloseCalculatePage();
                 ClosePopPage();
@@ -140,16 +160,8 @@ public class View : MonoBehaviour {
 
     public void OnCalculatePageCancel()
     {
-        OpenPopPage("確定離開嗎？",
-        delegate ()
-        {
-            CloseCalculatePage();
-            ClosePopPage();
-        },
-        delegate ()
-        {
-            ClosePopPage();
-        });
+        CloseCalculatePage();
+        ClosePopPage();
     }
 
     public void OnCalculatePageNumberClick(int id)
@@ -200,6 +212,7 @@ public class View : MonoBehaviour {
         string searchString = GetSearchPage().GetContent();
         if(searchString != "")
         {
+            GetMainPage().IsSearch = true;
             GetMainPage().RefreshList(GetSearchPage().GetContent());
         }
         CloseSearchPage();
