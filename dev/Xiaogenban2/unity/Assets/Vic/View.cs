@@ -22,6 +22,26 @@ public class View : MonoBehaviour {
         OpenTargetPage(EPage.Main);
     }
 
+    public void OnMainPageNoteClick()
+    {
+        OpenMemoPage();
+    }
+
+    public void OnMainPageTypeClick()
+    {
+        GetMainPage().ChangeShowType();
+    }
+
+    public void OnMainPageCarClick()
+    {
+        OpenCalculatePage();
+    }
+
+    public void OnMainPageSearchClick()
+    {
+        OpenSearchPage();
+    }
+
     public void OnMainPageNumberClick(int id)
     {
         GetMainPage().AddMoney(id);
@@ -103,6 +123,18 @@ public class View : MonoBehaviour {
         CloseMemoPage();
     }
 
+    public void OnSearchPageConfirm()
+    {
+        GetSearchPage().Confirm();
+        CloseSearchPage();
+    }
+
+    public void OnSearchPageCancel()
+    {
+        GetSearchPage().Cancel();
+        CloseSearchPage();
+    }
+
     public void CloseCalculatePage()
     {
         GetCalculatePage().Close();
@@ -118,17 +150,7 @@ public class View : MonoBehaviour {
         GetMemoPage().Close();
     }
 
-    public void OnSearchPageConfirm()
-    {
-        GetSearchPage().Confirm();
-        CloseSearchPage();
-    }
-
-    public void OnSearchPageCancel()
-    {
-        GetSearchPage().Cancel();
-        CloseSearchPage();
-    }
+    
 
     public void OpenSearchPage()
     {
