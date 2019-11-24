@@ -8,6 +8,8 @@ public class View : MonoBehaviour {
 
     public GameObject[] pages;
 
+    IModel Model;
+
     void OpenTargetPage(EPage id)
     {
         foreach (GameObject page in pages)
@@ -24,7 +26,7 @@ public class View : MonoBehaviour {
 
     public void OnMainPageNoteClick()
     {
-        OpenMemoPage();
+        OpenMemoPage(0);
     }
 
     public void OnMainPageTypeClick()
@@ -69,6 +71,47 @@ public class View : MonoBehaviour {
         }
     }
 
+    public void OnMainPageItemMemoClick(int id)
+    {
+        OpenMemoPage(id);
+    }
+
+    public void OnMainPageItemEditClick(int id)
+    {
+        Item item = Model.GetItemCacheById(id);
+        OpenPopPage("是否確定修改" + item.Money + " => " + GetMainPage().CurrentMoney(),
+            delegate ()
+            {
+                Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
+                {
+                    GetMainPage().UpdateItemList(list);
+                    ClosePopPage();
+                });
+            },
+            delegate ()
+            {
+                ClosePopPage();
+            });
+    }
+
+    public void OnMainPageItemDeleteClick(int id)
+    {
+        Item item = Model.GetItemCacheById(id);
+        OpenPopPage("是否確定刪除" + item.Money + "這個項目？",
+            delegate ()
+            {
+                Model.DeleteItem(id, delegate (object error, List<Item> list)
+                {
+                    GetMainPage().UpdateItemList(list);
+                    ClosePopPage();
+                });
+            },
+            delegate ()
+            {
+                ClosePopPage();
+            });
+    }
+
     public void OpenCalculatePage()
     {
         GetCalculatePage().Open();
@@ -76,12 +119,36 @@ public class View : MonoBehaviour {
 
     public void OnCalculatePageConfirm()
     {
-        GetCalculatePage().InputComplete();
+        OpenPopPage("確定結帳嗎？",
+        delegate ()
+        {
+            object[] result = GetCalculatePage().GetCurrentResult();
+            Model.AddEarn((int)result[2], result[3].ToString(), "", delegate (object error, List<Item> list)
+            {
+                CloseCalculatePage();
+                ClosePopPage();
+
+                GetMainPage().RefreshList();
+            });
+        },
+        delegate ()
+        {
+            ClosePopPage();
+        });
     }
 
     public void OnCalculatePageCancel()
     {
-        GetCalculatePage().Cancel();
+        OpenPopPage("確定離開嗎？",
+        delegate ()
+        {
+            CloseCalculatePage();
+            ClosePopPage();
+        },
+        delegate ()
+        {
+            ClosePopPage();
+        });
     }
 
     public void OnCalculatePageNumberClick(int id)
@@ -113,25 +180,32 @@ public class View : MonoBehaviour {
 
     public void OnMemoPageConfirm()
     {
-        GetMemoPage().Confirm();
-        CloseMemoPage();
+        int id = GetMemoPage().Id;
+        string content = GetMemoPage().GetContent();
+        Model.ChangeItemMemo(id, content, delegate (object error, List<Item> list)
+        {
+            GetMainPage().UpdateItemList(list);
+            CloseMemoPage();
+        });
     }
 
     public void OnMemoPageCancel()
     {
-        GetMemoPage().Cancel();
         CloseMemoPage();
     }
 
     public void OnSearchPageConfirm()
     {
-        GetSearchPage().Confirm();
+        string searchString = GetSearchPage().GetContent();
+        if(searchString != "")
+        {
+            GetMainPage().RefreshList(GetSearchPage().GetContent());
+        }
         CloseSearchPage();
     }
 
     public void OnSearchPageCancel()
     {
-        GetSearchPage().Cancel();
         CloseSearchPage();
     }
 
@@ -140,17 +214,16 @@ public class View : MonoBehaviour {
         GetCalculatePage().Close();
     }
 
-    public void OpenMemoPage()
+    public void OpenMemoPage(int id)
     {
         GetMemoPage().Open();
+        GetMemoPage().Id = id;
     }
 
     public void CloseMemoPage()
     {
         GetMemoPage().Close();
     }
-
-    
 
     public void OpenSearchPage()
     {
@@ -203,10 +276,10 @@ public class View : MonoBehaviour {
 
     void InitPages()
     {
-        IModel model = new DebugModel();
+        Model = new DebugModel();
         foreach (GameObject page in pages)
         {
-            page.GetComponent<IPage>().Model = model;
+            page.GetComponent<IPage>().Model = Model;
             page.GetComponent<IPage>().View = this;
             page.GetComponent<IPage>().Init();
         }

@@ -8,5 +8,9 @@ public class EarnRow : MonoBehaviour
     public Button Btn_note;
     public Button Btn_edit;
     public Button Btn_delete;
-    
+
+    public int id;
+    public Text memo;
+    public Text money;
+    public Text time;
 }

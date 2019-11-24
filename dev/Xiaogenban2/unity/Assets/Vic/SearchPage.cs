@@ -1,16 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SearchPage : Page
 {
-    public void Confirm()
+    public InputField Content;
+
+    public string GetContent()
     {
-        Debug.Log("輸入確定");
+        return Content.text;
     }
 
-    public void Cancel()
+    public override void Close()
     {
-        Debug.Log("輸入取消");
+        base.Close();
+
+        Content.text = "";
     }
 }

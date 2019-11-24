@@ -15,9 +15,9 @@ public class CarRow : MonoBehaviour
         Memo.text = memo;
     }
 
-    public void SetMoney(string money)
+    public void SetMoney(int money)
     {
-        Money.text = money;
+        Money.text = money.ToString();
     }
 
     public void SetTime(string time)

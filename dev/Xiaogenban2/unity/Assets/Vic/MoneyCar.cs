@@ -9,6 +9,10 @@ public class MoneyCar : MonoBehaviour
     public string AddMoney(int money)
     {
         if (Moneys.Count >= 5) return ShowMoney();
+        if (Moneys.Count == 0 && money == 0)
+        {
+            return ShowMoney();
+        }
         Moneys.Add(money);
         return ShowMoney();
     }
@@ -45,5 +49,10 @@ public class MoneyCar : MonoBehaviour
             showText += m.ToString();
         }
         return showText;
+    }
+
+    public int GetMoney()
+    {
+        return int.Parse(ShowMoney());
     }
 }

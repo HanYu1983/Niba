@@ -4,5 +4,6 @@
     void BackMoney();
     void ClearMoney();
     void DoubleZero();
+    int CurrentMoney();
     MoneyCar GetCar();
 }

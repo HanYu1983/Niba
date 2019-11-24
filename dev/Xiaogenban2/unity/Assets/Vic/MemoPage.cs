@@ -1,16 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MemoPage : Page
 {
-    public void Confirm()
-    {
-        Debug.Log("輸入確定");
+    public InputField content;
+
+    int _id;
+    public int Id {
+        get { return _id; }
+        set {
+            _id = value;
+            Item item = Model.GetItemCacheById(_id);
+            this.content.text = item.Memo;
+        }
     }
 
-    public void Cancel()
+    public string GetContent()
     {
-        Debug.Log("輸入取消");
+        return content.text;
     }
+    
 }
