@@ -1,7 +1,7 @@
-﻿enum ETimeType
+﻿class ETimeType
 {
-    ITEM = 0,
-    DAY = 1,
-    MONTH = 2,
-    YEAR = 3
+    public static int ITEM = 0;
+    public static int DAY = 1;
+    public static int MONTH = 2;
+    public static int YEAR = 3;
 };
