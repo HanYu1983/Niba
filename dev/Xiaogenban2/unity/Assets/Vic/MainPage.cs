@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class MainPage : Page, IHasMoneyCar
 {
     public Text ShowType;
+    public Text ShowCountType;
     public Text Money;
     public GameObject EarnRow;
     public GameObject EarnList;
@@ -20,6 +21,7 @@ public class MainPage : Page, IHasMoneyCar
     public Button BtnSearch;
     public Button BtnCar;
     public Button BtnTime;
+    public Button BtnCount;
 
     bool _isSearch;
     public bool IsSearch
@@ -34,6 +36,7 @@ public class MainPage : Page, IHasMoneyCar
             BtnPay.interactable = !_isSearch;
             BtnCar.interactable = !_isSearch;
             BtnTime.interactable = !_isSearch;
+            BtnCount.interactable = !_isSearch;
         }
     }
 
@@ -43,16 +46,29 @@ public class MainPage : Page, IHasMoneyCar
     {
         "單","日","月","年"
     };
-
     int currentTimeType = 0;
+
+    ECount[] countTypes = new ECount[3]
+    {
+        ECount.TEN,
+        ECount.THIRTY,
+        ECount.HUNDRED
+    };
+    int currentCountType = 0;
 
     public void ChangeShowType()
     {
-        if (++currentTimeType > 3) currentTimeType = 0;
+        if (++currentTimeType > timeTypes.Length - 1) currentTimeType = 0;
         ShowType.text = timeTypes[currentTimeType];
         RefreshList();
     }
 
+    public void ChangeCountType()
+    {
+        if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
+        ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
+        RefreshList();
+    }
 
     public void Buy()
     {
@@ -97,7 +113,7 @@ public class MainPage : Page, IHasMoneyCar
     
     public void RefreshList(string memo = "")
     {
-        Model.GetItemList(MaxRow, currentTimeType, memo, delegate (object error, List<Item> list)
+        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, memo, delegate (object error, List<Item> list)
         {
             UpdateItemList(list);
         });

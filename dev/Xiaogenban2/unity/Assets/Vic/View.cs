@@ -36,6 +36,11 @@ public class View : MonoBehaviour {
         OpenMemoPage(0);
     }
 
+    public void OnMainPageCountClick()
+    {
+        GetMainPage().ChangeCountType();
+    }
+
     public void OnMainPageTypeClick()
     {
         GetMainPage().ChangeShowType();
@@ -216,6 +221,11 @@ public class View : MonoBehaviour {
             GetMainPage().RefreshList(GetSearchPage().GetContent());
         }
         CloseSearchPage();
+    }
+
+    public void OnSearchPageAddTagClick()
+    {
+        GetSearchPage().AddTag();
     }
 
     public void OnSearchPageCancel()

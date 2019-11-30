@@ -41,8 +41,6 @@ public class Model : MonoBehaviour, IModel{
         callback(null, earns.Values.Select(Earn2Item).ToList());
     }
 
-    
-
     public void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback)
     {
         if (earns.ContainsKey(id) == false)
@@ -245,6 +243,26 @@ public class Model : MonoBehaviour, IModel{
     public List<Item> GetCarItemListCache()
     {
         return car.Values.ToList();
+    }
+
+    public List<MemoItem> GetMemoList()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<MemoItem> SelectMemo(string memo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<MemoItem> UnSelectMemo(string memo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<MemoItem> AddMemo(string memo)
+    {
+        throw new NotImplementedException();
     }
 
     #endregion

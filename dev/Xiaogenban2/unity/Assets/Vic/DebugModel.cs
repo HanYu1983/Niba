@@ -95,5 +95,43 @@ public class DebugModel : MonoBehaviour, IModel
         return items;
     }
 
+    public List<MemoItem> GetMemoList()
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 20; ++i)
+        {
+            items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
 
+    public List<MemoItem> UnSelectMemo(string memo)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 20; ++i)
+        {
+            items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
+
+    public List<MemoItem> SelectMemo(string memo)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 20; ++i)
+        {
+            items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
+
+    public List<MemoItem> AddMemo(string memo)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 20; ++i)
+        {
+            items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
 }

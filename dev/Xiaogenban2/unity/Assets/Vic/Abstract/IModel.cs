@@ -13,6 +13,10 @@ public interface IModel
     
     void AddItemToCar(int money, string memo, string time, UnityAction<object, List<Item>> callback);
     void DeleteItemFromCar(int id, UnityAction<object, List<Item>> callback);
-
     List<Item> GetCarItemListCache();
+
+    List<MemoItem> GetMemoList();
+    List<MemoItem> AddMemo(string memo);
+    List<MemoItem> SelectMemo(string memo);
+    List<MemoItem> UnSelectMemo(string memo);
 }
