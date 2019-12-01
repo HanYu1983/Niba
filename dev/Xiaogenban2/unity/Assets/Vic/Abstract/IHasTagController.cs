@@ -1,0 +1,4 @@
+﻿interface IHasTagController
+{
+    TagController GetTagController();
+}

@@ -212,6 +212,11 @@ public class View : MonoBehaviour {
         CloseMemoPage();
     }
 
+    public void OnMemoPageAddTagClick()
+    {
+        GetMemoPage().AddTag();
+    }
+
     public void OnSearchPageConfirm()
     {
         string searchString = GetSearchPage().GetContent();
@@ -222,11 +227,7 @@ public class View : MonoBehaviour {
         }
         CloseSearchPage();
     }
-
-    public void OnSearchPageAddTagClick()
-    {
-        GetSearchPage().AddTag();
-    }
+    
 
     public void OnSearchPageCancel()
     {
