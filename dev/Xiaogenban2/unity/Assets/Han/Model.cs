@@ -7,6 +7,7 @@ using System;
 
 public class Model : MonoBehaviour, IModel{
 
+    #region earn
     public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
     private int seqId = 0;
     private Earn lastInputEarn;
@@ -78,8 +79,6 @@ public class Model : MonoBehaviour, IModel{
         earns.Remove(id);
         callback(null, earns.Values.Select(Earn2Item).ToList());
     }
-
-    
 
     public Item GetItemCacheById(int id)
     {
@@ -210,10 +209,9 @@ public class Model : MonoBehaviour, IModel{
     {
         return earns.Values.Select(Earn2Item).ToList();
     }
-
+    #endregion
 
     #region car
-
     private Dictionary<int, Item> car = new Dictionary<int, Item>();
 
     public void ClearCar()
@@ -244,26 +242,53 @@ public class Model : MonoBehaviour, IModel{
     {
         return car.Values.ToList();
     }
+    #endregion
+
+    #region memo
+    private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
 
     public List<MemoItem> GetMemoList()
     {
-        throw new NotImplementedException();
+        return memoItems.Values.ToList();
     }
 
     public List<MemoItem> SelectMemo(string memo)
     {
-        throw new NotImplementedException();
+        if (memoItems.ContainsKey(memo) == false)
+        {
+            throw new Exception(memo + " not found");
+        }
+        memoItems[memo].isSelect = true;
+        return GetMemoList();
     }
 
     public List<MemoItem> UnSelectMemo(string memo)
     {
-        throw new NotImplementedException();
+        if (memoItems.ContainsKey(memo) == false)
+        {
+            throw new Exception(memo + " not found");
+        }
+        memoItems[memo].isSelect = false;
+        return GetMemoList();
     }
 
+    private char[] SplitTag = new char[] {',',';','.',' '};
     public List<MemoItem> AddMemo(string memo)
     {
-        throw new NotImplementedException();
-    }
+        var datas = memo.Split(SplitTag);
+        var memos = datas.Select(d =>
+        {
+            return new MemoItem(d.Trim(), true);
+        }).Where(m =>
+        {
+            return string.IsNullOrEmpty(m.Memo) == false;
+        });
 
+        foreach(var m in memos)
+        {
+            memoItems.Add(m.Memo, m);
+        }
+        return GetMemoList();
+    }
     #endregion
 }
