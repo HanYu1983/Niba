@@ -10,12 +10,44 @@ public class Model : MonoBehaviour, IModel{
 
     void Start()
     {
-        Load();
+        try
+        {
+            Load();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            throw e;
+        }
     }
 
     void OnAddEarn(Earn earn)
     {
         ClearCar();
+        OnDataChange();
+    }
+
+    void OnAddMemo()
+    {
+        OnDataChange();
+    }
+
+    void OnDataChange()
+    {
+        try
+        {
+            Save();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
+    }
+
+    void OnEarnMemoChange()
+    {
+        OnDataChange();
+        UnSelectAllMemo();
     }
 
     #region earn
@@ -58,6 +90,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.memo = memo;
         earns[id] = earn;
+        OnEarnMemoChange();
         callback(null, earns.Values.Select(Earn2Item).ToList());
     }
 
@@ -259,11 +292,23 @@ public class Model : MonoBehaviour, IModel{
         return memoItems.Values.ToList();
     }
 
+    public void UnSelectAllMemo()
+    {
+        foreach (var m in memoItems.Values)
+        {
+            m.isSelect = false;
+        }
+    }
+
     public List<MemoItem> SelectMemo(string memo)
     {
         var datas = memo.Split(SplitTag);
         foreach (string m in datas)
         {
+            if(memoItems.ContainsKey(m) == false)
+            {
+                continue;
+            }
             memoItems[m].isSelect = true;
         }
         return GetMemoList();
@@ -274,6 +319,10 @@ public class Model : MonoBehaviour, IModel{
         var datas = memo.Split(SplitTag);
         foreach (string m in datas)
         {
+            if (memoItems.ContainsKey(m) == false)
+            {
+                continue;
+            }
             memoItems[m].isSelect = false;
         }
         return GetMemoList();
@@ -283,7 +332,7 @@ public class Model : MonoBehaviour, IModel{
     public List<MemoItem> AddMemo(string memo)
     {
         var datas = memo.Split(SplitTag);
-        var memos = datas.Select(d =>
+        var memos = datas.Distinct().Select(d =>
         {
             return new MemoItem(d.Trim(), true);
         }).Where(m =>
@@ -295,12 +344,13 @@ public class Model : MonoBehaviour, IModel{
         {
             memoItems.Add(m.Memo, m);
         }
+        OnAddMemo();
         return GetMemoList();
     }
 
     public string MemoListToString(List<MemoItem> list)
     {
-        return string.Join(";", list.Select(d => d.Memo).ToArray());
+        return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
     }
     /*
     public List<MemoItem> StringToMemoList(string memo)
@@ -329,19 +379,26 @@ public class Model : MonoBehaviour, IModel{
         string json = JsonUtility.ToJson(temp, true);
         
         var filePath = Application.persistentDataPath + "/" + fileName;
+        Debug.LogWarningFormat("save to {0}...", filePath);
         File.WriteAllText(filePath, json);
     }
 
     public void Load()
     {
         var filePath = Application.persistentDataPath + "/" + fileName;
-        if(File.Exists(filePath) == false)
+        Debug.LogWarningFormat("load from {0}...", filePath);
+        if (File.Exists(filePath) == false)
         {
+            Debug.LogWarningFormat("%s not found", filePath);
             return;
         }
 
         string json = File.ReadAllText(filePath);
+        Debug.Log(json);
+
         var temp = JsonUtility.FromJson<Temp>(json);
+        Debug.Log(temp.earns);
+        Debug.Log(temp.seqId);
 
         seqId = temp.seqId;
         earns.Clear();
