@@ -426,6 +426,11 @@ public class Model : MonoBehaviour, IModel{
         throw new NotImplementedException();
     }
 
-    
+    public void ClearSelectMemo()
+    {
+        throw new NotImplementedException();
+    }
+
+
     #endregion
 }

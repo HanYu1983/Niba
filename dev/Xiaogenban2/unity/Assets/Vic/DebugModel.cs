@@ -149,4 +149,9 @@ public class DebugModel : MonoBehaviour, IModel
     {
         Debug.Log("SetFilterMemo");
     }
+
+    public void ClearSelectMemo()
+    {
+        throw new System.NotImplementedException();
+    }
 }
