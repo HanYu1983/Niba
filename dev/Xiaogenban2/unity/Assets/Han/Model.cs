@@ -288,7 +288,7 @@ public class Model : MonoBehaviour, IModel{
 
     #region memo
     private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
-    private char[] SplitTag = new char[] { ',', ';', '.', ' ' };
+    private char[] SplitTag = new char[] {';'};
 
     public List<MemoItem> GetMemoList()
     {
