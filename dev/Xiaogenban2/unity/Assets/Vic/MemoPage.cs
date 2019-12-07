@@ -30,7 +30,7 @@ public class MemoPage : Page
     {
         base.Open();
 
-        GetTagController().SetTagList();
+        GetTagController().SetTagList(true);
     }
 
     public override void Close()

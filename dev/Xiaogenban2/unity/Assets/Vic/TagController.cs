@@ -30,19 +30,29 @@ class TagController : MonoBehaviour
 
     List<GameObject> MemoList = new List<GameObject>();
 
-    public void SetTagList()
+    public void SetTagList(bool showByItem = false)
     {
         ClearList();
-        Item item = Model.GetItemCacheById(this.Id);
+        
         List<MemoItem> list = null;
-        try
+
+        if(showByItem)
         {
-            list = Model.SelectMemo(item.Memo);
+            Item item = Model.GetItemCacheById(this.Id);
+            try
+            {
+                list = Model.SelectMemo(item.Memo);
+            }
+            catch
+            {
+                Debug.Log("沒有列表");
+            }
+        }else{
+            list = Model.GetMemoList();
         }
-        catch
-        {
-            Debug.Log("沒有列表");
-        }
+
+        Debug.Log(list);
+        
         if (list == null) return;
 
         foreach (MemoItem tag in list)
