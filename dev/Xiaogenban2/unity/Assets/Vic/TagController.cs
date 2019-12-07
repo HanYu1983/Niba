@@ -28,18 +28,27 @@ class TagController : MonoBehaviour
 
     List<GameObject> MemoList = new List<GameObject>();
 
-    public void SetTagList()
+    public void SetTagList(bool usingTemp = false)
     {
         ClearList();
         
         List<MemoItem> list = null;
 
-        if(Id!=-1)
+        if (usingTemp)
         {
-            Item item = Model.GetItemCacheById(Id);
-            list = Model.SelectMemo(item.Memo);
-        }else{
             list = Model.GetMemoList();
+        }
+        else
+        {
+            if (Id != -1)
+            {
+                Item item = Model.GetItemCacheById(Id);
+                list = Model.SelectMemo(item.Memo);
+            }
+            else
+            {
+                list = Model.GetMemoList();
+            }
         }
         
         if (list == null) return;
@@ -92,7 +101,7 @@ class TagController : MonoBehaviour
             {
                 Model.SelectMemo(mr.Memo);
             }
-            SetTagList();
+            SetTagList(true);
         };
     }
 }
