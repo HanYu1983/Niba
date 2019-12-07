@@ -96,7 +96,7 @@ public class Model : MonoBehaviour, IModel{
         earn.memo = memo;
         earns[id] = earn;
         OnEarnMemoChange();
-        callback(null, earns.Values.Select(Earn2Item).ToList());
+        callback(null, GetItemListCache());
     }
 
     public void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback)
@@ -117,7 +117,7 @@ public class Model : MonoBehaviour, IModel{
         if (earns.ContainsKey(id) == false)
         {
             Debug.LogWarning(id + " not found. can not delete");
-            callback(null, earns.Values.Select(Earn2Item).ToList());
+            callback(null, GetItemListCache());
             return;
         }
         earns.Remove(id);
