@@ -202,6 +202,7 @@ public class View : MonoBehaviour {
         string content = GetMemoPage().GetContent();
 
         List<MemoItem> memos = Model.GetMemoList();
+        Debug.Log(Model.MemoListToString(memos));
         Model.ChangeItemMemo(id, Model.MemoListToString(memos), delegate (object error, List<Item> list)
         {
             GetMainPage().UpdateItemList(list);
