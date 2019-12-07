@@ -290,5 +290,15 @@ public class Model : MonoBehaviour, IModel{
         }
         return GetMemoList();
     }
+
+    public string MemoListToString(List<MemoItem> list)
+    {
+        throw new NotImplementedException();
+    }
+    /*
+    public List<MemoItem> StringToMemoList(string memo)
+    {
+        throw new NotImplementedException();
+    }*/
     #endregion
 }

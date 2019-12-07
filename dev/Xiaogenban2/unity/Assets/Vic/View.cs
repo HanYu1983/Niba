@@ -200,7 +200,9 @@ public class View : MonoBehaviour {
     {
         int id = GetMemoPage().Id;
         string content = GetMemoPage().GetContent();
-        Model.ChangeItemMemo(id, content, delegate (object error, List<Item> list)
+
+        List<MemoItem> memos = Model.GetMemoList();
+        Model.ChangeItemMemo(id, Model.MemoListToString(memos), delegate (object error, List<Item> list)
         {
             GetMainPage().UpdateItemList(list);
             CloseMemoPage();
@@ -219,8 +221,9 @@ public class View : MonoBehaviour {
 
     public void OnSearchPageConfirm()
     {
-        string searchString = GetSearchPage().GetContent();
-        if(searchString != "")
+        List<MemoItem> memos = Model.GetMemoList();
+        string searchString = Model.MemoListToString(memos);
+        if (searchString != "")
         {
             GetMainPage().IsSearch = true;
             GetMainPage().RefreshList(GetSearchPage().GetContent());

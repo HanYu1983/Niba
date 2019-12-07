@@ -7,6 +7,10 @@ using UnityEngine.UI;
 
 class TagController : MonoBehaviour
 {
+    public int Id
+    {
+        get;set;
+    }
     public IModel Model;
     public InputField Content;
     public GameObject MemoListContainer;
@@ -29,7 +33,18 @@ class TagController : MonoBehaviour
     public void SetTagList()
     {
         ClearList();
-        List<MemoItem> list = Model.GetMemoList();
+        Item item = Model.GetItemCacheById(this.Id);
+        List<MemoItem> list = null;
+        try
+        {
+            list = Model.SelectMemo(item.Memo);
+        }
+        catch
+        {
+            Debug.Log("沒有列表");
+        }
+        if (list == null) return;
+
         foreach (MemoItem tag in list)
         {
             GameObject row = Instantiate(PrefabMemoItem, MemoListContainer.transform);
@@ -78,6 +93,7 @@ class TagController : MonoBehaviour
             {
                 Model.SelectMemo(mr.Memo);
             }
+            SetTagList();
         };
     }
 }
