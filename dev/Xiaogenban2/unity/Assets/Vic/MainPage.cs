@@ -30,13 +30,7 @@ public class MainPage : Page, IHasMoneyCar
         set
         {
             _isSearch = value;
-            BtnBack.gameObject.SetActive(_isSearch);
-            BtnSearch.interactable = !_isSearch;
-            BtnEarn.interactable = !_isSearch;
-            BtnPay.interactable = !_isSearch;
-            BtnCar.interactable = !_isSearch;
-            BtnTime.interactable = !_isSearch;
-            BtnCount.interactable = !_isSearch;
+            UpdateBtn();
         }
     }
 
@@ -145,19 +139,30 @@ public class MainPage : Page, IHasMoneyCar
             EarnRow er = item.GetComponent<EarnRow>();
             er.id = itemModel.Id;
             er.memo.text = itemModel.Memo.ToString();
-            Debug.Log(itemModel.Memo);
             er.time.text = itemModel.Time.ToString();
             er.money.text = itemModel.Money.ToString();
             er.Btn_edit.onClick.AddListener(onBtnEditClick(er));
             er.Btn_delete.onClick.AddListener(onBtnDeleteClick(er));
             er.Btn_note.onClick.AddListener(onBtnNoteClick(er));
 
-            er.Btn_edit.interactable = !IsSearch;
-            er.Btn_delete.interactable = !IsSearch;
-            er.Btn_note.interactable = !IsSearch;
+            er.Btn_edit.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+            er.Btn_delete.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+            er.Btn_note.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
 
             earnRows.Add(item);
         }
+        UpdateBtn();
+    }
+
+    void UpdateBtn()
+    {
+        BtnBack.gameObject.SetActive(_isSearch);
+        BtnSearch.interactable = !_isSearch;
+        BtnEarn.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        BtnPay.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        BtnCar.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        BtnTime.interactable = !_isSearch;
+        BtnCount.interactable = !_isSearch;
     }
 
     UnityAction onBtnEditClick(EarnRow er)
