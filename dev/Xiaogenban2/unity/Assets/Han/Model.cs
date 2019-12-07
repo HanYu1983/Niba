@@ -4,18 +4,24 @@ using UnityEngine;
 using UnityEngine.Events;
 using System.Linq;
 using System;
+using System.IO;
 
 public class Model : MonoBehaviour, IModel{
 
-    #region earn
-    public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
-    private int seqId = 0;
-    private Earn lastInputEarn;
+    void Start()
+    {
+        Load();
+    }
 
     void OnAddEarn(Earn earn)
     {
         ClearCar();
     }
+
+    #region earn
+    public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
+    private int seqId = 0;
+    private Earn lastInputEarn;
 
     public static Item Earn2Item(Earn earn)
     {
@@ -246,6 +252,7 @@ public class Model : MonoBehaviour, IModel{
 
     #region memo
     private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
+    private char[] SplitTag = new char[] { ',', ';', '.', ' ' };
 
     public List<MemoItem> GetMemoList()
     {
@@ -254,25 +261,25 @@ public class Model : MonoBehaviour, IModel{
 
     public List<MemoItem> SelectMemo(string memo)
     {
-        if (memoItems.ContainsKey(memo) == false)
+        var datas = memo.Split(SplitTag);
+        foreach (string m in datas)
         {
-            throw new Exception(memo + " not found");
+            memoItems[m].isSelect = true;
         }
-        memoItems[memo].isSelect = true;
         return GetMemoList();
     }
 
     public List<MemoItem> UnSelectMemo(string memo)
     {
-        if (memoItems.ContainsKey(memo) == false)
+        var datas = memo.Split(SplitTag);
+        foreach (string m in datas)
         {
-            throw new Exception(memo + " not found");
+            memoItems[m].isSelect = false;
         }
-        memoItems[memo].isSelect = false;
         return GetMemoList();
     }
 
-    private char[] SplitTag = new char[] {',',';','.',' '};
+    
     public List<MemoItem> AddMemo(string memo)
     {
         var datas = memo.Split(SplitTag);
@@ -289,6 +296,54 @@ public class Model : MonoBehaviour, IModel{
             memoItems.Add(m.Memo, m);
         }
         return GetMemoList();
+    }
+    #endregion
+
+
+    #region save
+    private const string fileName = "save.json";
+
+    private struct Temp
+    {
+        public int seqId;
+        public List<Earn> earns;
+        public List<string> memo;
+    }
+
+    public void Save()
+    {
+        Temp temp;
+        temp.seqId = this.seqId;
+        temp.earns = new List<Earn>(earns.Values);
+        temp.memo = new List<string>(memoItems.Values.Select(d=>d.Memo));
+        string json = JsonUtility.ToJson(temp, true);
+        
+        var filePath = Application.persistentDataPath + "/" + fileName;
+        File.WriteAllText(filePath, json);
+    }
+
+    public void Load()
+    {
+        var filePath = Application.persistentDataPath + "/" + fileName;
+        if(File.Exists(filePath) == false)
+        {
+            return;
+        }
+
+        string json = File.ReadAllText(filePath);
+        var temp = JsonUtility.FromJson<Temp>(json);
+
+        seqId = temp.seqId;
+        earns.Clear();
+        foreach(var earn in temp.earns)
+        {
+            earns.Add(earn.id, earn);
+        }
+        memoItems.Clear();
+        foreach (var m in temp.memo)
+        {
+            memoItems.Add(m, new MemoItem(m, false));
+        }
     }
     #endregion
 }
