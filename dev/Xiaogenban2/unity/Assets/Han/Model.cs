@@ -289,10 +289,20 @@ public class Model : MonoBehaviour, IModel{
     #region memo
     private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
     private char[] SplitTag = new char[] {';'};
+    private string memoFilter;
+
+    public void SetFilterMemo(string filter)
+    {
+        memoFilter = filter;
+    }
 
     public List<MemoItem> GetMemoList()
     {
-        return memoItems.Values.ToList();
+        if (string.IsNullOrEmpty(memoFilter))
+        {
+            return memoItems.Values.ToList();
+        }
+        return memoItems.Values.Where(d=>d.Memo != null && d.Memo.Contains(memoFilter)).ToList();
     }
 
     public void UnSelectAllMemo()
@@ -416,9 +426,6 @@ public class Model : MonoBehaviour, IModel{
         throw new NotImplementedException();
     }
 
-    public void SetFilterMemo(string filter)
-    {
-        throw new NotImplementedException();
-    }
+    
     #endregion
 }
