@@ -300,7 +300,7 @@ public class Model : MonoBehaviour, IModel{
 
     public string MemoListToString(List<MemoItem> list)
     {
-        throw new NotImplementedException();
+        return string.Join(";", list.Select(d => d.Memo).ToArray());
     }
     /*
     public List<MemoItem> StringToMemoList(string memo)
