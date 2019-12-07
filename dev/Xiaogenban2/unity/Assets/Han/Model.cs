@@ -23,8 +23,9 @@ public class Model : MonoBehaviour, IModel{
 
     void OnAddEarn(Earn earn)
     {
-        ClearCar();
         OnDataChange();
+        ClearCar();
+        
     }
 
     void OnAddMemo()
@@ -77,7 +78,7 @@ public class Model : MonoBehaviour, IModel{
 
         lastInputEarn = earn;
         OnAddEarn(earn);
-        callback(null, earns.Values.Select(Earn2Item).ToList());
+        callback(null, GetItemListCache());
     }
 
     public void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback)
@@ -104,7 +105,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.money = money;
         earns[id] = earn;
-        callback(null, earns.Values.Select(Earn2Item).ToList());
+        callback(null, GetItemListCache());
     }
 
     public void DeleteItem(int id, UnityAction<object, List<Item>> callback)
@@ -116,7 +117,7 @@ public class Model : MonoBehaviour, IModel{
             return;
         }
         earns.Remove(id);
-        callback(null, earns.Values.Select(Earn2Item).ToList());
+        callback(null, GetItemListCache());
     }
 
     public Item GetItemCacheById(int id)
@@ -146,7 +147,7 @@ public class Model : MonoBehaviour, IModel{
                         null, 
                         earns.Values
                             .Where(MemoContains(memo))
-                            .OrderBy(earn => earn.createUTC)
+                            .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
                             .Select(Earn2Item).ToList()
                     );
@@ -175,7 +176,7 @@ public class Model : MonoBehaviour, IModel{
                                 earn.memo = new DateTime(year, month, day).ToLocalTime().ToLongDateString();
                                 return earn;
                             })
-                            .OrderBy(earn => earn.createUTC)
+                            .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
                             .Select(Earn2Item).ToList()
                     );
@@ -203,7 +204,7 @@ public class Model : MonoBehaviour, IModel{
                                 earn.memo = new DateTime(year, month, 1).ToLocalTime().ToLongDateString();
                                 return earn;
                             })
-                            .OrderBy(earn => earn.createUTC)
+                            .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
                             .Select(Earn2Item).ToList()
                     );
@@ -246,7 +247,7 @@ public class Model : MonoBehaviour, IModel{
 
     public List<Item> GetItemListCache()
     {
-        return earns.Values.Select(Earn2Item).ToList();
+        return earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
     }
     #endregion
 
@@ -262,7 +263,7 @@ public class Model : MonoBehaviour, IModel{
     {
         var id = seqId++;
         car[id] = new Item(id, money, memo, null);
-        callback(null, car.Values.ToList());
+        callback(null, GetCarItemListCache());
     }
 
     public void DeleteItemFromCar(int id, UnityAction<object, List<Item>> callback)
@@ -274,12 +275,14 @@ public class Model : MonoBehaviour, IModel{
             return;
         }
         car.Remove(id);
-        callback(null, car.Values.ToList());
+        callback(null, GetCarItemListCache());
     }
 
     public List<Item> GetCarItemListCache()
     {
-        return car.Values.ToList();
+        var ret = car.Values.ToList();
+        ret.Reverse();
+        return ret;
     }
     #endregion
 
@@ -394,12 +397,7 @@ public class Model : MonoBehaviour, IModel{
         }
 
         string json = File.ReadAllText(filePath);
-        Debug.Log(json);
-
         var temp = JsonUtility.FromJson<Temp>(json);
-        Debug.Log(temp.earns);
-        Debug.Log(temp.seqId);
-
         seqId = temp.seqId;
         earns.Clear();
         foreach(var earn in temp.earns)
