@@ -10,12 +10,38 @@ public class Model : MonoBehaviour, IModel{
 
     void Start()
     {
-        Load();
+        try
+        {
+            Load();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            throw e;
+        }
     }
 
     void OnAddEarn(Earn earn)
     {
         ClearCar();
+        OnDataChange();
+    }
+
+    void OnAddMemo()
+    {
+        OnDataChange();
+    }
+
+    void OnDataChange()
+    {
+        try
+        {
+            Save();
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+        }
     }
 
     #region earn
@@ -295,6 +321,7 @@ public class Model : MonoBehaviour, IModel{
         {
             memoItems.Add(m.Memo, m);
         }
+        OnAddMemo();
         return GetMemoList();
     }
 
@@ -329,19 +356,26 @@ public class Model : MonoBehaviour, IModel{
         string json = JsonUtility.ToJson(temp, true);
         
         var filePath = Application.persistentDataPath + "/" + fileName;
+        Debug.LogWarningFormat("save to {0}...", filePath);
         File.WriteAllText(filePath, json);
     }
 
     public void Load()
     {
         var filePath = Application.persistentDataPath + "/" + fileName;
-        if(File.Exists(filePath) == false)
+        Debug.LogWarningFormat("load from {0}...", filePath);
+        if (File.Exists(filePath) == false)
         {
+            Debug.LogWarningFormat("%s not found", filePath);
             return;
         }
 
         string json = File.ReadAllText(filePath);
+        Debug.Log(json);
+
         var temp = JsonUtility.FromJson<Temp>(json);
+        Debug.Log(temp.earns);
+        Debug.Log(temp.seqId);
 
         seqId = temp.seqId;
         earns.Clear();
