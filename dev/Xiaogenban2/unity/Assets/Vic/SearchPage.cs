@@ -30,8 +30,7 @@ public class SearchPage : Page
     public override void Open()
     {
         base.Open();
-
-        Model.ClearSelectMemo();
+        
         GetTagController().SetTagList();
     }
 

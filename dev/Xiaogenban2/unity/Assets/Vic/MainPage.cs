@@ -71,7 +71,7 @@ public class MainPage : Page, IHasMoneyCar
         {
             return;
         }
-        Model.AddEarn(money * -1, "", "", delegate (object error, List<Item> list)
+        Model.AddEarn(money * -1, null, "", delegate (object error, List<Item> list)
         {
             RefreshList();
             ClearMoney();
@@ -85,7 +85,7 @@ public class MainPage : Page, IHasMoneyCar
         {
             return;
         }
-        Model.AddEarn(money, "", "", delegate (object error, List<Item> list)
+        Model.AddEarn(money, null, "", delegate (object error, List<Item> list)
         {
             RefreshList();
             ClearMoney();
