@@ -227,11 +227,15 @@ public class View : MonoBehaviour {
         if (searchString != "")
         {
             GetMainPage().IsSearch = true;
-            GetMainPage().RefreshList(GetSearchPage().GetContent());
+            GetMainPage().RefreshList(searchString);
         }
         CloseSearchPage();
     }
     
+    public void OnSearchPageFilterChange()
+    {
+        GetSearchPage().FilterTag();
+    }
 
     public void OnSearchPageCancel()
     {

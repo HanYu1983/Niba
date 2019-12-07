@@ -412,5 +412,15 @@ public class Model : MonoBehaviour, IModel{
             memoItems.Add(m, new MemoItem(m, false));
         }
     }
+
+    public List<MemoItem> FilterMemo(string memo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetFilterMemo(string filter)
+    {
+        throw new NotImplementedException();
+    }
     #endregion
 }

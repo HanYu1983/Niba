@@ -34,6 +34,12 @@ public class SearchPage : Page
         GetTagController().SetTagList();
     }
 
+    public void FilterTag()
+    {
+        Model.SetFilterMemo(GetTagController().ContentText);
+        GetTagController().SetTagList();
+    }
+
     TagController GetTagController()
     {
         return GetComponent<TagController>();

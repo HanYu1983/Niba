@@ -139,14 +139,14 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return "a,b,c";
     }
-    /*
-    public List<MemoItem> StringToMemoList(string memo)
+
+    public List<MemoItem> FilterMemo(string memo)
     {
-        List<MemoItem> items = new List<MemoItem>();
-        for (int i = 0; i < 20; ++i)
-        {
-            items.Add(new MemoItem("tag_memo" + i, (Random.Range(0, 10) > 5)));
-        }
-        return items;
-    }*/
+        throw new System.NotImplementedException();
+    }
+
+    public void SetFilterMemo(string filter)
+    {
+        Debug.Log("SetFilterMemo");
+    }
 }
