@@ -320,6 +320,12 @@ public class Model : MonoBehaviour, IModel{
         {
             if(memoItems.ContainsKey(m) == false)
             {
+                Debug.LogFormat("{0} not found.", m);
+                continue;
+            }
+            if (memoItems[m].isSelect)
+            {
+                Debug.LogFormat("{0} already selected.", m);
                 continue;
             }
             memoItems[m].isSelect = true;
@@ -334,6 +340,12 @@ public class Model : MonoBehaviour, IModel{
         {
             if (memoItems.ContainsKey(m) == false)
             {
+                Debug.LogFormat("{0} not found.", m);
+                continue;
+            }
+            if (memoItems[m].isSelect == false)
+            {
+                Debug.LogFormat("{0} already unselected.", m);
                 continue;
             }
             memoItems[m].isSelect = false;
