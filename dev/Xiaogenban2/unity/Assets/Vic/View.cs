@@ -244,8 +244,8 @@ public class View : MonoBehaviour {
 
     public void OpenMemoPage(int id)
     {
-        GetMemoPage().Open();
         GetMemoPage().Id = id;
+        GetMemoPage().Open();
     }
 
     public void CloseMemoPage()
