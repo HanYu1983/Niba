@@ -30,6 +30,7 @@ public class MemoPage : Page
     {
         base.Open();
 
+        Model.ClearSelectMemo();
         GetTagController().SetTagList();
     }
 

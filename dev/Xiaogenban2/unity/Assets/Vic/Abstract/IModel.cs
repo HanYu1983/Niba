@@ -20,6 +20,7 @@ public interface IModel
     List<MemoItem> SelectMemo(string memo);
     List<MemoItem> UnSelectMemo(string memo);
     void SetFilterMemo(string filter);
+    void ClearSelectMemo();
 
     string MemoListToString(List<MemoItem> list);
 }

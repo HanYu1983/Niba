@@ -31,6 +31,7 @@ public class SearchPage : Page
     {
         base.Open();
 
+        Model.ClearSelectMemo();
         GetTagController().SetTagList();
     }
 
