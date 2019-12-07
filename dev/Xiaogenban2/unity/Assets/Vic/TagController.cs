@@ -7,10 +7,8 @@ using UnityEngine.UI;
 
 class TagController : MonoBehaviour
 {
-    public int Id
-    {
-        get;set;
-    }
+    public int Id = -1;
+    public string FilterString = "";
     public IModel Model;
     public InputField Content;
     public GameObject MemoListContainer;
@@ -30,21 +28,19 @@ class TagController : MonoBehaviour
 
     List<GameObject> MemoList = new List<GameObject>();
 
-    public void SetTagList(bool showByItem = false)
+    public void SetTagList()
     {
         ClearList();
         
         List<MemoItem> list = null;
 
-        if(showByItem)
+        if(Id!=-1)
         {
-            Item item = Model.GetItemCacheById(this.Id);
+            Item item = Model.GetItemCacheById(Id);
             list = Model.SelectMemo(item.Memo);
         }else{
             list = Model.GetMemoList();
         }
-
-        Debug.Log(list);
         
         if (list == null) return;
 
