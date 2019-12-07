@@ -134,4 +134,19 @@ public class DebugModel : MonoBehaviour, IModel
         }
         return items;
     }
+
+    public string MemoListToString(List<MemoItem> list)
+    {
+        return "a,b,c";
+    }
+    /*
+    public List<MemoItem> StringToMemoList(string memo)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 20; ++i)
+        {
+            items.Add(new MemoItem("tag_memo" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }*/
 }

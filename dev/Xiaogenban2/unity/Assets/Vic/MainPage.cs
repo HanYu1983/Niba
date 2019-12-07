@@ -145,6 +145,7 @@ public class MainPage : Page, IHasMoneyCar
             EarnRow er = item.GetComponent<EarnRow>();
             er.id = itemModel.Id;
             er.memo.text = itemModel.Memo.ToString();
+            Debug.Log(itemModel.Memo);
             er.time.text = itemModel.Time.ToString();
             er.money.text = itemModel.Money.ToString();
             er.Btn_edit.onClick.AddListener(onBtnEditClick(er));

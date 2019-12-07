@@ -19,4 +19,7 @@ public interface IModel
     List<MemoItem> AddMemo(string memo);
     List<MemoItem> SelectMemo(string memo);
     List<MemoItem> UnSelectMemo(string memo);
+
+    string MemoListToString(List<MemoItem> list);
+    //List<MemoItem> StringToMemoList(string memo);
 }

@@ -10,8 +10,7 @@ public class MemoPage : Page
         get { return _id; }
         set {
             _id = value;
-            Item item = Model.GetItemCacheById(_id);
-            GetTagController().ContentText = item.Memo;
+            GetTagController().Id = Id;
         }
     }
 
