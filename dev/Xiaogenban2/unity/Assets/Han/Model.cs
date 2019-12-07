@@ -28,6 +28,11 @@ public class Model : MonoBehaviour, IModel{
         
     }
 
+    void OnDeleteEarn()
+    {
+        OnDataChange();
+    }
+
     void OnAddMemo()
     {
         OnDataChange();
@@ -48,7 +53,6 @@ public class Model : MonoBehaviour, IModel{
     void OnEarnMemoChange()
     {
         OnDataChange();
-        UnSelectAllMemo();
     }
 
     #region earn
@@ -117,6 +121,7 @@ public class Model : MonoBehaviour, IModel{
             return;
         }
         earns.Remove(id);
+        OnDeleteEarn();
         callback(null, GetItemListCache());
     }
 
@@ -305,7 +310,7 @@ public class Model : MonoBehaviour, IModel{
         return memoItems.Values.Where(d=>d.Memo != null && d.Memo.Contains(memoFilter)).ToList();
     }
 
-    public void UnSelectAllMemo()
+    public void ClearSelectMemo()
     {
         foreach (var m in memoItems.Values)
         {
@@ -433,15 +438,7 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
-    public List<MemoItem> FilterMemo(string memo)
-    {
-        throw new NotImplementedException();
-    }
-
-    public void ClearSelectMemo()
-    {
-        throw new NotImplementedException();
-    }
+    
 
 
     #endregion
