@@ -39,8 +39,7 @@ class TagController : MonoBehaviour
         if(showByItem)
         {
             Item item = Model.GetItemCacheById(this.Id);
-                list = Model.SelectMemo(item.Memo);
-                Debug.Log(list.Count);
+            list = Model.SelectMemo(item.Memo);
         }else{
             list = Model.GetMemoList();
         }
