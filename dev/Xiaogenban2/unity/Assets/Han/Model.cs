@@ -44,6 +44,12 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
+    void OnEarnMemoChange()
+    {
+        OnDataChange();
+        UnSelectAllMemo();
+    }
+
     #region earn
     public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
     private int seqId = 0;
@@ -84,6 +90,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.memo = memo;
         earns[id] = earn;
+        OnEarnMemoChange();
         callback(null, earns.Values.Select(Earn2Item).ToList());
     }
 
@@ -285,11 +292,23 @@ public class Model : MonoBehaviour, IModel{
         return memoItems.Values.ToList();
     }
 
+    public void UnSelectAllMemo()
+    {
+        foreach (var m in memoItems.Values)
+        {
+            m.isSelect = false;
+        }
+    }
+
     public List<MemoItem> SelectMemo(string memo)
     {
         var datas = memo.Split(SplitTag);
         foreach (string m in datas)
         {
+            if(memoItems.ContainsKey(m) == false)
+            {
+                continue;
+            }
             memoItems[m].isSelect = true;
         }
         return GetMemoList();
@@ -300,6 +319,10 @@ public class Model : MonoBehaviour, IModel{
         var datas = memo.Split(SplitTag);
         foreach (string m in datas)
         {
+            if (memoItems.ContainsKey(m) == false)
+            {
+                continue;
+            }
             memoItems[m].isSelect = false;
         }
         return GetMemoList();
@@ -309,7 +332,7 @@ public class Model : MonoBehaviour, IModel{
     public List<MemoItem> AddMemo(string memo)
     {
         var datas = memo.Split(SplitTag);
-        var memos = datas.Select(d =>
+        var memos = datas.Distinct().Select(d =>
         {
             return new MemoItem(d.Trim(), true);
         }).Where(m =>
@@ -327,7 +350,7 @@ public class Model : MonoBehaviour, IModel{
 
     public string MemoListToString(List<MemoItem> list)
     {
-        return string.Join(";", list.Select(d => d.Memo).ToArray());
+        return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
     }
     /*
     public List<MemoItem> StringToMemoList(string memo)
