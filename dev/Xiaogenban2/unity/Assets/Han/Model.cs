@@ -41,8 +41,8 @@ public class Model : MonoBehaviour, IModel{
     {
         try
         {
-            // Save(GetMemonto());
-            // SaveToCloud();
+            Save(GetMemonto());
+            SaveToCloud();
         }
         catch (Exception e)
         {
@@ -96,7 +96,8 @@ public class Model : MonoBehaviour, IModel{
     {
         if (earns.ContainsKey(id) == false)
         {
-            callback(new System.Exception(id + " not found"), null);
+            InvokeErrorAction(id + " not found");
+            callback(null, null);
             return;
         }
         var earn = earns[id];
@@ -111,7 +112,7 @@ public class Model : MonoBehaviour, IModel{
     {
         if (earns.ContainsKey(id) == false)
         {
-            callback(new System.Exception(id + " not found"), null);
+            InvokeErrorAction(id + " not found");
             return;
         }
         var earn = earns[id];
@@ -137,20 +138,29 @@ public class Model : MonoBehaviour, IModel{
     {
         if (earns.ContainsKey(id) == false)
         {
-            throw new System.Exception(id + " not found");
+            InvokeErrorAction(id + " not found");
+            return null;
         }
         return Earn2Item(earns[id]);
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
     {
+        if (memo == null)
+        {
+            return (Earn earn) => true;
+        }
+        var tags = memo.Split(SplitTag);
         return (Earn earn) =>
         {
-            if(earn.memo == null)
+            if (string.IsNullOrEmpty(memo))
             {
-                return false;
+                if (earn.memo == null)
+                {
+                    return true;
+                }
             }
-            return earn.memo.Contains(memo);
+            return tags.Select(tag => earn.memo.Contains(tag)).Aggregate((acc, c) => acc || c);
         };
     }
 
@@ -305,7 +315,7 @@ public class Model : MonoBehaviour, IModel{
 
     #region memo
     private Dictionary<string, MemoItem> memoItems = new Dictionary<string, MemoItem>();
-    private char[] SplitTag = new char[] {';'};
+    private static char[] SplitTag = new char[] {';'};
     private string memoFilter;
 
     public void SetFilterMemo(string filter)
@@ -394,11 +404,7 @@ public class Model : MonoBehaviour, IModel{
     {
         return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
     }
-    /*
-    public List<MemoItem> StringToMemoList(string memo)
-    {
-        throw new NotImplementedException();
-    }*/
+
     #endregion
 
 
@@ -503,9 +509,12 @@ public class Model : MonoBehaviour, IModel{
 
     private UnityAction<string> errorAction;
 
-    public UnityAction<string> GetErrorAction()
+    public void InvokeErrorAction(string msg)
     {
-        return errorAction;
+        if (errorAction != null)
+        {
+            errorAction(msg);
+        }
     }
 
     public void SetErrorAction(UnityAction<string> callback)
