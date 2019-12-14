@@ -392,8 +392,7 @@ public class Model : MonoBehaviour, IModel{
 
     public string MemoListToString(List<MemoItem> list)
     {
-        //return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
-        return "temp";
+        return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
     }
     /*
     public List<MemoItem> StringToMemoList(string memo)
