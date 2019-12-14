@@ -83,6 +83,7 @@ public class View : MonoBehaviour {
     public void OnMainPageSearchBackClick()
     {
         GetMainPage().IsSearch = false;
+        GetMainPage().filterMemo = "";
         GetMainPage().RefreshList();
     }
 
@@ -278,10 +279,11 @@ public class View : MonoBehaviour {
     {
         List<MemoItem> memos = Model.GetMemoList();
         string searchString = Model.MemoListToString(memos);
+        GetMainPage().filterMemo = searchString;
         if (searchString != "")
         {
             GetMainPage().IsSearch = true;
-            GetMainPage().RefreshList(searchString);
+            GetMainPage().RefreshList();
         }
         CloseSearchPage();
     }
