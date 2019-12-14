@@ -172,7 +172,7 @@ public class DebugModel : MonoBehaviour, IModel
 
     public bool IsValidID(string id)
     {
-        return false;
+        return true;
     }
 
     public void SetErrorAction(UnityAction<string> callback)

@@ -29,5 +29,8 @@ public class PopPage : Page
     public override void Close()
     {
         base.Close();
+
+        if(BtnConfirm)  BtnConfirm.onClick.RemoveAllListeners();
+        if(BtnCancel)   BtnCancel.onClick.RemoveAllListeners();
     }
 }
