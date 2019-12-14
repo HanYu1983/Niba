@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public interface IModel
 {
+    void SetErrorAction(UnityAction<string> callback);
+
     void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback);
     void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback);
     void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback);

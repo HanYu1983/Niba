@@ -174,4 +174,9 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return false;
     }
+
+    public void SetErrorAction(UnityAction<string> callback)
+    {
+        Debug.Log("註冊錯誤方法");
+    }
 }

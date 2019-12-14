@@ -458,6 +458,11 @@ public class Model : MonoBehaviour, IModel{
         throw new NotImplementedException();
     }
 
+    public void SetErrorAction(UnityAction<string> callback)
+    {
+        throw new NotImplementedException();
+    }
+
 
 
 

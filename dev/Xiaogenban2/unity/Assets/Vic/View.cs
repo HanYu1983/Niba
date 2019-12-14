@@ -363,9 +363,22 @@ public class View : MonoBehaviour {
             page.GetComponent<IPage>().View = this;
             page.GetComponent<IPage>().Init();
         }
+
+        Model.SetErrorAction(delegate (string error)
+        {
+            OpenPopPage(error,
+                delegate () {
+                    ClosePopPage();
+                },
+                delegate ()
+                {
+                    ClosePopPage();
+                });
+        });
+
     }
-    
-	void Start () {
+
+    void Start () {
         InitPages();
         OpenMainPage();
 	}
