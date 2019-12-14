@@ -291,7 +291,7 @@ public class CloudSave : MonoBehaviour {
             {
                 error = www.error;
                 Debug.Log(error);
-                continue;
+                yield break;
             }
 
             var earnStr = getEarn.downloadHandler.text;
