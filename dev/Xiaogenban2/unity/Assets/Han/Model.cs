@@ -527,7 +527,7 @@ public class Model : MonoBehaviour, IModel{
             return true;
         }
         lastInputCloudId = id;
-        return cloudSave.GetId() == id;
+        return true;
     }
 
     private UnityAction<string> errorAction;
