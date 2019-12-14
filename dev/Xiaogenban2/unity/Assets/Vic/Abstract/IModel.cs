@@ -29,5 +29,5 @@ public interface IModel
     bool IsValidID(string id);
     string GetUserID();
     string GetShowID(string id);
-    void GetUserData(string id, UnityAction callback);
+    void GetUserData(string id, UnityAction<bool> callback);
 }

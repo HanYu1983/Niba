@@ -25,12 +25,12 @@ public class PopPage : Page
         BtnCancel.onClick.RemoveAllListeners();
         BtnCancel.onClick.AddListener(method);
     }
-
+    
     public override void Close()
     {
         base.Close();
 
-        if(BtnConfirm)  BtnConfirm.onClick.RemoveAllListeners();
+        if (BtnConfirm)  BtnConfirm.onClick.RemoveAllListeners();
         if(BtnCancel)   BtnCancel.onClick.RemoveAllListeners();
     }
 }

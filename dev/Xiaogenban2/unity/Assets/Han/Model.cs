@@ -495,12 +495,12 @@ public class Model : MonoBehaviour, IModel{
         return string.Join("-", buf);
     }
 
-    public void GetUserData(string id, UnityAction callback)
+    public void GetUserData(string id, UnityAction<bool> callback)
     {
         StartCoroutine(LoadFromCloud(callback));
     }
 
-    private IEnumerator LoadFromCloud(UnityAction callback)
+    private IEnumerator LoadFromCloud(UnityAction<bool> callback)
     {
         yield return cloudSave.LoadFromCloud(lastInputCloudId);
         try
@@ -508,12 +508,14 @@ public class Model : MonoBehaviour, IModel{
             var memonto = cloudSave.GetModelMemonto();
             SetMemonto(memonto);
             Save(memonto);
+            callback(true);
         }
         catch (Exception e)
         {
             InvokeErrorAction(e.Message);
+            callback(false);
         }
-        callback();
+        
     }
 
     public bool IsValidID(string id)
@@ -540,7 +542,6 @@ public class Model : MonoBehaviour, IModel{
 
     public void SetErrorAction(UnityAction<string> callback)
     {
-        Debug.Log("SetErrorAction");
         errorAction = callback;
     }
 

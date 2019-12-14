@@ -165,9 +165,9 @@ public class DebugModel : MonoBehaviour, IModel
         return "22-33-44";
     }
 
-    public void GetUserData(string id, UnityAction callback)
+    public void GetUserData(string id, UnityAction<bool> callback)
     {
-        callback();
+        callback(true);
     }
 
     public bool IsValidID(string id)

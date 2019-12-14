@@ -28,11 +28,14 @@ public class View : MonoBehaviour {
             OpenPopPage("確定要取回資料嗎?本地的資料會丟失哦!",
             delegate () {
                 OpenLoadingPage("取回資料中，請稍等…");
-                Model.GetUserData(GetDataPage().InputID, delegate ()
+                Model.GetUserData(GetDataPage().InputID, delegate (bool success)
                 {
-                    GetDataPage().Close();
-                    GetPopPage().Close();
-                    OpenMainPage();
+                    if (success)
+                    {
+                        GetDataPage().Close();
+                        GetPopPage().Close();
+                        OpenMainPage();
+                    }
                     CloseLoadingPage();
                 });
             },
