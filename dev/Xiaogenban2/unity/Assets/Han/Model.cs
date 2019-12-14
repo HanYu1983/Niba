@@ -42,7 +42,7 @@ public class Model : MonoBehaviour, IModel{
     {
         try
         {
-            Save();
+            Save(GetMemonto());
         }
         catch (Exception e)
         {
@@ -393,19 +393,17 @@ public class Model : MonoBehaviour, IModel{
     #region save
     private const string fileName = "save.json";
 
-    private struct Temp
+    public Memonto GetMemonto()
     {
-        public int seqId;
-        public List<Earn> earns;
-        public List<string> memo;
-    }
-
-    public void Save()
-    {
-        Temp temp;
+        Memonto temp;
         temp.seqId = this.seqId;
         temp.earns = new List<Earn>(earns.Values);
-        temp.memo = new List<string>(memoItems.Values.Select(d=>d.Memo));
+        temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
+        return temp;
+    }
+
+    public void Save(Memonto temp)
+    {
         string json = JsonUtility.ToJson(temp, true);
         
         var filePath = Application.persistentDataPath + "/" + fileName;
@@ -424,7 +422,7 @@ public class Model : MonoBehaviour, IModel{
         }
 
         string json = File.ReadAllText(filePath);
-        var temp = JsonUtility.FromJson<Temp>(json);
+        var temp = JsonUtility.FromJson<Memonto>(json);
         seqId = temp.seqId;
         earns.Clear();
         foreach(var earn in temp.earns)
@@ -437,9 +435,5 @@ public class Model : MonoBehaviour, IModel{
             memoItems.Add(m, new MemoItem(m, false));
         }
     }
-
-    
-
-
     #endregion
 }
