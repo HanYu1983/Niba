@@ -18,4 +18,5 @@ public struct Memonto
     public int seqId;
     public List<Earn> earns;
     public List<string> memo;
+    public static Memonto empty;
 }

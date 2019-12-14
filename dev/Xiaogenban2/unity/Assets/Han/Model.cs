@@ -25,7 +25,6 @@ public class Model : MonoBehaviour, IModel{
     {
         OnDataChange();
         ClearCar();
-        
     }
 
     void OnDeleteEarn()
@@ -42,7 +41,8 @@ public class Model : MonoBehaviour, IModel{
     {
         try
         {
-            Save(GetMemonto());
+            // Save(GetMemonto());
+            // SaveToCloud();
         }
         catch (Exception e)
         {
@@ -62,7 +62,7 @@ public class Model : MonoBehaviour, IModel{
 
     public static Item Earn2Item(Earn earn)
     {
-        var time = new DateTime(earn.createUTC);
+        var time = new DateTime(earn.createUTC).ToLocalTime();
         var timeStr = time.ToLongDateString() + time.ToLongTimeString();
         return new Item(earn.id, earn.money, earn.memo, timeStr);
     }
@@ -72,10 +72,17 @@ public class Model : MonoBehaviour, IModel{
         var earn = Earn.empty;
         earn.id = seqId++;
         earn.money = money;
-        earn.memo = memo;
-        if(earn.memo == null)
+        if(memo == null)
         {
             earn.memo = lastInputEarn.memo;
+            if(earn.memo == null)
+            {
+                earn.memo = "";
+            }
+        }
+        else
+        {
+            earn.memo = memo;
         }
         earn.createUTC = System.DateTime.UtcNow.Ticks;
         earns[earn.id] = earn;
@@ -95,6 +102,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.memo = memo;
         earns[id] = earn;
+        lastInputEarn = earn;
         OnEarnMemoChange();
         callback(null, GetItemListCache());
     }
@@ -138,6 +146,10 @@ public class Model : MonoBehaviour, IModel{
     {
         return (Earn earn) =>
         {
+            if(earn.memo == null)
+            {
+                return false;
+            }
             return earn.memo.Contains(memo);
         };
     }
@@ -380,7 +392,8 @@ public class Model : MonoBehaviour, IModel{
 
     public string MemoListToString(List<MemoItem> list)
     {
-        return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
+        //return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
+        return "temp";
     }
     /*
     public List<MemoItem> StringToMemoList(string memo)
@@ -421,17 +434,17 @@ public class Model : MonoBehaviour, IModel{
     {
         string json = JsonUtility.ToJson(temp, true);
         var filePath = Application.persistentDataPath + "/" + fileName;
-        Debug.LogWarningFormat("save to {0}...", filePath);
+        Debug.LogFormat("save to {0}...", filePath);
         File.WriteAllText(filePath, json);
     }
 
     public void Load()
     {
         var filePath = Application.persistentDataPath + "/" + fileName;
-        Debug.LogWarningFormat("load from {0}...", filePath);
+        Debug.LogFormat("load from {0}...", filePath);
         if (File.Exists(filePath) == false)
         {
-            Debug.LogWarningFormat("%s not found", filePath);
+            Debug.LogFormat("{0} not found", filePath);
             return;
         }
         string json = File.ReadAllText(filePath);
@@ -443,6 +456,11 @@ public class Model : MonoBehaviour, IModel{
     #region cloud save
     public CloudSave cloudSave;
     private string lastInputCloudId;
+
+    public void SaveToCloud()
+    {
+        StartCoroutine(cloudSave.SaveToCloud());
+    }
 
     public string GetUserID()
     {
@@ -469,6 +487,7 @@ public class Model : MonoBehaviour, IModel{
         yield return cloudSave.LoadFromCloud(lastInputCloudId);
         var memonto = cloudSave.GetModelMemonto();
         SetMemonto(memonto);
+        Save(memonto);
         callback();
     }
 

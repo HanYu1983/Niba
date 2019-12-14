@@ -5,13 +5,13 @@ using UnityEngine.Networking;
 using System.IO;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 public class CloudSave : MonoBehaviour {
 
     void Start()
     {
         LoadMeta();
-        StartCoroutine(LoadFromOld());
     }
 
     public string fileNameToSave = "save.json";
@@ -31,20 +31,48 @@ public class CloudSave : MonoBehaviour {
         return id;
     }
 
-    public void SaveToCloud()
+    public IEnumerator SaveToCloud()
     {
+        yield return null;
         if (string.IsNullOrEmpty(id))
         {
             Debug.LogFormat("id not generat yet!");
-            return;
+            yield break;
         }
 
         var filePath = Application.persistentDataPath + "/" + fileNameToSave;
         Debug.LogFormat("use file {0}", filePath);
 
+        if(File.Exists(filePath) == false)
+        {
+            Debug.LogFormat("file {0} not found. ignore save to cloud", filePath);
+            yield break;
+        }
+
+        var content = File.ReadAllText(filePath);
         string path = cloudHost + cloudPath.Replace("{id}", id);
         Debug.LogFormat("save to {0}", path);
-        
+
+        WWWForm form = new WWWForm();
+        form.AddField("Content", content);
+        form.AddField("Override", "");
+        var request = new UnityWebRequest(path, "POST");
+        // 需要加上這行, POST中資料才能成功上傳
+        // source: https://stackoverflow.com/questions/48627680/unitywebrequest-post-to-php-not-work
+        request.chunkedTransfer = false;
+        request.uploadHandler = new UploadHandlerRaw(form.data);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+        yield return request.SendWebRequest();
+
+        if (request.isNetworkError || request.isHttpError)
+        {
+            Debug.Log(request.error);
+            yield break;
+        }
+
+        var content2 = request.downloadHandler.text;
+        Debug.Log(content2);
     }
 
     private struct Meta
@@ -60,9 +88,12 @@ public class CloudSave : MonoBehaviour {
         {
             Debug.LogFormat("{0} not found. gen cloud id", filePath);
             GenId();
+
+            Meta meta;
+            meta.id = id;
+            File.WriteAllText(filePath, JsonUtility.ToJson(meta));
             return;
         }
-
         string json = File.ReadAllText(filePath);
         var temp = JsonUtility.FromJson<Meta>(json);
         id = temp.id;
@@ -73,6 +104,7 @@ public class CloudSave : MonoBehaviour {
         if(targetId == "0000")
         {
             yield return LoadFromOld();
+            yield break;
         }
 
         string path = cloudHost + cloudPath.Replace("{id}", targetId);
@@ -92,6 +124,9 @@ public class CloudSave : MonoBehaviour {
         {
             yield break;
         }
+
+        var memonto = JsonUtility.FromJson<Memonto>(content);
+        SetModelMemonto(memonto);
     }
 
     [Serializable]
@@ -118,7 +153,7 @@ public class CloudSave : MonoBehaviour {
         {
             get
             {
-                return booth + "" + date;
+                return booth + "_" + date;
             }
         }
     }
@@ -127,32 +162,63 @@ public class CloudSave : MonoBehaviour {
     {
         public List<OldEarn> earns;
     }
-
     
-
-    private List<OldEarn> allEarns = new List<OldEarn>();
     private int seqId = 0;
+
+    private bool FilterComment(string comment)
+    {
+        if (string.IsNullOrEmpty(comment))
+        {
+            return false;
+        }
+        var match = Regex.Match(comment, "[+\\-0-9]+");
+        if (match.Success)
+        {
+            if (match.Value == comment)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private Earn OldEarn2Earn(OldEarn old)
     {
         Earn earn;
         earn.id = seqId++;
         earn.money = old.money;
         earn.createUTC = new DateTime(old.date).ToUniversalTime().Ticks;
-        earn.memo = old.booth + (string.IsNullOrEmpty(old.comment) ? "" : ";"+old.comment);
+        earn.memo = old.booth;
+        if (FilterComment(old.comment))
+        {
+            earn.memo += ";" + old.comment;
+        }
         return earn;
     }
 
+    private Memonto modelMemonto = Memonto.empty;
+
     public Memonto GetModelMemonto()
     {
-        Memonto temp;        
-        temp.earns = allEarns.Select(OldEarn2Earn).ToList();
-        temp.memo = allEarns.Select(d => d.comment).Distinct().Concat(allEarns.Select(d => d.booth).Distinct()).ToList();
-        temp.seqId = seqId;
-        return temp;
+        return modelMemonto;
+    }
+
+    private void SetModelMemonto(Memonto m)
+    {
+        this.modelMemonto = m;
+    }
+
+    private void GenModelMemonto(List<OldEarn> allEarns)
+    {
+        modelMemonto.earns = allEarns.Select(OldEarn2Earn).ToList();
+        modelMemonto.memo = allEarns.Select(d => d.comment).Where(FilterComment).Distinct().Concat(allEarns.Select(d => d.booth).Distinct()).ToList();
+        // 注意: seqId會在OldEarn2Earn中被改變
+        modelMemonto.seqId = seqId;
     }
 
     public IEnumerator LoadFromOld()
     {
+        Debug.Log("============LoadFromOld=============");
         yield return null;
 
         UnityWebRequest www = UnityWebRequest.Get("https://particle-979.appspot.com/nightmarketssistentdbfile2/root/NightmarketAssistant/1e13a986c7022ea2725e9cd7a7bd186c/earns/earn_");
@@ -177,13 +243,20 @@ public class CloudSave : MonoBehaviour {
             yield break;
         }
 
-        allEarns.Clear();
+        var allEarns = new List<OldEarn>();
         var keys = new HashSet<string>();
         foreach (var item in res.Info)
         {
             var path = "https://particle-979.appspot.com/nightmarketssistentdbfile2/" + item.Name;
+            Debug.Log(path);
             UnityWebRequest getEarn = UnityWebRequest.Get(path);
             yield return getEarn.SendWebRequest();
+
+            if (getEarn.isNetworkError || getEarn.isHttpError)
+            {
+                Debug.Log(www.error);
+                continue;
+            }
 
             var earnStr = getEarn.downloadHandler.text;
             var earns = JsonUtility.FromJson<OldEarnJson>(earnStr);
@@ -197,8 +270,8 @@ public class CloudSave : MonoBehaviour {
                 keys.Add(earn.Key);
                 allEarns.Add(earn);
             }
-            break;
         }
-        
+
+        GenModelMemonto(allEarns);
     }
 }
