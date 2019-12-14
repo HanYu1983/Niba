@@ -4,5 +4,6 @@
     Memo=2,
     Search=3,
     Pop=4,
-    Data=5
+    Data=5,
+    Loading=6
 };

@@ -27,11 +27,13 @@ public class View : MonoBehaviour {
         {
             OpenPopPage("確定要取回資料嗎?本地的資料會丟失哦!",
             delegate () {
+                OpenLoadingPage("取回資料中，請稍等…");
                 Model.GetUserData(GetDataPage().InputID, delegate ()
                 {
                     GetDataPage().Close();
                     GetPopPage().Close();
                     OpenMainPage();
+                    CloseLoadingPage();
                 });
             },
             delegate () {
@@ -52,6 +54,17 @@ public class View : MonoBehaviour {
     public void OnDataPageInputChange()
     {
         GetDataPage().ShowClearID();
+    }
+
+    void OpenLoadingPage(string content)
+    {
+        GetLoadingPage().Open();
+        GetLoadingPage().Content = content;
+    }
+
+    void CloseLoadingPage()
+    {
+        GetLoadingPage().Close();
     }
 
     public void OpenMainPage()
@@ -318,6 +331,11 @@ public class View : MonoBehaviour {
     public void ClosePopPage()
     {
         GetPopPage().Close();
+    }
+
+    LoadingPage GetLoadingPage()
+    {
+        return pages[(int)EPage.Loading].GetComponent<LoadingPage>();
     }
 
     DataPage GetDataPage()
