@@ -26,6 +26,11 @@ public class CloudSave : MonoBehaviour {
         id = System.DateTime.UtcNow.Ticks + "";
     }
 
+    public string GetId()
+    {
+        return id;
+    }
+
     public void SaveToCloud()
     {
         if (string.IsNullOrEmpty(id))
@@ -65,7 +70,7 @@ public class CloudSave : MonoBehaviour {
 
     public IEnumerator LoadFromCloud(string targetId)
     {
-        if(targetId == "test")
+        if(targetId == "0000")
         {
             yield return LoadFromOld();
         }
@@ -133,7 +138,7 @@ public class CloudSave : MonoBehaviour {
         earn.id = seqId++;
         earn.money = old.money;
         earn.createUTC = new DateTime(old.date).ToUniversalTime().Ticks;
-        earn.memo = old.comment;
+        earn.memo = old.booth + (string.IsNullOrEmpty(old.comment) ? "" : ";"+old.comment);
         return earn;
     }
 

@@ -42,7 +42,7 @@ public class Model : MonoBehaviour, IModel{
     {
         try
         {
-            Save();
+            Save(GetMemonto());
         }
         catch (Exception e)
         {
@@ -393,21 +393,33 @@ public class Model : MonoBehaviour, IModel{
     #region save
     private const string fileName = "save.json";
 
-    private struct Temp
+    public void SetMemonto(Memonto temp)
     {
-        public int seqId;
-        public List<Earn> earns;
-        public List<string> memo;
+        seqId = temp.seqId;
+        earns.Clear();
+        foreach (var earn in temp.earns)
+        {
+            earns.Add(earn.id, earn);
+        }
+        memoItems.Clear();
+        foreach (var m in temp.memo)
+        {
+            memoItems.Add(m, new MemoItem(m, false));
+        }
     }
 
-    public void Save()
+    public Memonto GetMemonto()
     {
-        Temp temp;
+        Memonto temp;
         temp.seqId = this.seqId;
         temp.earns = new List<Earn>(earns.Values);
-        temp.memo = new List<string>(memoItems.Values.Select(d=>d.Memo));
+        temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
+        return temp;
+    }
+
+    public void Save(Memonto temp)
+    {
         string json = JsonUtility.ToJson(temp, true);
-        
         var filePath = Application.persistentDataPath + "/" + fileName;
         Debug.LogWarningFormat("save to {0}...", filePath);
         File.WriteAllText(filePath, json);
@@ -422,49 +434,66 @@ public class Model : MonoBehaviour, IModel{
             Debug.LogWarningFormat("%s not found", filePath);
             return;
         }
-
         string json = File.ReadAllText(filePath);
-        var temp = JsonUtility.FromJson<Temp>(json);
-        seqId = temp.seqId;
-        earns.Clear();
-        foreach(var earn in temp.earns)
-        {
-            earns.Add(earn.id, earn);
-        }
-        memoItems.Clear();
-        foreach (var m in temp.memo)
-        {
-            memoItems.Add(m, new MemoItem(m, false));
-        }
+        var temp = JsonUtility.FromJson<Memonto>(json);
+        SetMemonto(temp);
     }
+    #endregion
+
+    #region cloud save
+    public CloudSave cloudSave;
+    private string lastInputCloudId;
 
     public string GetUserID()
     {
-        throw new NotImplementedException();
+        return GetShowID(cloudSave.GetId());
     }
 
     public string GetShowID(string id)
     {
-        throw new NotImplementedException();
+        var buf = new List<string>();
+        for(var i=0; i<id.Length; i += 4)
+        {
+            buf.Add(id.Substring(i, Math.Min(id.Length, i+4) - i));
+        }
+        return string.Join("-", buf);
     }
 
     public void GetUserData(string id, UnityAction callback)
     {
-        throw new NotImplementedException();
+        StartCoroutine(LoadFromCloud(callback));
+    }
+
+    private IEnumerator LoadFromCloud(UnityAction callback)
+    {
+        yield return cloudSave.LoadFromCloud(lastInputCloudId);
+        var memonto = cloudSave.GetModelMemonto();
+        SetMemonto(memonto);
+        callback();
     }
 
     public bool IsValidID(string id)
     {
-        throw new NotImplementedException();
+        if (id == "0000")
+        {
+            lastInputCloudId = id;
+            return true;
+        }
+        lastInputCloudId = id;
+        return GetUserID() == id;
+    }
+
+    private UnityAction<string> errorAction;
+
+    public UnityAction<string> GetErrorAction()
+    {
+        return errorAction;
     }
 
     public void SetErrorAction(UnityAction<string> callback)
     {
-        throw new NotImplementedException();
+        errorAction = callback;
     }
-
-
-
 
     #endregion
 }
