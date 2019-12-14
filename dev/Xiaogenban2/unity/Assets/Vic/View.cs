@@ -148,7 +148,7 @@ public class View : MonoBehaviour {
             {
                 Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
                 {
-                    GetMainPage().UpdateItemList(list);
+                    GetMainPage().Open();
                     ClosePopPage();
                 });
             },
@@ -166,7 +166,7 @@ public class View : MonoBehaviour {
             {
                 Model.DeleteItem(id, delegate (object error, List<Item> list)
                 {
-                    GetMainPage().UpdateItemList(list);
+                    GetMainPage().Open();
                     ClosePopPage();
                 });
             },
@@ -256,7 +256,7 @@ public class View : MonoBehaviour {
         List<MemoItem> memos = Model.GetMemoList();
         Model.ChangeItemMemo(id, Model.MemoListToString(memos), delegate (object error, List<Item> list)
         {
-            GetMainPage().UpdateItemList(list);
+            GetMainPage().Open();
             CloseMemoPage();
         });
     }
