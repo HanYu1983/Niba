@@ -476,6 +476,7 @@ public class Model : MonoBehaviour, IModel{
         }
         catch (Exception e)
         {
+            Debug.Log(e.Message);
             // InvokeErrorAction(e.Message);
         }
     }
@@ -533,7 +534,7 @@ public class Model : MonoBehaviour, IModel{
 
     public void InvokeErrorAction(string msg)
     {
-        Debug.Log("InvokeErrorAction " + errorAction);
+        Debug.Log(msg);
         if (errorAction != null)
         {
             errorAction(msg);
