@@ -4,4 +4,5 @@
     Memo=2,
     Search=3,
     Pop=4,
+    Data=5
 };

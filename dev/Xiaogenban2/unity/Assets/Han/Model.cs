@@ -438,7 +438,27 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
-    
+    public string GetUserID()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetShowID(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetUserData(string id, UnityAction callback)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsValidID(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+
 
 
     #endregion

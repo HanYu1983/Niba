@@ -23,4 +23,9 @@ public interface IModel
     void ClearSelectMemo();
 
     string MemoListToString(List<MemoItem> list);
+
+    bool IsValidID(string id);
+    string GetUserID();
+    string GetShowID(string id);
+    void GetUserData(string id, UnityAction callback);
 }

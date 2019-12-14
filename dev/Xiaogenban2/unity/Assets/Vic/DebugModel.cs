@@ -152,6 +152,26 @@ public class DebugModel : MonoBehaviour, IModel
 
     public void ClearSelectMemo()
     {
-        throw new System.NotImplementedException();
+        
+    }
+
+    public string GetUserID()
+    {
+        return "1111-2222-3333-4444-55";
+    }
+
+    public string GetShowID(string id)
+    {
+        return "22-33-44";
+    }
+
+    public void GetUserData(string id, UnityAction callback)
+    {
+        callback();
+    }
+
+    public bool IsValidID(string id)
+    {
+        return false;
     }
 }
