@@ -2899,6 +2899,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58a45f1d31eae3943b4cb9bcb556dbee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cloudSave: {fileID: 0}
 --- !u!4 &297523640
 Transform:
   m_ObjectHideFlags: 0
@@ -8472,12 +8473,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 850135621}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eae0745abc93bde4cb9a9f5f6348f3ee, type: 3}
+  m_Script: {fileID: 11500000, guid: e30b201cdbd6c124bab01b916dd2c6d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TxtContent: {fileID: 0}
-  BtnConfirm: {fileID: 0}
-  BtnCancel: {fileID: 0}
+  TxtContent: {fileID: 1166289753}
 --- !u!1 &851224646
 GameObject:
   m_ObjectHideFlags: 0
