@@ -12,3 +12,10 @@ public struct Earn
     public string memo;
     public static Earn empty;
 }
+
+public struct Memonto
+{
+    public int seqId;
+    public List<Earn> earns;
+    public List<string> memo;
+}
