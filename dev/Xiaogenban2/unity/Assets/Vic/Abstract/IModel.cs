@@ -3,6 +3,8 @@ using UnityEngine.Events;
 
 public interface IModel
 {
+    void SetErrorAction(UnityAction<string> callback);
+
     void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback);
     void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback);
     void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback);
@@ -23,4 +25,9 @@ public interface IModel
     void ClearSelectMemo();
 
     string MemoListToString(List<MemoItem> list);
+
+    bool IsValidID(string id);
+    string GetUserID();
+    string GetShowID(string id);
+    void GetUserData(string id, UnityAction callback);
 }

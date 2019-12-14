@@ -19,10 +19,49 @@ public class View : MonoBehaviour {
         }
         pages[(int)id].GetComponent<IPage>().Open();
     }
+    
+    public void OnDataPageConfirmClick()
+    {
+        bool isValid = Model.IsValidID(GetDataPage().InputID);
+        if (isValid)
+        {
+            OpenPopPage("確定要取回資料嗎?本地的資料會丟失哦!",
+            delegate () {
+                Model.GetUserData(GetDataPage().InputID, delegate ()
+                {
+                    GetDataPage().Close();
+                    GetPopPage().Close();
+                    OpenMainPage();
+                });
+            },
+            delegate () {
+                GetPopPage().Close();
+            });
+        }
+        else
+        {
+            GetDataPage().ShowID = "內容有誤哦，請檢查！";
+        }
+    }
+
+    public void OnDataPageCancelClick()
+    {
+        GetDataPage().Close();
+    }
+
+    public void OnDataPageInputChange()
+    {
+        GetDataPage().ShowClearID();
+    }
 
     public void OpenMainPage()
     {
         OpenTargetPage(EPage.Main);
+    }
+
+    public void OnMainPageBtnDataClick()
+    {
+        GetDataPage().Open();
     }
 
     public void OnMainPageSearchBackClick()
@@ -281,6 +320,11 @@ public class View : MonoBehaviour {
         GetPopPage().Close();
     }
 
+    DataPage GetDataPage()
+    {
+        return pages[(int)EPage.Data].GetComponent<DataPage>();
+    }
+
     MainPage GetMainPage()
     {
         return pages[(int)EPage.Main].GetComponent<MainPage>();
@@ -319,9 +363,22 @@ public class View : MonoBehaviour {
             page.GetComponent<IPage>().View = this;
             page.GetComponent<IPage>().Init();
         }
+
+        Model.SetErrorAction(delegate (string error)
+        {
+            OpenPopPage(error,
+                delegate () {
+                    ClosePopPage();
+                },
+                delegate ()
+                {
+                    ClosePopPage();
+                });
+        });
+
     }
-    
-	void Start () {
+
+    void Start () {
         InitPages();
         OpenMainPage();
 	}

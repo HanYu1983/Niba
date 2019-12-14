@@ -42,7 +42,7 @@ public class Model : MonoBehaviour, IModel{
     {
         try
         {
-            Save(GetMemonto());
+            Save();
         }
         catch (Exception e)
         {
@@ -393,17 +393,19 @@ public class Model : MonoBehaviour, IModel{
     #region save
     private const string fileName = "save.json";
 
-    public Memonto GetMemonto()
+    private struct Temp
     {
-        Memonto temp;
-        temp.seqId = this.seqId;
-        temp.earns = new List<Earn>(earns.Values);
-        temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
-        return temp;
+        public int seqId;
+        public List<Earn> earns;
+        public List<string> memo;
     }
 
-    public void Save(Memonto temp)
+    public void Save()
     {
+        Temp temp;
+        temp.seqId = this.seqId;
+        temp.earns = new List<Earn>(earns.Values);
+        temp.memo = new List<string>(memoItems.Values.Select(d=>d.Memo));
         string json = JsonUtility.ToJson(temp, true);
         
         var filePath = Application.persistentDataPath + "/" + fileName;
@@ -422,7 +424,7 @@ public class Model : MonoBehaviour, IModel{
         }
 
         string json = File.ReadAllText(filePath);
-        var temp = JsonUtility.FromJson<Memonto>(json);
+        var temp = JsonUtility.FromJson<Temp>(json);
         seqId = temp.seqId;
         earns.Clear();
         foreach(var earn in temp.earns)
@@ -435,5 +437,34 @@ public class Model : MonoBehaviour, IModel{
             memoItems.Add(m, new MemoItem(m, false));
         }
     }
+
+    public string GetUserID()
+    {
+        throw new NotImplementedException();
+    }
+
+    public string GetShowID(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void GetUserData(string id, UnityAction callback)
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool IsValidID(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetErrorAction(UnityAction<string> callback)
+    {
+        throw new NotImplementedException();
+    }
+
+
+
+
     #endregion
 }
