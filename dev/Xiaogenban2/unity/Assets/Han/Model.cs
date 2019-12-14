@@ -63,7 +63,7 @@ public class Model : MonoBehaviour, IModel{
     public static Item Earn2Item(Earn earn)
     {
         var time = new DateTime(earn.createUTC).ToLocalTime();
-        var timeStr = time.ToLongDateString() + time.ToLongTimeString();
+        var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
         return new Item(earn.id, earn.money, earn.memo, timeStr);
     }
 
