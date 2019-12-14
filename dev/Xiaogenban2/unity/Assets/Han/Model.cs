@@ -113,7 +113,7 @@ public class Model : MonoBehaviour, IModel{
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
-            throw new Exception();
+            return;
         }
         var earn = earns[id];
         earn.money = money;
@@ -139,7 +139,7 @@ public class Model : MonoBehaviour, IModel{
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
-            return null;
+            throw new Exception("");
         }
         return Earn2Item(earns[id]);
     }
