@@ -113,7 +113,7 @@ public class Model : MonoBehaviour, IModel{
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
-            return;
+            throw new Exception();
         }
         var earn = earns[id];
         earn.money = money;
@@ -439,14 +439,14 @@ public class Model : MonoBehaviour, IModel{
     {
         string json = JsonUtility.ToJson(temp, true);
         var filePath = Application.persistentDataPath + "/" + fileName;
-        Debug.LogFormat("save to {0}...", filePath);
+        Debug.LogFormat("save to {0}", filePath);
         File.WriteAllText(filePath, json);
     }
 
     public void Load()
     {
         var filePath = Application.persistentDataPath + "/" + fileName;
-        Debug.LogFormat("load from {0}...", filePath);
+        Debug.LogFormat("load from {0}", filePath);
         if (File.Exists(filePath) == false)
         {
             Debug.LogFormat("{0} not found", filePath);
@@ -464,7 +464,20 @@ public class Model : MonoBehaviour, IModel{
 
     public void SaveToCloud()
     {
-        StartCoroutine(cloudSave.SaveToCloud());
+        StartCoroutine(InvokeSaveToCloud());
+    }
+
+    private IEnumerator InvokeSaveToCloud()
+    {
+        yield return cloudSave.SaveToCloud();
+        try
+        {
+            cloudSave.CheckError();
+        }
+        catch (Exception e)
+        {
+            // InvokeErrorAction(e.Message);
+        }
     }
 
     public string GetUserID()
@@ -490,9 +503,16 @@ public class Model : MonoBehaviour, IModel{
     private IEnumerator LoadFromCloud(UnityAction callback)
     {
         yield return cloudSave.LoadFromCloud(lastInputCloudId);
-        var memonto = cloudSave.GetModelMemonto();
-        SetMemonto(memonto);
-        Save(memonto);
+        try
+        {
+            var memonto = cloudSave.GetModelMemonto();
+            SetMemonto(memonto);
+            Save(memonto);
+        }
+        catch (Exception e)
+        {
+            InvokeErrorAction(e.Message);
+        }
         callback();
     }
 
@@ -504,13 +524,14 @@ public class Model : MonoBehaviour, IModel{
             return true;
         }
         lastInputCloudId = id;
-        return GetUserID() == id;
+        return cloudSave.GetId() == id;
     }
 
     private UnityAction<string> errorAction;
 
     public void InvokeErrorAction(string msg)
     {
+        Debug.Log("InvokeErrorAction " + errorAction);
         if (errorAction != null)
         {
             errorAction(msg);
@@ -519,6 +540,7 @@ public class Model : MonoBehaviour, IModel{
 
     public void SetErrorAction(UnityAction<string> callback)
     {
+        Debug.Log("SetErrorAction");
         errorAction = callback;
     }
 
