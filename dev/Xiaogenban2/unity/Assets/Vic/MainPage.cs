@@ -23,6 +23,11 @@ public class MainPage : Page, IHasMoneyCar
     public Button BtnTime;
     public Button BtnCount;
 
+    public string filterMemo
+    {
+        get;set;
+    }
+
     bool _isSearch;
     public bool IsSearch
     {
@@ -105,9 +110,9 @@ public class MainPage : Page, IHasMoneyCar
         RefreshList();
     }
     
-    public void RefreshList(string memo = "")
+    public void RefreshList()
     {
-        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, memo, delegate (object error, List<Item> list)
+        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
         {
             UpdateItemList(list);
         });
@@ -161,8 +166,6 @@ public class MainPage : Page, IHasMoneyCar
         BtnEarn.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
         BtnPay.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
         BtnCar.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
-        BtnTime.interactable = !_isSearch;
-        BtnCount.interactable = !_isSearch;
     }
 
     UnityAction onBtnEditClick(EarnRow er)

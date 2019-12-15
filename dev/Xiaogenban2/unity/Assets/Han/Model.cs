@@ -68,7 +68,7 @@ public class Model : MonoBehaviour, IModel{
     public static Item Earn2Item(Earn earn)
     {
         var time = new DateTime(earn.createUTC).ToLocalTime();
-        var timeStr = time.ToLongDateString() + time.ToLongTimeString();
+        var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
         return new Item(earn.id, earn.money, earn.memo, timeStr);
     }
 
@@ -205,7 +205,7 @@ public class Model : MonoBehaviour, IModel{
                                 var earn = Earn.empty;
                                 earn.createUTC = new DateTime(year, month, day).Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, day).ToLocalTime().ToLongDateString();
+                                earn.memo = new DateTime(year, month, day).ToLocalTime().ToString("yyyy/MM/dd");
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -233,7 +233,7 @@ public class Model : MonoBehaviour, IModel{
                                 var earn = Earn.empty;
                                 earn.createUTC = new DateTime(year, month, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, 1).ToLocalTime().ToLongDateString();
+                                earn.memo = new DateTime(year, month, 1).ToLocalTime().ToString("yyyy/MM");
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -260,7 +260,7 @@ public class Model : MonoBehaviour, IModel{
                                 var earn = Earn.empty;
                                 earn.createUTC = new DateTime(year, 1, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToLongDateString();
+                                earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
                                 return earn;
                             })
                             .OrderBy(earn => earn.createUTC)
