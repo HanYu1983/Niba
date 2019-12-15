@@ -49,8 +49,8 @@ public class EarnRow : MonoBehaviour
             View.Instance.OnMainPageItemMemoClick(itemId);
         });
 
-        Btn_edit.interactable = View.Instance.EnableFeature();
+        Btn_edit.interactable = View.Instance.EnableMemoMoney();
         Btn_delete.interactable = View.Instance.EnableFeature();
-        Btn_note.interactable = View.Instance.EnableFeature();
+        Btn_note.interactable = View.Instance.EnableMemoMoney();
     }
 }

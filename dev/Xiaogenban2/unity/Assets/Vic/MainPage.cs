@@ -54,24 +54,24 @@ public class MainPage : Page, IHasMoneyCar
         ECount.THIRTY,
         ECount.HUNDRED
     };
-    int currentCountType = 0;
+    //int currentCountType = 0;
 
     public void ChangeShowType()
     {
         if (++currentTimeType > timeTypes.Length - 1) currentTimeType = 0;
         ShowType.text = timeTypes[currentTimeType];
-        RefreshList();
+        RefreshList(true);
         ItemListToTop();
     }
 
-    public void ChangeCountType()
-    {
-        if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
-        ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
+    //public void ChangeCountType()
+    //{
+    //    if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
+    //    ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
         
-        RefreshList();
-        ItemListToTop();
-    }
+    //    RefreshList(true);
+    //    ItemListToTop();
+    //}
 
     public void Buy()
     {
@@ -82,7 +82,7 @@ public class MainPage : Page, IHasMoneyCar
         }
         Model.AddEarn(money * -1, null, "", delegate (object error, List<Item> list)
         {
-            RefreshList();
+            RefreshList(true);
             ClearMoney();
         });
     }
@@ -96,7 +96,7 @@ public class MainPage : Page, IHasMoneyCar
         }
         Model.AddEarn(money, null, "", delegate (object error, List<Item> list)
         {
-            RefreshList();
+            RefreshList(true);
             ClearMoney();
         });
     }
@@ -111,14 +111,14 @@ public class MainPage : Page, IHasMoneyCar
         base.Open();
 
         ClearMoney();
-        RefreshList();
+        RefreshList(true);
     }
     
-    public void RefreshList()
+    public void RefreshList(bool forceUpdate)
     {
-        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
+        Model.GetItemList(int.MaxValue, currentTimeType, filterMemo, delegate (object error, List<Item> list)
         {
-            UpdateItemList();
+            UpdateItemList(forceUpdate);
         });
     }
 
@@ -135,10 +135,17 @@ public class MainPage : Page, IHasMoneyCar
         earnRows.Clear();
     }
 
-    public void UpdateItemList()
+    public void UpdateItemList( bool forceUpdate)
     {
-        ItemScroller.totalCount = Mathf.Min((int)countTypes[currentCountType], Model.GetItemListCache().Count);
-        ItemScroller.RefreshCells();
+        ItemScroller.totalCount = Model.GetItemListCache().Count;
+        if (forceUpdate)
+        {
+            ItemScroller.RefillCells();
+        }
+        else
+        {
+            ItemScroller.RefreshCells();
+        }
         UpdateBtn();
     }
 
@@ -159,6 +166,11 @@ public class MainPage : Page, IHasMoneyCar
     public bool EnableFeature()
     {
         return !IsSearch && currentTimeType == ETimeType.ITEM;
+    }
+
+    public bool EnableMemoMoney()
+    {
+        return currentTimeType == ETimeType.ITEM;
     }
 
     public void AddMoney(int money)

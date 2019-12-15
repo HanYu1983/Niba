@@ -17,6 +17,11 @@ public class View : MonoBehaviour {
         return GetMainPage().EnableFeature();
     }
 
+    public bool EnableMemoMoney()
+    {
+        return GetMainPage().EnableMemoMoney();
+    }
+
     void OpenTargetPage(EPage id)
     {
         foreach (GameObject page in pages)
@@ -90,7 +95,7 @@ public class View : MonoBehaviour {
     {
         GetMainPage().IsSearch = false;
         GetMainPage().filterMemo = "";
-        GetMainPage().RefreshList();
+        GetMainPage().RefreshList(true);
     }
 
     public void OnMainPageNoteClick()
@@ -98,10 +103,10 @@ public class View : MonoBehaviour {
         OpenMemoPage(0);
     }
 
-    public void OnMainPageCountClick()
-    {
-        GetMainPage().ChangeCountType();
-    }
+    //public void OnMainPageCountClick()
+    //{
+    //    GetMainPage().ChangeCountType();
+    //}
 
     public void OnMainPageTypeClick()
     {
@@ -158,7 +163,7 @@ public class View : MonoBehaviour {
             {
                 Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
                 {
-                    GetMainPage().Open();
+                    GetMainPage().RefreshList(false);
                     ClosePopPage();
                 });
             },
@@ -176,7 +181,7 @@ public class View : MonoBehaviour {
             {
                 Model.DeleteItem(id, delegate (object error, List<Item> list)
                 {
-                    GetMainPage().Open();
+                    GetMainPage().RefreshList(true);
                     ClosePopPage();
                 });
             },
@@ -216,7 +221,7 @@ public class View : MonoBehaviour {
                 CloseCalculatePage();
                 ClosePopPage();
 
-                GetMainPage().RefreshList();
+                GetMainPage().RefreshList(true);
             });
         },
         delegate ()
@@ -266,7 +271,7 @@ public class View : MonoBehaviour {
         List<MemoItem> memos = Model.GetMemoList();
         Model.ChangeItemMemo(id, Model.MemoListToString(memos), delegate (object error, List<Item> list)
         {
-            GetMainPage().Open();
+            GetMainPage().RefreshList(false);
             CloseMemoPage();
         });
     }
@@ -289,7 +294,7 @@ public class View : MonoBehaviour {
         if (searchString != "")
         {
             GetMainPage().IsSearch = true;
-            GetMainPage().RefreshList();
+            GetMainPage().RefreshList(true);
             GetMainPage().ItemListToTop();
         }
         CloseSearchPage();
