@@ -14,24 +14,13 @@ public class EarnRow : MonoBehaviour
     public Text money;
     public Text time;
 
-    void ScrollCellIndex(int idx)
+    public void ScrollCellIndex(int idx)
     {
         if (idx < 0) return;
         List<Item> list = View.Model.GetItemListCache();
         if (idx >= list.Count)
         {
-            //用以下的方式會讓套件找不到ScrollCellIndex而產生錯誤
-            //this.gameObject.SetActive(false);
-
-            this.gameObject.transform.localScale = new Vector3(0, 0, 0);
             return;
-        }
-        else
-        {
-            //用以下的方式會讓套件找不到ScrollCellIndex而產生錯誤
-            //this.gameObject.SetActive(true);
-
-            this.gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
         int itemId = list[idx].Id;

@@ -345,7 +345,7 @@ public class Model : MonoBehaviour, IModel{
                                 earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
                                 return earn;
                             })
-                            .OrderBy(earn => earn.createUTC)
+                            .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
                             .Select(Earn2Item).ToList())
                     );

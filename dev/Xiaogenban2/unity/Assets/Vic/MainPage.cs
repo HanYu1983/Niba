@@ -137,10 +137,8 @@ public class MainPage : Page, IHasMoneyCar
 
     public void UpdateItemList()
     {
-        ItemScroller.totalCount = (int)countTypes[currentCountType];
+        ItemScroller.totalCount = Mathf.Min((int)countTypes[currentCountType], Model.GetItemListCache().Count);
         ItemScroller.RefreshCells();
-
-        Debug.Log(Model.GetItemListCache().Count);
         //if (list == null) return;
         //ClearList();
         //foreach (Item itemModel in list)
