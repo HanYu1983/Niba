@@ -11,6 +11,7 @@ public class CloudSave : MonoBehaviour {
 
     void Start()
     {
+        SetPersistentDataPath(Application.persistentDataPath);
         LoadMeta();
     }
 
@@ -20,6 +21,12 @@ public class CloudSave : MonoBehaviour {
     private const string cloudHost = "https://particle-979.appspot.com/nightmarketssistentdbfile2";
     public string cloudPath = "/root/xiaogenban/{id}/save.json";
     public string id;
+    private string persistentDataPath;
+
+    private void SetPersistentDataPath(string path)
+    {
+        persistentDataPath = path;
+    }
 
     private void GenId()
     {
@@ -54,7 +61,7 @@ public class CloudSave : MonoBehaviour {
             yield break;
         }
 
-        var filePath = Application.persistentDataPath + "/" + fileNameToSave;
+        var filePath = persistentDataPath + "/" + fileNameToSave;
         Debug.LogFormat("use file {0}", filePath);
 
         if(File.Exists(filePath) == false)
@@ -104,7 +111,7 @@ public class CloudSave : MonoBehaviour {
 
     public void LoadMeta()
     {
-        var filePath = Application.persistentDataPath + "/" + metaFileName;
+        var filePath = persistentDataPath + "/" + metaFileName;
         Debug.LogFormat("load cloud meta {0}...", filePath);
         if (File.Exists(filePath) == false)
         {

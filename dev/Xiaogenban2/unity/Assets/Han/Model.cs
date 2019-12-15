@@ -5,11 +5,14 @@ using UnityEngine.Events;
 using System.Linq;
 using System;
 using System.IO;
+using System.Threading;
 
 public class Model : MonoBehaviour, IModel{
 
     void Start()
     {
+        SetPersistentDataPath(Application.persistentDataPath);
+        StartCoroutine(SaveWorker());
         try
         {
             Load();
@@ -17,13 +20,14 @@ public class Model : MonoBehaviour, IModel{
         catch (Exception e)
         {
             Debug.Log(e.Message);
-            throw e;
+            InvokeErrorAction(e.Message);
         }
     }
 
     void OnApplicationQuit()
     {
         Debug.Log("OnApplicationQuit");
+        CloseSaveWorker();
     }
 
     void OnAddEarn(Earn earn)
@@ -44,21 +48,102 @@ public class Model : MonoBehaviour, IModel{
 
     void OnDataChange()
     {
-        try
-        {
-            Save(GetMemonto());
-            SaveToCloud();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-        }
+        RequestSave(GetMemonto());
     }
 
     void OnEarnMemoChange()
     {
         OnDataChange();
     }
+
+
+
+    #region save worker
+    
+    private Memonto isDirty;
+    private bool saveWorkDone;
+
+    private void RequestSave(Memonto memonto)
+    {
+        isDirty = memonto;
+    }
+
+    private void CloseSaveWorker()
+    {
+        saveWorkDone = true;
+    }
+
+    private IEnumerator SaveDisk(Memonto memonto)
+    {
+        yield return null;
+        var isDone = false;
+        var saveWroker = new Thread(()=>
+        {
+            Save(memonto);
+            isDone = true;
+        });
+        saveWroker.Start();
+        yield return new WaitUntil(() => isDone);
+    }
+
+    private IEnumerator SaveWorker()
+    {
+        yield return null;
+        while (saveWorkDone == false)
+        {
+            yield return new WaitForSeconds(3);
+            if (isDirty.Equals(Memonto.empty))
+            {
+                continue;
+            }
+            var temp = isDirty;
+            isDirty = Memonto.empty;
+            yield return SaveDisk(temp);
+            yield return InvokeSaveToCloud();
+        }
+        if (isDirty.Equals(Memonto.empty))
+        {
+            yield break;
+        }
+        yield return SaveDisk(isDirty);
+        yield return InvokeSaveToCloud();
+    }
+    /*
+    void SaveWrok()
+    {
+        while (saveWorkDone == false)
+        {
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+            if (isDirty.Equals(Memonto.empty))
+            {
+                continue;
+            }
+            isDirty = Memonto.empty;
+            try
+            {
+                Save(isDirty);
+                SaveToCloud();
+            }
+            catch(Exception e)
+            {
+                InvokeErrorAction(e.Message);
+            }
+        }
+
+        try
+        {
+            Save(isDirty);
+            SaveToCloud();
+        }
+        catch (Exception e)
+        {
+            InvokeErrorAction(e.Message);
+        }
+    }
+    */
+    #endregion
+
+
 
     #region earn
     public Dictionary<int, Earn> earns = new Dictionary<int, Earn>();
@@ -414,7 +499,13 @@ public class Model : MonoBehaviour, IModel{
 
 
     #region save
-    private const string fileName = "save.json";
+    public string fileName = "save.json";
+    private string persistentDataPath;
+
+    private void SetPersistentDataPath(string path)
+    {
+        persistentDataPath = path;
+    }
 
     public void SetMemonto(Memonto temp)
     {
@@ -443,14 +534,14 @@ public class Model : MonoBehaviour, IModel{
     public void Save(Memonto temp)
     {
         string json = JsonUtility.ToJson(temp, true);
-        var filePath = Application.persistentDataPath + "/" + fileName;
+        var filePath = persistentDataPath + "/" + fileName;
         Debug.LogFormat("save to {0}", filePath);
         File.WriteAllText(filePath, json);
     }
 
     public void Load()
     {
-        var filePath = Application.persistentDataPath + "/" + fileName;
+        var filePath = persistentDataPath + "/" + fileName;
         Debug.LogFormat("load from {0}", filePath);
         if (File.Exists(filePath) == false)
         {
