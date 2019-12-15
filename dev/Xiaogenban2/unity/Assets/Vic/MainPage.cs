@@ -61,13 +61,16 @@ public class MainPage : Page, IHasMoneyCar
         if (++currentTimeType > timeTypes.Length - 1) currentTimeType = 0;
         ShowType.text = timeTypes[currentTimeType];
         RefreshList();
+        ItemListToTop();
     }
 
     public void ChangeCountType()
     {
         if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
         ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
+        
         RefreshList();
+        ItemListToTop();
     }
 
     public void Buy()
@@ -113,11 +116,10 @@ public class MainPage : Page, IHasMoneyCar
     
     public void RefreshList()
     {
-        UpdateItemList();
-        //Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
-        //{
-        //    UpdateItemList(list);
-        //});
+        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
+        {
+            UpdateItemList();
+        });
     }
 
     void ClearList()
@@ -135,6 +137,7 @@ public class MainPage : Page, IHasMoneyCar
 
     public void UpdateItemList()
     {
+        ItemScroller.totalCount = (int)countTypes[currentCountType];
         ItemScroller.RefreshCells();
         //if (list == null) return;
         //ClearList();
@@ -162,6 +165,11 @@ public class MainPage : Page, IHasMoneyCar
         //UpdateBtn();
     }
 
+    public void ItemListToTop()
+    {
+        ItemScroller.SrollToCell(0, 20000);
+    }
+
     void UpdateBtn()
     {
         BtnBack.gameObject.SetActive(_isSearch);
@@ -171,29 +179,29 @@ public class MainPage : Page, IHasMoneyCar
         BtnCar.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
     }
 
-    UnityAction onBtnEditClick(EarnRow er)
-    {
-        return delegate ()
-        {
-            View.OnMainPageItemEditClick(er.id);
-        };
-    }
+    //UnityAction onBtnEditClick(EarnRow er)
+    //{
+    //    return delegate ()
+    //    {
+    //        View.OnMainPageItemEditClick(er.id);
+    //    };
+    //}
 
-    UnityAction onBtnNoteClick(EarnRow er)
-    {
-        return delegate ()
-        {
-            View.OnMainPageItemMemoClick(er.id);
-        };
-    }
+    //UnityAction onBtnNoteClick(EarnRow er)
+    //{
+    //    return delegate ()
+    //    {
+    //        View.OnMainPageItemMemoClick(er.id);
+    //    };
+    //}
 
-    UnityAction onBtnDeleteClick(EarnRow er)
-    {
-        return delegate ()
-        {
-            View.OnMainPageItemDeleteClick(er.id);
-        };
-    }
+    //UnityAction onBtnDeleteClick(EarnRow er)
+    //{
+    //    return delegate ()
+    //    {
+    //        View.OnMainPageItemDeleteClick(er.id);
+    //    };
+    //}
 
     public void AddMoney(int money)
     {

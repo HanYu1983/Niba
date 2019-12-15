@@ -10,6 +10,7 @@ public class View : MonoBehaviour {
 
     public MonoBehaviour model;
     public static IModel Model;
+    public static View Instance;
 
     void OpenTargetPage(EPage id)
     {
@@ -284,6 +285,7 @@ public class View : MonoBehaviour {
         {
             GetMainPage().IsSearch = true;
             GetMainPage().RefreshList();
+            GetMainPage().ItemListToTop();
         }
         CloseSearchPage();
     }
@@ -375,6 +377,7 @@ public class View : MonoBehaviour {
 
     void InitPages()
     {
+        Instance = this;
         if(model is IModel == false)
         {
             throw new Exception("xxxx");
@@ -410,6 +413,5 @@ public class View : MonoBehaviour {
     void Start () {
         
         InitPages();
-       
 	}
 }

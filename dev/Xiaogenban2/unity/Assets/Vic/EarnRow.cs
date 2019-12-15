@@ -16,8 +16,8 @@ public class EarnRow : MonoBehaviour
 
     void ScrollCellIndex(int idx)
     {
+        if (idx < 0) return;
         List<Item> list = View.Model.GetItemListCache();
-        this.gameObject.SetActive(true);
         if (idx >= list.Count)
         {
             this.gameObject.SetActive(false);
@@ -27,26 +27,31 @@ public class EarnRow : MonoBehaviour
         {
             this.gameObject.SetActive(true);
         }
-        Item item = View.Model.GetItemCacheById(list[idx].Id);
+
+        int itemId = list[idx].Id;
+        Debug.Log("idx:" + idx);
+        Debug.Log("itemID:" + itemId);
+        Item item = View.Model.GetItemCacheById(itemId);
         money.text = item.Money.ToString();
         memo.text = item.Memo.ToString();
         time.text = item.Time.ToString();
 
-        //var key = keys[idx];
-        //textDesc.text = iapDlg.langText.GetIAPDesc(iapDlg.lang, key.Idx);
-        //textCost.text = iapDlg.langText.GetIAPCost(iapDlg.lang, key.Idx);
+        Btn_delete.onClick.RemoveAllListeners();
+        Btn_delete.onClick.AddListener(delegate ()
+        {
+            View.Instance.OnMainPageItemDeleteClick(itemId);
+        });
 
-        //ButtonCtrl buyBtn = buyButton;
-        //buyBtn.command = "IAPDlgBtn" + key.StringKey;
-        //buyBtn.SetEnable(true);
+        Btn_edit.onClick.RemoveAllListeners();
+        Btn_edit.onClick.AddListener(delegate ()
+        {
+            View.Instance.OnMainPageItemEditClick(itemId);
+        });
 
-        //try
-        //{
-        //    Util.Instance.GetPrefab(key.IAPPrefabName, anchorObj);
-        //}
-        //catch (Exception e)
-        //{
-        //    Debug.LogWarning(e.Message);
-        //}
+        Btn_note.onClick.RemoveAllListeners();
+        Btn_note.onClick.AddListener(delegate ()
+        {
+            View.Instance.OnMainPageItemMemoClick(itemId);
+        });
     }
 }
