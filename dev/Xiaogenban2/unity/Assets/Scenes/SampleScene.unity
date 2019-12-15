@@ -2908,7 +2908,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2146926254}
   m_HandleRect: {fileID: 2146926253}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8261,7 +8261,7 @@ MonoBehaviour:
   - {fileID: 466951003}
   - {fileID: 1807916334}
   - {fileID: 850135621}
-  model: {fileID: 297523639}
+  model: {fileID: 239341945}
 --- !u!1 &880111212
 GameObject:
   m_ObjectHideFlags: 0
