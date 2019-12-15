@@ -12,6 +12,11 @@ public class View : MonoBehaviour {
     public static IModel Model;
     public static View Instance;
 
+    public bool EnableFeature()
+    {
+        return GetMainPage().EnableFeature();
+    }
+
     void OpenTargetPage(EPage id)
     {
         foreach (GameObject page in pages)
