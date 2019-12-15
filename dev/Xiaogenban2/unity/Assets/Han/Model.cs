@@ -248,6 +248,8 @@ public class Model : MonoBehaviour, IModel{
         };
     }
 
+    private int tempSeqId = 0;
+
     public void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback)
     {
         switch (timeType)
@@ -266,6 +268,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.DAY:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -282,7 +285,7 @@ public class Model : MonoBehaviour, IModel{
                                 var day = o.Key.Item3;
 
                                 var earn = Earn.empty;
-                                earn.id = seqId++;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, day).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, day).ToLocalTime().ToString("yyyy/MM/dd");
@@ -296,6 +299,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.MONTH:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -311,7 +315,7 @@ public class Model : MonoBehaviour, IModel{
                                 var month = o.Key.Item2;
 
                                 var earn = Earn.empty;
-                                earn.id = seqId++;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, 1).ToLocalTime().ToString("yyyy/MM");
@@ -325,6 +329,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.YEAR:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -339,7 +344,7 @@ public class Model : MonoBehaviour, IModel{
                                 var year = o.Key.Item1;
 
                                 var earn = Earn.empty;
-                                earn.id = seqId++;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, 1, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
@@ -397,7 +402,6 @@ public class Model : MonoBehaviour, IModel{
 
     private Item _GetItemCacheById(int id)
     {
-        // 這裡不必從cache中拿, 因為本來就是使用hash, 取值為最快
         if (itemMapCache.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
