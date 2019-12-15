@@ -179,7 +179,7 @@ public class Model : MonoBehaviour, IModel{
 
         lastInputEarn = earn;
         OnAddEarn(earn);
-        callback(null, GetItemListCache());
+        callback(null, GenItemList());
     }
 
     public void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback)
@@ -195,7 +195,7 @@ public class Model : MonoBehaviour, IModel{
         earns[id] = earn;
         lastInputEarn = earn;
         OnEarnMemoChange();
-        callback(null, GetItemListCache());
+        callback(null, GenItemList());
     }
 
     public void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback)
@@ -208,7 +208,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.money = money;
         earns[id] = earn;
-        callback(null, GetItemListCache());
+        callback(null, GenItemList());
     }
 
     public void DeleteItem(int id, UnityAction<object, List<Item>> callback)
@@ -221,11 +221,12 @@ public class Model : MonoBehaviour, IModel{
         }
         earns.Remove(id);
         OnDeleteEarn();
-        callback(null, GetItemListCache());
+        callback(null, GenItemList());
     }
 
     public Item GetItemCacheById(int id)
     {
+        // 這裡不必從cache中拿, 因為本來就是使用hash, 取值為最快
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
@@ -261,12 +262,12 @@ public class Model : MonoBehaviour, IModel{
             case ETimeType.ITEM:
                 {
                     callback(
-                        null, 
-                        earns.Values
+                        null,
+                        SetItemListCache(earns.Values
                             .Where(MemoContains(memo))
                             .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
-                            .Select(Earn2Item).ToList()
+                            .Select(Earn2Item).ToList())
                     );
                     return;
                 }
@@ -274,7 +275,7 @@ public class Model : MonoBehaviour, IModel{
                 {
                     callback(
                         null,
-                        earns.Values
+                        SetItemListCache(earns.Values
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
@@ -295,7 +296,7 @@ public class Model : MonoBehaviour, IModel{
                             })
                             .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
-                            .Select(Earn2Item).ToList()
+                            .Select(Earn2Item).ToList())
                     );
                     return;
                 }
@@ -303,7 +304,7 @@ public class Model : MonoBehaviour, IModel{
                 {
                     callback(
                         null,
-                        earns.Values
+                        SetItemListCache(earns.Values
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
@@ -323,7 +324,7 @@ public class Model : MonoBehaviour, IModel{
                             })
                             .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
-                            .Select(Earn2Item).ToList()
+                            .Select(Earn2Item).ToList())
                     );
                     return;
                 }
@@ -331,7 +332,7 @@ public class Model : MonoBehaviour, IModel{
                 {
                     callback(
                         null,
-                        earns.Values
+                        SetItemListCache(earns.Values
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
@@ -350,7 +351,7 @@ public class Model : MonoBehaviour, IModel{
                             })
                             .OrderBy(earn => earn.createUTC)
                             .Take(count)
-                            .Select(Earn2Item).ToList()
+                            .Select(Earn2Item).ToList())
                     );
                     return;
                 }
@@ -362,9 +363,27 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
+    private List<Item> itemListCache;
+
+    private List<Item> SetItemListCache(List<Item> list)
+    {
+        itemListCache = list;
+        return list;
+    }
+
+    public List<Item> GenItemList()
+    {
+        itemListCache = earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
+        return itemListCache;
+    }
+
     public List<Item> GetItemListCache()
     {
-        return earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
+        if(itemListCache == null)
+        {
+            return GenItemList();
+        }
+        return itemListCache;
     }
     #endregion
 
