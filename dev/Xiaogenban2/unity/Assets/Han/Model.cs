@@ -217,13 +217,15 @@ public class Model : MonoBehaviour, IModel{
 
     public Item GetItemCacheById(int id)
     {
-        // 這裡不必從cache中拿, 因為本來就是使用hash, 取值為最快
+        return _GetItemCacheById(id);
+        /*
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
             throw new Exception("");
         }
         return Earn2Item(earns[id]);
+        */
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
@@ -280,6 +282,7 @@ public class Model : MonoBehaviour, IModel{
                                 var day = o.Key.Item3;
 
                                 var earn = Earn.empty;
+                                earn.id = seqId++;
                                 earn.createUTC = new DateTime(year, month, day).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, day).ToLocalTime().ToString("yyyy/MM/dd");
@@ -308,6 +311,7 @@ public class Model : MonoBehaviour, IModel{
                                 var month = o.Key.Item2;
 
                                 var earn = Earn.empty;
+                                earn.id = seqId++;
                                 earn.createUTC = new DateTime(year, month, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, 1).ToLocalTime().ToString("yyyy/MM");
@@ -335,6 +339,7 @@ public class Model : MonoBehaviour, IModel{
                                 var year = o.Key.Item1;
 
                                 var earn = Earn.empty;
+                                earn.id = seqId++;
                                 earn.createUTC = new DateTime(year, 1, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
@@ -355,16 +360,29 @@ public class Model : MonoBehaviour, IModel{
     }
 
     private List<Item> itemListCache;
+    private Dictionary<int, Item> itemMapCache = new Dictionary<int, Item>();
 
     private List<Item> SetItemListCache(List<Item> list)
     {
         itemListCache = list;
+
+        itemMapCache.Clear();
+        foreach(var item in itemListCache)
+        {
+            itemMapCache.Add(item.Id, item);
+        }
         return list;
     }
 
     public List<Item> GenItemList()
     {
         itemListCache = earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
+
+        itemMapCache.Clear();
+        foreach (var item in itemListCache)
+        {
+            itemMapCache.Add(item.Id, item);
+        }
         return itemListCache;
     }
 
@@ -375,6 +393,17 @@ public class Model : MonoBehaviour, IModel{
             return GenItemList();
         }
         return itemListCache;
+    }
+
+    private Item _GetItemCacheById(int id)
+    {
+        // 這裡不必從cache中拿, 因為本來就是使用hash, 取值為最快
+        if (itemMapCache.ContainsKey(id) == false)
+        {
+            InvokeErrorAction(id + " not found");
+            throw new Exception("");
+        }
+        return itemMapCache[id];
     }
     #endregion
 

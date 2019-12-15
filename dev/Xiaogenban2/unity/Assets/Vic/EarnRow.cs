@@ -20,12 +20,12 @@ public class EarnRow : MonoBehaviour
         List<Item> list = View.Model.GetItemListCache();
         if (idx >= list.Count)
         {
-            this.gameObject.SetActive(false);
+            //this.gameObject.SetActive(false);
             return;
         }
         else
         {
-            this.gameObject.SetActive(true);
+            //this.gameObject.SetActive(true);
         }
 
         int itemId = list[idx].Id;

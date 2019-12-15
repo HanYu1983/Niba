@@ -139,6 +139,8 @@ public class MainPage : Page, IHasMoneyCar
     {
         ItemScroller.totalCount = (int)countTypes[currentCountType];
         ItemScroller.RefreshCells();
+
+        Debug.Log(Model.GetItemListCache().Count);
         //if (list == null) return;
         //ClearList();
         //foreach (Item itemModel in list)
