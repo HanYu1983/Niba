@@ -67,12 +67,17 @@ public class DebugModel : MonoBehaviour, IModel
 
     public List<Item> GetCarItemListCache()
     {
-        return new List<Item>();
+        List<Item> items = new List<Item>();
+        for (int i = 0; i < 30; ++i)
+        {
+            items.Add(new Item(i, 100 * i, "刪除項目_" + i, "1/2/" + i));
+        }
+        return items;
     }
 
     public Item GetItemCacheById(int id)
     {
-        return new Item(0,10, "", "");
+        return new Item(0,(int)(Random.RandomRange(.1f, .5f) * 10), "", "");
     }
 
     public void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback)
@@ -182,6 +187,6 @@ public class DebugModel : MonoBehaviour, IModel
 
     public void Load(UnityAction<bool> callback)
     {
-        throw new System.NotImplementedException();
+        callback(true);
     }
 }
