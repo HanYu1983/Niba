@@ -398,11 +398,16 @@ public class View : MonoBehaviour {
                     ClosePopPage();
                 });
         });
-
+        Model.Load(delegate (bool success)
+        {
+            if (success)
+            {
+                OpenMainPage();
+            }
+        });
     }
 
     void Start () {
         InitPages();
-        OpenMainPage();
 	}
 }

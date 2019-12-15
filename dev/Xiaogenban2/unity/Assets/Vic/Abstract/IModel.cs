@@ -30,4 +30,6 @@ public interface IModel
     string GetUserID();
     string GetShowID(string id);
     void GetUserData(string id, UnityAction<bool> callback);
+
+    void Load(UnityAction<bool> callback);
 }
