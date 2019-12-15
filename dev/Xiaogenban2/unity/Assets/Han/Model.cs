@@ -13,15 +13,6 @@ public class Model : MonoBehaviour, IModel{
     {
         SetPersistentDataPath(Application.persistentDataPath);
         StartCoroutine(SaveWorker());
-        try
-        {
-            Load();
-        }
-        catch (Exception e)
-        {
-            Debug.Log(e.Message);
-            InvokeErrorAction(e.Message);
-        }
     }
 
     void OnApplicationQuit()
@@ -640,6 +631,21 @@ public class Model : MonoBehaviour, IModel{
     public void SetErrorAction(UnityAction<string> callback)
     {
         errorAction = callback;
+    }
+
+    public void Load(UnityAction<bool> callback)
+    {
+        try
+        {
+            Load();
+            callback(true);
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.Message);
+            InvokeErrorAction(e.Message);
+            callback(false);
+        }
     }
 
     #endregion

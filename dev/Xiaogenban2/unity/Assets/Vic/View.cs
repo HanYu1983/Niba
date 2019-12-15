@@ -9,7 +9,7 @@ public class View : MonoBehaviour {
     public GameObject[] pages;
 
     public MonoBehaviour model;
-    IModel Model;
+    public static IModel Model;
 
     void OpenTargetPage(EPage id)
     {
@@ -398,11 +398,18 @@ public class View : MonoBehaviour {
                     ClosePopPage();
                 });
         });
-
+        Model.Load(delegate (bool success)
+        {
+            if (success)
+            {
+                OpenMainPage();
+            }
+        });
     }
 
     void Start () {
+        
         InitPages();
-        OpenMainPage();
+       
 	}
 }

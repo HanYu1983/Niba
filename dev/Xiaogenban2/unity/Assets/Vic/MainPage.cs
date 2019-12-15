@@ -11,6 +11,7 @@ public class MainPage : Page, IHasMoneyCar
     public Text ShowType;
     public Text ShowCountType;
     public Text Money;
+    public LoopVerticalScrollRect ItemScroller;
     public GameObject EarnRow;
     public GameObject EarnList;
     public int MaxRow = 10;
@@ -112,10 +113,11 @@ public class MainPage : Page, IHasMoneyCar
     
     public void RefreshList()
     {
-        Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
-        {
-            UpdateItemList(list);
-        });
+        UpdateItemList();
+        //Model.GetItemList((int)countTypes[currentCountType], currentTimeType, filterMemo, delegate (object error, List<Item> list)
+        //{
+        //    UpdateItemList(list);
+        //});
     }
 
     void ClearList()
@@ -131,32 +133,33 @@ public class MainPage : Page, IHasMoneyCar
         earnRows.Clear();
     }
 
-    public void UpdateItemList(List<Item> list)
+    public void UpdateItemList()
     {
-        if (list == null) return;
-        ClearList();
-        foreach (Item itemModel in list)
-        {
-            GameObject item = Instantiate(EarnRow, EarnList.transform);
-            item.name = "item_" + itemModel.Id;
-            item.SetActive(true);
+        ItemScroller.RefreshCells();
+        //if (list == null) return;
+        //ClearList();
+        //foreach (Item itemModel in list)
+        //{
+        //    GameObject item = Instantiate(EarnRow, EarnList.transform);
+        //    item.name = "item_" + itemModel.Id;
+        //    item.SetActive(true);
 
-            EarnRow er = item.GetComponent<EarnRow>();
-            er.id = itemModel.Id;
-            er.memo.text = itemModel.Memo.ToString();
-            er.time.text = itemModel.Time.ToString();
-            er.money.text = itemModel.Money.ToString();
-            er.Btn_edit.onClick.AddListener(onBtnEditClick(er));
-            er.Btn_delete.onClick.AddListener(onBtnDeleteClick(er));
-            er.Btn_note.onClick.AddListener(onBtnNoteClick(er));
+        //    EarnRow er = item.GetComponent<EarnRow>();
+        //    er.id = itemModel.Id;
+        //    er.memo.text = itemModel.Memo.ToString();
+        //    er.time.text = itemModel.Time.ToString();
+        //    er.money.text = itemModel.Money.ToString();
+        //    er.Btn_edit.onClick.AddListener(onBtnEditClick(er));
+        //    er.Btn_delete.onClick.AddListener(onBtnDeleteClick(er));
+        //    er.Btn_note.onClick.AddListener(onBtnNoteClick(er));
 
-            er.Btn_edit.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
-            er.Btn_delete.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
-            er.Btn_note.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        //    er.Btn_edit.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        //    er.Btn_delete.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
+        //    er.Btn_note.interactable = !IsSearch && currentTimeType == ETimeType.ITEM;
 
-            earnRows.Add(item);
-        }
-        UpdateBtn();
+        //    earnRows.Add(item);
+        //}
+        //UpdateBtn();
     }
 
     void UpdateBtn()

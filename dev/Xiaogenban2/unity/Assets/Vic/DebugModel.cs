@@ -179,4 +179,9 @@ public class DebugModel : MonoBehaviour, IModel
     {
         Debug.Log("註冊錯誤方法");
     }
+
+    public void Load(UnityAction<bool> callback)
+    {
+        throw new System.NotImplementedException();
+    }
 }
