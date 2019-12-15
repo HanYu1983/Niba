@@ -143,8 +143,11 @@ public class MainPage : Page, IHasMoneyCar
 
             EarnRow er = item.GetComponent<EarnRow>();
             er.id = itemModel.Id;
+            
+            var timeStr = new DateTime(itemModel.Time).ToLocalTime().ToString(new System.Globalization.CultureInfo("zh-TW"));
+
             er.memo.text = itemModel.Memo.ToString();
-            er.time.text = itemModel.Time.ToString();
+            er.time.text = timeStr;
             er.money.text = itemModel.Money.ToString();
             er.Btn_edit.onClick.AddListener(onBtnEditClick(er));
             er.Btn_delete.onClick.AddListener(onBtnDeleteClick(er));
