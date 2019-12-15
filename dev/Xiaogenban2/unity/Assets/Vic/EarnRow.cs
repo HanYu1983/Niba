@@ -20,17 +20,21 @@ public class EarnRow : MonoBehaviour
         List<Item> list = View.Model.GetItemListCache();
         if (idx >= list.Count)
         {
-            this.gameObject.SetActive(false);
+            //用以下的方式會讓套件找不到ScrollCellIndex而產生錯誤
+            //this.gameObject.SetActive(false);
+
+            this.gameObject.transform.localScale = new Vector3(0, 0, 0);
             return;
         }
         else
         {
-            this.gameObject.SetActive(true);
+            //用以下的方式會讓套件找不到ScrollCellIndex而產生錯誤
+            //this.gameObject.SetActive(true);
+
+            this.gameObject.transform.localScale = new Vector3(1, 1, 1);
         }
 
         int itemId = list[idx].Id;
-        Debug.Log("idx:" + idx);
-        Debug.Log("itemID:" + itemId);
         Item item = View.Model.GetItemCacheById(itemId);
         money.text = item.Money.ToString();
         memo.text = item.Memo.ToString();
