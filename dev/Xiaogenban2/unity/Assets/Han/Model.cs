@@ -13,7 +13,6 @@ public class Model : MonoBehaviour, IModel{
     {
         SetPersistentDataPath(Application.persistentDataPath);
         StartCoroutine(SaveWorker());
-        
     }
 
     void OnApplicationQuit()
@@ -144,9 +143,9 @@ public class Model : MonoBehaviour, IModel{
 
     public static Item Earn2Item(Earn earn)
     {
-        var time = new DateTime(earn.createUTC).ToLocalTime();
-        var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
-        return new Item(earn.id, earn.money, earn.memo, timeStr);
+        //var time = new DateTime(earn.createUTC).ToLocalTime();
+        //var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
+        return new Item(earn.id, earn.money, earn.memo, earn.createUTC);
     }
 
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
@@ -218,13 +217,15 @@ public class Model : MonoBehaviour, IModel{
 
     public Item GetItemCacheById(int id)
     {
-        // 這裡不必從cache中拿, 因為本來就是使用hash, 取值為最快
+        return _GetItemCacheById(id);
+        /*
         if (earns.ContainsKey(id) == false)
         {
             InvokeErrorAction(id + " not found");
             throw new Exception("");
         }
         return Earn2Item(earns[id]);
+        */
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
@@ -247,6 +248,8 @@ public class Model : MonoBehaviour, IModel{
         };
     }
 
+    private int tempSeqId = 0;
+
     public void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback)
     {
         switch (timeType)
@@ -265,6 +268,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.DAY:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -281,6 +285,7 @@ public class Model : MonoBehaviour, IModel{
                                 var day = o.Key.Item3;
 
                                 var earn = Earn.empty;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, day).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, day).ToLocalTime().ToString("yyyy/MM/dd");
@@ -294,6 +299,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.MONTH:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -309,6 +315,7 @@ public class Model : MonoBehaviour, IModel{
                                 var month = o.Key.Item2;
 
                                 var earn = Earn.empty;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, month, 1).ToLocalTime().ToString("yyyy/MM");
@@ -322,6 +329,7 @@ public class Model : MonoBehaviour, IModel{
                 }
             case ETimeType.YEAR:
                 {
+                    tempSeqId = 0;
                     callback(
                         null,
                         SetItemListCache(earns.Values
@@ -336,12 +344,13 @@ public class Model : MonoBehaviour, IModel{
                                 var year = o.Key.Item1;
 
                                 var earn = Earn.empty;
+                                earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, 1, 1).Ticks;
                                 earn.money = o.Sum(e => e.money);
                                 earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
                                 return earn;
                             })
-                            .OrderBy(earn => earn.createUTC)
+                            .OrderByDescending(earn => earn.createUTC)
                             .Take(count)
                             .Select(Earn2Item).ToList())
                     );
@@ -356,16 +365,29 @@ public class Model : MonoBehaviour, IModel{
     }
 
     private List<Item> itemListCache;
+    private Dictionary<int, Item> itemMapCache = new Dictionary<int, Item>();
 
     private List<Item> SetItemListCache(List<Item> list)
     {
         itemListCache = list;
+
+        itemMapCache.Clear();
+        foreach(var item in itemListCache)
+        {
+            itemMapCache.Add(item.Id, item);
+        }
         return list;
     }
 
     public List<Item> GenItemList()
     {
         itemListCache = earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
+
+        itemMapCache.Clear();
+        foreach (var item in itemListCache)
+        {
+            itemMapCache.Add(item.Id, item);
+        }
         return itemListCache;
     }
 
@@ -376,6 +398,16 @@ public class Model : MonoBehaviour, IModel{
             return GenItemList();
         }
         return itemListCache;
+    }
+
+    private Item _GetItemCacheById(int id)
+    {
+        if (itemMapCache.ContainsKey(id) == false)
+        {
+            InvokeErrorAction(id + " not found");
+            throw new Exception("");
+        }
+        return itemMapCache[id];
     }
     #endregion
 
@@ -390,7 +422,7 @@ public class Model : MonoBehaviour, IModel{
     public void AddItemToCar(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
         var id = seqId++;
-        car[id] = new Item(id, money, memo, null);
+        car[id] = new Item(id, money, memo, 0);
         callback(null, GetCarItemListCache());
     }
 

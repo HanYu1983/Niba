@@ -296,7 +296,7 @@ public class CloudSave : MonoBehaviour {
 
             if (getEarn.isNetworkError || getEarn.isHttpError)
             {
-                error = www.error;
+                error = getEarn.error;
                 Debug.Log(error);
                 yield break;
             }
