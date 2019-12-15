@@ -21,6 +21,11 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
+    void OnApplicationQuit()
+    {
+        Debug.Log("OnApplicationQuit");
+    }
+
     void OnAddEarn(Earn earn)
     {
         OnDataChange();
