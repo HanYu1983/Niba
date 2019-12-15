@@ -143,9 +143,9 @@ public class Model : MonoBehaviour, IModel{
 
     public static Item Earn2Item(Earn earn)
     {
-        var time = new DateTime(earn.createUTC).ToLocalTime();
-        var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
-        return new Item(earn.id, earn.money, earn.memo, timeStr);
+        //var time = new DateTime(earn.createUTC).ToLocalTime();
+        //var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
+        return new Item(earn.id, earn.money, earn.memo, earn.createUTC);
     }
 
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
@@ -422,7 +422,7 @@ public class Model : MonoBehaviour, IModel{
     public void AddItemToCar(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
         var id = seqId++;
-        car[id] = new Item(id, money, memo, null);
+        car[id] = new Item(id, money, memo, 0);
         callback(null, GetCarItemListCache());
     }
 

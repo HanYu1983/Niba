@@ -20,8 +20,8 @@ public class CarRow : MonoBehaviour
         Money.text = money.ToString();
     }
 
-    public void SetTime(string time)
+    public void SetTime(long time)
     {
-        Time.text = time;
+        Time.text = "";
     }
 }

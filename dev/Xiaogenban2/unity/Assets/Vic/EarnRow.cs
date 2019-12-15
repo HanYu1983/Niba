@@ -27,7 +27,9 @@ public class EarnRow : MonoBehaviour
         Item item = View.Model.GetItemCacheById(itemId);
         money.text = item.Money.ToString();
         memo.text = item.Memo.ToString();
-        time.text = item.Time.ToString();
+        
+        string timeStr = new System.DateTime(item.Time).ToLocalTime().ToString(new System.Globalization.CultureInfo("zh-TW"));
+        time.text = timeStr;
 
         Btn_delete.onClick.RemoveAllListeners();
         Btn_delete.onClick.AddListener(delegate ()

@@ -2,10 +2,10 @@
 {
     public int Id { get; set; }
     public int Money { get; set; }
-    public string Time { get; set; }
+    public long Time { get; set; }
     public string Memo { get; set; }
 
-    public Item(int id, int money, string memo, string time)
+    public Item(int id, int money, string memo, long time)
     {
         this.Id = id;
         this.Money = money;

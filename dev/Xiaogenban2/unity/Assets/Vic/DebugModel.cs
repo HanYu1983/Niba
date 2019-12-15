@@ -8,9 +8,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "新增項目_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "新增項目_" + i, i));
         }
         callback(null, items);
     }
@@ -18,9 +18,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void AddItemToCar(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "新增項目_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "新增項目_" + i, i));
         }
         callback(null, items);
     }
@@ -28,9 +28,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "修改備註_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "修改備註_" + i, i));
         }
         callback(null, items);
     }
@@ -38,9 +38,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "修改金錢_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "修改金錢_" + i, i));
         }
         callback(null, items);
     }
@@ -48,9 +48,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void DeleteItem(int id, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "刪除項目_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "刪除項目_" + i, i));
         }
         callback(null, items);
     }
@@ -58,9 +58,9 @@ public class DebugModel : MonoBehaviour, IModel
     public void DeleteItemFromCar(int id, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "刪除項目_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "刪除項目_" + i, i));
         }
         callback(null, items);
     }
@@ -68,24 +68,24 @@ public class DebugModel : MonoBehaviour, IModel
     public List<Item> GetCarItemListCache()
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 30; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "刪除項目_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "刪除項目_" + i, i));
         }
         return items;
     }
 
     public Item GetItemCacheById(int id)
     {
-        return new Item(0,(int)(Random.RandomRange(.1f, .5f) * 10), "", "");
+        return new Item(0,(int)(Random.RandomRange(.1f, .5f) * 10), "", 0);
     }
 
     public void GetItemList(int count, int timeType, string memo, UnityAction<object, List<Item>> callback)
     {
         List<Item> items = new List<Item>();
-        for( int i = 0; i < 20; ++i)
+        for( int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "memo_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "memo_" + i, i));
         }
         callback(null, items);
     }
@@ -93,9 +93,9 @@ public class DebugModel : MonoBehaviour, IModel
     public List<Item> GetItemListCache()
     {
         List<Item> items = new List<Item>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 3000; ++i)
         {
-            items.Add(new Item(i, 100 * i, "memo_" + i, "1/2/" + i));
+            items.Add(new Item(i, 100 * i, "memo_" + i, i));
         }
         return items;
     }
@@ -103,7 +103,7 @@ public class DebugModel : MonoBehaviour, IModel
     public List<MemoItem> GetMemoList()
     {
         List<MemoItem> items = new List<MemoItem>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 30; ++i)
         {
             items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
         }
@@ -113,7 +113,7 @@ public class DebugModel : MonoBehaviour, IModel
     public List<MemoItem> UnSelectMemo(string memo)
     {
         List<MemoItem> items = new List<MemoItem>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 30; ++i)
         {
             items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
         }
@@ -123,7 +123,7 @@ public class DebugModel : MonoBehaviour, IModel
     public List<MemoItem> SelectMemo(string memo)
     {
         List<MemoItem> items = new List<MemoItem>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 30; ++i)
         {
             items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
         }
@@ -133,7 +133,7 @@ public class DebugModel : MonoBehaviour, IModel
     public List<MemoItem> AddMemo(string memo)
     {
         List<MemoItem> items = new List<MemoItem>();
-        for (int i = 0; i < 20; ++i)
+        for (int i = 0; i < 30; ++i)
         {
             items.Add(new MemoItem("tag_" + i, (Random.Range(0, 10) > 5)));
         }
