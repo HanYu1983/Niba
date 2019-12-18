@@ -1,0 +1,67 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "GridType",
+  "_objFlags": 0,
+  "_native": "",
+  "_duration": 0.06666666666666667,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 1,
+  "curveData": {
+    "props": {
+      "color": [
+        {
+          "frame": 0,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 24,
+            "g": 0,
+            "b": 130,
+            "a": 255
+          }
+        },
+        {
+          "frame": 0.016666666666666666,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 0,
+            "g": 198,
+            "b": 255,
+            "a": 255
+          }
+        },
+        {
+          "frame": 0.03333333333333333,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 249,
+            "g": 255,
+            "b": 158,
+            "a": 255
+          }
+        },
+        {
+          "frame": 0.05,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 4,
+            "g": 255,
+            "b": 0,
+            "a": 255
+          }
+        },
+        {
+          "frame": 0.06666666666666667,
+          "value": {
+            "__type__": "cc.Color",
+            "r": 255,
+            "g": 118,
+            "b": 0,
+            "a": 255
+          }
+        }
+      ]
+    }
+  },
+  "events": []
+}
