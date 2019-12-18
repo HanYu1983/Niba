@@ -19,6 +19,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Sprite)
     backColor: cc.Sprite = null;
 
+    @property(cc.Node)
+    selectBorder:cc.Node = null;
+
     landX: number;
     landY: number;
 
@@ -26,11 +29,15 @@ export default class NewClass extends cc.Component {
 
     }
 
-    public showMove() {
+    showFocus(show:boolean){
+        this.selectBorder.active = show;
+    }
+
+    showMove() {
         this.backColor.node.color = cc.Color.BLUE;
     }
 
-    public setType(type: Number) {
+    setType(type: Number) {
         switch (type) {
             case 0:
                 this.typeName.string = "海";

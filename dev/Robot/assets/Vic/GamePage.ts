@@ -22,5 +22,10 @@ export default class NewClass extends BasicViewer {
     open(){
         super.open();
         this.map.initPool();
+        this.map.focusOnGrid(6, 9);
+    }
+
+    getMap():LandMap{
+        return this.map;
     }
 }

@@ -17,12 +17,15 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     prefabGrid: cc.Node = null;
 
+    @property(cc.Node)
+    gridContainer:cc.Node = null;
+
     private grids: Map<string, Grid> = new Map();
 
     initPool() {
         for (let i = 0; i < 400; ++i) {
             let gridNode: cc.Node = cc.instantiate(this.prefabGrid);
-            gridNode.setParent(this.node);
+            gridNode.setParent(this.gridContainer);
             gridNode.active = true;
 
             let grid: Grid = gridNode.getComponent(Grid);
@@ -38,5 +41,15 @@ export default class NewClass extends cc.Component {
     getGridByXY(x: number, y: number) {
         let grid = this.grids.get(x + ":" + y);
         return grid;
+    }
+
+    focusOnGrid(x:number, y:number){
+        this.grids.forEach(grid => {
+            grid.showFocus(false);
+        });
+        let grid = this.getGridByXY(x, y);
+        if(grid){
+            grid.showFocus(true);
+        }
     }
 }
