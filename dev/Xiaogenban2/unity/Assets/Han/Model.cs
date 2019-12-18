@@ -42,6 +42,11 @@ public class Model : MonoBehaviour, IModel{
         RequestSave(GetMemonto());
     }
 
+    void OnEarnMoneyChange()
+    {
+        OnDataChange();
+    }
+
     void OnEarnMemoChange()
     {
         OnDataChange();
@@ -199,6 +204,7 @@ public class Model : MonoBehaviour, IModel{
         var earn = earns[id];
         earn.money = money;
         earns[id] = earn;
+        OnEarnMoneyChange();
         callback(null, GenItemList());
     }
 
