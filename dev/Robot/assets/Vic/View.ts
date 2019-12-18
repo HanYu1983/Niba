@@ -11,45 +11,84 @@
 
 
 import LandMap from "./LandMap";
+import BasicViewer from "./BasicViewer";
+import GamePage from "./GamePage";
+import MainPage from "./MainPage";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(LandMap)
-    map: LandMap = null;
-
-    onLoad() {
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp);
-    }
+    @property(BasicViewer)
+    pages: BasicViewer[] = [];
 
     start() {
-        this.map.initPool();
+        this.openMainPage();
     }
 
-    onKeyUp(evt: cc.Event.EventKeyboard) {
-        switch (evt.keyCode) {
-            case cc.macro.KEY.w:
-                cc.log("move up");
-                break;
-            case cc.macro.KEY.a:
-                cc.log("move left");
-                break;
-            case cc.macro.KEY.s:
-                cc.log("move bottom");
-                break;
-            case cc.macro.KEY.d:
-                cc.log("move right");
-                break;
-            case cc.macro.KEY.enter:
-                cc.log("enter");
-                break;
-            case cc.macro.KEY.escape:
-                cc.log("esc");
-                break;
-        }
+    closeAllPages() {
+        this.pages.forEach(element => {
+            element.close();
+        });
     }
+
+    openMainPage():MainPage {
+        this.closeAllPages();
+        this.pages[0].open();
+        return this.getMainPage();
+    }
+
+    openGamePage():GamePage {
+        this.closeAllPages();
+        this.openLoadingPage();
+
+        this.node.runAction(cc.sequence(cc.delayTime(.1), cc.callFunc(function () {
+            this.pages[1].open();
+            this.closeLoadingPage();
+        }, this)));
+
+        return this.getGamePage();
+    }
+
+    openLoadingPage() {
+        this.pages[2].open();
+    }
+
+    closeLoadingPage() {
+        this.pages[2].close();
+    }
+
+    getGamePage():GamePage{
+        return this.pages[1] as GamePage;
+    }
+
+    getMainPage():MainPage{
+        return this.pages[0] as MainPage; 
+    }
+
+    // onKeyUp(evt: cc.Event.EventKeyboard) {
+    //     switch (evt.keyCode) {
+    //         case cc.macro.KEY.w:
+    //             cc.log("move up");
+    //             break;
+    //         case cc.macro.KEY.a:
+    //             cc.log("move left");
+    //             break;
+    //         case cc.macro.KEY.s:
+    //             cc.log("move bottom");
+    //             break;
+    //         case cc.macro.KEY.d:
+    //             cc.log("move right");
+    //             break;
+    //         case cc.macro.KEY.enter:
+    //             cc.log("enter");
+    //             break;
+    //         case cc.macro.KEY.escape:
+    //             cc.log("esc");
+    //             break;
+    //     }
+    // }
 
     // update (dt) {}
 }
