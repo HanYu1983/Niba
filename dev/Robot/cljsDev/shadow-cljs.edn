@@ -1,0 +1,21 @@
+;; shadow-cljs configuration
+{:source-paths
+ ["src"]
+
+ :dependencies
+ [[reagent "0.8.1"]
+  [org.clojure/core.async "0.6.532"]]
+
+ :dev-http {8080 "public/"}
+ ; "app" is the build-id, in running "shadow-cljs compile app"
+ :builds {:app {:target :browser ; compile code that loads in a browser
+                :output-dir "../build/cljs"
+                :asset-path "../cljs" ; assets loaded from index.html are based on path "/js"
+
+                ; "main.js" is the name for the bundle entry
+                :modules {:shared {:entries [hook]}
+                          :app {:entries [app.main]
+                                :depends-on #{:shared}}}}
+          :node {:target :node-script
+                 :main app.main/main
+                 :output-to "dist/script.js"}}}
