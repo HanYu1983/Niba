@@ -8,24 +8,22 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicViewer from "./BasicViewer"
-import LandMap from "./LandMap";
-
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends BasicViewer {
+export default class NewClass extends cc.Component {
 
-    @property(LandMap)
-    map: LandMap = null;
+    @property(cc.Label)
+    lblName:cc.Label = null;
 
-    open(){
-        super.open();
-        //this.map.initPool();
-        //this.map.focusOnGrid(6, 9);
+    @property(cc.Sprite)
+    backColor:cc.Sprite = null;
+
+    setLabel(label:string){
+        this.lblName.string = label;
     }
 
-    getMap():LandMap{
-        return this.map;
+    setFocus(focus:boolean){
+        this.backColor.node.color = focus ? cc.Color.YELLOW : cc.Color.WHITE;
     }
 }

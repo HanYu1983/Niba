@@ -24,7 +24,7 @@ export default class NewClass extends cc.Component {
     pages: BasicViewer[] = [];
 
     start() {
-        this.openMainPage();
+        this.openGamePage();
     }
 
     closeAllPages() {
