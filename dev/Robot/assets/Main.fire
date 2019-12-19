@@ -2197,7 +2197,7 @@
       "__id__": 37
     },
     "_enabled": true,
-    "btns": [],
+    "_btns": [],
     "prefabButton": {
       "__id__": 46
     },
