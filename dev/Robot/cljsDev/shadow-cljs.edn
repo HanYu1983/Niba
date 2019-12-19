@@ -9,13 +9,13 @@
  :dev-http {8080 "public/"}
  ; "app" is the build-id, in running "shadow-cljs compile app"
  :builds {:app {:target :browser ; compile code that loads in a browser
-                :output-dir "../build/cljs"
-                :asset-path "../cljs" ; assets loaded from index.html are based on path "/js"
+                :output-dir "public/js"
+                :asset-path "./js" ; assets loaded from index.html are based on path "/js"
 
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app.main]
                                 :depends-on #{:shared}}}}
-          :node {:target :node-script
-                 :main app.main/main
-                 :output-to "dist/script.js"}}}
+          :release {:target :browser
+                    :output-dir "../cocosDev/assets/Han"
+                    :modules {:app {:entries [app.main]}}}}}

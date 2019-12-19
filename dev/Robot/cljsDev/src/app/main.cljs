@@ -232,7 +232,6 @@
             (recur)))))))
 
 
-;(controller)
+(controller)
 
-(defn main []
-  (controller))
+(println "cljs!!!!")
