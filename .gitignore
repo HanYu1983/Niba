@@ -76,11 +76,11 @@ manifest.json
 
 #/////////////////////////////////////////////////////////////////////////////
 
-dev/Robot/library/
-dev/Robot/temp/
-dev/Robot/local/
-dev/Robot/build/
-dev/Robot/packages/
+dev/Robot/cocosDev/library/
+dev/Robot/cocosDev/temp/
+dev/Robot/cocosDev/local/
+dev/Robot/cocosDev/build/
+dev/Robot/cocosDev/packages/
 
 #/////////////////////////////////////////////////////////////////////////////
 # npm files
