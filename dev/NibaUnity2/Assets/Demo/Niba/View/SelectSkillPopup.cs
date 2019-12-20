@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using Common;
+using Niba;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 
-namespace View
+namespace Niba
 {
 	public class SelectSkillPopup : MonoBehaviour
 	{
@@ -67,7 +67,7 @@ namespace View
 			}
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			if (skillDataProvider.Data != null) {
 				skillListView.UpdateDataView (model);
 			}
@@ -76,7 +76,7 @@ namespace View
 			}
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_selectSkillPopup_ok":
 				{
@@ -87,7 +87,7 @@ namespace View
 					}
 					var skill = skillDataProvider.Data [idx];
 					work.values.Set ("skillId", skill);
-					Common.Common.Notify ("selectSkillPopup_selectSkill", work);
+                    Niba.Common.Notify ("selectSkillPopup_selectSkill", work);
 				}
 				break;
 			default:

@@ -3,35 +3,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
-using Common;
 using System.Linq;
 using System.IO;
 using System.Threading;
-using HanRPGAPI;
+using System.Runtime.InteropServices;
 
-namespace Model
+namespace Niba
 {
-	public class Model : MonoBehaviour, IModel
+	public class Model : MonoBehaviour
 	{
 		public HandleDebug debug;
-		MapDataStore mapData = new MapDataStore();
-		PlayerDataStore playerData = new PlayerDataStore();
+		public MapDataStore mapData = new MapDataStore();
+		public PlayerDataStore playerData = new PlayerDataStore();
 		UserSettings user = new UserSettings();
 
 		public void NewGame(){
 			ClearMoveResult ();
 			mapData = new MapDataStore();
 			playerData = new PlayerDataStore();
+
+            foreach(var w in Enumerable.Range(0, ConfigItem.ID_COUNT).Select(ConfigItem.Get))
+            {
+                if(w.AutoCreateCount > 0)
+                {
+                    playerData.AddItem(new Item()
+                    {
+                        prototype = w.ID,
+                        count = w.AutoCreateCount
+                    }, Place.Pocket);
+                }
+            }
+
+            //playerData.AddItem(new Item { prototype = ConfigItem.ID_grass, count = 20 }, Place.Pocket);
+
+            /*
 			playerData.player.basicAbility.vit = 100;
 			playerData.AddItem (new Item () {
 				prototype = ConfigItem.ID_woodBoat,
 				count = 1
 			}, Place.Storage);
-			/*
+
+            Item item;
+            item.count = 1;
+            for (var i = 0; i < ConfigItem.ID_COUNT; ++i)
+            {
+                item.prototype = ConfigItem.Get(i).ID;
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+                playerData.AddItem(item, Place.Storage);
+            }
+            */
+            /*
 			playerData.player.AddExp (ConfigAbility.ID_karate, 5);
 			playerData.player.AddExp (ConfigAbility.ID_tailor, 1);
 			*/
-			RequestSaveMap ();
+            RequestSaveMap ();
 			RequestSavePlayer ();
 			RequestSaveUserSettings ();
 		}
@@ -61,10 +90,10 @@ namespace Model
 		public void EnterMap (){
 			ClearMoveResult ();
 			// 重設位置
-			playerData.playerInMap.position = Position.Zero;
+			playerData.GetMapPlayer(Place.Map).position = Position.Zero;
 			// 先探明初始視野
 			playerData.ClearVisibleMapObjects ();
-			playerData.VisitPosition (playerData.playerInMap.position);
+			playerData.VisitPosition (playerData.GetMapPlayer(Place.Map).position);
 			// 清除地圖
 			mapData.ClearMap();
 			// 自動生成視野內的地圖
@@ -78,9 +107,9 @@ namespace Model
 			playerData.ExitMap ();
 			RequestSavePlayer ();
 		}
-		public List<MapObject> MapObjects{ get{ return mapData.mapObjects; } }
-		public List<ResourceInfo> ResourceInfos{ get { return mapData.resourceInfo; } }
-		public List<MonsterInfo> MonsterInfos{ get { return mapData.monsterInfo; } }
+		public List<MapObject> MapObjects{ get{ return mapData.MapObjects; } }
+		public List<ResourceInfo> ResourceInfos{ get { return mapData.ResourceInfo; } }
+		public List<MonsterInfo> MonsterInfos{ get { return mapData.MonsterInfo; } }
 		public IEnumerable<MapObject> VisibleMapObjects{ get { return playerData.VisibleMapObjects(mapData); } }
 		public IEnumerable<MapObject> MapObjectsAt (Position pos){
 			return mapData.FindObjects (pos);
@@ -158,11 +187,17 @@ namespace Model
 			RequestSavePlayer ();
 		}
 
-		public int IsCanFusion (string prototype, Place who){
-			return playerData.IsCanFusion (prototype, who);
+		public string IsCanFusion (string prototype, Place who, ref int fusionCnt){
+			return playerData.IsCanFusion (prototype, who, ref fusionCnt);
 		}
 
 		public void Fusion (Item item, Place who){
+            var fusionCnt = 0;
+            var msg = IsCanFusion(item.prototype, who, ref fusionCnt);
+            if(msg != null)
+            {
+                throw new Exception(msg);
+            }
 			playerData.Fusion (item, who);
 			RequestSavePlayer ();
 		}
@@ -174,15 +209,6 @@ namespace Model
 		public void UnequipWeapon (Item item, Place whosWeapon, Place whosStorage){
 			playerData.UnequipWeapon (item, whosWeapon, whosStorage);
 			RequestSavePlayer ();
-		}
-		public void ClearStorage(Place who){
-			if (who == Place.Pocket) {
-				playerData.player.storage.Clear ();
-			} else if (who == Place.Map) {
-				playerData.playerInMap.storage.Clear ();
-			} else {
-				playerData.playerInStorage.storage.Clear ();
-			}
 		}
 		public IEnumerable<string> AvailableNpcMissions {
 			get {
@@ -208,12 +234,12 @@ namespace Model
 			playerData.ClearMissionStatus ();
 		}
 
-		public void EquipSkill (Place who, string skillId){
+		public void EquipSkill (PlayState who, string skillId){
 			playerData.EquipSkill (who, skillId);
 			RequestSavePlayer ();
 		}
 
-		public void UnequipSkill (Place who, string skillId){
+		public void UnequipSkill (PlayState who, string skillId){
 			playerData.UnequipSkill (who, skillId);
 			RequestSavePlayer ();
 		}
@@ -250,11 +276,19 @@ namespace Model
 
 		public PlayState PlayState{ 
 			get{
-				return playerData.playState;
+				return playerData.PlayState;
 			}
 		}
 
-		void Move(Position offset){
+        public int Money { get { return playerData.Money; } }
+
+        public void AddPlayerHp(int v)
+        {
+            playerData.AddPlayerHp(mapData, v);
+            RequestSavePlayer();
+        }
+
+        void Move(Position offset){
 			if (hasMoveResult) {
 				throw new Exception ("必須先處理之前的move result並且呼叫ClearMoveResult");
 			}
@@ -271,37 +305,50 @@ namespace Model
 			}
 		}
 
-		#region persistent
-		bool Load(){
-			var persistentDataPath = Application.persistentDataPath;
+        #region persistent
 
-			var playerPath = persistentDataPath + "/playerData.json";
-			if (File.Exists (playerPath) == false) {
-				return false;
-			} else {
-				var playerMemoto = File.ReadAllText (playerPath);
-				playerData = PlayerDataStore.FromMemonto (playerMemoto);
-			}
+#if UNITY_STANDALONE || UNITY_IOS || UNITY_ANDROID || UNITY_EDITOR
+        bool Load()
+        {
+            var persistentDataPath = Application.persistentDataPath;
 
-			var mapPath = persistentDataPath + "/mapData.json";
-			if (File.Exists (mapPath) == false) {
-				return false;
-			} else {
-				var mapMemoto = File.ReadAllText (mapPath);
-				mapData = MapDataStore.FromMemonto (mapMemoto);
-			}
+            var playerPath = persistentDataPath + "/playerData.json";
+            if (File.Exists(playerPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var playerMemoto = File.ReadAllText(playerPath);
+                playerData = PlayerDataStore.FromMemonto(playerMemoto);
+            }
 
-			var userSettingsPath = persistentDataPath + "/userSettings.json";
-			// userSettings不存在的話沒差
-			if (File.Exists (userSettingsPath) == false) {
-				// ignore
-			} else {
-				var userMemoto = File.ReadAllText (userSettingsPath);
-				user = UserSettings.FromMemonto (userMemoto);	
-			}
-			return true;
-		}
-		HashSet<string> saveTargets = new HashSet<string>();
+            var mapPath = persistentDataPath + "/mapData.json";
+            if (File.Exists(mapPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var mapMemoto = File.ReadAllText(mapPath);
+                mapData = MapDataStore.FromMemonto(mapMemoto);
+            }
+
+            var userSettingsPath = persistentDataPath + "/userSettings.json";
+            // userSettings不存在的話沒差
+            if (File.Exists(userSettingsPath) == false)
+            {
+                // ignore
+            }
+            else
+            {
+                var userMemoto = File.ReadAllText(userSettingsPath);
+                user = UserSettings.FromMemonto(userMemoto);
+            }
+            return true;
+        }
+
+        HashSet<string> saveTargets = new HashSet<string>();
 		void RequestSavePlayer(){
 			SavePlayerDiskWorker (Application.persistentDataPath);
 			saveTargets.Add ("player");
@@ -332,23 +379,23 @@ namespace Model
 				while(true){
 					if(saveTargets.Contains("user")){
 						Debug.LogWarning("save user settings...");
-						var memonto = playerData.GetMemonto ();
+						var memonto = user.GetMemonto ();
 						var path = persistentDataPath + "/userSettings.json";
 						File.WriteAllText(path, memonto);
 						saveTargets.Remove("user");
 					}
 					if(saveTargets.Contains("player")){
-						Debug.LogWarning("save player...");
 						var memonto = playerData.GetMemonto ();
 						var path = persistentDataPath + "/playerData.json";
-						File.WriteAllText(path, memonto);
+                        Debug.LogWarning("save player:" + path);
+                        File.WriteAllText(path, memonto);
 						saveTargets.Remove("player");
 					}
 					if(saveTargets.Contains("map")){
-						Debug.LogWarning("save map...");
 						var memonto = mapData.GetMemonto ();
 						var path = persistentDataPath + "/mapData.json";
-						File.WriteAllText(path, memonto);
+                        Debug.LogWarning("save map:"+path);
+                        File.WriteAllText(path, memonto);
 						saveTargets.Remove("map");
 					}
 					lock (saveTargets) {
@@ -361,7 +408,76 @@ namespace Model
 			});
 			savingThread.Start ();
 		}
-		#endregion
-	}
+#elif UNITY_WEBGL
+        [DllImport("__Internal")]
+        public static extern string PersistentDataPath();
+        [DllImport("__Internal")]
+        public static extern bool IsFileExist(string path);
+        [DllImport("__Internal")]
+        public static extern string ReadAllText(string path);
+        [DllImport("__Internal")]
+        public static extern void DeleteFile(string path);
+        [DllImport("__Internal")]
+        public static extern void WriteAllText(string path, string data);
+
+        bool Load()
+        {
+            var persistentDataPath = "niba";
+
+            var playerPath = persistentDataPath + "/playerData.json";
+            if (IsFileExist(playerPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var playerMemoto = ReadAllText(playerPath);
+                playerData = PlayerDataStore.FromMemonto(playerMemoto);
+            }
+
+            var mapPath = persistentDataPath + "/mapData.json";
+            if (IsFileExist(mapPath) == false)
+            {
+                return false;
+            }
+            else
+            {
+                var mapMemoto = ReadAllText(mapPath);
+                mapData = MapDataStore.FromMemonto(mapMemoto);
+            }
+
+            var userSettingsPath = persistentDataPath + "/userSettings.json";
+            // userSettings不存在的話沒差
+            if (IsFileExist(userSettingsPath) == false)
+            {
+                // ignore
+            }
+            else
+            {
+                var userMemoto = ReadAllText(userSettingsPath);
+                user = UserSettings.FromMemonto(userMemoto);
+            }
+            return true;
+        }
+
+        void RequestSavePlayer()
+        {
+            var memonto = playerData.GetMemonto();
+            WriteAllText("niba/playerData.json", memonto);
+        }
+        void RequestSaveMap()
+        {
+            var memonto = mapData.GetMemonto();
+            WriteAllText("niba/mapData.json", memonto);
+        }
+        void RequestSaveUserSettings()
+        {
+            var memonto = user.GetMemonto();
+            WriteAllText("niba/userSettings.json", memonto);
+        }
+#endif
+
+            #endregion
+        }
 }
 

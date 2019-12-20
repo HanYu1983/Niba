@@ -1,12 +1,9 @@
-﻿using System;
-using Common;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class MissionDataProvider : MonoBehaviour, ListView.IDataProvider
 	{
@@ -27,21 +24,27 @@ namespace View
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			ui.transform.Find ("txt_npc").GetComponent<Text> ().text = "";
 			ui.transform.Find ("txt_des").GetComponent<Text> ().text = "";
 
 			var item = data [idx];
-			var cfg = ConfigNpcMission.Get (item);
+            var cfg = ConfigNpcMission.Get (item);
 			if (cfg.Npc != null) {
 				var npc = ConfigNpc.Get (cfg.Npc);
 				ui.transform.Find ("txt_npc").GetComponent<Text> ().text = npc.Name;
 			}
-			ui.transform.Find ("txt_des").GetComponent<Text> ().text = cfg.Dialog;
+            var des = cfg.Description;
+            var errs = Alg.GetMissionWantCompleteMessage(model.playerData, item);
+            if (errs != null)
+            {
+                des += ":" + string.Join(",", errs.ToArray());
+            }
+            ui.transform.Find("txt_des").GetComponent<Text>().text = des;
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			if (idx <0 || idx >= DataCount) {
 				return;
 			}
@@ -50,16 +53,16 @@ namespace View
 
 			var requireItem = new List<AbstractItem> ();
 			if (cfg.RequireItem != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireItem));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireItem));
 			}
 			if (cfg.RequireKill != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireKill));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireKill));
 			}
 			if (cfg.RequireStatus != null) {
-				requireItem.AddRange (HanRPGAPI.Alg.ParseAbstractItem (cfg.RequireStatus));
+				requireItem.AddRange (Alg.ParseAbstractItem (cfg.RequireStatus));
 			}
 			requireItemDataProvider.Data = requireItem;
-			rewardDataProvider.Data = HanRPGAPI.Alg.ParseAbstractItem (cfg.Reward).ToList ();
+			rewardDataProvider.Data = Alg.ParseAbstractItem (cfg.Reward).ToList ();
 
 			requireListView.UpdateDataView (model);
 			rewardListView.UpdateDataView (model);

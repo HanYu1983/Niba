@@ -1,13 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
 using System;
 using System.Linq;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View{
+namespace Niba
+{
 	public class SkillPopup : MonoBehaviour {
 		public ListView skillListView;
 		public SkillDataProvider skillDataProvider;
@@ -26,24 +25,24 @@ namespace View{
 			}*/
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			UpdateSkillList (model);
 			UpdateSlotCount (model);
 		}
 
-		public void UpdateSlotCount(IModelGetter model){
-			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
+		public void UpdateSlotCount(Model model){
+			var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
 			txtSlotUse.text = string.Format ("{0}/{1}", who.SkillSlotUsed, who.MaxSkillSlotCount);
 		}
 
 		static int FilterIDApply = 0;
 
-		public void UpdateSkillList(IModelGetter model){
+		public void UpdateSkillList(Model model){
 			IEnumerable<ConfigSkill> skills = null;
 
 			if (CheckToggleValue (FilterIDApply)) {
-				var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
-				skills = who.skills.Select (ConfigSkill.Get);
+				var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
+				skills = who.Skills.Select (ConfigSkill.Get);
 			} else {
 				skills = Enumerable.Range (0, ConfigSkill.ID_COUNT).Select (ConfigSkill.Get);
 			}
@@ -74,7 +73,7 @@ namespace View{
 			return toggles [num].isOn;
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_skillPopup_active":
 				{
@@ -87,7 +86,7 @@ namespace View{
 						yield break;
 					}
 					var selectSkill = skillDataProvider.Data [idx];
-					Common.Common.Notify ("skillPopup_active", selectSkill);
+					Niba.Common.Notify ("skillPopup_active", selectSkill);
 				}
 				break;
 			case "click_skillPopup_inactive":
@@ -101,7 +100,7 @@ namespace View{
 						yield break;
 					}
 					var selectSkill = skillDataProvider.Data [idx];
-					Common.Common.Notify ("skillPopup_inactive", selectSkill);
+					Niba.Common.Notify ("skillPopup_inactive", selectSkill);
 				}
 				break;
 			case "click_skillPopup_filter":

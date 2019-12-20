@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea30f6cc96e74e64bb30af2e2d031427, type: 3}
+  m_Name: CSV2Class
+  m_EditorClassIdentifier: 
+  csvPath: Demo/RobotWar/csv
+  generatePath: Demo/RobotWar/Model/Config
+  csvFiles:
+  - key: ConfigUnit
+    fileName: RobotWar - unit.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: hp
+      type: 0
+    - key: en
+      type: 0
+    - key: armor
+      type: 0
+    - key: speed
+      type: 0
+    - key: power
+      type: 0
+    - key: moneyCost
+      type: 0
+  - key: ConfigWeapon
+    fileName: RobotWar - weapon.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: unitPowerCost
+      type: 0
+    - key: bulletCount
+      type: 0
+    - key: weaponType
+      type: 2
+    - key: cost
+      type: 0
+    - key: moneyCost
+      type: 0
+    - key: minRange
+      type: 0
+    - key: maxRange
+      type: 0
+    - key: shape
+      type: 2
+    - key: shapeRange
+      type: 0
+    - key: power
+      type: 0
+    - key: prepareTime
+      type: 1
+    - key: hitRateBonus
+      type: 1
+    - key: ability
+      type: 2
+  - key: ConfigGrid
+    fileName: RobotWar - grid.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: cost
+      type: 0
+    - key: deffence
+      type: 1
+    - key: energy
+      type: 1
+  - key: ConfigPilot
+    fileName: RobotWar - pilot.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: fighting
+      type: 0
+    - key: shooting
+      type: 0
+    - key: hitRate
+      type: 0
+    - key: avoidanceRate
+      type: 0
+    - key: technique
+      type: 0
+    - key: lucky
+      type: 0
+  - key: ConfigShape
+    fileName: RobotWar - shape.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigWeaponType
+    fileName: RobotWar - weaponType.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+  - key: ConfigItem
+    fileName: RobotWar - item.tsv
+    types:
+    - key: id
+      type: 2
+    - key: name
+      type: 2
+    - key: description
+      type: 2
+    - key: unitPowerCost
+      type: 0
+    - key: moneyCost
+      type: 0
+  splitType: 0
+  split: 
+  ns: RobotWar

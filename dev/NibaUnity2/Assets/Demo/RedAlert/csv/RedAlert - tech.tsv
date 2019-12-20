@@ -1,0 +1,7 @@
+id	name	description	cost	buildTime	hostEntity	techDependencies	effectEntities
+gdiFoundation	GDI basic				gdiHome		
+gdiArmorFoundation	GDI basic armor				gdiFactory		
+gdiFireTech	GDI Fire Tech	all bullet type is fire, power + 30	1000	20	gdiHome		
+gdiArmorPlus	GDI Armor	all tank armor power + 30	2000	30	gdiFactory		gdiTank
+gdiArmorSpeed	GDI Armor Speed	all tank speed + 30	2000	40	gdiFactory		gdiTank
+gdi140mm	GDI 140 mm	all tank weapon change to 140mm			gdiFactory		gdiTank

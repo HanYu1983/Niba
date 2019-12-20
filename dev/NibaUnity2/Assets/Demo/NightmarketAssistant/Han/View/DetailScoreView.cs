@@ -32,7 +32,7 @@ namespace NightmarketAssistant
         {
             var earns = rangeRef.Ref;
             var total = Alg.TotalEarn(earns);
-            var avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(model.States, earns));
+            var avgTime = TimeSpan.FromTicks(Alg.AverageTimeBetweenEarn(new List<BoothState>(model.States), earns));
             var avgEarn = Alg.AverageEarn(earns);
             var maxEarn = Alg.MaxEarn(earns);
             var minEarn = Alg.MinEarn(earns);
@@ -44,7 +44,7 @@ namespace NightmarketAssistant
             }
             if (txt_avgTime != null)
             {
-                txt_avgTime.text = avgTime.Seconds + " seconds";
+                txt_avgTime.text = (int)avgTime.TotalMinutes + "(分鐘)";
             }
             if (txt_avgEarn != null)
             {

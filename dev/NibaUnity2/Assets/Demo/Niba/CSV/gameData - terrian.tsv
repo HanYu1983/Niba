@@ -1,12 +1,13 @@
 id	name	description	require	class	moveRequire
 wasteland	荒地				
-frozenSoil	凍土		temperature1	1	
-desert	沙漠		temperature3	1	
-plain	平原		grass,temperature2	2	
-iceField	冰原		grass,temperature1	2	
-hills	丘陵		smallMountain	2	
-forest	森林		tree_2	3	
-mountant	高山		smallMountain_3	4	
-coast	沿岸		water_1	5	
-epicontinentalSea	淺海		water_2	6	woodBoat
-deepSea	深海		water_3	7	woodBoat
+frozenSoil	凍土		symTemperature1	1	
+desert	沙漠		symTemperature3	1	
+iceField	冰原		grass,symTemperature1	2	
+hills	丘陵		symSmallMountain	2	
+plain	草原		grass	3	
+treeLand	木原		tree	3	
+forest	森林		grass,tree	4	
+mountant	高山		symSmallMountain_3	5	
+coast	沿岸		symWater_1	6	
+epicontinentalSea	淺海		symWater_2	7	woodBoat
+deepSea	深海		symWater_3	8	woodBoat,compass

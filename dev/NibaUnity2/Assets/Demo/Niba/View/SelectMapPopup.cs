@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using System;
 
-namespace View{
+namespace Niba
+{
 	public class SelectMapPopup : MonoBehaviour {
 		public ListView mapListView;
 		public MapDataProvider mapDataProvider;
@@ -13,14 +14,14 @@ namespace View{
 			mapListView.DataProvider = mapDataProvider;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			mapDataProvider.Data = new List<MapType> () {
-				MapType.Random, MapType.Pattern
+				MapType.Random, MapType.Pattern, MapType.Test1
 			};
 			mapListView.UpdateDataView (model);
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_selectMapPopup_ok":
 				{
@@ -30,7 +31,7 @@ namespace View{
 						yield break;
 					}
 					var mapType = mapDataProvider.Data [idx];
-					Common.Common.Notify ("selectMapPopup_selectMap", mapType);
+                    Niba.Common.Notify ("selectMapPopup_selectMap", mapType);
 				}
 				break;
 			default:

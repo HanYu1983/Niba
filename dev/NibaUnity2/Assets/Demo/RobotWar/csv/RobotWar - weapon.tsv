@@ -1,0 +1,9 @@
+id	name	description	unitPowerCost	bulletCount	weaponType	cost	moneyCost	minRange	maxRange	shape	shapeRange	power	prepareTime	hitRateBonus	ability
+lightSword	光束刀		10		energy	20	1000	1	1			10			kiriharai
+lightGun	光束鎗		10		energy	20	1000	2	5			10	0.1		
+bomb	高爆彈		20	10	bullet	1	1000	3	5	center	3	4	0.2		
+bomb500kg	500KG炸彈x6		30	10	bullet	1	1000	2	4	center	3	3	0.2	0.05	
+bigGun	粒子砲		50		energy	50	1000	2	5	forward	1	20	0.5		
+bigSword	大型光束刀		15		energy	40	1000	1	1	forward	1	20	0.05		
+handGun	手鎗		10		bullet	1	1000	2	5			8	0.1		
+fireGun	火焰放射器		10	10	bullet	1	1000	2	4			10	0.1		

@@ -1,12 +1,10 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections;
 using UnityEngine.UI;
 using System.Linq;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class MenuMap : MonoBehaviour
 	{
@@ -29,19 +27,19 @@ namespace View
 			workListView.DataProvider = workDataProvider;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			UpdateInfo (model);
 			UpdateWork (model);
 			UpdateMap (model);
 		}
 
-		public void UpdateInfo(IModelGetter model){
+		public void UpdateInfo(Model model){
 			var player = model.GetMapPlayer (Place.Map);
 			var fight = model.PlayerFightAbility (Place.Map);
 			txtInfo.text = string.Format ("hp:{0}/{1}", player.hp, (int)fight.hp);
 		}
 
-		public void UpdateWork(IModelGetter model){
+		public void UpdateWork(Model model){
 			workDataProvider.Data = model.Works.ToList ();
 			workListView.UpdateDataView (model);
 
@@ -103,11 +101,11 @@ namespace View
 			*/
 		}
 
-		public void UpdateMap(IModelGetter model){
+		public void UpdateMap(Model model){
 			SetTileWithPlayerPositionCenterExpend (model);
 		}
 
-		void SetTileWithPlayerPositionCenterExpend(IModelGetter model){
+		void SetTileWithPlayerPositionCenterExpend(Model model){
 
 			var gridParent = gridLayout.transform.parent;
 			for (var i = 0; i<grids.Length; ++i) {
@@ -117,7 +115,7 @@ namespace View
 			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
 			string[,] terrians;
-			Common.Common.Terrian (model, leftTop, rightBottom, out terrians);
+			Niba.Common.Terrian (model, leftTop, rightBottom, out terrians);
 			for (var x = 0; x < terrians.GetLength (0); ++x) {
 				for (var y = 0; y < terrians.GetLength (1); ++y) {
 					var idx = y * 10 + x;
@@ -140,7 +138,7 @@ namespace View
 			MapObject[,] mapObjs;
 			var leftTop = model.GetMapPlayer(Place.Map).position.Add (-5, -5);
 			var rightBottom = leftTop.Add(10, 10);
-			Common.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
+			Niba.Common.FlattenMapObjects(model, MapObjectType.Resource, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
 				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
 					var idx = y * 10 + x;
@@ -161,7 +159,7 @@ namespace View
 				}
 			}
 
-			Common.Common.FlattenMapObjects(model, MapObjectType.Monster, leftTop, rightBottom, out mapObjs);
+			Niba.Common.FlattenMapObjects(model, MapObjectType.Monster, leftTop, rightBottom, out mapObjs);
 			for (var x = 0; x < mapObjs.GetLength (0); ++x) {
 				for (var y = 0; y < mapObjs.GetLength (1); ++y) {
 					var mapObj = mapObjs[x,y];
@@ -173,7 +171,7 @@ namespace View
 			}*/
 		}
 
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			default:
 				{
@@ -181,7 +179,7 @@ namespace View
 						// 修改狀態文字
 						var selectIdx = workListView.CurrIndex (msg);
 						var work = workDataProvider.Data [selectIdx];
-						Common.Common.Notify ("menuMap_work", work);
+						Niba.Common.Notify ("menuMap_work", work);
 					} else if (msg.Contains (workListView.CommandPrefix)) {
 						yield return workListView.HandleCommand (model, msg, args, callback);
 					}

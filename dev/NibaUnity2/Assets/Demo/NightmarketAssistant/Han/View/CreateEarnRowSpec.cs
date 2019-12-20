@@ -10,6 +10,7 @@ namespace NightmarketAssistant
     {
         public EarnListRef earnListRef;
         public GameObject rowLayout;
+        public int showCount;
         public List<GameObject> rows;
 
         void Start()
@@ -42,8 +43,10 @@ namespace NightmarketAssistant
             }
             rows.Clear();
 
-            var earns = earnListRef.Ref;
-            for (var i = 0; i < earns.Count; ++i)
+            
+            var earns = earnListRef.Ref.OrderByDescending(e=>e.date).ToList();
+            var max = showCount <= 0 ? earns.Count : Mathf.Min(showCount, earns.Count);
+            for (var i = 0; i < max; ++i)
             {
                 var layout = rowLayout;
                 var row = Instantiate(layout, transform, false);

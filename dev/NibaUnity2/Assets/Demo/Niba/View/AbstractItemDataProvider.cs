@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class AbstractItemDataProvider : MonoBehaviour, ListView.IDataProvider
 	{
@@ -15,14 +13,14 @@ namespace View
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var modelItem = data [idx];
 			var msg = string.Format ("{0}{1}個", modelItem.prototype, modelItem.count);
 			ui.GetComponentInChildren<Text> ().text = msg;
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			
 		}
 

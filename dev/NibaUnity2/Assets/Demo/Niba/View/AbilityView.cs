@@ -1,11 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Common;
-using System.Linq;
-using HanRPGAPI;
-
-namespace View
+namespace Niba
 {
 	public class AbilityView : MonoBehaviour
 	{
@@ -20,7 +16,7 @@ namespace View
 			throw new Exception ("沒有找到:"+id);
 		}
 
-		public void UpdateAbility(IModelGetter model, Place who_){
+		public void UpdateAbility(Model model, Place who_){
 			if (who_ == Place.Storage) {
 				Debug.LogWarning("倉庫中不計算能力");
 				return;
@@ -60,7 +56,7 @@ namespace View
 					var id = cfg.ID;
 					var v = who.Exp (id);
 					Search (txtsExp, id).text = string.Format ("{0}:{1}", cfg.Name, v);
-				}
+                }
 			}
 		}
 	}

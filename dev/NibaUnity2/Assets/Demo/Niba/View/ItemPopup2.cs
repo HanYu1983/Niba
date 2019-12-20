@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
-using Common;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class ItemPopup2 : MonoBehaviour
 	{
@@ -25,9 +23,9 @@ namespace View
 			set;
 		}
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			var popup = this;
-			popup.itemDataProvider.Data = model.GetMapPlayer (Who).storage;
+			popup.itemDataProvider.Data = model.GetMapPlayer (Who).Storage;
 			popup.listView.UpdateDataView (model);
 			popup.listView.CurrItemLabel (model, popup.SelectIndex);
 			popup.UpdateButtonLabel (model, Who);
@@ -38,7 +36,7 @@ namespace View
 		/// 每次道具裝備或拆掉後呼叫
 		/// </summary>
 		/// <param name="model">Model.</param>
-		void UpdateButtonLabel(IModelGetter model, Place who_){
+		void UpdateButtonLabel(Model model, Place who_){
 			if (who_ == Place.Storage) {
 				Debug.LogWarning ("倉庫中不顯示裝備");
 				return;
@@ -52,7 +50,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_head.GetComponentInChildren<Text> ().text = "頭";
-			var head = who.weapons.Where (item => {
+			var head = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_head;
 			}).FirstOrDefault ();
@@ -68,7 +66,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_body.GetComponentInChildren<Text> ().text = "身";
-			var body = who.weapons.Where (item => {
+			var body = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_body;
 			}).FirstOrDefault ();
@@ -84,7 +82,7 @@ namespace View
 				throw new Exception ("xxx");
 			}
 			btn_foot.GetComponentInChildren<Text> ().text = "腳";
-			var foot = who.weapons.Where (item => {
+			var foot = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get (item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_foot;
 			}).FirstOrDefault ();
@@ -112,7 +110,7 @@ namespace View
 			rightHandBtn.GetComponentInChildren<Text> ().text = "右";
 
 			var handBtns = new Button[]{ leftHandBtn, rightHandBtn };
-			var handWeapons = who.weapons.Where (item => {
+			var handWeapons = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_hand;
 			}).ToList();
@@ -152,7 +150,7 @@ namespace View
 			a2Btn.GetComponentInChildren<Text> ().text = "配件2";
 			a3Btn.GetComponentInChildren<Text> ().text = "配件3";
 
-			var aWeapons = who.weapons.Where (item => {
+			var aWeapons = who.Weapons.Where (item => {
 				var cfg = ConfigItem.Get(item.prototype);
 				return cfg.Position == ConfigWeaponPosition.ID_accessory;
 			}).ToList();
@@ -172,7 +170,7 @@ namespace View
 
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			case "click_itemPopup_move":
 				{
@@ -197,7 +195,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_move_item", info);
+					Niba.Common.Notify ("itemPopup_move_item", info);
 				}
 				break;
 			case "click_itemPopup_equip":
@@ -225,7 +223,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_equip_item", info);
+					Niba.Common.Notify ("itemPopup_equip_item", info);
 				}
 				break;
 			case "click_itemPopup_unequip":
@@ -243,7 +241,7 @@ namespace View
 					LastPosition(ref pos, ref idx);
 
 					var who = model.GetMapPlayer (Who);
-					var item = who.weapons.Where (i => {
+					var item = who.Weapons.Where (i => {
 						var cfg = ConfigItem.Get(i.prototype);
 						return cfg.Position == pos;
 					}).Skip(idx).FirstOrDefault();
@@ -255,7 +253,7 @@ namespace View
 					var info = new object[] {
 						item, Who
 					};
-					Common.Common.Notify ("itemPopup_unequip_item", info);
+					Niba.Common.Notify ("itemPopup_unequip_item", info);
 				}
 				break;
 			case "click_itemPopup_use":
@@ -265,7 +263,7 @@ namespace View
 						yield break;
 					}
 					var item = itemDataProvider.Data[SelectIndex];
-					Common.Common.Notify ("itemPopup_use_item", item);
+					Niba.Common.Notify ("itemPopup_use_item", item);
 				}
 				break;
 			case "click_itemPopup_nouse":
@@ -275,14 +273,14 @@ namespace View
 						yield break;
 					}
 					var item = itemDataProvider.Data[SelectIndex];
-					Common.Common.Notify ("itemPopup_sell_item", item);
+					Niba.Common.Notify ("itemPopup_sell_item", item);
 				}
 				break;
 			case "click_itemPopup_normalMode":
 				{
 					var popup = this;
 					// 重新顯示所有道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage;
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).Storage;
 					popup.itemDataProvider.ShowMode = ItemDataProvider.Mode.Normal;
 					popup.listView.UpdateDataView (model);
 				}
@@ -308,7 +306,7 @@ namespace View
 					var idx = 0;
 					ParsePosition (msg, ref pos, ref idx);
 					// 依部分過濾道具
-					popup.itemDataProvider.Data = model.GetMapPlayer(Who).storage.Where (item => {
+					popup.itemDataProvider.Data = model.GetMapPlayer(Who).Storage.Where (item => {
 						var cfg = ConfigItem.Get(item.prototype);
 						return cfg.Type == ConfigItemType.ID_weapon && cfg.Position == pos;
 					}).ToList();

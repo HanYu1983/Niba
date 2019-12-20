@@ -1,4 +1,4 @@
 id	float	int	string
-moveConsumpation		2	
-workConsumpation		2	
-visibleRange		3	
+moveConsumpation		20	
+workConsumpation		3	
+visibleRange		2	

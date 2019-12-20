@@ -10,6 +10,7 @@ namespace NightmarketAssistant
         public BoothRef boothRef;
         public GameObject rowLayout, rowLayoutIsProgressing;
         public List<GameObject> rows;
+        public bool sortWithOpenTimeDesc;
 
         void Start()
         {
@@ -49,7 +50,17 @@ namespace NightmarketAssistant
                 return;
             }
 
+            
+
             var ranges = model.GroupEarns(boothRef.Ref.Key);
+            if (sortWithOpenTimeDesc)
+            {
+                System.Comparison<EarnsInRange> compareOpenTime = (x, x2) =>
+                {
+                    return x2.open.CompareTo(x.open);
+                };
+                ranges.Sort(compareOpenTime);
+            }
             for (var i = 0; i < ranges.Count; ++i)
             {
                 var range = ranges[i];

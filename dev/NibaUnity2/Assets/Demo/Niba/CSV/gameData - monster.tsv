@@ -1,7 +1,9 @@
-id	name	description	item	terrian	str	vit	spd	dex	int	luck	characteristic
-ant	螞蟻			plain,wasteland,desert	3	3	2	0	3	0	
-snack	蛇			forest,wasteland,desert	10	5	5	20	1	5	
-bear	熊			forest	20	20	10	10	1	0	
-bird	鳥			plain,forest	10	10	30	20	0	5	
-toxinSnack	毒蛇			desert	40	10	10	20	1	10	
-bigBear	大熊			forest	25	40	15	5	0	0	
+id	name	description	item	terrian	str	vit	spd	dex	int	luck	characteristic	activeRate	appearRate	itemAppearRate
+ant	螞蟻		yizhi	plain,wasteland,desert	7	3	7	7	7	7			desert_60	yizhi_80
+snack	蛇		shepi,shedan	forest,wasteland,desert	10	8	9	10	12	7		5	forest_70	shepi_90,shedan_5
+xie	蟹		xieke	coast	13	15	5	10	8	7		5		xieke_70
+_unplan_														
+bear	熊			forest	40	30	8	13	8	7		5		
+bird	鳥			plain,forest	15	5	30	30	20	7	fly			
+toxinSnack	毒蛇			forest	16	8	15	15	15	7		100		
+bigBear	大熊			forest	60	50	8	13	8	7		5		

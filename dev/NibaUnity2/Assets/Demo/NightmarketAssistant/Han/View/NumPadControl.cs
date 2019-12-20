@@ -3,27 +3,36 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 
 namespace NightmarketAssistant
 {
     public class NumPadControl : MonoBehaviour
     {
         public Text text;
+        public string num;
+        public int textLength;
+
+        [SerializeField]
+        private UnityEvent onClickRight = new UnityEvent();
+        [SerializeField]
+        private UnityEvent onClickLeft = new UnityEvent();
+
         void UpdateView()
         {
             try
             {
                 text.text = int.Parse(num) + "";
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Debug.LogWarning(e.Message);
                 text.text = "0";
             }
         }
-        
-        public Action<NumPadControl> OnEnter = delegate { };
-        public Action<NumPadControl> OnExpend = delegate { };
-        public string num;
+
         public int Num
         {
             get
@@ -41,13 +50,19 @@ namespace NightmarketAssistant
         }
         public void ClickNum(int num)
         {
+            if(textLength > 0 && this.num.Length >= 5)
+            {
+                Debug.LogWarning("over text langth:"+textLength);
+                return;
+            }
             this.num = this.num + num;
+            this.num = Num + "";
             UpdateView();
         }
         public void ClickZero2()
         {
-            this.num = this.num + "00";
-            UpdateView();
+            ClickNum(0);
+            ClickNum(0);
         }
         public void ClickBack()
         {
@@ -65,11 +80,11 @@ namespace NightmarketAssistant
         }
         public void ClickEnter()
         {
-            OnEnter(this);
+            onClickRight.Invoke();
         }
         public void ClickExpend()
         {
-            OnExpend(this);
+            onClickLeft.Invoke();
         }
     }
 }

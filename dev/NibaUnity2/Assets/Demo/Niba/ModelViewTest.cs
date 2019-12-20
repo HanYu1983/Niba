@@ -3,12 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HanUtil;
-using Common;
 using System.Linq;
-using View;
-using HanRPGAPI;
 
-namespace Model
+namespace Niba
 {
 	public class ModelViewTest : MonoBehaviour
 	{
@@ -17,7 +14,7 @@ namespace Model
 		public Model defaultModel;
 
 		IView view;
-		IModel model;
+		Model model;
 
 		void Awake(){
 			model = defaultModel;
@@ -35,23 +32,25 @@ namespace Model
 			//yield return TestNpcMission (model, view);
 			yield return TestHomeStorage (model, view);
 			yield return TestFusionView (model, view);
-			yield return TestFight (model, view);
 			yield return TestFusion (model, view);
 			yield return TestShowInfo (model, view);
 			yield return TestMap (model, view);
 			yield return TestWeapon (model, view);
+            Debug.Log("end test");
+            // 過時的
+            // yield return TestFight (model, view);
 		}
 
-		static IEnumerator TestNpcMission(IModel model, IView view){
+		static IEnumerator TestNpcMission(Model model, IView view){
 			var ms = model.AvailableNpcMissions;
 			var grass10Mission = ms
 				.Select (ConfigNpcMission.Get)
-				.Where (m => m.Dialog == "幫我拿10個草")
+				.Where (m => m.Description == "幫我拿10個草")
 				.FirstOrDefault ();
 			if (string.IsNullOrEmpty(grass10Mission.ID)) {
 				foreach (var m in ms) {
 					var cfg = ConfigNpcMission.Get (m);
-					Debug.Log (cfg.Dialog);
+					Debug.Log (cfg.Description);
 				}
 				throw new Exception ("必須有草任務");
 			}
@@ -81,24 +80,24 @@ namespace Model
 			ms = model.AvailableNpcMissions;
 			var wood10Mission = ms
 				.Select (ConfigNpcMission.Get)
-				.Where (m => m.Dialog == "幫我拿10個木")
+				.Where (m => m.Description == "幫我拿10個木")
 				.FirstOrDefault ();
 			if (string.IsNullOrEmpty(wood10Mission.ID)) {
 				foreach (var m in ms) {
 					var cfg = ConfigNpcMission.Get (m);
-					Debug.Log (cfg.Dialog);
+					Debug.Log (cfg.Description);
 				}
 				throw new Exception ("解完草任務必須有木任務");
 			}
 			yield return null;
 		}
 
-		static IEnumerator TestHomeStorage(IModel model, IView view){
-			model.ClearStorage (Place.Storage);
-			model.ClearStorage (Place.Pocket);
-			model.ClearStorage (Place.Map);
+		static IEnumerator TestHomeStorage(Model model, IView view){
+            model.GetMapPlayer(Place.Storage).Storage.Clear();
+			model.GetMapPlayer(Place.Map).Storage.Clear();
+            model.GetMapPlayer(Place.Pocket).Storage.Clear();
 
-			Debug.Log ("加入2個道具");
+            Debug.Log ("加入2個道具");
 			Item item;
 			item.count = 1;
 			item.prototype = ConfigItem.ID_grass;
@@ -108,8 +107,8 @@ namespace Model
 			model.AddItemToStorage (item, Place.Storage);
 
 			Debug.Log ("判斷道具是否存在");
-			if (model.GetMapPlayer(Place.Storage).storage.Count != 2) {
-				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Storage).storage.Count);
+			if (model.GetMapPlayer(Place.Storage).Storage.Count != 2) {
+				throw new Exception ("家裡必須有2個道具:"+model.GetMapPlayer(Place.Storage).Storage.Count);
 			}
 
 			Exception e = null;
@@ -125,20 +124,20 @@ namespace Model
 			Debug.Log ("加入道具到口袋");
 			item.prototype = ConfigItem.ID_woodSword;
 			model.AddItemToStorage (item, Place.Pocket);
-			if (model.GetMapPlayer(Place.Pocket).storage.Count != 1) {
+			if (model.GetMapPlayer(Place.Pocket).Storage.Count != 1) {
 				throw new Exception ("口袋必須有1個道具");
 			}
 
 			Debug.Log ("將口袋道具裝到身上");
 			model.EquipWeapon (item, Place.Pocket, Place.Pocket);
-			if (model.GetMapPlayer(Place.Pocket).storage.Count != 0) {
+			if (model.GetMapPlayer(Place.Pocket).Storage.Count != 0) {
 				throw new Exception ("裝備後口袋必須沒有道具");
 			}
 
 			Debug.Log ("直接從家裡裝裝備");
 			item.prototype = ConfigItem.ID_woodSword;
 			model.EquipWeapon (item, Place.Pocket, Place.Storage);
-			if (model.GetMapPlayer(Place.Pocket).weapons.Count != 2) {
+			if (model.GetMapPlayer(Place.Pocket).Weapons.Count != 2) {
 				throw new Exception ("裝備後裝備數量必須為2");
 			}
 			yield return view.ShowInfo(Info.Item, e2 => {
@@ -160,7 +159,7 @@ namespace Model
 			yield return view.HideInfo (Info.Storage);
 		}
 
-		static IEnumerator TestFusionView(IModel model, IView view){
+		static IEnumerator TestFusionView(Model model, IView view){
 			Item item;
 			item.count = 1;
 			for (var i = 0; i < ConfigItem.ID_COUNT; ++i) {
@@ -178,9 +177,9 @@ namespace Model
 			yield return view.HideInfo (Info.Fusion);
 		}
 
-		static IEnumerator TestWeapon(IModel model, IView view){
+		static IEnumerator TestWeapon(Model model, IView view){
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -189,16 +188,16 @@ namespace Model
 				throw e;
 			}
 			Debug.Log ("先拆除所有裝備");
-			foreach (var w in model.GetMapPlayer(Place.Map).weapons.ToList()) {
+			foreach (var w in model.GetMapPlayer(Place.Map).Weapons.ToList()) {
 				model.UnequipWeapon (w, Place.Map, Place.Map);
 			}
 			Debug.Log ("先丟掉所有道具");
-			model.ClearStorage (Place.Map);
+            model.GetMapPlayer(Place.Map).Storage.Clear();
 
 			var fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 
-			var weapon = HanRPGAPI.Item.Empty;
+			var weapon = Item.Empty;
 			weapon.prototype = ConfigItem.ID_woodSword;
 			weapon.count = 1;
 
@@ -224,10 +223,11 @@ namespace Model
 					throw new Exception ("裝備超過最大數量限制必須丟出特定例外:"+e2.Message);
 				}
 			}
-			weapon.prototype = ConfigItem.ID_grassKen;
-			model.AddItemToStorage (weapon, Place.Map);
-			model.EquipWeapon (weapon, Place.Map, Place.Map);
-
+            var handEquipCount = model.GetMapPlayer(Place.Map).Weapons.Where(w => ConfigItem.Get(w.prototype).Position == ConfigWeaponPosition.ID_hand).Count();
+            if(handEquipCount != 2)
+            {
+                throw new Exception("這時手上要有2個武器");
+            }
 			fight = model.PlayerFightAbility(Place.Map);
 			Debug.Log (fight);
 			yield return view.ShowInfo (Info.Ability, e2 => {
@@ -240,10 +240,10 @@ namespace Model
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestFight(IModel model, IView view){
+		static IEnumerator TestFight(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			model.EnterMap ();
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
@@ -304,7 +304,7 @@ namespace Model
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestFusion(IModel model, IView view){
+		static IEnumerator TestFusion(Model model, IView view){
 			yield return null;
 			/*
 			UnityEngine.Random.InitState (1);
@@ -391,11 +391,11 @@ namespace Model
 			*/
 		}
 
-		static IEnumerator TestShowInfo(IModel model, IView view){
+		static IEnumerator TestShowInfo(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			yield return view.ChangePage (Page.Game, e2 => {
 				e = e2;
 			});
@@ -452,11 +452,11 @@ namespace Model
 			model.ExitMap ();
 		}
 
-		static IEnumerator TestMap(IModel model, IView view){
+		static IEnumerator TestMap(Model model, IView view){
 			UnityEngine.Random.InitState (1);
 
 			Exception e = null;
-			model.NewMap (MapType.Unknown);
+			model.NewMap (MapType.Random);
 			if (e != null) {
 				throw e;
 			}
@@ -537,7 +537,7 @@ namespace Model
 						if (e != null) {
 							throw e;
 						}
-						foreach (var item in model.GetMapPlayer(Place.Map).storage) {
+						foreach (var item in model.GetMapPlayer(Place.Map).Storage) {
 							Debug.Log ("擁有" + item.prototype +"/"+item.count);
 						}
 						yield return view.ShowInfo (Info.Item, e2 => {

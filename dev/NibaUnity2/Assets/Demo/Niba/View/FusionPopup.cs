@@ -1,22 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using System;
 using System.Linq;
 
-namespace View{
+namespace Niba{
 	public class FusionPopup : MonoBehaviour {
 		public ItemView itemView;
 		public FusionRequireView fusionRequireView;
 
-		public void UpdateUI(IModelGetter model){
+		public void UpdateUI(Model model){
 			itemView.Data = model.CanFusionItems;
 			itemView.UpdateDataView (model);
 		}
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			switch (msg) {
 			default:
 				{
@@ -28,7 +28,7 @@ namespace View{
 							// 修改狀態文字
 							var selectIdx = itemView.CurrIndex (msg);
 							var item = itemView.Data.ToList () [selectIdx];
-							fusionRequireView.Who = Common.Common.PlaceAt (model.PlayState);
+							fusionRequireView.Who = Helper.PlaceAt (model.PlayState);
 							fusionRequireView.FusionTarget = item;
 							fusionRequireView.UpdateUI (model);
 						}

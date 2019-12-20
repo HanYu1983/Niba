@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Common;
+using Niba;
 using UnityEngine.UI;
 
-namespace View{
+namespace Niba
+{
 	public class MapDataProvider : MonoBehaviour, ListView.IDataProvider {
 		
 		public int DataCount{ 
@@ -13,13 +14,13 @@ namespace View{
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var mapType = data [idx];
 			ui.GetComponentInChildren<Text> ().text = mapType.ToString();
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			var mapType = data [idx];
 			switch (mapType) {
 			case MapType.Random:

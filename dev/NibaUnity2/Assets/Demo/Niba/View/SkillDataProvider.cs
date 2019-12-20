@@ -1,11 +1,9 @@
 ﻿using System;
 using UnityEngine;
-using Common;
 using System.Collections.Generic;
 using UnityEngine.UI;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class SkillDataProvider : MonoBehaviour, ListView.IDataProvider
 	{
@@ -15,13 +13,13 @@ namespace View
 			}
 		}
 
-		public void ShowData(IModelGetter model, GameObject ui, int idx){
+		public void ShowData(Model model, GameObject ui, int idx){
 			var modelItem = data [idx];
 			var cfg = ConfigSkill.Get (modelItem);
 			var conditionCfg = ConfigConditionType.Get (cfg.Condition);
 
-			var who = model.GetMapPlayer (Common.Common.PlaceAt (model.PlayState));
-			var isEquip = who.skills.Contains (cfg.ID);
+			var who = model.GetMapPlayer (Helper.PlaceAt (model.PlayState));
+			var isEquip = who.Skills.Contains (cfg.ID);
 			var btn = ui.GetComponent<Button> ();
 			var colors = btn.colors;
 			colors.normalColor = colors.highlightedColor = isEquip ? Color.yellow : Color.white;
@@ -34,7 +32,7 @@ namespace View
 			ui.SetActive (true);
 		}
 
-		public void ShowSelect (IModelGetter model, GameObject ui, int idx){
+		public void ShowSelect (Model model, GameObject ui, int idx){
 			if (idx <0 || idx >= DataCount) {
 				ui.GetComponent<Text>().text = "你沒有選擇任何道具";
 				return;

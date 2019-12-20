@@ -2,12 +2,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Common;
 using System.Linq;
 using System.Collections;
-using HanRPGAPI;
 
-namespace View
+namespace Niba
 {
 	public class ItemView : MonoBehaviour
 	{
@@ -34,18 +32,18 @@ namespace View
 			for(var i=0; i<items.Length; ++i){
 				Func<int,UnityEngine.Events.UnityAction> closure = idx=>{
 					return ()=>{
-						Common.Common.Notify(string.Format("{0}_item_{1}",commandPrefix, idx), null);
+						Niba.Common.Notify(string.Format("{0}_item_{1}",commandPrefix, idx), null);
 					};
 				};
 				items [i].onClick.AddListener (closure (i));
 			}
 
 			btnPageUp.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pageup", null);
+				Niba.Common.Notify(commandPrefix+"_pageup", null);
 			});
 
 			btnPageDown.onClick.AddListener (() => {
-				Common.Common.Notify(commandPrefix+"_pagedown", null);
+				Niba.Common.Notify(commandPrefix+"_pagedown", null);
 			});
 		}
 		/// <summary>
@@ -68,7 +66,7 @@ namespace View
 		/// </summary>
 		/// <param name="model">Model.</param>
 		/// <param name="currIndex">Curr index.</param>
-		public void CurrItemLabel(IModelGetter model, int currIndex){
+		public void CurrItemLabel(Model model, int currIndex){
 			if (data == null) {
 				Debug.LogWarning ("還沒有設定data");
 				return;
@@ -86,7 +84,7 @@ namespace View
 		/// 注意要先設定Data
 		/// </summary>
 		/// <param name="model">Model.</param>
-		public void UpdateDataView(IModelGetter model){
+		public void UpdateDataView(Model model){
 			if (data == null) {
 				Debug.LogWarning ("還沒有設定data");
 				return;
@@ -167,7 +165,7 @@ namespace View
 		#endregion
 
 		#region controller
-		public IEnumerator HandleCommand(IModelGetter model, string msg, object args, Action<Exception> callback){
+		public IEnumerator HandleCommand(Model model, string msg, object args, Action<Exception> callback){
 			if (msg == commandPrefix + "_pageup") {
 				Page -= 1;
 				UpdateDataView (model);
