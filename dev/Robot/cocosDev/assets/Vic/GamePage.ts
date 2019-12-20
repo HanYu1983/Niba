@@ -27,13 +27,13 @@ export default class NewClass extends BasicViewer {
         //this.map.focusOnGrid(6, 9);
     }
 
-    generateMap(deepsea: number = .3, 
-                sea: number = .3, 
-                sand: number = .3, 
-                grass: number = .3, 
-                city: number = .3, 
-                tree: number = .3,
-                award:number = .1): number[] {
+    generateMap(deepsea: number = .3,
+        sea: number = .3,
+        sand: number = .3,
+        grass: number = .3,
+        city: number = .3,
+        tree: number = .3,
+        award: number = .1): number[] {
         noise.seed(Math.random());
         let scale = .1;
         let map = [];
@@ -66,8 +66,15 @@ export default class NewClass extends BasicViewer {
 
                     } else {
 
-                        //城市
-                        map.push( Math.random() < award ? 7 : 4);
+                        if (i == 4 || i == 8 || i == 12 || i == 16 ||
+                            j == 4 || j == 8 || j == 12 || j == 16) {
+
+                            //路
+                            map.push(8);
+                        } else {
+                            //城市
+                            map.push(Math.random() < award ? 7 : 4);
+                        }
                     }
 
                     //map.push(3);

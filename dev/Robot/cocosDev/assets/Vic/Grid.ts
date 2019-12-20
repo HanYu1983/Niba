@@ -71,6 +71,10 @@ export default class NewClass extends cc.Component {
                 this.typeName.string = "補";
                 this.backColor.node.color = cc.Color.RED;
                 break;
+            case 8:
+                this.typeName.string = "路";
+                this.backColor.node.color = cc.Color.WHITE;
+                break;
         }
     }
 }
