@@ -23,11 +23,17 @@ export default class NewClass extends BasicViewer {
 
         super.open();
         this.map.initPool();
-        this.map.setMap(this.generateMap(.3, .3, .1, .6, .8, .8));
+        this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
     }
 
-    generateMap(deepsea: number = .3, sea: number = .3, sand: number = .3, grass: number = .3, city: number = .3, tree: number = .3): number[] {
+    generateMap(deepsea: number = .3, 
+                sea: number = .3, 
+                sand: number = .3, 
+                grass: number = .3, 
+                city: number = .3, 
+                tree: number = .3,
+                award:number = .1): number[] {
         noise.seed(Math.random());
         let scale = .1;
         let map = [];
@@ -51,28 +57,28 @@ export default class NewClass extends BasicViewer {
                         let f2: number = noise.perlin2(treePosX, treePosY);
                         if (f2 > -1 + tree) {
                             //平原
-                            map.push(3);
+                            map.push(Math.random() < award ? 7 : 3);
                         } else {
 
                             //樹林
-                            map.push(6);
+                            map.push(Math.random() < award ? 7 : 6);
                         }
 
                     } else {
 
                         //城市
-                        map.push(4);
+                        map.push( Math.random() < award ? 7 : 4);
                     }
 
                     //map.push(3);
                 } else if (f > -1 + deepsea + sea) {
 
                     //沙灘
-                    map.push(2);
+                    map.push(Math.random() < award ? 7 : 2);
                 } else if (f > -1 + deepsea) {
 
                     //淺海
-                    map.push(1);
+                    map.push(Math.random() < award ? 7 : 1);
                 } else {
 
                     //深海

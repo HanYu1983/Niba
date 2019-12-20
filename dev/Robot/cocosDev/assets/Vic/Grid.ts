@@ -20,7 +20,7 @@ export default class NewClass extends cc.Component {
     backColor: cc.Sprite = null;
 
     @property(cc.Node)
-    selectBorder:cc.Node = null;
+    selectBorder: cc.Node = null;
 
     landX: number;
     landY: number;
@@ -29,7 +29,7 @@ export default class NewClass extends cc.Component {
 
     }
 
-    showFocus(show:boolean){
+    showFocus(show: boolean) {
         this.selectBorder.active = show;
     }
 
@@ -66,6 +66,10 @@ export default class NewClass extends cc.Component {
             case 6:
                 this.typeName.string = "林";
                 this.backColor.node.color = new cc.Color(0, 120, 0);
+                break;
+            case 7:
+                this.typeName.string = "補";
+                this.backColor.node.color = cc.Color.RED;
                 break;
         }
     }
