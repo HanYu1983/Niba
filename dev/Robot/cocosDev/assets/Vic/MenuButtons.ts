@@ -14,46 +14,23 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.Button)
-    private _btns:Array<MenuButton> = [];
-
     @property(MenuButton)
     prefabButton:MenuButton = null;
 
+    private _btns:Array<MenuButton> = [];
     private _data:any;
     private _cursor1:number = 0;
     private _cursor2:Array<number> = [];
     
     start () {
+        // debug
         this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
-        this.right();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.right();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.right();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.right();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.right();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.left();
-        cc.log(this._cursor2);
-        this.next();
-        cc.log(this._cursor2);
-        this.left();
-        cc.log(this._cursor2);
     }
 
+    /**
+     * this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
+     * @param data 
+     */
     setData(data:any){
         this._data = data;
         let id = 0;
@@ -82,7 +59,7 @@ export default class NewClass extends cc.Component {
         this._btns[this._cursor1].setFocus(true);
     }
 
-    previus():number{
+    previus():Array<number>{
         if(--this._cursor1 < 0){
             this._cursor1 = this._btns.length - 1;
         }
@@ -90,7 +67,7 @@ export default class NewClass extends cc.Component {
         return this.getCurrentId();
     }
 
-    next():number{
+    next():Array<number>{
         if(++this._cursor1 > this._btns.length - 1){
             this._cursor1 = 0;
         }
@@ -98,24 +75,24 @@ export default class NewClass extends cc.Component {
         return this.getCurrentId();
     }
 
-    left():number{
+    left():Array<number>{
         if(--this._cursor2[this._cursor1] < 0){
             this._cursor2[this._cursor1] = this._data[this._cursor1].length - 1;
         }
         this._refreshButtonLabel();
-        return this._cursor2[this._cursor1];
+        return this.getCurrentId();
     }
 
-    right():number{
+    right():Array<number>{
         if(++this._cursor2[this._cursor1] > this._data[this._cursor1].length - 1){
             this._cursor2[this._cursor1] = 0;
         }
         this._refreshButtonLabel();
-        return this._cursor2[this._cursor1];
+        return this.getCurrentId();
     }
 
-    getCurrentId():number{
-        return this._cursor1;
+    getCurrentId():Array<number>{
+        return [this._cursor1, this._cursor2[this._cursor1]];
     }
 
 

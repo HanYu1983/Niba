@@ -37,8 +37,12 @@ export default class NewClass extends cc.Component {
         }
     }
 
-    // 用這個方法要檢查物件是不是undefined
-    getGridByXY(x: number, y: number) {
+    /**
+     * 用這個方法要檢查物件是不是undefined
+     * @param x 
+     * @param y 
+     */
+    getGridByXY(x: number, y: number):Grid {
         let grid = this.grids.get(x + ":" + y);
         return grid;
     }
