@@ -168,8 +168,13 @@
 
 
 (defn viewLoop [inputCh outputCh]
+  (.subscribe (.-viewNotifyOb js/window)
+              (fn [e]
+                (a/go
+                  (a/>! outputCh (js->clj e)))))
   (a/go-loop []
     (let [evt (a/<! inputCh)]
+      (.next (.-viewOb js/window) (clj->js evt))
       (recur))))
 
 (defn controller []
@@ -186,11 +191,16 @@
                                             (a/>! inputCh [:keyup (.-code e)]))))
     (modelLoop modelCh modelNotifyCh)
     (viewLoop viewCh viewNotifyCh)
+    (a/go
+      (a/>! viewCh [:hello {:name "han"}]))
 
     (a/go-loop []
       (let [[cmd args] (a/<! viewNotifyCh)]
+        (println "view" cmd args)
         (condp = cmd
           :on-select
+          (recur)
+          
           (recur))))
 
     (a/go-loop []
@@ -231,7 +241,17 @@
 
             (recur)))))))
 
+(println "ver 1.0")
+(defn main []
+  (let [viewOb (js/rxjs.Subject.)
+        viewNotifyOb (js/rxjs.Subject.)]
+    (.subscribe viewOb
+                (fn [e]
+                  (js/console.log "hello " e)))
+    (set! (.-viewOb js/window)
+          viewOb)
+    (set! (.-viewNotifyOb js/window)
+          viewNotifyOb))
+  (controller))
 
-(controller)
-
-(println "cljs!!!!")
+(set! (.-startApp js/window) main)

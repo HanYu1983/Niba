@@ -25,6 +25,12 @@ export default class NewClass extends cc.Component {
 
     start() {
         this.openGamePage();
+        window.startApp();
+        window.viewOb.subscribe(e=>{
+            const [cmd, args] = e
+            console.log("event from cljs ", cmd, args)
+        })
+        window.viewNotifyOb.next(["hello, i'm js", {name:"han"}])
     }
 
     closeAllPages() {
