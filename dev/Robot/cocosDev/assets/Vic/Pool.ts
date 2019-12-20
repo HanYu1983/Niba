@@ -13,7 +13,7 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(Number)
+    @property(cc.Integer)
     poolSize: number = 30;
 
     private _pool: Array<cc.Node> = [];

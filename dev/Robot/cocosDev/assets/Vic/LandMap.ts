@@ -37,6 +37,19 @@ export default class NewClass extends cc.Component {
         }
     }
 
+    setMap(data:any[]){
+        let id = 0;
+        data.forEach(element=>{
+            let x = id % 20;
+            let y = Math.floor(id / 20);
+            let grid = this.getGridByXY(x, y);
+            if(grid){
+                grid.setType(element);
+            }
+            id++;
+        });
+    }
+
     /**
      * 用這個方法要檢查物件是不是undefined
      * @param x 
