@@ -4,6 +4,7 @@
   (:require-macros [app.macros :as m]))
 
 (def defaultModel {})
+(def defaultGameplayModel {})
 
 (defn ask [tapCh outputCh name args]
   (let [key (gensym)
@@ -92,57 +93,68 @@
                             (recur ctx)
 
                             "startGameplay"
-                            (let []
+                            (let [map (map/generateMap 20 20
+                                                       {:deepsea 0.3
+                                                        :sea 0.3
+                                                        :sand 0.3
+                                                        :grass 0.3
+                                                        :city 0.3
+                                                        :tree 0.3
+                                                        :award 0.1})
+                                  gameplayCtx (merge defaultGameplayModel
+                                                     {:map map})]
                               (a/go
-                                (a/<! (simpleAsk "createMap" nil)))
+                                (a/<! (simpleAsk "createMap" map)))
+                              (->>
+                               (loop [gameplayCtx gameplayCtx]
+                                 (println gameplayCtx)
+                                 (when-let [[cmd args :as evt] (a/<! inputCh)]
+                                   (cond
+                                     (= cmd "selectMap")
+                                     (recur (let [pos args]
+                                              (loop [gameplayCtx gameplayCtx]
+                                                (println "handle selectUnitMenu")
+                                                (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" "attack" "cancel"]))]
+                                                  (println "selectUnitMenu " selectUnitMenu)
+                                                  (cond
+                                                    (= "cancel" selectUnitMenu)
+                                                    gameplayCtx
 
-                              (loop [ctx ctx]
-                                (println "handle map")
-                                (when-let [[cmd args :as evt] (a/<! inputCh)]
-                                  (cond
-                                    (= cmd "selectMap")
-                                    (recur (let [pos args]
-                                             (loop [ctx ctx]
-                                               (println "handle selectUnitMenu")
-                                               (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" "attack" "cancel"]))]
-                                                 (println "selectUnitMenu " selectUnitMenu)
-                                                 (cond
-                                                   (= "cancel" selectUnitMenu)
-                                                   ctx
+                                                    (= "attack" selectUnitMenu)
+                                                    (recur (loop [gameplayCtx gameplayCtx]
+                                                             (let [selectAttackMenu (a/<! (simpleAsk "attackMenu" [["weapon1" "weapon2"] "cancel"]))]
+                                                               (cond
+                                                                 (= "cancel" selectAttackMenu)
+                                                                 gameplayCtx
 
-                                                   (= "attack" selectUnitMenu)
-                                                   (recur (loop [ctx ctx]
-                                                            (let [selectAttackMenu (a/<! (simpleAsk "attackMenu" ["weapon1" "cancel"]))]
-                                                              (cond
-                                                                (= "cancel" selectAttackMenu)
-                                                                ctx
+                                                                 :else
+                                                                 (recur gameplayCtx)))))
 
-                                                                :else
-                                                                (recur ctx)))))
+                                                    :else
+                                                    (recur gameplayCtx))))))
 
-                                                   :else
-                                                   (recur ctx))))))
-
-                                    :else
-                                    (recur ctx)))))
+                                     :else
+                                     (recur gameplayCtx))))
+                               (constantly)
+                               (update ctx :gameplay)))
 
                             (recur ctx)))))
           inputCh (a/merge
                    [(a/tap viewNotifyMult (a/chan))])]
       (modelLoop inputCh viewCh))
 
-    (comment (js/window.addEventListener "keydown" (fn [e]
-                                                     (println (.-code e))
-                                                     (condp = (.-code e)
-                                                       "KeyA"
-                                                       (a/put! viewNotifyCh ["startGameplay"])
+    (js/window.addEventListener "keydown" (fn [e]
+                                            (println (.-code e))
+                                            (condp = (.-code e)
+                                              "KeyA"
+                                              (a/put! viewNotifyCh ["startGameplay"])
 
-                                                       "KeyB"
-                                                       (a/put! viewNotifyCh ["selectMap" [0 0]])
+                                              "KeyB"
+                                              (a/put! viewNotifyCh ["selectMap" [0 0]])
 
-                                                       nil))))
-
-    ))
+                                              nil)))))
 
 (set! (.-startApp js/window) 
       main)
+
+; (main)
