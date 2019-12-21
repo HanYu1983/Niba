@@ -20,9 +20,18 @@ export default class NewClass extends cc.Component {
 
     setData(data:any){
         this._data = data;
+        let id = 0;
         data.forEach(element=>{
+            if( typeof element == 'string'){
+                this._data[id] = [element];
+            }
             this._cursor2.push(0);
+            id++;
         });
+    }
+
+    getData(){
+        return this._data;
     }
 
     private _focusOn(){
@@ -63,5 +72,9 @@ export default class NewClass extends cc.Component {
 
     getCurrentId():Array<number>{
         return [this._cursor1, this._cursor2[this._cursor1]];
+    }
+
+    getCurrentFocus():any{
+        return this.getData()[this._cursor1][this._cursor2[this._cursor1]];
     }
 }

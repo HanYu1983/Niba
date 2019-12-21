@@ -24,9 +24,6 @@ export default class NewClass extends BasicViewer {
     prefabButton:MenuButton = null;
 
     private _btns:Array<MenuButton> = [];
-    private _data:any;
-    private _cursor1:number = 0;
-    private _cursor2:Array<number> = [];
     private _menuCursor:MenuCursor;
 
     static ON_MENU_ENTER:string = "ON_MENU_ENTER";
@@ -35,43 +32,48 @@ export default class NewClass extends BasicViewer {
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
-    open(){
-        super.open();
+    addListener(){
+        super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, ()=>{
-            this.previus();
+            this._menuCursor.previus();
         }, this);
 
         this.node.on(InputSensor.CURSOR_LEFT, ()=>{
-            this.right();
+            this._menuCursor.right();
         }, this);
 
         this.node.on(InputSensor.CURSOR_DOWN, ()=>{
-            this.next();
+            this._menuCursor.next();
         }, this);
 
         this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
-            this.right();
+            this._menuCursor.right();
         }, this);
 
         this.node.on(InputSensor.ENTER, ()=>{
-            this.node.emit(NewClass.ON_MENU_ENTER, this._data[this._cursor1][this._cursor2[this._cursor1]]);
+            this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
         }, this);
 
-        this.node.on(InputSensor.ESCAPE, ()=>{
-            this.close();
+        // this.node.on(InputSensor.ESCAPE, ()=>{
+        //     this.close();
+        // }, this);
+
+        this.node.on(MenuCursor.ON_CURSOR_CHANGE, data =>{
+            this._focusOn(data[0]);
+            this._refreshButtonLabel();
         }, this);
     }
 
-    close(){
+    removeListenser(){
+        super.removeListenser();
+
         this.node.off(InputSensor.CURSOR_UP);
         this.node.off(InputSensor.CURSOR_LEFT);
         this.node.off(InputSensor.CURSOR_DOWN);
         this.node.off(InputSensor.CURSOR_RIGHT);
         this.node.off(InputSensor.ENTER);
         this.node.off(InputSensor.ESCAPE);
-
-        super.close();
     }
 
     /**
@@ -79,82 +81,32 @@ export default class NewClass extends BasicViewer {
      * @param data 
      */
     setData(data:any){
-        this._data = data;
+        this._menuCursor.setData(data);
+        data = this._menuCursor.getData();
+
         let id = 0;
         data.forEach(element=>{
-            if( typeof element == 'string'){
-                this._data[id] = [element];
-            }
-
             let btn:cc.Node = cc.instantiate(this.prefabButton.node);
             btn.setParent(this.node);
             btn.active = true;
 
             let btnButton:MenuButton = btn.getComponent(MenuButton);
-            btnButton.setLabel(this._data[id++][0]);
+            btnButton.setLabel(data[id++][0]);
 
             this._btns.push(btnButton);
-            this._cursor2.push(0);
         });
-        this._focusOn();
+        this._focusOn(0);
     }
 
     private _refreshButtonLabel(){
-        this._btns[this._cursor1].setLabel(this._data[this._cursor1][this._cursor2[this._cursor1]]);
+        let corsor = this._menuCursor.getCurrentId();
+        this._btns[corsor[0]].setLabel(this._menuCursor.getCurrentFocus());
     }
 
-    private _focusOn(){
+    private _focusOn(cursor1:number){
         this._btns.forEach(element => {
             element.setFocus(false);
         });
-        cc.log( this._cursor1 );
-        this._btns[this._cursor1].setFocus(true);
+        this._btns[cursor1].setFocus(true);
     }
-
-    previus():Array<number>{
-        cc.log("previus:");
-        cc.log(this._btns.length);
-        cc.log(this._cursor1);
-
-        if(--this._cursor1 < 0){
-            this._cursor1 = this._btns.length - 1;
-        }
-        this._focusOn();
-        return this.getCurrentId();
-    }
-
-    next():Array<number>{
-        cc.log("next:");
-        cc.log(this._btns.length);
-        cc.log(this._cursor1);
-        if(++this._cursor1 > this._btns.length - 1){
-            this._cursor1 = 0;
-        }
-        this._focusOn();
-        return this.getCurrentId();
-    }
-
-    left():Array<number>{
-        if(--this._cursor2[this._cursor1] < 0){
-            this._cursor2[this._cursor1] = this._data[this._cursor1].length - 1;
-        }
-        this._refreshButtonLabel();
-        return this.getCurrentId();
-    }
-
-    right():Array<number>{
-        if(++this._cursor2[this._cursor1] > this._data[this._cursor1].length - 1){
-            this._cursor2[this._cursor1] = 0;
-        }
-        this._refreshButtonLabel();
-        return this.getCurrentId();
-    }
-
-    getCurrentId():Array<number>{
-        return [this._cursor1, this._cursor2[this._cursor1]];
-    }
-
-
-
-    // update (dt) {}
 }
