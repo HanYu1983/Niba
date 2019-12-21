@@ -9,7 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import Unit from "./Unit"
-import Pool from "./Pool"
+import Pool from "../Pool"
 
 const { ccclass, property } = cc._decorator;
 

@@ -10,10 +10,10 @@
 
 
 
-import LandMap from "./LandMap";
+import LandMap from "./GamePage/LandMap";
 import BasicViewer from "./BasicViewer";
-import GamePage from "./GamePage";
-import MainPage from "./MainPage";
+import GamePage from "./Page/GamePage";
+import MainPage from "./Page/MainPage";
 
 const { ccclass, property } = cc._decorator;
 
@@ -25,12 +25,12 @@ export default class NewClass extends cc.Component {
 
     start() {
         this.openGamePage();
-        window.startApp();
-        window.viewOb.subscribe(e=>{
-            const [cmd, args] = e
-            console.log("event from cljs ", cmd, args)
-        })
-        window.viewNotifyOb.next(["hello, i'm js", {name:"han"}])
+        // window.startApp();
+        // window.viewOb.subscribe(e=>{
+        //     const [cmd, args] = e
+        //     console.log("event from cljs ", cmd, args)
+        // })
+        // window.viewNotifyOb.next(["hello, i'm js", {name:"han"}])
     }
 
     closeAllPages() {
