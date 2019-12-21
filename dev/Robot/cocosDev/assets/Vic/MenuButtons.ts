@@ -11,11 +11,13 @@
 import MenuButton from "./MenuButton"
 import BasicViewer from "./BasicViewer";
 import InputSensor from "./InputSensor";
+import MenuCursor from "./MenuCursor";
 
 const {ccclass, property, requireComponent} = cc._decorator;
 
 @ccclass
 @requireComponent(InputSensor)
+@requireComponent(MenuCursor)
 export default class NewClass extends BasicViewer {
 
     @property(MenuButton)
@@ -25,8 +27,13 @@ export default class NewClass extends BasicViewer {
     private _data:any;
     private _cursor1:number = 0;
     private _cursor2:Array<number> = [];
+    private _menuCursor:MenuCursor;
 
     static ON_MENU_ENTER:string = "ON_MENU_ENTER";
+
+    start(){
+        this._menuCursor = this.node.getComponent(MenuCursor);
+    }
 
     open(){
         super.open();
