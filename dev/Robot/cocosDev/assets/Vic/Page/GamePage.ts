@@ -8,8 +8,8 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicViewer from "./BasicViewer"
-import LandMap from "./LandMap";
+import BasicViewer from "../BasicViewer"
+import LandMap from "../GamePage/LandMap";
 
 const { ccclass, property } = cc._decorator;
 
