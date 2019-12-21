@@ -7,15 +7,16 @@
 (def defaultGameplayModel {})
 
 (defn ask [tapCh outputCh name args]
-  (let [key (gensym)
+  ; gensym 要轉成字串才能和字串有相等性
+  (let [key (str (gensym))
         worker (a/chan)]
     (a/go
       (a/>! outputCh [name [key args]])
       (loop []
         (when-let [[cmd [resKey args] :as evt] (a/<! tapCh)]
+          (println "response" evt)
           (if (= ["ok" key] [cmd resKey])
             (do
-              (println "response" evt)
               (a/>! worker args)
               (a/close! tapCh)
               (a/close! worker))
@@ -115,13 +116,17 @@
                                      (recur (let [pos args]
                                               (loop [gameplayCtx gameplayCtx]
                                                 (println "handle selectUnitMenu")
-                                                (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" "attack" "cancel"]))]
+                                                (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" ["attack1" "attack2"] "cancel"]))]
                                                   (println "selectUnitMenu " selectUnitMenu)
                                                   (cond
                                                     (= "cancel" selectUnitMenu)
                                                     (do
-                                                      (a/<! (simpleAsk "closeMenu" "unitMenu"))
+                                                      (a/go
+                                                        (a/<! (simpleAsk "unitMenuClose" 0)))
                                                       gameplayCtx)
+
+                                                    (= "attack1" selectUnitMenu)
+                                                    gameplayCtx                                                    
 
                                                     (= "attack" selectUnitMenu)
                                                     (recur (loop [gameplayCtx gameplayCtx]
