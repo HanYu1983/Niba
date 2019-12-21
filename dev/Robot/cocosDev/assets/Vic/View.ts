@@ -45,9 +45,8 @@ export default class NewClass extends cc.Component {
                     this.getGamePage().openUnitMenu(id, menu);
                     break;
                 case "createMap":
-                    this.getGamePage().getMap().setMap(GamePage.generateMap(.3, .35, .05, .6, .8, .8, .02));
-
-                    const [id] = args;
+                    const [id, map] = args;
+                    this.getGamePage().getMap().setMap(map);
                     this.notifyModel("ok", id, 0);
                     break;
             }
