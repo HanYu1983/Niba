@@ -25,12 +25,25 @@ export default class NewClass extends cc.Component {
 
     start() {
         this.openGamePage();
-        // window.startApp();
-        // window.viewOb.subscribe(e=>{
-        //     const [cmd, args] = e
-        //     console.log("event from cljs ", cmd, args)
-        // })
-        // window.viewNotifyOb.next(["hello, i'm js", {name:"han"}])
+        /*
+        window.startApp();
+        window.viewOb.subscribe(e=>{
+            console.log(e)
+            const [cmd, args] = enum
+            switch(cmd){
+                case "unitMenu":
+                    const [id, menu] = args;
+                    this.getPopup(id=>{
+                        window.viewNotifyOb.next(["ok", [id, menu[id]]])
+                    })
+                    break;
+                case "createMap":
+                    break;
+            }
+        })
+        window.viewNotifyOb.next(["startGameplay"])
+        window.viewNotifyOb.next(["selectMap", [0, 0]])
+        */
     }
 
     closeAllPages() {

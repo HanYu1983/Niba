@@ -24,7 +24,7 @@ export default class NewClass extends cc.Component {
     
     start () {
         // debug
-        this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
+        // this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
     }
 
     /**

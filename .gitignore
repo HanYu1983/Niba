@@ -84,6 +84,7 @@ dev/Robot/cocosDev/packages/
 dev/Robot/cljsDev/public/
 dev/Robot/build/
 
+package-lock.json
 .shadow-cljs/
 .nrepl-port
 
