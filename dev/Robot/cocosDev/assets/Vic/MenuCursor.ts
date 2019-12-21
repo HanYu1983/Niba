@@ -19,6 +19,9 @@ export default class NewClass extends cc.Component {
     static ON_CURSOR_CHANGE:string = "ON_CURSOR_CHANGE";
 
     setData(data:any){
+        this._cursor1 = 0;
+        this._cursor2 = [];
+        
         this._data = data;
         let id = 0;
         data.forEach(element=>{

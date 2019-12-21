@@ -35,6 +35,11 @@ export default class NewClass extends cc.Component {
             console.log(e)
             const [cmd, args] = e;
             switch(cmd){
+                case "unitMenuClose":
+                    const [id] = args;
+                    this.notifyModel("ok", id, 0);
+                    this.getGamePage().closeUnitMenu();
+                    break;
                 case "unitMenu":
                     const [id, menu] = args;
                     this.getGamePage().openUnitMenu(id, menu);

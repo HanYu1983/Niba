@@ -55,9 +55,9 @@ export default class NewClass extends BasicViewer {
             this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
         }, this);
 
-        // this.node.on(InputSensor.ESCAPE, ()=>{
-        //     this.close();
-        // }, this);
+        this.node.on(InputSensor.ESCAPE, ()=>{
+            this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
+        }, this);
 
         this.node.on(MenuCursor.ON_CURSOR_CHANGE, data =>{
             this._focusOn(data[0]);
@@ -74,6 +74,11 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.CURSOR_RIGHT);
         this.node.off(InputSensor.ENTER);
         this.node.off(InputSensor.ESCAPE);
+
+        this._btns.forEach(btn=>{
+            btn.node.destroy();
+        });
+        this._btns = [];
     }
 
     /**
