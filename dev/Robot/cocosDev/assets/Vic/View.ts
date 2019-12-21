@@ -23,7 +23,11 @@ export default class NewClass extends cc.Component {
     @property(BasicViewer)
     pages: BasicViewer[] = [];
 
+    static instance:View;
+
     start() {
+        NewClass.instance = this;
+
         this.openGamePage();
         
         window.startApp();
@@ -32,7 +36,8 @@ export default class NewClass extends cc.Component {
             const [cmd, args] = e;
             switch(cmd){
                 case "unitMenu":
-                    // const [id, menu] = args;
+                    const [id, menu] = args;
+                    this.getGamePage().openUnitMenu(id, menu);
                     // this.getPopup(id=>{
                     //     window.viewNotifyOb.next(["ok", [id, menu[id]]])
                     // })
@@ -41,14 +46,22 @@ export default class NewClass extends cc.Component {
                     this.getGamePage().getMap().setMap(GamePage.generateMap(.3, .35, .05, .6, .8, .8, .02));
 
                     const [id] = args;
-                    window.viewNotifyOb.next(["ok", [id, 0]]);
+                    this.notifyModel("ok", id, 0);
                     break;
             }
         })
         
-       // window.viewNotifyOb.next(["selectMap", [0, 0]])
+       // 
         
     }
+
+    notifyModel(cmd:string, id:number, data:any){
+        window.viewNotifyOb.next([cmd, [id, data]]);
+    }
+
+    // initAllPages(){
+    //     this.pages.forEach(page=>{ page.init(this);})
+    // }
 
     closeAllPages() {
         this.pages.forEach(element => {
@@ -89,29 +102,6 @@ export default class NewClass extends cc.Component {
     getMainPage():MainPage{
         return this.pages[0] as MainPage; 
     }
-
-    // onKeyUp(evt: cc.Event.EventKeyboard) {
-    //     switch (evt.keyCode) {
-    //         case cc.macro.KEY.w:
-    //             cc.log("move up");
-    //             break;
-    //         case cc.macro.KEY.a:
-    //             cc.log("move left");
-    //             break;
-    //         case cc.macro.KEY.s:
-    //             cc.log("move bottom");
-    //             break;
-    //         case cc.macro.KEY.d:
-    //             cc.log("move right");
-    //             break;
-    //         case cc.macro.KEY.enter:
-    //             cc.log("enter");
-    //             break;
-    //         case cc.macro.KEY.escape:
-    //             cc.log("esc");
-    //             break;
-    //     }
-    // }
 
     // update (dt) {}
 }

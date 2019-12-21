@@ -10,14 +10,21 @@
 
 import BasicViewer from "../BasicViewer"
 import LandMap from "../GamePage/LandMap";
+import InputSensor from "../InputSensor";
+import MenuButtons from "../MenuButtons";
+import View from "../View";
 
-const { ccclass, property } = cc._decorator;
+const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
+@requireComponent(InputSensor)
 export default class NewClass extends BasicViewer {
 
     @property(LandMap)
     map: LandMap = null;
+
+    @property(MenuButtons)
+    unitMenu:MenuButtons = null;
 
     open() {
 
@@ -28,9 +35,36 @@ export default class NewClass extends BasicViewer {
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
+
+        this.node.on(InputSensor.CURSOR_UP, ()=>{
+
+        });
+
+        this.node.on(InputSensor.ENTER, ()=>{
+            View.instance.notifyModel("selectMap", [0,0]);
+        }, this);
     }
 
-    static generateMap(deepsea: number = .3,
+    close(){
+        this.node.off(InputSensor.CURSOR_UP);
+        this.node.off(InputSensor.ENTER);
+    }
+
+    openUnitMenu(id:number, data:any){
+        this.unitMenu.open();
+        this.unitMenu.setData(data);
+        this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
+            View.instance.notifyModel("ok", id, key);
+        });
+    }
+
+    closeUnitMenu(){
+        this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        this.unitMenu.close();
+    }
+
+    static generateMap(
+        deepsea: number = .3,
         sea: number = .3,
         sand: number = .3,
         grass: number = .3,
