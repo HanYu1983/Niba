@@ -3,255 +3,120 @@
   (:require [app.map :as map])
   (:require-macros [app.macros :as m]))
 
-(println (map/findPath 0 5 (fn [i] [(inc i)]) (constantly 1) (constantly 1)))
-(println (map/findPath
-          [0 0]
-          [100 100]
-          (fn [[x y]]
-            [[x (inc y)] [x (max 0 (dec y))] [(inc x) y] [(max 0 (dec x)) y]])
-          (constantly 1)
-          (fn [curr end]
-            (->> (map - curr end)
-                 (repeat 2)
-                 (apply map *)
-                 (apply +)))))
+(def defaultModel {})
 
-
-(def keymap {:up "KeyW"
-             :down "KeyS"
-             :left "KeyA"
-             :right "KeyD"
-             :ok "Space"})
-
-(def defaultModel {:page :title
-                   :pageState {:title nil
-                               :gameplay {:map nil
-                                          :cursor [0 0]
-                                          :players {:player {}
-                                                    :ai1 {:friendly false}
-                                                    :ai2 {:friendly true}}
-                                          :units [{:key (gensym)
-                                                   :player :player
-                                                   :robot {}
-                                                   :position [0 0]}
-                                                  {:key (gensym)
-                                                   :player :a1
-                                                   :robot {}
-                                                   :position [5 5]}]
-                                          :focusUnitKey nil}}})
-
-(defmulti updatePage (fn [ctx] (:page ctx)))
-(defmethod updatePage :default [ctx inputCh outputCh]
-  (let [worker (a/chan)]
+(defn ask [tapCh outputCh name args]
+  (let [key (gensym)
+        worker (a/chan)]
     (a/go
-      (a/>! outputCh [:on-change-page (:page ctx)]))
-    (a/go
-      (a/<! (a/timeout 1000))
-      (a/>! worker ctx)
-      (a/close! worker))
+      (a/>! outputCh [name [key args]])
+      (loop []
+        (when-let [[cmd [resKey args] :as evt] (a/<! tapCh)]
+          (if (= ["ok" key] [cmd resKey])
+            (do
+              (println "response" evt)
+              (a/>! worker args)
+              (a/close! tapCh)
+              (a/close! worker))
+            (recur))))
+      (println "finished !!!!"))
     worker))
 
-(defmethod updatePage :title [ctx inputCh outputCh]
-  (a/go
-    (a/>! outputCh [:on-change-page (:page ctx)]))
-  (let [worker (a/chan)]
-    (a/go-loop [pageCtx (get-in ctx [:pageState (:page ctx)])]
-      (let [[cmd args] (a/<! inputCh)]
-        (condp = [cmd args]
-          [:click :gameplay]
-          (let [ctx (-> ctx
-                        (update-in [:pageState (:page ctx)] (constantly pageCtx))
-                        (merge {:page :gameplay}))]
-            (a/>! worker ctx)
-            (a/close! worker))
-
-          (recur pageCtx))))
-    worker))
-
-(m/defstate moveAttackMenu [:on-show-popup :moveAttackMenu]
-  (condp = cmd
-    :click
-    (let [menu args]
-      (a/>! worker args)
-      (a/close! worker))
-
-    (recur ctx)))
-
-(m/defstate attackMenu [:on-show-popup :attackMenu]
-  (recur ctx))
-
-(m/defstate systemMenu [:on-show-popup :systemMenu]
-  (recur ctx))
-
-(defn playerTurn [ctx inputCh outputCh]
-  (a/go
-    (a/>! outputCh [:on-change-turn :player]))
-  (let [worker (a/chan)]
-    (a/go-loop [ctx ctx]
-      (let [[cmd args :as evt] (a/<! inputCh)]
-        (condp = evt
-          [:keydown (:up keymap)]
-          (recur (update ctx :cursor (fn [[x y]]
-                                       [x (max 0 (dec y))])))
-          [:keydown (:down keymap)]
-          (recur (update ctx :cursor (fn [[x y]]
-                                       [x (min 10 (inc y))])))
-          [:keydown (:left keymap)]
-          (recur (update ctx :cursor (fn [[x y]]
-                                       [(max 0 (dec x)) y])))
-          [:keydown (:right keymap)]
-          (recur (update ctx :cursor (fn [[x y]]
-                                       [(min 10 (inc x)) y])))
-
-          [:keydown (:ok keymap)]
-          (do
-            (a/>! worker ctx)
-            (a/close! worker))
-
-          (condp = cmd
-            :click-pos
-            (let [pos args
-                  units (:units ctx)
-                  unitsAtPos (-> (filter #(= pos (:position %)) units)
-                                 first)]
-              (if unitsAtPos
-                (let [action (a/<! (moveAttackMenu nil inputCh outputCh))]
-                  (condp = action
-                    :attack
-                    (let [xx (a/<! (attackMenu nil inputCh outputCh))]
-                      (println action))
-                    (recur ctx)))
-                (let [action (a/<! (systemMenu nil inputCh outputCh))]
-                  (recur ctx))))
-
-            (recur ctx)))))
-    worker))
-
-(defn enemyTurn [enemy ctx inputCh outputCh]
-  (a/go
-    (a/>! outputCh [:on-change-turn enemy]))
-  (let [worker (a/chan)]
-    (a/go
-      (a/>! worker ctx)
-      (a/close! worker))
-    worker))
-
-(defmethod updatePage :gameplay [ctx inputCh outputCh]
-  (a/go
-    (a/>! outputCh [:on-change-page (:page ctx)]))
-  (let [worker (a/chan)]
-    (a/go-loop [pageCtx (get-in ctx [:pageState (:page ctx)])]
-      (let [pageCtx (a/<! (playerTurn pageCtx inputCh outputCh))
-            enemies (->> (:players pageCtx)
-                         keys
-                         (filter #(not= :player %)))
-            enemyWorkers (let [enemyWorker (a/chan)]
-                           (a/go-loop [pageCtx pageCtx
-                                       enemies enemies]
-                             (if (= (count enemies) 0)
-                               (do
-                                 (a/>! enemyWorker pageCtx)
-                                 (a/close! enemyWorker))
-                               (let [enemy (first enemies)
-                                     pageCtx (a/<! (enemyTurn enemy pageCtx inputCh outputCh))]
-                                 (recur pageCtx (rest enemies)))))
-                           enemyWorker)
-            pageCtx (a/<! enemyWorkers)]
-        (recur pageCtx)))
-    worker))
-
-(defn modelLoop [inputCh outputCh]
-  (a/go-loop [ctx defaultModel]
-    (println ctx)
-    (let [ctx (a/<! (updatePage ctx inputCh outputCh))]
-      (recur ctx))))
-
-
-(defn viewLoop [inputCh outputCh]
-  (.subscribe (.-viewNotifyOb js/window)
-              (fn [e]
-                (a/go
-                  (a/>! outputCh (js->clj e)))))
-  (a/go-loop []
-    (let [evt (a/<! inputCh)]
-      (.next (.-viewOb js/window) (clj->js evt))
-      (recur))))
-
-(defn controller []
-  (let [modelCh (a/chan)
-        modelNotifyCh (a/chan)
-        viewCh (a/chan)
+(defn main []
+  (let [viewCh (a/chan)
         viewNotifyCh (a/chan)
-        inputCh (a/chan)]
-    (js/window.addEventListener "keydown" (fn [e]
-                                            (a/go
-                                              (a/>! inputCh [:keydown (.-code e)]))))
-    (js/window.addEventListener "keyup" (fn [e]
-                                          (a/go
-                                            (a/>! inputCh [:keyup (.-code e)]))))
-    (modelLoop modelCh modelNotifyCh)
-    (viewLoop viewCh viewNotifyCh)
-    (a/go
-      (a/>! viewCh [:hello {:name "han"}]))
+        ; 所有從viewNotifyMult中tap的channel一定要消費掉它的內容, 不然viewNotifyCh推不進新的內容
+        viewNotifyMult (a/mult viewNotifyCh)]
 
     (a/go-loop []
-      (let [[cmd args] (a/<! viewNotifyCh)]
-        (println "view" cmd args)
-        (condp = cmd
-          :on-select
-          (recur)
-          
-          (recur))))
-
-    (a/go-loop []
-      (let [[cmd args :as evt] (a/<! modelNotifyCh)]
-        (println cmd args)
-        (condp = evt
-          [:on-show-popup :moveAttackMenu]
-          (let []
-            (a/>! modelCh [:click :attack])
+      (when-let [[cmd args :as evt] (a/<! viewCh)]
+        (println "view command:" evt)
+        (cond
+          (contains? #{"attackMenu"} cmd)
+          (let [[key _] args]
+            (a/>! viewNotifyCh ["ok" [key "cancel"]])
             (recur))
           
-          (condp = cmd
-            :on-change-turn
-            (let [turn args]
-              (condp = turn
-                :player
-                (a/>! modelCh [:click-pos [0 0]])
+          (contains? #{"unitMenu"} cmd)
+          (let [[key _] args]
+            (a/>! viewNotifyCh ["ok" [key "cancel"]])
+            (recur))
 
-                nil)
-              (recur))
+          (contains? #{"createMap"} cmd)
+          (let [[key _] args]
+            (a/>! viewNotifyCh ["ok" [key 0]])
+            (recur))
 
-            :on-change-page
-            (let [page args]
-              (condp = page
-                :title
-                (a/>! modelCh [:click :gameplay])
+          (contains? #{"moveTo"} cmd)
+          (let [[key pos] args]
+            (a/go []
+                  (a/<! (a/timeout 1000))
+                  (a/<! (a/timeout 1000))
+                  (a/>! viewNotifyCh ["ok" [key 0]]))
+            (recur))
 
-                nil)
-              (recur))
+          :else
+          (recur))))
 
-            :on-show-popup
-            (recur)
+    (let [simpleAsk (fn [name args]
+                      (ask (a/tap viewNotifyMult (a/chan))
+                           viewCh
+                           name
+                           args))
+          modelLoop (fn [inputCh outputCh]
+                      (a/go-loop [ctx defaultModel]
+                        (when-let [[cmd args :as evt] (a/<! inputCh)]
+                          (condp = cmd
+                            "load"
+                            (recur ctx)
 
-            :model-sync
-            (let [model args]
-              (comment "draw model")
-              (recur))
+                            "startGameplay"
+                            (let []
+                              (a/<! (simpleAsk "createMap" nil))
 
-            (recur)))))))
+                              (loop [ctx ctx]
+                                (println "handle map")
+                                (when-let [[cmd args :as evt] (a/<! inputCh)]
+                                  (cond
+                                    (= cmd "selectMap")
+                                    (recur (let [pos args]
+                                             (loop [ctx ctx]
+                                               (println "handle selectUnitMenu")
+                                               (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" "attack" "cancel"]))]
+                                                 (println "selectUnitMenu " selectUnitMenu)
+                                                 (cond
+                                                   (= "cancel" selectUnitMenu)
+                                                   ctx
 
-(println "ver 1.0")
-(defn main []
-  (let [viewOb (js/rxjs.Subject.)
-        viewNotifyOb (js/rxjs.Subject.)]
-    (.subscribe viewOb
-                (fn [e]
-                  (js/console.log "hello " e)))
-    (set! (.-viewOb js/window)
-          viewOb)
-    (set! (.-viewNotifyOb js/window)
-          viewNotifyOb))
-  (controller))
+                                                   (= "attack" selectUnitMenu)
+                                                   (recur (loop [ctx ctx]
+                                                            (let [selectAttackMenu (a/<! (simpleAsk "attackMenu" ["weapon1" "cancel"]))]
+                                                              (cond
+                                                                (= "cancel" selectAttackMenu)
+                                                                ctx
 
-(set! (.-startApp js/window) main)
+                                                                :else
+                                                                (recur ctx)))))
+
+                                                   :else
+                                                   (recur ctx))))))
+
+                                    :else
+                                    (recur ctx)))))
+
+                            (recur ctx)))))
+          inputCh (a/merge
+                   [(a/tap viewNotifyMult (a/chan))])]
+      (modelLoop inputCh viewCh))
+
+    (js/window.addEventListener "keydown" (fn [e]
+                                            (condp = (.-code e)
+                                              "KeyA"
+                                              (a/put! viewNotifyCh ["startGameplay"])
+
+                                              "KeyB"
+                                              (a/put! viewNotifyCh ["selectMap" [0 0]])
+
+                                              nil)))))
+
+(main)
