@@ -71,6 +71,7 @@
     (let []
       (.subscribe (.-viewNotifyOb js/window)
                   (fn [e]
+                    (println "fromView " e)
                     (a/go
                       (a/>! viewNotifyCh (js->clj e)))))
       (a/go-loop []
@@ -107,7 +108,7 @@
                                 (a/<! (simpleAsk "createMap" map)))
                               (->>
                                (loop [gameplayCtx gameplayCtx]
-                                 (println gameplayCtx)
+                                 (println "handle gameplay")
                                  (when-let [[cmd args :as evt] (a/<! inputCh)]
                                    (cond
                                      (= cmd "selectMap")
@@ -118,14 +119,18 @@
                                                   (println "selectUnitMenu " selectUnitMenu)
                                                   (cond
                                                     (= "cancel" selectUnitMenu)
-                                                    gameplayCtx
+                                                    (do
+                                                      (a/<! (simpleAsk "closeMenu" "unitMenu"))
+                                                      gameplayCtx)
 
                                                     (= "attack" selectUnitMenu)
                                                     (recur (loop [gameplayCtx gameplayCtx]
                                                              (let [selectAttackMenu (a/<! (simpleAsk "attackMenu" [["weapon1" "weapon2"] "cancel"]))]
                                                                (cond
                                                                  (= "cancel" selectAttackMenu)
-                                                                 gameplayCtx
+                                                                 (do
+                                                                   (a/<! (simpleAsk "closeMenu" "attackMenu"))
+                                                                   gameplayCtx)
 
                                                                  :else
                                                                  (recur gameplayCtx)))))
@@ -146,10 +151,10 @@
     (js/window.addEventListener "keydown" (fn [e]
                                             (println (.-code e))
                                             (condp = (.-code e)
-                                              "KeyA"
+                                              "KeyP"
                                               (a/put! viewNotifyCh ["startGameplay"])
 
-                                              "KeyB"
+                                              "KeyO"
                                               (a/put! viewNotifyCh ["selectMap" [0 0]])
 
                                               nil)))))
