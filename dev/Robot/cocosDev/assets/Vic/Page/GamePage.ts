@@ -26,6 +26,8 @@ export default class NewClass extends BasicViewer {
     @property(MenuButtons)
     unitMenu:MenuButtons = null;
 
+    private _cursor:number[] = [0,0];
+
     open() {
 
         super.open();
@@ -36,6 +38,17 @@ export default class NewClass extends BasicViewer {
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
 
+        
+    }
+
+    setCursor(x:number, y:number){
+        this._cursor[0] = x;
+        this._cursor[1] = y;
+    }
+
+    addListener(){
+        super.addListener();
+
         this.node.on(InputSensor.CURSOR_UP, ()=>{
 
         });
@@ -45,7 +58,9 @@ export default class NewClass extends BasicViewer {
         }, this);
     }
 
-    close(){
+    removeListenser(){
+        super.removeListenser();
+
         this.node.off(InputSensor.CURSOR_UP);
         this.node.off(InputSensor.ENTER);
     }
@@ -56,11 +71,14 @@ export default class NewClass extends BasicViewer {
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
             View.instance.notifyModel("ok", id, key);
         });
+        this.removeListenser();
     }
 
     closeUnitMenu(){
         this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.unitMenu.close();
+
+        this.addListener();
     }
 
     static generateMap(

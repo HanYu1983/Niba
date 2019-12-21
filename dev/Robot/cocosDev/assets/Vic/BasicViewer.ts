@@ -14,11 +14,21 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
+    addListener(){
+        this.removeListenser();
+    }
+
+    removeListenser(){
+
+    }
+
     open(){
         this.node.active = true;
+        this.addListener();
     }
 
     close(){
         this.node.active = false;
+        this.removeListenser();
     }
 }
