@@ -23,41 +23,61 @@
     worker))
 
 (defn main []
+  (println "prepare rxjs")
+  (let [viewOb (js/rxjs.Subject.)
+        viewNotifyOb (js/rxjs.Subject.)]
+    (set! (.-viewOb js/window)
+          viewOb)
+    (set! (.-viewNotifyOb js/window)
+          viewNotifyOb))
+  
   (let [viewCh (a/chan)
         viewNotifyCh (a/chan)
         ; 所有從viewNotifyMult中tap的channel一定要消費掉它的內容, 不然viewNotifyCh推不進新的內容
         viewNotifyMult (a/mult viewNotifyCh)]
 
-    (a/go-loop []
-      (when-let [[cmd args :as evt] (a/<! viewCh)]
-        (println "view command:" evt)
-        (cond
-          (contains? #{"attackMenu"} cmd)
-          (let [[key _] args]
-            (a/>! viewNotifyCh ["ok" [key "cancel"]])
-            (recur))
-          
-          (contains? #{"unitMenu"} cmd)
-          (let [[key _] args]
-            (a/>! viewNotifyCh ["ok" [key "cancel"]])
-            (recur))
+    (comment (a/go-loop []
+               (when-let [[cmd args :as evt] (a/<! viewCh)]
+                 (println "view command:" evt)
+                 (cond
+                   (contains? #{"attackMenu"} cmd)
+                   (let [[key _] args]
+                     (a/>! viewNotifyCh ["ok" [key "cancel"]])
+                     (recur))
 
-          (contains? #{"createMap"} cmd)
-          (let [[key _] args]
-            (a/>! viewNotifyCh ["ok" [key 0]])
-            (recur))
+                   (contains? #{"unitMenu"} cmd)
+                   (let [[key _] args]
+                     (a/>! viewNotifyCh ["ok" [key "cancel"]])
+                     (recur))
 
-          (contains? #{"moveTo"} cmd)
-          (let [[key pos] args]
-            (a/go []
-                  (a/<! (a/timeout 1000))
-                  (a/<! (a/timeout 1000))
-                  (a/>! viewNotifyCh ["ok" [key 0]]))
-            (recur))
+                   (contains? #{"createMap"} cmd)
+                   (let [[key _] args]
+                     (a/>! viewNotifyCh ["ok" [key 0]])
+                     (recur))
 
-          :else
+                   (contains? #{"moveTo"} cmd)
+                   (let [[key pos] args]
+                     (a/go []
+                           (a/<! (a/timeout 1000))
+                           (a/<! (a/timeout 1000))
+                           (a/>! viewNotifyCh ["ok" [key 0]]))
+                     (recur))
+
+                   :else
+                   (recur)))))
+
+    (println "view")
+    (let []
+      (.subscribe (.-viewNotifyOb js/window)
+                  (fn [e]
+                    (a/go
+                      (a/>! viewNotifyCh (js->clj e)))))
+      (a/go-loop []
+        (let [evt (a/<! viewCh)]
+          (.next (.-viewOb js/window) (clj->js evt))
           (recur))))
 
+    (println "model")
     (let [simpleAsk (fn [name args]
                       (ask (a/tap viewNotifyMult (a/chan))
                            viewCh
@@ -66,13 +86,15 @@
           modelLoop (fn [inputCh outputCh]
                       (a/go-loop [ctx defaultModel]
                         (when-let [[cmd args :as evt] (a/<! inputCh)]
+                          (println "control " evt)
                           (condp = cmd
                             "load"
                             (recur ctx)
 
                             "startGameplay"
                             (let []
-                              (a/<! (simpleAsk "createMap" nil))
+                              (a/go
+                                (a/<! (simpleAsk "createMap" nil)))
 
                               (loop [ctx ctx]
                                 (println "handle map")
@@ -109,14 +131,18 @@
                    [(a/tap viewNotifyMult (a/chan))])]
       (modelLoop inputCh viewCh))
 
-    (js/window.addEventListener "keydown" (fn [e]
-                                            (condp = (.-code e)
-                                              "KeyA"
-                                              (a/put! viewNotifyCh ["startGameplay"])
+    (comment (js/window.addEventListener "keydown" (fn [e]
+                                                     (println (.-code e))
+                                                     (condp = (.-code e)
+                                                       "KeyA"
+                                                       (a/put! viewNotifyCh ["startGameplay"])
 
-                                              "KeyB"
-                                              (a/put! viewNotifyCh ["selectMap" [0 0]])
+                                                       "KeyB"
+                                                       (a/put! viewNotifyCh ["selectMap" [0 0]])
 
-                                              nil)))))
+                                                       nil))))
 
-(main)
+    ))
+
+(set! (.-startApp js/window) 
+      main)
