@@ -23,11 +23,14 @@ export default class NewClass extends BasicViewer {
 
         super.open();
         this.map.initPool();
-        this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
+
+        window.viewNotifyOb.next(["startGameplay"]);
+
+        //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
     }
 
-    generateMap(deepsea: number = .3,
+    static generateMap(deepsea: number = .3,
         sea: number = .3,
         sand: number = .3,
         grass: number = .3,

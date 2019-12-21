@@ -25,25 +25,29 @@ export default class NewClass extends cc.Component {
 
     start() {
         this.openGamePage();
-        /*
+        
         window.startApp();
         window.viewOb.subscribe(e=>{
             console.log(e)
-            const [cmd, args] = enum
+            const [cmd, args] = e;
             switch(cmd){
                 case "unitMenu":
-                    const [id, menu] = args;
-                    this.getPopup(id=>{
-                        window.viewNotifyOb.next(["ok", [id, menu[id]]])
-                    })
+                    // const [id, menu] = args;
+                    // this.getPopup(id=>{
+                    //     window.viewNotifyOb.next(["ok", [id, menu[id]]])
+                    // })
                     break;
                 case "createMap":
+                    this.getGamePage().getMap().setMap(GamePage.generateMap(.3, .35, .05, .6, .8, .8, .02));
+
+                    const [id] = args;
+                    window.viewNotifyOb.next(["ok", [id, 0]]);
                     break;
             }
         })
-        window.viewNotifyOb.next(["startGameplay"])
-        window.viewNotifyOb.next(["selectMap", [0, 0]])
-        */
+        
+       // window.viewNotifyOb.next(["selectMap", [0, 0]])
+        
     }
 
     closeAllPages() {
