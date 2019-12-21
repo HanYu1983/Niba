@@ -33,12 +33,11 @@ export default class NewClass extends BasicViewer {
         super.open();
         this.map.initPool();
 
-        window.viewNotifyOb.next(["startGameplay"]);
+        View.instance.notifyCmd("startGameplay");
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
 
-        
     }
 
     setCursor(x:number, y:number){
@@ -77,7 +76,6 @@ export default class NewClass extends BasicViewer {
     closeUnitMenu(){
         this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.unitMenu.close();
-
         this.addListener();
     }
 

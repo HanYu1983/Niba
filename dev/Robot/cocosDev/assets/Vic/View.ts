@@ -23,7 +23,7 @@ export default class NewClass extends cc.Component {
     @property(BasicViewer)
     pages: BasicViewer[] = [];
 
-    static instance:View;
+    static instance:NewClass;
 
     start() {
         NewClass.instance = this;
@@ -38,9 +38,6 @@ export default class NewClass extends cc.Component {
                 case "unitMenu":
                     const [id, menu] = args;
                     this.getGamePage().openUnitMenu(id, menu);
-                    // this.getPopup(id=>{
-                    //     window.viewNotifyOb.next(["ok", [id, menu[id]]])
-                    // })
                     break;
                 case "createMap":
                     this.getGamePage().getMap().setMap(GamePage.generateMap(.3, .35, .05, .6, .8, .8, .02));
@@ -49,14 +46,17 @@ export default class NewClass extends cc.Component {
                     this.notifyModel("ok", id, 0);
                     break;
             }
-        })
-        
-       // 
-        
+        })        
     }
 
     notifyModel(cmd:string, id:number, data:any){
         window.viewNotifyOb.next([cmd, [id, data]]);
+
+        
+    }
+
+    notifyCmd(cmd:string, data:any = undefined){
+        window.viewNotifyOb.next(["startGameplay", data]);
     }
 
     // initAllPages(){
