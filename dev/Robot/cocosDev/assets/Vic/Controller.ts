@@ -43,6 +43,10 @@ export default class NewClass extends cc.Component {
                 // 敵方回合
                 case "enemyTurn":
                     {
+                        this.view.getGamePage().closeSceneMenu();
+                        this.view.getGamePage().closeUnitMenu();
+                        this.view.getGamePage().removeListenser();
+
                         // 這由以上的指令不能回覆
                     }
                     break;

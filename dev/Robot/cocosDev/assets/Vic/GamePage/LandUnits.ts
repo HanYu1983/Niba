@@ -52,6 +52,7 @@ export default class NewClass extends cc.Component {
 
     setUnits(data: any) {
         let units = data.units;
+        cc.log(units);
         for (let element of units) {
             let unitId = element["key"];
             let name = element["key"];
@@ -62,7 +63,7 @@ export default class NewClass extends cc.Component {
             let unitNode: cc.Node = this.getComponent(Pool).getNode(this.prefabUnit.node);
             unitNode.setParent(this.node);
 
-            let gridPos = Controller.instance.view.getGridPos(pos[0], pos[1]);
+            let gridPos = Controller.instance.view.getGridPos(pos);
             unitNode.x = gridPos[0];
             unitNode.y = gridPos[1];
             unitNode.active = true;
