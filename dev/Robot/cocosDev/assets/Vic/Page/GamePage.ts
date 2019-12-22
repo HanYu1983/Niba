@@ -10,10 +10,11 @@
 
 import BasicViewer from "../BasicViewer"
 import LandMap from "../GamePage/LandMap";
+import LandUnits from "../GamePage/LandUnits";
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
 import WeaponMenu from "../GamePage/WeaponMenu"
-import View from "../View";
+import Controller from "../Controller";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -23,6 +24,9 @@ export default class NewClass extends BasicViewer {
 
     @property(LandMap)
     map: LandMap = null;
+
+    @property(LandUnits)
+    units:LandUnits = null;
 
     @property(MenuButtons)
     unitMenu:MenuButtons = null;
@@ -43,7 +47,7 @@ export default class NewClass extends BasicViewer {
         super.open();
         this.map.initPool();
 
-        View.instance.notifyCmd("startGameplay");
+        Controller.instance.notifyCmd("startGameplay");
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
@@ -57,7 +61,7 @@ export default class NewClass extends BasicViewer {
         this._cursor[0] = x;
         this._cursor[1] = y;
 
-        let cursorPos = View.instance.getGridPos(x, y);
+        let cursorPos = Controller.instance.view.getGridPos(x, y);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
     }
@@ -70,7 +74,7 @@ export default class NewClass extends BasicViewer {
         });
 
         this.node.on(InputSensor.ENTER, ()=>{
-            View.instance.notifyModel("selectMap", [0,0]);
+            Controller.instance.notifyModel("selectMap", [0,0]);
         }, this);
     }
 
@@ -85,7 +89,7 @@ export default class NewClass extends BasicViewer {
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
         this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
-            View.instance.notifyModel("ok", id, key);
+            Controller.instance.notifyModel("ok", id, key);
         });
 
         this.removeListenser();
@@ -98,11 +102,12 @@ export default class NewClass extends BasicViewer {
         this.addListener();
     }
 
-    openUnitMenu(id:number, data:any){
+    openUnitMenu(data:any, callback:(key)=>void){
         this.unitMenu.open();
         this.unitMenu.setData(data);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
-            View.instance.notifyModel("ok", id, key);
+            //View.instance.notifyModel("ok", id, key);
+            callback(key);
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor=>{
@@ -224,7 +229,7 @@ export default class NewClass extends BasicViewer {
         return map;
     }
 
-    getMap(): LandMap {
-        return this.map;
-    }
+    // getMap(): LandMap {
+    //     return this.map;
+    // }
 }
