@@ -204,9 +204,9 @@
           playerTurn (fn [gameplayCtx inputCh outputCh]
                        (a/go-loop [gameplayCtx gameplayCtx]
                          (println "[model][playerTurn]")
-                         
-                         ; (a/<! (simpleAsk "playerTurn" 0))
-                         
+                         ; 不能這樣用, 因為inputCh也會收到回覆, 從而透過recur導致不斷的發送                      
+                         ;(a/<! (simpleAsk "playerTurn" 0))
+                         (a/>! outputCh ["playerTurn"])
                          (when-let [[cmd args :as evt] (a/<! inputCh)]
                            (println "[model][playerTurn][evt]" evt)
                            (cond
@@ -247,7 +247,7 @@
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
                       (a/go
                         (println "[model][enemyTurn]" enemy)
-                        (a/<! (simpleAsk "enemyTurn" enemy))
+                        (a/>! outputCh ["enemyTurn" enemy])
                         gameplayCtx))
 
 
