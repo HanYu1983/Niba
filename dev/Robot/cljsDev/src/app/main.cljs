@@ -53,9 +53,10 @@
                                     :position [5 5]}]
                            :focusUnitKey nil})
 
-(defn ask [tapCh outputCh name args]
+(defn ask [mult outputCh name args]
   ; gensym 要轉成字串才能和字串有相等性
-  (let [key (str (gensym))
+  (let [tapCh (a/tap mult (a/chan))
+        key (str (gensym))
         worker (a/chan)]
     (a/go
       (a/>! outputCh [name [key args]])
@@ -127,17 +128,23 @@
           (.next (.-viewOb js/window) (clj->js evt))
           (recur))))
 
-    (println "model v2")
-    (let [simpleAsk (fn [name args]
-                      (ask (a/tap viewNotifyMult (a/chan))
+    (println "model v3")
+    (let [; 預設的緩衝大小是0, 要先有人準備好消化(<!)才能推進去(>!)
+          ; 而因為這個chan會放在merge裡, 所以要預留緩衝
+          systemInputCh (a/chan 999)
+
+
+          simpleAsk (fn [name args]
+                      (ask viewNotifyMult
                            viewCh
                            name
                            args))
 
-          
+
+
           selectUnitFlow (fn [gameplayCtx inputCh outputCh]
                            (a/go-loop [gameplayCtx gameplayCtx]
-                             (println "handle selectUnitMenu")
+                             (println "selectUnitFlow")
                              (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" ["attack1" "attack2"] "cancel"]))]
                                (println "selectUnitMenu " selectUnitMenu)
                                (cond
@@ -165,22 +172,78 @@
                                  :else
                                  (recur gameplayCtx)))))
 
-          
+
+
+          selectNoUnitFlow (fn [gameplayCtx inputCh outputCh]
+                             (a/go-loop [gameplayCtx gameplayCtx]
+                               (println "selectNoUnitFlow")
+                               (let [select (a/<! (simpleAsk "unitMenu" ["endTurn" "cancel"]))]
+                                 (println "unitMenu " select)
+                                 (cond
+                                   (= "endTurn" select)
+                                   (let []
+                                     (a/<! (simpleAsk "unitMenuClose" 0))
+                                     (a/>! systemInputCh ["endPlayerTurn"])
+                                     gameplayCtx)
+
+                                   (= "cancel" select)
+                                   (do
+                                     (a/go
+                                       (a/<! (simpleAsk "unitMenuClose" 0)))
+                                     gameplayCtx)
+
+                                   :else
+                                   (recur gameplayCtx)))))
+
+
+
           playerTurn (fn [gameplayCtx inputCh outputCh]
                        (a/go-loop [gameplayCtx gameplayCtx]
-                         (println "handle gameplay")
+                         (println "playerTurn")
                          (when-let [[cmd args :as evt] (a/<! inputCh)]
+                           (println evt)
                            (cond
+                             (= "endPlayerTurn" cmd)
+                             (let []
+                               gameplayCtx)
+
                              (= "selectMap" cmd)
                              (recur (let [pos args]
-                                      (a/<! (selectUnitFlow gameplayCtx inputCh outputCh))))
+                                      (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))
 
                              :else
                              (recur gameplayCtx)))))
 
-          
+
+
+          enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
+                      (println "enemyTurn" enemy)
+                      (a/go
+                        gameplayCtx))
+
+
+
+          gameplayLoop (fn [gameplayCtx inputCh outputCh]
+                         (println "gameplayLoop")
+                         (a/go-loop [gameplayCtx gameplayCtx]
+                           (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
+                                 enemies (->> (:players gameplayCtx)
+                                              keys
+                                              (filter #(not= :player %)))
+                                 enemyTurns (a/go-loop [gameplayCtx gameplayCtx
+                                                        enemies enemies]
+                                              (if (= (count enemies) 0)
+                                                gameplayCtx
+                                                (let [enemy (first enemies)
+                                                      gameplayCtx (a/<! (enemyTurn gameplayCtx enemy inputCh outputCh))]
+                                                  (recur gameplayCtx (rest enemies)))))]
+                             (recur (a/<! enemyTurns)))))
+
+
+
           modelLoop (fn [inputCh outputCh]
                       (a/go-loop [ctx defaultModel]
+                        (println "modelLoop")
                         (when-let [[cmd args :as evt] (a/<! inputCh)]
                           (println "control " evt)
                           (condp = cmd
@@ -198,18 +261,14 @@
                                                         :award 0.1})
                                   gameplayCtx (merge defaultGameplayModel
                                                      {:map map})]
-                              (a/go
-                                (a/<! (simpleAsk "createMap" map)))
-                              (->>
-                               (a/<! (playerTurn gameplayCtx inputCh outputCh))
-                               (constantly)
-                               (update ctx :gameplay)))
+                              (a/<! (simpleAsk "createMap" map))
+                              (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
 
                             (recur ctx)))))
-          
-          
-          inputCh (a/merge
-                   [(a/tap viewNotifyMult (a/chan))])]
+
+
+          inputCh (a/merge [(a/tap viewNotifyMult (a/chan))
+                            systemInputCh])]
       
       
       (modelLoop inputCh viewCh))
