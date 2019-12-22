@@ -203,11 +203,11 @@
                                                                units))]
                                (if unitAtCursor
                                  (let []
-                                   (a/<! (simpleAsk "unitStateMenu" 0))
-                                   (a/<! (simpleAsk "setCursor" cursor))
+                                   (a/>! outputCh ["unitState"])
+                                   (a/>! outputCh ["setCursor" cursor])
                                    (recur gameplayCtx))
                                  (let []
-                                   (a/<! (simpleAsk "setCursor" cursor))
+                                   (a/>! outputCh ["setCursor" cursor])
                                    (recur gameplayCtx))))
 
                              (= "selectMap" cmd)

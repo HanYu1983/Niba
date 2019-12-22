@@ -26,10 +26,15 @@ export default class NewClass extends cc.Component {
         window.viewOb.subscribe(e => {
             const [cmd, args] = e;
             switch (cmd) {
-                case "unitStateMenu":
+                case "setCursor":
                     {
-                        const [id] = args;
-                        this.notifyAnswer(id);
+                        const pos = args;
+                        this.view.getGamePage().setCursor(pos);
+                    }
+                    break;
+                case "unitState":
+                    {
+                        
                     }
                     break;
                 // 進入gameplay
@@ -84,13 +89,6 @@ export default class NewClass extends cc.Component {
                         const [id, units] = args;
                         this.view.getGamePage().units.setUnits(units);
                         this.notifyModel("ok", id, 0);
-                    }
-                    break;
-                case "setCursor":
-                    {
-                        const [id, pos] = args;
-                        this.view.getGamePage().setCursor(pos);
-                        this.notifyAnswer(id);
                     }
                     break;
                 case "createMap":
