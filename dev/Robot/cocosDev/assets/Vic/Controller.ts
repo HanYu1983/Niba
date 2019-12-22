@@ -30,6 +30,12 @@ export default class NewClass extends cc.Component {
                 case "gameplayLoop":
                 // 玩家回合
                 case "playerTurn":
+                    {
+                        // this.view.getGamePage().closeSceneMenu();
+                        // this.view.getGamePage().closeUnitMenu();
+                        // this.view.getGamePage().addListener();
+                    }
+                    break;
                 // 敵方回合
                 case "enemyTurn":
                     {
@@ -40,32 +46,36 @@ export default class NewClass extends cc.Component {
                     break;
                 // 系統選單
                 case "selectNoUnitFlow":
+                    {
+                        const [id, menu] = args;
+                        this.view.getGamePage().openSceneMenu(menu,((key) => {
+                            this.notifyAnswer(id, key);
+                        }).bind(this));
+                    }
+                    break;
                 // 機體動作選單
                 case "selectUnitFlow":
                     {
                         const [id, menu] = args;
                         this.view.getGamePage().openUnitMenu(menu, ((key) => {
-
-                            //this.view.getGamePage().focusUnitMenu();
                             this.notifyAnswer(id, key);
                         }).bind(this));
-                        
                     }
                     break;
-                case "focus":
-                    {
-                        const [id, focus] = args;
-                        switch (focus) {
-                            case "gameplayLoop":
-                                this.view.getGamePage().focusGamePage();
-                                break;
-                            case "playerTurn":
-                                this.view.getGamePage().focusGamePage();
-                                break;
-                        }
-                        this.notifyAnswer(id);
-                    }
-                    break;
+                // case "focus":
+                //     {
+                //         const [id, focus] = args;
+                //         switch (focus) {
+                //             case "gameplayLoop":
+                //                 this.view.getGamePage().focusGamePage();
+                //                 break;
+                //             case "playerTurn":
+                //                 this.view.getGamePage().focusGamePage();
+                //                 break;
+                //         }
+                //         this.notifyAnswer(id);
+                //     }
+                //     break;
                 case "createUnits":
                     {
                         const [id, units] = args;
@@ -93,14 +103,14 @@ export default class NewClass extends cc.Component {
                         this.notifyAnswer(id);
                     }
                     break;
-                case "unitMenu":
-                    {
-                        const [id, menu] = args;
-                        this.view.getGamePage().openUnitMenu(menu, ((key) => {
-                            this.notifyAnswer(id, key);
-                        }).bind(this));
-                    }
-                    break;
+                // case "unitMenu":
+                //     {
+                //         const [id, menu] = args;
+                //         this.view.getGamePage().openUnitMenu(menu, ((key) => {
+                //             this.notifyAnswer(id, key);
+                //         }).bind(this));
+                //     }
+                //     break;
                 case "createMap":
                     {
                         const [id, map] = args;

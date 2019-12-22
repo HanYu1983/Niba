@@ -54,7 +54,7 @@ export default class NewClass extends BasicViewer {
 
         //this.setCursor(5,10);
 
-        //this.openSceneMenu(2, ['finish','cancel']);
+        //this.openSceneMenu(['finish','cancel'], ()=>{});
     }
 
     setCursor(pos:number[]){
@@ -104,28 +104,30 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
     }
 
-    focusGamePage(){
-        this.addListener();
-        this.unitMenu.removeListenser();
-        this.sceneMenu.removeListenser();
-    }
+    // focusGamePage(){
+    //     this.addListener();
+    //     this.unitMenu.removeListenser();
+    //     this.sceneMenu.removeListenser();
+    // }
 
-    focusUnitMenu(){
-        this.removeListenser();
-        this.unitMenu.addListener();
-        this.sceneMenu.removeListenser();
-    }
+    // focusUnitMenu(){
+    //     this.removeListenser();
+    //     this.unitMenu.addListener();
+    //     this.sceneMenu.removeListenser();
+    // }
 
-    focusSceneMenu(){
-        this.removeListenser();
-        this.unitMenu.removeListenser();
-        this.sceneMenu.addListener();
-    }
+    // focusSceneMenu(){
+    //     this.removeListenser();
+    //     this.unitMenu.removeListenser();
+    //     this.sceneMenu.addListener();
+    // }
 
     openSceneMenu(data:any, callback:(key)=>void){
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
         this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
+
+        this.removeListenser();
     }
 
     closeSceneMenu(){
