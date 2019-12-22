@@ -3,7 +3,7 @@
  ["src"]
 
  :dependencies
- [[reagent "0.8.1"]
+ [[net.mikera/core.matrix "0.62.0"]
   [org.clojure/core.async "0.6.532"]]
 
  :dev-http {8080 "public/"}
