@@ -206,6 +206,7 @@
           playerTurn (fn [gameplayCtx inputCh outputCh]
                        (a/go-loop [gameplayCtx gameplayCtx]
                          (println "[model][playerTurn]")
+                         (a/<! (simpleAsk "focus" "playerTurn"))
                          (when-let [[cmd args :as evt] (a/<! inputCh)]
                            (println "[model][playerTurn][evt]" evt)
                            (cond
@@ -245,6 +246,7 @@
 
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
                       (a/go
+                        (a/<! (simpleAsk "focus" "enemyTurn"))
                         (println "[model][enemyTurn]" enemy)
                         gameplayCtx))
 
@@ -253,6 +255,7 @@
           gameplayLoop (fn [gameplayCtx inputCh outputCh]
                          (a/go-loop [gameplayCtx gameplayCtx]
                            (println "[model][gameplayLoop]")
+                           (a/<! (simpleAsk "focus" "gameplayLoop"))
                            (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
                                  enemies (->> (:players gameplayCtx)
                                               keys
