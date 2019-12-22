@@ -28,12 +28,16 @@ export default class NewClass extends cc.Component {
             switch (cmd) {
                 // 進入gameplay
                 case "gameplayLoop":
+                    {
+
+                    }
+                    break;
                 // 玩家回合
                 case "playerTurn":
                     {
-                        // this.view.getGamePage().closeSceneMenu();
-                        // this.view.getGamePage().closeUnitMenu();
-                        // this.view.getGamePage().addListener();
+                        this.view.getGamePage().closeSceneMenu();
+                        this.view.getGamePage().closeUnitMenu();
+                        this.view.getGamePage().addListener();
                     }
                     break;
                 // 敵方回合
@@ -94,13 +98,13 @@ export default class NewClass extends cc.Component {
                         this.notifyAnswer(id);
                     }
                     break;
-                case "unitMenuClose":
-                    {
-                        const [id] = args;
-                        this.view.getGamePage().closeUnitMenu();
-                        this.notifyAnswer(id);
-                    }
-                    break;
+                // case "unitMenuClose":
+                //     {
+                //         const [id] = args;
+                //         this.view.getGamePage().closeUnitMenu();
+                //         this.notifyAnswer(id);
+                //     }
+                //     break;
                 // case "unitMenu":
                 //     {
                 //         const [id, menu] = args;
