@@ -70,28 +70,27 @@ export default class NewClass extends BasicViewer {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, ()=>{
-            this.cursor[1] = this.cursor[1] + 1;
+            this._cursor[1] += 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_LEFT, ()=>{
-            this.cursor[0] -= 1;
+            this._cursor[0] -= 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_DOWN, ()=>{
-            this.cursor[1] -= 1;
+            this._cursor[1] -= 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
-            this.cursor[0] += 1;
+            this._cursor[0] += 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.ENTER, ()=>{
             Controller.instance.notifySelectMap(this._cursor);
-            //Controller.instance.notifyModel("selectMap", [0,0]);
         }, this);
     }
 
@@ -99,31 +98,45 @@ export default class NewClass extends BasicViewer {
         super.removeListenser();
 
         this.node.off(InputSensor.CURSOR_UP);
+        this.node.off(InputSensor.CURSOR_LEFT);
+        this.node.off(InputSensor.CURSOR_DOWN);
+        this.node.off(InputSensor.CURSOR_RIGHT);
         this.node.off(InputSensor.ENTER);
     }
 
-    openSceneMenu(id:number, data:any){
+    focusGamePage(){
+        this.addListener();
+        this.unitMenu.removeListenser();
+        this.sceneMenu.removeListenser();
+    }
+
+    focusUnitMenu(){
+        this.removeListenser();
+        this.unitMenu.addListener();
+        this.sceneMenu.removeListenser();
+    }
+
+    focusSceneMenu(){
+        this.removeListenser();
+        this.unitMenu.removeListenser();
+        this.sceneMenu.addListener();
+    }
+
+    openSceneMenu(data:any, callback:(key)=>void){
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
-        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
-            Controller.instance.notifyModel("ok", id, key);
-        });
-
-        this.removeListenser();
+        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
     }
 
     closeSceneMenu(){
         this.sceneMenu.close();
         this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
-
-        this.addListener();
     }
 
     openUnitMenu(data:any, callback:(key)=>void){
         this.unitMenu.open();
         this.unitMenu.setData(data);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
-            //View.instance.notifyModel("ok", id, key);
             callback(key);
         });
 
@@ -136,7 +149,6 @@ export default class NewClass extends BasicViewer {
         });
 
         this.openWeaponMenu(data);
-        this.removeListenser();
     }
 
     closeUnitMenu(){
@@ -146,7 +158,6 @@ export default class NewClass extends BasicViewer {
         this.unitMenu.close();
 
         this.weaponMenu.close();
-        this.addListener();
     }
 
     openWeaponMenu(data:any){

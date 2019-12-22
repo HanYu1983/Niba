@@ -26,12 +26,27 @@ export default class NewClass extends cc.Component {
         window.viewOb.subscribe(e=>{
             const [cmd, args] = e;
             switch(cmd){
+                case "focus":
+                    {
+                        const[id, focus] = args;
+                        switch(focus){
+                            case "gameplayLoop":
+                                this.view.getGamePage().focusGamePage();
+                                break;
+                            case "playerTurn":
+                                this.view.getGamePage().focusGamePage();
+                                break;
+                        }
+                        this.notifyAnswer(id);
+                    }
+                    break;
                 case "createUnits":
                     {
                         const [id, units] = args;
                         this.view.getGamePage().units.setUnits(units);
                         this.notifyModel("ok", id, 0);
                     }
+                    break;
                 case "unitStateMenu":
                     {
                         const [id] = args;
@@ -72,8 +87,6 @@ export default class NewClass extends cc.Component {
     }
 
     notifySetCursor(pos:number[]){
-        cc.log("==============")
-        cc.log(pos);
         this.notifyCmd("setCursor", pos);
     }
 

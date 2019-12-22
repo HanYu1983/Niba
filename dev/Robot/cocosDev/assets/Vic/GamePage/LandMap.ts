@@ -29,7 +29,7 @@ export default class NewClass extends cc.Component {
             gridNode.active = true;
 
             let grid: Grid = gridNode.getComponent(Grid);
-            grid.setType(Math.floor(Math.random() * 6));
+            //grid.setType(Math.floor(Math.random() * 6));
             grid.landX = i % 20;
             grid.landY = Math.floor(i / 20);
 
