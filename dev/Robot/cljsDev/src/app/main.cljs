@@ -58,8 +58,7 @@
 (defn ask [mult outputCh name args]
   ; gensym 要轉成字串才能和字串有相等性
   (let [tapCh (a/tap mult (a/chan))
-        key (str (gensym name))
-        worker (a/chan)]
+        key (str (gensym name))]
     (a/go
       (println "[model][ask][question]" name args)
       (a/>! outputCh [name [key args]])
@@ -71,11 +70,9 @@
             (println "[model][ask][ignore]" cmd))
           (if (= ["ok" key] [cmd resKey])
             (do
-              (a/>! worker args)
               (a/close! tapCh)
-              (a/close! worker))
-            (recur)))))
-    worker))
+              args)
+            (recur)))))))
 
 (defn main []
   (println "[model]" "rxjs")
@@ -125,20 +122,21 @@
     (let []
       (.subscribe (.-viewNotifyOb js/window)
                   (fn [e]
-                    (js/console.log "[view]" e)
+                    (js/console.log "[view][receive]" e)
                     (a/go
-                      (a/>! viewNotifyCh (js->clj e)))))
+                      (a/>! viewNotifyCh (js->clj e))
+                      (js/console.log "[view][receive] consume" e))))
       (a/go-loop []
         (let [evt (a/<! viewCh)
               evtJs (clj->js evt)]
-          (js/console.log "[model]" evtJs)
+          (js/console.log "[model][send]" evtJs)
           (.next (.-viewOb js/window) evtJs)
           (recur))))
 
     (println "[model]" "v3")
     (let [; 預設的緩衝大小是0, 要先有人準備好消化(<!)才能推進去(>!)
           ; 而因為這個chan會放在merge裡, 所以要預留緩衝
-          systemInputCh (a/chan 999)
+          systemInputCh (a/chan 3)
 
 
           simpleAsk (fn [name args]
@@ -206,7 +204,9 @@
           playerTurn (fn [gameplayCtx inputCh outputCh]
                        (a/go-loop [gameplayCtx gameplayCtx]
                          (println "[model][playerTurn]")
-                         (a/<! (simpleAsk "playerTurn" 0))
+                         
+                         ; (a/<! (simpleAsk "playerTurn" 0))
+                         
                          (when-let [[cmd args :as evt] (a/<! inputCh)]
                            (println "[model][playerTurn][evt]" evt)
                            (cond
@@ -223,10 +223,10 @@
                                  (let []
                                    (a/<! (simpleAsk "unitStateMenu" 0))
                                    (a/<! (simpleAsk "setCursor" cursor))
-                                   gameplayCtx)
+                                   (recur gameplayCtx))
                                  (let []
                                    (a/<! (simpleAsk "setCursor" cursor))
-                                   gameplayCtx)))
+                                   (recur gameplayCtx))))
 
                              (= "selectMap" cmd)
                              (recur (let [cursor args
@@ -246,8 +246,8 @@
 
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
                       (a/go
-                        (a/<! (simpleAsk "enemyTurn" enemy))
                         (println "[model][enemyTurn]" enemy)
+                        (a/<! (simpleAsk "enemyTurn" enemy))
                         gameplayCtx))
 
 
@@ -255,7 +255,6 @@
           gameplayLoop (fn [gameplayCtx inputCh outputCh]
                          (a/go-loop [gameplayCtx gameplayCtx]
                            (println "[model][gameplayLoop]")
-                           (a/<! (simpleAsk "gameplayLoop" 0))
                            (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
                                  enemies (->> (:players gameplayCtx)
                                               keys
@@ -301,22 +300,11 @@
 
           inputCh (a/merge [(a/tap viewNotifyMult (a/chan))
                             systemInputCh])]
-      
-      
+
+
       (modelLoop inputCh viewCh))
 
-    
-
-    (js/window.addEventListener "keydown" (fn [e]
-                                            (println (.-code e))
-                                            (condp = (.-code e)
-                                              "KeyP"
-                                              (a/put! viewNotifyCh ["startGameplay"])
-
-                                              "KeyO"
-                                              (a/put! viewNotifyCh ["selectMap" [0 0]])
-
-                                              nil)))))
+    (comment "")))
 
 (set! (.-startApp js/window) 
       main)
