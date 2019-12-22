@@ -115,5 +115,9 @@ export default class NewClass extends cc.Component {
         return this.pages[0] as MainPage; 
     }
 
+    getGridPos(x: number, y: number) {
+        return [x * 32 - 304, -y * 32 + 304];
+    }
+
     // update (dt) {}
 }

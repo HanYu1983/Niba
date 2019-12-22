@@ -12,6 +12,7 @@ import BasicViewer from "../BasicViewer"
 import LandMap from "../GamePage/LandMap";
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
+import WeaponMenu from "../GamePage/WeaponMenu"
 import View from "../View";
 
 const { ccclass, property, requireComponent } = cc._decorator;
@@ -26,6 +27,15 @@ export default class NewClass extends BasicViewer {
     @property(MenuButtons)
     unitMenu:MenuButtons = null;
 
+    @property(MenuButtons)
+    sceneMenu:MenuButtons = null;
+
+    @property(WeaponMenu)
+    weaponMenu:WeaponMenu = null;
+
+    @property(cc.Node)
+    cursor:cc.Node = null;
+
     private _cursor:number[] = [0,0];
 
     open() {
@@ -38,11 +48,18 @@ export default class NewClass extends BasicViewer {
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
 
+        this.setCursor(5,10);
+
+        //this.openSceneMenu(2, ['finish','cancel']);
     }
 
     setCursor(x:number, y:number){
         this._cursor[0] = x;
         this._cursor[1] = y;
+
+        let cursorPos = View.instance.getGridPos(x, y);
+        this.cursor.x = cursorPos[0];
+        this.cursor.y = cursorPos[1];
     }
 
     addListener(){
@@ -64,19 +81,77 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
     }
 
+    openSceneMenu(id:number, data:any){
+        this.sceneMenu.open();
+        this.sceneMenu.setData(data);
+        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
+            View.instance.notifyModel("ok", id, key);
+        });
+
+        this.removeListenser();
+    }
+
+    closeSceneMenu(){
+        this.sceneMenu.close();
+        this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
+
+        this.addListener();
+    }
+
     openUnitMenu(id:number, data:any){
         this.unitMenu.open();
         this.unitMenu.setData(data);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
             View.instance.notifyModel("ok", id, key);
         });
+
+        this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor=>{
+            this._changeCurrentWeapon(cursor);
+        });
+
+        this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor=>{
+            this._changeCurrentWeapon(cursor);
+        });
+
+        this.openWeaponMenu(data);
         this.removeListenser();
     }
 
     closeUnitMenu(){
         this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
+        this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
         this.unitMenu.close();
+
+        this.weaponMenu.close();
         this.addListener();
+    }
+
+    openWeaponMenu(data:any){
+
+        let ws = [];
+        for(let i = 0; i < data[1].length; ++i){
+            ws.push({
+                name:'weapon_' + i,
+                type:'type',
+                power: i * 1000,
+                range:'1~3',
+                hit:53
+            });
+        }
+
+        this.weaponMenu.open();
+        this.weaponMenu.setWeapons(ws);
+    }
+
+    private _changeCurrentWeapon(cursor:any){
+        if(cursor[0]==1){
+            this.weaponMenu.showCurrentWeapon(cursor[1]);
+        }
+    }
+
+    closeWeaponMenu(){
+        this.weaponMenu.close();
     }
 
     static generateMap(

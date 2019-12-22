@@ -10,6 +10,7 @@
 
 import Unit from "./Unit"
 import Pool from "../Pool"
+import View from "../View";
 
 const { ccclass, property } = cc._decorator;
 
@@ -61,7 +62,7 @@ export default class NewClass extends cc.Component {
             let unitNode: cc.Node = this.getComponent(Pool).getNode(this.prefabUnit.node);
             unitNode.setParent(this.node);
 
-            let gridPos = this.getGridPos(pos[0], pos[1]);
+            let gridPos = View.instance.getGridPos(pos[0], pos[1]);
             unitNode.x = gridPos[0];
             unitNode.y = gridPos[1];
             unitNode.active = true;
@@ -101,7 +102,7 @@ export default class NewClass extends cc.Component {
         if (unit) {
             let actions = [];
             moveTo.forEach(element => {
-                let gridPos = this.getGridPos(element[0], element[1]);
+                let gridPos = View.instance.getGridPos(element[0], element[1]);
                 let action = cc.moveTo(.3, gridPos[0], gridPos[1]);
                 action.easing(cc.easeSineOut());
                 actions.push(action);
@@ -110,7 +111,7 @@ export default class NewClass extends cc.Component {
         }
     }
 
-    getGridPos(x: number, y: number) {
-        return [x * 32 - 304, -y * 32 + 304];
-    }
+    // getGridPos(x: number, y: number) {
+    //     return [x * 32 - 304, -y * 32 + 304];
+    // }
 }
