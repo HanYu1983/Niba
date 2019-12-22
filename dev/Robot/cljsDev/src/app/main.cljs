@@ -154,24 +154,10 @@
                                (println "[model][selectUnitFlow]" selectUnitMenu)
                                (cond
                                  (= "cancel" selectUnitMenu)
-                                 (do
-                                   (a/<! (simpleAsk "unitMenuClose" 0))
-                                   gameplayCtx)
+                                 gameplayCtx
 
                                  (= "attack1" selectUnitMenu)
                                  gameplayCtx
-
-                                 (= "attack" selectUnitMenu)
-                                 (recur (loop [gameplayCtx gameplayCtx]
-                                          (let [selectAttackMenu (a/<! (simpleAsk "attackMenu" [["weapon1" "weapon2"] "cancel"]))]
-                                            (cond
-                                              (= "cancel" selectAttackMenu)
-                                              (do
-                                                (a/<! (simpleAsk "closeMenu" "attackMenu"))
-                                                gameplayCtx)
-
-                                              :else
-                                              (recur gameplayCtx)))))
 
                                  :else
                                  (recur gameplayCtx)))))
@@ -186,15 +172,11 @@
                                  (cond
                                    (= "endTurn" select)
                                    (let []
-                                     (a/<! (simpleAsk "unitMenuClose" 0))
                                      (a/>! systemInputCh ["endPlayerTurn"])
                                      gameplayCtx)
 
                                    (= "cancel" select)
-                                   (do
-                                     (a/go
-                                       (a/<! (simpleAsk "unitMenuClose" 0)))
-                                     gameplayCtx)
+                                   gameplayCtx
 
                                    :else
                                    (recur gameplayCtx)))))
