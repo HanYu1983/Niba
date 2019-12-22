@@ -35,6 +35,14 @@ export default class NewClass extends cc.Component {
             console.log(e)
             const [cmd, args] = e;
             switch(cmd){
+                case "unitStateMenu":
+                    const [id] = args;
+                    this.notifyModel("ok", id, 0);
+                    break;
+                case "setCursor":
+                    const [id] = args;
+                    this.notifyModel("ok", id, 0);
+                    break;
                 case "unitMenuClose":
                     const [id] = args;
                     this.notifyModel("ok", id, 0);

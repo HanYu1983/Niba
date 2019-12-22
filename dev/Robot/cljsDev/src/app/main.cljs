@@ -213,9 +213,30 @@
                              (let []
                                gameplayCtx)
 
+                             (= "setCursor" cmd)
+                             (let [cursor args
+                                   units (:units gameplayCtx)
+                                   unitAtCursor (first (filter #(= cursor (:position %))
+                                                               units))]
+                               (if unitAtCursor
+                                 (let []
+                                   (a/<! (simpleAsk "unitStateMenu" 0))
+                                   (a/<! (simpleAsk "setCursor" cursor))
+                                   gameplayCtx)
+                                 (let []
+                                   (a/<! (simpleAsk "setCursor" cursor))
+                                   gameplayCtx)))
+
                              (= "selectMap" cmd)
-                             (recur (let [pos args]
-                                      (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))
+                             (recur (let [cursor args
+                                          units (:units gameplayCtx)
+                                          unitAtCursor (first (filter #(= cursor (:position %))
+                                                                      units))]
+                                      (if unitAtCursor
+                                        (let []
+                                          (a/<! (selectUnitFlow gameplayCtx inputCh outputCh)))
+                                        (let []
+                                          (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))))
 
                              :else
                              (recur gameplayCtx)))))
