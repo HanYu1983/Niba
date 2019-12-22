@@ -47,21 +47,21 @@ export default class NewClass extends BasicViewer {
         super.open();
         this.map.initPool();
 
-        Controller.instance.notifyCmd("startGameplay");
+        Controller.instance.notifyStartGame();
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
 
-        this.setCursor(5,10);
+        //this.setCursor(5,10);
 
         //this.openSceneMenu(2, ['finish','cancel']);
     }
 
-    setCursor(x:number, y:number){
-        this._cursor[0] = x;
-        this._cursor[1] = y;
+    setCursor(pos:number[]){
+        this._cursor[0] = pos[0];
+        this._cursor[1] = pos[1];
 
-        let cursorPos = Controller.instance.view.getGridPos(x, y);
+        let cursorPos = Controller.instance.view.getGridPos(this._cursor);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
     }
@@ -70,11 +70,28 @@ export default class NewClass extends BasicViewer {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, ()=>{
+            this.cursor[1] = this.cursor[1] + 1;
+            Controller.instance.notifySetCursor(this._cursor);
+        });
 
+        this.node.on(InputSensor.CURSOR_LEFT, ()=>{
+            this.cursor[0] -= 1;
+            Controller.instance.notifySetCursor(this._cursor);
+        });
+
+        this.node.on(InputSensor.CURSOR_DOWN, ()=>{
+            this.cursor[1] -= 1;
+            Controller.instance.notifySetCursor(this._cursor);
+        });
+
+        this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
+            this.cursor[0] += 1;
+            Controller.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.ENTER, ()=>{
-            Controller.instance.notifyModel("selectMap", [0,0]);
+            Controller.instance.notifySelectMap(this._cursor);
+            //Controller.instance.notifyModel("selectMap", [0,0]);
         }, this);
     }
 
