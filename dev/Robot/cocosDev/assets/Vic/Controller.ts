@@ -9,56 +9,35 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import View from "./View"
-const { ccclass, property } = cc._decorator;
+const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
 
     @property(View)
-    view: View = null;
+    view:View = null;
 
-    static instance: NewClass;
+    static instance:NewClass;
 
-    start() {
+    start(){
         NewClass.instance = this;
 
         window.startApp();
-        window.viewOb.subscribe(e => {
+        window.viewOb.subscribe(e=>{
             const [cmd, args] = e;
-            switch (cmd) {
-                // 進入gameplay
-                case "gameplayLoop":
-                // 玩家回合
-                case "playerTurn":
+            switch(cmd){
+                case "focus":
                     {
-                        const [id, info] = args;
-                        console.log(id, info)
-                        this.notifyModel("ok", id, 0);
-                    }
-                    break;
-                // 敵方回合
-                case "enemyTurn":
-                    {
-                        /*
-                        const [id, info] = args;
-                        console.log(id, info)
-                        this.notifyModel("ok", id, 0);
-                        */
-                    }
-                    break;
-                // 系統選單
-                case "selectNoUnitFlow":
-                    {
-
-                    }
-                    break;
-                // 機體動作選單
-                case "selectUnitFlow":
-                    {
-                        const [id, menu] = args;
-                        this.view.getGamePage().openUnitMenu(menu, ((key) => {
-                            this.notifyAnswer(id, key);
-                        }).bind(this));
+                        const[id, focus] = args;
+                        switch(focus){
+                            case "gameplayLoop":
+                                this.view.getGamePage().focusGamePage();
+                                break;
+                            case "playerTurn":
+                                this.view.getGamePage().focusGamePage();
+                                break;
+                        }
+                        this.notifyAnswer(id);
                     }
                     break;
                 case "createUnits":
@@ -91,7 +70,7 @@ export default class NewClass extends cc.Component {
                 case "unitMenu":
                     {
                         const [id, menu] = args;
-                        this.view.getGamePage().openUnitMenu(menu, ((key) => {
+                        this.view.getGamePage().openUnitMenu(menu, ((key)=>{
                             this.notifyAnswer(id, key);
                         }).bind(this));
                     }
@@ -104,32 +83,30 @@ export default class NewClass extends cc.Component {
                     }
                     break;
             }
-        })
+        })   
     }
 
-    notifySetCursor(pos: number[]) {
-        cc.log("==============")
-        cc.log(pos);
+    notifySetCursor(pos:number[]){
         this.notifyCmd("setCursor", pos);
     }
 
-    notifyStartGame() {
+    notifyStartGame(){
         this.notifyCmd("startGameplay");
     }
 
-    notifyAnswer(id, args = 0) {
+    notifyAnswer(id, args = 0){
         this.notifyModel("ok", id, args);
     }
 
-    notifySelectMap(pos: number[]) {
+    notifySelectMap(pos:number[]){
         this.notifyCmd("selectMap", pos);
     }
 
-    notifyModel(cmd: string, id: number, data: any) {
+    notifyModel(cmd:string, id:number, data:any){
         window.viewNotifyOb.next([cmd, [id, data]]);
     }
 
-    notifyCmd(cmd: string, data: any = undefined) {
+    notifyCmd(cmd:string, data:any = undefined){
         window.viewNotifyOb.next([cmd, data]);
     }
 }
