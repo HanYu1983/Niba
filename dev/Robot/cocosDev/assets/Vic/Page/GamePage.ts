@@ -149,6 +149,8 @@ export default class NewClass extends BasicViewer {
         });
 
         this.openWeaponMenu(data);
+
+        this.removeListenser();
     }
 
     closeUnitMenu(){
