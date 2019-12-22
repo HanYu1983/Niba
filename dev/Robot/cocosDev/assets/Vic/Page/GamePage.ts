@@ -8,12 +8,16 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicViewer from "../BasicViewer"
+
 import LandMap from "../GamePage/LandMap";
 import LandUnits from "../GamePage/LandUnits";
+import WeaponMenu from "../GamePage/WeaponMenu"
+import UnitStatuMenu from "../GamePage/UnitStatuMenu";
+import TurnStart from "../GamePage/TurnStart"
+
+import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
-import WeaponMenu from "../GamePage/WeaponMenu"
 import Controller from "../Controller";
 
 const { ccclass, property, requireComponent } = cc._decorator;
@@ -37,6 +41,12 @@ export default class NewClass extends BasicViewer {
     @property(WeaponMenu)
     weaponMenu:WeaponMenu = null;
 
+    @property(UnitStatuMenu)
+    unitStatuMenu:UnitStatuMenu = null;
+
+    @property(TurnStart)
+    turnStart:TurnStart = null;
+
     @property(cc.Node)
     cursor:cc.Node = null;
 
@@ -55,6 +65,8 @@ export default class NewClass extends BasicViewer {
         //this.setCursor(5,10);
 
         //this.openSceneMenu(['finish','cancel'], ()=>{});
+
+        //this.openTurnStart();
     }
 
     setCursor(pos:number[]){
@@ -104,25 +116,24 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
     }
 
-    // focusGamePage(){
-    //     this.addListener();
-    //     this.unitMenu.removeListenser();
-    //     this.sceneMenu.removeListenser();
-    // }
+    openUnitStatuMenu(){
+        this.unitStatuMenu.open();
+    }
 
-    // focusUnitMenu(){
-    //     this.removeListenser();
-    //     this.unitMenu.addListener();
-    //     this.sceneMenu.removeListenser();
-    // }
+    closeUnitStatuMenu(){
+        this.unitStatuMenu.close();
+    }
 
-    // focusSceneMenu(){
-    //     this.removeListenser();
-    //     this.unitMenu.removeListenser();
-    //     this.sceneMenu.addListener();
-    // }
+    openTurnStart(data:any){
+        this.turnStart.setContent("abc");
+        this.turnStart.setPlayer(false);
+        this.turnStart.node.active = true;
+        this.turnStart.node.getComponent(cc.Animation).play("TurnStart");
+    }
 
     openSceneMenu(data:any, callback:(key)=>void){
+        this.closeSceneMenu();
+
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
         this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
@@ -131,11 +142,13 @@ export default class NewClass extends BasicViewer {
     }
 
     closeSceneMenu(){
-        this.sceneMenu.close();
         this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        this.sceneMenu.close();
     }
 
     openUnitMenu(data:any, callback:(key)=>void){
+        this.closeUnitMenu();
+
         this.unitMenu.open();
         this.unitMenu.setData(data);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
