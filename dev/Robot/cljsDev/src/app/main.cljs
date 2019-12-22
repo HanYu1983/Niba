@@ -40,9 +40,9 @@
 
 (def defaultModel {})
 (def defaultGameplayModel {:map nil
-                           :players {:player {}
-                                     :ai1 {:friendly false}
-                                     :ai2 {:friendly true}}
+                           :players {:player {:faction 0}
+                                     :ai1 {:faction 1}
+                                     :ai2 {:faction 1}}
                            :units [{:key (gensym)
                                     :player :player
                                     :type :robot
@@ -268,7 +268,8 @@
                                   gameplayCtx (merge defaultGameplayModel
                                                      {:map map})]
                               (a/<! (simpleAsk "createMap" map))
-                              (a/<! (simpleAsk "createUnits" (:units gameplayCtx)))
+                              (a/<! (simpleAsk "createUnits" {:units (:units gameplayCtx)
+                                                              :players (:players gameplayCtx)}))
                               (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
 
                             (recur ctx)))))
