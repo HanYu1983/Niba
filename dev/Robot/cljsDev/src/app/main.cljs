@@ -45,35 +45,40 @@
                                      :ai2 {:friendly true}}
                            :units [{:key (gensym)
                                     :player :player
-                                    :robot {}
+                                    :type :robot
+                                    :state {:key 0}
                                     :position [0 0]}
                                    {:key (gensym)
                                     :player :a1
-                                    :robot {}
+                                    :type :robot
+                                    :state {:key 0}
                                     :position [5 5]}]
                            :focusUnitKey nil})
 
 (defn ask [mult outputCh name args]
   ; gensym 要轉成字串才能和字串有相等性
   (let [tapCh (a/tap mult (a/chan))
-        key (str (gensym))
+        key (str (gensym name))
         worker (a/chan)]
     (a/go
+      (println "[model][ask][question]" name args)
       (a/>! outputCh [name [key args]])
       (loop []
+        (println "[model][ask][waitForAnswer]" key)
         (when-let [[cmd [resKey args] :as evt] (a/<! tapCh)]
-          (println "response" evt)
+          (if (= "ok" cmd)
+            (println "[model][ask][answer]" evt)
+            (println "[model][ask][ignore]" cmd))
           (if (= ["ok" key] [cmd resKey])
             (do
               (a/>! worker args)
               (a/close! tapCh)
               (a/close! worker))
-            (recur))))
-      (println "finished !!!!"))
+            (recur)))))
     worker))
 
 (defn main []
-  (println "prepare rxjs")
+  (println "[model]" "rxjs")
   (let [viewOb (js/rxjs.Subject.)
         viewNotifyOb (js/rxjs.Subject.)]
     (set! (.-viewOb js/window)
@@ -116,19 +121,21 @@
                    :else
                    (recur)))))
 
-    (println "view")
+    (println "[model]" "view")
     (let []
       (.subscribe (.-viewNotifyOb js/window)
                   (fn [e]
-                    (println "fromView " e)
+                    (js/console.log "[view]" e)
                     (a/go
                       (a/>! viewNotifyCh (js->clj e)))))
       (a/go-loop []
-        (let [evt (a/<! viewCh)]
-          (.next (.-viewOb js/window) (clj->js evt))
+        (let [evt (a/<! viewCh)
+              evtJs (clj->js evt)]
+          (js/console.log "[model]" evtJs)
+          (.next (.-viewOb js/window) evtJs)
           (recur))))
 
-    (println "model v3")
+    (println "[model]" "v3")
     (let [; 預設的緩衝大小是0, 要先有人準備好消化(<!)才能推進去(>!)
           ; 而因為這個chan會放在merge裡, 所以要預留緩衝
           systemInputCh (a/chan 999)
@@ -144,9 +151,9 @@
 
           selectUnitFlow (fn [gameplayCtx inputCh outputCh]
                            (a/go-loop [gameplayCtx gameplayCtx]
-                             (println "selectUnitFlow")
+                             (println "[model][selectUnitFlow]")
                              (let [selectUnitMenu (a/<! (simpleAsk "unitMenu" ["move" ["attack1" "attack2"] "cancel"]))]
-                               (println "selectUnitMenu " selectUnitMenu)
+                               (println "[model][selectUnitFlow]" selectUnitMenu)
                                (cond
                                  (= "cancel" selectUnitMenu)
                                  (do
@@ -175,9 +182,9 @@
 
           selectNoUnitFlow (fn [gameplayCtx inputCh outputCh]
                              (a/go-loop [gameplayCtx gameplayCtx]
-                               (println "selectNoUnitFlow")
+                               (println "[model][selectNoUnitFlow]")
                                (let [select (a/<! (simpleAsk "unitMenu" ["endTurn" "cancel"]))]
-                                 (println "unitMenu " select)
+                                 (println "[model][selectNoUnitFlow]" "unitMenu " select)
                                  (cond
                                    (= "endTurn" select)
                                    (let []
@@ -198,9 +205,9 @@
 
           playerTurn (fn [gameplayCtx inputCh outputCh]
                        (a/go-loop [gameplayCtx gameplayCtx]
-                         (println "playerTurn")
+                         (println "[model][playerTurn]")
                          (when-let [[cmd args :as evt] (a/<! inputCh)]
-                           (println evt)
+                           (println "[model][playerTurn][evt]" evt)
                            (cond
                              (= "endPlayerTurn" cmd)
                              (let []
@@ -217,14 +224,14 @@
 
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
                       (a/go
-                        (println "enemyTurn" enemy)
+                        (println "[model][enemyTurn]" enemy)
                         gameplayCtx))
 
 
 
           gameplayLoop (fn [gameplayCtx inputCh outputCh]
                          (a/go-loop [gameplayCtx gameplayCtx]
-                           (println "gameplayLoop")
+                           (println "[model][gameplayLoop]")
                            (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
                                  enemies (->> (:players gameplayCtx)
                                               keys
@@ -242,9 +249,9 @@
 
           modelLoop (fn [inputCh outputCh]
                       (a/go-loop [ctx defaultModel]
-                        (println "modelLoop")
+                        (println "[model][modelLoop]")
                         (when-let [[cmd args :as evt] (a/<! inputCh)]
-                          (println "control " evt)
+                          (println "[model][modelLoop][evt]" evt)
                           (condp = cmd
                             "load"
                             (recur ctx)
@@ -261,6 +268,7 @@
                                   gameplayCtx (merge defaultGameplayModel
                                                      {:map map})]
                               (a/<! (simpleAsk "createMap" map))
+                              (a/<! (simpleAsk "createUnits" (:units gameplayCtx)))
                               (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
 
                             (recur ctx)))))
