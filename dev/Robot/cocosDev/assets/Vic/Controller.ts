@@ -26,6 +26,12 @@ export default class NewClass extends cc.Component {
         window.viewOb.subscribe(e => {
             const [cmd, args] = e;
             switch (cmd) {
+                case "unitStateMenu":
+                    {
+                        const [id] = args;
+                        this.notifyAnswer(id);
+                    }
+                    break;
                 // 進入gameplay
                 case "gameplayLoop":
                     {
@@ -46,10 +52,15 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().closeSceneMenu();
                         this.view.getGamePage().closeUnitMenu();
                         this.view.getGamePage().removeListenser();
-
-                        // 這由以上的指令不能回覆
                     }
                     break;
+
+
+                /**
+                 * 這由以上的指令不能回覆
+                 */
+
+
                 // 系統選單
                 case "selectNoUnitFlow":
                     {
@@ -68,31 +79,11 @@ export default class NewClass extends cc.Component {
                         }).bind(this));
                     }
                     break;
-                // case "focus":
-                //     {
-                //         const [id, focus] = args;
-                //         switch (focus) {
-                //             case "gameplayLoop":
-                //                 this.view.getGamePage().focusGamePage();
-                //                 break;
-                //             case "playerTurn":
-                //                 this.view.getGamePage().focusGamePage();
-                //                 break;
-                //         }
-                //         this.notifyAnswer(id);
-                //     }
-                //     break;
                 case "createUnits":
                     {
                         const [id, units] = args;
                         this.view.getGamePage().units.setUnits(units);
                         this.notifyModel("ok", id, 0);
-                    }
-                    break;
-                case "unitStateMenu":
-                    {
-                        const [id] = args;
-                        this.notifyAnswer(id);
                     }
                     break;
                 case "setCursor":
@@ -102,21 +93,6 @@ export default class NewClass extends cc.Component {
                         this.notifyAnswer(id);
                     }
                     break;
-                // case "unitMenuClose":
-                //     {
-                //         const [id] = args;
-                //         this.view.getGamePage().closeUnitMenu();
-                //         this.notifyAnswer(id);
-                //     }
-                //     break;
-                // case "unitMenu":
-                //     {
-                //         const [id, menu] = args;
-                //         this.view.getGamePage().openUnitMenu(menu, ((key) => {
-                //             this.notifyAnswer(id, key);
-                //         }).bind(this));
-                //     }
-                //     break;
                 case "createMap":
                     {
                         const [id, map] = args;

@@ -70,7 +70,7 @@ export default class NewClass extends BasicViewer {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, ()=>{
-            this._cursor[1] += 1;
+            this._cursor[1] -= 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
@@ -80,7 +80,7 @@ export default class NewClass extends BasicViewer {
         });
 
         this.node.on(InputSensor.CURSOR_DOWN, ()=>{
-            this._cursor[1] -= 1;
+            this._cursor[1] += 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
@@ -260,8 +260,4 @@ export default class NewClass extends BasicViewer {
         }
         return map;
     }
-
-    // getMap(): LandMap {
-    //     return this.map;
-    // }
 }
