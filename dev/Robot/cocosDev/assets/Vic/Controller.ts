@@ -33,9 +33,7 @@ export default class NewClass extends cc.Component {
                 // 敵方回合
                 case "enemyTurn":
                     {
-                        const [id, info] = args;
-                        console.log(id, info)
-                        this.notifyModel("ok", id, 0);
+                        // 這由以上的指令不能回覆
                     }
                     break;
                 // 系統選單
