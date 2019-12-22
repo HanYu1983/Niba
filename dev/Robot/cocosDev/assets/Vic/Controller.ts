@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
                     break;
                 case "unitState":
                     {
-                        
+
                     }
                     break;
                 // 進入gameplay
@@ -64,13 +64,18 @@ export default class NewClass extends cc.Component {
                 /**
                  * 這由以上的指令不能回覆
                  */
-
-
+                case "playerTurnStart":
+                case "enemyTurnStart":
+                    {
+                        const [id] = args;
+                        this.notifyAnswer(id);
+                    }
+                    break;
                 // 系統選單
                 case "selectNoUnitFlow":
                     {
                         const [id, menu] = args;
-                        this.view.getGamePage().openSceneMenu(menu,((key) => {
+                        this.view.getGamePage().openSceneMenu(menu, ((key) => {
                             this.notifyAnswer(id, key);
                         }).bind(this));
                     }

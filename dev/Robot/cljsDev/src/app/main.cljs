@@ -148,89 +148,113 @@
 
 
           selectUnitFlow (fn [gameplayCtx inputCh outputCh]
-                           (a/go-loop [gameplayCtx gameplayCtx]
-                             (println "[model][selectUnitFlow]")
-                             (let [selectUnitMenu (a/<! (simpleAsk "selectUnitFlow" ["move" ["attack1" "attack2"] "cancel"]))]
-                               (println "[model][selectUnitFlow]" selectUnitMenu)
-                               (cond
-                                 (= "cancel" selectUnitMenu)
-                                 gameplayCtx
+                           ; 等待simpleAsk的同時也要把一起收到的事件消化, 不然新的推不進去
+                           ; 要記得close!
+                           (let [cleaner (a/chan)
+                                 _ (a/go-loop []
+                                     (let [[_ ch] (a/alts! [inputCh cleaner])]
+                                       (when (= ch inputCh)
+                                         (recur))))]
+                             (a/go-loop [gameplayCtx gameplayCtx]
+                               (println "[model][selectUnitFlow]")
+                               (let [selectUnitMenu (a/<! (simpleAsk "selectUnitFlow" ["move" ["attack1" "attack2"] "cancel"]))]
+                                 (println "[model][selectUnitFlow]" selectUnitMenu)
+                                 (cond
+                                   (= "cancel" selectUnitMenu)
+                                   (let []
+                                     (a/close! cleaner)
+                                     gameplayCtx)
 
-                                 (= "attack1" selectUnitMenu)
-                                 gameplayCtx
+                                   (= "attack1" selectUnitMenu)
+                                   (let []
+                                     (a/close! cleaner)
+                                     gameplayCtx)
 
-                                 :else
-                                 (recur gameplayCtx)))))
+                                   :else
+                                   (recur gameplayCtx))))))
 
 
 
           selectNoUnitFlow (fn [gameplayCtx inputCh outputCh]
-                             (a/go-loop [gameplayCtx gameplayCtx]
-                               (println "[model][selectNoUnitFlow]")
-                               (let [select (a/<! (simpleAsk "selectNoUnitFlow" ["endTurn" "cancel"]))]
-                                 (println "[model][selectNoUnitFlow]" "unitMenu " select)
-                                 (cond
-                                   (= "endTurn" select)
-                                   (let []
-                                     (a/>! systemInputCh ["endPlayerTurn"])
-                                     gameplayCtx)
+                             ; 等待simpleAsk的同時也要把一起收到的事件消化, 不然新的推不進去
+                             ; 要記得close!
+                             (let [cleaner (a/chan)
+                                   _ (a/go-loop []
+                                       (let [[_ ch] (a/alts! [inputCh cleaner])]
+                                         (when (= ch inputCh)
+                                           (recur))))]
+                               (a/go-loop [gameplayCtx gameplayCtx]
+                                 (println "[model][selectNoUnitFlow]")
+                                 (let [select (a/<! (simpleAsk "selectNoUnitFlow" ["endTurn" "cancel"]))]
+                                   (println "[model][selectNoUnitFlow]" "unitMenu " select)
+                                   (cond
+                                     (= "endTurn" select)
+                                     (let []
+                                       (a/>! systemInputCh ["endPlayerTurn"])
+                                       (a/close! cleaner)
+                                       gameplayCtx)
 
-                                   (= "cancel" select)
-                                   gameplayCtx
+                                     (= "cancel" select)
+                                     (let []
+                                       (a/close! cleaner)
+                                       gameplayCtx)
 
-                                   :else
-                                   (recur gameplayCtx)))))
+                                     :else
+                                     (recur gameplayCtx))))))
 
 
 
           playerTurn (fn [gameplayCtx inputCh outputCh]
-                       (a/go-loop [gameplayCtx gameplayCtx]
-                         (println "[model][playerTurn]")
-                         ; 不能這樣用, 因為inputCh也會收到回覆, 從而透過recur導致不斷的發送                      
-                         ;(a/<! (simpleAsk "playerTurn" 0))
-                         (a/>! outputCh ["playerTurn"])
-                         (when-let [[cmd args :as evt] (a/<! inputCh)]
-                           (println "[model][playerTurn][evt]" evt)
-                           (cond
-                             (= "endPlayerTurn" cmd)
-                             (let []
-                               gameplayCtx)
+                       (a/go
+                         (a/<! (simpleAsk "playerTurnStart" 0))
+                         (loop [gameplayCtx gameplayCtx]
+                           (println "[model][playerTurn]")
+                           ; 不能這樣用, 因為inputCh也會收到回覆, 從而透過recur導致不斷的發送                      
+                           ;(a/<! (simpleAsk "playerTurn" 0))
+                           (a/>! outputCh ["playerTurn"])
+                           (when-let [[cmd args :as evt] (a/<! inputCh)]
+                             (println "[model][playerTurn][evt]" evt)
+                             (cond
+                               (= "endPlayerTurn" cmd)
+                               (let []
+                                 gameplayCtx)
 
-                             (= "setCursor" cmd)
-                             (let [cursor args
-                                   units (:units gameplayCtx)
-                                   unitAtCursor (first (filter #(= cursor (:position %))
-                                                               units))]
-                               (if unitAtCursor
-                                 (let []
-                                   (a/>! outputCh ["unitState"])
-                                   (a/>! outputCh ["setCursor" cursor])
-                                   (recur gameplayCtx))
-                                 (let []
-                                   (a/>! outputCh ["setCursor" cursor])
-                                   (recur gameplayCtx))))
+                               (= "setCursor" cmd)
+                               (let [cursor args
+                                     units (:units gameplayCtx)
+                                     unitAtCursor (first (filter #(= cursor (:position %))
+                                                                 units))]
+                                 (if unitAtCursor
+                                   (let []
+                                     (a/>! outputCh ["unitState"])
+                                     (a/>! outputCh ["setCursor" cursor])
+                                     (recur gameplayCtx))
+                                   (let []
+                                     (a/>! outputCh ["setCursor" cursor])
+                                     (recur gameplayCtx))))
 
-                             (= "selectMap" cmd)
-                             (recur (let [cursor args
-                                          units (:units gameplayCtx)
-                                          unitAtCursor (first (filter #(= cursor (:position %))
-                                                                      units))]
-                                      (if unitAtCursor
-                                        (let []
-                                          (a/<! (selectUnitFlow gameplayCtx inputCh outputCh)))
-                                        (let []
-                                          (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))))
+                               (= "selectMap" cmd)
+                               (recur (let [cursor args
+                                            units (:units gameplayCtx)
+                                            unitAtCursor (first (filter #(= cursor (:position %))
+                                                                        units))]
+                                        (if unitAtCursor
+                                          (let []
+                                            (a/<! (selectUnitFlow gameplayCtx inputCh outputCh)))
+                                          (let []
+                                            (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))))
 
-                             :else
-                             (recur gameplayCtx)))))
+                               :else
+                               (recur gameplayCtx))))))
 
 
 
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
                       (a/go
                         (println "[model][enemyTurn]" enemy)
-                        (a/>! outputCh ["enemyTurn" enemy])
-                        gameplayCtx))
+                        (a/<! (simpleAsk "enemyTurnStart" enemy))
+                        (loop []
+                          gameplayCtx)))
 
 
 
