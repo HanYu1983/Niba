@@ -59,16 +59,32 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().removeListenser();
                     }
                     break;
-
-
                 /**
                  * 這由以上的指令不能回覆
                  */
                 case "playerTurnStart":
+                    {
+                        const [id] = args;
+                        this.view.getGamePage().openTurnStart(true, (() => {
+                            this.notifyAnswer(id);
+
+                            this.view.getGamePage().closeSceneMenu();
+                            this.view.getGamePage().closeUnitMenu();
+                            this.view.getGamePage().addListener();
+                            
+                        }).bind(this));
+                    }
+                    break;
                 case "enemyTurnStart":
                     {
                         const [id] = args;
-                        this.notifyAnswer(id);
+                        this.view.getGamePage().openTurnStart(false, (() => {
+                            this.notifyAnswer(id);
+                        }).bind(this));
+
+                        this.view.getGamePage().closeSceneMenu();
+                        this.view.getGamePage().closeUnitMenu();
+                        this.view.getGamePage().removeListenser();
                     }
                     break;
                 // 系統選單
@@ -78,6 +94,8 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().openSceneMenu(menu, ((key) => {
                             this.notifyAnswer(id, key);
                         }).bind(this));
+
+                        this.view.getGamePage().removeListenser();
                     }
                     break;
                 // 機體動作選單
@@ -87,6 +105,8 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().openUnitMenu(menu, ((key) => {
                             this.notifyAnswer(id, key);
                         }).bind(this));
+
+                        this.view.getGamePage().removeListenser();
                     }
                     break;
                 case "createUnits":

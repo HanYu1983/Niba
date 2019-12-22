@@ -3,7 +3,7 @@
   "_name": "TurnStart",
   "_objFlags": 0,
   "_native": "",
-  "_duration": 2.1666666666666665,
+  "_duration": 1.1666666666666667,
   "sample": 60,
   "speed": 1,
   "wrapMode": 1,
@@ -19,11 +19,11 @@
           "value": 1
         },
         {
-          "frame": 2,
+          "frame": 1,
           "value": 1
         },
         {
-          "frame": 2.1666666666666665,
+          "frame": 1.1666666666666667,
           "value": 0
         }
       ]
@@ -31,7 +31,7 @@
   },
   "events": [
     {
-      "frame": 2.1666666666666665,
+      "frame": 1.1666666666666667,
       "func": "end",
       "params": [
         ""

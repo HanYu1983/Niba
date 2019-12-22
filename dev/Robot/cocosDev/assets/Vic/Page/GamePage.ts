@@ -58,6 +58,7 @@ export default class NewClass extends BasicViewer {
         this.map.initPool();
 
         Controller.instance.notifyStartGame();
+        this.removeListenser();
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);
@@ -124,11 +125,14 @@ export default class NewClass extends BasicViewer {
         this.unitStatuMenu.close();
     }
 
-    openTurnStart(data:any){
-        this.turnStart.setContent("abc");
-        this.turnStart.setPlayer(false);
-        this.turnStart.node.active = true;
-        this.turnStart.node.getComponent(cc.Animation).play("TurnStart");
+    openTurnStart(isPlayer:boolean, callback:()=>void){
+        this.turnStart.setContent(isPlayer ? "玩家回合開始" : "敵軍回合開始");
+        this.turnStart.setPlayer(isPlayer);
+        this.turnStart.open();
+        this.turnStart.node.on("end", ()=>{
+            this.turnStart.node.off("end");
+            callback();
+        }, this);
     }
 
     openSceneMenu(data:any, callback:(key)=>void){
@@ -137,8 +141,6 @@ export default class NewClass extends BasicViewer {
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
         this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
-
-        this.removeListenser();
     }
 
     closeSceneMenu(){
@@ -164,8 +166,6 @@ export default class NewClass extends BasicViewer {
         });
 
         this.openWeaponMenu(data);
-
-        this.removeListenser();
     }
 
     closeUnitMenu(){

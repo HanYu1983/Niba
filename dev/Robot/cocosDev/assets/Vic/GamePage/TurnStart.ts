@@ -8,10 +8,11 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import BasicViewer from "../BasicViewer"
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class NewClass extends BasicViewer {
 
     @property(cc.Label)
     content: cc.Label = null;
@@ -27,7 +28,13 @@ export default class NewClass extends cc.Component {
         this.backColor.node.color = isPlayer ? cc.Color.BLUE : cc.Color.RED;
     }
 
+    open(){
+        super.open();
+        this.node.getComponent(cc.Animation).play("TurnStart");
+    }
+
     end(){
-        this.node.active = false;
+        this.node.emit("end");
+        this.close();
     }
 }
