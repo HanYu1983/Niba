@@ -150,8 +150,7 @@
                                (cond
                                  (= "cancel" selectUnitMenu)
                                  (do
-                                   (a/go
-                                     (a/<! (simpleAsk "unitMenuClose" 0)))
+                                   (a/<! (simpleAsk "unitMenuClose" 0))
                                    gameplayCtx)
 
                                  (= "attack1" selectUnitMenu)
@@ -217,15 +216,15 @@
 
 
           enemyTurn (fn [gameplayCtx enemy inputCh outputCh]
-                      (println "enemyTurn" enemy)
                       (a/go
+                        (println "enemyTurn" enemy)
                         gameplayCtx))
 
 
 
           gameplayLoop (fn [gameplayCtx inputCh outputCh]
-                         (println "gameplayLoop")
                          (a/go-loop [gameplayCtx gameplayCtx]
+                           (println "gameplayLoop")
                            (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
                                  enemies (->> (:players gameplayCtx)
                                               keys
