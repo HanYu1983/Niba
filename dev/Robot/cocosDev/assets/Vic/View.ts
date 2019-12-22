@@ -23,57 +23,9 @@ export default class NewClass extends cc.Component {
     @property(BasicViewer)
     pages: BasicViewer[] = [];
 
-    static instance:NewClass;
-
     start() {
-        NewClass.instance = this;
-
         this.openGamePage();
-        
-        window.startApp();
-        window.viewOb.subscribe(e=>{
-            console.log(e)
-            const [cmd, args] = e;
-            switch(cmd){
-                case "unitStateMenu":
-                    const [id] = args;
-                    this.notifyModel("ok", id, 0);
-                    break;
-                case "setCursor":
-                    const [id] = args;
-                    this.notifyModel("ok", id, 0);
-                    break;
-                case "unitMenuClose":
-                    const [id] = args;
-                    this.notifyModel("ok", id, 0);
-                    this.getGamePage().closeUnitMenu();
-                    break;
-                case "unitMenu":
-                    const [id, menu] = args;
-                    this.getGamePage().openUnitMenu(id, menu);
-                    break;
-                case "createMap":
-                    const [id, map] = args;
-                    this.getGamePage().getMap().setMap(map);
-                    this.notifyModel("ok", id, 0);
-                    break;
-            }
-        })        
     }
-
-    notifyModel(cmd:string, id:number, data:any){
-        window.viewNotifyOb.next([cmd, [id, data]]);
-
-        
-    }
-
-    notifyCmd(cmd:string, data:any = undefined){
-        window.viewNotifyOb.next(["startGameplay", data]);
-    }
-
-    // initAllPages(){
-    //     this.pages.forEach(page=>{ page.init(this);})
-    // }
 
     closeAllPages() {
         this.pages.forEach(element => {
@@ -115,5 +67,7 @@ export default class NewClass extends cc.Component {
         return this.pages[0] as MainPage; 
     }
 
-    // update (dt) {}
+    getGridPos(x: number, y: number) {
+        return [x * 32 - 304, -y * 32 + 304];
+    }
 }

@@ -10,6 +10,7 @@
 
 import Unit from "./Unit"
 import Pool from "../Pool"
+import Controller from "../Controller";
 
 const { ccclass, property } = cc._decorator;
 
@@ -33,35 +34,35 @@ export default class NewClass extends cc.Component {
 
     start() {
 
-        let units = [];
-        for (let i = 0; i < 10; ++i) {
-            units.push({
-                id: i,
-                name: "V" + i,
-                isPlayer: Math.random() > .5 ? true : false,
-                isMovable: Math.random() > .5 ? true : false,
-                pos: [Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)]
-            })
-        }
-        this.setUnits(units);
+        // let units = [];
+        // for (let i = 0; i < 10; ++i) {
+        //     units.push({
+        //         id: i,
+        //         name: "V" + i,
+        //         isPlayer: Math.random() > .5 ? true : false,
+        //         isMovable: Math.random() > .5 ? true : false,
+        //         pos: [Math.floor(Math.random() * 20), Math.floor(Math.random() * 20)]
+        //     })
+        // }
+        // this.setUnits(units);
 
-        this.moveUnitByID(0, [[5, 5], [5, 9], [10, 9]]);
-        this.moveUnitByID(3, [[12, 12], [6, 12], [6, 9], [8, 9], [8, 10], [10, 10]]);
+        // this.moveUnitByID(0, [[5, 5], [5, 9], [10, 9]]);
+        // this.moveUnitByID(3, [[12, 12], [6, 12], [6, 9], [8, 9], [8, 10], [10, 10]]);
     }
 
     setUnits(data: any) {
-        for (let element of data) {
-            let unitId = element["id"];
-
-            let name = element["name"];
-            let isPlayer = element["isPlayer"];
-            let isMovable = element["isMovable"];
-            let pos = element["pos"];
+        let units = data.units;
+        for (let element of units) {
+            let unitId = element["key"];
+            let name = element["key"];
+            let isPlayer = (element["player"] == "player");
+            let isMovable = true;
+            let pos = element["position"];
 
             let unitNode: cc.Node = this.getComponent(Pool).getNode(this.prefabUnit.node);
             unitNode.setParent(this.node);
 
-            let gridPos = this.getGridPos(pos[0], pos[1]);
+            let gridPos = Controller.instance.view.getGridPos(pos[0], pos[1]);
             unitNode.x = gridPos[0];
             unitNode.y = gridPos[1];
             unitNode.active = true;
@@ -101,16 +102,12 @@ export default class NewClass extends cc.Component {
         if (unit) {
             let actions = [];
             moveTo.forEach(element => {
-                let gridPos = this.getGridPos(element[0], element[1]);
+                let gridPos = Controller.instance.view.getGridPos(element[0], element[1]);
                 let action = cc.moveTo(.3, gridPos[0], gridPos[1]);
                 action.easing(cc.easeSineOut());
                 actions.push(action);
             });
             unit.node.runAction(cc.sequence(actions));
         }
-    }
-
-    getGridPos(x: number, y: number) {
-        return [x * 32 - 304, -y * 32 + 304];
     }
 }

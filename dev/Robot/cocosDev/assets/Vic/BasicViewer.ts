@@ -14,6 +14,12 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component {
 
+    private _inited = false;
+
+    init(){
+        this._inited = true;
+    }
+
     addListener(){
         this.removeListenser();
     }
@@ -24,6 +30,9 @@ export default class NewClass extends cc.Component {
 
     open(){
         this.node.active = true;
+        if(!this._inited){
+            this.init();
+        }
         this.addListener();
     }
 

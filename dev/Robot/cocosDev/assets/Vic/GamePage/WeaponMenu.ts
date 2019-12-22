@@ -21,50 +21,30 @@ export default class NewClass extends BasicViewer {
     @property(WeaponMenuItem)
     weaponItems:WeaponMenuItem[] = [];
 
-    private _menuCursor:MenuCursor;
+    //private _menuCursor:MenuCursor;
 
-    start(){
-        this.open();
+    addListener(){
+        //this._menuCursor.node.on(MenuCursor.ON_CURSOR_CHANGE, this.showCurrentWeapon, this);
     }
 
-    open(){
-        super.open();
-        this._menuCursor = this.node.getComponent(MenuCursor);
-
-        let ws = [];
-        for(let i = 0; i < 3; ++i){
-            ws.push({
-                name:'weapon_' + i,
-                type:'type',
-                power: i * 1000,
-                range:'1~3',
-                hit:53
-            });
-        }
-        this.setWeapons(ws);
-
-
-        this._menuCursor.node.on(MenuCursor.ON_CURSOR_CHANGE, this.showCurrentWeapon, this);
-
-        this._menuCursor.next();
+    removeListenser(){
+        //this._menuCursor.node.off(MenuCursor.ON_CURSOR_CHANGE);
     }
 
-    close(){
-        super.close();
-        this._menuCursor.node.off(MenuCursor.ON_CURSOR_CHANGE);
+    init(){
+        super.init();
+        //this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
-    showCurrentWeapon(cursor:any){
-        cc.log("showCurrentWeapon:", cursor[0]);
-        let cursor1 = cursor[0];
+    showCurrentWeapon(id:any){
         this.weaponItems.forEach(weaponItem=>{
             weaponItem.backColor.node.color = cc.Color.WHITE;
         });
-        this.weaponItems[cursor1].node.color = cc.Color.YELLOW;
+        this.weaponItems[id].backColor.node.color = cc.Color.YELLOW;
     }
 
     setWeapons(data:any){
-        this._menuCursor.setData(data);
+       // this._menuCursor.setData(data);
 
         for(let i = 0; i < this.weaponItems.length; ++i){
             if(i<data.length){
@@ -80,5 +60,7 @@ export default class NewClass extends BasicViewer {
                 this.weaponItems[i].node.active = false;
             }
         }
+
+        this.showCurrentWeapon(0);
     }
 }

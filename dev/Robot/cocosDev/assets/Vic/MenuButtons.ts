@@ -16,8 +16,8 @@ import MenuCursor from "./MenuCursor";
 const {ccclass, property, requireComponent} = cc._decorator;
 
 @ccclass
-@requireComponent(InputSensor)
 @requireComponent(MenuCursor)
+@requireComponent(InputSensor)
 export default class NewClass extends BasicViewer {
 
     @property(MenuButton)
@@ -27,8 +27,11 @@ export default class NewClass extends BasicViewer {
     private _menuCursor:MenuCursor;
 
     static ON_MENU_ENTER:string = "ON_MENU_ENTER";
+    static ON_MENU_LEFT:string = "ON_MENU_LEFT";
+    static ON_MENU_RIGHT:string = "ON_MENU_RIGHT";
 
-    start(){
+    init(){
+        super.init();
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
@@ -41,6 +44,7 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.CURSOR_LEFT, ()=>{
             this._menuCursor.right();
+            this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
         }, this);
 
         this.node.on(InputSensor.CURSOR_DOWN, ()=>{
@@ -49,6 +53,7 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
             this._menuCursor.right();
+            this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
         }, this);
 
         this.node.on(InputSensor.ENTER, ()=>{
