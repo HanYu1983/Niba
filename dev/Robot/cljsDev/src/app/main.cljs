@@ -286,17 +286,28 @@
                             (recur ctx)
 
                             "startGameplay"
-                            (let [map (map/generateMap 20 20
-                                                       {:deepsea 0.3
-                                                        :sea 0.3
-                                                        :sand 0.3
-                                                        :grass 0.3
-                                                        :city 0.3
-                                                        :tree 0.3
-                                                        :award 0.1})
+                            (let [cw 20
+                                  ch 20
+                                  [cx cy] [10 25]
+                                  [mw mh] [30 30]
+                                  playmap (map/generateMap mw mh
+                                                           {:deepsea 0.3
+                                                            :sea 0.3
+                                                            :sand 0.3
+                                                            :grass 0.3
+                                                            :city 0.3
+                                                            :tree 0.3
+                                                            :award 0.1})
+                                  playmap (->> playmap
+                                               (mapv (fn [row]
+                                                       (subvec row (min cx (- mw cw)) (min mw (+ cx cw)))))
+                                               ((fn [data]
+                                                  (subvec data (min cy (- mh ch)) (min mh (+ cy ch)))))
+                                               (flatten))
                                   gameplayCtx (merge defaultGameplayModel
-                                                     {:map map})]
-                              (a/<! (simpleAsk "createMap" map))
+                                                     {:map playmap})]
+                              
+                              (a/<! (simpleAsk "createMap" playmap))
                               (a/<! (simpleAsk "createUnits" {:units (:units gameplayCtx)
                                                               :players (:players gameplayCtx)}))
                               (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
