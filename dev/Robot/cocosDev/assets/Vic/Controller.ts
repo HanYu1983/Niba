@@ -33,25 +33,30 @@ export default class NewClass extends cc.Component {
                         this.notifyModel("ok", id, 0);
                     }
                 case "unitStateMenu":
-                    // const [id] = args;
-                    // this.notifyModel("ok", id, 0);
+                    {
+                        const [id] = args;
+                        this.notifyAnswer(id);
+                    }
                     break;
                 case "setCursor":
-                    // const [id] = args;
-                    // this.notifyModel("ok", id, 0);
+                    {
+                        const [id, pos] = args;
+                        this.view.getGamePage().setCursor(pos);
+                        this.notifyAnswer(id);
+                    }
                     break;
                 case "unitMenuClose":
                     {
                         const [id] = args;
                         this.view.getGamePage().closeUnitMenu();
-                        this.notifyModel("ok", id, 0);
+                        this.notifyAnswer(id);
                     }
                     break;
                 case "unitMenu":
                     {
                         const [id, menu] = args;
                         this.view.getGamePage().openUnitMenu(menu, ((key)=>{
-                            this.notifyModel("ok", id, key);
+                            this.notifyAnswer(id, key);
                         }).bind(this));
                     }
                     break;
@@ -59,11 +64,29 @@ export default class NewClass extends cc.Component {
                     {
                         const [id, map] = args;
                         this.view.getGamePage().map.setMap(map);
-                        this.notifyModel("ok", id, 0);
+                        this.notifyAnswer(id);
                     }
                     break;
             }
         })   
+    }
+
+    notifySetCursor(pos:number[]){
+        cc.log("==============")
+        cc.log(pos);
+        this.notifyCmd("setCursor", pos);
+    }
+
+    notifyStartGame(){
+        this.notifyCmd("startGameplay");
+    }
+
+    notifyAnswer(id, args = 0){
+        this.notifyModel("ok", id, args);
+    }
+
+    notifySelectMap(pos:number[]){
+        this.notifyCmd("selectMap", pos);
     }
 
     notifyModel(cmd:string, id:number, data:any){
@@ -71,6 +94,6 @@ export default class NewClass extends cc.Component {
     }
 
     notifyCmd(cmd:string, data:any = undefined){
-        window.viewNotifyOb.next(["startGameplay", data]);
+        window.viewNotifyOb.next([cmd, data]);
     }
 }
