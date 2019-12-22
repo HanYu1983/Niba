@@ -3,6 +3,41 @@
   (:require [app.map :as map])
   (:require-macros [app.macros :as m]))
 
+(let [shortestPathTree (map/findPath 0
+                                     (fn [info curr]
+                                       [(= curr 5) true])
+                                     (fn [i] [(inc i)])
+                                     (constantly 1)
+                                     (constantly 1))
+      path (map/buildPath shortestPathTree 5)]
+  (println shortestPathTree)
+  (println path))
+
+(let [shortestPathTree (map/findPath [5 5]
+                                     (fn [{:keys [totalCost]} curr]
+                                       [(>= totalCost 3) false])
+                                     (fn [[x y]]
+                                       [[x (inc y)] [x (max 0 (dec y))] [(inc x) y] [(max 0 (dec x)) y]])
+                                     (constantly 1)
+                                     (fn [curr] 0))
+      path (map/buildPath shortestPathTree [2 5])]
+  (println shortestPathTree)
+  (println path))
+
+(let [shortestPathTree (map/findPath [0 0]
+                                     (fn [{:keys [totalCost]} curr i]
+                                       [(= [100 100] curr) true])
+                                     (fn [[x y]]
+                                       [[x (inc y)] [x (max 0 (dec y))] [(inc x) y] [(max 0 (dec x)) y]])
+                                     (constantly 1)
+                                     (fn [curr]
+                                       (->> (map - curr [100 100])
+                                            (repeat 2)
+                                            (apply map *)
+                                            (apply +))))
+      path (map/buildPath shortestPathTree [100 100])]
+  (println path))
+
 (def defaultModel {})
 (def defaultGameplayModel {})
 

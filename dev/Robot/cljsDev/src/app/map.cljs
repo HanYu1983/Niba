@@ -2,30 +2,36 @@
 
 (def defaultModel {})
 
-(defn findPath [start end nextFn costFn estCostFn]
+(defn buildPath [pathTree end]
+  (let [path (loop [path []
+                    curr end]
+               (if (nil? (get pathTree curr))
+                 (cons curr path)
+                 (recur (cons curr path) (:prev (get pathTree curr)))))]
+    path))
+
+(defn findPath [start endFn nextFn costFn estCostFn]
   (loop [close #{}
          open [start]
          info {}
          i 0]
-    (if (= i 5000)
-      nil
-      (let [curr (first open)]
-        (if (= curr end)
-          (let [path (loop [path []
-                            curr curr]
-                       (if (nil? (get info curr))
-                         (cons curr path)
-                         (recur (cons curr path) (:prev (get info curr)))))]
-            (println i)
-            path)
-          (let [close (conj close curr)
-                nexts (->> (nextFn curr)
+    (if (or (= i 5000) (= 0 (count open)))
+      info
+      (let [curr (first open)
+            open (rest open)
+            close (conj close curr)
+            [isFind isInterrupt] (endFn (get info curr) curr i)]
+        (if isFind
+          (if isInterrupt
+            info
+            (recur close open info (inc i)))
+          (let [nexts (->> (nextFn curr)
                            (filter #(not (contains? (into close open) %))))
                 info (->> nexts
                           (reduce (fn [info next]
                                     (update info next (fn [origin]
                                                         (let [costToNext (costFn curr next)
-                                                              cost (+ (estCostFn next end) costToNext)
+                                                              cost (+ (estCostFn next) costToNext)
                                                               totalCost (+ (get-in info [curr :totalCost]) costToNext)]
                                                           (if (nil? origin)
                                                             {:cost cost
@@ -38,7 +44,6 @@
                                                                              :prev curr})))))))
                                   info))
                 open (->> open
-                          rest
                           (concat nexts)
                           (sort-by (fn [d]
                                      (->> [:totalCost :cost]
