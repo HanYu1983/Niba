@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
                     break;
                 case "unitState":
                     {
-                        
+                        this.view.getGamePage().openUnitStatuMenu();
                     }
                     break;
                 // 進入gameplay

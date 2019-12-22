@@ -27,11 +27,11 @@ export default class NewClass extends cc.Component {
     static ESCAPE: string = "ESCAPE";
 
     start() {
-        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }
 
     onDestroy() {
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP);
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN);
     }
 
     onKeyUp(evt: cc.Event.EventKeyboard) {

@@ -9,35 +9,44 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import View from "./View";
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
 
     private _inited = false;
+    private _isOpen = false;
 
-    init(){
+    isOpen():boolean{
+        return this._isOpen;
+    }
+
+    init() {
         this._inited = true;
     }
 
-    addListener(){
+    addListener() {
         this.removeListenser();
     }
 
-    removeListenser(){
+    removeListenser() {
 
     }
 
-    open(){
+    open() {
         this.node.active = true;
-        if(!this._inited){
+        if (!this._inited) {
             this.init();
         }
         this.addListener();
+
+        this._isOpen = true;
     }
 
-    close(){
+    close() {
         this.node.active = false;
         this.removeListenser();
+
+        this._isOpen = false;
     }
 }

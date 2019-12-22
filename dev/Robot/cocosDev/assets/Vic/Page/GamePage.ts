@@ -12,6 +12,7 @@
 import LandMap from "../GamePage/LandMap";
 import LandUnits from "../GamePage/LandUnits";
 import WeaponMenu from "../GamePage/WeaponMenu"
+import UnitStatuMenu from "../GamePage/UnitStatuMenu";
 import TurnStart from "../GamePage/TurnStart"
 
 import BasicViewer from "../BasicViewer"
@@ -39,6 +40,9 @@ export default class NewClass extends BasicViewer {
 
     @property(WeaponMenu)
     weaponMenu:WeaponMenu = null;
+
+    @property(UnitStatuMenu)
+    unitStatuMenu:UnitStatuMenu = null;
 
     @property(TurnStart)
     turnStart:TurnStart = null;
@@ -112,6 +116,14 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
     }
 
+    openUnitStatuMenu(){
+        this.unitStatuMenu.open();
+    }
+
+    closeUnitStatuMenu(){
+        this.unitStatuMenu.close();
+    }
+
     openTurnStart(data:any){
         this.turnStart.setContent("abc");
         this.turnStart.setPlayer(false);
@@ -120,6 +132,8 @@ export default class NewClass extends BasicViewer {
     }
 
     openSceneMenu(data:any, callback:(key)=>void){
+        this.closeSceneMenu();
+
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
         this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
@@ -128,11 +142,13 @@ export default class NewClass extends BasicViewer {
     }
 
     closeSceneMenu(){
-        this.sceneMenu.close();
         this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        this.sceneMenu.close();
     }
 
     openUnitMenu(data:any, callback:(key)=>void){
+        this.closeUnitMenu();
+
         this.unitMenu.open();
         this.unitMenu.setData(data);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
