@@ -79,4 +79,11 @@ export default class NewClass extends cc.Component {
     getGridPos(pos: number[]) {
         return [pos[0] * 32 - 304, -pos[1] * 32 + 304];
     }
+
+    getXYByIndex(id:number):number[]{
+        cc.log(id);
+        let pos = [id%20, Math.floor(id/20)];
+        cc.log(id%20, Math.floor(id/20));
+        return pos;
+    }
 }

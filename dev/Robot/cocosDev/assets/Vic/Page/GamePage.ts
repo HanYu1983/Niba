@@ -112,7 +112,7 @@ export default class NewClass extends BasicViewer {
             }
         });
     }
-
+    
     showWeaponRange(data:any[]){
         data.forEach(elem => {
             let grid: Grid = this.map.getGridByXY(elem);

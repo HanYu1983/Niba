@@ -64,9 +64,11 @@ export default class NewClass extends cc.Component {
                  */
                 case "unitMove":
                     {
-                        const[id, path] = args;
-                        this.notifyAnswer(id);
-                        //this.view.getGamePage().units.moveUnitByID()
+                        const[id, data] = args;
+                        this.view.getGamePage().map.clearRange();
+                        this.view.getGamePage().units.moveUnitByID(data.unit, data.path, ()=>{
+                            this.notifyAnswer(id);
+                        });
                     }
                     break;
                 case "selectPosition":

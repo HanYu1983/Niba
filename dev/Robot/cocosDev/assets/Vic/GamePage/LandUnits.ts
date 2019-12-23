@@ -97,16 +97,17 @@ export default class NewClass extends cc.Component {
         return undefined;
     }
 
-    moveUnitByID(id: number, moveTo: any) {
+    moveUnitByID(id: number, moveTo: any, callback:()=>void) {
         let unit = this.getUnitByID(id);
         if (unit) {
             let actions = [];
             moveTo.forEach(element => {
-                let gridPos = Controller.instance.view.getGridPos(element[0], element[1]);
+                let gridPos = Controller.instance.view.getGridPos(element);
                 let action = cc.moveTo(.3, gridPos[0], gridPos[1]);
                 action.easing(cc.easeSineOut());
                 actions.push(action);
             });
+            actions.push(cc.callFunc(callback));
             unit.node.runAction(cc.sequence(actions));
         }
     }
