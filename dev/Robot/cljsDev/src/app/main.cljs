@@ -1,6 +1,7 @@
 (ns app.main
   (:require [clojure.core.async :as a])
   (:require [app.map :as map])
+  (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
 (comment (let [shortestPathTree (map/findPath 0
@@ -40,6 +41,8 @@
 
 (def defaultModel {})
 (def defaultGameplayModel {:map nil
+                           :cursor [0 0]
+                           :camera [0 0]
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
@@ -225,7 +228,8 @@
                                (let [cursor args
                                      units (:units gameplayCtx)
                                      unitAtCursor (first (filter #(= cursor (:position %))
-                                                                 units))]
+                                                                 units))
+                                     gameplayCtx (update gameplayCtx :cursor (constantly cursor))]
                                  (if unitAtCursor
                                    (let []
                                      (a/>! outputCh ["unitState"])
@@ -237,11 +241,16 @@
 
                                (= "setCamera" cmd)
                                (let [camera args
-                                     playmap (:map gameplayCtx)]
+                                     playmap (:map gameplayCtx)
+                                     gameplayCtx (update gameplayCtx :camera (constantly camera))]
                                  (a/>! outputCh ["setMap" (->> playmap
                                                                (map/subMap camera playmapSize)
                                                                (flatten))])
                                  (a/>! outputCh ["setCamera" camera])
+                                 (recur gameplayCtx))
+                               
+                               (= "setMoveRange" cmd)
+                               (let []
                                  (recur gameplayCtx))
 
                                (= "selectMap" cmd)
