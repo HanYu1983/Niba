@@ -52,7 +52,6 @@ export default class NewClass extends cc.Component {
 
     setUnits(data: any) {
         let units = data.units;
-        cc.log(units);
         for (let element of units) {
             let unitId = element["key"];
             let name = element["key"];

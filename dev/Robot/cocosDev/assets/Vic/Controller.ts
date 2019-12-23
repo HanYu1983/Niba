@@ -9,6 +9,8 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import View from "./View"
+import GamePage from "./page/GamePage";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -46,9 +48,7 @@ export default class NewClass extends cc.Component {
                 // 玩家回合
                 case "playerTurn":
                     {
-                        this.view.getGamePage().closeSceneMenu();
-                        this.view.getGamePage().closeUnitMenu();
-                        this.view.getGamePage().addListener();
+                        this.view.onPlayerTurn();
                     }
                     break;
                 // 敵方回合
@@ -62,16 +62,34 @@ export default class NewClass extends cc.Component {
                 /**
                  * 這由以上的指令不能回覆
                  */
+                case "unitMove":
+                    {
+                        const[id, path] = args;
+                        this.notifyAnswer(id);
+                        //this.view.getGamePage().units.moveUnitByID()
+                    }
+                    break;
+                case "selectPosition":
+                    {
+                        const [id, pos] = args;
+                        this.view.getGamePage().closeUnitMenu();
+                        this.view.getGamePage().addListener();
+                        this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
+                            this.notifyAnswer(id, corsor);
+                        }, this);
+                    }
+                    break;
+                case "setMoveRange":
+                    {
+                        this.view.getGamePage().showMovableGrid(args);
+                    }
+                    break;
                 case "playerTurnStart":
                     {
                         const [id] = args;
                         this.view.getGamePage().openTurnStart(true, (() => {
                             this.notifyAnswer(id);
-
-                            this.view.getGamePage().closeSceneMenu();
-                            this.view.getGamePage().closeUnitMenu();
-                            this.view.getGamePage().addListener();
-                            
+                            this.view.onPlayerTurn();
                         }).bind(this));
                     }
                     break;

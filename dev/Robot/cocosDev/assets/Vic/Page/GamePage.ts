@@ -55,6 +55,8 @@ export default class NewClass extends BasicViewer {
     @property(cc.Node)
     cursor: cc.Node = null;
 
+    static ON_GAMEPAGE_ENTER:string = "ON_GAMEPAGE_ENTER";
+
     private _cursor: number[] = [0, 0];
 
     open() {
@@ -144,7 +146,7 @@ export default class NewClass extends BasicViewer {
         });
 
         this.node.on(InputSensor.ENTER, () => {
-            Controller.instance.notifySelectMap(this._cursor);
+            this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
         }, this);
     }
 
@@ -156,14 +158,16 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.CURSOR_DOWN);
         this.node.off(InputSensor.CURSOR_RIGHT);
         this.node.off(InputSensor.ENTER);
+        this.node.off(NewClass.ON_GAMEPAGE_ENTER);
     }
 
     openUnitStatuMenu() {
-        this.unitStatuMenu.open();
+
+        //this.unitStatuMenu.open();
     }
 
     closeUnitStatuMenu() {
-        this.unitStatuMenu.close();
+        //this.unitStatuMenu.close();
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {

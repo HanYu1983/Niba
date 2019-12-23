@@ -32,11 +32,13 @@ export default class NewClass extends cc.Component {
     showMove() {
         this.selectBorder.active = true;
         this.selectBorder.color = cc.Color.WHITE;
+        this.selectBorder.color.setA(.5);
     }
 
     showRange(){
         this.selectBorder.active = true;
         this.selectBorder.color = cc.Color.YELLOW;
+        this.selectBorder.color.setA(.5);
     }
 
     setType(type: Number) {
