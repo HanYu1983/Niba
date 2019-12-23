@@ -88,7 +88,7 @@ export default class NewClass extends cc.Component {
                     }
                     break;
                 // 系統選單
-                case "selectNoUnitFlow":
+                case "systemMenu":
                     {
                         const [id, menu] = args;
                         this.view.getGamePage().openSceneMenu(menu, ((key) => {
@@ -99,7 +99,7 @@ export default class NewClass extends cc.Component {
                     }
                     break;
                 // 機體動作選單
-                case "selectUnitFlow":
+                case "unitMenu":
                     {
                         const [id, menu] = args;
                         this.view.getGamePage().openUnitMenu(menu, ((key) => {
