@@ -25,19 +25,22 @@ export default class NewClass extends cc.Component {
     landX: number;
     landY: number;
 
-    start() {
-
-    }
-
-    showFocus(show: boolean) {
-        this.selectBorder.active = show;
+    showNormal(){
+        this.selectBorder.active = false;
     }
 
     showMove() {
-        this.backColor.node.color = cc.Color.BLUE;
+        this.selectBorder.active = true;
+        this.selectBorder.color = cc.Color.WHITE;
+    }
+
+    showRange(){
+        this.selectBorder.active = true;
+        this.selectBorder.color = cc.Color.YELLOW;
     }
 
     setType(type: Number) {
+        cc.log(type);
         switch (type) {
             case 0:
                 this.typeName.string = "深";

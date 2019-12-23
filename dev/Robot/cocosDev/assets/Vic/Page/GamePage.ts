@@ -13,7 +13,9 @@ import LandMap from "../GamePage/LandMap";
 import LandUnits from "../GamePage/LandUnits";
 import WeaponMenu from "../GamePage/WeaponMenu"
 import UnitStatuMenu from "../GamePage/UnitStatuMenu";
+import FightMenu from "../GamePage/FightMenu";
 import TurnStart from "../GamePage/TurnStart"
+import Grid from "../GamePage/Grid"
 
 import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
@@ -30,27 +32,30 @@ export default class NewClass extends BasicViewer {
     map: LandMap = null;
 
     @property(LandUnits)
-    units:LandUnits = null;
+    units: LandUnits = null;
 
     @property(MenuButtons)
-    unitMenu:MenuButtons = null;
+    unitMenu: MenuButtons = null;
 
     @property(MenuButtons)
-    sceneMenu:MenuButtons = null;
+    sceneMenu: MenuButtons = null;
 
     @property(WeaponMenu)
-    weaponMenu:WeaponMenu = null;
+    weaponMenu: WeaponMenu = null;
 
     @property(UnitStatuMenu)
-    unitStatuMenu:UnitStatuMenu = null;
+    unitStatuMenu: UnitStatuMenu = null;
+
+    @property(FightMenu)
+    fightInfoMenu: FightMenu = null;
 
     @property(TurnStart)
-    turnStart:TurnStart = null;
+    turnStart: TurnStart = null;
 
     @property(cc.Node)
-    cursor:cc.Node = null;
+    cursor: cc.Node = null;
 
-    private _cursor:number[] = [0,0];
+    private _cursor: number[] = [0, 0];
 
     open() {
 
@@ -68,9 +73,23 @@ export default class NewClass extends BasicViewer {
         //this.openSceneMenu(['finish','cancel'], ()=>{});
 
         //this.openTurnStart();
+
+        //this.showMovableGrid([[3,4],[5,6],[7,9]]);
+
+        this.showFightInfo([
+            {
+                
+            },
+            {
+
+            },
+            {
+
+            }
+        ]);
     }
 
-    setCursor(pos:number[]){
+    setCursor(pos: number[]) {
         this._cursor[0] = pos[0];
         this._cursor[1] = pos[1];
 
@@ -79,35 +98,57 @@ export default class NewClass extends BasicViewer {
         this.cursor.y = cursorPos[1];
     }
 
-    addListener(){
+    showFightInfo(datas:any[]){
+        this.fightInfoMenu.showInfos(datas);
+    }
+
+    showMovableGrid(data: any[]) {
+        data.forEach(elem => {
+            let grid: Grid = this.map.getGridByXY(elem);
+            if (grid) {
+                grid.showMove();
+            }
+        });
+    }
+
+    showWeaponRange(data:any[]){
+        data.forEach(elem => {
+            let grid: Grid = this.map.getGridByXY(elem);
+            if (grid) {
+                grid.showRange();
+            }
+        });
+    }
+
+    addListener() {
         super.addListener();
 
-        this.node.on(InputSensor.CURSOR_UP, ()=>{
+        this.node.on(InputSensor.CURSOR_UP, () => {
             this._cursor[1] -= 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
-        this.node.on(InputSensor.CURSOR_LEFT, ()=>{
+        this.node.on(InputSensor.CURSOR_LEFT, () => {
             this._cursor[0] -= 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
-        this.node.on(InputSensor.CURSOR_DOWN, ()=>{
+        this.node.on(InputSensor.CURSOR_DOWN, () => {
             this._cursor[1] += 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
-        this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
+        this.node.on(InputSensor.CURSOR_RIGHT, () => {
             this._cursor[0] += 1;
             Controller.instance.notifySetCursor(this._cursor);
         });
 
-        this.node.on(InputSensor.ENTER, ()=>{
+        this.node.on(InputSensor.ENTER, () => {
             Controller.instance.notifySelectMap(this._cursor);
         }, this);
     }
 
-    removeListenser(){
+    removeListenser() {
         super.removeListenser();
 
         this.node.off(InputSensor.CURSOR_UP);
@@ -117,58 +158,58 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
     }
 
-    openUnitStatuMenu(){
+    openUnitStatuMenu() {
         this.unitStatuMenu.open();
     }
 
-    closeUnitStatuMenu(){
+    closeUnitStatuMenu() {
         this.unitStatuMenu.close();
     }
 
-    openTurnStart(isPlayer:boolean, callback:()=>void){
+    openTurnStart(isPlayer: boolean, callback: () => void) {
         this.turnStart.setContent(isPlayer ? "玩家回合開始" : "敵軍回合開始");
         this.turnStart.setPlayer(isPlayer);
         this.turnStart.open();
-        this.turnStart.node.on("end", ()=>{
+        this.turnStart.node.on("end", () => {
             this.turnStart.node.off("end");
             callback();
         }, this);
     }
 
-    openSceneMenu(data:any, callback:(key)=>void){
+    openSceneMenu(data: any, callback: (key) => void) {
         this.closeSceneMenu();
 
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
-        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback );
+        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback);
     }
 
-    closeSceneMenu(){
+    closeSceneMenu() {
         this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.sceneMenu.close();
     }
 
-    openUnitMenu(data:any, callback:(key)=>void){
+    openUnitMenu(data: any, callback: (key) => void) {
         this.closeUnitMenu();
 
         this.unitMenu.open();
         this.unitMenu.setData(data);
-        this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key=>{
+        this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
             callback(key);
         });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor=>{
+        this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
             this._changeCurrentWeapon(cursor);
         });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor=>{
+        this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
             this._changeCurrentWeapon(cursor);
         });
 
         this.openWeaponMenu(data);
     }
 
-    closeUnitMenu(){
+    closeUnitMenu() {
         this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
         this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
@@ -177,16 +218,16 @@ export default class NewClass extends BasicViewer {
         this.weaponMenu.close();
     }
 
-    openWeaponMenu(data:any){
+    openWeaponMenu(data: any) {
 
         let ws = [];
-        for(let i = 0; i < data[1].length; ++i){
+        for (let i = 0; i < data[1].length; ++i) {
             ws.push({
-                name:'weapon_' + i,
-                type:'type',
+                name: 'weapon_' + i,
+                type: 'type',
                 power: i * 1000,
-                range:'1~3',
-                hit:53
+                range: '1~3',
+                hit: 53
             });
         }
 
@@ -194,14 +235,10 @@ export default class NewClass extends BasicViewer {
         this.weaponMenu.setWeapons(ws);
     }
 
-    private _changeCurrentWeapon(cursor:any){
-        if(cursor[0]==1){
+    private _changeCurrentWeapon(cursor: any) {
+        if (cursor[0] == 1) {
             this.weaponMenu.showCurrentWeapon(cursor[1]);
         }
-    }
-
-    closeWeaponMenu(){
-        this.weaponMenu.close();
     }
 
     static generateMap(
