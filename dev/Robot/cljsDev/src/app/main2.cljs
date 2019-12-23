@@ -1,4 +1,4 @@
-(ns app.main
+(ns app.main2
   (:require [clojure.core.async :as a])
   (:require [app.map :as map])
   (:require-macros [app.macros :as m]))
