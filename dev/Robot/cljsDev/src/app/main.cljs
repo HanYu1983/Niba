@@ -4,6 +4,17 @@
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
+(let [shortestPathTree (map/findPath [5 5]
+                                     (fn [{:keys [totalCost]} curr]
+                                       [(>= totalCost 3) false])
+                                     (fn [[x y]]
+                                       [[x (inc y)] [x (max 0 (dec y))] [(inc x) y] [(max 0 (dec x)) y]])
+                                     (constantly 1)
+                                     (fn [curr] 0))
+      path (map/buildPath shortestPathTree [2 5])]
+  (println shortestPathTree)
+  (println path))
+
 (comment (let [shortestPathTree (map/findPath 0
                                               (fn [info curr]
                                                 [(= curr 5) true])
@@ -14,16 +25,7 @@
            (println shortestPathTree)
            (println path))
 
-         (let [shortestPathTree (map/findPath [5 5]
-                                              (fn [{:keys [totalCost]} curr]
-                                                [(>= totalCost 3) false])
-                                              (fn [[x y]]
-                                                [[x (inc y)] [x (max 0 (dec y))] [(inc x) y] [(max 0 (dec x)) y]])
-                                              (constantly 1)
-                                              (fn [curr] 0))
-               path (map/buildPath shortestPathTree [2 5])]
-           (println shortestPathTree)
-           (println path))
+         
 
          (let [shortestPathTree (map/findPath [0 0]
                                               (fn [{:keys [totalCost]} curr i]
@@ -41,8 +43,9 @@
 
 (def defaultModel {})
 (def defaultGameplayModel {:map nil
-                           :cursor [0 0]
-                           :camera [0 0]
+                           :temp {:cursor [0 0]
+                                  :camera [0 0]
+                                  :moveRange []}
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
@@ -151,8 +154,41 @@
                            args))
 
 
+          selectPosition (fn [gameplayCtx possibleRange inputCh outputCh]
+                           (a/go
+                             (a/>! outputCh ["selectPosition" ["selectPosition"]])
+                             (loop [gameplayCtx gameplayCtx]
+                               (when-let [[cmd [resKey resArgs :as args] :as evt] (a/<! inputCh)]
+                                 (cond
+                                   (= "setCursor" cmd)
+                                   (let [cursor args
+                                         units (:units gameplayCtx)
+                                         unitAtCursor (first (filter #(= cursor (:position %))
+                                                                     units))
+                                         gameplayCtx (update-in gameplayCtx [:temp :cursor] (constantly cursor))]
+                                     (if unitAtCursor
+                                       (let []
+                                         (a/>! outputCh ["unitState"])
+                                         (a/>! outputCh ["setCursor" cursor])
+                                         (recur gameplayCtx))
+                                       (let []
+                                         (a/>! outputCh ["setCursor" cursor])
+                                         (recur gameplayCtx))))
 
-          selectUnitFlow (fn [gameplayCtx inputCh outputCh]
+                                   (= ["ok" "selectPosition"] [cmd resKey])
+                                   (let [cursor args
+                                         isInRange (some #(= % cursor) possibleRange)]
+                                     (if isInRange
+                                       [gameplayCtx cursor]
+                                       (recur gameplayCtx)))
+
+                                   :else
+                                   (let []
+                                     (println "[model][selectPosition][waitForAnswer]")
+                                     (recur gameplayCtx)))))))
+
+
+          selectUnitFlow (fn [gameplayCtx unit inputCh outputCh]
                            ; 等待simpleAsk的同時也要把一起收到的事件消化, 不然新的推不進去
                            ; 要記得close!
                            (let [cleaner (a/chan)
@@ -165,6 +201,33 @@
                                (let [selectUnitMenu (a/<! (simpleAsk "selectUnitFlow" ["move" ["attack1" "attack2"] "cancel"]))]
                                  (println "[model][selectUnitFlow]" selectUnitMenu)
                                  (cond
+                                   (= "move" selectUnitMenu)
+                                   (let [[mw mh] playmapSize
+                                         shortestPathTree (map/findPath (:position unit)
+                                                                        (fn [{:keys [totalCost]} curr]
+                                                                          [(>= totalCost 5) false])
+                                                                        (fn [[x y]]
+                                                                          [[x (min mh (inc y))]
+                                                                           [x (max 0 (dec y))]
+                                                                           [(min mw (inc x)) y]
+                                                                           [(max 0 (dec x)) y]])
+                                                                        (constantly 1)
+                                                                        (fn [curr] 0))
+                                         moveRange (map first shortestPathTree)
+                                         gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
+                                     (a/>! outputCh ["setMoveRange" moveRange])
+                                     (let [[gameplayCtx pos] (a/<! (selectPosition gameplayCtx moveRange inputCh outputCh))
+                                           path (map/buildPath moveRange pos)]
+                                       (a/<! (simpleAsk "moveUnit" path))
+                                       (loop [gameplayCtx gameplayCtx]
+                                         (let [select2 (a/<! (simpleAsk "selectUnitFlow" [["attack1" "attack2"] "cancel"]))]
+                                           (cond
+                                             (= "cancel" select2)
+                                             gameplayCtx
+
+                                             :else
+                                             (recur gameplayCtx))))))
+
                                    (= "cancel" selectUnitMenu)
                                    (let []
                                      (a/close! cleaner)
@@ -229,7 +292,7 @@
                                      units (:units gameplayCtx)
                                      unitAtCursor (first (filter #(= cursor (:position %))
                                                                  units))
-                                     gameplayCtx (update gameplayCtx :cursor (constantly cursor))]
+                                     gameplayCtx (update-in gameplayCtx [:temp :cursor] (constantly cursor))]
                                  (if unitAtCursor
                                    (let []
                                      (a/>! outputCh ["unitState"])
@@ -242,13 +305,13 @@
                                (= "setCamera" cmd)
                                (let [camera args
                                      playmap (:map gameplayCtx)
-                                     gameplayCtx (update gameplayCtx :camera (constantly camera))]
+                                     gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
                                  (a/>! outputCh ["setMap" (->> playmap
                                                                (map/subMap camera playmapSize)
                                                                (flatten))])
                                  (a/>! outputCh ["setCamera" camera])
                                  (recur gameplayCtx))
-                               
+
                                (= "setMoveRange" cmd)
                                (let []
                                  (recur gameplayCtx))
@@ -260,7 +323,7 @@
                                                                         units))]
                                         (if unitAtCursor
                                           (let []
-                                            (a/<! (selectUnitFlow gameplayCtx inputCh outputCh)))
+                                            (a/<! (selectUnitFlow gameplayCtx unitAtCursor inputCh outputCh)))
                                           (let []
                                             (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))))))
 
@@ -317,7 +380,7 @@
 
                                   gameplayCtx (merge defaultGameplayModel
                                                      {:map playmap})]
-                              
+
                               (a/<! (simpleAsk "createMap" (->> playmap
                                                                 (map/subMap [0 0] playmapSize)
                                                                 (flatten))))
