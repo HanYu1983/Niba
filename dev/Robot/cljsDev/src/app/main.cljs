@@ -88,17 +88,21 @@
               moveRange (map first shortestPathTree)
               gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
           (a/>! outputCh ["setMoveRange" moveRange])
-          (let [[gameplayCtx pos] (a/<! (selectPosition gameplayCtx moveRange inputCh outputCh))
-                path (map/buildPath moveRange pos)]
-            (a/<! (unitMove nil path inputCh outputCh))
-            (loop [gameplayCtx gameplayCtx]
-              (let [select2 (a/<! (unitMenu nil [["attack1" "attack2"] "cancel"] inputCh outputCh))]
-                (cond
-                  (= "cancel" select2)
-                  gameplayCtx
+          (loop [gameplayCtx gameplayCtx]
+            (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx moveRange inputCh outputCh))
+                  isInRange (some #(= % cursor) moveRange)]
+              (if isInRange
+                (let [path (map/buildPath moveRange cursor)]
+                  (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
+                  (loop [gameplayCtx gameplayCtx]
+                    (let [[gameplayCtx select2] (a/<! (unitMenu nil [["attack1" "attack2"] "cancel"] inputCh outputCh))]
+                      (cond
+                        (= "cancel" select2)
+                        gameplayCtx
 
-                  :else
-                  (recur gameplayCtx))))))
+                        :else
+                        (recur gameplayCtx)))))
+                (recur gameplayCtx)))))
 
         (= "cancel" selectUnitMenu)
         (let []
