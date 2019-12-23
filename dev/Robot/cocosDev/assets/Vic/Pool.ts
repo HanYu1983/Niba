@@ -34,10 +34,12 @@ export default class NewClass extends cc.Component {
 
     getNodes() {
         return this._pool;
-        //return Object.assign([], this._pool);
     }
 
     clearPool() {
+        this._pool.forEach(node=>{
+            node.destroy();
+        });
         this._pool = [];
     }
 }

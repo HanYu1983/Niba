@@ -42,7 +42,7 @@ export default class NewClass extends cc.Component {
         data.forEach(element=>{
             let x = id % 20;
             let y = Math.floor(id / 20);
-            let grid = this.getGridByXY(x, y);
+            let grid = this.getGridByXY([x, y]);
             if(grid){
                 grid.setType(element);
             }
@@ -55,18 +55,18 @@ export default class NewClass extends cc.Component {
      * @param x 
      * @param y 
      */
-    getGridByXY(x: number, y: number):Grid {
-        let grid = this.grids.get(x + ":" + y);
+    getGridByXY(pos: number[]):Grid {
+        let grid = this.grids.get(pos[0] + ":" + pos[1]);
         return grid;
     }
 
-    focusOnGrid(x:number, y:number){
-        this.grids.forEach(grid => {
-            grid.showFocus(false);
-        });
-        let grid = this.getGridByXY(x, y);
-        if(grid){
-            grid.showFocus(true);
-        }
-    }
+    // focusOnGrid(x:number, y:number){
+    //     this.grids.forEach(grid => {
+    //         grid.showFocus(false);
+    //     });
+    //     let grid = this.getGridByXY(x, y);
+    //     if(grid){
+    //         grid.showFocus(true);
+    //     }
+    // }
 }
