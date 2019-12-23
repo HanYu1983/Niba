@@ -74,6 +74,8 @@
               args)
             (recur)))))))
 
+(def playmapSize [20 20])
+
 (defn main []
   (println "[model]" "rxjs")
   (let [viewOb (js/rxjs.Subject.)
@@ -233,6 +235,15 @@
                                      (a/>! outputCh ["setCursor" cursor])
                                      (recur gameplayCtx))))
 
+                               (= "setCamera" cmd)
+                               (let [camera args
+                                     playmap (:map gameplayCtx)]
+                                 (a/>! outputCh ["setMap" (->> playmap
+                                                               (map/subMap camera playmapSize)
+                                                               (flatten))])
+                                 (a/>! outputCh ["setCamera" camera])
+                                 (recur gameplayCtx))
+
                                (= "selectMap" cmd)
                                (recur (let [cursor args
                                             units (:units gameplayCtx)
@@ -286,11 +297,7 @@
                             (recur ctx)
 
                             "startGameplay"
-                            (let [cw 20
-                                  ch 20
-                                  [cx cy] [10 25]
-                                  [mw mh] [30 30]
-                                  playmap (map/generateMap mw mh
+                            (let [playmap (map/generateMap 100 100
                                                            {:deepsea 0.3
                                                             :sea 0.3
                                                             :sand 0.3
@@ -298,16 +305,13 @@
                                                             :city 0.3
                                                             :tree 0.3
                                                             :award 0.1})
-                                  playmap (->> playmap
-                                               (mapv (fn [row]
-                                                       (subvec row (min cx (- mw cw)) (min mw (+ cx cw)))))
-                                               ((fn [data]
-                                                  (subvec data (min cy (- mh ch)) (min mh (+ cy ch)))))
-                                               (flatten))
+
                                   gameplayCtx (merge defaultGameplayModel
                                                      {:map playmap})]
                               
-                              (a/<! (simpleAsk "createMap" playmap))
+                              (a/<! (simpleAsk "createMap" (->> playmap
+                                                                (map/subMap [0 0] playmapSize)
+                                                                (flatten))))
                               (a/<! (simpleAsk "createUnits" {:units (:units gameplayCtx)
                                                               :players (:players gameplayCtx)}))
                               (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))

@@ -121,3 +121,15 @@
        (partition w)
        (map (partial into []))
        (into [])))
+
+(defn subMap [[cx cy] [cw ch] playmap]
+  (let [[mw mh] [(count (first playmap)) (count playmap)]]
+    (->> playmap
+         (mapv (fn [row]
+                 (subvec row 
+                         (max 0 (min cx (- mw cw))) 
+                         (max 0 (min mw (+ cx cw))))))
+         ((fn [data]
+            (subvec data 
+                    (max 0 (min cy (- mh ch))) 
+                    (max 0 (min mh (+ cy ch)))))))))
