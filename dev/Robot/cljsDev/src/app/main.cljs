@@ -92,7 +92,9 @@
             (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx moveRange inputCh outputCh))
                   isInRange (some #(= % cursor) moveRange)]
               (if isInRange
-                (let [path (map/buildPath moveRange cursor)]
+                (let [_ (update gameplayCtx :units (fn [origin]
+                                                     (replace {unit (merge unit {:position cursor})} origin)))
+                      path (map/buildPath shortestPathTree cursor)]
                   (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                   (loop [gameplayCtx gameplayCtx]
                     (let [[gameplayCtx select2] (a/<! (unitMenu nil [["attack1" "attack2"] "cancel"] inputCh outputCh))]
