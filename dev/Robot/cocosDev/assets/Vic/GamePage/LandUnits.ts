@@ -32,6 +32,8 @@ export default class NewClass extends cc.Component {
     @property(Unit)
     prefabUnit: Unit = null;
 
+    private _units:Array<cc.Node> = [];
+
     start() {
 
         // let units = [];
@@ -59,7 +61,7 @@ export default class NewClass extends cc.Component {
             let isMovable = true;
             let pos = element["position"];
 
-            let unitNode: cc.Node = this.getComponent(Pool).getNode(this.prefabUnit.node);
+            let unitNode: cc.Node = this.getComponent(Pool).acquire(this.prefabUnit.node);
             unitNode.setParent(this.node);
 
             let gridPos = Controller.instance.view.getGridPos(pos);
@@ -84,12 +86,21 @@ export default class NewClass extends cc.Component {
                     unit.setColor(this.enemyEndColor);
                 }
             }
+
+            this._units.push(unitNode);
         }
     }
 
+    clearUnits(){
+        this._units.forEach(unit=>{
+            unit.removeFromParent();
+            this.getComponent(Pool).release(unit);
+        });
+        this._units = [];
+    }
+
     getUnitByID(id: number): Unit {
-        let units = this.getComponent(Pool).getNodes();
-        for (let element of units) {
+        for (let element of this._units) {
             if (element.getComponent(Unit).unitId == id) {
                 return element.getComponent(Unit);
             }

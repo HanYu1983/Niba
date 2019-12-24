@@ -13,25 +13,27 @@ import Pool from "../Pool";
 
 import Controller from "../Controller";
 
-const {ccclass, property, requireComponent} = cc._decorator;
+const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(Pool)
 export default class NewClass extends cc.Component {
 
     @property(FightInfo)
-    fightInfoPrefab:FightInfo = null;
+    fightInfoPrefab: FightInfo = null;
 
-    showInfos(datas:any[]){
+    private _fightInfo: Array<cc.Node> = [];
+
+    showInfos(datas: any[]) {
         this.clearInfo();
-        datas.forEach(data=>{
+        datas.forEach(data => {
             this.showInfo(data);
         });
     }
 
-    showInfo(data:any){
-        let pool:Pool = this.node.getComponent(Pool);
-        let fightInfoNode:cc.Node = pool.getNode(this.fightInfoPrefab.node);
+    showInfo(data: any) {
+        let pool: Pool = this.node.getComponent(Pool);
+        let fightInfoNode: cc.Node = pool.acquire(this.fightInfoPrefab.node);
         fightInfoNode.active = true;
         fightInfoNode.setParent(this.node);
 
@@ -39,12 +41,16 @@ export default class NewClass extends cc.Component {
         let infoPos = Controller.instance.view.getGridPos(pos);
         fightInfoNode.x = infoPos[0];
         fightInfoNode.y = infoPos[1];
+
+        this._fightInfo.push(fightInfoNode);
     }
 
-    clearInfo(){
-        let pool:Pool = this.node.getComponent(Pool);
-        pool.getNodes().forEach(node=>{
-            node.active = false;
+    clearInfo() {
+        let pool: Pool = this.node.getComponent(Pool);
+        this._fightInfo.forEach(node=>{
+            node.removeFromParent();
+            pool.release(node);
         });
+        this._fightInfo = [];
     }
 }

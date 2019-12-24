@@ -17,27 +17,25 @@ export default class NewClass extends cc.Component {
     poolSize: number = 30;
 
     private _pool: Array<cc.Node> = [];
-    private _cursor: number = 0;
 
-    getNode(node: cc.Node) {
-        if (this._pool.length > this.poolSize) {
-            let node = this._pool[this._cursor];
-            if (++this._cursor > this.poolSize - 1) {
-                this._cursor = 0;
-            }
-            return node;
+    private _initPool(node: cc.Node) {
+        if (this._pool.length > 0) return;
+        for (let i = 0; i < this.poolSize; ++i) {
+            this._pool.push(cc.instantiate(node));
         }
-        let newNode = cc.instantiate(node);
-        this._pool.push(newNode);
-        return newNode;
     }
 
-    getNodes() {
-        return this._pool;
+    acquire(node: cc.Node):cc.Node {
+        this._initPool(node);
+        return this._pool.pop();
+    }
+
+    release(node:cc.Node){
+        this._pool.unshift(node);
     }
 
     clearPool() {
-        this._pool.forEach(node=>{
+        this._pool.forEach(node => {
             node.destroy();
         });
         this._pool = [];
