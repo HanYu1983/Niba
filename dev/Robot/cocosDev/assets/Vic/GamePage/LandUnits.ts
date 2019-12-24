@@ -61,7 +61,7 @@ export default class NewClass extends cc.Component {
             let isMovable = true;
             let pos = element["position"];
 
-            let unitNode: cc.Node = this.getComponent(Pool).acquire(this.prefabUnit.node);
+            let unitNode: cc.Node = this.getComponent(Pool).acquire();
             unitNode.setParent(this.node);
 
             let gridPos = Controller.instance.view.getGridPos(pos);

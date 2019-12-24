@@ -16,17 +16,22 @@ export default class NewClass extends cc.Component {
     @property(cc.Integer)
     poolSize: number = 30;
 
+    @property(cc.Node)
+    instanceNode:cc.Node = null;
+
     private _pool: Array<cc.Node> = [];
 
-    private _initPool(node: cc.Node) {
-        if (this._pool.length > 0) return;
+    onLoad(){
         for (let i = 0; i < this.poolSize; ++i) {
-            this._pool.push(cc.instantiate(node));
+            this._pool.push(cc.instantiate(this.instanceNode));
         }
     }
 
-    acquire(node: cc.Node):cc.Node {
-        this._initPool(node);
+    onDestroy(){
+        this.clearPool();
+    }
+
+    acquire():cc.Node {
         return this._pool.pop();
     }
 

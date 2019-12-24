@@ -33,7 +33,7 @@ export default class NewClass extends cc.Component {
 
     showInfo(data: any) {
         let pool: Pool = this.node.getComponent(Pool);
-        let fightInfoNode: cc.Node = pool.acquire(this.fightInfoPrefab.node);
+        let fightInfoNode: cc.Node = pool.acquire();
         fightInfoNode.active = true;
         fightInfoNode.setParent(this.node);
 
