@@ -21,21 +21,6 @@ export default class NewClass extends BasicViewer {
     @property(WeaponMenuItem)
     weaponItems:WeaponMenuItem[] = [];
 
-    //private _menuCursor:MenuCursor;
-
-    addListener(){
-        //this._menuCursor.node.on(MenuCursor.ON_CURSOR_CHANGE, this.showCurrentWeapon, this);
-    }
-
-    removeListenser(){
-        //this._menuCursor.node.off(MenuCursor.ON_CURSOR_CHANGE);
-    }
-
-    init(){
-        super.init();
-        //this._menuCursor = this.node.getComponent(MenuCursor);
-    }
-
     showCurrentWeapon(id:any){
         this.weaponItems.forEach(weaponItem=>{
             weaponItem.backColor.node.color = cc.Color.WHITE;
@@ -44,8 +29,6 @@ export default class NewClass extends BasicViewer {
     }
 
     setWeapons(data:any){
-       // this._menuCursor.setData(data);
-
         for(let i = 0; i < this.weaponItems.length; ++i){
             if(i<data.length){
                 this.weaponItems[i].node.active = true;
@@ -60,7 +43,6 @@ export default class NewClass extends BasicViewer {
                 this.weaponItems[i].node.active = false;
             }
         }
-
         this.showCurrentWeapon(0);
     }
 }
