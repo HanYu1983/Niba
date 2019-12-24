@@ -97,7 +97,7 @@
                       path (map/buildPath shortestPathTree cursor)]
                   (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                   (loop [gameplayCtx gameplayCtx]
-                    (let [[gameplayCtx select2] (a/<! (unitMenu nil [["attack1" "attack2"] "cancel"] inputCh outputCh))]
+                    (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [["attack1" "attack2"] "cancel"] inputCh outputCh))]
                       (cond
                         (= "cancel" select2)
                         gameplayCtx
