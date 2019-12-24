@@ -21,10 +21,14 @@ export default class NewClass extends cc.Component {
 
     private _pool: Array<cc.Node> = [];
 
-    onLoad(){
+    private _init(){
         for (let i = 0; i < this.poolSize; ++i) {
             this._pool.push(cc.instantiate(this.instanceNode));
         }
+    }
+    
+    onLoad(){
+        this._init();
     }
 
     onDestroy(){

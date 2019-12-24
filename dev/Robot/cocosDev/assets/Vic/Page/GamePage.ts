@@ -78,17 +78,17 @@ export default class NewClass extends BasicViewer {
 
         //this.showMovableGrid([[3,4],[5,6],[7,9]]);
 
-        // this.showFightInfo([
-        //     {
+        this.showFightInfo([
+            {
                 
-        //     },
-        //     {
+            },
+            {
 
-        //     },
-        //     {
+            },
+            {
 
-        //     }
-        // ]);
+            }
+        ]);
     }
 
     setCursor(pos: number[]) {
@@ -111,18 +111,6 @@ export default class NewClass extends BasicViewer {
                 grid.showMove();
             }
         });
-
-        this.showFightInfo([
-                {
-                    
-                },
-                {
-    
-                },
-                {
-    
-                }
-            ]);
     }
     
     showWeaponRange(data:any[]){
