@@ -48,23 +48,23 @@ export default class NewClass extends cc.Component {
                 // 玩家回合
                 case "playerTurn":
                     {
-                        this.view.onPlayerTurn();
+                        this.onPlayerTurn();
                     }
                     break;
                 // 敵方回合
                 case "enemyTurn":
                     {
-                        this.view.getGamePage().closeSceneMenu();
-                        this.view.getGamePage().closeUnitMenu();
+                        this.closeAllMenu();
                         this.view.getGamePage().removeListenser();
                     }
                     break;
                 /**
-                 * 這由以上的指令不能回覆
+                 * 這以上的指令不能回覆
                  */
                 case "unitMove":
                     {
                         const[id, data] = args;
+                        this.closeAllMenu();
                         this.view.getGamePage().map.clearRange();
                         this.view.getGamePage().units.moveUnitByID(data.unit, data.path, ()=>{
                             this.notifyAnswer(id);
@@ -74,7 +74,7 @@ export default class NewClass extends cc.Component {
                 case "selectPosition":
                     {
                         const [id, pos] = args;
-                        this.view.getGamePage().closeUnitMenu();
+                        this.closeAllMenu();
                         this.view.getGamePage().addListener();
                         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
                             this.notifyAnswer(id, corsor);
@@ -91,7 +91,7 @@ export default class NewClass extends cc.Component {
                         const [id] = args;
                         this.view.getGamePage().openTurnStart(true, (() => {
                             this.notifyAnswer(id);
-                            this.view.onPlayerTurn();
+                            this.onPlayerTurn();
                         }).bind(this));
                     }
                     break;
@@ -102,8 +102,7 @@ export default class NewClass extends cc.Component {
                             this.notifyAnswer(id);
                         }).bind(this));
 
-                        this.view.getGamePage().closeSceneMenu();
-                        this.view.getGamePage().closeUnitMenu();
+                        this.closeAllMenu();
                         this.view.getGamePage().removeListenser();
                     }
                     break;
@@ -145,6 +144,20 @@ export default class NewClass extends cc.Component {
                     break;
             }
         })
+    }
+
+    closeAllMenu(){
+        this.view.getGamePage().closeSceneMenu();
+        this.view.getGamePage().closeUnitMenu();
+    }
+
+    onPlayerTurn(){
+        this.closeAllMenu();
+        this.view.getGamePage().map.clearRange();
+        this.view.getGamePage().addListener();
+        this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
+            this.notifySelectMap(corsor);
+        }, this);
     }
 
     notifySetCursor(pos: number[]) {
