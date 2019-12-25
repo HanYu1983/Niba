@@ -64,6 +64,16 @@
 (m/defstate systemMenu [ctx args])
 (m/defstate unitMove [ctx args])
 (m/defstate selectPosition [gameplayCtx args]
+  (= "setCamera" cmd)
+  (let [camera args
+        playmap (:map gameplayCtx)
+        gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
+    (a/>! outputCh ["setMap" (->> playmap
+                                  (map/subMap camera playmapSize)
+                                  (flatten))])
+    (a/>! outputCh ["setCamera" camera])
+    (recur gameplayCtx))
+  
   (= "setCursor" cmd)
   (m/handleCursor gameplayCtx))
 
@@ -89,7 +99,7 @@
               gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
           (a/>! outputCh ["setMoveRange" moveRange])
           (loop [gameplayCtx gameplayCtx]
-            (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx moveRange inputCh outputCh))
+            (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
                   isInRange (some #(= % cursor) moveRange)]
               (if isInRange
                 (let [_ (update gameplayCtx :units (fn [origin]
@@ -140,45 +150,17 @@
     (loop [gameplayCtx gameplayCtx]
       (println "[model][playerTurn]")
       (a/>! outputCh ["playerTurn"])
-      (when-let [[cmd args :as evt] (a/<! inputCh)]
-        (println "[model][playerTurn][evt]" evt)
-        (cond
-          (= "endPlayerTurn" cmd)
-          (let []
-            gameplayCtx)
-
-          (= "setCursor" cmd)
-          (m/handleCursor gameplayCtx)
-
-          (= "setCamera" cmd)
-          (let [camera args
-                playmap (:map gameplayCtx)
-                gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
-            (a/>! outputCh ["setMap" (->> playmap
-                                          (map/subMap camera playmapSize)
-                                          (flatten))])
-            (a/>! outputCh ["setCamera" camera])
+      (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
+            units (:units gameplayCtx)
+            unitAtCursor (first (filter #(= cursor (:position %))
+                                        units))]
+        (if unitAtCursor
+          (let [gameplayCtx (a/<! (selectUnitFlow gameplayCtx unitAtCursor inputCh outputCh))]
             (recur gameplayCtx))
-
-          (= "setMoveRange" cmd)
-          (let []
-            (recur gameplayCtx))
-
-          (= "selectMap" cmd)
-          (let [cursor args
-                units (:units gameplayCtx)
-                unitAtCursor (first (filter #(= cursor (:position %))
-                                            units))]
-            (if unitAtCursor
-              (let [gameplayCtx (a/<! (selectUnitFlow gameplayCtx unitAtCursor inputCh outputCh))]
-                (recur gameplayCtx))
-              (let [[gameplayCtx endTurn] (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))]
-                (if endTurn
-                  gameplayCtx
-                  (recur gameplayCtx)))))
-
-          :else
-          (recur gameplayCtx))))))
+          (let [[gameplayCtx endTurn] (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))]
+            (if endTurn
+              gameplayCtx
+              (recur gameplayCtx))))))))
 
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
   (a/go
