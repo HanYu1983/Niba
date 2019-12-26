@@ -8,25 +8,16 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import EffectLayer from "./EffectLayer";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component {
 
-    @property(cc.Label)
-    lblName: cc.Label = null;
+    @property(EffectLayer)
+    bladeLayer:EffectLayer = null;
 
-    unitId:number = 0;
-
-    setName(name:string){
-        this.lblName.string = name;
-    }
-
-    setColor(color:cc.Color){
-        this.node.color = color;
-    }
-
-    shake(){
-        this.node.getComponent(cc.Animation).play("ShakeUnit");
+    createBlade(pos:number[]){
+        this.bladeLayer.createEffect(pos);
     }
 }

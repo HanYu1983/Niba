@@ -33,6 +33,7 @@ export default class NewClass extends cc.Component {
     prefabUnit: Unit = null;
 
     private _units:Array<cc.Node> = [];
+    private _pool:Pool;
 
     start() {
 
@@ -52,6 +53,10 @@ export default class NewClass extends cc.Component {
         // this.moveUnitByID(3, [[12, 12], [6, 12], [6, 9], [8, 9], [8, 10], [10, 10]]);
     }
 
+    onLoad(){
+        this._pool = this.node.getComponent(Pool);
+    }
+
     setUnits(data: any) {
         let units = data.units;
         for (let element of units) {
@@ -61,7 +66,7 @@ export default class NewClass extends cc.Component {
             let isMovable = true;
             let pos = element["position"];
 
-            let unitNode: cc.Node = this.getComponent(Pool).acquire();
+            let unitNode: cc.Node = this._pool.acquire();
             unitNode.setParent(this.node);
 
             let gridPos = Controller.instance.view.getGridPos(pos);
@@ -91,10 +96,17 @@ export default class NewClass extends cc.Component {
         }
     }
 
+    shakeOneUnit(id:number){
+        let unit:Unit = this.getUnitByID(id);
+        if(unit){
+            unit.shake();
+        }
+    }
+
     clearUnits(){
         this._units.forEach(unit=>{
             unit.removeFromParent();
-            this.getComponent(Pool).release(unit);
+            this._pool.release(unit);
         });
         this._units = [];
     }
