@@ -14,8 +14,9 @@ import LandUnits from "../GamePage/LandUnits";
 import WeaponMenu from "../GamePage/WeaponMenu"
 import UnitStatuMenu from "../GamePage/UnitStatuMenu";
 import FightMenu from "../GamePage/FightMenu";
-import TurnStart from "../GamePage/TurnStart"
-import Grid from "../GamePage/Grid"
+import TurnStart from "../GamePage/TurnStart";
+import Grid from "../GamePage/Grid";
+import Effects from "../GamePage/Effects";
 
 import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
@@ -48,6 +49,9 @@ export default class NewClass extends BasicViewer {
 
     @property(FightMenu)
     fightInfoMenu: FightMenu = null;
+
+    @property(Effects)
+    effects:Effects = null;
 
     @property(TurnStart)
     turnStart: TurnStart = null;
@@ -89,6 +93,8 @@ export default class NewClass extends BasicViewer {
 
             }
         ]);
+
+        //this.effects.createBlade([0,0]);
     }
 
     setCursor(pos: number[]) {
