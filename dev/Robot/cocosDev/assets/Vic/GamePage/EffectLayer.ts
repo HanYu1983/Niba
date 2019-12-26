@@ -27,12 +27,17 @@ export default class NewClass extends cc.Component {
         let gridPos = Controller.instance.view.getGridPos(pos);
         effect.x = gridPos[0];
         effect.y = gridPos[1];
+        effect.setParent(this.node);
+
+        // 不需要指定播放的animation且確定會重新播放的呼叫方式
         effect.active = false;
         effect.active = true;
         effect.getComponent(cc.Animation).play();
-        effect.setParent(this.node);
+
+        // 確保只有一次的監聽
+        effect.off(AnimationEndCallback.ON_ANIMATION_END);
         effect.on(AnimationEndCallback.ON_ANIMATION_END, ()=>{
-            cc.log("on blade end");
+            effect.off(AnimationEndCallback.ON_ANIMATION_END);
             effect.removeFromParent();
             this._pool.release(effect);
         });

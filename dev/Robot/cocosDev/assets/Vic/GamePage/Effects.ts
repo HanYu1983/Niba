@@ -17,7 +17,14 @@ export default class NewClass extends cc.Component {
     @property(EffectLayer)
     bladeLayer:EffectLayer = null;
 
+    @property(EffectLayer)
+    explodeLayer:EffectLayer = null;
+
     createBlade(pos:number[]){
         this.bladeLayer.createEffect(pos);
+    }
+
+    createExplode(pos:number[]){
+        this.explodeLayer.createEffect(pos);
     }
 }

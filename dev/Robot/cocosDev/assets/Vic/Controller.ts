@@ -34,7 +34,7 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().setCursor(pos);
 
                         this.view.getGamePage().units.shakeOneUnit("G__1");
-                        this.view.getGamePage().effects.createBlade([0,0]);
+                        this.view.getGamePage().effects.createExplode([0,0]);
                     }
                     break;
                 case "unitState":
@@ -135,7 +135,7 @@ export default class NewClass extends cc.Component {
                     {
                         const [id, units] = args;
                         this.view.getGamePage().units.setUnits(units);
-                        this.notifyModel("ok", id, 0);
+                        this.notifyAnswer(id);
                     }
                     break;
                 case "createMap":
