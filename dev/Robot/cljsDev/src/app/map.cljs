@@ -22,9 +22,11 @@
             close (conj close curr)
             [isFind isInterrupt] (endFn (get info curr) curr i)]
         (if isFind
-          (if isInterrupt
-            info
-            (recur close open info (inc i)))
+          (let [info (update info curr (fn [origin]
+                                         (merge origin {:tail true})))]
+            (if isInterrupt
+              info
+              (recur close open info (inc i))))
           (let [nexts (->> (nextFn curr)
                            (filter #(not (contains? (into close open) %))))
                 info (->> nexts

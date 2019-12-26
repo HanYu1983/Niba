@@ -19,10 +19,10 @@
                                     :state {:key 0}
                                     :position [0 0]}
                                    {:key (gensym)
-                                    :player :a1
+                                    :player :player
                                     :type :robot
                                     :state {:key 0}
-                                    :position [5 5]}]
+                                    :position [10 5]}]
                            :focusUnitKey nil})
 
 
@@ -64,6 +64,9 @@
 (m/defstate systemMenu [ctx args])
 (m/defstate unitMove [ctx args])
 (m/defstate selectPosition [gameplayCtx args]
+  (= "cancel" cmd)
+  gameplayCtx
+
   (= "setCamera" cmd)
   (let [camera args
         playmap (:map gameplayCtx)
@@ -73,7 +76,7 @@
                                   (flatten))])
     (a/>! outputCh ["setCamera" camera])
     (recur gameplayCtx))
-  
+
   (= "setCursor" cmd)
   (m/handleCursor gameplayCtx))
 
@@ -110,7 +113,9 @@
                     (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [["attack1" "attack2"] "cancel"] inputCh outputCh))]
                       (cond
                         (= "cancel" select2)
-                        gameplayCtx
+                        (do
+                          (a/>! outputCh ["setUnitPosition" (:position unit)])
+                          gameplayCtx)
 
                         :else
                         (recur gameplayCtx)))))
