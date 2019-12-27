@@ -16,6 +16,9 @@ export default class NewClass extends cc.Component {
     @property(cc.Label)
     lblName: cc.Label = null;
 
+    @property(cc.Sprite)
+    backColor:cc.Sprite = null;
+
     unitId:number = 0;
 
     setName(name:string){
@@ -23,7 +26,7 @@ export default class NewClass extends cc.Component {
     }
 
     setColor(color:cc.Color){
-        this.node.color = color;
+        this.backColor.node.color = color;
     }
 
     shake(){

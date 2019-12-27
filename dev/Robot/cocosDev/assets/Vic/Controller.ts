@@ -33,8 +33,9 @@ export default class NewClass extends cc.Component {
                         const pos = args;
                         this.view.getGamePage().setCursor(pos);
 
-                        this.view.getGamePage().units.shakeOneUnit("G__1");
-                        this.view.getGamePage().effects.createExplode([0,0]);
+                        this.view.getGamePage().units.shakeOneUnit("G__2");
+                        this.view.getGamePage().effects.createExplode(3000, [10,5]);
+                        //this.view.getGamePage().effects.createBlade(3000, [10,5]);
                     }
                     break;
                 case "unitState":

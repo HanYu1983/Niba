@@ -22,7 +22,7 @@ export default class NewClass extends cc.Component {
         this._pool = this.node.getComponent(Pool);
     }
 
-    createEffect(pos:number[]){
+    createEffect(pos:number[]):cc.Node{
         let effect:cc.Node = this._pool.acquire();
         let gridPos = Controller.instance.view.getGridPos(pos);
         effect.x = gridPos[0];
@@ -41,5 +41,6 @@ export default class NewClass extends cc.Component {
             effect.removeFromParent();
             this._pool.release(effect);
         });
+        return effect;
     }
 }

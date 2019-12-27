@@ -20,11 +20,29 @@ export default class NewClass extends cc.Component {
     @property(EffectLayer)
     explodeLayer:EffectLayer = null;
 
-    createBlade(pos:number[]){
+    @property(EffectLayer)
+    hitHpLayer:EffectLayer = null;
+
+    createBlade(hp:number, pos:number[]){
+        this._createBlade(pos);
+        this._createHitHp(hp, pos);
+    }
+
+    createExplode(hp:number, pos:number[]){
+        this._createExplode(pos);
+        this._createHitHp(hp, pos);
+    }
+
+    private _createBlade(pos:number[]){
         this.bladeLayer.createEffect(pos);
     }
 
-    createExplode(pos:number[]){
+    private _createExplode(pos:number[]){
         this.explodeLayer.createEffect(pos);
+    }
+
+    private _createHitHp(hp:number, pos:number[]){
+        let effect:cc.Node = this.hitHpLayer.createEffect(pos);
+        effect.getChildByName("Hp").getComponent(cc.Label).string = hp.toString();
     }
 }
