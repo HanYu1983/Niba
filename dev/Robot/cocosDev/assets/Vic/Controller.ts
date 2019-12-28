@@ -77,7 +77,7 @@ export default class NewClass extends cc.Component {
                     {
                         const [id, data] = args;
                         this.closeAllMenu();
-                        this.view.getGamePage().map.clearRange();
+                        // this.view.getGamePage().map.clearRange();
                         this.view.getGamePage().units.moveUnitByID(data.unit, data.path, () => {
                             this.notifyAnswer(id);
                         });
