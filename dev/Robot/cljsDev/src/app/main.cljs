@@ -66,10 +66,9 @@
   (= "setCamera" cmd)
   (let [camera args
         playmap (:map gameplayCtx)
-        gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
-    (a/>! outputCh ["setMap" (->> playmap
-                                  (map/subMap camera playmapSize)
-                                  (flatten))])
+        gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))
+        playmap (map/subMap camera playmapSize playmap)]
+    (a/>! outputCh ["setMap" playmap])
     (a/>! outputCh ["setCamera" camera])
     (recur gameplayCtx))
 
@@ -203,9 +202,7 @@
         gameplayCtx (merge defaultGameplayModel
                            {:map playmap})]
     (a/<! (createMap nil
-                     (->> playmap
-                          (map/subMap [0 0] playmapSize)
-                          (flatten))
+                     (map/subMap [0 0] playmapSize playmap)
                      inputCh outputCh))
     (a/<! (createUnits nil
                        {:units (:units gameplayCtx)
