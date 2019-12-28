@@ -84,7 +84,7 @@
         ; map
         mapSize [(dec (count (first playmap))) (dec (count playmap))]
         camera (->> camera
-                    (map min mapSize)
+                    (map min (map - mapSize mapViewSize))
                     (map max [0 0]))
         playmap (map/subMap camera mapViewSize playmap)
 
