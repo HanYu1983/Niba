@@ -35,10 +35,12 @@
 
 (defmacro handleCursor [ctx]
   `(let [~'cursor ~'args
-        ~'units (:units ~ctx)
-        ~'unitAtCursor (first (filter #(= ~'cursor (:position %))
-                                    ~'units))
-        ~ctx (update-in ~ctx [:temp :cursor] (constantly ~'cursor))]
+         ~'units (:units ~ctx)
+         ~'unitAtCursor (first (filter #(= ~'cursor (:position %))
+                                       ~'units))
+         ~'camera (get-in ~ctx [:temp :camera])
+         ~'worldCursor (~'local2world ~'camera ~'cursor)
+         ~ctx (update-in ~ctx [:temp :cursor] (constantly ~'worldCursor))]
     (if ~'unitAtCursor
       (let []
         (a/>! ~'outputCh ["unitState"])
