@@ -26,6 +26,8 @@ export default class NewClass extends cc.Component {
 
         window.startApp();
         window.viewOb.subscribe(e => {
+            //this.removeGamePageExtraListener();
+
             const [cmd, args] = e;
             switch (cmd) {
                 case "setCamera":
@@ -88,6 +90,9 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().addListener();
                         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
                             this.notifyAnswer(id, corsor);
+                        }, this);
+                        this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ESCAPE, (corsor) => {
+                            this.notifyCmd("cancel");
                         }, this);
                     }
                     break;
@@ -166,6 +171,10 @@ export default class NewClass extends cc.Component {
                     break;
             }
         })
+    }
+
+    removeGamePageExtraListener(){
+        this.view.getGamePage().node.targetOff(this);
     }
 
     closeAllMenu() {

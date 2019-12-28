@@ -60,6 +60,7 @@ export default class NewClass extends BasicViewer {
     cursor: cc.Node = null;
 
     static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
+    static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
 
     private _cursor: number[] = [0, 0];
     private _camera: number[] = [0, 0];
@@ -182,7 +183,7 @@ export default class NewClass extends BasicViewer {
         }, this);
 
         this.node.on(InputSensor.ESCAPE, () => {
-            
+            this.node.emit(NewClass.ON_GAMEPAGE_ESCAPE);
         }, this);
     }
 
@@ -198,6 +199,7 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.SCREEN_DOWN);
         this.node.off(InputSensor.SCREEN_RIGHT);
         this.node.off(InputSensor.ENTER);
+        this.node.off(InputSensor.ESCAPE);
         this.node.off(NewClass.ON_GAMEPAGE_ENTER);
     }
 
