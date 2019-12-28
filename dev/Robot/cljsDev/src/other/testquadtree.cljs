@@ -17,6 +17,8 @@
                            (aq/delete ctx getRectByUnit unit))
                          tree)
                  (aq/balance))]
+  (println (last tree2))
+  (println (count (aq/values tree)))
 
   (let [sketch (fn [p]
                  (set! (.-setup p)

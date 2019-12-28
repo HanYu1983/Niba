@@ -4,20 +4,6 @@
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
-
-(println (aq/rect-overlap-rect? [0 0 10 10] [0 0 3 3]))
-
-(let [tree (aq/make-qdtree [0 0 20 20] 1)
-      tree (aq/add tree :rect {:rect [0 0 3 3]})
-      tree (aq/add tree :rect {:rect [3 3 4 4]})
-      tree (aq/add tree :rect {:rect [2 2 6 6]})
-      tree (aq/add tree :rect {:rect [12 12 13 13]})
-      tree (aq/balance tree)
-      objs (aq/search tree :rect [12 12 14 14])]
-  (println (aq/make-qdtree [0 0 20 20] 1))
-  (println tree)
-  (println objs))
-
 (def playmapSize [20 20])
 (def defaultModel {})
 (def defaultGameplayModel {:map nil

@@ -70,7 +70,10 @@
       r4
       [rect objs r1 r2 r3 (add r4 rectFn v) info]
 
-      [rect (conj objs v) r1 r2 r3 r4 info])))
+      tree
+      [rect (conj objs v) r1 r2 r3 r4 info]
+      
+      (throw (js/Error. "add error")))))
 
 (defn delete [tree rectFn v]
   (let [[rect objs r1 r2 r3 r4 info] tree
@@ -99,9 +102,23 @@
       r4
       [rect objs r1 r2 r3 (delete r4 rectFn v) info]
 
-      [rect (disj objs v) r1 r2 r3 r4 info])))
+      tree
+      [rect (disj objs v) r1 r2 r3 r4 info]
+      
+      (throw (js/Error. "delete error")))))
 
 (defn search [tree rectFn searchRect]
+  (when tree
+    (let [[rect objs r1 r2 r3 r4 {cnt :totalCount}] tree]
+      (when (and (> cnt 0)
+                 (rect-overlap-rect? searchRect rect))
+        (->> [r1 r2 r3 r4]
+             (map #(search % rectFn searchRect))
+             (apply clojure.set/union (->> objs
+                                           (filter #(rect-overlap-rect? searchRect (rectFn %)))
+                                           (into #{}))))))))
+  
+(defn search2 [tree rectFn searchRect]
   (let [[_ objs r1 r2 r3 r4 info] tree
         objs (->> objs
                   (filter #(rect-overlap-rect? searchRect (rectFn %)))
@@ -117,3 +134,9 @@
                      [r1 r2 r3 r4])]
     objs))
 
+(defn values [tree]
+  (when tree
+    (let [[_ objs r1 r2 r3 r4] tree]
+      (->> [r1 r2 r3 r4]
+           (map values)
+           (apply clojure.set/union objs)))))
