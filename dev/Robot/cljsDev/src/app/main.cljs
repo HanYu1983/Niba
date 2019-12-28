@@ -87,21 +87,18 @@
                     (map min (map - mapSize mapViewSize))
                     (map max [0 0]))
         playmap (map/subMap camera mapViewSize playmap)
-
-        ; units
-        units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
-                   (map (fn [unit]
-                          (update unit :position (partial world2local camera)))))
-        
-        ; cursor
-        cursor (world2local camera cursor)
-
         gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
-    (doseq [unit units]
-      (a/>! outputCh ["setUnitPosition"  {:unit (:key unit) :position (:position unit)}]))
+
+    (a/<! (createUnits nil
+                       {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
+                                    (map (fn [unit]
+                                           (update unit :position (partial world2local camera)))))
+                        :players (:players gameplayCtx)}
+                       inputCh outputCh))
+        
     (a/>! outputCh ["setMap" playmap])
     (a/>! outputCh ["setCamera" camera])
-    (a/>! outputCh ["setCursor" cursor])
+    (a/>! outputCh ["setCursor" (world2local camera cursor)])
     (recur gameplayCtx))
 
   (= "setCursor" cmd)
@@ -159,11 +156,18 @@
                                                                                                   :range-max 4
                                                                                                   :type :beam
                                                                                                   :name "gan"}}}]
-                                                                inputCh outputCh))]
+                                                                inputCh outputCh))
+                          camera (get-in gameplayCtx [:temp :camera])
+                          units (:units gameplayCtx)]
                       (cond
                         (= "cancel" select2)
-                        (do
-                          (a/>! outputCh ["setUnitPosition"  {:unit (:key unit) :position (:position unit)}])
+                        (let []
+                          (a/<! (createUnits nil
+                                             {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
+                                                          (map (fn [unit]
+                                                                 (update unit :position (partial world2local camera)))))
+                                              :players (:players gameplayCtx)}
+                                             inputCh outputCh))
                           gameplayCtx)
 
                         :else
