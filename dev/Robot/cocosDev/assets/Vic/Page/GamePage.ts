@@ -180,6 +180,10 @@ export default class NewClass extends BasicViewer {
         this.node.on(InputSensor.ENTER, () => {
             this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
         }, this);
+
+        this.node.on(InputSensor.ESCAPE, () => {
+            
+        }, this);
     }
 
     removeListenser() {
@@ -229,24 +233,27 @@ export default class NewClass extends BasicViewer {
         this.sceneMenu.close();
     }
 
-    openUnitMenu(data: any, callback: (key) => void) {
+    openUnitMenu(menus: any, callback: (key) => void) {
+        const [menu, weaponInfo] = menus;
+        let weaponId = weaponInfo.weaponIdx;
+        let weapons = weaponInfo.weapons;
         this.closeUnitMenu();
 
         this.unitMenu.open();
-        this.unitMenu.setData(data);
+        this.unitMenu.setData(menu);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
             callback(key);
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
-            this._changeCurrentWeapon(cursor);
+            this._changeCurrentWeapon(weaponId, cursor);
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
-            this._changeCurrentWeapon(cursor);
+            this._changeCurrentWeapon(weaponId, cursor);
         });
 
-        this.openWeaponMenu(data);
+        this.openWeaponMenu(weapons);
     }
 
     closeUnitMenu() {
@@ -261,13 +268,14 @@ export default class NewClass extends BasicViewer {
     openWeaponMenu(data: any) {
 
         let ws = [];
-        for (let i = 0; i < data[1].length; ++i) {
+        for(let weaponKey in data){
+            let weapon = data[weaponKey];
             ws.push({
-                name: 'weapon_' + i,
-                type: 'type',
-                power: i * 1000,
-                range: '1~3',
-                hit: 53
+                name: weapon.name,
+                type: weapon.type,
+                power: 1000,
+                range: weapon["range-min"] + "~" + weapon["range-max"],
+                hit: 100
             });
         }
 
@@ -275,8 +283,8 @@ export default class NewClass extends BasicViewer {
         this.weaponMenu.setWeapons(ws);
     }
 
-    private _changeCurrentWeapon(cursor: any) {
-        if (cursor[0] == 1) {
+    private _changeCurrentWeapon(weaponIdInMenu:number, cursor: any) {
+        if (cursor[0] == weaponIdInMenu) {
             this.weaponMenu.showCurrentWeapon(cursor[1]);
         }
     }
