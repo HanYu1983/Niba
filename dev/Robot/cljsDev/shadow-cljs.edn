@@ -15,7 +15,9 @@
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app.main]
-                                :depends-on #{:shared}}}}
+                                :depends-on #{:shared}}
+                          :testquadtree {:entries [other.testquadtree]
+                                         :depends-on #{:shared}}}}
           :release {:target :browser
                     :output-dir "../cocosDev/assets/Han"
                     :modules {:app {:entries [app.main]}}}}}

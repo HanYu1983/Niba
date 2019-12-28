@@ -81,9 +81,8 @@ dev/Robot/cocosDev/temp/
 dev/Robot/cocosDev/local/
 dev/Robot/cocosDev/build/
 dev/Robot/cocosDev/packages/
-dev/Robot/cljsDev/public/
 dev/Robot/build/
-
+cljs-runtime/
 package-lock.json
 .shadow-cljs/
 .nrepl-port

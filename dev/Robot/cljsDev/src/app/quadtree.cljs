@@ -4,52 +4,53 @@
   (let [[ltx1 lty1 rbx1 rby1] r1
         [ltx2 lty2 rbx2 rby2] r2]
     (and (<= ltx1 ltx2)
-         (> rbx1 rbx2)
+         (>= rbx1 rbx2)
          (<= lty1 lty2)
-         (> rby1 rby2))))
+         (>= rby1 rby2))))
 
 (defn rect-overlap-rect? [r1 r2]
-  (println r1 r2)
   (let [[ltx1 lty1 rbx1 rby1] r1
         [ltx2 lty2 rbx2 rby2] r2]
-    (and (<= ltx1 rbx2)
+    (and (< ltx1 rbx2)
          (> rbx1 ltx2)
-         (<= lty1 rby2)
+         (< lty1 rby2)
          (> rby1 lty2))))
 
 (defn make-qdtree [rect depth]
   (if (= depth 0)
-    [rect #{} nil nil nil nil {:depth 0}]
-    (let [[cx cy cw ch] rect
-          s1 [cx cy (/ cw 2) (/ ch 2)]
-          s2 [(+ cx (/ cw 2)) cy cw (/ ch 2)]
-          s3 [cx (+ cy (/ ch 2)) (/ cw 2) ch]
-          s4 [(+ cx (/ cw 2)) (+ cy (/ ch 2)) cw ch]]
+    [rect #{} nil nil nil nil {:height 0}]
+    (let [[x1 y1 x2 y2] rect
+          [xa xb xc] [x1 (/ (+ x1 x2) 2) x2]
+          [ya yb yc] [y1 (/ (+ y1 y2) 2) y2]
+          s1 [xa ya xb yb]
+          s2 [xb ya xc yb]
+          s3 [xa yb xb yc]
+          s4 [xb yb xc yc]]
       [rect #{}
        (make-qdtree s1 (dec depth))
        (make-qdtree s2 (dec depth))
        (make-qdtree s3 (dec depth))
        (make-qdtree s4 (dec depth))
-       {:depth depth}])))
+       {:height depth}])))
 
 (defn balance [tree]
   (when tree
     (let [[rect objs r1 r2 r3 r4 info] tree
           [r1 r2 r3 r4] (map balance [r1 r2 r3 r4])
           cnt (->> [r1 r2 r3 r4]
-                   (map #(let [[_ _ _ _ _ _ {cnt :count}] %]
+                   (map #(let [[_ _ _ _ _ _ {cnt :totalCount}] %]
                            cnt))
                    (cons (count objs))
                    (apply +))]
-      [rect objs r1 r2 r3 r4 (merge info {:count cnt})])))
+      [rect objs r1 r2 r3 r4 (merge info {:totalCount cnt :count (count objs)})])))
 
 (defn add [tree rectFn v]
   (let [[rect objs r1 r2 r3 r4 info] tree
-        t (reduce (fn [acc [rect :as tree]]
+        t (reduce (fn [acc [subRect :as tree]]
                     (if acc
                       acc
                       (if tree
-                        (if (rect-contains-rect? rect (rectFn v))
+                        (if (rect-contains-rect? subRect (rectFn v))
                           tree
                           acc)
                         acc)))
@@ -73,7 +74,7 @@
 
 (defn delete [tree rectFn v]
   (let [[rect objs r1 r2 r3 r4 info] tree
-        t (reduce (fn [acc [rect _ _ _ _ _ {cnt :count} :as tree]]
+        t (reduce (fn [acc [rect _ _ _ _ _ {cnt :totalCount} :as tree]]
                     (if acc
                       acc
                       (if tree
@@ -101,11 +102,11 @@
       [rect (disj objs v) r1 r2 r3 r4 info])))
 
 (defn search [tree rectFn searchRect]
-  (let [[_ objs r1 r2 r3 r4] tree
+  (let [[_ objs r1 r2 r3 r4 info] tree
         objs (->> objs
                   (filter #(rect-overlap-rect? searchRect (rectFn %)))
                   (into #{}))
-        objs (reduce (fn [objs [subRect _ _ _ _ _ {cnt :count} :as tree]]
+        objs (reduce (fn [objs [subRect _ _ _ _ _ {cnt :totalCount} :as tree]]
                        (if tree
                          (if (and (> cnt 0)
                                   (rect-overlap-rect? searchRect subRect))
