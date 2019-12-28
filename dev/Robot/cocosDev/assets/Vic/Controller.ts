@@ -28,13 +28,19 @@ export default class NewClass extends cc.Component {
         window.viewOb.subscribe(e => {
             const [cmd, args] = e;
             switch (cmd) {
+                case "setCamera":
+                    {
+                        const pos = args;
+                        this.view.getGamePage().setCamera(pos);
+                    }
+                    break;
                 case "setCursor":
                     {
                         const pos = args;
                         this.view.getGamePage().setCursor(pos);
 
                         this.view.getGamePage().units.shakeOneUnit("G__2");
-                        this.view.getGamePage().effects.createExplode(3000, [10,5]);
+                        this.view.getGamePage().effects.createExplode(3000, [10, 5]);
                         //this.view.getGamePage().effects.createBlade(3000, [10,5]);
                     }
                     break;
@@ -67,10 +73,10 @@ export default class NewClass extends cc.Component {
                  */
                 case "unitMove":
                     {
-                        const[id, data] = args;
+                        const [id, data] = args;
                         this.closeAllMenu();
                         this.view.getGamePage().map.clearRange();
-                        this.view.getGamePage().units.moveUnitByID(data.unit, data.path, ()=>{
+                        this.view.getGamePage().units.moveUnitByID(data.unit, data.path, () => {
                             this.notifyAnswer(id);
                         });
                     }
@@ -83,6 +89,12 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
                             this.notifyAnswer(id, corsor);
                         }, this);
+                    }
+                    break;
+                case "setMap":
+                    {
+                        const map = args;
+                        this.view.getGamePage().map.setMap(map);
                     }
                     break;
                 case "setMoveRange":
@@ -150,12 +162,12 @@ export default class NewClass extends cc.Component {
         })
     }
 
-    closeAllMenu(){
+    closeAllMenu() {
         this.view.getGamePage().closeSceneMenu();
         this.view.getGamePage().closeUnitMenu();
     }
 
-    onPlayerTurn(){
+    onPlayerTurn() {
         this.closeAllMenu();
         this.view.getGamePage().map.clearRange();
         this.view.getGamePage().addListener();
@@ -166,6 +178,10 @@ export default class NewClass extends cc.Component {
 
     notifySetCursor(pos: number[]) {
         this.notifyCmd("setCursor", pos);
+    }
+
+    notifySetCamera(pos: number[]) {
+        this.notifyCmd("setCamera", pos);
     }
 
     notifyStartGame() {
