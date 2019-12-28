@@ -111,6 +111,15 @@ export default class NewClass extends cc.Component {
         this._units = [];
     }
 
+    setUnitPos(id:number, pos:number[]){
+        let unit = this.getUnitByID(id);
+        if(unit){
+            let unitPos = Controller.instance.view.getGridPos(pos);
+            unit.node.x = unitPos[0];
+            unit.node.y = unitPos[1];
+        }
+    }
+
     getUnitByID(id: number): Unit {
         for (let element of this._units) {
             if (element.getComponent(Unit).unitId == id) {
@@ -126,8 +135,8 @@ export default class NewClass extends cc.Component {
             let actions = [];
             moveTo.forEach(element => {
                 let gridPos = Controller.instance.view.getGridPos(element);
-                let action = cc.moveTo(.3, gridPos[0], gridPos[1]);
-                action.easing(cc.easeSineOut());
+                let action = cc.moveTo(.05, gridPos[0], gridPos[1]);
+                //action.easing(cc.easeSineOut());
                 actions.push(action);
             });
             actions.push(cc.callFunc(callback));

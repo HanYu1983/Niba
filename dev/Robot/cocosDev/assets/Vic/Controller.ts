@@ -97,6 +97,12 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().map.setMap(map);
                     }
                     break;
+                case "setUnitPosition":
+                    {
+                        const {unit, position} = args;
+                        this.view.getGamePage().units.setUnitPos(unit, position);
+                    }
+                    break;
                 case "setMoveRange":
                     {
                         this.view.getGamePage().showMovableGrid(args);
@@ -136,8 +142,8 @@ export default class NewClass extends cc.Component {
                 // 機體動作選單
                 case "unitMenu":
                     {
-                        const [id, menu] = args;
-                        this.view.getGamePage().openUnitMenu(menu, ((key) => {
+                        const [id, menus] = args;
+                        this.view.getGamePage().openUnitMenu(menus, ((key) => {
                             this.notifyAnswer(id, key);
                         }).bind(this));
 
