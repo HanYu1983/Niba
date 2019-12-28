@@ -4,8 +4,12 @@
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
-(def playmapSize [20 20])
+(def mapViewSize [20 20])
 (def defaultModel {})
+
+(defn rectByUnit [{[x y] :position}]
+  [x y (+ 0.5 x) (+ 0.5 y)])
+
 (def defaultGameplayModel {:map nil
                            :temp {:cursor [0 0]
                                   :camera [0 0]
@@ -13,16 +17,18 @@
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
-                           :units [{:key (gensym)
-                                    :player :player
-                                    :type :robot
-                                    :state {:key 0}
-                                    :position [0 0]}
-                                   {:key (gensym)
-                                    :player :player
-                                    :type :robot
-                                    :state {:key 0}
-                                    :position [10 5]}]
+                           :units (-> (aq/make-qdtree [0 0 100 100] 3)
+                                      (aq/add rectByUnit {:key (gensym)
+                                                          :player :player
+                                                          :type :robot
+                                                          :state {:key 0}
+                                                          :position [0 0]})
+                                      (aq/add rectByUnit {:key (gensym)
+                                                          :player :player
+                                                          :type :robot
+                                                          :state {:key 0}
+                                                          :position [10 5]})
+                                      (aq/balance))
                            :focusUnitKey nil})
 
 
@@ -66,8 +72,12 @@
   (= "setCamera" cmd)
   (let [camera args
         playmap (:map gameplayCtx)
+        mapSize [(dec (count (first playmap))) (dec (count playmap))]
+        camera (->> camera
+                    (map min mapSize)
+                    (map max [0 0]))
         gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))
-        playmap (map/subMap camera playmapSize playmap)]
+        playmap (map/subMap camera mapViewSize playmap)]
     (a/>! outputCh ["setMap" playmap])
     (a/>! outputCh ["setCamera" camera])
     (recur gameplayCtx))
@@ -92,7 +102,7 @@
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond
         (= "move" selectUnitMenu)
-        (let [[mw mh] playmapSize
+        (let [[mw mh] mapViewSize
               shortestPathTree (map/findPath (:position unit)
                                              (fn [{:keys [totalCost]} curr]
                                                [(>= totalCost 5) false])
@@ -129,7 +139,7 @@
                       (cond
                         (= "cancel" select2)
                         (do
-                          (a/>! outputCh ["setUnitPosition" (:position unit)])
+                          (a/>! outputCh ["setUnitPosition"  {:unit (:key unit) :position (:position unit)}])
                           gameplayCtx)
 
                         :else
@@ -218,14 +228,13 @@
                                   :city 0.3
                                   :tree 0.3
                                   :award 0.1})
-
         gameplayCtx (merge defaultGameplayModel
                            {:map playmap})]
     (a/<! (createMap nil
-                     (map/subMap [0 0] playmapSize playmap)
+                     (map/subMap [0 0] mapViewSize playmap)
                      inputCh outputCh))
     (a/<! (createUnits nil
-                       {:units (:units gameplayCtx)
+                       {:units (aq/values (:units gameplayCtx))
                         :players (:players gameplayCtx)}
                        inputCh outputCh))
     (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))})))
