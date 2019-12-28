@@ -19,7 +19,7 @@ export default class NewClass extends cc.Component {
     @property(cc.Sprite)
     backColor:cc.Sprite = null;
 
-    unitId:number = 0;
+    unitId:string = "";
 
     setName(name:string){
         this.lblName.string = name;

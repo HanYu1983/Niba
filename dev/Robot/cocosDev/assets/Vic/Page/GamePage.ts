@@ -117,24 +117,6 @@ export default class NewClass extends BasicViewer {
         this.fightInfoMenu.showInfos(datas);
     }
 
-    showMovableGrid(data: any[]) {
-        data.forEach(elem => {
-            let grid: Grid = this.map.getGridByXY(elem);
-            if (grid) {
-                grid.showMove();
-            }
-        });
-    }
-
-    showWeaponRange(data: any[]) {
-        data.forEach(elem => {
-            let grid: Grid = this.map.getGridByXY(elem);
-            if (grid) {
-                grid.showRange();
-            }
-        });
-    }
-
     addListener() {
         super.addListener();
 
@@ -201,6 +183,7 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.ENTER);
         this.node.off(InputSensor.ESCAPE);
         this.node.off(NewClass.ON_GAMEPAGE_ENTER);
+        this.node.off(NewClass.ON_GAMEPAGE_ESCAPE);
     }
 
     openUnitStatuMenu() {

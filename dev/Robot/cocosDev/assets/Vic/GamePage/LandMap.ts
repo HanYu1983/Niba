@@ -47,6 +47,26 @@ export default class NewClass extends cc.Component {
         }
     }
 
+    showMovableGrid(data: any[]) {
+        this.clearRange();
+        data.forEach(elem => {
+            let grid: Grid = this.getGridByXY(elem);
+            if (grid) {
+                grid.showMove();
+            }
+        });
+    }
+
+    showWeaponRange(data: any[]) {
+        this.clearRange();
+        data.forEach(elem => {
+            let grid: Grid = this.getGridByXY(elem);
+            if (grid) {
+                grid.showRange();
+            }
+        });
+    }
+
     clearRange() {
         this.grids.forEach(grid => {
             grid.showNormal();

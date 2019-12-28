@@ -90,10 +90,10 @@ export default class NewClass extends cc.Component {
                         this.view.getGamePage().addListener();
                         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
                             this.notifyAnswer(id, corsor);
-                        }, this);
+                        });
                         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ESCAPE, (corsor) => {
                             this.notifyCmd("cancel");
-                        }, this);
+                        });
                     }
                     break;
                 case "setMap":
@@ -110,7 +110,7 @@ export default class NewClass extends cc.Component {
                     break;
                 case "setMoveRange":
                     {
-                        this.view.getGamePage().showMovableGrid(args);
+                        this.view.getGamePage().map.showMovableGrid(args);
                     }
                     break;
                 case "playerTurnStart":
@@ -174,7 +174,8 @@ export default class NewClass extends cc.Component {
     }
 
     removeGamePageExtraListener(){
-        this.view.getGamePage().node.targetOff(this);
+        this.view.getGamePage().node.off(GamePage.ON_GAMEPAGE_ENTER);
+        this.view.getGamePage().node.off(GamePage.ON_GAMEPAGE_ESCAPE);
     }
 
     closeAllMenu() {
@@ -188,7 +189,7 @@ export default class NewClass extends cc.Component {
         this.view.getGamePage().addListener();
         this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
             this.notifySelectMap(corsor);
-        }, this);
+        });
     }
 
     notifySetCursor(pos: number[]) {

@@ -98,7 +98,7 @@ export default class NewClass extends cc.Component {
         }
     }
 
-    shakeOneUnit(id:number){
+    shakeOneUnit(id:string){
         let unit:Unit = this.getUnitByID(id);
         if(unit){
             unit.shake();
@@ -113,7 +113,7 @@ export default class NewClass extends cc.Component {
         this._units = [];
     }
 
-    setUnitPos(id:number, pos:number[]){
+    setUnitPos(id:string, pos:number[]){
         let unit = this.getUnitByID(id);
         if(unit){
             let unitPos = Controller.instance.view.getGridPos(pos);
@@ -122,7 +122,7 @@ export default class NewClass extends cc.Component {
         }
     }
 
-    getUnitByID(id: number): Unit {
+    getUnitByID(id: string): Unit {
         for (let element of this._units) {
             if (element.getComponent(Unit).unitId == id) {
                 return element.getComponent(Unit);
@@ -131,7 +131,7 @@ export default class NewClass extends cc.Component {
         return undefined;
     }
 
-    moveUnitByID(id: number, moveTo: any, callback:()=>void) {
+    moveUnitByID(id: string, moveTo: any, callback:()=>void) {
         let unit = this.getUnitByID(id);
         if (unit) {
             let actions = [];
