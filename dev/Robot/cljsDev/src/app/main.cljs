@@ -72,8 +72,9 @@
 (m/defstate systemMenu [ctx args])
 (m/defstate unitMove [ctx args])
 (m/defstate selectPosition [gameplayCtx args]
+  ; 要跳出去的記得回傳格式為[ctx answer]
   (= "cancel" cmd)
-  gameplayCtx
+  [gameplayCtx nil]
 
   (= "setCamera" cmd)
   (let [camera args
@@ -95,7 +96,7 @@
                                            (update unit :position (partial world2local camera)))))
                         :players (:players gameplayCtx)}
                        inputCh outputCh))
-        
+
     (a/>! outputCh ["setMap" playmap])
     (a/>! outputCh ["setCamera" camera])
     (a/>! outputCh ["setCursor" (world2local camera cursor)])
@@ -135,44 +136,48 @@
               moveRange (map first shortestPathTree)
               gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
           (a/>! outputCh ["setMoveRange" moveRange])
-          (loop [gameplayCtx gameplayCtx]
-            (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
-                  camera (get-in gameplayCtx [:temp :camera])
-                  cursor (local2world camera cursor)
-                  isInRange (some #(= % cursor) moveRange)]
-              (if isInRange
-                (let [_ (update gameplayCtx :units (fn [origin]
-                                                     (replace {unit (merge unit {:position cursor})} origin)))
-                      path (map/buildPath shortestPathTree cursor)]
-                  (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
-                  (loop [gameplayCtx gameplayCtx]
-                    (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel"]
-                                                                             {:weaponIdx 0
-                                                                              :weapons {:attack1 {:range-min 2
-                                                                                                  :range-max 4
-                                                                                                  :type :beam
-                                                                                                  :name "attack1"}
-                                                                                        :attack2 {:range-min 2
-                                                                                                  :range-max 4
-                                                                                                  :type :beam
-                                                                                                  :name "gan"}}}]
-                                                                inputCh outputCh))
-                          camera (get-in gameplayCtx [:temp :camera])
-                          units (:units gameplayCtx)]
-                      (cond
-                        (= "cancel" select2)
-                        (let []
-                          (a/<! (createUnits nil
-                                             {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
-                                                          (map (fn [unit]
-                                                                 (update unit :position (partial world2local camera)))))
-                                              :players (:players gameplayCtx)}
-                                             inputCh outputCh))
-                          gameplayCtx)
+          (recur (loop [gameplayCtx gameplayCtx]
+                   (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
+                     (if cursor
+                       (let [camera (get-in gameplayCtx [:temp :camera])
+                             cursor (local2world camera cursor)
+                             isInRange (some #(= % cursor) moveRange)]
+                         (if isInRange
+                           (let [_ (update gameplayCtx :units (fn [origin]
+                                                                (replace {unit (merge unit {:position cursor})} origin)))
+                                 path (map/buildPath shortestPathTree cursor)]
+                             (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
+                             (loop [gameplayCtx gameplayCtx]
+                               (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel"]
+                                                                                        {:weaponIdx 0
+                                                                                         :weapons {:attack1 {:range-min 2
+                                                                                                             :range-max 4
+                                                                                                             :type :beam
+                                                                                                             :name "attack1"}
+                                                                                                   :attack2 {:range-min 2
+                                                                                                             :range-max 4
+                                                                                                             :type :beam
+                                                                                                             :name "gan"}}}]
+                                                                           inputCh outputCh))
+                                     camera (get-in gameplayCtx [:temp :camera])
+                                     units (:units gameplayCtx)]
+                                 (cond
+                                   (= "cancel" select2)
+                                   (let []
+                                     (a/<! (createUnits nil
+                                                        {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
+                                                                     (map (fn [unit]
+                                                                            (update unit :position (partial world2local camera)))))
+                                                         :players (:players gameplayCtx)}
+                                                        inputCh outputCh))
+                                     gameplayCtx)
 
-                        :else
-                        (recur gameplayCtx)))))
-                (recur gameplayCtx)))))
+                                   :else
+                                   (recur gameplayCtx)))))
+                           (recur gameplayCtx)))
+                       (do 
+                         (a/>! outputCh ["setMoveRange" []])
+                         gameplayCtx))))))
 
         (= "cancel" selectUnitMenu)
         (let []
