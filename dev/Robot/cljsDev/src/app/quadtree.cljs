@@ -141,3 +141,6 @@
       (->> [r1 r2 r3 r4]
            (map values)
            (apply clojure.set/union objs)))))
+
+(defn makeRectFromPoint [[x y] [w h]]
+  [x y (+ x w) (+ y h)])

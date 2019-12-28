@@ -181,7 +181,9 @@
       (println "[model][playerTurn]")
       (a/>! outputCh ["playerTurn"])
       (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
-            units (:units gameplayCtx)
+            units (-> 
+                   (:units gameplayCtx)
+                   (aq/search rectByUnit (aq/makeRectFromPoint cursor [1 1])))
             unitAtCursor (first (filter #(= cursor (:position %))
                                         units))]
         (if unitAtCursor
