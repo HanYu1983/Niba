@@ -78,7 +78,17 @@
 (defn selectUnitFlow [gameplayCtx unit inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
     (println "[model][selectUnitFlow]")
-    (let [[gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx ["move" ["attack1" "attack2"] "cancel"] inputCh outputCh))]
+    (let [[gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" ["attack1" "attack2"] "cancel"] 
+                                                                    {:weaponIdx 1 
+                                                                     :weapons {:attack1 {:range-min 2 
+                                                                                         :range-max 4
+                                                                                         :type :beam
+                                                                                         :name "attack1"}
+                                                                               :attack2 {:range-min 2
+                                                                                         :range-max 4
+                                                                                         :type :beam
+                                                                                         :name "gan"}}}]
+                                                       inputCh outputCh))]
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond
         (= "move" selectUnitMenu)
@@ -105,7 +115,17 @@
                       path (map/buildPath shortestPathTree cursor)]
                   (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                   (loop [gameplayCtx gameplayCtx]
-                    (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [["attack1" "attack2"] "cancel"] inputCh outputCh))]
+                    (let [[gameplayCtx select2] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel"]
+                                                                             {:weaponIdx 0
+                                                                              :weapons {:attack1 {:range-min 2
+                                                                                                  :range-max 4
+                                                                                                  :type :beam
+                                                                                                  :name "attack1"}
+                                                                                        :attack2 {:range-min 2
+                                                                                                  :range-max 4
+                                                                                                  :type :beam
+                                                                                                  :name "gan"}}}]
+                                                                inputCh outputCh))]
                       (cond
                         (= "cancel" select2)
                         (do
