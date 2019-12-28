@@ -58,6 +58,8 @@ export default class NewClass extends cc.Component {
     }
 
     setUnits(data: any) {
+        this.clearUnits();
+        
         let units = data.units;
         for (let element of units) {
             let unitId = element["key"];
