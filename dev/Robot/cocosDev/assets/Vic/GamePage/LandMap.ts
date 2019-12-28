@@ -18,7 +18,7 @@ export default class NewClass extends cc.Component {
     prefabGrid: cc.Node = null;
 
     @property(cc.Node)
-    gridContainer:cc.Node = null;
+    gridContainer: cc.Node = null;
 
     private grids: Map<string, Grid> = new Map();
 
@@ -36,21 +36,19 @@ export default class NewClass extends cc.Component {
         }
     }
 
-    setMap(data:any[]){
-        let id = 0;
-        data.forEach(element=>{
-            let x = id % 20;
-            let y = Math.floor(id / 20);
-            let grid = this.getGridByXY([x, y]);
-            if(grid){
-                grid.setType(element);
+    setMap(data: any[]) {
+        for (let i = 0; i < data.length; ++i) {
+            for (let j = 0; j < data[i].length; ++j) {
+                let grid = this.getGridByXY([j, i]);
+                if (grid) {
+                    grid.setType(data[i][j]);
+                }
             }
-            id++;
-        });
+        }
     }
 
-    clearRange(){
-        this.grids.forEach(grid=>{
+    clearRange() {
+        this.grids.forEach(grid => {
             grid.showNormal();
         });
     }
@@ -60,7 +58,7 @@ export default class NewClass extends cc.Component {
      * @param x 
      * @param y 
      */
-    getGridByXY(pos: number[]):Grid {
+    getGridByXY(pos: number[]): Grid {
         let grid = this.grids.get(pos[0] + ":" + pos[1]);
         return grid;
     }

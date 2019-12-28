@@ -51,7 +51,7 @@ export default class NewClass extends BasicViewer {
     fightInfoMenu: FightMenu = null;
 
     @property(Effects)
-    effects:Effects = null;
+    effects: Effects = null;
 
     @property(TurnStart)
     turnStart: TurnStart = null;
@@ -59,9 +59,10 @@ export default class NewClass extends BasicViewer {
     @property(cc.Node)
     cursor: cc.Node = null;
 
-    static ON_GAMEPAGE_ENTER:string = "ON_GAMEPAGE_ENTER";
+    static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
 
     private _cursor: number[] = [0, 0];
+    private _camera: number[] = [0, 0];
 
     open() {
 
@@ -84,7 +85,7 @@ export default class NewClass extends BasicViewer {
 
         this.showFightInfo([
             {
-                
+
             },
             {
 
@@ -106,7 +107,12 @@ export default class NewClass extends BasicViewer {
         this.cursor.y = cursorPos[1];
     }
 
-    showFightInfo(datas:any[]){
+    setCamera(pos:number[]){
+        this._camera[0] = pos[0];
+        this._camera[1] = pos[1];
+    }
+
+    showFightInfo(datas: any[]) {
         this.fightInfoMenu.showInfos(datas);
     }
 
@@ -118,8 +124,8 @@ export default class NewClass extends BasicViewer {
             }
         });
     }
-    
-    showWeaponRange(data:any[]){
+
+    showWeaponRange(data: any[]) {
         data.forEach(elem => {
             let grid: Grid = this.map.getGridByXY(elem);
             if (grid) {
@@ -151,6 +157,26 @@ export default class NewClass extends BasicViewer {
             Controller.instance.notifySetCursor(this._cursor);
         });
 
+        this.node.on(InputSensor.SCREEN_UP, () => {
+            this._camera[1] -= 1;
+            Controller.instance.notifySetCamera(this._camera);
+        });
+
+        this.node.on(InputSensor.SCREEN_LEFT, () => {
+            this._camera[0] -= 1;
+            Controller.instance.notifySetCamera(this._camera);
+        });
+
+        this.node.on(InputSensor.SCREEN_DOWN, () => {
+            this._camera[1] += 1;
+            Controller.instance.notifySetCamera(this._camera);
+        });
+
+        this.node.on(InputSensor.SCREEN_RIGHT, () => {
+            this._camera[0] += 1;
+            Controller.instance.notifySetCamera(this._camera);
+        });
+
         this.node.on(InputSensor.ENTER, () => {
             this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
         }, this);
@@ -163,6 +189,10 @@ export default class NewClass extends BasicViewer {
         this.node.off(InputSensor.CURSOR_LEFT);
         this.node.off(InputSensor.CURSOR_DOWN);
         this.node.off(InputSensor.CURSOR_RIGHT);
+        this.node.off(InputSensor.SCREEN_UP);
+        this.node.off(InputSensor.SCREEN_LEFT);
+        this.node.off(InputSensor.SCREEN_DOWN);
+        this.node.off(InputSensor.SCREEN_RIGHT);
         this.node.off(InputSensor.ENTER);
         this.node.off(NewClass.ON_GAMEPAGE_ENTER);
     }
