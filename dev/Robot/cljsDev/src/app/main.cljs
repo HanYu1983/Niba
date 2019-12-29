@@ -65,10 +65,10 @@
   (m/handleCursor gameplayCtx))
 
 
-(defn selectUnitFlow-move [gameplayCtx unit inputCh outputCh]
+(defn selectUnitFlow-moveRange-move [gameplayCtx unit inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
-      (let [[gameplayCtx select] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel"]
+      (let [[gameplayCtx select] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel" "end"]
                                                               {:weaponIdx 0
                                                                :weapons {:attack1 {:range-min 2
                                                                                    :range-max 4
@@ -80,17 +80,64 @@
                                                                                    :name "gan"}}}]
                                                  inputCh outputCh))]
         (cond
+          (= "end" select)
+          [gameplayCtx true]
+          
           (= "cancel" select)
           (let []
             (a/<! (createUnits nil
                                {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                                 :players (gameplay/getPlayers gameplayCtx)}
                                inputCh outputCh))
-            gameplayCtx)
+            [gameplayCtx false])
 
           :else
           (recur gameplayCtx))))))
 
+(defn selectUnitFlow-moveRange [gameplayCtx unit inputCh outputCh]
+  (a/go
+    (let [[mw mh] gameplay/mapViewSize
+          shortestPathTree (map/findPath (:position unit)
+                                         (fn [{:keys [totalCost]} curr]
+                                           [(>= totalCost 5) false])
+                                         (fn [[x y]]
+                                           [[x (min mh (inc y))]
+                                            [x (max 0 (dec y))]
+                                            [(min mw (inc x)) y]
+                                            [(max 0 (dec x)) y]])
+                                         (constantly 1)
+                                         (fn [curr] 0))
+          moveRange (map first shortestPathTree)
+          gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
+      (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
+                                          moveRange)])
+      (loop [gameplayCtx gameplayCtx]
+        (let [[gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
+          (if localCursor
+            (let [camera (gameplay/getCamera gameplayCtx)
+                  cursor (gameplay/local2world camera localCursor)
+                  isInRange (some #(= % cursor) moveRange)]
+              (if isInRange
+                (let [path (->>
+                            (map/buildPath shortestPathTree cursor)
+                            (map (partial gameplay/world2local camera)))]
+                  (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
+                  (let [[gameplayCtx isEnd] (a/<! (selectUnitFlow-moveRange-move gameplayCtx unit inputCh outputCh))]
+                    (if isEnd
+                      (let [gameplayCtx (update gameplayCtx
+                                                :units
+                                                (fn [origin]
+                                                  (-> origin
+                                                      (aq/delete gameplay/rectByUnit unit)
+                                                      (aq/add gameplay/rectByUnit (merge unit {:position cursor}))
+                                                      (aq/balance))))]
+                        [gameplayCtx true])
+                      (recur gameplayCtx))))
+                (recur gameplayCtx)))
+            (do
+              (a/>! outputCh ["setMoveRange" []])
+              (let [gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly []))]
+                [gameplayCtx false]))))))))
 
 (defn selectUnitFlow [gameplayCtx unit inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
@@ -109,47 +156,18 @@
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond
         (= "move" selectUnitMenu)
-        (let [[mw mh] gameplay/mapViewSize
-              shortestPathTree (map/findPath (:position unit)
-                                             (fn [{:keys [totalCost]} curr]
-                                               [(>= totalCost 5) false])
-                                             (fn [[x y]]
-                                               [[x (min mh (inc y))]
-                                                [x (max 0 (dec y))]
-                                                [(min mw (inc x)) y]
-                                                [(max 0 (dec x)) y]])
-                                             (constantly 1)
-                                             (fn [curr] 0))
-              moveRange (map first shortestPathTree)
-              gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
-          (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
-                                              moveRange)])
-          (recur (loop [gameplayCtx gameplayCtx]
-                   (let [[gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
-                     (if localCursor
-                       (recur (let [camera (gameplay/getCamera gameplayCtx)
-                                    cursor (gameplay/local2world camera localCursor)
-                                    isInRange (some #(= % cursor) moveRange)]
-                                 (if isInRange
-                                   (let [_ (update gameplayCtx :units (fn [origin]
-                                                                        (replace {unit (merge unit {:position cursor})} origin)))
-                                         path (->>
-                                               (map/buildPath shortestPathTree cursor)
-                                               (map (partial gameplay/world2local camera)))]
-                                     (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
-                                     (a/<! (selectUnitFlow-move gameplayCtx unit inputCh outputCh)))
-                                   gameplayCtx)))
-                       (do 
-                         (a/>! outputCh ["setMoveRange" []])
-                        (update-in gameplayCtx [:temp :moveRange] (constantly []))))))))
+        (let [[gameplayCtx isEnd] (a/<! (selectUnitFlow-moveRange gameplayCtx unit inputCh outputCh))]
+          (if isEnd
+            [gameplayCtx true]
+            (recur gameplayCtx)))
 
         (= "cancel" selectUnitMenu)
         (let []
-          gameplayCtx)
+          [gameplayCtx false])
 
         (= "attack1" selectUnitMenu)
         (let []
-          gameplayCtx)
+          [gameplayCtx false])
 
         :else
         (recur gameplayCtx)))))
@@ -183,8 +201,10 @@
             unitAtCursor (first (filter #(= cursor (:position %))
                                         units))]
         (if unitAtCursor
-          (let [gameplayCtx (a/<! (selectUnitFlow gameplayCtx unitAtCursor inputCh outputCh))]
-            (recur gameplayCtx))
+          (let [[gameplayCtx isEnd] (a/<! (selectUnitFlow gameplayCtx unitAtCursor inputCh outputCh))]
+            (if isEnd
+              (recur gameplayCtx)
+              (recur gameplayCtx)))
           (let [[gameplayCtx endTurn] (a/<! (selectNoUnitFlow gameplayCtx inputCh outputCh))]
             (if endTurn
               gameplayCtx
