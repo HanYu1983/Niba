@@ -135,3 +135,7 @@
             (subvec data 
                     (max 0 (min cy (- mh ch))) 
                     (max 0 (min mh (+ cy ch)))))))))
+
+
+(defn getMapSize [playmap]
+  [(count (first playmap)) (count playmap)])

@@ -1,6 +1,7 @@
 (ns app.main
   (:require [clojure.core.async :as a])
   (:require [app.map :as map])
+  (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
@@ -265,24 +266,18 @@
                                   :city 0.3
                                   :tree 0.3
                                   :award 0.1})
-        
-        gameplayCtx (merge defaultGameplayModel
-                           {:map playmap})
-        
-        camera (get-in gameplayCtx [:temp :camera])
-        cursor (get-in gameplayCtx [:temp :cursor])
-        cursor (world2local camera cursor)]
+
+        gameplayCtx (-> gameplay/defaultGameplayModel
+                        (gameplay/setMap playmap))]
     (a/<! (createMap nil
-                     (map/subMap [0 0] mapViewSize playmap)
+                     (gameplay/getLocalMap gameplayCtx nil)
                      inputCh outputCh))
     (a/<! (createUnits nil
-                       {:units (->> (:units gameplayCtx)
-                                    (aq/values)
-                                    (map (fn [unit] (update unit :position (partial world2local camera)))))
-                        :players (:players gameplayCtx)}
+                       {:units (gameplay/getLocalUnits gameplayCtx nil)
+                        :players (gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
-    (a/>! outputCh ["setCamera" camera])
-    (a/>! outputCh ["setCursor" cursor])
+    (a/>! outputCh ["setCamera" (gameplay/getCamera gameplayCtx)])
+    (a/>! outputCh ["setCursor" (gameplay/getLocalCursor gameplayCtx nil)])
     (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))})))
 
 
