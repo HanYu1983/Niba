@@ -1,22 +1,28 @@
 (ns other.testquadtree
   (:require [app.quadtree :as aq]))
 
-(let [getRectByUnit (fn [{[x y] :pos}]
+(def n 0)
+
+(let [getRectByUnitLog (fn [{[x y] :pos}]
+                      (set! n (inc n))
+                      [x y (+ 0.5 x) (+ 0.5 y)])
+      getRectByUnit (fn [{[x y] :pos}]
                       [x y (+ 0.5 x) (+ 0.5 y)])
       units (->> (repeatedly (fn [] {:key (gensym) :pos [(rand 20) (rand 20)]}))
-                 (take 500))
+                 (take 1000))
       tree (->> units
                 (reduce (fn [ctx unit]
                           (aq/add ctx getRectByUnit unit))
-                        (aq/make-qdtree [0 0 20 20] 4))
+                        (aq/make-qdtree [0 0 20 20] 3))
                 (aq/balance))
-      searchSize [4 4 12 12]
-      searchObj (aq/search tree getRectByUnit searchSize)
+      searchSize [5 0 20 20]
+      searchObj (aq/search tree getRectByUnitLog searchSize)
       tree2 (->> units
                  (reduce (fn [ctx unit]
                            (aq/delete ctx getRectByUnit unit))
                          tree)
                  (aq/balance))]
+  (println n "times")
   (println (last tree2))
   (println (count (aq/values tree)))
 
