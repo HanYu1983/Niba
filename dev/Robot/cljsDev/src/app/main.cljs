@@ -5,39 +5,7 @@
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
-(def mapViewSize [20 20])
 (def defaultModel {})
-
-(defn rectByUnit [{[x y] :position}]
-  [x y (+ 0.5 x) (+ 0.5 y)])
-
-(defn world2local [camera position]
-  (map - position camera))
-
-(defn local2world [camera position]
-  (map + position camera))
-
-(def defaultGameplayModel {:map nil
-                           :temp {:cursor [0 0]
-                                  :camera [0 0]
-                                  :moveRange []}
-                           :players {:player {:faction 0}
-                                     :ai1 {:faction 1}
-                                     :ai2 {:faction 1}}
-                           :units (-> (aq/make-qdtree [0 0 100 100] 3)
-                                      (aq/add rectByUnit {:key (gensym)
-                                                          :player :player
-                                                          :type :robot
-                                                          :state {:key 0}
-                                                          :position [0 0]})
-                                      (aq/add rectByUnit {:key (gensym)
-                                                          :player :player
-                                                          :type :robot
-                                                          :state {:key 0}
-                                                          :position [10 5]})
-                                      (aq/balance))
-                           :focusUnitKey nil})
-
 
 (defn installViewRxjs [inputFromView outputToView]
   (let [viewOb (js/rxjs.Subject.)
@@ -86,21 +54,19 @@
         ; map
         mapSize [(dec (count (first playmap))) (dec (count playmap))]
         camera (->> camera
-                    (map min (map - mapSize mapViewSize))
+                    (map min (map - mapSize gameplay/mapViewSize))
                     (map max [0 0]))
-        playmap (map/subMap camera mapViewSize playmap)
+        playmap (map/subMap camera gameplay/mapViewSize playmap)
         gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
 
     (a/<! (createUnits nil
-                       {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
-                                    (map (fn [unit]
-                                           (update unit :position (partial world2local camera)))))
+                       {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                         :players (:players gameplayCtx)}
                        inputCh outputCh))
 
     (a/>! outputCh ["setMap" playmap])
     (a/>! outputCh ["setCamera" camera])
-    (a/>! outputCh ["setCursor" (world2local camera cursor)])
+    (a/>! outputCh ["setCursor" (gameplay/world2local camera cursor)])
     (recur gameplayCtx))
 
   (= "setCursor" cmd)
@@ -123,7 +89,7 @@
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond
         (= "move" selectUnitMenu)
-        (let [[mw mh] mapViewSize
+        (let [[mw mh] gameplay/mapViewSize
               shortestPathTree (map/findPath (:position unit)
                                              (fn [{:keys [totalCost]} curr]
                                                [(>= totalCost 5) false])
