@@ -57,18 +57,22 @@
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
 
+(defn getUnits [ctx camera searchSize]
+  (let [camera (or camera (getCamera ctx))
+        searchSize (or searchSize (aq/makeRectFromPoint camera mapViewSize))
+        units (aq/search (:units ctx) rectByUnit searchSize)]
+    units))
+
 (defn getLocalMap [ctx camera]
   (let [camera (or camera (getCamera ctx))
         playmap (:map ctx)]
     (map/subMap camera mapViewSize playmap)))
 
 (defn getLocalUnits [ctx camera searchSize]
-  (let [camera (or camera (getCamera ctx))
-        searchSize (or searchSize (aq/makeRectFromPoint camera mapViewSize))
-        units (->> (aq/search (:units ctx) rectByUnit searchSize)
-                   (map (fn [unit]
-                          (update unit :position (partial world2local camera)))))]
-    units))
+  (let [camera (or camera (getCamera ctx))]
+    (->> (getUnits ctx camera searchSize)
+         (map (fn [unit]
+                (update unit :position (partial world2local camera)))))))
 
 (defn getLocalCursor [ctx camera]
   (let [camera (or camera (getCamera ctx))
