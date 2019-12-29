@@ -48,7 +48,8 @@
   (= "setCamera" cmd)
   (let [camera args
         gameplayCtx (-> gameplayCtx
-                        (gameplay/setCamera camera))]
+                        (gameplay/setCamera camera))
+        moveRange (get-in gameplayCtx [:temp :moveRange])]
     (a/<! (createUnits nil
                        {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                         :players (gameplay/getPlayers gameplayCtx)}
@@ -56,6 +57,8 @@
     (m/notifySetMap gameplayCtx)
     (m/notifySetCamera gameplayCtx)
     (m/notifySetCursor gameplayCtx)
+    (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
+                                        moveRange)])
     (recur gameplayCtx))
 
   (= "setCursor" cmd)
@@ -119,7 +122,8 @@
                                              (fn [curr] 0))
               moveRange (map first shortestPathTree)
               gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
-          (a/>! outputCh ["setMoveRange" moveRange])
+          (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
+                                              moveRange)])
           (recur (loop [gameplayCtx gameplayCtx]
                    (let [[gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
                      (if localCursor
@@ -129,13 +133,15 @@
                                  (if isInRange
                                    (let [_ (update gameplayCtx :units (fn [origin]
                                                                         (replace {unit (merge unit {:position cursor})} origin)))
-                                         path (map/buildPath shortestPathTree cursor)]
+                                         path (->>
+                                               (map/buildPath shortestPathTree cursor)
+                                               (map (partial gameplay/world2local camera)))]
                                      (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                                      (a/<! (selectUnitFlow-move gameplayCtx unit inputCh outputCh)))
                                    gameplayCtx)))
                        (do 
                          (a/>! outputCh ["setMoveRange" []])
-                         gameplayCtx))))))
+                        (update-in gameplayCtx [:temp :moveRange] (constantly []))))))))
 
         (= "cancel" selectUnitMenu)
         (let []
