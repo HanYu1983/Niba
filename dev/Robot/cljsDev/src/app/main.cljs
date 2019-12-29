@@ -140,8 +140,8 @@
           (recur (loop [gameplayCtx gameplayCtx]
                    (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
                      (if cursor
-                       (recur (let [camera (get-in gameplayCtx [:temp :camera])
-                                    cursor (local2world camera cursor)
+                       (recur (let [camera (gameplay/getCamera gameplayCtx)
+                                    cursor (gameplay/local2world camera cursor)
                                     isInRange (some #(= % cursor) moveRange)]
                                  (if isInRange
                                   (let [_ (update gameplayCtx :units (fn [origin]
@@ -159,17 +159,13 @@
                                                                                                                     :range-max 4
                                                                                                                     :type :beam
                                                                                                                     :name "gan"}}}]
-                                                                                  inputCh outputCh))
-                                            camera (get-in gameplayCtx [:temp :camera])
-                                            units (:units gameplayCtx)]
+                                                                                  inputCh outputCh))]
                                         (cond
                                           (= "cancel" select2)
                                           (let []
                                             (a/<! (createUnits nil
-                                                               {:units (->> (aq/search units rectByUnit (aq/makeRectFromPoint camera mapViewSize))
-                                                                            (map (fn [unit]
-                                                                                   (update unit :position (partial world2local camera)))))
-                                                                :players (:players gameplayCtx)}
+                                                               {:units (gameplay/getLocalUnits gameplayCtx nil nil)
+                                                                :players (gameplay/getPlayers gameplayCtx)}
                                                                inputCh outputCh))
                                             gameplayCtx)
 
@@ -215,11 +211,8 @@
       (println "[model][playerTurn]")
       (a/>! outputCh ["playerTurn"])
       (let [[gameplayCtx cursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
-            camera (get-in gameplayCtx [:temp :camera])
-            cursor (local2world camera cursor)
-            units (->
-                   (:units gameplayCtx)
-                   (aq/search rectByUnit (aq/makeRectFromPoint cursor [1 1])))
+            cursor (gameplay/getLocalCursor gameplayCtx nil)
+            units (gameplay/getLocalUnits gameplayCtx nil (aq/makeRectFromPoint cursor [1 1]))
             unitAtCursor (first (filter #(= cursor (:position %))
                                         units))]
         (if unitAtCursor
@@ -273,7 +266,7 @@
                      (gameplay/getLocalMap gameplayCtx nil)
                      inputCh outputCh))
     (a/<! (createUnits nil
-                       {:units (gameplay/getLocalUnits gameplayCtx nil)
+                       {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                         :players (gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
     (a/>! outputCh ["setCamera" (gameplay/getCamera gameplayCtx)])

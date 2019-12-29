@@ -62,9 +62,10 @@
         playmap (:map ctx)]
     (map/subMap camera mapViewSize playmap)))
 
-(defn getLocalUnits [ctx camera]
+(defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))
-        units (->> (aq/search (:units ctx) rectByUnit (aq/makeRectFromPoint camera mapViewSize))
+        searchSize (or searchSize (aq/makeRectFromPoint camera mapViewSize))
+        units (->> (aq/search (:units ctx) rectByUnit searchSize)
                    (map (fn [unit]
                           (update unit :position (partial world2local camera)))))]
     units))
