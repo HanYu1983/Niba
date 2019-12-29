@@ -118,6 +118,19 @@
 (defn search [tree rectFn searchRect]
   (when tree
     (let [[rect objs r1 r2 r3 r4 {cnt :totalCount}] tree]
+      (when (> cnt 0)
+        (if (rect-contains-rect? searchRect rect)
+          (values tree)
+          (when (rect-overlap-rect? searchRect rect)
+            (->> [r1 r2 r3 r4]
+                 (map #(search % rectFn searchRect))
+                 (apply clojure.set/union (->> objs
+                                               (filter #(rect-overlap-rect? searchRect (rectFn %)))
+                                               (into #{}))))))))))
+
+(defn search3 [tree rectFn searchRect]
+  (when tree
+    (let [[rect objs r1 r2 r3 r4 {cnt :totalCount}] tree]
       (when (and (> cnt 0)
                  (rect-overlap-rect? searchRect rect))
         (->> [r1 r2 r3 r4]

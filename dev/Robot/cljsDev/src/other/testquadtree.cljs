@@ -15,7 +15,7 @@
                           (aq/add ctx getRectByUnit unit))
                         (aq/make-qdtree [0 0 20 20] 3))
                 (aq/balance))
-      searchSize [5 0 20 20]
+      searchSize [7 7 13 13]
       searchObj (aq/search tree getRectByUnitLog searchSize)
       tree2 (->> units
                  (reduce (fn [ctx unit]
