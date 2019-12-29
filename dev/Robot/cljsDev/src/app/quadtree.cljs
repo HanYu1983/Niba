@@ -108,13 +108,23 @@
       
       (throw (js/Error. "delete error")))))
 
+(defn values [tree]
+  (when tree
+    (let [[_ objs r1 r2 r3 r4] tree]
+      (->> [r1 r2 r3 r4]
+           (map values)
+           (apply clojure.set/union objs)))))
+
 (defn search [tree rectFn searchRect]
   (when tree
     (let [[rect objs r1 r2 r3 r4 {cnt :totalCount}] tree]
       (when (and (> cnt 0)
                  (rect-overlap-rect? searchRect rect))
         (->> [r1 r2 r3 r4]
-             (map #(search % rectFn searchRect))
+             (map (fn [[subRect :as tree]]
+                    (if (rect-contains-rect? searchRect subRect)
+                      (values tree)
+                      (search tree rectFn searchRect))))
              (apply clojure.set/union (if (rect-contains-rect? searchRect rect)
                                         objs
                                         (->> objs
@@ -138,13 +148,6 @@
                      objs
                      [r1 r2 r3 r4])]
     objs))
-
-(defn values [tree]
-  (when tree
-    (let [[_ objs r1 r2 r3 r4] tree]
-      (->> [r1 r2 r3 r4]
-           (map values)
-           (apply clojure.set/union objs)))))
 
 (defn makeRectFromPoint [[x y] [w h]]
   [(- x w) (- y h) (+ x w) (+ y h)])
