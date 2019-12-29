@@ -53,9 +53,9 @@
                        {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                         :players (gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
-    (a/>! outputCh ["setMap" (gameplay/getLocalMap gameplayCtx nil)])
-    (a/>! outputCh ["setCamera" (gameplay/getCamera gameplayCtx)])
-    (a/>! outputCh ["setCursor" (gameplay/getLocalCursor gameplayCtx nil)])
+    (m/notifySetMap gameplayCtx)
+    (m/notifySetCamera gameplayCtx)
+    (m/notifySetCursor gameplayCtx)
     (recur gameplayCtx))
 
   (= "setCursor" cmd)
@@ -230,8 +230,8 @@
                        {:units (gameplay/getLocalUnits gameplayCtx nil nil)
                         :players (gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
-    (a/>! outputCh ["setCamera" (gameplay/getCamera gameplayCtx)])
-    (a/>! outputCh ["setCursor" (gameplay/getLocalCursor gameplayCtx nil)])
+    (m/notifySetCamera gameplayCtx)
+    (m/notifySetCursor gameplayCtx)
     (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))})))
 
 

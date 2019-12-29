@@ -49,3 +49,13 @@
       (let []
         (a/>! ~'outputCh ["setCursor" ~'cursor])
         (recur ~ctx)))))
+
+
+(defmacro notifySetMap [ctx]
+  `(a/>! ~'outputCh ["setMap" (gameplay/getLocalMap ~ctx nil)]))
+
+(defmacro notifySetCamera [ctx]
+  `(a/>! ~'outputCh ["setCamera" (gameplay/getCamera ~ctx)]))
+
+(defmacro notifySetCursor [ctx]
+  `(a/>! ~'outputCh ["setCursor" (gameplay/getLocalCursor ~ctx nil)]))
