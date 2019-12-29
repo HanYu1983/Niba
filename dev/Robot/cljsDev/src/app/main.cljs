@@ -47,26 +47,15 @@
 
   (= "setCamera" cmd)
   (let [camera args
-        cursor (get-in gameplayCtx [:temp :cursor])
-        playmap (:map gameplayCtx)
-        units (:units gameplayCtx)
-
-        ; map
-        mapSize [(dec (count (first playmap))) (dec (count playmap))]
-        camera (->> camera
-                    (map min (map - mapSize gameplay/mapViewSize))
-                    (map max [0 0]))
-        playmap (map/subMap camera gameplay/mapViewSize playmap)
-        gameplayCtx (update-in gameplayCtx [:temp :camera] (constantly camera))]
-
+        gameplayCtx (-> gameplayCtx
+                        (gameplay/setCamera camera))]
     (a/<! (createUnits nil
                        {:units (gameplay/getLocalUnits gameplayCtx nil nil)
-                        :players (:players gameplayCtx)}
+                        :players (gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
-
-    (a/>! outputCh ["setMap" playmap])
-    (a/>! outputCh ["setCamera" camera])
-    (a/>! outputCh ["setCursor" (gameplay/world2local camera cursor)])
+    (a/>! outputCh ["setMap" (gameplay/getLocalMap gameplayCtx nil)])
+    (a/>! outputCh ["setCamera" (gameplay/getCamera gameplayCtx)])
+    (a/>! outputCh ["setCursor" (gameplay/getLocalCursor gameplayCtx nil)])
     (recur gameplayCtx))
 
   (= "setCursor" cmd)
