@@ -5,6 +5,7 @@
   (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
+  (:require [app.unitState])
   (:require-macros [app.macros :as m]))
 
 (def defaultModel {})
@@ -70,21 +71,22 @@
 (defn selectUnitFlow-moveRange-move [gameplayCtx unit inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
-      (let [[gameplayCtx select] (a/<! (unitMenu gameplayCtx [[["attack1" "attack2"] "cancel" "end"]
+      (let [weapons (app.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+            [gameplayCtx select] (a/<! (unitMenu gameplayCtx [[(range (count weapons)) "cancel"]
                                                               {:weaponIdx 0
-                                                               :weapons {:attack1 {:range-min 2
-                                                                                   :range-max 4
-                                                                                   :type :beam
-                                                                                   :name "attack1"}
-                                                                         :attack2 {:range-min 2
-                                                                                   :range-max 4
-                                                                                   :type :beam
-                                                                                   :name "gan"}}}]
+                                                               :weapons weapons
+                                                               :weaponRange (map (fn [{[min max] :range type :type :as weapon}]
+                                                                                   (->> (map/simpleFindPath (:position unit) min)
+                                                                                        (into #{})
+                                                                                        (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                                                     (into #{})))
+                                                                                        (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                                 weapons)}]
                                                  inputCh outputCh))]
         (cond
           (= "end" select)
           [gameplayCtx true]
-          
+
           (= "cancel" select)
           (let []
             (a/<! (createUnits nil
@@ -138,23 +140,17 @@
 (defn selectUnitFlow [gameplayCtx unit inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
     (println "[model][selectUnitFlow]")
-    (let [[gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" ["attack1" "attack2"] "cancel"] 
-                                                                    {:weaponIdx 1 
-                                                                     :weapons {:attack1 {:range-min 2 
-                                                                                         :range-max 4
-                                                                                         :type :beam
-                                                                                         :name "attack1"}
-                                                                               :attack2 {:range-min 2
-                                                                                         :range-max 4
-                                                                                         :type :beam
-                                                                                         :name "gan"}}
-                                                                     :weaponRange {:attack1 (->> (map/simpleFindPath (:position unit) 1)
-                                                                                                 (into #{})
-                                                                                                 (clojure.set/difference (->> (map/simpleFindPath (:position unit) 2)
-                                                                                                                              (into #{})))
-                                                                                                 (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx))))
-                                                                                   :attack2 (->> (map/simpleFindPath (:position unit) 5)
-                                                                                                 (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx))))}}]
+    (let [weapons (app.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+          [gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" (range (count weapons)) "cancel"]
+                                                                    {:weaponIdx 1
+                                                                     :weapons weapons
+                                                                     :weaponRange (map (fn [{[min max] :range type :type :as weapon}]
+                                                                                         (->> (map/simpleFindPath (:position unit) min)
+                                                                                              (into #{})
+                                                                                              (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                                                           (into #{})))
+                                                                                              (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                                       weapons)}]
                                                        inputCh outputCh))]
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond

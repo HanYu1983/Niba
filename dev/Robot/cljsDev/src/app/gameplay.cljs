@@ -1,6 +1,7 @@
 (ns app.gameplay
   (:require [app.quadtree :as aq])
-  (:require [app.map :as map]))
+  (:require [app.map :as map])
+  (:require [app.unitState]))
 
 (def mapViewSize [20 20])
 
@@ -24,12 +25,12 @@
                                       (aq/add rectByUnit {:key (gensym)
                                                           :player :player
                                                           :type :robot
-                                                          :state {:key 0}
+                                                          :state app.unitState/default
                                                           :position [0 0]})
                                       (aq/add rectByUnit {:key (gensym)
                                                           :player :player
                                                           :type :robot
-                                                          :state {:key 0}
+                                                          :state app.unitState/default
                                                           :position [10 5]})
                                       (aq/balance))})
 

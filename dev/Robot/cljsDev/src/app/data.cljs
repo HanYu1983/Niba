@@ -13,7 +13,7 @@
                                 "damage" 3000
                                 "energyType" "energy"
                                 "energyCost" 20
-                                "bulletCount" 8
+                                "maxBulletCount" 8
                                 "accuracy" 0.7
                                 "suitability" [1 0 1 1]
                                 "ablitity" ["moveAttack"]}
@@ -23,12 +23,12 @@
                                  "damage" 2000
                                  "energyType" "energy"
                                  "energyCost" 20
-                                 "bulletCount" 8
+                                 "maxBulletCount" 8
                                  "accuracy" 0.9
                                  "suitability" [1 1 1 1]
                                  "ablitity" ["moveAttack"]}}
            "robot" {"jimu" {"title" "jimu"
-                            "weapons" ["beangun"]
+                            "weapons" ["beangun" "bigsword"]
                             "hp" 2000
                             "en" 120
                             "armor" 1000
