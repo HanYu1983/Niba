@@ -31,8 +31,10 @@
                                                           :type :robot
                                                           :state {:key 0}
                                                           :position [10 5]})
-                                      (aq/balance))
-                           :focusUnitKey nil})
+                                      (aq/balance))})
+
+(defn setData [ctx data]
+  (update ctx :data (constantly data)))
 
 (defn updateUnit [ctx unit nextUnit]
   (update ctx :units (fn [origin]

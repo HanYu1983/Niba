@@ -2,6 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [app.map :as map])
+  (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
@@ -240,7 +241,8 @@
   (recur ctx)
 
   (= "startGameplay" cmd)
-  (let [playmap (map/generateMap 100 100
+  (let [data (a/<! (data/loadData))
+        playmap (map/generateMap 100 100
                                  {:deepsea 0.3
                                   :sea 0.3
                                   :sand 0.3
@@ -248,8 +250,8 @@
                                   :city 0.3
                                   :tree 0.3
                                   :award 0.1})
-
         gameplayCtx (-> gameplay/defaultGameplayModel
+                        (gameplay/setData data)
                         (gameplay/setMap playmap))]
     (a/<! (createMap nil
                      (gameplay/getLocalMap gameplayCtx nil)
