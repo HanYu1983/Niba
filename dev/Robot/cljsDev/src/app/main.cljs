@@ -75,7 +75,7 @@
             [gameplayCtx select] (a/<! (unitMenu gameplayCtx [[(range (count weapons)) "cancel"]
                                                               {:weaponIdx 0
                                                                :weapons weapons
-                                                               :weaponRange (map (fn [{[min max] :range type :type :as weapon}]
+                                                               :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
                                                                                    (->> (map/simpleFindPath (:position unit) min)
                                                                                         (into #{})
                                                                                         (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
@@ -144,7 +144,7 @@
           [gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" (range (count weapons)) "cancel"]
                                                                     {:weaponIdx 1
                                                                      :weapons weapons
-                                                                     :weaponRange (map (fn [{[min max] :range type :type :as weapon}]
+                                                                     :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
                                                                                          (->> (map/simpleFindPath (:position unit) min)
                                                                                               (into #{})
                                                                                               (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
