@@ -124,13 +124,7 @@
                   (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                   (let [[gameplayCtx isEnd] (a/<! (selectUnitFlow-moveRange-move gameplayCtx unit inputCh outputCh))]
                     (if isEnd
-                      (let [gameplayCtx (update gameplayCtx
-                                                :units
-                                                (fn [origin]
-                                                  (-> origin
-                                                      (aq/delete gameplay/rectByUnit unit)
-                                                      (aq/add gameplay/rectByUnit (merge unit {:position cursor}))
-                                                      (aq/balance))))]
+                      (let [gameplayCtx (gameplay/updateUnit gameplayCtx unit (merge unit {:position cursor}))]
                         [gameplayCtx true])
                       (recur gameplayCtx))))
                 (recur gameplayCtx)))

@@ -34,6 +34,13 @@
                                       (aq/balance))
                            :focusUnitKey nil})
 
+(defn updateUnit [ctx unit nextUnit]
+  (update ctx :units (fn [origin]
+                       (-> origin
+                           (aq/delete rectByUnit unit)
+                           (aq/add rectByUnit nextUnit)
+                           (aq/balance)))))
+
 
 (defn setMap [ctx map]
   (update ctx :map (constantly map)))
