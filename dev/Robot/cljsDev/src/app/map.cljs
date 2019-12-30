@@ -54,6 +54,19 @@
             (recur close open info (inc i))))))))
 
 
+(def simpleFindPath
+  (memoize (fn [start maxCost]
+             (map first (findPath start
+                                  (fn [{:keys [totalCost]} curr]
+                                    [(>= totalCost maxCost) false])
+                                  (fn [[x y]]
+                                    [[x (inc y)]
+                                     [x (dec y)]
+                                     [(inc x) y]
+                                     [(dec x) y]])
+                                  (constantly 1)
+                                  (constantly 0))))))
+
 
 (defn generateMap [w h {:keys [deepsea sea sand grass city tree award]}]
   (->> (let [scale 0.1]

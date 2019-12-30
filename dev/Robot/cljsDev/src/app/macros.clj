@@ -35,18 +35,32 @@
 
 (defmacro handleCursor [ctx]
   `(let [~'cursor ~'args
-         ~'units (:units ~ctx)
-         ~'unitAtCursor (first (filter #(= ~'cursor (:position %))
-                                       ~'units))
-         ~'camera (get-in ~ctx [:temp :camera])
+         ~'camera (gameplay/getCamera ~ctx)
          ~'worldCursor (gameplay/local2world ~'camera ~'cursor)
-         ~ctx (update-in ~ctx [:temp :cursor] (constantly ~'worldCursor))]
+         ~'units (gameplay/getUnits ~ctx ~'camera (aq/makeRectFromPoint ~'worldCursor [1 1]))
+         ~'unitAtCursor (first (filter #(= ~'worldCursor (:position %))
+                                       ~'units))
+         ~ctx (gameplay/setCursor ~ctx ~'worldCursor)]
     (if ~'unitAtCursor
-      (let []
-        (a/>! ~'outputCh ["unitState"])
+      (let [[~'mw ~'mh] gameplay/mapViewSize
+            ~'shortestPathTree (map/findPath (:position ~'unitAtCursor)
+                                             (fn [{:keys [~'totalCost]} ~'curr]
+                                               [(>= ~'totalCost 5) false])
+                                             (fn [[~'x ~'y]]
+                                               [[~'x (min ~'mh (inc ~'y))]
+                                                [~'x (max 0 (dec ~'y))]
+                                                [(min ~'mw (inc ~'x)) ~'y]
+                                                [(max 0 (dec ~'x)) ~'y]])
+                                             (constantly 1)
+                                             (constantly 0))
+            ~'moveRange (map first ~'shortestPathTree)
+            ~ctx (update-in ~ctx [:temp :moveRange] (constantly ~'moveRange))]
+        (a/>! ~'outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera ~ctx) %)
+                                              ~'moveRange)])
         (a/>! ~'outputCh ["setCursor" ~'cursor])
         (recur ~ctx))
       (let []
+        ; (a/>! ~'outputCh ["setMoveRange" []])
         (a/>! ~'outputCh ["setCursor" ~'cursor])
         (recur ~ctx)))))
 

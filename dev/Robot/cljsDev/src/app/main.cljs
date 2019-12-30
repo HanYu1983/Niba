@@ -1,5 +1,6 @@
 (ns app.main
   (:require [clojure.core.async :as a])
+  (:require [clojure.set])
   (:require [app.map :as map])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
@@ -145,7 +146,14 @@
                                                                                :attack2 {:range-min 2
                                                                                          :range-max 4
                                                                                          :type :beam
-                                                                                         :name "gan"}}}]
+                                                                                         :name "gan"}}
+                                                                     :weaponRange {:attack1 (->> (map/simpleFindPath (:position unit) 1)
+                                                                                                 (into #{})
+                                                                                                 (clojure.set/difference (->> (map/simpleFindPath (:position unit) 2)
+                                                                                                                              (into #{})))
+                                                                                                 (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx))))
+                                                                                   :attack2 (->> (map/simpleFindPath (:position unit) 5)
+                                                                                                 (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx))))}}]
                                                        inputCh outputCh))]
       (println "[model][selectUnitFlow]" selectUnitMenu)
       (cond

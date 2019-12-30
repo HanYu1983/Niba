@@ -61,6 +61,9 @@
 (defn getCamera [ctx]
   (get-in ctx [:temp :camera]))
 
+(defn setCursor [ctx cursor]
+  (update-in ctx [:temp :cursor] (constantly cursor)))
+
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
 
