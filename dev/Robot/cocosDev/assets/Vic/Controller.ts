@@ -10,18 +10,93 @@
 
 import View from "./View"
 import GamePage from "./page/GamePage";
+import IViewController from "../Han/IViewController";
+import IModel from "../Han/IModel";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class NewClass extends cc.Component implements IModel {
 
     @property(View)
     view: View = null;
-
     static instance: NewClass;
-
     start() {
+        NewClass.instance = this;
+        this.bindModel();
+    }
+
+    seqId: number = 0;
+    viewNotifyOb: { next: (args: any) => void };
+    viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
+
+    talk(q: string, args: any, callback: (answer: any) => void) {
+        const id = this.seqId++;
+        this.viewNotifyOb.next([q, [id + "", args]]);
+        const sub = this.viewOb.subscribe(e => {
+            const [cmd, args] = e;
+            if (cmd == "ok") {
+                const [resId, resArgs] = args;
+                if (resId == id) {
+                    sub.unsubscribe();
+                    callback(resArgs);
+                } else {
+                    console.log("[talk][wait]" + q);
+                }
+            }
+        })
+    }
+
+    bindModel() {
+        window.startApp();
+        this.viewNotifyOb = window.viewNotifyOb;
+        this.viewOb = window.viewOb;
+    }
+
+    pushState(state: string, save: any, callback: () => void) {
+        this.talk("pushState", [state, save], callback);
+    }
+
+    popState(callback: () => void) {
+        this.talk("popState", 0, callback);
+    }
+
+    viewController: IViewController;
+
+    setViewController(ctr: IViewController) {
+        this.viewController = ctr;
+        ctr.setModel(this);
+        this.viewOb.subscribe(e => {
+            const [cmd, args] = e;
+            switch (cmd) {
+                case "onStateChange":
+                    {
+                        const [state, data] = e;
+                        this.viewController.onStateChange(state, data);
+                    }
+                    break;
+                case "playerTurnStart":
+                    {
+                        const [id] = args;
+                        this.viewController.onPlayerTurnStart(() => {
+                            this.viewNotifyOb.next([cmd, [id, 0]]);
+                        })
+                    }
+                    break;
+                case "enemyTurnStart":
+                    {
+                        const [id, ai] = args;
+                        this.viewController.onEnemyTurnStart(ai, () => {
+                            this.viewNotifyOb.next([cmd, [id, 0]]);
+                        })
+                    }
+                    break;
+            }
+        })
+        this.notifyCmd("startGameplay");
+    }
+
+    start2() {
         NewClass.instance = this;
 
         window.startApp();
@@ -116,7 +191,7 @@ export default class NewClass extends cc.Component {
                     break;
                 case "setUnitPosition":
                     {
-                        const {unit, position} = args;
+                        const { unit, position } = args;
                         this.view.getGamePage().units.setUnitPos(unit, position);
                     }
                     break;
@@ -185,7 +260,7 @@ export default class NewClass extends cc.Component {
         })
     }
 
-    removeGamePageExtraListener(){
+    removeGamePageExtraListener() {
         this.view.getGamePage().node.off(GamePage.ON_GAMEPAGE_ENTER);
         this.view.getGamePage().node.off(GamePage.ON_GAMEPAGE_ESCAPE);
     }
@@ -213,7 +288,7 @@ export default class NewClass extends cc.Component {
     }
 
     notifyStartGame() {
-        this.notifyCmd("startGameplay");
+        //this.notifyCmd("startGameplay");
     }
 
     notifyAnswer(id, args = 0) {
