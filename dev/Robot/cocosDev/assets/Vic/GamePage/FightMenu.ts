@@ -11,7 +11,7 @@
 import FightInfo from "./FightInfo";
 import Pool from "../Pool";
 
-import Controller from "../Controller";
+import ViewController from "../ViewController";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -38,7 +38,7 @@ export default class NewClass extends cc.Component {
         fightInfoNode.setParent(this.node);
 
         let pos = [4, 5];
-        let infoPos = Controller.instance.view.getGridPos(pos);
+        let infoPos = ViewController.instance.view.getGridPos(pos);
         fightInfoNode.x = infoPos[0];
         fightInfoNode.y = infoPos[1];
 

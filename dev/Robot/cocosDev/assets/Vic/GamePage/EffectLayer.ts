@@ -9,7 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import Pool from "../Pool";
-import Controller from "../Controller";
+import ViewController from "../ViewController";
 import AnimationEndCallback from "../AnimationEndCallback";
 const {ccclass, property} = cc._decorator;
 
@@ -24,7 +24,7 @@ export default class NewClass extends cc.Component {
 
     createEffect(pos:number[]):cc.Node{
         let effect:cc.Node = this._pool.acquire();
-        let gridPos = Controller.instance.view.getGridPos(pos);
+        let gridPos = ViewController.instance.view.getGridPos(pos);
         effect.x = gridPos[0];
         effect.y = gridPos[1];
         effect.setParent(this.node);

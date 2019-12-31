@@ -10,7 +10,7 @@
 
 import Unit from "./Unit"
 import Pool from "../Pool"
-import Controller from "../Controller";
+import ViewController from "../ViewController";
 
 const { ccclass, property } = cc._decorator;
 
@@ -71,7 +71,7 @@ export default class NewClass extends cc.Component {
             let unitNode: cc.Node = this._pool.acquire();
             unitNode.setParent(this.node);
 
-            let gridPos = Controller.instance.view.getGridPos(pos);
+            let gridPos = ViewController.instance.view.getGridPos(pos);
             unitNode.x = gridPos[0];
             unitNode.y = gridPos[1];
             unitNode.active = true;
@@ -116,7 +116,7 @@ export default class NewClass extends cc.Component {
     setUnitPos(id:string, pos:number[]){
         let unit = this.getUnitByID(id);
         if(unit){
-            let unitPos = Controller.instance.view.getGridPos(pos);
+            let unitPos = ViewController.instance.view.getGridPos(pos);
             unit.node.x = unitPos[0];
             unit.node.y = unitPos[1];
         }
@@ -136,7 +136,7 @@ export default class NewClass extends cc.Component {
         if (unit) {
             let actions = [];
             moveTo.forEach(element => {
-                let gridPos = Controller.instance.view.getGridPos(element);
+                let gridPos = ViewController.instance.view.getGridPos(element);
                 let action = cc.moveTo(.05, gridPos[0], gridPos[1]);
                 //action.easing(cc.easeSineOut());
                 actions.push(action);

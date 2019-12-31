@@ -21,7 +21,7 @@ import Effects from "../GamePage/Effects";
 import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
-import Controller from "../Controller";
+import ViewController from "../ViewController";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -70,7 +70,7 @@ export default class NewClass extends BasicViewer {
         super.open();
         this.map.initPool();
 
-        Controller.instance.notifyStartGame();
+        //ViewController.instance.notifyStartGame();
         this.removeListenser();
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
@@ -84,17 +84,17 @@ export default class NewClass extends BasicViewer {
 
         //this.showMovableGrid([[3,4],[5,6],[7,9]]);
 
-        this.showFightInfo([
-            {
+        // this.showFightInfo([
+        //     {
 
-            },
-            {
+        //     },
+        //     {
 
-            },
-            {
+        //     },
+        //     {
 
-            }
-        ]);
+        //     }
+        // ]);
 
         //this.effects.createBlade([0,0]);
     }
@@ -103,7 +103,7 @@ export default class NewClass extends BasicViewer {
         this._cursor[0] = pos[0];
         this._cursor[1] = pos[1];
 
-        let cursorPos = Controller.instance.view.getGridPos(this._cursor);
+        let cursorPos = ViewController.instance.view.getGridPos(this._cursor);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
     }
@@ -122,42 +122,42 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.CURSOR_UP, () => {
             this._cursor[1] -= 1;
-            Controller.instance.notifySetCursor(this._cursor);
+            ViewController.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_LEFT, () => {
             this._cursor[0] -= 1;
-            Controller.instance.notifySetCursor(this._cursor);
+            ViewController.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_DOWN, () => {
             this._cursor[1] += 1;
-            Controller.instance.notifySetCursor(this._cursor);
+            ViewController.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.CURSOR_RIGHT, () => {
             this._cursor[0] += 1;
-            Controller.instance.notifySetCursor(this._cursor);
+            ViewController.instance.notifySetCursor(this._cursor);
         });
 
         this.node.on(InputSensor.SCREEN_UP, () => {
             this._camera[1] -= 1;
-            Controller.instance.notifySetCamera(this._camera);
+            ViewController.instance.notifySetCamera(this._camera);
         });
 
         this.node.on(InputSensor.SCREEN_LEFT, () => {
             this._camera[0] -= 1;
-            Controller.instance.notifySetCamera(this._camera);
+            ViewController.instance.notifySetCamera(this._camera);
         });
 
         this.node.on(InputSensor.SCREEN_DOWN, () => {
             this._camera[1] += 1;
-            Controller.instance.notifySetCamera(this._camera);
+            ViewController.instance.notifySetCamera(this._camera);
         });
 
         this.node.on(InputSensor.SCREEN_RIGHT, () => {
             this._camera[0] += 1;
-            Controller.instance.notifySetCamera(this._camera);
+            ViewController.instance.notifySetCamera(this._camera);
         });
 
         this.node.on(InputSensor.ENTER, () => {

@@ -8,8 +8,6 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-
-import Controller from "./Controller";
 import LandMap from "./GamePage/LandMap";
 import BasicViewer from "./BasicViewer";
 import GamePage from "./Page/GamePage";
@@ -27,14 +25,14 @@ export default class NewClass extends cc.Component {
         this.openGamePage();
     }
 
-    onPlayerTurn(){
-        this.getGamePage().closeSceneMenu();
-        this.getGamePage().closeUnitMenu();
-        this.getGamePage().addListener();
-        this.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
-            Controller.instance.notifySelectMap(corsor);
-        }, this);
-    }
+    // onPlayerTurn(){
+    //     this.getGamePage().closeSceneMenu();
+    //     this.getGamePage().closeUnitMenu();
+    //     this.getGamePage().addListener();
+    //     this.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
+    //         ViewController.instance.notifySelectMap(corsor);
+    //     }, this);
+    // }
 
     closeAllPages() {
         this.pages.forEach(element => {
