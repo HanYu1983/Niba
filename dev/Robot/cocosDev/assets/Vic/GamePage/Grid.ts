@@ -20,25 +20,25 @@ export default class NewClass extends cc.Component {
     backColor: cc.Sprite = null;
 
     @property(cc.Node)
-    selectBorder: cc.Node = null;
+    moveRange: cc.Node = null;
+
+    @property(cc.Node)
+    weaponRange: cc.Node = null;
 
     landX: number;
     landY: number;
 
-    showNormal(){
-        this.selectBorder.active = false;
+    showNormal() {
+        this.showMoveRange(false);
+        this.showWeaponRange(false);
     }
 
-    showMove() {
-        this.selectBorder.active = true;
-        this.selectBorder.color = cc.Color.WHITE;
-        this.selectBorder.color.setA(.5);
+    showMoveRange(show: boolean = true) {
+        this.moveRange.active = show;
     }
 
-    showRange(){
-        this.selectBorder.active = true;
-        this.selectBorder.color = cc.Color.YELLOW;
-        this.selectBorder.color.setA(.5);
+    showWeaponRange(show: boolean = true) {
+        this.weaponRange.active = show;
     }
 
     setType(type: Number) {

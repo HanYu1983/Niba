@@ -222,12 +222,29 @@ export default class NewClass extends BasicViewer {
         const [menu, weaponInfo] = menus;
         let weaponId = weaponInfo.weaponIdx;
         let weapons = weaponInfo.weapons;
+        let weaponRanges = weaponInfo.weaponRange;
+
         this.closeUnitMenu();
 
         this.unitMenu.open();
         this.unitMenu.setData(menu);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
             callback(key);
+        });
+
+        let showWeaponRange = (cursor) => {
+            this.map.closeWeaponRange();
+            if(cursor[0] == weaponId){
+                this.map.showWeaponRange(weaponRanges[cursor[1]]);
+            }
+        }
+
+        this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
+            showWeaponRange(cursor);
+        });
+
+        this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
+            showWeaponRange(cursor);
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
@@ -245,6 +262,8 @@ export default class NewClass extends BasicViewer {
         this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
         this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
+        this.unitMenu.node.off(MenuButtons.ON_MENU_UP);
+        this.unitMenu.node.off(MenuButtons.ON_MENU_DOWN);
         this.unitMenu.close();
 
         this.weaponMenu.close();
@@ -252,15 +271,31 @@ export default class NewClass extends BasicViewer {
 
     openWeaponMenu(data: any) {
 
+        cc.log("==================");
+        cc.log(data);
+
         let ws = [];
         for(let weaponKey in data){
             let weapon = data[weaponKey];
+            /**
+             * range:number[]
+             * energyCost:number
+             * maxBulletCount:number
+             * suitablility:number[] 地形適性[陸海空宇]
+             * ability:string[] 能否移動射擊之類的
+             * state:{weaponKey:string 抓資料用的KEY, bulletCount:int 殘彈數}
+             * eneygeType:string 是否為能量型
+             * title:string
+             * type:string 目標的選取方式，會影響RANGE的顯示
+             * accuracy:number
+             * damage:number
+             */
             ws.push({
-                name: weapon.name,
+                name: weapon.title,
                 type: weapon.type,
-                power: 1000,
-                range: weapon["range-min"] + "~" + weapon["range-max"],
-                hit: 100
+                power: weapon.damage,
+                range: weapon.range[0] + "~" + weapon.range[1],
+                hit: weapon.accuracy
             });
         }
 
