@@ -31,7 +31,7 @@
                                                           :player :player
                                                           :type :robot
                                                           :state app.unitState/default
-                                                          :position [10 5]})
+                                                          :position [2 2]})
                                       (aq/balance))})
 
 (defn setData [ctx data]

@@ -40,6 +40,9 @@
 (m/defstate unitMenu [gameplayCtx _]
   (= "setCursor" cmd)
   (m/handleCursor gameplayCtx))
+
+(m/defstate selectSingleUnit [ctx args])
+
 (m/defstate battleMenu [ctx args])
 (m/defstate systemMenu [ctx args])
 (m/defstate unitMove [ctx args])
@@ -167,7 +170,14 @@
         (int? (js/parseInt selectUnitMenu))
         (let [[gameplayCtx isEnd] (loop [gameplayCtx gameplayCtx]
                                     (let [idx (js/parseInt selectUnitMenu)
-                                          selectWeapon (nth weapons idx)
+                                          {[min max] "range" type "type" :as selectWeapon} (nth weapons idx)
+                                          attackRange (->> (map/simpleFindPath (:position unit) min)
+                                                           (into #{})
+                                                           (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                        (into #{}))))
+                                          units (gameplay/getUnits gameplayCtx nil  (aq/makeRectFromPoint (:position unit) gameplay/mapViewSize))
+                                          unitsInRange (filter #(contains? attackRange (:position %)) units)
+                                          [gameplayCtx selectUnit] (a/<! (selectSingleUnit gameplayCtx unitsInRange inputCh outputCh))
                                           [gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
                                           cursor (gameplay/local2world (gameplay/getCamera gameplayCtx) localCursor)
                                           units (gameplay/getUnits gameplayCtx nil nil)]
