@@ -73,6 +73,12 @@ export default class NewClass extends cc.Component {
                 /**
                  * 這以上的指令不能回覆
                  */
+                case "battleMenu":
+                    {
+                        const [id, data] = args;
+                        this.notifyAnswer(id);
+                    }
+                    break;
                 case "selectSingleUnit":
                     {
                         const [id, data] = args;

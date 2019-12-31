@@ -248,11 +248,17 @@ export default class NewClass extends BasicViewer {
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
-            this._changeCurrentWeapon(weaponId, cursor);
+            if (cursor[0] == weaponId) {
+                showWeaponRange(cursor);
+                this.weaponMenu.showCurrentWeapon(cursor[1]);
+            }
         });
 
         this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
-            this._changeCurrentWeapon(weaponId, cursor);
+            if (cursor[0] == weaponId) {
+                showWeaponRange(cursor);
+                this.weaponMenu.showCurrentWeapon(cursor[1]);
+            }
         });
 
         this.openWeaponMenu(weapons);
@@ -270,9 +276,6 @@ export default class NewClass extends BasicViewer {
     }
 
     openWeaponMenu(data: any) {
-
-        cc.log("==================");
-        cc.log(data);
 
         let ws = [];
         for(let weaponKey in data){
@@ -301,12 +304,6 @@ export default class NewClass extends BasicViewer {
 
         this.weaponMenu.open();
         this.weaponMenu.setWeapons(ws);
-    }
-
-    private _changeCurrentWeapon(weaponIdInMenu:number, cursor: any) {
-        if (cursor[0] == weaponIdInMenu) {
-            this.weaponMenu.showCurrentWeapon(cursor[1]);
-        }
     }
 
     static generateMap(
