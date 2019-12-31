@@ -40,7 +40,7 @@
 (m/defstate unitMenu [gameplayCtx _]
   (= "setCursor" cmd)
   (m/handleCursor gameplayCtx))
-
+(m/defstate battleMenu [ctx args])
 (m/defstate systemMenu [ctx args])
 (m/defstate unitMove [ctx args])
 (m/defstate selectPosition [gameplayCtx args]
@@ -94,7 +94,7 @@
                                 :players (gameplay/getPlayers gameplayCtx)}
                                inputCh outputCh))
             [gameplayCtx false])
-
+          
           :else
           (recur gameplayCtx))))))
 
@@ -164,9 +164,32 @@
         (let []
           [gameplayCtx false])
 
-        (= "attack1" selectUnitMenu)
-        (let []
-          [gameplayCtx false])
+        (int? (js/parseInt selectUnitMenu))
+        (let [[gameplayCtx isEnd] (loop [gameplayCtx gameplayCtx]
+                                    (let [idx (js/parseInt selectUnitMenu)
+                                          selectWeapon (nth weapons idx)
+                                          [gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
+                                          cursor (gameplay/local2world (gameplay/getCamera gameplayCtx) localCursor)
+                                          units (gameplay/getUnits gameplayCtx nil nil)]
+                                      (condp = (get selectWeapon "type")
+                                        "single"
+                                        (let [unitAtCursor (first (filter #(= cursor (:position %))
+                                                                          units))]
+                                          (if unitAtCursor
+                                            (let [[gameplayCtx select] (a/<! (battleMenu gameplayCtx nil inputCh outputCh))]
+                                              (cond
+                                                (= "ok" select)
+                                                [gameplayCtx false]
+
+                                                (= "cancel" select)
+                                                [gameplayCtx false]
+
+                                                :else
+                                                (recur gameplayCtx)))
+                                            [gameplayCtx false]))
+
+                                        [gameplayCtx false])))]
+          (recur gameplayCtx))
 
         :else
         (recur gameplayCtx)))))
