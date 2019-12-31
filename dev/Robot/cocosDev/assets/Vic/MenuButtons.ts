@@ -29,6 +29,8 @@ export default class NewClass extends BasicViewer {
     static ON_MENU_ENTER:string = "ON_MENU_ENTER";
     static ON_MENU_LEFT:string = "ON_MENU_LEFT";
     static ON_MENU_RIGHT:string = "ON_MENU_RIGHT";
+    static ON_MENU_UP:string = "ON_MENU_UP";
+    static ON_MENU_DOWN:string = "ON_MENU_DOWN";
 
     init(){
         super.init();
@@ -40,6 +42,7 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.CURSOR_UP, ()=>{
             this._menuCursor.previus();
+            this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
         }, this);
 
         this.node.on(InputSensor.CURSOR_LEFT, ()=>{
@@ -49,6 +52,7 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.CURSOR_DOWN, ()=>{
             this._menuCursor.next();
+            this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
         }, this);
 
         this.node.on(InputSensor.CURSOR_RIGHT, ()=>{

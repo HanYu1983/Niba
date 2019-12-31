@@ -52,18 +52,24 @@ export default class NewClass extends cc.Component {
         data.forEach(elem => {
             let grid: Grid = this.getGridByXY(elem);
             if (grid) {
-                grid.showMove();
+                grid.showMoveRange();
             }
         });
     }
 
     showWeaponRange(data: any[]) {
-        this.clearRange();
+        this.closeWeaponRange();
         data.forEach(elem => {
             let grid: Grid = this.getGridByXY(elem);
             if (grid) {
-                grid.showRange();
+                grid.showWeaponRange();
             }
+        });
+    }
+
+    closeWeaponRange(){
+        this.grids.forEach(grid => {
+            grid.showWeaponRange(false);
         });
     }
 
