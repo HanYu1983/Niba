@@ -294,6 +294,23 @@
     (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))})))
 
 
+(comment (defn viewLoop [ctx args inputCh outputCh]
+           (a/go
+             (loop [ctx ctx]
+               (let [[cmd args] (a/<! inputCh)]
+                 (cond
+                   (= "setCursor" cmd)
+                   ctx
+
+                   (= "setCamera" cmd)
+                   ctx
+
+                   ctx)))))
+
+
+         (defn controller [ctx args inputCh outputCh]
+           (let [])))
+
 (defn main []
   (let [outputToView (a/chan)
         inputFromView (a/chan)]
