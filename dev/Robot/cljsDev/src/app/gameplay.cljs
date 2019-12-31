@@ -1,7 +1,8 @@
 (ns app.gameplay
   (:require [app.quadtree :as aq])
   (:require [app.map :as map])
-  (:require [app.unitState]))
+  (:require [app.unitState])
+  (:require [app.fsm]))
 
 (def mapViewSize [20 20])
 
@@ -32,7 +33,14 @@
                                                           :type :robot
                                                           :state app.unitState/default
                                                           :position [2 2]})
-                                      (aq/balance))})
+                                      (aq/balance))
+                           :fsm app.fsm/model})
+
+(defn getFsm [ctx]
+  (:fsm ctx))
+
+(defn setFsm [ctx fsm]
+  (merge ctx {:fsm fsm}))
 
 (defn setData [ctx data]
   (update ctx :data (constantly data)))
