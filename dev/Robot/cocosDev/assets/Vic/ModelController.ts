@@ -63,13 +63,19 @@ export default class NewClass extends cc.Component implements IModel {
         })
     }
 
+    /**
+     * return unit if exist;
+     */
+    static checkIsUnit():any{
+        return {};
+    }
+
     private viewController: IViewController;
     setViewController(ctr: IViewController) {
         this.bindModel();
         ctr.setModel(this);
         this.viewController = ctr;
         this.subscribe();
-        //this.send("startGameplay");
     }
 
     private viewNotifyOb: { next: (args: any) => void };

@@ -31,6 +31,69 @@ export default class NewClass extends cc.Component implements IViewController {
         this.view.openGamePage();
     }
 
+    onGamePageWClick(){
+        let cursor = this.getModel().getCursor();
+        cursor[1] -= 1;
+        this.view.getGamePage().setCursor(cursor);
+    }
+
+    onGamePageAClick(){
+        let cursor = this.getModel().getCursor();
+        cursor[0] -= 1;
+        this.view.getGamePage().setCursor(cursor);
+    }
+
+    onGamePageSClick(){
+        let cursor = this.getModel().getCursor();
+        cursor[1] += 1;
+        this.view.getGamePage().setCursor(cursor);
+    }
+
+    onGamePageDClick(){
+        let cursor = this.getModel().getCursor();
+        cursor[0] += 1;
+        this.view.getGamePage().setCursor(cursor);
+    }
+
+    onGamePageUPClick(){
+        let camera = this.getModel().getCamera();
+        camera[1] -= 1;
+        this.setCamera(camera);
+    }
+
+    onGamePageDOWNClick(){
+        let camera = this.getModel().getCamera();
+        camera[1] += 1;
+        this.setCamera(camera);
+    }
+
+    onGamePageLEFTClick(){
+        let camera = this.getModel().getCamera();
+        camera[0] -= 1;
+        this.setCamera(camera);
+    }
+
+    onGamePageRIGHTClick(){
+        let camera = this.getModel().getCamera();
+        camera[0] += 1;
+        this.setCamera(camera);
+    }
+
+    onGamePageENTERClick(){
+        let isUnit:any = ModelController.checkIsUnit();
+        if(isUnit){
+            this.getModel().pushState("unitMenu", {}, ()=>{
+                //let menu = [["move", ["1","2"],"cancel"], {weaponIdx:1, weapons:}];
+                //this.view.getGamePage().openUnitMenu();
+            });
+        }
+    }
+
+    onGamePageESCAPEClick(){
+
+    }
+
+
     setCursor(cursor) {
         this.getModel().setCursor(cursor, (newCursor) => {
             this.refreshCursor();
@@ -46,6 +109,9 @@ export default class NewClass extends cc.Component implements IViewController {
     refreshCursor(){
         let global = ModelController.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
+
+        //check if unit
+        
     }
 
     refreshGameMap(callback?:()=>void) {

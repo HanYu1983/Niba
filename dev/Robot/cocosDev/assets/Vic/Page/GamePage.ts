@@ -102,18 +102,10 @@ export default class NewClass extends BasicViewer {
     }
 
     setCursor(pos: number[]) {
-        // this._cursor[0] = pos[0];
-        // this._cursor[1] = pos[1];
-        cc.log("set cursor", pos);
         let cursorPos = ViewController.instance.view.getGridPos(pos);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
     }
-
-    // setCamera(pos:number[]){
-    //     this._camera[0] = pos[0];
-    //     this._camera[1] = pos[1];
-    // }
 
     showFightInfo(datas: any[]) {
         this.fightInfoMenu.showInfos(datas);
@@ -123,59 +115,45 @@ export default class NewClass extends BasicViewer {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, () => {
-            let cursor = ViewController.instance.getModel().getCursor();
-            cursor[1] -= 1;
-            ViewController.instance.setCursor(cursor);
+            ViewController.instance.onGamePageWClick();
         });
 
         this.node.on(InputSensor.CURSOR_LEFT, () => {
-            let cursor = ViewController.instance.getModel().getCursor();
-            cursor[0] -= 1;
-            ViewController.instance.setCursor(cursor);
+            ViewController.instance.onGamePageAClick();
         });
 
         this.node.on(InputSensor.CURSOR_DOWN, () => {
-            let cursor = ViewController.instance.getModel().getCursor();
-            cursor[1] += 1;
-            ViewController.instance.setCursor(cursor);
+            ViewController.instance.onGamePageSClick();
         });
 
         this.node.on(InputSensor.CURSOR_RIGHT, () => {
-            let cursor = ViewController.instance.getModel().getCursor();
-            cursor[0] += 1;
-            ViewController.instance.setCursor(cursor);
+            ViewController.instance.onGamePageDClick();
         });
 
         this.node.on(InputSensor.SCREEN_UP, () => {
-            let camera = ViewController.instance.getModel().getCamera();
-            camera[1] -= 1;
-            ViewController.instance.setCamera(camera);
+            ViewController.instance.onGamePageUPClick();
         });
 
         this.node.on(InputSensor.SCREEN_LEFT, () => {
-            let camera = ViewController.instance.getModel().getCamera();
-            camera[0] -= 1;
-            ViewController.instance.setCamera(camera);
+            ViewController.instance.onGamePageLEFTClick();
         });
 
         this.node.on(InputSensor.SCREEN_DOWN, () => {
-            let camera = ViewController.instance.getModel().getCamera();
-            camera[1] += 1;
-            ViewController.instance.setCamera(camera);
+            ViewController.instance.onGamePageDOWNClick();
         });
 
         this.node.on(InputSensor.SCREEN_RIGHT, () => {
-            let camera = ViewController.instance.getModel().getCamera();
-            camera[0] += 1;
-            ViewController.instance.setCamera(camera);
+            ViewController.instance.onGamePageRIGHTClick();
         });
 
         this.node.on(InputSensor.ENTER, () => {
-            this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
+            ViewController.instance.onGamePageENTERClick();
+            //this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
         }, this);
 
         this.node.on(InputSensor.ESCAPE, () => {
-            this.node.emit(NewClass.ON_GAMEPAGE_ESCAPE);
+            ViewController.instance.onGamePageESCAPEClick();
+            //this.node.emit(NewClass.ON_GAMEPAGE_ESCAPE);
         }, this);
     }
 
