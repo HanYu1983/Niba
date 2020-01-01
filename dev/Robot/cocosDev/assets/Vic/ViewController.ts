@@ -111,6 +111,7 @@ export default class NewClass extends cc.Component implements IViewController {
         let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
+        //if(this.getModel().)
         let unit: IUnit = this._getUnitOnCursor();
         if (unit) {
             this.getModel().getUnitNormalState(unit.key, (info) => {
@@ -168,20 +169,42 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     onStateChange(state: string, data: any): void {
-        cc.log(state);
         switch (state) {
             case "default":
+                {
+                    // 打開地圖監聽
+                    this.view.getGamePage().addListener();
+                }
+                break;
+            case "unitMove":
                 {
                     this.view.getGamePage().addListener();
                 }
                 break;
             case "unitMenu":
                 {
-                    let unit:IUnit = this._getUnitOnCursor();
-                    this.getModel().getUnitMenu(unit.key, (info)=>{
+                    // 關掉地圖監聽
+                    this.view.getGamePage().removeListenser();
+
+                    // 打開單位選單
+                    let unit: IUnit = this._getUnitOnCursor();
+                    this.getModel().getUnitMenu(unit.key, (info) => {
                         cc.log(info);
-                        this.view.getGamePage().openUnitMenu(info, (key)=>{
+                        this.view.getGamePage().openUnitMenu(info, (key) => {
                             cc.log(key);
+
+                            switch (key) {
+                                case "move":
+                                    this.getModel().pushState("unitMove", 0);
+                                    this.view.getGamePage().closeUnitMenu();
+                                    break;
+                                case "cancel":
+                                    this.getModel().popState();
+                                    this.view.getGamePage().closeUnitMenu();
+                                    break;
+                                default:
+                                    break;
+                            }
                         });
                     });
                 }
@@ -189,7 +212,11 @@ export default class NewClass extends cc.Component implements IViewController {
             case "sceneMenu":
                 {
                     //data = data || {}
+
+                    // 關掉地圖監聽
                     this.view.getGamePage().removeListenser();
+
+                    // 打開地圖選單
                     this.view.getGamePage().openSceneMenu(['endTurn', 'cancel'], (key) => {
                         switch (key) {
                             case "endTurn":
@@ -213,10 +240,6 @@ export default class NewClass extends cc.Component implements IViewController {
         this.closeAllMenu();
         this.view.getGamePage().map.clearRange();
         this.view.getGamePage().addListener();
-        // this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
-        //     this.notifySelectMap(corsor);
-        // });
-
     }
 
     removeGamePageExtraListener() {
