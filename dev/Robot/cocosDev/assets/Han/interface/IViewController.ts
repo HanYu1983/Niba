@@ -1,4 +1,4 @@
-import IModel from "./interface/IModel";
+import IModel from "./IModel";
 
 export default interface IViewController {
     setModel(model: IModel): void;

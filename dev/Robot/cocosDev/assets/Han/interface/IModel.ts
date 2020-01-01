@@ -1,4 +1,4 @@
-import IUnit from "../IUnit";
+import IUnit from "./IUnit";
 
 export default interface IModel {
     pushState(state: string, save: any, callback?: () => void): void;

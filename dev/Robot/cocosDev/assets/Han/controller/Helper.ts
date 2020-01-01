@@ -1,4 +1,4 @@
-import IUnit from "./IUnit";
+import IUnit from "../interface/IUnit";
 
 export default class Helper {
     static projectPosition([cx, cy]: number[], [x, y]: number[]): number[] {
