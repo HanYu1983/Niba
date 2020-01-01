@@ -48,6 +48,17 @@
         (recur)))))
 
 (m/defstate prepareForStart [gameplayCtx args]
+  (= "pushState" cmd)
+  (let [[id [state data]] args
+        gameplayCtx (-> (gameplay/getFsm gameplayCtx)
+                        (app.fsm/save data)
+                        (app.fsm/pushState state)
+                        ((fn [fsm]
+                           (gameplay/setFsm gameplayCtx fsm))))]
+    (a/>! outputCh ["onStateChange" [(app.fsm/currState (gameplay/getFsm gameplayCtx)) nil]])
+    (a/>! outputCh ["ok" [id]])
+    (recur gameplayCtx))
+  
   (= "getUnitsByRegion" cmd)
   (let [[id] args
         units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
@@ -251,8 +262,8 @@
                                           :award 0.1})
                 gameplayCtx (-> gameplay/defaultGameplayModel
                                 (gameplay/setData data)
-                                (gameplay/setMap playmap))]
-            (a/<! (prepareForStart gameplayCtx nil inputCh outputCh))
+                                (gameplay/setMap playmap))
+                [gameplayCtx] (a/<! (prepareForStart gameplayCtx nil inputCh outputCh))]
             (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
           
           :else

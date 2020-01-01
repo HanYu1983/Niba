@@ -1,5 +1,5 @@
 import IViewController from "../Han/IViewController";
-import IModel from "../Han/IModel";
+import IModel from "../Han/interface/IModel";
 import ModelController from "../Han/ModelController";
 import View from "./View";
 import GamePage from "./Page/GamePage";
@@ -11,6 +11,7 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component implements IViewController {
     onPrepareForStart(callback: () => void): void {
+        this.getModel().pushState("default", 0);
         this.refreshGameMap(callback);
     }
 
@@ -31,7 +32,6 @@ export default class NewClass extends cc.Component implements IViewController {
 
     start() {
         this.view.openGamePage();
-        this.getModel().pushState("default", 0);
     }
 
     onGamePageWClick() {

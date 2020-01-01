@@ -1,5 +1,5 @@
 import IViewController from "./IViewController";
-import IModel from "./IModel";
+import IModel from "./interface/IModel";
 import IUnit from "./IUnit";
 
 const { ccclass, property } = cc._decorator;
