@@ -29,6 +29,13 @@ export default class StackViewControler extends EmptyViewController {
             return;
         }
         this.stack.length = 1;
+
+        const mgr = this.getTop();
+        if (mgr != null) {
+            if (mgr["onEnterState"]) {
+                mgr["onEnterState"]();
+            }
+        }
     }
 
     getTop(): IViewManager {

@@ -80,7 +80,7 @@ export default class DefaultViewController extends EmptyViewController {
     }
 
     onGamePageESCAPEClick() {
-        //this.getModel().popState();
+        
     }
 
     onPlayerTurnStart(callback: () => void): void {
@@ -98,71 +98,7 @@ export default class DefaultViewController extends EmptyViewController {
     }
 
     onStateChange(state: string, data: any): void {
-        switch (state) {
-            case "default":
-                {
-                    // 打開地圖監聽
-                    this.view.getGamePage().addListener();
-                }
-                break;
-            case "unitMove":
-                {
-                    this.view.getGamePage().addListener();
-                }
-                break;
-            case "unitMenu":
-                {
-                    // 關掉地圖監聽
-                    this.view.getGamePage().removeListenser();
-
-                    // 打開單位選單
-                    let unit: IUnit = this._getUnitOnCursor();
-                    this.getModel().getUnitMenu(unit.key, (info) => {
-                        cc.log(info);
-                        this.view.getGamePage().openUnitMenu(info, (key) => {
-                            cc.log(key);
-
-                            switch (key) {
-                                case "move":
-                                    this.getModel().pushState("unitMove", 0);
-                                    this.view.getGamePage().closeUnitMenu();
-                                    break;
-                                case "cancel":
-                                    this.getModel().popState();
-                                    this.view.getGamePage().closeUnitMenu();
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
-                    });
-                }
-                break;
-            case "sceneMenu":
-                {
-                    //data = data || {}
-
-                    // 關掉地圖監聽
-                    this.view.getGamePage().removeListenser();
-
-                    // 打開地圖選單
-                    this.view.getGamePage().openSceneMenu(['endTurn', 'cancel'], (key) => {
-                        switch (key) {
-                            case "endTurn":
-                                {
-                                    this.getModel().endTurn();
-                                    this.view.getGamePage().removeListenser();
-                                }
-                                break;
-                            case "cancel":
-                                this.getModel().popState();
-                                this.view.getGamePage().closeSceneMenu();
-                                break;
-                        }
-                    });
-                }
-                break;
-        }
+        
     }
 
     notifyStartGame() {
