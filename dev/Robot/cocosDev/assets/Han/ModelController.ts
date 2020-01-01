@@ -1,5 +1,6 @@
-import IViewController from "../Han/IViewController";
-import IModel from "../Han/IModel";
+import IViewController from "./IViewController";
+import IModel from "./IModel";
+import IUnit from "./IUnit";
 
 const { ccclass, property } = cc._decorator;
 
@@ -18,15 +19,22 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("getLocalMap", 0, cb);
     }
 
-    getLocalUnits(cb: (args: any[]) => void) {
+    getLocalUnits(cb: (args: IUnit[]) => void) {
         this.talk("getLocalUnits", 0, cb);
     }
 
-    getUnitsByRegion(cb: (args: any[]) => void) {
-        this.talk("getUnitsByRegion", 0, cb);
+    private units: IUnit[] = [];
+    getUnits():IUnit[]{
+        return this.units;
+    }
+    getUnitsByRegion(cb: (args: IUnit[]) => void) {
+        this.talk("getUnitsByRegion", 0, args=>{
+            this.units = args;
+            cb(args);
+        });
     }
 
-    getUnitNormalState(unitKey, cb: (info: { unit: { position: number[] }, moveRange: number[][] }) => void) {
+    getUnitNormalState(unitKey, cb: (info: { unit: IUnit, moveRange: number[][] }) => void) {
         this.talk("getUnitNormalState", unitKey, cb);
     }
 
@@ -50,24 +58,6 @@ export default class NewClass extends cc.Component implements IModel {
             this.cursor = args;
             cb(args);
         });
-    }
-
-    static projectPosition([cx, cy]: number[], [x, y]: number[]): number[] {
-        return [x - cx, y - cy]
-    }
-
-    static projectUnits(camera: number[], units: { position: number[] }[]) {
-        return units.map(u => {
-            u.position = NewClass.projectPosition(camera, u.position);
-            return u;
-        })
-    }
-
-    /**
-     * return unit if exist;
-     */
-    static checkIsUnit():any{
-        return {};
     }
 
     private viewController: IViewController;
@@ -128,6 +118,9 @@ export default class NewClass extends cc.Component implements IModel {
     private talk(q: string, args: any, callback: (answer: any) => void) {
         const id = this.seqId++;
         this.viewNotifyOb.next([q, [id + "", args]]);
+        if(callback == null){
+            return;
+        }
         const sub = this.viewOb.subscribe(e => {
             const [cmd, args] = e;
             if (cmd == "ok") {
