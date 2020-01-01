@@ -11,8 +11,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component implements IViewController {
     onPrepareForStart(callback: () => void): void {
-        this.getModel().pushState("default", 0);
-        this.refreshGameMap(callback);
+        this.getModel().pushState("default", 0, ()=>{
+            this.refreshGameMap(callback);
+        });
     }
 
     @property(View)
