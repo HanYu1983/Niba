@@ -130,7 +130,8 @@
             (recur gameplayCtx))
 
           (= "endTurn" cmd)
-          (let [[id] args]
+          (let [[id] args
+                gameplayCtx (gameplay/setFsm gameplayCtx app.fsm/model)]
             (a/>! outputCh ["ok" [id]])
             gameplayCtx)
 
