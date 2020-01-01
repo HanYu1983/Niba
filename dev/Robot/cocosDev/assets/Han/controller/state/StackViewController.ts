@@ -1,7 +1,7 @@
-import IViewManager from "../interface/IViewManager";
-import IModel from "../interface/IModel";
-import EmptyViewController from "./EmptyViewController";
-import IStackViewControllerEvents from "../interface/IStackViewControllerEvents";
+import IViewManager from "../../interface/IViewManager";
+import IModel from "../../interface/IModel";
+import EmptyViewController from "../EmptyViewController";
+import IStackViewControllerEvents from "../../interface/IStackViewControllerEvents";
 
 export default class StackViewControler extends EmptyViewController {
     private stack: IViewManager[] = [];

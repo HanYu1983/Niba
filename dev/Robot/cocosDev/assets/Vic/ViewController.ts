@@ -3,8 +3,8 @@ import IModel from "../Han/interface/IModel";
 import ModelController from "../Han/controller/ModelController";
 import View from "./View";
 import IViewManager from "../Han/interface/IViewManager";
-import DefaultViewController from "../Han/controller/DefaultViewController";
-import StackViewControler from "../Han/controller/StackViewController";
+import DefaultViewController from "../Han/controller/state/DefaultViewController";
+import StackViewControler from "../Han/controller/state/StackViewController";
 
 const { ccclass, property } = cc._decorator;
 

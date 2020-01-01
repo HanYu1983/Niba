@@ -1,10 +1,10 @@
-import EmptyViewController from "./EmptyViewController";
-import View from "../../Vic/View";
+import EmptyViewController from "../EmptyViewController";
+import View from "../../../Vic/View";
 import StackViewControler from "./StackViewController";
-import IUnit from "../interface/IUnit";
-import Helper from "./Helper";
-import IModel from "../interface/IModel";
-import IStackViewControllerEvents from "../interface/IStackViewControllerEvents";
+import IUnit from "../../interface/IUnit";
+import Helper from "../Helper";
+import IModel from "../../interface/IModel";
+import IStackViewControllerEvents from "../../interface/IStackViewControllerEvents";
 
 export default class UnitMoveViewController extends EmptyViewController implements IStackViewControllerEvents{
     

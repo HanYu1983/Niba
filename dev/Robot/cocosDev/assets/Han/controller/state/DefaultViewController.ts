@@ -1,8 +1,8 @@
-import Helper from "../controller/Helper";
-import IUnit from "../interface/IUnit";
-import View from "../../Vic/View";
+import Helper from "../Helper";
+import IUnit from "../../interface/IUnit";
+import View from "../../../Vic/View";
 import StackViewControler from "./StackViewController";
-import EmptyViewController from "./EmptyViewController";
+import EmptyViewController from "../EmptyViewController";
 import UnitMenuViewController from "./UnitMenuViewController";
 import SceneMenuViewController from "./SceneMenuViewController";
 
