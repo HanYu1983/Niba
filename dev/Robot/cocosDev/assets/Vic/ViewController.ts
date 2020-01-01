@@ -111,15 +111,16 @@ export default class NewClass extends cc.Component implements IViewController {
         let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
-        //if(this.getModel().)
-        let unit: IUnit = this._getUnitOnCursor();
-        if (unit) {
-            this.getModel().getUnitNormalState(unit.key, (info) => {
-                let moveRange = info.moveRange;
-                this.view.getGamePage().map.showMovableGrid(moveRange);
-            });
-        } else {
-            this.view.getGamePage().map.clearRange();
+        if ( !this.getModel().getState() || this.getModel().getState() == "default") {
+            let unit: IUnit = this._getUnitOnCursor();
+            if (unit) {
+                this.getModel().getUnitNormalState(unit.key, (info) => {
+                    let moveRange = info.moveRange;
+                    this.view.getGamePage().map.showMovableGrid(moveRange);
+                });
+            } else {
+                this.view.getGamePage().map.clearRange();
+            }
         }
     }
 
