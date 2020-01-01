@@ -4,6 +4,7 @@ import ModelController from "../Han/ModelController";
 import View from "./View";
 import GamePage from "./Page/GamePage";
 import Helper from "../Han/Helper";
+import IUnit from "../Han/IUnit";
 
 const { ccclass, property } = cc._decorator;
 
@@ -35,25 +36,25 @@ export default class NewClass extends cc.Component implements IViewController {
     onGamePageWClick() {
         let cursor = this.getModel().getCursor();
         cursor[1] -= 1;
-        this.view.getGamePage().setCursor(cursor);
+        this.setCursor(cursor);
     }
 
     onGamePageAClick() {
         let cursor = this.getModel().getCursor();
         cursor[0] -= 1;
-        this.view.getGamePage().setCursor(cursor);
+        this.setCursor(cursor);
     }
 
     onGamePageSClick() {
         let cursor = this.getModel().getCursor();
         cursor[1] += 1;
-        this.view.getGamePage().setCursor(cursor);
+        this.setCursor(cursor);
     }
 
     onGamePageDClick() {
         let cursor = this.getModel().getCursor();
         cursor[0] += 1;
-        this.view.getGamePage().setCursor(cursor);
+        this.setCursor(cursor);
     }
 
     onGamePageUPClick() {
@@ -81,13 +82,9 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     onGamePageENTERClick() {
-        let isUnit: any = Helper.checkIsUnit(this.getModel().getUnits(), this.getModel().getCursor());
-        isUnit = undefined;
+        let isUnit: IUnit = this._getUnitOnCursor();
         if (isUnit) {
-            this.getModel().pushState("unitMenu", {}, () => {
-                //let menu = [["move", ["1","2"],"cancel"], {weaponIdx:1, weapons:}];
-                //this.view.getGamePage().openUnitMenu();
-            });
+            this.getModel().pushState("unitMenu", 0);
         } else {
             this.getModel().pushState("sceneMenu", 0);
         }
@@ -114,8 +111,15 @@ export default class NewClass extends cc.Component implements IViewController {
         let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
-        //check if unit
-
+        let unit:IUnit = this._getUnitOnCursor();
+        if(unit){
+            this.getModel().getUnitNormalState(unit.key, (info)=>{
+                let moveRange = info.moveRange;
+                this.view.getGamePage().map.showMovableGrid(moveRange);
+            });
+        }else{
+            this.view.getGamePage().map.clearRange();
+        }
     }
 
     refreshGameMap(callback?: () => void) {
@@ -198,5 +202,9 @@ export default class NewClass extends cc.Component implements IViewController {
 
     notifyStartGame() {
         this._model.gameStart();
+    }
+
+    private _getUnitOnCursor():IUnit{
+        return Helper.checkIsUnit(this.getModel().getUnits(), this.getModel().getCursor());
     }
 }
