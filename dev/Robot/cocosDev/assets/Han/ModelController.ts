@@ -24,21 +24,30 @@ export default class NewClass extends cc.Component implements IModel {
     }
 
     private units: IUnit[] = [];
-    getUnits():IUnit[]{
+    getUnits(): IUnit[] {
         return this.units;
     }
+
     getUnitsByRegion(cb: (args: IUnit[]) => void) {
-        this.talk("getUnitsByRegion", 0, args=>{
+        this.talk("getUnitsByRegion", 0, args => {
             this.units = args;
             cb(args);
         });
     }
 
-    getUnitNormalState(unitKey, cb: (info: { unit: IUnit, moveRange: number[][] }) => void) {
+    getUnitMenu(unitKey: string, cb: (info: any[]) => void) {
+        this.talk("getUnitMenu", unitKey, cb);
+    }
+
+    getUnitNormalState(unitKey: string, cb: (info: { unit: IUnit, moveRange: number[][] }) => void) {
         this.talk("getUnitNormalState", unitKey, cb);
     }
 
-    gameStart(){
+    endTurn(cb?: () => void) {
+        this.talk("endTurn", 0, cb);
+    }
+
+    gameStart() {
         this.send("startGameplay");
     }
 
@@ -118,7 +127,7 @@ export default class NewClass extends cc.Component implements IModel {
     private talk(q: string, args: any, callback: (answer: any) => void) {
         const id = this.seqId++;
         this.viewNotifyOb.next([q, [id + "", args]]);
-        if(callback == null){
+        if (callback == null) {
             return;
         }
         const sub = this.viewOb.subscribe(e => {

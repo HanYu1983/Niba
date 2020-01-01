@@ -151,7 +151,7 @@
                 localMap (gameplay/getLocalMap gameplayCtx nil)]
             (a/>! outputCh ["ok", [id localMap]])
             (recur gameplayCtx))
-          
+
           (= "getUnitsByRegion" cmd)
           (let [[id] args
                 units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
@@ -178,6 +178,26 @@
                     moveRange (map first shortestPathTree)
                     gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
                 (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
+                (recur gameplayCtx))
+              (throw (js/Error. (str unitKey " not found")))))
+
+          (= "getUnitMenu" cmd)
+          (let [[id unitKey] args
+                unit (-> (gameplay/getUnits gameplayCtx)
+                         (app.units/getByKey unitKey))]
+            (if unit
+              (let [weapons (app.unitState/getWeapons nil unit (:data gameplayCtx))
+                    menu [["move" (range (count weapons)) "cancel"]
+                          {:weaponIdx 1
+                           :weapons weapons
+                           :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
+                                               (->> (map/simpleFindPath (:position unit) (dec min))
+                                                    (into #{})
+                                                    (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                 (into #{})))
+                                                    (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                             weapons)}]]
+                (a/>! outputCh ["ok" [id menu]])
                 (recur gameplayCtx))
               (throw (js/Error. (str unitKey " not found")))))
 
