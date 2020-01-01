@@ -14,6 +14,14 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("popState", 0, callback);
     }
 
+    getLocalMap(cb: (args:number[][])=>void){
+        this.talk("getLocalMap", 0, cb);
+    }
+
+    getLocalUnits(cb: (args:any[])=>void){
+        this.talk("getLocalUnits", 0, cb);
+    }
+
     private viewController: IViewController;
     setViewController(ctr: IViewController) {
         this.bindModel();
@@ -38,6 +46,14 @@ export default class NewClass extends cc.Component implements IModel {
                     {
                         const [state, data] = e;
                         this.viewController.onStateChange(state, data);
+                    }
+                    break;
+                case "prepareForStart":
+                    {
+                        const [id] = args;
+                        this.viewController.onPrepareForStart(()=>{
+                            this.send("ok", [id, 0])
+                        })
                     }
                     break;
                 case "playerTurnStart":

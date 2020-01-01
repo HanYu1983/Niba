@@ -8,6 +8,16 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component implements IViewController {
+    onPrepareForStart(callback: () => void): void {
+        // 不支援同時呼叫多個callback, 只能順序呼叫
+        this._model.getLocalMap(map=>{
+            console.log(map);
+            this._model.getLocalUnits(units=>{
+                console.log(units);
+                callback();
+            })
+        })
+    }
 
     @property(View)
     view: View = null;

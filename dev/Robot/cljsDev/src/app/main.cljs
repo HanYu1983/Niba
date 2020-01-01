@@ -33,6 +33,19 @@
         (.next (.-viewOb js/window) evtJs)
         (recur)))))
 
+(m/defstate prepareForStart [gameplayCtx args]
+  (= "getLocalUnits" cmd)
+  (let [[id] args
+        units (gameplay/getLocalUnits gameplayCtx nil nil)]
+    (a/>! outputCh ["ok", [id units]])
+    (recur gameplayCtx))
+
+  (= "getLocalMap" cmd)
+  (let [[id] args
+        localMap (gameplay/getLocalMap gameplayCtx nil)]
+    (a/>! outputCh ["ok", [id localMap]])
+    (recur gameplayCtx)))
+
 (m/defstate playerTurnStart [ctx args])
 (m/defstate enemyTurnStart [ctx args])
 
@@ -40,10 +53,10 @@
   (a/go
     (a/<! (playerTurnStart nil nil inputCh outputCh))
     (loop [gameplayCtx gameplayCtx]
-      (let [[cmd [id args]] (a/<! inputCh)]
+      (let [[cmd args] (a/<! inputCh)]
         (cond
           (= "setState" cmd)
-          (let [state args
+          (let [[id state] args
                 gameplayCtx  (-> (gameplay/getFsm gameplayCtx)
                                  (app.fsm/setState state)
                                  ((fn [fsm]
@@ -53,7 +66,7 @@
             (recur gameplayCtx))
 
           (= "pushState" cmd)
-          (let [[state data] args
+          (let [[id [state data]] args
                 gameplayCtx (-> (gameplay/getFsm gameplayCtx)
                                 (app.fsm/save data)
                                 (app.fsm/pushState state)
@@ -64,7 +77,8 @@
             (recur gameplayCtx))
 
           (= "popState" cmd)
-          (let [gameplayCtx (-> (gameplay/getFsm gameplayCtx)
+          (let [[id] args
+                gameplayCtx (-> (gameplay/getFsm gameplayCtx)
                                 (app.fsm/popState)
                                 ((fn [fsm]
                                    (gameplay/setFsm gameplayCtx fsm))))]
@@ -74,9 +88,39 @@
             (recur gameplayCtx))
 
           (= "endTurn" cmd)
-          (let []
+          (let [[id] args]
             (a/>! outputCh ["ok" [id]])
             gameplayCtx)
+
+          (= "setCursor" cmd)
+          (let [[id cursor] args
+                gameplayCtx (gameplay/setCursor gameplayCtx cursor)]
+            (a/>! outputCh ["ok", [id cursor]])
+            (recur gameplayCtx))
+
+          (= "setCamera" cmd)
+          (let [[id camera] args
+                gameplayCtx (gameplay/setCamera gameplayCtx camera)]
+            (a/>! outputCh ["ok", [id camera]])
+            (recur gameplayCtx))
+
+          (= "getLocalUnits" cmd)
+          (let [[id] args
+                units (gameplay/getLocalUnits gameplayCtx nil nil)]
+            (a/>! outputCh ["ok", [id units]])
+            (recur gameplayCtx))
+
+          (= "getLocalMap" cmd)
+          (let [[id] args
+                localMap (gameplay/getLocalMap gameplayCtx nil)]
+            (a/>! outputCh ["ok", [id localMap]])
+            (recur gameplayCtx))
+
+          (= "getNormalState" cmd)
+          (let [[id unitKey] args
+                units (gameplay/getLocalUnits gameplayCtx nil nil)]
+            (a/>! outputCh ["ok", [id]])
+            (recur gameplayCtx))
 
           :else
           (recur gameplayCtx))))))
@@ -111,8 +155,20 @@
           (recur ctx)
 
           (= "startGameplay" cmd)
-          (let []
-            (merge ctx {:gameplay (a/<! (gameplayLoop gameplay/defaultGameplayModel inputCh outputCh))}))
+          (let [data (a/<! (data/loadData))
+                playmap (map/generateMap 100 100
+                                         {:deepsea 0.3
+                                          :sea 0.3
+                                          :sand 0.3
+                                          :grass 0.3
+                                          :city 0.3
+                                          :tree 0.3
+                                          :award 0.1})
+                gameplayCtx (-> gameplay/defaultGameplayModel
+                                (gameplay/setData data)
+                                (gameplay/setMap playmap))]
+            (a/<! (prepareForStart gameplayCtx nil inputCh outputCh))
+            (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
           
           :else
           (recur ctx))))))

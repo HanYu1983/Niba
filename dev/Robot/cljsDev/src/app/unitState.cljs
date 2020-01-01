@@ -1,6 +1,6 @@
 (ns app.unitState)
 
-(def default {:key "jimu"
+(def default {:robot "jimu"
               :pilot "amuro"
               :hp 2000
               :mp 120

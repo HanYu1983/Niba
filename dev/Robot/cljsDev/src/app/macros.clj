@@ -1,16 +1,5 @@
 (ns app.macros)
 
-(defmacro defstate2 [name notifyEnter & body]
-  `(defn ~name [~'ctx ~'inputCh ~'outputCh]
-     (a/go
-       (a/>! ~'outputCh ~notifyEnter))
-     (let [~'worker (a/chan)]
-       (a/go-loop [~'ctx ~'ctx]
-         (let [[~'cmd ~'args :as ~'evt] (a/<! ~'inputCh)]
-           ~@body))
-       ~'worker)))
-
-
 (defmacro defstate [name [varCtx args] & body]
   `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
      (let [~'key (str (gensym ~(str name)))
@@ -33,43 +22,61 @@
                (recur ~varCtx))))))))
 
 
-(defmacro handleCursor [ctx]
-  `(let [~'cursor ~'args
-         ~'camera (gameplay/getCamera ~ctx)
-         ~'worldCursor (gameplay/local2world ~'camera ~'cursor)
-         ~'units (gameplay/getUnits ~ctx ~'camera (aq/makeRectFromPoint ~'worldCursor [1 1]))
-         ~'unitAtCursor (first (filter #(= ~'worldCursor (:position %))
-                                       ~'units))
-         ~ctx (gameplay/setCursor ~ctx ~'worldCursor)]
-    (if ~'unitAtCursor
-      (let [[~'mw ~'mh] gameplay/mapViewSize
-            ~'shortestPathTree (map/findPath (:position ~'unitAtCursor)
-                                             (fn [{:keys [~'totalCost]} ~'curr]
-                                               [(>= ~'totalCost 5) false])
-                                             (fn [[~'x ~'y]]
-                                               [[~'x (min ~'mh (inc ~'y))]
-                                                [~'x (max 0 (dec ~'y))]
-                                                [(min ~'mw (inc ~'x)) ~'y]
-                                                [(max 0 (dec ~'x)) ~'y]])
-                                             (constantly 1)
-                                             (constantly 0))
-            ~'moveRange (map first ~'shortestPathTree)
-            ~ctx (update-in ~ctx [:temp :moveRange] (constantly ~'moveRange))]
-        (a/>! ~'outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera ~ctx) %)
-                                              ~'moveRange)])
-        (a/>! ~'outputCh ["setCursor" ~'cursor])
-        (recur ~ctx))
-      (let []
+(defmacro answer [body]
+  `(let [~'ans ~body]
+     (a/>! ~'outputCh ["ok", [~'id ~'ans]])
+     ~'ans))
+
+
+
+
+(comment (defmacro defstate2 [name notifyEnter & body]
+           `(defn ~name [~'ctx ~'inputCh ~'outputCh]
+              (a/go
+                (a/>! ~'outputCh ~notifyEnter))
+              (let [~'worker (a/chan)]
+                (a/go-loop [~'ctx ~'ctx]
+                  (let [[~'cmd ~'args :as ~'evt] (a/<! ~'inputCh)]
+                    ~@body))
+                ~'worker)))
+
+         (defmacro handleCursor [ctx]
+           `(let [~'cursor ~'args
+                  ~'camera (gameplay/getCamera ~ctx)
+                  ~'worldCursor (gameplay/local2world ~'camera ~'cursor)
+                  ~'units (gameplay/getUnits ~ctx ~'camera (aq/makeRectFromPoint ~'worldCursor [1 1]))
+                  ~'unitAtCursor (first (filter #(= ~'worldCursor (:position %))
+                                                ~'units))
+                  ~ctx (gameplay/setCursor ~ctx ~'worldCursor)]
+              (if ~'unitAtCursor
+                (let [[~'mw ~'mh] gameplay/mapViewSize
+                      ~'shortestPathTree (map/findPath (:position ~'unitAtCursor)
+                                                       (fn [{:keys [~'totalCost]} ~'curr]
+                                                         [(>= ~'totalCost 5) false])
+                                                       (fn [[~'x ~'y]]
+                                                         [[~'x (min ~'mh (inc ~'y))]
+                                                          [~'x (max 0 (dec ~'y))]
+                                                          [(min ~'mw (inc ~'x)) ~'y]
+                                                          [(max 0 (dec ~'x)) ~'y]])
+                                                       (constantly 1)
+                                                       (constantly 0))
+                      ~'moveRange (map first ~'shortestPathTree)
+                      ~ctx (update-in ~ctx [:temp :moveRange] (constantly ~'moveRange))]
+                  (a/>! ~'outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera ~ctx) %)
+                                                        ~'moveRange)])
+                  (a/>! ~'outputCh ["setCursor" ~'cursor])
+                  (recur ~ctx))
+                (let []
         ; (a/>! ~'outputCh ["setMoveRange" []])
-        (a/>! ~'outputCh ["setCursor" ~'cursor])
-        (recur ~ctx)))))
+                  (a/>! ~'outputCh ["setCursor" ~'cursor])
+                  (recur ~ctx)))))
 
 
-(defmacro notifySetMap [ctx]
-  `(a/>! ~'outputCh ["setMap" (gameplay/getLocalMap ~ctx nil)]))
+         (defmacro notifySetMap [ctx]
+           `(a/>! ~'outputCh ["setMap" (gameplay/getLocalMap ~ctx nil)]))
 
-(defmacro notifySetCamera [ctx]
-  `(a/>! ~'outputCh ["setCamera" (gameplay/getCamera ~ctx)]))
+         (defmacro notifySetCamera [ctx]
+           `(a/>! ~'outputCh ["setCamera" (gameplay/getCamera ~ctx)]))
 
-(defmacro notifySetCursor [ctx]
-  `(a/>! ~'outputCh ["setCursor" (gameplay/getLocalCursor ~ctx nil)]))
+         (defmacro notifySetCursor [ctx]
+           `(a/>! ~'outputCh ["setCursor" (gameplay/getLocalCursor ~ctx nil)])))
