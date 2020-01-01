@@ -47,9 +47,9 @@
         (recur)))))
 
 (m/defstate prepareForStart [gameplayCtx args]
-  (= "getLocalUnits" cmd)
+  (= "getUnitsByRegion" cmd)
   (let [[id] args
-        units (gameplay/getLocalUnits gameplayCtx nil nil)]
+        units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
     (a/>! outputCh ["ok", [id units]])
     (recur gameplayCtx))
 
@@ -80,7 +80,13 @@
             gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
         (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
         (recur gameplayCtx))
-      (throw (js/Error. (str unitKey " not found"))))))
+      (throw (js/Error. (str unitKey " not found")))))
+
+  (= "getLocalUnits" cmd)
+  (let [[id] args
+        units (gameplay/getLocalUnits gameplayCtx nil nil)]
+    (a/>! outputCh ["ok", [id units]])
+    (recur gameplayCtx)))
 
 (m/defstate playerTurnStart [ctx args])
 (m/defstate enemyTurnStart [ctx args])
@@ -131,25 +137,25 @@
           (= "setCursor" cmd)
           (let [[id cursor] args
                 gameplayCtx (gameplay/setCursor gameplayCtx cursor)]
-            (a/>! outputCh ["ok", [id cursor]])
+            (a/>! outputCh ["ok", [id (gameplay/getCursor gameplayCtx)]])
             (recur gameplayCtx))
 
           (= "setCamera" cmd)
           (let [[id camera] args
                 gameplayCtx (gameplay/setCamera gameplayCtx camera)]
-            (a/>! outputCh ["ok", [id camera]])
-            (recur gameplayCtx))
-
-          (= "getLocalUnits" cmd)
-          (let [[id] args
-                units (gameplay/getLocalUnits gameplayCtx nil nil)]
-            (a/>! outputCh ["ok", [id units]])
+            (a/>! outputCh ["ok", [id (gameplay/getCamera gameplayCtx)]])
             (recur gameplayCtx))
 
           (= "getLocalMap" cmd)
           (let [[id] args
                 localMap (gameplay/getLocalMap gameplayCtx nil)]
             (a/>! outputCh ["ok", [id localMap]])
+            (recur gameplayCtx))
+          
+          (= "getUnitsByRegion" cmd)
+          (let [[id] args
+                units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
+            (a/>! outputCh ["ok", [id units]])
             (recur gameplayCtx))
 
           (= "getUnitNormalState" cmd)
@@ -174,6 +180,12 @@
                 (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
                 (recur gameplayCtx))
               (throw (js/Error. (str unitKey " not found")))))
+
+          (= "getLocalUnits" cmd)
+          (let [[id] args
+                units (gameplay/getLocalUnits gameplayCtx nil nil)]
+            (a/>! outputCh ["ok", [id units]])
+            (recur gameplayCtx))
 
           :else
           (recur gameplayCtx))))))

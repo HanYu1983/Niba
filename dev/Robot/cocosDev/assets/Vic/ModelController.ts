@@ -22,8 +22,41 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("getLocalUnits", 0, cb);
     }
 
-    getUnitNormalState(unitKey, cb: (info: { unit: any, moveRange: number[][] }) => void) {
+    getUnitsByRegion(cb: (args: any[]) => void) {
+        this.talk("getUnitsByRegion", 0, cb);
+    }
+
+    getUnitNormalState(unitKey, cb: (info: { unit: { position: number[] }, moveRange: number[][] }) => void) {
         this.talk("getUnitNormalState", unitKey, cb);
+    }
+
+    private camera: number[] = [0, 0];
+    getCamera(): number[] { return this.camera; }
+    setCamera(camera: number[], cb: (args: number[]) => void) {
+        this.talk("setCamera", camera, args => {
+            this.camera = args;
+            cb(args);
+        });
+    }
+
+    private cursor: number[] = [0, 0];
+    getCursor(): number[] { return this.cursor; }
+    setCursor(cursor: number[], cb: (args: number[]) => void) {
+        this.talk("setCursor", cursor, args => {
+            this.cursor = args;
+            cb(args);
+        });
+    }
+
+    static projectPosition([cx, cy]: number[], [x, y]: number[]): number[] {
+        return [x - cx, y - cy]
+    }
+
+    static projectUnits(camera: number[], units: { position: number[] }[]) {
+        return units.map(u => {
+            u.position = NewClass.projectPosition(camera, u.position);
+            return u;
+        })
     }
 
     private viewController: IViewController;

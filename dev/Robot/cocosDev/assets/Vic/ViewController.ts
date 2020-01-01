@@ -12,7 +12,8 @@ export default class NewClass extends cc.Component implements IViewController {
         // 不支援同時呼叫多個callback, 只能順序呼叫
         this._model.getLocalMap(map=>{
             console.log(map);
-            this._model.getLocalUnits(units=>{
+            this._model.getUnitsByRegion(units=>{
+                units = ModelController.projectUnits(this._model.getCamera(), units);
                 console.log(units);
                 const unit = units[0];
                 this._model.getUnitNormalState(unit.key, (info)=>{
