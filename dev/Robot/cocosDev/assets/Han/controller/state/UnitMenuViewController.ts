@@ -20,6 +20,22 @@ export default class UnitMenuViewController extends EmptyViewController implemen
         this.unit = unit;
     }
 
+    onGamePageWClick() {
+        
+    }
+
+    onGamePageAClick() {
+        
+    }
+
+    onGamePageSClick() {
+        
+    }
+
+    onGamePageDClick() {
+       
+    }
+
     onEnterState() {
         // 關掉地圖監聽
         this.view.getGamePage().removeListenser();
