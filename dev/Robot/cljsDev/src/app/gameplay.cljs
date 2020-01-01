@@ -76,11 +76,14 @@
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
 
-(defn getUnits [ctx camera searchSize]
+(defn getUnits [ctx]
+  (:units ctx))
+
+(defn getUnitsByRegion [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))
         [p1 p2] (or searchSize [(map - camera mapViewSize)
-                                   (map + camera mapViewSize)])
-        units (app.units/getByRegion (:units ctx) p1 p2)]
+                                (map + camera mapViewSize)])
+        units (app.units/getByRegion (getUnits ctx) p1 p2)]
     units))
 
 (defn getLocalMap [ctx camera]
@@ -90,7 +93,7 @@
 
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
-    (->> (getUnits ctx camera searchSize)
+    (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
                 (update unit :position (partial world2local camera)))))))
 

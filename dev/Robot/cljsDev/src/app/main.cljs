@@ -14,8 +14,10 @@
                      (app.units/add ua)
                      (app.units/add {:key (gensym) :position [2 1]})
                      (app.units/add {:key (gensym) :position [3 3]})
-                     (app.units/delete ua))]
+            ;(app.units/delete ua)
+                     )]
            (println a)
+           (println (app.units/getByKey a (:key ua)))
            (println (app.units/getByPosition a [2 0]))
            (println (app.units/getByRegion a [0 0] [4 4]))))
 
@@ -55,7 +57,30 @@
   (let [[id] args
         localMap (gameplay/getLocalMap gameplayCtx nil)]
     (a/>! outputCh ["ok", [id localMap]])
-    (recur gameplayCtx)))
+    (recur gameplayCtx))
+
+  (= "getUnitNormalState" cmd)
+  (let [[id unitKey] args
+        unit (-> (gameplay/getUnits gameplayCtx)
+                 (app.units/getByKey unitKey))]
+    (println (get-in (gameplay/getUnits gameplayCtx) [:key]))
+    (if unit
+      (let [[mw mh] gameplay/mapViewSize
+            shortestPathTree (map/findPath (:position unit)
+                                           (fn [{:keys [totalCost]} curr]
+                                             [(>= totalCost 5) false])
+                                           (fn [[x y]]
+                                             [[x (min mh (inc y))]
+                                              [x (max 0 (dec y))]
+                                              [(min mw (inc x)) y]
+                                              [(max 0 (dec x)) y]])
+                                           (constantly 1)
+                                           (constantly 0))
+            moveRange (map first shortestPathTree)
+            gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
+        (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
+        (recur gameplayCtx))
+      (throw (js/Error. (str unitKey " not found"))))))
 
 (m/defstate playerTurnStart [ctx args])
 (m/defstate enemyTurnStart [ctx args])
@@ -127,11 +152,28 @@
             (a/>! outputCh ["ok", [id localMap]])
             (recur gameplayCtx))
 
-          (= "getNormalState" cmd)
+          (= "getUnitNormalState" cmd)
           (let [[id unitKey] args
-                units (gameplay/getLocalUnits gameplayCtx nil nil)]
-            (a/>! outputCh ["ok", [id]])
-            (recur gameplayCtx))
+                unit (-> (gameplay/getUnits gameplayCtx)
+                         (app.units/getByKey unitKey))]
+            (println (get-in (gameplay/getUnits gameplayCtx) [:key]))
+            (if unit
+              (let [[mw mh] gameplay/mapViewSize
+                    shortestPathTree (map/findPath (:position unit)
+                                                   (fn [{:keys [totalCost]} curr]
+                                                     [(>= totalCost 5) false])
+                                                   (fn [[x y]]
+                                                     [[x (min mh (inc y))]
+                                                      [x (max 0 (dec y))]
+                                                      [(min mw (inc x)) y]
+                                                      [(max 0 (dec x)) y]])
+                                                   (constantly 1)
+                                                   (constantly 0))
+                    moveRange (map first shortestPathTree)
+                    gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
+                (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
+                (recur gameplayCtx))
+              (throw (js/Error. (str unitKey " not found")))))
 
           :else
           (recur gameplayCtx))))))

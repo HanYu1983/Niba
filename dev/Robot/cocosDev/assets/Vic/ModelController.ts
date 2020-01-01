@@ -14,12 +14,16 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("popState", 0, callback);
     }
 
-    getLocalMap(cb: (args:number[][])=>void){
+    getLocalMap(cb: (args: number[][]) => void) {
         this.talk("getLocalMap", 0, cb);
     }
 
-    getLocalUnits(cb: (args:any[])=>void){
+    getLocalUnits(cb: (args: any[]) => void) {
         this.talk("getLocalUnits", 0, cb);
+    }
+
+    getUnitNormalState(unitKey, cb: (info: { unit: any, moveRange: number[][] }) => void) {
+        this.talk("getUnitNormalState", unitKey, cb);
     }
 
     private viewController: IViewController;
@@ -30,15 +34,15 @@ export default class NewClass extends cc.Component implements IModel {
         this.subscribe();
         this.send("startGameplay");
     }
-    
+
     private viewNotifyOb: { next: (args: any) => void };
     private viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
 
-    private send(cmd:string, data:any = 0){
+    private send(cmd: string, data: any = 0) {
         this.viewNotifyOb.next([cmd, data]);
     }
 
-    private subscribe(){
+    private subscribe() {
         this.viewOb.subscribe(e => {
             const [cmd, args] = e;
             switch (cmd) {
@@ -51,7 +55,7 @@ export default class NewClass extends cc.Component implements IModel {
                 case "prepareForStart":
                     {
                         const [id] = args;
-                        this.viewController.onPrepareForStart(()=>{
+                        this.viewController.onPrepareForStart(() => {
                             this.send("ok", [id, 0])
                         })
                     }

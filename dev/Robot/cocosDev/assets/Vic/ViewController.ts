@@ -14,7 +14,11 @@ export default class NewClass extends cc.Component implements IViewController {
             console.log(map);
             this._model.getLocalUnits(units=>{
                 console.log(units);
-                callback();
+                const unit = units[0];
+                this._model.getUnitNormalState(unit.key, (info)=>{
+                    console.log(info);
+                    callback();    
+                })
             })
         })
     }
