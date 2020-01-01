@@ -186,7 +186,7 @@
                 unit (-> (gameplay/getUnits gameplayCtx)
                          (app.units/getByKey unitKey))]
             (if unit
-              (let [weapons (app.unitState/getWeapons nil unit (:data gameplayCtx))
+              (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))
                     menu [["move" (range (count weapons)) "cancel"]
                           {:weaponIdx 1
                            :weapons weapons

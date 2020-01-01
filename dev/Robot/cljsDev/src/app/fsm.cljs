@@ -1,6 +1,6 @@
 (ns app.fsm)
 
-(def model {:stack [:default]
+(def model {:stack []
             :state {}})
 
 (defn currState [ctx]

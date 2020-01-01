@@ -44,6 +44,9 @@
 (defn setData [ctx data]
   (update ctx :data (constantly data)))
 
+(defn getData [ctx]
+  (:data ctx))
+
 (defn updateUnit [ctx unit nextUnit]
   (update ctx :units (fn [origin]
                        (-> origin
