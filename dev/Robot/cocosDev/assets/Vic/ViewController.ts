@@ -31,66 +31,69 @@ export default class NewClass extends cc.Component implements IViewController {
         this.view.openGamePage();
     }
 
-    onGamePageWClick(){
+    onGamePageWClick() {
         let cursor = this.getModel().getCursor();
         cursor[1] -= 1;
         this.view.getGamePage().setCursor(cursor);
     }
 
-    onGamePageAClick(){
+    onGamePageAClick() {
         let cursor = this.getModel().getCursor();
         cursor[0] -= 1;
         this.view.getGamePage().setCursor(cursor);
     }
 
-    onGamePageSClick(){
+    onGamePageSClick() {
         let cursor = this.getModel().getCursor();
         cursor[1] += 1;
         this.view.getGamePage().setCursor(cursor);
     }
 
-    onGamePageDClick(){
+    onGamePageDClick() {
         let cursor = this.getModel().getCursor();
         cursor[0] += 1;
         this.view.getGamePage().setCursor(cursor);
     }
 
-    onGamePageUPClick(){
+    onGamePageUPClick() {
         let camera = this.getModel().getCamera();
         camera[1] -= 1;
         this.setCamera(camera);
     }
 
-    onGamePageDOWNClick(){
+    onGamePageDOWNClick() {
         let camera = this.getModel().getCamera();
         camera[1] += 1;
         this.setCamera(camera);
     }
 
-    onGamePageLEFTClick(){
+    onGamePageLEFTClick() {
         let camera = this.getModel().getCamera();
         camera[0] -= 1;
         this.setCamera(camera);
     }
 
-    onGamePageRIGHTClick(){
+    onGamePageRIGHTClick() {
         let camera = this.getModel().getCamera();
         camera[0] += 1;
         this.setCamera(camera);
     }
 
-    onGamePageENTERClick(){
-        let isUnit:any = ModelController.checkIsUnit();
-        if(isUnit){
-            this.getModel().pushState("unitMenu", {}, ()=>{
+    onGamePageENTERClick() {
+        let isUnit: any = ModelController.checkIsUnit();
+        isUnit = undefined;
+        if (isUnit) {
+            this.getModel().pushState("unitMenu", {}, () => {
                 //let menu = [["move", ["1","2"],"cancel"], {weaponIdx:1, weapons:}];
                 //this.view.getGamePage().openUnitMenu();
             });
+        } else {
+            this.getModel().pushState("sceneMenu", 0);
         }
     }
 
-    onGamePageESCAPEClick(){
-
+    onGamePageESCAPEClick() {
+        this.getModel().popState();
     }
 
 
@@ -106,15 +109,15 @@ export default class NewClass extends cc.Component implements IViewController {
         });
     }
 
-    refreshCursor(){
+    refreshCursor() {
         let global = ModelController.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
         //check if unit
-        
+
     }
 
-    refreshGameMap(callback?:()=>void) {
+    refreshGameMap(callback?: () => void) {
         // 不支援同時呼叫多個callback, 只能順序呼叫
         this._model.getLocalMap(map => {
 
@@ -132,7 +135,7 @@ export default class NewClass extends cc.Component implements IViewController {
 
                 this.refreshCursor();
 
-                if(callback) callback();
+                if (callback) callback();
             })
         })
     }
@@ -160,7 +163,16 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     onStateChange(state: string, data: any): void {
-        cc.log("onStateChange");
+        cc.log(state);
+        switch (state) {
+            case "sceneMenu":
+                {
+                    this.view.getGamePage().openSceneMenu(['end turn', 'cancel'], (key) => {
+
+                    });
+                }
+                break;
+        }
     }
 
     onPlayerTurn() {
