@@ -30,6 +30,10 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("getUnitNormalState", unitKey, cb);
     }
 
+    gameStart(){
+        this.send("startGameplay");
+    }
+
     private camera: number[] = [0, 0];
     getCamera(): number[] { return this.camera; }
     setCamera(camera: number[], cb: (args: number[]) => void) {
@@ -65,7 +69,7 @@ export default class NewClass extends cc.Component implements IModel {
         ctr.setModel(this);
         this.viewController = ctr;
         this.subscribe();
-        this.send("startGameplay");
+        //this.send("startGameplay");
     }
 
     private viewNotifyOb: { next: (args: any) => void };

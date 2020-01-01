@@ -11,10 +11,14 @@ export default class NewClass extends cc.Component implements IViewController {
     onPrepareForStart(callback: () => void): void {
         // 不支援同時呼叫多個callback, 只能順序呼叫
         this._model.getLocalMap(map=>{
-            console.log(map);
+            this.view.getGamePage().map.setMap(map);
+
             this._model.getUnitsByRegion(units=>{
                 units = ModelController.projectUnits(this._model.getCamera(), units);
                 console.log(units);
+
+                this.view.getGamePage().units.setUnits(units);
+                
                 const unit = units[0];
                 this._model.getUnitNormalState(unit.key, (info)=>{
                     console.log(info);
@@ -23,7 +27,7 @@ export default class NewClass extends cc.Component implements IViewController {
             })
         })
     }
-
+    
     @property(View)
     view: View = null;
 
@@ -35,8 +39,13 @@ export default class NewClass extends cc.Component implements IViewController {
     private _model: IModel;
 
     onLoad(){
+        cc.log("set view conteoller")
         this.modelController.setViewController(this);
         NewClass.instance = this;
+    }
+
+    start(){
+        this.view.openGamePage();
     }
 
     setModel(model: IModel): void {
@@ -44,17 +53,17 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     onPlayerTurnStart(callback: () => void): void {
-        this.view.getGamePage().openTurnStart(true, () => {
-            this.onPlayerTurn();
-            callback();
-        });
+        // this.view.getGamePage().openTurnStart(true, () => {
+        //     this.onPlayerTurn();
+        //     callback();
+        // });
     }
 
     onEnemyTurnStart(ai: string, callback: () => void): void {
-        this.view.getGamePage().openTurnStart(false, callback);
+        // this.view.getGamePage().openTurnStart(false, callback);
 
-        this.closeAllMenu();
-        this.view.getGamePage().removeListenser();
+        // this.closeAllMenu();
+        // this.view.getGamePage().removeListenser();
     }
 
     onStateChange(state: string, data: any): void {
@@ -79,5 +88,9 @@ export default class NewClass extends cc.Component implements IViewController {
     closeAllMenu() {
         this.view.getGamePage().closeSceneMenu();
         this.view.getGamePage().closeUnitMenu();
+    }
+
+    notifyStartGame(){
+        this._model.gameStart();
     }
 }

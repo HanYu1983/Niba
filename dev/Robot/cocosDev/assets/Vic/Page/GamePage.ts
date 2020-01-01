@@ -65,13 +65,15 @@ export default class NewClass extends BasicViewer {
     private _cursor: number[] = [0, 0];
     private _camera: number[] = [0, 0];
 
-    open() {
-
-        super.open();
+    onLoad(){
         this.map.initPool();
+    }
 
-        //ViewController.instance.notifyStartGame();
-        this.removeListenser();
+    open() {
+        super.open();
+
+        ViewController.instance.notifyStartGame();
+        //this.removeListenser();
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
         //this.map.focusOnGrid(6, 9);

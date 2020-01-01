@@ -57,10 +57,9 @@ export default class NewClass extends cc.Component {
         this._pool = this.node.getComponent(Pool);
     }
 
-    setUnits(data: any) {
+    setUnits(units: any) {
         this.clearUnits();
         
-        let units = data.units;
         for (let element of units) {
             let unitId = element["key"];
             let name = element["key"];

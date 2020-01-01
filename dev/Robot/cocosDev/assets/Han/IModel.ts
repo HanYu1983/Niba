@@ -9,4 +9,5 @@ export default interface IModel {
     setCamera(camera: number[], cb: (args: number[]) => void): void;
     getCursor(): number[];
     setCursor(cursor: number[], cb: (args: number[]) => void): void;
+    gameStart();
 }

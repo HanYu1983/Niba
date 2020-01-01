@@ -42,6 +42,7 @@ export default class NewClass extends cc.Component {
     }
 
     setType(type: Number) {
+        cc.log(type);
         switch (type) {
             case 0:
                 this.typeName.string = "深";
