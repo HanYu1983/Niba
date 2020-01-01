@@ -10,7 +10,6 @@
 
 import MenuButton from "./MenuButton"
 import BasicViewer from "./BasicViewer";
-import InputSensor from "./InputSensor";
 import MenuCursor from "./MenuCursor";
 
 const {ccclass, property, requireComponent} = cc._decorator;
@@ -36,36 +35,64 @@ export default class NewClass extends BasicViewer {
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
+    prev(){
+        this._menuCursor.previus();
+        this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
+    }
+
+    next(){
+        this._menuCursor.next();
+        this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
+    }
+
+    left(){
+        this._menuCursor.left();
+        this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
+    }
+
+    right(){
+        this._menuCursor.right();
+        this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
+    }
+
+    enter(){
+        this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
+    }
+
+    escape(){
+        this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
+    }
+
     addListener(){
         super.addListener();
 
-        this.node.on(InputSensor.CURSOR_UP, ()=>{
-            this._menuCursor.previus();
-            this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
-        }, this);
+        // this.node.on(InputSensor.CURSOR_UP, ()=>{
+        //     this._menuCursor.previus();
+        //     this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
+        // }, this);
 
-        this.node.on(InputSensor.CURSOR_LEFT, ()=>{
-            this._menuCursor.right();
-            this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
-        }, this);
+        // this.node.on(InputSensor.CURSOR_LEFT, ()=>{
+        //     this._menuCursor.left();
+        //     this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
+        // }, this);
 
-        this.node.on(InputSensor.CURSOR_DOWN, ()=>{
-            this._menuCursor.next();
-            this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
-        }, this);
+        // this.node.on(InputSensor.CURSOR_DOWN, ()=>{
+        //     this._menuCursor.next();
+        //     this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
+        // }, this);
 
-        this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
-            this._menuCursor.right();
-            this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
-        }, this);
+        // this.node.on(InputSensor.CURSOR_RIGHT, ()=>{
+        //     this._menuCursor.right();
+        //     this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
+        // }, this);
 
-        this.node.on(InputSensor.ENTER, ()=>{
-            this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
-        }, this);
+        // this.node.on(InputSensor.ENTER, ()=>{
+        //     this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
+        // }, this);
 
-        this.node.on(InputSensor.ESCAPE, ()=>{
-            this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
-        }, this);
+        // this.node.on(InputSensor.ESCAPE, ()=>{
+        //     this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
+        // }, this);
 
         this.node.on(MenuCursor.ON_CURSOR_CHANGE, data =>{
             this._focusOn(data[0]);
@@ -76,12 +103,14 @@ export default class NewClass extends BasicViewer {
     removeListenser(){
         super.removeListenser();
 
-        this.node.off(InputSensor.CURSOR_UP);
-        this.node.off(InputSensor.CURSOR_LEFT);
-        this.node.off(InputSensor.CURSOR_DOWN);
-        this.node.off(InputSensor.CURSOR_RIGHT);
-        this.node.off(InputSensor.ENTER);
-        this.node.off(InputSensor.ESCAPE);
+        // this.node.off(InputSensor.CURSOR_UP);
+        // this.node.off(InputSensor.CURSOR_LEFT);
+        // this.node.off(InputSensor.CURSOR_DOWN);
+        // this.node.off(InputSensor.CURSOR_RIGHT);
+        // this.node.off(InputSensor.ENTER);
+        // this.node.off(InputSensor.ESCAPE);
+
+        this.node.off(MenuCursor.ON_CURSOR_CHANGE);
 
         this._btns.forEach(btn=>{
             btn.node.destroy();

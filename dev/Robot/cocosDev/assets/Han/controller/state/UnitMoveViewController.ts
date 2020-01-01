@@ -20,13 +20,11 @@ export default class UnitMoveViewController extends EmptyViewController implemen
     }
 
     onEnterState() {
-        this.view.getGamePage().addListener();
+        
     }
 
     onGamePageESCAPEClick() {
-        this.view.getGamePage().removeListenser();
         this.view.getGamePage().closeUnitMenu();
-        this.view.getGamePage().addListener();
         this.stackMgr.pop();
     }
 

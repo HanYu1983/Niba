@@ -21,24 +21,30 @@ export default class UnitMenuViewController extends EmptyViewController implemen
     }
 
     onGamePageWClick() {
-        
+        this.view.getGamePage().unitMenu.prev();
     }
 
     onGamePageAClick() {
-        
+        this.view.getGamePage().unitMenu.left();
     }
 
     onGamePageSClick() {
-        
+        this.view.getGamePage().unitMenu.next();
     }
 
     onGamePageDClick() {
-       
+        this.view.getGamePage().unitMenu.right();
+    }
+
+    onGamePageENTERClick() {
+        this.view.getGamePage().unitMenu.enter();
+    }
+
+    onGamePageESCAPEClick() {
+        this.view.getGamePage().unitMenu.escape();
     }
 
     onEnterState() {
-        // 關掉地圖監聽
-        this.view.getGamePage().removeListenser();
         this.getModel().getUnitMenu(this.unit.key, (info) => {
             cc.log(info);
             this.view.getGamePage().openUnitMenu(info, (key) => {
@@ -51,7 +57,6 @@ export default class UnitMenuViewController extends EmptyViewController implemen
                         break;
                     case "cancel":
                         this.view.getGamePage().closeUnitMenu();
-                        this.view.getGamePage().addListener();
                         this.stackMgr.pop();
                         break;
                     default:

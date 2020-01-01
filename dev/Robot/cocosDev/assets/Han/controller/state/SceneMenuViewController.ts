@@ -15,26 +15,45 @@ export default class SceneMenuViewController extends EmptyViewController {
         this.stackMgr = stackMgr;
     }
 
+    onGamePageWClick() {
+        this.view.getGamePage().sceneMenu.prev();
+    }
+
+    onGamePageAClick() {
+        this.view.getGamePage().sceneMenu.left();
+    }
+
+    onGamePageSClick() {
+        this.view.getGamePage().sceneMenu.next();
+    }
+
+    onGamePageDClick() {
+        this.view.getGamePage().sceneMenu.right();
+    }
+
+    onGamePageENTERClick() {
+        this.view.getGamePage().sceneMenu.enter();
+    }
+
+    onGamePageESCAPEClick() {
+        this.view.getGamePage().sceneMenu.escape();
+    }
+
     setModel(model: IModel) {
         super.setModel(model);
 
-        this.view.getGamePage().removeListenser();
-        // 打開地圖選單
         this.view.getGamePage().openSceneMenu(['endTurn', 'cancel'], (key) => {
-            console.log("XXXXX "+key);
             switch (key) {
                 case "endTurn":
                     {
                         this.stackMgr.popToFirst();
                         this.view.getGamePage().closeSceneMenu();
-                        this.view.getGamePage().removeListenser();
                         this.getModel().endTurn();
                     }
                     break;
                 case "cancel":
                     {
                         this.view.getGamePage().closeSceneMenu();
-                        this.view.getGamePage().addListener();
                         this.stackMgr.pop();
                     }
                     break;
