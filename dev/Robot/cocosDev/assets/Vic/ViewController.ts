@@ -1,8 +1,9 @@
 import IViewController from "../Han/IViewController";
 import IModel from "../Han/IModel";
-import ModelController from "./ModelController";
+import ModelController from "../Han/ModelController";
 import View from "./View";
 import GamePage from "./Page/GamePage";
+import Helper from "../Han/Helper";
 
 const { ccclass, property } = cc._decorator;
 
@@ -80,7 +81,7 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     onGamePageENTERClick() {
-        let isUnit: any = ModelController.checkIsUnit();
+        let isUnit: any = Helper.checkIsUnit(this.getModel().getUnits(), this.getModel().getCursor());
         isUnit = undefined;
         if (isUnit) {
             this.getModel().pushState("unitMenu", {}, () => {
@@ -110,7 +111,7 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     refreshCursor() {
-        let global = ModelController.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
+        let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
         //check if unit
@@ -128,7 +129,7 @@ export default class NewClass extends cc.Component implements IViewController {
             this._model.getUnitsByRegion(units => {
 
                 // 取得單位的投影
-                units = ModelController.projectUnits(this._model.getCamera(), units);
+                units = Helper.projectUnits(this._model.getCamera(), units);
 
                 // 顯示單位
                 this.view.getGamePage().units.setUnits(units);
