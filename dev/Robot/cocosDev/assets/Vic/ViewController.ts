@@ -31,6 +31,7 @@ export default class NewClass extends cc.Component implements IViewController {
 
     start() {
         this.view.openGamePage();
+        this.getModel().pushState("default", 0);
     }
 
     onGamePageWClick() {

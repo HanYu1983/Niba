@@ -148,12 +148,10 @@ export default class NewClass extends BasicViewer {
 
         this.node.on(InputSensor.ENTER, () => {
             ViewController.instance.onGamePageENTERClick();
-            //this.node.emit(NewClass.ON_GAMEPAGE_ENTER, this._cursor);
         }, this);
 
         this.node.on(InputSensor.ESCAPE, () => {
             ViewController.instance.onGamePageESCAPEClick();
-            //this.node.emit(NewClass.ON_GAMEPAGE_ESCAPE);
         }, this);
     }
 
