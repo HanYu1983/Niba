@@ -111,13 +111,13 @@ export default class NewClass extends cc.Component implements IViewController {
         let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
-        let unit:IUnit = this._getUnitOnCursor();
-        if(unit){
-            this.getModel().getUnitNormalState(unit.key, (info)=>{
+        let unit: IUnit = this._getUnitOnCursor();
+        if (unit) {
+            this.getModel().getUnitNormalState(unit.key, (info) => {
                 let moveRange = info.moveRange;
                 this.view.getGamePage().map.showMovableGrid(moveRange);
             });
-        }else{
+        } else {
             this.view.getGamePage().map.clearRange();
         }
     }
@@ -170,10 +170,39 @@ export default class NewClass extends cc.Component implements IViewController {
     onStateChange(state: string, data: any): void {
         cc.log(state);
         switch (state) {
+            case "default":
+                {
+                    this.view.getGamePage().addListener();
+                }
+                break;
+            case "unitMenu":
+                {
+                    let unit:IUnit = this._getUnitOnCursor();
+                    this.getModel().getUnitMenu(unit.key, (info)=>{
+                        cc.log(info);
+                        this.view.getGamePage().openUnitMenu(info, (key)=>{
+                            cc.log(key);
+                        });
+                    });
+                }
+                break;
             case "sceneMenu":
                 {
-                    this.view.getGamePage().openSceneMenu(['end turn', 'cancel'], (key) => {
-
+                    //data = data || {}
+                    this.view.getGamePage().removeListenser();
+                    this.view.getGamePage().openSceneMenu(['endTurn', 'cancel'], (key) => {
+                        switch (key) {
+                            case "endTurn":
+                                {
+                                    this.getModel().endTurn();
+                                    this.view.getGamePage().removeListenser();
+                                }
+                                break;
+                            case "cancel":
+                                this.getModel().popState();
+                                this.view.getGamePage().closeSceneMenu();
+                                break;
+                        }
                     });
                 }
                 break;
@@ -204,7 +233,7 @@ export default class NewClass extends cc.Component implements IViewController {
         this._model.gameStart();
     }
 
-    private _getUnitOnCursor():IUnit{
+    private _getUnitOnCursor(): IUnit {
         return Helper.checkIsUnit(this.getModel().getUnits(), this.getModel().getCursor());
     }
 }
