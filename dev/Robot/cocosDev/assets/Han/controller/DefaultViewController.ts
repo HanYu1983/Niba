@@ -8,9 +8,9 @@ import SceneMenuViewController from "./SceneMenuViewController";
 
 export default class DefaultViewController extends EmptyViewController {
     private view: View;
-    private stackMgr:StackViewControler;
+    private stackMgr: StackViewControler;
 
-    constructor(view: View, stackMgr:StackViewControler) {
+    constructor(view: View, stackMgr: StackViewControler) {
         super();
         this.view = view;
         this.stackMgr = stackMgr;
@@ -71,14 +71,16 @@ export default class DefaultViewController extends EmptyViewController {
     onGamePageENTERClick() {
         let isUnit: IUnit = this._getUnitOnCursor();
         if (isUnit) {
-            this.stackMgr.push(new UnitMenuViewController(this.view, this.stackMgr));
+            // 打開單位選單
+            let unit: IUnit = this._getUnitOnCursor();
+            this.stackMgr.push(new UnitMenuViewController(this.view, this.stackMgr, unit));
         } else {
             this.stackMgr.push(new SceneMenuViewController(this.view, this.stackMgr));
         }
     }
 
     onGamePageESCAPEClick() {
-        this.getModel().popState();
+        //this.getModel().popState();
     }
 
     onPlayerTurnStart(callback: () => void): void {
@@ -167,15 +169,15 @@ export default class DefaultViewController extends EmptyViewController {
         this.getModel().gameStart();
     }
 
-    private setCursor(cursor) {
-        this.getModel().setCursor(cursor, (newCursor) => {
-            this.refreshCursor();
-        });
-    }
-
     private setCamera(camera) {
         this.getModel().setCamera(camera, (newCamera) => {
             this.refreshGameMap();
+        });
+    }
+
+    private setCursor(cursor) {
+        this.getModel().setCursor(cursor, (newCursor) => {
+            this.refreshCursor();
         });
     }
 
@@ -183,16 +185,14 @@ export default class DefaultViewController extends EmptyViewController {
         let global = Helper.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
         this.view.getGamePage().setCursor(global);
 
-        if (!this.getModel().getState() || this.getModel().getState() == "default") {
-            let unit: IUnit = this._getUnitOnCursor();
-            if (unit) {
-                this.getModel().getUnitNormalState(unit.key, (info) => {
-                    let moveRange = info.moveRange;
-                    this.view.getGamePage().map.showMovableGrid(moveRange);
-                });
-            } else {
-                this.view.getGamePage().map.clearRange();
-            }
+        let unit: IUnit = this._getUnitOnCursor();
+        if (unit) {
+            this.getModel().getUnitNormalState(unit.key, (info) => {
+                let moveRange = info.moveRange;
+                this.view.getGamePage().map.showMovableGrid(moveRange);
+            });
+        } else {
+            this.view.getGamePage().map.clearRange();
         }
     }
 

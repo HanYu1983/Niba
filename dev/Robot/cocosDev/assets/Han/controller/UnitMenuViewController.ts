@@ -4,26 +4,26 @@ import StackViewControler from "./StackViewController";
 import IUnit from "../interface/IUnit";
 import Helper from "./Helper";
 import IModel from "../interface/IModel";
+import UnitMoveViewController from "./UnitMoveViewController";
+import IStackViewControllerEvents from "../interface/IStackViewControllerEvents";
 
-export default class UnitMenuViewController extends EmptyViewController {
+export default class UnitMenuViewController extends EmptyViewController implements IStackViewControllerEvents {
+    
     private view: View;
     private stackMgr: StackViewControler;
+    private unit: IUnit;
 
-    constructor(view: View, stackMgr: StackViewControler) {
+    constructor(view: View, stackMgr: StackViewControler, unit:IUnit) {
         super();
         this.view = view;
         this.stackMgr = stackMgr;
+        this.unit = unit;
     }
 
-    setModel(model: IModel) {
-        super.setModel(model);
-
+    onEnterState() {
         // 關掉地圖監聽
         this.view.getGamePage().removeListenser();
-
-        // 打開單位選單
-        let unit: IUnit = this._getUnitOnCursor();
-        this.getModel().getUnitMenu(unit.key, (info) => {
+        this.getModel().getUnitMenu(this.unit.key, (info) => {
             cc.log(info);
             this.view.getGamePage().openUnitMenu(info, (key) => {
                 cc.log(key);
@@ -31,6 +31,7 @@ export default class UnitMenuViewController extends EmptyViewController {
                 switch (key) {
                     case "move":
                         this.view.getGamePage().closeUnitMenu();
+                        this.stackMgr.push(new UnitMoveViewController(this.view, this.stackMgr));
                         break;
                     case "cancel":
                         this.view.getGamePage().closeUnitMenu();

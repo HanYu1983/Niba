@@ -1,6 +1,7 @@
 import IViewManager from "../interface/IViewManager";
 import IModel from "../interface/IModel";
 import EmptyViewController from "./EmptyViewController";
+import IStackViewControllerEvents from "../interface/IStackViewControllerEvents";
 
 export default class StackViewControler extends EmptyViewController {
     private stack: IViewManager[] = [];
@@ -8,14 +9,23 @@ export default class StackViewControler extends EmptyViewController {
     push(mgr: IViewManager) {
         mgr.setModel(this.getModel());
         this.stack.push(mgr);
+        if (mgr["onEnterState"]) {
+            mgr["onEnterState"]();
+        }
     }
 
     pop() {
         this.stack.pop();
+        const mgr = this.getTop();
+        if (mgr != null) {
+            if (mgr["onEnterState"]) {
+                mgr["onEnterState"]();
+            }
+        }
     }
 
-    popToFirst(){
-        if(this.stack.length <= 1){
+    popToFirst() {
+        if (this.stack.length <= 1) {
             return;
         }
         this.stack.length = 1;
