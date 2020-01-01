@@ -9,61 +9,88 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component implements IViewController {
     onPrepareForStart(callback: () => void): void {
-        // 不支援同時呼叫多個callback, 只能順序呼叫
-        this._model.getLocalMap(map=>{
-            this.view.getGamePage().map.setMap(map);
-
-            this._model.getUnitsByRegion(units=>{
-                units = ModelController.projectUnits(this._model.getCamera(), units);
-                console.log(units);
-
-                this.view.getGamePage().units.setUnits(units);
-                
-                const unit = units[0];
-                this._model.getUnitNormalState(unit.key, (info)=>{
-                    console.log(info);
-                    callback();    
-                })
-            })
-        })
+        this.refreshGameMap(callback);
     }
-    
+
     @property(View)
     view: View = null;
 
     @property(ModelController)
-    modelController:ModelController = null;
+    modelController: ModelController = null;
 
-    static instance:NewClass;
+    static instance: NewClass;
 
     private _model: IModel;
 
-    onLoad(){
-        cc.log("set view conteoller")
+    onLoad() {
         this.modelController.setViewController(this);
         NewClass.instance = this;
     }
 
-    start(){
+    start() {
         this.view.openGamePage();
+    }
+
+    setCursor(cursor) {
+        this.getModel().setCursor(cursor, (newCursor) => {
+            this.refreshCursor();
+        });
+    }
+
+    setCamera(camera) {
+        this.getModel().setCamera(camera, (newCamera) => {
+            this.refreshGameMap();
+        });
+    }
+
+    refreshCursor(){
+        let global = ModelController.projectPosition(this.getModel().getCamera(), this.getModel().getCursor());
+        this.view.getGamePage().setCursor(global);
+    }
+
+    refreshGameMap(callback?:()=>void) {
+        // 不支援同時呼叫多個callback, 只能順序呼叫
+        this._model.getLocalMap(map => {
+
+            // 顯示地圖
+            this.view.getGamePage().map.setMap(map);
+
+            // 取得當前地圖的單位
+            this._model.getUnitsByRegion(units => {
+
+                // 取得單位的投影
+                units = ModelController.projectUnits(this._model.getCamera(), units);
+
+                // 顯示單位
+                this.view.getGamePage().units.setUnits(units);
+
+                this.refreshCursor();
+
+                if(callback) callback();
+            })
+        })
     }
 
     setModel(model: IModel): void {
         this._model = model;
     }
 
+    getModel() {
+        return this._model;
+    }
+
     onPlayerTurnStart(callback: () => void): void {
-        // this.view.getGamePage().openTurnStart(true, () => {
-        //     this.onPlayerTurn();
-        //     callback();
-        // });
+        this.view.getGamePage().openTurnStart(true, () => {
+            this.onPlayerTurn();
+            callback();
+        });
     }
 
     onEnemyTurnStart(ai: string, callback: () => void): void {
-        // this.view.getGamePage().openTurnStart(false, callback);
+        this.view.getGamePage().openTurnStart(false, callback);
 
-        // this.closeAllMenu();
-        // this.view.getGamePage().removeListenser();
+        this.closeAllMenu();
+        this.view.getGamePage().removeListenser();
     }
 
     onStateChange(state: string, data: any): void {
@@ -77,7 +104,7 @@ export default class NewClass extends cc.Component implements IViewController {
         // this.view.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
         //     this.notifySelectMap(corsor);
         // });
-        
+
     }
 
     removeGamePageExtraListener() {
@@ -90,7 +117,7 @@ export default class NewClass extends cc.Component implements IViewController {
         this.view.getGamePage().closeUnitMenu();
     }
 
-    notifyStartGame(){
+    notifyStartGame() {
         this._model.gameStart();
     }
 }

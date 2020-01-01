@@ -62,8 +62,8 @@ export default class NewClass extends BasicViewer {
     static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
     static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
 
-    private _cursor: number[] = [0, 0];
-    private _camera: number[] = [0, 0];
+    // private _cursor: number[] = [0, 0];
+    // private _camera: number[] = [0, 0];
 
     onLoad(){
         this.map.initPool();
@@ -102,18 +102,18 @@ export default class NewClass extends BasicViewer {
     }
 
     setCursor(pos: number[]) {
-        this._cursor[0] = pos[0];
-        this._cursor[1] = pos[1];
-
-        let cursorPos = ViewController.instance.view.getGridPos(this._cursor);
+        // this._cursor[0] = pos[0];
+        // this._cursor[1] = pos[1];
+        cc.log("set cursor", pos);
+        let cursorPos = ViewController.instance.view.getGridPos(pos);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
     }
 
-    setCamera(pos:number[]){
-        this._camera[0] = pos[0];
-        this._camera[1] = pos[1];
-    }
+    // setCamera(pos:number[]){
+    //     this._camera[0] = pos[0];
+    //     this._camera[1] = pos[1];
+    // }
 
     showFightInfo(datas: any[]) {
         this.fightInfoMenu.showInfos(datas);
@@ -123,43 +123,51 @@ export default class NewClass extends BasicViewer {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, () => {
-            this._cursor[1] -= 1;
-            ViewController.instance.notifySetCursor(this._cursor);
+            let cursor = ViewController.instance.getModel().getCursor();
+            cursor[1] -= 1;
+            ViewController.instance.setCursor(cursor);
         });
 
         this.node.on(InputSensor.CURSOR_LEFT, () => {
-            this._cursor[0] -= 1;
-            ViewController.instance.notifySetCursor(this._cursor);
+            let cursor = ViewController.instance.getModel().getCursor();
+            cursor[0] -= 1;
+            ViewController.instance.setCursor(cursor);
         });
 
         this.node.on(InputSensor.CURSOR_DOWN, () => {
-            this._cursor[1] += 1;
-            ViewController.instance.notifySetCursor(this._cursor);
+            let cursor = ViewController.instance.getModel().getCursor();
+            cursor[1] += 1;
+            ViewController.instance.setCursor(cursor);
         });
 
         this.node.on(InputSensor.CURSOR_RIGHT, () => {
-            this._cursor[0] += 1;
-            ViewController.instance.notifySetCursor(this._cursor);
+            let cursor = ViewController.instance.getModel().getCursor();
+            cursor[0] += 1;
+            ViewController.instance.setCursor(cursor);
         });
 
         this.node.on(InputSensor.SCREEN_UP, () => {
-            this._camera[1] -= 1;
-            ViewController.instance.notifySetCamera(this._camera);
+            let camera = ViewController.instance.getModel().getCamera();
+            camera[1] -= 1;
+            ViewController.instance.setCamera(camera);
         });
 
         this.node.on(InputSensor.SCREEN_LEFT, () => {
-            this._camera[0] -= 1;
-            ViewController.instance.notifySetCamera(this._camera);
+            let camera = ViewController.instance.getModel().getCamera();
+            camera[0] -= 1;
+            ViewController.instance.setCamera(camera);
         });
 
         this.node.on(InputSensor.SCREEN_DOWN, () => {
-            this._camera[1] += 1;
-            ViewController.instance.notifySetCamera(this._camera);
+            let camera = ViewController.instance.getModel().getCamera();
+            camera[1] += 1;
+            ViewController.instance.setCamera(camera);
         });
 
         this.node.on(InputSensor.SCREEN_RIGHT, () => {
-            this._camera[0] += 1;
-            ViewController.instance.notifySetCamera(this._camera);
+            let camera = ViewController.instance.getModel().getCamera();
+            camera[0] += 1;
+            ViewController.instance.setCamera(camera);
         });
 
         this.node.on(InputSensor.ENTER, () => {
