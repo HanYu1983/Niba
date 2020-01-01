@@ -1,8 +1,8 @@
 (ns app.gameplay
-  (:require [app.quadtree :as aq])
   (:require [app.map :as map])
   (:require [app.unitState])
-  (:require [app.fsm]))
+  (:require [app.fsm])
+  (:require [app.units]))
 
 (def mapViewSize [20 20])
 
@@ -22,18 +22,17 @@
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
-                           :units (-> (aq/make-qdtree [0 0 100 100] 3)
-                                      (aq/add rectByUnit {:key (gensym)
-                                                          :player :player
-                                                          :type :robot
-                                                          :state app.unitState/default
-                                                          :position [0 0]})
-                                      (aq/add rectByUnit {:key (gensym)
-                                                          :player :player
-                                                          :type :robot
-                                                          :state app.unitState/default
-                                                          :position [2 2]})
-                                      (aq/balance))
+                           :units (-> app.units/model
+                                      (app.units/add {:key (gensym)
+                                                      :player :player
+                                                      :type :robot
+                                                      :state app.unitState/default
+                                                      :position [0 0]})
+                                      (app.units/add {:key (gensym)
+                                                      :player :player
+                                                      :type :robot
+                                                      :state app.unitState/default
+                                                      :position [2 2]}))
                            :fsm app.fsm/model})
 
 (defn getFsm [ctx]
@@ -48,9 +47,8 @@
 (defn updateUnit [ctx unit nextUnit]
   (update ctx :units (fn [origin]
                        (-> origin
-                           (aq/delete rectByUnit unit)
-                           (aq/add rectByUnit nextUnit)
-                           (aq/balance)))))
+                           (app.units/delete unit)
+                           (app.units/add nextUnit)))))
 
 
 (defn setMap [ctx map]
@@ -80,8 +78,9 @@
 
 (defn getUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))
-        searchSize (or searchSize (aq/makeRectFromPoint camera mapViewSize))
-        units (aq/search (:units ctx) rectByUnit searchSize)]
+        [p1 p2] (or searchSize [(map - camera mapViewSize)
+                                   (map + camera mapViewSize)])
+        units (app.units/getByRegion (:units ctx) p1 p2)]
     units))
 
 (defn getLocalMap [ctx camera]

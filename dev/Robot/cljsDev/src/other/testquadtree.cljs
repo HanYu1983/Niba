@@ -1,5 +1,5 @@
 (ns other.testquadtree
-  (:require [app.quadtree :as aq]))
+  (:require [other.quadtree :as aq]))
 
 (def n 0)
 

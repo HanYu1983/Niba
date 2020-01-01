@@ -4,10 +4,21 @@
   (:require [app.map :as map])
   (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
-  (:require [app.quadtree :as aq])
   (:require [app.fsm])
   (:require [app.unitState])
+  (:require [app.units])
   (:require-macros [app.macros :as m]))
+
+(comment (let [ua {:key (gensym) :position [2 0]}
+               a (-> app.units/model
+                     (app.units/add ua)
+                     (app.units/add {:key (gensym) :position [2 1]})
+                     (app.units/add {:key (gensym) :position [3 3]})
+                     (app.units/delete ua))]
+           (println a)
+           (println (app.units/getByPosition a [2 0]))
+           (println (app.units/getByRegion a [0 0] [4 4]))))
+
 
 (def defaultModel {})
 
