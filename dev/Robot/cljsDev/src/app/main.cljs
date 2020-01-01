@@ -38,7 +38,8 @@
                   (js/console.log "[view][receive]" e)
                   (a/go
                     (a/>! inputFromView (js->clj e))
-                    (js/console.log "[view][receive] consume" e))))
+                    ;(js/console.log "[view][receive] consume" e)
+                    )))
     (a/go-loop []
       (let [evt (a/<! outputToView)
             evtJs (clj->js evt)]
@@ -63,7 +64,6 @@
   (let [[id unitKey] args
         unit (-> (gameplay/getUnits gameplayCtx)
                  (app.units/getByKey unitKey))]
-    (println (get-in (gameplay/getUnits gameplayCtx) [:key]))
     (if unit
       (let [[mw mh] gameplay/mapViewSize
             shortestPathTree (map/findPath (:position unit)
@@ -130,7 +130,8 @@
             (recur gameplayCtx))
 
           (= "endTurn" cmd)
-          (let [[id] args]
+          (let [[id] args
+                gameplayCtx (gameplay/setFsm gameplayCtx app.fsm/model)]
             (a/>! outputCh ["ok" [id]])
             gameplayCtx)
 
@@ -162,7 +163,6 @@
           (let [[id unitKey] args
                 unit (-> (gameplay/getUnits gameplayCtx)
                          (app.units/getByKey unitKey))]
-            (println (get-in (gameplay/getUnits gameplayCtx) [:key]))
             (if unit
               (let [[mw mh] gameplay/mapViewSize
                     shortestPathTree (map/findPath (:position unit)
