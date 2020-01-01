@@ -81,7 +81,7 @@ export default class NewClass extends cc.Component implements IModel {
             switch (cmd) {
                 case "onStateChange":
                     {
-                        const [state, data] = e;
+                        const [state, data] = args;
                         this.viewController.onStateChange(state, data);
                     }
                     break;
