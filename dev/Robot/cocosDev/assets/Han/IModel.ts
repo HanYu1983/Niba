@@ -10,6 +10,7 @@ export default interface IModel {
     getUnitsByRegion(cb: (args: IUnit[]) => void): void;
     getUnitNormalState(unitKey, cb: (info: { unit: IUnit, moveRange: number[][] }) => void): void;
     getUnitMenu(unitKey: string, cb: (info: any[]) => void): void;
+    getState(): string;
 
     getCamera(): number[];
     setCamera(camera: number[], cb: (args: number[]) => void): void;

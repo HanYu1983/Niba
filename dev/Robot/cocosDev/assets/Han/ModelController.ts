@@ -77,6 +77,14 @@ export default class NewClass extends cc.Component implements IModel {
         this.subscribe();
     }
 
+    private lastState:string;
+    setState(state:string){
+        this.lastState = state;
+    }
+    getState():string{
+        return this.lastState;
+    }
+
     private viewNotifyOb: { next: (args: any) => void };
     private viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
 
@@ -91,6 +99,7 @@ export default class NewClass extends cc.Component implements IModel {
                 case "onStateChange":
                     {
                         const [state, data] = args;
+                        this.setState(state);
                         this.viewController.onStateChange(state, data);
                     }
                     break;
