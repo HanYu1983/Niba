@@ -1,20 +1,23 @@
-import IViewManager from "../interface/IViewManager";
-import IModel from "../interface/IModel";
 import Helper from "../controller/Helper";
 import IUnit from "../interface/IUnit";
 import View from "../../Vic/View";
-import GamePage from "../../Vic/Page/GamePage";
+import StackViewControler from "./StackViewController";
+import EmptyViewController from "./EmptyViewController";
+import UnitMenuViewController from "./UnitMenuViewController";
+import SceneMenuViewController from "./SceneMenuViewController";
 
-export default class DefaultViewController implements IViewManager {
+export default class DefaultViewController extends EmptyViewController {
     private view: View;
-    constructor(view: View) {
+    private stackMgr:StackViewControler;
+
+    constructor(view: View, stackMgr:StackViewControler) {
+        super();
         this.view = view;
+        this.stackMgr = stackMgr;
     }
 
     onPrepareForStart(callback: () => void): void {
-        this.getModel().pushState("default", 0, () => {
-            this.refreshGameMap(callback);
-        });
+        this.refreshGameMap(callback);
     }
 
     onGamePageWClick() {
@@ -68,19 +71,14 @@ export default class DefaultViewController implements IViewManager {
     onGamePageENTERClick() {
         let isUnit: IUnit = this._getUnitOnCursor();
         if (isUnit) {
-            this.getModel().pushState("unitMenu", 0);
+            this.stackMgr.push(new UnitMenuViewController(this.view, this.stackMgr));
         } else {
-            this.getModel().pushState("sceneMenu", 0);
+            this.stackMgr.push(new SceneMenuViewController(this.view, this.stackMgr));
         }
     }
 
     onGamePageESCAPEClick() {
         this.getModel().popState();
-    }
-
-    private _model: IModel;
-    setModel(model: IModel): void {
-        this._model = model;
     }
 
     onPlayerTurnStart(callback: () => void): void {
@@ -166,11 +164,7 @@ export default class DefaultViewController implements IViewManager {
     }
 
     notifyStartGame() {
-        this._model.gameStart();
-    }
-
-    private getModel() {
-        return this._model;
+        this.getModel().gameStart();
     }
 
     private setCursor(cursor) {
@@ -204,16 +198,16 @@ export default class DefaultViewController implements IViewManager {
 
     private refreshGameMap(callback?: () => void) {
         // 不支援同時呼叫多個callback, 只能順序呼叫
-        this._model.getLocalMap(map => {
+        this.getModel().getLocalMap(map => {
 
             // 顯示地圖
             this.view.getGamePage().map.setMap(map);
 
             // 取得當前地圖的單位
-            this._model.getUnitsByRegion(units => {
+            this.getModel().getUnitsByRegion(units => {
 
                 // 取得單位的投影
-                units = Helper.projectUnits(this._model.getCamera(), units);
+                units = Helper.projectUnits(this.getModel().getCamera(), units);
 
                 // 顯示單位
                 this.view.getGamePage().units.setUnits(units);

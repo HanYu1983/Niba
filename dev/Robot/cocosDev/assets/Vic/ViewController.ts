@@ -2,12 +2,9 @@ import IViewController from "../Han/interface/IViewController";
 import IModel from "../Han/interface/IModel";
 import ModelController from "../Han/controller/ModelController";
 import View from "./View";
-import GamePage from "./Page/GamePage";
-import Helper from "../Han/controller/Helper";
-import IUnit from "../Han/interface/IUnit";
-import IViewEvents from "../Han/interface/IViewEvents";
 import IViewManager from "../Han/interface/IViewManager";
 import DefaultViewController from "../Han/controller/DefaultViewController";
+import StackViewControler from "../Han/controller/StackViewController";
 
 const { ccclass, property } = cc._decorator;
 
@@ -23,7 +20,9 @@ export default class NewClass extends cc.Component implements IViewController {
     private _viewEventHandler: IViewManager;
 
     onLoad() {
-        this._viewEventHandler = new DefaultViewController(this.view);
+        const svc = new StackViewControler();
+        svc.push(new DefaultViewController(this.view, svc));
+        this._viewEventHandler = svc;
         this.modelController.setViewController(this);
         NewClass.instance = this;
     }
