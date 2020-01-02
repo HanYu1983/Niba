@@ -19,6 +19,8 @@ public interface IModel
 
     List<MemoItem> GetMemoList();
     List<MemoItem> AddMemo(string memo);
+    List<MemoItem> DeleteMemo();
+    List<MemoItem> EditMemo(string memo);
     List<MemoItem> SelectMemo(string memo);
     List<MemoItem> UnSelectMemo(string memo);
     void SetFilterMemo(string filter);

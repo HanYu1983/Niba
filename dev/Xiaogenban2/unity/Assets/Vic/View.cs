@@ -283,7 +283,47 @@ public class View : MonoBehaviour {
 
     public void OnMemoPageAddTagClick()
     {
-        GetMemoPage().AddTag();
+        string memo = GetMemoPage().GetContent();
+        if(memo != "")
+        {
+            GetMemoPage().AddTag();
+        }
+        
+    }
+
+    public void OnMemoPageEditTagClick()
+    {
+        string memo = GetMemoPage().GetContent();
+        if (memo != "")
+        {
+            OpenPopPage("確定要修改為" + memo + "嗎?",
+            delegate ()
+            {
+                GetMemoPage().EditTag();
+            },
+            delegate ()
+            {
+                ClosePopPage();
+            });
+        }
+        
+    }
+
+    public void OnMemoPageDeleteTagClick()
+    {
+        List<MemoItem> listMemo = Model.GetMemoList();
+        if(listMemo.Count > 0)
+        {
+            OpenPopPage("確定要刪除嗎?",
+                delegate ()
+                {
+                    GetMemoPage().DeleteTag();
+                },
+                delegate ()
+                {
+                    ClosePopPage();
+                });
+        }
     }
 
     public void OnSearchPageConfirm()

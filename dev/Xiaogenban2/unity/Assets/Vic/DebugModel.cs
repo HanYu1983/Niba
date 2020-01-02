@@ -189,4 +189,24 @@ public class DebugModel : MonoBehaviour, IModel
     {
         callback(true);
     }
+
+    public List<MemoItem> DeleteMemo()
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 30; ++i)
+        {
+            items.Add(new MemoItem("tag_delete_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
+
+    public List<MemoItem> EditMemo(string memo)
+    {
+        List<MemoItem> items = new List<MemoItem>();
+        for (int i = 0; i < 30; ++i)
+        {
+            items.Add(new MemoItem("tag_edit_" + i, (Random.Range(0, 10) > 5)));
+        }
+        return items;
+    }
 }

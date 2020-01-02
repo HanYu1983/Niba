@@ -74,6 +74,18 @@ class TagController : MonoBehaviour
         SetTagList();
     }
 
+    public void EditTag()
+    {
+        Model.EditMemo(ContentText);
+        SetTagList();
+    }
+
+    public void DeleteTag()
+    {
+        Model.DeleteMemo();
+        SetTagList();
+    }
+
     public void ClearContent()
     {
         this.ContentText = "";

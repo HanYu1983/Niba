@@ -46,6 +46,16 @@ public class MemoPage : Page
         GetTagController().AddTag();
     }
 
+    public void EditTag()
+    {
+        GetTagController().EditTag();
+    }
+
+    public void DeleteTag()
+    {
+        GetTagController().DeleteTag();
+    }
+
     TagController GetTagController()
     {
         return GetComponent<TagController>();

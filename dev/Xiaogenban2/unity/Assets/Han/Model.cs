@@ -706,5 +706,15 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
+    public List<MemoItem> DeleteMemo()
+    {
+        throw new NotImplementedException();
+    }
+
+    public List<MemoItem> EditMemo(string memo)
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 }
