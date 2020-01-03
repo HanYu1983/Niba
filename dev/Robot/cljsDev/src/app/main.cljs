@@ -91,9 +91,16 @@
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
-      (let [path (map/buildPath paths (:cursor state))]
+      (let [cursor (:cursor state)
+            path (map/buildPath paths cursor)]
         (a/<! (unitMoveAnim gameplayCtx {:unit unit :path path} inputCh outputCh))
-        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
+        (let [gameplayCtx (-> gameplayCtx
+                              (gameplay/getUnits)
+                              (app.units/delete unit)
+                              (app.units/add (merge unit {:position cursor}))
+                              ((fn [units]
+                                 (gameplay/setUnits gameplayCtx units))))
+              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
           (if isEnd
             [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
             (recur gameplayCtx))))

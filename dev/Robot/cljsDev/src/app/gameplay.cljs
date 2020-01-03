@@ -79,6 +79,9 @@
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
 
+(defn setUnits [ctx units]
+  (update ctx :units (constantly units)))
+
 (defn getUnits [ctx]
   (:units ctx))
 
