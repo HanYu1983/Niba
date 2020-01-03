@@ -223,7 +223,8 @@ public class Model : MonoBehaviour, IModel{
             earn.money = money;
             if (memo == null)
             {
-                earn.memo = lastInputEarn.memo;
+                // 不使用最後一個memo
+                // earn.memo = lastInputEarn.memo;
                 if (earn.memo == null)
                 {
                     earn.memo = "";
