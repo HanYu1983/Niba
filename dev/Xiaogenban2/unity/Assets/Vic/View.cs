@@ -300,6 +300,8 @@ public class View : MonoBehaviour {
             delegate ()
             {
                 GetMemoPage().EditTag();
+                GetMainPage().RefreshList(true);
+                ClosePopPage();
             },
             delegate ()
             {
@@ -318,6 +320,8 @@ public class View : MonoBehaviour {
                 delegate ()
                 {
                     GetMemoPage().DeleteTag();
+                    GetMainPage().RefreshList(true);
+                    ClosePopPage();
                 },
                 delegate ()
                 {
