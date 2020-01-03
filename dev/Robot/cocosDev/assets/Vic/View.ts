@@ -13,38 +13,49 @@ import BasicViewer from "./BasicViewer";
 import GamePage from "./Page/GamePage";
 import MainPage from "./Page/MainPage";
 import IView from "../Han/interface/IView";
+import IUnit from "../Han/interface/IUnit";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component implements IView {
-    unitMoveAnim(data: any, cb: () => void) {
-        cb();
-    }
-    updateUnitSelectMovePosition(data: any, cb: () => void) {
-        cb();
-    }
-    updatePlayTurn(data: any, cb: () => void) {
-        cb();
-    }
-    updateSystemMenu(data: any, cb: () => void) {
-        cb();
-    }
-    updateUnitMenu(data: any, cb: () => void) {
-        cb();
-    }
     updateMap(data: number[][], cb: () => void) {
         cb();
     }
-    updateUnits(data: any, cb: () => void) {
+    updateUnits(data: IUnit[], cb: () => void) {
         cb();
     }
     playerTurnStart(data: any, cb: () => void) {
-        cb();
+        cb()
     }
     enemyTurnStart(data: string, cb: () => void) {
-        cb();
+        cb()
     }
+    updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
+        console.log(data.cursor);
+        cb()
+    }
+    updateSystemMenu(data: { menu: string[]; cursor: number; }, cb: () => void) {
+        console.log(data.cursor);
+        cb()
+    }
+    updateUnitMenu(data: { menu: string[][]; cursor: number; subcursor: any; }, cb: () => void) {
+        const cursor1 = data.cursor;
+        const cursor2 = data.subcursor[cursor1];
+        console.log(data.menu);
+        console.log(cursor1, cursor2);
+        cb()
+    }
+    updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
+        console.log(data.cursor);
+        cb()
+    }
+    unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
+        console.log(data.unit);
+        console.log(data.path);
+        cb()
+    }
+
 
     @property(BasicViewer)
     pages: BasicViewer[] = [];

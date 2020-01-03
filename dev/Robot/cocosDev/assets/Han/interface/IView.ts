@@ -1,11 +1,13 @@
+import IUnit from "./IUnit"
+
 export default interface IView {
     updateMap(data: number[][], cb: () => void);
-    updateUnits(data: any, cb: () => void);
+    updateUnits(data: IUnit[], cb: () => void);
     playerTurnStart(data: any, cb: () => void);
     enemyTurnStart(data: string, cb: () => void);
-    updatePlayTurn(data: any, cb: () => void);
-    updateSystemMenu(data: any, cb: () => void);
-    updateUnitMenu(data: any, cb: () => void);
-    updateUnitSelectMovePosition(data: any, cb: () => void);
-    unitMoveAnim(data: any, cb: () => void);
+    updatePlayTurn(data: { cursor: number[] }, cb: () => void);
+    updateSystemMenu(data: { menu: string[], cursor: number }, cb: () => void);
+    updateUnitMenu(data: { menu: string[][], cursor: number, subcursor: any }, cb: () => void);
+    updateUnitSelectMovePosition(data: { cursor: number[][] }, cb: () => void);
+    unitMoveAnim(data: { unit: IUnit, path: number[][] }, cb: () => void);
 }

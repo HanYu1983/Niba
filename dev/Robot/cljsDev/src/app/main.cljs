@@ -83,8 +83,8 @@
         (recur (gameplay/setFsm gameplayCtx fsm)))
       
       (= :enter action)
-      (let []
-        (a/<! (unitMoveAnim gameplayCtx nil inputCh outputCh))
+      (let [path (map/buildPath paths (:cursor state))]
+        (a/<! (unitMoveAnim gameplayCtx {:unit unit :path path} inputCh outputCh))
         (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
           (if isEnd
             [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
@@ -143,7 +143,19 @@
       (let [[select] [:move]]
         (cond
           (= :move select)
-          (let [[gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths nil} inputCh outputCh))]
+          (let [[mw mh] gameplay/mapViewSize
+                shortestPathTree (map/findPath (:position unit)
+                                               (fn [{:keys [totalCost]} curr]
+                                                 [(>= totalCost 5) false])
+                                               (fn [[x y]]
+                                                 [[x (min mh (inc y))]
+                                                  [x (max 0 (dec y))]
+                                                  [(min mw (inc x)) y]
+                                                  [(max 0 (dec x)) y]])
+                                               (constantly 1)
+                                               (constantly 0))
+                moveRange (map first shortestPathTree)
+                [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
             (if isEnd
               [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
               (recur gameplayCtx)))
