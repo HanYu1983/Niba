@@ -117,20 +117,22 @@
 (m/defstate unitMenu [gameplayCtx {unit :unit camera :camera}]
   nil
   (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:camera camera
-                                      :cursor 0
-                                      :subcursor {}
-                                      :menu (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))]
-                                              [["move" (range (count weapons)) "cancel"]
-                                               {:weaponIdx 1
-                                                :weapons weapons
-                                                :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
-                                                                    (->> (map/simpleFindPath (:position unit) (dec min))
-                                                                         (into #{})
-                                                                         (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
-                                                                                                      (into #{})))
-                                                                         (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
-                                                                  weapons)}])})]
+        state (or (app.fsm/load fsm) 
+                  (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))
+                        menu ["move" (range (count weapons)) "cancel"]]
+                    {:camera camera
+                     :cursor 0
+                     :subcursor (into [] (repeat (count menu) 0))
+                     :menu [menu
+                            {:weaponIdx 1
+                             :weapons weapons
+                             :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
+                                                 (->> (map/simpleFindPath (:position unit) (dec min))
+                                                      (into #{})
+                                                      (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                   (into #{})))
+                                                      (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                               weapons)}]}))]
     (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx (:camera state)) inputCh outputCh))
     (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx (:camera state) nil) inputCh outputCh))
     (a/<! (updateUnitMenu nil state inputCh outputCh))
