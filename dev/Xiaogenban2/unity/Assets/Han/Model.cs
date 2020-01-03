@@ -643,7 +643,7 @@ public class Model : MonoBehaviour, IModel{
         var datas = memo.Split(SplitTag);
         var memos = datas.Distinct().Select(d =>
         {
-            return new MemoItem(d.Trim(), true);
+            return new MemoItem(d.Trim(), false);
         }).Where(m =>
         {
             return string.IsNullOrEmpty(m.Memo) == false;
