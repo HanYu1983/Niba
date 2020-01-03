@@ -4,7 +4,7 @@ import ModelController from "../Han/controller/ModelController";
 import View from "./View";
 import IViewManager from "../Han/interface/IViewManager";
 import DefaultViewController from "../Han/controller/state/DefaultViewController";
-import StackViewControler from "../Han/controller/state/StackViewController";
+import StackViewControler from "../Han/controller/StackViewController";
 
 const { ccclass, property } = cc._decorator;
 

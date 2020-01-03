@@ -1,6 +1,6 @@
 import EmptyViewController from "../EmptyViewController";
 import View from "../../../Vic/View";
-import StackViewControler from "./StackViewController";
+import StackViewControler from "../StackViewController";
 import IUnit from "../../interface/IUnit";
 import Helper from "../Helper";
 import IModel from "../../interface/IModel";
