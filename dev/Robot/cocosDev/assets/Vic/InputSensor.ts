@@ -35,6 +35,7 @@ export default class NewClass extends cc.Component {
     }
 
     onKeyUp(evt: cc.Event.EventKeyboard) {
+        window.viewNotifyOb.next(["KEY_DOWN", evt.keyCode]);
         switch (evt.keyCode) {
             case cc.macro.KEY.w:
                 this.node.emit(NewClass.CURSOR_UP);

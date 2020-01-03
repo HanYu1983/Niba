@@ -9,18 +9,6 @@
   (:require [app.units])
   (:require-macros [app.macros :as m]))
 
-(comment (let [ua {:key (gensym) :position [2 0]}
-               a (-> app.units/model
-                     (app.units/add ua)
-                     (app.units/add {:key (gensym) :position [2 1]})
-                     (app.units/add {:key (gensym) :position [3 3]})
-            ;(app.units/delete ua)
-                     )]
-           (println a)
-           (println (app.units/getByKey a (:key ua)))
-           (println (app.units/getByPosition a [2 0]))
-           (println (app.units/getByRegion a [0 0] [4 4]))))
-
 
 (def defaultModel {})
 
@@ -47,175 +35,176 @@
         (.next (.-viewOb js/window) evtJs)
         (recur)))))
 
-(m/defstate prepareForStart [gameplayCtx args]
-  (= "getUnitsByRegion" cmd)
-  (let [[id] args
-        units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
-    (a/>! outputCh ["ok", [id units]])
-    (recur gameplayCtx))
+(m/defwait playerTurnStart [ctx args])
+(m/defwait enemyTurnStart [ctx args])
+(m/defwait updateMap [ctx args])
+(m/defwait updateUnits [ctx args])
+(m/defwait updateCursor [ctx args])
+(m/defwait updateMoveRange [ctx args])
+(m/defwait updateAttackRange [ctx args])
+(m/defwait updatePlayTurn [ctx args])
+(m/defwait updateUnitMenu [ctx args])
+(m/defwait updateSystemMenu [ctx args])
+(m/defwait unitMoveAnim [ctx args])
 
-  (= "getLocalMap" cmd)
-  (let [[id] args
-        localMap (gameplay/getLocalMap gameplayCtx nil)]
-    (a/>! outputCh ["ok", [id localMap]])
-    (recur gameplayCtx))
+(def actions {87 :up
+              83 :down
+              65 :left
+              68 :right
+              13 :enter
+              27 :cancel})
 
-  (= "getUnitNormalState" cmd)
-  (let [[id unitKey] args
-        unit (-> (gameplay/getUnits gameplayCtx)
-                 (app.units/getByKey unitKey))]
-    (if unit
-      (let [[mw mh] gameplay/mapViewSize
-            shortestPathTree (map/findPath (:position unit)
-                                           (fn [{:keys [totalCost]} curr]
-                                             [(>= totalCost 5) false])
-                                           (fn [[x y]]
-                                             [[x (min mh (inc y))]
-                                              [x (max 0 (dec y))]
-                                              [(min mw (inc x)) y]
-                                              [(max 0 (dec x)) y]])
-                                           (constantly 1)
-                                           (constantly 0))
-            moveRange (map first shortestPathTree)
-            gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
-        (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
-        (recur gameplayCtx))
-      (throw (js/Error. (str unitKey " not found")))))
 
-  (= "getLocalUnits" cmd)
-  (let [[id] args
-        units (gameplay/getLocalUnits gameplayCtx nil nil)]
-    (a/>! outputCh ["ok", [id units]])
-    (recur gameplayCtx)))
+(declare unitMenu)
 
-(m/defstate playerTurnStart [ctx args])
-(m/defstate enemyTurnStart [ctx args])
+(m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
+  nil
+  nil
 
-(defn playerTurn [gameplayCtx inputCh outputCh]
-  (a/go
-    (a/<! (playerTurnStart nil nil inputCh outputCh))
-    (loop [gameplayCtx gameplayCtx]
-      (let [[cmd args] (a/<! inputCh)]
+  (= "KEY_DOWN" cmd)
+  (let [keycode args
+        action (get actions keycode)
+        fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor (:position unit)})]
+    (cond
+      (some #(= % action) [:up :down :left :right])
+      (let [dir {:up [0 -1]
+                 :down [0 1]
+                 :left [-1 0]
+                 :right [1 0]}
+            state (update state :cursor (partial map + (action dir)))
+            fsm (app.fsm/save fsm state)]
+        (println fsm)
+        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (recur (gameplay/setFsm gameplayCtx fsm)))
+      
+      (= :enter action)
+      (let []
+        ; (a/<! (unitMoveAnim gameplayCtx nil inputCh outputCh))
+        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
+          (if isEnd
+            [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+            (recur gameplayCtx))))
+
+      (= :cancel action)
+      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+
+      :else
+      (recur gameplayCtx))))
+
+(m/defstate unitMenu [gameplayCtx unit]
+  nil
+  (let [menu [[:move [:weapon1]] {}]]
+    ; (a/<! (updateUnitMenu nil menu inputCh outputCh))
+    gameplayCtx)
+
+  (= "KEY_DOWN" cmd)
+  (let [keycode args
+        action (get actions keycode)
+        fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor 0
+                                      :subcursor {}})]
+    (cond
+      (some #(= % action) [:up :down])
+      (let [dir {:up dec
+                 :down inc}
+            state (update state :cursor (action dir))
+            fsm (app.fsm/save fsm state)]
+        (println fsm)
+        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (recur (gameplay/setFsm gameplayCtx fsm)))
+
+      (some #(= % action) [:left :right])
+      (let [dir {:left dec
+                 :right inc}
+            state (update-in state [:subcursor (:cursor state)] (action dir))
+            fsm (app.fsm/save fsm state)]
+        (println fsm)
+        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (recur (gameplay/setFsm gameplayCtx fsm)))
+
+      (= :enter action)
+      (let [[select] [:move]]
         (cond
-          (= "setState" cmd)
-          (let [[id state] args
-                gameplayCtx  (-> (gameplay/getFsm gameplayCtx)
-                                 (app.fsm/setState state)
-                                 ((fn [fsm]
-                                    (gameplay/setFsm gameplayCtx fsm))))]
-            (a/>! outputCh ["onStateChange" [(app.fsm/currState (gameplay/getFsm gameplayCtx)) nil]])
-            (a/>! outputCh ["ok" [id]])
-            (recur gameplayCtx))
-
-          (= "pushState" cmd)
-          (let [[id [state data]] args
-                gameplayCtx (-> (gameplay/getFsm gameplayCtx)
-                                (app.fsm/save data)
-                                (app.fsm/pushState state)
-                                ((fn [fsm]
-                                   (gameplay/setFsm gameplayCtx fsm))))]
-            (a/>! outputCh ["onStateChange" [(app.fsm/currState (gameplay/getFsm gameplayCtx)) nil]])
-            (a/>! outputCh ["ok" [id]])
-            (recur gameplayCtx))
-
-          (= "popState" cmd)
-          (let [[id] args
-                gameplayCtx (-> (gameplay/getFsm gameplayCtx)
-                                (app.fsm/popState)
-                                ((fn [fsm]
-                                   (gameplay/setFsm gameplayCtx fsm))))]
-            (a/>! outputCh ["onStateChange" [(app.fsm/currState (gameplay/getFsm gameplayCtx))
-                                             (app.fsm/load (gameplay/getFsm gameplayCtx))]])
-            (a/>! outputCh ["ok" [id]])
-            (recur gameplayCtx))
-
-          (= "endTurn" cmd)
-          (let [[id] args
-                gameplayCtx (gameplay/setFsm gameplayCtx app.fsm/model)]
-            (a/>! outputCh ["ok" [id]])
-            gameplayCtx)
-
-          (= "setCursor" cmd)
-          (let [[id cursor] args
-                gameplayCtx (gameplay/setCursor gameplayCtx cursor)]
-            (a/>! outputCh ["ok", [id (gameplay/getCursor gameplayCtx)]])
-            (recur gameplayCtx))
-
-          (= "setCamera" cmd)
-          (let [[id camera] args
-                gameplayCtx (gameplay/setCamera gameplayCtx camera)]
-            (a/>! outputCh ["ok", [id (gameplay/getCamera gameplayCtx)]])
-            (recur gameplayCtx))
-
-          (= "getLocalMap" cmd)
-          (let [[id] args
-                localMap (gameplay/getLocalMap gameplayCtx nil)]
-            (a/>! outputCh ["ok", [id localMap]])
-            (recur gameplayCtx))
-
-          (= "getUnitsByRegion" cmd)
-          (let [[id] args
-                units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
-            (a/>! outputCh ["ok", [id units]])
-            (recur gameplayCtx))
-
-          (= "getUnitNormalState" cmd)
-          (let [[id unitKey] args
-                unit (-> (gameplay/getUnits gameplayCtx)
-                         (app.units/getByKey unitKey))]
-            (if unit
-              (let [[mw mh] gameplay/mapViewSize
-                    shortestPathTree (map/findPath (:position unit)
-                                                   (fn [{:keys [totalCost]} curr]
-                                                     [(>= totalCost 5) false])
-                                                   (fn [[x y]]
-                                                     [[x (min mh (inc y))]
-                                                      [x (max 0 (dec y))]
-                                                      [(min mw (inc x)) y]
-                                                      [(max 0 (dec x)) y]])
-                                                   (constantly 1)
-                                                   (constantly 0))
-                    moveRange (map first shortestPathTree)
-                    gameplayCtx (update-in gameplayCtx [:temp :shortestPathTree] (constantly shortestPathTree))]
-                (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
-                (recur gameplayCtx))
-              (throw (js/Error. (str unitKey " not found")))))
-
-          (= "buildPath" cmd)
-          (let [[id pos] args
-                shortestPathTree (get-in gameplayCtx [:temp :shortestPathTree])
-                path (map/buildPath shortestPathTree pos)]
-            (a/>! outputCh ["ok", [id path]])
-            (recur gameplayCtx))
-
-          (= "getUnitMenu" cmd)
-          (let [[id unitKey] args
-                unit (-> (gameplay/getUnits gameplayCtx)
-                         (app.units/getByKey unitKey))]
-            (if unit
-              (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))
-                    menu [["move" (range (count weapons)) "cancel"]
-                          {:weaponIdx 1
-                           :weapons weapons
-                           :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
-                                               (->> (map/simpleFindPath (:position unit) (dec min))
-                                                    (into #{})
-                                                    (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
-                                                                                 (into #{})))
-                                                    (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
-                                             weapons)}]]
-                (a/>! outputCh ["ok" [id menu]])
-                (recur gameplayCtx))
-              (throw (js/Error. (str unitKey " not found")))))
-
-          (= "getLocalUnits" cmd)
-          (let [[id] args
-                units (gameplay/getLocalUnits gameplayCtx nil nil)]
-            (a/>! outputCh ["ok", [id units]])
-            (recur gameplayCtx))
+          (= :move select)
+          (let [[gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths nil} inputCh outputCh))]
+            (if isEnd
+              [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
+              (recur gameplayCtx)))
 
           :else
-          (recur gameplayCtx))))))
+          (recur gameplayCtx)))
+
+      (= :cancel action)
+      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+
+      :else
+      (recur gameplayCtx))))
+
+(m/defstate systemMenu [gameplayCtx _]
+  nil
+  nil
+
+  (= "KEY_DOWN" cmd)
+  (let [keycode args
+        action (get actions keycode)
+        fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor 0})]
+    (cond
+      (some #(= % action) [:up :down :left :right])
+      (let [dir {:up dec
+                 :down inc
+                 :left dec
+                 :right inc}
+            state (update state :cursor (action dir))
+            fsm (app.fsm/save fsm state)]
+        (println fsm)
+        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (recur (gameplay/setFsm gameplayCtx fsm)))
+      
+      (= :cancel action)
+      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+      
+      :else
+      (recur gameplayCtx))))
+
+(m/defstate playerTurn [gameplayCtx _]
+  nil
+  nil  
+
+  (= "KEY_DOWN" cmd)
+  (let [keycode args
+        action (get actions keycode)
+        fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor [0 0]})]
+    (cond
+      (some #(= % action) [:up :down :left :right])
+      (let [dir {:up [0 -1]
+                 :down [0 1]
+                 :left [-1 0]
+                 :right [1 0]}
+            state (update state :cursor (partial map + (action dir)))
+            fsm (app.fsm/save fsm state)]
+        (println fsm)
+                ; (a/<! (updatePlayTurn gameplayCtx state inputCh outputCh))
+        (recur (gameplay/setFsm gameplayCtx fsm)))
+
+      (= :enter action)
+      (let [cursor (:cursor state)
+            unitAtCursor (-> (gameplay/getUnits gameplayCtx)
+                             (app.units/getByPosition cursor))]
+        (if unitAtCursor
+          (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unitAtCursor inputCh outputCh))]
+            (if isEnd
+              (recur gameplayCtx)
+              (recur gameplayCtx)))
+          (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx nil inputCh outputCh))]
+            (if endTurn
+              gameplayCtx
+              (recur gameplayCtx)))))
+
+      :else
+      (recur gameplayCtx))))
 
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
   (a/go
@@ -225,7 +214,7 @@
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
-    (let [gameplayCtx (a/<! (playerTurn gameplayCtx inputCh outputCh))
+    (let [gameplayCtx (a/<! (playerTurn gameplayCtx nil inputCh outputCh))
           enemies (->> (:players gameplayCtx)
                        keys
                        (filter #(not= :player %)))
@@ -258,8 +247,11 @@
                                           :award 0.1})
                 gameplayCtx (-> gameplay/defaultGameplayModel
                                 (gameplay/setData data)
-                                (gameplay/setMap playmap))
-                [gameplayCtx] (a/<! (prepareForStart gameplayCtx nil inputCh outputCh))]
+                                (gameplay/setMap playmap))]
+            
+            ;(a/<! (updateMap gameplayCtx (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
+            ;(a/<! (updateUnits gameplayCtx (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
+            
             (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
           
           :else

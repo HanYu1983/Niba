@@ -1,18 +1,20 @@
 (ns app.fsm)
 
 (def model {:stack []
-            :state {}})
+            :state []})
 
 (defn currState [ctx]
-  (peek (:stack ctx)))
+  (first (:stack ctx)))
 
 (defn pushState [ctx state]
-  (update ctx :stack #(conj % state)))
+  (-> ctx 
+   (update :stack (partial cons state))
+   (update :state (partial cons nil))))
 
 (defn popState [ctx]
   (-> ctx
-      (update :state (fn [state] (dissoc state (currState ctx))))
-      (update :stack pop)))
+      (update :state rest)
+      (update :stack rest)))
 
 (defn setState [ctx state]
   (-> ctx
@@ -20,7 +22,9 @@
       (pushState state)))
 
 (defn save [ctx obj]
-  (update-in ctx [:state (currState ctx)] (constantly obj)))
+  (update ctx :state (fn [origin]
+                       (->> (rest origin)
+                            (cons obj)))))
 
 (defn load [ctx]
-  (get-in ctx [:state (currState ctx)]))
+  (first (:state ctx)))
