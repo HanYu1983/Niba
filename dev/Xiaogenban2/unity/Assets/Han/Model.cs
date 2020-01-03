@@ -162,39 +162,6 @@ public class Model : MonoBehaviour, IModel{
         yield return SaveDisk(isDirty);
         yield return InvokeSaveToCloud();
     }
-    /*
-    void SaveWrok()
-    {
-        while (saveWorkDone == false)
-        {
-            Thread.Sleep(TimeSpan.FromSeconds(3));
-            if (isDirty.Equals(Memonto.empty))
-            {
-                continue;
-            }
-            isDirty = Memonto.empty;
-            try
-            {
-                Save(isDirty);
-                SaveToCloud();
-            }
-            catch(Exception e)
-            {
-                InvokeErrorAction(e.Message);
-            }
-        }
-
-        try
-        {
-            Save(isDirty);
-            SaveToCloud();
-        }
-        catch (Exception e)
-        {
-            InvokeErrorAction(e.Message);
-        }
-    }
-    */
     #endregion
 
 
@@ -309,7 +276,15 @@ public class Model : MonoBehaviour, IModel{
 
     public Item GetItemCacheById(int id)
     {
-        return _GetItemCacheById(id);
+        try
+        {
+            return _GetItemCacheById(id);
+        }
+        catch(Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
@@ -488,8 +463,7 @@ public class Model : MonoBehaviour, IModel{
     {
         if (itemMapCache.ContainsKey(id) == false)
         {
-            InvokeErrorAction(new Exception(id + " not found"));
-            throw new Exception("");
+            throw new Exception(id + " not found");
         }
         return itemMapCache[id];
     }
@@ -875,6 +849,7 @@ public class Model : MonoBehaviour, IModel{
         {
             errorAction(e.Message);
         }
+        throw e;
     }
 
     public void SetErrorAction(UnityAction<string> callback)
