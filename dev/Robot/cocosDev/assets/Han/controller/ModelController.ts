@@ -43,6 +43,10 @@ export default class NewClass extends cc.Component implements IModel {
         this.talk("getUnitNormalState", unitKey, cb);
     }
 
+    buildPath(positon: number[], cb: (path: number[][])=>void){
+        this.talk("buildPath", positon, cb);
+    }
+
     endTurn(cb?: () => void) {
         this.talk("endTurn", 0, cb);
     }

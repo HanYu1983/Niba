@@ -48,17 +48,6 @@
         (recur)))))
 
 (m/defstate prepareForStart [gameplayCtx args]
-  (= "pushState" cmd)
-  (let [[id [state data]] args
-        gameplayCtx (-> (gameplay/getFsm gameplayCtx)
-                        (app.fsm/save data)
-                        (app.fsm/pushState state)
-                        ((fn [fsm]
-                           (gameplay/setFsm gameplayCtx fsm))))]
-    (a/>! outputCh ["onStateChange" [(app.fsm/currState (gameplay/getFsm gameplayCtx)) nil]])
-    (a/>! outputCh ["ok" [id]])
-    (recur gameplayCtx))
-  
   (= "getUnitsByRegion" cmd)
   (let [[id] args
         units (gameplay/getUnitsByRegion gameplayCtx nil nil)]
@@ -187,10 +176,17 @@
                                                    (constantly 1)
                                                    (constantly 0))
                     moveRange (map first shortestPathTree)
-                    gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
+                    gameplayCtx (update-in gameplayCtx [:temp :shortestPathTree] (constantly shortestPathTree))]
                 (a/>! outputCh ["ok", [id {:unit unit :moveRange moveRange}]])
                 (recur gameplayCtx))
               (throw (js/Error. (str unitKey " not found")))))
+
+          (= "buildPath" cmd)
+          (let [[id pos] args
+                shortestPathTree (get-in gameplayCtx [:temp :shortestPathTree])
+                path (map/buildPath shortestPathTree pos)]
+            (a/>! outputCh ["ok", [id path]])
+            (recur gameplayCtx))
 
           (= "getUnitMenu" cmd)
           (let [[id unitKey] args

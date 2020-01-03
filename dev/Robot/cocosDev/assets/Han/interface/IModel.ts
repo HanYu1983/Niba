@@ -17,6 +17,7 @@ export default interface IModel {
     getCursor(): number[];
     setCursor(cursor: number[], cb: (args: number[]) => void): void;
 
+    buildPath(positon: number[], cb: (path: number[][]) => void): void;
     endTurn(cb?: () => void): void;
     gameStart();
 }

@@ -3,9 +3,8 @@ import View from "../../../Vic/View";
 import StackViewControler from "../StackViewController";
 import IUnit from "../../interface/IUnit";
 import Helper from "../Helper";
-import IModel from "../../interface/IModel";
-import UnitMoveViewController from "./UnitMoveViewController";
 import IStackViewControllerEvents from "../../interface/IStackViewControllerEvents";
+import UnitSelectPositionViewController from "./UnitSelectPositionViewController";
 
 export default class UnitMenuViewController extends EmptyViewController implements IStackViewControllerEvents {
     
@@ -53,7 +52,7 @@ export default class UnitMenuViewController extends EmptyViewController implemen
                 switch (key) {
                     case "move":
                         this.view.getGamePage().closeUnitMenu();
-                        this.stackMgr.push(new UnitMoveViewController(this.view, this.stackMgr, this.unit));
+                        this.stackMgr.push(new UnitSelectPositionViewController(this.view, this.stackMgr, this.unit));
                         break;
                     case "cancel":
                         this.view.getGamePage().closeUnitMenu();

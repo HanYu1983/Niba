@@ -1,4 +1,5 @@
 import IUnit from "../interface/IUnit";
+import View from "../../Vic/View";
 
 export default class Helper {
     static projectPosition([cx, cy]: number[], [x, y]: number[]): number[] {
@@ -21,5 +22,12 @@ export default class Helper {
             return null;
         }
         return find[0];
+    }
+
+    static unitMove(view: View, unitKey:string, path: number[][], cb?:()=>void){
+        console.log(unitKey, path);
+        if(cb){
+            cb();
+        }
     }
 }
