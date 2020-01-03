@@ -34,4 +34,5 @@ public interface IModel
     void GetUserData(string id, UnityAction<bool> callback);
 
     void Load(UnityAction<bool> callback);
+    bool IsCloudSaveDirty();
 }

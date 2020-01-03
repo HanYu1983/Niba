@@ -209,4 +209,9 @@ public class DebugModel : MonoBehaviour, IModel
         }
         return items;
     }
+
+    public bool IsCloudSaveDirty()
+    {
+        return true;
+    }
 }

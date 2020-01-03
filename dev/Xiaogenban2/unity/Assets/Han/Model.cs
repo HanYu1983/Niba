@@ -770,24 +770,38 @@ public class Model : MonoBehaviour, IModel{
     #region cloud save
     public CloudSave cloudSave;
     private string lastInputCloudId;
+    private bool isCloudSaveDirty = false;
 
-    public void SaveToCloud()
+    public bool IsCloudSaveDirty()
     {
-        StartCoroutine(InvokeSaveToCloud());
+        return isCloudSaveDirty;
     }
 
+    private bool isCloudSaveLock = false;
+    // 注意, 這個方法不能在執行完畢前同時呼叫多次
     private IEnumerator InvokeSaveToCloud()
     {
+        if (isCloudSaveLock)
+        {
+            InvokeErrorAction(new Exception("isCloudSaveLock"));
+            yield break;
+        }
+        isCloudSaveLock = true;
+
+        isCloudSaveDirty = true;
         yield return cloudSave.SaveToCloud();
         try
         {
             cloudSave.CheckError();
+            isCloudSaveDirty = false;
         }
         catch (Exception e)
         {
+            // 離線使用不中斷程式
+            // 前端必須要顯示isCloudSaveDirty狀態來讓使用者判斷有沒有成功同步網路資料
             Debug.Log(e.Message);
-            // InvokeErrorAction(e.Message);
         }
+        isCloudSaveLock = false;
     }
 
     public string GetUserID()
