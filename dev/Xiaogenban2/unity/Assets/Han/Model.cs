@@ -145,7 +145,7 @@ public class Model : MonoBehaviour, IModel{
         yield return null;
         while (saveWorkDone == false)
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(1);
             if (isDirty.Equals(Memonto.empty))
             {
                 continue;
