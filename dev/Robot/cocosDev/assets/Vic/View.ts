@@ -19,6 +19,15 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component implements IView {
+    updateMoveRange(data: number[][], cb: () => void) {
+        cb();
+    }
+    updateAttackRange(data: number[][], cb: () => void) {
+        cb();
+    }
+    updateMapAttackRange(data: number[][], cb: () => void) {
+        cb();
+    }
     updateCursor(data: number[], cb: () => void) {
         console.log(data)
         cb();
@@ -83,13 +92,13 @@ export default class NewClass extends cc.Component implements IView {
         });
     }
 
-    openMainPage():MainPage {
+    openMainPage(): MainPage {
         this.closeAllPages();
         this.pages[0].open();
         return this.getMainPage();
     }
 
-    openGamePage():GamePage {
+    openGamePage(): GamePage {
         this.closeAllPages();
         this.openLoadingPage();
 
@@ -109,22 +118,22 @@ export default class NewClass extends cc.Component implements IView {
         this.pages[2].close();
     }
 
-    getGamePage():GamePage{
+    getGamePage(): GamePage {
         return this.pages[1] as GamePage;
     }
 
-    getMainPage():MainPage{
-        return this.pages[0] as MainPage; 
+    getMainPage(): MainPage {
+        return this.pages[0] as MainPage;
     }
 
     getGridPos(pos: number[]) {
         return [pos[0] * 32 - 304, -pos[1] * 32 + 304];
     }
 
-    getXYByIndex(id:number):number[]{
+    getXYByIndex(id: number): number[] {
         cc.log(id);
-        let pos = [id%20, Math.floor(id/20)];
-        cc.log(id%20, Math.floor(id/20));
+        let pos = [id % 20, Math.floor(id / 20)];
+        cc.log(id % 20, Math.floor(id / 20));
         return pos;
     }
 }
