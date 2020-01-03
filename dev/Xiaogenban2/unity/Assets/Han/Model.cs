@@ -23,8 +23,8 @@ public class Model : MonoBehaviour, IModel{
 
     void OnAddEarn(Earn earn)
     {
-        OnDataChange();
         ClearCar();
+        OnDataChange();
     }
 
     void OnDeleteEarn()
@@ -206,8 +206,6 @@ public class Model : MonoBehaviour, IModel{
 
     public static Item Earn2Item(Earn earn)
     {
-        //var time = new DateTime(earn.createUTC).ToLocalTime();
-        //var timeStr = time.ToString(new System.Globalization.CultureInfo("zh-TW"));
         return new Item(earn.id, earn.money, earn.memo, earn.createUTC);
     }
 
@@ -218,83 +216,99 @@ public class Model : MonoBehaviour, IModel{
 
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
-        var earn = Earn.empty;
-        earn.id = seqId++;
-        earn.money = money;
-        if(memo == null)
+        try
         {
-            earn.memo = lastInputEarn.memo;
-            if(earn.memo == null)
+            var earn = Earn.empty;
+            earn.id = seqId++;
+            earn.money = money;
+            if (memo == null)
             {
-                earn.memo = "";
+                earn.memo = lastInputEarn.memo;
+                if (earn.memo == null)
+                {
+                    earn.memo = "";
+                }
             }
-        }
-        else
-        {
-            earn.memo = memo;
-        }
-        earn.createUTC = System.DateTime.UtcNow.Ticks;
-        earns[earn.id] = earn;
+            else
+            {
+                earn.memo = memo;
+            }
+            earn.createUTC = System.DateTime.UtcNow.Ticks;
+            earns[earn.id] = earn;
 
-        lastInputEarn = earn;
-        OnAddEarn(earn);
-        callback(null, GenItemList());
+            lastInputEarn = earn;
+
+            callback(null, GenItemList());
+            OnAddEarn(earn);
+        }
+        catch(Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback)
     {
-        if (earns.ContainsKey(id) == false)
+        try
         {
-            InvokeErrorAction(id + " not found");
-            callback(null, null);
-            return;
+            if (earns.ContainsKey(id) == false)
+            {
+                throw new Exception(id + " not found");
+            }
+            var earn = earns[id];
+            earn.memo = memo;
+            earns[id] = earn;
+            lastInputEarn = earn;
+            callback(null, GenItemList());
+            OnEarnMemoChange(memo);
         }
-        var earn = earns[id];
-        earn.memo = memo;
-        earns[id] = earn;
-        lastInputEarn = earn;
-        OnEarnMemoChange(memo);
-        callback(null, GenItemList());
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback)
     {
-        if (earns.ContainsKey(id) == false)
+        try
         {
-            InvokeErrorAction(id + " not found");
-            return;
+            if (earns.ContainsKey(id) == false)
+            {
+                throw new Exception(id + " not found");
+            }
+            var earn = earns[id];
+            earn.money = money;
+            earns[id] = earn;
+            callback(null, GenItemList());
+            OnEarnMoneyChange();
         }
-        var earn = earns[id];
-        earn.money = money;
-        earns[id] = earn;
-        OnEarnMoneyChange();
-        callback(null, GenItemList());
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public void DeleteItem(int id, UnityAction<object, List<Item>> callback)
     {
-        if (earns.ContainsKey(id) == false)
+        try
         {
-            Debug.LogWarning(id + " not found. can not delete");
-            callback(null, GetItemListCache());
-            return;
+            if (earns.ContainsKey(id) == false)
+            {
+                throw new Exception(id + " not found. can not delete");
+            }
+            earns.Remove(id);
+            callback(null, GenItemList());
+            OnDeleteEarn();
         }
-        earns.Remove(id);
-        OnDeleteEarn();
-        callback(null, GenItemList());
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public Item GetItemCacheById(int id)
     {
         return _GetItemCacheById(id);
-        /*
-        if (earns.ContainsKey(id) == false)
-        {
-            InvokeErrorAction(id + " not found");
-            throw new Exception("");
-        }
-        return Earn2Item(earns[id]);
-        */
     }
 
     public static Func<Earn, bool> MemoContains(string memo)
@@ -448,7 +462,7 @@ public class Model : MonoBehaviour, IModel{
         return list;
     }
 
-    public List<Item> GenItemList()
+    private List<Item> GenItemList()
     {
         itemListCache = earns.Values.OrderByDescending(d => d.createUTC).Select(Earn2Item).ToList();
 
@@ -473,7 +487,7 @@ public class Model : MonoBehaviour, IModel{
     {
         if (itemMapCache.ContainsKey(id) == false)
         {
-            InvokeErrorAction(id + " not found");
+            InvokeErrorAction(new Exception(id + " not found"));
             throw new Exception("");
         }
         return itemMapCache[id];
@@ -490,21 +504,33 @@ public class Model : MonoBehaviour, IModel{
 
     public void AddItemToCar(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
-        var id = seqId++;
-        car[id] = new Item(id, money, memo, 0);
-        callback(null, GetCarItemListCache());
+        try
+        {
+            var id = seqId++;
+            car[id] = new Item(id, money, memo, 0);
+            callback(null, GetCarItemListCache());
+        }
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public void DeleteItemFromCar(int id, UnityAction<object, List<Item>> callback)
     {
-        if (car.ContainsKey(id) == false)
+        try
         {
-            Debug.LogWarning(id + " not found. can not delete");
-            callback(null, earns.Values.Select(Earn2Item).ToList());
-            return;
+            if (car.ContainsKey(id) == false)
+            {
+                throw new Exception(id + " not found. can not delete");
+            }
+            car.Remove(id);
+            callback(null, GetCarItemListCache());
         }
-        car.Remove(id);
-        callback(null, GetCarItemListCache());
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+        }
     }
 
     public List<Item> GetCarItemListCache()
@@ -539,66 +565,97 @@ public class Model : MonoBehaviour, IModel{
 
     public void ClearSelectMemo()
     {
-        foreach (var m in memoItems.Values)
+        try
         {
-            m.isSelect = false;
+            foreach (var m in memoItems.Values)
+            {
+                m.isSelect = false;
+            }
+        }
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
         }
     }
 
     public List<MemoItem> SelectMemo(string memo)
     {
-        var datas = memo.Split(SplitTag);
-        foreach (string m in datas)
+        try
         {
-            if(memoItems.ContainsKey(m) == false)
+            var datas = memo.Split(SplitTag);
+            foreach (string m in datas)
             {
-                Debug.LogFormat("{0} not found.", m);
-                continue;
+                if (memoItems.ContainsKey(m) == false)
+                {
+                    Debug.LogFormat("{0} not found.", m);
+                    continue;
+                }
+                if (memoItems[m].isSelect)
+                {
+                    Debug.LogFormat("{0} already selected.", m);
+                    continue;
+                }
+                memoItems[m].isSelect = true;
             }
-            if (memoItems[m].isSelect)
-            {
-                Debug.LogFormat("{0} already selected.", m);
-                continue;
-            }
-            memoItems[m].isSelect = true;
+            return GetMemoList();
         }
-        return GetMemoList();
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
     }
 
     public List<MemoItem> UnSelectMemo(string memo)
     {
-        var datas = memo.Split(SplitTag);
-        foreach (string m in datas)
+        try
         {
-            if (memoItems.ContainsKey(m) == false)
+            var datas = memo.Split(SplitTag);
+            foreach (string m in datas)
             {
-                Debug.LogFormat("{0} not found.", m);
-                continue;
+                if (memoItems.ContainsKey(m) == false)
+                {
+                    Debug.LogFormat("{0} not found.", m);
+                    continue;
+                }
+                if (memoItems[m].isSelect == false)
+                {
+                    Debug.LogFormat("{0} already unselected.", m);
+                    continue;
+                }
+                memoItems[m].isSelect = false;
             }
-            if (memoItems[m].isSelect == false)
-            {
-                Debug.LogFormat("{0} already unselected.", m);
-                continue;
-            }
-            memoItems[m].isSelect = false;
+            return GetMemoList();
         }
-        return GetMemoList();
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
     }
 
     
     public List<MemoItem> AddMemo(string memo)
     {
-        var memos = StringToMemoList(memo);
-        foreach (var m in memos)
+        try
         {
-            if (memoItems.ContainsKey(memo))
+            var memos = StringToMemoList(memo);
+            foreach (var m in memos)
             {
-                continue;
+                if (memoItems.ContainsKey(memo))
+                {
+                    continue;
+                }
+                memoItems.Add(m.Memo, m);
             }
-            memoItems.Add(m.Memo, m);
+            OnAddMemo();
+            return GetMemoList();
         }
-        OnAddMemo();
-        return GetMemoList();
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
     }
 
     public string MemoListToString(List<MemoItem> list)
@@ -626,28 +683,44 @@ public class Model : MonoBehaviour, IModel{
 
     public List<MemoItem> DeleteMemo()
     {
-        var selectedMemoList = GetSelectedMemoListKeys();
-        OnDeleteMemo(selectedMemoList);
-        foreach (var selected in selectedMemoList)
+        try
         {
-            memoItems.Remove(selected);
+            var selectedMemoList = GetSelectedMemoListKeys();
+            OnDeleteMemo(selectedMemoList);
+            foreach (var selected in selectedMemoList)
+            {
+                memoItems.Remove(selected);
+            }
+            return GetMemoList();
         }
-        return GetMemoList();
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
     }
 
     public List<MemoItem> EditMemo(string memo)
     {
-        if (memo.Split(SplitTag).Length > 1)
+        try
         {
-            InvokeErrorAction(memo +" should not have " + SplitTag);
+            if (memo.Split(SplitTag).Length > 1)
+            {
+                throw new Exception(memo + " should not have " + SplitTag);
+            }
+            OnEditMemo(GetSelectedMemoListKeys(), memo);
+            AddMemo(memo);
             return GetMemoList();
         }
-        OnEditMemo(GetSelectedMemoListKeys(), memo);
-        AddMemo(memo);
-        return GetMemoList();
+        catch (Exception e)
+        {
+            InvokeErrorAction(e);
+            throw e;
+        }
+        
     }
 
-    public void UpdateMemoLastUTC(string memo)
+    private void UpdateMemoLastUTC(string memo)
     {
         var datas = memo.Split(SplitTag);
         foreach(var d in datas)
@@ -672,7 +745,7 @@ public class Model : MonoBehaviour, IModel{
         persistentDataPath = path;
     }
 
-    public void SetMemonto(Memonto temp)
+    private void SetMemonto(Memonto temp)
     {
         seqId = temp.seqId;
         earns.Clear();
@@ -696,7 +769,7 @@ public class Model : MonoBehaviour, IModel{
         return temp;
     }
 
-    public void Save(Memonto temp)
+    private void Save(Memonto temp)
     {
         string json = JsonUtility.ToJson(temp, true);
         var filePath = persistentDataPath + "/" + fileName;
@@ -704,7 +777,7 @@ public class Model : MonoBehaviour, IModel{
         File.WriteAllText(filePath, json);
     }
 
-    public void Load()
+    private void Load()
     {
         var filePath = persistentDataPath + "/" + fileName;
         Debug.LogFormat("load from {0}", filePath);
@@ -774,7 +847,7 @@ public class Model : MonoBehaviour, IModel{
         }
         catch (Exception e)
         {
-            InvokeErrorAction(e.Message);
+            InvokeErrorAction(e);
             callback(false);
         }
         
@@ -793,12 +866,13 @@ public class Model : MonoBehaviour, IModel{
 
     private UnityAction<string> errorAction;
 
-    public void InvokeErrorAction(string msg)
+    public void InvokeErrorAction(Exception e)
     {
-        Debug.Log(msg);
+        Debug.Log(e.StackTrace);
+        Debug.Log(e.Message);
         if (errorAction != null)
         {
-            errorAction(msg);
+            errorAction(e.Message);
         }
     }
 
@@ -817,7 +891,7 @@ public class Model : MonoBehaviour, IModel{
         catch (Exception e)
         {
             Debug.Log(e.Message);
-            InvokeErrorAction(e.Message);
+            InvokeErrorAction(e);
             callback(false);
         }
     }
