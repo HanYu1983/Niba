@@ -19,6 +19,10 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component implements IView {
+    updateCursor(data: number[], cb: () => void) {
+        console.log(data)
+        cb();
+    }
     updateMap(data: number[][], cb: () => void) {
         cb();
     }
