@@ -39,13 +39,16 @@
 (m/defwait enemyTurnStart [ctx args])
 (m/defwait updateMap [ctx args])
 (m/defwait updateUnits [ctx args])
-(m/defwait updateCursor [ctx args])
-(m/defwait updateMoveRange [ctx args])
-(m/defwait updateAttackRange [ctx args])
+
 (m/defwait updatePlayTurn [ctx args])
 (m/defwait updateUnitMenu [ctx args])
 (m/defwait updateSystemMenu [ctx args])
+(m/defwait updateUnitSelectMovePosition [ctx args])
 (m/defwait unitMoveAnim [ctx args])
+
+(m/defwait updateCursor [ctx args])
+(m/defwait updateMoveRange [ctx args])
+(m/defwait updateAttackRange [ctx args])
 
 (def actions {87 :up
               83 :down
@@ -54,18 +57,20 @@
               13 :enter
               27 :cancel})
 
-
 (declare unitMenu)
 
 (m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
   nil
-  nil
+  (let [fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor (:position unit)})]
+    (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh))
+    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
   (= "KEY_DOWN" cmd)
   (let [keycode args
         action (get actions keycode)
         fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor (:position unit)})]
+        state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down :left :right])
       (let [dir {:up [0 -1]
@@ -75,12 +80,11 @@
             state (update state :cursor (partial map + (action dir)))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
       
       (= :enter action)
       (let []
-        ; (a/<! (unitMoveAnim gameplayCtx nil inputCh outputCh))
+        (a/<! (unitMoveAnim gameplayCtx nil inputCh outputCh))
         (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
           (if isEnd
             [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
@@ -94,16 +98,18 @@
 
 (m/defstate unitMenu [gameplayCtx unit]
   nil
-  (let [menu [[:move [:weapon1]] {}]]
-    ; (a/<! (updateUnitMenu nil menu inputCh outputCh))
-    gameplayCtx)
+  (let [menu [[:move [:weapon1]] {}]
+        fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor 0
+                                      :subcursor {}})]
+    (a/<! (updateUnitMenu nil state inputCh outputCh))
+    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
   (= "KEY_DOWN" cmd)
   (let [keycode args
         action (get actions keycode)
         fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor 0
-                                      :subcursor {}})]
+        state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down])
       (let [dir {:up dec
@@ -111,7 +117,7 @@
             state (update state :cursor (action dir))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:left :right])
@@ -120,7 +126,7 @@
             state (update-in state [:subcursor (:cursor state)] (action dir))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+        (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
@@ -143,13 +149,16 @@
 
 (m/defstate systemMenu [gameplayCtx _]
   nil
-  nil
+  (let [fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor 0})]
+    (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
+    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
   (= "KEY_DOWN" cmd)
   (let [keycode args
         action (get actions keycode)
         fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor 0})]
+        state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down :left :right])
       (let [dir {:up dec
@@ -159,7 +168,6 @@
             state (update state :cursor (action dir))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        ; (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
       
       (= :cancel action)
@@ -170,13 +178,16 @@
 
 (m/defstate playerTurn [gameplayCtx _]
   nil
-  nil  
+  (let [fsm (gameplay/getFsm gameplayCtx)
+        state (or (app.fsm/load fsm) {:cursor [0 0]})]
+    (a/<! (updatePlayTurn gameplayCtx state inputCh outputCh))
+    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
   (= "KEY_DOWN" cmd)
   (let [keycode args
         action (get actions keycode)
         fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor [0 0]})]
+        state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down :left :right])
       (let [dir {:up [0 -1]
@@ -186,7 +197,6 @@
             state (update state :cursor (partial map + (action dir)))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-                ; (a/<! (updatePlayTurn gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
@@ -248,10 +258,10 @@
                 gameplayCtx (-> gameplay/defaultGameplayModel
                                 (gameplay/setData data)
                                 (gameplay/setMap playmap))]
-            
-            ;(a/<! (updateMap gameplayCtx (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-            ;(a/<! (updateUnits gameplayCtx (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-            
+
+            (a/<! (updateMap gameplayCtx (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
+            (a/<! (updateUnits gameplayCtx (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
+
             (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
           
           :else

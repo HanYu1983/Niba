@@ -1,11 +1,50 @@
 import IViewController from "../interface/IViewController";
 import IModel from "../interface/IModel";
 import IUnit from "../interface/IUnit";
+import IView from "../interface/IView";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class NewClass extends cc.Component implements IModel {
+
+    private viewNotifyOb: { next: (args: any) => void };
+    private viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
+
+    private send(cmd: string, data: any = 0) {
+        this.viewNotifyOb.next([cmd, data]);
+    }
+
+    private view: IView;
+    setView(ctr: IView) {
+        this.bindModel();
+        this.view = ctr;
+        this.subscribe();
+    }
+
+    subscribe(){
+        this.viewOb.subscribe(e => {
+            const [cmd, args] = e;
+            if(this.view[cmd]){
+                const [id, data] = args;
+                this.view[cmd](data, ()=>{
+                    this.send("ok", [id, 0])
+                })
+            }
+        })
+    }
+
+    private bindModel() {
+        window.startApp();
+        this.viewNotifyOb = window.viewNotifyOb;
+        this.viewOb = window.viewOb;
+    }
+
+    startGame(){
+        this.send("startGameplay");
+    }
+
+    // =============================== //
 
     pushState(state: string, save: any, callback: () => void) {
         this.talk("pushState", [state, save], callback);
@@ -78,7 +117,7 @@ export default class NewClass extends cc.Component implements IModel {
         this.bindModel();
         ctr.setModel(this);
         this.viewController = ctr;
-        this.subscribe();
+        //this.subscribe2();
     }
 
     private lastState:string;
@@ -89,14 +128,7 @@ export default class NewClass extends cc.Component implements IModel {
         return this.lastState;
     }
 
-    private viewNotifyOb: { next: (args: any) => void };
-    private viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
-
-    private send(cmd: string, data: any = 0) {
-        this.viewNotifyOb.next([cmd, data]);
-    }
-
-    private subscribe() {
+    private subscribe2() {
         this.viewOb.subscribe(e => {
             const [cmd, args] = e;
             switch (cmd) {
@@ -157,9 +189,5 @@ export default class NewClass extends cc.Component implements IModel {
         })
     }
 
-    private bindModel() {
-        window.startApp();
-        this.viewNotifyOb = window.viewNotifyOb;
-        this.viewOb = window.viewOb;
-    }
+    
 }

@@ -12,11 +12,39 @@ import LandMap from "./GamePage/LandMap";
 import BasicViewer from "./BasicViewer";
 import GamePage from "./Page/GamePage";
 import MainPage from "./Page/MainPage";
+import IView from "../Han/interface/IView";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class NewClass extends cc.Component implements IView {
+    unitMoveAnim(data: any, cb: () => void) {
+        cb();
+    }
+    updateUnitSelectMovePosition(data: any, cb: () => void) {
+        cb();
+    }
+    updatePlayTurn(data: any, cb: () => void) {
+        cb();
+    }
+    updateSystemMenu(data: any, cb: () => void) {
+        cb();
+    }
+    updateUnitMenu(data: any, cb: () => void) {
+        cb();
+    }
+    updateMap(data: number[][], cb: () => void) {
+        cb();
+    }
+    updateUnits(data: any, cb: () => void) {
+        cb();
+    }
+    playerTurnStart(data: any, cb: () => void) {
+        cb();
+    }
+    enemyTurnStart(data: string, cb: () => void) {
+        cb();
+    }
 
     @property(BasicViewer)
     pages: BasicViewer[] = [];

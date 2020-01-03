@@ -5,6 +5,8 @@ import View from "./View";
 import IViewManager from "../Han/interface/IViewManager";
 import DefaultViewController from "../Han/controller/state/DefaultViewController";
 import StackViewControler from "../Han/controller/StackViewController";
+import IView from "../Han/interface/IView";
+import EmptyViewController from "../Han/controller/EmptyViewController"
 
 const { ccclass, property } = cc._decorator;
 
@@ -20,10 +22,14 @@ export default class NewClass extends cc.Component implements IViewController {
     private _viewEventHandler: IViewManager;
 
     onLoad() {
+        /*
         const svc = new StackViewControler();
         svc.push(new DefaultViewController(this.view, svc));
         this._viewEventHandler = svc;
         this.modelController.setViewController(this);
+        */
+        this._viewEventHandler = new EmptyViewController();
+        this.modelController.setView(this.view);
         NewClass.instance = this;
     }
 
@@ -32,7 +38,8 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     notifyStartGame() {
-        this._viewEventHandler.notifyStartGame();
+        //this._viewEventHandler.notifyStartGame();
+        this.modelController.startGame();
     }
 
     onPrepareForStart(callback: () => void): void {
