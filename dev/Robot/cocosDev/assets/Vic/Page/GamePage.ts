@@ -135,15 +135,15 @@ export default class NewClass extends BasicViewer {
 
         this.sceneMenu.open();
         this.sceneMenu.setData(data);
-        this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback);
+        //this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback);
     }
 
     closeSceneMenu() {
-        this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        //this.sceneMenu.node.off(MenuButtons.ON_MENU_ENTER);
         this.sceneMenu.close();
     }
 
-    openUnitMenu(menus: any, cursors:any[], callback: (key) => void) {
+    openUnitMenu(menus: any, cursors:any[]) {
         const [menu, weaponInfo] = menus;
         let weaponId = weaponInfo.weaponIdx;
         let weapons = weaponInfo.weapons;
@@ -153,48 +153,48 @@ export default class NewClass extends BasicViewer {
 
         this.unitMenu.open();
         this.unitMenu.setData(menu, cursors);
-        this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
-            callback(key);
-        });
+        // this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
+        //     callback(key);
+        // });
 
-        let showWeaponRange = (cursor) => {
-            this.map.closeWeaponRange();
-            if(cursor[0] == weaponId){
-                this.map.showWeaponRange(weaponRanges[cursor[1]]);
-            }
-        }
+        // let showWeaponRange = (cursor) => {
+        //     this.map.closeWeaponRange();
+        //     if(cursor[0] == weaponId){
+        //         this.map.showWeaponRange(weaponRanges[cursor[1]]);
+        //     }
+        // }
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
-            showWeaponRange(cursor);
-        });
+        // this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
+        //     showWeaponRange(cursor);
+        // });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
-            showWeaponRange(cursor);
-        });
+        // this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
+        //     showWeaponRange(cursor);
+        // });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
-            if (cursor[0] == weaponId) {
-                showWeaponRange(cursor);
-                this.weaponMenu.showCurrentWeapon(cursor[1]);
-            }
-        });
+        // this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
+        //     if (cursor[0] == weaponId) {
+        //         showWeaponRange(cursor);
+        //         this.weaponMenu.showCurrentWeapon(cursor[1]);
+        //     }
+        // });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
-            if (cursor[0] == weaponId) {
-                showWeaponRange(cursor);
-                this.weaponMenu.showCurrentWeapon(cursor[1]);
-            }
-        });
+        // this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
+        //     if (cursor[0] == weaponId) {
+        //         showWeaponRange(cursor);
+        //         this.weaponMenu.showCurrentWeapon(cursor[1]);
+        //     }
+        // });
 
         this.openWeaponMenu(weapons);
     }
 
     closeUnitMenu() {
-        this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_UP);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_DOWN);
+        // this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
+        // this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
+        // this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
+        // this.unitMenu.node.off(MenuButtons.ON_MENU_UP);
+        // this.unitMenu.node.off(MenuButtons.ON_MENU_DOWN);
         this.unitMenu.close();
 
         this.weaponMenu.close();
