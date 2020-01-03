@@ -47,15 +47,73 @@ public class Model : MonoBehaviour, IModel{
         OnDataChange();
     }
 
-    void OnEarnMemoChange()
+    void OnEarnMemoChange(string memo)
     {
+        UpdateMemoLastUTC(memo);
         OnDataChange();
     }
 
+    void OnDeleteMemo(List<string> selectedMomoList)
+    {
+        foreach(var deleteMemo in selectedMomoList)
+        {
+            var selectedEarns = GetEarns().Values.Where(d=>
+            {
+                if (d.memo == null)
+                {
+                    return false;
+                }
+                return d.memo.Contains(deleteMemo);
+            }).ToList();
 
+            foreach(var earn in selectedEarns)
+            {
+                var willDelete = StringToMemoList(earn.memo).Select(d => d.Memo).Where(d => d == deleteMemo).ToList();
+                if (willDelete.Count == 0)
+                {
+                    continue;
+                }
+                var newMemos = StringToMemoList(earn.memo).Where(d => d.Memo != deleteMemo);
+                var memoStr = MemoListToString(newMemos.ToList());
+                ChangeItemMemo(earn.id, memoStr, (err, items) => { });
+            }
+        }
+        OnDataChange();
+    }
+
+    void OnEditMemo(List<string> selectedMomoList, string memo)
+    {
+        foreach (var deleteMemo in selectedMomoList)
+        {
+            var selectedEarns = GetEarns().Values.Where(d =>
+            {
+                if (d.memo == null)
+                {
+                    return false;
+                }
+                return d.memo.Contains(deleteMemo);
+            }).ToList();
+
+            foreach (var earn in selectedEarns)
+            {
+                var willDelete = StringToMemoList(earn.memo).Select(d => d.Memo).Where(d => d == deleteMemo).ToList();
+                if(willDelete.Count == 0)
+                {
+                    continue;
+                }
+                var newMemos = StringToMemoList(earn.memo).Select(d => d.Memo).Where(d => d != deleteMemo).ToList();
+                newMemos.Add(memo);
+                // 去掉重復的
+                newMemos = newMemos.Distinct().ToList();
+                var memoStr = MemoListToString(newMemos.Select(d=>new MemoItem(d, true)).ToList());
+                ChangeItemMemo(earn.id, memoStr, (err, items) => { });
+            }
+        }
+        OnDataChange();
+    }
 
     #region save worker
-    
+
     private Memonto isDirty;
     private bool saveWorkDone;
 
@@ -153,6 +211,11 @@ public class Model : MonoBehaviour, IModel{
         return new Item(earn.id, earn.money, earn.memo, earn.createUTC);
     }
 
+    private Dictionary<int, Earn> GetEarns()
+    {
+        return earns;
+    }
+
     public void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback)
     {
         var earn = Earn.empty;
@@ -190,7 +253,7 @@ public class Model : MonoBehaviour, IModel{
         earn.memo = memo;
         earns[id] = earn;
         lastInputEarn = earn;
-        OnEarnMemoChange();
+        OnEarnMemoChange(memo);
         callback(null, GenItemList());
     }
 
@@ -466,9 +529,12 @@ public class Model : MonoBehaviour, IModel{
     {
         if (string.IsNullOrEmpty(memoFilter))
         {
-            return memoItems.Values.ToList();
+            return memoItems.Values.OrderByDescending(d => d.LastSelectUTC).ToList();
         }
-        return memoItems.Values.Where(d=>d.Memo != null && d.Memo.Contains(memoFilter)).ToList();
+        return memoItems.Values
+            .Where(d => d.Memo != null && d.Memo.Contains(memoFilter))
+            .OrderByDescending(d => d.LastSelectUTC)
+            .ToList();
     }
 
     public void ClearSelectMemo()
@@ -522,17 +588,13 @@ public class Model : MonoBehaviour, IModel{
     
     public List<MemoItem> AddMemo(string memo)
     {
-        var datas = memo.Split(SplitTag);
-        var memos = datas.Distinct().Select(d =>
+        var memos = StringToMemoList(memo);
+        foreach (var m in memos)
         {
-            return new MemoItem(d.Trim(), true);
-        }).Where(m =>
-        {
-            return string.IsNullOrEmpty(m.Memo) == false;
-        });
-
-        foreach(var m in memos)
-        {
+            if (memoItems.ContainsKey(memo))
+            {
+                continue;
+            }
             memoItems.Add(m.Memo, m);
         }
         OnAddMemo();
@@ -542,6 +604,60 @@ public class Model : MonoBehaviour, IModel{
     public string MemoListToString(List<MemoItem> list)
     {
         return string.Join(";", list.Where(d=>d.isSelect).Select(d => d.Memo).ToArray());
+    }
+
+    private List<MemoItem> StringToMemoList(string memo)
+    {
+        var datas = memo.Split(SplitTag);
+        var memos = datas.Distinct().Select(d =>
+        {
+            return new MemoItem(d.Trim(), true);
+        }).Where(m =>
+        {
+            return string.IsNullOrEmpty(m.Memo) == false;
+        });
+        return memos.ToList();
+    }
+
+    private List<string> GetSelectedMemoListKeys()
+    {
+        return memoItems.Values.Where(d => d.isSelect).Select(d => d.Memo).ToList();
+    }
+
+    public List<MemoItem> DeleteMemo()
+    {
+        var selectedMemoList = GetSelectedMemoListKeys();
+        OnDeleteMemo(selectedMemoList);
+        foreach (var selected in selectedMemoList)
+        {
+            memoItems.Remove(selected);
+        }
+        return GetMemoList();
+    }
+
+    public List<MemoItem> EditMemo(string memo)
+    {
+        if (memo.Split(SplitTag).Length > 1)
+        {
+            InvokeErrorAction(memo +" should not have " + SplitTag);
+            return GetMemoList();
+        }
+        OnEditMemo(GetSelectedMemoListKeys(), memo);
+        AddMemo(memo);
+        return GetMemoList();
+    }
+
+    public void UpdateMemoLastUTC(string memo)
+    {
+        var datas = memo.Split(SplitTag);
+        foreach(var d in datas)
+        {
+            if(memoItems.ContainsKey(d) == false)
+            {
+                continue;
+            }
+            memoItems[d].LastSelectUTC = System.DateTime.UtcNow.Ticks;
+        }
     }
 
     #endregion
@@ -704,16 +820,6 @@ public class Model : MonoBehaviour, IModel{
             InvokeErrorAction(e.Message);
             callback(false);
         }
-    }
-
-    public List<MemoItem> DeleteMemo()
-    {
-        throw new NotImplementedException();
-    }
-
-    public List<MemoItem> EditMemo(string memo)
-    {
-        throw new NotImplementedException();
     }
 
     #endregion
