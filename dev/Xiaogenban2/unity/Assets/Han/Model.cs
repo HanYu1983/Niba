@@ -675,7 +675,7 @@ public class Model : MonoBehaviour, IModel{
         }
     }
 
-    public List<MemoItem> EditMemo(string memo)
+    public List<MemoItem> EditMemo(string memo, bool removeOld)
     {
         try
         {
@@ -683,7 +683,15 @@ public class Model : MonoBehaviour, IModel{
             {
                 throw new Exception(memo + " should not have " + SplitTag);
             }
-            OnEditMemo(GetSelectedMemoListKeys(), memo);
+            var selectedMemoList = GetSelectedMemoListKeys();
+            OnEditMemo(selectedMemoList, memo);
+            if (removeOld)
+            {
+                foreach (var selected in selectedMemoList)
+                {
+                    memoItems.Remove(selected);
+                }
+            }
             AddMemo(memo);
             return GetMemoList();
         }

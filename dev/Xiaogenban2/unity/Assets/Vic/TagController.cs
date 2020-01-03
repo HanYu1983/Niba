@@ -76,7 +76,7 @@ class TagController : MonoBehaviour
 
     public void EditTag()
     {
-        Model.EditMemo(ContentText);
+        Model.EditMemo(ContentText, true);
         SetTagList();
     }
 

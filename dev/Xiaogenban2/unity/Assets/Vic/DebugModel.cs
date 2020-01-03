@@ -200,7 +200,7 @@ public class DebugModel : MonoBehaviour, IModel
         return items;
     }
 
-    public List<MemoItem> EditMemo(string memo)
+    public List<MemoItem> EditMemo(string memo, bool removeOld)
     {
         List<MemoItem> items = new List<MemoItem>();
         for (int i = 0; i < 30; ++i)
