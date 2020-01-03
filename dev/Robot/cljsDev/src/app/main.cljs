@@ -98,10 +98,20 @@
 
 (m/defstate unitMenu [gameplayCtx unit]
   nil
-  (let [menu [[:move [:weapon1]] {}]
-        fsm (gameplay/getFsm gameplayCtx)
+  (let [fsm (gameplay/getFsm gameplayCtx)
         state (or (app.fsm/load fsm) {:cursor 0
-                                      :subcursor {}})]
+                                      :subcursor {}
+                                      :menu (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))]
+                                              [["move" (range (count weapons)) "cancel"]
+                                               {:weaponIdx 1
+                                                :weapons weapons
+                                                :weaponRange (map (fn [{[min max] "range" type "type" :as weapon}]
+                                                                    (->> (map/simpleFindPath (:position unit) (dec min))
+                                                                         (into #{})
+                                                                         (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                                                      (into #{})))
+                                                                         (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                  weapons)}])})]
     (a/<! (updateUnitMenu nil state inputCh outputCh))
     (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
