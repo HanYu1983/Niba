@@ -148,7 +148,6 @@
             state (update state :cursor (action dir))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:left :right])
@@ -157,7 +156,6 @@
             state (update-in state [:subcursor (:cursor state)] (action dir))
             fsm (app.fsm/save fsm state)]
         (println fsm)
-        (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
