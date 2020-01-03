@@ -229,7 +229,10 @@
       (recur gameplayCtx))))
 
 (m/defstate playerTurn [gameplayCtx _]
-  nil
+  (let []
+    (a/<! (playerTurnStart gameplayCtx nil inputCh outputCh))
+    gameplayCtx)
+  
   (let [fsm (gameplay/getFsm gameplayCtx)
         state (or (app.fsm/load fsm) {:cursor [0 0]
                                       :camera [0 0]})]
