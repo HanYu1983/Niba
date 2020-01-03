@@ -62,8 +62,9 @@ export default class NewClass extends cc.Component implements IView {
         const cursor1 = data.cursor;
         const cursor2 = data.subcursor;
         const menu = data.menu;
-        cc.log(cursor2 );
-        this.getGamePage().openUnitMenu(menu, [cursor1, cursor2], cb);
+        cc.log(cursor1, cursor2 );
+        this.getGamePage().openUnitMenu(menu, [cursor1, cursor2]);
+        cb();
     }
     updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
         console.log(data.cursor);
