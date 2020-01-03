@@ -12,72 +12,72 @@ import MenuButton from "./MenuButton"
 import BasicViewer from "./BasicViewer";
 import MenuCursor from "./MenuCursor";
 
-const {ccclass, property, requireComponent} = cc._decorator;
+const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(MenuCursor)
 export default class NewClass extends BasicViewer {
 
     @property(MenuButton)
-    prefabButton:MenuButton = null;
+    prefabButton: MenuButton = null;
 
-    private _btns:Array<MenuButton> = [];
-    private _menuCursor:MenuCursor;
+    private _btns: Array<MenuButton> = [];
+    private _menuCursor: MenuCursor;
 
-    static ON_MENU_ENTER:string = "ON_MENU_ENTER";
-    static ON_MENU_LEFT:string = "ON_MENU_LEFT";
-    static ON_MENU_RIGHT:string = "ON_MENU_RIGHT";
-    static ON_MENU_UP:string = "ON_MENU_UP";
-    static ON_MENU_DOWN:string = "ON_MENU_DOWN";
+    static ON_MENU_ENTER: string = "ON_MENU_ENTER";
+    static ON_MENU_LEFT: string = "ON_MENU_LEFT";
+    static ON_MENU_RIGHT: string = "ON_MENU_RIGHT";
+    static ON_MENU_UP: string = "ON_MENU_UP";
+    static ON_MENU_DOWN: string = "ON_MENU_DOWN";
 
-    init(){
+    init() {
         super.init();
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
-    prev(){
+    prev() {
         this._menuCursor.previus();
         this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
     }
 
-    next(){
+    next() {
         this._menuCursor.next();
         this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
     }
 
-    left(){
+    left() {
         this._menuCursor.left();
         this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
     }
 
-    right(){
+    right() {
         this._menuCursor.right();
         this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
     }
 
-    enter(){
+    enter() {
         this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
     }
 
-    escape(){
+    escape() {
         this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
     }
 
-    addListener(){
+    addListener() {
         super.addListener();
 
-        this.node.on(MenuCursor.ON_CURSOR_CHANGE, data =>{
+        this.node.on(MenuCursor.ON_CURSOR_CHANGE, data => {
             this._focusOn(data[0]);
             this._refreshButtonLabel();
         }, this);
     }
 
-    removeListenser(){
+    removeListenser() {
         super.removeListenser();
-        
+
         this.node.off(MenuCursor.ON_CURSOR_CHANGE);
 
-        this._btns.forEach(btn=>{
+        this._btns.forEach(btn => {
             btn.node.destroy();
         });
         this._btns = [];
@@ -87,33 +87,31 @@ export default class NewClass extends BasicViewer {
      * this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
      * @param data 
      */
-    setData(data:any, cursors?:any[]){
+    setData(data: any, cursors?: any[]) {
         this._menuCursor.setData(data, cursors);
         data = this._menuCursor.getData();
 
         let id = 0;
-        data.forEach(element=>{
-            let btn:cc.Node = cc.instantiate(this.prefabButton.node);
+        data.forEach(element => {
+            let btn: cc.Node = cc.instantiate(this.prefabButton.node);
             btn.setParent(this.node);
             btn.active = true;
 
-            let btnButton:MenuButton = btn.getComponent(MenuButton);
-            //let currentCursor2:number = cursors ? cursors[1][cursors[id]] : 0;
-            //cc.log( cursors );
-           // cc.log("currentCursor2:", currentCursor2);
-            btnButton.setLabel(data[id++][0]);
+            let btnButton: MenuButton = btn.getComponent(MenuButton);
+            let currentCursor2: number = cursors ? cursors[1][id] : 0;
+            btnButton.setLabel(data[id++][currentCursor2]);
 
             this._btns.push(btnButton);
         });
-        this._focusOn( cursors ? cursors[0] : 0);
+        this._focusOn(cursors ? cursors[0] : 0);
     }
 
-    private _refreshButtonLabel(){
+    private _refreshButtonLabel() {
         let corsor = this._menuCursor.getCurrentId();
         this._btns[corsor[0]].setLabel(this._menuCursor.getCurrentFocus());
     }
 
-    private _focusOn(cursor1:number){
+    private _focusOn(cursor1: number) {
         this._btns.forEach(element => {
             element.setFocus(false);
         });
