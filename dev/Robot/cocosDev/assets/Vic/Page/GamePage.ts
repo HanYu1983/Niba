@@ -59,8 +59,8 @@ export default class NewClass extends BasicViewer {
     @property(cc.Node)
     cursor: cc.Node = null;
 
-    static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
-    static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
+    // static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
+    // static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
 
     // private _cursor: number[] = [0, 0];
     // private _camera: number[] = [0, 0];
@@ -111,67 +111,6 @@ export default class NewClass extends BasicViewer {
         this.fightInfoMenu.showInfos(datas);
     }
 
-    addListener() {
-        super.addListener();
-
-        this.node.on(InputSensor.CURSOR_UP, () => {
-            ViewController.instance.onGamePageWClick();
-        });
-
-        this.node.on(InputSensor.CURSOR_LEFT, () => {
-            ViewController.instance.onGamePageAClick();
-        });
-
-        this.node.on(InputSensor.CURSOR_DOWN, () => {
-            ViewController.instance.onGamePageSClick();
-        });
-
-        this.node.on(InputSensor.CURSOR_RIGHT, () => {
-            ViewController.instance.onGamePageDClick();
-        });
-
-        this.node.on(InputSensor.SCREEN_UP, () => {
-            ViewController.instance.onGamePageUPClick();
-        });
-
-        this.node.on(InputSensor.SCREEN_LEFT, () => {
-            ViewController.instance.onGamePageLEFTClick();
-        });
-
-        this.node.on(InputSensor.SCREEN_DOWN, () => {
-            ViewController.instance.onGamePageDOWNClick();
-        });
-
-        this.node.on(InputSensor.SCREEN_RIGHT, () => {
-            ViewController.instance.onGamePageRIGHTClick();
-        });
-
-        this.node.on(InputSensor.ENTER, () => {
-            ViewController.instance.onGamePageENTERClick();
-        }, this);
-
-        this.node.on(InputSensor.ESCAPE, () => {
-            ViewController.instance.onGamePageESCAPEClick();
-        }, this);
-    }
-
-    removeListenser() {
-        super.removeListenser();
-
-        this.node.off(InputSensor.CURSOR_UP);
-        this.node.off(InputSensor.CURSOR_LEFT);
-        this.node.off(InputSensor.CURSOR_DOWN);
-        this.node.off(InputSensor.CURSOR_RIGHT);
-        this.node.off(InputSensor.SCREEN_UP);
-        this.node.off(InputSensor.SCREEN_LEFT);
-        this.node.off(InputSensor.SCREEN_DOWN);
-        this.node.off(InputSensor.SCREEN_RIGHT);
-        this.node.off(InputSensor.ENTER);
-        this.node.off(InputSensor.ESCAPE);
-        this.node.off(NewClass.ON_GAMEPAGE_ENTER);
-        this.node.off(NewClass.ON_GAMEPAGE_ESCAPE);
-    }
-
     openUnitStatuMenu() {
 
         //this.unitStatuMenu.open();
@@ -204,7 +143,7 @@ export default class NewClass extends BasicViewer {
         this.sceneMenu.close();
     }
 
-    openUnitMenu(menus: any, callback: (key) => void) {
+    openUnitMenu(menus: any, cursors:any[], callback: (key) => void) {
         const [menu, weaponInfo] = menus;
         let weaponId = weaponInfo.weaponIdx;
         let weapons = weaponInfo.weapons;
@@ -213,7 +152,7 @@ export default class NewClass extends BasicViewer {
         this.closeUnitMenu();
 
         this.unitMenu.open();
-        this.unitMenu.setData(menu);
+        this.unitMenu.setData(menu, cursors);
         this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
             callback(key);
         });

@@ -11,7 +11,7 @@ import EmptyViewController from "../Han/controller/EmptyViewController"
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component implements IViewController {
+export default class NewClass extends cc.Component {
     @property(View)
     view: View = null;
 
@@ -19,16 +19,8 @@ export default class NewClass extends cc.Component implements IViewController {
     modelController: ModelController = null;
 
     static instance: NewClass;
-    private _viewEventHandler: IViewManager;
 
     onLoad() {
-        /*
-        const svc = new StackViewControler();
-        svc.push(new DefaultViewController(this.view, svc));
-        this._viewEventHandler = svc;
-        this.modelController.setViewController(this);
-        */
-        this._viewEventHandler = new EmptyViewController();
         this.modelController.setView(this.view);
         NewClass.instance = this;
     }
@@ -38,67 +30,6 @@ export default class NewClass extends cc.Component implements IViewController {
     }
 
     notifyStartGame() {
-        //this._viewEventHandler.notifyStartGame();
         this.modelController.startGame();
-    }
-
-    onPrepareForStart(callback: () => void): void {
-        this._viewEventHandler.onPrepareForStart(callback);
-    }
-
-    onGamePageWClick() {
-        this._viewEventHandler.onGamePageWClick();
-    }
-
-    onGamePageAClick() {
-        this._viewEventHandler.onGamePageAClick();
-    }
-
-    onGamePageSClick() {
-        this._viewEventHandler.onGamePageSClick();
-    }
-
-    onGamePageDClick() {
-        this._viewEventHandler.onGamePageDClick();
-    }
-
-    onGamePageUPClick() {
-        this._viewEventHandler.onGamePageUPClick();
-    }
-
-    onGamePageDOWNClick() {
-        this._viewEventHandler.onGamePageDOWNClick();
-    }
-
-    onGamePageLEFTClick() {
-        this._viewEventHandler.onGamePageLEFTClick();
-    }
-
-    onGamePageRIGHTClick() {
-        this._viewEventHandler.onGamePageRIGHTClick();
-    }
-
-    onGamePageENTERClick() {
-        this._viewEventHandler.onGamePageENTERClick();
-    }
-
-    onGamePageESCAPEClick() {
-        this._viewEventHandler.onGamePageESCAPEClick();
-    }
-
-    setModel(model: IModel): void {
-        this._viewEventHandler.setModel(model);
-    }
-
-    onPlayerTurnStart(callback: () => void): void {
-        this._viewEventHandler.onPlayerTurnStart(callback);
-    }
-
-    onEnemyTurnStart(ai: string, callback: () => void): void {
-        this._viewEventHandler.onEnemyTurnStart(ai, callback);
-    }
-
-    onStateChange(state: string, data: any): void {
-        this._viewEventHandler.onStateChange(state, data);
     }
 }

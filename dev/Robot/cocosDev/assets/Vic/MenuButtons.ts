@@ -87,8 +87,8 @@ export default class NewClass extends BasicViewer {
      * this.setData([["atk", "def", "dodge"],["1000","2000"],["cancel"]]);
      * @param data 
      */
-    setData(data:any){
-        this._menuCursor.setData(data);
+    setData(data:any, cursors?:any[]){
+        this._menuCursor.setData(data, cursors);
         data = this._menuCursor.getData();
 
         let id = 0;
@@ -98,11 +98,14 @@ export default class NewClass extends BasicViewer {
             btn.active = true;
 
             let btnButton:MenuButton = btn.getComponent(MenuButton);
+            //let currentCursor2:number = cursors ? cursors[1][cursors[id]] : 0;
+            //cc.log( cursors );
+           // cc.log("currentCursor2:", currentCursor2);
             btnButton.setLabel(data[id++][0]);
 
             this._btns.push(btnButton);
         });
-        this._focusOn(0);
+        this._focusOn( cursors ? cursors[0] : 0);
     }
 
     private _refreshButtonLabel(){

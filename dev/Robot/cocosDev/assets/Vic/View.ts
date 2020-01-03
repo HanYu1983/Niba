@@ -20,71 +20,64 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component implements IView {
     updateMoveRange(data: number[][], cb: () => void) {
+        this.getGamePage().map.showMovableGrid(data);
         cb();
     }
     updateAttackRange(data: number[][], cb: () => void) {
+        this.getGamePage().map.showWeaponRange(data);
         cb();
     }
     updateMapAttackRange(data: number[][], cb: () => void) {
         cb();
     }
     updateCursor(data: number[], cb: () => void) {
-        console.log(data)
+        this.getGamePage().setCursor(data);
         cb();
     }
     updateMap(data: number[][], cb: () => void) {
+        this.getGamePage().map.setMap(data);
         cb();
     }
     updateUnits(data: IUnit[], cb: () => void) {
+        this.getGamePage().units.setUnits(data);
         cb();
     }
     playerTurnStart(data: any, cb: () => void) {
-        cb()
+        this.getGamePage().openTurnStart(true, cb);
     }
     enemyTurnStart(data: string, cb: () => void) {
-        cb()
+        this.getGamePage().openTurnStart(false, cb);
     }
     updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
         console.log(data.cursor);
+        this.getGamePage().closeUnitMenu();
         cb()
     }
     updateSystemMenu(data: { menu: string[]; cursor: number; }, cb: () => void) {
         console.log(data.cursor);
-        cb()
+        cc.log(data.menu);
+        this.getGamePage().openSceneMenu(data.menu, cb);
     }
     updateUnitMenu(data: { menu: string[][]; cursor: number; subcursor: any; }, cb: () => void) {
         const cursor1 = data.cursor;
-        const cursor2 = data.subcursor[cursor1];
-        console.log(data.menu);
-        console.log(cursor1, cursor2);
-        cb()
+        const cursor2 = data.subcursor;
+        const menu = data.menu;
+        cc.log(cursor2 );
+        this.getGamePage().openUnitMenu(menu, [cursor1, cursor2], cb);
     }
     updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
         console.log(data.cursor);
+        this.getGamePage().closeUnitMenu();
         cb()
     }
     unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         console.log(data.unit);
         console.log(data.path);
-        cb()
+        this.getGamePage().units.moveUnitByID(data.unit.key, data.path, cb);
     }
-
 
     @property(BasicViewer)
     pages: BasicViewer[] = [];
-
-    start() {
-        //this.openGamePage();
-    }
-
-    // onPlayerTurn(){
-    //     this.getGamePage().closeSceneMenu();
-    //     this.getGamePage().closeUnitMenu();
-    //     this.getGamePage().addListener();
-    //     this.getGamePage().node.on(GamePage.ON_GAMEPAGE_ENTER, (corsor) => {
-    //         ViewController.instance.notifySelectMap(corsor);
-    //     }, this);
-    // }
 
     closeAllPages() {
         this.pages.forEach(element => {
