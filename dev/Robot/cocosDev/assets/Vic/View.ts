@@ -38,9 +38,13 @@ export default class NewClass extends cc.Component implements IView {
         this.repaintUnits(data, cb);
     }
     playerTurnStart(data: any, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
         this.repaintPlayerStart(cb);
     }
     enemyTurnStart(enemyName: string, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
         this.repaintEnemyTurnStart(enemyName, cb);
     }
 

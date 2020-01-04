@@ -157,8 +157,7 @@
                                                        (->> (map/simpleFindPath (:position unit) (dec min))
                                                             (into #{})
                                                             (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
-                                                                                         (into #{})))
-                                                            (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                                         (into #{})))))
                                                      weapons))}]}))]
     (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
     (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
