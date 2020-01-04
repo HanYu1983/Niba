@@ -15,9 +15,9 @@ import WeaponMenu from "../GamePage/WeaponMenu"
 import UnitStatuMenu from "../GamePage/UnitStatuMenu";
 import FightMenu from "../GamePage/FightMenu";
 import TurnStart from "../GamePage/TurnStart";
-import Grid from "../GamePage/Grid";
 import Effects from "../GamePage/Effects";
-
+import AccuracyInfo from "../GamePage/AccuracyInfo";
+import ShowItem from "../ShowItem";
 import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
@@ -52,6 +52,9 @@ export default class NewClass extends BasicViewer {
 
     @property(Effects)
     effects: Effects = null;
+
+    @property(ShowItem)
+    accuracyInfos: ShowItem = null;
 
     @property(TurnStart)
     turnStart: TurnStart = null;
@@ -120,6 +123,15 @@ export default class NewClass extends BasicViewer {
         //this.unitStatuMenu.close();
     }
 
+    showAccuracyInfos(data:any[]) {
+        this.accuracyInfos.clearItem();
+
+        let i = 0;
+        this.accuracyInfos.showItems([[10, 5], [5, 7]], (item: cc.Node) => {
+            item.getComponent(AccuracyInfo).setAccuracy(20 * i++);
+        });
+    }
+
     openTurnStart(isPlayer: boolean, callback: () => void) {
         this.turnStart.setContent(isPlayer ? "玩家回合開始" : "敵軍回合開始");
         this.turnStart.setPlayer(isPlayer);
@@ -130,7 +142,7 @@ export default class NewClass extends BasicViewer {
         }, this);
     }
 
-    openSceneMenu(data: any, cursors:any[]) {
+    openSceneMenu(data: any, cursors: any[]) {
         this.closeSceneMenu();
 
         this.sceneMenu.open();
