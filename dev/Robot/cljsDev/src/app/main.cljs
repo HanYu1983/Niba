@@ -262,13 +262,11 @@
     gameplayCtx)
   
   (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor [0 0]
-                                      :camera [0 0]
-                                      :moveRange []})]
+        state (or (app.fsm/load fsm) {})]
     (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
     (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
     (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-    (a/<! (updateMoveRange nil (map (partial gameplay/world2local (:camera state)) (:moveRange state)) inputCh outputCh))
+    (a/<! (updateMoveRange nil (gameplay/getLocalMoveRange gameplayCtx nil) inputCh outputCh))
     (a/<! (updatePlayTurn gameplayCtx state inputCh outputCh))
     (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
@@ -308,15 +306,12 @@
                               moveRange (map first shortestPathTree)]
                           moveRange)
                         (let []
-                          []))
-
-            state (-> state
-                      (update :moveRange (constantly moveRange)))
-            fsm (app.fsm/save fsm state)]
+                          []))]
 
         (recur (-> gameplayCtx
                    (gameplay/setFsm fsm)
-                   (gameplay/setCursor cursor))))
+                   (gameplay/setCursor cursor)
+                   (gameplay/setMoveRange moveRange))))
 
       (some #(= % action) [:rup :rdown :rleft :rright])
       (let [camera (gameplay/getCamera gameplayCtx)
@@ -327,15 +322,13 @@
 
             camera (->> camera
                         (map + (action dir))
-                        (gameplay/boundCamera gameplayCtx))
-
-            fsm (app.fsm/save fsm state)]
+                        (gameplay/boundCamera gameplayCtx))]
         (recur (-> gameplayCtx
                    (gameplay/setFsm fsm)
                    (gameplay/setCamera camera))))
 
       (= :enter action)
-      (let [cursor (:cursor state)
+      (let [cursor (gameplay/getCursor gameplayCtx)
             unitAtCursor (-> (gameplay/getUnits gameplayCtx)
                              (app.units/getByPosition cursor))]
         (if unitAtCursor
