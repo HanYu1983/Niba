@@ -121,3 +121,8 @@
   (let [camera (or camera (getCamera ctx))
         cursor (getCursor ctx)]
     (world2local camera cursor)))
+
+(defn getLocalMoveRange [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        moveRange (getMoveRange ctx)]
+    (map (partial world2local camera) moveRange)))
