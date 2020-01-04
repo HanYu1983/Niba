@@ -20,62 +20,114 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class NewClass extends cc.Component implements IView {
     updateMoveRange(data: number[][], cb: () => void) {
-        this.getGamePage().map.showMovableGrid(data);
-        cb();
+        this.repaintMoveRange(data, cb);
     }
     updateAttackRange(data: number[][], cb: () => void) {
-        this.getGamePage().map.showWeaponRange(data);
-        cb();
+        this.repaintAttackRange(data, cb);
     }
     updateMapAttackRange(data: number[][], cb: () => void) {
-        cb();
+        this.repaintMapAttackRange(data, cb);
     }
     updateCursor(data: number[], cb: () => void) {
-        this.getGamePage().setCursor(data);
-        cb();
+        this.repaintCursor(data, cb);
     }
     updateMap(data: number[][], cb: () => void) {
-        this.getGamePage().map.setMap(data);
-        cb();
+        this.repaintMap(data, cb);
     }
     updateUnits(data: IUnit[], cb: () => void) {
-        this.getGamePage().units.setUnits(data);
-        cb();
+        this.repaintUnits(data, cb);
     }
     playerTurnStart(data: any, cb: () => void) {
-        this.getGamePage().openTurnStart(true, cb);
+        this.repaintPlayerStart(cb);
     }
-    enemyTurnStart(data: string, cb: () => void) {
-        this.getGamePage().openTurnStart(false, cb);
+    enemyTurnStart(enemyName: string, cb: () => void) {
+        this.repaintEnemyTurnStart(enemyName, cb);
     }
     updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
-        console.log(data.cursor);
-        this.getGamePage().closeUnitMenu();
-        cb()
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
     }
-    updateSystemMenu(data: { menu: string[]; cursor: number; }, cb: () => void) {
-        console.log(data.cursor);
-        cc.log(data.menu);
-        this.getGamePage().openSceneMenu(data.menu, cb);
+    updateSystemMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void) {
+        this.createOrUpdateSystemMenu(data.menu, data.cursor, data.subcursor);
+        cb();
     }
-    updateUnitMenu(data: { menu: string[][]; cursor: number; subcursor: any; }, cb: () => void) {
-        const cursor1 = data.cursor;
-        const cursor2 = data.subcursor;
-        const menu = data.menu;
-        cc.log(cursor1, cursor2 );
-        this.getGamePage().openUnitMenu(menu, [cursor1, cursor2]);
+    updateUnitMenu(data: { menu: any[]; cursor: number; subcursor: number[]; }, cb: () => void) {
+        this.createOrUpdateUnitMenu(data.menu, data.cursor, data.subcursor);
         cb();
     }
     updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
-        console.log(data.cursor);
-        this.getGamePage().closeUnitMenu();
-        cb()
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
     }
     unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
-        console.log(data.unit);
-        console.log(data.path);
-        this.getGamePage().units.moveUnitByID(data.unit.key, data.path, cb);
+        this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
+
+    // ====================== //
+
+    private repaintMoveRange(data: number[][], cb: () => void) {
+        this.getGamePage().map.showMovableGrid(data);
+        cb();
+    }
+
+    private repaintAttackRange(data: number[][], cb: () => void) {
+        this.getGamePage().map.showWeaponRange(data);
+        cb();
+    }
+
+    private repaintMapAttackRange(data: number[][], cb: () => void) {
+        this.getGamePage().map.showWeaponRange(data);
+        cb();
+    }
+
+    private repaintCursor(cursor: number[], cb: () => void) {
+        this.getGamePage().setCursor(cursor);
+        cb();
+    }
+
+    private repaintMap(data: number[][], cb: () => void) {
+        this.getGamePage().map.setMap(data);
+        cb();
+    }
+
+    private repaintUnits(data: IUnit[], cb: () => void) {
+        this.getGamePage().units.setUnits(data);
+        cb();
+    }
+
+    private repaintPlayerStart(cb: () => void) {
+        this.getGamePage().openTurnStart(true, cb);
+    }
+
+    private repaintEnemyTurnStart(enemyName: string, cb: () => void) {
+        this.getGamePage().openTurnStart(false, cb);
+    }
+
+    private closeUnitMenu() {
+        this.getGamePage().closeUnitMenu();
+    }
+
+    private closeSystemMenu() {
+        this.getGamePage().closeSceneMenu();
+    }
+
+    private createOrUpdateUnitMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
+        this.getGamePage().openUnitMenu(menuInfo, [cursor, subcursor]);
+    }
+
+    private createOrUpdateSystemMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
+        const [menu, info] = menuInfo;
+        console.warn("createOrUpdateSystemMenu", cursor, subcursor);
+        // this.getGamePage().openSceneMenu(menu, () => { });
+    }
+
+    private performUnitMoveAnim(unitKey: string, path: number[][], cb: () => void) {
+        this.getGamePage().units.moveUnitByID(unitKey, path, cb);
+    }
+
+    // ====================== //
 
     @property(BasicViewer)
     pages: BasicViewer[] = [];

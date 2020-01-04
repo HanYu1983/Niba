@@ -126,7 +126,7 @@
   (let [fsm (gameplay/getFsm gameplayCtx)
         state (or (app.fsm/load fsm) 
                   (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))
-                        menu ["move" (range (count weapons)) "cancel"]]
+                        menu [["move"] (range (count weapons)) ["cancel"]]]
                     {:camera camera
                      :cursor 0
                      :subcursor (into [] (repeat (count menu) 0))
@@ -209,7 +209,10 @@
 (m/defstate systemMenu [gameplayCtx _]
   nil
   (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:cursor 0})]
+        state (or (app.fsm/load fsm) (let [menu [["endTurn"] ["cancel"]]]
+                                       {:cursor 0
+                                        :subcursor (into [] (repeat (count menu) 0))
+                                        :menu [menu {}]}))]
     (a/<! (updateSystemMenu gameplayCtx state inputCh outputCh))
     (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
