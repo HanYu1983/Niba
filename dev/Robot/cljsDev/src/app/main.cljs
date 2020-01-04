@@ -151,16 +151,32 @@
         state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down])
-      (let [dir {:up dec
+      (let [cursor (:cursor state)
+            menu (get-in state [:menu 0])
+            dir {:up dec
                  :down inc}
-            state (update state :cursor (action dir))
+            cursor (-> cursor
+                       ((action dir))
+                       (max 0)
+                       (min (dec (count menu))))
+            state (update state :cursor (constantly cursor))
             fsm (app.fsm/save fsm state)]
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:left :right])
-      (let [dir {:left dec
+      (let [menu (get-in state [:menu 0])
+            cursor1 (:cursor state)
+            cursor2 (get-in state [:subcursor cursor1])
+            
+            dir {:left dec
                  :right inc}
-            state (update-in state [:subcursor (:cursor state)] (action dir))
+            
+            cursor2 (-> cursor2
+                        ((action dir))
+                        (max 0)
+                        (min (dec (count (get menu cursor1)))))
+            
+            state (update-in state [:subcursor (:cursor state)] (constantly cursor2))
             fsm (app.fsm/save fsm state)]
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
