@@ -93,6 +93,12 @@
 (defn getMoveRange [ctx]
   (get-in ctx [:temp :moveRange]))
 
+(defn setAttackRange [ctx v]
+  (update-in ctx [:temp :attackRange] (constantly v)))
+
+(defn getAttackRange [ctx]
+  (get-in ctx [:temp :attackRange]))
+
 (defn setUnits [ctx units]
   (update ctx :units (constantly units)))
 
@@ -126,3 +132,8 @@
   (let [camera (or camera (getCamera ctx))
         moveRange (getMoveRange ctx)]
     (map (partial world2local camera) moveRange)))
+
+(defn getLocalAttackRange [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        range (getAttackRange ctx)]
+    (map (partial world2local camera) range)))
