@@ -87,20 +87,20 @@
                  :right [1 0]}
             state (update state :cursor (partial map + (action dir)))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
       (let [cursor (:cursor state)
+            camera (:camera state)
             path (map/buildPath paths cursor)]
-        (a/<! (unitMoveAnim gameplayCtx {:unit unit :path path} inputCh outputCh))
+        (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial gameplay/world2local camera) path)} inputCh outputCh))
         (let [gameplayCtx (-> gameplayCtx
                               (gameplay/getUnits)
                               (app.units/delete unit)
                               (app.units/add (merge unit {:position cursor}))
                               ((fn [units]
                                  (gameplay/setUnits gameplayCtx units))))
-              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx unit inputCh outputCh))]
+              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unit :camera camera} inputCh outputCh))]
           (if isEnd
             [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
             (recur gameplayCtx))))
@@ -115,7 +115,6 @@
                  :rright [1 0]}
             state (update state :camera (partial map + (action dir)))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       :else
@@ -126,7 +125,7 @@
   (let [fsm (gameplay/getFsm gameplayCtx)
         state (or (app.fsm/load fsm) 
                   (let [weapons (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx))
-                        menu [["move"] (range (count weapons)) ["cancel"]]]
+                        menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
                     {:camera camera
                      :cursor 0
                      :subcursor (into [] (repeat (count menu) 0))
@@ -156,7 +155,6 @@
                  :down inc}
             state (update state :cursor (action dir))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:left :right])
@@ -164,13 +162,14 @@
                  :right inc}
             state (update-in state [:subcursor (:cursor state)] (action dir))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (= :enter action)
-      (let [[select] [:move]]
+      (let [cursor1 (:cursor state)
+            cursor2 (get-in state [:subcursor cursor1])
+            select (get-in state [:menu 0 cursor1 cursor2])]
         (cond
-          (= :move select)
+          (= "move" select)
           (let [[mw mh] gameplay/mapViewSize
                 shortestPathTree (map/findPath (:position unit)
                                                (fn [{:keys [totalCost]} curr]
@@ -187,6 +186,10 @@
             (if isEnd
               [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
               (recur gameplayCtx)))
+
+          (= "cancel" select)
+          (let []
+            [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false])
 
           :else
           (recur gameplayCtx)))
@@ -229,7 +232,6 @@
                  :right inc}
             state (update state :cursor (action dir))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
         (recur (gameplay/setFsm gameplayCtx fsm)))
       
       (= :cancel action)
@@ -245,10 +247,12 @@
   
   (let [fsm (gameplay/getFsm gameplayCtx)
         state (or (app.fsm/load fsm) {:cursor [0 0]
-                                      :camera [0 0]})]
+                                      :camera [0 0]
+                                      :moveRange []})]
     (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx (:camera state)) inputCh outputCh))
     (a/<! (updateCursor nil (gameplay/world2local (:camera state) (:cursor state)) inputCh outputCh))
     (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx (:camera state) nil) inputCh outputCh))
+    (a/<! (updateMoveRange nil (map (partial gameplay/world2local (:camera state)) (:moveRange state)) inputCh outputCh))
     (a/<! (updatePlayTurn gameplayCtx state inputCh outputCh))
     (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
 
@@ -259,14 +263,37 @@
         state (app.fsm/load fsm)]
     (cond
       (some #(= % action) [:up :down :left :right])
-      (let [dir {:up [0 -1]
+      (let [cursor (:cursor state)
+            dir {:up [0 -1]
                  :down [0 1]
                  :left [-1 0]
                  :right [1 0]}
-            state (update state :cursor (partial map + (action dir)))
+            cursor (map + (action dir) cursor)
+            unitAtCursor (-> (gameplay/getUnits gameplayCtx)
+                             (app.units/getByPosition cursor))
+
+            moveRange (if unitAtCursor
+                        (let [[mw mh] gameplay/mapViewSize
+                              shortestPathTree (map/findPath (:position unitAtCursor)
+                                                             (fn [{:keys [totalCost]} curr]
+                                                               [(>= totalCost 5) false])
+                                                             (fn [[x y]]
+                                                               [[x (min mh (inc y))]
+                                                                [x (max 0 (dec y))]
+                                                                [(min mw (inc x)) y]
+                                                                [(max 0 (dec x)) y]])
+                                                             (constantly 1)
+                                                             (constantly 0))
+                              moveRange (map first shortestPathTree)]
+                          moveRange)
+                        (let []
+                          []))
+
+            state (-> state
+                      (update :cursor (constantly cursor))
+                      (update :moveRange (constantly moveRange)))
             fsm (app.fsm/save fsm state)]
-        (println fsm)
-        (a/<! (updateCursor nil (gameplay/world2local (:camera state) (:cursor state)) inputCh outputCh))
+        
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:rup :rdown :rleft :rright])
