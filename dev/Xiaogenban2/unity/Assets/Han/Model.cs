@@ -74,7 +74,8 @@ public class Model : MonoBehaviour, IModel{
                     continue;
                 }
                 var newMemos = StringToMemoList(earn.memo).Where(d => d.Memo != deleteMemo);
-                var memoStr = MemoListToString(newMemos.ToList());
+                // MemoListToString 只會選擇isSelect為真的. 所以先設為真
+                var memoStr = MemoListToString(newMemos.Select(d=>new MemoItem(d.Memo, true)).ToList());
                 ChangeItemMemo(earn.id, memoStr, (err, items) => { });
             }
         }
@@ -105,6 +106,8 @@ public class Model : MonoBehaviour, IModel{
                 newMemos.Add(memo);
                 // 去掉重復的
                 newMemos = newMemos.Distinct().ToList();
+
+                // MemoListToString 只會選擇isSelect為真的. 所以先設為真
                 var memoStr = MemoListToString(newMemos.Select(d=>new MemoItem(d, true)).ToList());
                 ChangeItemMemo(earn.id, memoStr, (err, items) => { });
             }
@@ -661,11 +664,11 @@ public class Model : MonoBehaviour, IModel{
         try
         {
             var selectedMemoList = GetSelectedMemoListKeys();
-            OnDeleteMemo(selectedMemoList);
             foreach (var selected in selectedMemoList)
             {
                 memoItems.Remove(selected);
             }
+            OnDeleteMemo(selectedMemoList);
             return GetMemoList();
         }
         catch (Exception e)
@@ -684,7 +687,6 @@ public class Model : MonoBehaviour, IModel{
                 throw new Exception(memo + " should not have " + SplitTag);
             }
             var selectedMemoList = GetSelectedMemoListKeys();
-            OnEditMemo(selectedMemoList, memo);
             if (removeOld)
             {
                 foreach (var selected in selectedMemoList)
@@ -692,7 +694,8 @@ public class Model : MonoBehaviour, IModel{
                     memoItems.Remove(selected);
                 }
             }
-            AddMemo(memo);
+            memoItems.Add(memo, new MemoItem(memo, false));
+            OnEditMemo(selectedMemoList, memo);
             return GetMemoList();
         }
         catch (Exception e)
