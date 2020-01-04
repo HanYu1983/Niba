@@ -11,7 +11,7 @@
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class Pool extends cc.Component {
 
     @property(cc.Integer)
     poolSize: number = 30;

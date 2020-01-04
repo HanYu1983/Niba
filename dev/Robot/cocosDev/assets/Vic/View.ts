@@ -10,15 +10,15 @@
 
 import LandMap from "./GamePage/LandMap";
 import BasicViewer from "./BasicViewer";
-import GamePage from "./Page/GamePage";
 import MainPage from "./Page/MainPage";
 import IView from "../Han/interface/IView";
 import IUnit from "../Han/interface/IUnit";
+import GamePage from './Page/GamePage';
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component implements IView {
+export default class View extends cc.Component implements IView {
     updateMoveRange(data: number[][], cb: () => void) {
         this.repaintMoveRange(data, cb);
     }

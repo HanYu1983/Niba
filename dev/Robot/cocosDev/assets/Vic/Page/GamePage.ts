@@ -27,7 +27,7 @@ const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(InputSensor)
-export default class NewClass extends BasicViewer {
+export default class GamePage extends BasicViewer {
 
     @property(LandMap)
     map: LandMap = null;

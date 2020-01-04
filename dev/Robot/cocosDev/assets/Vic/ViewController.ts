@@ -11,18 +11,18 @@ import EmptyViewController from "../Han/controller/EmptyViewController"
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class ViewController extends cc.Component {
     @property(View)
     view: View = null;
 
     @property(ModelController)
     modelController: ModelController = null;
 
-    static instance: NewClass;
+    static instance: ViewController;
 
     onLoad() {
         this.modelController.setView(this.view);
-        NewClass.instance = this;
+        ViewController.instance = this;
     }
 
     start() {

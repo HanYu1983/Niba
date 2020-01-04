@@ -11,7 +11,7 @@
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class MenuCursor extends cc.Component {
     private _data: any;
     private _cursor1: number = 0;
     private _cursor2: Array<number> = [];
@@ -41,7 +41,7 @@ export default class NewClass extends cc.Component {
     }
 
     private _focusOn() {
-        this.node.emit(NewClass.ON_CURSOR_CHANGE, this.getCurrentId());
+        this.node.emit(MenuCursor.ON_CURSOR_CHANGE, this.getCurrentId());
     }
 
     previus(): Array<number> {

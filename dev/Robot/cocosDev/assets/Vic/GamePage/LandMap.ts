@@ -12,7 +12,7 @@ import Grid from './Grid';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class LandMap extends cc.Component {
 
     @property(cc.Node)
     prefabGrid: cc.Node = null;

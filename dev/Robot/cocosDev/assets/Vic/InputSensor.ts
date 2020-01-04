@@ -11,7 +11,7 @@
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class InputSensor extends cc.Component {
 
     static CURSOR_UP: string = "CURSOR_UP";
     static CURSOR_DOWN: string = "CURSOR_DOWN";
@@ -38,34 +38,34 @@ export default class NewClass extends cc.Component {
         window.viewNotifyOb.next(["KEY_DOWN", evt.keyCode]);
         switch (evt.keyCode) {
             case cc.macro.KEY.w:
-                this.node.emit(NewClass.CURSOR_UP);
+                this.node.emit(InputSensor.CURSOR_UP);
                 break;
             case cc.macro.KEY.a:
-                this.node.emit(NewClass.CURSOR_LEFT);
+                this.node.emit(InputSensor.CURSOR_LEFT);
                 break;
             case cc.macro.KEY.s:
-                this.node.emit(NewClass.CURSOR_DOWN);
+                this.node.emit(InputSensor.CURSOR_DOWN);
                 break;
             case cc.macro.KEY.d:
-                this.node.emit(NewClass.CURSOR_RIGHT);
+                this.node.emit(InputSensor.CURSOR_RIGHT);
                 break;
             case cc.macro.KEY.up:
-                this.node.emit(NewClass.SCREEN_UP);
+                this.node.emit(InputSensor.SCREEN_UP);
                 break;
             case cc.macro.KEY.left:
-                this.node.emit(NewClass.SCREEN_LEFT);
+                this.node.emit(InputSensor.SCREEN_LEFT);
                 break;
             case cc.macro.KEY.down:
-                this.node.emit(NewClass.SCREEN_DOWN);
+                this.node.emit(InputSensor.SCREEN_DOWN);
                 break;
             case cc.macro.KEY.right:
-                this.node.emit(NewClass.SCREEN_RIGHT);
+                this.node.emit(InputSensor.SCREEN_RIGHT);
                 break;
             case cc.macro.KEY.enter:
-                this.node.emit(NewClass.ENTER);
+                this.node.emit(InputSensor.ENTER);
                 break;
             case cc.macro.KEY.escape:
-                this.node.emit(NewClass.ESCAPE);
+                this.node.emit(InputSensor.ESCAPE);
                 break;
         }
     }

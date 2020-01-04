@@ -14,7 +14,7 @@ import AnimationEndCallback from "../AnimationEndCallback";
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class EffectLayer extends cc.Component {
 
     private _pool:Pool = null;
 

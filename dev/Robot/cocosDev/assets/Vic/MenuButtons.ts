@@ -16,7 +16,7 @@ const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(MenuCursor)
-export default class NewClass extends BasicViewer {
+export default class MenuButtons extends BasicViewer {
 
     @property(MenuButton)
     prefabButton: MenuButton = null;
@@ -37,30 +37,30 @@ export default class NewClass extends BasicViewer {
 
     prev() {
         this._menuCursor.previus();
-        this.node.emit(NewClass.ON_MENU_UP, this._menuCursor.getCurrentId());
+        this.node.emit(MenuButtons.ON_MENU_UP, this._menuCursor.getCurrentId());
     }
 
     next() {
         this._menuCursor.next();
-        this.node.emit(NewClass.ON_MENU_DOWN, this._menuCursor.getCurrentId());
+        this.node.emit(MenuButtons.ON_MENU_DOWN, this._menuCursor.getCurrentId());
     }
 
     left() {
         this._menuCursor.left();
-        this.node.emit(NewClass.ON_MENU_LEFT, this._menuCursor.getCurrentId());
+        this.node.emit(MenuButtons.ON_MENU_LEFT, this._menuCursor.getCurrentId());
     }
 
     right() {
         this._menuCursor.right();
-        this.node.emit(NewClass.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
+        this.node.emit(MenuButtons.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
     }
 
     enter() {
-        this.node.emit(NewClass.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
+        this.node.emit(MenuButtons.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
     }
 
     escape() {
-        this.node.emit(NewClass.ON_MENU_ENTER, "cancel");
+        this.node.emit(MenuButtons.ON_MENU_ENTER, "cancel");
     }
 
     addListener() {

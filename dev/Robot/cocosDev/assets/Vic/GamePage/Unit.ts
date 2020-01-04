@@ -11,7 +11,7 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class Unit extends cc.Component {
 
     @property(cc.Label)
     lblName: cc.Label = null;

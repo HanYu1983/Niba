@@ -12,7 +12,7 @@ import BasicViewer from "../BasicViewer"
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends BasicViewer {
+export default class UnitStatuMenu extends BasicViewer {
 
     
 }

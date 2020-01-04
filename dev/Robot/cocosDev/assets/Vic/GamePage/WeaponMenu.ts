@@ -16,7 +16,7 @@ const {ccclass, property, requireComponent} = cc._decorator;
 
 @ccclass
 @requireComponent(MenuCursor)
-export default class NewClass extends BasicViewer {
+export default class WeaponMenu extends BasicViewer {
 
     @property(WeaponMenuItem)
     weaponItems:WeaponMenuItem[] = [];

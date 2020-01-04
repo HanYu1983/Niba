@@ -12,7 +12,7 @@ import View from "./View";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class BasicViewer extends cc.Component {
 
     private _inited = false;
     private _isOpen = false;

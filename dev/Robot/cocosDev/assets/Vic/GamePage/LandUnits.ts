@@ -15,7 +15,7 @@ import ViewController from "../ViewController";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class LandUnits extends cc.Component {
 
     @property(cc.Color)
     playerColor: cc.Color = null;

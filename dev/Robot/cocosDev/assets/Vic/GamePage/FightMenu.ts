@@ -17,7 +17,7 @@ const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(Pool)
-export default class NewClass extends cc.Component {
+export default class FightMenu extends cc.Component {
 
     @property(FightInfo)
     fightInfoPrefab: FightInfo = null;
