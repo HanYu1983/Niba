@@ -67,6 +67,22 @@ export default class NewClass extends cc.Component {
         });
     }
 
+    showMapRange(data: any[]) {
+        this.closeMapRange();
+        data.forEach(elem => {
+            let grid: Grid = this.getGridByXY(elem);
+            if (grid) {
+                grid.showMapRange();
+            }
+        });
+    }
+
+    closeMapRange(){
+        this.grids.forEach(grid => {
+            grid.showMapRange(false);
+        });
+    }
+
     closeWeaponRange(){
         this.grids.forEach(grid => {
             grid.showWeaponRange(false);

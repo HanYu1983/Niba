@@ -25,12 +25,16 @@ export default class NewClass extends cc.Component {
     @property(cc.Node)
     weaponRange: cc.Node = null;
 
+    @property(cc.Node)
+    mapRange:cc.Node = null;
+
     landX: number;
     landY: number;
 
     showNormal() {
         this.showMoveRange(false);
         this.showWeaponRange(false);
+        this.showMapRange(false);
     }
 
     showMoveRange(show: boolean = true) {
@@ -39,6 +43,10 @@ export default class NewClass extends cc.Component {
 
     showWeaponRange(show: boolean = true) {
         this.weaponRange.active = show;
+    }
+
+    showMapRange(show:boolean = true){
+        this.mapRange.active = show;
     }
 
     setType(type: Number) {
