@@ -26,7 +26,7 @@
      (let [~'key (str (gensym ~(str name)))
            ~args ~'args]
        (a/go
-         (println "[model][ask][question]" ~(str name) ~'args)
+         ;(println "[model][ask][question]" ~(str name) ~'args)
          (a/>! ~'outputCh [~(str name) [~'key ~'args]])
          (loop [~varCtx ~varCtx]
            (println "[model][ask][waitForAnswer]" ~'key)
@@ -36,7 +36,7 @@
                (let [[~'resKey ~'resArgs] ~'evt
                      ~'isMatch (= ~'key ~'resKey)]
                  (if ~'isMatch
-                   (do (println "[model][ask][answer]" ~'evt)
+                   (do ;(println "[model][ask][answer]" ~'evt)
                        [~varCtx ~'resArgs])
                    (recur ~varCtx)))
 

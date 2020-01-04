@@ -23,7 +23,7 @@
   (let []
     (.subscribe (.-viewNotifyOb js/window)
                 (fn [e]
-                  (js/console.log "[view][receive]" e)
+                  ;(js/console.log "[view][receive]" e)
                   (a/go
                     (a/>! inputFromView (js->clj e))
                     ;(js/console.log "[view][receive] consume" e)
@@ -31,7 +31,7 @@
     (a/go-loop []
       (let [evt (a/<! outputToView)
             evtJs (clj->js evt)]
-        (js/console.log "[model][send]" evtJs)
+        ;(js/console.log "[model][send]" evtJs)
         (.next (.-viewOb js/window) evtJs)
         (recur)))))
 
