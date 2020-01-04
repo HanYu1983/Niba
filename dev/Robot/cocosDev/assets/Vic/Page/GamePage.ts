@@ -130,11 +130,11 @@ export default class NewClass extends BasicViewer {
         }, this);
     }
 
-    openSceneMenu(data: any, callback: (key) => void) {
+    openSceneMenu(data: any, cursors:any[]) {
         this.closeSceneMenu();
 
         this.sceneMenu.open();
-        this.sceneMenu.setData(data);
+        this.sceneMenu.setData(data, cursors);
         //this.sceneMenu.node.on(MenuButtons.ON_MENU_ENTER, callback);
     }
 
@@ -170,7 +170,10 @@ export default class NewClass extends BasicViewer {
             const c1 = cursors[0];
             const c2 = cursors[1][cursors[0]];
             if (c1 == weaponId) {
-                showWeaponRange([c1, c2]);
+
+                // 顯示武器攻擊範圍，改成CONTROLLER呼叫，不自己處理
+                // showWeaponRange([c1, c2]);
+
                 this.weaponMenu.showCurrentWeapon(c2);
             }
         }

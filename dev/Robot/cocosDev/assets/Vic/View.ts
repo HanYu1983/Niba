@@ -43,6 +43,12 @@ export default class NewClass extends cc.Component implements IView {
     enemyTurnStart(enemyName: string, cb: () => void) {
         this.repaintEnemyTurnStart(enemyName, cb);
     }
+
+    unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
+        this.performUnitMoveAnim(data.unit.key, data.path, cb);
+    }
+
+
     updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
         this.closeUnitMenu();
         this.closeSystemMenu();
@@ -61,9 +67,7 @@ export default class NewClass extends cc.Component implements IView {
         this.closeSystemMenu();
         cb();
     }
-    unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
-        this.performUnitMoveAnim(data.unit.key, data.path, cb);
-    }
+    
 
     // ====================== //
 
@@ -119,8 +123,7 @@ export default class NewClass extends cc.Component implements IView {
 
     private createOrUpdateSystemMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
         const [menu, info] = menuInfo;
-        console.warn("createOrUpdateSystemMenu", cursor, subcursor);
-        // this.getGamePage().openSceneMenu(menu, () => { });
+        this.getGamePage().openSceneMenu(menu, [cursor, subcursor]);
     }
 
     private performUnitMoveAnim(unitKey: string, path: number[][], cb: () => void) {
