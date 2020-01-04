@@ -164,6 +164,7 @@ public class View : MonoBehaviour {
                 Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
                 {
                     GetMainPage().RefreshList(false);
+                    GetMainPage().ClearMoney();
                     ClosePopPage();
                 });
             },
