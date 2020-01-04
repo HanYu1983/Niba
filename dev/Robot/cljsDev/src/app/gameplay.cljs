@@ -18,7 +18,9 @@
 (def defaultGameplayModel {:map nil
                            :temp {:cursor [0 0]
                                   :camera [0 0]
-                                  :moveRange []}
+                                  :moveRange []
+                                  :attackRange []
+                                  :mapAttackRange []}
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
@@ -61,11 +63,7 @@
   (:map ctx))
 
 (defn setCamera [ctx camera]
-  (let [mapSize (map/getMapSize (getMap ctx))
-        camera (->> camera
-                    (map min (map - mapSize mapViewSize))
-                    (map max [0 0]))]
-    (update-in ctx [:temp :camera] (constantly camera))))
+  (update-in ctx [:temp :camera] (constantly camera)))
 
 (defn getPlayers [ctx]
   (:players ctx))
@@ -76,8 +74,24 @@
 (defn setCursor [ctx cursor]
   (update-in ctx [:temp :cursor] (constantly cursor)))
 
+(defn boundCursor [ctx cursor]
+  (->> cursor
+       (map max [0 0])
+       (map min (map dec (map/getMapSize (getMap ctx))))))
+
+(defn boundCamera [ctx camera]
+  (->> camera
+       (map min (map - (map/getMapSize (getMap ctx)) mapViewSize))
+       (map max [0 0])))
+
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
+
+(defn setMoveRange [ctx v]
+  (update-in ctx [:temp :moveRange] (constantly v)))
+
+(defn getMoveRange [ctx]
+  (get-in ctx [:temp :moveRange]))
 
 (defn setUnits [ctx units]
   (update ctx :units (constantly units)))
