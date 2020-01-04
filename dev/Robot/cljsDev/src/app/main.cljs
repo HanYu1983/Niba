@@ -264,11 +264,18 @@
     (cond
       (some #(= % action) [:up :down :left :right])
       (let [cursor (:cursor state)
+            mapSize (map/getMapSize (gameplay/getMap gameplayCtx))
+            
             dir {:up [0 -1]
                  :down [0 1]
                  :left [-1 0]
                  :right [1 0]}
-            cursor (map + (action dir) cursor)
+
+            cursor (->> cursor
+                        (map + (action dir))
+                        (map max [0 0])
+                        (map min (map dec mapSize)))
+
             unitAtCursor (-> (gameplay/getUnits gameplayCtx)
                              (app.units/getByPosition cursor))
 
@@ -297,11 +304,19 @@
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
       (some #(= % action) [:rup :rdown :rleft :rright])
-      (let [dir {:rup [0 -1]
+      (let [camera (:camera state)
+            dir {:rup [0 -1]
                  :rdown [0 1]
                  :rleft [-1 0]
                  :rright [1 0]}
-            state (update state :camera (partial map + (action dir)))
+
+            mapSize (map/getMapSize (gameplay/getMap gameplayCtx))
+            camera (->> camera
+                        (map + (action dir))
+                        (map min (map - mapSize gameplay/mapViewSize))
+                        (map max [0 0]))
+            
+            state (update state :camera (constantly camera))
             fsm (app.fsm/save fsm state)]
         (recur (gameplay/setFsm gameplayCtx fsm)))
 
