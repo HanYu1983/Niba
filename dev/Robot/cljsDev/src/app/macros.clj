@@ -1,5 +1,28 @@
 (ns app.macros)
 
+(defmacro defwait [name [varCtx args] & body]
+  `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
+     (let [~'key (str (gensym ~(str name)))
+           ~args ~'args]
+       (a/go
+         ;(println "[model][ask][question]" ~(str name) ~'args)
+         (a/>! ~'outputCh [~(str name) [~'key ~'args]])
+         (loop [~varCtx ~varCtx]
+           (println "[model][ask][waitForAnswer]" ~'key)
+           (when-let [[~'cmd ~'evt] (a/<! ~'inputCh)]
+             (cond
+               (= "ok" ~'cmd)
+               (let [[~'resKey ~'resArgs] ~'evt
+                     ~'isMatch (= ~'key ~'resKey)]
+                 (if ~'isMatch
+                   (do ;(println "[model][ask][answer]" ~'evt)
+                     [~varCtx ~'resArgs])
+                   (recur ~varCtx)))
+
+               ~@body
+
+               :else
+               (recur ~varCtx))))))))
 
 (defmacro defstate [name [varCtx args] & body]
   `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
@@ -21,29 +44,51 @@
                   :else
                   (recur ~varCtx))))))))))
 
-(defmacro defwait [name [varCtx args] & body]
-  `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
-     (let [~'key (str (gensym ~(str name)))
-           ~args ~'args]
-       (a/go
-         ;(println "[model][ask][question]" ~(str name) ~'args)
-         (a/>! ~'outputCh [~(str name) [~'key ~'args]])
-         (loop [~varCtx ~varCtx]
-           (println "[model][ask][waitForAnswer]" ~'key)
-           (when-let [[~'cmd ~'evt] (a/<! ~'inputCh)]
-             (cond
-               (= "ok" ~'cmd)
-               (let [[~'resKey ~'resArgs] ~'evt
-                     ~'isMatch (= ~'key ~'resKey)]
-                 (if ~'isMatch
-                   (do ;(println "[model][ask][answer]" ~'evt)
-                       [~varCtx ~'resArgs])
-                   (recur ~varCtx)))
 
-               ~@body
+(defmacro basicNotify [state & body]
+  `(let [~'fsm (gameplay/getFsm ~'gameplayCtx)
+         ~'state (or (app.fsm/load ~'fsm) ~state)]
+     (a/<! (~'updateMap nil (gameplay/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateCursor nil (gameplay/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateUnits nil (gameplay/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateMoveRange nil (gameplay/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+      ~@body
+     (gameplay/setFsm ~'gameplayCtx (app.fsm/save ~'fsm ~'state))))
 
-               :else
-               (recur ~varCtx))))))))
+(defmacro handleL [& body]
+  `(let [~'gameplayCtx (~'handleCursor ~'gameplayCtx (~'action {:up [0 -1]
+                                                                :down [0 1]
+                                                                :left [-1 0]
+                                                                :right [1 0]}))]
+     ~@body))
+
+(defmacro handleR []
+  '(recur (handleCamera gameplayCtx (action {:rup [0 -1]
+                                             :rdown [0 1]
+                                             :rleft [-1 0]
+                                             :rright [1 0]}))))
+
+
+(defmacro handleKeyDown [& body]
+  `(let [~'keycode ~'args
+         ~'action (get ~'actions ~'keycode)
+         ~'fsm (gameplay/getFsm ~'gameplayCtx)
+         ~'state (app.fsm/load ~'fsm)]
+     (cond
+       ~@body
+
+       :else
+       (recur ~'gameplayCtx))))
+
+
+
+
+
+
+
+
+
+
 
 
 (comment
