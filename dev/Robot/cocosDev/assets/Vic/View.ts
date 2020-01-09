@@ -59,8 +59,8 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         cb();
     }
-    updateSystemMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void) {
-        this.createOrUpdateSystemMenu(data.menu, data.cursor, data.subcursor);
+    updateSystemMenu(data: any, cb: () => void) {
+        this.createOrUpdateSystemMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
         cb();
     }
     updateUnitMenu(data: any, cb: () => void) {
@@ -136,8 +136,7 @@ export default class View extends cc.Component implements IView {
         this.getGamePage().openUnitMenu([menu, info], [cursor, subcursor]);
     }
 
-    private createOrUpdateSystemMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
-        const [menu, info] = menuInfo;
+    private createOrUpdateSystemMenu(menu: any, info: any, cursor: number, subcursor: number[]) {
         this.getGamePage().openSceneMenu(menu, [cursor, subcursor]);
     }
 

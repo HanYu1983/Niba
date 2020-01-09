@@ -11,7 +11,7 @@ export default interface IView {
     playerTurnStart(data: any, cb: () => void);
     enemyTurnStart(data: string, cb: () => void);
     updatePlayTurn(data: { cursor: number[] }, cb: () => void);
-    updateSystemMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void);
+    updateSystemMenu(data: any, cb: () => void);
     updateUnitMenu(data: any, cb: () => void);
     updateUnitSelectMovePosition(data: { cursor: number[][] }, cb: () => void);
     updateUnitSelectSingleTarget(data: any, cb: () => void);
