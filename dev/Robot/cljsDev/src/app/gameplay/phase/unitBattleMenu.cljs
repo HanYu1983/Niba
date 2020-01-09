@@ -23,7 +23,7 @@
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
   nil
   (m/basicNotify
-   (or (tool.fsm/load fsm) {:tempUnit unit})
+   {:tempUnit unit}
    (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)

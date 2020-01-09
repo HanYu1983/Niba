@@ -28,7 +28,7 @@
 (m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
   nil
   (m/basicNotify
-   (or (tool.fsm/load fsm) {:tempUnit unit})
+   {:tempUnit unit}
    (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
@@ -74,21 +74,20 @@
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
   (m/basicNotify
-   (or (tool.fsm/load fsm)
-       (let [weapons (into [] (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay.model/getData gameplayCtx)))
-             menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
-         {:cursor 0
-          :subcursor (into [] (repeat (count menu) 0))
-          :menu [menu
-                 {:weaponIdx 1
-                  :weapons weapons
-                  :weaponRange (into []
-                                     (map (fn [{[min max] "range" type "type" :as weapon}]
-                                            (->> (tool.map/simpleFindPath (:position unit) (dec min))
-                                                 (into #{})
-                                                 (clojure.set/difference (->> (tool.map/simpleFindPath (:position unit) max)
-                                                                              (into #{})))))
-                                          weapons))}]}))
+   (let [weapons (into [] (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay.model/getData gameplayCtx)))
+         menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
+     {:cursor 0
+      :subcursor (into [] (repeat (count menu) 0))
+      :menu [menu
+             {:weaponIdx 1
+              :weapons weapons
+              :weaponRange (into []
+                                 (map (fn [{[min max] "range" type "type" :as weapon}]
+                                        (->> (tool.map/simpleFindPath (:position unit) (dec min))
+                                             (into #{})
+                                             (clojure.set/difference (->> (tool.map/simpleFindPath (:position unit) max)
+                                                                          (into #{})))))
+                                      weapons))}]})
    (a/<! (updateUnitMenu nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)

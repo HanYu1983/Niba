@@ -24,7 +24,7 @@
 (m/defstate unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange]}]
   nil
   (m/basicNotify
-   (or (tool.fsm/load fsm) {:tempUnit unit})
+   {:tempUnit unit}
    (a/<! (updateUnitSelectSingleTarget nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
