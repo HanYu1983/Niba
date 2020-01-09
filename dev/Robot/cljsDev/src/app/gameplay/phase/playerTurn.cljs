@@ -1,12 +1,12 @@
 (ns app.gameplay.phase.playerTurn
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.gameplay.map])
+  (:require [tool.map])
   (:require [app.gameplay.data])
   (:require [app.gameplay.gameplay])
-  (:require [app.gameplay.fsm])
+  (:require [tool.fsm])
   (:require [app.gameplay.unitState])
-  (:require [app.gameplay.units])
+  (:require [tool.units])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
@@ -42,10 +42,10 @@
    (m/handleCursor
     cursor
     (let [unitAtCursor (-> (app.gameplay.gameplay/getUnits gameplayCtx)
-                           (app.gameplay.units/getByPosition cursor))
+                           (tool.units/getByPosition cursor))
           moveRange (if unitAtCursor
                       (let [[mw mh] app.gameplay.gameplay/mapViewSize
-                            shortestPathTree (app.gameplay.map/findPath (:position unitAtCursor)
+                            shortestPathTree (tool.map/findPath (:position unitAtCursor)
                                                                (fn [{:keys [totalCost]} curr]
                                                                  [(>= totalCost 5) false])
                                                                (fn [[x y]]
@@ -65,7 +65,7 @@
    (= :enter action)
    (let [cursor (app.gameplay.gameplay/getCursor gameplayCtx)
          unitAtCursor (-> (app.gameplay.gameplay/getUnits gameplayCtx)
-                          (app.gameplay.units/getByPosition cursor))]
+                          (tool.units/getByPosition cursor))]
      (if unitAtCursor
        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
          (if isEnd

@@ -1,8 +1,8 @@
 (ns app.gameplay.gameplay
-  (:require [app.gameplay.map :as map])
+  (:require [tool.map :as map])
   (:require [app.gameplay.unitState])
-  (:require [app.gameplay.fsm])
-  (:require [app.gameplay.units]))
+  (:require [tool.fsm])
+  (:require [tool.units]))
 
 (def mapViewSize [20 20])
 
@@ -24,18 +24,18 @@
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
-                           :units (-> app.gameplay.units/model
-                                      (app.gameplay.units/add {:key (gensym)
+                           :units (-> tool.units/model
+                                      (tool.units/add {:key (gensym)
                                                       :player :player
                                                       :type :robot
                                                       :state app.gameplay.unitState/default
                                                       :position [0 0]})
-                                      (app.gameplay.units/add {:key (gensym)
+                                      (tool.units/add {:key (gensym)
                                                       :player :player
                                                       :type :robot
                                                       :state app.gameplay.unitState/default
                                                       :position [2 2]}))
-                           :fsm app.gameplay.fsm/model})
+                           :fsm tool.fsm/model})
 
 (defn getFsm [ctx]
   (:fsm ctx))
@@ -52,8 +52,8 @@
 (defn updateUnit [ctx unit nextUnit]
   (update ctx :units (fn [origin]
                        (-> origin
-                           (app.gameplay.units/delete unit)
-                           (app.gameplay.units/add nextUnit)))))
+                           (tool.units/delete unit)
+                           (tool.units/add nextUnit)))))
 
 
 (defn setMap [ctx map]
@@ -109,7 +109,7 @@
   (let [camera (or camera (getCamera ctx))
         [p1 p2] (or searchSize [(map - camera mapViewSize)
                                 (map + camera mapViewSize)])
-        units (app.gameplay.units/getByRegion (getUnits ctx) p1 p2)]
+        units (tool.units/getByRegion (getUnits ctx) p1 p2)]
     units))
 
 (defn getLocalMap [ctx camera]

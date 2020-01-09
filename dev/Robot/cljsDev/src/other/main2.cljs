@@ -1,6 +1,6 @@
 (ns app.main2
   (:require [clojure.core.async :as a])
-  (:require [app.gameplay.map :as map])
+  (:require [tool.map :as map])
   (:require-macros [app.macros :as m]))
 
 (println (map/findPath 0 5 (fn [i] [(inc i)]) (constantly 1) (constantly 1)))

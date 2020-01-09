@@ -1,25 +1,25 @@
 (ns app.main5
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.gameplay.map :as map])
+  (:require [tool.map :as map])
   (:require [app.data :as data])
   (:require [app.gameplay])
   (:require [app.fsm])
   (:require [app.gameplay.unitState])
-  (:require [app.gameplay.units])
+  (:require [tool.units])
   (:require-macros [app.macros :as m]))
 
 (comment (let [ua {:key (gensym) :position [2 0]}
-               a (-> app.gameplay.units/model
-                     (app.gameplay.units/add ua)
-                     (app.gameplay.units/add {:key (gensym) :position [2 1]})
-                     (app.gameplay.units/add {:key (gensym) :position [3 3]})
-            ;(app.gameplay.units/delete ua)
+               a (-> tool.units/model
+                     (tool.units/add ua)
+                     (tool.units/add {:key (gensym) :position [2 1]})
+                     (tool.units/add {:key (gensym) :position [3 3]})
+            ;(tool.units/delete ua)
                      )]
            (println a)
-           (println (app.gameplay.units/getByKey a (:key ua)))
-           (println (app.gameplay.units/getByPosition a [2 0]))
-           (println (app.gameplay.units/getByRegion a [0 0] [4 4]))))
+           (println (tool.units/getByKey a (:key ua)))
+           (println (tool.units/getByPosition a [2 0]))
+           (println (tool.units/getByRegion a [0 0] [4 4]))))
 
 
 (def defaultModel {})
@@ -63,7 +63,7 @@
   (= "getUnitNormalState" cmd)
   (let [[id unitKey] args
         unit (-> (app.gameplay/getUnits gameplayCtx)
-                 (app.gameplay.units/getByKey unitKey))]
+                 (tool.units/getByKey unitKey))]
     (if unit
       (let [[mw mh] app.gameplay/mapViewSize
             shortestPathTree (map/findPath (:position unit)
@@ -162,7 +162,7 @@
           (= "getUnitNormalState" cmd)
           (let [[id unitKey] args
                 unit (-> (app.gameplay/getUnits gameplayCtx)
-                         (app.gameplay.units/getByKey unitKey))]
+                         (tool.units/getByKey unitKey))]
             (if unit
               (let [[mw mh] app.gameplay/mapViewSize
                     shortestPathTree (map/findPath (:position unit)
@@ -191,7 +191,7 @@
           (= "getUnitMenu" cmd)
           (let [[id unitKey] args
                 unit (-> (app.gameplay/getUnits gameplayCtx)
-                         (app.gameplay.units/getByKey unitKey))]
+                         (tool.units/getByKey unitKey))]
             (if unit
               (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay/getData gameplayCtx))
                     menu [["move" (range (count weapons)) "cancel"]

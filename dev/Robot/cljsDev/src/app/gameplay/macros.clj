@@ -32,13 +32,13 @@
          (println "[model][state]" ~(str name) ~'args)
          (let [~varCtx ~(or (first body)
                             `(let [~'fsm (-> (app.gameplay.gameplay/getFsm ~varCtx)
-                                             (app.gameplay.fsm/pushState (keyword ~(str name))))]
+                                             (tool.fsm/pushState (keyword ~(str name))))]
                                (app.gameplay.gameplay/setFsm ~varCtx ~'fsm)))]
            (loop [~varCtx ~varCtx]
              (let [~varCtx ~(or (first (rest body))
                                 varCtx)
                    ~'fsm (app.gameplay.gameplay/getFsm ~varCtx)
-                   ~'state (app.gameplay.fsm/load ~'fsm)]
+                   ~'state (tool.fsm/load ~'fsm)]
               (when-let [[~'cmd ~'args] (a/<! ~'inputCh)]
                 (cond
                   ~@(rest (rest body))
@@ -49,14 +49,14 @@
 
 (defmacro basicNotify [state & body]
   `(let [~'fsm (app.gameplay.gameplay/getFsm ~'gameplayCtx)
-         ~'state (or (app.gameplay.fsm/load ~'fsm) ~state)]
+         ~'state (or (tool.fsm/load ~'fsm) ~state)]
      (a/<! (~'updateMap nil (app.gameplay.gameplay/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      (a/<! (~'updateCursor nil (app.gameplay.gameplay/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      (a/<! (~'updateUnits nil (app.gameplay.gameplay/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
      (a/<! (~'updateMoveRange nil (app.gameplay.gameplay/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      (a/<! (~'updateAttackRange nil (app.gameplay.gameplay/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      ~@body
-     (app.gameplay.gameplay/setFsm ~'gameplayCtx (app.gameplay.fsm/save ~'fsm ~'state))))
+     (app.gameplay.gameplay/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))))
 
 (defmacro handleKeyDown [getter setter & body]
   `(let [~'keycode ~getter

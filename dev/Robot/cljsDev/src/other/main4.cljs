@@ -1,7 +1,7 @@
 (ns app.main4
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.gameplay.map :as map])
+  (:require [tool.map :as map])
   (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])

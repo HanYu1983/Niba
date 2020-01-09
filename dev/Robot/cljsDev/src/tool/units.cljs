@@ -1,4 +1,4 @@
-(ns app.gameplay.units
+(ns tool.units
   (:require [clojure.set]))
 
 (def model {:key {}

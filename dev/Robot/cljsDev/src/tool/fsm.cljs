@@ -1,4 +1,4 @@
-(ns app.gameplay.fsm)
+(ns tool.fsm)
 
 (def model {:stack []
             :state []})
