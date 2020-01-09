@@ -2,11 +2,11 @@
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
-  (:require [app.gameplay.data])
-  (:require [app.gameplay.gameplay])
   (:require [tool.fsm])
-  (:require [app.gameplay.unitState])
   (:require [tool.units])
+  (:require [app.gameplay.data])
+  (:require [app.gameplay.model])
+  (:require [app.gameplay.unitState])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
@@ -48,7 +48,7 @@
                     (min (dec (count menu))))
          state (update state :cursor (constantly cursor))
          fsm (tool.fsm/save fsm state)]
-     (recur (app.gameplay.gameplay/setFsm gameplayCtx fsm)))
+     (recur (app.gameplay.model/setFsm gameplayCtx fsm)))
 
    (= :enter action)
    (let [cursor1 (:cursor state)
@@ -56,13 +56,13 @@
          select (get-in state [:menu 0 cursor1 cursor2])]
      (cond
        (= "endTurn" select)
-       [(app.gameplay.gameplay/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
 
        (= "cancel" select)
-       [(app.gameplay.gameplay/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
 
        :else
        (recur gameplayCtx)))
 
    (= :cancel action)
-   [(app.gameplay.gameplay/setFsm gameplayCtx (tool.fsm/popState fsm)) false]))
+   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]))

@@ -2,11 +2,11 @@
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
-  (:require [app.gameplay.data])
-  (:require [app.gameplay.gameplay])
   (:require [tool.fsm])
-  (:require [app.gameplay.unitState])
   (:require [tool.units])
+  (:require [app.gameplay.data])
+  (:require [app.gameplay.model])
+  (:require [app.gameplay.unitState])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart

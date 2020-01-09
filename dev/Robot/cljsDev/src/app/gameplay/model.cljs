@@ -1,4 +1,4 @@
-(ns app.gameplay.gameplay
+(ns app.gameplay.model
   (:require [tool.map :as map])
   (:require [app.gameplay.unitState])
   (:require [tool.fsm])

@@ -31,13 +31,13 @@
        (a/go
          (println "[model][state]" ~(str name) ~'args)
          (let [~varCtx ~(or (first body)
-                            `(let [~'fsm (-> (app.gameplay.gameplay/getFsm ~varCtx)
+                            `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
                                              (tool.fsm/pushState (keyword ~(str name))))]
-                               (app.gameplay.gameplay/setFsm ~varCtx ~'fsm)))]
+                               (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
            (loop [~varCtx ~varCtx]
              (let [~varCtx ~(or (first (rest body))
                                 varCtx)
-                   ~'fsm (app.gameplay.gameplay/getFsm ~varCtx)
+                   ~'fsm (app.gameplay.model/getFsm ~varCtx)
                    ~'state (tool.fsm/load ~'fsm)]
               (when-let [[~'cmd ~'args] (a/<! ~'inputCh)]
                 (cond
@@ -48,15 +48,15 @@
 
 
 (defmacro basicNotify [state & body]
-  `(let [~'fsm (app.gameplay.gameplay/getFsm ~'gameplayCtx)
+  `(let [~'fsm (app.gameplay.model/getFsm ~'gameplayCtx)
          ~'state (or (tool.fsm/load ~'fsm) ~state)]
-     (a/<! (~'updateMap nil (app.gameplay.gameplay/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateCursor nil (app.gameplay.gameplay/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateUnits nil (app.gameplay.gameplay/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateMoveRange nil (app.gameplay.gameplay/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateAttackRange nil (app.gameplay.gameplay/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateMap nil (app.gameplay.model/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateCursor nil (app.gameplay.model/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateUnits nil (app.gameplay.model/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateMoveRange nil (app.gameplay.model/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateAttackRange nil (app.gameplay.model/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      ~@body
-     (app.gameplay.gameplay/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))))
+     (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))))
 
 (defmacro handleKeyDown [getter setter & body]
   `(let [~'keycode ~getter
@@ -68,25 +68,25 @@
        (recur ~'gameplayCtx))))
 
 (defmacro handleCursor [setter & body]
-  `(let [temp# (->> (app.gameplay.gameplay/getCursor ~'gameplayCtx)
+  `(let [temp# (->> (app.gameplay.model/getCursor ~'gameplayCtx)
                     (map + (~'action {:up [0 -1]
                                       :down [0 1]
                                       :left [-1 0]
                                       :right [1 0]}))
-                    (app.gameplay.gameplay/boundCursor ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay.gameplay/setCursor ~'gameplayCtx temp#)
+                    (app.gameplay.model/boundCursor ~'gameplayCtx))
+         ~'gameplayCtx (app.gameplay.model/setCursor ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))
 
 (defmacro handleCamera [setter & body]
   ; 加上~'修改namespace為local
   ; 使用#隨機命名變量
-  `(let [temp# (->> (app.gameplay.gameplay/getCamera ~'gameplayCtx)
+  `(let [temp# (->> (app.gameplay.model/getCamera ~'gameplayCtx)
                     (map + (~'action {:rup [0 -1]
                                       :rdown [0 1]
                                       :rleft [-1 0]
                                       :rright [1 0]}))
-                    (app.gameplay.gameplay/boundCamera ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay.gameplay/setCamera ~'gameplayCtx temp#)
+                    (app.gameplay.model/boundCamera ~'gameplayCtx))
+         ~'gameplayCtx (app.gameplay.model/setCamera ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))

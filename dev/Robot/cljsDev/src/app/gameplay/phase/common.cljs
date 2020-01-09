@@ -1,12 +1,5 @@
 (ns app.gameplay.phase.common
   (:require [clojure.core.async :as a])
-  (:require [clojure.set])
-  (:require [tool.map])
-  (:require [app.gameplay.data])
-  (:require [app.gameplay.gameplay])
-  (:require [tool.fsm])
-  (:require [app.gameplay.unitState])
-  (:require [tool.units])
   (:require-macros [app.gameplay.macros :as m]))
 
 

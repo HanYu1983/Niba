@@ -32,9 +32,9 @@
                                                  :city 0.3
                                                  :tree 0.3
                                                  :award 0.1})
-          gameplayCtx (-> app.gameplay.gameplay/defaultGameplayModel
-                          (app.gameplay.gameplay/setData data)
-                          (app.gameplay.gameplay/setMap playmap))]
-      (a/<! (updateMap gameplayCtx (app.gameplay.gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-      (a/<! (updateUnits gameplayCtx (app.gameplay.gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
+          gameplayCtx (-> app.gameplay.model/defaultGameplayModel
+                          (app.gameplay.model/setData data)
+                          (app.gameplay.model/setMap playmap))]
+      (a/<! (updateMap gameplayCtx (app.gameplay.model/getLocalMap gameplayCtx nil) inputCh outputCh))
+      (a/<! (updateUnits gameplayCtx (app.gameplay.model/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))
