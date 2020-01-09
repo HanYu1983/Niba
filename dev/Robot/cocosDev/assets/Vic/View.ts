@@ -71,7 +71,17 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         cb();
     }
-    
+    updateUnitSelectSingleTarget(data: any, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
+    }   
+    updateUnitBattleMenu(data: any, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
+    }
+
 
     // ====================== //
 

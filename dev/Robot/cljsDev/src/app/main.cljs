@@ -79,312 +79,237 @@
 
 (declare unitMenu)
 
-
-
-
-(defn handleCamera [gameplayCtx offset]
-  (let [camera (gameplay/getCamera gameplayCtx)
-        camera (->> camera
-                    (map + offset)
-                    (gameplay/boundCamera gameplayCtx))]
-    (gameplay/setCamera gameplayCtx camera)))
-
-(defn handleCursor [gameplayCtx offset]
-  (let [cursor (->> (gameplay/getCursor gameplayCtx)
-                    (map + offset)
-                    (gameplay/boundCursor gameplayCtx))]
-    (gameplay/setCursor gameplayCtx cursor)))
-
 (m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
   nil
-  (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:tempUnit unit})]
-    (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-    (a/<! (updateMoveRange nil (gameplay/getLocalMoveRange gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh))
-    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
+  (m/basicNotify
+   (or (app.fsm/load fsm) {:tempUnit unit})
+   (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
-  (let [keycode args
-        action (get actions keycode)
-        fsm (gameplay/getFsm gameplayCtx)
-        state (app.fsm/load fsm)]
-    (cond
-      (some #(= % action) [:up :down :left :right])
-      (recur (handleCursor gameplayCtx (action {:up [0 -1]
-                                                :down [0 1]
-                                                :left [-1 0]
-                                                :right [1 0]})))
+  (m/handleKeyDown
+   args action
 
-      (some #(= % action) [:rup :rdown :rleft :rright])
-      (recur (handleCamera gameplayCtx (action {:rup [0 -1]
-                                                :rdown [0 1]
-                                                :rleft [-1 0]
-                                                :rright [1 0]})))
+   (some #(= % action) [:up :down :left :right])
+   (m/handleCursor _ (recur gameplayCtx))
 
-      (= :enter action)
-      (let [cursor (gameplay/getCursor gameplayCtx)
-            camera (gameplay/getCamera gameplayCtx)
-            path (map/buildPath paths cursor)]
-        (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial gameplay/world2local camera) path)} inputCh outputCh))
-        (let [tempUnit (merge unit {:position cursor})
-              state (merge state {:tempUnit tempUnit})
-              units (-> gameplayCtx
-                        (gameplay/getUnits)
-                        (app.units/delete unit)
-                        (app.units/add tempUnit))
-              gameplayCtx (-> gameplayCtx
-                              (gameplay/setUnits units)
-                              (gameplay/setFsm (app.fsm/save fsm state)))
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
 
-              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
-          (if isEnd
-            [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
-            (let [tempUnit (:tempUnit state)
-                  units (-> gameplayCtx
-                            (gameplay/getUnits)
-                            (app.units/delete tempUnit)
-                            (app.units/add unit))
-                  gameplayCtx (-> gameplayCtx
-                                  (gameplay/setUnits units))]
-              (recur gameplayCtx)))))
+   (= :cancel action)
+   [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
 
-      (= :cancel action)
-      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+   (= :enter action)
+   (let [cursor (gameplay/getCursor gameplayCtx)
+         camera (gameplay/getCamera gameplayCtx)
+         path (map/buildPath paths cursor)]
+     (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial gameplay/world2local camera) path)} inputCh outputCh))
+     (let [tempUnit (merge unit {:position cursor})
+           state (merge state {:tempUnit tempUnit})
+           units (-> gameplayCtx
+                     (gameplay/getUnits)
+                     (app.units/delete unit)
+                     (app.units/add tempUnit))
+           gameplayCtx (-> gameplayCtx
+                           (gameplay/setUnits units)
+                           (gameplay/setFsm (app.fsm/save fsm state)))
 
-      :else
-      (recur gameplayCtx))))
+           [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
+       (if isEnd
+         [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+         (let [tempUnit (:tempUnit state)
+               units (-> gameplayCtx
+                         (gameplay/getUnits)
+                         (app.units/delete tempUnit)
+                         (app.units/add unit))
+               gameplayCtx (-> gameplayCtx
+                               (gameplay/setUnits units))]
+           (recur gameplayCtx)))))))
 
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
   nil
-
-  (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:tempUnit unit})]
-    (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-    (a/<! (updateMoveRange nil (gameplay/getLocalMoveRange gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnitBattleMenu nil state inputCh outputCh))
-    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
+  (m/basicNotify
+   (or (app.fsm/load fsm) {:tempUnit unit})
+   (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
-  (let [keycode args
-        action (get actions keycode)
-        fsm (gameplay/getFsm gameplayCtx)
-        state (app.fsm/load fsm)]
-    (cond
-      (some #(= % action) [:up :down :left :right])
-      (recur (handleCursor gameplayCtx (action {:up [0 -1]
-                                                :down [0 1]
-                                                :left [-1 0]
-                                                :right [1 0]})))
+  (m/handleKeyDown
+   args action
 
-      (some #(= % action) [:rup :rdown :rleft :rright])
-      (recur (handleCamera gameplayCtx (action {:rup [0 -1]
-                                                :rdown [0 1]
-                                                :rleft [-1 0]
-                                                :rright [1 0]})))
+   (some #(= % action) [:up :down :left :right])
+   (m/handleCursor _ (recur gameplayCtx))
 
-      (= :enter action)
-      (let [cursor (gameplay/getCursor gameplayCtx)
-            units (gameplay/getUnits gameplayCtx)
-            unitAtCursor (app.units/getByPosition units cursor)]
-        (if unitAtCursor)
-        (recur gameplayCtx))
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
 
-      :else
-      (recur gameplayCtx))))
+   (= :cancel action)
+   [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+
+   (= :enter action)
+   (let [cursor (gameplay/getCursor gameplayCtx)
+         units (gameplay/getUnits gameplayCtx)
+         unitAtCursor (app.units/getByPosition units cursor)]
+     (if unitAtCursor)
+     (recur gameplayCtx))))
 
 (m/defstate unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange]}]
   nil
-  
-  (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm) {:tempUnit unit})]
-    (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-    (a/<! (updateMoveRange nil (gameplay/getLocalMoveRange gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnitSelectSingleTarget nil state inputCh outputCh))
-    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
-  
+  (m/basicNotify
+   (or (app.fsm/load fsm) {:tempUnit unit})
+   (a/<! (updateUnitSelectSingleTarget nil state inputCh outputCh)))
+
   (= "KEY_DOWN" cmd)
-  (let [keycode args
-        action (get actions keycode)
-        fsm (gameplay/getFsm gameplayCtx)
-        state (app.fsm/load fsm)]
-    (cond
-      (some #(= % action) [:up :down :left :right])
-      (recur (handleCursor gameplayCtx (action {:up [0 -1]
-                                                :down [0 1]
-                                                :left [-1 0]
-                                                :right [1 0]})))
+  (m/handleKeyDown
+   args action
 
-      (some #(= % action) [:rup :rdown :rleft :rright])
-      (recur (handleCamera gameplayCtx (action {:rup [0 -1]
-                                                :rdown [0 1]
-                                                :rleft [-1 0]
-                                                :rright [1 0]})))
+   (some #(= % action) [:up :down :left :right])
+   (m/handleCursor _ (recur gameplayCtx))
 
-      (= :enter action)
-      (let [cursor (gameplay/getCursor gameplayCtx)
-            units (gameplay/getUnits gameplayCtx)
-            unitAtCursor (app.units/getByPosition units cursor)]
-        (if unitAtCursor
-          (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
-            (if isEnd
-              [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
-              (recur gameplayCtx)))
-          (recur gameplayCtx)))
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
 
-      (= :cancel action)
-      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+   (= :cancel action)
+   [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
 
-      :else
-      (recur gameplayCtx))))
+   (= :enter action)
+   (let [cursor (gameplay/getCursor gameplayCtx)
+         units (gameplay/getUnits gameplayCtx)
+         unitAtCursor (app.units/getByPosition units cursor)]
+     (if unitAtCursor
+       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+         (if isEnd
+           [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
+           (recur gameplayCtx)))
+       (recur gameplayCtx)))))
 
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
-  (let [fsm (gameplay/getFsm gameplayCtx)
-        state (or (app.fsm/load fsm)
-                  (let [weapons (into [] (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx)))
-                        menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
-                    {:cursor 0
-                     :subcursor (into [] (repeat (count menu) 0))
-                     :menu [menu
-                            {:weaponIdx 1
-                             :weapons weapons
-                             :weaponRange (into []
-                                                (map (fn [{[min max] "range" type "type" :as weapon}]
-                                                       (->> (map/simpleFindPath (:position unit) (dec min))
-                                                            (into #{})
-                                                            (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
-                                                                                         (into #{})))))
-                                                     weapons))}]}))]
-    (a/<! (updateMap nil (gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateCursor nil (gameplay/getLocalCursor gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnits nil (gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
-    (a/<! (updateMoveRange nil (gameplay/getLocalMoveRange gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateAttackRange nil (gameplay/getLocalAttackRange gameplayCtx nil) inputCh outputCh))
-    (a/<! (updateUnitMenu nil state inputCh outputCh))
-    (gameplay/setFsm gameplayCtx (app.fsm/save fsm state)))
+  (m/basicNotify
+   (or (app.fsm/load fsm)
+       (let [weapons (into [] (app.unitState/getWeapons nil (:state unit) (gameplay/getData gameplayCtx)))
+             menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
+         {:cursor 0
+          :subcursor (into [] (repeat (count menu) 0))
+          :menu [menu
+                 {:weaponIdx 1
+                  :weapons weapons
+                  :weaponRange (into []
+                                     (map (fn [{[min max] "range" type "type" :as weapon}]
+                                            (->> (map/simpleFindPath (:position unit) (dec min))
+                                                 (into #{})
+                                                 (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
+                                                                              (into #{})))))
+                                          weapons))}]}))
+   (a/<! (updateUnitMenu nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
-  (let [keycode args
-        action (get actions keycode)
-        fsm (gameplay/getFsm gameplayCtx)
-        state (app.fsm/load fsm)]
-    (cond
-      (some #(= % action) [:up :down])
-      (let [menu (get-in state [:menu 0])
-            cursor (:cursor state)
-            dir {:up dec
-                 :down inc}
-            cursor (-> cursor
-                       ((action dir))
-                       (max 0)
-                       (min (dec (count menu))))
-            state (update state :cursor (constantly cursor))
+  (m/handleKeyDown
+   args action
+
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
+
+   (some #(= % action) [:up :down])
+   (let [menu (get-in state [:menu 0])
+         cursor (:cursor state)
+         dir {:up dec
+              :down inc}
+         cursor (-> cursor
+                    ((action dir))
+                    (max 0)
+                    (min (dec (count menu))))
+         state (update state :cursor (constantly cursor))
 
 
-            cursor1 cursor
-            cursor2 (get-in state [:subcursor cursor1])
-            menu (get-in state [:menu 0])
-            weaponIdx (get-in state [:menu 1 :weaponIdx])
-            attackRange (if (= cursor1 weaponIdx)
-                          (get-in state [:menu 1 :weaponRange cursor2])
-                          [])
+         cursor1 cursor
+         cursor2 (get-in state [:subcursor cursor1])
+         menu (get-in state [:menu 0])
+         weaponIdx (get-in state [:menu 1 :weaponIdx])
+         attackRange (if (= cursor1 weaponIdx)
+                       (get-in state [:menu 1 :weaponRange cursor2])
+                       [])
 
 
-            gameplayCtx (-> gameplayCtx
-                            (gameplay/setFsm (app.fsm/save fsm state))
-                            (gameplay/setAttackRange attackRange))]
-        (recur gameplayCtx))
+         gameplayCtx (-> gameplayCtx
+                         (gameplay/setFsm (app.fsm/save fsm state))
+                         (gameplay/setAttackRange attackRange))]
+     (recur gameplayCtx))
 
-      (some #(= % action) [:left :right])
-      (let [cursor1 (:cursor state)
-            cursor2 (get-in state [:subcursor cursor1])
-            menu (get-in state [:menu 0])
-            dir {:left dec
-                 :right inc}
-            cursor2 (-> cursor2
-                        ((action dir))
-                        (max 0)
-                        (min (dec (count (get menu cursor1)))))
-            state (update-in state [:subcursor (:cursor state)] (constantly cursor2))
+   (some #(= % action) [:left :right])
+   (let [cursor1 (:cursor state)
+         cursor2 (get-in state [:subcursor cursor1])
+         menu (get-in state [:menu 0])
+         dir {:left dec
+              :right inc}
+         cursor2 (-> cursor2
+                     ((action dir))
+                     (max 0)
+                     (min (dec (count (get menu cursor1)))))
+         state (update-in state [:subcursor (:cursor state)] (constantly cursor2))
 
-            
-            menu (get-in state [:menu 0])
-            weaponIdx (get-in state [:menu 1 :weaponIdx])
-            attackRange (if (= cursor1 weaponIdx)
-                          (get-in state [:menu 1 :weaponRange cursor2])
-                          [])
-            
-            
-            gameplayCtx (-> gameplayCtx
-                            (gameplay/setFsm (app.fsm/save fsm state))
-                            (gameplay/setAttackRange attackRange))]
-        (recur gameplayCtx))
 
-      (= :enter action)
-      (let [cursor1 (:cursor state)
-            cursor2 (get-in state [:subcursor cursor1])
-            weaponIdx (get-in state [:menu 1 :weaponIdx])
-            select (get-in state [:menu 0 cursor1 cursor2])]
-        (cond
-          (= cursor1 weaponIdx)
-          (let [menu (get-in state [:menu 0])
-                weaponIdx (get-in state [:menu 1 :weaponIdx])
-                weapons (:weapons state)
-                weapon (get weapons cursor2)
-                weaponType (get weapon "type")]
-            (cond
-              (= "single" weaponType)
-              (recur gameplayCtx)
-              
-              (= "line" weaponType)
-              (recur gameplayCtx)
-              
-              :else
-              (recur gameplayCtx)))
+         menu (get-in state [:menu 0])
+         weaponIdx (get-in state [:menu 1 :weaponIdx])
+         attackRange (if (= cursor1 weaponIdx)
+                       (get-in state [:menu 1 :weaponRange cursor2])
+                       [])
 
-          (= "move" select)
-          (let [[mw mh] gameplay/mapViewSize
-                shortestPathTree (map/findPath (:position unit)
-                                               (fn [{:keys [totalCost]} curr]
-                                                 [(>= totalCost 5) false])
-                                               (fn [[x y]]
-                                                 [[x (min mh (inc y))]
-                                                  [x (max 0 (dec y))]
-                                                  [(min mw (inc x)) y]
-                                                  [(max 0 (dec x)) y]])
-                                               (constantly 1)
-                                               (constantly 0))
-                moveRange (map first shortestPathTree)
-                [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
-            (if isEnd
-              [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
-              (recur gameplayCtx)))
 
-          (= "cancel" select)
-          (let []
-            [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false])
+         gameplayCtx (-> gameplayCtx
+                         (gameplay/setFsm (app.fsm/save fsm state))
+                         (gameplay/setAttackRange attackRange))]
+     (recur gameplayCtx))
 
-          :else
-          (recur gameplayCtx)))
+   (= :enter action)
+   (let [cursor1 (:cursor state)
+         cursor2 (get-in state [:subcursor cursor1])
+         weaponIdx (get-in state [:menu 1 :weaponIdx])
+         select (get-in state [:menu 0 cursor1 cursor2])]
+     (cond
+       (= cursor1 weaponIdx)
+       (let [menu (get-in state [:menu 0])
+             weaponIdx (get-in state [:menu 1 :weaponIdx])
+             weapons (get-in state [:menu 1 :weapons])
+             weapon (get weapons cursor2)
+             weaponType (get weapon "type")]
+         (println "XXX" weaponType)
+         (cond
+           (= "single" weaponType)
+           (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange []} inputCh outputCh))]
+             (recur gameplayCtx))
 
-      (some #(= % action) [:rup :rdown :rleft :rright])
-      (recur (handleCamera gameplayCtx (action {:rup [0 -1]
-                                                :rdown [0 1]
-                                                :rleft [-1 0]
-                                                :rright [1 0]})))
+           (= "line" weaponType)
+           (recur gameplayCtx)
 
-      (= :cancel action)
-      [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+           :else
+           (recur gameplayCtx)))
 
-      :else
-      (recur gameplayCtx))))
+       (= "move" select)
+       (let [[mw mh] gameplay/mapViewSize
+             shortestPathTree (map/findPath (:position unit)
+                                            (fn [{:keys [totalCost]} curr]
+                                              [(>= totalCost 5) false])
+                                            (fn [[x y]]
+                                              [[x (min mh (inc y))]
+                                               [x (max 0 (dec y))]
+                                               [(min mw (inc x)) y]
+                                               [(max 0 (dec x)) y]])
+                                            (constantly 1)
+                                            (constantly 0))
+             moveRange (map first shortestPathTree)
+             [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
+         (if isEnd
+           [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
+           (recur gameplayCtx)))
+
+       (= "cancel" select)
+       (let []
+         [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false])
+
+       :else
+       (recur gameplayCtx)))
+
+   (= :cancel action)
+   [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]))
 
 (m/defstate systemMenu [gameplayCtx _]
   nil
@@ -400,42 +325,37 @@
    args action
 
    (some #(= % action) [:rup :rdown :rleft :rright])
-   (m/handleCamera
-    _
-    (recur gameplayCtx))
+   (m/handleCamera _ (recur gameplayCtx))
 
    (some #(= % action) [:up :down])
-   (m/fsmState
-    (let [cursor (:cursor state)
-          menu (get-in state [:menu 0])
-          dir {:up dec
-               :down inc}
-          cursor (-> cursor
-                     ((action dir))
-                     (max 0)
-                     (min (dec (count menu))))
-          state (update state :cursor (constantly cursor))
-          fsm (app.fsm/save fsm state)]
-      (recur (gameplay/setFsm gameplayCtx fsm))))
+   (let [cursor (:cursor state)
+         menu (get-in state [:menu 0])
+         dir {:up dec
+              :down inc}
+         cursor (-> cursor
+                    ((action dir))
+                    (max 0)
+                    (min (dec (count menu))))
+         state (update state :cursor (constantly cursor))
+         fsm (app.fsm/save fsm state)]
+     (recur (gameplay/setFsm gameplayCtx fsm)))
 
    (= :enter action)
-   (m/fsmState
-    (let [cursor1 (:cursor state)
-          cursor2 (get-in state [:subcursor cursor1])
-          select (get-in state [:menu 0 cursor1 cursor2])]
-      (cond
-        (= "endTurn" select)
-        [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
+   (let [cursor1 (:cursor state)
+         cursor2 (get-in state [:subcursor cursor1])
+         select (get-in state [:menu 0 cursor1 cursor2])]
+     (cond
+       (= "endTurn" select)
+       [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
 
-        (= "cancel" select)
-        [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+       (= "cancel" select)
+       [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
 
-        :else
-        (recur gameplayCtx))))
+       :else
+       (recur gameplayCtx)))
 
    (= :cancel action)
-   (m/fsmState
-    [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false])))
+   [(gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]))
 
 (m/defstate playerTurn [gameplayCtx _]
   (let []
@@ -446,10 +366,12 @@
    {}
    (a/<! (updatePlayTurn nil state inputCh outputCh)))
 
-
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
    args action
+
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
 
    (some #(= % action) [:up :down :left :right])
    (m/handleCursor
@@ -474,12 +396,6 @@
                         []))]
       (recur (-> gameplayCtx
                  (gameplay/setMoveRange moveRange)))))
-
-   (some #(= % action) [:rup :rdown :rleft :rright])
-   (m/handleCamera
-    _
-    (recur gameplayCtx))
-
 
    (= :enter action)
    (let [cursor (gameplay/getCursor gameplayCtx)

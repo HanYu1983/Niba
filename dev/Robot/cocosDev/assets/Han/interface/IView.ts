@@ -14,5 +14,7 @@ export default interface IView {
     updateSystemMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void);
     updateUnitMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void);
     updateUnitSelectMovePosition(data: { cursor: number[][] }, cb: () => void);
+    updateUnitSelectSingleTarget(data: any, cb: () => void);
+    updateUnitBattleMenu(data: any, cb: () => void);
     unitMoveAnim(data: { unit: IUnit, path: number[][] }, cb: () => void);
 }
