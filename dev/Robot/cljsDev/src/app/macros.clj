@@ -55,30 +55,47 @@
       ~@body
      (gameplay/setFsm ~'gameplayCtx (app.fsm/save ~'fsm ~'state))))
 
-(defmacro handleL [& body]
-  `(let [~'gameplayCtx (~'handleCursor ~'gameplayCtx (~'action {:up [0 -1]
-                                                                :down [0 1]
-                                                                :left [-1 0]
-                                                                :right [1 0]}))]
-     ~@body))
-
-(defmacro handleR []
-  '(recur (handleCamera gameplayCtx (action {:rup [0 -1]
-                                             :rdown [0 1]
-                                             :rleft [-1 0]
-                                             :rright [1 0]}))))
-
-
-(defmacro handleKeyDown [& body]
-  `(let [~'keycode ~'args
-         ~'action (get ~'actions ~'keycode)
-         ~'fsm (gameplay/getFsm ~'gameplayCtx)
-         ~'state (app.fsm/load ~'fsm)]
+(defmacro handleKeyDown [getter setter & body]
+  `(let [~'keycode ~getter
+         ~setter (get ~'actions ~'keycode)]
      (cond
        ~@body
 
        :else
        (recur ~'gameplayCtx))))
+
+(defmacro fsmState [& body]
+  `(let [~'fsm (gameplay/getFsm ~'gameplayCtx)
+         ~'state (app.fsm/load ~'fsm)]
+     ~@body))
+
+(defmacro handleCursor [setter & body]
+  `(let [temp# (->> (gameplay/getCursor ~'gameplayCtx)
+                    (map + (~'action {:up [0 -1]
+                                      :down [0 1]
+                                      :left [-1 0]
+                                      :right [1 0]}))
+                    (gameplay/boundCursor ~'gameplayCtx))
+         ~'gameplayCtx (gameplay/setCursor ~'gameplayCtx temp#)
+         ~setter temp#]
+     ~@body))
+
+(defmacro handleCamera [setter & body]
+  ; 加上~'修改namespace為local
+  ; 使用#隨機命名變量
+  `(let [temp# (->> (gameplay/getCamera ~'gameplayCtx)
+                    (map + (~'action {:rup [0 -1]
+                                      :rdown [0 1]
+                                      :rleft [-1 0]
+                                      :rright [1 0]}))
+                    (gameplay/boundCamera ~'gameplayCtx))
+         ~'gameplayCtx (gameplay/setCamera ~'gameplayCtx temp#)
+         ~setter temp#]
+     ~@body))
+
+
+
+
 
 
 
@@ -92,11 +109,36 @@
 
 
 (comment
+
+  (defmacro handleL [& body]
+    `(let [~'gameplayCtx (~'handleCursor ~'gameplayCtx (~'action {:up [0 -1]
+                                                                  :down [0 1]
+                                                                  :left [-1 0]
+                                                                  :right [1 0]}))]
+       ~@body))
+
+  (defmacro handleR []
+    '(recur (handleCamera gameplayCtx (action {:rup [0 -1]
+                                               :rdown [0 1]
+                                               :rleft [-1 0]
+                                               :rright [1 0]}))))
+
+
+  (defmacro handleKeyDown2 [& body]
+    `(let [~'keycode ~'args
+           ~'action (get ~'actions ~'keycode)
+           ~'fsm (gameplay/getFsm ~'gameplayCtx)
+           ~'state (app.fsm/load ~'fsm)]
+       (cond
+         ~@body
+
+         :else
+         (recur ~'gameplayCtx))))
   (defmacro answer [body]
     `(let [~'ans ~body]
        (a/>! ~'outputCh ["ok", [~'id ~'ans]])
        ~'ans))
-  
+
   (defmacro defstate [name [varCtx args] & body]
     `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
        (let [~'key (str (gensym ~(str name)))
