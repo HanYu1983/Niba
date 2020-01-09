@@ -337,7 +337,7 @@ public class Model : MonoBehaviour, IModel{
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
-                                var d = new DateTime(earn.createUTC);
+                                var d = new DateTime(earn.createUTC).ToLocalTime();
                                 return Tuple.Create(d.Year, d.Month, d.Day);
                             })
                             .Select(o =>
@@ -348,9 +348,9 @@ public class Model : MonoBehaviour, IModel{
 
                                 var earn = Earn.empty;
                                 earn.id = tempSeqId++;
-                                earn.createUTC = new DateTime(year, month, day).Ticks;
+                                earn.createUTC = new DateTime(year, month, day).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, day).ToLocalTime().ToString("yyyy/MM/dd");
+                                earn.memo = new DateTime(year, month, day).ToUniversalTime().ToString("yyyy/MM/dd");
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -368,7 +368,7 @@ public class Model : MonoBehaviour, IModel{
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
-                                var d = new DateTime(earn.createUTC);
+                                var d = new DateTime(earn.createUTC).ToLocalTime();
                                 return Tuple.Create(d.Year, d.Month);
                             })
                             .Select(o =>
@@ -378,9 +378,9 @@ public class Model : MonoBehaviour, IModel{
 
                                 var earn = Earn.empty;
                                 earn.id = tempSeqId++;
-                                earn.createUTC = new DateTime(year, month, 1).Ticks;
+                                earn.createUTC = new DateTime(year, month, 1).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, 1).ToLocalTime().ToString("yyyy/MM");
+                                earn.memo = new DateTime(year, month, 1).ToUniversalTime().ToString("yyyy/MM");
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -398,7 +398,7 @@ public class Model : MonoBehaviour, IModel{
                             .Where(MemoContains(memo))
                             .GroupBy(earn =>
                             {
-                                var d = new DateTime(earn.createUTC);
+                                var d = new DateTime(earn.createUTC).ToLocalTime();
                                 return Tuple.Create(d.Year);
                             })
                             .Select(o =>
@@ -407,9 +407,9 @@ public class Model : MonoBehaviour, IModel{
 
                                 var earn = Earn.empty;
                                 earn.id = tempSeqId++;
-                                earn.createUTC = new DateTime(year, 1, 1).Ticks;
+                                earn.createUTC = new DateTime(year, 1, 1).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, 1, 1).ToLocalTime().ToString("yyyy");
+                                earn.memo = new DateTime(year, 1, 1).ToUniversalTime().ToString("yyyy");
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -533,11 +533,15 @@ public class Model : MonoBehaviour, IModel{
     {
         if (string.IsNullOrEmpty(memoFilter))
         {
-            return memoItems.Values.OrderByDescending(d => d.LastSelectUTC).ToList();
+            return memoItems.Values
+                //.OrderByDescending(d => d.LastSelectUTC)
+                .OrderBy(d => d.Memo)
+                .ToList();
         }
         return memoItems.Values
             .Where(d => d.Memo != null && d.Memo.Contains(memoFilter))
-            .OrderByDescending(d => d.LastSelectUTC)
+            //.OrderByDescending(d => d.LastSelectUTC)
+            .OrderBy(d=>d.Memo)
             .ToList();
     }
 
