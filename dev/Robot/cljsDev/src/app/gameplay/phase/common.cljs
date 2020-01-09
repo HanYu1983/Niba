@@ -1,13 +1,13 @@
-(ns app.phase.common
+(ns app.gameplay.phase.common
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.map])
-  (:require [app.data])
-  (:require [app.gameplay])
-  (:require [app.fsm])
-  (:require [app.unitState])
-  (:require [app.units])
-  (:require-macros [app.macros :as m]))
+  (:require [app.gameplay.map])
+  (:require [app.gameplay.data])
+  (:require [app.gameplay.gameplay])
+  (:require [app.gameplay.fsm])
+  (:require [app.gameplay.unitState])
+  (:require [app.gameplay.units])
+  (:require-macros [app.gameplay.macros :as m]))
 
 
 (m/defwait playerTurnStart [ctx args])

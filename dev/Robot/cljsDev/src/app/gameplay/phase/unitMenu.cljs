@@ -1,34 +1,34 @@
-(ns app.phase.unitMenu
+(ns app.gameplay.phase.unitMenu
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.map])
-  (:require [app.data])
-  (:require [app.gameplay])
-  (:require [app.fsm])
-  (:require [app.unitState])
-  (:require [app.units])
-  (:require-macros [app.macros :as m])
-  (:require [app.phase.common :refer [playerTurnStart
-                                      enemyTurnStart
-                                      updateMap
-                                      updateUnits
-                                      updateCursor
-                                      updateMoveRange
-                                      updateAttackRange
+  (:require [app.gameplay.map])
+  (:require [app.gameplay.data])
+  (:require [app.gameplay.gameplay])
+  (:require [app.gameplay.fsm])
+  (:require [app.gameplay.unitState])
+  (:require [app.gameplay.units])
+  (:require-macros [app.gameplay.macros :as m])
+  (:require [app.gameplay.phase.common :refer [playerTurnStart
+                                               enemyTurnStart
+                                               updateMap
+                                               updateUnits
+                                               updateCursor
+                                               updateMoveRange
+                                               updateAttackRange
 
-                                      updateUnitSelectMovePosition
-                                      updateUnitMenu
-                                      unitMoveAnim
-                                      
-                                      actions]])
-  (:require [app.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]]))
+                                               updateUnitSelectMovePosition
+                                               updateUnitMenu
+                                               unitMoveAnim
+
+                                               actions]])
+  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]]))
 
 (declare unitMenu)
 
 (m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
   nil
   (m/basicNotify
-   (or (app.fsm/load fsm) {:tempUnit unit})
+   (or (app.gameplay.fsm/load fsm) {:tempUnit unit})
    (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
@@ -42,40 +42,40 @@
    (m/handleCamera _ (recur gameplayCtx))
 
    (= :cancel action)
-   [(app.gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+   [(app.gameplay.gameplay/setFsm gameplayCtx (app.gameplay.fsm/popState fsm)) false]
 
    (= :enter action)
-   (let [cursor (app.gameplay/getCursor gameplayCtx)
-         camera (app.gameplay/getCamera gameplayCtx)
-         path (app.map/buildPath paths cursor)]
-     (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay/world2local camera) path)} inputCh outputCh))
+   (let [cursor (app.gameplay.gameplay/getCursor gameplayCtx)
+         camera (app.gameplay.gameplay/getCamera gameplayCtx)
+         path (app.gameplay.map/buildPath paths cursor)]
+     (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay.gameplay/world2local camera) path)} inputCh outputCh))
      (let [tempUnit (merge unit {:position cursor})
            state (merge state {:tempUnit tempUnit})
            units (-> gameplayCtx
-                     (app.gameplay/getUnits)
-                     (app.units/delete unit)
-                     (app.units/add tempUnit))
+                     (app.gameplay.gameplay/getUnits)
+                     (app.gameplay.units/delete unit)
+                     (app.gameplay.units/add tempUnit))
            gameplayCtx (-> gameplayCtx
-                           (app.gameplay/setUnits units)
-                           (app.gameplay/setFsm (app.fsm/save fsm state)))
+                           (app.gameplay.gameplay/setUnits units)
+                           (app.gameplay.gameplay/setFsm (app.gameplay.fsm/save fsm state)))
 
            [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
        (if isEnd
-         [(app.gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]
+         [(app.gameplay.gameplay/setFsm gameplayCtx (app.gameplay.fsm/popState fsm)) false]
          (let [tempUnit (:tempUnit state)
                units (-> gameplayCtx
-                         (app.gameplay/getUnits)
-                         (app.units/delete tempUnit)
-                         (app.units/add unit))
+                         (app.gameplay.gameplay/getUnits)
+                         (app.gameplay.units/delete tempUnit)
+                         (app.gameplay.units/add unit))
                gameplayCtx (-> gameplayCtx
-                               (app.gameplay/setUnits units))]
+                               (app.gameplay.gameplay/setUnits units))]
            (recur gameplayCtx)))))))
 
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
   (m/basicNotify
-   (or (app.fsm/load fsm)
-       (let [weapons (into [] (app.unitState/getWeapons nil (:state unit) (app.gameplay/getData gameplayCtx)))
+   (or (app.gameplay.fsm/load fsm)
+       (let [weapons (into [] (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay.gameplay/getData gameplayCtx)))
              menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
          {:cursor 0
           :subcursor (into [] (repeat (count menu) 0))
@@ -84,9 +84,9 @@
                   :weapons weapons
                   :weaponRange (into []
                                      (map (fn [{[min max] "range" type "type" :as weapon}]
-                                            (->> (app.map/simpleFindPath (:position unit) (dec min))
+                                            (->> (app.gameplay.map/simpleFindPath (:position unit) (dec min))
                                                  (into #{})
-                                                 (clojure.set/difference (->> (app.map/simpleFindPath (:position unit) max)
+                                                 (clojure.set/difference (->> (app.gameplay.map/simpleFindPath (:position unit) max)
                                                                               (into #{})))))
                                           weapons))}]}))
    (a/<! (updateUnitMenu nil state inputCh outputCh)))
@@ -120,8 +120,8 @@
 
 
          gameplayCtx (-> gameplayCtx
-                         (app.gameplay/setFsm (app.fsm/save fsm state))
-                         (app.gameplay/setAttackRange attackRange))]
+                         (app.gameplay.gameplay/setFsm (app.gameplay.fsm/save fsm state))
+                         (app.gameplay.gameplay/setAttackRange attackRange))]
      (recur gameplayCtx))
 
    (some #(= % action) [:left :right])
@@ -145,8 +145,8 @@
 
 
          gameplayCtx (-> gameplayCtx
-                         (app.gameplay/setFsm (app.fsm/save fsm state))
-                         (app.gameplay/setAttackRange attackRange))]
+                         (app.gameplay.gameplay/setFsm (app.gameplay.fsm/save fsm state))
+                         (app.gameplay.gameplay/setAttackRange attackRange))]
      (recur gameplayCtx))
 
    (= :enter action)
@@ -173,8 +173,8 @@
            (recur gameplayCtx)))
 
        (= "move" select)
-       (let [[mw mh] app.gameplay/mapViewSize
-             shortestPathTree (app.map/findPath (:position unit)
+       (let [[mw mh] app.gameplay.gameplay/mapViewSize
+             shortestPathTree (app.gameplay.map/findPath (:position unit)
                                                 (fn [{:keys [totalCost]} curr]
                                                   [(>= totalCost 5) false])
                                                 (fn [[x y]]
@@ -187,15 +187,15 @@
              moveRange (map first shortestPathTree)
              [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
          (if isEnd
-           [(app.gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) true]
+           [(app.gameplay.gameplay/setFsm gameplayCtx (app.gameplay.fsm/popState fsm)) true]
            (recur gameplayCtx)))
 
        (= "cancel" select)
        (let []
-         [(app.gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false])
+         [(app.gameplay.gameplay/setFsm gameplayCtx (app.gameplay.fsm/popState fsm)) false])
 
        :else
        (recur gameplayCtx)))
 
    (= :cancel action)
-   [(app.gameplay/setFsm gameplayCtx (app.fsm/popState fsm)) false]))
+   [(app.gameplay.gameplay/setFsm gameplayCtx (app.gameplay.fsm/popState fsm)) false]))

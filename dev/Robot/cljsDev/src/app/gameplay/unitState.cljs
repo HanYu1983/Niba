@@ -1,4 +1,4 @@
-(ns app.unitState)
+(ns app.gameplay.unitState)
 
 (def default {:robot "jimu"
               :pilot "amuro"

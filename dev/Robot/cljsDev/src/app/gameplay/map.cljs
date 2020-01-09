@@ -1,4 +1,4 @@
-(ns app.map)
+(ns app.gameplay.map)
 
 (def defaultModel {})
 

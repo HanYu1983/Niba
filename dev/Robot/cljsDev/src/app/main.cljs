@@ -1,17 +1,11 @@
 (ns app.main
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.map])
-  (:require [app.data])
-  (:require [app.gameplay])
-  (:require [app.fsm])
-  (:require [app.unitState])
-  (:require [app.units])
-  (:require-macros [app.macros :as m])
-  (:require [app.phase.playerTurn :refer [playerTurn]])
-  (:require [app.phase.enemyTurn :refer [enemyTurn]])
-  (:require [app.phase.common :refer [updateMap
-                                      updateUnits]]))
+  (:require-macros [app.gameplay.macros :as m])
+  (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
+  (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
+  (:require [app.gameplay.phase.common :refer [updateMap
+                                               updateUnits]]))
 
 
 (def defaultModel {})
@@ -41,8 +35,8 @@
           (recur ctx)
 
           (= "startGameplay" cmd)
-          (let [data (a/<! (app.data/loadData))
-                playmap (app.map/generateMap 100 100
+          (let [data (a/<! (app.gameplay.data/loadData))
+                playmap (app.gameplay.map/generateMap 100 100
                                              {:deepsea 0.3
                                               :sea 0.3
                                               :sand 0.3
@@ -50,12 +44,12 @@
                                               :city 0.3
                                               :tree 0.3
                                               :award 0.1})
-                gameplayCtx (-> app.gameplay/defaultGameplayModel
-                                (app.gameplay/setData data)
-                                (app.gameplay/setMap playmap))]
+                gameplayCtx (-> app.gameplay.gameplay/defaultGameplayModel
+                                (app.gameplay.gameplay/setData data)
+                                (app.gameplay.gameplay/setMap playmap))]
 
-            (a/<! (updateMap gameplayCtx (app.gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
-            (a/<! (updateUnits gameplayCtx (app.gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
+            (a/<! (updateMap gameplayCtx (app.gameplay.gameplay/getLocalMap gameplayCtx nil) inputCh outputCh))
+            (a/<! (updateUnits gameplayCtx (app.gameplay.gameplay/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
 
             (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))
 

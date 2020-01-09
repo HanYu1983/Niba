@@ -1,4 +1,4 @@
-(ns app.macros)
+(ns app.gameplay.macros)
 
 (defmacro defwait [name [varCtx args] & body]
   `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
@@ -31,14 +31,14 @@
        (a/go
          (println "[model][state]" ~(str name) ~'args)
          (let [~varCtx ~(or (first body)
-                            `(let [~'fsm (-> (app.gameplay/getFsm ~varCtx)
-                                             (app.fsm/pushState (keyword ~(str name))))]
-                               (app.gameplay/setFsm ~varCtx ~'fsm)))]
+                            `(let [~'fsm (-> (app.gameplay.gameplay/getFsm ~varCtx)
+                                             (app.gameplay.fsm/pushState (keyword ~(str name))))]
+                               (app.gameplay.gameplay/setFsm ~varCtx ~'fsm)))]
            (loop [~varCtx ~varCtx]
              (let [~varCtx ~(or (first (rest body))
                                 varCtx)
-                   ~'fsm (app.gameplay/getFsm ~varCtx)
-                   ~'state (app.fsm/load ~'fsm)]
+                   ~'fsm (app.gameplay.gameplay/getFsm ~varCtx)
+                   ~'state (app.gameplay.fsm/load ~'fsm)]
               (when-let [[~'cmd ~'args] (a/<! ~'inputCh)]
                 (cond
                   ~@(rest (rest body))
@@ -48,15 +48,15 @@
 
 
 (defmacro basicNotify [state & body]
-  `(let [~'fsm (app.gameplay/getFsm ~'gameplayCtx)
-         ~'state (or (app.fsm/load ~'fsm) ~state)]
-     (a/<! (~'updateMap nil (app.gameplay/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateCursor nil (app.gameplay/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateUnits nil (app.gameplay/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateMoveRange nil (app.gameplay/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateAttackRange nil (app.gameplay/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+  `(let [~'fsm (app.gameplay.gameplay/getFsm ~'gameplayCtx)
+         ~'state (or (app.gameplay.fsm/load ~'fsm) ~state)]
+     (a/<! (~'updateMap nil (app.gameplay.gameplay/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateCursor nil (app.gameplay.gameplay/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateUnits nil (app.gameplay.gameplay/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateMoveRange nil (app.gameplay.gameplay/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+     (a/<! (~'updateAttackRange nil (app.gameplay.gameplay/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
      ~@body
-     (app.gameplay/setFsm ~'gameplayCtx (app.fsm/save ~'fsm ~'state))))
+     (app.gameplay.gameplay/setFsm ~'gameplayCtx (app.gameplay.fsm/save ~'fsm ~'state))))
 
 (defmacro handleKeyDown [getter setter & body]
   `(let [~'keycode ~getter
@@ -68,25 +68,25 @@
        (recur ~'gameplayCtx))))
 
 (defmacro handleCursor [setter & body]
-  `(let [temp# (->> (app.gameplay/getCursor ~'gameplayCtx)
+  `(let [temp# (->> (app.gameplay.gameplay/getCursor ~'gameplayCtx)
                     (map + (~'action {:up [0 -1]
                                       :down [0 1]
                                       :left [-1 0]
                                       :right [1 0]}))
-                    (app.gameplay/boundCursor ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay/setCursor ~'gameplayCtx temp#)
+                    (app.gameplay.gameplay/boundCursor ~'gameplayCtx))
+         ~'gameplayCtx (app.gameplay.gameplay/setCursor ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))
 
 (defmacro handleCamera [setter & body]
   ; 加上~'修改namespace為local
   ; 使用#隨機命名變量
-  `(let [temp# (->> (app.gameplay/getCamera ~'gameplayCtx)
+  `(let [temp# (->> (app.gameplay.gameplay/getCamera ~'gameplayCtx)
                     (map + (~'action {:rup [0 -1]
                                       :rdown [0 1]
                                       :rleft [-1 0]
                                       :rright [1 0]}))
-                    (app.gameplay/boundCamera ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay/setCamera ~'gameplayCtx temp#)
+                    (app.gameplay.gameplay/boundCamera ~'gameplayCtx))
+         ~'gameplayCtx (app.gameplay.gameplay/setCamera ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))

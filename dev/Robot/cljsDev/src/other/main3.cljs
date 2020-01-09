@@ -1,6 +1,6 @@
 (ns app.main3
   (:require [clojure.core.async :as a])
-  (:require [app.map :as map])
+  (:require [app.gameplay.map :as map])
   (:require [app.quadtree :as aq])
   (:require-macros [app.macros :as m]))
 
