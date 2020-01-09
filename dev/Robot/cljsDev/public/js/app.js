@@ -1,1 +1,1 @@
-SHADOW_ENV.load({}, ["app.map.js","app.data.js","app.unitState.js","app.fsm.js","app.units.js","app.gameplay.js","app.main.js","shadow.module.app.append.js"]);
+SHADOW_ENV.load({}, ["app.map.js","app.data.js","app.unitState.js","app.fsm.js","app.units.js","app.gameplay.js","app.phase.common.js","app.phase.systemMenu.js","app.phase.unitBattleMenu.js","app.phase.unitSelectSingleTarget.js","app.phase.unitMenu.js","app.phase.playerTurn.js","app.phase.enemyTurn.js","app.main.js","shadow.module.app.append.js"]);

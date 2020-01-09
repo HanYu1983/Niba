@@ -26,7 +26,7 @@ export default class NewClass extends cc.Component implements IModel {
         this.viewOb.subscribe(e => {
             const [cmd, args] = e;
             if(this.view[cmd]){
-                console.log("[ModelController][receive]"+cmd);
+                console.log("[ModelController][receive]"+cmd, args);
                 const [id, data] = args;
                 this.view[cmd](data, ()=>{
                     console.log("[ModelController][reply]"+cmd)
