@@ -1,4 +1,4 @@
-(ns app.map)
+(ns tool.map)
 
 (def defaultModel {})
 

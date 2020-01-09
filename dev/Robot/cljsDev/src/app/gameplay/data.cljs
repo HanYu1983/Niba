@@ -1,4 +1,4 @@
-(ns app.data
+(ns app.gameplay.data
   (:require [clojure.core.async :as a]))
 
 

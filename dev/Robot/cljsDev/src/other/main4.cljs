@@ -1,11 +1,11 @@
 (ns app.main4
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
-  (:require [app.map :as map])
+  (:require [tool.map :as map])
   (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
-  (:require [app.unitState])
+  (:require [app.gameplay.unitState])
   (:require-macros [app.macros :as m]))
 
 (def defaultModel {})
@@ -54,16 +54,16 @@
   (= "setCamera" cmd)
   (let [camera args
         gameplayCtx (-> gameplayCtx
-                        (gameplay/setCamera camera))
+                        (app.gameplay/setCamera camera))
         moveRange (get-in gameplayCtx [:temp :moveRange])]
     (a/<! (createUnits nil
-                       {:units (gameplay/getLocalUnits gameplayCtx nil nil)
-                        :players (gameplay/getPlayers gameplayCtx)}
+                       {:units (app.gameplay/getLocalUnits gameplayCtx nil nil)
+                        :players (app.gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
     (m/notifySetMap gameplayCtx)
     (m/notifySetCamera gameplayCtx)
     (m/notifySetCursor gameplayCtx)
-    (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
+    (a/>! outputCh ["setMoveRange" (map #(app.gameplay/world2local (app.gameplay/getCamera gameplayCtx) %)
                                         moveRange)])
     (recur gameplayCtx))
 
@@ -74,7 +74,7 @@
 (defn selectUnitFlow-moveRange-move [gameplayCtx unit inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
-      (let [weapons (app.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+      (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
             [gameplayCtx select] (a/<! (unitMenu gameplayCtx [[(range (count weapons)) "cancel"]
                                                               {:weaponIdx 0
                                                                :weapons weapons
@@ -83,7 +83,7 @@
                                                                                         (into #{})
                                                                                         (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
                                                                                                                      (into #{})))
-                                                                                        (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                                        (map (partial app.gameplay/local2world (app.gameplay/getCamera gameplayCtx)))))
                                                                                  weapons)}]
                                                  inputCh outputCh))]
         (cond
@@ -93,8 +93,8 @@
           (= "cancel" select)
           (let []
             (a/<! (createUnits nil
-                               {:units (gameplay/getLocalUnits gameplayCtx nil nil)
-                                :players (gameplay/getPlayers gameplayCtx)}
+                               {:units (app.gameplay/getLocalUnits gameplayCtx nil nil)
+                                :players (app.gameplay/getPlayers gameplayCtx)}
                                inputCh outputCh))
             [gameplayCtx false])
           
@@ -103,7 +103,7 @@
 
 (defn selectUnitFlow-moveRange [gameplayCtx unit inputCh outputCh]
   (a/go
-    (let [[mw mh] gameplay/mapViewSize
+    (let [[mw mh] app.gameplay/mapViewSize
           shortestPathTree (map/findPath (:position unit)
                                          (fn [{:keys [totalCost]} curr]
                                            [(>= totalCost 5) false])
@@ -116,22 +116,22 @@
                                          (fn [curr] 0))
           moveRange (map first shortestPathTree)
           gameplayCtx (update-in gameplayCtx [:temp :moveRange] (constantly moveRange))]
-      (a/>! outputCh ["setMoveRange" (map #(gameplay/world2local (gameplay/getCamera gameplayCtx) %)
+      (a/>! outputCh ["setMoveRange" (map #(app.gameplay/world2local (app.gameplay/getCamera gameplayCtx) %)
                                           moveRange)])
       (loop [gameplayCtx gameplayCtx]
         (let [[gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))]
           (if localCursor
-            (let [camera (gameplay/getCamera gameplayCtx)
-                  cursor (gameplay/local2world camera localCursor)
+            (let [camera (app.gameplay/getCamera gameplayCtx)
+                  cursor (app.gameplay/local2world camera localCursor)
                   isInRange (some #(= % cursor) moveRange)]
               (if isInRange
                 (let [path (->>
                             (map/buildPath shortestPathTree cursor)
-                            (map (partial gameplay/world2local camera)))]
+                            (map (partial app.gameplay/world2local camera)))]
                   (a/<! (unitMove nil {:unit (:key unit) :path path} inputCh outputCh))
                   (let [[gameplayCtx isEnd] (a/<! (selectUnitFlow-moveRange-move gameplayCtx unit inputCh outputCh))]
                     (if isEnd
-                      (let [gameplayCtx (gameplay/updateUnit gameplayCtx unit (merge unit {:position cursor}))]
+                      (let [gameplayCtx (app.gameplay/updateUnit gameplayCtx unit (merge unit {:position cursor}))]
                         [gameplayCtx true])
                       (recur gameplayCtx))))
                 (recur gameplayCtx)))
@@ -143,7 +143,7 @@
 (defn selectUnitFlow [gameplayCtx unit inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
     (println "[model][selectUnitFlow]")
-    (let [weapons (app.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+    (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
           [gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" (range (count weapons)) "cancel"]
                                                                     {:weaponIdx 1
                                                                      :weapons weapons
@@ -152,7 +152,7 @@
                                                                                               (into #{})
                                                                                               (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
                                                                                                                            (into #{})))
-                                                                                              (map (partial gameplay/local2world (gameplay/getCamera gameplayCtx)))))
+                                                                                              (map (partial app.gameplay/local2world (app.gameplay/getCamera gameplayCtx)))))
                                                                                        weapons)}]
                                                        inputCh outputCh))]
       (println "[model][selectUnitFlow]" selectUnitMenu)
@@ -175,12 +175,12 @@
                                                            (into #{})
                                                            (clojure.set/difference (->> (map/simpleFindPath (:position unit) max)
                                                                                         (into #{}))))
-                                          units (gameplay/getUnits gameplayCtx nil  (aq/makeRectFromPoint (:position unit) gameplay/mapViewSize))
+                                          units (app.gameplay/getUnits gameplayCtx nil  (aq/makeRectFromPoint (:position unit) app.gameplay/mapViewSize))
                                           unitsInRange (filter #(contains? attackRange (:position %)) units)
                                           [gameplayCtx selectUnit] (a/<! (selectSingleUnit gameplayCtx unitsInRange inputCh outputCh))
                                           [gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
-                                          cursor (gameplay/local2world (gameplay/getCamera gameplayCtx) localCursor)
-                                          units (gameplay/getUnits gameplayCtx nil nil)]
+                                          cursor (app.gameplay/local2world (app.gameplay/getCamera gameplayCtx) localCursor)
+                                          units (app.gameplay/getUnits gameplayCtx nil nil)]
                                       (condp = (get selectWeapon "type")
                                         "single"
                                         (let [unitAtCursor (first (filter #(= cursor (:position %))
@@ -228,8 +228,8 @@
       (println "[model][playerTurn]")
       (a/>! outputCh ["playerTurn"])
       (let [[gameplayCtx localCursor] (a/<! (selectPosition gameplayCtx nil inputCh outputCh))
-            cursor (gameplay/local2world (gameplay/getCamera gameplayCtx) localCursor)
-            units (gameplay/getUnits gameplayCtx nil (aq/makeRectFromPoint cursor [1 1]))
+            cursor (app.gameplay/local2world (app.gameplay/getCamera gameplayCtx) localCursor)
+            units (app.gameplay/getUnits gameplayCtx nil (aq/makeRectFromPoint cursor [1 1]))
             unitAtCursor (first (filter #(= cursor (:position %))
                                         units))]
         (if unitAtCursor
@@ -279,15 +279,15 @@
                                   :city 0.3
                                   :tree 0.3
                                   :award 0.1})
-        gameplayCtx (-> gameplay/defaultGameplayModel
-                        (gameplay/setData data)
-                        (gameplay/setMap playmap))]
+        gameplayCtx (-> app.gameplay/defaultGameplayModel
+                        (app.gameplay/setData data)
+                        (app.gameplay/setMap playmap))]
     (a/<! (createMap nil
-                     (gameplay/getLocalMap gameplayCtx nil)
+                     (app.gameplay/getLocalMap gameplayCtx nil)
                      inputCh outputCh))
     (a/<! (createUnits nil
-                       {:units (gameplay/getLocalUnits gameplayCtx nil nil)
-                        :players (gameplay/getPlayers gameplayCtx)}
+                       {:units (app.gameplay/getLocalUnits gameplayCtx nil nil)
+                        :players (app.gameplay/getPlayers gameplayCtx)}
                        inputCh outputCh))
     (m/notifySetCamera gameplayCtx)
     (m/notifySetCursor gameplayCtx)

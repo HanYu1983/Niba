@@ -14,6 +14,7 @@ import MainPage from "./Page/MainPage";
 import IView from "../Han/interface/IView";
 import IUnit from "../Han/interface/IUnit";
 import GamePage from './Page/GamePage';
+import MenuCursor from "./MenuCursor";
 
 const { ccclass, property } = cc._decorator;
 
@@ -58,12 +59,12 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         cb();
     }
-    updateSystemMenu(data: { menu: any[]; cursor: number; subcursor: number[] }, cb: () => void) {
-        this.createOrUpdateSystemMenu(data.menu, data.cursor, data.subcursor);
+    updateSystemMenu(data: any, cb: () => void) {
+        this.createOrUpdateSystemMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
         cb();
     }
-    updateUnitMenu(data: { menu: any[]; cursor: number; subcursor: number[]; }, cb: () => void) {
-        this.createOrUpdateUnitMenu(data.menu, data.cursor, data.subcursor);
+    updateUnitMenu(data: any, cb: () => void) {
+        this.createOrUpdateUnitMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
         cb();
     }
     updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
@@ -71,7 +72,17 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         cb();
     }
-    
+    updateUnitSelectSingleTarget(data: any, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
+    }   
+    updateUnitBattleMenu(data: any, cb: () => void) {
+        this.closeUnitMenu();
+        this.closeSystemMenu();
+        cb();
+    }
+
 
     // ====================== //
 
@@ -121,12 +132,11 @@ export default class View extends cc.Component implements IView {
         this.getGamePage().closeSceneMenu();
     }
 
-    private createOrUpdateUnitMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
-        this.getGamePage().openUnitMenu(menuInfo, [cursor, subcursor]);
+    private createOrUpdateUnitMenu(menu: any, info: any, cursor: number, subcursor: number[]) {
+        this.getGamePage().openUnitMenu([menu, info], [cursor, subcursor]);
     }
 
-    private createOrUpdateSystemMenu(menuInfo: any[], cursor: number, subcursor: number[]) {
-        const [menu, info] = menuInfo;
+    private createOrUpdateSystemMenu(menu: any, info: any, cursor: number, subcursor: number[]) {
         this.getGamePage().openSceneMenu(menu, [cursor, subcursor]);
     }
 
