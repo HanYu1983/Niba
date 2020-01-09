@@ -90,3 +90,14 @@
          ~'gameplayCtx (app.gameplay.model/setCamera ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))
+
+
+(defmacro handleCursor1 [menuCnt setter & body]
+  `(let [result# (-> (:cursor ~'state)
+                     ((~'action {:up dec
+                                 :down inc}))
+                     (max 0)
+                     (min (dec ~menuCnt)))
+         ~'state (update ~'state :cursor (constantly result#))
+         ~setter result#]
+     ~@body))
