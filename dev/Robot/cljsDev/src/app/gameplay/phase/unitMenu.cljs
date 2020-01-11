@@ -62,7 +62,7 @@
 
            [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
        (if isEnd
-         [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+         [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
          (let [tempUnit (:tempUnit state)
                units (-> gameplayCtx
                          (app.gameplay.model/getUnits)
@@ -145,7 +145,9 @@
          (cond
            (= "single" weaponType)
            (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange []} inputCh outputCh))]
-             (recur gameplayCtx))
+             (if isEnd
+               [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+               (recur gameplayCtx)))
 
            (= "line" weaponType)
            (recur gameplayCtx)

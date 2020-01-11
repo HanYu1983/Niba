@@ -18,6 +18,7 @@
 (m/defwait updateUnitSelectSingleTarget [ctx args])
 (m/defwait updateUnitBattleMenu [ctx args])
 (m/defwait unitMoveAnim [ctx args])
+(m/defwait unitBattleAnim [ctx args])
 
 (def actions {87 :up
               83 :down

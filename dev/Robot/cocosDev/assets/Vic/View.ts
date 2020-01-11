@@ -53,6 +53,9 @@ export default class View extends cc.Component implements IView {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
 
+    unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
+        cb();
+    }
 
     updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
         this.closeUnitMenu();
@@ -78,7 +81,7 @@ export default class View extends cc.Component implements IView {
         cb();
     }   
     updateUnitBattleMenu(data: any, cb: () => void) {
-        this.closeUnitMenu();
+        this.createOrUpdateUnitMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
         this.closeSystemMenu();
         cb();
     }

@@ -91,8 +91,23 @@
          ~setter temp#]
      ~@body))
 
+(defmacro handleMenuCursorUpDown [& body]
+  `(let [~'state (update ~'state :menuCursor (fn [~'ctx]
+                                               (tool.menuCursor/mapCursor1 ~'ctx
+                                                                           (~'action {:up dec :down inc}))))
+         ~'gameplayCtx (-> ~'gameplayCtx
+                           (app.gameplay.model/setFsm (tool.fsm/save ~'fsm ~'state)))]
+     ~@body))
 
-(defmacro handleCursor1 [menuCnt setter & body]
+(defmacro handleMenuCursorLeftRight [& body]
+  `(let [~'state (update ~'state :menuCursor (fn [~'ctx]
+                                               (tool.menuCursor/mapCursor2 ~'ctx
+                                                                           (~'action {:left dec :right inc}))))
+         ~'gameplayCtx (-> ~'gameplayCtx
+                           (app.gameplay.model/setFsm (tool.fsm/save ~'fsm ~'state)))]
+     ~@body))
+
+(comment (defmacro handleCursor1 [menuCnt setter & body]
   `(let [result# (-> (:cursor ~'state)
                      ((~'action {:up dec
                                  :down inc}))
@@ -100,4 +115,4 @@
                      (min (dec ~menuCnt)))
          ~'state (update ~'state :cursor (constantly result#))
          ~setter result#]
-     ~@body))
+     ~@body)))

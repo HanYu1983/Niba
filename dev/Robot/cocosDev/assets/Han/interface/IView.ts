@@ -17,4 +17,5 @@ export default interface IView {
     updateUnitSelectSingleTarget(data: any, cb: () => void);
     updateUnitBattleMenu(data: any, cb: () => void);
     unitMoveAnim(data: { unit: IUnit, path: number[][] }, cb: () => void);
+    unitBattleAnim(data: any, cb: () => void);
 }
