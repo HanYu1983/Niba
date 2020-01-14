@@ -110,6 +110,10 @@ export default class View extends cc.Component implements IView {
     }
 
     private repaintMap(data: number[][], cb: () => void) {
+        // let temp = GamePage.generateMap();
+        // this.getGamePage().map.setMapOneLevel(temp);
+        // cb();
+
         this.getGamePage().map.setMap(data);
         cb();
     }

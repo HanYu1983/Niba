@@ -47,6 +47,17 @@ export default class LandMap extends cc.Component {
         }
     }
 
+    setMapOneLevel(data:number[]){
+        for (let i = 0; i < data.length; ++i) {
+            let x = i % 20;
+            let y = Math.floor(i / 20);
+            let grid = this.getGridByXY([x, y]);
+            if (grid) {
+                grid.setType(data[i]);
+            }
+        }
+    }
+
     showMovableGrid(data: any[]) {
         this.clearRange();
         data.forEach(elem => {

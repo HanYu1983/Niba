@@ -27,9 +27,7 @@ export default class ShowItem extends cc.Component {
         const gridPos: number[] = ViewController.instance.view.getGridPos(pos);
         item.x = gridPos[0];
         item.y = gridPos[1];
-
-        cc.log(item.x, item.y);
-
+        
         this._items.push(item);
 
         if (onCreate) onCreate(item);

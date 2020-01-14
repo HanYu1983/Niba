@@ -256,12 +256,12 @@ export default class GamePage extends BasicViewer {
     }
 
     static generateMap(
-        deepsea: number = .3,
-        sea: number = .3,
-        sand: number = .3,
-        grass: number = .3,
-        city: number = .3,
-        tree: number = .3,
+        deepsea: number = .5,
+        sea: number = .4,
+        sand: number = .2,
+        grass: number = .4,
+        city: number = .1,
+        tree: number = .8,
         award: number = .1): number[] {
         noise.seed(Math.random());
         let scale = .1;
