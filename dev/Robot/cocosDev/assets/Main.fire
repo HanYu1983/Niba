@@ -2733,7 +2733,7 @@
         "__id__": 59
       }
     ],
-    "_active": false,
+    "_active": true,
     "_components": [
       {
         "__id__": 65
@@ -2885,7 +2885,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 32,
-      "height": 30
+      "height": 28
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -2937,7 +2937,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "80b99e0d-6fcc-4f67-995a-8d2aae05e267"
+      "__uuid__": "03ed950d-f071-4f4b-a7c5-0c9a085e1fab"
     },
     "_type": 0,
     "_sizeMode": 1,
