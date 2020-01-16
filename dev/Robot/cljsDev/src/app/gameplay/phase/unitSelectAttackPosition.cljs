@@ -23,10 +23,34 @@
 
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
-  (:require [app.gameplay.step.menu :refer [menu]]))
+  (:require [app.gameplay.step.selectPosition])
+  (:require [app.gameplay.step.menu]))
+
+(m/defbasic unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
+  [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
+  
+  nil
+  (m/basicNotify
+   {:tempUnit unit}
+   (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
+
+  (false? result)
+  (m/returnPop false)
+
+  (true? result)
+  (let [[gameplayCtx select] (a/<! (app.gameplay.step.menu/menu gameplayCtx {:menu [["ok"] ["cancel"]] :data {}} inputCh outputCh))]
+    (cond
+      (some #(= select %) [:cancel "cancel"])
+      (m/returnPop false)
+
+      :else
+      (m/returnPop true))))
+  
 
 
-(m/defstate unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
+
+
+(m/defstate unitSelectAttackPosition2 [gameplayCtx {unit :unit paths :paths}]
   nil
   (m/basicNotify
    {:tempUnit unit}
@@ -46,7 +70,7 @@
    (m/returnPop false)
 
    (= :enter action)
-   (let [[gameplayCtx select] (a/<! (menu gameplayCtx {:menu [["ok"] ["cancel"]] :data {}} inputCh outputCh))]
+   (let [[gameplayCtx select] (a/<! (app.gameplay.step.menu/menu gameplayCtx {:menu [["ok"] ["cancel"]] :data {}} inputCh outputCh))]
      (cond
        (some #(= select %) [:cancel "cancel"])
        (m/returnPop false)
