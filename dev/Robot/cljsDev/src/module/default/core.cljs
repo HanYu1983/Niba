@@ -50,10 +50,11 @@
     data))
 
 (defmethod app.gameplay.module/unitStateCreate :default [_ unit]
-  defaultUnitState)
+  (merge unit 
+         {:state defaultUnitState}))
 
-(defmethod app.gameplay.module/unitStateGetWeapons :default [_ unitState]
-  (->> (get unitState :weapon)
+(defmethod app.gameplay.module/unitStateGetWeapons :default [_ unit]
+  (->> (get-in unit [:state :weapon])
        (map (fn [{:keys [weaponKey] :as weapon}]
               (merge (get-in data ["weapon" weaponKey])
                      {:state weapon})))))
