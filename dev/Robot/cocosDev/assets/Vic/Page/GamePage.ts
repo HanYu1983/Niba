@@ -102,6 +102,8 @@ export default class GamePage extends BasicViewer {
         // ]);
 
         //this.effects.createBlade([0,0]);
+
+        //this.effects.createAimEffect([2, 3], [5, 7]);
     }
 
     setCursor(pos: number[]) {
@@ -211,6 +213,8 @@ export default class GamePage extends BasicViewer {
                 this.weaponMenu.showCurrentWeapon(cursor[1]);
             }
         });
+
+        this.effects.createAimEffect([0, 0], [3, 3]);
     }
 
     closeUnitMenu() {

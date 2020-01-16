@@ -22,9 +22,9 @@ export default class EffectLayer extends cc.Component {
         this._pool = this.node.getComponent(Pool);
     }
 
-    createEffect(pos:number[]):cc.Node{
+    createEffect(pos:number[], transformToGrid:boolean = true):cc.Node{
         let effect:cc.Node = this._pool.acquire();
-        let gridPos = ViewController.instance.view.getGridPos(pos);
+        let gridPos = transformToGrid ? ViewController.instance.view.getGridPos(pos) : pos;
         effect.x = gridPos[0];
         effect.y = gridPos[1];
         effect.setParent(this.node);
