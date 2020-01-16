@@ -48,7 +48,7 @@
    (m/handleCamera _ (recur gameplayCtx))
 
    (= :cancel action)
-   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+   (m/returnPop false)
 
    (some #(= % action) [:up :down])
    (m/handleMenuCursorUpDown
@@ -64,10 +64,10 @@
        (= "ok" select)
        (let [result 0]
          (a/<! (unitBattleAnim nil result inputCh outputCh))
-         [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true])
+         (m/returnPop true))
 
        (= "cancel" select)
-       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+       (m/returnPop false)
 
        :else
        (recur gameplayCtx)))))

@@ -107,6 +107,10 @@
                            (app.gameplay.model/setFsm (tool.fsm/save ~'fsm ~'state)))]
      ~@body))
 
+
+(defmacro returnPop [v]
+  `[(app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/popState ~'fsm)) ~v])
+
 (comment (defmacro handleCursor1 [menuCnt setter & body]
   `(let [result# (-> (:cursor ~'state)
                      ((~'action {:up dec

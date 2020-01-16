@@ -48,7 +48,7 @@
    (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
          cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
          select (tool.menuCursor/getSelect (:menuCursor state))]
-     [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) select])
+     (m/returnPop select))
 
    (= :cancel action)
-   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) :cancel]))
+   (m/returnPop :cancel)))

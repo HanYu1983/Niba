@@ -38,7 +38,7 @@
    (m/handleCamera _ (recur gameplayCtx))
 
    (= :cancel action)
-   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+   (m/returnPop false)
 
    (= :enter action)
    (let [cursor (app.gameplay.model/getCursor gameplayCtx)
@@ -47,6 +47,6 @@
      (if unitAtCursor
        (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
          (if isEnd
-           [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+           (m/returnPop true)
            (recur gameplayCtx)))
        (recur gameplayCtx)))))

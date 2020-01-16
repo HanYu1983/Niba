@@ -43,13 +43,13 @@
    (m/handleCamera _ (recur gameplayCtx))
 
    (= :cancel action)
-   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+   (m/returnPop false)
 
    (= :enter action)
    (let [[gameplayCtx select] (a/<! (menu gameplayCtx {:menu [["ok"] ["cancel"]] :data {}} inputCh outputCh))]
      (cond
        (some #(= select %) [:cancel "cancel"])
-       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+       (m/returnPop false)
 
        :else
-       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]))))
+       (m/returnPop true)))))

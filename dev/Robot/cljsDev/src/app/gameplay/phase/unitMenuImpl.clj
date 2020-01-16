@@ -75,13 +75,13 @@
               (= "single" weaponType)
               (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange []} inputCh outputCh))]
                 (if isEnd
-                  [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+                  (m/returnPop true)
                   (recur gameplayCtx)))
 
               (= "line" weaponType)
               (let [[gameplay isEnd] (a/<! (unitSelectAttackPosition gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]
                 (if isEnd
-                  [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+                  (m/returnPop true)
                   (recur gameplayCtx)))
 
               :else
@@ -102,15 +102,15 @@
                 moveRange (map first shortestPathTree)
                 [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
             (if isEnd
-              [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+              (m/returnPop true)
               (recur gameplayCtx)))
 
           (= "cancel" select)
           (let []
-            [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false])
+            (m/returnPop false))
 
           :else
           (recur gameplayCtx)))
 
       (= :cancel action)
-      [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false])))
+      (m/returnPop false))))
