@@ -183,7 +183,7 @@
       "array": [
         0,
         0,
-        361.195885058896,
+        368.0558770618108,
         0,
         0,
         0,
@@ -1180,7 +1180,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "sand",
+    "_name": "city",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1238,7 +1238,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "f00wEEMPRMg4nP1r8ywCgW"
+    "_id": "10e/SWAIpOG7M0SGHdUhkO"
   },
   {
     "__type__": "cc.Sprite",
@@ -1256,7 +1256,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "05db3b1b-ecd3-4920-ae7d-3070462ef448"
+      "__uuid__": "d71425fc-922a-468c-add7-4df61604da51"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1270,11 +1270,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "63AncKyyNAVLyM8V7Fg7CE"
+    "_id": "518fCnvjJBKaPt0ZTpoOj6"
   },
   {
     "__type__": "cc.Node",
-    "_name": "sea",
+    "_name": "hill",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1332,7 +1332,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "1doStc0lxLfIKqlOd5U1eZ"
+    "_id": "afJlMWAklBv5ZQ5ng1Mhe7"
   },
   {
     "__type__": "cc.Sprite",
@@ -1350,7 +1350,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "31b1ce51-85a5-4c6b-8880-10b2fbb16cd1"
+      "__uuid__": "38d4b482-6301-4e22-8b5e-cd09d0338fd2"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1364,11 +1364,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "e5NfOjUJhGjJ0b/pc728Rl"
+    "_id": "39tHeMix9NULEO7E3L1WQo"
   },
   {
     "__type__": "cc.Node",
-    "_name": "beach",
+    "_name": "grass",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1426,7 +1426,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "81j724QBpGLKeWMe2VwXwn"
+    "_id": "5baV0hq5FOgqCjbZlbFm8h"
   },
   {
     "__type__": "cc.Sprite",
@@ -1444,7 +1444,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "82874c26-25fd-46a2-9cd7-1e32a74ad99d"
+      "__uuid__": "b6f6e725-bdcf-4af0-91f5-0164c9924348"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1458,11 +1458,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "c6NxM1UCtF/4+D29Yw2V0+"
+    "_id": "475zhrwL9Pe6IH7V3VmGWg"
   },
   {
     "__type__": "cc.Node",
-    "_name": "city",
+    "_name": "tree",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1520,7 +1520,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "10e/SWAIpOG7M0SGHdUhkO"
+    "_id": "10hhI35h1GdIBxI08pYWBI"
   },
   {
     "__type__": "cc.Sprite",
@@ -1538,7 +1538,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "d71425fc-922a-468c-add7-4df61604da51"
+      "__uuid__": "876299a1-876a-4741-bce9-9348b197938f"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1552,11 +1552,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "518fCnvjJBKaPt0ZTpoOj6"
+    "_id": "09MKuwnmFK/rGBkT1NqFfj"
   },
   {
     "__type__": "cc.Node",
-    "_name": "hill",
+    "_name": "road",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1614,7 +1614,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "afJlMWAklBv5ZQ5ng1Mhe7"
+    "_id": "28hCnC6LBJjoXbfb3HwKYf"
   },
   {
     "__type__": "cc.Sprite",
@@ -1632,7 +1632,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "38d4b482-6301-4e22-8b5e-cd09d0338fd2"
+      "__uuid__": "029842c0-0c5e-42e8-9b2b-4c42e5215834"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1646,11 +1646,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "39tHeMix9NULEO7E3L1WQo"
+    "_id": "bcSBa6OpxB6adcTR8nbY1o"
   },
   {
     "__type__": "cc.Node",
-    "_name": "grass",
+    "_name": "box",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1708,7 +1708,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "5baV0hq5FOgqCjbZlbFm8h"
+    "_id": "88yFAX9+1B+ogKmkMSytCj"
   },
   {
     "__type__": "cc.Sprite",
@@ -1726,7 +1726,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "b6f6e725-bdcf-4af0-91f5-0164c9924348"
+      "__uuid__": "7695a2a7-0580-42fe-859f-936d1913c5fc"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1740,11 +1740,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "475zhrwL9Pe6IH7V3VmGWg"
+    "_id": "c5XRsuZOhNJaNEd1KsvkJp"
   },
   {
     "__type__": "cc.Node",
-    "_name": "tree",
+    "_name": "sand",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1802,7 +1802,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "10hhI35h1GdIBxI08pYWBI"
+    "_id": "f00wEEMPRMg4nP1r8ywCgW"
   },
   {
     "__type__": "cc.Sprite",
@@ -1820,7 +1820,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "876299a1-876a-4741-bce9-9348b197938f"
+      "__uuid__": "05db3b1b-ecd3-4920-ae7d-3070462ef448"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1834,11 +1834,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "09MKuwnmFK/rGBkT1NqFfj"
+    "_id": "63AncKyyNAVLyM8V7Fg7CE"
   },
   {
     "__type__": "cc.Node",
-    "_name": "road",
+    "_name": "sea",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1896,7 +1896,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "28hCnC6LBJjoXbfb3HwKYf"
+    "_id": "1doStc0lxLfIKqlOd5U1eZ"
   },
   {
     "__type__": "cc.Sprite",
@@ -1914,7 +1914,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "029842c0-0c5e-42e8-9b2b-4c42e5215834"
+      "__uuid__": "31b1ce51-85a5-4c6b-8880-10b2fbb16cd1"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -1928,11 +1928,11 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "bcSBa6OpxB6adcTR8nbY1o"
+    "_id": "e5NfOjUJhGjJ0b/pc728Rl"
   },
   {
     "__type__": "cc.Node",
-    "_name": "box",
+    "_name": "beach",
     "_objFlags": 0,
     "_parent": {
       "__id__": 22
@@ -1990,7 +1990,7 @@
     "_is3DNode": false,
     "_groupIndex": 0,
     "groupIndex": 0,
-    "_id": "88yFAX9+1B+ogKmkMSytCj"
+    "_id": "81j724QBpGLKeWMe2VwXwn"
   },
   {
     "__type__": "cc.Sprite",
@@ -2008,7 +2008,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "7695a2a7-0580-42fe-859f-936d1913c5fc"
+      "__uuid__": "82874c26-25fd-46a2-9cd7-1e32a74ad99d"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -2022,7 +2022,7 @@
     "_fillRange": 0,
     "_isTrimmedMode": true,
     "_atlas": null,
-    "_id": "c5XRsuZOhNJaNEd1KsvkJp"
+    "_id": "c6NxM1UCtF/4+D29Yw2V0+"
   },
   {
     "__type__": "cc.Node",
@@ -2032,7 +2032,7 @@
       "__id__": 22
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 42
@@ -2136,7 +2136,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 130.815,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -2260,7 +2260,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 130,
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
@@ -2384,7 +2384,7 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 255,
+    "_opacity": 130,
     "_color": {
       "__type__": "cc.Color",
       "r": 0,
@@ -2509,7 +2509,13 @@
     },
     "landImages": [
       {
-        "__id__": 26
+        "__id__": 38
+      },
+      {
+        "__id__": 40
+      },
+      {
+        "__id__": 36
       },
       {
         "__id__": 28
@@ -2518,7 +2524,7 @@
         "__id__": 24
       },
       {
-        "__id__": 34
+        "__id__": 26
       },
       {
         "__id__": 30
@@ -2527,17 +2533,11 @@
         "__id__": 32
       },
       {
-        "__id__": 36
-      },
-      {
-        "__id__": 38
-      },
-      {
         "__id__": 42
       }
     ],
     "boxImage": {
-      "__id__": 40
+      "__id__": 34
     },
     "_id": "b21ATIR8RAeJgOHlJ2482T"
   },
@@ -2733,7 +2733,7 @@
         "__id__": 59
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 65
@@ -4429,11 +4429,11 @@
       }
     ],
     "_prefab": null,
-    "_opacity": 141.01500000000001,
+    "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
-      "r": 0,
-      "g": 20,
+      "r": 255,
+      "g": 255,
       "b": 255,
       "a": 255
     },
@@ -4492,7 +4492,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "a23235d1-15db-4b95-8439-a2e005bfff91"
+      "__uuid__": "fdd0c385-a496-4ecb-bab6-ffffc618feb5"
     },
     "_type": 0,
     "_sizeMode": 0,
