@@ -19,9 +19,36 @@
                                                updateUnitSelectSingleTarget
 
                                                actions]])
-  (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]]))
+  (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
+  (:require [app.gameplay.step.selectPosition]))
 
-(m/defstate unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange]}]
+(m/defbasic unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange]}]
+  [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
+
+  nil
+  (m/basicNotify
+   {:tempUnit unit}
+   (a/<! (updateUnitSelectSingleTarget nil state inputCh outputCh)))
+
+  (false? result)
+  (m/returnPop false)
+
+  (true? result)
+  (let [cursor (app.gameplay.model/getCursor gameplayCtx)
+        units (app.gameplay.model/getUnits gameplayCtx)
+        unitAtCursor (tool.units/getByPosition units cursor)]
+    (if unitAtCursor
+      (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+        (if isEnd
+          (m/returnPop true)
+          (recur gameplayCtx)))
+      (recur gameplayCtx))))
+
+
+
+
+
+(m/defstate unitSelectSingleTarget2 [gameplayCtx {:keys [unit attackRange]}]
   nil
   (m/basicNotify
    {:tempUnit unit}
