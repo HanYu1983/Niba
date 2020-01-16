@@ -13,7 +13,7 @@
 (defmulti create (fn [type] type))
 (defmulti getWeapons (fn [type] type))
 
-(defmethod create :default [_ key data]
+(defmethod create :default [_ unit data]
   default)
 
 (defmethod getWeapons :default [_ ctx data]

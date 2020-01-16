@@ -1,7 +1,7 @@
 (ns app.gameplay.model
-  (:require [tool.map :as map])
-  (:require [app.gameplay.unitState])
+  (:require [app.gameplay.unit])
   (:require [tool.fsm])
+  (:require [tool.map :as map])
   (:require [tool.units]))
 
 (def mapViewSize [20 20])
@@ -24,17 +24,7 @@
                            :players {:player {:faction 0}
                                      :ai1 {:faction 1}
                                      :ai2 {:faction 1}}
-                           :units (-> tool.units/model
-                                      (tool.units/add {:key (gensym)
-                                                      :player :player
-                                                      :type :robot
-                                                      :state app.gameplay.unitState/default
-                                                      :position [0 0]})
-                                      (tool.units/add {:key (gensym)
-                                                      :player :player
-                                                      :type :robot
-                                                      :state app.gameplay.unitState/default
-                                                      :position [2 2]}))
+                           :units tool.units/model
                            :fsm tool.fsm/model})
 
 (defn getFsm [ctx]

@@ -5,7 +5,7 @@
   (:require [app.data :as data])
   (:require [app.gameplay :as gameplay])
   (:require [app.quadtree :as aq])
-  (:require [app.gameplay.unitState])
+  (:require [app.gameplay.unit])
   (:require-macros [app.macros :as m]))
 
 (def defaultModel {})
@@ -74,7 +74,7 @@
 (defn selectUnitFlow-moveRange-move [gameplayCtx unit inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
-      (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+      (let [weapons (app.gameplay.unit/getWeapons unit (:data gameplayCtx))
             [gameplayCtx select] (a/<! (unitMenu gameplayCtx [[(range (count weapons)) "cancel"]
                                                               {:weaponIdx 0
                                                                :weapons weapons
@@ -143,7 +143,7 @@
 (defn selectUnitFlow [gameplayCtx unit inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
     (println "[model][selectUnitFlow]")
-    (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (:data gameplayCtx))
+    (let [weapons (app.gameplay.unit/getWeapons unit (:data gameplayCtx))
           [gameplayCtx selectUnitMenu] (a/<! (unitMenu gameplayCtx [["move" (range (count weapons)) "cancel"]
                                                                     {:weaponIdx 1
                                                                      :weapons weapons

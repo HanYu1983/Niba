@@ -25,14 +25,26 @@
   (a/go
     (let [data (a/<! (app.gameplay.data/loadData))
           playmap (tool.map/generateMap 100 100
-                                                {:deepsea 0.3
-                                                 :sea 0.3
-                                                 :sand 0.3
-                                                 :grass 0.3
-                                                 :city 0.3
-                                                 :tree 0.3
-                                                 :award 0.1})
+                                        {:deepsea 0.3
+                                         :sea 0.3
+                                         :sand 0.3
+                                         :grass 0.3
+                                         :city 0.3
+                                         :tree 0.3
+                                         :award 0.1})
           gameplayCtx (-> app.gameplay.model/defaultGameplayModel
+                          ((fn [ctx]
+                             (let [units (-> ctx
+                                             (app.gameplay.model/getUnits)
+                                             (tool.units/add (app.gameplay.unit/model {:player :player
+                                                                                       :type :robot
+                                                                                       :position [0 0]}
+                                                                                      data))
+                                             (tool.units/add (app.gameplay.unit/model {:player :player
+                                                                                       :type :robot
+                                                                                       :position [3 3]}
+                                                                                      data)))]
+                               (app.gameplay.model/setUnits ctx units))))
                           (app.gameplay.model/setData data)
                           (app.gameplay.model/setMap playmap))]
       (a/<! (updateMap gameplayCtx (app.gameplay.model/getLocalMap gameplayCtx nil) inputCh outputCh))

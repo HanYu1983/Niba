@@ -5,7 +5,7 @@
   (:require [app.data :as data])
   (:require [app.gameplay])
   (:require [app.fsm])
-  (:require [app.gameplay.unitState])
+  (:require [app.gameplay.unit])
   (:require [tool.units])
   (:require-macros [app.macros :as m]))
 
@@ -193,7 +193,7 @@
                 unit (-> (app.gameplay/getUnits gameplayCtx)
                          (tool.units/getByKey unitKey))]
             (if unit
-              (let [weapons (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay/getData gameplayCtx))
+              (let [weapons (app.gameplay.unit/getWeapons unit (app.gameplay/getData gameplayCtx))
                     menu [["move" (range (count weapons)) "cancel"]
                           {:weaponIdx 1
                            :weapons weapons
