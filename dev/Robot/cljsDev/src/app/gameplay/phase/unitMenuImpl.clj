@@ -5,7 +5,7 @@
      nil
      (m/basicNotify
       (let [weapons (into [] (app.gameplay.unitState/getWeapons nil (:state unit) (app.gameplay.model/getData gameplayCtx)))
-            menu [["move"] (into [] (range (count weapons))) ["cancel"]]]
+            menu [["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]]
         {:menuCursor (tool.menuCursor/model menu)
          :data {:weaponIdx 1
                 :weapons weapons
@@ -105,6 +105,9 @@
             (if isEnd
               (m/returnPop true)
               (recur gameplayCtx)))
+
+          (= "ok" select)
+          (m/returnPop true)          
 
           (= "cancel" select)
           (let []

@@ -29,13 +29,32 @@
 
 (declare unitMenu)
 
-(m/defbasic unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}] 
+(m/defbasic unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
   [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
-  
+
   nil
-  (m/basicNotify
-   {:tempUnit unit}
-   (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
+
+  (-> (m/basicNotify
+       {:tempUnit unit
+        :tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
+                             shortestPathTree (tool.map/findPath (:position unit)
+                                                                 (fn [{:keys [totalCost]} curr]
+                                                                   [(>= totalCost 5) false])
+                                                                 (fn [[x y]]
+                                                                   [[x (min mh (inc y))]
+                                                                    [x (max 0 (dec y))]
+                                                                    [(min mw (inc x)) y]
+                                                                    [(max 0 (dec x)) y]])
+                                                                 (constantly 1)
+                                                                 (constantly 0))
+                             moveRange (map first shortestPathTree)]
+                         moveRange)}
+       (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
+      ((fn [gameplayCtx]
+         (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
+                                                          (app.gameplay.model/getFsm)
+                                                          (tool.fsm/load)
+                                                          (:tempMoveRange))))))
 
   (false? result)
   (m/returnPop false)
