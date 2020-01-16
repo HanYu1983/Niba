@@ -79,7 +79,10 @@
                   (recur gameplayCtx)))
 
               (= "line" weaponType)
-              (recur gameplayCtx)
+              (let [[gameplay isEnd] (a/<! (unitSelectAttackPosition gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]
+                (if isEnd
+                  [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]
+                  (recur gameplayCtx)))
 
               :else
               (recur gameplayCtx)))

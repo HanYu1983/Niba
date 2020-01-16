@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.unitMenu
+(ns app.gameplay.phase.unitSelectAttackPosition
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
@@ -9,7 +9,6 @@
   (:require [app.gameplay.model])
   (:require [app.gameplay.unitState])
   (:require-macros [app.gameplay.macros :as m])
-  (:require-macros [app.gameplay.phase.unitMenuImpl])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                updateMap
@@ -24,9 +23,33 @@
 
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
-  (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
-  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [app.gameplay.step.menu :refer [menu]]))
 
-; 使用這個方法解決和unitSelectMovePosition的互相依賴
-; 記得這裡有用到的引用也要在別的地方一起加上
-(app.gameplay.phase.unitMenuImpl/impl)
+
+(m/defstate unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
+  nil
+  (m/basicNotify
+   {:tempUnit unit}
+   (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
+
+  (= "KEY_DOWN" cmd)
+  (m/handleKeyDown
+   args action
+
+   (some #(= % action) [:up :down :left :right])
+   (m/handleCursor _ (recur gameplayCtx))
+
+   (some #(= % action) [:rup :rdown :rleft :rright])
+   (m/handleCamera _ (recur gameplayCtx))
+
+   (= :cancel action)
+   [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+
+   (= :enter action)
+   (let [[gameplayCtx select] (a/<! (menu gameplayCtx {:menu [["ok"] ["cancel"]] :data {}} inputCh outputCh))]
+     (cond
+       (some #(= select %) [:cancel "cancel"])
+       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) false]
+
+       :else
+       [(app.gameplay.model/setFsm gameplayCtx (tool.fsm/popState fsm)) true]))))

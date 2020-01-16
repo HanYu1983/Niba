@@ -23,7 +23,8 @@
                                                unitMoveAnim
 
                                                actions]])
-  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]]))
+  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
+  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 
 (declare unitMenu)
 
