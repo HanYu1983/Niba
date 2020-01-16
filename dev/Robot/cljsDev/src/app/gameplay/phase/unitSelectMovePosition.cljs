@@ -24,11 +24,65 @@
 
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
-  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
+  (:require [app.gameplay.step.selectPosition]))
 
 (declare unitMenu)
 
-(m/defstate unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
+(m/defbasic unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}] 
+  [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
+  
+  nil
+  (m/basicNotify
+   {:tempUnit unit}
+   (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))
+
+  (false? result)
+  (m/returnPop false)
+
+  (true? result)
+  (let [cursor (app.gameplay.model/getCursor gameplayCtx)
+        camera (app.gameplay.model/getCamera gameplayCtx)
+        path (tool.map/buildPath paths cursor)]
+    (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
+    (let [tempUnit (merge unit {:position cursor})
+          state (merge state {:tempUnit tempUnit})
+          units (-> gameplayCtx
+                    (app.gameplay.model/getUnits)
+                    (tool.units/delete unit)
+                    (tool.units/add tempUnit))
+          gameplayCtx (-> gameplayCtx
+                          (app.gameplay.model/setUnits units)
+                          (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
+
+          [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
+      (if isEnd
+        (m/returnPop true)
+        (let [tempUnit (:tempUnit state)
+              units (-> gameplayCtx
+                        (app.gameplay.model/getUnits)
+                        (tool.units/delete tempUnit)
+                        (tool.units/add unit))
+              gameplayCtx (-> gameplayCtx
+                              (app.gameplay.model/setUnits units))]
+          (recur gameplayCtx))))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(m/defstate unitSelectMovePosition2 [gameplayCtx {unit :unit paths :paths}]
   nil
   (m/basicNotify
    {:tempUnit unit}

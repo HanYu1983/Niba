@@ -24,7 +24,7 @@
                :else
                (recur ~varCtx))))))))
 
-(defmacro defstate [name [varCtx args] & body]
+(defmacro defbasic [name [varCtx args] [inputVar input] & body]
   `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
      (let [~'key (str (gensym ~(str name)))
            ~args ~'args]
@@ -39,12 +39,38 @@
                                 varCtx)
                    ~'fsm (app.gameplay.model/getFsm ~varCtx)
                    ~'state (tool.fsm/load ~'fsm)]
-              (when-let [[~'cmd ~'args] (a/<! ~'inputCh)]
+               (let [~inputVar ~input]
+                 (cond
+                   ~@(rest (rest body))
+
+                   :else
+                   (recur ~varCtx))))))))))
+
+(defmacro defstate [name args & body]
+  `(defbasic ~name ~args ~'([cmd args] (a/<! inputCh)) ~@body))
+
+(defmacro defstate2 [name [varCtx args] & body]
+  `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
+     (let [~'key (str (gensym ~(str name)))
+           ~args ~'args]
+       (a/go
+         (println "[model][state]" ~(str name) ~'args)
+         (let [~varCtx ~(or (first body)
+                            `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
+                                             (tool.fsm/pushState (keyword ~(str name))))]
+                               (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
+           (loop [~varCtx ~varCtx]
+             (let [~varCtx ~(or (first (rest body))
+                                varCtx)
+                   ~'fsm (app.gameplay.model/getFsm ~varCtx)
+                   ~'state (tool.fsm/load ~'fsm)]
+              (let [[~'cmd ~'args] (a/<! ~'inputCh)]
                 (cond
                   ~@(rest (rest body))
 
                   :else
                   (recur ~varCtx))))))))))
+
 
 
 (defmacro basicNotify [state & body]
