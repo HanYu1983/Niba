@@ -11,10 +11,11 @@
                 :weapons weapons
                 :weaponRange (into []
                                    (map (fn [{[min max] "range" type "type" :as weapon}]
-                                          (->> (tool.map/simpleFindPath (:position unit) (dec min))
+                                          (->> (tool.map/simpleFindPath [0 0] (dec min))
                                                (into #{})
-                                               (clojure.set/difference (->> (tool.map/simpleFindPath (:position unit) max)
-                                                                            (into #{})))))
+                                               (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                                                            (into #{})))
+                                               (map (partial map + (:position unit)))))
                                         weapons))}})
       (a/<! (updateUnitMenu nil state inputCh outputCh)))
 
