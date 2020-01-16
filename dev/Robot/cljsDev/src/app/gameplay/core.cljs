@@ -3,7 +3,8 @@
   (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
   (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
   (:require [app.gameplay.phase.common :refer [updateMap
-                                               updateUnits]]))
+                                               updateUnits]])
+  (:require [app.gameplay.module]))
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
@@ -23,7 +24,7 @@
 
 (defn startGameplay [ctx inputCh outputCh]
   (a/go
-    (let [data (a/<! (app.gameplay.data/loadData))
+    (let [data (a/<! (app.gameplay.module/loadData app.gameplay.module/*module))
           playmap (tool.map/generateMap 100 100
                                         {:deepsea 0.3
                                          :sea 0.3

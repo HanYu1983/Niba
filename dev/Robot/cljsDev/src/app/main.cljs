@@ -1,4 +1,5 @@
 (ns app.main
+  (:require [module.default.core])
   (:require [clojure.core.async :as a])
   (:require [app.gameplay.core]))
 
