@@ -5,7 +5,6 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.data])
   (:require [app.gameplay.model])
   (:require [app.gameplay.unit])
   (:require-macros [app.gameplay.macros :as m])
@@ -25,7 +24,7 @@
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
   nil
   (m/basicNotify
-   (let [weapons (into [] (app.gameplay.unit/getWeapons unit (app.gameplay.model/getData gameplayCtx)))
+   (let [weapons (into [] (app.gameplay.unit/getWeapons unit))
          menu [(into [] (range (count weapons))) ["ok"] ["cancel"]]]
      {:tempUnit unit
       :menuCursor (tool.menuCursor/model menu)

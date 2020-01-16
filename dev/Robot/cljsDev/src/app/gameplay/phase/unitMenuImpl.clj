@@ -4,7 +4,7 @@
   '(m/defstate unitMenu [gameplayCtx {unit :unit}]
      nil
      (m/basicNotify
-      (let [weapons (into [] (app.gameplay.unit/getWeapons unit (app.gameplay.model/getData gameplayCtx)))
+      (let [weapons (into [] (app.gameplay.unit/getWeapons unit))
             menu [["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]]
         {:menuCursor (tool.menuCursor/model menu)
          :data {:weaponIdx 1

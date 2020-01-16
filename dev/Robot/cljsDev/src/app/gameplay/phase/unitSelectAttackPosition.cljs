@@ -5,7 +5,6 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.data])
   (:require [app.gameplay.model])
   (:require [app.gameplay.unit])
   (:require-macros [app.gameplay.macros :as m])

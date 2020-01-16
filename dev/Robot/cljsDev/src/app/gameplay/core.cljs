@@ -39,14 +39,11 @@
                                              (app.gameplay.model/getUnits)
                                              (tool.units/add (app.gameplay.unit/model {:player :player
                                                                                        :type :robot
-                                                                                       :position [0 0]}
-                                                                                      data))
+                                                                                       :position [0 0]}))
                                              (tool.units/add (app.gameplay.unit/model {:player :player
                                                                                        :type :robot
-                                                                                       :position [3 3]}
-                                                                                      data)))]
+                                                                                       :position [3 3]})))]
                                (app.gameplay.model/setUnits ctx units))))
-                          (app.gameplay.model/setData data)
                           (app.gameplay.model/setMap playmap))]
       (a/<! (updateMap gameplayCtx (app.gameplay.model/getLocalMap gameplayCtx nil) inputCh outputCh))
       (a/<! (updateUnits gameplayCtx (app.gameplay.model/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
