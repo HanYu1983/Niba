@@ -38,7 +38,7 @@
         units (app.gameplay.model/getUnits gameplayCtx)
         unitAtCursor (tool.units/getByPosition units cursor)]
     (if unitAtCursor
-      (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+      (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unit :targetUnit unitAtCursor} inputCh outputCh))]
         (if isEnd
           (m/returnPop true)
           (recur gameplayCtx)))
@@ -72,7 +72,7 @@
          units (app.gameplay.model/getUnits gameplayCtx)
          unitAtCursor (tool.units/getByPosition units cursor)]
      (if unitAtCursor
-       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unit :targetUnit unitAtCursor} inputCh outputCh))]
          (if isEnd
            (m/returnPop true)
            (recur gameplayCtx)))

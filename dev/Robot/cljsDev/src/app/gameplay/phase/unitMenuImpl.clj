@@ -27,39 +27,30 @@
       (m/handleCamera _ (recur gameplayCtx))
 
       (some #(= % action) [:up :down])
-      (let [state (update state :menuCursor (fn [ctx]
-                                              (tool.menuCursor/mapCursor1 ctx
-                                                                          (action {:up dec :down inc}))))
-
-            cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
-            cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-            menu (tool.menuCursor/getMenu (:menuCursor state))
-            weaponIdx (get-in state [:data :weaponIdx])
-            attackRange (if (= cursor1 weaponIdx)
-                          (get-in state [:data :weaponRange cursor2])
-                          [])
-
-            gameplayCtx (-> gameplayCtx
-                            (app.gameplay.model/setFsm (tool.fsm/save fsm state))
-                            (app.gameplay.model/setAttackRange attackRange))]
-        (recur gameplayCtx))
+      (m/handleMenuCursorUpDown
+       (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+             cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+             menu (tool.menuCursor/getMenu (:menuCursor state))
+             weaponIdx (get-in state [:data :weaponIdx])
+             attackRange (if (= cursor1 weaponIdx)
+                           (get-in state [:data :weaponRange cursor2])
+                           [])
+             gameplayCtx (-> gameplayCtx
+                             (app.gameplay.model/setAttackRange attackRange))]
+         (recur gameplayCtx)))
 
       (some #(= % action) [:left :right])
-      (let [state (update state :menuCursor (fn [ctx]
-                                              (tool.menuCursor/mapCursor2 ctx
-                                                                          (action {:left dec :right inc}))))
-            cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
-            cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-            menu (tool.menuCursor/getMenu (:menuCursor state))
-            weaponIdx (get-in state [:data :weaponIdx])
-            attackRange (if (= cursor1 weaponIdx)
-                          (get-in state [:data :weaponRange cursor2])
-                          [])
-
-            gameplayCtx (-> gameplayCtx
-                            (app.gameplay.model/setFsm (tool.fsm/save fsm state))
-                            (app.gameplay.model/setAttackRange attackRange))]
-        (recur gameplayCtx))
+      (m/handleMenuCursorLeftRight
+       (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+             cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+             menu (tool.menuCursor/getMenu (:menuCursor state))
+             weaponIdx (get-in state [:data :weaponIdx])
+             attackRange (if (= cursor1 weaponIdx)
+                           (get-in state [:data :weaponRange cursor2])
+                           [])
+             gameplayCtx (-> gameplayCtx
+                             (app.gameplay.model/setAttackRange attackRange))]
+         (recur gameplayCtx)))
 
       (= :enter action)
       (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
@@ -111,7 +102,7 @@
               (recur gameplayCtx)))
 
           (= "ok" select)
-          (m/returnPop true)          
+          (m/returnPop true)
 
           (= "cancel" select)
           (let []

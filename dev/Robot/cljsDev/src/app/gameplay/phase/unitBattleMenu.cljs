@@ -33,10 +33,11 @@
              :weapons weapons
              :weaponRange (into []
                                 (map (fn [{[min max] "range" type "type" :as weapon}]
-                                       (->> (tool.map/simpleFindPath (:position unit) (dec min))
+                                       (->> (tool.map/simpleFindPath [0 0] (dec min))
                                             (into #{})
-                                            (clojure.set/difference (->> (tool.map/simpleFindPath (:position unit) max)
-                                                                         (into #{})))))
+                                            (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                                                         (into #{})))
+                                            (map (partial map + (:position unit)))))
                                      weapons))}})
    (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
 
@@ -52,11 +53,29 @@
 
    (some #(= % action) [:up :down])
    (m/handleMenuCursorUpDown
-    (recur gameplayCtx))
+    (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+          cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+          menu (tool.menuCursor/getMenu (:menuCursor state))
+          weaponIdx (get-in state [:data :weaponIdx])
+          attackRange (if (= cursor1 weaponIdx)
+                        (get-in state [:data :weaponRange cursor2])
+                        [])
+          gameplayCtx (-> gameplayCtx
+                          (app.gameplay.model/setAttackRange attackRange))]
+      (recur gameplayCtx)))
 
    (some #(= % action) [:left :right])
    (m/handleMenuCursorLeftRight
-    (recur gameplayCtx))
+    (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+          cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+          menu (tool.menuCursor/getMenu (:menuCursor state))
+          weaponIdx (get-in state [:data :weaponIdx])
+          attackRange (if (= cursor1 weaponIdx)
+                        (get-in state [:data :weaponRange cursor2])
+                        [])
+          gameplayCtx (-> gameplayCtx
+                          (app.gameplay.model/setAttackRange attackRange))]
+      (recur gameplayCtx)))
 
    (= :enter action)
    (let [select (tool.menuCursor/getSelect (:menuCursor state))]
