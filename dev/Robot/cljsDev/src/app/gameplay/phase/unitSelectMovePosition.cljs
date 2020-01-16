@@ -45,7 +45,11 @@
                                                                     [x (max 0 (dec y))]
                                                                     [(min mw (inc x)) y]
                                                                     [(max 0 (dec x)) y]])
-                                                                 (constantly 1)
+                                                                 (fn [curr next]
+                                                                   (let [map (app.gameplay.model/getMap gameplayCtx)]
+                                                                     (-> map
+                                                                         (get-in next)
+                                                                         (/ 3))))
                                                                  (constantly 0))
                              moveRange (map first shortestPathTree)]
                          moveRange)}

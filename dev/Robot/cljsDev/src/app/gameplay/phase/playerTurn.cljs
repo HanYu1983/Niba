@@ -46,15 +46,19 @@
           moveRange (if unitAtCursor
                       (let [[mw mh] app.gameplay.model/mapViewSize
                             shortestPathTree (tool.map/findPath (:position unitAtCursor)
-                                                               (fn [{:keys [totalCost]} curr]
-                                                                 [(>= totalCost 5) false])
-                                                               (fn [[x y]]
-                                                                 [[x (min mh (inc y))]
-                                                                  [x (max 0 (dec y))]
-                                                                  [(min mw (inc x)) y]
-                                                                  [(max 0 (dec x)) y]])
-                                                               (constantly 1)
-                                                               (constantly 0))
+                                                                (fn [{:keys [totalCost]} curr]
+                                                                  [(>= totalCost 5) false])
+                                                                (fn [[x y]]
+                                                                  [[x (min mh (inc y))]
+                                                                   [x (max 0 (dec y))]
+                                                                   [(min mw (inc x)) y]
+                                                                   [(max 0 (dec x)) y]])
+                                                                (fn [curr next]
+                                                                  (let [map (app.gameplay.model/getMap gameplayCtx)]
+                                                                    (-> map
+                                                                        (get-in next)
+                                                                        (/ 3))))
+                                                                (constantly 0))
                             moveRange (map first shortestPathTree)]
                         moveRange)
                       (let []
