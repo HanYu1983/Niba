@@ -126,3 +126,7 @@
 (defmethod app.gameplay.module/unitOnDone :default [_ unit gameplayCtx]
   (-> unit
       (update-in [:state :tag] #(conj % :done))))
+
+(defmethod app.gameplay.module/unitOnTurnStart :default [_ unit gameplayCtx]
+  (-> unit
+      (update-in [:state :tag] (constantly #{}))))

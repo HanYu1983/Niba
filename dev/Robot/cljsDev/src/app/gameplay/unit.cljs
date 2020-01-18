@@ -24,3 +24,6 @@
 
 (defn onDone [ctx gameplayCtx]
   (app.gameplay.module/unitOnDone app.gameplay.module/*module ctx gameplayCtx))
+
+(defn onTurnStart [ctx gameplayCtx]
+  (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx gameplayCtx))

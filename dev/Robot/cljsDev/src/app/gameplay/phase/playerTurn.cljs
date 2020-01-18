@@ -22,7 +22,10 @@
   (:require [app.gameplay.phase.unitMenu :refer [unitMenu]]))
 
 (m/defstate playerTurn [gameplayCtx _]
-  (let []
+  (let [units (-> (app.gameplay.model/getUnits gameplayCtx)
+                  (tool.units/mapUnits (fn [unit]
+                                         (app.gameplay.unit/onTurnStart unit gameplayCtx))))
+        gameplayCtx (-> (app.gameplay.model/setUnits gameplayCtx units))]
     (a/<! (playerTurnStart gameplayCtx nil inputCh outputCh))
     gameplayCtx)
 

@@ -54,7 +54,7 @@
      (let [~'key (str (gensym ~(str name)))
            ~args ~'args]
        (a/go
-         (println "[model][state]" ~(str name) ~'args)
+         ; (println "[model][state]" ~(str name) ~'args)
          (let [~varCtx ~(or (first body)
                             `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
                                              (tool.fsm/pushState (keyword ~(str name))))]

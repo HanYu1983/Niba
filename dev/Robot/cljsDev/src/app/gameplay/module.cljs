@@ -9,5 +9,6 @@
 (defmulti unitGetMenuData (fn [type unit gameplayCtx] type))
 (defmulti unitOnMove (fn [type unit pos gameplayCtx] type))
 (defmulti unitOnDone (fn [type unit gameplayCtx] type))
+(defmulti unitOnTurnStart (fn [type unit gameplayCtx] type))
 
 (def *module nil)

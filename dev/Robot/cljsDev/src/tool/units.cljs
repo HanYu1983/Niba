@@ -33,3 +33,11 @@
 
 (defn getByPosition [ctx [x y]]
   (get-in ctx [:position x y]))
+
+(defn mapUnits [ctx f]
+  (reduce (fn [ctx unit]
+            (-> ctx
+                (delete unit)
+                (add (f unit))))
+          ctx
+          (vals (:key ctx))))
