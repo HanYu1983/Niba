@@ -62,7 +62,6 @@
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setUnits units)
                           (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
-
           [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
       (if isEnd
         (m/returnPop true)

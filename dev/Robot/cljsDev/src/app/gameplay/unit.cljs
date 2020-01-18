@@ -21,3 +21,6 @@
 
 (defn onMove [ctx pos gameplayCtx]
   (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx pos gameplayCtx))
+
+(defn onDone [ctx gameplayCtx]
+  (app.gameplay.module/unitOnDone app.gameplay.module/*module ctx gameplayCtx))

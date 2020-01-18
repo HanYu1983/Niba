@@ -8,5 +8,6 @@
 (defmulti unitGetAttackRange (fn [type unit weapon gameplayCtx] type))
 (defmulti unitGetMenuData (fn [type unit gameplayCtx] type))
 (defmulti unitOnMove (fn [type unit pos gameplayCtx] type))
+(defmulti unitOnDone (fn [type unit gameplayCtx] type))
 
 (def *module nil)

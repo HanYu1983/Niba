@@ -59,7 +59,16 @@
      (if unitAtCursor
        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
          (if isEnd
-           (recur gameplayCtx)
+           (let [unit (-> (app.gameplay.model/getUnits gameplayCtx)
+                          (tool.units/getByKey (:key unitAtCursor)))
+                 unitOnDone (app.gameplay.unit/onDone unit gameplayCtx)
+                 units (-> gameplayCtx
+                           (app.gameplay.model/getUnits)
+                           (tool.units/delete unit)
+                           (tool.units/add unitOnDone))
+                 gameplayCtx (-> gameplayCtx
+                                 (app.gameplay.model/setUnits units))]
+             (recur gameplayCtx))
            (recur gameplayCtx)))
        (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]
          (if endTurn

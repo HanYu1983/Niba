@@ -99,20 +99,30 @@
                        {:weaponIdx 0
                         :weapons weapons
                         :weaponRange weaponRange}]
-                      (let [hasFirstMove (-> (get-in unit [:state :tag])
-                                             (contains? :firstMove))]
-                        (if hasFirstMove
-                          [[(into [] (range (count weapons))) ["ok"] ["cancel"]]
-                           {:weaponIdx 0
-                            :weapons weapons
-                            :weaponRange weaponRange}]
-                          [[["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]
-                           {:weaponIdx 1
-                            :weapons weapons
-                            :weaponRange weaponRange}])))]
+                      (cond
+                        (-> (get-in unit [:state :tag])
+                            (contains? :done))
+                        [[["cancel"]] {}]
+
+                        (-> (get-in unit [:state :tag])
+                            (contains? :firstMove))
+                        [[(into [] (range (count weapons))) ["ok"] ["cancel"]]
+                         {:weaponIdx 0
+                          :weapons weapons
+                          :weaponRange weaponRange}]
+
+                        :else
+                        [[["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]
+                         {:weaponIdx 1
+                          :weapons weapons
+                          :weaponRange weaponRange}]))]
     [menu data]))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ unit pos gameplayCtx]
   (-> unit
       (merge {:position pos})
       (update-in [:state :tag] #(conj % :firstMove))))
+
+(defmethod app.gameplay.module/unitOnDone :default [_ unit gameplayCtx]
+  (-> unit
+      (update-in [:state :tag] #(conj % :done))))
