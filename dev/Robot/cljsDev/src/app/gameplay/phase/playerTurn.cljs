@@ -9,14 +9,7 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
-                                               updateMap
-                                               updateUnits
-                                               updateCursor
-                                               updateMoveRange
-                                               updateAttackRange
-
-                                               updatePlayTurn
-
+                                               paint
                                                actions]])
   (:require [app.gameplay.phase.systemMenu :refer [systemMenu]])
   (:require [app.gameplay.phase.unitMenu :refer [unitMenu]]))
@@ -30,8 +23,7 @@
     gameplayCtx)
 
   (m/basicNotify
-   {}
-   (a/<! (updatePlayTurn nil state inputCh outputCh)))
+   {})
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown

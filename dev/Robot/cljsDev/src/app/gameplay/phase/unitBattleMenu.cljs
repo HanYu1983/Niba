@@ -10,15 +10,9 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
-                                               updateMap
-                                               updateUnits
-                                               updateCursor
-                                               updateMoveRange
-                                               updateAttackRange
-
-                                               updateUnitBattleMenu
+                                               paint
+                                               
                                                unitBattleAnim
-
                                                actions]]))
 
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
@@ -27,8 +21,7 @@
    (let [[menu data] (app.gameplay.unit/getMenuData unit gameplayCtx)]
      {:tempUnit unit
       :menuCursor (tool.menuCursor/model menu)
-      :data data})
-   (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
+      :data data}))
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown

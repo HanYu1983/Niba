@@ -4,22 +4,14 @@
   (:require [tool.menuCursor])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
-                                               updateMap
-                                               updateUnits
-                                               updateCursor
-                                               updateMoveRange
-                                               updateAttackRange
-
-                                               updateSystemMenu
-
+                                               paint
                                                actions]]))
 
 
 (m/defstate menu [gameplayCtx {:keys [menu data]}]
   nil
   (m/basicNotify
-   {:menuCursor (tool.menuCursor/model menu)}
-   (a/<! (updateSystemMenu nil state inputCh outputCh)))
+   {:menuCursor (tool.menuCursor/model menu)})
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown

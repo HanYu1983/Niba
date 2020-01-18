@@ -75,14 +75,11 @@
 
 (defmacro basicNotify [state & body]
   `(let [~'fsm (app.gameplay.model/getFsm ~'gameplayCtx)
-         ~'state (or (tool.fsm/load ~'fsm) ~state)]
-     (a/<! (~'updateMap nil (app.gameplay.model/getLocalMap ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateCursor nil (app.gameplay.model/getLocalCursor ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateUnits nil (app.gameplay.model/getLocalUnits ~'gameplayCtx nil nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateMoveRange nil (app.gameplay.model/getLocalMoveRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
-     (a/<! (~'updateAttackRange nil (app.gameplay.model/getLocalAttackRange ~'gameplayCtx nil) ~'inputCh ~'outputCh))
+         ~'state (or (tool.fsm/load ~'fsm) ~state)
+         ~'gameplayCtx (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))]
+     (a/<! (~'paint nil (app.gameplay.model/formatToDraw ~'gameplayCtx) ~'inputCh ~'outputCh))
      ~@body
-     (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))))
+     ~'gameplayCtx))
 
 (defmacro handleKeyDown [getter setter & body]
   `(let [~'keycode ~getter

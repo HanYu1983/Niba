@@ -6,8 +6,7 @@
      (m/basicNotify
       (let [[menu data] (app.gameplay.unit/getMenuData unit gameplayCtx)]
         {:menuCursor (tool.menuCursor/model menu)
-         :data data})
-      (a/<! (updateUnitMenu nil state inputCh outputCh)))
+         :data data}))
 
      (= "KEY_DOWN" cmd)
      (m/handleKeyDown

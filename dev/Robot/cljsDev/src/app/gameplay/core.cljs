@@ -2,8 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
   (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
-  (:require [app.gameplay.phase.common :refer [updateMap
-                                               updateUnits]])
+  (:require [app.gameplay.phase.common :refer [paint]])
   (:require [app.gameplay.module]))
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
@@ -45,6 +44,5 @@
                                                                                        :position [3 3]})))]
                                (app.gameplay.model/setUnits ctx units))))
                           (app.gameplay.model/setMap playmap))]
-      (a/<! (updateMap gameplayCtx (app.gameplay.model/getLocalMap gameplayCtx nil) inputCh outputCh))
-      (a/<! (updateUnits gameplayCtx (app.gameplay.model/getLocalUnits gameplayCtx nil nil) inputCh outputCh))
+      (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

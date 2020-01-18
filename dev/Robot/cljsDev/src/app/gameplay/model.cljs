@@ -120,3 +120,20 @@
   (let [camera (or camera (getCamera ctx))
         range (getAttackRange ctx)]
     (map (partial world2local camera) range)))
+
+(defn formatToDraw [ctx]
+  (let [state (-> (getFsm ctx)
+                  (tool.fsm/currState))
+        stateDetail (-> (getFsm ctx)
+                        (tool.fsm/load))]
+    {:units (getLocalUnits ctx nil nil)
+     :map (getLocalMap ctx nil)
+     :cursor (getLocalCursor ctx nil)
+     :moveRange (getLocalMoveRange ctx nil)
+     :attackRange (getLocalAttackRange ctx nil)
+     :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
+                 stateDetail)
+     :systemMenu (when (some #(= % state) [:menu])
+                   stateDetail)
+     :state state
+     :stateDetail stateDetail}))

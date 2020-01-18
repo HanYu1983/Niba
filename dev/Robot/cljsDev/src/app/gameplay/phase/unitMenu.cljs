@@ -11,16 +11,8 @@
   (:require-macros [app.gameplay.phase.unitMenuImpl])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
-                                               updateMap
-                                               updateUnits
-                                               updateCursor
-                                               updateMoveRange
-                                               updateAttackRange
-
-                                               updateUnitSelectMovePosition
-                                               updateUnitMenu
+                                               paint
                                                unitMoveAnim
-
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])

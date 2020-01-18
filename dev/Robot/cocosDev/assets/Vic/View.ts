@@ -15,29 +15,12 @@ import IView from "../Han/interface/IView";
 import IUnit from "../Han/interface/IUnit";
 import GamePage from './Page/GamePage';
 import MenuCursor from "./MenuCursor";
+import IPaintInfo from "../Han/interface/IPaintInfo";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class View extends cc.Component implements IView {
-    updateMoveRange(data: number[][], cb: () => void) {
-        this.repaintMoveRange(data, cb);
-    }
-    updateAttackRange(data: number[][], cb: () => void) {
-        this.repaintAttackRange(data, cb);
-    }
-    updateMapAttackRange(data: number[][], cb: () => void) {
-        this.repaintMapAttackRange(data, cb);
-    }
-    updateCursor(data: number[], cb: () => void) {
-        this.repaintCursor(data, cb);
-    }
-    updateMap(data: number[][], cb: () => void) {
-        this.repaintMap(data, cb);
-    }
-    updateUnits(data: IUnit[], cb: () => void) {
-        this.repaintUnits(data, cb);
-    }
     playerTurnStart(data: any, cb: () => void) {
         this.closeUnitMenu();
         this.closeSystemMenu();
@@ -48,44 +31,41 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         this.repaintEnemyTurnStart(enemyName, cb);
     }
-
     unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
-
     unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         cb();
     }
+    paint(data: IPaintInfo, cb: () => void) {
+        this.repaintUnits(data.units, () => { });
+        this.repaintMap(data.map, () => { })
+        this.repaintCursor(data.cursor, () => { });
+        this.repaintMoveRange(data.moveRange, () => { });
+        this.repaintAttackRange(data.attackRange, () => { })
+        if (data.systemMenu) {
+            this.createOrUpdateSystemMenu(
+                data.systemMenu.menuCursor.menu,
+                data.systemMenu.data,
+                data.systemMenu.menuCursor.cursor,
+                data.systemMenu.menuCursor.subcursor
+            );
+        } else {
+            this.closeSystemMenu();
+        }
 
-    updatePlayTurn(data: { cursor: number[]; }, cb: () => void) {
-        this.closeUnitMenu();
-        this.closeSystemMenu();
+        if (data.unitMenu) {
+            this.createOrUpdateUnitMenu(
+                data.unitMenu.menuCursor.menu,
+                data.unitMenu.data,
+                data.unitMenu.menuCursor.cursor,
+                data.unitMenu.menuCursor.subcursor
+            );
+        } else {
+            this.closeUnitMenu();
+        }
         cb();
     }
-    updateSystemMenu(data: any, cb: () => void) {
-        this.createOrUpdateSystemMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
-        cb();
-    }
-    updateUnitMenu(data: any, cb: () => void) {
-        this.createOrUpdateUnitMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
-        cb();
-    }
-    updateUnitSelectMovePosition(data: { cursor: number[][]; }, cb: () => void) {
-        this.closeUnitMenu();
-        this.closeSystemMenu();
-        cb();
-    }
-    updateUnitSelectSingleTarget(data: any, cb: () => void) {
-        this.closeUnitMenu();
-        this.closeSystemMenu();
-        cb();
-    }   
-    updateUnitBattleMenu(data: any, cb: () => void) {
-        this.createOrUpdateUnitMenu(data.menuCursor.menu, data.data, data.menuCursor.cursor, data.menuCursor.subcursor);
-        this.closeSystemMenu();
-        cb();
-    }
-
 
     // ====================== //
 

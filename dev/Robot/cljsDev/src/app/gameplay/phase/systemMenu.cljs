@@ -10,14 +10,7 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
-                                               updateMap
-                                               updateUnits
-                                               updateCursor
-                                               updateMoveRange
-                                               updateAttackRange
-
-                                               updateSystemMenu
-
+                                               paint
                                                actions]])
   (:require [app.gameplay.step.menu :refer [menu]]))
 
