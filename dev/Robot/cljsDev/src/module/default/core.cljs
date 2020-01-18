@@ -50,11 +50,11 @@
   (a/go
     data))
 
-(defmethod app.gameplay.module/unitStateCreate :default [_ unit]
+(defmethod app.gameplay.module/unitCreate :default [_ unit]
   (merge unit 
          {:state defaultUnitState}))
 
-(defmethod app.gameplay.module/unitStateGetWeapons :default [_ unit gameplayCtx]
+(defmethod app.gameplay.module/unitGetWeapons :default [_ unit gameplayCtx]
   (->> (get-in unit [:state :weapon])
        (map (fn [{:keys [weaponKey] :as weapon}]
               (merge (get-in data ["weapon" weaponKey])
@@ -83,3 +83,23 @@
        (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
                                     (into #{})))
        (map (partial map + (:position unit)))))
+
+(defmethod app.gameplay.module/unitGetMenuData :default [type unit gameplayCtx]
+  (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
+                         (tool.fsm/currState)
+                         (= :unitBattleMenu))
+        weapons (into [] (app.gameplay.module/unitGetWeapons type unit gameplayCtx))
+        weaponRange (into []
+                          (map (fn [weapon]
+                                 (app.gameplay.module/unitGetAttackRange type unit weapon gameplayCtx))
+                               weapons))
+        [menu data] (if isBattleMenu
+                      [[(into [] (range (count weapons))) ["ok"] ["cancel"]]
+                       {:weaponIdx 0
+                        :weapons weapons
+                        :weaponRange weaponRange}]
+                      [[["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]
+                       {:weaponIdx 1
+                        :weapons weapons
+                        :weaponRange weaponRange}])]
+    [menu data]))

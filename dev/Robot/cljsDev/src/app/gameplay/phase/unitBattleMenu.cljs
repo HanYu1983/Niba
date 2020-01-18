@@ -24,16 +24,10 @@
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
   nil
   (m/basicNotify
-   (let [weapons (into [] (app.gameplay.unit/getWeapons unit gameplayCtx))
-         menu [(into [] (range (count weapons))) ["ok"] ["cancel"]]]
+   (let [[menu data] (app.gameplay.unit/getMenuData unit gameplayCtx)]
      {:tempUnit unit
       :menuCursor (tool.menuCursor/model menu)
-      :data {:weaponIdx 0
-             :weapons weapons
-             :weaponRange (into []
-                                (map (fn [weapon]
-                                       (app.gameplay.unit/getAttackRange unit weapon gameplayCtx))
-                                     weapons))}})
+      :data data})
    (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
 
   (= "KEY_DOWN" cmd)
