@@ -1,4 +1,5 @@
 (ns module.default.core
+  (:require [clojure.set])
   (:require [clojure.core.async :as a])
   (:require [app.gameplay.module]))
 
@@ -53,8 +54,32 @@
   (merge unit 
          {:state defaultUnitState}))
 
-(defmethod app.gameplay.module/unitStateGetWeapons :default [_ unit]
+(defmethod app.gameplay.module/unitStateGetWeapons :default [_ unit gameplayCtx]
   (->> (get-in unit [:state :weapon])
        (map (fn [{:keys [weaponKey] :as weapon}]
               (merge (get-in data ["weapon" weaponKey])
                      {:state weapon})))))
+
+(defmethod app.gameplay.module/unitGetMovePathTree :default [_ unit gameplayCtx]
+  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        [mw mh] (tool.map/getMapSize playmap)]
+    (tool.map/findPath (:position unit)
+                       (fn [{:keys [totalCost]} curr]
+                         [(>= totalCost 5) false])
+                       (fn [[x y]]
+                         [[x (min mh (inc y))]
+                          [x (max 0 (dec y))]
+                          [(min mw (inc x)) y]
+                          [(max 0 (dec x)) y]])
+                       (fn [curr next]
+                         (-> playmap
+                             (get-in next)
+                             (/ 3)))
+                       (constantly 0))))
+
+(defmethod app.gameplay.module/unitGetAttackRange :default [_ unit {[min max] "range" type "type" :as weapon} gameplayCtx]
+  (->> (tool.map/simpleFindPath [0 0] (dec min))
+       (into #{})
+       (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                    (into #{})))
+       (map (partial map + (:position unit)))))

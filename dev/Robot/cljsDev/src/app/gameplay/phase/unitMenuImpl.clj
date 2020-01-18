@@ -4,18 +4,14 @@
   '(m/defstate unitMenu [gameplayCtx {unit :unit}]
      nil
      (m/basicNotify
-      (let [weapons (into [] (app.gameplay.unit/getWeapons unit))
+      (let [weapons (into [] (app.gameplay.unit/getWeapons unit gameplayCtx))
             menu [["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]]
         {:menuCursor (tool.menuCursor/model menu)
          :data {:weaponIdx 1
                 :weapons weapons
                 :weaponRange (into []
-                                   (map (fn [{[min max] "range" type "type" :as weapon}]
-                                          (->> (tool.map/simpleFindPath [0 0] (dec min))
-                                               (into #{})
-                                               (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                                                            (into #{})))
-                                               (map (partial map + (:position unit)))))
+                                   (map (fn [weapon]
+                                          (app.gameplay.unit/getAttackRange unit weapon gameplayCtx))
                                         weapons))}})
       (a/<! (updateUnitMenu nil state inputCh outputCh)))
 
@@ -81,20 +77,7 @@
 
           (= "move" select)
           (let [[mw mh] app.gameplay.model/mapViewSize
-                shortestPathTree (tool.map/findPath (:position unit)
-                                                    (fn [{:keys [totalCost]} curr]
-                                                      [(>= totalCost 5) false])
-                                                    (fn [[x y]]
-                                                      [[x (min mh (inc y))]
-                                                       [x (max 0 (dec y))]
-                                                       [(min mw (inc x)) y]
-                                                       [(max 0 (dec x)) y]])
-                                                    (fn [curr next]
-                                                      (let [map (app.gameplay.model/getMap gameplayCtx)]
-                                                        (-> map
-                                                            (get-in next)
-                                                            (/ 3))))
-                                                    (constantly 0))
+                shortestPathTree (app.gameplay.unit/getMovePathTree unit gameplayCtx)
                 moveRange (map first shortestPathTree)
                 [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
             (if isEnd

@@ -24,19 +24,15 @@
 (m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
   nil
   (m/basicNotify
-   (let [weapons (into [] (app.gameplay.unit/getWeapons unit))
+   (let [weapons (into [] (app.gameplay.unit/getWeapons unit gameplayCtx))
          menu [(into [] (range (count weapons))) ["ok"] ["cancel"]]]
      {:tempUnit unit
       :menuCursor (tool.menuCursor/model menu)
       :data {:weaponIdx 0
              :weapons weapons
              :weaponRange (into []
-                                (map (fn [{[min max] "range" type "type" :as weapon}]
-                                       (->> (tool.map/simpleFindPath [0 0] (dec min))
-                                            (into #{})
-                                            (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                                                         (into #{})))
-                                            (map (partial map + (:position unit)))))
+                                (map (fn [weapon]
+                                       (app.gameplay.unit/getAttackRange unit weapon gameplayCtx))
                                      weapons))}})
    (a/<! (updateUnitBattleMenu nil state inputCh outputCh)))
 

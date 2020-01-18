@@ -36,20 +36,7 @@
   (-> (m/basicNotify
        {:tempUnit unit
         :tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
-                             shortestPathTree (tool.map/findPath (:position unit)
-                                                                 (fn [{:keys [totalCost]} curr]
-                                                                   [(>= totalCost 5) false])
-                                                                 (fn [[x y]]
-                                                                   [[x (min mh (inc y))]
-                                                                    [x (max 0 (dec y))]
-                                                                    [(min mw (inc x)) y]
-                                                                    [(max 0 (dec x)) y]])
-                                                                 (fn [curr next]
-                                                                   (let [map (app.gameplay.model/getMap gameplayCtx)]
-                                                                     (-> map
-                                                                         (get-in next)
-                                                                         (/ 3))))
-                                                                 (constantly 0))
+                             shortestPathTree (app.gameplay.unit/getMovePathTree unit gameplayCtx)
                              moveRange (map first shortestPathTree)]
                          moveRange)}
        (a/<! (updateUnitSelectMovePosition nil state inputCh outputCh)))

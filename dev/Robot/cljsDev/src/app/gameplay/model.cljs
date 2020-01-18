@@ -1,7 +1,6 @@
 (ns app.gameplay.model
-  (:require [app.gameplay.unit])
   (:require [tool.fsm])
-  (:require [tool.map :as map])
+  (:require [tool.map])
   (:require [tool.units]))
 
 (def mapViewSize [20 20])
@@ -61,11 +60,11 @@
 (defn boundCursor [ctx cursor]
   (->> cursor
        (map max [0 0])
-       (map min (map dec (map/getMapSize (getMap ctx))))))
+       (map min (map dec (tool.map/getMapSize (getMap ctx))))))
 
 (defn boundCamera [ctx camera]
   (->> camera
-       (map min (map - (map/getMapSize (getMap ctx)) mapViewSize))
+       (map min (map - (tool.map/getMapSize (getMap ctx)) mapViewSize))
        (map max [0 0])))
 
 (defn getCursor [ctx]
@@ -99,7 +98,7 @@
 (defn getLocalMap [ctx camera]
   (let [camera (or camera (getCamera ctx))
         playmap (:map ctx)]
-    (map/subMap camera mapViewSize playmap)))
+    (tool.map/subMap camera mapViewSize playmap)))
 
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
