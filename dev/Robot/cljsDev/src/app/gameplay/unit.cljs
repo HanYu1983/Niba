@@ -18,3 +18,6 @@
 
 (defn getMenuData [ctx gameplayCtx]
   (app.gameplay.module/unitGetMenuData app.gameplay.module/*module ctx gameplayCtx))
+
+(defn onMove [ctx pos gameplayCtx]
+  (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx pos gameplayCtx))
