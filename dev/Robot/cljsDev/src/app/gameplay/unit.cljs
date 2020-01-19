@@ -27,3 +27,12 @@
 
 (defn onTurnStart [ctx gameplayCtx]
   (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx gameplayCtx))
+
+(defn selectCounterAttackAction [unit fromUnit weapon gameplayCtx]
+  [:attack weapon])
+
+(defn calcActionResult [left leftAction right rightAction gameplayCtx]
+  {})
+
+(defn applyActionResult [ctx result]
+  ctx)

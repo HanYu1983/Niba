@@ -14,7 +14,7 @@
   (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
   (:require [app.gameplay.step.selectPosition]))
 
-(m/defbasic unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange]}]
+(m/defbasic unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange weapon]}]
   [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
 
   nil
@@ -29,7 +29,12 @@
         units (app.gameplay.model/getUnits gameplayCtx)
         unitAtCursor (tool.units/getByPosition units cursor)]
     (if unitAtCursor
-      (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx {:unit unit :targetUnit unitAtCursor} inputCh outputCh))]
+      (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
+                                                      {:left unit
+                                                       :leftAction [:attack weapon]
+                                                       :right unitAtCursor
+                                                       :rightAction [:pending]}
+                                                      inputCh outputCh))]
         (if isEnd
           (m/returnPop true)
           (recur gameplayCtx)))

@@ -15,13 +15,18 @@
                                                unitBattleAnim
                                                actions]]))
 
-(m/defstate unitBattleMenu [gameplayCtx {:keys [unit targetUnit]}]
+(m/defstate unitBattleMenu [gameplayCtx {left :left
+                                         right :right
+                                         leftAction :leftAction
+                                         :as args}]
   nil
   (m/basicNotify
-   (let [[menu data] (app.gameplay.unit/getMenuData unit gameplayCtx)]
-     {:tempUnit unit
-      :menuCursor (tool.menuCursor/model menu)
-      :data data}))
+   (let [[menu data] (app.gameplay.unit/getMenuData left gameplayCtx)
+         [_ weapon] leftAction]
+     {:menuCursor (tool.menuCursor/model menu)
+      :data data
+      :args (merge args
+                   {:rightAction (app.gameplay.unit/selectCounterAttackAction right left weapon gameplayCtx)})}))
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
@@ -52,10 +57,17 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
+          rightAction (if (= cursor1 weaponIdx)
+                        (let [weapon (get-in state [:data :weapons cursor2])]
+                          (app.gameplay.unit/selectCounterAttackAction right left weapon gameplayCtx))
+                        [:pending])
           attackRange (if (= cursor1 weaponIdx)
                         (get-in state [:data :weaponRange cursor2])
                         [])
+          state (merge state {:rightAction rightAction})
+          fsm (tool.fsm/save fsm state)
           gameplayCtx (-> gameplayCtx
+                          (app.gameplay.model/setFsm fsm)
                           (app.gameplay.model/setAttackRange attackRange))]
       (recur gameplayCtx)))
 
@@ -63,7 +75,9 @@
    (let [select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
        (= "ok" select)
-       (let [result 0]
+       (let [leftAction (:leftAction state)
+             rightAction (:rightAction state)
+             result (app.gameplay.unit/calcActionResult left leftAction right rightAction gameplayCtx)]
          (a/<! (unitBattleAnim nil result inputCh outputCh))
          (m/returnPop true))
 

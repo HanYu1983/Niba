@@ -45,6 +45,9 @@
       (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
             cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
             weaponIdx (get-in state [:data :weaponIdx])
+            attackRange (if (= cursor1 weaponIdx)
+                          (get-in state [:data :weaponRange cursor2])
+                          [])
             select (tool.menuCursor/getSelect (:menuCursor state))]
         (cond
           (= cursor1 weaponIdx)
@@ -54,7 +57,7 @@
                 weaponType (get weapon "type")]
             (cond
               (= "single" weaponType)
-              (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange []} inputCh outputCh))]
+              (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
                 (if isEnd
                   (m/returnPop true)
                   (recur gameplayCtx)))
