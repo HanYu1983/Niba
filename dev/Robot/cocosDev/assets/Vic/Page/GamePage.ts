@@ -215,6 +215,8 @@ export default class GamePage extends BasicViewer {
         });
 
         this.effects.createAimEffect([0, 0], [3, 3]);
+        this.effects.createBlade(120, [4,4]);
+        this.effects.createExplode(200, [7,8]);
     }
 
     closeUnitMenu() {
