@@ -14,13 +14,14 @@ const {ccclass, property} = cc._decorator;
 export default class NewClass extends cc.Component {
 
     start () {
-        cc.log(this.getComponent(cc.Sprite).spriteFrame.getRect());
-        //cc.log(this.getComponent(cc.Sprite).getMaterial(0).setProperty );
-        //cc.log(this.getComponent(cc.Sprite).getMaterial(0).passes[0]);
-        this.getComponent(cc.Sprite).getMaterial(0).setProperty('myc', [100,1,0,0]);
-        //this.getComponent(cc.Sprite).getMaterial(0).setProperty('alphaThreshold', 1);
+       
+        let t:cc.Texture2D = this.getComponent(cc.Sprite).spriteFrame.getTexture();
+        let r:cc.Rect = this.getComponent(cc.Sprite).spriteFrame.getRect();
+        let min_u = r.x / t.width;
+        let max_u = (r.x + r.width) / t.width;
+        let min_y = r.y / t.height;
+        let max_y = (r.y + r.height) / t.height;
+        this.getComponent(cc.Sprite).getMaterial(0).setProperty('resetUV', [min_u, max_u - min_u, min_y, max_y - min_y]);
 
-        
-        
     }
 }

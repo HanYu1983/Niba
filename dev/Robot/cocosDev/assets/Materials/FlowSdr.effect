@@ -12,8 +12,9 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
-        myt: {value: [white]}
-        myc: {value: [1,1,1,1], editor:{type:color}}
+        main_texture: {value: [white]}
+        resetUV: {value: [1,1,1,1], editor:{type:vec4}}
+        flow_texture: {value: [white]}
         alphaThreshold: { value: 0.5 }
         
 }%
@@ -59,38 +60,31 @@ CCProgram fs %{
   precision highp float;
   
   #include <alpha-test>
+  #include <cc-global>
 
   in vec4 v_color;
-
-  
 
   #if USE_TEXTURE
   in vec2 v_uv0;
   uniform sampler2D texture;
-  uniform sampler2D myt;
-  uniform sampler2D age;
   #endif
 
-  
+  uniform sampler2D main_texture;
+  uniform sampler2D flow_texture;
+
   uniform Constant{
-    vec4 myc;
+    vec4 resetUV;
   }
 
   void main () {
-    vec4 o = vec4(1, 1, 1, 1);
-
-    #if USE_TEXTURE
-    o *= texture(myt, v_uv0);
-      #if CC_USE_ALPHA_ATLAS_TEXTURE
-      o.a *= texture2D(myt, v_uv0 + vec2(0, 0.5)).r;
-      #endif
-    #endif
-
-    o *= v_color;
-
-    ALPHA_TEST(o);
-
-    gl_FragColor = myc;
-    //gl_FragColor = vec4(1, 0, 0, 1);
+    vec2 h5uv = vec2((v_uv0.x - resetUV.x) / resetUV.y, (v_uv0.y - resetUV.z) / resetUV.w);
+    vec4 flow_texture = texture(flow_texture, h5uv);
+    h5uv.x += flow_texture.x * .5 + cc_time.x * .5;
+    h5uv.y += flow_texture.y * .5 + cc_time.x * .1;
+    h5uv = fract(h5uv);
+    vec4 main_color = texture(main_texture, h5uv);
+    main_color *= v_color;
+    ALPHA_TEST(main_color);
+    gl_FragColor = main_color;
   }
 }%

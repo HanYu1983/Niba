@@ -11,15 +11,11 @@
   },
   "_props": {
     "texture": null,
-    "myt": {
-      "__uuid__": "834ded7e-e648-486f-bb90-1c3e0d753ce8"
+    "main_texture": {
+      "__uuid__": "4d114b0c-c7fb-4533-8ac3-3c855ad15545"
     },
-    "myc": {
-      "__type__": "cc.Vec4",
-      "x": 0,
-      "y": 1,
-      "z": 0,
-      "w": 1
+    "flow_texture": {
+      "__uuid__": "bdf770f0-c6d8-4666-acec-162909517bcb"
     }
   }
 }
