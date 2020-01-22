@@ -13,6 +13,13 @@
     "texture": null,
     "myt": {
       "__uuid__": "834ded7e-e648-486f-bb90-1c3e0d753ce8"
+    },
+    "myc": {
+      "__type__": "cc.Vec4",
+      "x": 0,
+      "y": 1,
+      "z": 0,
+      "w": 1
     }
   }
 }

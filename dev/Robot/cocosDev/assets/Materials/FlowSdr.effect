@@ -12,8 +12,10 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
-        myt: {value:white}
+        myt: {value: [white]}
+        myc: {value: [1,1,1,1], editor:{type:color}}
         alphaThreshold: { value: 0.5 }
+        
 }%
 
 
@@ -26,6 +28,7 @@ CCProgram vs %{
   in vec3 a_position;
   in vec4 a_color;
   out vec4 v_color;
+
 
   #if USE_TEXTURE
   in vec2 a_uv0;
@@ -59,11 +62,19 @@ CCProgram fs %{
 
   in vec4 v_color;
 
+  
+
   #if USE_TEXTURE
   in vec2 v_uv0;
   uniform sampler2D texture;
   uniform sampler2D myt;
+  uniform sampler2D age;
   #endif
+
+  
+  uniform Constant{
+    vec4 myc;
+  }
 
   void main () {
     vec4 o = vec4(1, 1, 1, 1);
@@ -79,7 +90,7 @@ CCProgram fs %{
 
     ALPHA_TEST(o);
 
-    gl_FragColor = vec4(0, 1, 1, 1);
+    gl_FragColor = myc;
     //gl_FragColor = vec4(1, 0, 0, 1);
   }
 }%
