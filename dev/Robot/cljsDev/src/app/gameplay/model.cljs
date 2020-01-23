@@ -3,7 +3,9 @@
   (:require [tool.map])
   (:require [tool.units]))
 
-(def mapViewSize [20 20])
+; ==============
+; === helper ===
+; ==============
 
 (defn rectByUnit [{[x y] :position}]
   [x y (+ 0.5 x) (+ 0.5 y)])
@@ -13,6 +15,12 @@
 
 (defn local2world [camera position]
   (map + position camera))
+
+; ==============
+; === config ===
+; ==============
+
+(def mapViewSize [20 20])
 
 (def defaultGameplayModel {:map nil
                            :temp {:cursor [0 0]
@@ -26,18 +34,25 @@
                            :units tool.units/model
                            :fsm tool.fsm/model})
 
+(defn getPlayers [ctx]
+  (:players ctx))
+
+; ===================
+; === Phase State ===
+; ===================
+
 (defn getFsm [ctx]
   (:fsm ctx))
 
 (defn setFsm [ctx fsm]
   (merge ctx {:fsm fsm}))
 
-(defn updateUnit [ctx unit f]
-  (update ctx :units (fn [origin]
-                       (-> origin
-                           (tool.units/delete unit)
-                           (tool.units/add (f unit))))))
+; ===========
+; === Map ===
+; ===========
 
+; map
+(declare getCamera)
 
 (defn setMap [ctx map]
   (update ctx :map (constantly map)))
@@ -45,42 +60,49 @@
 (defn getMap [ctx]
   (:map ctx))
 
+(defn getLocalMap [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        playmap (:map ctx)]
+    (tool.map/subMap camera mapViewSize playmap)))
+
+; camera
 (defn setCamera [ctx camera]
   (update-in ctx [:temp :camera] (constantly camera)))
 
-(defn getPlayers [ctx]
-  (:players ctx))
-
 (defn getCamera [ctx]
   (get-in ctx [:temp :camera]))
-
-(defn setCursor [ctx cursor]
-  (update-in ctx [:temp :cursor] (constantly cursor)))
-
-(defn boundCursor [ctx cursor]
-  (->> cursor
-       (map max [0 0])
-       (map min (map dec (tool.map/getMapSize (getMap ctx))))))
 
 (defn boundCamera [ctx camera]
   (->> camera
        (map min (map - (tool.map/getMapSize (getMap ctx)) mapViewSize))
        (map max [0 0])))
 
+; cursor
+(defn setCursor [ctx cursor]
+  (update-in ctx [:temp :cursor] (constantly cursor)))
+
 (defn getCursor [ctx]
   (get-in ctx [:temp :cursor]))
 
-(defn setMoveRange [ctx v]
-  (update-in ctx [:temp :moveRange] (constantly v)))
+(defn boundCursor [ctx cursor]
+  (->> cursor
+       (map max [0 0])
+       (map min (map dec (tool.map/getMapSize (getMap ctx))))))
 
-(defn getMoveRange [ctx]
-  (get-in ctx [:temp :moveRange]))
+(defn getLocalCursor [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        cursor (getCursor ctx)]
+    (world2local camera cursor)))
 
-(defn setAttackRange [ctx v]
-  (update-in ctx [:temp :attackRange] (constantly v)))
+; ============
+; === unit ===
+; ============
 
-(defn getAttackRange [ctx]
-  (get-in ctx [:temp :attackRange]))
+(defn updateUnit [ctx unit f]
+  (update ctx :units (fn [origin]
+                       (-> origin
+                           (tool.units/delete unit)
+                           (tool.units/add (f unit))))))
 
 (defn setUnits [ctx units]
   (update ctx :units (constantly units)))
@@ -95,21 +117,29 @@
         units (tool.units/getByRegion (getUnits ctx) p1 p2)]
     units))
 
-(defn getLocalMap [ctx camera]
-  (let [camera (or camera (getCamera ctx))
-        playmap (:map ctx)]
-    (tool.map/subMap camera mapViewSize playmap)))
-
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
     (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
                 (update unit :position (partial world2local camera)))))))
 
-(defn getLocalCursor [ctx camera]
-  (let [camera (or camera (getCamera ctx))
-        cursor (getCursor ctx)]
-    (world2local camera cursor)))
+; ============
+; === view ===
+; ============
+
+(defn setMoveRange [ctx v]
+  (update-in ctx [:temp :moveRange] (constantly v)))
+
+(defn getMoveRange [ctx]
+  (get-in ctx [:temp :moveRange]))
+
+
+(defn setAttackRange [ctx v]
+  (update-in ctx [:temp :attackRange] (constantly v)))
+
+(defn getAttackRange [ctx]
+  (get-in ctx [:temp :attackRange]))
+
 
 (defn getLocalMoveRange [ctx camera]
   (let [camera (or camera (getCamera ctx))
