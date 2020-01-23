@@ -80,14 +80,10 @@
         weapons (app.gameplay.module/unitGetWeapons type unit gameplayCtx)
         weaponKeys (->> (range (count weapons))
                         (into []))
-        weaponRange (mapv (fn [weapon]
-                            (app.gameplay.module/unitGetWeaponRange type unit weapon gameplayCtx))
-                          weapons)
         [menu data] (if isBattleMenu
                       [[weaponKeys ["ok"] ["cancel"]]
                        {:weaponIdx 0
-                        :weapons weapons
-                        :weaponRange weaponRange}]
+                        :weapons weapons}]
                       (cond
                         (-> (get-in unit [:state :tag])
                             (contains? :done))
@@ -97,14 +93,12 @@
                             (contains? :firstMove))
                         [[weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 0
-                          :weapons weapons
-                          :weaponRange weaponRange}]
+                          :weapons weapons}]
 
                         :else
                         [[["move"] weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 1
-                          :weapons weapons
-                          :weaponRange weaponRange}]))]
+                          :weapons weapons}]))]
     [menu data]))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ unit pos gameplayCtx]
