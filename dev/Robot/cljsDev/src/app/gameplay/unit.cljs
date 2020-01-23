@@ -22,6 +22,15 @@
 (defn onTurnStart [ctx gameplayCtx]
   (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx gameplayCtx))
 
+(defn getWeapons [ctx gameplayCtx]
+  (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx gameplayCtx))
+
+(defn getWeaponRange [ctx weapon gameplayCtx]
+  (app.gameplay.module/unitGetWeaponRange app.gameplay.module/*module ctx weapon gameplayCtx))
+
+(defn getWeaponType [ctx weapon gameplayCtx]
+  (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx weapon gameplayCtx))
+
 (defn selectCounterAttackAction [unit fromUnit weapon gameplayCtx]
   [:attack weapon])
 

@@ -22,7 +22,10 @@
              menu (tool.menuCursor/getMenu (:menuCursor state))
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (if (= cursor1 weaponIdx)
-                           (get-in state [:data :weaponRange cursor2])
+                           (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                               (nth cursor2)
+                               ((fn [weapon]
+                                  (app.gameplay.unit/getWeaponRange unit weapon gameplayCtx))))
                            [])
              gameplayCtx (-> gameplayCtx
                              (app.gameplay.model/setAttackRange attackRange))]
@@ -35,7 +38,10 @@
              menu (tool.menuCursor/getMenu (:menuCursor state))
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (if (= cursor1 weaponIdx)
-                           (get-in state [:data :weaponRange cursor2])
+                           (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                               (nth cursor2)
+                               ((fn [weapon]
+                                  (app.gameplay.unit/getWeaponRange unit weapon gameplayCtx))))
                            [])
              gameplayCtx (-> gameplayCtx
                              (app.gameplay.model/setAttackRange attackRange))]
@@ -52,9 +58,9 @@
         (cond
           (= cursor1 weaponIdx)
           (let [menu (tool.menuCursor/getMenu (:menuCursor state))
-                weapons (get-in state [:data :weapons])
-                weapon (get weapons cursor2)
-                weaponType (get weapon "type")]
+                weapon  (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                            (nth cursor2))
+                weaponType (app.gameplay.unit/getWeaponType unit weapon gameplayCtx)]
             (cond
               (= "single" weaponType)
               (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]

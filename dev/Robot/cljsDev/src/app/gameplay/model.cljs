@@ -123,6 +123,10 @@
          (map (fn [unit]
                 (update unit :position (partial world2local camera)))))))
 
+
+(defn getHitRate [ctx unit targetUnit]
+  0.8)
+
 ; ============
 ; === view ===
 ; ============

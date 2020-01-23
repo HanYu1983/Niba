@@ -15,15 +15,16 @@
        :hp (get robot "hp")
        :en (get robot "en")
        :component []
-       :weapon (map (fn [weaponKey]
-                      (let [weapon (get-in data ["weapon" weaponKey])]
-                        (if (nil? weapon)
-                          (throw (js/Error. (str weaponKey "not found")))
-                          (cond-> {:key (gensym)
-                                   :weaponKey weaponKey}
-                            (= (get weapon "energyType") "bullet")
-                            (merge {:bulletCount (get weapon "maxBulletCount")})))))
-                    (get robot "weapons"))
+       ; 使用vector(mapv)方便索引的存取(nth, get-in)
+       :weapon (mapv (fn [weaponKey]
+                       (let [weapon (get-in data ["weapon" weaponKey])]
+                         (if (nil? weapon)
+                           (throw (js/Error. (str weaponKey "not found")))
+                           (cond-> {:key (gensym)
+                                    :weaponKey weaponKey}
+                             (= (get weapon "energyType") "bullet")
+                             (merge {:bulletCount (get weapon "maxBulletCount")})))))
+                     (get robot "weapons"))
        :tag #{}})))
 
 (defmethod app.gameplay.module/loadData :default [_]
@@ -52,24 +53,36 @@
                              (/ 3)))
                        (constantly 0))))
 
+(defmethod app.gameplay.module/unitGetWeapons :default [_ unit gameplayCtx]
+  (get-in unit [:state :weapon]))
+
+(defmethod app.gameplay.module/unitGetWeaponRange :default [_ unit {:keys [weaponKey]} gameplayCtx]
+  (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
+    (if (nil? weapon)
+      (throw (js/Error. (str weaponKey "not found")))
+      (->> (tool.map/simpleFindPath [0 0] (dec min))
+           (into #{})
+           (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                        (into #{})))
+           (map (partial map + (:position unit)))))))
+
+
+(defmethod app.gameplay.module/unitGetWeaponType :default [_ unit {:keys [weaponKey]} gameplayCtx]
+  (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
+    (if (nil? weapon)
+      (throw (js/Error. (str weaponKey "not found")))
+      (get weapon "type"))))
+
 (defmethod app.gameplay.module/unitGetMenuData :default [type unit gameplayCtx]
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (into [] (get-in unit [:state :weapon]))
+        weapons (app.gameplay.module/unitGetWeapons type unit gameplayCtx)
         weaponKeys (->> (range (count weapons))
                         (into []))
-        weaponRange (->> (map (fn [{:keys [weaponKey]}]
-                                (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
-                                  (if (nil? weapon)
-                                    (throw (js/Error. (str weaponKey "not found")))
-                                    (->> (tool.map/simpleFindPath [0 0] (dec min))
-                                         (into #{})
-                                         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                                                      (into #{})))
-                                         (map (partial map + (:position unit)))))))
-                              weapons)
-                         (into []))
+        weaponRange (mapv (fn [weapon]
+                            (app.gameplay.module/unitGetWeaponRange type unit weapon gameplayCtx))
+                          weapons)
         [menu data] (if isBattleMenu
                       [[weaponKeys ["ok"] ["cancel"]]
                        {:weaponIdx 0

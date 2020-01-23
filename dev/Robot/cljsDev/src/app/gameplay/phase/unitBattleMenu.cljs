@@ -44,9 +44,10 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
-          attackRange (if (= cursor1 weaponIdx)
-                        (get-in state [:data :weaponRange cursor2])
-                        [])
+          attackRange (-> (app.gameplay.unit/getWeapons left gameplayCtx)
+                          (nth cursor2)
+                          ((fn [weapon]
+                             (app.gameplay.unit/getWeaponRange left weapon gameplayCtx))))
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setAttackRange attackRange))]
       (recur gameplayCtx)))
@@ -61,9 +62,10 @@
                         (let [weapon (get-in state [:data :weapons cursor2])]
                           (app.gameplay.unit/selectCounterAttackAction right left weapon gameplayCtx))
                         [:pending])
-          attackRange (if (= cursor1 weaponIdx)
-                        (get-in state [:data :weaponRange cursor2])
-                        [])
+          attackRange (-> (app.gameplay.unit/getWeapons left gameplayCtx)
+                          (nth cursor2)
+                          ((fn [weapon]
+                             (app.gameplay.unit/getWeaponRange left weapon gameplayCtx))))
           state (merge state {:rightAction rightAction})
           fsm (tool.fsm/save fsm state)
           gameplayCtx (-> gameplayCtx
