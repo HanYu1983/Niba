@@ -57,19 +57,19 @@
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
         weapons (into [] (get-in unit [:state :weapon]))
-        weaponKeys (-> (range (count weapons))
-                       (into []))
-        weaponRange (-> (map (fn [{:keys [weaponKey]}]
-                               (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
-                                 (if (nil? weapon)
-                                   (throw (js/Error. (str weaponKey "not found")))
-                                   (->> (tool.map/simpleFindPath [0 0] (dec min))
-                                        (into #{})
-                                        (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                                                     (into #{})))
-                                        (map (partial map + (:position unit)))))))
-                             weapons)
+        weaponKeys (->> (range (count weapons))
                         (into []))
+        weaponRange (->> (map (fn [{:keys [weaponKey]}]
+                                (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
+                                  (if (nil? weapon)
+                                    (throw (js/Error. (str weaponKey "not found")))
+                                    (->> (tool.map/simpleFindPath [0 0] (dec min))
+                                         (into #{})
+                                         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                                                      (into #{})))
+                                         (map (partial map + (:position unit)))))))
+                              weapons)
+                         (into []))
         [menu data] (if isBattleMenu
                       [[weaponKeys ["ok"] ["cancel"]]
                        {:weaponIdx 0
