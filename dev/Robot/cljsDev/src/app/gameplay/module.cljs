@@ -2,7 +2,7 @@
 
 (defmulti loadData (fn [type] type))
 
-(defmulti unitCreate (fn [type unit args] type))
+(defmulti unitCreate (fn [type gameplayCtx unit args] type))
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))
 (defmulti unitGetWeaponRange (fn [type gameplayCtx unit weapon] type))

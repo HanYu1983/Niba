@@ -6,7 +6,6 @@
   (:require [tool.units])
   (:require [tool.menuCursor])
   (:require [app.gameplay.model])
-  (:require [app.gameplay.unit])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart

@@ -5,7 +5,6 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [app.gameplay.model])
-  (:require [app.gameplay.unit])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart

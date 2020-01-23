@@ -173,6 +173,14 @@
 ; === module ===
 ; ==============
 
+(defn createUnit [ctx {:keys [key position] :as unit} args]
+  (-> (getUnits ctx)
+      (tool.units/add (merge (app.gameplay.module/unitCreate app.gameplay.module/*module ctx unit args)
+                             {:key (or key (gensym))
+                              :position (or position [0 0])}))
+      ((fn [units]
+         (setUnits ctx units)))))
+
 (defn getHitRate [ctx unit targetUnit]
   0.8)
 

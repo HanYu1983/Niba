@@ -31,7 +31,7 @@
   (a/go
     data))
 
-(defmethod app.gameplay.module/unitCreate :default [_ unit {:keys [robotKey] :as args}]
+(defmethod app.gameplay.module/unitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (merge unit 
          {:state (createUnitStateForKey robotKey)}))
 
