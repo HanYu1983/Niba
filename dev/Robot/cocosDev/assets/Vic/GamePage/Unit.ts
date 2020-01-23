@@ -24,7 +24,7 @@ export default class Unit extends cc.Component {
     setUnitImage(key: string) {
         for(let i = 0; i < this.images.length; ++i){
             let image = this.images[i];
-            if(image.name==key){
+            if(image.name.toLowerCase()==key.toLowerCase()){
                 this.unitImage.spriteFrame = image;
             }
         }
