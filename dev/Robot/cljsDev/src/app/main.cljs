@@ -1,7 +1,11 @@
 (ns app.main
   (:require [module.default.core])
   (:require [clojure.core.async :as a])
-  (:require [app.gameplay.core]))
+  (:require-macros [app.gameplay.macros :as m])
+  (:require [app.gameplay.core])
+  (:require [app.gameplay.module]))
+
+(m/defwait setData [ctx args])
 
 (def defaultModel {})
 
@@ -10,8 +14,11 @@
     (loop [ctx ctx]
       (let [[cmd args] (a/<! inputCh)]
         (cond
-          (= "load" cmd)
-          (recur ctx)
+          (= "loadConfig" cmd)
+          (let [[id subargs] args
+                data (a/<! (app.gameplay.module/loadData app.gameplay.module/*module))]
+            (a/>! outputCh ["ok", [id data]])
+            (recur ctx))
 
           (= "startGameplay" cmd)
           (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))

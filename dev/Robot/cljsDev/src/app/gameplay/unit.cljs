@@ -7,9 +7,6 @@
          {:key (or key (gensym))
           :position (or position [0 0])}))
 
-(defn getWeapons [ctx gameplayCtx]
-  (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx gameplayCtx))
-
 (defn getMovePathTree [ctx gameplayCtx]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx gameplayCtx))
 

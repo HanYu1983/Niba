@@ -33,12 +33,6 @@
   (merge unit 
          {:state (createUnitStateForKey "jimu")}))
 
-(defmethod app.gameplay.module/unitGetWeapons :default [_ unit gameplayCtx]
-  (->> (get-in unit [:state :weapon])
-       (map (fn [{:keys [weaponKey] :as weapon}]
-              (merge (get-in data ["weapon" weaponKey])
-                     {:state weapon})))))
-
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ unit gameplayCtx]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         [mw mh] (tool.map/getMapSize playmap)]
@@ -67,7 +61,10 @@
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (into [] (app.gameplay.module/unitGetWeapons type unit gameplayCtx))
+        weapons (into [] (->> (get-in unit [:state :weapon])
+                              (map (fn [{:keys [weaponKey] :as weapon}]
+                                     (merge (get-in data ["weapon" weaponKey])
+                                            {:state weapon})))))
         weaponKeys (-> (range (count weapons))
                        (into []))
         weaponRange (into []

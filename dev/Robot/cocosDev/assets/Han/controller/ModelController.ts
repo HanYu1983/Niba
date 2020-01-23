@@ -6,7 +6,7 @@ import IView from "../interface/IView";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component implements IModel {
+export default class ModelController extends cc.Component implements IModel {
 
     private viewNotifyOb: { next: (args: any) => void };
     private viewOb: { subscribe: (args: any) => { unsubscribe: () => void } };
@@ -42,8 +42,34 @@ export default class NewClass extends cc.Component implements IModel {
         this.viewOb = window.viewOb;
     }
 
+    private seqId: number = 0;
+    private talk(q: string, args: any, callback: (answer: any) => void) {
+        const id = this.seqId++;
+        this.viewNotifyOb.next([q, [id + "", args]]);
+        if (callback == null) {
+            return;
+        }
+        const sub = this.viewOb.subscribe(e => {
+            const [cmd, args] = e;
+            if (cmd == "ok") {
+                const [resId, resArgs] = args;
+                if (resId == id) {
+                    sub.unsubscribe();
+                    callback(resArgs);
+                } else {
+                    console.log("[talk][wait]" + q);
+                }
+            }
+        })
+    }
+
     startGame(){
         this.send("startGameplay");
+        
+    }
+
+    loadConfig(cb: (data:any)=>void){
+        this.talk("loadConfig", null, cb)
     }
 
     // =============================== //
@@ -170,26 +196,7 @@ export default class NewClass extends cc.Component implements IModel {
     }
 
 
-    private seqId: number = 0;
-    private talk(q: string, args: any, callback: (answer: any) => void) {
-        const id = this.seqId++;
-        this.viewNotifyOb.next([q, [id + "", args]]);
-        if (callback == null) {
-            return;
-        }
-        const sub = this.viewOb.subscribe(e => {
-            const [cmd, args] = e;
-            if (cmd == "ok") {
-                const [resId, resArgs] = args;
-                if (resId == id) {
-                    sub.unsubscribe();
-                    callback(resArgs);
-                } else {
-                    console.log("[talk][wait]" + q);
-                }
-            }
-        })
-    }
+    
 
     
 }

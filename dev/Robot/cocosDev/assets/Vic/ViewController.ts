@@ -26,7 +26,10 @@ export default class ViewController extends cc.Component {
     }
 
     start() {
-        this.view.openGamePage();
+        this.modelController.loadConfig(data=>{
+            console.log(data)
+            this.view.openGamePage();
+        })
     }
 
     notifyStartGame() {

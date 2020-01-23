@@ -23,8 +23,7 @@
 
 (defn startGameplay [ctx inputCh outputCh]
   (a/go
-    (let [data (a/<! (app.gameplay.module/loadData app.gameplay.module/*module))
-          playmap (tool.map/generateMap 100 100
+    (let [playmap (tool.map/generateMap 100 100
                                         {:deepsea 0.3
                                          :sea 0.3
                                          :sand 0.3
