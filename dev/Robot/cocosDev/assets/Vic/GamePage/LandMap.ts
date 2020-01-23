@@ -1,13 +1,3 @@
-// Learn TypeScript:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
 import Grid from './Grid';
 const { ccclass, property } = cc._decorator;
 
@@ -36,6 +26,12 @@ export default class LandMap extends cc.Component {
         }
     }
 
+    resetUV() {
+        this.grids.forEach((grid: Grid, key: string) => {
+            grid.resetUV();
+        });
+    }
+
     setMap(data: any[]) {
         for (let i = 0; i < data.length; ++i) {
             for (let j = 0; j < data[i].length; ++j) {
@@ -47,7 +43,7 @@ export default class LandMap extends cc.Component {
         }
     }
 
-    setMapOneLevel(data:number[]){
+    setMapOneLevel(data: number[]) {
         for (let i = 0; i < data.length; ++i) {
             let x = i % 20;
             let y = Math.floor(i / 20);
@@ -88,13 +84,13 @@ export default class LandMap extends cc.Component {
         });
     }
 
-    closeMapRange(){
+    closeMapRange() {
         this.grids.forEach(grid => {
             grid.showMapRange(false);
         });
     }
 
-    closeWeaponRange(){
+    closeWeaponRange() {
         this.grids.forEach(grid => {
             grid.showWeaponRange(false);
         });

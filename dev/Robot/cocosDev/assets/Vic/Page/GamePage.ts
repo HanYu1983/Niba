@@ -75,6 +75,7 @@ export default class GamePage extends BasicViewer {
     open() {
         super.open();
 
+        this.map.resetUV();
         ViewController.instance.notifyStartGame();
         //this.removeListenser();
 
@@ -233,8 +234,9 @@ export default class GamePage extends BasicViewer {
     openWeaponMenu(data: any) {
 
         let ws = [];
-        for (let weaponKey in data) {
-            let weapon = data[weaponKey];
+        for (let key in data) {
+            let weapon = data[key];
+            let weaponDetail = ViewController.instance.getWeapon(weapon.weaponKey);
             /**
              * range:number[]
              * energyCost:number
@@ -249,11 +251,11 @@ export default class GamePage extends BasicViewer {
              * damage:number
              */
             ws.push({
-                name: weapon.title,
-                type: weapon.type,
-                power: weapon.damage,
-                range: weapon.range[0] + "~" + weapon.range[1],
-                hit: weapon.accuracy
+                name: weaponDetail.title,
+                type: weaponDetail.type,
+                power: weaponDetail.damage,
+                range: weaponDetail.range[0] + "~" + weaponDetail.range[1],
+                hit: weaponDetail.accuracy
             });
         }
 
