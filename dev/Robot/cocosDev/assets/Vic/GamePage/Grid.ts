@@ -1,12 +1,4 @@
-// Learn TypeScript:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
+import UVReset from './UVReset';
 
 const { ccclass, property } = cc._decorator;
 
@@ -64,6 +56,15 @@ export default class Grid extends cc.Component {
             this.landImages[i].node.active = (i == id);
         }
         this.showBox(false);
+    }
+
+    resetUV(){
+        for(let i = 0; i < this.landImages.length; ++i){
+            let uvreset = this.landImages[i].node.getComponent(UVReset);
+            if (uvreset) {
+                uvreset.fix();
+            }
+        }
     }
 
     setType(type: Number) {

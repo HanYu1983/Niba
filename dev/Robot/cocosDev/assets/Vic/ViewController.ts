@@ -20,6 +20,16 @@ export default class ViewController extends cc.Component {
 
     static instance: ViewController;
 
+    private _data:any;
+
+    getData(){
+        return this._data;
+    }
+
+    getWeapon(key:string):any{
+        return this.getData().weapon[key];
+    }
+
     onLoad() {
         this.modelController.setView(this.view);
         ViewController.instance = this;
@@ -27,7 +37,7 @@ export default class ViewController extends cc.Component {
 
     start() {
         this.modelController.loadConfig(data=>{
-            console.log(data)
+            this._data = data;
             this.view.openGamePage();
         })
     }
