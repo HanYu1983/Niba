@@ -1,7 +1,8 @@
 (ns app.gameplay.model
   (:require [tool.fsm])
   (:require [tool.map])
-  (:require [tool.units]))
+  (:require [tool.units])
+  (:require [app.gameplay.module]))
 
 ; ==============
 ; === helper ===
@@ -123,10 +124,6 @@
          (map (fn [unit]
                 (update unit :position (partial world2local camera)))))))
 
-
-(defn getHitRate [ctx unit targetUnit]
-  0.8)
-
 ; ============
 ; === view ===
 ; ============
@@ -171,3 +168,43 @@
                    stateDetail)
      :state state
      :stateDetail stateDetail}))
+
+; ==============
+; === module ===
+; ==============
+
+(defn getHitRate [ctx unit targetUnit]
+  0.8)
+
+(defn getMovePathTree [ctx unit]
+  (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
+
+(defn getMenuData [ctx unit]
+  (app.gameplay.module/unitGetMenuData app.gameplay.module/*module ctx unit))
+
+(defn onMove [ctx unit pos]
+  (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx unit pos))
+
+(defn onDone [ctx unit]
+  (app.gameplay.module/unitOnDone app.gameplay.module/*module ctx unit))
+
+(defn onTurnStart [ctx unit]
+  (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx unit))
+
+(defn getWeapons [ctx unit]
+  (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
+
+(defn getWeaponRange [ctx unit weapon]
+  (app.gameplay.module/unitGetWeaponRange app.gameplay.module/*module ctx unit weapon))
+
+(defn getWeaponType [ctx unit weapon]
+  (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
+
+(defn selectCounterAttackAction [unit fromUnit weapon gameplayCtx]
+  [:attack weapon])
+
+(defn calcActionResult [left leftAction right rightAction gameplayCtx]
+  {})
+
+(defn applyActionResult [ctx result]
+  ctx)

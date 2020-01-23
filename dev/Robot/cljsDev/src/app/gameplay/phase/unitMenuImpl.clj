@@ -4,7 +4,7 @@
   '(m/defstate unitMenu [gameplayCtx {unit :unit}]
      nil
      (m/basicNotify
-      (let [[menu data] (app.gameplay.unit/getMenuData unit gameplayCtx)]
+      (let [[menu data] (app.gameplay.model/getMenuData gameplayCtx unit)]
         {:menuCursor (tool.menuCursor/model menu)
          :data data}))
 
@@ -22,10 +22,10 @@
              menu (tool.menuCursor/getMenu (:menuCursor state))
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (if (= cursor1 weaponIdx)
-                           (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                           (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                                (nth cursor2)
                                ((fn [weapon]
-                                  (app.gameplay.unit/getWeaponRange unit weapon gameplayCtx))))
+                                  (app.gameplay.model/getWeaponRange gameplayCtx unit weapon))))
                            [])
              gameplayCtx (-> gameplayCtx
                              (app.gameplay.model/setAttackRange attackRange))]
@@ -38,10 +38,10 @@
              menu (tool.menuCursor/getMenu (:menuCursor state))
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (if (= cursor1 weaponIdx)
-                           (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                           (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                                (nth cursor2)
                                ((fn [weapon]
-                                  (app.gameplay.unit/getWeaponRange unit weapon gameplayCtx))))
+                                  (app.gameplay.model/getWeaponRange gameplayCtx unit weapon))))
                            [])
              gameplayCtx (-> gameplayCtx
                              (app.gameplay.model/setAttackRange attackRange))]
@@ -58,9 +58,9 @@
         (cond
           (= cursor1 weaponIdx)
           (let [menu (tool.menuCursor/getMenu (:menuCursor state))
-                weapon  (-> (app.gameplay.unit/getWeapons unit gameplayCtx)
+                weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                             (nth cursor2))
-                weaponType (app.gameplay.unit/getWeaponType unit weapon gameplayCtx)]
+                weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
             (cond
               (= "single" weaponType)
               (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
@@ -79,7 +79,7 @@
 
           (= "move" select)
           (let [[mw mh] app.gameplay.model/mapViewSize
-                shortestPathTree (app.gameplay.unit/getMovePathTree unit gameplayCtx)
+                shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
                 moveRange (map first shortestPathTree)
                 [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
             (if isEnd

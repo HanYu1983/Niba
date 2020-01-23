@@ -27,7 +27,7 @@
 
   (-> (m/basicNotify
        {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
-                             shortestPathTree (app.gameplay.unit/getMovePathTree unit gameplayCtx)
+                             shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
                              moveRange (map first shortestPathTree)]
                          moveRange)})
       ((fn [gameplayCtx]
@@ -44,7 +44,7 @@
         camera (app.gameplay.model/getCamera gameplayCtx)
         path (tool.map/buildPath paths cursor)]
     (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
-    (let [tempUnit (app.gameplay.unit/onMove unit cursor gameplayCtx)
+    (let [tempUnit (app.gameplay.model/onMove gameplayCtx unit cursor)
           state (merge state {:tempUnit tempUnit})
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/updateUnit unit (constantly tempUnit))

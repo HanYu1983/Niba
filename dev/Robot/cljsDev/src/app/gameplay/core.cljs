@@ -3,6 +3,7 @@
   (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
   (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
   (:require [app.gameplay.phase.common :refer [paint]])
+  (:require [app.gameplay.unit])
   (:require [app.gameplay.module]))
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]

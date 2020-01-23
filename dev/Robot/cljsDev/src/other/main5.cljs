@@ -193,7 +193,7 @@
                 unit (-> (app.gameplay/getUnits gameplayCtx)
                          (tool.units/getByKey unitKey))]
             (if unit
-              (let [weapons (app.gameplay.unit/getWeapons unit (app.gameplay/getData gameplayCtx))
+              (let [weapons (app.gameplay.model/getWeapons unit (app.gameplay/getData gameplayCtx))
                     menu [["move" (range (count weapons)) "cancel"]
                           {:weaponIdx 1
                            :weapons weapons

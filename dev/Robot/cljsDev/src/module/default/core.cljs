@@ -35,7 +35,7 @@
   (merge unit 
          {:state (createUnitStateForKey robotKey)}))
 
-(defmethod app.gameplay.module/unitGetMovePathTree :default [_ unit gameplayCtx]
+(defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (get-in data ["robot" (get-in unit [:state :robot]) "power"])
         [mw mh] (tool.map/getMapSize playmap)]
@@ -53,10 +53,10 @@
                              (/ 3)))
                        (constantly 0))))
 
-(defmethod app.gameplay.module/unitGetWeapons :default [_ unit gameplayCtx]
+(defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (get-in unit [:state :weapon]))
 
-(defmethod app.gameplay.module/unitGetWeaponRange :default [_ unit {:keys [weaponKey]} gameplayCtx]
+(defmethod app.gameplay.module/unitGetWeaponRange :default [_ gameplayCtx unit {:keys [weaponKey]}]
   (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
     (if (nil? weapon)
       (throw (js/Error. (str weaponKey "not found")))
@@ -67,17 +67,17 @@
            (map (partial map + (:position unit)))))))
 
 
-(defmethod app.gameplay.module/unitGetWeaponType :default [_ unit {:keys [weaponKey]} gameplayCtx]
+(defmethod app.gameplay.module/unitGetWeaponType :default [_ gameplayCtx unit {:keys [weaponKey]}]
   (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
     (if (nil? weapon)
       (throw (js/Error. (str weaponKey "not found")))
       (get weapon "type"))))
 
-(defmethod app.gameplay.module/unitGetMenuData :default [type unit gameplayCtx]
+(defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (app.gameplay.module/unitGetWeapons type unit gameplayCtx)
+        weapons (app.gameplay.module/unitGetWeapons type gameplayCtx unit )
         weaponKeys (->> (range (count weapons))
                         (into []))
         [menu data] (if isBattleMenu
@@ -101,15 +101,15 @@
                           :weapons weapons}]))]
     [menu data]))
 
-(defmethod app.gameplay.module/unitOnMove :default [_ unit pos gameplayCtx]
+(defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
       (merge {:position pos})
       (update-in [:state :tag] #(conj % :firstMove2))))
 
-(defmethod app.gameplay.module/unitOnDone :default [_ unit gameplayCtx]
+(defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tag] #(conj % :done))))
 
-(defmethod app.gameplay.module/unitOnTurnStart :default [_ unit gameplayCtx]
+(defmethod app.gameplay.module/unitOnTurnStart :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tag] (constantly #{}))))
