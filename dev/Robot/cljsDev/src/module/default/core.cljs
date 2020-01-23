@@ -6,16 +6,24 @@
 
 (def data (js->clj dataJson))
 
-(def defaultUnitState {:robot "jimu"
-                       :pilot "amuro"
-                       :hp 2000
-                       :mp 120
-                       :component []
-                       :weapon [{:weaponKey "beangun"
-                                 :bulletCount 12}
-                                {:weaponKey "bigsword"}]
-                       :tag #{}})
-
+(defn createUnitStateForKey [robotKey]
+  (let [robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str robotKey "not found")))
+      {:robot robotKey
+       :pilot nil
+       :hp (get robot "hp")
+       :en (get robot "en")
+       :component []
+       :weapon (map (fn [weaponKey]
+                      (let [weapon (get-in data ["weapon" weaponKey])]
+                        (if (nil? weapon)
+                          (throw (js/Error. (str weaponKey "not found")))
+                          {:key (gensym)
+                           :weaponKey weaponKey
+                           :bulletCount (get weapon "maxBulletCount")})))
+                    (get robot "weapons"))
+       :tag #{}})))
 
 (defmethod app.gameplay.module/loadData :default [_]
   (a/go
@@ -23,7 +31,7 @@
 
 (defmethod app.gameplay.module/unitCreate :default [_ unit]
   (merge unit 
-         {:state defaultUnitState}))
+         {:state (createUnitStateForKey "jimu")}))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ unit gameplayCtx]
   (->> (get-in unit [:state :weapon])
@@ -60,12 +68,14 @@
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
         weapons (into [] (app.gameplay.module/unitGetWeapons type unit gameplayCtx))
+        weaponKeys (-> (range (count weapons))
+                       (into []))
         weaponRange (into []
                           (map (fn [weapon]
                                  (app.gameplay.module/unitGetAttackRange type unit weapon gameplayCtx))
                                weapons))
         [menu data] (if isBattleMenu
-                      [[(into [] (range (count weapons))) ["ok"] ["cancel"]]
+                      [[weaponKeys ["ok"] ["cancel"]]
                        {:weaponIdx 0
                         :weapons weapons
                         :weaponRange weaponRange}]
@@ -76,13 +86,13 @@
 
                         (-> (get-in unit [:state :tag])
                             (contains? :firstMove))
-                        [[(into [] (range (count weapons))) ["ok"] ["cancel"]]
+                        [[weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 0
                           :weapons weapons
                           :weaponRange weaponRange}]
 
                         :else
-                        [[["move"] (into [] (range (count weapons))) ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
                           :weaponRange weaponRange}]))]
