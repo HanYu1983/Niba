@@ -32,11 +32,11 @@
 (defn setFsm [ctx fsm]
   (merge ctx {:fsm fsm}))
 
-(defn updateUnit [ctx unit nextUnit]
+(defn updateUnit [ctx unit f]
   (update ctx :units (fn [origin]
                        (-> origin
                            (tool.units/delete unit)
-                           (tool.units/add nextUnit)))))
+                           (tool.units/add (f unit))))))
 
 
 (defn setMap [ctx map]

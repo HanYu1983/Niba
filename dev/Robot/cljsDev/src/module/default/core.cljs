@@ -91,7 +91,7 @@
 (defmethod app.gameplay.module/unitOnMove :default [_ unit pos gameplayCtx]
   (-> unit
       (merge {:position pos})
-      (update-in [:state :tag] #(conj % :firstMove))))
+      (update-in [:state :tag] #(conj % :firstMove2))))
 
 (defmethod app.gameplay.module/unitOnDone :default [_ unit gameplayCtx]
   (-> unit

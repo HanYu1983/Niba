@@ -29,12 +29,12 @@
        {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
                              shortestPathTree (app.gameplay.unit/getMovePathTree unit gameplayCtx)
                              moveRange (map first shortestPathTree)]
-                         moveRange)}
+                         moveRange)})
       ((fn [gameplayCtx]
          (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
                                                           (app.gameplay.model/getFsm)
                                                           (tool.fsm/load)
-                                                          (:tempMoveRange)))))))
+                                                          (:tempMoveRange))))))
 
   (false? result)
   (m/returnPop false)
@@ -46,23 +46,14 @@
     (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
     (let [tempUnit (app.gameplay.unit/onMove unit cursor gameplayCtx)
           state (merge state {:tempUnit tempUnit})
-          units (-> gameplayCtx
-                    (app.gameplay.model/getUnits)
-                    (tool.units/delete unit)
-                    (tool.units/add tempUnit))
           gameplayCtx (-> gameplayCtx
-                          (app.gameplay.model/setUnits units)
+                          (app.gameplay.model/updateUnit unit (constantly tempUnit))
                           (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
           [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
       (if isEnd
         (m/returnPop true)
         (let [tempUnit (:tempUnit state)
-              units (-> gameplayCtx
-                        (app.gameplay.model/getUnits)
-                        (tool.units/delete tempUnit)
-                        (tool.units/add unit))
-              gameplayCtx (-> gameplayCtx
-                              (app.gameplay.model/setUnits units))]
+              gameplayCtx (app.gameplay.model/updateUnit gameplayCtx tempUnit (constantly unit))]
           (recur gameplayCtx))))))
 
 (app.gameplay.phase.unitMenuImpl/impl)
