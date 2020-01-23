@@ -111,6 +111,12 @@
 (defn getUnits [ctx]
   (:units ctx))
 
+(defn getUnitsInRange [ctx range]
+  (->> (map (fn [pos]
+              (tool.units/getByPosition (getUnits ctx) pos))
+            range)
+       (filter identity)))
+
 (defn getUnitsByRegion [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))
         [p1 p2] (or searchSize [(map - camera mapViewSize)
@@ -123,6 +129,9 @@
     (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
                 (update unit :position (partial world2local camera)))))))
+
+(defn isFriendlyUnit [ctx unit targetUnit]
+  false)
 
 ; ============
 ; === view ===

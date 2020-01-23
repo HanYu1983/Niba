@@ -37,12 +37,16 @@
              cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
              menu (tool.menuCursor/getMenu (:menuCursor state))
              weaponIdx (get-in state [:data :weaponIdx])
-             attackRange (if (= cursor1 weaponIdx)
+             attackRange (when (= cursor1 weaponIdx)
                            (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                                (nth cursor2)
                                ((fn [weapon]
-                                  (app.gameplay.model/getWeaponRange gameplayCtx unit weapon))))
-                           [])
+                                  (app.gameplay.model/getWeaponRange gameplayCtx unit weapon)))))
+             xxx (when (= cursor1 weaponIdx)
+                   (let [unitsNearby (-> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
+                                         (filter (comp not (partial app.gameplay.model/isFriendlyUnit unit))))
+                         checkHitRate (map identity unitsNearby)]
+                     checkHitRate))
              gameplayCtx (-> gameplayCtx
                              (app.gameplay.model/setAttackRange attackRange))]
          (recur gameplayCtx)))
