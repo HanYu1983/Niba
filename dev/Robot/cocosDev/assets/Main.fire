@@ -2874,7 +2874,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "gaite",
+    "_name": "UnitImage",
     "_objFlags": 0,
     "_parent": {
       "__id__": 60
@@ -3095,12 +3095,17 @@
       "__id__": 59
     },
     "_enabled": true,
-    "lblName": {
-      "__id__": 64
-    },
-    "backColor": {
+    "unitImage": {
       "__id__": 62
     },
+    "images": [
+      {
+        "__uuid__": "80b99e0d-6fcc-4f67-995a-8d2aae05e267"
+      },
+      {
+        "__uuid__": "03ed950d-f071-4f4b-a7c5-0c9a085e1fab"
+      }
+    ],
     "_id": "7bj9Tt4d5Nva80J0uMHIMS"
   },
   {

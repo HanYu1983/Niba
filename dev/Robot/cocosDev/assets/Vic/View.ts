@@ -1,20 +1,8 @@
-// Learn TypeScript:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
-// Learn Attribute:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/reference/attributes.html
-// Learn life-cycle callbacks:
-//  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
-
-import LandMap from "./GamePage/LandMap";
 import BasicViewer from "./BasicViewer";
 import MainPage from "./Page/MainPage";
 import IView from "../Han/interface/IView";
 import IUnit from "../Han/interface/IUnit";
 import GamePage from './Page/GamePage';
-import MenuCursor from "./MenuCursor";
 import IPaintInfo from "../Han/interface/IPaintInfo";
 
 const { ccclass, property } = cc._decorator;
@@ -130,8 +118,6 @@ export default class View extends cc.Component implements IView {
     private performUnitMoveAnim(unitKey: string, path: number[][], cb: () => void) {
         this.getGamePage().units.moveUnitByID(unitKey, path, cb);
     }
-
-    // ====================== //
 
     @property(BasicViewer)
     pages: BasicViewer[] = [];

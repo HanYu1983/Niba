@@ -227,7 +227,7 @@ const dataJson =
       "hp": 3300,
       "en": 160,
       "armor": 1200,
-      "power": 12,
+      "power": 6,
       "cost": 4000
     },
     "jimu": {
@@ -240,7 +240,7 @@ const dataJson =
       "hp": 2000,
       "en": 120,
       "armor": 1000,
-      "power": 7,
+      "power": 6,
       "cost": 1200
     },
     "zGundam": {
@@ -254,7 +254,7 @@ const dataJson =
       "hp": 2700,
       "en": 160,
       "armor": 1200,
-      "power": 9,
+      "power": 6,
       "cost": 3000
     }
   }

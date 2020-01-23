@@ -8,28 +8,33 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Unit extends cc.Component {
 
-    @property(cc.Label)
-    lblName: cc.Label = null;
-
     @property(cc.Sprite)
-    backColor:cc.Sprite = null;
+    unitImage: cc.Sprite = null;
 
-    unitId:string = "";
+    @property(cc.SpriteFrame)
+    images: cc.SpriteFrame[] = [];
 
-    setName(name:string){
-        this.lblName.string = name;
+    unitId: string = "";
+
+    setUnitImage(key: string) {
+        for(let i = 0; i < this.images.length; ++i){
+            let image = this.images[i];
+            if(image.name==key){
+                this.unitImage.spriteFrame = image;
+            }
+        }
     }
 
-    setColor(color:cc.Color){
-        this.backColor.node.color = color;
+    setColor(color: cc.Color) {
+        this.unitImage.node.color = color;
     }
 
-    shake(){
+    shake() {
         this.node.getComponent(cc.Animation).play("ShakeUnit");
     }
 }
