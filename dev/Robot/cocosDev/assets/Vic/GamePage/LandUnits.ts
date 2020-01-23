@@ -61,8 +61,8 @@ export default class LandUnits extends cc.Component {
         this.clearUnits();
         
         for (let element of units) {
-            let unitId = element["key"];
-            let name = element["key"];
+            let unitId = element.key;
+            let unitName = element.state.robot;
             let isPlayer = (element["player"] == "player");
             let isMovable = true;
             let pos = element["position"];
@@ -77,7 +77,8 @@ export default class LandUnits extends cc.Component {
 
             let unit: Unit = unitNode.getComponent(Unit);
             unit.unitId = unitId;
-            unit.setName(name);
+
+            unit.setUnitImage(unitName);
 
             if (isPlayer) {
                 if (isMovable) {
