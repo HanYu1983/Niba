@@ -10,9 +10,6 @@
 (defn getMovePathTree [ctx gameplayCtx]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx gameplayCtx))
 
-(defn getAttackRange [ctx weapon gameplayCtx]
-  (app.gameplay.module/unitGetAttackRange app.gameplay.module/*module ctx weapon gameplayCtx))
-
 (defn getMenuData [ctx gameplayCtx]
   (app.gameplay.module/unitGetMenuData app.gameplay.module/*module ctx gameplayCtx))
 
