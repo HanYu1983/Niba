@@ -37,10 +37,16 @@
                                              (app.gameplay.model/getUnits)
                                              (tool.units/add (app.gameplay.unit/model {:player :player
                                                                                        :type :robot
-                                                                                       :position [0 0]}))
+                                                                                       :position [0 0]}
+                                                                                      {:robotKey "gaite"}))
                                              (tool.units/add (app.gameplay.unit/model {:player :player
                                                                                        :type :robot
-                                                                                       :position [3 3]})))]
+                                                                                       :position [3 3]}
+                                                                                      {:robotKey "jimu"}))
+                                             (tool.units/add (app.gameplay.unit/model {:player :player
+                                                                                       :type :robot
+                                                                                       :position [6 6]}
+                                                                                      {:robotKey "zGundam"})))]
                                (app.gameplay.model/setUnits ctx units))))
                           (app.gameplay.model/setMap playmap))]
       (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))

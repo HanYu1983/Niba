@@ -30,16 +30,17 @@
   (a/go
     data))
 
-(defmethod app.gameplay.module/unitCreate :default [_ unit]
+(defmethod app.gameplay.module/unitCreate :default [_ unit {:keys [robotKey] :as args}]
   (merge unit 
-         {:state (createUnitStateForKey "jimu")}))
+         {:state (createUnitStateForKey robotKey)}))
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ unit gameplayCtx]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        power (get-in data ["robot" (get-in unit [:state :robot]) "power"])
         [mw mh] (tool.map/getMapSize playmap)]
     (tool.map/findPath (:position unit)
                        (fn [{:keys [totalCost]} curr]
-                         [(>= totalCost 5) false])
+                         [(>= totalCost power) false])
                        (fn [[x y]]
                          [[x (min mh (inc y))]
                           [x (max 0 (dec y))]

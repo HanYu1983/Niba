@@ -2,7 +2,7 @@
 
 (defmulti loadData (fn [type] type))
 
-(defmulti unitCreate (fn [type unit] type))
+(defmulti unitCreate (fn [type unit args] type))
 (defmulti unitGetMovePathTree (fn [type unit gameplayCtx] type))
 (defmulti unitGetMenuData (fn [type unit gameplayCtx] type))
 (defmulti unitOnMove (fn [type unit pos gameplayCtx] type))
