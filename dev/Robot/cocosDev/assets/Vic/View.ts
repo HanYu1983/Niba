@@ -38,45 +38,48 @@ export default class View extends cc.Component implements IView {
         cb();
     }
     paint(data: IPaintInfo, cb: () => void) {
-        this.repaintUnits(data.units, () => { });
-        this.repaintMap(data.map, () => { })
-        this.repaintCursor(data.cursor, () => { });
-        this.repaintMoveRange(data.moveRange, () => { });
-        this.repaintAttackRange(data.attackRange, () => { })
-        if (data.systemMenu) {
-            this.createOrUpdateSystemMenu(
-                data.systemMenu.menuCursor.menu,
-                data.systemMenu.data,
-                data.systemMenu.menuCursor.cursor,
-                data.systemMenu.menuCursor.subcursor
-            );
-        } else {
-            this.closeSystemMenu();
-        }
+        this.repaintUnits(data.units);
+        this.repaintMap(data.map)
+        this.repaintCursor(data.cursor);
+        this.repaintMoveRange(data.moveRange);
+        this.repaintAttackRange(data.attackRange);
+        this.repaintSystemMenu(data.systemMenu);
+        this.repaintUnitMenu(data.unitMenu);
+        cb();
+    }
 
-        if (data.unitMenu) {
+    private repaintUnitMenu(unitMenu: any) {
+        if (unitMenu) {
             this.createOrUpdateUnitMenu(
-                data.unitMenu.menuCursor.menu,
-                data.unitMenu.data,
-                data.unitMenu.menuCursor.cursor,
-                data.unitMenu.menuCursor.subcursor
+                unitMenu.menuCursor.menu,
+                unitMenu.data,
+                unitMenu.menuCursor.cursor,
+                unitMenu.menuCursor.subcursor
             );
         } else {
             this.closeUnitMenu();
         }
-        cb();
     }
 
-    // ====================== //
+    private repaintSystemMenu(systemMenu: any) {
+        if (systemMenu) {
+            this.createOrUpdateSystemMenu(
+                systemMenu.menuCursor.menu,
+                systemMenu.data,
+                systemMenu.menuCursor.cursor,
+                systemMenu.menuCursor.subcursor
+            );
+        } else {
+            this.closeSystemMenu();
+        }
+    }
 
-    private repaintMoveRange(data: number[][], cb: () => void) {
+    private repaintMoveRange(data: number[][]) {
         this.getGamePage().map.showMovableGrid(data);
-        cb();
     }
 
-    private repaintAttackRange(data: number[][], cb: () => void) {
+    private repaintAttackRange(data: number[][]) {
         this.getGamePage().map.showWeaponRange(data);
-        cb();
     }
 
     private repaintMapAttackRange(data: number[][], cb: () => void) {
@@ -84,23 +87,20 @@ export default class View extends cc.Component implements IView {
         cb();
     }
 
-    private repaintCursor(cursor: number[], cb: () => void) {
+    private repaintCursor(cursor: number[]) {
         this.getGamePage().setCursor(cursor);
-        cb();
     }
 
-    private repaintMap(data: number[][], cb: () => void) {
+    private repaintMap(data: number[][]) {
         // let temp = GamePage.generateMap();
         // this.getGamePage().map.setMapOneLevel(temp);
         // cb();
 
         this.getGamePage().map.setMap(data);
-        cb();
     }
 
-    private repaintUnits(data: IUnit[], cb: () => void) {
+    private repaintUnits(data: IUnit[]) {
         this.getGamePage().units.setUnits(data);
-        cb();
     }
 
     private repaintPlayerStart(cb: () => void) {
