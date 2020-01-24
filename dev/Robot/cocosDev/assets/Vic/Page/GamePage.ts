@@ -127,12 +127,23 @@ export default class GamePage extends BasicViewer {
     }
 
     showAccuracyInfos(data:any[]) {
-        this.accuracyInfos.clearItem();
+        this.closeAccuracyInfos();
+
+        let poses:number[][] = [];
+        let hitRate:number[] = [];
+        data.forEach((info:any)=>{
+            poses.push(info.targetUnit.position);
+            hitRate.push(info.hitRate);
+        });
 
         let i = 0;
-        this.accuracyInfos.showItems([[10, 5], [5, 7]], (item: cc.Node) => {
-            item.getComponent(AccuracyInfo).setAccuracy(20 * i++);
+        this.accuracyInfos.showItems(poses, (item: cc.Node) => {
+            item.getComponent(AccuracyInfo).setAccuracy(hitRate[i++] * 100);
         });
+    }
+
+    closeAccuracyInfos(){
+        this.accuracyInfos.clearItem();
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {

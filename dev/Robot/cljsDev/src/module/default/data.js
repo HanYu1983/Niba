@@ -212,7 +212,7 @@ const dataJson =
       "title": "蓋特加農",
       "type": "single",
       "accuracy": 0.6,
-      "damage": 3000
+      "damage": 2500
     }
   },
   "robot": {

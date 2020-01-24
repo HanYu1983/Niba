@@ -3,7 +3,6 @@ import MainPage from "./Page/MainPage";
 import IView from "../Han/interface/IView";
 import IUnit from "../Han/interface/IUnit";
 import GamePage from './Page/GamePage';
-import IPaintInfo from "../Han/interface/IPaintInfo";
 
 const { ccclass, property } = cc._decorator;
 
@@ -25,7 +24,7 @@ export default class View extends cc.Component implements IView {
     unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         cb();
     }
-    paint(data: IPaintInfo, cb: () => void) {
+    paint(data: any, cb: () => void) {
         this.repaintUnits(data.units);
         this.repaintMap(data.map)
         this.repaintCursor(data.cursor);
@@ -33,7 +32,16 @@ export default class View extends cc.Component implements IView {
         this.repaintAttackRange(data.attackRange);
         this.repaintSystemMenu(data.systemMenu);
         this.repaintUnitMenu(data.unitMenu);
+        this.repaintHitInfo(data.checkHitRate);
         cb();
+    }
+
+    private repaintHitInfo(checkHitRate:any){
+        if(checkHitRate){
+            this.getGamePage().showAccuracyInfos(checkHitRate);
+        }else{
+            this.getGamePage().closeAccuracyInfos();
+        }
     }
 
     private repaintUnitMenu(unitMenu: any) {

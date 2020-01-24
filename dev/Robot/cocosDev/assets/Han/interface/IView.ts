@@ -6,5 +6,5 @@ export default interface IView {
     enemyTurnStart(data: string, cb: () => void);
     unitMoveAnim(data: { unit: IUnit, path: number[][] }, cb: () => void);
     unitBattleAnim(data: any, cb: () => void);
-    paint(data: IPaintInfo, cb: () => void);
+    paint(data: any, cb: () => void);
 }
