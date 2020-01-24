@@ -88,9 +88,8 @@ export default class View extends cc.Component implements IView {
     }
 
     private repaintMap(data: number[][]) {
-        // let temp = GamePage.generateMap();
+        // let temp = GamePage.generateMap(20,20);
         // this.getGamePage().map.setMapOneLevel(temp);
-        // cb();
 
         this.getGamePage().map.setMap(data);
     }

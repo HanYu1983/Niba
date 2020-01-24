@@ -276,35 +276,50 @@ export default class GamePage extends BasicViewer {
 
     static generateMap(
         w, h,
-        deepsea,
-        sea,
-        sand,
-        grass,
-        city,
-        tree,
-        award) {
+        deepsea = 1,
+        sea = 1,
+        sand = 1,
+        grass = 1,
+        hill = 1,
+        city = .3,
+        tree = .3,
+        award = .01,
+        power = 1,
+        offset = 0) {
+
+        let total = deepsea + sea + sand + grass + hill;
+        let deepseaIn = deepsea / total;
+        let seaIn = sea / total + deepseaIn;
+        let sandIn = sand / total + seaIn;
+        let grassIn = grass / total + sandIn;
+
         noise.seed(Math.random());
         let scale = .1;
         let map = [];
         for (let i = 0; i < w; ++i) {
             for (let j = 0; j < h; ++j) {
                 let f = noise.perlin2(i * scale, j * scale);
-                if (f > -1 + deepsea + sea + sand + grass) {
+                f = Math.pow(f, power);
+                f = (f + 1) / 2;
+                f += offset;
+                if (f > grassIn) {
 
                     //山脈
                     map.push(5);
-                } else if (f > -1 + deepsea + sea + sand) {
+                } else if (f > sandIn) {
                     let cityPosX = Math.floor(i * .4) * scale * 3 + 123;
                     let cityPosY = Math.floor(j * .4) * scale * 3 + 245;
 
                     let f3 = noise.perlin2(cityPosX, cityPosY);
-                    if (f3 > -1 + city) {
+                    f3 = (f3 + 1) / 2;
+                    if (f3 > city) {
 
                         let treePosX = i * scale * 3 + 300;
                         let treePosY = j * scale * 3 + 20;
 
                         let f2 = noise.perlin2(treePosX, treePosY);
-                        if (f2 > -1 + tree) {
+                        f2 = (f2 + 1) / 2;
+                        if (f2 > tree) {
                             //平原
                             map.push(Math.random() < award ? 7 : 3);
                         } else {
@@ -325,13 +340,11 @@ export default class GamePage extends BasicViewer {
                             map.push(Math.random() < award ? 7 : 4);
                         }
                     }
-
-                    //map.push(3);
-                } else if (f > -1 + deepsea + sea) {
+                } else if (f > seaIn) {
 
                     //沙灘
                     map.push(Math.random() < award ? 7 : 2);
-                } else if (f > -1 + deepsea) {
+                } else if (f > deepseaIn) {
 
                     //淺海
                     map.push(Math.random() < award ? 7 : 1);
