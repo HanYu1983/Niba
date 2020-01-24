@@ -68,8 +68,8 @@
                                   (constantly 1)
                                   (constantly 0))))))
 
-(defn generateMap [w h {:keys [deepsea sea sand grass city tree award]}]
-  (->> (_generateMap w h deepsea sea sand grass city tree award)
+(defn generateMap [w h {:keys [deepsea sea sand grass hill city tree award power offset]}]
+  (->> (_generateMap w h deepsea sea sand grass hill city tree award power offset)
        (partition w)
        (map (partial into []))
        (into [])))

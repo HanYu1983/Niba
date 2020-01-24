@@ -28,9 +28,12 @@
                                          :sea 0.3
                                          :sand 0.3
                                          :grass 0.3
-                                         :city 0.8
-                                         :tree 0.8
-                                         :award 0.1})
+                                         :hill 0.3
+                                         :city 0.3
+                                         :tree 0.3
+                                         :award 0.01
+                                         :power 1
+                                         :offset 0})
           gameplayCtx (-> app.gameplay.model/defaultGameplayModel
                           (app.gameplay.model/createUnit {:player :player
                                                           :type :robot
