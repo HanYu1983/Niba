@@ -223,10 +223,11 @@
 (defn getWeaponType [ctx unit weapon]
   (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
 
-(defn selectCounterAttackAction [unit fromUnit weapon gameplayCtx]
-  [:attack weapon])
+(defn selectCounterAttackAction [ctx unit fromUnit weapon]
+  (let [hitRate (getHitRate ctx fromUnit weapon unit)]
+    [:attack weapon]))
 
-(defn calcActionResult [left leftAction right rightAction gameplayCtx]
+(defn calcActionResult [ctx left leftAction right rightAction]
   {})
 
 (defn applyActionResult [ctx result]
