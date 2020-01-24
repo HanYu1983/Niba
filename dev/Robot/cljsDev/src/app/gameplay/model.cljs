@@ -131,11 +131,16 @@
                 (update unit :position (partial world2local camera)))))))
 
 (defn isFriendlyUnit [ctx unit targetUnit]
-  false)
+  (if (= unit targetUnit)
+    true
+    false))
 
 ; ============
 ; === view ===
 ; ============
+
+(defn updateTemp [ctx f]
+  (update-in ctx [:temp] f))
 
 (defn setMoveRange [ctx v]
   (update-in ctx [:temp :moveRange] (constantly v)))
@@ -171,6 +176,7 @@
      :cursor (getLocalCursor ctx nil)
      :moveRange (getLocalMoveRange ctx nil)
      :attackRange (getLocalAttackRange ctx nil)
+     :checkHitRate (get-in ctx [:temp :checkHitRate])
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  stateDetail)
      :systemMenu (when (some #(= % state) [:menu])
@@ -190,7 +196,7 @@
       ((fn [units]
          (setUnits ctx units)))))
 
-(defn getHitRate [ctx unit targetUnit]
+(defn getHitRate [ctx unit weapon targetUnit]
   0.8)
 
 (defn getMovePathTree [ctx unit]

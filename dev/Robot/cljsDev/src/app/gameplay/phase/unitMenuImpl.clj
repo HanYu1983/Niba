@@ -42,12 +42,21 @@
                                (nth cursor2)
                                ((fn [weapon]
                                   (app.gameplay.model/getWeaponRange gameplayCtx unit weapon)))))
-             xxx (when (= cursor1 weaponIdx)
-                   (let [unitsNearby (-> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
-                                         (filter (comp not (partial app.gameplay.model/isFriendlyUnit unit))))
-                         checkHitRate (map identity unitsNearby)]
-                     checkHitRate))
+             checkHitRate (when (= cursor1 weaponIdx)
+                            (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                                             (nth cursor2))
+                                  unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
+                                                   (filter (comp not (partial app.gameplay.model/isFriendlyUnit gameplayCtx unit))))
+                                  checkHitRate (map (fn [targetUnit]
+                                                      {:unit (:key unit)
+                                                       :targetUnit (:key targetUnit)
+                                                       :weapon (:key weapon)
+                                                       :hitRate (app.gameplay.model/getHitRate gameplayCtx unit weapon targetUnit)})
+                                                    unitsNearby)]
+                              checkHitRate))
              gameplayCtx (-> gameplayCtx
+                             (app.gameplay.model/updateTemp (fn [temp]
+                                                              (merge temp {:checkHitRate checkHitRate})))
                              (app.gameplay.model/setAttackRange attackRange))]
          (recur gameplayCtx)))
 
