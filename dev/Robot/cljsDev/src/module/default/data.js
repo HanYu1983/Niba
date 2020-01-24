@@ -1,5 +1,63 @@
-const dataJson = 
+const dataJson =
 {
+  "terrainMapping": {
+    "5": "mountain",
+    "3": "plain",
+    "6": "forest",
+    "8": "road",
+    "4": "city",
+    "2": "beach",
+    "1": "shallowSea",
+    "0": "deepSea",
+    "7": "award",
+  },
+  "terrain": {
+    "mountain": {
+      "cost": 2,
+      "hitRate": 1,
+      "damage": 0.5
+    },
+    "plain": {
+      "cost": 0.5,
+      "hitRate": 1,
+      "damage": 1
+    },
+    "forest": {
+      "cost": 1.5,
+      "hitRate": 0.5,
+      "damage": 0.75
+    },
+    "road": {
+      "cost": 0.1,
+      "hitRate": 1,
+      "damage": 1
+    },
+    "city": {
+      "cost": 2,
+      "hitRate": 0.9,
+      "damage": 0.75
+    },
+    "beach": {
+      "cost": 0.75,
+      "hitRate": 1,
+      "damage": 1
+    },
+    "shallowSea": {
+      "cost": 1.5,
+      "hitRate": 1,
+      "damage": 1
+    },
+    "deepSea": {
+      "cost": 3,
+      "hitRate": 1,
+      "damage": 1
+    },
+    "award": {
+      "cost": 0.25,
+      "hitRate": 1,
+      "damage": 1
+    }
+  },
   "weaponType": {
     "single": {
       "title": "單一"

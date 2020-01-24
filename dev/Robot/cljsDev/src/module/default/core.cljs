@@ -36,21 +36,14 @@
   (merge unit 
          {:state (createUnitStateForKey robotKey)}))
 
-(def terrainCost {tool.map/mountain 2
-                  tool.map/plain 0.5
-                  tool.map/forest 1.5
-                  tool.map/road 0.1
-                  tool.map/city 2
-                  tool.map/beach 0.75
-                  tool.map/shallowSea 1.5
-                  tool.map/deepSea 3
-                  tool.map/award 0.25})
-
 (defn moveCost [gameplayCtx from to]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        t1 (get-in playmap (reverse from))
-        t2 (get-in playmap (reverse to))]
-    (+ (get terrainCost t1) (get terrainCost t2))))
+        t1 (get-in data ["terrainMapping"
+                         (str (get-in playmap (reverse from)))])
+        t2 (get-in data ["terrainMapping"
+                         (str (get-in playmap (reverse to)))])]
+    (+ (get-in data ["terrain" t1 "cost"])
+       (get-in data ["terrain" t2 "cost"]))))
 
 (def moveCostM (memoize moveCost))
 
