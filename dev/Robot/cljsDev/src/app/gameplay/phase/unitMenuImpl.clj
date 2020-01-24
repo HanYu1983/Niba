@@ -48,9 +48,9 @@
                                   unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
                                                    (filter (comp not (partial app.gameplay.model/isFriendlyUnit gameplayCtx unit))))
                                   checkHitRate (map (fn [targetUnit]
-                                                      {:unit (:key unit)
-                                                       :targetUnit (:key targetUnit)
-                                                       :weapon (:key weapon)
+                                                      {:unit unit
+                                                       :targetUnit targetUnit
+                                                       :weapon weapon
                                                        :hitRate (app.gameplay.model/getHitRate gameplayCtx unit weapon targetUnit)})
                                                     unitsNearby)]
                               checkHitRate))
