@@ -24,16 +24,15 @@
 
   nil
 
-  (-> (m/basicNotify
-       {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
-                             shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
-                             moveRange (map first shortestPathTree)]
-                         moveRange)})
-      ((fn [gameplayCtx]
-         (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
-                                                          (app.gameplay.model/getFsm)
-                                                          (tool.fsm/load)
-                                                          (:tempMoveRange))))))
+  (m/basicNotify
+   {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
+                         shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
+                         moveRange (map first shortestPathTree)]
+                     moveRange)}
+   (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
+                                                    (app.gameplay.model/getFsm)
+                                                    (tool.fsm/load)
+                                                    (:tempMoveRange))))
 
   (false? result)
   (m/returnPop false)

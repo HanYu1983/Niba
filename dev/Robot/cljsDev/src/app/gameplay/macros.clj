@@ -49,36 +49,18 @@
 (defmacro defstate [name args & body]
   `(defbasic ~name ~args ~'([cmd args] (a/<! inputCh)) ~@body))
 
-(defmacro defstate2 [name [varCtx args] & body]
-  `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
-     (let [~'key (str (gensym ~(str name)))
-           ~args ~'args]
-       (a/go
-         ; (println "[model][state]" ~(str name) ~'args)
-         (let [~varCtx ~(or (first body)
-                            `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
-                                             (tool.fsm/pushState (keyword ~(str name))))]
-                               (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
-           (loop [~varCtx ~varCtx]
-             (let [~varCtx ~(or (first (rest body))
-                                varCtx)
-                   ~'fsm (app.gameplay.model/getFsm ~varCtx)
-                   ~'state (tool.fsm/load ~'fsm)]
-              (let [[~'cmd ~'args] (a/<! ~'inputCh)]
-                (cond
-                  ~@(rest (rest body))
 
-                  :else
-                  (recur ~varCtx))))))))))
 
 
 
 (defmacro basicNotify [state & body]
   `(let [~'fsm (app.gameplay.model/getFsm ~'gameplayCtx)
          ~'state (or (tool.fsm/load ~'fsm) ~state)
-         ~'gameplayCtx (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))]
+         ~'gameplayCtx (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))
+         ~'gameplayCtx ~(if body
+                          `(let [] ~@body)
+                          'gameplayCtx)]
      (a/<! (~'paint nil (app.gameplay.model/formatToDraw ~'gameplayCtx) ~'inputCh ~'outputCh))
-     ~@body
      ~'gameplayCtx))
 
 (defmacro handleKeyDown [getter setter & body]
@@ -134,14 +116,46 @@
 
 
 (defmacro returnPop [v]
-  `[(app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/popState ~'fsm)) ~v])
+  `[(-> ~'gameplayCtx
+        (app.gameplay.model/setAttackRange [])
+        (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm)))
+    ~v])
 
-(comment (defmacro handleCursor1 [menuCnt setter & body]
-  `(let [result# (-> (:cursor ~'state)
-                     ((~'action {:up dec
-                                 :down inc}))
-                     (max 0)
-                     (min (dec ~menuCnt)))
-         ~'state (update ~'state :cursor (constantly result#))
-         ~setter result#]
-     ~@body)))
+
+
+
+
+(comment
+  
+  
+  (defmacro defstate2 [name [varCtx args] & body]
+    `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
+       (let [~'key (str (gensym ~(str name)))
+             ~args ~'args]
+         (a/go
+         ; (println "[model][state]" ~(str name) ~'args)
+           (let [~varCtx ~(or (first body)
+                              `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
+                                               (tool.fsm/pushState (keyword ~(str name))))]
+                                 (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
+             (loop [~varCtx ~varCtx]
+               (let [~varCtx ~(or (first (rest body))
+                                  varCtx)
+                     ~'fsm (app.gameplay.model/getFsm ~varCtx)
+                     ~'state (tool.fsm/load ~'fsm)]
+                 (let [[~'cmd ~'args] (a/<! ~'inputCh)]
+                   (cond
+                     ~@(rest (rest body))
+
+                     :else
+                     (recur ~varCtx)))))))))) 
+  
+  (defmacro handleCursor1 [menuCnt setter & body]
+    `(let [result# (-> (:cursor ~'state)
+                       ((~'action {:up dec
+                                   :down inc}))
+                       (max 0)
+                       (min (dec ~menuCnt)))
+           ~'state (update ~'state :cursor (constantly result#))
+           ~setter result#]
+       ~@body)))
