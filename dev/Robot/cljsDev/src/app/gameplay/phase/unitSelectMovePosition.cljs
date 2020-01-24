@@ -41,7 +41,7 @@
   (let [cursor (app.gameplay.model/getCursor gameplayCtx)
         camera (app.gameplay.model/getCamera gameplayCtx)
         path (tool.map/buildPath paths cursor)]
-    (a/<! (unitMoveAnim gameplayCtx {:unit unit :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
+    (a/<! (unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
     (let [tempUnit (app.gameplay.model/onMove gameplayCtx unit cursor)
           state (merge state {:tempUnit tempUnit})
           gameplayCtx (-> gameplayCtx

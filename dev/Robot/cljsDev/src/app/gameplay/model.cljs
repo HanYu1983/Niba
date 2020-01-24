@@ -124,11 +124,17 @@
         units (tool.units/getByRegion (getUnits ctx) p1 p2)]
     units))
 
+(defn mapUnitToLocal [ctx camera unit]
+  (let [camera (or camera (getCamera ctx))]
+    (update unit :position (partial world2local camera))))
+
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
     (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
-                (update unit :position (partial world2local camera)))))))
+                (mapUnitToLocal ctx camera unit))))))
+
+
 
 (defn isFriendlyUnit [ctx unit targetUnit]
   (if (= unit targetUnit)
