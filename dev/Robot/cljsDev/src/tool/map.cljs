@@ -68,6 +68,15 @@
                                   (constantly 1)
                                   (constantly 0))))))
 
+(def mountain 5)
+(def plain 3)
+(def forest 6)
+(def road 8)
+(def city 4)
+(def beach 2)
+(def shallowSea 1)
+(def deepSea 0)
+(def award 7)
 
 (defn generateMap [w h {:keys [deepsea sea sand grass city tree award]}]
   (->> (_generateMap w h deepsea sea sand grass city tree award)

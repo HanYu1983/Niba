@@ -2,6 +2,7 @@
   (:require [clojure.set])
   (:require [clojure.core.async :as a])
   (:require [app.gameplay.module])
+  (:require [tool.map])
   (:require ["./data.js" :as dataJson]))
 
 (def data (js->clj dataJson))
@@ -35,23 +36,46 @@
   (merge unit 
          {:state (createUnitStateForKey robotKey)}))
 
+(def terrainCost {tool.map/mountain 2
+                  tool.map/plain 0.5
+                  tool.map/forest 1.5
+                  tool.map/road 0.1
+                  tool.map/city 2
+                  tool.map/beach 0.75
+                  tool.map/shallowSea 1.5
+                  tool.map/deepSea 3
+                  tool.map/award 0.25})
+
+(defn moveCost [gameplayCtx from to]
+  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        t1 (get-in playmap (reverse from))
+        t2 (get-in playmap (reverse to))]
+    (+ (get terrainCost t1) (get terrainCost t2))))
+
+(def moveCostM (memoize moveCost))
+
+
+(defn nextCell [[mw mh] [x y]]
+  [[x (min mh (inc y))]
+   [x (max 0 (dec y))]
+   [(min mw (inc x)) y]
+   [(max 0 (dec x)) y]])
+
+(def nextCellM (memoize nextCell))
+
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (get-in data ["robot" (get-in unit [:state :robot]) "power"])
         [mw mh] (tool.map/getMapSize playmap)]
-    (tool.map/findPath (:position unit)
-                       (fn [{:keys [totalCost]} curr]
-                         [(>= totalCost power) false])
-                       (fn [[x y]]
-                         [[x (min mh (inc y))]
-                          [x (max 0 (dec y))]
-                          [(min mw (inc x)) y]
-                          [(max 0 (dec x)) y]])
-                       (fn [curr next]
-                         (-> playmap
-                             (get-in next)
-                             (/ 3)))
-                       (constantly 0))))
+    (->> (tool.map/findPath (:position unit)
+                            (fn [{:keys [totalCost]} curr]
+                              [(>= totalCost power) false])
+                            (partial nextCellM [mw mh])
+                            (partial moveCostM gameplayCtx)
+                            (constantly 0))
+         (filter (fn [[k v]]
+                   (<= (:totalCost v) power)))
+         (into {}))))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (get-in unit [:state :weapon]))

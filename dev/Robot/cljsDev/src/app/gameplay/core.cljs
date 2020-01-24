@@ -28,8 +28,8 @@
                                          :sea 0.3
                                          :sand 0.3
                                          :grass 0.3
-                                         :city 0.3
-                                         :tree 0.3
+                                         :city 0.8
+                                         :tree 0.8
                                          :award 0.1})
           gameplayCtx (-> app.gameplay.model/defaultGameplayModel
                           (app.gameplay.model/createUnit {:player :player
