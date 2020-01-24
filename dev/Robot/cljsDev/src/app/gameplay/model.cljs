@@ -182,7 +182,11 @@
      :cursor (getLocalCursor ctx nil)
      :moveRange (getLocalMoveRange ctx nil)
      :attackRange (getLocalAttackRange ctx nil)
-     :checkHitRate (get-in ctx [:temp :checkHitRate])
+     :checkHitRate (->> (get-in ctx [:temp :checkHitRate])
+                        (map (fn [info]
+                               (-> info
+                                   (update :unit (partial mapUnitToLocal ctx nil))
+                                   (update :targetUnit (partial mapUnitToLocal ctx nil))))))
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  stateDetail)
      :systemMenu (when (some #(= % state) [:menu])
