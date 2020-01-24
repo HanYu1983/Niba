@@ -126,12 +126,12 @@ export default class GamePage extends BasicViewer {
         //this.unitStatuMenu.close();
     }
 
-    showAccuracyInfos(data:any[]) {
+    showAccuracyInfos(data: any[]) {
         this.closeAccuracyInfos();
 
-        let poses:number[][] = [];
-        let hitRate:number[] = [];
-        data.forEach((info:any)=>{
+        let poses: number[][] = [];
+        let hitRate: number[] = [];
+        data.forEach((info: any) => {
             poses.push(info.targetUnit.position);
             hitRate.push(info.hitRate);
         });
@@ -142,7 +142,7 @@ export default class GamePage extends BasicViewer {
         });
     }
 
-    closeAccuracyInfos(){
+    closeAccuracyInfos() {
         this.accuracyInfos.clearItem();
     }
 
@@ -227,8 +227,8 @@ export default class GamePage extends BasicViewer {
         });
 
         this.effects.createAimEffect([0, 0], [3, 3]);
-        this.effects.createBlade(120, [4,4]);
-        this.effects.createExplode(200, [7,8]);
+        this.effects.createBlade(120, [4, 4]);
+        this.effects.createExplode(200, [7, 8]);
     }
 
     closeUnitMenu() {
@@ -275,19 +275,20 @@ export default class GamePage extends BasicViewer {
     }
 
     static generateMap(
-        deepsea: number = .5,
-        sea: number = .4,
-        sand: number = .2,
-        grass: number = .4,
-        city: number = .1,
-        tree: number = .8,
-        award: number = .1): number[] {
+        w, h,
+        deepsea,
+        sea,
+        sand,
+        grass,
+        city,
+        tree,
+        award) {
         noise.seed(Math.random());
         let scale = .1;
         let map = [];
-        for (let i = 0; i < 20; ++i) {
-            for (let j = 0; j < 20; ++j) {
-                let f: number = noise.perlin2(i * scale, j * scale);
+        for (let i = 0; i < w; ++i) {
+            for (let j = 0; j < h; ++j) {
+                let f = noise.perlin2(i * scale, j * scale);
                 if (f > -1 + deepsea + sea + sand + grass) {
 
                     //山脈
@@ -296,13 +297,13 @@ export default class GamePage extends BasicViewer {
                     let cityPosX = Math.floor(i * .4) * scale * 3 + 123;
                     let cityPosY = Math.floor(j * .4) * scale * 3 + 245;
 
-                    let f3: number = noise.perlin2(cityPosX, cityPosY);
+                    let f3 = noise.perlin2(cityPosX, cityPosY);
                     if (f3 > -1 + city) {
 
                         let treePosX = i * scale * 3 + 300;
                         let treePosY = j * scale * 3 + 20;
 
-                        let f2: number = noise.perlin2(treePosX, treePosY);
+                        let f2 = noise.perlin2(treePosX, treePosY);
                         if (f2 > -1 + tree) {
                             //平原
                             map.push(Math.random() < award ? 7 : 3);
