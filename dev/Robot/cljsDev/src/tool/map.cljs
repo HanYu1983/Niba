@@ -1,4 +1,5 @@
-(ns tool.map)
+(ns tool.map
+  (:require ["./generateMap.js" :as _generateMap]))
 
 (def defaultModel {})
 
@@ -69,70 +70,7 @@
 
 
 (defn generateMap [w h {:keys [deepsea sea sand grass city tree award]}]
-  (->> (let [scale 0.1]
-         (for [i (range w)
-               j (range h)]
-           (let [f (js/noise.perlin2 (* i scale) (* j scale))]
-             (cond
-          ; 山脈
-               (> f (+ -1 deepsea sea sand grass))
-               5
-
-               (> f (+ -1 deepsea sea sand))
-               (let [cityPosX (->> (* i 0.4)
-                                   int
-                                   (* scale 3)
-                                   (+ 123))
-                     cityPosY (->> (* j 0.4)
-                                   int
-                                   (* scale 3)
-                                   (+ 245))
-                     f3 (js/noise.perlin2 cityPosX cityPosY)]
-                 (cond
-                   (> f3 (+ -1 city))
-                   (let [treePosX (->> (* i scale 3)
-                                       (+ 300))
-                         treePosY (->> (* i scale 3)
-                                       (+ 20))
-                         f2 (js/noise.perlin2 treePosX treePosY)]
-                     (cond
-                  ; 平原
-                       (> f2 (+ -1 tree))
-                       (if (< (rand) award)
-                         7
-                         3)
-
-                  ; 樹林
-                       :else
-                       (if (< (rand) award)
-                         7
-                         4)))
-
-              ; 路
-                   (or (some #(= i %) [4 8 12 16])
-                       (some #(= j %) [4 8 12 16]))
-                   8
-
-              ; 城市
-                   :else
-                   (if (< (rand) award)
-                     7
-                     4)))
-
-          ; 沙灘          
-               (> f (+ -1 deepsea sea))
-               (if (< (rand) award)
-                 7
-                 2)
-
-          ; 淺海       
-               (> f (+ -1 deepsea))
-               (if (< (rand) award)
-                 7
-                 1)
-
-               :else
-               0))))
+  (->> (_generateMap w h deepsea sea sand grass city tree award)
        (partition w)
        (map (partial into []))
        (into [])))
