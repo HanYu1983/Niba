@@ -73,6 +73,12 @@
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (get-in unit [:state :weapon]))
 
+(defmethod app.gameplay.module/unitGetWeaponInfo :default [_ gameplayCtx unit {:keys [weaponKey]}]
+  (let [weapon (get-in data ["weapon" weaponKey])]
+    (if (nil? weapon)
+      (throw (js/Error. (str weaponKey "not found")))
+      weapon)))
+
 (defmethod app.gameplay.module/unitGetWeaponRange :default [_ gameplayCtx unit {:keys [weaponKey]}]
   (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
     (if (nil? weapon)
