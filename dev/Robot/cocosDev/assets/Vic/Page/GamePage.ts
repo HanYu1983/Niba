@@ -117,7 +117,7 @@ export default class GamePage extends BasicViewer {
         this.fightInfoMenu.showInfos(datas.preview);
     }
 
-    closeFightInfo(){
+    closeFightInfo() {
         this.fightInfoMenu.clearInfo();
     }
 
@@ -175,13 +175,8 @@ export default class GamePage extends BasicViewer {
 
     openUnitMenu(menus: any, cursors: any[], cb?: (key: string) => {}) {
         const [menu, weaponInfo] = menus;
-        let weaponId = weaponInfo.weaponIdx;
-        let weapons = weaponInfo.weapons;
-        let weaponRanges = weaponInfo.weaponRange;
 
         this.closeUnitMenu();
-        this.openWeaponMenu(weapons);
-
         this.unitMenu.open();
         this.unitMenu.setData(menu, cursors);
 
@@ -189,46 +184,54 @@ export default class GamePage extends BasicViewer {
             if (cb) cb(key);
         });
 
-        let showWeaponRange = (cursor) => {
-            this.map.closeWeaponRange();
-            if (cursor[0] == weaponId) {
-                this.map.showWeaponRange(weaponRanges[cursor[1]]);
+        if (weaponInfo) {
+            let weaponId = weaponInfo.weaponIdx;
+            let weapons = weaponInfo.weapons;
+            let weaponRanges = weaponInfo.weaponRange;
+
+            this.openWeaponMenu(weapons);
+
+            let showWeaponRange = (cursor) => {
+                this.map.closeWeaponRange();
+                if (cursor[0] == weaponId) {
+                    this.map.showWeaponRange(weaponRanges[cursor[1]]);
+                }
             }
-        }
 
-        if (cursors) {
-            const c1 = cursors[0];
-            const c2 = cursors[1][cursors[0]];
-            if (c1 == weaponId) {
+            if (cursors) {
+                const c1 = cursors[0];
+                const c2 = cursors[1][cursors[0]];
+                if (c1 == weaponId) {
 
-                // 顯示武器攻擊範圍，改成CONTROLLER呼叫，不自己處理
-                // showWeaponRange([c1, c2]);
+                    // 顯示武器攻擊範圍，改成CONTROLLER呼叫，不自己處理
+                    // showWeaponRange([c1, c2]);
 
-                this.weaponMenu.showCurrentWeapon(c2);
+                    this.weaponMenu.showCurrentWeapon(c2);
+                }
             }
-        }
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
-            showWeaponRange(cursor);
-        });
-
-        this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
-            showWeaponRange(cursor);
-        });
-
-        this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
-            if (cursor[0] == weaponId) {
+            this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
                 showWeaponRange(cursor);
-                this.weaponMenu.showCurrentWeapon(cursor[1]);
-            }
-        });
+            });
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
-            if (cursor[0] == weaponId) {
+            this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
                 showWeaponRange(cursor);
-                this.weaponMenu.showCurrentWeapon(cursor[1]);
-            }
-        });
+            });
+
+            this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
+                if (cursor[0] == weaponId) {
+                    showWeaponRange(cursor);
+                    this.weaponMenu.showCurrentWeapon(cursor[1]);
+                }
+            });
+
+            this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
+                if (cursor[0] == weaponId) {
+                    showWeaponRange(cursor);
+                    this.weaponMenu.showCurrentWeapon(cursor[1]);
+                }
+            });
+        }
     }
 
     closeUnitMenu() {
