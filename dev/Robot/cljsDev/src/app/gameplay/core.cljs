@@ -24,13 +24,13 @@
 (defn startGameplay [ctx inputCh outputCh]
   (a/go
     (let [playmap (tool.map/generateMap 100 100
-                                        {:deepsea 0.3
-                                         :sea 0.3
-                                         :sand 0.3
-                                         :grass 0.3
-                                         :hill 0.3
+                                        {:deepsea 0.6
+                                         :sea 0.6
+                                         :sand 0.1
+                                         :grass 1
+                                         :hill 1
                                          :city 0.3
-                                         :tree 0.3
+                                         :tree 0.4
                                          :award 0.01
                                          :power 1
                                          :offset 0})
