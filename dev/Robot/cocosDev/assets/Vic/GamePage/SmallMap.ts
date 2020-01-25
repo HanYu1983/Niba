@@ -25,15 +25,11 @@ export default class SmallMap extends cc.Component {
         let newTexture = new cc.Texture2D();
         let data = this.createQuadData(size.width, size.height);
         newTexture.initWithData(data, 4, size.width, size.height);
-        //newTexture.handleLoadedTexture();
+        newTexture.handleLoadedTexture();
         let spriteFrame = new cc.SpriteFrame(newTexture, new cc.Rect(0, 0, size.width, size.height), false
             , cc.Vec2.ZERO, size);
 
         this.map.spriteFrame = spriteFrame;
-        //let node = new cc.Node();
-        //let spriteComponent = node.addComponent(cc.Sprite);
-        //spriteComponent.spriteFrame = spriteFrame;
-        //this.node.addChild(node);
     }
 
     createQuadData(width, height) {
@@ -43,9 +39,9 @@ export default class SmallMap extends cc.Component {
                 //R
                 data[i * width * 4 + n * 4 + 0] = 255;
                 //G
-                data[i * width * 4 + n * 4 + 1] = 0;
+                data[i * width * 4 + n * 4 + 1] = 255;
                 //B
-                data[i * width * 4 + n * 4 + 2] = 0;
+                data[i * width * 4 + n * 4 + 2] = 255;
                 //A
                 data[i * width * 4 + n * 4 + 3] = 255;
             }
