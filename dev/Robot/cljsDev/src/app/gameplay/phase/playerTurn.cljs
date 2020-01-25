@@ -50,7 +50,7 @@
    (let [cursor (app.gameplay.model/getCursor gameplayCtx)
          unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
                           (tool.units/getByPosition cursor))]
-     (if unitAtCursor
+     (if (app.gameplay.model/isBelongToPlayer gameplayCtx unitAtCursor)
        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
          (if isEnd
            (let [unit (-> (app.gameplay.model/getUnits gameplayCtx)
