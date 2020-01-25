@@ -7,6 +7,7 @@
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))
 (defmulti unitGetWeaponRange (fn [type gameplayCtx unit weapon] type))
 (defmulti unitGetWeaponType (fn [type gameplayCtx unit weapon] type))
+(defmulti unitGetWeaponInfo (fn [type gameplayCtx unit weapon] type))
 (defmulti unitGetWeapons (fn [type gameplayCtx unit] type))
 (defmulti unitOnMove (fn [type gameplayCtx unit pos] type))
 (defmulti unitOnDone (fn [type gameplayCtx unit] type))

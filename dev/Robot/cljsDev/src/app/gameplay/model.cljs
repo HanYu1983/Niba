@@ -198,7 +198,9 @@
                    (select-keys stateDetail [:menuCursor :data]))
      :battleMenu (when (some #(= % state) [:unitBattleMenu])
                    (let [{args :args} stateDetail]
-                     {:preview args}))
+                     {:preview (map (fn [info]
+                                      (update info :unit (partial mapUnitToLocal ctx nil)))
+                                    args)}))
      :state state
      :stateDetail stateDetail}))
 
