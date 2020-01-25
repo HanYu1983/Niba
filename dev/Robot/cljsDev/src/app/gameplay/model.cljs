@@ -192,6 +192,7 @@
                                (-> info
                                    (update :unit (partial mapUnitToLocal ctx nil))
                                    (update :targetUnit (partial mapUnitToLocal ctx nil))))))
+     :cellState (->> (get-in ctx [:temp :cellState]))
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  (select-keys stateDetail [:menuCursor :data]))
      :systemMenu (when (some #(= % state) [:menu])
