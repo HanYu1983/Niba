@@ -29,10 +29,8 @@
         unitAtCursor (tool.units/getByPosition units cursor)]
     (if unitAtCursor
       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
-                                                      {:left unit
-                                                       :leftAction [:attack weapon]
-                                                       :right unitAtCursor
-                                                       :rightAction [:pending]}
+                                                      [{:unit unit :action [:attack weapon]}
+                                                       {:unit unitAtCursor :action [:pending]}]
                                                       inputCh outputCh))]
         (if isEnd
           (m/returnPop true)

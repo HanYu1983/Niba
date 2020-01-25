@@ -14,18 +14,18 @@
                                                unitBattleAnim
                                                actions]]))
 
-(m/defstate unitBattleMenu [gameplayCtx {left :left
-                                         right :right
-                                         leftAction :leftAction
-                                         :as args}]
+(m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
+                                         {right :unit} :as args]]
   nil
   (m/basicNotify
    (let [[menu data] (app.gameplay.model/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (tool.menuCursor/model menu)
       :data data
-      :args (merge args
-                   {:rightAction (app.gameplay.model/selectCounterAttackAction gameplayCtx right left weapon)})}))
+      :args (-> args
+                (update-in [0 :hitRate] (constantly (app.gameplay.model/getHitRate gameplayCtx left leftWeapon right)))
+                (update-in [1 :action] (constantly (app.gameplay.model/selectCounterAttackAction gameplayCtx right left weapon)))
+                (update-in [1 :hitRate] (constantly 0)))}))
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
@@ -71,7 +71,15 @@
                             ((fn [weapon]
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
                         [])
-          state (merge state {:rightAction rightAction})
+          
+          hitRate (cond-> (get-in state [:args 0 :hitRate])
+                    (= rightAction [:evade])
+                    (/ 2))
+          
+          state (-> state  
+                    (update-in [:args 1 :action] (constantly rightAction))
+                    (update-in [:args 0 :hitRate] (constantly hitRate)))
+          
           fsm (tool.fsm/save fsm state)
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setFsm fsm)

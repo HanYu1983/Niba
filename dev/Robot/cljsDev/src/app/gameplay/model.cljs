@@ -188,9 +188,12 @@
                                    (update :unit (partial mapUnitToLocal ctx nil))
                                    (update :targetUnit (partial mapUnitToLocal ctx nil))))))
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
-                 stateDetail)
+                 (select-keys stateDetail [:menuCursor :data]))
      :systemMenu (when (some #(= % state) [:menu])
-                   stateDetail)
+                   (select-keys stateDetail [:menuCursor :data]))
+     :battleMenu (when (some #(= % state) [:unitBattleMenu])
+                   (let [{args :args} stateDetail]
+                     {:preview args}))
      :state state
      :stateDetail stateDetail}))
 
