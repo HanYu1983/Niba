@@ -22,6 +22,10 @@ export default class View extends cc.Component implements IView {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
     unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
+        this.getGamePage().effects.createAimEffect([0, 0], [3, 3]);
+        this.getGamePage().effects.createBlade(120, [4, 4]);
+        this.getGamePage().effects.createExplode(200, [7, 8]);
+
         cb();
     }
     paint(data: any, cb: () => void) {
@@ -33,7 +37,16 @@ export default class View extends cc.Component implements IView {
         this.repaintSystemMenu(data.systemMenu);
         this.repaintUnitMenu(data.unitMenu);
         this.repaintHitInfo(data.checkHitRate);
+        this.repainBattleMenu(data.battleMenu);
         cb();
+    }
+
+    private repainBattleMenu(battleMenu:any){
+        if(battleMenu){
+            this.getGamePage().showFightInfo(battleMenu);
+        }else{
+            this.getGamePage().closeFightInfo();
+        }
     }
 
     private repaintHitInfo(checkHitRate:any){

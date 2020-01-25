@@ -113,8 +113,12 @@ export default class GamePage extends BasicViewer {
         this.cursor.y = cursorPos[1];
     }
 
-    showFightInfo(datas: any[]) {
-        this.fightInfoMenu.showInfos(datas);
+    showFightInfo(datas: any) {
+        this.fightInfoMenu.showInfos(datas.preview);
+    }
+
+    closeFightInfo(){
+        this.fightInfoMenu.clearInfo();
     }
 
     openUnitStatuMenu() {
@@ -225,10 +229,6 @@ export default class GamePage extends BasicViewer {
                 this.weaponMenu.showCurrentWeapon(cursor[1]);
             }
         });
-
-        this.effects.createAimEffect([0, 0], [3, 3]);
-        this.effects.createBlade(120, [4, 4]);
-        this.effects.createExplode(200, [7, 8]);
     }
 
     closeUnitMenu() {

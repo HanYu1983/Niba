@@ -16,41 +16,31 @@ import ViewController from "../ViewController";
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
-@requireComponent(Pool)
 export default class FightMenu extends cc.Component {
 
     @property(FightInfo)
-    fightInfoPrefab: FightInfo = null;
+    playerInfo: FightInfo = null;
 
-    private _fightInfo: Array<cc.Node> = [];
+    @property(FightInfo)
+    enemyInfo: FightInfo = null;
 
     showInfos(datas: any[]) {
         this.clearInfo();
-        datas.forEach(data => {
-            this.showInfo(data);
-        });
+        this.showInfo(this.playerInfo, datas[0]);
+        this.showInfo(this.enemyInfo, datas[1]);
     }
 
-    showInfo(data: any) {
-        let pool: Pool = this.node.getComponent(Pool);
-        let fightInfoNode: cc.Node = pool.acquire();
-        fightInfoNode.active = true;
-        fightInfoNode.setParent(this.node);
-
-        let pos = [4, 5];
-        let infoPos = ViewController.instance.view.getGridPos(pos);
-        fightInfoNode.x = infoPos[0];
-        fightInfoNode.y = infoPos[1];
-
-        this._fightInfo.push(fightInfoNode);
+    showInfo(info: FightInfo, data: any) {
+        info.node.active = true;
+        let weapon:any = ViewController.instance.getWeapon(data.action[1].weaponKey);
+        info.setAction(data.action[0]);
+        info.setPower(weapon.damage);
+        info.setWeaponName(weapon.title);
+        info.setHitRate(data.hitRate);
     }
 
     clearInfo() {
-        let pool: Pool = this.node.getComponent(Pool);
-        this._fightInfo.forEach(node=>{
-            node.removeFromParent();
-            pool.release(node);
-        });
-        this._fightInfo = [];
+        this.playerInfo.node.active = false;
+        this.enemyInfo.node.active = false;
     }
 }
