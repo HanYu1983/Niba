@@ -59,27 +59,35 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
+          leftAction (if (= cursor1 weaponIdx)
+                       (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                           (nth cursor2)
+                           ((fn [weapon]
+                              [:attack weapon])))
+                       leftAction)
+
           rightAction (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
                             (nth cursor2)
                             ((fn [weapon]
                                (app.gameplay.model/selectCounterAttackAction gameplayCtx right left weapon))))
-                        [:pending])
+                        (get-in state [:args 1 :action]))
           attackRange (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
                             (nth cursor2)
                             ((fn [weapon]
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
                         [])
-          
+
           hitRate (cond-> (get-in state [:args 0 :hitRate])
                     (= rightAction [:evade])
                     (/ 2))
-          
-          state (-> state  
+
+          state (-> state
                     (update-in [:args 1 :action] (constantly rightAction))
+                    (update-in [:args 0 :action] (constantly leftAction))
                     (update-in [:args 0 :hitRate] (constantly hitRate)))
-          
+
           fsm (tool.fsm/save fsm state)
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setFsm fsm)
