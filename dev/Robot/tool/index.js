@@ -45,7 +45,6 @@ async function main(config) {
                 .on('data', row => list.push(row))
                 .on('end', rowCount => res(list));
         })
-        console.log(list)
 
         list = list.map(obj => {
             if (obj["id/string"].trim() == "") {
