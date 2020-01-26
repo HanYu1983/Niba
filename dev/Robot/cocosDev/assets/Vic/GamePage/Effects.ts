@@ -30,8 +30,8 @@ export default class Effects extends cc.Component {
     @property(cc.Node)
     tracker: cc.Node = null;
 
-    onLoad(){
-        this.tracker['toGridPos'] = [0,0];
+    onLoad() {
+        this.tracker['toGridPos'] = [0, 0];
         this.tracker['time'] = 0;
     }
 
@@ -53,6 +53,22 @@ export default class Effects extends cc.Component {
         this.tracker['time'] = 0;
     }
 
+    createExplodePipe(from: number[], to: number[], hp: number) {
+        cc.tween(this.node)
+            .call(()=>{this.createAimEffect(from, to)})
+            .delay(1)
+            .call(()=>{this.createExplode(hp, to)})
+            .start();
+    }
+
+    createBladePipe(from: number[], to: number[], hp: number) {
+        cc.tween(this.node)
+            .call(()=>{this.createAimEffect(from, to)})
+            .delay(1)
+            .call(()=>{this.createBlade(hp, to)})
+            .start();
+    }
+
     private _createBlade(pos: number[]) {
         this.bladeLayer.createEffect(pos);
     }
@@ -67,13 +83,13 @@ export default class Effects extends cc.Component {
     }
 
     private _checkAndMoveAim() {
-        if (this.tracker['toGridPos'][0] - this.tracker.x > 1 || 
+        if (this.tracker['toGridPos'][0] - this.tracker.x > 1 ||
             this.tracker['toGridPos'][1] - this.tracker.y > 1) {
 
-            this.tracker.x += (this.tracker['toGridPos'][0] - this.tracker.x ) * .2;
-            this.tracker.y += (this.tracker['toGridPos'][1] - this.tracker.y ) * .2;
+            this.tracker.x += (this.tracker['toGridPos'][0] - this.tracker.x) * .2;
+            this.tracker.y += (this.tracker['toGridPos'][1] - this.tracker.y) * .2;
 
-            if(this.tracker['time'] % 1 == 0){
+            if (this.tracker['time'] % 1 == 0) {
                 this.aimEffects.createEffect([this.tracker.x, this.tracker.y], false);
             }
         }

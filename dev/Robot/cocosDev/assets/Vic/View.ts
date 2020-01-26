@@ -12,6 +12,8 @@ export default class View extends cc.Component implements IView {
         this.closeUnitMenu();
         this.closeSystemMenu();
         this.repaintPlayerStart(cb);
+
+        this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
     }
     enemyTurnStart(enemyName: string, cb: () => void) {
         this.closeUnitMenu();
@@ -22,9 +24,11 @@ export default class View extends cc.Component implements IView {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
     unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
-        this.getGamePage().effects.createAimEffect([0, 0], [3, 3]);
-        this.getGamePage().effects.createBlade(120, [4, 4]);
-        this.getGamePage().effects.createExplode(200, [7, 8]);
+        // this.getGamePage().effects.createAimEffect([0, 0], [3, 3]);
+        // this.getGamePage().effects.createBlade(120, [4, 4]);
+        // this.getGamePage().effects.createExplode(200, [7, 8]);
+
+        this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
 
         cb();
     }
