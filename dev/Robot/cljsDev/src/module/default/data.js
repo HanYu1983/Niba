@@ -60,8 +60,8 @@ const dataJson =
     "robot": {
         "gaite": {
             "title": "蓋特",
-            "cost": 16000,
-            "power": 30,
+            "cost": 27040,
+            "power": 26,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",
@@ -73,12 +73,19 @@ const dataJson =
                 "energy2",
                 "armor1",
                 "armor2"
-            ]
+            ],
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "transform": []
         },
         "zgundam": {
             "title": "z鋼彈",
-            "cost": 6760,
-            "power": 13,
+            "cost": 16000,
+            "power": 20,
             "weapons": [
                 "beam_sword2",
                 "beam_gun1",
@@ -89,12 +96,19 @@ const dataJson =
                 "energy1",
                 "armor1",
                 "armor1"
-            ]
+            ],
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "transform": []
         },
         "gundam": {
             "title": "鋼彈",
-            "cost": 3240,
-            "power": 9,
+            "cost": 9000,
+            "power": 15,
             "weapons": [
                 "beam_sword1",
                 "beam_gun1"
@@ -104,7 +118,14 @@ const dataJson =
                 "energy1",
                 "armor1",
                 "armor1"
-            ]
+            ],
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "transform": []
         }
     },
     "terrain": {

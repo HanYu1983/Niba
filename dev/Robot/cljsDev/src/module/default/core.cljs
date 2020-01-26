@@ -110,7 +110,8 @@
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str weaponKey " not found")))
-      weaponData)))
+      (merge weaponData
+             {:state weapon}))))
 
 (defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
   (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
