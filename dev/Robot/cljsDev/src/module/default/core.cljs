@@ -11,22 +11,52 @@
   (let [robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str robotKey "not found")))
-      {:robot robotKey
-       :pilot nil
-       :hp (get robot "hp")
-       :en (get robot "en")
-       :component []
+      (let [component (mapv (fn [key]
+                              (let [com (get-in data ["component" key])]
+                                (if (nil? com)
+                                  (throw (js/Error. (str key " not found")))
+                                  {:key (gensym)
+                                   :componentKey key})))
+                            (get robot "components"))
+            ; 使用vector(mapv)方便索引的存取(nth, get-in)
+            weapon (mapv (fn [weaponKey]
+                           (let [weapon (get-in data ["weapon" weaponKey])]
+                             (if (nil? weapon)
+                               (throw (js/Error. (str weaponKey " not found")))
+                               (cond-> {:key (gensym)
+                                        :weaponKey weaponKey}
+                                 (= (get weapon "energyType") "bullet")
+                                 (merge {:bulletCount (get weapon "maxBulletCount")})))))
+                         (get robot "weapons"))
+            power (->> (concat (map (fn [d]
+                                      (get-in data ["component" (:componentKey d) "powerCost"]))
+                                    component)
+                               (map (fn [d]
+                                      (get-in data ["weapon" (:weaponKey d) "powerCost"]))
+                                    weapon))
+                       (apply - (get robot "power")))
+            en (->> component
+                    (filter (fn [d]
+                              (some #(= % (:componentKey d)) ["energy1" "energy2" "energy3"])))
+                    (map (fn [d] (get-in data ["component" (:componentKey d) "value" 0])))
+                    (map int)
+                    (apply +))
+            armor (->> component
+                       (filter (fn [d]
+                                 (some #(= % (:componentKey d)) ["armor1" "armor2" "armor3"])))
+                       (map (fn [d] (get-in data ["component" (:componentKey d) "value" 0])))
+                       (map int)
+                       (apply +))]
+        {:robot robotKey
+         :pilot nil
+         :hp 10000
+         :en en
+         :power power
+         :armor armor
+         :component component
        ; 使用vector(mapv)方便索引的存取(nth, get-in)
-       :weapon (mapv (fn [weaponKey]
-                       (let [weapon (get-in data ["weapon" weaponKey])]
-                         (if (nil? weapon)
-                           (throw (js/Error. (str weaponKey "not found")))
-                           (cond-> {:key (gensym)
-                                    :weaponKey weaponKey}
-                             (= (get weapon "energyType") "bullet")
-                             (merge {:bulletCount (get weapon "maxBulletCount")})))))
-                     (get robot "weapons"))
-       :tag #{}})))
+         :weapon weapon
+         :tag #{}}))))
 
 (defmethod app.gameplay.module/loadData :default [_]
   (a/go
@@ -60,7 +90,7 @@
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (get-in data ["robot" (get-in unit [:state :robot]) "power"])
+        power (get-in unit [:state :power])
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [totalCost]} curr]
