@@ -1,321 +1,677 @@
-const dataJson =
+const dataJson = 
 {
-  "terrainMapping": {
-    "5": "mountain",
-    "3": "plain",
-    "6": "forest",
-    "8": "road",
-    "4": "city",
-    "2": "beach",
-    "1": "shallowSea",
-    "0": "deepSea",
-    "7": "award",
-  },
-  "terrain": {
-    "mountain": {
-      "cost": 2,
-      "hitRate": 1,
-      "damage": 0.5
+    "component": {
+        "energy1": {
+            "title": "能量夾",
+            "desc": "增加{0}能量.",
+            "value": [
+                "80"
+            ],
+            "powerCost": 1,
+            "action": ""
+        },
+        "energy2": {
+            "title": "能量夾",
+            "desc": "增加{0}能量.",
+            "value": [
+                "170"
+            ],
+            "powerCost": 2,
+            "action": ""
+        },
+        "energy3": {
+            "title": "能量夾",
+            "desc": "增加{0}能量.",
+            "value": [
+                "260"
+            ],
+            "powerCost": 3,
+            "action": ""
+        },
+        "armor1": {
+            "title": "鐵板",
+            "desc": "增加{0}裝甲.",
+            "value": [
+                "100"
+            ],
+            "powerCost": 2,
+            "action": ""
+        },
+        "armor2": {
+            "title": "鋼板",
+            "desc": "增加{0}裝甲.",
+            "value": [
+                "170"
+            ],
+            "powerCost": 3,
+            "action": ""
+        },
+        "armor3": {
+            "title": "鋼彈合金",
+            "desc": "增加{0}裝甲.",
+            "value": [
+                "240"
+            ],
+            "powerCost": 4,
+            "action": ""
+        }
     },
-    "plain": {
-      "cost": 0.5,
-      "hitRate": 1,
-      "damage": 1
+    "componentAction": {},
+    "robot": {
+        "gaite": {
+            "title": "蓋特",
+            "cost": 16000,
+            "power": 20,
+            "weapons": [
+                "gaite_handSword",
+                "gaite_axe",
+                "gaite_beam",
+                "gaite_cannon"
+            ],
+            "components": [
+                "energy1",
+                "energy2",
+                "armor1",
+                "armor2"
+            ]
+        },
+        "zgundam": {
+            "title": "z鋼彈",
+            "cost": 6760,
+            "power": 13,
+            "weapons": [
+                "beam_sword2",
+                "beam_gun1",
+                "beam_mega2"
+            ],
+            "components": [
+                "energy1",
+                "energy1",
+                "armor1",
+                "armor1"
+            ]
+        },
+        "gundam": {
+            "title": "鋼彈",
+            "cost": 3240,
+            "power": 9,
+            "weapons": [
+                "beam_sword1",
+                "beam_gun1"
+            ],
+            "components": [
+                "energy1",
+                "energy1",
+                "armor1",
+                "armor1"
+            ]
+        }
     },
-    "forest": {
-      "cost": 1.5,
-      "hitRate": 0.5,
-      "damage": 0.75
+    "terrain": {
+        "mountain": {
+            "title": "mountain",
+            "cost": 2,
+            "hitRate": 1,
+            "damage": 0.5
+        },
+        "plain": {
+            "title": "plain",
+            "cost": 0.5,
+            "hitRate": 1,
+            "damage": 1
+        },
+        "forest": {
+            "title": "forest",
+            "cost": 1.5,
+            "hitRate": 0.5,
+            "damage": 0.75
+        },
+        "road": {
+            "title": "road",
+            "cost": 0.1,
+            "hitRate": 1,
+            "damage": 1
+        },
+        "city": {
+            "title": "city",
+            "cost": 2,
+            "hitRate": 0.9,
+            "damage": 0.75
+        },
+        "beach": {
+            "title": "beach",
+            "cost": 0.75,
+            "hitRate": 1,
+            "damage": 1
+        },
+        "shallowSea": {
+            "title": "shallowSea",
+            "cost": 1.5,
+            "hitRate": 1,
+            "damage": 1
+        },
+        "deepSea": {
+            "title": "deepSea",
+            "cost": 3,
+            "hitRate": 1,
+            "damage": 1
+        },
+        "award": {
+            "title": "award",
+            "cost": 0.25,
+            "hitRate": 1,
+            "damage": 1
+        }
     },
-    "road": {
-      "cost": 0.1,
-      "hitRate": 1,
-      "damage": 1
+    "terrainMapping": {
+        "0": {
+            "terrain": "deepSea"
+        },
+        "1": {
+            "terrain": "shallowSea"
+        },
+        "2": {
+            "terrain": "beach"
+        },
+        "3": {
+            "terrain": "plain"
+        },
+        "4": {
+            "terrain": "city"
+        },
+        "5": {
+            "terrain": "mountain"
+        },
+        "6": {
+            "terrain": "forest"
+        },
+        "7": {
+            "terrain": "award"
+        },
+        "8": {
+            "terrain": "road"
+        }
     },
-    "city": {
-      "cost": 2,
-      "hitRate": 0.9,
-      "damage": 0.75
+    "weapon": {
+        "beam_mega1": {
+            "title": "輕型粒子炮",
+            "range": [
+                5,
+                2
+            ],
+            "energyCost": 50,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [],
+            "energyType": "energy",
+            "type": "line",
+            "accuracy": 0.5,
+            "damage": 3500,
+            "powerCost": 5
+        },
+        "beam_mega2": {
+            "title": "中型粒子炮",
+            "range": [
+                6,
+                2
+            ],
+            "energyCost": 100,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [],
+            "energyType": "energy",
+            "type": "line",
+            "accuracy": 0.5,
+            "damage": 4200,
+            "powerCost": 6
+        },
+        "beam_mega3": {
+            "title": "重型粒子炮",
+            "range": [
+                7,
+                3
+            ],
+            "energyCost": 150,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [],
+            "energyType": "energy",
+            "type": "line",
+            "accuracy": 0.5,
+            "damage": 5000,
+            "powerCost": 7
+        },
+        "beam_sniper1": {
+            "title": "輕型光束狙擊鎗",
+            "range": [
+                3,
+                10
+            ],
+            "energyCost": 20,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "standAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3200,
+            "powerCost": 2
+        },
+        "beam_sniper2": {
+            "title": "中型光束狙擊鎗",
+            "range": [
+                3,
+                11
+            ],
+            "energyCost": 30,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "standAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 4000,
+            "powerCost": 3
+        },
+        "beam_sniper3": {
+            "title": "重型光束狙擊鎗",
+            "range": [
+                4,
+                12
+            ],
+            "energyCost": 40,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "standAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 4800,
+            "powerCost": 4
+        },
+        "beam_gun1": {
+            "title": "輕型光束鎗",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 10,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2000,
+            "powerCost": 1
+        },
+        "beam_gun2": {
+            "title": "中型光束鎗",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 15,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2500,
+            "powerCost": 2
+        },
+        "beam_gun3": {
+            "title": "重型光束鎗",
+            "range": [
+                2,
+                6
+            ],
+            "energyCost": 20,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3000,
+            "powerCost": 3
+        },
+        "beam_gatling1": {
+            "title": "輕型光束衝鋒鎗",
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 10,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 1500,
+            "powerCost": 1
+        },
+        "beam_gatling2": {
+            "title": "中型光束衝鋒鎗",
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 15,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 2000,
+            "powerCost": 2
+        },
+        "beam_gatling3": {
+            "title": "重型光束衝鋒鎗",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 20,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 2500,
+            "powerCost": 3
+        },
+        "beam_sword1": {
+            "title": "輕型光束劍",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 5,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2200,
+            "powerCost": 1
+        },
+        "beam_sword2": {
+            "title": "中型光束劍",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 10,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2700,
+            "powerCost": 2
+        },
+        "beam_sword3": {
+            "title": "重型光束劍",
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 15,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3200,
+            "powerCost": 3
+        },
+        "gaite_handSword": {
+            "title": "蓋特手刀",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 5,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2200,
+            "powerCost": 1
+        },
+        "gaite_axe": {
+            "title": "蓋特巨斧",
+            "range": [
+                2,
+                3
+            ],
+            "energyCost": 25,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 0.7,
+            "damage": 4200,
+            "powerCost": 3
+        },
+        "gaite_beam": {
+            "title": "蓋特光線",
+            "range": [
+                1,
+                3
+            ],
+            "energyCost": 50,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ablitity": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 5000,
+            "powerCost": 5
+        },
+        "gaite_cannon": {
+            "title": "蓋特加農",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ablitity": [],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 2500,
+            "powerCost": 2
+        }
     },
-    "beach": {
-      "cost": 0.75,
-      "hitRate": 1,
-      "damage": 1
+    "weaponAbility": {
+        "moveAttack": {
+            "title": "移動可",
+            "desc": "可移動使用",
+            "values": []
+        },
+        "standAttack": {
+            "title": "狙擊",
+            "desc": "原地使用時。命中增加{0}。",
+            "values": [
+                "1"
+            ]
+        },
+        "melee": {
+            "title": "格鬥",
+            "desc": "以格鬥值差距影響命中率",
+            "values": []
+        },
+        "range": {
+            "title": "射擊",
+            "desc": "以射擊值差距影響命中率",
+            "values": []
+        },
+        "beam": {
+            "title": "光束",
+            "desc": "",
+            "values": []
+        },
+        "physic": {
+            "title": "實彈",
+            "desc": "",
+            "values": []
+        }
     },
-    "shallowSea": {
-      "cost": 1.5,
-      "hitRate": 1,
-      "damage": 1
+    "weaponEnergyType": {
+        "energy": {
+            "title": "energy"
+        },
+        "bullet": {
+            "title": "bullet"
+        }
     },
-    "deepSea": {
-      "cost": 3,
-      "hitRate": 1,
-      "damage": 1
-    },
-    "award": {
-      "cost": 0.25,
-      "hitRate": 1,
-      "damage": 1
+    "weaponType": {
+        "single": {
+            "title": "single"
+        },
+        "line": {
+            "title": "line"
+        }
     }
-  },
-  "weaponType": {
-    "single": {
-      "title": "單一"
-    },
-    "line": {
-      "title": "線形"
-    }
-  },
-  "weaponAbility": {
-    "moveAttack": {
-      "title": "移動可"
-    }
-  },
-  "weaponEnergyType": {
-    "energy": {
-      "title": "能量"
-    },
-    "bullet": {
-      "title": "彈數"
-    }
-  },
-  "weapon": {
-    "bean_gun": {
-      "range": [
-        2,
-        6
-      ],
-      "energyCost": 15,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [],
-      "energyType": "energy",
-      "title": "光束鎗",
-      "type": "single",
-      "accuracy": 0.7,
-      "damage": 3000
-    },
-    "bean_bigGun": {
-      "range": [
-        3,
-        7
-      ],
-      "energyCost": 40,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [],
-      "energyType": "energy",
-      "title": "巨型光束鎗",
-      "type": "single",
-      "accuracy": 0.6,
-      "damage": 4500
-    },
-    "bean_gatling": {
-      "range": [
-        2,
-        4
-      ],
-      "energyCost": 10,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "光束加特林",
-      "type": "single",
-      "accuracy": 0.8,
-      "damage": 2000
-    },
-    "bean_sword": {
-      "range": [
-        1,
-        1
-      ],
-      "energyCost": 5,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "光束劍",
-      "type": "single",
-      "accuracy": 0.9,
-      "damage": 2500
-    },
-    "bean_bigSword": {
-      "range": [
-        1,
-        2
-      ],
-      "energyCost": 30,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "巨型光束劍",
-      "type": "line",
-      "accuracy": 0.7,
-      "damage": 3000
-    },
-    "gaite_handSword": {
-      "range": [
-        1,
-        1
-      ],
-      "energyCost": 5,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        1,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "蓋特手刀",
-      "type": "single",
-      "accuracy": 0.9,
-      "damage": 2300
-    },
-    "gaite_axe": {
-      "range": [
-        1,
-        2
-      ],
-      "energyCost": 20,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        1,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "蓋特巨斧",
-      "type": "single",
-      "accuracy": 0.7,
-      "damage": 3700
-    },
-    "gaite_beam": {
-      "range": [
-        1,
-        3
-      ],
-      "energyCost": 50,
-      "maxBulletCount": 0,
-      "suitability": [
-        1,
-        0.5,
-        1,
-        1
-      ],
-      "ablitity": [
-        "moveAttack"
-      ],
-      "energyType": "energy",
-      "title": "蓋特光束",
-      "type": "single",
-      "accuracy": 0.7,
-      "damage": 5000
-    },
-    "gaite_cannon": {
-      "range": [
-        2,
-        6
-      ],
-      "energyCost": 0,
-      "maxBulletCount": 6,
-      "suitability": [
-        1,
-        1,
-        1,
-        1
-      ],
-      "ablitity": [],
-      "energyType": "bullet",
-      "title": "蓋特加農",
-      "type": "single",
-      "accuracy": 0.6,
-      "damage": 2500
-    }
-  },
-  "robot": {
-    "gaite": {
-      "title": "蓋特",
-      "weapons": [
-        "gaite_handSword",
-        "gaite_axe",
-        "gaite_beam",
-        "gaite_cannon"
-      ],
-      "hp": 3300,
-      "en": 160,
-      "armor": 1200,
-      "power": 6,
-      "cost": 4000
-    },
-    "jimu": {
-      "title": "jimu",
-      "weapons": [
-        "bean_sword",
-        "bean_gatling",
-        "bean_gun"
-      ],
-      "hp": 2000,
-      "en": 120,
-      "armor": 1000,
-      "power": 6,
-      "cost": 1200
-    },
-    "zGundam": {
-      "title": "Z鋼彈",
-      "weapons": [
-        "bean_sword",
-        "bean_gatling",
-        "bean_gun",
-        "bean_bigGun"
-      ],
-      "hp": 2700,
-      "en": 160,
-      "armor": 1200,
-      "power": 6,
-      "cost": 3000
-    }
-  }
 }
-
 module.exports = dataJson

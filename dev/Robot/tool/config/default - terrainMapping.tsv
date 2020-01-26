@@ -1,4 +1,4 @@
-id/string	title/string
+id/string	terrain/string
 5	mountain
 3	plain
 6	forest

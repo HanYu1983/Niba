@@ -42,11 +42,11 @@
                           (app.gameplay.model/createUnit {:player :ai
                                                           :type :robot
                                                           :position [3 3]}
-                                                         {:robotKey "jimu"})
+                                                         {:robotKey "gundam"})
                           (app.gameplay.model/createUnit {:player :player
                                                           :type :robot
                                                           :position [6 6]}
-                                                         {:robotKey "zGundam"})
+                                                         {:robotKey "zgundam"})
                           (app.gameplay.model/setMap playmap))]
       (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

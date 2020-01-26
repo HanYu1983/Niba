@@ -39,9 +39,11 @@
 (defn moveCost [gameplayCtx from to]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         t1 (get-in data ["terrainMapping"
-                         (str (get-in playmap (reverse from)))])
+                         (str (get-in playmap (reverse from)))
+                         "terrain"])
         t2 (get-in data ["terrainMapping"
-                         (str (get-in playmap (reverse to)))])]
+                         (str (get-in playmap (reverse to)))
+                         "terrain"])]
     (+ (get-in data ["terrain" t1 "cost"])
        (get-in data ["terrain" t2 "cost"]))))
 

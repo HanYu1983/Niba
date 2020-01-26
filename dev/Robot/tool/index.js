@@ -189,5 +189,5 @@ async function main(config) {
 main({
     prefix: "default - ",
     template: "./template.txt",
-    output: "./data.js"
+    output: "../cljsDev/src/module/default/data.js"
 }).catch(console.log)
