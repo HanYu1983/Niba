@@ -1,0 +1,14 @@
+id/string	title/string	cost/int	power/int	weapons/string[]	components/string[]
+gaite	蓋特	16000	20	gaite_handSword,gaite_axe,gaite_beam,gaite_cannon	energy1,energy2,armor1,armor2
+zgundam	z鋼彈	6760	13	beam_sword2,beam_gun1,beam_mega2	energy1,energy1,armor1,armor1
+gundam	鋼彈	3240	9	beam_sword1,beam_gun1	energy1,energy1,armor1,armor1
+		0			
+		0			
+		0			
+		0			
+		0			
+		0			
+		0			
+		0			
+		0			
+		0			
