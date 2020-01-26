@@ -106,7 +106,7 @@
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (get-in unit [:state :weapons]))
 
-(defmethod app.gameplay.module/unitGetWeaponInfo :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
+(defmethod app.gameplay.module/unitGetWeaponInfoFromState :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str weaponKey " not found")))
@@ -114,7 +114,7 @@
              {:state weapon}))))
 
 (defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
-  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
+  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit weapon)]
     (->> (tool.map/simpleFindPath [0 0] (dec min))
          (into #{})
          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
@@ -123,7 +123,7 @@
 
 
 (defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
-  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
+  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit weapon)]
     type))
 
 (defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
@@ -131,7 +131,7 @@
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
         weapons (->> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
-                     (map (partial app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit)))
+                     (map (partial app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit)))
         weaponKeys (->> (range (count weapons))
                         (into []))
         [menu data] (if isBattleMenu
