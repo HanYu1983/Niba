@@ -45,6 +45,7 @@ async function main(config) {
                 .on('data', row => list.push(row))
                 .on('end', rowCount => res(list));
         })
+        console.log(list)
 
         list = list.map(obj => {
             if (obj["id/string"].trim() == "") {
@@ -56,6 +57,9 @@ async function main(config) {
             const ret = {}
             for (const k in obj) {
                 let v = obj[k]
+                if(k.trim().length == 0){
+                    continue;
+                }
                 const [keyName, type] = k.split("/")
                 switch (type) {
                     case "string":
