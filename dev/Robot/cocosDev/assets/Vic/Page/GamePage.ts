@@ -281,7 +281,8 @@ export default class GamePage extends BasicViewer {
         let ws = [];
         for (let key in data) {
             let weapon = data[key];
-            let weaponDetail = ViewController.instance.getWeapon(weapon.weaponKey);
+            //let weaponDetail = ViewController.instance.getWeapon(weapon.weaponKey);
+            let weaponDetail = weapon;
             /**
              * range:number[]
              * energyCost:number

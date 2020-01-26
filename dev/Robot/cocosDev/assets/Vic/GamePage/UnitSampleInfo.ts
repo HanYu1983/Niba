@@ -9,14 +9,19 @@ export default class UnitSampleInfo extends cc.Component {
     @property(cc.Sprite)
     enSprite:cc.Sprite = null;
 
-    // maxHP:number;
-    // maxEN:number;
-    // currentHP:number;
-    // currentEN:number;
+    maxHP:number;
+    maxEN:number;
+    currentHP:number;
+    currentEN:number;
 
     showHPEN(maxHP:number, hp:number, maxEN:number, en:number){
         this.hpSprite.node.scaleX = hp / maxHP;
         this.enSprite.node.scaleX = en / maxEN;
+
+        this.maxHP = maxHP;
+        this.maxEN = maxEN;
+        this.currentHP = hp;
+        this.currentEN = en;
     }
 
 }
