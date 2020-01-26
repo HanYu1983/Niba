@@ -48,7 +48,7 @@
                        (map int)
                        (apply +))]
         {:robot robotKey
-         :pilot nil
+         :pilot "amuro"
          :hp 10000
          :en en
          :power power
@@ -105,34 +105,32 @@
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (get-in unit [:state :weapon]))
 
-(defmethod app.gameplay.module/unitGetWeaponInfo :default [_ gameplayCtx unit {:keys [weaponKey]}]
-  (let [weapon (get-in data ["weapon" weaponKey])]
-    (if (nil? weapon)
-      (throw (js/Error. (str weaponKey "not found")))
-      weapon)))
+(defmethod app.gameplay.module/unitGetWeaponInfo :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (merge weapon
+             weaponData))))
 
-(defmethod app.gameplay.module/unitGetWeaponRange :default [_ gameplayCtx unit {:keys [weaponKey]}]
-  (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
-    (if (nil? weapon)
-      (throw (js/Error. (str weaponKey "not found")))
-      (->> (tool.map/simpleFindPath [0 0] (dec min))
-           (into #{})
-           (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                        (into #{})))
-           (map (partial map + (:position unit)))))))
+(defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
+  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
+    (->> (tool.map/simpleFindPath [0 0] (dec min))
+         (into #{})
+         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                      (into #{})))
+         (map (partial map + (:position unit))))))
 
 
-(defmethod app.gameplay.module/unitGetWeaponType :default [_ gameplayCtx unit {:keys [weaponKey]}]
-  (let [{[min max] "range" type "type" :as weapon} (get-in data ["weapon" weaponKey])]
-    (if (nil? weapon)
-      (throw (js/Error. (str weaponKey "not found")))
-      (get weapon "type"))))
+(defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
+  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
+    (get weapon "type")))
 
 (defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (app.gameplay.module/unitGetWeapons type gameplayCtx unit )
+        weapons (->> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
+                     (map (partial app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit)))
         weaponKeys (->> (range (count weapons))
                         (into []))
         [menu data] (if isBattleMenu
@@ -155,6 +153,20 @@
                          {:weaponIdx 1
                           :weapons weapons}]))]
     [menu data]))
+
+
+
+
+(defmethod app.gameplay.module/getHitRate :default [_ gameplayCtx unit weapon targetUnit]
+  (let [isMelee true]
+    (if isMelee
+      (let [pilot 0]
+        ))))
+
+(defmethod app.gameplay.module/unitThinkReaction :default [type gameplayCtx unit fromUnit weapon]
+  (let [hitRate (app.gameplay.module/getHitRate type gameplayCtx fromUnit weapon unit)
+        weapons (app.gameplay.module/unitGetWeapons type gameplayCtx unit)]
+    [:attack (first weapons)]))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
