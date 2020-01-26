@@ -35,6 +35,7 @@ export default class ShowItem extends cc.Component {
 
     clearItem() {
         this._items.forEach(item => {
+            item.active = false;
             item.removeFromParent();
             this._pool.release(item);
         });

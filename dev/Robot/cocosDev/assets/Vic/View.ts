@@ -109,6 +109,7 @@ export default class View extends cc.Component implements IView {
 
     private repaintUnits(data: IUnit[]) {
         this.getGamePage().units.setUnits(data);
+        this.getGamePage().showUnitSampleInfos(data);
     }
 
     private repaintPlayerStart(cb: () => void) {

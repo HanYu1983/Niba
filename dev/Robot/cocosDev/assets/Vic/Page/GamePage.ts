@@ -22,6 +22,7 @@ import BasicViewer from "../BasicViewer"
 import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
 import ViewController from "../ViewController";
+import UnitSampleInfo from "../GamePage/UnitSampleInfo";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -55,6 +56,9 @@ export default class GamePage extends BasicViewer {
 
     @property(ShowItem)
     accuracyInfos: ShowItem = null;
+
+    @property(ShowItem)
+    unitSampleInfos: ShowItem = null;
 
     @property(TurnStart)
     turnStart: TurnStart = null;
@@ -148,6 +152,33 @@ export default class GamePage extends BasicViewer {
 
     closeAccuracyInfos() {
         this.accuracyInfos.clearItem();
+    }
+
+    showUnitSampleInfos(data: any[]) {
+        this.closeUnitSampleInfos();
+
+        let poses: number[][] = [];
+        let maxHP: number[] = [];
+        let maxEN: number[] = [];
+        let hp: number[] = [];
+        let en: number[] = [];
+        data.forEach((unit: any) => {
+            poses.push(unit.position);
+            maxHP.push(20000);
+            maxEN.push(300);
+            hp.push(unit.state.hp);
+            en.push(unit.state.en);
+        });
+
+        let i = 0;
+        this.unitSampleInfos.showItems(poses, (item: cc.Node) => {
+            item.getComponent(UnitSampleInfo).showHPEN(maxHP[i], hp[i], maxEN[i], en[i]);
+            i += 1;
+        });
+    }
+
+    closeUnitSampleInfos() {
+        this.unitSampleInfos.clearItem();
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {
