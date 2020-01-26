@@ -12,11 +12,11 @@ CCEffect %{
         cullMode: none
       properties:
         texture: { value: white }
+        alphaThreshold: { value: 0.5 }
+
         main_texture: {value: [white]}
         flow_texture: {value: [white]}
         resetUV: {value: [1,1,1,1], editor:{type:vec4}}
-        alphaThreshold: { value: 0.5 }
-        
 }%
 
 
@@ -29,7 +29,7 @@ CCProgram vs %{
   in vec3 a_position;
   in vec4 a_color;
   out vec4 v_color;
-
+  out vec3 v_position;
 
   #if USE_TEXTURE
   in vec2 a_uv0;
@@ -50,6 +50,7 @@ CCProgram vs %{
     #endif
 
     v_color = a_color;
+    v_position = a_position;
 
     gl_Position = pos;
   }
@@ -59,10 +60,11 @@ CCProgram vs %{
 CCProgram fs %{
   precision highp float;
   
-  #include <alpha-test>
   #include <cc-global>
+  #include <alpha-test>
 
   in vec4 v_color;
+  in vec3 v_position;
 
   #if USE_TEXTURE
   in vec2 v_uv0;
@@ -78,9 +80,12 @@ CCProgram fs %{
 
   void main () {
     vec2 h5uv = vec2((v_uv0.x - resetUV.x) / resetUV.y, (v_uv0.y - resetUV.z) / resetUV.w);
-    vec4 flow_texture = texture(flow_texture, h5uv);
-    h5uv.x += flow_texture.x * .5 + cc_time.x * .5;
-    h5uv.y += flow_texture.y * .5 + cc_time.x * .1;
+    vec2 flowuv = h5uv;
+    flowuv.x += cc_time.x + v_position.x * .001;
+    flowuv = fract(flowuv);
+    vec4 flow_texture = texture(flow_texture, flowuv);
+    h5uv.x += (flow_texture.x - .5) * .2;
+    h5uv.y += (flow_texture.y - .5) * .1;
     h5uv = fract(h5uv);
     vec4 main_color = texture(main_texture, h5uv);
     main_color *= v_color;
