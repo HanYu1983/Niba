@@ -24,7 +24,8 @@
                              (if (nil? weapon)
                                (throw (js/Error. (str weaponKey " not found")))
                                (cond-> {:key (gensym)
-                                        :weaponKey weaponKey}
+                                        :weaponKey weaponKey
+                                        :level 0}
                                  (= (get weapon "energyType") "bullet")
                                  (merge {:bulletCount (get weapon "maxBulletCount")})))))
                          (get robot "weapons"))
@@ -53,9 +54,9 @@
          :en en
          :power power
          :armor armor
-         :component component
+         :components component
        ; 使用vector(mapv)方便索引的存取(nth, get-in)
-         :weapon weapon
+         :weapons weapon
          :tag #{}}))))
 
 (defmethod app.gameplay.module/loadData :default [_]
@@ -103,14 +104,13 @@
          (into {}))))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
-  (get-in unit [:state :weapon]))
+  (get-in unit [:state :weapons]))
 
 (defmethod app.gameplay.module/unitGetWeaponInfo :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str weaponKey " not found")))
-      (merge weapon
-             weaponData))))
+      weaponData)))
 
 (defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
   (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
@@ -123,7 +123,7 @@
 
 (defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
   (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfo type gameplayCtx unit weapon)]
-    (get weapon "type")))
+    type))
 
 (defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
@@ -154,14 +154,10 @@
                           :weapons weapons}]))]
     [menu data]))
 
-
-
-
 (defmethod app.gameplay.module/getHitRate :default [_ gameplayCtx unit weapon targetUnit]
   (let [isMelee true]
     (if isMelee
-      (let [pilot 0]
-        ))))
+      (let [pilot 0]))))
 
 (defmethod app.gameplay.module/unitThinkReaction :default [type gameplayCtx unit fromUnit weapon]
   (let [hitRate (app.gameplay.module/getHitRate type gameplayCtx fromUnit weapon unit)
