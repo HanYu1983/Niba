@@ -24,7 +24,7 @@
       :data data
       :args (-> args
                 (update-in [0 :hitRate] (constantly (app.gameplay.model/getHitRate gameplayCtx left leftWeapon right)))
-                (update-in [1 :action] (constantly (app.gameplay.model/selectCounterAttackAction gameplayCtx right left weapon)))
+                (update-in [1 :action] (constantly (app.gameplay.model/thinkReaction gameplayCtx right left weapon)))
                 (update-in [1 :hitRate] (constantly 0)))}))
 
   (= "KEY_DOWN" cmd)
@@ -70,7 +70,7 @@
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
                             (nth cursor2)
                             ((fn [weapon]
-                               (app.gameplay.model/selectCounterAttackAction gameplayCtx right left weapon))))
+                               (app.gameplay.model/thinkReaction gameplayCtx right left weapon))))
                         (get-in state [:args 1 :action]))
           attackRange (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)

@@ -61,7 +61,7 @@ const dataJson =
         "gaite": {
             "title": "蓋特",
             "cost": 16000,
-            "power": 20,
+            "power": 30,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",

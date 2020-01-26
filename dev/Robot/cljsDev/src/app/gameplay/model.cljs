@@ -218,7 +218,7 @@
          (setUnits ctx units)))))
 
 (defn getHitRate [ctx unit weapon targetUnit]
-  0.8)
+  (app.gameplay.module/getHitRate app.gameplay.module/*module ctx unit weapon targetUnit))
 
 (defn getMovePathTree [ctx unit]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
@@ -244,9 +244,8 @@
 (defn getWeaponType [ctx unit weapon]
   (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
 
-(defn selectCounterAttackAction [ctx unit fromUnit weapon]
-  (let [hitRate (getHitRate ctx fromUnit weapon unit)]
-    [:attack weapon]))
+(defn thinkReaction [ctx unit fromUnit weapon]
+  (app.gameplay.module/unitThinkReaction app.gameplay.module/*module ctx unit fromUnit weapon))
 
 (defn calcActionResult [ctx left leftAction right rightAction]
   {})
