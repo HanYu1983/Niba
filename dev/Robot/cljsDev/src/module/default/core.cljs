@@ -185,7 +185,8 @@
                                          :components (->> (getUnitComponentsM gameplayCtx unit)
                                                           second)
                                          :maxHp (getUnitMaxHpM gameplayCtx unit)
-                                         :maxEn (getUnitMaxEnM gameplayCtx unit)}))))))
+                                         :maxEn (getUnitMaxEnM gameplayCtx unit)
+                                         :power (getUnitPowerM gameplayCtx unit)}))))))
 
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]

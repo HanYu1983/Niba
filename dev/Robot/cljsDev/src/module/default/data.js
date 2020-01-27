@@ -323,7 +323,7 @@ const dataJson =
                 5,
                 2
             ],
-            "energyCost": 50,
+            "energyCost": 32,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -336,7 +336,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.6,
             "damage": 4096,
-            "powerCost": 5
+            "powerCost": 20
         },
         "beam_mega2": {
             "title": "粒子炮L2",
@@ -344,7 +344,7 @@ const dataJson =
                 5,
                 2
             ],
-            "energyCost": 100,
+            "energyCost": 40,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -355,9 +355,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.572,
-            "damage": 4741,
-            "powerCost": 6
+            "accuracy": 0.588,
+            "damage": 4475,
+            "powerCost": 24
         },
         "beam_mega3": {
             "title": "粒子炮L3",
@@ -365,7 +365,7 @@ const dataJson =
                 6,
                 3
             ],
-            "energyCost": 150,
+            "energyCost": 72,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -376,9 +376,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.544,
-            "damage": 5451,
-            "powerCost": 7
+            "accuracy": 0.54,
+            "damage": 6229,
+            "powerCost": 40
         },
         "beam_mega4": {
             "title": "粒子炮L4",
@@ -386,7 +386,7 @@ const dataJson =
                 6,
                 3
             ],
-            "energyCost": 200,
+            "energyCost": 84,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -397,9 +397,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.516,
-            "damage": 6229,
-            "powerCost": 8
+            "accuracy": 0.522,
+            "damage": 6989,
+            "powerCost": 46
         },
         "beam_mega5": {
             "title": "粒子炮L5",
@@ -407,7 +407,7 @@ const dataJson =
                 7,
                 4
             ],
-            "energyCost": 250,
+            "energyCost": 112,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -418,9 +418,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.488,
-            "damage": 7077,
-            "powerCost": 9
+            "accuracy": 0.48,
+            "damage": 8998,
+            "powerCost": 60
         },
         "beam_mega6": {
             "title": "粒子炮L6",
@@ -428,7 +428,7 @@ const dataJson =
                 7,
                 4
             ],
-            "energyCost": 300,
+            "energyCost": 120,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -439,9 +439,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.46,
-            "damage": 8000,
-            "powerCost": 10
+            "accuracy": 0.468,
+            "damage": 9636,
+            "powerCost": 64
         },
         "beam_mega7": {
             "title": "粒子炮L7",
@@ -449,7 +449,7 @@ const dataJson =
                 7,
                 4
             ],
-            "energyCost": 350,
+            "energyCost": 152,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -460,9 +460,9 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.432,
-            "damage": 8998,
-            "powerCost": 11
+            "accuracy": 0.42,
+            "damage": 12487,
+            "powerCost": 80
         },
         "beam_sniper1": {
             "title": "光束狙擊鎗L1",
@@ -470,7 +470,7 @@ const dataJson =
                 3,
                 9
             ],
-            "energyCost": 20,
+            "energyCost": 33,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -478,14 +478,12 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [
-                "standAttack"
-            ],
+            "ability": [],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 3375,
-            "powerCost": 2
+            "accuracy": 1.3,
+            "damage": 4096,
+            "powerCost": 20
         },
         "beam_sniper2": {
             "title": "光束狙擊鎗L2",
@@ -493,7 +491,7 @@ const dataJson =
                 3,
                 9
             ],
-            "energyCost": 23,
+            "energyCost": 37,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -501,14 +499,12 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [
-                "standAttack"
-            ],
+            "ability": [],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 4173,
-            "powerCost": 3
+            "accuracy": 1.3,
+            "damage": 4640,
+            "powerCost": 24
         },
         "beam_sniper3": {
             "title": "光束狙擊鎗L3",
@@ -516,7 +512,7 @@ const dataJson =
                 4,
                 12
             ],
-            "energyCost": 26,
+            "energyCost": 57,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -524,14 +520,12 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [
-                "standAttack"
-            ],
+            "ability": [],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 5088,
-            "powerCost": 4
+            "accuracy": 1.3,
+            "damage": 7301,
+            "powerCost": 40
         },
         "beam_sniper4": {
             "title": "光束狙擊鎗L4",
@@ -539,7 +533,7 @@ const dataJson =
                 4,
                 12
             ],
-            "energyCost": 29,
+            "energyCost": 64,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -547,14 +541,12 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [
-                "standAttack"
-            ],
+            "ability": [],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 6128,
-            "powerCost": 5
+            "accuracy": 1.3,
+            "damage": 8514,
+            "powerCost": 46
         },
         "beam_sniper5": {
             "title": "光束狙擊鎗L5",
@@ -562,7 +554,7 @@ const dataJson =
                 5,
                 15
             ],
-            "energyCost": 32,
+            "energyCost": 81,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -570,14 +562,12 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [
-                "standAttack"
-            ],
+            "ability": [],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 7301,
-            "powerCost": 6
+            "accuracy": 1.3,
+            "damage": 11852,
+            "powerCost": 60
         },
         "beam_sniper6": {
             "title": "光束狙擊鎗L6",
@@ -585,7 +575,49 @@ const dataJson =
                 5,
                 15
             ],
-            "energyCost": 35,
+            "energyCost": 85,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.3,
+            "damage": 12944,
+            "powerCost": 64
+        },
+        "beam_sniper7": {
+            "title": "光束狙擊鎗L7",
+            "range": [
+                5,
+                15
+            ],
+            "energyCost": 105,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.3,
+            "damage": 17984,
+            "powerCost": 80
+        },
+        "beam_gun1": {
+            "title": "光束鎗L1",
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 10,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -594,19 +626,111 @@ const dataJson =
                 1
             ],
             "ability": [
-                "standAttack"
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 8615,
-            "powerCost": 7
+            "damage": 2744,
+            "powerCost": 10
         },
-        "beam_sniper7": {
-            "title": "光束狙擊鎗L7",
+        "beam_gun2": {
+            "title": "光束鎗L2",
             "range": [
-                5,
-                15
+                2,
+                4
+            ],
+            "energyCost": 12,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3048,
+            "powerCost": 12
+        },
+        "beam_gun3": {
+            "title": "光束鎗L3",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 22,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 4492,
+            "powerCost": 20
+        },
+        "beam_gun4": {
+            "title": "光束鎗L4",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 25,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 5132,
+            "powerCost": 23
+        },
+        "beam_gun5": {
+            "title": "光束鎗L5",
+            "range": [
+                2,
+                6
+            ],
+            "energyCost": 34,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 6859,
+            "powerCost": 30
+        },
+        "beam_gun6": {
+            "title": "光束鎗L6",
+            "range": [
+                2,
+                6
             ],
             "energyCost": 38,
             "maxBulletCount": 0,
@@ -617,67 +741,21 @@ const dataJson =
                 1
             ],
             "ability": [
-                "standAttack"
-            ],
-            "energyType": "energy",
-            "type": "single",
-            "accuracy": 1,
-            "damage": 10077,
-            "powerCost": 8
-        },
-        "beam_gun1": {
-            "title": "輕型光束鎗",
-            "range": [
-                2,
-                5
-            ],
-            "energyCost": 10,
-            "maxBulletCount": 0,
-            "suitability": [
-                1,
-                0.5,
-                1,
-                1
-            ],
-            "ability": [
                 "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 2000,
-            "powerCost": 1
+            "damage": 8000,
+            "powerCost": 34
         },
-        "beam_gun2": {
-            "title": "中型光束鎗",
-            "range": [
-                2,
-                5
-            ],
-            "energyCost": 15,
-            "maxBulletCount": 0,
-            "suitability": [
-                1,
-                0.5,
-                1,
-                1
-            ],
-            "ability": [
-                "moveAttack"
-            ],
-            "energyType": "energy",
-            "type": "single",
-            "accuracy": 1,
-            "damage": 2500,
-            "powerCost": 2
-        },
-        "beam_gun3": {
-            "title": "重型光束鎗",
+        "beam_gun7": {
+            "title": "光束鎗L7",
             "range": [
                 2,
                 6
             ],
-            "energyCost": 20,
+            "energyCost": 46,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -691,11 +769,11 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 3000,
-            "powerCost": 3
+            "damage": 9938,
+            "powerCost": 40
         },
         "beam_gatling1": {
-            "title": "輕型光束衝鋒鎗",
+            "title": "光束衝鋒鎗L1",
             "range": [
                 2,
                 4
@@ -714,16 +792,16 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.5,
-            "damage": 1500,
-            "powerCost": 1
+            "damage": 2197,
+            "powerCost": 10
         },
         "beam_gatling2": {
-            "title": "中型光束衝鋒鎗",
+            "title": "光束衝鋒鎗L2",
             "range": [
                 2,
                 4
             ],
-            "energyCost": 15,
+            "energyCost": 12,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -737,16 +815,16 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.5,
-            "damage": 2000,
-            "powerCost": 2
+            "damage": 2406,
+            "powerCost": 12
         },
         "beam_gatling3": {
-            "title": "重型光束衝鋒鎗",
+            "title": "光束衝鋒鎗L3",
             "range": [
                 2,
                 5
             ],
-            "energyCost": 20,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -760,16 +838,108 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.5,
-            "damage": 2500,
-            "powerCost": 3
+            "damage": 3375,
+            "powerCost": 20
+        },
+        "beam_gatling4": {
+            "title": "光束衝鋒鎗L4",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 25,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 3796,
+            "powerCost": 23
+        },
+        "beam_gatling5": {
+            "title": "光束衝鋒鎗L5",
+            "range": [
+                2,
+                6
+            ],
+            "energyCost": 34,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 4913,
+            "powerCost": 30
+        },
+        "beam_gatling6": {
+            "title": "光束衝鋒鎗L6",
+            "range": [
+                2,
+                6
+            ],
+            "energyCost": 38,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 5639,
+            "powerCost": 34
+        },
+        "beam_gatling7": {
+            "title": "光束衝鋒鎗L7",
+            "range": [
+                2,
+                6
+            ],
+            "energyCost": 46,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 6859,
+            "powerCost": 40
         },
         "beam_sword1": {
-            "title": "輕型光束劍",
+            "title": "光束劍L1",
             "range": [
                 1,
                 1
             ],
-            "energyCost": 5,
+            "energyCost": 8,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -784,16 +954,16 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 2200,
-            "powerCost": 1
+            "damage": 3176,
+            "powerCost": 10
         },
         "beam_sword2": {
-            "title": "中型光束劍",
+            "title": "光束劍L2",
             "range": [
                 1,
                 1
             ],
-            "energyCost": 10,
+            "energyCost": 14,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -808,16 +978,16 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 2700,
-            "powerCost": 2
+            "damage": 3581,
+            "powerCost": 12
         },
         "beam_sword3": {
-            "title": "重型光束劍",
+            "title": "光束劍L3",
             "range": [
                 1,
                 2
             ],
-            "energyCost": 15,
+            "energyCost": 38,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -832,8 +1002,104 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 3200,
-            "powerCost": 3
+            "damage": 5545,
+            "powerCost": 20
+        },
+        "beam_sword4": {
+            "title": "光束劍L4",
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 47,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 6434,
+            "powerCost": 23
+        },
+        "beam_sword5": {
+            "title": "光束劍L5",
+            "range": [
+                2,
+                3
+            ],
+            "energyCost": 68,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 8869,
+            "powerCost": 30
+        },
+        "beam_sword6": {
+            "title": "光束劍L6",
+            "range": [
+                2,
+                3
+            ],
+            "energyCost": 80,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 10503,
+            "powerCost": 34
+        },
+        "beam_sword7": {
+            "title": "光束劍L7",
+            "range": [
+                2,
+                3
+            ],
+            "energyCost": 98,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 13312,
+            "powerCost": 40
         },
         "gaite_handSword": {
             "title": "蓋特手刀",
@@ -841,7 +1107,7 @@ const dataJson =
                 1,
                 1
             ],
-            "energyCost": 5,
+            "energyCost": 10,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -855,9 +1121,9 @@ const dataJson =
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
-            "damage": 2200,
-            "powerCost": 1
+            "accuracy": 0.95,
+            "damage": 3300,
+            "powerCost": 12
         },
         "gaite_axe": {
             "title": "蓋特巨斧",
@@ -865,7 +1131,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 25,
+            "energyCost": 75,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -880,8 +1146,8 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 4200,
-            "powerCost": 3
+            "damage": 10000,
+            "powerCost": 30
         },
         "gaite_beam": {
             "title": "蓋特光線",
@@ -889,7 +1155,7 @@ const dataJson =
                 1,
                 3
             ],
-            "energyCost": 50,
+            "energyCost": 70,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -903,8 +1169,8 @@ const dataJson =
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 5000,
-            "powerCost": 5
+            "damage": 9000,
+            "powerCost": 30
         },
         "gaite_cannon": {
             "title": "蓋特加農",
@@ -924,8 +1190,8 @@ const dataJson =
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 2500,
-            "powerCost": 2
+            "damage": 3000,
+            "powerCost": 12
         }
     },
     "weaponAbility": {
