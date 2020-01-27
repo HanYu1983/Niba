@@ -1,0 +1,12 @@
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+id/string,title/string,melee/float,range/float,dex/float,agi/float,exp/int,ability/string[]
+amuro,amuro,1,2,1.4,1.4,10,
