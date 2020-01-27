@@ -164,12 +164,11 @@
 ; binding
 ; =======================
 
-
 (defmethod app.gameplay.module/loadData :default [_]
   (a/go
     data))
 
-(defmethod app.gameplay.module/unitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
+(defmethod app.gameplay.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
                                   :tags #{}}})]
@@ -178,6 +177,19 @@
            (setUnitHp gameplayCtx unit (getUnitMaxHp gameplayCtx unit))))
         ((fn [unit]
            (setUnitEn gameplayCtx unit (getUnitMaxEn gameplayCtx unit)))))))
+
+(defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
+  (-> unit
+      (merge {:position pos})
+      (update-in [:state :tag] #(conj % :firstMove2))))
+
+(defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
+  (-> unit
+      (update-in [:state :tag] #(conj % :done))))
+
+(defmethod app.gameplay.module/unitOnTurnStart :default [_ gameplayCtx unit]
+  (-> unit
+      (update-in [:state :tag] (constantly #{}))))
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
@@ -240,26 +252,14 @@
                           :weapons weapons}]))]
     [menu data]))
 
-(defmethod app.gameplay.module/getHitRate :default [_ gameplayCtx unit weapon targetUnit]
+(defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
   (let [isMelee true]
     (if isMelee
       (let [pilot 0]))))
 
-(defmethod app.gameplay.module/unitThinkReaction :default [type gameplayCtx unit fromUnit weapon]
-  (let [hitRate (app.gameplay.module/getHitRate type gameplayCtx fromUnit weapon unit)
+(defmethod app.gameplay.module/unitGetReaction :default [type gameplayCtx unit fromUnit weapon]
+  (let [hitRate (app.gameplay.module/unitGetHitRate type gameplayCtx fromUnit weapon unit)
         weapons (-> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
                     second)]
     [:attack (first weapons)]))
 
-(defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
-  (-> unit
-      (merge {:position pos})
-      (update-in [:state :tag] #(conj % :firstMove2))))
-
-(defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
-  (-> unit
-      (update-in [:state :tag] #(conj % :done))))
-
-(defmethod app.gameplay.module/unitOnTurnStart :default [_ gameplayCtx unit]
-  (-> unit
-      (update-in [:state :tag] (constantly #{}))))

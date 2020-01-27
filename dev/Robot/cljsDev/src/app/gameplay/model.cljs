@@ -211,14 +211,14 @@
 
 (defn createUnit [ctx {:keys [key position] :as unit} args]
   (-> (getUnits ctx)
-      (tool.units/add (merge (app.gameplay.module/unitCreate app.gameplay.module/*module ctx unit args)
+      (tool.units/add (merge (app.gameplay.module/unitOnCreate app.gameplay.module/*module ctx unit args)
                              {:key (or key (gensym))
                               :position (or position [0 0])}))
       ((fn [units]
          (setUnits ctx units)))))
 
 (defn getHitRate [ctx unit weapon targetUnit]
-  (app.gameplay.module/getHitRate app.gameplay.module/*module ctx unit weapon targetUnit))
+  (app.gameplay.module/unitGetHitRate app.gameplay.module/*module ctx unit weapon targetUnit))
 
 (defn getMovePathTree [ctx unit]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
@@ -248,7 +248,7 @@
   (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
 
 (defn thinkReaction [ctx unit fromUnit weapon]
-  (app.gameplay.module/unitThinkReaction app.gameplay.module/*module ctx unit fromUnit weapon))
+  (app.gameplay.module/unitGetReaction app.gameplay.module/*module ctx unit fromUnit weapon))
 
 (defn calcActionResult [ctx left leftAction right rightAction]
   {})
