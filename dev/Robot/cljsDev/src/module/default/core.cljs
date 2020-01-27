@@ -1,6 +1,7 @@
 (ns module.default.core
   (:require [clojure.set])
   (:require [clojure.core.async :as a])
+  (:require [app.gameplay.model])
   (:require [app.gameplay.module])
   (:require [tool.map])
   (:require-macros [module.default.core :as mm])
