@@ -99,10 +99,11 @@
 
 ; components
 (defn getUnitComponents [gameplayCtx unit]
-  (let [coms (get-in unit [:state :components :default])]
+  (let [transform (get-in unit [:state :robot])
+        coms (get-in unit [:state :components transform])]
     (if coms
       coms
-      [:default
+      [transform
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
          (if (nil? robot)
@@ -163,6 +164,13 @@
 
 (def getUnitPowerM (memoize getUnitPower))
 
+(defn getUnitTransforms [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str robotKey "not found")))
+      (conj (get-in robot ["transform"])
+            robotKey))))
 
 (defn getUnitInfo [gameplayCtx unit]
   (let [robotKey (get-in unit [:state :robot])
@@ -194,6 +202,18 @@
   (a/go
     data))
 
+(defmethod app.gameplay.module/gameplayOnInit :default [_ gameplayCtx]
+  (let [[gameplayCtx _] (->> (get data "robot")
+                             (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                       [(app.gameplay.model/createUnit gameplayCtx
+                                                                       {:player :player
+                                                                        :type :robot
+                                                                        :position [0 i]}
+                                                                       {:robotKey robotKey})
+                                        (inc i)])
+                                     [gameplayCtx 1]))]
+    gameplayCtx))
+
 (defmethod app.gameplay.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
@@ -224,7 +244,7 @@
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (getUnitPowerM gameplayCtx unit)
+        power (/ (getUnitPowerM gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [totalCost]} curr]
@@ -278,7 +298,7 @@
                           :weapons weapons}]
 
                         :else
-                        [[["move"] weaponKeys ["gundam" "gaite" "zgundam"] ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys (getUnitTransforms gameplayCtx unit) ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
                           :transformIdx 2}]))]

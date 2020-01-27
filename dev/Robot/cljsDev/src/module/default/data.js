@@ -59,9 +59,9 @@ const dataJson =
     "componentAction": {},
     "robot": {
         "gaite": {
-            "title": "蓋特",
-            "cost": 27040,
-            "power": 26,
+            "title": "真蓋特",
+            "cost": 62500,
+            "power": 125,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",
@@ -75,17 +75,20 @@ const dataJson =
                 "armor2"
             ],
             "suitability": [
+                0.75,
+                0.5,
                 1,
-                1,
-                1,
-                1
+                0.75
             ],
-            "transform": []
+            "transform": [
+                "zgundam",
+                "gundam"
+            ]
         },
         "zgundam": {
             "title": "z鋼彈",
-            "cost": 16000,
-            "power": 20,
+            "cost": 32400,
+            "power": 90,
             "weapons": [
                 "beam_sword2",
                 "beam_gun1",
@@ -99,16 +102,16 @@ const dataJson =
             ],
             "suitability": [
                 1,
-                1,
-                1,
+                0.5,
+                0,
                 1
             ],
             "transform": []
         },
         "gundam": {
             "title": "鋼彈",
-            "cost": 9000,
-            "power": 15,
+            "cost": 16900,
+            "power": 65,
             "weapons": [
                 "beam_sword1",
                 "beam_gun1"
@@ -121,8 +124,108 @@ const dataJson =
             ],
             "suitability": [
                 1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": []
+        },
+        "jimu": {
+            "title": "吉姆",
+            "cost": 9216,
+            "power": 48,
+            "weapons": [
+                "beam_sword1",
+                "beam_gatling1"
+            ],
+            "components": [
+                "energy1",
+                "armor1"
+            ],
+            "suitability": [
                 1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": []
+        },
+        "BGD": {
+            "title": "制式格鬥",
+            "cost": 14400,
+            "power": 60,
+            "weapons": [
+                "beam_sword2",
+                "beam_gatling1"
+            ],
+            "components": [
+                "energy1",
+                "armor1"
+            ],
+            "suitability": [
                 1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": []
+        },
+        "BYJ": {
+            "title": "制式遊擊",
+            "cost": 14400,
+            "power": 60,
+            "weapons": [
+                "beam_sword1",
+                "beam_gatling2"
+            ],
+            "components": [
+                "energy1",
+                "armor1"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": []
+        },
+        "BJJ": {
+            "title": "制式狙擊",
+            "cost": 14400,
+            "power": 60,
+            "weapons": [
+                "beam_sniper1",
+                "beam_gatling1"
+            ],
+            "components": [
+                "energy2",
+                "armor1"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": []
+        },
+        "BGR": {
+            "title": "制式干擾",
+            "cost": 14400,
+            "power": 60,
+            "weapons": [
+                "beam_sword1",
+                "beam_gatling1"
+            ],
+            "components": [
+                "energy1",
+                "armor2"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
                 1
             ],
             "transform": []

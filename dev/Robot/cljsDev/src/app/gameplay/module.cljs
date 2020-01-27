@@ -2,6 +2,8 @@
 
 (defmulti loadData (fn [type] type))
 
+(defmulti gameplayOnInit (fn [type gameplayCtx] type))
+
 (defmulti unitOnCreate (fn [type gameplayCtx unit args] type))
 (defmulti unitOnMove (fn [type gameplayCtx unit pos] type))
 (defmulti unitOnDone (fn [type gameplayCtx unit] type))
