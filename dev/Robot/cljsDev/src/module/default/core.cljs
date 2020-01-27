@@ -202,6 +202,18 @@
   (a/go
     data))
 
+(defmethod app.gameplay.module/gameplayOnInit :default [_ gameplayCtx]
+  (let [[gameplayCtx _] (->> (get data "robot")
+                             (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                       [(app.gameplay.model/createUnit gameplayCtx
+                                                                       {:player :player
+                                                                        :type :robot
+                                                                        :position [0 i]}
+                                                                       {:robotKey robotKey})
+                                        (inc i)])
+                                     [gameplayCtx 1]))]
+    gameplayCtx))
+
 (defmethod app.gameplay.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
@@ -232,7 +244,7 @@
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (getUnitPowerM gameplayCtx unit)
+        power (/ (getUnitPowerM gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [totalCost]} curr]
