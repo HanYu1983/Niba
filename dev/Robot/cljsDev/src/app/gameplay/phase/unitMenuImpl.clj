@@ -23,6 +23,7 @@
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (if (= cursor1 weaponIdx)
                            (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                               second
                                (nth cursor2)
                                ((fn [weapon]
                                   (app.gameplay.model/getWeaponRange gameplayCtx unit weapon))))
@@ -39,11 +40,13 @@
              weaponIdx (get-in state [:data :weaponIdx])
              attackRange (when (= cursor1 weaponIdx)
                            (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                               second
                                (nth cursor2)
                                ((fn [weapon]
                                   (app.gameplay.model/getWeaponRange gameplayCtx unit weapon)))))
              checkHitRate (when (= cursor1 weaponIdx)
                             (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                                             second
                                              (nth cursor2))
                                   unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
                                                    (filter (comp not (partial app.gameplay.model/isFriendlyUnit gameplayCtx unit))))
@@ -72,6 +75,7 @@
           (= cursor1 weaponIdx)
           (let [menu (tool.menuCursor/getMenu (:menuCursor state))
                 weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                            second
                             (nth cursor2))
                 weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
             (cond

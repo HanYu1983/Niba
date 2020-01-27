@@ -238,6 +238,9 @@
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
 
+(defn setWeapons [ctx unit weapons]
+  (app.gameplay.module/unitSetWeapons app.gameplay.module/*module ctx unit))
+
 (defn getWeaponRange [ctx unit weapon]
   (app.gameplay.module/unitGetWeaponRange app.gameplay.module/*module ctx unit weapon))
 

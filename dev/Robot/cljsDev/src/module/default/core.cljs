@@ -53,19 +53,7 @@
          :hp 10000
          :en en
          :power power
-         :armor armor
-         :components component
-       ; 使用vector(mapv)方便索引的存取(nth, get-in)
-         :weapons weapon
          :tag #{}}))))
-
-(defmethod app.gameplay.module/loadData :default [_]
-  (a/go
-    data))
-
-(defmethod app.gameplay.module/unitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
-  (merge unit 
-         {:state (createUnitStateForKey robotKey)}))
 
 (defn moveCost [gameplayCtx from to]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
@@ -89,6 +77,48 @@
 
 (def nextCellM (memoize nextCell))
 
+(defn getWeaponData [weaponKey]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      weaponData)))
+
+(defn getUnitWeapons [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        weapons (get-in unit [:state :weapons :default])]
+    (if weapons
+      weapons
+      [:default
+       (let [robot (get-in data ["robot" robotKey])]
+         (if (nil? robot)
+           (throw (js/Error. (str robotKey "not found")))
+           (mapv (fn [weaponKey]
+                   (let [weapon (get-in data ["weapon" weaponKey])]
+                     (if (nil? weapon)
+                       (throw (js/Error. (str weaponKey " not found")))
+                       (cond-> {:key (gensym)
+                                :weaponKey weaponKey
+                                :level 0}
+                         (= (get weapon "energyType") "bullet")
+                         (merge {:bulletCount (get weapon "maxBulletCount")})))))
+                 (get robot "weapons"))))])))
+
+(def getUnitWeaponsM (memoize getUnitWeapons))
+
+(defn setUnitWeapons [gameplayCtx unit weapons]
+  (update-in unit [:state :weapons] (fn [origin]
+                                      (conj origin weapons))))
+
+
+
+(defmethod app.gameplay.module/loadData :default [_]
+  (a/go
+    data))
+
+(defmethod app.gameplay.module/unitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
+  (merge unit 
+         {:state (createUnitStateForKey robotKey)}))
+
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (get-in unit [:state :power])
@@ -104,7 +134,10 @@
          (into {}))))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
-  (get-in unit [:state :weapons]))
+  (getUnitWeaponsM gameplayCtx unit))
+
+(defmethod app.gameplay.module/unitSetWeapons :default [_ gameplayCtx unit weapons]
+  (setUnitWeapons gameplayCtx unit weapons))
 
 (defmethod app.gameplay.module/unitGetWeaponInfoFromState :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
@@ -131,6 +164,7 @@
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
         weapons (->> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
+                     second
                      (map (partial app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit)))
         weaponKeys (->> (range (count weapons))
                         (into []))
@@ -162,7 +196,8 @@
 
 (defmethod app.gameplay.module/unitThinkReaction :default [type gameplayCtx unit fromUnit weapon]
   (let [hitRate (app.gameplay.module/getHitRate type gameplayCtx fromUnit weapon unit)
-        weapons (app.gameplay.module/unitGetWeapons type gameplayCtx unit)]
+        weapons (-> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
+                    second)]
     [:attack (first weapons)]))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]

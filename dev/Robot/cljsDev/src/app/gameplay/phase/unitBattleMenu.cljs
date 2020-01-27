@@ -45,6 +45,7 @@
           weaponIdx (get-in state [:data :weaponIdx])
           attackRange (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                            second
                             (nth cursor2)
                             ((fn [weapon]
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
@@ -61,6 +62,7 @@
           weaponIdx (get-in state [:data :weaponIdx])
           leftAction (if (= cursor1 weaponIdx)
                        (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                           second
                            (nth cursor2)
                            ((fn [weapon]
                               [:attack weapon])))
@@ -68,12 +70,14 @@
 
           rightAction (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                            second
                             (nth cursor2)
                             ((fn [weapon]
                                (app.gameplay.model/thinkReaction gameplayCtx right left weapon))))
                         (get-in state [:args 1 :action]))
           attackRange (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                            second
                             (nth cursor2)
                             ((fn [weapon]
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
