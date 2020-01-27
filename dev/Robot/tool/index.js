@@ -23,6 +23,8 @@ async function main(config) {
 
     const {
         prefix,
+        ext,
+        delimiter,
         template,
         output
     } = config;
@@ -33,20 +35,23 @@ async function main(config) {
 
     for (const i in filepaths) {
         const filepath = filepaths[i];
-        if (path.extname(filepath) != ".tsv") {
+        if (path.extname(filepath) != ext) {
             continue
         }
         const tableKey = path.basename(filepath).replace(prefix, "").replace(path.extname(filepath), "")
         let list = await new Promise((res, rej) => {
             const list = []
             fs.createReadStream(filepath)
-                .pipe(csv.parse({ headers: true, delimiter: "\t" }))
+                .pipe(csv.parse({ headers: true, delimiter: delimiter }))
                 .on('error', rej)
                 .on('data', row => list.push(row))
                 .on('end', rowCount => res(list));
         })
 
         list = list.map(obj => {
+            if(obj["id/string"] == null){
+                return null
+            }
             if (obj["id/string"].trim() == "") {
                 return null
             }
@@ -188,9 +193,19 @@ async function main(config) {
     }
     await writeFile(output, tmpl.replace("{0}", JSON.stringify(formated, null, 4)))
 }
-
+/*
 main({
     prefix: "default - ",
+    ext: ".tsv",
+    delimiter: "\t",
+    template: "./template.txt",
+    output: "../cljsDev/src/module/default/data.js"
+}).catch(console.log)
+*/
+main({
+    prefix: "",
+    ext: ".csv",
+    delimiter: ",",
     template: "./template.txt",
     output: "../cljsDev/src/module/default/data.js"
 }).catch(console.log)

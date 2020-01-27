@@ -2,61 +2,67 @@ const dataJson =
 {
     "component": {
         "energy1": {
-            "title": "能量夾",
+            "title": "能量夾L1",
             "desc": "增加{0}能量.",
             "value": [
-                "80"
+                "40"
             ],
-            "powerCost": 1,
+            "powerCost": 2,
             "action": ""
         },
         "energy2": {
-            "title": "能量夾",
+            "title": "能量夾L2",
             "desc": "增加{0}能量.",
             "value": [
-                "170"
+                "65"
             ],
-            "powerCost": 2,
+            "powerCost": 3,
             "action": ""
         },
         "energy3": {
-            "title": "能量夾",
+            "title": "能量夾L3",
             "desc": "增加{0}能量.",
             "value": [
-                "260"
+                "90"
             ],
-            "powerCost": 3,
+            "powerCost": 4,
             "action": ""
         },
         "armor1": {
-            "title": "鐵板",
+            "title": "裝甲L1",
             "desc": "增加{0}裝甲.",
             "value": [
-                "100"
-            ],
-            "powerCost": 2,
-            "action": ""
-        },
-        "armor2": {
-            "title": "鋼板",
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "170"
+                "600"
             ],
             "powerCost": 3,
             "action": ""
         },
-        "armor3": {
-            "title": "鋼彈合金",
+        "armor2": {
+            "title": "裝甲L2",
             "desc": "增加{0}裝甲.",
             "value": [
-                "240"
+                "850"
             ],
             "powerCost": 4,
+            "action": ""
+        },
+        "armor3": {
+            "title": "裝甲L3",
+            "desc": "增加{0}裝甲.",
+            "value": [
+                "1100"
+            ],
+            "powerCost": 5,
             "action": ""
         }
     },
     "componentAction": {},
+    "config": {
+        "default": {
+            "powerCostForMove": 5
+        }
+    },
+    "pilot": {},
     "robot": {
         "gaite": {
             "title": "真蓋特",
@@ -439,7 +445,7 @@ const dataJson =
             "ability": [],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.468,
+            "accuracy": 0.46799999999999997,
             "damage": 9636,
             "powerCost": 64
         },
@@ -1209,12 +1215,7 @@ const dataJson =
         },
         "melee": {
             "title": "格鬥",
-            "desc": "以格鬥值差距影響命中率",
-            "values": []
-        },
-        "range": {
-            "title": "射擊",
-            "desc": "以射擊值差距影響命中率",
+            "desc": "以格鬥值差距影響命中率. 沒有melee就代表以射擊值影響. ",
             "values": []
         },
         "beam": {
@@ -1225,6 +1226,11 @@ const dataJson =
         "physic": {
             "title": "實彈",
             "desc": "",
+            "values": []
+        },
+        "fire": {
+            "title": "火焰",
+            "desc": "無視裝甲值. 樹林中傷害x{0}",
             "values": []
         }
     },
