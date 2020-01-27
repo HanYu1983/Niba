@@ -13,7 +13,8 @@ export default class View extends cc.Component implements IView {
         this.closeSystemMenu();
         this.repaintPlayerStart(cb);
 
-        this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
+        //this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
+        this.getGamePage().changeUnitHP();
     }
     enemyTurnStart(enemyName: string, cb: () => void) {
         this.closeUnitMenu();
@@ -28,7 +29,6 @@ export default class View extends cc.Component implements IView {
         // this.getGamePage().effects.createBlade(120, [4, 4]);
         // this.getGamePage().effects.createExplode(200, [7, 8]);
 
-        this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
 
         cb();
     }

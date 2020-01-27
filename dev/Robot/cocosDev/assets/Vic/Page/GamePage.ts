@@ -164,8 +164,8 @@ export default class GamePage extends BasicViewer {
         let en: number[] = [];
         data.forEach((unit: any) => {
             poses.push(unit.position);
-            maxHP.push(20000);
-            maxEN.push(300);
+            maxHP.push(unit.state.maxHp);
+            maxEN.push(unit.state.maxEn);
             hp.push(unit.state.hp);
             en.push(unit.state.en);
         });
@@ -179,6 +179,22 @@ export default class GamePage extends BasicViewer {
 
     closeUnitSampleInfos() {
         this.unitSampleInfos.clearItem();
+    }
+
+    changeUnitHP() {
+        this.closeUnitSampleInfos();
+
+        cc.tween(this.node)
+            .call(() => { this.effects.createAimEffect([0, 0], [3, 3]) })
+            .delay(.7)
+            .call(() => { this.effects.createExplode(120, [3, 3]) })
+            .delay(.7)
+            .call(() => {
+                this.unitSampleInfos.showItems([[3, 3]], (item: cc.Node) => {
+                    item.getComponent(UnitSampleInfo).changeHP(100, 20);
+                });
+            })
+            .start();
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {
