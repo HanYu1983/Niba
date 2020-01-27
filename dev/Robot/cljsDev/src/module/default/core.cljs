@@ -99,10 +99,11 @@
 
 ; components
 (defn getUnitComponents [gameplayCtx unit]
-  (let [coms (get-in unit [:state :components :default])]
+  (let [transform (get-in unit [:state :robot])
+        coms (get-in unit [:state :components transform])]
     (if coms
       coms
-      [:default
+      [transform
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
          (if (nil? robot)

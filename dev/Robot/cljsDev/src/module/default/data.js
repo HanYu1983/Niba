@@ -103,7 +103,7 @@ const dataJson =
                 1,
                 1
             ],
-            "transform": []
+            "transform": ["gaite", "gundam"]
         },
         "gundam": {
             "title": "鋼彈",
@@ -125,7 +125,7 @@ const dataJson =
                 1,
                 1
             ],
-            "transform": []
+            "transform": ["zgundam", "gaite"]
         }
     },
     "terrain": {
