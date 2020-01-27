@@ -83,9 +83,13 @@
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
                         [])
 
-          hitRate (cond-> (get-in state [:args 0 :hitRate])
-                    (= rightAction [:evade])
-                    (/ 2))
+          hitRate (if (= cursor1 weaponIdx)
+                    (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                        second
+                        (nth cursor2)
+                        ((fn [weapon]
+                           (app.gameplay.model/getHitRate gameplayCtx left weapon right))))
+                    (get-in state [:args 0 :hitRate]))
 
           state (-> state
                     (update-in [:args 1 :action] (constantly rightAction))

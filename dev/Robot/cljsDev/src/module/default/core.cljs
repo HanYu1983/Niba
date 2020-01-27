@@ -164,6 +164,40 @@
 
 (def getUnitPowerM (memoize getUnitPower))
 
+
+(defn getUnitHitRate [gameplayCtx unit weapon targetUnit]
+  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+        ; 距離為基本命中率
+        basic (let [pos1 (:position unit)
+                    pos2 (:position targetUnit)
+                    dist (->> (map - pos1 pos2)
+                              (repeat 2)
+                              (apply map *)
+                              (map js/Math.sqrt)
+                              (apply +))]
+                (- 0.9 (* dist 0.05)))
+
+        ; 格鬥或射擊係數
+        factor1 (let [isMelee (some #(= % "melee") (get weaponInfo "ability"))]
+                  (if isMelee
+                    1
+                    1))
+
+        ; 命中回避係數
+        factor2 1
+
+        ; 地型適性係數
+        factor3 1
+
+        ; 武器命中補正係數
+        factor4 (get weaponInfo "accuracy")
+
+        ; 地型補正係數
+        factor5 1]
+    (* basic factor1 factor2 factor3 factor4 factor5)))
+
+
+; transform
 (defn getUnitTransforms [gameplayCtx unit]
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
@@ -306,9 +340,7 @@
     [menu data]))
 
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
-  (let [isMelee true]
-    (if isMelee
-      (let [pilot 0]))))
+  (getUnitHitRate gameplayCtx unit weapon targetUnit))
 
 (defmethod app.gameplay.module/unitGetReaction :default [type gameplayCtx unit fromUnit weapon]
   (let [hitRate (app.gameplay.module/unitGetHitRate type gameplayCtx fromUnit weapon unit)
