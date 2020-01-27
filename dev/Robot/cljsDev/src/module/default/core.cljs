@@ -47,7 +47,7 @@
 ; hp
 (mm/defUnitSetter hp)
 (mm/defUnitGetter hp)
-(defn getMaxHp [gameplayCtx unit]
+(defn getUnitMaxHp [gameplayCtx unit]
   10000)
 
 ; en
@@ -75,12 +75,12 @@
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
-  (let [robotKey (get-in unit [:state :robot])
-        weapons (get-in unit [:state :weapons :default])]
+  (let [weapons (get-in unit [:state :weapons :default])]
     (if weapons
       weapons
       [:default
-       (let [robot (get-in data ["robot" robotKey])]
+       (let [robotKey (get-in unit [:state :robot])
+             robot (get-in data ["robot" robotKey])]
          (if (nil? robot)
            (throw (js/Error. (str robotKey "not found")))
            (mapv (fn [weaponKey]
@@ -89,7 +89,8 @@
                        (throw (js/Error. (str weaponKey " not found")))
                        (cond-> {:key (gensym)
                                 :weaponKey weaponKey
-                                :level 0}
+                                :level 0
+                                :tags #{}}
                          (= (get weapon "energyType") "bullet")
                          (merge {:bulletCount (get weapon "maxBulletCount")})))))
                  (get robot "weapons"))))])))
@@ -135,6 +136,29 @@
 (def getUnitPowerM (memoize getUnitPower))
 
 
+;weapon
+(defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (let [{[min max] "range" type "type"} weaponData]
+        [min max]))))
+
+(defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (let [{type "type"} weaponData]
+        type))))
+
+(defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (merge weaponData
+             {"range" (getWeaponRange gameplayCtx unit weapon)
+              "type" (getWeaponType gameplayCtx unit weapon)}))))
+
 ; =======================
 ; binding
 ; =======================
@@ -145,9 +169,14 @@
     data))
 
 (defmethod app.gameplay.module/unitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
-  (merge unit {:state {:robot robotKey
-                       :pilot "amuro"
-                       :tag #{}}}))
+  (let [unit (merge unit {:state {:robot robotKey
+                                  :pilot "amuro"
+                                  :tags #{}}})]
+    (-> unit
+        ((fn [unit]
+           (setUnitHp gameplayCtx unit (getUnitMaxHp gameplayCtx unit))))
+        ((fn [unit]
+           (setUnitEn gameplayCtx unit (getUnitMaxEn gameplayCtx unit)))))))
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
@@ -169,25 +198,16 @@
 (defmethod app.gameplay.module/unitSetWeapons :default [_ gameplayCtx unit weapons]
   (setUnitWeapons gameplayCtx unit weapons))
 
-(defmethod app.gameplay.module/unitGetWeaponInfoFromState :default [_ gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  (let [weaponData (get-in data ["weapon" weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
-      (merge weaponData
-             {:state weapon}))))
-
 (defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
-  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit weapon)]
+  (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
     (->> (tool.map/simpleFindPath [0 0] (dec min))
          (into #{})
          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
                                       (into #{})))
          (map (partial map + (:position unit))))))
 
-
 (defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
-  (let [{[min max] "range" type "type"} (app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit weapon)]
-    type))
+  (getWeaponType gameplayCtx unit weapon))
 
 (defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
@@ -195,7 +215,7 @@
                          (= :unitBattleMenu))
         weapons (->> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
                      second
-                     (map (partial app.gameplay.module/unitGetWeaponInfoFromState type gameplayCtx unit)))
+                     (map (partial getWeaponInfo gameplayCtx unit)))
         weaponKeys (->> (range (count weapons))
                         (into []))
         [menu data] (if isBattleMenu
