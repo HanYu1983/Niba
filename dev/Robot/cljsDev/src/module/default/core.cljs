@@ -119,10 +119,11 @@
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
-  (let [weapons (get-in unit [:state :weapons :default])]
+  (let [transform (get-in unit [:state :robot])
+        weapons (get-in unit [:state :weapons transform])]
     (if weapons
       weapons
-      [:default
+      [transform
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
          (if (nil? robot)
@@ -131,7 +132,7 @@
                    (let [weapon (get-in data ["weapon" weaponKey])]
                      (if (nil? weapon)
                        (throw (js/Error. (str weaponKey " not found")))
-                       (cond-> {:key (gensym)
+                       (cond-> {:key weaponKey
                                 :weaponKey weaponKey
                                 :level 0
                                 :tags #{}}
@@ -162,6 +163,7 @@
 
 (def getUnitPowerM (memoize getUnitPower))
 
+
 (defn getUnitInfo [gameplayCtx unit]
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
@@ -176,6 +178,13 @@
                                                           second)
                                          :maxHp (getUnitMaxHpM gameplayCtx unit)
                                          :maxEn (getUnitMaxEnM gameplayCtx unit)}))))))
+
+
+(defn unitOnTransform [gameplayCtx unit fromKey toKey]
+  (-> unit
+      (update-in unit [:state :robot] (constantly toKey))
+      (update-in unit [:state :weapons (keyword toKey)] (constantly (let [weapons (get-in unit [:state :weapons (keyword fromKey)])]
+                                                                      weapons)))))
 
 ; =======================
 ; binding
