@@ -17,6 +17,6 @@ export default class AccuracyInfo extends cc.Component {
     txtAccuracy: cc.Label = null;
 
     setAccuracy(accuracy:number){
-        this.txtAccuracy.string = accuracy + "%";
+        this.txtAccuracy.string = accuracy.toFixed(0) + "%";
     }
 }
