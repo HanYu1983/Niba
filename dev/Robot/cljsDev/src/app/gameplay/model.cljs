@@ -132,7 +132,10 @@
   (let [camera (or camera (getCamera ctx))]
     (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
-                (mapUnitToLocal ctx camera unit))))))
+                (mapUnitToLocal ctx camera unit)))
+         (map (fn [unit]
+                (println unit)
+                (app.gameplay.module/unitGetInfo app.gameplay.module/*module ctx unit))))))
 
 (defn isBelongToPlayer [ctx unit]
   (= (:player unit) :player))

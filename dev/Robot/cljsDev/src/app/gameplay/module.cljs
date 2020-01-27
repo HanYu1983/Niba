@@ -14,7 +14,7 @@
 (defmulti unitGetWeapons (fn [type gameplayCtx unit] type))
 (defmulti unitSetWeapons (fn [type gameplayCtx unit] type))
 (defmulti unitGetReaction (fn [type gameplayCtx unit fromUnit weapon] type))
-
 (defmulti unitGetHitRate (fn [type gameplayCtx unit weapon targetUnit]))
+(defmulti unitGetInfo (fn [type gameplayCtx unit] type))
 
 (def *module nil)

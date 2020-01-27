@@ -41,6 +41,33 @@
 
 (def nextCellM (memoize nextCell))
 
+
+; =======================
+; weapon
+; =======================
+(defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (let [{[min max] "range" type "type"} weaponData]
+        [min max]))))
+
+(defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (let [{type "type"} weaponData]
+        type))))
+
+(defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str weaponKey " not found")))
+      (merge weaponData
+             {"range" (getWeaponRange gameplayCtx unit weapon)
+              "type" (getWeaponType gameplayCtx unit weapon)}
+             weapon))))
+
 ; =======================
 ; unit
 ; =======================
@@ -50,6 +77,7 @@
 (mm/defUnitGetter hp)
 (defn getUnitMaxHp [gameplayCtx unit]
   10000)
+(def getUnitMaxHpM (memoize getUnitMaxHp))
 
 ; en
 (mm/defUnitSetter en)
@@ -59,20 +87,35 @@
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str robotKey "not found")))
-      (let [component (mapv (fn [key]
-                              (let [com (get-in data ["component" key])]
-                                (if (nil? com)
-                                  (throw (js/Error. (str key " not found")))
-                                  {:key (gensym)
-                                   :componentKey key})))
-                            (get robot "components"))
-            en (->> component
-                    (filter (fn [d]
-                              (some #(= % (:componentKey d)) ["energy1" "energy2" "energy3"])))
-                    (map (fn [d] (get-in data ["component" (:componentKey d) "value" 0])))
+      (let [en (->> (get robot "components")
+                    (filter (fn [k]
+                              (some #(= % k) ["energy1" "energy2" "energy3"])))
+                    (map (fn [k] (get-in data ["component" k "value" 0])))
                     (map int)
                     (apply +))]
         en))))
+
+(def getUnitMaxEnM (memoize getUnitMaxEn))
+
+; components
+(defn getUnitComponents [gameplayCtx unit]
+  (let [coms (get-in unit [:state :components :default])]
+    (if coms
+      coms
+      [:default
+       (let [robotKey (get-in unit [:state :robot])
+             robot (get-in data ["robot" robotKey])]
+         (if (nil? robot)
+           (throw (js/Error. (str robotKey "not found")))
+           (mapv (fn [key]
+                   (let [com (get-in data ["component" key])]
+                     (if (nil? com)
+                       (throw (js/Error. (str key " not found")))
+                       {:key (gensym)
+                        :componentKey key})))
+                 (get robot "components"))))])))
+
+(def getUnitComponentsM (memoize getUnitComponents))
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
@@ -108,57 +151,31 @@
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str robotKey "not found")))
-      (let [component (mapv (fn [key]
-                              (let [com (get-in data ["component" key])]
-                                (if (nil? com)
-                                  (throw (js/Error. (str key " not found")))
-                                  {:key (gensym)
-                                   :componentKey key})))
-                            (get robot "components"))
-            weapon (mapv (fn [weaponKey]
-                           (let [weapon (get-in data ["weapon" weaponKey])]
-                             (if (nil? weapon)
-                               (throw (js/Error. (str weaponKey " not found")))
-                               (cond-> {:key (gensym)
-                                        :weaponKey weaponKey
-                                        :level 0}
-                                 (= (get weapon "energyType") "bullet")
-                                 (merge {:bulletCount (get weapon "maxBulletCount")})))))
-                         (get robot "weapons"))
-            power (->> (concat (map (fn [d]
-                                      (get-in data ["component" (:componentKey d) "powerCost"]))
-                                    component)
-                               (map (fn [d]
-                                      (get-in data ["weapon" (:weaponKey d) "powerCost"]))
-                                    weapon))
+      (let [power (->> (concat (map (fn [k]
+                                      (get-in data ["component" k "powerCost"]))
+                                    (get robot "components"))
+                               (map (fn [k]
+                                      (get-in data ["weapon" k "powerCost"]))
+                                    (get robot "weapons")))
                        (apply - (get robot "power")))]
         power))))
 
 (def getUnitPowerM (memoize getUnitPower))
 
-
-;weapon
-(defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  (let [weaponData (get-in data ["weapon" weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
-      (let [{[min max] "range" type "type"} weaponData]
-        [min max]))))
-
-(defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  (let [weaponData (get-in data ["weapon" weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
-      (let [{type "type"} weaponData]
-        type))))
-
-(defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  (let [weaponData (get-in data ["weapon" weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
-      (merge weaponData
-             {"range" (getWeaponRange gameplayCtx unit weapon)
-              "type" (getWeaponType gameplayCtx unit weapon)}))))
+(defn getUnitInfo [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str robotKey " not found")))
+      (update-in unit [:state] (fn [state]
+                                 (merge state
+                                        {:weapons (->> (getUnitWeaponsM gameplayCtx unit)
+                                                       second
+                                                       (map (partial getWeaponInfo gameplayCtx unit)))
+                                         :components (->> (getUnitComponentsM gameplayCtx unit)
+                                                          second)
+                                         :maxHp (getUnitMaxHpM gameplayCtx unit)
+                                         :maxEn (getUnitMaxEnM gameplayCtx unit)}))))))
 
 ; =======================
 ; binding
@@ -171,6 +188,8 @@
 (defmethod app.gameplay.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
+                                  :weapons {}
+                                  :components {}
                                   :tags #{}}})]
     (-> unit
         ((fn [unit]
@@ -226,7 +245,7 @@
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (->> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
+        weapons (->> (getUnitWeaponsM gameplayCtx unit)
                      second
                      (map (partial getWeaponInfo gameplayCtx unit)))
         weaponKeys (->> (range (count weapons))
@@ -263,3 +282,5 @@
                     second)]
     [:attack (first weapons)]))
 
+(defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
+  (getUnitInfo gameplayCtx unit))
