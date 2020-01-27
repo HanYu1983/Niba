@@ -1,4 +1,4 @@
-const dataJson = 
+const dataJson =
 {
     "component": {
         "energy1": {
@@ -80,7 +80,7 @@ const dataJson =
                 1,
                 1
             ],
-            "transform": []
+            "transform": ["zgundam", "gundam"]
         },
         "zgundam": {
             "title": "z鋼彈",

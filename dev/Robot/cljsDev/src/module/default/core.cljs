@@ -163,6 +163,13 @@
 
 (def getUnitPowerM (memoize getUnitPower))
 
+(defn getUnitTransforms [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str robotKey "not found")))
+      (conj (get-in robot ["transform"])
+            robotKey))))
 
 (defn getUnitInfo [gameplayCtx unit]
   (let [robotKey (get-in unit [:state :robot])
@@ -278,7 +285,7 @@
                           :weapons weapons}]
 
                         :else
-                        [[["move"] weaponKeys ["gundam" "gaite" "zgundam"] ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys (getUnitTransforms gameplayCtx unit) ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
                           :transformIdx 2}]))]
