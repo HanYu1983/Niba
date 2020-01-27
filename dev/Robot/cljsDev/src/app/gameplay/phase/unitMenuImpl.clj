@@ -67,11 +67,19 @@
       (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
             cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
             weaponIdx (get-in state [:data :weaponIdx])
+            transformIdx (get-in state [:data :transformIdx])
             attackRange (if (= cursor1 weaponIdx)
                           (get-in state [:data :weaponRange cursor2])
                           [])
             select (tool.menuCursor/getSelect (:menuCursor state))]
         (cond
+          (= cursor1 transformIdx)
+          (let [transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
+                gameplayCtx (-> gameplayCtx
+                                (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
+                [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
+            (m/returnPop isEnd))
+
           (= cursor1 weaponIdx)
           (let [menu (tool.menuCursor/getMenu (:menuCursor state))
                 weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)

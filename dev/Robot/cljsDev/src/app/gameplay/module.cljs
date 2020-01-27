@@ -6,6 +6,7 @@
 (defmulti unitOnMove (fn [type gameplayCtx unit pos] type))
 (defmulti unitOnDone (fn [type gameplayCtx unit] type))
 (defmulti unitOnTurnStart (fn [type gameplayCtx unit] type))
+(defmulti unitOnTransform (fn [type gameplayCtx unit robotKey] type))
 
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))

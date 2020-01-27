@@ -238,6 +238,9 @@
 (defn onTurnStart [ctx unit]
   (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx unit))
 
+(defn onTransform [ctx unit robotKey]
+  (app.gameplay.module/unitOnTransform app.gameplay.module/*module ctx unit robotKey))
+
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
 

@@ -182,8 +182,8 @@
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
   (-> unit
-      (update-in unit [:state :robot] (constantly toKey))
-      (update-in unit [:state :weapons (keyword toKey)] (constantly (let [weapons (get-in unit [:state :weapons (keyword fromKey)])]
+      (update-in [:state :robot] (constantly toKey))
+      (update-in [:state :weapons (keyword toKey)] (constantly (let [weapons (get-in unit [:state :weapons (keyword fromKey)])]
                                                                       weapons)))))
 
 ; =======================
@@ -209,15 +209,18 @@
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
       (merge {:position pos})
-      (update-in [:state :tag] #(conj % :firstMove2))))
+      (update-in [:state :tags] #(conj % :firstMove2))))
 
 (defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
   (-> unit
-      (update-in [:state :tag] #(conj % :done))))
+      (update-in [:state :tags] #(conj % :done))))
 
 (defmethod app.gameplay.module/unitOnTurnStart :default [_ gameplayCtx unit]
   (-> unit
-      (update-in [:state :tag] (constantly #{}))))
+      (update-in [:state :tags] (constantly #{}))))
+
+(defmethod app.gameplay.module/unitOnTransform :default [_ gameplayCtx unit robotKey]
+  (unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) robotKey))
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
@@ -264,20 +267,21 @@
                        {:weaponIdx 0
                         :weapons weapons}]
                       (cond
-                        (-> (get-in unit [:state :tag])
+                        (-> (get-in unit [:state :tags])
                             (contains? :done))
                         [[["cancel"]] {}]
 
-                        (-> (get-in unit [:state :tag])
+                        (-> (get-in unit [:state :tags])
                             (contains? :firstMove))
                         [[weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 0
                           :weapons weapons}]
 
                         :else
-                        [[["move"] weaponKeys ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys ["gundam" "gaite" "zgundam"] ["ok"] ["cancel"]]
                          {:weaponIdx 1
-                          :weapons weapons}]))]
+                          :weapons weapons
+                          :transformIdx 2}]))]
     [menu data]))
 
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
