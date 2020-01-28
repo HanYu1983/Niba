@@ -187,6 +187,8 @@ export default class GamePage extends BasicViewer {
 
         let unit1 = data.units[0];
         let unit2 = data.units[1];
+        let unitAfter1 = data.unitsAfter[0];
+        let unitAfter2 = data.unitsAfter[1];
         let from1 = unit1.position;
         let to1 = unit2.position;
         let result1 = data.results[1];
@@ -202,7 +204,7 @@ export default class GamePage extends BasicViewer {
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(100, 20);
+                    item.getComponent(UnitSampleInfo).changeHP(unitAfter2.state.maxHp, unitAfter2.state.hp);
                 });
             })
             .call(() => { this.effects.createAimEffect(to1, from1) })
@@ -214,9 +216,10 @@ export default class GamePage extends BasicViewer {
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(100, 20);
+                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
                 });
             })
+            .delay(.7)
             .call(cb)
             .start();
     }

@@ -23,6 +23,7 @@ export default class View extends cc.Component {
     }
     unitBattleAnim(data: any, cb: () => void) {
         this.getGamePage().closeFightInfo();
+        this.getGamePage().closeAccuracyInfos();
         this.getGamePage().changeUnitHP(data, cb);
     }
     paint(data: any, cb: () => void) {
