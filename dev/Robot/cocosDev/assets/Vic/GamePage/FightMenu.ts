@@ -18,6 +18,9 @@ const { ccclass, property, requireComponent } = cc._decorator;
 @ccclass
 export default class FightMenu extends cc.Component {
 
+    @property(cc.Sprite)
+    back:cc.Sprite = null;
+
     @property(FightInfo)
     playerInfo: FightInfo = null;
 
@@ -31,6 +34,7 @@ export default class FightMenu extends cc.Component {
     }
 
     showInfo(info: FightInfo, data: any) {
+        this.back.node.active = true;
         info.node.active = true;
         let weapon:any = ViewController.instance.getWeapon(data.action[1].weaponKey);
         info.setAction(data.action[0]);
@@ -40,6 +44,7 @@ export default class FightMenu extends cc.Component {
     }
 
     clearInfo() {
+        this.back.node.active = false;
         this.playerInfo.node.active = false;
         this.enemyInfo.node.active = false;
     }
