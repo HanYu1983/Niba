@@ -83,8 +83,8 @@ export default class Effects extends cc.Component {
     }
 
     private _checkAndMoveAim() {
-        if (this.tracker['toGridPos'][0] - this.tracker.x > 1 ||
-            this.tracker['toGridPos'][1] - this.tracker.y > 1) {
+        if (Math.abs(this.tracker['toGridPos'][0] - this.tracker.x) > 1 ||
+            Math.abs(this.tracker['toGridPos'][1] - this.tracker.y) > 1) {
 
             this.tracker.x += (this.tracker['toGridPos'][0] - this.tracker.x) * .2;
             this.tracker.y += (this.tracker['toGridPos'][1] - this.tracker.y) * .2;
