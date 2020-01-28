@@ -109,10 +109,16 @@
        (let [leftAction (get-in state [:args 0 :action])
              rightAction (get-in state [:args 1 :action])
              result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
+             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left right result)
+             leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
+                           (tool.units/getByKey (:key left)))
+             rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
+                            (tool.units/getByKey (:key right)))
              _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
                                                   (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
-                                          :results result} inputCh outputCh))
-             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left right result)]
+                                          :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter) 
+                                                       (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
+                                          :results result} inputCh outputCh))]
          (m/returnPop true))
 
        (= "cancel" select)
