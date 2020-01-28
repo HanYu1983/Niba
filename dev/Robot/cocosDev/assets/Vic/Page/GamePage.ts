@@ -195,7 +195,12 @@ export default class GamePage extends BasicViewer {
         let result2 = data.results[0];
 
         cc.tween(this.node)
-            .call(() => { this.effects.createAimEffect(from1, to1) })
+            .call(() => {
+                this.effects.createAimEffect(from1, to1);
+                this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
+                    item.getComponent(UnitSampleInfo).changeEN(unitAfter2.state.maxEn, 10);
+                });
+            })
             .delay(.7)
             .call(() => {
                 this.effects.createExplode(result1.value, to1);
@@ -204,10 +209,16 @@ export default class GamePage extends BasicViewer {
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(unitAfter2.state.maxHp, unitAfter2.state.hp);
+                    item.getComponent(UnitSampleInfo).changeHP(unitAfter2.state.maxHp, 10);
                 });
             })
-            .call(() => { this.effects.createAimEffect(to1, from1) })
+            .delay(.7)
+            .call(() => {
+                this.effects.createAimEffect(to1, from1);
+                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+                    item.getComponent(UnitSampleInfo).changeEN(unitAfter1.state.maxEn, 10);
+                });
+            })
             .delay(.7)
             .call(() => {
                 this.effects.createBlade(result2.value, from1);
@@ -216,7 +227,7 @@ export default class GamePage extends BasicViewer {
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
+                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, 10);
                 });
             })
             .delay(.7)
