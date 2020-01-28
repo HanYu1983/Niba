@@ -20,4 +20,7 @@
 (defmulti unitGetHitRate (fn [type gameplayCtx unit weapon targetUnit]))
 (defmulti unitGetInfo (fn [type gameplayCtx unit] type))
 
+(defmulti ReactionGetResult (fn [type gameplayCtx left leftAction right rightAction]))
+(defmulti ReactionApply (fn [type gameplayCtx left right result]))
+
 (def *module nil)

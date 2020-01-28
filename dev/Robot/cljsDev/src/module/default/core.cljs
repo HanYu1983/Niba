@@ -343,10 +343,36 @@
   (getUnitHitRate gameplayCtx unit weapon targetUnit))
 
 (defmethod app.gameplay.module/unitGetReaction :default [type gameplayCtx unit fromUnit weapon]
-  (let [hitRate (app.gameplay.module/unitGetHitRate type gameplayCtx fromUnit weapon unit)
-        weapons (-> (app.gameplay.module/unitGetWeapons type gameplayCtx unit)
+  (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
+        weapons (-> (getUnitWeaponsM gameplayCtx unit)
                     second)]
     [:attack (first weapons)]))
 
 (defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
   (getUnitInfo gameplayCtx unit))
+
+
+(defmethod app.gameplay.module/ReactionGetResult :default [_ gameplayCtx left [_ leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
+  (let [leftHitRate (getUnitHitRate gameplayCtx left leftWeapon right)]
+    (cond
+      (= rightActionType :evade)
+      (let [leftHitRate (if (= rightActionType :evade)
+                          (/ leftHitRate 2)
+                          leftHitRate)]
+        [{:result :nothing} {:result :damage
+                             :value 1000}])
+
+      (= rightActionType :guard)
+      [{:result :nothing} {:result :damage
+                           :value 1000}]
+
+      (= rightActionType :attack)
+      (let [rightHitRate (getUnitHitRate gameplayCtx right rightWeapon left)]
+        [{:result :damage
+          :value 1000} 
+         
+         {:result :damage
+          :value 1000}]))))
+
+(defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left right result]
+  gameplayCtx)

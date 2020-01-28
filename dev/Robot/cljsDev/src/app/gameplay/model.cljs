@@ -126,16 +126,16 @@
 
 (defn mapUnitToLocal [ctx camera unit]
   (let [camera (or camera (getCamera ctx))]
-    (update unit :position (partial world2local camera))))
+    (-> unit
+        (update :position (partial world2local camera))
+        ((fn [unit]
+           (app.gameplay.module/unitGetInfo app.gameplay.module/*module ctx unit))))))
 
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
     (->> (getUnitsByRegion ctx camera searchSize)
          (map (fn [unit]
-                (mapUnitToLocal ctx camera unit)))
-         (map (fn [unit]
-                (println unit)
-                (app.gameplay.module/unitGetInfo app.gameplay.module/*module ctx unit))))))
+                (mapUnitToLocal ctx camera unit))))))
 
 (defn isBelongToPlayer [ctx unit]
   (= (:player unit) :player))
@@ -257,7 +257,7 @@
   (app.gameplay.module/unitGetReaction app.gameplay.module/*module ctx unit fromUnit weapon))
 
 (defn calcActionResult [ctx left leftAction right rightAction]
-  {})
+  (app.gameplay.module/ReactionGetResult app.gameplay.module/*module ctx left leftAction right rightAction))
 
-(defn applyActionResult [ctx result]
-  ctx)
+(defn applyActionResult [ctx left right result]
+  (app.gameplay.module/ReactionApply app.gameplay.module/*module ctx left right result))

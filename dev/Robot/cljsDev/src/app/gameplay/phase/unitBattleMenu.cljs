@@ -106,10 +106,13 @@
    (let [select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
        (= "ok" select)
-       (let [leftAction (:leftAction state)
-             rightAction (:rightAction state)
-             result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)]
-         (a/<! (unitBattleAnim nil result inputCh outputCh))
+       (let [leftAction (get-in state [:args 0 :action])
+             rightAction (get-in state [:args 1 :action])
+             result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
+             _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
+                                                  (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
+                                          :results result} inputCh outputCh))
+             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left right result)]
          (m/returnPop true))
 
        (= "cancel" select)
