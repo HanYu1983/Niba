@@ -201,7 +201,7 @@ export default class GamePage extends BasicViewer {
             })
             .call(() => { this.effects.createAimEffect(to1, from1) })
             .delay(.7)
-            .call(() => { this.effects.createExplode(result2.value, from1) })
+            .call(() => { this.effects.createBlade(result2.value, from1) })
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
