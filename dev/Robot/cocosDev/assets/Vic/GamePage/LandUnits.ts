@@ -100,6 +100,8 @@ export default class LandUnits extends cc.Component {
 
     shakeOneUnit(id:string){
         let unit:Unit = this.getUnitByID(id);
+        cc.log("shakeOneUnitshakeOneUnit");
+        cc.log(id, unit);
         if(unit){
             unit.shake();
         }
@@ -108,6 +110,7 @@ export default class LandUnits extends cc.Component {
     clearUnits(){
         this._units.forEach(unit=>{
             unit.removeFromParent();
+            unit.getComponent(Unit).unitId = "";
             this._pool.release(unit);
         });
         this._units = [];

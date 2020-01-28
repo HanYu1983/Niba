@@ -22,6 +22,7 @@ export default class View extends cc.Component {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
+        this.getGamePage().closeFightInfo();
         this.getGamePage().changeUnitHP(data, cb);
     }
     paint(data: any, cb: () => void) {

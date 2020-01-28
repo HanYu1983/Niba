@@ -23,6 +23,7 @@ import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
 import ViewController from "../ViewController";
 import UnitSampleInfo from "../GamePage/UnitSampleInfo";
+import Unit from '../GamePage/Unit';
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -181,18 +182,23 @@ export default class GamePage extends BasicViewer {
         this.unitSampleInfos.clearItem();
     }
 
-    changeUnitHP(data:any, cb:()=>void) {
+    changeUnitHP(data: any, cb: () => void) {
         this.closeUnitSampleInfos();
 
-        let from1 = data.units[0].position;
-        let to1 = data.units[1].position;
+        let unit1 = data.units[0];
+        let unit2 = data.units[1];
+        let from1 = unit1.position;
+        let to1 = unit2.position;
         let result1 = data.results[1];
         let result2 = data.results[0];
 
         cc.tween(this.node)
             .call(() => { this.effects.createAimEffect(from1, to1) })
             .delay(.7)
-            .call(() => { this.effects.createExplode(result1.value, to1) })
+            .call(() => {
+                this.effects.createExplode(result1.value, to1);
+                this.units.shakeOneUnit(unit2.key);
+            })
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
@@ -201,7 +207,10 @@ export default class GamePage extends BasicViewer {
             })
             .call(() => { this.effects.createAimEffect(to1, from1) })
             .delay(.7)
-            .call(() => { this.effects.createBlade(result2.value, from1) })
+            .call(() => {
+                this.effects.createBlade(result2.value, from1);
+                this.units.shakeOneUnit(unit1.key);
+            })
             .delay(.7)
             .call(() => {
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
