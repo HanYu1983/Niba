@@ -181,19 +181,34 @@ export default class GamePage extends BasicViewer {
         this.unitSampleInfos.clearItem();
     }
 
-    changeUnitHP() {
+    changeUnitHP(data:any, cb:()=>void) {
         this.closeUnitSampleInfos();
 
+        let from1 = data.units[0].position;
+        let to1 = data.units[1].position;
+        let result1 = data.results[1];
+        let result2 = data.results[0];
+
         cc.tween(this.node)
-            .call(() => { this.effects.createAimEffect([0, 0], [3, 3]) })
+            .call(() => { this.effects.createAimEffect(from1, to1) })
             .delay(.7)
-            .call(() => { this.effects.createExplode(120, [3, 3]) })
+            .call(() => { this.effects.createExplode(result1.value, to1) })
             .delay(.7)
             .call(() => {
-                this.unitSampleInfos.showItems([[3, 3]], (item: cc.Node) => {
+                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
                     item.getComponent(UnitSampleInfo).changeHP(100, 20);
                 });
             })
+            .call(() => { this.effects.createAimEffect(to1, from1) })
+            .delay(.7)
+            .call(() => { this.effects.createBlade(result2.value, from1) })
+            .delay(.7)
+            .call(() => {
+                this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
+                    item.getComponent(UnitSampleInfo).changeHP(100, 20);
+                });
+            })
+            .call(cb)
             .start();
     }
 

@@ -7,14 +7,11 @@ import GamePage from './Page/GamePage';
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class View extends cc.Component implements IView {
+export default class View extends cc.Component {
     playerTurnStart(data: any, cb: () => void) {
         this.closeUnitMenu();
         this.closeSystemMenu();
         this.repaintPlayerStart(cb);
-
-        //this.getGamePage().effects.createBladePipe([0, 0], [3, 3], 120);
-        this.getGamePage().changeUnitHP();
     }
     enemyTurnStart(enemyName: string, cb: () => void) {
         this.closeUnitMenu();
@@ -24,13 +21,8 @@ export default class View extends cc.Component implements IView {
     unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
-    unitBattleAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
-        // this.getGamePage().effects.createAimEffect([0, 0], [3, 3]);
-        // this.getGamePage().effects.createBlade(120, [4, 4]);
-        // this.getGamePage().effects.createExplode(200, [7, 8]);
-
-
-        cb();
+    unitBattleAnim(data: any, cb: () => void) {
+        this.getGamePage().changeUnitHP(data, cb);
     }
     paint(data: any, cb: () => void) {
         this.repaintUnits(data.units);

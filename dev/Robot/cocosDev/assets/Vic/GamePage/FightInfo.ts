@@ -26,7 +26,7 @@ export default class FightInfo extends cc.Component {
     hit: cc.Label = null;
 
     setHitRate(rate: number) {
-        this.hit.string = rate * 100 + "%";
+        this.hit.string = (rate * 100).toFixed(0) + "%";
     }
 
     setAction(action: string) {
