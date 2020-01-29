@@ -15,7 +15,8 @@
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
-  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
+  (:require [app.gameplay.view]))
 
 ; 使用這個方法解決和unitSelectMovePosition的互相依賴
 ; 記得這裡有用到的引用也要在別的地方一起加上

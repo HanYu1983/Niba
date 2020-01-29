@@ -13,7 +13,8 @@
                                                
                                                unitBattleAnim
                                                actions]])
-  (:require [app.gameplay.session.battleMenu]))
+  (:require [app.gameplay.session.battleMenu])
+  (:require [app.gameplay.view]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]

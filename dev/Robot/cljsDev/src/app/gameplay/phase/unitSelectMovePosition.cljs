@@ -15,7 +15,8 @@
                                                actions]])
   (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
-  (:require [app.gameplay.step.selectPosition]))
+  (:require [app.gameplay.step.selectPosition])
+  (:require [app.gameplay.view]))
 
 (declare unitMenu)
 

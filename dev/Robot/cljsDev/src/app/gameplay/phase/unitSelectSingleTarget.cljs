@@ -12,7 +12,8 @@
                                                actions]])
   (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
   (:require [app.gameplay.step.selectPosition])
-  (:require [app.gameplay.session.battleMenu]))
+  (:require [app.gameplay.session.battleMenu])
+  (:require [app.gameplay.view]))
 
 (m/defbasic unitSelectSingleTarget [gameplayCtx {:keys [unit attackRange weapon]}]
   [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]

@@ -5,7 +5,8 @@
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
-                                               actions]]))
+                                               actions]])
+  (:require [app.gameplay.view]))
 
 
 (m/defstate menu [gameplayCtx {:keys [menu data]}]
