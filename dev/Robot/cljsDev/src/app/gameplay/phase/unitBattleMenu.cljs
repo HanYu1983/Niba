@@ -12,7 +12,8 @@
                                                paint
                                                
                                                unitBattleAnim
-                                               actions]]))
+                                               actions]])
+  (:require [app.gameplay.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]
@@ -22,11 +23,9 @@
          [_ weapon] leftAction]
      {:menuCursor (tool.menuCursor/model menu)
       :data data
-      :args (-> args
-                (update-in [0 :hitRate] (constantly (app.gameplay.model/getHitRate gameplayCtx left leftWeapon right)))
-                (update-in [1 :action] (constantly (app.gameplay.model/thinkReaction gameplayCtx right left weapon)))
-                (update-in [1 :hitRate] (constantly 0)))}))
-
+      :battleMenuSession (-> args
+                             (app.gameplay.session.battleMenu/setRightActionFromReaction gameplayCtx))}))
+  
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
    args action
@@ -60,21 +59,16 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
-          leftAction (if (= cursor1 weaponIdx)
-                       (-> (app.gameplay.model/getWeapons gameplayCtx left)
-                           second
-                           (nth cursor2)
-                           ((fn [weapon]
-                              [:attack weapon])))
-                       leftAction)
 
-          rightAction (if (= cursor1 weaponIdx)
-                        (-> (app.gameplay.model/getWeapons gameplayCtx left)
-                            second
-                            (nth cursor2)
-                            ((fn [weapon]
-                               (app.gameplay.model/thinkReaction gameplayCtx right left weapon))))
-                        (get-in state [:args 1 :action]))
+          battleMenuSession (if (= cursor1 weaponIdx)
+                              (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                                               second
+                                               (nth cursor2))]
+                                (-> (:battleMenuSession state)
+                                    (app.gameplay.session.battleMenu/setLeftAction [:attack weapon] gameplayCtx)
+                                    (app.gameplay.session.battleMenu/setRightActionFromReaction gameplayCtx)))
+                              (:battleMenuSession state))
+
           attackRange (if (= cursor1 weaponIdx)
                         (-> (app.gameplay.model/getWeapons gameplayCtx left)
                             second
@@ -83,18 +77,8 @@
                                (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
                         [])
 
-          hitRate (if (= cursor1 weaponIdx)
-                    (-> (app.gameplay.model/getWeapons gameplayCtx left)
-                        second
-                        (nth cursor2)
-                        ((fn [weapon]
-                           (app.gameplay.model/getHitRate gameplayCtx left weapon right))))
-                    (get-in state [:args 0 :hitRate]))
-
           state (-> state
-                    (update-in [:args 1 :action] (constantly rightAction))
-                    (update-in [:args 0 :action] (constantly leftAction))
-                    (update-in [:args 0 :hitRate] (constantly hitRate)))
+                    (update :battleMenuSession (constantly battleMenuSession)))
 
           fsm (tool.fsm/save fsm state)
           gameplayCtx (-> gameplayCtx
@@ -106,8 +90,8 @@
    (let [select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
        (= "ok" select)
-       (let [leftAction (get-in state [:args 0 :action])
-             rightAction (get-in state [:args 1 :action])
+       (let [leftAction (get-in state [:battleMenuSession 0 :action])
+             rightAction (get-in state [:battleMenuSession 1 :action])
              result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
              gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left right result)
              leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
@@ -116,7 +100,7 @@
                             (tool.units/getByKey (:key right)))
              _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
                                                   (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
-                                          :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter) 
+                                          :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
                                                        (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
                                           :results result} inputCh outputCh))]
          (m/returnPop true))
