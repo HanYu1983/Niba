@@ -25,11 +25,13 @@ export default class View extends cc.Component {
         this.getGamePage().closeFightInfo();
         this.getGamePage().closeAccuracyInfos();
         this.getGamePage().changeUnitHP(data, cb);
-
-        this.getCommentUI().showAlert("aaabbb", ()=>{});
     }
     unitDeadAnim(data: any, cb: ()=>void){
         this.getGamePage().explodeUnit(data, cb);
+    }
+    showMessage(data: any, cb: ()=>void){
+        this.getCommentUI().showAlert(data.message, ()=>{});
+        cb()
     }
     paint(data: any, cb: () => void) {
         this.repaintUnits(data.units);

@@ -9,6 +9,7 @@
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
+                                               showMessage
                                                actions]])
   (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
   (:require [app.gameplay.step.selectPosition])
@@ -38,4 +39,6 @@
         (if isEnd
           (m/returnPop true)
           (recur gameplayCtx)))
-      (recur gameplayCtx))))
+      (let []
+        (a/<! (showMessage nil {:message (str "請選擇目標")} inputCh outputCh))
+        (recur gameplayCtx)))))

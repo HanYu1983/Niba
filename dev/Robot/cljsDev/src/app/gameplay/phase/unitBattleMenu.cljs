@@ -13,6 +13,7 @@
                                                
                                                unitBattleAnim
                                                unitDeadAnim
+                                               showMessage
                                                actions]])
   (:require [app.gameplay.session.battleMenu])
   (:require [app.gameplay.view]))
@@ -99,38 +100,48 @@
          select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
        (= cursor1 weaponIdx)
-       (let [leftAction (get-in state [:battleMenuSession 0 :action])
-             rightAction (get-in state [:battleMenuSession 1 :action])
-             result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
-             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left leftAction right rightAction result)
-             leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
-                           (tool.units/getByKey (:key left)))
-             rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
-                            (tool.units/getByKey (:key right)))
-             _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
-                                                  (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
-                                          :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
-                                                       (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
-                                          :results result} inputCh outputCh))
-             gameplayCtx (if (app.gameplay.model/isDead gameplayCtx leftAfter)
-                           (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
-                                                 (tool.units/delete leftAfter)
-                                                 ((fn [units]
-                                                    (app.gameplay.model/setUnits gameplayCtx units))))
-                                 gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx leftAfter))
-                                 _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
-                             gameplayCtx)
-                           gameplayCtx)
-             gameplayCtx (if (app.gameplay.model/isDead gameplayCtx rightAfter)
-                           (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
-                                                 (tool.units/delete rightAfter)
-                                                 ((fn [units]
-                                                    (app.gameplay.model/setUnits gameplayCtx units))))
-                                 gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx rightAfter))
-                                 _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
-                             gameplayCtx)
-                           gameplayCtx)]
-         (m/returnPop true))
+       (let [cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+             weapon (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                        second
+                        (nth cursor2))
+             attackRange (app.gameplay.model/getWeaponRange gameplayCtx left weapon)
+             isTargetInRange (some #(= (:position right) %) attackRange)]
+         (if (not isTargetInRange)
+           (let []
+             (a/<! (showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
+             (recur gameplayCtx))
+           (let [leftAction (get-in state [:battleMenuSession 0 :action])
+                 rightAction (get-in state [:battleMenuSession 1 :action])
+                 result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
+                 gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left leftAction right rightAction result)
+                 leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
+                               (tool.units/getByKey (:key left)))
+                 rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
+                                (tool.units/getByKey (:key right)))
+                 _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
+                                                      (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
+                                              :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
+                                                           (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
+                                              :results result} inputCh outputCh))
+                 gameplayCtx (if (app.gameplay.model/isDead gameplayCtx leftAfter)
+                               (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
+                                                     (tool.units/delete leftAfter)
+                                                     ((fn [units]
+                                                        (app.gameplay.model/setUnits gameplayCtx units))))
+                                     gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx leftAfter))
+                                     _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                 gameplayCtx)
+                               gameplayCtx)
+                 gameplayCtx (if (app.gameplay.model/isDead gameplayCtx rightAfter)
+                               (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
+                                                     (tool.units/delete rightAfter)
+                                                     ((fn [units]
+                                                        (app.gameplay.model/setUnits gameplayCtx units))))
+                                     gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx rightAfter))
+                                     _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                 gameplayCtx)
+                               gameplayCtx)]
+             (m/returnPop true))))
 
        (= "cancel" select)
        (m/returnPop false)

@@ -8,6 +8,7 @@
 (m/defwait unitBattleAnim [ctx args])
 (m/defwait unitDeadAnim [ctx args])
 (m/defwait paint [ctx args])
+(m/defwait showMessage [ctx args])
 
 (def actions {87 :up
               83 :down
