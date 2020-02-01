@@ -203,7 +203,7 @@ export default class GamePage extends BasicViewer {
             })
             .delay(.7)
             .call(() => {
-                this.effects.createExplode(result1.value, to1);
+                this.effects.createExplode(result1.damage, to1);
                 this.units.shakeOneUnit(unit2.key);
             })
             .delay(.7)
@@ -221,7 +221,7 @@ export default class GamePage extends BasicViewer {
             })
             .delay(.7)
             .call(() => {
-                this.effects.createBlade(result2.value, from1);
+                this.effects.createBlade(result2.damage, from1);
                 this.units.shakeOneUnit(unit1.key);
             })
             .delay(.7)
