@@ -19,6 +19,9 @@ export default class Effects extends cc.Component {
     bladeLayer: EffectLayer = null;
 
     @property(EffectLayer)
+    shieldLayer: EffectLayer = null;
+
+    @property(EffectLayer)
     explodeLayer: EffectLayer = null;
 
     @property(EffectLayer)
@@ -47,6 +50,10 @@ export default class Effects extends cc.Component {
 
     createUnitExplode(pos:number[]){
         this._createExplode(pos);
+    }
+
+    createShield(pos:number[]){
+        this.shieldLayer.createEffect(pos);
     }
 
     createAimEffect(from: number[], to: number[]) {

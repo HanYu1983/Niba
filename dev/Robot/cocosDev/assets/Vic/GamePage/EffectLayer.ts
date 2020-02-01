@@ -11,9 +11,10 @@
 import Pool from "../Pool";
 import ViewController from "../ViewController";
 import AnimationEndCallback from "../AnimationEndCallback";
-const {ccclass, property} = cc._decorator;
+const {ccclass, property, requireComponent} = cc._decorator;
 
 @ccclass
+@requireComponent(Pool)
 export default class EffectLayer extends cc.Component {
 
     private _pool:Pool = null;

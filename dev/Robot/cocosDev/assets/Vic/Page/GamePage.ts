@@ -197,7 +197,7 @@ export default class GamePage extends BasicViewer {
         return cc.tween().delay(time);
     }
 
-    _showAttackerChangeEN(from1, to1, unit1, unitAfter1, unit2) {
+    _showAttackerAim(from1, to1, unit1, unitAfter1, unit2) {
         let tween = cc.tween(this.node).call(() => {
 
             this.effects.createAimEffect(from1, to1);
@@ -239,15 +239,36 @@ export default class GamePage extends BasicViewer {
     }
 
     _showHitEffect(unit2, to1, result1) {
+
+        let tweens = [];
+        if(result1.events){
+
+            // 播放技能動畫
+            result1.events.forEach((evt:any[])=>{
+                let tween = cc.tween(this.node).call(()=>{
+                    switch(evt[0]){
+                        case "guard":
+                            {
+                                this.effects.createShield(unit2.position);
+                            }
+                            break;
+                    }
+                });
+                tweens.push(tween.delay(.7));
+            });
+        }
+
         let tween = cc.tween(this.node).call(() => {
+
             // 被攻擊者播放受擊動畫
             this.effects.createExplode(result1.damage, to1);
             this.units.shakeOneUnit(unit2.key);
         });
-        return tween.delay(.7);
+        tweens.push(tween.delay(.7));
+        return cc.tween(this.node).sequence(cc.tween(this.node).delay(0), ...tweens);
     }
 
-    _showDeffenderChangeEn(unit2, unitAfter2, from1, to1) {
+    _showDeffenderAim(unit2, unitAfter2, from1, to1) {
         let tween = cc.tween(this.node).call(() => {
             this.effects.createAimEffect(to1, from1);
 
@@ -274,13 +295,12 @@ export default class GamePage extends BasicViewer {
         let result2 = data.results[0];
 
         let tweens = [];
-        tweens.push(this._showAttackerChangeEN(from1, to1, unit1, unitAfter1, unit2));
+        tweens.push(this._showAttackerAim(from1, to1, unit1, unitAfter1, unit2));
         tweens.push(this._showHitEffect(unit2, to1, result1));
         tweens.push(this._showDeffenderChangeHP(to1, unit2, unitAfter2));
-        tweens.push(this._showDeffenderChangeEn(unit2, unitAfter2, from1, to1));
+        tweens.push(this._showDeffenderAim(unit2, unitAfter2, from1, to1));
         tweens.push(this._showHitEffect(unit1, from1, result2));
         tweens.push(this._showAttackerChangeHP(from1, unit1, unitAfter1));
-
         cc.tween(this.node).sequence(cc.tween(this.node).delay(0), ...tweens).call(cb).start();
     }
 
