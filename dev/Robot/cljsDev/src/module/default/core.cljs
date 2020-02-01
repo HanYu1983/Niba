@@ -316,14 +316,14 @@
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
         weapons (->> (getUnitWeaponsM gameplayCtx unit)
-                     second
-                     (map (partial getWeaponInfo gameplayCtx unit)))
+                     second)
         weaponKeys (->> (range (count weapons))
                         (into []))
         [menu data] (if isBattleMenu
-                      [[weaponKeys ["ok"] ["cancel"]]
+                      [[weaponKeys ["cancel"]]
                        {:weaponIdx 0
-                        :weapons weapons}]
+                        :weapons weapons
+                        :unit unit}]
                       (cond
                         (-> (get-in unit [:state :tags])
                             (contains? :done))
@@ -333,13 +333,15 @@
                             (contains? :firstMove))
                         [[weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 0
-                          :weapons weapons}]
+                          :weapons weapons
+                          :unit unit}]
 
                         :else
                         [[["move"] weaponKeys (getUnitTransforms gameplayCtx unit) ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
-                          :transformIdx 2}]))]
+                          :transformIdx 2
+                          :unit unit}]))]
     [menu data]))
 
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
@@ -400,3 +402,36 @@
                         (app.gameplay.model/updateUnit left (constantly leftAfter))
                         (app.gameplay.model/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
+
+
+(defmethod app.gameplay.module/formatToDraw :default [_ gameplayCtx]
+  (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
+                  (tool.fsm/currState))
+        stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)
+                        (tool.fsm/load))]
+    {:units (app.gameplay.model/getLocalUnits gameplayCtx nil nil)
+     :map (app.gameplay.model/getLocalMap gameplayCtx nil)
+     :cursor (app.gameplay.model/getLocalCursor gameplayCtx nil)
+     :moveRange (app.gameplay.model/getLocalMoveRange gameplayCtx nil)
+     :attackRange (app.gameplay.model/getLocalAttackRange gameplayCtx nil)
+     :checkHitRate (->> (get-in gameplayCtx [:temp :checkHitRate])
+                        (map (fn [info]
+                               (-> info
+                                   (update :unit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))
+                                   (update :targetUnit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))))))
+     :cellState (->> (get-in gameplayCtx [:temp :cellState]))
+     :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
+                 (let [unit (get stateDetail :unit)
+                       data (-> (get stateDetail :data)
+                                (update :weapons (fn [weapons]
+                                                   (map (partial getWeaponInfo gameplayCtx unit) weapons))))
+                       menuCursor (get stateDetail :menuCursor)]
+                   {:menuCursor menuCursor
+                    :data data}))
+     :systemMenu (when (some #(= % state) [:menu])
+                   (select-keys stateDetail [:menuCursor :data]))
+     :battleMenu (when (some #(= % state) [:unitBattleMenu])
+                   (let [{battleMenuSession :battleMenuSession} stateDetail]
+                     {:preview (app.gameplay.session.battleMenu/mapUnits battleMenuSession (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))}))
+     :state state
+     :stateDetail stateDetail}))

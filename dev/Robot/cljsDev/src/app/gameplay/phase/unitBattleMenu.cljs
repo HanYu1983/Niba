@@ -23,7 +23,12 @@
   (m/basicNotify
    (let [[menu data] (app.gameplay.model/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
-     {:menuCursor (tool.menuCursor/model menu)
+     {:menuCursor (-> (tool.menuCursor/model menu)
+                      (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                                                                                         second)
+                                                                                     (range))
+                                                                    weaponIdx (indexMap leftWeapon)]
+                                                                weaponIdx))))
       :data data
       :battleMenuSession (-> args
                              (app.gameplay.session.battleMenu/setRightActionFromReaction gameplayCtx))}))
@@ -89,9 +94,11 @@
       (recur gameplayCtx)))
 
    (= :enter action)
-   (let [select (tool.menuCursor/getSelect (:menuCursor state))]
+   (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+         weaponIdx (get-in state [:data :weaponIdx])
+         select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
-       (= "ok" select)
+       (= cursor1 weaponIdx)
        (let [leftAction (get-in state [:battleMenuSession 0 :action])
              rightAction (get-in state [:battleMenuSession 1 :action])
              result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)

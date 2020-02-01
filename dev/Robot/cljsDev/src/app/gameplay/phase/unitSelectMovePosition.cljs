@@ -43,19 +43,22 @@
         camera (app.gameplay.model/getCamera gameplayCtx)
         path (tool.map/buildPath paths cursor)]
     (if (> (count path) 1)
-      (let []
-        (a/<! (unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
-        (let [tempUnit (app.gameplay.model/onMove gameplayCtx unit cursor)
-              state (merge state {:tempUnit tempUnit})
-              gameplayCtx (-> gameplayCtx
-                              (app.gameplay.model/updateUnit unit (constantly tempUnit))
-                              (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
-              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
-          (if isEnd
-            (m/returnPop true)
-            (let [tempUnit (:tempUnit state)
-                  gameplayCtx (app.gameplay.model/updateUnit gameplayCtx tempUnit (constantly unit))]
-              (recur gameplayCtx)))))
+      (let [unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+                             (tool.units/getByPosition cursor))]
+        (if unitAtCursor
+          (recur gameplayCtx)
+          (do (a/<! (unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
+              (let [tempUnit (app.gameplay.model/onMove gameplayCtx unit cursor)
+                    state (merge state {:tempUnit tempUnit})
+                    gameplayCtx (-> gameplayCtx
+                                    (app.gameplay.model/updateUnit unit (constantly tempUnit))
+                                    (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
+                    [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
+                (if isEnd
+                  (m/returnPop true)
+                  (let [tempUnit (:tempUnit state)
+                        gameplayCtx (app.gameplay.model/updateUnit gameplayCtx tempUnit (constantly unit))]
+                    (recur gameplayCtx)))))))
       (recur gameplayCtx))))
 
 (app.gameplay.phase.unitMenuImpl/impl)

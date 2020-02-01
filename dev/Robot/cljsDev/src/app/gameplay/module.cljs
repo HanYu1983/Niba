@@ -25,4 +25,6 @@
 (defmulti ReactionGetResult (fn [type gameplayCtx left leftAction right rightAction]))
 (defmulti ReactionApply (fn [type gameplayCtx left leftAction right rightAction result]))
 
+(defmulti formatToDraw (fn [type gameplayCtx] type))
+
 (def *module nil)

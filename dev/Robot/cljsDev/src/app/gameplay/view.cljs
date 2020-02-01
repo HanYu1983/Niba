@@ -2,7 +2,7 @@
   (:require [app.gameplay.model])
   (:require [app.gameplay.session.battleMenu]))
 
-(defn formatToDraw [gameplayCtx]
+(defn formatToDrawXX [gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
                   (tool.fsm/currState))
         stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)

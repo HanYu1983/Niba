@@ -181,32 +181,7 @@
     (map (partial world2local camera) range)))
 
 (defn formatToDraw [ctx]
-  (let [state (-> (getFsm ctx)
-                  (tool.fsm/currState))
-        stateDetail (-> (getFsm ctx)
-                        (tool.fsm/load))]
-    {:units (getLocalUnits ctx nil nil)
-     :map (getLocalMap ctx nil)
-     :cursor (getLocalCursor ctx nil)
-     :moveRange (getLocalMoveRange ctx nil)
-     :attackRange (getLocalAttackRange ctx nil)
-     :checkHitRate (->> (get-in ctx [:temp :checkHitRate])
-                        (map (fn [info]
-                               (-> info
-                                   (update :unit (partial mapUnitToLocal ctx nil))
-                                   (update :targetUnit (partial mapUnitToLocal ctx nil))))))
-     :cellState (->> (get-in ctx [:temp :cellState]))
-     :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
-                 (select-keys stateDetail [:menuCursor :data]))
-     :systemMenu (when (some #(= % state) [:menu])
-                   (select-keys stateDetail [:menuCursor :data]))
-     :battleMenu (when (some #(= % state) [:unitBattleMenu])
-                   (let [{battleMenuSession :battleMenuSession} stateDetail]
-                     {:preview (map (fn [info]
-                                      (update info :unit (partial mapUnitToLocal ctx nil)))
-                                    battleMenuSession)}))
-     :state state
-     :stateDetail stateDetail}))
+  (app.gameplay.module/formatToDraw app.gameplay.module/*module ctx))
 
 ; ==============
 ; === module ===
