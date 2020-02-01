@@ -45,6 +45,10 @@ export default class Effects extends cc.Component {
         this._createHitHp(hp, pos);
     }
 
+    createUnitExplode(pos:number[]){
+        this._createExplode(pos);
+    }
+
     createAimEffect(from: number[], to: number[]) {
         let fromGridPos = ViewController.instance.view.getGridPos(from);
         this.tracker.x = fromGridPos[0];

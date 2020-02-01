@@ -113,9 +113,14 @@ export default class GamePage extends BasicViewer {
     }
 
     setCursor(pos: number[]) {
+        this.cursor.active = true;
         let cursorPos = ViewController.instance.view.getGridPos(pos);
         this.cursor.x = cursorPos[0];
         this.cursor.y = cursorPos[1];
+    }
+
+    hideCursor(){
+        this.cursor.active = false;
     }
 
     showFightInfo(datas: any) {
@@ -182,8 +187,15 @@ export default class GamePage extends BasicViewer {
         this.unitSampleInfos.clearItem();
     }
 
+    explodeUnit(data:any, cb:()=>void){
+        this.effects.createUnitExplode(data.unit.position);
+        this.units.removeUnitByID(data.unit.key);
+        cc.tween(this.node).delay(1).call(cb).start();
+    }
+
     changeUnitHP(data: any, cb: () => void) {
         this.closeUnitSampleInfos();
+        this.hideCursor();
 
         let unit1 = data.units[0];
         let unit2 = data.units[1];
@@ -196,27 +208,44 @@ export default class GamePage extends BasicViewer {
 
         cc.tween(this.node)
             .call(() => {
+                // 描準鏡
                 this.effects.createAimEffect(from1, to1);
+
+                // 攻擊者的初始狀態+扣EN動畫
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeEN(unitAfter2.state.maxEn, 10);
+                    item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unit1.state.en);
+                    item.getComponent(UnitSampleInfo).changeEN(unit1.state.maxEn, unitAfter1.state.en);
+                });
+
+                // 被攻擊者的初始狀態
+                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
                 });
             })
             .delay(.7)
             .call(() => {
+
+                // 被攻擊者播放受擊動畫
                 this.effects.createExplode(result1.damage, to1);
                 this.units.shakeOneUnit(unit2.key);
             })
             .delay(.7)
             .call(() => {
+
+                // 被攻擊者的初始狀態+扣HP動畫
                 this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(unitAfter2.state.maxHp, 10);
+                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
+                    item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
                 });
             })
             .delay(.7)
             .call(() => {
                 this.effects.createAimEffect(to1, from1);
+
+                // 被攻擊者的扣血狀態+扣EN動畫
                 this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeEN(unitAfter1.state.maxEn, 10);
+                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unitAfter2.state.hp, unit2.state.maxEn, unit2.state.en);
+                    item.getComponent(UnitSampleInfo).changeEN(unit2.state.maxEn, unitAfter2.state.en);
                 });
             })
             .delay(.7)
@@ -226,8 +255,11 @@ export default class GamePage extends BasicViewer {
             })
             .delay(.7)
             .call(() => {
+
+                // 攻擊者的扣EN狀態+扣血動畫
                 this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, 10);
+                    item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unitAfter1.state.en);
+                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
                 });
             })
             .delay(.7)

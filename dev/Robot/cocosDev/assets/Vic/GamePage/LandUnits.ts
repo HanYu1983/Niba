@@ -32,8 +32,8 @@ export default class LandUnits extends cc.Component {
     @property(Unit)
     prefabUnit: Unit = null;
 
-    private _units:Array<cc.Node> = [];
-    private _pool:Pool;
+    private _units: Array<cc.Node> = [];
+    private _pool: Pool;
 
     start() {
 
@@ -53,13 +53,13 @@ export default class LandUnits extends cc.Component {
         // this.moveUnitByID(3, [[12, 12], [6, 12], [6, 9], [8, 9], [8, 10], [10, 10]]);
     }
 
-    onLoad(){
+    onLoad() {
         this._pool = this.node.getComponent(Pool);
     }
 
     setUnits(units: any) {
         this.clearUnits();
-        
+
         for (let element of units) {
             let unitId = element.key;
             let unitName = element.state.robot;
@@ -98,25 +98,30 @@ export default class LandUnits extends cc.Component {
         }
     }
 
-    shakeOneUnit(id:string){
-        let unit:Unit = this.getUnitByID(id);
-        if(unit){
+    shakeOneUnit(id: string) {
+        let unit: Unit = this.getUnitByID(id);
+        if (unit) {
             unit.shake();
         }
     }
 
-    clearUnits(){
-        this._units.forEach(unit=>{
-            unit.removeFromParent();
-            unit.getComponent(Unit).unitId = "";
-            this._pool.release(unit);
+    clearUnits() {
+        this._units.forEach(unit => {
+            this._removeUnit(unit);
         });
         this._units = [];
     }
 
-    setUnitPos(id:string, pos:number[]){
+    removeUnitByID(id: string) {
         let unit = this.getUnitByID(id);
-        if(unit){
+        if (unit) {
+            this._removeUnit(unit.node);
+        }
+    }
+
+    setUnitPos(id: string, pos: number[]) {
+        let unit = this.getUnitByID(id);
+        if (unit) {
             let unitPos = ViewController.instance.view.getGridPos(pos);
             unit.node.x = unitPos[0];
             unit.node.y = unitPos[1];
@@ -132,7 +137,7 @@ export default class LandUnits extends cc.Component {
         return undefined;
     }
 
-    moveUnitByID(id: string, moveTo: any, callback:()=>void) {
+    moveUnitByID(id: string, moveTo: any, callback: () => void) {
         let unit = this.getUnitByID(id);
         if (unit) {
             let actions = [];
@@ -145,5 +150,11 @@ export default class LandUnits extends cc.Component {
             actions.push(cc.callFunc(callback));
             unit.node.runAction(cc.sequence(actions));
         }
+    }
+
+    _removeUnit(unitNode:cc.Node) {
+        unitNode.removeFromParent();
+        unitNode.getComponent(Unit).unitId = "";
+        this._pool.release(unitNode);
     }
 }

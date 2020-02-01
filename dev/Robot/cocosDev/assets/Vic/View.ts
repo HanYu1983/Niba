@@ -27,7 +27,7 @@ export default class View extends cc.Component {
         this.getGamePage().changeUnitHP(data, cb);
     }
     unitDeadAnim(data: any, cb: ()=>void){
-        cb()
+        this.getGamePage().explodeUnit(data, cb);
     }
     paint(data: any, cb: () => void) {
         this.repaintUnits(data.units);
