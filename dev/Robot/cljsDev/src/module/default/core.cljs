@@ -277,6 +277,9 @@
 (defmethod app.gameplay.module/unitOnTransform :default [_ gameplayCtx unit robotKey]
   (unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) robotKey))
 
+(defmethod app.gameplay.module/unitOnDead :default [_ gameplayCtx unit]
+  (a/go gameplayCtx))
+
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (/ (getUnitPowerM gameplayCtx unit) 5)
@@ -348,6 +351,9 @@
                     second)]
     [:attack (first weapons)]))
 
+(defmethod app.gameplay.module/unitIsDead :default [_ gameplayCtx unit]
+  (<= (get-in unit [:state :hp]) 0))
+
 (defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
   (getUnitInfo gameplayCtx unit))
 
@@ -375,10 +381,10 @@
       (= rightActionType :attack)
       (let [rightHitRate (getUnitHitRate gameplayCtx right rightWeapon left)]
         [{:events #{[:evade] [:guard 300]}
-          :damage 1000} 
+          :damage 5000} 
          
          {:events #{[:hit 3000] [:guard 300]}
-          :damage 1000}]))))
+          :damage 5000}]))))
 
 (defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left leftAction right rightAction result]
   (let [[{leftDamage :damage} {rightDamage :damage}] result

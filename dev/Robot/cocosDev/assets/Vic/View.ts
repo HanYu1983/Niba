@@ -26,6 +26,9 @@ export default class View extends cc.Component {
         this.getGamePage().closeAccuracyInfos();
         this.getGamePage().changeUnitHP(data, cb);
     }
+    unitDeadAnim(data: any, cb: ()=>void){
+        cb()
+    }
     paint(data: any, cb: () => void) {
         this.repaintUnits(data.units);
         this.repaintMap(data.map)

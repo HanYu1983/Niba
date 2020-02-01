@@ -88,7 +88,8 @@
                 weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
             (cond
               (= "single" weaponType)
-              (let [[gameplay isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
+              (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
+                    [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
                 (if isEnd
                   (m/returnPop true)
                   (recur gameplayCtx)))

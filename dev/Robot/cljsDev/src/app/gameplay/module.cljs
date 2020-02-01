@@ -9,6 +9,7 @@
 (defmulti unitOnDone (fn [type gameplayCtx unit] type))
 (defmulti unitOnTurnStart (fn [type gameplayCtx unit] type))
 (defmulti unitOnTransform (fn [type gameplayCtx unit robotKey] type))
+(defmulti unitOnDead (fn [type gameplayCtx unit] type))
 
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))
@@ -19,6 +20,7 @@
 (defmulti unitGetReaction (fn [type gameplayCtx unit fromUnit weapon] type))
 (defmulti unitGetHitRate (fn [type gameplayCtx unit weapon targetUnit]))
 (defmulti unitGetInfo (fn [type gameplayCtx unit] type))
+(defmulti unitIsDead (fn [type gameplayCtx unit] type))
 
 (defmulti ReactionGetResult (fn [type gameplayCtx left leftAction right rightAction]))
 (defmulti ReactionApply (fn [type gameplayCtx left leftAction right rightAction result]))

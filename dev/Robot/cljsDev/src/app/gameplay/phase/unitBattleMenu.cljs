@@ -12,6 +12,7 @@
                                                paint
                                                
                                                unitBattleAnim
+                                               unitDeadAnim
                                                actions]])
   (:require [app.gameplay.session.battleMenu])
   (:require [app.gameplay.view]))
@@ -103,7 +104,25 @@
                                                   (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
                                           :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
                                                        (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
-                                          :results result} inputCh outputCh))]
+                                          :results result} inputCh outputCh))
+             gameplayCtx (if (app.gameplay.model/isDead gameplayCtx leftAfter)
+                           (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
+                                                 (tool.units/delete leftAfter)
+                                                 ((fn [units]
+                                                    (app.gameplay.model/setUnits gameplayCtx units))))
+                                 gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx leftAfter))
+                                 _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                             gameplayCtx)
+                           gameplayCtx)
+             gameplayCtx (if (app.gameplay.model/isDead gameplayCtx rightAfter)
+                           (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
+                                                 (tool.units/delete rightAfter)
+                                                 ((fn [units]
+                                                    (app.gameplay.model/setUnits gameplayCtx units))))
+                                 gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx rightAfter))
+                                 _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                             gameplayCtx)
+                           gameplayCtx)]
          (m/returnPop true))
 
        (= "cancel" select)

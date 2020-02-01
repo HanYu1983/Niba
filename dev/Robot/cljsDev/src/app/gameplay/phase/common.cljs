@@ -6,6 +6,7 @@
 (m/defwait enemyTurnStart [ctx args])
 (m/defwait unitMoveAnim [ctx args])
 (m/defwait unitBattleAnim [ctx args])
+(m/defwait unitDeadAnim [ctx args])
 (m/defwait paint [ctx args])
 
 (def actions {87 :up

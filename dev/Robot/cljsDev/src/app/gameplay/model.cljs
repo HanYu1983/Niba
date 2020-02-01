@@ -241,6 +241,9 @@
 (defn onTransform [ctx unit robotKey]
   (app.gameplay.module/unitOnTransform app.gameplay.module/*module ctx unit robotKey))
 
+(defn onDead [ctx unit]
+  (app.gameplay.module/unitOnDead app.gameplay.module/*module ctx unit))
+
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
 
@@ -261,3 +264,6 @@
 
 (defn applyActionResult [ctx left leftAction right rightAction result]
   (app.gameplay.module/ReactionApply app.gameplay.module/*module ctx left leftAction right rightAction result))
+
+(defn isDead [ctx unit]
+  (app.gameplay.module/unitIsDead app.gameplay.module/*module ctx unit))
