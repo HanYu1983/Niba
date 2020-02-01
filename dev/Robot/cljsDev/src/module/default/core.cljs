@@ -175,7 +175,7 @@
                               (apply map *)
                               (map js/Math.sqrt)
                               (apply +))]
-                (- 0.9 (* dist 0.05)))
+                (max 0.05 (- 0.9 (* dist 0.05))))
 
         ; 格鬥或射擊係數
         factor1 (let [isMelee (some #(= % "melee") (get weaponInfo "ability"))]
