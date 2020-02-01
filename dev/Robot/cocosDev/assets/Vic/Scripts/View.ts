@@ -2,6 +2,7 @@ import BasicViewer from "./BasicViewer";
 import MainPage from "./Page/MainPage";
 import GamePage from './Page/GamePage';
 import IUnit from "../../Han/interface/IUnit";
+import CommentUI from './CommentUI';
 
 const { ccclass, property } = cc._decorator;
 
@@ -24,6 +25,8 @@ export default class View extends cc.Component {
         this.getGamePage().closeFightInfo();
         this.getGamePage().closeAccuracyInfos();
         this.getGamePage().changeUnitHP(data, cb);
+
+        this.getCommentUI().showAlert("aaabbb", ()=>{});
     }
     unitDeadAnim(data: any, cb: ()=>void){
         this.getGamePage().explodeUnit(data, cb);
@@ -143,6 +146,9 @@ export default class View extends cc.Component {
     @property(BasicViewer)
     pages: BasicViewer[] = [];
 
+    @property(CommentUI)
+    commentUI:CommentUI = null;
+
     closeAllPages() {
         this.pages.forEach(element => {
             element.close();
@@ -173,6 +179,10 @@ export default class View extends cc.Component {
 
     closeLoadingPage() {
         this.pages[2].close();
+    }
+
+    getCommentUI():CommentUI{
+        return this.commentUI;
     }
 
     getGamePage(): GamePage {
