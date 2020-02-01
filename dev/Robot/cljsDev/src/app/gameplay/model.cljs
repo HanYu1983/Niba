@@ -259,5 +259,5 @@
 (defn calcActionResult [ctx left leftAction right rightAction]
   (app.gameplay.module/ReactionGetResult app.gameplay.module/*module ctx left leftAction right rightAction))
 
-(defn applyActionResult [ctx left right result]
-  (app.gameplay.module/ReactionApply app.gameplay.module/*module ctx left right result))
+(defn applyActionResult [ctx left leftAction right rightAction result]
+  (app.gameplay.module/ReactionApply app.gameplay.module/*module ctx left leftAction right rightAction result))

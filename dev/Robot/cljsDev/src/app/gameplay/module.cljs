@@ -21,6 +21,6 @@
 (defmulti unitGetInfo (fn [type gameplayCtx unit] type))
 
 (defmulti ReactionGetResult (fn [type gameplayCtx left leftAction right rightAction]))
-(defmulti ReactionApply (fn [type gameplayCtx left right result]))
+(defmulti ReactionApply (fn [type gameplayCtx left leftAction right rightAction result]))
 
 (def *module nil)

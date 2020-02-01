@@ -11,7 +11,7 @@
 (defn getWeaponData [weaponKey]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
+      (throw (js/Error. (str "getWeaponData[" weaponKey "] not found")))
       weaponData)))
 
 
@@ -48,21 +48,21 @@
 (defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
+      (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
       (let [{[min max] "range" type "type"} weaponData]
         [min max]))))
 
 (defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (let [{type "type"} weaponData]
         type))))
 
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
-      (throw (js/Error. (str weaponKey " not found")))
+      (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found")))
       (merge weaponData
              {"range" (getWeaponRange gameplayCtx unit weapon)
               "type" (getWeaponType gameplayCtx unit weapon)}
@@ -86,7 +86,7 @@
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
-      (throw (js/Error. (str robotKey "not found")))
+      (throw (js/Error. (str "getUnitMaxEn[" robotKey "] not found")))
       (let [en (->> (get robot "components")
                     (filter (fn [k]
                               (some #(= % k) ["energy1" "energy2" "energy3"])))
@@ -107,11 +107,11 @@
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
          (if (nil? robot)
-           (throw (js/Error. (str robotKey "not found")))
+           (throw (js/Error. (str "getUnitComponents[" robotKey "] not found")))
            (mapv (fn [key]
                    (let [com (get-in data ["component" key])]
                      (if (nil? com)
-                       (throw (js/Error. (str key " not found")))
+                       (throw (js/Error. (str "getUnitComponents[" key "] not found")))
                        {:key (gensym)
                         :componentKey key})))
                  (get robot "components"))))])))
@@ -128,11 +128,11 @@
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
          (if (nil? robot)
-           (throw (js/Error. (str robotKey "not found")))
+           (throw (js/Error. (str "getUnitWeapons[" robotKey "]not found")))
            (mapv (fn [weaponKey]
                    (let [weapon (get-in data ["weapon" weaponKey])]
                      (if (nil? weapon)
-                       (throw (js/Error. (str weaponKey " not found")))
+                       (throw (js/Error. (str "getUnitWeapons[" weaponKey "] not found")))
                        (cond-> {:key weaponKey
                                 :weaponKey weaponKey
                                 :level 0
@@ -152,7 +152,7 @@
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
-      (throw (js/Error. (str robotKey "not found")))
+      (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
       (let [power (->> (concat (map (fn [k]
                                       (get-in data ["component" k "powerCost"]))
                                     (get robot "components"))
@@ -202,7 +202,7 @@
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
-      (throw (js/Error. (str robotKey "not found")))
+      (throw (js/Error. (str "getUnitTransforms[" robotKey "] not found")))
       (conj (get-in robot ["transform"])
             robotKey))))
 
@@ -210,7 +210,7 @@
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data ["robot" robotKey])]
     (if (nil? robot)
-      (throw (js/Error. (str robotKey " not found")))
+      (throw (js/Error. (str "getUnitInfo[" robotKey "] not found")))
       (update-in unit [:state] (fn [state]
                                  (merge state
                                         {:weapons (->> (getUnitWeaponsM gameplayCtx unit)
@@ -257,9 +257,9 @@
                                   :tags #{}}})]
     (-> unit
         ((fn [unit]
-           (setUnitHp gameplayCtx unit (getUnitMaxHp gameplayCtx unit))))
+           (setUnitHp unit (getUnitMaxHp gameplayCtx unit))))
         ((fn [unit]
-           (setUnitEn gameplayCtx unit (getUnitMaxEn gameplayCtx unit)))))))
+           (setUnitEn unit (getUnitMaxEn gameplayCtx unit)))))))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
@@ -359,20 +359,38 @@
       (let [leftHitRate (if (= rightActionType :evade)
                           (/ leftHitRate 2)
                           leftHitRate)]
-        [{:result :nothing} {:result :damage
-                             :value 1000}])
+        [{:events #{[:evade] [:guard 300]}
+          :damage 0} 
+         
+         {:events #{[:hit 1000]}
+          :damage 1000}])
 
       (= rightActionType :guard)
-      [{:result :nothing} {:result :damage
-                           :value 1000}]
+      [{:events #{}
+        :damage 0}
+       
+       {:events #{}
+        :damage 1000}]
 
       (= rightActionType :attack)
       (let [rightHitRate (getUnitHitRate gameplayCtx right rightWeapon left)]
-        [{:result :damage
-          :value 1000} 
+        [{:events #{[:evade] [:guard 300]}
+          :damage 1000} 
          
-         {:result :damage
-          :value 1000}]))))
+         {:events #{[:hit 3000] [:guard 300]}
+          :damage 1000}]))))
 
-(defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left right result]
-  gameplayCtx)
+(defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left leftAction right rightAction result]
+  (let [[{leftDamage :damage} {rightDamage :damage}] result
+        [leftAfter rightAfter] (map (fn [unit damage]
+                                      (-> (getUnitHp unit)
+                                          (- damage)
+                                          (max 0)
+                                          ((fn [hp]
+                                             (setUnitHp unit hp)))))
+                                    [left right]
+                                    [leftDamage rightDamage])
+        gameplayCtx (-> gameplayCtx
+                        (app.gameplay.model/updateUnit left (constantly leftAfter))
+                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
+    gameplayCtx))

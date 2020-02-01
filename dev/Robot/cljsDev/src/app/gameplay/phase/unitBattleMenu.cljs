@@ -94,7 +94,7 @@
        (let [leftAction (get-in state [:battleMenuSession 0 :action])
              rightAction (get-in state [:battleMenuSession 1 :action])
              result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
-             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left right result)
+             gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left leftAction right rightAction result)
              leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
                            (tool.units/getByKey (:key left)))
              rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
