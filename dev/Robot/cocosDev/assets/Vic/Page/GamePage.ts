@@ -119,7 +119,7 @@ export default class GamePage extends BasicViewer {
         this.cursor.y = cursorPos[1];
     }
 
-    hideCursor(){
+    hideCursor() {
         this.cursor.active = false;
     }
 
@@ -187,10 +187,77 @@ export default class GamePage extends BasicViewer {
         this.unitSampleInfos.clearItem();
     }
 
-    explodeUnit(data:any, cb:()=>void){
+    explodeUnit(data: any, cb: () => void) {
         this.effects.createUnitExplode(data.unit.position);
         this.units.removeUnitByID(data.unit.key);
         cc.tween(this.node).delay(1).call(cb).start();
+    }
+
+    deelll(time) {
+        return cc.tween().delay(time);
+    }
+
+    _showAttackerChangeEN(from1, to1, unit1, unitAfter1, unit2) {
+        let tween = cc.tween(this.node).call(() => {
+
+            this.effects.createAimEffect(from1, to1);
+
+            // 攻擊者的初始狀態+扣EN動畫
+            this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
+                item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unit1.state.en);
+                item.getComponent(UnitSampleInfo).changeEN(unit1.state.maxEn, unitAfter1.state.en);
+            });
+
+            // 被攻擊者的初始狀態
+            this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
+            });
+        });
+        return tween.delay(.7);
+    }
+
+    _showDeffenderChangeHP(to1, unit2, unitAfter2) {
+        let tween = cc.tween(this.node).call(() => {
+            // 被攻擊者的初始狀態+扣HP動畫
+            this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
+                item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
+            });
+        });
+        return tween.delay(.7);
+    }
+
+    _showAttackerChangeHP(from1, unit1, unitAfter1) {
+        let tween = cc.tween(this.node).call(() => {
+            // 攻擊者的扣EN狀態+扣血動畫
+            this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
+                item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unitAfter1.state.en);
+                item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
+            });
+        });
+        return tween.delay(.7);
+    }
+
+    _showHitEffect(unit2, to1, result1) {
+        let tween = cc.tween(this.node).call(() => {
+            // 被攻擊者播放受擊動畫
+            this.effects.createExplode(result1.damage, to1);
+            this.units.shakeOneUnit(unit2.key);
+        });
+        return tween.delay(.7);
+    }
+
+    _showDeffenderChangeEn(unit2, unitAfter2, from1, to1) {
+        let tween = cc.tween(this.node).call(() => {
+            this.effects.createAimEffect(to1, from1);
+
+            // 被攻擊者的扣血狀態+扣EN動畫
+            this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unitAfter2.state.hp, unit2.state.maxEn, unit2.state.en);
+                item.getComponent(UnitSampleInfo).changeEN(unit2.state.maxEn, unitAfter2.state.en);
+            });
+        });
+        return tween.delay(.7);
     }
 
     changeUnitHP(data: any, cb: () => void) {
@@ -206,65 +273,15 @@ export default class GamePage extends BasicViewer {
         let result1 = data.results[1];
         let result2 = data.results[0];
 
-        cc.tween(this.node)
-            .call(() => {
-                // 描準鏡
-                this.effects.createAimEffect(from1, to1);
+        let tweens = [];
+        tweens.push(this._showAttackerChangeEN(from1, to1, unit1, unitAfter1, unit2));
+        tweens.push(this._showHitEffect(unit2, to1, result1));
+        tweens.push(this._showDeffenderChangeHP(to1, unit2, unitAfter2));
+        tweens.push(this._showDeffenderChangeEn(unit2, unitAfter2, from1, to1));
+        tweens.push(this._showHitEffect(unit1, from1, result2));
+        tweens.push(this._showAttackerChangeHP(from1, unit1, unitAfter1));
 
-                // 攻擊者的初始狀態+扣EN動畫
-                this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unit1.state.en);
-                    item.getComponent(UnitSampleInfo).changeEN(unit1.state.maxEn, unitAfter1.state.en);
-                });
-
-                // 被攻擊者的初始狀態
-                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
-                });
-            })
-            .delay(.7)
-            .call(() => {
-
-                // 被攻擊者播放受擊動畫
-                this.effects.createExplode(result1.damage, to1);
-                this.units.shakeOneUnit(unit2.key);
-            })
-            .delay(.7)
-            .call(() => {
-
-                // 被攻擊者的初始狀態+扣HP動畫
-                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
-                    item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
-                });
-            })
-            .delay(.7)
-            .call(() => {
-                this.effects.createAimEffect(to1, from1);
-
-                // 被攻擊者的扣血狀態+扣EN動畫
-                this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unitAfter2.state.hp, unit2.state.maxEn, unit2.state.en);
-                    item.getComponent(UnitSampleInfo).changeEN(unit2.state.maxEn, unitAfter2.state.en);
-                });
-            })
-            .delay(.7)
-            .call(() => {
-                this.effects.createBlade(result2.damage, from1);
-                this.units.shakeOneUnit(unit1.key);
-            })
-            .delay(.7)
-            .call(() => {
-
-                // 攻擊者的扣EN狀態+扣血動畫
-                this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                    item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unitAfter1.state.en);
-                    item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
-                });
-            })
-            .delay(.7)
-            .call(cb)
-            .start();
+        cc.tween(this.node).sequence(cc.tween(this.node).delay(0), ...tweens).call(cb).start();
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {
