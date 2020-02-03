@@ -13,6 +13,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Unit extends cc.Component {
 
+    @property(cc.Node)
+    unit:cc.Node = null;
+
     @property(cc.Sprite)
     unitImage: cc.Sprite = null;
 
@@ -40,5 +43,13 @@ export default class Unit extends cc.Component {
 
     evade(){
         this.node.getComponent(cc.Animation).play("UnitEvade");
+    }
+
+    toSky(cb:()=>void){
+        cc.tween(this.unit).to(.5, {y:6}).call(cb).start();
+    }
+
+    toLand(cb:()=>void){
+        cc.tween(this.unit).to(.5, {y:0}).call(cb).start();
     }
 }

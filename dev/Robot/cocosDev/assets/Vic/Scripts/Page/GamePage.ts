@@ -193,10 +193,6 @@ export default class GamePage extends BasicViewer {
         cc.tween(this.node).delay(1).call(cb).start();
     }
 
-    deelll(time) {
-        return cc.tween().delay(time);
-    }
-
     _showAttackerAim(from1, to1, unit1, unitAfter1, unit2) {
         let tween = cc.tween(this.node).call(() => {
 
