@@ -376,7 +376,8 @@
           [gameplayCtx isEnd true])
 
         (= cursor1 transformIdx)
-        (let [transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
+        (let [transformedUnit (unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) select)
+              ; transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
               gameplayCtx (-> gameplayCtx
                               (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
               [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
