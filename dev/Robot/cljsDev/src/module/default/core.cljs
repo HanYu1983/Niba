@@ -41,6 +41,14 @@
 
 (def nextCellM (memoize nextCell))
 
+; =======================
+; pilot
+; =======================
+(defn getPilotInfo [gameplayCtx unit pilot]
+  (let [data (get-in data ["pilot" pilot])]
+    (if (nil? data)
+      (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
+      data)))
 
 ; =======================
 ; weapon
@@ -58,6 +66,12 @@
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (let [{type "type"} weaponData]
         type))))
+
+(defn getWeaponSuitability [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  (let [weaponData (get-in data ["weapon" weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
+      (get-in weaponData ["suitability"]))))
 
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
@@ -164,9 +178,25 @@
 
 (def getUnitPowerM (memoize getUnitPower))
 
+(defn getUnitSuitability [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
+      (get robot "suitability"))))
 
 (defn getUnitHitRate [gameplayCtx unit weapon targetUnit]
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+        pilot (getPilotInfo gameplayCtx unit (get-in unit [:state :pilot]))
+        targetPilot (getPilotInfo gameplayCtx targetUnit (get-in targetUnit [:state :pilot]))
+        terrain (-> (app.gameplay.model/getMap gameplayCtx)
+                    (get-in (reverse (:position targetUnit)))
+                    ((fn [cellId]
+                       (get-in data ["terrainMapping" (str cellId) "terrain"])))
+                    ((fn [terrainKey]
+                       (get-in data ["terrain" terrainKey]))))
+        weaponSuitability (getWeaponSuitability gameplayCtx unit weapon)
+
         ; 距離為基本命中率
         basic (let [pos1 (:position unit)
                     pos2 (:position targetUnit)
@@ -180,20 +210,20 @@
         ; 格鬥或射擊係數
         factor1 (let [isMelee (some #(= % "melee") (get weaponInfo "ability"))]
                   (if isMelee
-                    1
-                    1))
+                    (/ (get pilot "melee") (get targetPilot "melee"))
+                    (/ (get pilot "range") (get targetPilot "range"))))
 
         ; 命中回避係數
-        factor2 1
+        factor2 (/ (get pilot "dex") (get targetPilot "agi"))
 
         ; 地型適性係數
-        factor3 1
+        factor3 (get weaponSuitability 0)
 
         ; 武器命中補正係數
         factor4 (get weaponInfo "accuracy")
 
         ; 地型補正係數
-        factor5 1]
+        factor5 (get terrain "hitRate")]
     (* basic factor1 factor2 factor3 factor4 factor5)))
 
 

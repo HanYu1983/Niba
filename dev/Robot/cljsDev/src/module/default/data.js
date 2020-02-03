@@ -62,7 +62,17 @@ const dataJson =
             "powerCostForMove": 5
         }
     },
-    "pilot": {},
+    "pilot": {
+        "amuro":{
+            "title": "amuro",
+            "melee": 1,
+            "range": 1,
+            "dex": 1,
+            "agi": 1,
+            "tech": 1,
+            "exp": 20
+        }
+    },
     "robot": {
         "gaite": {
             "title": "真蓋特",
