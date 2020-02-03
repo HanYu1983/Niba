@@ -5,7 +5,11 @@
   (:require [app.gameplay.module])
   (:require [tool.map])
   (:require-macros [module.default.core :as mm])
-  (:require ["./data.js" :as dataJson]))
+  (:require ["./data.js" :as dataJson])
+  (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
+  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
+  (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
+  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 
 (def data (js->clj dataJson))
 (defn getWeaponData [weaponKey]
@@ -340,6 +344,60 @@
 (defmethod app.gameplay.module/waitUnitOnDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
+(defmethod app.gameplay.module/waitUnitOnMenu :default [_ gameplayCtx {unit  :unit
+                                                                       menuCursor :menuCursor
+                                                                       [menu data] :menuData}
+                                                        inputCh outputCh]
+  (a/go
+    (let [cursor1 (tool.menuCursor/getCursor1 menuCursor)
+          cursor2 (tool.menuCursor/getCursor2 menuCursor)
+          weaponIdx (get-in data [:weaponIdx])
+          transformIdx (get-in data [:transformIdx])
+          attackRange (if (= cursor1 weaponIdx)
+                        (get-in data [:weaponRange cursor2])
+                        [])
+          select (tool.menuCursor/getSelect menuCursor)]
+      (cond
+        (= select "sky")
+        (let [transformedUnit (update-in unit [:state :tags] (fn [tags]
+                                                               (conj tags :sky)))
+              gameplayCtx (-> gameplayCtx
+                              (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
+              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
+          [gameplayCtx isEnd])
+
+        (= cursor1 transformIdx)
+        (let [transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
+              gameplayCtx (-> gameplayCtx
+                              (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
+              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
+          [gameplayCtx isEnd])
+
+        (= cursor1 weaponIdx)
+        (let [menu (tool.menuCursor/getMenu menuCursor)
+              weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                          second
+                          (nth cursor2))
+              weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
+          (cond
+            (= "single" weaponType)
+            (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
+                  [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
+              (if isEnd
+                [gameplayCtx isEnd]
+                [gameplayCtx false]))
+
+            (= "line" weaponType)
+            (let [[gameplay isEnd] (a/<! (unitSelectAttackPosition gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]
+              (if isEnd
+                [gameplayCtx isEnd]
+                [gameplayCtx false]))
+
+            :else
+            [gameplayCtx false]))
+
+        :else
+        [gameplayCtx false]))))
 
 (defmethod app.gameplay.module/waitEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (a/go
@@ -414,7 +472,7 @@
                           :unit unit}]
 
                         :else
-                        [[["move"] weaponKeys (getUnitTransforms gameplayCtx unit) ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys (getUnitTransforms gameplayCtx unit) ["sky"] ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
                           :transformIdx 2
