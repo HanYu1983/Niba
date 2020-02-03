@@ -226,7 +226,7 @@
         factor5 (get terrain "hitRate")]
     (* basic factor1 factor2 factor3 factor4 factor5)))
 
-(defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit] 1000)
+(defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit] 5000)
 
 ; transform
 (defn getUnitTransforms [gameplayCtx unit]
@@ -415,14 +415,19 @@
                (conj :evade)
 
                (= rightActionType :guard)
-               (conj :guard))
+               (conj :guard)
+               
+               (<= (- (getUnitHp right) leftMakeDamage) 0)
+               (conj :dead))
      :damage leftMakeDamage}))
 
 
 (defmethod app.gameplay.module/ReactionGetResult :default [_ gameplayCtx left leftAction right rightAction]
-  [(getReactionResult gameplayCtx right rightAction left leftAction)
-   (getReactionResult gameplayCtx left leftAction right rightAction)])
-
+  (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
+      ((fn [[_ firstResult :as ctx]]
+         (if (contains? (:events firstResult) :dead)
+           ctx
+           (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))
 
 (defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left leftAction right rightAction result]
   (let [[{leftDamage :damage} {rightDamage :damage}] result
