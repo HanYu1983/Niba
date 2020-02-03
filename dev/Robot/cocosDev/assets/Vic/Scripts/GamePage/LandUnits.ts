@@ -105,6 +105,13 @@ export default class LandUnits extends cc.Component {
         }
     }
 
+    evadeOneUnit(id:string){
+        let unit: Unit = this.getUnitByID(id);
+        if (unit) {
+            unit.evade();
+        }
+    }
+
     clearUnits() {
         this._units.forEach(unit => {
             this._removeUnit(unit);

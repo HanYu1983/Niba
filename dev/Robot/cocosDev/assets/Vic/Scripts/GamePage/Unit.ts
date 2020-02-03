@@ -35,6 +35,10 @@ export default class Unit extends cc.Component {
     }
 
     shake() {
-        this.node.getComponent(cc.Animation).play("ShakeUnit");
+        this.node.getComponent(cc.Animation).play("UnitShake");
+    }
+
+    evade(){
+        this.node.getComponent(cc.Animation).play("UnitEvade");
     }
 }
