@@ -34,19 +34,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> (app.gameplay.module/gameplayOnInit app.gameplay.module/*module app.gameplay.model/defaultGameplayModel) 
-                          (app.gameplay.model/createUnit {:player :player
-                                                          :type :robot
-                                                          :position [0 0]}
-                                                         {:robotKey "gaite"})
-                          (app.gameplay.model/createUnit {:player :ai
-                                                          :type :robot
-                                                          :position [3 3]}
-                                                         {:robotKey "gundam"})
-                          (app.gameplay.model/createUnit {:player :player
-                                                          :type :robot
-                                                          :position [6 6]}
-                                                         {:robotKey "zgundam"})
+          gameplayCtx (-> (app.gameplay.module/gameplayOnInit app.gameplay.module/*module app.gameplay.model/defaultGameplayModel)
                           (app.gameplay.model/setMap playmap))]
       (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

@@ -63,19 +63,20 @@ const dataJson =
         }
     },
     "pilot": {
-        "amuro":{
+        "amuro": {
             "title": "amuro",
-            "melee": 1,
-            "range": 1,
+            "melee": 0.75,
+            "range": 1.25,
             "dex": 1,
             "agi": 1,
             "tech": 1,
-            "exp": 20
+            "exp": 10
         }
     },
+    "pilotAbility": {},
     "robot": {
-        "gaite": {
-            "title": "真蓋特",
+        "gaite_sky": {
+            "title": "空蓋特",
             "cost": 62500,
             "power": 125,
             "weapons": [
@@ -94,11 +95,63 @@ const dataJson =
                 0.75,
                 0.5,
                 1,
-                0.75
+                1
             ],
             "transform": [
-                "zgundam",
-                "gundam"
+                "gaite_land",
+                "gaite_sea"
+            ]
+        },
+        "gaite_land": {
+            "title": "地蓋特",
+            "cost": 62500,
+            "power": 125,
+            "weapons": [
+                "gaite_drill",
+                "gaite_drillMissle",
+                "gaite_powerDrill"
+            ],
+            "components": [
+                "energy1",
+                "energy2",
+                "armor1",
+                "armor1"
+            ],
+            "suitability": [
+                1,
+                0.75,
+                0,
+                1
+            ],
+            "transform": [
+                "gaite_sky",
+                "gaite_sea"
+            ]
+        },
+        "gaite_sea": {
+            "title": "海蓋特",
+            "cost": 62500,
+            "power": 125,
+            "weapons": [
+                "gaite_punch",
+                "gaite_missle",
+                "gaite_shan"
+            ],
+            "components": [
+                "energy1",
+                "energy2",
+                "armor2",
+                "armor2"
+            ],
+            "suitability": [
+                0.75,
+                1,
+                0,
+                1
+            ],
+            "transform": [
+                "gaite_sky",
+                "gaite_land"
             ]
         },
         "zgundam": {
@@ -122,7 +175,32 @@ const dataJson =
                 0,
                 1
             ],
-            "transform": []
+            "transform": [
+                "zgundam_sky"
+            ]
+        },
+        "zgundam_sky": {
+            "title": "z鋼彈飛翼",
+            "cost": 32400,
+            "power": 90,
+            "weapons": [
+                "beam_gun1"
+            ],
+            "components": [
+                "energy1",
+                "energy1",
+                "armor1",
+                "armor1"
+            ],
+            "suitability": [
+                0,
+                0,
+                1,
+                1
+            ],
+            "transform": [
+                "zgundam"
+            ]
         },
         "gundam": {
             "title": "鋼彈",
@@ -347,7 +425,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.6,
@@ -368,7 +449,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.588,
@@ -389,7 +473,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.54,
@@ -410,7 +497,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.522,
@@ -431,7 +521,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.48,
@@ -452,7 +545,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.46799999999999997,
@@ -473,7 +569,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "line",
             "accuracy": 0.42,
@@ -494,7 +593,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -515,7 +617,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -536,7 +641,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -557,7 +665,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -578,7 +689,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -599,7 +713,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -620,7 +737,10 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "standAttack",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
@@ -642,7 +762,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -665,7 +786,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -679,7 +801,7 @@ const dataJson =
                 2,
                 5
             ],
-            "energyCost": 22,
+            "energyCost": 20,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -688,7 +810,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -702,7 +825,7 @@ const dataJson =
                 2,
                 5
             ],
-            "energyCost": 25,
+            "energyCost": 23,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -711,7 +834,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -725,7 +849,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 34,
+            "energyCost": 30,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -734,7 +858,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -748,7 +873,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 38,
+            "energyCost": 34,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -757,7 +882,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -771,7 +897,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 46,
+            "energyCost": 40,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -780,7 +906,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -803,7 +930,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -826,7 +955,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -840,7 +971,7 @@ const dataJson =
                 2,
                 5
             ],
-            "energyCost": 22,
+            "energyCost": 20,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -849,7 +980,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -863,7 +996,7 @@ const dataJson =
                 2,
                 5
             ],
-            "energyCost": 25,
+            "energyCost": 23,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -872,7 +1005,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -886,7 +1021,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 34,
+            "energyCost": 30,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -895,7 +1030,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -909,7 +1046,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 38,
+            "energyCost": 34,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -918,7 +1055,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -932,7 +1071,7 @@ const dataJson =
                 2,
                 6
             ],
-            "energyCost": 46,
+            "energyCost": 40,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -941,7 +1080,9 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam",
+                "multi"
             ],
             "energyType": "energy",
             "type": "single",
@@ -979,7 +1120,7 @@ const dataJson =
                 1,
                 1
             ],
-            "energyCost": 14,
+            "energyCost": 9,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1003,7 +1144,7 @@ const dataJson =
                 1,
                 2
             ],
-            "energyCost": 38,
+            "energyCost": 15,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1027,7 +1168,7 @@ const dataJson =
                 1,
                 2
             ],
-            "energyCost": 47,
+            "energyCost": 17,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1051,7 +1192,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 68,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1075,7 +1216,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 80,
+            "energyCost": 24,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1099,7 +1240,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 98,
+            "energyCost": 29,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1137,8 +1278,8 @@ const dataJson =
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 0.95,
-            "damage": 3300,
+            "accuracy": 0.9,
+            "damage": 3800,
             "powerCost": 12
         },
         "gaite_axe": {
@@ -1147,7 +1288,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 75,
+            "energyCost": 35,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1171,7 +1312,7 @@ const dataJson =
                 1,
                 3
             ],
-            "energyCost": 70,
+            "energyCost": 30,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1180,7 +1321,8 @@ const dataJson =
                 1
             ],
             "ability": [
-                "moveAttack"
+                "moveAttack",
+                "beam"
             ],
             "energyType": "energy",
             "type": "single",
@@ -1202,12 +1344,156 @@ const dataJson =
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "multi"
+            ],
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
             "damage": 3000,
             "powerCost": 12
+        },
+        "gaite_drill": {
+            "title": "蓋特電鑽",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 9,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3500,
+            "powerCost": 12
+        },
+        "gaite_drillMissle": {
+            "title": "蓋特鑽頭飛彈",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "missle"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 0,
+            "powerCost": 0
+        },
+        "gaite_powerDrill": {
+            "title": "蓋特强力電鉆",
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 20,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 7000,
+            "powerCost": 0
+        },
+        "gaite_punch": {
+            "title": "蓋特重拳",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 5,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1.1,
+            "damage": 3200,
+            "powerCost": 10
+        },
+        "gaite_missle": {
+            "title": "蓋特飛彈",
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "missle"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 0,
+            "powerCost": 0
+        },
+        "gaite_shan": {
+            "title": "蓋特大雪山",
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 20,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "ability": [
+                "moveAttack",
+                "melee"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 9500,
+            "powerCost": 30
         }
     },
     "weaponAbility": {
@@ -1218,7 +1504,7 @@ const dataJson =
         },
         "standAttack": {
             "title": "狙擊",
-            "desc": "原地使用時。命中增加{0}。",
+            "desc": "原地使用時。命中增加{0}。不可反擊。",
             "values": [
                 "1"
             ]
@@ -1242,6 +1528,37 @@ const dataJson =
             "title": "火焰",
             "desc": "無視裝甲值. 樹林中傷害x{0}",
             "values": []
+        },
+        "lighting": {
+            "title": "電擊",
+            "desc": "無視裝甲值. 水中傷害x{0}",
+            "values": [
+                "1.2"
+            ]
+        },
+        "spray": {
+            "title": "擴散",
+            "desc": "命中x{0}, 傷害x{1}",
+            "values": [
+                "1.3",
+                "0.8"
+            ]
+        },
+        "multi": {
+            "title": "連射",
+            "desc": "命中x{0}, 傷害x{1}~{2}",
+            "values": [
+                "1.1",
+                "0.7",
+                "1.3"
+            ]
+        },
+        "missle": {
+            "title": "飛彈",
+            "desc": "命中x{0}, 會被防禦兵器擊落",
+            "values": [
+                "1.3"
+            ]
         }
     },
     "weaponEnergyType": {
