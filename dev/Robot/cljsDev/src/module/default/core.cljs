@@ -301,7 +301,7 @@
                                        [(app.gameplay.model/createUnit gameplayCtx
                                                                        {:player (if (< (rand) 0.5)
                                                                                   :player
-                                                                                  :ai)
+                                                                                  :ai1)
                                                                         :type :robot
                                                                         :position [0 i]}
                                                                        {:robotKey robotKey})
@@ -337,8 +337,25 @@
 (defmethod app.gameplay.module/unitOnTransform :default [_ gameplayCtx unit robotKey]
   (unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) robotKey))
 
-(defmethod app.gameplay.module/unitOnDead :default [_ gameplayCtx unit]
+(defmethod app.gameplay.module/waitUnitOnDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
+
+
+(defmethod app.gameplay.module/waitEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
+  (a/go
+    (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
+                     (tool.units/getAll)
+                     (filter (fn [unit]
+                               (= (get unit :player) enemy))))]
+      (loop [gameplayCtx gameplayCtx
+             units units]
+        (if (> (count units) 0)
+          (let [unit (first units)
+                gameplayCtx (-> (app.gameplay.model/updateUnit gameplayCtx unit (fn [unit]
+                                                                                  unit)))]
+            (recur gameplayCtx (rest units)))
+          gameplayCtx)))))
+
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)

@@ -9,7 +9,9 @@
 (defmulti unitOnDone (fn [type gameplayCtx unit] type))
 (defmulti unitOnTurnStart (fn [type gameplayCtx unit] type))
 (defmulti unitOnTransform (fn [type gameplayCtx unit robotKey] type))
-(defmulti unitOnDead (fn [type gameplayCtx unit] type))
+
+(defmulti waitEnemyTurn (fn [type gameplayCtx enemy inputCh outputCh] type))
+(defmulti waitUnitOnDead (fn [type gameplayCtx unit] type))
 
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))

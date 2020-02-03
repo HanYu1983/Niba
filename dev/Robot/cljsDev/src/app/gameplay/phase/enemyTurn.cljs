@@ -14,4 +14,4 @@
   (a/go
     (loop []
       (a/<! (enemyTurnStart gameplayCtx enemy inputCh outputCh))
-      gameplayCtx)))
+      (a/<! (app.gameplay.module/waitEnemyTurn app.gameplay.module/*module gameplayCtx enemy inputCh outputCh)))))

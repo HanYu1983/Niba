@@ -217,7 +217,7 @@
   (app.gameplay.module/unitOnTransform app.gameplay.module/*module ctx unit robotKey))
 
 (defn onDead [ctx unit]
-  (app.gameplay.module/unitOnDead app.gameplay.module/*module ctx unit))
+  (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module ctx unit))
 
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))

@@ -41,3 +41,6 @@
                 (add (f unit))))
           ctx
           (vals (:key ctx))))
+
+(defn getAll [ctx]
+  (vals (:key ctx)))
