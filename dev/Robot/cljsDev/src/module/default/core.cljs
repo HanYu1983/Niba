@@ -324,7 +324,7 @@
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
       (merge {:position pos})
-      (update-in [:state :tags] #(conj % :firstMove2))))
+      (update-in [:state :tags] #(conj % :move))))
 
 (defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
   (-> unit
@@ -390,7 +390,7 @@
                         [[["cancel"]] {}]
 
                         (-> (get-in unit [:state :tags])
-                            (contains? :firstMove))
+                            (contains? :move))
                         [[weaponKeys ["ok"] ["cancel"]]
                          {:weaponIdx 0
                           :weapons weapons
