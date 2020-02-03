@@ -1,0 +1,4 @@
+id/string,title/string,desc/string,value/string[],techCost
+,火神炮防禦,飛彈類型的攻擊機率{0}無效.,0.1,1
+,盾防禦,機率{0}將傷害減半.,0.3,1
+,分身,幾率{0}不受任何傷害,0.5,3

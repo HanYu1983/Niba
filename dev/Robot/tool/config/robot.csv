@@ -1,6 +1,9 @@
 id/string,title/string,cost/int,power/int,weapons/string[],components/string[],suitability/float[4],transform/string[]
-gaite,真蓋特,62500,125,"gaite_handSword,gaite_axe,gaite_beam,gaite_cannon","energy1,energy2,armor1,armor2","0.75,0.5,1,0.75","zgundam,gundam"
-zgundam,z鋼彈,32400,90,"beam_sword2,beam_gun1,beam_mega2","energy1,energy1,armor1,armor1","1,0.5,0,1",
+gaite_sky,空蓋特,62500,125,"gaite_handSword,gaite_axe,gaite_beam,gaite_cannon","energy1,energy2,armor1,armor2","0.75,0.5,1,1","gaite_land,gaite_sea"
+gaite_land,地蓋特,62500,125,"gaite_drill,gaite_drillMissle,gaite_powerDrill","energy1,energy2,armor1,armor1","1,0.75,0,1","gaite_sky,gaite_sea"
+gaite_sea,海蓋特,62500,125,"gaite_punch,gaite_missle,gaite_shan","energy1,energy2,armor2,armor2","0.75,1,0,1","gaite_sky,gaite_land"
+zgundam,z鋼彈,32400,90,"beam_sword2,beam_gun1,beam_mega2","energy1,energy1,armor1,armor1","1,0.5,0,1",zgundam_sky
+zgundam_sky,z鋼彈飛翼,32400,90,beam_gun1,"energy1,energy1,armor1,armor1","0,0,1,1",zgundam
 gundam,鋼彈,16900,65,"beam_sword1,beam_gun1","energy1,energy1,armor1,armor1","1,0.5,0,1",
 jimu,吉姆,9216,48,"beam_sword1,beam_gatling1","energy1,armor1","1,0.5,0,1",
 BGD,制式格鬥,14400,60,"beam_sword2,beam_gatling1","energy1,armor1","1,0.5,0,1",

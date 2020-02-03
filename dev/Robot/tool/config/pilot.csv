@@ -1,12 +1,2 @@
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-,,,,,,,
-id/string,title/string,melee/float,range/float,dex/float,agi/float,exp/int,ability/string[]
-amuro,amuro,1,2,1.4,1.4,10,
+id/string,title/string,melee/float,range/float,dex/float,agi/float,tech/float,exp/float
+amuro,amuro,0.75,1.25,1,1,1,10
