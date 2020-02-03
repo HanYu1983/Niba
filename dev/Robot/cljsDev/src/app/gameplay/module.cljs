@@ -12,6 +12,7 @@
 
 (defmulti waitEnemyTurn (fn [type gameplayCtx enemy inputCh outputCh] type))
 (defmulti waitUnitOnDead (fn [type gameplayCtx unit] type))
+(defmulti waitUnitOnMenu (fn [type gameplayCtx args inputCh outputCh] type))
 
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
 (defmulti unitGetMenuData (fn [type gameplayCtx unit] type))

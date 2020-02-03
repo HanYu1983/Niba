@@ -32,6 +32,12 @@ export default class View extends cc.Component {
     unitDeadAnim(data: any, cb: ()=>void){
         this.getGamePage().explodeUnit(data, cb);
     }
+    unitSkyAnim(data: any, cb: ()=>void){
+        this.getGamePage().units.toSkyUnit(data.unit.key, cb);
+    }
+    unitGroundAnim(data: any, cb: ()=>void){
+        this.getGamePage().units.toLandUnit(data.unit.key, cb);
+    }
     showMessage(data: any, cb: ()=>void){
         this.getCommentUI().showAlert(data.message, ()=>{});
         cb()

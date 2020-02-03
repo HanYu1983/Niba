@@ -64,45 +64,8 @@
          (recur gameplayCtx)))
 
       (= :enter action)
-      (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
-            cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-            weaponIdx (get-in state [:data :weaponIdx])
-            transformIdx (get-in state [:data :transformIdx])
-            attackRange (if (= cursor1 weaponIdx)
-                          (get-in state [:data :weaponRange cursor2])
-                          [])
-            select (tool.menuCursor/getSelect (:menuCursor state))]
+      (let [select (tool.menuCursor/getSelect (:menuCursor state))]
         (cond
-          (= cursor1 transformIdx)
-          (let [transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
-                gameplayCtx (-> gameplayCtx
-                                (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
-                [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
-            (m/returnPop isEnd))
-
-          (= cursor1 weaponIdx)
-          (let [menu (tool.menuCursor/getMenu (:menuCursor state))
-                weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
-                            second
-                            (nth cursor2))
-                weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
-            (cond
-              (= "single" weaponType)
-              (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
-                    [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
-                (if isEnd
-                  (m/returnPop true)
-                  (recur gameplayCtx)))
-
-              (= "line" weaponType)
-              (let [[gameplay isEnd] (a/<! (unitSelectAttackPosition gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]
-                (if isEnd
-                  (m/returnPop true)
-                  (recur gameplayCtx)))
-
-              :else
-              (recur gameplayCtx)))
-
           (= "move" select)
           (let [[mw mh] app.gameplay.model/mapViewSize
                 shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
@@ -120,7 +83,17 @@
             (m/returnPop false))
 
           :else
-          (recur gameplayCtx)))
+          (let [[gameplayCtx isEnd isReturn] (a/<! (app.gameplay.module/waitUnitOnMenu app.gameplay.module/*module gameplayCtx
+                                                                              {:unit unit
+                                                                               :menuCursor (get state :menuCursor)
+                                                                               :menuData (app.gameplay.model/getMenuData gameplayCtx unit)}
+                                                                              inputCh
+                                                                              outputCh))]
+            (if isEnd
+              (m/returnPop true)
+              (if isReturn
+                (m/returnPop isEnd)
+                (recur gameplayCtx))))))
 
       (= :cancel action)
       (m/returnPop false))))
