@@ -1,9 +1,70 @@
 (ns tool.map
-  (:require ["./generateMap.js" :as _generateMap]))
+  (:require ["./generateMap.js" :as _generateMap])
+  (:require [tool.astar]))
 
 (def defaultModel {})
 
 (defn buildPath [pathTree end]
+  (tool.astar/buildPath pathTree end))
+
+(defn findPath [start endFn nextFn costFn estCostFn]
+  (tool.astar/route nextFn costFn estCostFn start endFn))
+
+(def simpleFindPath
+  (memoize (fn [start maxCost]
+             (map first (findPath start
+                                  (fn [{:keys [totalCost]} curr]
+                                    [(>= totalCost maxCost) false])
+                                  (fn [[x y]]
+                                    [[x (inc y)]
+                                     [x (dec y)]
+                                     [(inc x) y]
+                                     [(dec x) y]])
+                                  (constantly 1)
+                                  (constantly 0))))))
+
+(defn generateMap [w h {:keys [deepsea sea sand grass hill city tree award power offset]}]
+  (->> (_generateMap w h deepsea sea sand grass hill city tree award power offset)
+       (partition w)
+       (map (partial into []))
+       (into [])))
+
+(defn subMap [[cx cy] [cw ch] playmap]
+  (let [[mw mh] [(count (first playmap)) (count playmap)]]
+    (->> playmap
+         (mapv (fn [row]
+                 (subvec row 
+                         (max 0 (min cx (- mw cw))) 
+                         (max 0 (min mw (+ cx cw))))))
+         ((fn [data]
+            (subvec data 
+                    (max 0 (min cy (- mh ch))) 
+                    (max 0 (min mh (+ cy ch)))))))))
+
+
+(defn getMapSize [playmap]
+  [(count (first playmap)) (count playmap)])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(defn buildPath2 [pathTree end]
   (let [path (loop [path []
                     curr end]
                (if (nil? (get pathTree curr))
@@ -11,7 +72,7 @@
                  (recur (cons curr path) (:prev (get pathTree curr)))))]
     path))
 
-(defn findPath [start endFn nextFn costFn estCostFn]
+(defn findPath2 [start endFn nextFn costFn estCostFn]
   (loop [close #{}
          open [start]
          info {}
@@ -53,39 +114,3 @@
                                           (map (fn [key] (get-in info [d key])))
                                           (apply +)))))]
             (recur close open info (inc i))))))))
-
-
-(def simpleFindPath
-  (memoize (fn [start maxCost]
-             (map first (findPath start
-                                  (fn [{:keys [totalCost]} curr]
-                                    [(>= totalCost maxCost) false])
-                                  (fn [[x y]]
-                                    [[x (inc y)]
-                                     [x (dec y)]
-                                     [(inc x) y]
-                                     [(dec x) y]])
-                                  (constantly 1)
-                                  (constantly 0))))))
-
-(defn generateMap [w h {:keys [deepsea sea sand grass hill city tree award power offset]}]
-  (->> (_generateMap w h deepsea sea sand grass hill city tree award power offset)
-       (partition w)
-       (map (partial into []))
-       (into [])))
-
-(defn subMap [[cx cy] [cw ch] playmap]
-  (let [[mw mh] [(count (first playmap)) (count playmap)]]
-    (->> playmap
-         (mapv (fn [row]
-                 (subvec row 
-                         (max 0 (min cx (- mw cw))) 
-                         (max 0 (min mw (+ cx cw))))))
-         ((fn [data]
-            (subvec data 
-                    (max 0 (min cy (- mh ch))) 
-                    (max 0 (min mh (+ cy ch)))))))))
-
-
-(defn getMapSize [playmap]
-  [(count (first playmap)) (count playmap)])
