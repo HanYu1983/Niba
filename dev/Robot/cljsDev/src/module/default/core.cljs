@@ -299,7 +299,9 @@
   (let [[gameplayCtx _] (->> (get data "robot")
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(app.gameplay.model/createUnit gameplayCtx
-                                                                       {:player :player
+                                                                       {:player (if (< (rand) 0.5)
+                                                                                  :player
+                                                                                  :ai)
                                                                         :type :robot
                                                                         :position [0 i]}
                                                                        {:robotKey robotKey})
