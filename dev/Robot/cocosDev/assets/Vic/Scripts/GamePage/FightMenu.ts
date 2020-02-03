@@ -36,6 +36,13 @@ export default class FightMenu extends cc.Component {
     showInfo(info: FightInfo, data: any) {
         this.back.node.active = true;
         info.node.active = true;
+        // 如果是防禦或閃避, 沒有第二個元素
+        // ["evade"]
+        // ["guard"]
+        // ["attack" weaponData]
+        if(data.action.length < 2){
+            return;
+        }
         let weapon:any = ViewController.instance.getWeapon(data.action[1].weaponKey);
         info.setAction(data.action[0]);
         info.setPower(weapon.damage);

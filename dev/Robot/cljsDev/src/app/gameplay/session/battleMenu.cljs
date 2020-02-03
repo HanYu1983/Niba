@@ -20,7 +20,6 @@
               (update-in [0 :action] (constantly action))
               (update-in [0 :hitRate] (constantly (app.gameplay.model/getHitRate gameplayCtx left weapon right)))))
 
-        :else
         (-> ctx
             (update-in [0 :action] (constantly action))
             (update-in [0 :hitRate] (constantly 0)))))))
@@ -36,7 +35,6 @@
               (update-in [1 :action] (constantly action))
               (update-in [1 :hitRate] (constantly (app.gameplay.model/getHitRate gameplayCtx right weapon left)))))
 
-        :else
         (-> ctx
             (update-in [1 :action] (constantly action))
             (update-in [1 :hitRate] (constantly 0)))))))

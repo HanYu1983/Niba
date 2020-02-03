@@ -226,6 +226,7 @@
         factor5 (get terrain "hitRate")]
     (* basic factor1 factor2 factor3 factor4 factor5)))
 
+(defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit] 1000)
 
 ; transform
 (defn getUnitTransforms [gameplayCtx unit]
@@ -390,33 +391,38 @@
   (getUnitInfo gameplayCtx unit))
 
 
-(defmethod app.gameplay.module/ReactionGetResult :default [_ gameplayCtx left [_ leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
-  (let [leftHitRate (getUnitHitRate gameplayCtx left leftWeapon right)]
-    (cond
-      (= rightActionType :evade)
-      (let [leftHitRate (if (= rightActionType :evade)
-                          (/ leftHitRate 2)
-                          leftHitRate)]
-        [{:events #{[:evade] [:guard 300]}
-          :damage 0} 
-         
-         {:events #{[:hit 1000]}
-          :damage 1000}])
+(defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
+  (let [leftHitRate (cond-> 0
+                      (= leftActionType :attack)
+                      ((fn [_]
+                         (getUnitHitRate gameplayCtx left leftWeapon right)))
 
-      (= rightActionType :guard)
-      [{:events #{}
-        :damage 0}
-       
-       {:events #{}
-        :damage 1000}]
+                      (= rightActionType :evade)
+                      (/ 2))
+        leftIsHit (< (rand) leftHitRate)
+        leftMakeDamage (cond-> 0
+                         (= leftActionType :attack)
+                         ((fn [_]
+                            (getUnitMakeDamage gameplayCtx left leftWeapon right)))
+                         
+                         (false? leftIsHit)
+                         ((fn [_] 0))
 
-      (= rightActionType :attack)
-      (let [rightHitRate (getUnitHitRate gameplayCtx right rightWeapon left)]
-        [{:events #{[:evade] [:guard 300]}
-          :damage 5000} 
-         
-         {:events #{[:hit 3000] [:guard 300]}
-          :damage 5000}]))))
+                         (= rightActionType :guard)
+                         (/ 2))]
+    {:events (cond-> #{}
+               (false? leftIsHit)
+               (conj :evade)
+
+               (= rightActionType :guard)
+               (conj :guard))
+     :damage leftMakeDamage}))
+
+
+(defmethod app.gameplay.module/ReactionGetResult :default [_ gameplayCtx left leftAction right rightAction]
+  [(getReactionResult gameplayCtx right rightAction left leftAction)
+   (getReactionResult gameplayCtx left leftAction right rightAction)])
+
 
 (defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left leftAction right rightAction result]
   (let [[{leftDamage :damage} {rightDamage :damage}] result
