@@ -20,9 +20,6 @@ export default class View extends cc.Component {
     }
     unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
-
-        // test to sky animation
-        // this.getGamePage().units.toSkyUnit(data.unit.key, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
         this.getGamePage().closeFightInfo();

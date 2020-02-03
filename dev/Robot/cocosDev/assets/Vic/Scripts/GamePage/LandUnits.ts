@@ -60,12 +60,23 @@ export default class LandUnits extends cc.Component {
     setUnits(units: any) {
         this.clearUnits();
 
+        let checkIsSky = (tags: any[]) => {
+            let isSky = false
+            tags.forEach(tag => {
+                if (tag == "sky") {
+                    isSky = true;
+                }
+            });
+            return isSky;
+        }
+
         for (let element of units) {
             let unitId = element.key;
             let unitName = element.state.robot;
             let isPlayer = (element["player"] == "player");
             let isMovable = true;
             let pos = element["position"];
+            let isSky = checkIsSky(element.state.tags);
 
             let unitNode: cc.Node = this._pool.acquire();
             unitNode.setParent(this.node);
@@ -77,6 +88,7 @@ export default class LandUnits extends cc.Component {
 
             let unit: Unit = unitNode.getComponent(Unit);
             unit.unitId = unitId;
+            if (isSky) unit.unit.y = 6;
 
             unit.setUnitImage(unitName);
 
@@ -105,21 +117,21 @@ export default class LandUnits extends cc.Component {
         }
     }
 
-    evadeOneUnit(id:string){
+    evadeOneUnit(id: string) {
         let unit: Unit = this.getUnitByID(id);
         if (unit) {
             unit.evade();
         }
     }
 
-    toSkyUnit(id:string, cb:()=>void){
+    toSkyUnit(id: string, cb: () => void) {
         let unit: Unit = this.getUnitByID(id);
         if (unit) {
             unit.toSky(cb);
         }
     }
 
-    toLandUnit(id:string, cb:()=>void){
+    toLandUnit(id: string, cb: () => void) {
         let unit: Unit = this.getUnitByID(id);
         if (unit) {
             unit.toLand(cb);
@@ -173,9 +185,10 @@ export default class LandUnits extends cc.Component {
         }
     }
 
-    _removeUnit(unitNode:cc.Node) {
+    _removeUnit(unitNode: cc.Node) {
         unitNode.removeFromParent();
         unitNode.getComponent(Unit).unitId = "";
+        unitNode.getComponent(Unit).unit.y = 0;
         this._pool.release(unitNode);
     }
 }
