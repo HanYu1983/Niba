@@ -112,6 +112,20 @@ export default class LandUnits extends cc.Component {
         }
     }
 
+    toSkyUnit(id:string, cb:()=>void){
+        let unit: Unit = this.getUnitByID(id);
+        if (unit) {
+            unit.toSky(cb);
+        }
+    }
+
+    toLandUnit(id:string, cb:()=>void){
+        let unit: Unit = this.getUnitByID(id);
+        if (unit) {
+            unit.toLand(cb);
+        }
+    }
+
     clearUnits() {
         this._units.forEach(unit => {
             this._removeUnit(unit);
