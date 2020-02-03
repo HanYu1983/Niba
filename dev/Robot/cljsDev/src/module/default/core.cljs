@@ -79,7 +79,8 @@
       (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found")))
       (merge weaponData
              {"range" (getWeaponRange gameplayCtx unit weapon)
-              "type" (getWeaponType gameplayCtx unit weapon)}
+              "type" (getWeaponType gameplayCtx unit weapon)
+              "suitability" (getWeaponSuitability gameplayCtx unit weapon)}
              weapon))))
 
 ; =======================
@@ -110,6 +111,20 @@
         en))))
 
 (def getUnitMaxEnM (memoize getUnitMaxEn))
+
+
+(defn getUnitArmor [gameplayCtx unit]
+  (let [robotKey (get-in unit [:state :robot])
+        robot (get-in data ["robot" robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str "getUnitArmor[" robotKey "] not found")))
+      (let [value (->> (get robot "components")
+                       (filter (fn [k]
+                                 (some #(= % k) ["armor1" "armor2" "armor3"])))
+                       (map (fn [k] (get-in data ["component" k "value" 0])))
+                       (map int)
+                       (apply +))]
+        value))))
 
 ; components
 (defn getUnitComponents [gameplayCtx unit]
@@ -195,7 +210,7 @@
                        (get-in data ["terrainMapping" (str cellId) "terrain"])))
                     ((fn [terrainKey]
                        (get-in data ["terrain" terrainKey]))))
-        weaponSuitability (getWeaponSuitability gameplayCtx unit weapon)
+        weaponSuitability (get weaponInfo "suitability")
 
         ; 距離為基本命中率
         basic (let [pos1 (:position unit)
@@ -226,7 +241,19 @@
         factor5 (get terrain "hitRate")]
     (* basic factor1 factor2 factor3 factor4 factor5)))
 
-(defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit] 5000)
+(defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit]
+  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+        terrain (-> (app.gameplay.model/getMap gameplayCtx)
+                    (get-in (reverse (:position targetUnit)))
+                    ((fn [cellId]
+                       (get-in data ["terrainMapping" (str cellId) "terrain"])))
+                    ((fn [terrainKey]
+                       (get-in data ["terrain" terrainKey]))))
+        weaponSuitability (getWeaponSuitability gameplayCtx unit weapon)
+        targetArmor (getUnitArmor gameplayCtx targetUnit)
+        damage (get weaponInfo "damage")]
+    (-> (- damage targetArmor)
+        (max 100))))
 
 ; transform
 (defn getUnitTransforms [gameplayCtx unit]
