@@ -83,7 +83,7 @@
             (m/returnPop false))
 
           :else
-          (let [[gameplayCtx isEnd] (a/<! (app.gameplay.module/waitUnitOnMenu app.gameplay.module/*module gameplayCtx
+          (let [[gameplayCtx isEnd isReturn] (a/<! (app.gameplay.module/waitUnitOnMenu app.gameplay.module/*module gameplayCtx
                                                                               {:unit unit
                                                                                :menuCursor (get state :menuCursor)
                                                                                :menuData (app.gameplay.model/getMenuData gameplayCtx unit)}
@@ -91,7 +91,9 @@
                                                                               outputCh))]
             (if isEnd
               (m/returnPop true)
-              (recur gameplayCtx)))))
+              (if isReturn
+                (m/returnPop isEnd)
+                (recur gameplayCtx))))))
 
       (= :cancel action)
       (m/returnPop false))))
