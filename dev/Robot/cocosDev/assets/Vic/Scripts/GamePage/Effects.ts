@@ -10,6 +10,7 @@
 
 import EffectLayer from "./EffectLayer";
 import ViewController from "../ViewController";
+import TextEffect from "./TextEffect";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -53,7 +54,8 @@ export default class Effects extends cc.Component {
     }
 
     createShield(pos:number[]){
-        this.shieldLayer.createEffect(pos);
+        let effect:cc.Node = this.shieldLayer.createEffect(pos);
+        effect.getComponent(TextEffect).setContent("盾防");
     }
 
     createAimEffect(from: number[], to: number[]) {
