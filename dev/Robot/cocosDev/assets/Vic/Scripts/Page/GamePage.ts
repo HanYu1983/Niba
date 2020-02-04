@@ -23,7 +23,6 @@ import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
 import ViewController from "../ViewController";
 import UnitSampleInfo from "../GamePage/UnitSampleInfo";
-import Unit from '../GamePage/Unit';
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -208,8 +207,8 @@ export default class GamePage extends BasicViewer {
             this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
                 item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
             });
-        });
-        return tween.delay(.7);
+        }).delay(.7);
+        return tween;
     }
 
     _showDeffenderChangeHP(to1, unit2, unitAfter2) {
@@ -219,8 +218,8 @@ export default class GamePage extends BasicViewer {
                 item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
                 item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
             });
-        });
-        return tween.delay(.7);
+        }).delay(.7);
+        return tween;
     }
 
     _showAttackerChangeHP(from1, unit1, unitAfter1) {
@@ -230,24 +229,30 @@ export default class GamePage extends BasicViewer {
                 item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unitAfter1.state.en);
                 item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
             });
-        });
-        return tween.delay(.7);
+        }).delay(.7);
+        return tween;
     }
 
     _showHitEffect(unit2, to1, result1) {
 
         let tweens = [];
+        let isEvade = false;
         if (result1.events) {
 
             // 播放技能動畫
-            result1.events.forEach((evt: any[]) => {
-                switch (evt[0]) {
+            result1.events.forEach((evt: any) => {
+                switch (evt) {
                     case "guard":
                         {
                             let tween = cc.tween(this.node).call(() => {
                                 this.effects.createShield(unit2.position);
-                            });
-                            tweens.push(tween.delay(.7));
+                            }).delay(.7);
+                            tweens.push(tween);
+                        }
+                        break;
+                    case "evade":
+                        {
+                            isEvade = true;
                         }
                         break;
                 }
@@ -257,10 +262,14 @@ export default class GamePage extends BasicViewer {
         let tween = cc.tween(this.node).call(() => {
 
             // 被攻擊者播放受擊動畫
-            this.effects.createExplode(result1.damage, to1);
-            this.units.shakeOneUnit(unit2.key);
-        });
-        tweens.push(tween.delay(.7));
+            if(isEvade){
+                this.units.evadeOneUnit(unit2.key);
+            }else{
+                this.effects.createExplode(result1.damage, to1);
+                this.units.shakeOneUnit(unit2.key);
+            }
+        }).delay(.6);
+        tweens.push(tween);
         return cc.tween(this.node).sequence(cc.tween(this.node).delay(0), ...tweens);
     }
 
@@ -273,8 +282,8 @@ export default class GamePage extends BasicViewer {
                 item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unitAfter2.state.hp, unit2.state.maxEn, unit2.state.en);
                 item.getComponent(UnitSampleInfo).changeEN(unit2.state.maxEn, unitAfter2.state.en);
             });
-        });
-        return tween.delay(.7);
+        }).delay(.7);
+        return tween;
     }
 
     changeUnitHP(data: any, cb: () => void) {
