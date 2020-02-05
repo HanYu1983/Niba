@@ -13,15 +13,6 @@
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 
-
-
-
-
-
-; =======================
-; binding
-; =======================
-
 (defmethod app.gameplay.module/loadData :default [_]
   (a/go
     module.default.data/data))
