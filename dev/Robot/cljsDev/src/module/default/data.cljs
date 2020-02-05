@@ -376,3 +376,18 @@
                         (app.gameplay.model/updateUnit left (constantly leftAfter))
                         (app.gameplay.model/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
+
+
+(defn getUnitMovePathTree [gameplayCtx unit]
+  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        power (/ (getUnitPowerM gameplayCtx unit) 5)
+        [mw mh] (tool.map/getMapSize playmap)]
+    (->> (tool.map/findPath (:position unit)
+                            (fn [{:keys [totalCost]} curr]
+                              [(>= totalCost power) false])
+                            (partial nextCellM [mw mh])
+                            (partial moveCostM gameplayCtx)
+                            (constantly 0))
+         (filter (fn [[k v]]
+                   (<= (:totalCost v) power)))
+         (into {}))))

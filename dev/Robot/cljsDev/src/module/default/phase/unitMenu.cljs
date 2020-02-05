@@ -42,7 +42,7 @@
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
           attackRange (if (= cursor1 weaponIdx)
-                        (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                        (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
                             second
                             (nth cursor2)
                             ((fn [weapon]
@@ -59,13 +59,13 @@
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
           attackRange (when (= cursor1 weaponIdx)
-                        (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                        (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
                             second
                             (nth cursor2)
                             ((fn [weapon]
                                (module.default.data/getUnitWeaponRange gameplayCtx unit weapon)))))
           checkHitRate (when (= cursor1 weaponIdx)
-                         (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                         (let [weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
                                           second
                                           (nth cursor2))
                                unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
@@ -88,7 +88,7 @@
      (cond
        (= "move" select)
        (let [[mw mh] app.gameplay.model/mapViewSize
-             shortestPathTree (app.gameplay.model/getMovePathTree gameplayCtx unit)
+             shortestPathTree (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module gameplayCtx unit)
              moveRange (map first shortestPathTree)
              [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
          (if isEnd
@@ -137,7 +137,7 @@
 
            (= cursor1 weaponIdx)
            (let [menu (tool.menuCursor/getMenu menuCursor)
-                 weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
+                 weapon  (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
                              second
                              (nth cursor2))
                  weaponType (module.default.data/getWeaponType gameplayCtx unit weapon)]

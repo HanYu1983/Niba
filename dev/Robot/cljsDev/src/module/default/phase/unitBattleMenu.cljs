@@ -18,7 +18,7 @@
    (let [[menu data] (module.default.data/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
-                      (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                      (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                                                                                          second)
                                                                                      (range))
                                                                     weaponIdx (indexMap leftWeapon)]
@@ -44,7 +44,7 @@
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
           attackRange (if (= cursor1 weaponIdx)
-                        (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                        (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                             second
                             (nth cursor2)
                             ((fn [weapon]
@@ -62,7 +62,7 @@
           weaponIdx (get-in state [:data :weaponIdx])
 
           battleMenuSession (if (= cursor1 weaponIdx)
-                              (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                              (let [weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                                                second
                                                (nth cursor2))]
                                 (-> (:battleMenuSession state)
@@ -71,7 +71,7 @@
                               (:battleMenuSession state))
 
           attackRange (if (= cursor1 weaponIdx)
-                        (-> (app.gameplay.model/getWeapons gameplayCtx left)
+                        (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                             second
                             (nth cursor2)
                             ((fn [weapon]
@@ -94,7 +94,7 @@
      (cond
        (= cursor1 weaponIdx)
        (let [cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-             weapon (-> (app.gameplay.model/getWeapons gameplayCtx left)
+             weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                         second
                         (nth cursor2))
              attackRange (module.default.data/getUnitWeaponRange gameplayCtx left weapon)
@@ -116,21 +116,21 @@
                                                                         :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
                                                                                      (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
                                                                         :results result} inputCh outputCh))
-                 gameplayCtx (if (app.gameplay.model/isDead gameplayCtx leftAfter)
+                 gameplayCtx (if (app.gameplay.module/unitIsDead app.gameplay.module/*module gameplayCtx leftAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete leftAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx leftAfter))
+                                     gameplayCtx (a/<! (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module gameplayCtx leftAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
-                 gameplayCtx (if (app.gameplay.model/isDead gameplayCtx rightAfter)
+                 gameplayCtx (if (app.gameplay.module/unitIsDead app.gameplay.module/*module gameplayCtx rightAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete rightAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx rightAfter))
+                                     gameplayCtx (a/<! (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module gameplayCtx rightAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]

@@ -194,24 +194,3 @@
                               :position (or position [0 0])}))
       ((fn [units]
          (setUnits ctx units)))))
-
-(defn getMovePathTree [ctx unit]
-  (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
-
-(defn onMove [ctx unit pos]
-  (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx unit pos))
-
-(defn onDone [ctx unit]
-  (app.gameplay.module/unitOnDone app.gameplay.module/*module ctx unit))
-
-(defn onTurnStart [ctx unit]
-  (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx unit))
-
-(defn onDead [ctx unit]
-  (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module ctx unit))
-
-(defn getWeapons [ctx unit]
-  (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
-
-(defn isDead [ctx unit]
-  (app.gameplay.module/unitIsDead app.gameplay.module/*module ctx unit))

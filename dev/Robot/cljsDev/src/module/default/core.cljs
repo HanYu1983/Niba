@@ -88,18 +88,7 @@
 
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
-  (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (/ (module.default.data/getUnitPowerM gameplayCtx unit) 5)
-        [mw mh] (tool.map/getMapSize playmap)]
-    (->> (tool.map/findPath (:position unit)
-                            (fn [{:keys [totalCost]} curr]
-                              [(>= totalCost power) false])
-                            (partial module.default.data/nextCellM [mw mh])
-                            (partial module.default.data/moveCostM gameplayCtx)
-                            (constantly 0))
-         (filter (fn [[k v]]
-                   (<= (:totalCost v) power)))
-         (into {}))))
+  (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (module.default.data/getUnitWeaponsM gameplayCtx unit))
