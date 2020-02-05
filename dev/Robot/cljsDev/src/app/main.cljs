@@ -1,9 +1,13 @@
 (ns app.main
-  (:require [module.default.core])
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.core])
-  (:require [app.gameplay.module]))
+  (:require [app.gameplay.module])
+  (:require [module.default.core])
+  (:require [module.debug.core]))
+
+; debug
+; (set! app.gameplay.module/*module :debug)
 
 (m/defwait setData [ctx args])
 
