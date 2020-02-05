@@ -7,14 +7,7 @@
   (:require [tool.menuCursor])
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-
-                                               unitBattleAnim
-                                               unitDeadAnim
-                                               showMessage
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [app.gameplay.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
@@ -107,7 +100,7 @@
              isTargetInRange (some #(= (:position right) %) attackRange)]
          (if (not isTargetInRange)
            (let []
-             (a/<! (showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
+             (a/<! (app.gameplay.phase.common/showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
              (recur gameplayCtx))
            (let [leftAction (get-in state [:battleMenuSession 0 :action])
                  rightAction (get-in state [:battleMenuSession 1 :action])
@@ -117,18 +110,18 @@
                                (tool.units/getByKey (:key left)))
                  rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
                                 (tool.units/getByKey (:key right)))
-                 _ (a/<! (unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
-                                                      (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
-                                              :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
-                                                           (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
-                                              :results result} inputCh outputCh))
+                 _ (a/<! (app.gameplay.phase.common/unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
+                                                                                (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
+                                                                        :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
+                                                                                     (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
+                                                                        :results result} inputCh outputCh))
                  gameplayCtx (if (app.gameplay.model/isDead gameplayCtx leftAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete leftAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
                                      gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx leftAfter))
-                                     _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                     _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
                  gameplayCtx (if (app.gameplay.model/isDead gameplayCtx rightAfter)
@@ -137,7 +130,7 @@
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
                                      gameplayCtx (a/<! (app.gameplay.model/onDead gameplayCtx rightAfter))
-                                     _ (a/<! (unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                     _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]
              (m/returnPop true))))

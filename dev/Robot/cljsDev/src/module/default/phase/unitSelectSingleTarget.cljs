@@ -6,11 +6,7 @@
   (:require [tool.units])
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               showMessage
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
   (:require [app.gameplay.step.selectPosition])
   (:require [app.gameplay.session.battleMenu])
@@ -40,5 +36,5 @@
           (m/returnPop true)
           (recur gameplayCtx)))
       (let []
-        (a/<! (showMessage nil {:message (str "請選擇目標")} inputCh outputCh))
+        (a/<! (app.gameplay.phase.common/showMessage nil {:message (str "請選擇目標")} inputCh outputCh))
         (recur gameplayCtx)))))

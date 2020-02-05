@@ -8,11 +8,7 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               unitMoveAnim
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 

@@ -8,11 +8,7 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [app.gameplay.phase.unitMenuImpl])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               unitMoveAnim
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [app.gameplay.step.selectPosition]))
 
 (declare unitMenu)
@@ -44,7 +40,7 @@
                              (tool.units/getByPosition cursor))]
         (if unitAtCursor
           (recur gameplayCtx)
-          (do (a/<! (unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
+          (do (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
               (let [tempUnit (app.gameplay.model/onMove gameplayCtx unit cursor)
                     state (merge state {:tempUnit tempUnit})
                     gameplayCtx (-> gameplayCtx

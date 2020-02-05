@@ -6,10 +6,7 @@
   (:require [tool.units])
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [app.gameplay.phase.systemMenu :refer [systemMenu]])
   (:require [app.gameplay.phase.unitMenu :refer [unitMenu]]))
 
@@ -18,7 +15,7 @@
                   (tool.units/mapUnits (fn [unit]
                                          (app.gameplay.model/onTurnStart gameplayCtx unit))))
         gameplayCtx (-> (app.gameplay.model/setUnits gameplayCtx units))]
-    (a/<! (playerTurnStart gameplayCtx nil inputCh outputCh))
+    (a/<! (app.gameplay.phase.common/playerTurnStart gameplayCtx nil inputCh outputCh))
     gameplayCtx)
 
   (m/basicNotify

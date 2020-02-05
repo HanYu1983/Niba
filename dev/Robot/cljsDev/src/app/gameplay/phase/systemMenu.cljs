@@ -7,10 +7,7 @@
   (:require [tool.menuCursor])
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [app.gameplay.step.menu :refer [menu]]))
 
 (defn systemMenu [gameplayCtx args inputCh outputCh]

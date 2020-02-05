@@ -7,11 +7,7 @@
   (:require [tool.menuCursor])
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               unitMoveAnim
-                                               actions]])
+  (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.step.selectPosition])
   (:require [app.gameplay.step.menu])
