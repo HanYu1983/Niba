@@ -74,7 +74,7 @@
                                                    {:unit unit
                                                     :targetUnit targetUnit
                                                     :weapon weapon
-                                                    :hitRate (app.gameplay.model/getHitRate gameplayCtx unit weapon targetUnit)})
+                                                    :hitRate (module.default.data/getUnitHitRate gameplayCtx unit weapon targetUnit)})
                                                  unitsNearby)]
                            checkHitRate))
           gameplayCtx (-> gameplayCtx

@@ -195,9 +195,6 @@
       ((fn [units]
          (setUnits ctx units)))))
 
-(defn getHitRate [ctx unit weapon targetUnit]
-  (app.gameplay.module/unitGetHitRate app.gameplay.module/*module ctx unit weapon targetUnit))
-
 (defn getMovePathTree [ctx unit]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
 
@@ -215,9 +212,6 @@
 
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
-
-(defn setWeapons [ctx unit weapons]
-  (app.gameplay.module/unitSetWeapons app.gameplay.module/*module ctx unit))
 
 (defn getWeaponRange [ctx unit weapon]
   (app.gameplay.module/unitGetWeaponRange app.gameplay.module/*module ctx unit weapon))
