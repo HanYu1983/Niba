@@ -17,7 +17,7 @@
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app.main]
                                 :depends-on #{:shared}}
-                          :testquadtree {:entries [other.testquadtree]
+                          :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
           :release {:target :browser
                     :output-dir "../cocosDev/assets/Han"

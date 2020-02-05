@@ -1,4 +1,4 @@
-(ns other.quadtree
+(ns tool.quadtree
   (:require [clojure.set]))
 
 (defn rect-contains-rect? [r1 r2]
