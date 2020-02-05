@@ -55,6 +55,12 @@
         (recur)))))
 
 (defn testIt [inputCh outputCh]
+  (when inputCh
+    (a/go
+      (loop []
+        (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
+          (a/>! outputCh ["ok", [id]])
+          (recur)))))
   (let [right 68
         down 83
         left 65
@@ -66,14 +72,6 @@
         rleft 37
         rright 39]
     (a/go
-      (loop []
-        (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
-          (println args)
-          (a/>! outputCh ["ok", [id]])
-          (recur))))
-    (a/go
-      (a/>! outputCh ["startGameplay"])
-      (a/<! (a/timeout 1000))
       (print "=======move cursor=======")
       (let [keys [right down left up]]
         (loop [keys keys]
@@ -98,8 +96,8 @@
             (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
-      (println "=======move stack=======")
-      (let [keys [enter enter right enter enter right enter cancel cancel cancel cancel cancel]]
+      (println "=======move=======")
+      (let [keys [enter enter right enter cancel cancel cancel left]]
         (loop [keys keys]
           (when-let [key (first keys)]
             (a/<! (a/timeout 200))
@@ -107,7 +105,9 @@
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
       (println "=======attack=======")
-      (let [keys [enter down right left enter]]
+      (let [keys [enter down right left enter
+                  right right enter
+                  right left right down up enter]]
         (loop [keys keys]
           (when-let [key (first keys)]
             (a/<! (a/timeout 200))
@@ -117,12 +117,32 @@
       (print "ok"))))
 
 (defn main []
-  (let [outputToView (a/chan)
+  (let [phase :debugView
+        outputToView (a/chan)
         inputFromView (a/chan)]
 
-    (installViewRxjs inputFromView outputToView)
-    (mainLoop defaultModel inputFromView outputToView)
-    ;(testIt outputToView inputFromView)
+    (cond
+      (= phase :debugView)
+      (do
+        (installViewRxjs inputFromView outputToView)
+        (mainLoop defaultModel inputFromView outputToView)
+        (a/go
+          (print "===== start debugView after 5s =====")
+          (a/<! (a/timeout 5000))
+          (testIt nil inputFromView)))
+
+      (= phase :debug)
+      (do
+        (mainLoop defaultModel inputFromView outputToView)
+        (a/go
+          (a/>! inputFromView ["startGameplay"])
+          (a/<! (a/timeout 1000))
+          (testIt outputToView inputFromView)))
+
+      :else
+      (do
+        (installViewRxjs inputFromView outputToView)
+        (mainLoop defaultModel inputFromView outputToView)))
 
     (comment "")))
 
