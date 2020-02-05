@@ -10,13 +10,12 @@
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
-                                               
+
                                                unitBattleAnim
                                                unitDeadAnim
                                                showMessage
                                                actions]])
-  (:require [app.gameplay.session.battleMenu])
-  (:require [app.gameplay.view]))
+  (:require [app.gameplay.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]

@@ -1,11 +1,11 @@
 (ns app.gameplay.step.selectPosition
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
+  (:require [app.gameplay.model])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
-                                               actions]])
-  (:require [app.gameplay.view]))
+                                               actions]]))
 
 
 (m/defstate selectPosition [gameplayCtx _]

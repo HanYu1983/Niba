@@ -9,9 +9,9 @@
   (:require-macros [module.default.core :as mm])
   (:require [module.default.phase.unitMenu])
   (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
-  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
+  (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
-  (:require [app.gameplay.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 
 
 

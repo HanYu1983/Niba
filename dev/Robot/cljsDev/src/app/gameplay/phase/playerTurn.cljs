@@ -11,8 +11,7 @@
                                                paint
                                                actions]])
   (:require [app.gameplay.phase.systemMenu :refer [systemMenu]])
-  (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
-  (:require [app.gameplay.view]))
+  (:require [app.gameplay.phase.unitMenu :refer [unitMenu]]))
 
 (m/defstate playerTurn [gameplayCtx _]
   (let [units (-> (app.gameplay.model/getUnits gameplayCtx)

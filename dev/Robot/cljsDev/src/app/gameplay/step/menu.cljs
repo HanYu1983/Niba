@@ -2,11 +2,8 @@
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               actions]])
-  (:require [app.gameplay.view]))
+  (:require [app.gameplay.model])
+  (:require [app.gameplay.phase.common]))
 
 
 (m/defstate menu [gameplayCtx {:keys [menu data]}]

@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.unitSelectAttackPosition
+(ns module.default.phase.unitSelectAttackPosition
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
@@ -12,10 +12,10 @@
                                                paint
                                                unitMoveAnim
                                                actions]])
-  (:require [app.gameplay.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
+  (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.step.selectPosition])
   (:require [app.gameplay.step.menu])
-  (:require [app.gameplay.view]))
+  )
 
 (m/defbasic unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
   [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
