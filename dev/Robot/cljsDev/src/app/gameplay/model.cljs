@@ -201,9 +201,6 @@
 (defn getMovePathTree [ctx unit]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
 
-(defn getMenuData [ctx unit]
-  (app.gameplay.module/unitGetMenuData app.gameplay.module/*module ctx unit))
-
 (defn onMove [ctx unit pos]
   (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx unit pos))
 
@@ -212,9 +209,6 @@
 
 (defn onTurnStart [ctx unit]
   (app.gameplay.module/unitOnTurnStart app.gameplay.module/*module ctx unit))
-
-(defn onTransform [ctx unit robotKey]
-  (app.gameplay.module/unitOnTransform app.gameplay.module/*module ctx unit robotKey))
 
 (defn onDead [ctx unit]
   (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module ctx unit))
@@ -230,15 +224,6 @@
 
 (defn getWeaponType [ctx unit weapon]
   (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
-
-(defn thinkReaction [ctx unit fromUnit weapon]
-  (app.gameplay.module/unitGetReaction app.gameplay.module/*module ctx unit fromUnit weapon))
-
-(defn calcActionResult [ctx left leftAction right rightAction]
-  (app.gameplay.module/ReactionGetResult app.gameplay.module/*module ctx left leftAction right rightAction))
-
-(defn applyActionResult [ctx left leftAction right rightAction result]
-  (app.gameplay.module/ReactionApply app.gameplay.module/*module ctx left leftAction right rightAction result))
 
 (defn isDead [ctx unit]
   (app.gameplay.module/unitIsDead app.gameplay.module/*module ctx unit))
