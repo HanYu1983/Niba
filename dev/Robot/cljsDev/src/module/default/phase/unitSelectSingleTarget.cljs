@@ -7,7 +7,7 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
-  (:require [app.gameplay.phase.unitBattleMenu :refer [unitBattleMenu]])
+  (:require [module.default.phase.unitBattleMenu :refer [unitBattleMenu]])
   (:require [app.gameplay.step.selectPosition])
   (:require [app.gameplay.session.battleMenu])
   )
