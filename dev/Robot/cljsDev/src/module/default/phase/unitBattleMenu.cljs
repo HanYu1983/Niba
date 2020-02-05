@@ -8,6 +8,7 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
+  (:require [module.default.data])
   (:require [module.default.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
@@ -104,8 +105,8 @@
              (recur gameplayCtx))
            (let [leftAction (get-in state [:battleMenuSession 0 :action])
                  rightAction (get-in state [:battleMenuSession 1 :action])
-                 result (app.gameplay.model/calcActionResult gameplayCtx left leftAction right rightAction)
-                 gameplayCtx (app.gameplay.model/applyActionResult gameplayCtx left leftAction right rightAction result)
+                 result (module.default.data/calcActionResult gameplayCtx left leftAction right rightAction)
+                 gameplayCtx (module.default.data/applyActionResult gameplayCtx left leftAction right rightAction result)
                  leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
                                (tool.units/getByKey (:key left)))
                  rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)

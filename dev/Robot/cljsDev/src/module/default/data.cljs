@@ -308,3 +308,62 @@
                           :transformIdx 2
                           :unit unit}]))]
     [menu data]))
+
+(defn thinkReaction [gameplayCtx unit fromUnit weapon]
+  (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
+        weapons (-> (getUnitWeaponsM gameplayCtx unit)
+                    second)]
+    [:attack (first weapons)]))
+
+
+(defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
+  (let [leftHitRate (cond-> 0
+                      (= leftActionType :attack)
+                      ((fn [_]
+                         (getUnitHitRate gameplayCtx left leftWeapon right)))
+
+                      (= rightActionType :evade)
+                      (/ 2))
+        leftIsHit (< (rand) leftHitRate)
+        leftMakeDamage (cond-> 0
+                         (= leftActionType :attack)
+                         ((fn [_]
+                            (getUnitMakeDamage gameplayCtx left leftWeapon right)))
+
+                         (false? leftIsHit)
+                         ((fn [_] 0))
+
+                         (= rightActionType :guard)
+                         (/ 2))]
+    {:events (cond-> #{}
+               (false? leftIsHit)
+               (conj :evade)
+
+               (= rightActionType :guard)
+               (conj :guard)
+
+               (<= (- (getUnitHp right) leftMakeDamage) 0)
+               (conj :dead))
+     :damage leftMakeDamage}))
+
+(defn calcActionResult [gameplayCtx left leftAction right rightAction]
+   (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
+      ((fn [[_ firstResult :as ctx]]
+         (if (contains? (:events firstResult) :dead)
+           ctx
+           (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))
+
+(defn applyActionResult [gameplayCtx left leftAction right rightAction result]
+  (let [[{leftDamage :damage} {rightDamage :damage}] result
+        [leftAfter rightAfter] (map (fn [unit damage]
+                                      (-> (getUnitHp unit)
+                                          (- damage)
+                                          (max 0)
+                                          ((fn [hp]
+                                             (setUnitHp unit hp)))))
+                                    [left right]
+                                    [leftDamage rightDamage])
+        gameplayCtx (-> gameplayCtx
+                        (app.gameplay.model/updateUnit left (constantly leftAfter))
+                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
+    gameplayCtx))

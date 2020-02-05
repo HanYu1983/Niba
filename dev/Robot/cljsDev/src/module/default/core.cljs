@@ -65,10 +65,6 @@
   (-> unit
       (update-in [:state :tags] (constantly #{}))))
 
-(defmethod app.gameplay.module/unitOnTransform :default [_ gameplayCtx unit robotKey]
-  ;(unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) robotKey)
-  )
-
 (defmethod app.gameplay.module/waitUnitOnDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
@@ -125,72 +121,11 @@
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
   (module.default.data/getUnitHitRate gameplayCtx unit weapon targetUnit))
 
-(defmethod app.gameplay.module/unitGetReaction :default [type gameplayCtx unit fromUnit weapon]
-  (let [hitRate (module.default.data/getUnitHitRate gameplayCtx fromUnit weapon unit)
-        weapons (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                    second)]
-    [:attack (first weapons)]))
-
 (defmethod app.gameplay.module/unitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
 (defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
   (module.default.data/getUnitInfo gameplayCtx unit))
-
-
-(defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
-  (let [leftHitRate (cond-> 0
-                      (= leftActionType :attack)
-                      ((fn [_]
-                         (module.default.data/getUnitHitRate gameplayCtx left leftWeapon right)))
-
-                      (= rightActionType :evade)
-                      (/ 2))
-        leftIsHit (< (rand) leftHitRate)
-        leftMakeDamage (cond-> 0
-                         (= leftActionType :attack)
-                         ((fn [_]
-                            (module.default.data/getUnitMakeDamage gameplayCtx left leftWeapon right)))
-                         
-                         (false? leftIsHit)
-                         ((fn [_] 0))
-
-                         (= rightActionType :guard)
-                         (/ 2))]
-    {:events (cond-> #{}
-               (false? leftIsHit)
-               (conj :evade)
-
-               (= rightActionType :guard)
-               (conj :guard)
-               
-               (<= (- (module.default.data/getUnitHp right) leftMakeDamage) 0)
-               (conj :dead))
-     :damage leftMakeDamage}))
-
-
-(defmethod app.gameplay.module/ReactionGetResult :default [_ gameplayCtx left leftAction right rightAction]
-  (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
-      ((fn [[_ firstResult :as ctx]]
-         (if (contains? (:events firstResult) :dead)
-           ctx
-           (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))
-
-(defmethod app.gameplay.module/ReactionApply :default [_ gameplayCtx left leftAction right rightAction result]
-  (let [[{leftDamage :damage} {rightDamage :damage}] result
-        [leftAfter rightAfter] (map (fn [unit damage]
-                                      (-> (module.default.data/getUnitHp unit)
-                                          (- damage)
-                                          (max 0)
-                                          ((fn [hp]
-                                             (module.default.data/setUnitHp unit hp)))))
-                                    [left right]
-                                    [leftDamage rightDamage])
-        gameplayCtx (-> gameplayCtx
-                        (app.gameplay.model/updateUnit left (constantly leftAfter))
-                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
-    gameplayCtx))
-
 
 (defmethod app.gameplay.module/formatToDraw :default [_ gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
