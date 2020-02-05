@@ -3,7 +3,7 @@
   (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
   (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
   (:require [app.gameplay.phase.common :refer [paint]])
-  (:require [app.gameplay.module]))
+  (:require [app.module]))
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
@@ -34,7 +34,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> (app.gameplay.module/gameplayOnInit app.gameplay.module/*module app.gameplay.model/defaultGameplayModel)
+          gameplayCtx (-> (app.module/gameplayOnInit app.module/*module app.gameplay.model/defaultGameplayModel)
                           (app.gameplay.model/setMap playmap))]
       (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

@@ -1,4 +1,4 @@
-(ns app.gameplay.module)
+(ns app.module)
 
 (defmulti loadData (fn [type] type))
 

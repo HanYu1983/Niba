@@ -12,4 +12,4 @@
   (a/go
     (loop []
       (a/<! (app.gameplay.phase.common/enemyTurnStart gameplayCtx enemy inputCh outputCh))
-      (a/<! (app.gameplay.module/waitEnemyTurn app.gameplay.module/*module gameplayCtx enemy inputCh outputCh)))))
+      (a/<! (app.module/waitEnemyTurn app.module/*module gameplayCtx enemy inputCh outputCh)))))

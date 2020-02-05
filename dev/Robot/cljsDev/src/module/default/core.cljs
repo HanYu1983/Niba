@@ -2,7 +2,7 @@
   (:require [clojure.set])
   (:require [clojure.core.async :as a])
   (:require [app.gameplay.model])
-  (:require [app.gameplay.module])
+  (:require [app.module])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.map])
   (:require [module.default.data])
@@ -13,11 +13,11 @@
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
 
-(defmethod app.gameplay.module/loadData :default [_]
+(defmethod app.module/loadData :default [_]
   (a/go
     module.default.data/data))
 
-(defmethod app.gameplay.module/gameplayOnInit :default [_ gameplayCtx]
+(defmethod app.module/gameplayOnInit :default [_ gameplayCtx]
   (let [[gameplayCtx _] (->> (get module.default.data/data "robot")
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(app.gameplay.model/createUnit gameplayCtx
@@ -31,7 +31,7 @@
                                      [gameplayCtx 1]))]
     gameplayCtx))
 
-(defmethod app.gameplay.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
+(defmethod app.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
                                   :weapons {}
@@ -43,26 +43,26 @@
         ((fn [unit]
            (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
 
-(defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
+(defmethod app.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
       (merge {:position pos})
       (update-in [:state :tags] #(conj % :move))))
 
-(defmethod app.gameplay.module/unitOnDone :default [_ gameplayCtx unit]
+(defmethod app.module/unitOnDone :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] #(conj % :done))))
 
-(defmethod app.gameplay.module/unitOnTurnStart :default [_ gameplayCtx unit]
+(defmethod app.module/unitOnTurnStart :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] (constantly #{}))))
 
-(defmethod app.gameplay.module/waitUnitOnDead :default [_ gameplayCtx unit]
+(defmethod app.module/waitUnitOnDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
-(defmethod app.gameplay.module/waitUnitOnMenu :default [_ gameplayCtx args inputCh outputCh]
+(defmethod app.module/waitUnitOnMenu :default [_ gameplayCtx args inputCh outputCh]
   (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
 
-(defmethod app.gameplay.module/waitEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
+(defmethod app.module/waitEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (a/go
     (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
                      (tool.units/getAll)
@@ -78,19 +78,19 @@
           gameplayCtx)))))
 
 
-(defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
+(defmethod app.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
-(defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
+(defmethod app.module/unitGetWeapons :default [_ gameplayCtx unit]
   (module.default.data/getUnitWeaponsM gameplayCtx unit))
 
-(defmethod app.gameplay.module/unitIsDead :default [_ gameplayCtx unit]
+(defmethod app.module/unitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
-(defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
+(defmethod app.module/unitGetInfo :default [_ gameplayCtx unit]
   (module.default.data/getUnitInfo gameplayCtx unit))
 
-(defmethod app.gameplay.module/formatToDraw :default [_ gameplayCtx]
+(defmethod app.module/formatToDraw :default [_ gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
                   (tool.fsm/currState))
         stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)

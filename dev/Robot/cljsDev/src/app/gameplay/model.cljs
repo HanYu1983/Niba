@@ -2,7 +2,7 @@
   (:require [tool.fsm])
   (:require [tool.map])
   (:require [tool.units])
-  (:require [app.gameplay.module]))
+  (:require [app.module]))
 
 ; ==============
 ; === helper ===
@@ -129,7 +129,7 @@
     (-> unit
         (update :position (partial world2local camera))
         ((fn [unit]
-           (app.gameplay.module/unitGetInfo app.gameplay.module/*module ctx unit))))))
+           (app.module/unitGetInfo app.module/*module ctx unit))))))
 
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
@@ -181,7 +181,7 @@
     (map (partial world2local camera) range)))
 
 (defn formatToDraw [ctx]
-  (app.gameplay.module/formatToDraw app.gameplay.module/*module ctx))
+  (app.module/formatToDraw app.module/*module ctx))
 
 ; ==============
 ; === module ===
@@ -189,7 +189,7 @@
 
 (defn createUnit [ctx {:keys [key position] :as unit} args]
   (-> (getUnits ctx)
-      (tool.units/add (merge (app.gameplay.module/unitOnCreate app.gameplay.module/*module ctx unit args)
+      (tool.units/add (merge (app.module/unitOnCreate app.module/*module ctx unit args)
                              {:key (or key (gensym))
                               :position (or position [0 0])}))
       ((fn [units]

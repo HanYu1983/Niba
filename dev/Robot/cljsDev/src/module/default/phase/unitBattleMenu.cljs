@@ -116,21 +116,21 @@
                                                                         :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
                                                                                      (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
                                                                         :results result} inputCh outputCh))
-                 gameplayCtx (if (app.gameplay.module/unitIsDead app.gameplay.module/*module gameplayCtx leftAfter)
+                 gameplayCtx (if (app.module/unitIsDead app.module/*module gameplayCtx leftAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete leftAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module gameplayCtx leftAfter))
+                                     gameplayCtx (a/<! (app.module/waitUnitOnDead app.module/*module gameplayCtx leftAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
-                 gameplayCtx (if (app.gameplay.module/unitIsDead app.gameplay.module/*module gameplayCtx rightAfter)
+                 gameplayCtx (if (app.module/unitIsDead app.module/*module gameplayCtx rightAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete rightAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.gameplay.module/waitUnitOnDead app.gameplay.module/*module gameplayCtx rightAfter))
+                                     gameplayCtx (a/<! (app.module/waitUnitOnDead app.module/*module gameplayCtx rightAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]

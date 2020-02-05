@@ -88,7 +88,7 @@
      (cond
        (= "move" select)
        (let [[mw mh] app.gameplay.model/mapViewSize
-             shortestPathTree (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module gameplayCtx unit)
+             shortestPathTree (app.module/unitGetMovePathTree app.module/*module gameplayCtx unit)
              moveRange (map first shortestPathTree)
              [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
          (if isEnd
