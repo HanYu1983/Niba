@@ -48,7 +48,7 @@
                             second
                             (nth cursor2)
                             ((fn [weapon]
-                               (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
+                               (module.default.data/getUnitWeaponRange gameplayCtx left weapon))))
                         [])
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setAttackRange attackRange))]
@@ -75,7 +75,7 @@
                             second
                             (nth cursor2)
                             ((fn [weapon]
-                               (app.gameplay.model/getWeaponRange gameplayCtx left weapon))))
+                               (module.default.data/getUnitWeaponRange gameplayCtx left weapon))))
                         [])
 
           state (-> state
@@ -97,7 +97,7 @@
              weapon (-> (app.gameplay.model/getWeapons gameplayCtx left)
                         second
                         (nth cursor2))
-             attackRange (app.gameplay.model/getWeaponRange gameplayCtx left weapon)
+             attackRange (module.default.data/getUnitWeaponRange gameplayCtx left weapon)
              isTargetInRange (some #(= (:position right) %) attackRange)]
          (if (not isTargetInRange)
            (let []

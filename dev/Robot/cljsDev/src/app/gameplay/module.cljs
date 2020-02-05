@@ -15,8 +15,6 @@
 (defmulti waitUnitOnMenu (fn [type gameplayCtx args inputCh outputCh] type))
 
 (defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
-(defmulti unitGetWeaponRange (fn [type gameplayCtx unit weapon] type))
-(defmulti unitGetWeaponType (fn [type gameplayCtx unit weapon] type))
 (defmulti unitGetWeapons (fn [type gameplayCtx unit] type))
 (defmulti unitGetInfo (fn [type gameplayCtx unit] type))
 (defmulti unitIsDead (fn [type gameplayCtx unit] type))

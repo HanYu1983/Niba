@@ -213,11 +213,5 @@
 (defn getWeapons [ctx unit]
   (app.gameplay.module/unitGetWeapons app.gameplay.module/*module ctx unit))
 
-(defn getWeaponRange [ctx unit weapon]
-  (app.gameplay.module/unitGetWeaponRange app.gameplay.module/*module ctx unit weapon))
-
-(defn getWeaponType [ctx unit weapon]
-  (app.gameplay.module/unitGetWeaponType app.gameplay.module/*module ctx unit weapon))
-
 (defn isDead [ctx unit]
   (app.gameplay.module/unitIsDead app.gameplay.module/*module ctx unit))

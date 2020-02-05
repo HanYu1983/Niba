@@ -171,6 +171,15 @@
   (update-in unit [:state :weapons] (fn [origin]
                                       (conj origin weapons))))
 
+
+(defn getUnitWeaponRange [gameplayCtx unit weapon]
+  (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
+    (->> (tool.map/simpleFindPath [0 0] (dec min))
+         (into #{})
+         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                      (into #{})))
+         (map (partial map + (:position unit))))))
+
 ;power
 (defn getUnitPower [gameplayCtx unit]
   (let [robotKey (get-in unit [:state :robot])

@@ -46,7 +46,7 @@
                             second
                             (nth cursor2)
                             ((fn [weapon]
-                               (app.gameplay.model/getWeaponRange gameplayCtx unit weapon))))
+                               (module.default.data/getUnitWeaponRange gameplayCtx unit weapon))))
                         [])
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/setAttackRange attackRange))]
@@ -63,7 +63,7 @@
                             second
                             (nth cursor2)
                             ((fn [weapon]
-                               (app.gameplay.model/getWeaponRange gameplayCtx unit weapon)))))
+                               (module.default.data/getUnitWeaponRange gameplayCtx unit weapon)))))
           checkHitRate (when (= cursor1 weaponIdx)
                          (let [weapon (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                                           second
@@ -140,7 +140,7 @@
                  weapon  (-> (app.gameplay.model/getWeapons gameplayCtx unit)
                              second
                              (nth cursor2))
-                 weaponType (app.gameplay.model/getWeaponType gameplayCtx unit weapon)]
+                 weaponType (module.default.data/getWeaponType gameplayCtx unit weapon)]
              (cond
                (= "single" weaponType)
                (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續

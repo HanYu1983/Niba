@@ -104,17 +104,6 @@
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
   (module.default.data/getUnitWeaponsM gameplayCtx unit))
 
-(defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
-  (let [[min max] (module.default.data/getWeaponRange gameplayCtx unit weapon)]
-    (->> (tool.map/simpleFindPath [0 0] (dec min))
-         (into #{})
-         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                      (into #{})))
-         (map (partial map + (:position unit))))))
-
-(defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
-  (module.default.data/getWeaponType gameplayCtx unit weapon))
-
 (defmethod app.gameplay.module/unitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
