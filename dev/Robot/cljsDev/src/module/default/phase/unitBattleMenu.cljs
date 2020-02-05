@@ -8,14 +8,14 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
-  (:require [module.default.data])
+  (:require [module.default.dataalg.data])
   (:require [module.default.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]
   nil
   (m/basicNotify
-   (let [[menu data] (module.default.data/getMenuData gameplayCtx left)
+   (let [[menu data] (module.default.dataalg.data/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
                       (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (app.gameplay.model/getWeapons gameplayCtx left)
@@ -105,8 +105,8 @@
              (recur gameplayCtx))
            (let [leftAction (get-in state [:battleMenuSession 0 :action])
                  rightAction (get-in state [:battleMenuSession 1 :action])
-                 result (module.default.data/calcActionResult gameplayCtx left leftAction right rightAction)
-                 gameplayCtx (module.default.data/applyActionResult gameplayCtx left leftAction right rightAction result)
+                 result (module.default.dataalg.data/calcActionResult gameplayCtx left leftAction right rightAction)
+                 gameplayCtx (module.default.dataalg.data/applyActionResult gameplayCtx left leftAction right rightAction result)
                  leftAfter (-> (app.gameplay.model/getUnits gameplayCtx)
                                (tool.units/getByKey (:key left)))
                  rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)

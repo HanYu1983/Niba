@@ -5,7 +5,7 @@
   (:require [app.gameplay.module])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.map])
-  (:require [module.default.data])
+  (:require [module.default.dataalg.data])
   (:require-macros [module.default.core :as mm])
   (:require [module.default.phase.unitMenu])
   (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
@@ -24,10 +24,10 @@
 
 (defmethod app.gameplay.module/loadData :default [_]
   (a/go
-    module.default.data/data))
+    module.default.dataalg.data/data))
 
 (defmethod app.gameplay.module/gameplayOnInit :default [_ gameplayCtx]
-  (let [[gameplayCtx _] (->> (get module.default.data/data "robot")
+  (let [[gameplayCtx _] (->> (get module.default.dataalg.data/data "robot")
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(app.gameplay.model/createUnit gameplayCtx
                                                                        {:player (if (< (rand) 0.5)
@@ -48,9 +48,9 @@
                                   :tags #{}}})]
     (-> unit
         ((fn [unit]
-           (module.default.data/setUnitHp unit (module.default.data/getUnitMaxHp gameplayCtx unit))))
+           (module.default.dataalg.data/setUnitHp unit (module.default.dataalg.data/getUnitMaxHp gameplayCtx unit))))
         ((fn [unit]
-           (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
+           (module.default.dataalg.data/setUnitEn unit (module.default.dataalg.data/getUnitMaxEn gameplayCtx unit)))))))
 
 (defmethod app.gameplay.module/unitOnMove :default [_ gameplayCtx unit pos]
   (-> unit
@@ -89,26 +89,26 @@
 
 (defmethod app.gameplay.module/unitGetMovePathTree :default [_ gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (/ (module.default.data/getUnitPowerM gameplayCtx unit) 5)
+        power (/ (module.default.dataalg.data/getUnitPowerM gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [totalCost]} curr]
                               [(>= totalCost power) false])
-                            (partial module.default.data/nextCellM [mw mh])
-                            (partial module.default.data/moveCostM gameplayCtx)
+                            (partial module.default.dataalg.data/nextCellM [mw mh])
+                            (partial module.default.dataalg.data/moveCostM gameplayCtx)
                             (constantly 0))
          (filter (fn [[k v]]
                    (<= (:totalCost v) power)))
          (into {}))))
 
 (defmethod app.gameplay.module/unitGetWeapons :default [_ gameplayCtx unit]
-  (module.default.data/getUnitWeaponsM gameplayCtx unit))
+  (module.default.dataalg.data/getUnitWeaponsM gameplayCtx unit))
 
 (defmethod app.gameplay.module/unitSetWeapons :default [_ gameplayCtx unit weapons]
-  (module.default.data/setUnitWeapons gameplayCtx unit weapons))
+  (module.default.dataalg.data/setUnitWeapons gameplayCtx unit weapons))
 
 (defmethod app.gameplay.module/unitGetWeaponRange :default [type gameplayCtx unit weapon]
-  (let [[min max] (module.default.data/getWeaponRange gameplayCtx unit weapon)]
+  (let [[min max] (module.default.dataalg.data/getWeaponRange gameplayCtx unit weapon)]
     (->> (tool.map/simpleFindPath [0 0] (dec min))
          (into #{})
          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
@@ -116,16 +116,16 @@
          (map (partial map + (:position unit))))))
 
 (defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
-  (module.default.data/getWeaponType gameplayCtx unit weapon))
+  (module.default.dataalg.data/getWeaponType gameplayCtx unit weapon))
 
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
-  (module.default.data/getUnitHitRate gameplayCtx unit weapon targetUnit))
+  (module.default.dataalg.data/getUnitHitRate gameplayCtx unit weapon targetUnit))
 
 (defmethod app.gameplay.module/unitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
 (defmethod app.gameplay.module/unitGetInfo :default [_ gameplayCtx unit]
-  (module.default.data/getUnitInfo gameplayCtx unit))
+  (module.default.dataalg.data/getUnitInfo gameplayCtx unit))
 
 (defmethod app.gameplay.module/formatToDraw :default [_ gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
@@ -147,7 +147,7 @@
                  (let [unit (get stateDetail :unit)
                        data (-> (get stateDetail :data)
                                 (update :weapons (fn [weapons]
-                                                   (map (partial module.default.data/getWeaponInfo gameplayCtx unit) weapons))))
+                                                   (map (partial module.default.dataalg.data/getWeaponInfo gameplayCtx unit) weapons))))
                        menuCursor (get stateDetail :menuCursor)]
                    {:menuCursor menuCursor
                     :data data}))

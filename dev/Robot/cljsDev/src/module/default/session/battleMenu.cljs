@@ -1,5 +1,5 @@
 (ns module.default.session.battleMenu
-  (:require [module.default.data]))
+  (:require [module.default.dataalg.data]))
 
 (def defaultModel [{:unit nil :action [:pending]}
                    {:unit nil :action [:pending]}])
@@ -18,7 +18,7 @@
         (let [weapon args]
           (-> ctx
               (update-in [0 :action] (constantly action))
-              (update-in [0 :hitRate] (constantly (module.default.data/getUnitHitRate gameplayCtx left weapon right)))))
+              (update-in [0 :hitRate] (constantly (module.default.dataalg.data/getUnitHitRate gameplayCtx left weapon right)))))
 
         (-> ctx
             (update-in [0 :action] (constantly action))
@@ -33,7 +33,7 @@
         (let [weapon args]
           (-> ctx
               (update-in [1 :action] (constantly action))
-              (update-in [1 :hitRate] (constantly (module.default.data/getUnitHitRate gameplayCtx right weapon left)))))
+              (update-in [1 :hitRate] (constantly (module.default.dataalg.data/getUnitHitRate gameplayCtx right weapon left)))))
 
         (-> ctx
             (update-in [1 :action] (constantly action))
@@ -43,7 +43,7 @@
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)
         [leftActionType leftWeapon] (get-in ctx [0 :action] ctx)]
-    (setRightAction ctx (module.default.data/thinkReaction gameplayCtx right left leftWeapon) gameplayCtx)))
+    (setRightAction ctx (module.default.dataalg.data/thinkReaction gameplayCtx right left leftWeapon) gameplayCtx)))
 
 (defn mapUnits [ctx f]
   (-> ctx
