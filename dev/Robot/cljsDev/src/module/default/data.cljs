@@ -1,4 +1,4 @@
-(ns module.default.dataalg.data
+(ns module.default.data
   (:require ["./data.js" :as dataJson])
   (:require [app.gameplay.model])
   (:require-macros [module.default.core :as mm]))
@@ -280,7 +280,7 @@
   (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                          (tool.fsm/currState)
                          (= :unitBattleMenu))
-        weapons (->> (module.default.dataalg.data/getUnitWeaponsM gameplayCtx unit)
+        weapons (->> (module.default.data/getUnitWeaponsM gameplayCtx unit)
                      second)
         weaponKeys (->> (range (count weapons))
                         (into []))
@@ -302,7 +302,7 @@
                           :unit unit}]
 
                         :else
-                        [[["move"] weaponKeys (module.default.dataalg.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
+                        [[["move"] weaponKeys (module.default.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
                          {:weaponIdx 1
                           :weapons weapons
                           :transformIdx 2

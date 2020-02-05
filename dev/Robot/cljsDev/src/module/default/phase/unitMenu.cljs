@@ -24,7 +24,7 @@
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
   (m/basicNotify
-   (let [[menu data] (module.default.dataalg.data/getMenuData gameplayCtx unit)]
+   (let [[menu data] (module.default.data/getMenuData gameplayCtx unit)]
      {:menuCursor (tool.menuCursor/model menu)
       :data data}))
 
