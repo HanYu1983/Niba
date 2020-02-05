@@ -201,9 +201,6 @@
 (defn getMovePathTree [ctx unit]
   (app.gameplay.module/unitGetMovePathTree app.gameplay.module/*module ctx unit))
 
-(defn getMenuData [ctx unit]
-  (app.gameplay.module/unitGetMenuData app.gameplay.module/*module ctx unit))
-
 (defn onMove [ctx unit pos]
   (app.gameplay.module/unitOnMove app.gameplay.module/*module ctx unit pos))
 

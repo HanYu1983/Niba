@@ -122,39 +122,6 @@
 (defmethod app.gameplay.module/unitGetWeaponType :default [type gameplayCtx unit weapon]
   (module.default.data/getWeaponType gameplayCtx unit weapon))
 
-(defmethod app.gameplay.module/unitGetMenuData :default [type gameplayCtx unit]
-  (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
-                         (tool.fsm/currState)
-                         (= :unitBattleMenu))
-        weapons (->> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                     second)
-        weaponKeys (->> (range (count weapons))
-                        (into []))
-        [menu data] (if isBattleMenu
-                      [[weaponKeys ["cancel"]]
-                       {:weaponIdx 0
-                        :weapons weapons
-                        :unit unit}]
-                      (cond
-                        (-> (get-in unit [:state :tags])
-                            (contains? :done))
-                        [[["cancel"]] {}]
-
-                        (-> (get-in unit [:state :tags])
-                            (contains? :move))
-                        [[weaponKeys ["ok"] ["cancel"]]
-                         {:weaponIdx 0
-                          :weapons weapons
-                          :unit unit}]
-
-                        :else
-                        [[["move"] weaponKeys (module.default.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
-                         {:weaponIdx 1
-                          :weapons weapons
-                          :transformIdx 2
-                          :unit unit}]))]
-    [menu data]))
-
 (defmethod app.gameplay.module/unitGetHitRate :default [_ gameplayCtx unit weapon targetUnit]
   (module.default.data/getUnitHitRate gameplayCtx unit weapon targetUnit))
 
@@ -253,6 +220,6 @@
                    (select-keys stateDetail [:menuCursor :data]))
      :battleMenu (when (some #(= % state) [:unitBattleMenu])
                    (let [{battleMenuSession :battleMenuSession} stateDetail]
-                     {:preview (app.gameplay.session.battleMenu/mapUnits battleMenuSession (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))}))
+                     {:preview (module.default.session.battleMenu/mapUnits battleMenuSession (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))}))
      :state state
      :stateDetail stateDetail}))

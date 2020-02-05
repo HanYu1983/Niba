@@ -8,13 +8,13 @@
   (:require [app.gameplay.model])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
-  (:require [app.gameplay.session.battleMenu]))
+  (:require [module.default.session.battleMenu]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]
   nil
   (m/basicNotify
-   (let [[menu data] (app.gameplay.model/getMenuData gameplayCtx left)
+   (let [[menu data] (module.default.data/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
                       (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (app.gameplay.model/getWeapons gameplayCtx left)
@@ -24,7 +24,7 @@
                                                                 weaponIdx))))
       :data data
       :battleMenuSession (-> args
-                             (app.gameplay.session.battleMenu/setRightActionFromReaction gameplayCtx))}))
+                             (module.default.session.battleMenu/setRightActionFromReaction gameplayCtx))}))
   
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
@@ -65,8 +65,8 @@
                                                second
                                                (nth cursor2))]
                                 (-> (:battleMenuSession state)
-                                    (app.gameplay.session.battleMenu/setLeftAction [:attack weapon] gameplayCtx)
-                                    (app.gameplay.session.battleMenu/setRightActionFromReaction gameplayCtx)))
+                                    (module.default.session.battleMenu/setLeftAction [:attack weapon] gameplayCtx)
+                                    (module.default.session.battleMenu/setRightActionFromReaction gameplayCtx)))
                               (:battleMenuSession state))
 
           attackRange (if (= cursor1 weaponIdx)

@@ -1,4 +1,4 @@
-(ns app.gameplay.session.battleMenu
+(ns module.default.session.battleMenu
   (:require [app.gameplay.model]))
 
 (def defaultModel [{:unit nil :action [:pending]}
