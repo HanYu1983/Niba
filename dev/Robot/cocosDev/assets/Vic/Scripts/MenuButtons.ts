@@ -63,6 +63,10 @@ export default class MenuButtons extends BasicViewer {
         this.node.emit(MenuButtons.ON_MENU_ENTER, "cancel");
     }
 
+    getFocus():any{
+        return this._menuCursor.getCurrentFocus();
+    }
+
     addListener() {
         super.addListener();
 

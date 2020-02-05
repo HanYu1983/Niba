@@ -14,6 +14,7 @@ export default class ShowItem extends cc.Component {
     }
 
     showItems(poss: any[], onCreate?: (node: cc.Node) => void) {
+        this.clearItem();
         poss.forEach(pos => {
             this.showItem(pos, onCreate);
         });

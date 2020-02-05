@@ -46,7 +46,7 @@ export default class View extends cc.Component {
         this.repaintMoveRange(data.moveRange);
         this.repaintAttackRange(data.attackRange);
         this.repaintSystemMenu(data.systemMenu);
-        this.repaintUnitMenu(data.unitMenu);
+        this.repaintUnitMenu(data.cursor, data.unitMenu);
         this.repaintHitInfo(data.checkHitRate);
         this.repainBattleMenu(data.battleMenu);
         cb();
@@ -68,9 +68,10 @@ export default class View extends cc.Component {
         }
     }
 
-    private repaintUnitMenu(unitMenu: any) {
+    private repaintUnitMenu(pos:number[], unitMenu: any) {
         if (unitMenu) {
             this.createOrUpdateUnitMenu(
+                pos,
                 unitMenu.menuCursor.menu,
                 unitMenu.data,
                 unitMenu.menuCursor.cursor,
@@ -139,8 +140,8 @@ export default class View extends cc.Component {
         this.getGamePage().closeSceneMenu();
     }
 
-    private createOrUpdateUnitMenu(menu: any, info: any, cursor: number, subcursor: number[]) {
-        this.getGamePage().openUnitMenu([menu, info], [cursor, subcursor]);
+    private createOrUpdateUnitMenu(pos:number[], menu: any, info: any, cursor: number, subcursor: number[]) {
+        this.getGamePage().openUnitMenu(pos, [menu, info], [cursor, subcursor]);
     }
 
     private createOrUpdateSystemMenu(menu: any, info: any, cursor: number, subcursor: number[]) {

@@ -23,6 +23,7 @@ import InputSensor from "../InputSensor";
 import MenuButtons from "../MenuButtons";
 import ViewController from "../ViewController";
 import UnitSampleInfo from "../GamePage/UnitSampleInfo";
+import TextEffect from "../GamePage/TextEffect";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -59,6 +60,9 @@ export default class GamePage extends BasicViewer {
 
     @property(ShowItem)
     unitSampleInfos: ShowItem = null;
+
+    @property(ShowItem)
+    unitActionInfos: ShowItem = null;
 
     @property(TurnStart)
     turnStart: TurnStart = null;
@@ -262,9 +266,9 @@ export default class GamePage extends BasicViewer {
         let tween = cc.tween(this.node).call(() => {
 
             // 被攻擊者播放受擊動畫
-            if(isEvade){
+            if (isEvade) {
                 this.units.evadeOneUnit(unit2.key);
-            }else{
+            } else {
                 this.effects.createExplode(result1.damage, to1);
                 this.units.shakeOneUnit(unit2.key);
             }
@@ -335,75 +339,38 @@ export default class GamePage extends BasicViewer {
         this.sceneMenu.close();
     }
 
-    openUnitMenu(menus: any, cursors: any[], cb?: (key: string) => {}) {
+    openUnitMenu(pos:number[], menus: any, cursors: any[], cb?: (key: string) => {}) {
         const [menu, weaponInfo] = menus;
 
         this.closeUnitMenu();
         this.unitMenu.open();
         this.unitMenu.setData(menu, cursors);
 
-        this.unitMenu.node.on(MenuButtons.ON_MENU_ENTER, key => {
-            if (cb) cb(key);
+        // 顯示指令在unit旁邊
+        this.unitActionInfos.showItems([pos], node => {
+            const content = this.unitMenu.getFocus();
+            node.getComponent(TextEffect).setContent(content);
         });
 
         if (weaponInfo) {
             let weaponId = weaponInfo.weaponIdx;
             let weapons = weaponInfo.weapons;
-            let weaponRanges = weaponInfo.weaponRange;
 
             this.openWeaponMenu(weapons);
-
-            let showWeaponRange = (cursor) => {
-                this.map.closeWeaponRange();
-                if (cursor[0] == weaponId) {
-                    this.map.showWeaponRange(weaponRanges[cursor[1]]);
-                }
-            }
 
             if (cursors) {
                 const c1 = cursors[0];
                 const c2 = cursors[1][cursors[0]];
                 if (c1 == weaponId) {
-
-                    // 顯示武器攻擊範圍，改成CONTROLLER呼叫，不自己處理
-                    // showWeaponRange([c1, c2]);
-
                     this.weaponMenu.showCurrentWeapon(c2);
                 }
             }
-
-            this.unitMenu.node.on(MenuButtons.ON_MENU_UP, cursor => {
-                showWeaponRange(cursor);
-            });
-
-            this.unitMenu.node.on(MenuButtons.ON_MENU_DOWN, cursor => {
-                showWeaponRange(cursor);
-            });
-
-            this.unitMenu.node.on(MenuButtons.ON_MENU_LEFT, cursor => {
-                if (cursor[0] == weaponId) {
-                    showWeaponRange(cursor);
-                    this.weaponMenu.showCurrentWeapon(cursor[1]);
-                }
-            });
-
-            this.unitMenu.node.on(MenuButtons.ON_MENU_RIGHT, cursor => {
-                if (cursor[0] == weaponId) {
-                    showWeaponRange(cursor);
-                    this.weaponMenu.showCurrentWeapon(cursor[1]);
-                }
-            });
         }
     }
 
     closeUnitMenu() {
-        this.unitMenu.node.off(MenuButtons.ON_MENU_ENTER);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_LEFT);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_RIGHT);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_UP);
-        this.unitMenu.node.off(MenuButtons.ON_MENU_DOWN);
+        this.unitActionInfos.clearItem();
         this.unitMenu.close();
-
         this.weaponMenu.close();
     }
 
