@@ -85,6 +85,9 @@ export default class GamePage extends BasicViewer {
 
         this.map.resetUV();
         ViewController.instance.notifyStartGame();
+        ViewController.instance.audioController.gamePage();
+
+
         //this.removeListenser();
 
         //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));

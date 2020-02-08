@@ -18,6 +18,10 @@ export default class AudioController extends cc.Component {
 
     @property(cc.AudioClip)
     sounds:cc.AudioClip[] = [];
+
+    gamePage(){
+        cc.audioEngine.play(this.midis[0], true, 1);
+    }
     
     explode(){
         cc.audioEngine.play(this.sounds[0], false, 1);
