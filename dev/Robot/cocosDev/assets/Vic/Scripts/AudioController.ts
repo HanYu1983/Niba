@@ -13,17 +13,35 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class AudioController extends cc.Component {
 
-    @property(cc.AudioClip)
-    midis:cc.AudioClip[] = [];
+    @property(cc.Boolean)
+    musicEnable:boolean = false;
+
+    @property(cc.Boolean)
+    audioEnable:boolean = false;
 
     @property(cc.AudioClip)
-    sounds:cc.AudioClip[] = [];
+    musics:cc.AudioClip[] = [];
+
+    @property(cc.AudioClip)
+    audios:cc.AudioClip[] = [];
 
     gamePage(){
-        cc.audioEngine.play(this.midis[0], true, 1);
+        this._playMusic(0);
     }
     
     explode(){
-        cc.audioEngine.play(this.sounds[0], false, 1);
+        this._playAudio(0);
+    }
+
+    _playMusic(id:number, loop:boolean = true){
+        if(this.musicEnable){
+            cc.audioEngine.play(this.musics[id], loop, 1);
+        }
+    }
+
+    _playAudio(id:number){
+        if(this.audioEnable){
+            cc.audioEngine.play(this.audios[id], false, 1);
+        }
     }
 }

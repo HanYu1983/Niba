@@ -17967,12 +17967,14 @@
       "__id__": 475
     },
     "_enabled": true,
-    "midis": [
+    "musicEnable": true,
+    "audioEnable": true,
+    "musics": [
       {
         "__uuid__": "1dc6cc6f-aa32-47bc-aae7-46e308daf759"
       }
     ],
-    "sounds": [
+    "audios": [
       {
         "__uuid__": "46aa783e-1a1d-47c3-a111-1823c17f0b47"
       }
