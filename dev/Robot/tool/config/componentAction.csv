@@ -1,4 +1,4 @@
 id/string,title/string
-,裝備
-,使用
-,使用自身
+equipment,裝備
+item,使用
+itemForSelf,使用自身
