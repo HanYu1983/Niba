@@ -100,11 +100,12 @@
      :cursor (app.gameplay.model/getLocalCursor gameplayCtx nil)
      :moveRange (app.gameplay.model/getLocalMoveRange gameplayCtx nil)
      :attackRange (app.gameplay.model/getLocalAttackRange gameplayCtx nil)
-     :checkHitRate (->> (get-in gameplayCtx [:temp :checkHitRate])
-                        (map (fn [info]
-                               (-> info
-                                   (update :unit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))
-                                   (update :targetUnit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))))))
+     :checkHitRate (when (not= state nil)
+                     (->> (get-in gameplayCtx [:temp :checkHitRate])
+                          (map (fn [info]
+                                 (-> info
+                                     (update :unit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))
+                                     (update :targetUnit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil)))))))
      :cellState (->> (get-in gameplayCtx [:temp :cellState]))
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  (let [unit (get stateDetail :unit)
