@@ -275,6 +275,7 @@ export default class GamePage extends BasicViewer {
             } else {
                 this.effects.createExplode(result1.damage, to1);
                 this.units.shakeOneUnit(unit2.key);
+                ViewController.instance.audioController.explode();
             }
         }).delay(.6);
         tweens.push(tween);
