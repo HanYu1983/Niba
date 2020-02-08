@@ -117,7 +117,7 @@
       (print "ok"))))
 
 (defn main []
-  (let [phase :debugView
+  (let [phase nil
         outputToView (a/chan)
         inputFromView (a/chan)]
 
