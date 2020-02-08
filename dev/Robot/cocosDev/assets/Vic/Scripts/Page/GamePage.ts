@@ -222,6 +222,10 @@ export default class GamePage extends BasicViewer {
                 item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
                 item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
             });
+
+            // this.unitActionInfos.showItems([to1], (item:cc.Node)=>{
+            //     item.getComponent(TextEffect).setContent("直擊!");
+            // });
         }).delay(.7);
         return tween;
     }
