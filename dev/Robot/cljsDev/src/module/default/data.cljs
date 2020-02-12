@@ -263,8 +263,18 @@
         factor4 (get weaponInfo "accuracy")
 
         ; 地型補正係數
-        factor5 (get terrain "hitRate")]
-    (* basic factor1 factor2 factor3 factor4 factor5)))
+        factor5 (get terrain "hitRate")
+
+        ; 對方速度
+        factor6 (let [vel (or 0 (get-in targetUnit [:state :tags :velocity]))]
+                  (if (= vel 0)
+                    1
+                    (-> 0.5
+                        (* vel)
+                        (/ 20)
+                        ((fn [v]
+                           (- 1 v))))))]
+    (* basic factor1 factor2 factor3 factor4 factor5 factor6)))
 
 (defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit]
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)

@@ -36,7 +36,7 @@
                                   :pilot "amuro"
                                   :weapons {}
                                   :components {}
-                                  :tags #{}}})]
+                                  :tags {}}})]
     (-> unit
         ((fn [unit]
            (module.default.data/setUnitHp unit (module.default.data/getUnitMaxHp gameplayCtx unit))))
@@ -44,17 +44,22 @@
            (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
 
 (defmethod app.module/unitOnMove :default [_ gameplayCtx unit pos]
-  (-> unit
-      (merge {:position pos})
-      (update-in [:state :tags] #(conj % :move))))
+  (let [vel (->> (map - (:position unit) pos)
+                 (repeat 2)
+                 (apply map *)
+                 (apply +))]
+    (-> unit
+        (merge {:position pos})
+        (update-in [:state :tags] #(conj % [:move true]))
+        (update-in [:state :tags] #(conj % [:velocity vel])))))
 
 (defmethod app.module/unitOnDone :default [_ gameplayCtx unit]
   (-> unit
-      (update-in [:state :tags] #(conj % :done))))
+      (update-in [:state :tags] #(conj % [:done true]))))
 
 (defmethod app.module/unitOnTurnStart :default [_ gameplayCtx unit]
   (-> unit
-      (update-in [:state :tags] (constantly #{}))))
+      (update-in [:state :tags] (constantly {}))))
 
 (defmethod app.module/onUnitDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))

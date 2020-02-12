@@ -118,7 +118,7 @@
            (let [transformedUnit (update-in unit [:state :tags] (fn [tags]
                                                                   (if (contains? tags :sky)
                                                                     (disj tags :sky)
-                                                                    (conj tags :sky))))
+                                                                    (conj tags [:sky true]))))
                  gameplayCtx (-> gameplayCtx
                                  (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
                  _ (if (contains? (get-in transformedUnit [:state :tags]) :sky)

@@ -60,7 +60,10 @@ export default class LandUnits extends cc.Component {
     setUnits(units: any) {
         this.clearUnits();
 
-        let checkIsSky = (tags: any[]) => {
+        let checkIsSky = (tags: any) => {
+            // 改成object
+            return tags.sky != null
+            /*
             let isSky = false
             tags.forEach(tag => {
                 if (tag == "sky") {
@@ -68,6 +71,7 @@ export default class LandUnits extends cc.Component {
                 }
             });
             return isSky;
+            */
         }
 
         for (let element of units) {
