@@ -89,7 +89,10 @@
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   (let [weaponData (get-in data ["weapon" weaponKey])]
     (if (nil? weaponData)
-      (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found")))
+      (do
+        (print "=============")
+        (print weapon)
+        (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found"))))
       (merge weaponData
              {"range" (getWeaponRange gameplayCtx unit weapon)
               "type" (getWeaponType gameplayCtx unit weapon)
@@ -154,7 +157,7 @@
                    (let [com (get-in data ["component" key])]
                      (if (nil? com)
                        (throw (js/Error. (str "getUnitComponents[" key "] not found")))
-                       {:key (gensym)
+                       {:key key
                         :componentKey key})))
                  (get robot "components"))))])))
 
@@ -165,7 +168,7 @@
   (let [transform (get-in unit [:state :robot])
         weapons (get-in unit [:state :weapons transform])]
     (if weapons
-      weapons
+      [transform weapons]
       [transform
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
@@ -175,7 +178,7 @@
                    (let [weapon (get-in data ["weapon" weaponKey])]
                      (if (nil? weapon)
                        (throw (js/Error. (str "getUnitWeapons[" weaponKey "] not found")))
-                       (cond-> {:key weaponKey
+                       (cond-> {:key weaponKey ; 在這個不能使用gensym, 因為這個方法是getter
                                 :weaponKey weaponKey
                                 :level 0
                                 :tags #{}}
@@ -185,7 +188,7 @@
 
 (def getUnitWeaponsM (memoize getUnitWeapons))
 
-(defn setUnitWeapons [gameplayCtx unit weapons]
+(defn setUnitWeapons [unit weapons]
   (update-in unit [:state :weapons] (fn [origin]
                                       (conj origin weapons))))
 
@@ -302,6 +305,30 @@
                                          :maxEn (getUnitMaxEnM gameplayCtx unit)
                                          :power (getUnitPowerM gameplayCtx unit)}))))))
 
+(defn useUnitWeapon [gameplayCtx unit weapon]
+  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)]
+    (cond
+      (= (get weaponInfo "energyType") "energy")
+      (let [energyCost (get weaponInfo "energyCost")
+            unitAfter (-> (getUnitEn unit)
+                          (- energyCost)
+                          (max 0)
+                          ((fn [en]
+                             (setUnitEn unit en))))]
+        (app.gameplay.model/updateUnit gameplayCtx unit (constantly unitAfter)))
+      
+      (= (get weaponInfo "energyType") "bullet")
+      (let [weapons (getUnitWeaponsM gameplayCtx unit)
+            weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
+            weaponsAfter (update-in weapons [1] (fn [vs]
+                                                  (replace {weapon weaponAfter} vs)))
+            unitAfter (setUnitWeapons unit weaponsAfter)]
+        (app.gameplay.model/updateUnit gameplayCtx unit (constantly unitAfter)))
+      
+      :else
+      gameplayCtx)))
+
+
 (defn isBelongToPlayer [gameplayCtx unit]
   (= (:player unit) :player))
 
@@ -414,7 +441,14 @@
                                     [leftDamage rightDamage])
         gameplayCtx (-> gameplayCtx
                         (app.gameplay.model/updateUnit left (constantly leftAfter))
-                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
+                        (app.gameplay.model/updateUnit right (constantly rightAfter)))
+
+        gameplayCtx  (reduce (fn [gameplayCtx [unit [actionType weapon]]]
+                               (if (= actionType :attack)
+                                 (useUnitWeapon gameplayCtx unit weapon)
+                                 gameplayCtx))
+                             gameplayCtx
+                             (zipmap [left right] [leftAction rightAction]))]
     gameplayCtx))
 
 

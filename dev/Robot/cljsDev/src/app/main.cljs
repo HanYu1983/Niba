@@ -72,11 +72,23 @@
         rleft 37
         rright 39]
     (a/go
-      (print "=======move cursor=======")
+      (print "=======bullet count=======")
+      (let [keys [right right right right enter
+                  down right enter
+                  left left enter enter]]
+        (loop [keys keys]
+          (when-let [key (first keys)]
+            (a/<! (a/timeout 200))
+            (println "press" key)
+            (a/>! outputCh ["KEY_DOWN" key])
+            (recur (rest keys)))))
+
+      (comment (print "=======move cursor=======")
       (let [keys [right down left up]]
         (loop [keys keys]
           (when-let [key (first keys)]
             (a/<! (a/timeout 200))
+            (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
       (print "=======move camera=======")
@@ -84,6 +96,7 @@
         (loop [keys keys]
           (when-let [key (first keys)]
             (a/<! (a/timeout 200))
+            (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
       (println "=======menu=======")
@@ -124,7 +137,7 @@
             (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
-      
+
       (println "=======enemy unit only cancel menu=======")
       (let [keys [right right enter enter left left]]
         (loop [keys keys]
@@ -132,16 +145,28 @@
             (a/<! (a/timeout 200))
             (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
+            (recur (rest keys))))))
+
+
+      
       (print "ok"))))
 
+
+(defn debug []
+  (let [outputToView (a/chan)
+        inputFromView (a/chan)]
+    (mainLoop defaultModel inputFromView outputToView)
+    (a/go
+      (a/>! inputFromView ["startGameplay"])
+      (a/<! (a/timeout 1000))
+      (testIt outputToView inputFromView))))
+
 (defn main []
-  (let [phase :x
+  (let [phase :debug
         outputToView (a/chan)
         inputFromView (a/chan)]
-
     (cond
-      (= phase :debugView)
+      (= phase :debug)
       (do
         (installViewRxjs inputFromView outputToView)
         (mainLoop defaultModel inputFromView outputToView)
@@ -150,20 +175,15 @@
           (a/<! (a/timeout 5000))
           (testIt nil inputFromView)))
 
-      (= phase :debug)
-      (do
-        (mainLoop defaultModel inputFromView outputToView)
-        (a/go
-          (a/>! inputFromView ["startGameplay"])
-          (a/<! (a/timeout 1000))
-          (testIt outputToView inputFromView)))
-
       :else
       (do
         (installViewRxjs inputFromView outputToView)
         (mainLoop defaultModel inputFromView outputToView)))
 
-    (comment "")))
+    (comment "end main")))
 
 (set! (.-startApp js/window)
       main)
+
+(set! (.-startDebug js/window)
+      debug)

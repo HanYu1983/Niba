@@ -111,11 +111,18 @@
                                (tool.units/getByKey (:key left)))
                  rightAfter (-> (app.gameplay.model/getUnits gameplayCtx)
                                 (tool.units/getByKey (:key right)))
+                 _ (when (nil? leftAfter)
+                     (print (app.gameplay.model/getUnits gameplayCtx))
+                     (throw (js/Error. (str (:key left) " not found"))))
+                 _ (when (nil? rightAfter)
+                     (print (app.gameplay.model/getUnits gameplayCtx))
+                     (throw (js/Error. (str (:key left) " not found"))))
                  _ (a/<! (app.gameplay.phase.common/unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
                                                                                 (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
                                                                         :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)
                                                                                      (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)]
                                                                         :results result} inputCh outputCh))
+                 ; 進攻方死亡
                  gameplayCtx (if (app.module/unitIsDead app.module/*module gameplayCtx leftAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete leftAfter)
@@ -125,6 +132,7 @@
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
+                 ; 防守方死亡
                  gameplayCtx (if (app.module/unitIsDead app.module/*module gameplayCtx rightAfter)
                                (let [gameplayCtx (-> (app.gameplay.model/getUnits gameplayCtx)
                                                      (tool.units/delete rightAfter)

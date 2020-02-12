@@ -39,6 +39,10 @@
                                                           :type :robot
                                                           :position [0 0]}
                                                          {:robotKey "gundam"})
+                          (app.gameplay.model/createUnit {:player :player
+                                                          :type :robot
+                                                          :position [4 0]}
+                                                         {:robotKey "gaite_land"})
                           (app.gameplay.model/createUnit {:player :ai1
                                                           :type :robot
                                                           :position [2 0]}
