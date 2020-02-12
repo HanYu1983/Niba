@@ -305,7 +305,7 @@
                                          :maxEn (getUnitMaxEnM gameplayCtx unit)
                                          :power (getUnitPowerM gameplayCtx unit)}))))))
 
-(defn useUnitWeapon [gameplayCtx unit weapon]
+(defn useUnitWeapon [gameplayCtx weapon unit]
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)]
     (cond
       (= (get weaponInfo "energyType") "energy")
@@ -315,7 +315,7 @@
                           (max 0)
                           ((fn [en]
                              (setUnitEn unit en))))]
-        (app.gameplay.model/updateUnit gameplayCtx unit (constantly unitAfter)))
+        unitAfter)
       
       (= (get weaponInfo "energyType") "bullet")
       (let [weapons (getUnitWeaponsM gameplayCtx unit)
@@ -323,10 +323,10 @@
             weaponsAfter (update-in weapons [1] (fn [vs]
                                                   (replace {weapon weaponAfter} vs)))
             unitAfter (setUnitWeapons unit weaponsAfter)]
-        (app.gameplay.model/updateUnit gameplayCtx unit (constantly unitAfter)))
+        weaponsAfter)
       
       :else
-      gameplayCtx)))
+      unit)))
 
 
 (defn isBelongToPlayer [gameplayCtx unit]
@@ -439,16 +439,16 @@
                                              (setUnitHp unit hp)))))
                                     [left right]
                                     [leftDamage rightDamage])
+
+        [leftAfter rightAfter] (map (fn [unit [actionType weapon]]
+                                      (if (= actionType :attack)
+                                        (useUnitWeapon gameplayCtx weapon unit)
+                                        unit))
+                                    [leftAfter rightAfter]
+                                    [leftAction rightAction])
         gameplayCtx (-> gameplayCtx
                         (app.gameplay.model/updateUnit left (constantly leftAfter))
-                        (app.gameplay.model/updateUnit right (constantly rightAfter)))
-
-        gameplayCtx  (reduce (fn [gameplayCtx [unit [actionType weapon]]]
-                               (if (= actionType :attack)
-                                 (useUnitWeapon gameplayCtx unit weapon)
-                                 gameplayCtx))
-                             gameplayCtx
-                             (zipmap [left right] [leftAction rightAction]))]
+                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
 
