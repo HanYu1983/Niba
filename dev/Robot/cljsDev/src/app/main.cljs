@@ -1,6 +1,7 @@
 (ns app.main
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [app.main])
   (:require [app.gameplay.core])
   (:require [app.module])
   (:require [module.default.core])
@@ -59,7 +60,7 @@
     (a/go
       (loop []
         (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
-          ; 強制所有欄位求值. 不然有些程式碼不會運行到
+          ; 使用print強制所有欄位求值. 不然有些程式碼不會運行到
           (println args)
           (a/>! outputCh ["ok", [id]])
           (recur)))))
@@ -74,83 +75,41 @@
         rleft 37
         rright 39]
     (a/go
-      (print "=======bullet count=======")
-      (let [keys [right right right right enter
-                  down right enter
-                  left left enter enter]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
+      (app.main/defclick false "bullet count"
+        [right right right right enter
+         down right enter
+         left left enter enter]
+        ; wait battle animation
+        (a/<! (a/timeout 5000))
+        (app.main/defclick true "back"
+          [left left]))
 
-      (comment (print "=======move cursor=======")
-      (let [keys [right down left up]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
-      (print "=======move camera=======")
-      (let [keys [rright rdown rleft rup]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
-      (println "=======menu=======")
-      (let [keys [left left up up enter
-                  down up down left left right right
-                  down down up up cancel]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
-      (println "=======move=======")
-      (let [keys [enter enter right enter cancel cancel cancel left]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
-      (println "=======attack=======")
-      (let [keys [enter down right left enter
-                  right right enter
-                  right left right down up enter]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
+      (app.main/defclick false "move cursor"
+        [right down left up])
 
-      ; wait battle animation
-      (a/<! (a/timeout 5000))
-      (let [keys [left left]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys)))))
+      (app.main/defclick false "move camera"
+        [rright rdown rleft rup])
 
-      (println "=======enemy unit only cancel menu=======")
-      (let [keys [right right enter enter left left]]
-        (loop [keys keys]
-          (when-let [key (first keys)]
-            (a/<! (a/timeout 200))
-            (println "press" key)
-            (a/>! outputCh ["KEY_DOWN" key])
-            (recur (rest keys))))))
+      (app.main/defclick false "menu"
+        [left left up up enter
+         down up down left left right right
+         down down up up cancel])
 
+      (app.main/defclick false "move"
+        [enter enter right enter cancel cancel cancel left])
 
-      
+      (app.main/defclick false "attack"
+        [enter down right left enter
+         right right enter
+         right left right down up enter]
+        ; wait battle animation
+        (a/<! (a/timeout 5000))
+        (app.main/defclick true "back"
+          [left left]))
+
+      (app.main/defclick false "enemy unit only cancel menu"
+        [right right enter enter left left])
+
       (print "ok"))))
 
 
