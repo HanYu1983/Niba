@@ -49,6 +49,7 @@ export default class View extends cc.Component {
         this.repaintUnitMenu(data.cursor, data.unitMenu);
         this.repaintHitInfo(data.checkHitRate);
         this.repainBattleMenu(data.battleMenu);
+        console.log("data.cellState", data.cellState)
         cb();
     }
 

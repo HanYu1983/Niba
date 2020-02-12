@@ -106,7 +106,13 @@
                                  (-> info
                                      (update :unit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))
                                      (update :targetUnit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil)))))))
-     :cellState (->> (get-in gameplayCtx [:temp :cellState]))
+     :cellState (let [cursor (app.gameplay.model/getCursor gameplayCtx)
+                      unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+                                       (tool.units/getByPosition cursor))
+                      terrain (module.default.data/getTerrain gameplayCtx cursor)]
+                  {:unit (when unitAtCursor
+                           (app.gameplay.model/mapUnitToLocal gameplayCtx nil unitAtCursor))
+                   :terrain terrain})
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  (let [unit (get stateDetail :unit)
                        data (-> (get stateDetail :data)

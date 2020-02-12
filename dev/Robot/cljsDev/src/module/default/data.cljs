@@ -14,6 +14,20 @@
 ; map
 ; =======================
 
+
+(defn getTerrainKey [gameplayCtx from]
+  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        t1 (get-in data ["terrainMapping"
+                         (str (get-in playmap (reverse from)))
+                         "terrain"])]
+    t1))
+
+(defn getTerrain [gameplayCtx from]
+  (-> (getTerrainKey gameplayCtx from)
+      ((fn [key]
+         (get-in data ["terrain" key])))))
+
+
 (defn moveCost [gameplayCtx from to]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         t1 (get-in data ["terrainMapping"
