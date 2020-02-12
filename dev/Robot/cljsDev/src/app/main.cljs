@@ -59,6 +59,8 @@
     (a/go
       (loop []
         (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
+          ; 強制所有欄位求值. 不然有些程式碼不會運行到
+          (println args)
           (a/>! outputCh ["ok", [id]])
           (recur)))))
   (let [right 68
