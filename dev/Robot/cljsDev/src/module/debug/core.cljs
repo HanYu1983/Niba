@@ -19,13 +19,13 @@
 (defmethod app.module/unitOnTurnStart :debug [_ gameplayCtx unit]
   unit)
 
-(defmethod app.module/waitUnitOnDead :debug [_ gameplayCtx unit]
+(defmethod app.module/onUnitDead :debug [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
-(defmethod app.module/waitUnitOnMenu :debug [_ gameplayCtx args inputCh outputCh]
+(defmethod app.module/onUnitMenu :debug [_ gameplayCtx args inputCh outputCh]
   (a/go [gameplayCtx false]))
 
-(defmethod app.module/waitEnemyTurn :debug [_ gameplayCtx enemy inputCh outputCh]
+(defmethod app.module/onEnemyTurn :debug [_ gameplayCtx enemy inputCh outputCh]
   (a/go gameplayCtx))
 
 

@@ -56,13 +56,13 @@
   (-> unit
       (update-in [:state :tags] (constantly #{}))))
 
-(defmethod app.module/waitUnitOnDead :default [_ gameplayCtx unit]
+(defmethod app.module/onUnitDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
-(defmethod app.module/waitUnitOnMenu :default [_ gameplayCtx args inputCh outputCh]
+(defmethod app.module/onUnitMenu :default [_ gameplayCtx args inputCh outputCh]
   (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
 
-(defmethod app.module/waitEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
+(defmethod app.module/onEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (a/go
     (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
                      (tool.units/getAll)

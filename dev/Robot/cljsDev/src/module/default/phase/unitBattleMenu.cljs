@@ -121,7 +121,7 @@
                                                      (tool.units/delete leftAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.module/waitUnitOnDead app.module/*module gameplayCtx leftAfter))
+                                     gameplayCtx (a/<! (app.module/onUnitDead app.module/*module gameplayCtx leftAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
@@ -130,7 +130,7 @@
                                                      (tool.units/delete rightAfter)
                                                      ((fn [units]
                                                         (app.gameplay.model/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (app.module/waitUnitOnDead app.module/*module gameplayCtx rightAfter))
+                                     gameplayCtx (a/<! (app.module/onUnitDead app.module/*module gameplayCtx rightAfter))
                                      _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]
