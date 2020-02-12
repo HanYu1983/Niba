@@ -114,10 +114,29 @@
             (println "press" key)
             (a/>! outputCh ["KEY_DOWN" key])
             (recur (rest keys)))))
+
+      ; wait battle animation
+      (a/<! (a/timeout 5000))
+      (let [keys [left left]]
+        (loop [keys keys]
+          (when-let [key (first keys)]
+            (a/<! (a/timeout 200))
+            (println "press" key)
+            (a/>! outputCh ["KEY_DOWN" key])
+            (recur (rest keys)))))
+      
+      (println "=======enemy unit only cancel menu=======")
+      (let [keys [right right enter enter left left]]
+        (loop [keys keys]
+          (when-let [key (first keys)]
+            (a/<! (a/timeout 200))
+            (println "press" key)
+            (a/>! outputCh ["KEY_DOWN" key])
+            (recur (rest keys)))))
       (print "ok"))))
 
 (defn main []
-  (let [phase :debugView
+  (let [phase :x
         outputToView (a/chan)
         inputFromView (a/chan)]
 

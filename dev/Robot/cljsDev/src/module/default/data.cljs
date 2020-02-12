@@ -28,16 +28,20 @@
          (get-in data ["terrain" key])))))
 
 
-(defn moveCost [gameplayCtx from to]
-  (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        t1 (get-in data ["terrainMapping"
-                         (str (get-in playmap (reverse from)))
-                         "terrain"])
-        t2 (get-in data ["terrainMapping"
-                         (str (get-in playmap (reverse to)))
-                         "terrain"])]
-    (+ (get-in data ["terrain" t1 "cost"])
-       (get-in data ["terrain" t2 "cost"]))))
+(defn moveCost [gameplayCtx unit from to]
+  (let [isSky (-> (get-in unit [:state :tags])
+                  (contains? :sky))]
+    (if isSky
+      1
+      (let [playmap (app.gameplay.model/getMap gameplayCtx)
+            t1 (get-in data ["terrainMapping"
+                             (str (get-in playmap (reverse from)))
+                             "terrain"])
+            t2 (get-in data ["terrainMapping"
+                             (str (get-in playmap (reverse to)))
+                             "terrain"])]
+        (+ (get-in data ["terrain" t1 "cost"])
+           (get-in data ["terrain" t2 "cost"]))))))
 
 (def moveCostM (memoize moveCost))
 
@@ -347,9 +351,18 @@
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
-        weapons (-> (getUnitWeaponsM gameplayCtx unit)
-                    second)]
-    [:attack (first weapons)]))
+        weapon (->> (getUnitWeaponsM gameplayCtx unit)
+                    second
+                    reverse
+                    (drop-while (fn [weapon]
+                                  (->> (getUnitWeaponRange gameplayCtx unit weapon)
+                                       ; 注意: (0 0) != [0 0]
+                                       (some #(= (into [] %) (:position fromUnit)))
+                                       not)))
+                    first)]
+    (if weapon
+      [:attack weapon]
+      [:evade])))
 
 
 (defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
@@ -413,7 +426,7 @@
                             (fn [{:keys [totalCost]} curr]
                               [(>= totalCost power) false])
                             (partial nextCellM [mw mh])
-                            (partial moveCostM gameplayCtx)
+                            (partial moveCostM gameplayCtx unit)
                             (constantly 0))
          (filter (fn [[k v]]
                    (<= (:totalCost v) power)))
