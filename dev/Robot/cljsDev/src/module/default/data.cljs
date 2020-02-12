@@ -298,39 +298,52 @@
                                          :maxEn (getUnitMaxEnM gameplayCtx unit)
                                          :power (getUnitPowerM gameplayCtx unit)}))))))
 
+(defn isBelongToPlayer [gameplayCtx unit]
+  (= (:player unit) :player))
+
+(defn isFriendlyUnit [gameplayCtx unit targetUnit]
+  (if (= unit targetUnit)
+    true
+    (->> [unit targetUnit]
+         (map :player)
+         (map (fn [player]
+                (get-in gameplayCtx [:players player :faction])))
+         (apply =))))
 
 (defn getMenuData [gameplayCtx unit]
-  (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
-                         (tool.fsm/currState)
-                         (= :unitBattleMenu))
-        weapons (->> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                     second)
-        weaponKeys (->> (range (count weapons))
-                        (into []))
-        [menu data] (if isBattleMenu
-                      [[weaponKeys ["cancel"]]
-                       {:weaponIdx 0
-                        :weapons weapons
-                        :unit unit}]
-                      (cond
-                        (-> (get-in unit [:state :tags])
-                            (contains? :done))
-                        [[["cancel"]] {}]
-
-                        (-> (get-in unit [:state :tags])
-                            (contains? :move))
-                        [[weaponKeys ["ok"] ["cancel"]]
+  (if (not (isBelongToPlayer gameplayCtx unit))
+    [[["cancel"]] {}]
+    (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
+                           (tool.fsm/currState)
+                           (= :unitBattleMenu))
+          weapons (->> (module.default.data/getUnitWeaponsM gameplayCtx unit)
+                       second)
+          weaponKeys (->> (range (count weapons))
+                          (into []))
+          [menu data] (if isBattleMenu
+                        [[weaponKeys ["cancel"]]
                          {:weaponIdx 0
                           :weapons weapons
                           :unit unit}]
+                        (cond
+                          (-> (get-in unit [:state :tags])
+                              (contains? :done))
+                          [[["cancel"]] {}]
 
-                        :else
-                        [[["move"] weaponKeys (module.default.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
-                         {:weaponIdx 1
-                          :weapons weapons
-                          :transformIdx 2
-                          :unit unit}]))]
-    [menu data]))
+                          (-> (get-in unit [:state :tags])
+                              (contains? :move))
+                          [[weaponKeys ["ok"] ["cancel"]]
+                           {:weaponIdx 0
+                            :weapons weapons
+                            :unit unit}]
+
+                          :else
+                          [[["move"] weaponKeys (module.default.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
+                           {:weaponIdx 1
+                            :weapons weapons
+                            :transformIdx 2
+                            :unit unit}]))]
+      [menu data])))
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)

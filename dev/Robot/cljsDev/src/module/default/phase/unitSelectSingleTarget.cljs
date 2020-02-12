@@ -25,7 +25,7 @@
   (let [cursor (app.gameplay.model/getCursor gameplayCtx)
         units (app.gameplay.model/getUnits gameplayCtx)
         unitAtCursor (tool.units/getByPosition units cursor)]
-    (if (and unitAtCursor (not (app.gameplay.model/isFriendlyUnit gameplayCtx unit unitAtCursor)))
+    (if (and unitAtCursor (not (module.default.data/isFriendlyUnit gameplayCtx unit unitAtCursor)))
       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
                                                       (-> module.default.session.battleMenu/defaultModel
                                                           (module.default.session.battleMenu/setUnits unit unitAtCursor)

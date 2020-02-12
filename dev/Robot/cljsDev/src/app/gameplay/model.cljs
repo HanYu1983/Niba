@@ -137,18 +137,6 @@
          (map (fn [unit]
                 (mapUnitToLocal ctx camera unit))))))
 
-(defn isBelongToPlayer [ctx unit]
-  (= (:player unit) :player))
-
-(defn isFriendlyUnit [ctx unit targetUnit]
-  (if (= unit targetUnit)
-    true
-    (->> [unit targetUnit]
-         (map :player)
-         (map (fn [player]
-                (get-in ctx [:players player :faction])))
-         (apply =))))
-
 ; ============
 ; === view ===
 ; ============
