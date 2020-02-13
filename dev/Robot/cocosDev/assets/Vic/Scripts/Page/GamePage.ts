@@ -211,9 +211,9 @@ export default class GamePage extends BasicViewer {
             });
 
             // 被攻擊者的初始狀態
-            this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
-            });
+            // this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
+            //     item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
+            // });
         }).delay(.7);
         return tween;
     }
@@ -363,13 +363,12 @@ export default class GamePage extends BasicViewer {
         if (weaponInfo) {
             let weaponId = weaponInfo.weaponIdx;
             let weapons = weaponInfo.weapons;
-
-            this.openWeaponMenu(weapons);
-
+            
             if (cursors) {
                 const c1 = cursors[0];
                 const c2 = cursors[1][cursors[0]];
                 if (c1 == weaponId) {
+                    this.openWeaponMenu(weapons);
                     this.weaponMenu.showCurrentWeapon(c2);
                 }
             }
