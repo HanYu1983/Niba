@@ -28,6 +28,12 @@ export default class WeaponMenuItem extends cc.Component {
     @property(cc.Label)
     weaponHit: cc.Label = null;
 
+    @property(cc.Label)
+    weaponEN: cc.Label = null;
+
+    @property(cc.Label)
+    weaponBullet: cc.Label = null;
+
     @property(cc.Sprite)
     backColor:cc.Sprite = null;
 }

@@ -34,11 +34,13 @@ export default class WeaponMenu extends BasicViewer {
                 this.weaponItems[i].node.active = true;
                 let weaponData = data[i];
                 let weapon:WeaponMenuItem = this.weaponItems[i];
-                weapon.weaponName.string = weaponData.name;
-                weapon.weaponPower.string = weaponData.power;
-                weapon.weaponHit.string = weaponData.hit;
-                weapon.weaponRange.string = weaponData.range;
+                weapon.weaponName.string = weaponData.title;
+                weapon.weaponPower.string = weaponData.damage;
+                weapon.weaponHit.string = (weaponData.accuracy * 100).toFixed(0) + "%";
+                weapon.weaponRange.string = weaponData.range[0] + "~" + weaponData.range[1];
                 weapon.weaponType.string = weaponData.type;
+                weapon.weaponBullet.string = "彈 " + weaponData.maxBulletCount;
+                weapon.weaponEN.string = "EN " + weaponData.energyCost;
             }else{
                 this.weaponItems[i].node.active = false;
             }

@@ -401,13 +401,7 @@ export default class GamePage extends BasicViewer {
              * accuracy:number
              * damage:number
              */
-            ws.push({
-                name: weaponDetail.title,
-                type: weaponDetail.type,
-                power: weaponDetail.damage,
-                range: weaponDetail.range[0] + "~" + weaponDetail.range[1],
-                hit: weaponDetail.accuracy
-            });
+            ws.push(weaponDetail);
         }
 
         this.weaponMenu.open();
