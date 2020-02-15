@@ -486,19 +486,6 @@
             paths
             shouldRemove)))
 
-(defn getUnitMovePathTree [gameplayCtx unit]
-  (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (/ (getUnitPowerM gameplayCtx unit) 5)
-        [mw mh] (tool.map/getMapSize playmap)]
-    (->> (tool.map/findPath (:position unit)
-                            (fn [{:keys [cost]} curr]
-                              [(>= cost power) false])
-                            (partial nextCellM [mw mh])
-                            (partial moveCostM gameplayCtx unit)
-                            (constantly 0))
-         ((fn [paths]
-            (formatPathTree power paths))))))
-
 (defn getUnitMovePathTreeTo [gameplayCtx unit pos]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (/ (getUnitPowerM gameplayCtx unit) 5)
@@ -509,6 +496,11 @@
                             (partial nextCellM [mw mh])
                             (partial moveCostM gameplayCtx unit)
                             (fn [from]
-                              (estimateCost from pos)))
+                              (if pos
+                                (estimateCost from pos)
+                                0)))
          ((fn [paths]
             (formatPathTree power paths))))))
+
+(defn getUnitMovePathTree [gameplayCtx unit]
+  (getUnitMovePathTreeTo gameplayCtx unit nil))
