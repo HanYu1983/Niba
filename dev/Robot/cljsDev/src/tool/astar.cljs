@@ -20,7 +20,10 @@
                   :cost current-score
                   :totalCost totalScore}
             [isFind isInterrupt] (goal info current)
-            visited (assoc visited current (assoc info :tail isFind))]
+            visited (assoc visited current (merge info {:tail isFind
+                                                        :priority (if isFind
+                                                                    (count visited)
+                                                                    99999999)}))]
         (if isFind
           (if isInterrupt
             visited

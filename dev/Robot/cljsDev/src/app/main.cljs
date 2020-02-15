@@ -76,6 +76,7 @@
         rleft 37
         rright 39]
     (a/go
+      
       (app.main/defclick (or testAll false) "bullet count"
         [right right right right enter
          down right enter
@@ -110,6 +111,9 @@
 
       (app.main/defclick (or testAll false) "enemy unit only cancel menu"
         [right right enter enter left left])
+
+      (app.main/defclick (or testAll false) "enemy turn"
+        [right enter enter])
 
       (print "ok"))))
 

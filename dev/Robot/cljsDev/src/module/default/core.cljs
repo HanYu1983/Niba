@@ -8,10 +8,7 @@
   (:require [module.default.data])
   (:require-macros [module.default.core :as mm])
   (:require [module.default.phase.unitMenu])
-  (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
-  (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
-  (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
-  (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [module.default.phase.enemyTurn]))
 
 (defmethod app.module/loadData :default [_]
   (a/go
@@ -68,19 +65,7 @@
   (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
 
 (defmethod app.module/onEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
-  (a/go
-    (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
-                     (tool.units/getAll)
-                     (filter (fn [unit]
-                               (= (get unit :player) enemy))))]
-      (loop [gameplayCtx gameplayCtx
-             units units]
-        (if (> (count units) 0)
-          (let [unit (first units)
-                gameplayCtx (-> (app.gameplay.model/updateUnit gameplayCtx unit (fn [unit]
-                                                                                  unit)))]
-            (recur gameplayCtx (rest units)))
-          gameplayCtx)))))
+  (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
 
 
 (defmethod app.module/unitGetMovePathTree :default [_ gameplayCtx unit]

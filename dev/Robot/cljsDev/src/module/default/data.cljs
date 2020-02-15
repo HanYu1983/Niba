@@ -54,6 +54,13 @@
 
 (def nextCellM (memoize nextCell))
 
+
+(defn estimateCost [from to]
+  (->> (map - from to)
+       (repeat 2)
+       (apply map *)
+       (apply +)))
+
 ; =======================
 ; pilot
 ; =======================
@@ -463,17 +470,45 @@
                         (app.gameplay.model/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
+(defn formatPathTree [power paths]
+  (let [shouldRemove (filter (fn [[k v]]
+                               (> (:cost v) power))
+                             paths)]
+    (reduce (fn [paths [curr info]]
+              (let [parent (:prev info)]
+                (cond-> paths
+                  parent
+                  (update parent (fn [n]
+                                   (merge n (select-keys info [:tail :priority]))))
+
+                  true
+                  (dissoc curr))))
+            paths
+            shouldRemove)))
 
 (defn getUnitMovePathTree [gameplayCtx unit]
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
         power (/ (getUnitPowerM gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
-                            (fn [{:keys [totalCost]} curr]
-                              [(>= totalCost power) false])
+                            (fn [{:keys [cost]} curr]
+                              [(>= cost power) false])
                             (partial nextCellM [mw mh])
                             (partial moveCostM gameplayCtx unit)
                             (constantly 0))
-         (filter (fn [[k v]]
-                   (<= (:totalCost v) power)))
-         (into {}))))
+         ((fn [paths]
+            (formatPathTree power paths))))))
+
+(defn getUnitMovePathTreeTo [gameplayCtx unit pos]
+  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+        power (/ (getUnitPowerM gameplayCtx unit) 5)
+        [mw mh] (tool.map/getMapSize playmap)]
+    (->> (tool.map/findPath (:position unit)
+                            (fn [{:keys [cost]} curr]
+                              [(or (= curr pos) (>= cost power)) false])
+                            (partial nextCellM [mw mh])
+                            (partial moveCostM gameplayCtx unit)
+                            (fn [from]
+                              (estimateCost from pos)))
+         ((fn [paths]
+            (formatPathTree power paths))))))
