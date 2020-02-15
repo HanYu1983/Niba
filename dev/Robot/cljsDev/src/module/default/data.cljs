@@ -154,7 +154,7 @@
   (let [transform (get-in unit [:state :robot])
         coms (get-in unit [:state :components transform])]
     (if coms
-      coms
+      [transform coms]
       [transform
        (let [robotKey (get-in unit [:state :robot])
              robot (get-in data ["robot" robotKey])]
@@ -186,12 +186,11 @@
                    (let [weapon (get-in data ["weapon" weaponKey])]
                      (if (nil? weapon)
                        (throw (js/Error. (str "getUnitWeapons[" weaponKey "] not found")))
-                       (cond-> {:key weaponKey ; 在這個不能使用gensym, 因為這個方法是getter
-                                :weaponKey weaponKey
-                                :level 0
-                                :tags #{}}
-                         (= (get weapon "energyType") "bullet")
-                         (merge {:bulletCount (get weapon "maxBulletCount")})))))
+                       {:key weaponKey ; 在這個不能使用gensym, 因為這個方法是getter
+                        :weaponKey weaponKey
+                        :level 0
+                        :tags #{}
+                        :bulletCount (get weapon "maxBulletCount")})))
                  (get robot "weapons"))))])))
 
 (def getUnitWeaponsM (memoize getUnitWeapons))

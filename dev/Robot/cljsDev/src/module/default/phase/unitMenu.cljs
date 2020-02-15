@@ -16,10 +16,17 @@
 (m/defwait unitGroundAnim [ctx args])
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
-  (-> unit
-      (update-in [:state :robot] (constantly toKey))
-      (update-in [:state :weapons (keyword toKey)] (constantly (let [weapons (get-in unit [:state :weapons (keyword fromKey)])]
-                                                                 weapons)))))
+  (let [weaponsNow (get-in unit [:state :weapons (keyword fromKey)])
+        weaponsNext (get-in unit [:state :weapons (keyword toKey)])
+        weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
+                    (merge (select-keys (zipmap (map :weaponKey weaponsNow) weaponsNow)
+                                        (map :weaponKey weaponsNext)))
+                    vals
+                    ((fn [vs]
+                       (into [] vs))))]
+    (-> unit
+        (update-in [:state :robot] (constantly toKey))
+        (update-in [:state :weapons (keyword toKey)] (constantly weapons)))))
 
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
