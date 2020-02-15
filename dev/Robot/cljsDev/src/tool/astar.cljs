@@ -21,6 +21,13 @@
                   :totalCost totalScore}
             [isFind isInterrupt] (goal info current)
             visited (assoc visited current (merge info {:tail isFind
+                                                        :length (loop [len 0
+                                                                       previous previous]
+                                                                  (if previous
+                                                                    (recur (inc len) (-> previous
+                                                                                         visited
+                                                                                         :prev))
+                                                                    len))
                                                         :priority (if isFind
                                                                     (count visited)
                                                                     99999999)}))]
