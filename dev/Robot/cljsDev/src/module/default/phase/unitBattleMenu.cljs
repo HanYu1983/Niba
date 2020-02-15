@@ -113,10 +113,10 @@
                                 (tool.units/getByKey (:key right)))
                  _ (when (nil? leftAfter)
                      (print (app.gameplay.model/getUnits gameplayCtx))
-                     (throw (js/Error. (str (:key left) " not found"))))
+                     (throw (js/Error. (str "leftAfter " (:key left) " not found"))))
                  _ (when (nil? rightAfter)
                      (print (app.gameplay.model/getUnits gameplayCtx))
-                     (throw (js/Error. (str (:key left) " not found"))))
+                     (throw (js/Error. (str "rightAfter " (:key left) " not found"))))
                  _ (a/<! (app.gameplay.phase.common/unitBattleAnim nil {:units [(app.gameplay.model/mapUnitToLocal gameplayCtx nil left)
                                                                                 (app.gameplay.model/mapUnitToLocal gameplayCtx nil right)]
                                                                         :unitsAfter [(app.gameplay.model/mapUnitToLocal gameplayCtx nil leftAfter)

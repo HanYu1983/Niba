@@ -61,10 +61,11 @@
       (loop []
         (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
           ; 使用print強制所有欄位求值. 不然有些程式碼不會運行到
-          (println args)
+          (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [right 68
+  (let [testAll false
+        right 68
         down 83
         left 65
         up 87
@@ -75,7 +76,7 @@
         rleft 37
         rright 39]
     (a/go
-      (app.main/defclick false "bullet count"
+      (app.main/defclick (or testAll false) "bullet count"
         [right right right right enter
          down right enter
          left left enter enter]
@@ -84,21 +85,21 @@
         (app.main/defclick true "back"
           [left left]))
 
-      (app.main/defclick false "move cursor"
+      (app.main/defclick (or testAll false) "move cursor"
         [right down left up])
 
-      (app.main/defclick false "move camera"
+      (app.main/defclick (or testAll false) "move camera"
         [rright rdown rleft rup])
 
-      (app.main/defclick false "menu"
+      (app.main/defclick (or testAll false) "menu"
         [left left up up enter
          down up down left left right right
          down down up up cancel])
 
-      (app.main/defclick false "move"
+      (app.main/defclick (or testAll false) "move"
         [enter enter right enter cancel cancel cancel left])
 
-      (app.main/defclick false "attack"
+      (app.main/defclick (or testAll false) "attack"
         [enter down right left enter
          right right enter
          right left right down up enter]
@@ -107,7 +108,7 @@
         (app.main/defclick true "back"
           [left left]))
 
-      (app.main/defclick false "enemy unit only cancel menu"
+      (app.main/defclick (or testAll false) "enemy unit only cancel menu"
         [right right enter enter left left])
 
       (print "ok"))))

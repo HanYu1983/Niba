@@ -165,6 +165,7 @@
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
+  {:post [(= 2 (count %))]}
   (let [transform (get-in unit [:state :robot])
         weapons (get-in unit [:state :weapons transform])]
     (if weapons
@@ -316,6 +317,7 @@
                                          :power (getUnitPowerM gameplayCtx unit)}))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
+  {:post [(= (keys unit) (keys %))]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)]
     (cond
       (= (get weaponInfo "energyType") "energy")
@@ -333,7 +335,7 @@
             weaponsAfter (update-in weapons [1] (fn [vs]
                                                   (replace {weapon weaponAfter} vs)))
             unitAfter (setUnitWeapons unit weaponsAfter)]
-        weaponsAfter)
+        unitAfter)
       
       :else
       unit)))

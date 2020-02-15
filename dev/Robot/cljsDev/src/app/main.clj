@@ -1,8 +1,8 @@
 (ns app.main)
 
 (defmacro defclick [enable desc keys & body]
-  (when enable
-    `(let [keys# ~keys]
+  `(when ~enable
+     (let [keys# ~keys]
        (println (str "======" ~desc "======"))
        (loop [~'keys keys#]
          (when-let [~'key (first ~'keys)]

@@ -14,7 +14,7 @@
 (defn route [graph dist h start goal]
   (loop [visited {}
          queue (tailrecursion.priority-map/priority-map-keyfn first start [0 0 nil])]
-    (if (and (seq queue) (> (count queue) 0))
+    (if (seq queue)
       (let [[current [totalScore current-score previous]] (peek queue)
             info {:prev previous
                   :cost current-score
