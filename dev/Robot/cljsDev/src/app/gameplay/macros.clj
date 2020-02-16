@@ -107,7 +107,7 @@
 
 (defmacro handleMenuCursorLeftRight [& body]
   `(let [~'state (update ~'state :menuCursor (fn [~'ctx]
-                                               (tool.menuCursor/mapCursor2 ~'ctx
+                                               (tool.menuCursor/mapCursor2 ~'ctx nil
                                                                            (~'action {:left dec :right inc}))))
          ~'fsm (tool.fsm/save ~'fsm ~'state)
          ~'gameplayCtx (-> ~'gameplayCtx
@@ -117,6 +117,8 @@
 
 (defmacro returnPop [v]
   `[(-> ~'gameplayCtx
+        (app.gameplay.model/updateTemp (fn [~'temp]
+                                         (dissoc ~'temp :checkHitRate)))
         (app.gameplay.model/setAttackRange [])
         (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm)))
     ~v])

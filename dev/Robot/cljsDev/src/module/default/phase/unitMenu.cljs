@@ -10,7 +10,8 @@
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
   (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
-  (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]]))
+  (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
+  (:require-macros [module.default.phase.unitMenu]))
 
 (m/defwait unitSkyAnim [ctx args])
 (m/defwait unitGroundAnim [ctx args])
@@ -48,14 +49,11 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
-          attackRange (if (= cursor1 weaponIdx)
-                        (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                            second
-                            (nth cursor2)
-                            ((fn [weapon]
-                               (module.default.data/getUnitWeaponRange gameplayCtx unit weapon))))
-                        [])
+          attackRange (module.default.phase.unitMenu/getAttackRange)
+          checkHitRate (module.default.phase.unitMenu/getHitRate)
           gameplayCtx (-> gameplayCtx
+                          (app.gameplay.model/updateTemp (fn [temp]
+                                                           (merge temp {:checkHitRate checkHitRate})))
                           (app.gameplay.model/setAttackRange attackRange))]
       (recur gameplayCtx)))
 
@@ -65,25 +63,8 @@
           cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
-          attackRange (when (= cursor1 weaponIdx)
-                        (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                            second
-                            (nth cursor2)
-                            ((fn [weapon]
-                               (module.default.data/getUnitWeaponRange gameplayCtx unit weapon)))))
-          checkHitRate (when (= cursor1 weaponIdx)
-                         (let [weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
-                                          second
-                                          (nth cursor2))
-                               unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
-                                                (filter (comp not (partial module.default.data/isFriendlyUnit gameplayCtx unit))))
-                               checkHitRate (map (fn [targetUnit]
-                                                   {:unit unit
-                                                    :targetUnit targetUnit
-                                                    :weapon weapon
-                                                    :hitRate (module.default.data/getUnitHitRate gameplayCtx unit weapon targetUnit)})
-                                                 unitsNearby)]
-                           checkHitRate))
+          attackRange (module.default.phase.unitMenu/getAttackRange)
+          checkHitRate (module.default.phase.unitMenu/getHitRate)
           gameplayCtx (-> gameplayCtx
                           (app.gameplay.model/updateTemp (fn [temp]
                                                            (merge temp {:checkHitRate checkHitRate})))
