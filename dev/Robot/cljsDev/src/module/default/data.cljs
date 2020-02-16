@@ -443,11 +443,13 @@
      :damage leftMakeDamage}))
 
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
-   (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
-       ((fn [[_ firstResult :as ctx]]
-          (if (contains? (:events firstResult) :attack)
-            (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction)))
-            ctx)))))
+  (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
+      ((fn [[_ firstResult :as ctx]]
+         (if (contains? (:events firstResult) :dead)
+           ctx
+           (if (not= (first rightAction) :attack)
+             ctx
+             (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction)))))))))
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
   (let [[{leftDamage :damage} {rightDamage :damage}] result
