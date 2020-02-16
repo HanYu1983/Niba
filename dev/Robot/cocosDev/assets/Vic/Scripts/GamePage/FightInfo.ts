@@ -19,19 +19,12 @@ export default class FightInfo extends cc.Component {
     @property(cc.Label)
     power: cc.Label = null;
 
-    // @property(cc.Label)
-    // action: cc.Label = null;
-
     @property(cc.Label)
     hit: cc.Label = null;
 
     setHitRate(rate: number) {
         this.hit.string = rate === 0 ? "--" : (rate * 100).toFixed(0) + "%";
     }
-
-    // setAction(action: string) {
-    //     this.action.string = action;
-    // }
 
     setPower(power: number) {
         this.power.string = power.toString();

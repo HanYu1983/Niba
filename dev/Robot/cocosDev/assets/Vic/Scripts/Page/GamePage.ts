@@ -137,7 +137,7 @@ export default class GamePage extends BasicViewer {
         this.fightInfoMenu.clearInfo();
     }
 
-    openUnitStatuMenu(cellstate:any) {
+    openUnitStatuMenu(cellstate: any) {
         this.unitStatuMenu.open();
         this.unitStatuMenu.setUnit(cellstate.unit);
         this.unitStatuMenu.setTerrain(cellstate.terrain);
@@ -318,6 +318,11 @@ export default class GamePage extends BasicViewer {
         tweens.push(this._showHitEffect(unit2, to1, result1));
         tweens.push(this._showDeffenderChangeHP(to1, unit2, unitAfter2));
 
+        // 沒有REAULT的事件的話，代表對方沒有反擊。
+        if (result2.events.length == 0) {
+            return;
+        }
+
         // 反擊者
         tweens.push(this._showDeffenderAim(unit2, unitAfter2, from1, to1));
         tweens.push(this._showHitEffect(unit1, from1, result2));
@@ -348,7 +353,7 @@ export default class GamePage extends BasicViewer {
         this.sceneMenu.close();
     }
 
-    openUnitMenu(pos:number[], menus: any, cursors: any[], cb?: (key: string) => {}) {
+    openUnitMenu(pos: number[], menus: any, cursors: any[], cb?: (key: string) => {}) {
         const [menu, weaponInfo] = menus;
 
         this.closeUnitMenu();
@@ -364,7 +369,7 @@ export default class GamePage extends BasicViewer {
         if (weaponInfo) {
             let weaponId = weaponInfo.weaponIdx;
             let weapons = weaponInfo.weapons;
-            
+
             if (cursors) {
                 const c1 = cursors[0];
                 const c2 = cursors[1][cursors[0]];
