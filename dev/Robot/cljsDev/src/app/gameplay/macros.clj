@@ -117,6 +117,8 @@
 
 (defmacro returnPop [v]
   `[(-> ~'gameplayCtx
+        (app.gameplay.model/updateTemp (fn [~'temp]
+                                         (dissoc ~'temp :checkHitRate)))
         (app.gameplay.model/setAttackRange [])
         (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm)))
     ~v])

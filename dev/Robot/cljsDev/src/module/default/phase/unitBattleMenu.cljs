@@ -19,10 +19,10 @@
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
                       (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
-                                                                                         second)
-                                                                                     (range))
-                                                                    weaponIdx (indexMap leftWeapon)]
-                                                                weaponIdx))))
+                                                                                                           second)
+                                                                                                       (range))
+                                                                                      weaponIdx (indexMap leftWeapon)]
+                                                                                  weaponIdx))))
       :data data
       :battleMenuSession (-> args
                              (module.default.session.battleMenu/setRightActionFromReaction gameplayCtx))}))

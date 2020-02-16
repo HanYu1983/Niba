@@ -64,7 +64,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll true
+  (let [testAll false
         right 68
         down 83
         left 65
