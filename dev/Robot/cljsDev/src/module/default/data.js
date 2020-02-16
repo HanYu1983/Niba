@@ -182,7 +182,7 @@ const dataJson =
             "power": 125,
             "weapons": [
                 "gaite_drill",
-                "gaite_drillMissle",
+                "gaite_missle",
                 "gaite_powerDrill"
             ],
             "components": [
@@ -209,9 +209,7 @@ const dataJson =
             "weapons": [
                 "gaite_punch",
                 "gaite_missle",
-                "gaite_shan",
-                "moshen_jian",
-                "moshen_fire"
+                "gaite_shan"
             ],
             "components": [
                 "energy1",
@@ -237,7 +235,9 @@ const dataJson =
             "weapons": [
                 "moshen_ray",
                 "moshen_punch",
-                "moshen_flypunch"
+                "moshen_flypunch",
+                "moshen_jian",
+                "moshen_fire"
             ],
             "components": [
                 "energy1",
@@ -2054,29 +2054,6 @@ const dataJson =
             "damage": 3500,
             "powerCost": 12
         },
-        "gaite_drillMissle": {
-            "title": "蓋特鑽頭飛彈",
-            "range": [
-                2,
-                5
-            ],
-            "energyCost": 0,
-            "maxBulletCount": 6,
-            "suitability": [
-                1,
-                1,
-                1,
-                1
-            ],
-            "ability": [
-                "missle"
-            ],
-            "energyType": "bullet",
-            "type": "single",
-            "accuracy": 1,
-            "damage": 0,
-            "powerCost": 0
-        },
         "gaite_powerDrill": {
             "title": "蓋特强力電鉆",
             "range": [
@@ -2099,7 +2076,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 7000,
-            "powerCost": 0
+            "powerCost": 26
         },
         "gaite_punch": {
             "title": "蓋特重拳",
@@ -2145,8 +2122,8 @@ const dataJson =
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 0,
-            "powerCost": 0
+            "damage": 3000,
+            "powerCost": 12
         },
         "gaite_shan": {
             "title": "蓋特大雪山",
