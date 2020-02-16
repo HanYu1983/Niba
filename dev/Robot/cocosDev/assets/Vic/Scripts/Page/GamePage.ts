@@ -137,13 +137,14 @@ export default class GamePage extends BasicViewer {
         this.fightInfoMenu.clearInfo();
     }
 
-    openUnitStatuMenu() {
-
-        //this.unitStatuMenu.open();
+    openUnitStatuMenu(cellstate:any) {
+        this.unitStatuMenu.open();
+        this.unitStatuMenu.setUnit(cellstate.unit);
+        this.unitStatuMenu.setTerrain(cellstate.terrain);
     }
 
     closeUnitStatuMenu() {
-        //this.unitStatuMenu.close();
+        this.unitStatuMenu.close();
     }
 
     showAccuracyInfos(data: any[]) {

@@ -1,3 +1,5 @@
+import ViewController from '../ViewController';
+import ImagesAssets from '../ImagesAssets';
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -14,22 +16,17 @@ const { ccclass, property } = cc._decorator;
 export default class Unit extends cc.Component {
 
     @property(cc.Node)
-    unit:cc.Node = null;
+    unit: cc.Node = null;
 
     @property(cc.Sprite)
     unitImage: cc.Sprite = null;
 
-    @property(cc.SpriteFrame)
-    images: cc.SpriteFrame[] = [];
-
     unitId: string = "";
 
     setUnitImage(key: string) {
-        for(let i = 0; i < this.images.length; ++i){
-            let image = this.images[i];
-            if(image.name.toLowerCase()==key.toLowerCase()){
-                this.unitImage.spriteFrame = image;
-            }
+        const image = ViewController.instance.imagesAssets.getImageByKey(key);
+        if (image != undefined) {
+            this.unitImage.spriteFrame = image;
         }
     }
 
@@ -41,15 +38,15 @@ export default class Unit extends cc.Component {
         this.node.getComponent(cc.Animation).play("UnitShake");
     }
 
-    evade(){
+    evade() {
         this.node.getComponent(cc.Animation).play("UnitEvade");
     }
 
-    toSky(cb:()=>void){
-        cc.tween(this.node).by(.5, {y:6}).call(cb).start();
+    toSky(cb: () => void) {
+        cc.tween(this.node).by(.5, { y: 6 }).call(cb).start();
     }
 
-    toLand(cb:()=>void){
-        cc.tween(this.node).by(.5, {y:-6}).call(cb).start();
+    toLand(cb: () => void) {
+        cc.tween(this.node).by(.5, { y: -6 }).call(cb).start();
     }
 }

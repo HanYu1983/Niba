@@ -1,6 +1,7 @@
 import View from "./View";
 import ModelController from "../../Han/controller/ModelController";
 import AudioController from "./AudioController";
+import ImagesAssets from './ImagesAssets';
 
 
 const { ccclass, property } = cc._decorator;
@@ -15,6 +16,9 @@ export default class ViewController extends cc.Component {
 
     @property(AudioController)
     audioController:AudioController = null;
+
+    @property(ImagesAssets)
+    imagesAssets:ImagesAssets = null;
 
     static instance: ViewController;
 

@@ -48,12 +48,19 @@ export default class View extends cc.Component {
         this.repaintSystemMenu(data.systemMenu);
         this.repaintUnitMenu(data.cursor, data.unitMenu);
         this.repaintHitInfo(data.checkHitRate);
-        this.repainBattleMenu(data.battleMenu);
-        console.log("data.cellState", data.cellState)
+        this.repaintBattleMenu(data.battleMenu);
+        this.repaintCellstate(data.cellState);
         cb();
     }
 
-    private repainBattleMenu(battleMenu:any){
+    private repaintCellstate(cellstate:any){
+        this.getGamePage().closeUnitStatuMenu();
+        if(cellstate){
+            this.getGamePage().openUnitStatuMenu(cellstate);
+        }
+    }
+
+    private repaintBattleMenu(battleMenu:any){
         if(battleMenu){
             this.getGamePage().showFightInfo(battleMenu);
         }else{
