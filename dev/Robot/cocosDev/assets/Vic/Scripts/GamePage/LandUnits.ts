@@ -59,28 +59,13 @@ export default class LandUnits extends cc.Component {
 
     setUnits(units: any) {
         this.clearUnits();
-
-        let checkIsSky = (tags: any) => {
-            // 改成object
-            return tags.sky != null
-            /*
-            let isSky = false
-            tags.forEach(tag => {
-                if (tag == "sky") {
-                    isSky = true;
-                }
-            });
-            return isSky;
-            */
-        }
-
-        for (let element of units) {
-            let unitId = element.key;
-            let unitName = element.state.robot;
-            let isPlayer = (element["player"] == "player");
-            let isMovable = true;
-            let pos = element["position"];
-            let isSky = checkIsSky(element.state.tags);
+        for (const element of units) {
+            const unitId = element.key;
+            const unitName = element.state.robot;
+            const isPlayer = (element["player"] == "player");
+            const isDone = element.state.tags.done != undefined;
+            const isSky = element.state.tags.sky != undefined;
+            const pos = element["position"];
 
             let unitNode: cc.Node = this._pool.acquire();
             unitNode.setParent(this.node);
@@ -97,16 +82,16 @@ export default class LandUnits extends cc.Component {
             unit.setUnitImage(unitName);
 
             if (isPlayer) {
-                if (isMovable) {
-                    unit.setColor(this.playerColor);
-                } else {
+                if (isDone) {
                     unit.setColor(this.playerEndColor);
+                } else {
+                    unit.setColor(this.playerColor);
                 }
             } else {
-                if (isMovable) {
-                    unit.setColor(this.enemyColor);
-                } else {
+                if (isDone) {
                     unit.setColor(this.enemyEndColor);
+                } else {
+                    unit.setColor(this.enemyColor);
                 }
             }
 

@@ -39,7 +39,7 @@ export default class WeaponMenu extends BasicViewer {
                 weapon.weaponHit.string = (weaponData.accuracy * 100).toFixed(0) + "%";
                 weapon.weaponRange.string = weaponData.range[0] + "~" + weaponData.range[1];
                 weapon.weaponType.string = weaponData.type;
-                weapon.weaponBullet.string = "彈 " + weaponData.maxBulletCount;
+                weapon.weaponBullet.string = "彈 " + weaponData.bulletCount + "/" + weaponData.maxBulletCount;
                 weapon.weaponEN.string = "EN " + weaponData.energyCost;
             }else{
                 this.weaponItems[i].node.active = false;

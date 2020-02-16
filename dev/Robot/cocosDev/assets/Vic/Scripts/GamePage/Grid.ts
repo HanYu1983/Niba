@@ -70,48 +70,39 @@ export default class Grid extends cc.Component {
     setType(type: Number) {
         switch (type) {
             case 0:
-                // this.typeName.string = "深";
-                // this.backColor.node.color = cc.Color.BLUE;
+                //"深";
                 this.showTargetLand(0);
                 break;
             case 1:
-                // this.typeName.string = "海";
-                // this.backColor.node.color = new cc.Color(50, 50, 255);
+                //"海"
                 this.showTargetLand(1);
                 break;
             case 2:
-                // this.typeName.string = "沙";
-                // this.backColor.node.color = cc.Color.YELLOW;
+                //"沙";
                 this.showTargetLand(2);
                 break;
             case 3:
-                // this.typeName.string = "草";
-                // this.backColor.node.color = cc.Color.GREEN;
+                //"草";
                 this.showTargetLand(3);
                 break;
             case 4:
-                // this.typeName.string = "城";
-                // this.backColor.node.color = cc.Color.GRAY;
+                //"城";
                 this.showTargetLand(4);
                 break;
             case 5:
-                // this.typeName.string = "山";
-                // this.backColor.node.color = cc.Color.ORANGE;
+                //"山";
                 this.showTargetLand(5);
                 break;
             case 6:
-                // this.typeName.string = "林";
-                // this.backColor.node.color = new cc.Color(0, 120, 0);
+                //"林";
                 this.showTargetLand(6);
                 break;
             case 7:
-                // this.typeName.string = "補";
-                // this.backColor.node.color = cc.Color.RED;
+                //"補";
                 this.showTargetLand(8);
                 break;
             case 8:
-                // this.typeName.string = "路";
-                // this.backColor.node.color = cc.Color.WHITE;
+                // "路";
                 this.showTargetLand(7);
                 break;
         }
