@@ -7759,7 +7759,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 60,
+      "width": 90,
       "height": 37.8
     },
     "_anchorPoint": {
@@ -7810,8 +7810,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "回避",
-    "_N$string": "回避",
+    "_string": "命中率",
+    "_N$string": "命中率",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -7823,7 +7823,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 0,
+    "_N$cacheMode": 1,
     "_id": "79h08FA/FOjqZIJ7H1vImf"
   },
   {
@@ -7910,9 +7910,6 @@
     "power": {
       "__id__": 184
     },
-    "action": {
-      "__id__": 188
-    },
     "hit": {
       "__id__": 180
     },
@@ -7997,7 +7994,7 @@
       "__type__": "cc.Color",
       "r": 255,
       "g": 131,
-      "b": 166,
+      "b": 131,
       "a": 255
     },
     "_contentSize": {
@@ -8474,7 +8471,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 60,
+      "width": 90,
       "height": 37.8
     },
     "_anchorPoint": {
@@ -8525,8 +8522,8 @@
       }
     ],
     "_useOriginalSize": false,
-    "_string": "回避",
-    "_N$string": "回避",
+    "_string": "命中率",
+    "_N$string": "命中率",
     "_fontSize": 30,
     "_lineHeight": 30,
     "_enableWrapText": true,
@@ -8538,7 +8535,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 0,
+    "_N$cacheMode": 1,
     "_id": "dbzQe0kVVO86C4n5Rzf9Qt"
   },
   {
@@ -8624,9 +8621,6 @@
     },
     "power": {
       "__id__": 205
-    },
-    "action": {
-      "__id__": 209
     },
     "hit": {
       "__id__": 201
