@@ -319,14 +319,12 @@ export default class GamePage extends BasicViewer {
         tweens.push(this._showDeffenderChangeHP(to1, unit2, unitAfter2));
 
         // 沒有REAULT的事件的話，代表對方沒有反擊。
-        if (result2.events.length == 0) {
-            return;
+        if (result2.events.length != 0) {
+            // 反擊者
+            tweens.push(this._showDeffenderAim(unit2, unitAfter2, from1, to1));
+            tweens.push(this._showHitEffect(unit1, from1, result2));
+            tweens.push(this._showAttackerChangeHP(from1, unit1, unitAfter1));
         }
-
-        // 反擊者
-        tweens.push(this._showDeffenderAim(unit2, unitAfter2, from1, to1));
-        tweens.push(this._showHitEffect(unit1, from1, result2));
-        tweens.push(this._showAttackerChangeHP(from1, unit1, unitAfter1));
         cc.tween(this.node).sequence(cc.tween(this.node).delay(0), ...tweens).call(cb).start();
     }
 
