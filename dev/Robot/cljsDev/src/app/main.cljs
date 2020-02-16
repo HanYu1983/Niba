@@ -3,6 +3,7 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [app.main])
   (:require [app.gameplay.core])
+  (:require [app.lobby.core])
   (:require [app.module])
   (:require [module.default.core])
   (:require [module.debug.core]))
@@ -27,6 +28,9 @@
 
           (= "startGameplay" cmd)
           (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))
+
+          (= "startLobby" cmd)
+          (a/<! (app.lobby.core/startLobby ctx inputCh outputCh))
 
           :else
           (recur ctx))))))

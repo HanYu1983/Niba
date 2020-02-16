@@ -430,8 +430,10 @@
                          (= rightActionType :guard)
                          (/ 2))]
     {:events (cond-> #{}
-               (false? leftIsHit)
-               (conj :evade)
+               true
+               (conj (if leftIsHit
+                       :damage
+                       :evade))
 
                (= rightActionType :guard)
                (conj :guard)
@@ -442,10 +444,10 @@
 
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
    (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
-      ((fn [[_ firstResult :as ctx]]
-         (if (contains? (:events firstResult) :dead)
-           ctx
-           (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))
+       ((fn [[_ firstResult :as ctx]]
+          (if (contains? (:events firstResult) :dead)
+            ctx
+            (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
   (let [[{leftDamage :damage} {rightDamage :damage}] result
