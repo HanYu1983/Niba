@@ -18,7 +18,7 @@
    (let [[menu data] (module.default.data/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
-                      (tool.menuCursor/mapCursor2 (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+                      (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
                                                                                          second)
                                                                                      (range))
                                                                     weaponIdx (indexMap leftWeapon)]

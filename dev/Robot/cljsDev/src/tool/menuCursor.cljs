@@ -25,8 +25,8 @@
       ((fn [cursor]
          (update ctx :cursor (constantly cursor))))))
 
-(defn mapCursor2 [ctx f]
-  (let [cursor1 (:cursor ctx)
+(defn mapCursor2 [ctx cursor1 f]
+  (let [cursor1 (or cursor1 (:cursor ctx))
         cursor2 (get-in ctx [:subcursor cursor1])
         cursor2 (-> cursor2
                     (f)

@@ -107,7 +107,7 @@
 
 (defmacro handleMenuCursorLeftRight [& body]
   `(let [~'state (update ~'state :menuCursor (fn [~'ctx]
-                                               (tool.menuCursor/mapCursor2 ~'ctx
+                                               (tool.menuCursor/mapCursor2 ~'ctx nil
                                                                            (~'action {:left dec :right inc}))))
          ~'fsm (tool.fsm/save ~'fsm ~'state)
          ~'gameplayCtx (-> ~'gameplayCtx

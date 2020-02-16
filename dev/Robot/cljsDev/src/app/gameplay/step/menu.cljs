@@ -19,20 +19,12 @@
    (m/handleCamera _ (recur gameplayCtx))
 
    (some #(= % action) [:up :down])
-   (let [state (update state :menuCursor (fn [ctx]
-                                           (tool.menuCursor/mapCursor1 ctx
-                                                                       (action {:up dec :down inc}))))
-         gameplayCtx (-> gameplayCtx
-                         (app.gameplay.model/setFsm (tool.fsm/save fsm state)))]
-     (recur gameplayCtx))
+   (m/handleMenuCursorUpDown 
+    (recur gameplayCtx))
 
    (some #(= % action) [:left :right])
-   (let [state (update state :menuCursor (fn [ctx]
-                                           (tool.menuCursor/mapCursor2 ctx
-                                                                       (action {:left dec :right inc}))))
-         gameplayCtx (-> gameplayCtx
-                         (app.gameplay.model/setFsm (tool.fsm/save fsm state)))]
-     (recur gameplayCtx))
+   (m/handleMenuCursorLeftRight
+    (recur gameplayCtx))
 
    (= :enter action)
    (let [cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
