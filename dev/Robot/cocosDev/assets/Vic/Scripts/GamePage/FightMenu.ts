@@ -19,7 +19,7 @@ const { ccclass, property, requireComponent } = cc._decorator;
 export default class FightMenu extends cc.Component {
 
     @property(cc.Sprite)
-    back:cc.Sprite = null;
+    back: cc.Sprite = null;
 
     @property(FightInfo)
     playerInfo: FightInfo = null;
@@ -34,20 +34,37 @@ export default class FightMenu extends cc.Component {
     }
 
     showInfo(info: FightInfo, data: any) {
-        this.back.node.active = true;
-        info.node.active = true;
+
         // 如果是防禦或閃避, 沒有第二個元素
         // ["evade"]
         // ["guard"]
         // ["attack" weaponData]
-        if(data.action.length < 2){
-            return;
+
+        this.back.node.active = true;
+        info.node.active = true;
+        
+        switch (data.action[0]) {
+            case "evade":
+                info.setWeaponName("迴避");
+                info.showPower(false);
+                info.setHitRate(0);
+                break;
+            case "guard":
+                info.setWeaponName("防御");
+                info.showPower(false);
+                info.setHitRate(0);
+                break;
+            case "attack":
+                {
+                    let weapon: any = ViewController.instance.getWeapon(data.action[1].weaponKey);
+                    info.showPower(true);
+                    info.showHit(true);
+                    info.setHitRate(data.hitRate);
+                    info.setWeaponName(weapon.title);
+                    info.setPower(weapon.damage);
+                }
+                break;
         }
-        let weapon:any = ViewController.instance.getWeapon(data.action[1].weaponKey);
-        info.setAction(data.action[0]);
-        info.setPower(weapon.damage);
-        info.setWeaponName(weapon.title);
-        info.setHitRate(data.hitRate);
     }
 
     clearInfo() {
