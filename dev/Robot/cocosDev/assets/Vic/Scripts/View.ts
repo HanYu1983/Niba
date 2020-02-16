@@ -125,6 +125,7 @@ export default class View extends cc.Component {
         // this.getGamePage().map.setMapOneLevel(temp);
 
         this.getGamePage().map.setMap(data);
+        this.getGamePage().setSmallMap(data);
     }
 
     private repaintUnits(data: IUnit[]) {

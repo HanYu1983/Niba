@@ -24,6 +24,7 @@ import MenuButtons from "../MenuButtons";
 import ViewController from "../ViewController";
 import UnitSampleInfo from "../GamePage/UnitSampleInfo";
 import TextEffect from "../GamePage/TextEffect";
+import SmallMap from '../GamePage/SmallMap';
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -69,6 +70,9 @@ export default class GamePage extends BasicViewer {
 
     @property(cc.Node)
     cursor: cc.Node = null;
+
+    @property(SmallMap)
+    smallMap:SmallMap = null;
 
     // static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
     // static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
@@ -135,6 +139,10 @@ export default class GamePage extends BasicViewer {
 
     closeFightInfo() {
         this.fightInfoMenu.clearInfo();
+    }
+
+    setSmallMap(data:any[]){
+        this.smallMap.drawMap(data);
     }
 
     openUnitStatuMenu(cellstate: any) {
@@ -311,7 +319,7 @@ export default class GamePage extends BasicViewer {
         let to1 = unit2.position;
         let result1 = data.results[1];
         let result2 = data.results[0];
-
+        
         let tweens = [];
         // 攻擊者
         tweens.push(this._showAttackerAim(from1, to1, unit1, unitAfter1, unit2));
