@@ -76,7 +76,7 @@ CCProgram fs %{
 
   uniform Constant{
     vec4 resetUV;
-  }
+  };
 
   void main () {
     vec2 h5uv = vec2((v_uv0.x - resetUV.x) / resetUV.y, (v_uv0.y - resetUV.z) / resetUV.w);

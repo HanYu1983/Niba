@@ -1,21 +1,25 @@
 {
   "__type__": "cc.Material",
-  "_name": "",
+  "_name": "SeaMat",
   "_objFlags": 0,
   "_native": "",
   "_effectAsset": {
     "__uuid__": "811af778-b82b-49ab-b13a-bb48230c8158"
   },
-  "_defines": {
-    "USE_TEXTURE": true
-  },
-  "_props": {
-    "texture": null,
-    "main_texture": {
-      "__uuid__": "38654742-0703-41ab-bffc-43532ac05882"
-    },
-    "flow_texture": {
-      "__uuid__": "bdf770f0-c6d8-4666-acec-162909517bcb"
+  "_techniqueData": {
+    "0": {
+      "props": {
+        "texture": null,
+        "main_texture": {
+          "__uuid__": "38654742-0703-41ab-bffc-43532ac05882"
+        },
+        "flow_texture": {
+          "__uuid__": "bdf770f0-c6d8-4666-acec-162909517bcb"
+        }
+      },
+      "defines": {
+        "USE_TEXTURE": true
+      }
     }
   }
 }
