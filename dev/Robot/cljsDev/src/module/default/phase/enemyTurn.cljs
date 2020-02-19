@@ -9,7 +9,10 @@
   (:require [app.gameplay.phase.common])
   (:require [module.default.data]))
 
-(defn enemyTurn [gameplayCtx enemy inputCh outputCh]
+
+(defmulti _enemyTurn (fn [type gameplayCtx enemy inputCh outputCh] type))
+
+(defmethod _enemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (a/go
     (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
                      (tool.units/getAll)
@@ -40,3 +43,7 @@
                                                                                   unit)))]
             (recur gameplayCtx (rest units)))
           gameplayCtx)))))
+
+
+(defn enemyTurn [gameplayCtx enemy inputCh outputCh]
+  (_enemyTurn nil gameplayCtx enemy inputCh outputCh))
