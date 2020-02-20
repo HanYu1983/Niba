@@ -9,23 +9,32 @@ import RobotListItem from "./RobotListItem";
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-const {ccclass, property} = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class RobotStore extends BasicViewer {
 
     @property(MenuButtons)
-    robotList:MenuButtons = null;
+    robotList: MenuButtons = null;
 
-    init(){
-        this.robotList.updateItem = (btn, data)=>{
+    init() {
+        this.robotList.updateItem = (btn, data) => {
             let robotItem = btn as RobotListItem;
             robotItem.setLabel(data.name);
+            robotItem.money.string = data.money;
         };
     }
 
-    setRobotList(){
+    setRobotList() {
         this.robotList.open();
-        this.robotList.setData([{name:"w"},{name:"d"}]);
+
+        let data = [];
+        for (let i = 0; i < 10; ++i) {
+            data.push({ name: "robot_" + i, money: i * 200 });
+        }
+
+        this.robotList.setData(data);
     }
+
+    
 }

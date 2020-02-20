@@ -38,6 +38,9 @@ export default class MainPage extends BasicViewer {
     @property(StandBy)
     standBy: StandBy = null;
 
+    @property(cc.Label)
+    money: cc.Label = null;
+
     private _state: StateController;
 
     init() {
@@ -202,6 +205,10 @@ export default class MainPage extends BasicViewer {
         this.robotStore.close();
         this.pilotStore.close();
         this.standBy.close();
+    }
+
+    setMoney(money: number) {
+        this.money.string = money.toString();
     }
 
     private _onMainPageCursorUp() {
