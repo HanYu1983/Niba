@@ -54,8 +54,7 @@ export default class MainPage extends BasicViewer {
         this.menu.open();
         this.menu.setData(["整備部隊", "購買機體", "雇傭駕駛", "出擊"]);
 
-        this._state.changeState(new MainPageDefaultState());
-        this.closeAllSub();
+        this.backToLooby();
     }
 
     addListener() {
@@ -83,6 +82,8 @@ export default class MainPage extends BasicViewer {
     close() {
         super.close();
     }
+
+    //#region MainPageDefaultState
 
     onMenuUpClick() {
         this.menu.onPrevClick();
@@ -117,6 +118,10 @@ export default class MainPage extends BasicViewer {
         }
     }
 
+    //#endregion
+
+    //#region RobotStoreState
+
     onRobotStoreUpClick() {
         this.robotStore.robotList.onPrevClick(this);
     }
@@ -141,10 +146,12 @@ export default class MainPage extends BasicViewer {
     }
 
     onRobotStoreEscClick() {
-        this.closeAllSub();
-        this._state.changeState(new MainPageDefaultState());
+        this.backToLooby();
     }
 
+    //#endregion
+
+    //#region RobotStoreBuyState
     onRobotStoreBuyLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
     }
@@ -167,6 +174,8 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new RobotStoreState())
     }
 
+    //#endregion
+
     openRobotStore() {
         this.closeAllSub();
         this.robotStore.open();
@@ -182,6 +191,11 @@ export default class MainPage extends BasicViewer {
     openStandBy() {
         this.closeAllSub();
         this.standBy.open();
+    }
+
+    backToLooby(){
+        this.closeAllSub();
+        this._state.changeState(new MainPageDefaultState());
     }
 
     closeAllSub() {
