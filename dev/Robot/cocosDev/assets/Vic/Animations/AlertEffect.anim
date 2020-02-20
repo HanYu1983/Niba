@@ -12,19 +12,19 @@
       "y": [
         {
           "frame": 0,
-          "value": -350.074
+          "value": -370
         },
         {
           "frame": 0.5,
-          "value": -290
+          "value": -310
         },
         {
           "frame": 3,
-          "value": -290
+          "value": -310
         },
         {
           "frame": 3.5,
-          "value": -350.074
+          "value": -370
         }
       ]
     }

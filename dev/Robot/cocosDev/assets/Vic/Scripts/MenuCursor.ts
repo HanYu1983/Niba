@@ -24,7 +24,7 @@ export default class MenuCursor extends cc.Component {
         this._cursor2 = [];
         let id = 0;
         data.forEach(element => {
-            if (typeof element == 'string') {
+            if (!Array.isArray(element)) {
                 this._data[id] = [element];
             }
             this._cursor2.push(0);

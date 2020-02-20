@@ -1,4 +1,6 @@
 import BasicViewer from "../../BasicViewer";
+import MenuButtons from "../../MenuButtons";
+import RobotListItem from "./RobotListItem";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -12,4 +14,18 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class RobotStore extends BasicViewer {
 
+    @property(MenuButtons)
+    robotList:MenuButtons = null;
+
+    init(){
+        this.robotList.updateItem = (btn, data)=>{
+            let robotItem = btn as RobotListItem;
+            robotItem.setLabel(data.name);
+        };
+    }
+
+    setRobotList(){
+        this.robotList.open();
+        this.robotList.setData([{name:"w"},{name:"d"}]);
+    }
 }

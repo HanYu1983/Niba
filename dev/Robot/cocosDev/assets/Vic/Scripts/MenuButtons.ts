@@ -30,6 +30,8 @@ export default class MenuButtons extends BasicViewer {
     static ON_MENU_UP: string = "ON_MENU_UP";
     static ON_MENU_DOWN: string = "ON_MENU_DOWN";
 
+    updateItem:(btn:MenuButton, data:any)=>void = null;
+
     init() {
         super.init();
         this._menuCursor = this.node.getComponent(MenuCursor);
@@ -103,7 +105,9 @@ export default class MenuButtons extends BasicViewer {
 
             let btnButton: MenuButton = btn.getComponent(MenuButton);
             let currentCursor2: number = cursors ? cursors[1][id] : 0;
-            btnButton.setLabel(data[id++][currentCursor2]);
+            if(this.updateItem){
+                this.updateItem(btnButton, data[id++][currentCursor2]);
+            }
 
             this._btns.push(btnButton);
         });
@@ -112,7 +116,9 @@ export default class MenuButtons extends BasicViewer {
 
     private _refreshButtonLabel() {
         let corsor = this._menuCursor.getCurrentId();
-        this._btns[corsor[0]].setLabel(this._menuCursor.getCurrentFocus());
+        if(this.updateItem){
+            this.updateItem(this._btns[corsor[0]], this._menuCursor.getCurrentFocus());
+        }
     }
 
     private _focusOn(cursor1: number) {

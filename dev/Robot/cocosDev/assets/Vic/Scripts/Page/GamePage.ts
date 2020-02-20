@@ -25,6 +25,7 @@ import ViewController from "../ViewController";
 import UnitSampleInfo from "../GamePage/UnitSampleInfo";
 import TextEffect from "../GamePage/TextEffect";
 import SmallMap from '../GamePage/SmallMap';
+import MenuButton from "../MenuButton";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -72,7 +73,7 @@ export default class GamePage extends BasicViewer {
     cursor: cc.Node = null;
 
     @property(SmallMap)
-    smallMap:SmallMap = null;
+    smallMap: SmallMap = null;
 
     // static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
     // static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
@@ -81,45 +82,26 @@ export default class GamePage extends BasicViewer {
     // private _camera: number[] = [0, 0];
 
     onLoad() {
+        // 放在這裏shader的計算才會正確
         this.map.initPool();
+    }
+
+    init() {
+
+        this.unitMenu.updateItem = ((btn: MenuButton, data: any): void => {
+            btn.setLabel(data);
+        });
+
+        this.sceneMenu.updateItem = ((btn: MenuButton, data: any): void => {
+            btn.setLabel(data);
+        });
     }
 
     open() {
         super.open();
-
         this.map.resetUV();
         ViewController.instance.notifyStartGame();
         ViewController.instance.audioController.gamePage();
-
-
-        //this.removeListenser();
-
-        //this.map.setMap(this.generateMap(.3, .35, .05, .6, .8, .8, .02));
-        //this.map.focusOnGrid(6, 9);
-
-        //this.setCursor(5,10);
-
-        //this.openSceneMenu(['finish','cancel'], ()=>{});
-
-        //this.openTurnStart();
-
-        //this.showMovableGrid([[3,4],[5,6],[7,9]]);
-
-        // this.showFightInfo([
-        //     {
-
-        //     },
-        //     {
-
-        //     },
-        //     {
-
-        //     }
-        // ]);
-
-        //this.effects.createBlade([0,0]);
-
-        //this.effects.createAimEffect([2, 3], [5, 7]);
     }
 
     setCursor(pos: number[]) {
@@ -141,7 +123,7 @@ export default class GamePage extends BasicViewer {
         this.fightInfoMenu.clearInfo();
     }
 
-    setSmallMap(data:any[]){
+    setSmallMap(data: any[]) {
         this.smallMap.drawMap(data);
     }
 
@@ -319,7 +301,7 @@ export default class GamePage extends BasicViewer {
         let to1 = unit2.position;
         let result1 = data.results[1];
         let result2 = data.results[0];
-        
+
         let tweens = [];
         // 攻擊者
         tweens.push(this._showAttackerAim(from1, to1, unit1, unitAfter1, unit2));

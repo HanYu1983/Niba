@@ -18,6 +18,8 @@ import RobotStore from '../MainPage/RobotStore/RobotStore';
 import PilotStore from '../MainPage/PilotStore/PilotStore';
 import StandBy from '../MainPage/StandBy/StandBy';
 import RobotStoreState from '../MainPage/RobotStoreState';
+import MenuButton from '../MenuButton';
+import RobotStoreBuyState from '../MainPage/RobotStoreBuyState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -28,18 +30,22 @@ export default class MainPage extends BasicViewer {
     menu: MenuButtons = null;
 
     @property(RobotStore)
-    robotStore:RobotStore = null;
+    robotStore: RobotStore = null;
 
     @property(PilotStore)
-    pilotStore:PilotStore = null;
+    pilotStore: PilotStore = null;
 
     @property(StandBy)
-    standBy:StandBy = null;
+    standBy: StandBy = null;
 
     private _state: StateController;
 
     init() {
         this._state = this.node.getComponent(StateController);
+
+        this.menu.updateItem = (btn: MenuButton, data: any) => {
+            btn.setLabel(data);
+        };
     }
 
     open() {
@@ -86,31 +92,6 @@ export default class MainPage extends BasicViewer {
         this.menu.onNextClick();
     }
 
-    onRobotStoreUpClick(){
-        this.robotStore.onPrevClick(this);
-    }
-
-    onRobotStoreDownClick(){
-        this.robotStore.onNextClick(this);
-    }
-
-    onRobotStoreLeftClick(){
-        this.robotStore.onLeftClick(this);
-    }
-
-    onRobotStoreRightClick(){
-        this.robotStore.onRightClick(this);
-    }
-
-    onRobotStoreEnterClick(){
-        this.robotStore.onEnterClick(this);
-    }
-
-    onRobotStoreEscClick(){
-        this.closeAllSub();
-        this._state.changeState(new MainPageDefaultState());
-    }
-
     onMenuEnterClick() {
         switch (this.menu.getFocus()) {
             case "整備部隊":
@@ -136,23 +117,74 @@ export default class MainPage extends BasicViewer {
         }
     }
 
-    openRobotStore(){
+    onRobotStoreUpClick() {
+        this.robotStore.robotList.onPrevClick(this);
+    }
+
+    onRobotStoreDownClick() {
+        this.robotStore.robotList.onNextClick(this);
+    }
+
+    onRobotStoreLeftClick() {
+        this.robotStore.robotList.onLeftClick(this);
+    }
+
+    onRobotStoreRightClick() {
+        this.robotStore.robotList.onRightClick(this);
+    }
+
+    onRobotStoreEnterClick() {
+        this._state.changeState(new RobotStoreBuyState());
+
+        const data = this.robotStore.robotList.getFocus();
+        ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+    }
+
+    onRobotStoreEscClick() {
         this.closeAllSub();
-        this.robotStore.open();
+        this._state.changeState(new MainPageDefaultState());
+    }
+
+    onRobotStoreBuyLeftClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
+    }
+
+    onRobotStoreBuyRightClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+    }
+
+    onRobotStoreBuyEnterClick() {
+        const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
+        if (cursor[0] == 0) {
+            ViewController.instance.view.getCommentUI().showAlert("已購買");
+        }
+        ViewController.instance.view.getCommentUI().closePop();
         this._state.changeState(new RobotStoreState())
     }
 
-    openPilotStore(){
+    onRobotStoreBuyEscClick() {
+        ViewController.instance.view.getCommentUI().closePop();
+        this._state.changeState(new RobotStoreState())
+    }
+
+    openRobotStore() {
+        this.closeAllSub();
+        this.robotStore.open();
+        this.robotStore.setRobotList();
+        this._state.changeState(new RobotStoreState())
+    }
+
+    openPilotStore() {
         this.closeAllSub();
         this.pilotStore.open();
     }
 
-    openStandBy(){
+    openStandBy() {
         this.closeAllSub();
         this.standBy.open();
     }
 
-    closeAllSub(){
+    closeAllSub() {
         this.robotStore.close();
         this.pilotStore.close();
         this.standBy.close();
