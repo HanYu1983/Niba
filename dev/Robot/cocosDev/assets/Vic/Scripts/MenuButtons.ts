@@ -35,31 +35,31 @@ export default class MenuButtons extends BasicViewer {
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
 
-    prev() {
+    onPrevClick(owner?: any) {
         this._menuCursor.previus();
         this.node.emit(MenuButtons.ON_MENU_UP, this._menuCursor.getCurrentId());
     }
 
-    next() {
+    onNextClick(owner?: any) {
         this._menuCursor.next();
         this.node.emit(MenuButtons.ON_MENU_DOWN, this._menuCursor.getCurrentId());
     }
 
-    left() {
+    onLeftClick(owner?: any) {
         this._menuCursor.left();
         this.node.emit(MenuButtons.ON_MENU_LEFT, this._menuCursor.getCurrentId());
     }
 
-    right() {
+    onRightClick(owner?: any) {
         this._menuCursor.right();
         this.node.emit(MenuButtons.ON_MENU_RIGHT, this._menuCursor.getCurrentId());
     }
 
-    enter() {
+    onEnterClick(owner?: any) {
         this.node.emit(MenuButtons.ON_MENU_ENTER, this._menuCursor.getCurrentFocus());
     }
 
-    escape() {
+    onEscClick(owner: any) {
         this.node.emit(MenuButtons.ON_MENU_ENTER, "cancel");
     }
 

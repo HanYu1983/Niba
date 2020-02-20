@@ -9,10 +9,11 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import View from "./View";
+import IState from "./IState";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class BasicViewer extends cc.Component {
+export default class BasicViewer extends cc.Component implements IState {
 
     private _inited = false;
     private _isOpen = false;
@@ -48,5 +49,24 @@ export default class BasicViewer extends cc.Component {
         this.removeListenser();
 
         this._isOpen = false;
+    }
+
+    onPrevClick(owner?: any) {
+        throw new Error("Method not implemented.");
+    }
+    onNextClick(owner?: any) {
+        throw new Error("Method not implemented.");
+    }
+    onLeftClick(owner?: any) {
+        throw new Error("Method not implemented.");
+    }
+    onRightClick(owner?: any) {
+        throw new Error("Method not implemented.");
+    }
+    onEnterClick(owner?: any) {
+        throw new Error("Method not implemented.");
+    }
+    onEscClick(owner?: any) {
+        throw new Error("Method not implemented.");
     }
 }

@@ -79,31 +79,31 @@ export default class MainPage extends BasicViewer {
     }
 
     onMenuUpClick() {
-        this.menu.prev();
+        this.menu.onPrevClick();
     }
 
     onMenuDownClick() {
-        this.menu.next();
+        this.menu.onNextClick();
     }
 
     onRobotStoreUpClick(){
-
+        this.robotStore.onPrevClick(this);
     }
 
     onRobotStoreDownClick(){
-
+        this.robotStore.onNextClick(this);
     }
 
     onRobotStoreLeftClick(){
-
+        this.robotStore.onLeftClick(this);
     }
 
     onRobotStoreRightClick(){
-        
+        this.robotStore.onRightClick(this);
     }
 
     onRobotStoreEnterClick(){
-
+        this.robotStore.onEnterClick(this);
     }
 
     onRobotStoreEscClick(){

@@ -12,26 +12,26 @@ export default class StateController extends cc.Component {
     }
 
     onPrevClick(owner: any) {
-        this.current.onPrevClick(owner, this);
+        this.current.onPrevClick(owner);
     }
 
     onNextClick(owner: any) {
-        this.current.onNextClick(owner, this);
+        this.current.onNextClick(owner);
     }
 
     onLeftClick(owner: any) {
-        this.current.onLeftClick(owner, this);
+        this.current.onLeftClick(owner);
     }
 
     onRightClick(owner: any) {
-        this.current.onRightClick(owner, this);
+        this.current.onRightClick(owner);
     }
 
     onEnterClick(owner: any) {
-        this.current.onEnterClick(owner, this);
+        this.current.onEnterClick(owner);
     }
 
     onEscClick(owner: any) {
-        this.current.onEscClick(owner, this);
+        this.current.onEscClick(owner);
     }
 }
