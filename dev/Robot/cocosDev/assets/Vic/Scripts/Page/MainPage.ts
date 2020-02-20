@@ -11,23 +11,48 @@
 import BasicViewer from '../BasicViewer'
 import MenuButtons from '../MenuButtons';
 import InputSensor from '../InputSensor';
-const {ccclass, property,requireComponent} = cc._decorator;
+import StateController from '../StateController';
+import MainPageDefaultState from '../MainPage/MainPageDefaultState';
+import ViewController from '../ViewController';
+import RobotStore from '../MainPage/RobotStore/RobotStore';
+import PilotStore from '../MainPage/PilotStore/PilotStore';
+import StandBy from '../MainPage/StandBy/StandBy';
+import RobotStoreState from '../MainPage/RobotStoreState';
+const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(cc.Layout)
 export default class MainPage extends BasicViewer {
 
     @property(MenuButtons)
-    menu:MenuButtons = null;
+    menu: MenuButtons = null;
 
-    open(){
+    @property(RobotStore)
+    robotStore:RobotStore = null;
+
+    @property(PilotStore)
+    pilotStore:PilotStore = null;
+
+    @property(StandBy)
+    standBy:StandBy = null;
+
+    private _state: StateController;
+
+    init() {
+        this._state = this.node.getComponent(StateController);
+    }
+
+    open() {
         super.open();
 
         this.menu.open();
-        this.menu.setData(["整備部隊","購買機體","雇傭駕駛","出擊"]);
+        this.menu.setData(["整備部隊", "購買機體", "雇傭駕駛", "出擊"]);
+
+        this._state.changeState(new MainPageDefaultState());
+        this.closeAllSub();
     }
 
-    addListener(){
+    addListener() {
         super.addListener();
 
         this.node.on(InputSensor.CURSOR_UP, this._onMainPageCursorUp, this);
@@ -38,7 +63,7 @@ export default class MainPage extends BasicViewer {
         this.node.on(InputSensor.ESCAPE, this._onMainPageCursorEsc, this);
     }
 
-    removeListenser(){
+    removeListenser() {
         super.removeListenser();
 
         this.node.off(InputSensor.CURSOR_UP, this._onMainPageCursorUp, this);
@@ -49,31 +74,111 @@ export default class MainPage extends BasicViewer {
         this.node.off(InputSensor.ESCAPE, this._onMainPageCursorEsc, this);
     }
 
-    close(){
+    close() {
         super.close();
     }
 
-    private _onMainPageCursorUp(){
+    onMenuUpClick() {
         this.menu.prev();
     }
 
-    private _onMainPageCursorLeft(){
-
-    }
-
-    private _onMainPageCursorRight(){
-
-    }
-
-    private _onMainPageCursorDown(){
+    onMenuDownClick() {
         this.menu.next();
     }
 
-    private _onMainPageCursorEnter(){
+    onRobotStoreUpClick(){
 
     }
 
-    private _onMainPageCursorEsc(){
+    onRobotStoreDownClick(){
 
+    }
+
+    onRobotStoreLeftClick(){
+
+    }
+
+    onRobotStoreRightClick(){
+        
+    }
+
+    onRobotStoreEnterClick(){
+
+    }
+
+    onRobotStoreEscClick(){
+        this.closeAllSub();
+        this._state.changeState(new MainPageDefaultState());
+    }
+
+    onMenuEnterClick() {
+        switch (this.menu.getFocus()) {
+            case "整備部隊":
+                {
+                    this.openStandBy();
+                }
+                break;
+            case "購買機體":
+                {
+                    this.openRobotStore();
+                }
+                break;
+            case "雇傭駕駛":
+                {
+                    this.openPilotStore();
+                }
+                break;
+            case "出擊":
+                {
+                    ViewController.instance.view.openGamePage();
+                }
+                break;
+        }
+    }
+
+    openRobotStore(){
+        this.closeAllSub();
+        this.robotStore.open();
+        this._state.changeState(new RobotStoreState())
+    }
+
+    openPilotStore(){
+        this.closeAllSub();
+        this.pilotStore.open();
+    }
+
+    openStandBy(){
+        this.closeAllSub();
+        this.standBy.open();
+    }
+
+    closeAllSub(){
+        this.robotStore.close();
+        this.pilotStore.close();
+        this.standBy.close();
+    }
+
+    private _onMainPageCursorUp() {
+        this._state.onPrevClick(this);
+    }
+
+    private _onMainPageCursorLeft() {
+        this._state.onLeftClick(this);
+    }
+
+    private _onMainPageCursorRight() {
+        this._state.onRightClick(this);
+    }
+
+    private _onMainPageCursorDown() {
+        this._state.onNextClick(this);
+    }
+
+    private _onMainPageCursorEnter() {
+        this._state.onEnterClick(this);
+    }
+
+    private _onMainPageCursorEsc() {
+        this._state.onEscClick(this);
     }
 }
