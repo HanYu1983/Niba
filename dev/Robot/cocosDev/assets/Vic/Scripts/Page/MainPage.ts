@@ -20,6 +20,8 @@ import StandBy from '../MainPage/StandBy/StandBy';
 import RobotStoreState from '../MainPage/RobotStoreState';
 import MenuButton from '../MenuButton';
 import RobotStoreBuyState from '../MainPage/RobotStoreBuyState';
+import PilotStoreState from '../MainPage/PilotStoreState';
+import PilotStoreBuyState from '../MainPage/PilotStoreBuyState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -154,7 +156,65 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    //#region PilotStoreState
+
+    onPilotStoreUpClick() {
+        this.pilotStore.robotList.onPrevClick(this);
+    }
+
+    onPilotStoreDownClick() {
+        this.pilotStore.robotList.onNextClick(this);
+    }
+
+    onPilotStoreLeftClick() {
+        this.pilotStore.robotList.onLeftClick(this);
+    }
+
+    onPilotStoreRightClick() {
+        this.pilotStore.robotList.onRightClick(this);
+    }
+
+    onPilotStoreEnterClick() {
+        this._state.changeState(new PilotStoreBuyState());
+
+        const data = this.pilotStore.robotList.getFocus();
+        ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+    }
+
+    onPilotStoreEscClick() {
+        this.backToLooby();
+    }
+
+    //#endregion
+
+    //#region PilotStoreBuyState
+    
+    onPilotStoreBuyLeftClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
+    }
+
+    onPilotStoreBuyRightClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+    }
+
+    onPilotStoreBuyEnterClick() {
+        const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
+        if (cursor[0] == 0) {
+            ViewController.instance.view.getCommentUI().showAlert("已購買");
+        }
+        ViewController.instance.view.getCommentUI().closePop();
+        this._state.changeState(new PilotStoreState())
+    }
+
+    onPilotStoreBuyEscClick() {
+        ViewController.instance.view.getCommentUI().closePop();
+        this._state.changeState(new PilotStoreState())
+    }
+
+    //#endregion
+
     //#region RobotStoreBuyState
+
     onRobotStoreBuyLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
     }
@@ -183,12 +243,14 @@ export default class MainPage extends BasicViewer {
         this.closeAllSub();
         this.robotStore.open();
         this.robotStore.setRobotList();
-        this._state.changeState(new RobotStoreState())
+        this._state.changeState(new RobotStoreState());
     }
 
     openPilotStore() {
         this.closeAllSub();
         this.pilotStore.open();
+        this.pilotStore.setRobotList();
+        this._state.changeState(new PilotStoreState());
     }
 
     openStandBy() {
@@ -196,7 +258,7 @@ export default class MainPage extends BasicViewer {
         this.standBy.open();
     }
 
-    backToLooby(){
+    backToLooby() {
         this.closeAllSub();
         this._state.changeState(new MainPageDefaultState());
     }
