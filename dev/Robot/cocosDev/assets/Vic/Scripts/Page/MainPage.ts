@@ -22,6 +22,8 @@ import MenuButton from '../MenuButton';
 import RobotStoreBuyState from '../MainPage/RobotStoreBuyState';
 import PilotStoreState from '../MainPage/PilotStoreState';
 import PilotStoreBuyState from '../MainPage/PilotStoreBuyState';
+import StandByState from '../MainPage/StandyByState';
+import StandByRobotDetailState from '../MainPage/StandyByRobotDetailState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -239,6 +241,48 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    //#region StandByState
+
+    onStandByUpClick() {
+        this.standBy.robotList.onPrevClick(this);
+    }
+
+    onStandByDownClick() {
+        this.standBy.robotList.onNextClick(this);
+    }
+
+    onStandByLeftClick() {
+        this.standBy.robotList.onLeftClick(this);
+    }
+
+    onStandByRightClick() {
+        this.standBy.robotList.onRightClick(this);
+    }
+
+    onStandByEnterClick() {
+        this._state.changeState(new StandByRobotDetailState());
+        const data = this.standBy.robotList.getFocus();
+
+        this.standBy.openRobotDetail();
+    }
+
+    onStandByEscClick() {
+        this.backToLooby();
+    }
+
+    //#endregion
+    
+    //#region StandByRobotDetail
+    onStandByRobotDetailEnterClick(){
+        
+    }
+
+    onStandByRobotDetailEscClick(){
+        this.standBy.closeRobotDetail();
+        this._state.changeState(new StandByState());
+    }
+    //#endregion
+
     openRobotStore() {
         this.closeAllSub();
         this.robotStore.open();
@@ -256,6 +300,8 @@ export default class MainPage extends BasicViewer {
     openStandBy() {
         this.closeAllSub();
         this.standBy.open();
+        this.standBy.setRobotList();
+        this._state.changeState(new StandByState());
     }
 
     backToLooby() {

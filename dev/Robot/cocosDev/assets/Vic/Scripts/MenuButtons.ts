@@ -32,10 +32,14 @@ export default class MenuButtons extends BasicViewer {
 
     updateItem:(btn:MenuButton, data:any)=>void = null;
 
-    init() {
-        super.init();
+    onLoad(){
         this._menuCursor = this.node.getComponent(MenuCursor);
     }
+
+    // init() {
+    //     super.init();
+    //     this._menuCursor = this.node.getComponent(MenuCursor);
+    // }
 
     onPrevClick(owner?: any) {
         this._menuCursor.previus();
