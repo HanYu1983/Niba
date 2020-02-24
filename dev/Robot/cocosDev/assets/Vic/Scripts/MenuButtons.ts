@@ -73,6 +73,10 @@ export default class MenuButtons extends BasicViewer {
         return this._menuCursor.getCurrentFocus();
     }
 
+    getFocusId():number[]{
+        return this._menuCursor.getCurrentId();
+    }
+
     addListener() {
         super.addListener();
 

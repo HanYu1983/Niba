@@ -24,6 +24,8 @@ import PilotStoreState from '../MainPage/PilotStoreState';
 import PilotStoreBuyState from '../MainPage/PilotStoreBuyState';
 import StandByState from '../MainPage/StandyByState';
 import StandByRobotDetailState from '../MainPage/StandyByRobotDetailState';
+import StandByRobotPilotState from '../MainPage/StandyByRobotPilotState';
+import StandByRobotPilotPopState from '../MainPage/StandyByRobotPilotPopState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -190,7 +192,7 @@ export default class MainPage extends BasicViewer {
     //#endregion
 
     //#region PilotStoreBuyState
-    
+
     onPilotStoreBuyLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
     }
@@ -271,17 +273,76 @@ export default class MainPage extends BasicViewer {
     }
 
     //#endregion
-    
+
     //#region StandByRobotDetail
-    onStandByRobotDetailEnterClick(){
-        
+    onStandByRobotDetailEnterClick() {
+        const buttonId = this.standBy.robotDetail.feature.getFocusId();
+        const robotId = this.standBy.robotList.getFocusId();
+        cc.log("buttonId", buttonId);
+        cc.log("robotId", robotId);
+
+        if (buttonId[0] == 0) {
+            this.standBy.setPilotList();
+            this._state.changeState(new StandByRobotPilotState())
+        }
     }
 
-    onStandByRobotDetailEscClick(){
+    onStandByRobotDetailEscClick() {
         this.standBy.closeRobotDetail();
         this._state.changeState(new StandByState());
     }
     //#endregion
+
+    //#region StandByRobotPilot
+
+    onStandByRobotPilotUpClick() {
+        this.standBy.pilotList.onPrevClick();
+    }
+
+    onStandByRobotPilotDownClick() {
+        this.standBy.pilotList.onNextClick();
+    }
+
+    onStandByRobotPilotEnterClick() {
+        const pilotId = this.standBy.pilotList.getFocusId();
+        cc.log("pilotId", pilotId);
+
+        ViewController.instance.view.getCommentUI().openPopup("確定？");
+        this._state.changeState(new StandByRobotPilotPopState());
+    }
+
+    onStandByRobotPilotEscClick() {
+        this.standBy.pilotList.close();
+        this._state.changeState(new StandByRobotDetailState());
+    }
+    //#endregion
+
+    //#region StandByRobotPilotPop
+    onStandByRobotPilotPopLeftClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
+    }
+
+    onStandByRobotPilotPopRightClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+    }
+
+    onStandByRobotPilotPopEnterClick() {
+        const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
+        if (cursor[0] == 0) {
+            ViewController.instance.view.getCommentUI().showAlert("已修改");
+
+            this.standBy.pilotList.close();
+            ViewController.instance.view.getCommentUI().closePop();
+            this._state.changeState(new StandByRobotDetailState());
+        } else {
+            this.onStandByRobotPilotPopEscClick();
+        }
+    }
+
+    onStandByRobotPilotPopEscClick() {
+        ViewController.instance.view.getCommentUI().closePop();
+        this._state.changeState(new StandByRobotPilotState());
+    }
 
     openRobotStore() {
         this.closeAllSub();

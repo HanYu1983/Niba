@@ -2,6 +2,7 @@ import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import RobotListItem from "../RobotStore/RobotListItem";
 import RobotDetail from "./RobotDetail";
+import MenuButton from "../../MenuButton";
 
 const {ccclass, property} = cc._decorator;
 
@@ -9,6 +10,9 @@ const {ccclass, property} = cc._decorator;
 export default class StandBy extends BasicViewer {
     @property(MenuButtons)
     robotList: MenuButtons = null;
+
+    @property(MenuButtons)
+    pilotList:MenuButtons = null;
 
     @property(RobotDetail)
     robotDetail:RobotDetail = null;
@@ -19,6 +23,11 @@ export default class StandBy extends BasicViewer {
             robotItem.setLabel(data.name);
             robotItem.money.string = data.money;
         };
+        this.pilotList.updateItem = (btn, data) => {
+            let pilotItem = btn as MenuButton;
+            pilotItem.setLabel(data.name);
+        };
+
         this.robotDetail.close();
     }
 
@@ -31,6 +40,17 @@ export default class StandBy extends BasicViewer {
         }
 
         this.robotList.setData(data);
+    }
+
+    setPilotList(){
+        this.pilotList.open();
+
+        let data = [];
+        for (let i = 0; i < 10; ++i) {
+            data.push({ name: "pilot_" + i, money: i * 200 });
+        }
+
+        this.pilotList.setData(data);
     }
 
     openRobotDetail(){
