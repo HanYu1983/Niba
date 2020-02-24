@@ -1,6 +1,7 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import RobotListItem from "./RobotListItem";
+import ViewController from "../../ViewController";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -27,12 +28,7 @@ export default class RobotStore extends BasicViewer {
 
     setRobotList() {
         this.robotList.open();
-
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "robot_" + i, money: i * 200 });
-        }
-
+        let data = ViewController.instance.model.getRobotStoreList(0);
         this.robotList.setData(data);
     }
 

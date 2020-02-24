@@ -2,6 +2,7 @@ import View from "./View";
 import ModelController from "../../Han/controller/ModelController";
 import AudioController from "./AudioController";
 import ImagesAssets from './ImagesAssets';
+import Model from "./Model";
 
 
 const { ccclass, property } = cc._decorator;
@@ -10,6 +11,9 @@ const { ccclass, property } = cc._decorator;
 export default class ViewController extends cc.Component {
     @property(View)
     view: View = null;
+
+    @property(Model)
+    model:Model = null;
 
     @property(ModelController)
     modelController: ModelController = null;

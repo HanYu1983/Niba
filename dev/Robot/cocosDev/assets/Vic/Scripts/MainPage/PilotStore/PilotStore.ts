@@ -1,6 +1,7 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import PilotListItem from "./PilotListItem";
+import ViewController from "../../ViewController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -20,11 +21,7 @@ export default class PilotStore extends BasicViewer {
     setRobotList() {
         this.robotList.open();
 
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "pilot_" + i, money: i * 200 });
-        }
-
+        let data = ViewController.instance.model.getPilotStoreList(0);
         this.robotList.setData(data);
     }
 }

@@ -3,6 +3,7 @@ import MenuButtons from "../../MenuButtons";
 import RobotListItem from "../RobotStore/RobotListItem";
 import RobotDetail from "./RobotDetail";
 import MenuButton from "../../MenuButton";
+import ViewController from "../../ViewController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -34,22 +35,14 @@ export default class StandBy extends BasicViewer {
     setRobotList() {
         this.robotList.open();
 
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "robot_" + i, money: i * 200 });
-        }
-
+        let data = ViewController.instance.model.getRobotList(0);
         this.robotList.setData(data);
     }
 
     setPilotList(){
         this.pilotList.open();
 
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "pilot_" + i, money: i * 200 });
-        }
-
+        let data = ViewController.instance.model.getPilotList(0);
         this.pilotList.setData(data);
     }
 

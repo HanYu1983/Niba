@@ -204,6 +204,7 @@ export default class MainPage extends BasicViewer {
     onPilotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
+            ViewController.instance.model.buyPilotById();
             ViewController.instance.view.getCommentUI().showAlert("已購買");
         }
         ViewController.instance.view.getCommentUI().closePop();
@@ -230,6 +231,7 @@ export default class MainPage extends BasicViewer {
     onRobotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
+            ViewController.instance.model.buyRobotById();
             ViewController.instance.view.getCommentUI().showAlert("已購買");
         }
         ViewController.instance.view.getCommentUI().closePop();
@@ -329,6 +331,7 @@ export default class MainPage extends BasicViewer {
     onStandByRobotPilotPopEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
+            ViewController.instance.model.setRobotPilot();
             ViewController.instance.view.getCommentUI().showAlert("已修改");
 
             this.standBy.pilotList.close();
@@ -343,6 +346,8 @@ export default class MainPage extends BasicViewer {
         ViewController.instance.view.getCommentUI().closePop();
         this._state.changeState(new StandByRobotPilotState());
     }
+
+    //#endregion
 
     openRobotStore() {
         this.closeAllSub();
