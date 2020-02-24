@@ -92,7 +92,7 @@ export default class MainPage extends BasicViewer {
         super.close();
     }
 
-    //#region MainPageDefaultState
+    //#region MainPageDefaultState 最外層的選單
 
     onMenuUpClick() {
         this.menu.onPrevClick();
@@ -129,7 +129,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region RobotStoreState
+    //#region RobotStoreState 最外層的選單-》買機體的選單
 
     onRobotStoreUpClick() {
         this.robotStore.robotList.onPrevClick(this);
@@ -160,7 +160,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region PilotStoreState
+    //#region PilotStoreState 最外層的選單-》買駕駛員的選單
 
     onPilotStoreUpClick() {
         this.pilotStore.robotList.onPrevClick(this);
@@ -191,7 +191,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region PilotStoreBuyState
+    //#region PilotStoreBuyState 最外層的選單-》買駕駛員的選單-》買駕駛員的確認選單
 
     onPilotStoreBuyLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
@@ -218,7 +218,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region RobotStoreBuyState
+    //#region RobotStoreBuyState 最外層的選單-》買機體的選單-》買機體的確認選單
 
     onRobotStoreBuyLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
@@ -245,7 +245,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region StandByState
+    //#region StandByState 最外層的選單-》整備選單
 
     onStandByUpClick() {
         this.standBy.robotList.onPrevClick(this);
@@ -276,7 +276,7 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
-    //#region StandByRobotDetail
+    //#region StandByRobotDetail 最外層的選單-》整備選單-》機體詳細
     onStandByRobotDetailEnterClick() {
         const buttonId = this.standBy.robotDetail.feature.getFocusId();
         const robotId = this.standBy.robotList.getFocusId();
@@ -295,7 +295,7 @@ export default class MainPage extends BasicViewer {
     }
     //#endregion
 
-    //#region StandByRobotPilot
+    //#region StandByRobotPilot 最外層的選單-》整備選單-》機體詳細-》切換駕駛選單
 
     onStandByRobotPilotUpClick() {
         this.standBy.pilotList.onPrevClick();
@@ -319,7 +319,7 @@ export default class MainPage extends BasicViewer {
     }
     //#endregion
 
-    //#region StandByRobotPilotPop
+    //#region StandByRobotPilotPop 最外層的選單-》整備選單-》機體詳細-》切換駕駛選單-》切換駕駛選單的確認選單
     onStandByRobotPilotPopLeftClick() {
         ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
     }
