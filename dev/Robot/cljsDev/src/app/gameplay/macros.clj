@@ -114,50 +114,13 @@
                            (app.gameplay.model/setFsm  ~'fsm))]
      ~@body))
 
+(defmacro returnPopCtx []
+  `(-> ~'gameplayCtx
+       (app.gameplay.model/updateTemp (fn [~'temp]
+                                        (dissoc ~'temp :checkHitRate)))
+       (app.gameplay.model/setAttackRange [])
+       (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm))))
 
 (defmacro returnPop [v]
-  `[(-> ~'gameplayCtx
-        (app.gameplay.model/updateTemp (fn [~'temp]
-                                         (dissoc ~'temp :checkHitRate)))
-        (app.gameplay.model/setAttackRange [])
-        (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm)))
+  `[(returnPopCtx)
     ~v])
-
-
-
-
-
-(comment
-  
-  
-  (defmacro defstate2 [name [varCtx args] & body]
-    `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
-       (let [~'key (str (gensym ~(str name)))
-             ~args ~'args]
-         (a/go
-         ; (println "[model][state]" ~(str name) ~'args)
-           (let [~varCtx ~(or (first body)
-                              `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
-                                               (tool.fsm/pushState (keyword ~(str name))))]
-                                 (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
-             (loop [~varCtx ~varCtx]
-               (let [~varCtx ~(or (first (rest body))
-                                  varCtx)
-                     ~'fsm (app.gameplay.model/getFsm ~varCtx)
-                     ~'state (tool.fsm/load ~'fsm)]
-                 (let [[~'cmd ~'args] (a/<! ~'inputCh)]
-                   (cond
-                     ~@(rest (rest body))
-
-                     :else
-                     (recur ~varCtx)))))))))) 
-  
-  (defmacro handleCursor1 [menuCnt setter & body]
-    `(let [result# (-> (:cursor ~'state)
-                       ((~'action {:up dec
-                                   :down inc}))
-                       (max 0)
-                       (min (dec ~menuCnt)))
-           ~'state (update ~'state :cursor (constantly result#))
-           ~setter result#]
-       ~@body)))

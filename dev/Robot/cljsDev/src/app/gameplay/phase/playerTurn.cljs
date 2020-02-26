@@ -63,5 +63,5 @@
            (recur gameplayCtx)))
        (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]
          (if endTurn
-           gameplayCtx
+           (m/returnPopCtx)
            (recur gameplayCtx)))))))
