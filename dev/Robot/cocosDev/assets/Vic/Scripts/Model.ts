@@ -13,11 +13,15 @@ const { ccclass, property } = cc._decorator;
 export default class Model extends cc.Component {
 
     private modelController: ModelController = null;
-    setModelController(ctr:ModelController){
+    setModelController(ctr: ModelController) {
         this.modelController = ctr;
     }
 
-    getRobotStoreList(pageId: number, count: number = 10):any[] {
+    getRobotStoreList(pageId: number, count: number = 10): any[] {
+        this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
+
+        })
+
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "robot_" + i, money: i * 200 });
@@ -26,6 +30,10 @@ export default class Model extends cc.Component {
     }
 
     getPilotStoreList(pageId: number, count: number = 10) {
+        this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
+
+        })
+
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "pilot_" + i, money: i * 200 });
@@ -34,6 +42,10 @@ export default class Model extends cc.Component {
     }
 
     getRobotList(pageId: number, count: number = 10) {
+        this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
+
+        })
+
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "robot_" + i, money: i * 200 });
@@ -42,6 +54,10 @@ export default class Model extends cc.Component {
     }
 
     getPilotList(pageId: number, count: number = 10) {
+        this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
+
+        })
+
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "pilot_" + i, money: i * 200 });
@@ -49,15 +65,15 @@ export default class Model extends cc.Component {
         return data;
     }
 
-    buyRobotById(){
+    buyRobotById() {
         cc.log("購買機器人");
     }
 
-    buyPilotById(){
+    buyPilotById() {
         cc.log("購買駕駛員");
     }
 
-    setRobotPilot(){
+    setRobotPilot() {
         cc.log("設定駕駛員");
     }
 }

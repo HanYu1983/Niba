@@ -26,16 +26,6 @@ export default class ViewController extends cc.Component {
 
     static instance: ViewController;
 
-    private _data:any;
-
-    getData(){
-        return this._data;
-    }
-
-    getWeapon(key:string):any{
-        return this.getData().weapon[key];
-    }
-
     onLoad() {
         this.modelController.setConsumer(this);
         this.model.setModelController(this.modelController);
@@ -44,12 +34,13 @@ export default class ViewController extends cc.Component {
 
     start() {
         this.modelController.loadConfig(data=>{
-            this._data = data;
+            this.setData(data)
             this.view.openMainPage();
             // this.view.openGamePage();
         })
     }
 
+    //#region helper
     notifyStartGame() {
         this.modelController.startGame();
     }
@@ -57,6 +48,22 @@ export default class ViewController extends cc.Component {
     notifyStartLobby() {
         this.modelController.startLobby();
     }
+    
+    private _data:any;
+
+    setData(d){
+        this._data = d;
+    }
+
+    getData(){
+        return this._data;
+    }
+
+    getWeapon(key:string):any{
+        return this.getData().weapon[key];
+    }
+    //#endregion
+
 
     //#region consumer
     playerTurnStart(data: any, cb: () => void) {
