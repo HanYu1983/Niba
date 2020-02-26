@@ -30,7 +30,10 @@
           (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))
 
           (= "startLobby" cmd)
-          (a/<! (app.lobby.core/startLobby ctx inputCh outputCh))
+          (recur (a/<! (app.lobby.core/startLobby ctx inputCh outputCh)))
+          
+          (= "exit" cmd)
+          ctx
 
           :else
           (recur ctx))))))

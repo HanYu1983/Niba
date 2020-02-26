@@ -1,42 +1,50 @@
 (ns app.lobby.core
   (:require [clojure.core.async :as a])
-  (:require-macros [app.lobby.core]))
+  (:require [app.lobby.model]))
 
-(def actions {87 :up
-              83 :down
-              65 :left
-              68 :right
-              13 :enter
-              27 :cancel
-              38 :rup
-              40 :rdown
-              37 :rleft
-              39 :rright})
-
-
-(defn lobby [lobbyCtx args inputCh outputCh]
-  (a/go
-    (loop []
-      (let [[cmd args] (a/<! inputCh)]
-        [lobbyCtx next]))))
-
-(app.lobby.core/defbuy buyRobot)
-(app.lobby.core/defbuy buyPilot)
 
 (defn startLobby [ctx inputCh outputCh]
   (a/go
-    (loop [lobbyCtx (or (:lobbyCtx ctx) {})
-           doState lobby]
-      (let [[lobbyCtx next] (a/<! (doState lobbyCtx nil inputCh outputCh))]
+    (loop [lobbyCtx (or (:lobbyCtx ctx) app.lobby.model/defaultLobbyModel)]
+      (let [[cmd args] (a/<! inputCh)]
         (cond
-          (= next :buyRobot)
-          (recur lobbyCtx buyRobot)
+          (= cmd "getRobotList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id nil]])
+            (recur lobbyCtx))
 
-          (= next :buyPilot)
-          (recur lobbyCtx buyPilot)
+          (= cmd "getPilotList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id nil]])
+            (recur lobbyCtx))
 
-          (= next :lobby)
-          (recur lobbyCtx lobby)
+          (= cmd "getRobotStoreList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id (get-in lobbyCtx app.lobby.model/robots)]])
+            (recur lobbyCtx))
+
+          (= cmd "getPilotStoreList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id (get-in lobbyCtx app.lobby.model/pilots)]])
+            (recur lobbyCtx))
+
+          (= cmd "buyRobotById")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id nil]])
+            (recur lobbyCtx))
+
+          (= cmd "buyPilotById")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id nil]])
+            (recur lobbyCtx))
+
+          (= cmd "setRobotPilot")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id nil]])
+            (recur lobbyCtx))
+
+          (= cmd "exit")
+          (update ctx :lobbyCtx (constantly lobbyCtx))
 
           :else
-          (assoc ctx :lobbyCtx lobbyCtx))))))
+          (recur lobbyCtx))))))
