@@ -37,7 +37,8 @@ export default class ViewController extends cc.Component {
     }
 
     onLoad() {
-        this.modelController.setView(this.view);
+        this.modelController.setConsumer(this);
+        this.model.setModelController(this.modelController);
         ViewController.instance = this;
     }
 
@@ -52,4 +53,38 @@ export default class ViewController extends cc.Component {
     notifyStartGame() {
         this.modelController.startGame();
     }
+
+    notifyStartLobby() {
+        this.modelController.startLobby();
+    }
+
+    //#region consumer
+    playerTurnStart(data: any, cb: () => void) {
+        this.view.playerTurnStart(data, cb)
+    }
+    enemyTurnStart(enemyName: any, cb: () => void) {
+        this.view.enemyTurnStart(enemyName, cb)
+    }
+    unitMoveAnim(data: any, cb: () => void) {
+        this.view.unitMoveAnim(data, cb)
+    }
+    unitBattleAnim(data: any, cb: () => void) {
+        this.view.unitBattleAnim(data, cb)
+    }
+    unitDeadAnim(data: any, cb: ()=>void){
+        this.view.unitDeadAnim(data, cb)
+    }
+    unitSkyAnim(data: any, cb: ()=>void){
+        this.view.unitSkyAnim(data, cb)
+    }
+    unitGroundAnim(data: any, cb: ()=>void){
+        this.view.unitGroundAnim(data, cb)
+    }
+    showMessage(data: any, cb: ()=>void){
+        this.view.showMessage(data, cb)
+    }
+    paint(data: any, cb: () => void) {
+        this.view.paint(data, cb)
+    }
+    //#endregion
 }

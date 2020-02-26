@@ -1,3 +1,5 @@
+import ModelController from "../../Han/controller/ModelController";
+
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
 // Learn Attribute:
@@ -9,6 +11,11 @@ const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Model extends cc.Component {
+
+    private modelController: ModelController = null;
+    setModelController(ctr:ModelController){
+        this.modelController = ctr;
+    }
 
     getRobotStoreList(pageId: number, count: number = 10):any[] {
         let data = [];

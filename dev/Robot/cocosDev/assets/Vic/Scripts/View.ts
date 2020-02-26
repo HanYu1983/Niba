@@ -1,7 +1,6 @@
 import BasicViewer from "./BasicViewer";
 import MainPage from "./Page/MainPage";
 import GamePage from './Page/GamePage';
-import IUnit from "../../Han/interface/IUnit";
 import CommentUI from './CommentUI';
 
 const { ccclass, property } = cc._decorator;
@@ -13,12 +12,12 @@ export default class View extends cc.Component {
         this.closeSystemMenu();
         this.repaintPlayerStart(cb);
     }
-    enemyTurnStart(enemyName: string, cb: () => void) {
+    enemyTurnStart(enemyName: any, cb: () => void) {
         this.closeUnitMenu();
         this.closeSystemMenu();
         this.repaintEnemyTurnStart(enemyName, cb);
     }
-    unitMoveAnim(data: { unit: IUnit; path: number[][]; }, cb: () => void) {
+    unitMoveAnim(data: any, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
