@@ -13,7 +13,7 @@
 
 (m/defwait setData [ctx args])
 
-(def defaultModel {})
+(def defaultModel {:money 1000})
 
 (defn mainLoop [ctx inputCh outputCh]
   (a/go
@@ -24,7 +24,7 @@
           (let [[id subargs] args
                 data (a/<! (app.module/loadData app.module/*module))]
             (a/>! outputCh ["ok", [id data]])
-            (recur ctx))
+            (recur (merge ctx {:data data})))
 
           (= "startGameplay" cmd)
           (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))
