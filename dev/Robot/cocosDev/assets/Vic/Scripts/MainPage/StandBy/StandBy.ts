@@ -35,15 +35,17 @@ export default class StandBy extends BasicViewer {
     setRobotList() {
         this.robotList.open();
 
-        let data = ViewController.instance.model.getRobotList(0);
-        this.robotList.setData(data);
+        ViewController.instance.model.getRobotList(0, 10, (data:any[])=>{
+            this.robotList.setData(data);
+        });
     }
 
     setPilotList(){
         this.pilotList.open();
 
-        let data = ViewController.instance.model.getPilotList(0);
-        this.pilotList.setData(data);
+        ViewController.instance.model.getPilotList(0, 10, (data:any[])=>{
+            this.pilotList.setData(data);
+        });
     }
 
     openRobotDetail(){

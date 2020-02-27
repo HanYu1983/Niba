@@ -204,8 +204,9 @@ export default class MainPage extends BasicViewer {
     onPilotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.buyPilotById();
-            ViewController.instance.view.getCommentUI().showAlert("已購買");
+            ViewController.instance.model.buyPilotById((data:any)=>{
+                ViewController.instance.view.getCommentUI().showAlert("已購買");
+            });
         }
         ViewController.instance.view.getCommentUI().closePop();
         this._state.changeState(new PilotStoreState())
@@ -231,8 +232,9 @@ export default class MainPage extends BasicViewer {
     onRobotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.buyRobotById();
-            ViewController.instance.view.getCommentUI().showAlert("已購買");
+            ViewController.instance.model.buyRobotById((data:any)=>{
+                ViewController.instance.view.getCommentUI().showAlert("已購買");
+            });
         }
         ViewController.instance.view.getCommentUI().closePop();
         this._state.changeState(new RobotStoreState())
@@ -326,17 +328,19 @@ export default class MainPage extends BasicViewer {
 
     onStandByRobotPilotPopRightClick() {
         ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+
     }
 
     onStandByRobotPilotPopEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.setRobotPilot();
-            ViewController.instance.view.getCommentUI().showAlert("已修改");
+            ViewController.instance.model.setRobotPilot((data:any)=>{
+                ViewController.instance.view.getCommentUI().showAlert("已修改");
 
-            this.standBy.pilotList.close();
-            ViewController.instance.view.getCommentUI().closePop();
-            this._state.changeState(new StandByRobotDetailState());
+                this.standBy.pilotList.close();
+                ViewController.instance.view.getCommentUI().closePop();
+                this._state.changeState(new StandByRobotDetailState());
+            });
         } else {
             this.onStandByRobotPilotPopEscClick();
         }

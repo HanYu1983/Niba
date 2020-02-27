@@ -1,5 +1,3 @@
-import ModelController from "../../Han/controller/ModelController";
-
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
 // Learn Attribute:
@@ -12,68 +10,47 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Model extends cc.Component {
 
-    private modelController: ModelController = null;
-    setModelController(ctr: ModelController) {
-        this.modelController = ctr;
-    }
-
-    getRobotStoreList(pageId: number, count: number = 10): any[] {
-        this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
-
-        })
-
+    getRobotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "robot_" + i, money: i * 200 });
         }
-        return data;
+        cb(data);
     }
 
-    getPilotStoreList(pageId: number, count: number = 10) {
-        this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
-
-        })
-
+    getPilotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "pilot_" + i, money: i * 200 });
         }
-        return data;
+        cb(data);
     }
 
-    getRobotList(pageId: number, count: number = 10) {
-        this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
-
-        })
-
+    getRobotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "robot_" + i, money: i * 200 });
         }
-        return data;
+        cb(data);
     }
 
-    getPilotList(pageId: number, count: number = 10) {
-        this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
-
-        })
-
+    getPilotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         let data = [];
         for (let i = 0; i < 10; ++i) {
             data.push({ name: "pilot_" + i, money: i * 200 });
         }
-        return data;
+        cb(data);
     }
 
-    buyRobotById() {
+    buyRobotById(cb: (data: any) => void) {
         cc.log("購買機器人");
     }
 
-    buyPilotById() {
+    buyPilotById(cb: (data: any) => void) {
         cc.log("購買駕駛員");
     }
 
-    setRobotPilot() {
+    setRobotPilot(cb: (data: any) => void) {
         cc.log("設定駕駛員");
     }
 }

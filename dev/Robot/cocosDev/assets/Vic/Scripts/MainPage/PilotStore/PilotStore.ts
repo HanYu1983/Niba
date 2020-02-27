@@ -21,7 +21,8 @@ export default class PilotStore extends BasicViewer {
     setRobotList() {
         this.robotList.open();
 
-        let data = ViewController.instance.model.getPilotStoreList(0);
-        this.robotList.setData(data);
+        ViewController.instance.model.getPilotStoreList(0, 10, (data:any[])=>{
+            this.robotList.setData(data);
+        });
     }
 }
