@@ -28,7 +28,8 @@ export default class RobotStore extends BasicViewer {
 
     setRobotList() {
         this.robotList.open();
-        ViewController.instance.model.getRobotStoreList(0, 10, (data:any[])=>{
+        ViewController.instance.model.getRobotStoreList(0, 10, (data:any)=>{
+            cc.log(data);
             this.robotList.setData(data);
         });
     }
