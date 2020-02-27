@@ -13,7 +13,7 @@
 
 (m/defwait setData [ctx args])
 
-(def defaultModel {:money 1000})
+(def defaultModel {:money 100000})
 
 (defn mainLoop [ctx inputCh outputCh]
   (a/go

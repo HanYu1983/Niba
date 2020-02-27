@@ -12,29 +12,31 @@
         (cond
           (= cmd "getRobotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id (->> (get-in ctx [:data "robot"])
-                                          (vals))]])
+            (a/>! outputCh ["ok" [id [nil (->> (get-in ctx [:data "robot"])
+                                               (vals))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id (->> (get-in ctx [:data "pilot"])
-                                          (vals))]])
+            (a/>! outputCh ["ok" [id [nil (->> (get-in ctx [:data "pilot"])
+                                               (vals))]]])
             (recur lobbyCtx))
 
           (= cmd "getRobotList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id (get-in lobbyCtx app.lobby.model/robots)]])
+            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx app.lobby.model/robots)
+                                               (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id (get-in lobbyCtx app.lobby.model/pilots)]])
+            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx app.lobby.model/pilots)
+                                               (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "buyRobotById")
-          (let [[id {robotKey "robotKey"}] args
-                robot (get-in ctx [:data "robot" robotKey])]
+          (let [[id {key "key"}] args
+                robot (get-in ctx [:data "robot" key])]
             (if robot
               (let [money (get-in lobbyCtx app.lobby.model/money)
                     cost (get-in robot ["cost"])
@@ -42,8 +44,7 @@
                 (if isEnoughMoney
                   (let [lobbyCtx (-> lobbyCtx
                                      (update-in app.lobby.model/money (constantly (- money cost)))
-                                     (update-in app.lobby.model/robots (partial cons {:key (gensym)
-                                                                                      :robotKey robotKey})))]
+                                     (update-in app.lobby.model/robots #(conj % [(gensym) key])))]
                     (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                     (recur lobbyCtx))
                   (do
@@ -54,8 +55,8 @@
                 (recur lobbyCtx))))
 
           (= cmd "buyPilotById")
-          (let [[id {pilotKey "pilotKey"}] args
-                pilot (get-in ctx [:data "pilot" pilotKey])]
+          (let [[id {key "key"}] args
+                pilot (get-in ctx [:data "pilot" key])]
             (if pilot
               (let [money (get-in lobbyCtx app.lobby.model/money)
                     cost (get-in pilot ["cost"])
@@ -63,8 +64,7 @@
                 (if isEnoughMoney
                   (let [lobbyCtx (-> lobbyCtx
                                      (update-in app.lobby.model/money (constantly (- money cost)))
-                                     (update-in app.lobby.model/robots (partial cons {:key (gensym)
-                                                                                      :pilotKey pilotKey})))]
+                                     (update-in app.lobby.model/pilots #(conj % [(gensym) key])))]
                     (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                     (recur lobbyCtx))
                   (do
@@ -75,8 +75,10 @@
                 (recur lobbyCtx))))
 
           (= cmd "setRobotPilot")
-          (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id nil]])
+          (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args
+                lobbyCtx (-> lobbyCtx
+                             (update-in app.lobby.model/robotByPilot #(conj % [pilotKey robotKey])))]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
             (recur lobbyCtx))
 
           (= cmd "exit")

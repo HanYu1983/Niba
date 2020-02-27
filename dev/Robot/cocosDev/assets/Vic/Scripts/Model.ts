@@ -19,14 +19,16 @@ export default class Model extends cc.Component {
     getRobotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         console.log("getRobotStoreList")
         this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 
     getPilotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
         console.log("getPilotStoreList")
         this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 
@@ -34,7 +36,8 @@ export default class Model extends cc.Component {
         console.log("getRobotList")
         this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
             console.log(answer)
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         })
     }
 
@@ -42,31 +45,35 @@ export default class Model extends cc.Component {
         console.log("getPilotList")
         this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
             console.log(answer)
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 
     buyRobotById(robotKey: string, cb: (data: any) => void) {
         cc.log("購買機器人");
-        this.modelController.talk("buyRobotById", { robotKey: "test" }, answer => {
+        this.modelController.talk("buyRobotById", { key: "gaite_sky" }, answer => {
             console.log(answer)
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 
     buyPilotById(pilotKey: string, cb: (data: any) => void) {
         cc.log("購買駕駛員");
-        this.modelController.talk("buyPilotById", { pilotKey: "test" }, answer => {
+        this.modelController.talk("buyPilotById", { key: "amuro" }, answer => {
             console.log(answer)
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 
     setRobotPilot(robotKey: string, pilotKey: string, cb: (data: any) => void) {
         cc.log("設定駕駛員");
-        this.modelController.talk("buyRobotById", { robotKey: "test", pilotKey: "test" }, answer => {
+        this.modelController.talk("setRobotPilot", { robotKey: "test", pilotKey: "test" }, answer => {
             console.log(answer)
-            cb(answer);
+            const [err, info] = answer;
+            cb(info);
         });
     }
 }
