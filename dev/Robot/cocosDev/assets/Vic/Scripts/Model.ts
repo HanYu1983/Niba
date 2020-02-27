@@ -1,3 +1,5 @@
+import ModelController from "../../Han/controller/ModelController";
+
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
 // Learn Attribute:
@@ -10,36 +12,32 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Model extends cc.Component {
 
+    private modelController: ModelController = null;
+    setModelController(ctr: ModelController) {
+        this.modelController = ctr;
+    }
     getRobotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "robot_" + i, money: i * 200 });
-        }
-        cb(data);
+        this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
+            cb(answer);
+        });
     }
 
     getPilotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "pilot_" + i, money: i * 200 });
-        }
-        cb(data);
+        this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
+            cb(answer);
+        });
     }
 
     getRobotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "robot_" + i, money: i * 200 });
-        }
-        cb(data);
+        this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
+            cb(answer);
+        })
     }
 
     getPilotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        let data = [];
-        for (let i = 0; i < 10; ++i) {
-            data.push({ name: "pilot_" + i, money: i * 200 });
-        }
-        cb(data);
+        this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
+            cb(answer);
+        });
     }
 
     buyRobotById(cb: (data: any) => void) {
