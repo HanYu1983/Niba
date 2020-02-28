@@ -13,16 +13,16 @@ export default class ViewController extends cc.Component {
     view: View = null;
 
     @property(Model)
-    model:Model = null;
+    model: Model = null;
 
     @property(ModelController)
     modelController: ModelController = null;
 
     @property(AudioController)
-    audioController:AudioController = null;
+    audioController: AudioController = null;
 
     @property(ImagesAssets)
-    imagesAssets:ImagesAssets = null;
+    imagesAssets: ImagesAssets = null;
 
     static instance: ViewController;
 
@@ -33,7 +33,7 @@ export default class ViewController extends cc.Component {
     }
 
     start() {
-        this.modelController.loadConfig(data=>{
+        this.modelController.loadConfig(data => {
             this.setData(data)
             this.view.openMainPage();
             this.notifyStartLobby()
@@ -49,19 +49,25 @@ export default class ViewController extends cc.Component {
     notifyStartLobby() {
         this.modelController.startLobby();
     }
-    
-    private _data:any;
 
-    setData(d){
+    private _data: any;
+
+    setData(d) {
         this._data = d;
     }
 
-    getData(){
+    getData() {
         return this._data;
     }
 
-    getWeapon(key:string):any{
+    getWeapon(key: string): any {
         return this.getData().weapon[key];
+    }
+    getRobot(key: string): any {
+        return this.getData().robot[key];
+    }
+    getPilot(key: string): any {
+        return this.getData().pilot[key];
     }
     //#endregion
 
@@ -79,16 +85,16 @@ export default class ViewController extends cc.Component {
     unitBattleAnim(data: any, cb: () => void) {
         this.view.unitBattleAnim(data, cb)
     }
-    unitDeadAnim(data: any, cb: ()=>void){
+    unitDeadAnim(data: any, cb: () => void) {
         this.view.unitDeadAnim(data, cb)
     }
-    unitSkyAnim(data: any, cb: ()=>void){
+    unitSkyAnim(data: any, cb: () => void) {
         this.view.unitSkyAnim(data, cb)
     }
-    unitGroundAnim(data: any, cb: ()=>void){
+    unitGroundAnim(data: any, cb: () => void) {
         this.view.unitGroundAnim(data, cb)
     }
-    showMessage(data: any, cb: ()=>void){
+    showMessage(data: any, cb: () => void) {
         this.view.showMessage(data, cb)
     }
     paint(data: any, cb: () => void) {

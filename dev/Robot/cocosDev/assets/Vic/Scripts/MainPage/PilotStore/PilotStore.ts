@@ -8,21 +8,26 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class PilotStore extends BasicViewer {
     @property(MenuButtons)
-    robotList: MenuButtons = null;
+    pilotList: MenuButtons = null;
 
     init() {
-        this.robotList.updateItem = (btn, data) => {
+        this.pilotList.updateItem = (btn, data) => {
             let robotItem = btn as PilotListItem;
-            robotItem.setLabel(data.name);
-            robotItem.money.string = data.money;
+            robotItem.setLabel(data.title);
+            robotItem.money.string = data.cost;
         };
     }
 
-    setRobotList() {
-        this.robotList.open();
-
-        ViewController.instance.model.getPilotStoreList(0, 10, (data:any[])=>{
-            this.robotList.setData(data);
+    setPilotList() {
+        this.pilotList.open();
+        ViewController.instance.model.getPilotStoreList(0, 10, (err:any, data:any[])=>{
+            const detailData = data.map(element=>{
+                const [key, data] = element;
+                const detail = ViewController.instance.getPilot(key);
+                detail.key = key;
+                return detail;
+            });
+            this.pilotList.setData(detailData);
         });
     }
 }

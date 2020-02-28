@@ -1,4 +1,5 @@
 import ModelController from "../../Han/controller/ModelController";
+import ViewController from "./ViewController";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -16,64 +17,80 @@ export default class Model extends cc.Component {
     setModelController(ctr: ModelController) {
         this.modelController = ctr;
     }
-    getRobotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        console.log("getRobotStoreList")
+    getRobotStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 
-    getPilotStoreList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        console.log("getPilotStoreList")
+    getPilotStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 
-    getRobotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        console.log("getRobotList")
+    getRobotList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
-            console.log(answer)
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         })
     }
 
-    getPilotList(pageId: number, count: number = 10, cb: (data: any[]) => void) {
-        console.log("getPilotList")
+    getPilotList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
-            console.log(answer)
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 
-    buyRobotById(robotKey: string, cb: (data: any) => void) {
-        cc.log("購買機器人");
-        this.modelController.talk("buyRobotById", { key: "gaite_sky" }, answer => {
-            console.log(answer)
+    buyRobotById(robotKey: string, cb: (err: any, data: any) => void) {
+        this.modelController.talk("buyRobotById", { key: robotKey }, answer => {
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 
-    buyPilotById(pilotKey: string, cb: (data: any) => void) {
-        cc.log("購買駕駛員");
-        this.modelController.talk("buyPilotById", { key: "amuro" }, answer => {
-            console.log(answer)
+    buyPilotById(pilotKey: string, cb: (err: any, data: any) => void) {
+        this.modelController.talk("buyPilotById", { key: pilotKey }, answer => {
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 
-    setRobotPilot(robotKey: string, pilotKey: string, cb: (data: any) => void) {
-        cc.log("設定駕駛員");
-        this.modelController.talk("setRobotPilot", { robotKey: "test", pilotKey: "test" }, answer => {
-            console.log(answer)
+    setRobotPilot(robotKey: string, pilotKey: string, cb: (err: any, data: any) => void) {
+        this.modelController.talk("setRobotPilot", { robotKey: robotKey, pilotKey: pilotKey }, answer => {
             const [err, info] = answer;
-            cb(info);
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
         });
     }
 }

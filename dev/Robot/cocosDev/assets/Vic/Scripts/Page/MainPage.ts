@@ -163,25 +163,25 @@ export default class MainPage extends BasicViewer {
     //#region PilotStoreState 最外層的選單-》買駕駛員的選單
 
     onPilotStoreUpClick() {
-        this.pilotStore.robotList.onPrevClick(this);
+        this.pilotStore.pilotList.onPrevClick(this);
     }
 
     onPilotStoreDownClick() {
-        this.pilotStore.robotList.onNextClick(this);
+        this.pilotStore.pilotList.onNextClick(this);
     }
 
     onPilotStoreLeftClick() {
-        this.pilotStore.robotList.onLeftClick(this);
+        this.pilotStore.pilotList.onLeftClick(this);
     }
 
     onPilotStoreRightClick() {
-        this.pilotStore.robotList.onRightClick(this);
+        this.pilotStore.pilotList.onRightClick(this);
     }
 
     onPilotStoreEnterClick() {
         this._state.changeState(new PilotStoreBuyState());
 
-        const data = this.pilotStore.robotList.getFocus();
+        const data = this.pilotStore.pilotList.getFocus();
         ViewController.instance.view.getCommentUI().openPopup("確定要買？");
     }
 
@@ -204,7 +204,9 @@ export default class MainPage extends BasicViewer {
     onPilotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.buyPilotById((data:any)=>{
+            const buyPilot = this.pilotStore.pilotList.getFocus();
+            ViewController.instance.model.buyPilotById(buyPilot.key, (err: any, data: any) => {
+                cc.log(data);
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
@@ -232,7 +234,8 @@ export default class MainPage extends BasicViewer {
     onRobotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.buyRobotById((data:any)=>{
+            const buyRobot = this.robotStore.robotList.getFocus();
+            ViewController.instance.model.buyRobotById(buyRobot.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
@@ -334,7 +337,11 @@ export default class MainPage extends BasicViewer {
     onStandByRobotPilotPopEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            ViewController.instance.model.setRobotPilot((data:any)=>{
+            const robot = this.standBy.robotList.getFocus();
+            const pilot = this.standBy.pilotList.getFocus();
+
+            ViewController.instance.model.setRobotPilot(robot.standbyKey, pilot.standbyKey, (err: any, data: any) => {
+                cc.log(data);
                 ViewController.instance.view.getCommentUI().showAlert("已修改");
 
                 this.standBy.pilotList.close();
@@ -363,7 +370,7 @@ export default class MainPage extends BasicViewer {
     openPilotStore() {
         this.closeAllSub();
         this.pilotStore.open();
-        this.pilotStore.setRobotList();
+        this.pilotStore.setPilotList();
         this._state.changeState(new PilotStoreState());
     }
 

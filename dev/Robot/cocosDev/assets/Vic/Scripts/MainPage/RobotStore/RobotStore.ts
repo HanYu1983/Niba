@@ -20,17 +20,22 @@ export default class RobotStore extends BasicViewer {
 
     init() {
         this.robotList.updateItem = (btn, data) => {
-            let robotItem = btn as RobotListItem;
-            robotItem.setLabel(data.name);
-            robotItem.money.string = data.money;
+            const robotItem = btn as RobotListItem;
+            robotItem.setLabel(data.title);
+            robotItem.money.string = data.cost;
         };
     }
 
     setRobotList() {
         this.robotList.open();
-        ViewController.instance.model.getRobotStoreList(0, 10, (data:any)=>{
-            cc.log(data);
-            this.robotList.setData(data);
+        ViewController.instance.model.getRobotStoreList(0, 10, (err:any, data:any)=>{
+            const detailDatail = data.map(element=>{
+                const [key, data] = element;
+                let detail = ViewController.instance.getRobot(key);
+                detail.key = key;
+                return detail;
+            });
+            this.robotList.setData(detailDatail);
         });
     }
 
