@@ -1,6 +1,8 @@
 (ns app.lobby.core
   (:require [clojure.core.async :as a])
-  (:require [app.lobby.model]))
+  (:require [app.lobby.model])
+  (:require [app.module])
+  (:require-macros [app.lobby.core]))
 
 
 (defn startLobby [ctx inputCh outputCh]
@@ -12,14 +14,14 @@
         (cond
           (= cmd "getRobotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in ctx [:data "robot"])
-                                               (vals))]]])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetUnits app.module/*module lobbyCtx)
+                                               (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in ctx [:data "pilot"])
-                                               (vals))]]])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetPilots app.module/*module lobbyCtx)
+                                               (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getRobotList")
@@ -35,44 +37,10 @@
             (recur lobbyCtx))
 
           (= cmd "buyRobotById")
-          (let [[id {key "key"}] args
-                robot (get-in ctx [:data "robot" key])]
-            (if robot
-              (let [money (get-in lobbyCtx app.lobby.model/money)
-                    cost (get-in robot ["cost"])
-                    isEnoughMoney (>= money cost)]
-                (if isEnoughMoney
-                  (let [lobbyCtx (-> lobbyCtx
-                                     (update-in app.lobby.model/money (constantly (- money cost)))
-                                     (update-in app.lobby.model/robots #(conj % [(gensym) key])))]
-                    (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-                    (recur lobbyCtx))
-                  (do
-                    (a/>! outputCh ["ok" [id ["money is not enougth"]]])
-                    (recur lobbyCtx))))
-              (do
-                (a/>! outputCh ["ok" [id ["key is not found"]]])
-                (recur lobbyCtx))))
+          (app.lobby.core/buyImpl app.module/lobbyGetUnits app.lobby.model/robots)
 
           (= cmd "buyPilotById")
-          (let [[id {key "key"}] args
-                pilot (get-in ctx [:data "pilot" key])]
-            (if pilot
-              (let [money (get-in lobbyCtx app.lobby.model/money)
-                    cost (get-in pilot ["cost"])
-                    isEnoughMoney (>= money cost)]
-                (if isEnoughMoney
-                  (let [lobbyCtx (-> lobbyCtx
-                                     (update-in app.lobby.model/money (constantly (- money cost)))
-                                     (update-in app.lobby.model/pilots #(conj % [(gensym) key])))]
-                    (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-                    (recur lobbyCtx))
-                  (do
-                    (a/>! outputCh ["ok" [id ["money is not enougth"]]])
-                    (recur lobbyCtx))))
-              (do
-                (a/>! outputCh ["ok" [id ["key is not found"]]])
-                (recur lobbyCtx))))
+          (app.lobby.core/buyImpl app.module/lobbyGetPilots app.lobby.model/pilots)
 
           (= cmd "setRobotPilot")
           (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args

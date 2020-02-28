@@ -118,3 +118,14 @@
                      {:preview (module.default.session.battleMenu/mapUnits battleMenuSession (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))}))
      :state state
      :stateDetail stateDetail}))
+
+
+(defmethod app.module/lobbyGetUnits :default [_ lobbyCtx]
+  (->> (get-in module.default.data/data ["robot"])
+       (map (fn [[k v]] [k {:cost (get v "cost")}]))
+       (into {})))
+
+(defmethod app.module/lobbyGetPilots :default [_ lobbyCtx]
+  (->> (get-in module.default.data/data ["pilot"])
+       (map (fn [[k v]] [k {:cost (get v "cost")}]))
+       (into {})))

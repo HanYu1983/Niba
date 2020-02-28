@@ -1,26 +1,21 @@
 (ns app.lobby.core)
 
-(defmacro defbuy [name]
-  (let [selectKey (keyword (str "select" (clojure.string/capitalize (str name))))]
-    `(defn ~name [~'lobbyCtx ~'args ~'inputCh ~'outputCh]
-       (a/go
-         (loop [~'lobbyCtx ~'lobbyCtx]
-           (let [[~'cmd ~'args] (a/<! ~'inputCh)]
-             (cond
-               (= "KEY_DOWN" ~'cmd)
-               (let [~'action (actions ~'args)]
-                 (cond
-                   (= ~'action :up)
-                   (update-in ~'lobbyCtx [:state ~selectKey] dec)
-
-                   (= ~'action :down)
-                   (update-in ~'lobbyCtx [:state ~selectKey] inc)
-
-                   (= ~'action :cancel)
-                   [~'lobbyCtx :lobby]
-
-                   :else
-                   (recur ~'lobbyCtx)))
-
-               :else
-               (recur ~'lobbyCtx))))))))
+(defmacro buyImpl [getter setter]
+  `(let [[~'id {~'key "key"}] ~'args
+         ~'item (get-in (~getter app.module/*module ~'lobbyCtx) [~'key])]
+     (if ~'item
+       (let [~'money (get-in ~'lobbyCtx app.lobby.model/money)
+             ~'cost (get-in ~'item [:cost])
+             ~'isEnoughMoney (>= ~'money ~'cost)]
+         (if ~'isEnoughMoney
+           (let [~'lobbyCtx (-> ~'lobbyCtx
+                                (update-in app.lobby.model/money (constantly (- ~'money ~'cost)))
+                                (update-in ~setter #(conj % [(gensym) ~'key])))]
+             (a/>! ~'outputCh ["ok" [~'id [nil ~'lobbyCtx]]])
+             (recur ~'lobbyCtx))
+           (do
+             (a/>! ~'outputCh ["ok" [~'id ["money is not enougth"]]])
+             (recur ~'lobbyCtx))))
+       (do
+         (a/>! ~'outputCh ["ok" [~'id ["key is not found"]]])
+         (recur ~'lobbyCtx)))))
