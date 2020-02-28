@@ -48,5 +48,5 @@
                                                           :position [2 0]}
                                                          {:robotKey "gundam"})
                           (app.gameplay.model/setMap playmap))]
-      (a/<! (paint nil (app.gameplay.model/formatToDraw gameplayCtx) inputCh outputCh))
+      (a/<! (paint nil (app.module/gameplayFormatToDraw app.module/*module gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

@@ -28,7 +28,7 @@
                                      [gameplayCtx 1]))]
     gameplayCtx))
 
-(defmethod app.module/unitOnCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
+(defmethod app.module/gameplayOnUnitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot "amuro"
                                   :weapons {}
@@ -40,7 +40,7 @@
         ((fn [unit]
            (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
 
-(defmethod app.module/unitOnMove :default [_ gameplayCtx unit pos]
+(defmethod app.module/gameplayOnUnitMove :default [_ gameplayCtx unit pos]
   (let [vel (->> (map - (:position unit) pos)
                  (repeat 2)
                  (apply map *)
@@ -50,37 +50,37 @@
         (update-in [:state :tags] #(conj % [:move true]))
         (update-in [:state :tags] #(conj % [:velocity vel])))))
 
-(defmethod app.module/unitOnDone :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayOnUnitDone :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] #(conj % [:done true]))))
 
-(defmethod app.module/unitOnTurnStart :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayOnUnitTurnStart :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] (constantly {}))))
 
-(defmethod app.module/onUnitDead :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayOnUnitDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
-(defmethod app.module/onUnitMenu :default [_ gameplayCtx args inputCh outputCh]
+(defmethod app.module/gameplayOnUnitMenu :default [_ gameplayCtx args inputCh outputCh]
   (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
 
-(defmethod app.module/onEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
+(defmethod app.module/gameplayOnEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
 
 
-(defmethod app.module/unitGetMovePathTree :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayGetUnitMovePathTree :default [_ gameplayCtx unit]
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
-(defmethod app.module/unitGetWeapons :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayGetUnitWeapons :default [_ gameplayCtx unit]
   (module.default.data/getUnitWeaponsM gameplayCtx unit))
 
-(defmethod app.module/unitIsDead :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayGetUnitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
-(defmethod app.module/unitGetInfo :default [_ gameplayCtx unit]
+(defmethod app.module/gameplayGetUnitInfo :default [_ gameplayCtx unit]
   (module.default.data/getUnitInfo gameplayCtx unit))
 
-(defmethod app.module/formatToDraw :default [_ gameplayCtx]
+(defmethod app.module/gameplayFormatToDraw :default [_ gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
                   (tool.fsm/currState))
         stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)

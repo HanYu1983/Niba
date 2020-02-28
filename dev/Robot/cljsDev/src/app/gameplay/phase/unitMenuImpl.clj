@@ -2,7 +2,7 @@
 
 (defmacro impl []
   '(defn unitMenu [gameplayCtx args inputCh outputCh]
-     (app.module/onUnitMenu app.module/*module
+     (app.module/gameplayOnUnitMenu app.module/*module
                                 gameplayCtx
                                 args
                                 inputCh

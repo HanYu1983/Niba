@@ -13,7 +13,7 @@
 (m/defstate playerTurn [gameplayCtx _]
   (let [units (-> (app.gameplay.model/getUnits gameplayCtx)
                   (tool.units/mapUnits (fn [unit]
-                                         (app.module/unitOnTurnStart app.module/*module gameplayCtx unit))))
+                                         (app.module/gameplayOnUnitTurnStart app.module/*module gameplayCtx unit))))
         gameplayCtx (-> (app.gameplay.model/setUnits gameplayCtx units))]
     (a/<! (app.gameplay.phase.common/playerTurnStart gameplayCtx nil inputCh outputCh))
     gameplayCtx)
@@ -35,7 +35,7 @@
                            (tool.units/getByPosition cursor))
           moveRange (if unitAtCursor
                       (let [[mw mh] app.gameplay.model/mapViewSize
-                            shortestPathTree (app.module/unitGetMovePathTree app.module/*module gameplayCtx unitAtCursor)
+                            shortestPathTree (app.module/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unitAtCursor)
                             moveRange (map first shortestPathTree)]
                         moveRange)
                       (let []
@@ -52,7 +52,7 @@
          (if isEnd
            (let [unit (-> (app.gameplay.model/getUnits gameplayCtx)
                           (tool.units/getByKey (:key unitAtCursor)))
-                 unitOnDone (app.module/unitOnDone app.module/*module gameplayCtx unit)
+                 unitOnDone (app.module/gameplayOnUnitDone app.module/*module gameplayCtx unit)
                  units (-> gameplayCtx
                            (app.gameplay.model/getUnits)
                            (tool.units/delete unit)

@@ -4,21 +4,24 @@
 
 (defmulti gameplayOnInit (fn [type gameplayCtx] type))
 
-(defmulti unitOnCreate (fn [type gameplayCtx unit args] type))
-(defmulti unitOnMove (fn [type gameplayCtx unit pos] type))
-(defmulti unitOnDone (fn [type gameplayCtx unit] type))
-(defmulti unitOnTurnStart (fn [type gameplayCtx unit] type))
-(defmulti unitOnTransform (fn [type gameplayCtx unit robotKey] type))
+(defmulti gameplayOnUnitCreate (fn [type gameplayCtx unit args] type))
+(defmulti gameplayOnUnitMove (fn [type gameplayCtx unit pos] type))
+(defmulti gameplayOnUnitDone (fn [type gameplayCtx unit] type))
+(defmulti gameplayOnUnitTurnStart (fn [type gameplayCtx unit] type))
 
-(defmulti onEnemyTurn (fn [type gameplayCtx enemy inputCh outputCh] type))
-(defmulti onUnitDead (fn [type gameplayCtx unit] type))
-(defmulti onUnitMenu (fn [type gameplayCtx args inputCh outputCh] type))
+(defmulti gameplayOnEnemyTurn (fn [type gameplayCtx enemy inputCh outputCh] type))
+(defmulti gameplayOnUnitDead (fn [type gameplayCtx unit] type))
+(defmulti gameplayOnUnitMenu (fn [type gameplayCtx args inputCh outputCh] type))
 
-(defmulti unitGetMovePathTree (fn [type gameplayCtx unit] type))
-(defmulti unitGetWeapons (fn [type gameplayCtx unit] type))
-(defmulti unitGetInfo (fn [type gameplayCtx unit] type))
-(defmulti unitIsDead (fn [type gameplayCtx unit] type))
+(defmulti gameplayGetUnitMovePathTree (fn [type gameplayCtx unit] type))
+(defmulti gameplayGetUnitWeapons (fn [type gameplayCtx unit] type))
+(defmulti gameplayGetUnitInfo (fn [type gameplayCtx unit] type))
+(defmulti gameplayGetUnitIsDead (fn [type gameplayCtx unit] type))
 
-(defmulti formatToDraw (fn [type gameplayCtx] type))
+(defmulti gameplayFormatToDraw (fn [type gameplayCtx] type))
+
+
+(defmulti lobbyGetUnits (fn [type lobbyCtx] type))
+(defmulti lobbyGetPilots (fn [type lobbyCtx] type))
 
 (def *module nil)
