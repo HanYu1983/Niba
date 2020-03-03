@@ -10,7 +10,7 @@
          (if ~'isEnoughMoney
            (let [~'lobbyCtx (-> ~'lobbyCtx
                                 (update-in app.lobby.model/money (constantly (- ~'money ~'cost)))
-                                (update-in ~setter #(conj % [(cljs.core/random-uuid) ~'key])))]
+                                (update-in ~setter #(conj % [(str (cljs.core/random-uuid)) ~'key])))]
              (a/>! ~'outputCh ["ok" [~'id [nil ~'lobbyCtx]]])
              (recur (app.lobby.model/save ~'lobbyCtx)))
            (do

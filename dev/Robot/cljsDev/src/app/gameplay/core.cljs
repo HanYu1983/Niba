@@ -23,7 +23,8 @@
 
 (defn startGameplay [ctx inputCh outputCh]
   (a/go
-    (let [playmap (tool.map/generateMap 100 100
+    (let [lobbyCtx (:lobbyCtx ctx)
+          playmap (tool.map/generateMap 100 100
                                         {:deepsea 0.6
                                          :sea 0.6
                                          :sand 0.1
@@ -47,6 +48,7 @@
                                                           :type :robot
                                                           :position [2 0]}
                                                          {:robotKey "gundam"})
-                          (app.gameplay.model/setMap playmap))]
+                          (app.gameplay.model/setMap playmap)
+                          (merge {:lobbyCtx lobbyCtx}))]
       (a/<! (paint nil (app.module/gameplayFormatToDraw app.module/*module gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))
