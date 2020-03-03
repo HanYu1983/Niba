@@ -8,8 +8,9 @@
 (defn startLobby [ctx inputCh outputCh]
   (a/go
     (loop [lobbyCtx (-> (or (:lobbyCtx ctx)
-                            app.lobby.model/defaultLobbyModel)
+                            (app.lobby.model/load))
                         (update-in app.lobby.model/money (constantly (:money ctx))))]
+      
       (let [[cmd args] (a/<! inputCh)]
         (cond
           (= cmd "getRobotStoreList")
@@ -47,7 +48,7 @@
                 lobbyCtx (-> lobbyCtx
                              (update-in app.lobby.model/robotByPilot #(conj % [pilotKey robotKey])))]
             (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur lobbyCtx))
+            (recur (app.lobby.model/save lobbyCtx)))
 
           (= cmd "exit")
           (update ctx :lobbyCtx (constantly lobbyCtx))
