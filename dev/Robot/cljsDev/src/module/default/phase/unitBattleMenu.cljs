@@ -25,7 +25,8 @@
                                                                                   weaponIdx))))
       :data data
       :battleMenuSession (-> args
-                             (module.default.session.battleMenu/setRightActionFromReaction gameplayCtx))}))
+                             (module.default.session.battleMenu/setRightActionFromReaction gameplayCtx))
+      :unit left}))
   
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown

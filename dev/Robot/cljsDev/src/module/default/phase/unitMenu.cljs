@@ -34,7 +34,8 @@
   (m/basicNotify
    (let [[menu data] (module.default.data/getMenuData gameplayCtx unit)]
      {:menuCursor (tool.menuCursor/model menu)
-      :data data}))
+      :data data
+      :unit unit}))
 
   (= "KEY_DOWN" cmd)
   (m/handleKeyDown
