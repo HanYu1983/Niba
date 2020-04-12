@@ -39,15 +39,15 @@
                           (app.gameplay.model/createUnit {:player :player
                                                           :type :robot
                                                           :position [0 0]}
-                                                         {:robotKey "gundam"})
+                                                         {:robotKey :gundam})
                           (app.gameplay.model/createUnit {:player :player
                                                           :type :robot
                                                           :position [4 0]}
-                                                         {:robotKey "gaite_land"})
+                                                         {:robotKey :gaite_land})
                           (app.gameplay.model/createUnit {:player :ai1
                                                           :type :robot
                                                           :position [2 0]}
-                                                         {:robotKey "gundam"})
+                                                         {:robotKey :gundam})
                           (app.gameplay.model/setMap playmap)
                           (merge {:lobbyCtx lobbyCtx}))]
       (a/<! (paint nil (app.module/gameplayFormatToDraw app.module/*module gameplayCtx) inputCh outputCh))

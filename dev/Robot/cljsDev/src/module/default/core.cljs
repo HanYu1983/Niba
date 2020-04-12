@@ -15,7 +15,7 @@
     module.default.data/data))
 
 (defmethod app.module/gameplayOnInit :default [_ gameplayCtx]
-  (let [[gameplayCtx _] (->> (get module.default.data/data "robot")
+  (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(app.gameplay.model/createUnit gameplayCtx
                                                                        {:player (if (< (rand) 0.5)
@@ -30,7 +30,7 @@
 
 (defmethod app.module/gameplayOnUnitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
-                                  :pilot "amuro"
+                                  :pilot :amuro
                                   :weapons {}
                                   :components {}
                                   :tags {}}})]
@@ -121,11 +121,11 @@
 
 
 (defmethod app.module/lobbyGetUnits :default [_ lobbyCtx]
-  (->> (get-in module.default.data/data ["robot"])
+  (->> (get-in module.default.data/data [:robot])
        (map (fn [[k v]] [k {:cost (get v "cost")}]))
        (into {})))
 
 (defmethod app.module/lobbyGetPilots :default [_ lobbyCtx]
-  (->> (get-in module.default.data/data ["pilot"])
+  (->> (get-in module.default.data/data [:pilot])
        (map (fn [[k v]] [k {:cost (get v "cost")}]))
        (into {})))
