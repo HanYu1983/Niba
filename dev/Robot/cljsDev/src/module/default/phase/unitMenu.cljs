@@ -9,26 +9,13 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
   (:require [app.gameplay.phase.common])
+  (:require [module.default.data])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
   (:require-macros [module.default.phase.unitMenu]))
 
 (m/defwait unitSkyAnim [ctx args])
 (m/defwait unitGroundAnim [ctx args])
-
-(defn unitOnTransform [gameplayCtx unit fromKey toKey]
-  (let [weaponsNow (get-in unit [:state :weapons (keyword fromKey)])
-        weaponsNext (get-in unit [:state :weapons (keyword toKey)])
-        weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
-                    (merge (select-keys (zipmap (map :weaponKey weaponsNow) weaponsNow)
-                                        (map :weaponKey weaponsNext)))
-                    vals
-                    ((fn [vs]
-                       (into [] vs))))]
-    (-> unit
-        (update-in [:state :robot] (constantly toKey))
-        (update-in [:state :weapons (keyword toKey)] (constantly weapons)))))
-
 (m/defstate unitMenu [gameplayCtx {unit :unit}]
   nil
   (m/basicNotify
@@ -106,7 +93,7 @@
            (= select "sky/ground")
            (let [transformedUnit (update-in unit [:state :tags] (fn [tags]
                                                                   (if (contains? tags :sky)
-                                                                    (disj tags :sky)
+                                                                    (dissoc tags :sky)
                                                                     (conj tags [:sky true]))))
                  gameplayCtx (-> gameplayCtx
                                  (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
@@ -117,8 +104,7 @@
              (m/returnPop isEnd))
 
            (= cursor1 transformIdx)
-           (let [transformedUnit (unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) select)
-                 ; transformedUnit (app.gameplay.model/onTransform gameplayCtx unit select)
+           (let [transformedUnit (module.default.data/unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) select)
                  gameplayCtx (-> gameplayCtx
                                  (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
                  [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
@@ -126,7 +112,7 @@
 
            (= cursor1 weaponIdx)
            (let [menu (tool.menuCursor/getMenu menuCursor)
-                 weapon  (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
+                 weapon  (-> (module.default.data/getUnitWeapons gameplayCtx unit)
                              second
                              (nth cursor2))
                  weaponType (module.default.data/getWeaponType gameplayCtx unit weapon)]

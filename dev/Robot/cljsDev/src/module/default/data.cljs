@@ -11,10 +11,18 @@
         (println args)
         false)))
 
+(s/def ::robot keyword?)
 (s/def ::state (s/keys :req-un [::robot ::pilot ::weapons ::components ::tags]))
 (s/def ::unit (s/keys :req-un [::player ::type ::position ::state]))
+
+
+(s/def ::weaponKey keyword?)
 (s/def ::weapon (s/keys :req-un [::key ::weaponKey ::level ::tags ::bulletCount]))
-(s/def ::weaponSlot (s/tuple keyword? (s/* ::weapon)))
+(s/def ::weaponInfo (s/merge ::weapon (s/keys :req-un [::range ::type ::suitability])))
+(s/def ::weaponSlot (s/tuple keyword? (s/+ ::weapon)))
+
+(s/def ::data (s/keys :opt-un [::weaponIdx ::weapons ::unit]))
+(s/def ::menuData (s/tuple (constantly true) ::data))
 
 (def data (js->clj dataJson :keywordize-keys true))
 (defn getWeaponData [weaponKey]
@@ -43,20 +51,20 @@
 
 (defn moveCost [gameplayCtx unit from to]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]
-   :post []}
+   :post [(number? %)]}
   (let [isSky (-> (get-in unit [:state :tags])
                   (contains? :sky))]
     (if isSky
       1
       (let [playmap (app.gameplay.model/getMap gameplayCtx)
             t1 (get-in data [:terrainMapping
-                             (str (get-in playmap (reverse from)))
+                             ((comp keyword str) (get-in playmap (reverse from)))
                              :terrain])
             t2 (get-in data [:terrainMapping
-                             (str (get-in playmap (reverse to)))
+                             ((comp keyword str) (get-in playmap (reverse to)))
                              :terrain])]
-        (+ (get-in data [:terrain t1 "cost"])
-           (get-in data [:terrain t2 "cost"]))))))
+        (+ (get-in data [:terrain (keyword t1) :cost])
+           (get-in data [:terrain (keyword t2) :cost]))))))
 
 (def moveCostM (memoize moveCost))
 
@@ -113,7 +121,8 @@
       (get-in weaponData [:suitability]))))
 
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::unit ::weapon) [unit weapon])]}
+  {:pre [(explainValid? (s/tuple ::unit ::weapon) [unit weapon])]
+   :post [(explainValid? ::weaponInfo %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (do
@@ -150,12 +159,10 @@
       (let [en (->> (get robot :components)
                     (filter (fn [k]
                               (some #(= % k) ["energy1" "energy2" "energy3"])))
-                    (map (fn [k] (get-in data [:component k :value 0])))
+                    (map (fn [k] (get-in data [:component (keyword k) :value 0])))
                     (map int)
                     (apply +))]
         en))))
-
-(def getUnitMaxEnM (memoize getUnitMaxEn))
 
 
 (defn getUnitArmor [gameplayCtx unit]
@@ -218,8 +225,6 @@
                         :bulletCount (get weapon :maxBulletCount)})))
                  (get robot :weapons))))])))
 
-(def getUnitWeaponsM (memoize getUnitWeapons))
-
 (defn setUnitWeapons [unit weapons]
   {:pre [(explainValid? (s/tuple ::unit ::weaponSlot) [unit weapons])]
    :post [(explainValid? ::unit %)]}
@@ -239,21 +244,19 @@
 ;power
 (defn getUnitPower [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]
-   :post [(explainValid? number? %)]}
+   :post [(number? %)]}
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
       (let [power (->> (concat (map (fn [k]
-                                      (get-in data [:component k "powerCost"]))
+                                      (get-in data [:component k :powerCost]))
                                     (get robot :components))
                                (map (fn [k]
-                                      (get-in data [:weapon k "powerCost"]))
+                                      (get-in data [:weapon k :powerCost]))
                                     (get robot :weapons)))
-                       (apply - (get robot "power")))]
+                       (apply - (get robot :power)))]
         power))))
-
-(def getUnitPowerM (memoize getUnitPower))
 
 (defn getUnitSuitability [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]}
@@ -272,9 +275,9 @@
         terrain (-> (app.gameplay.model/getMap gameplayCtx)
                     (get-in (reverse (:position targetUnit)))
                     ((fn [cellId]
-                       (get-in data [:terrainMapping (str cellId) :terrain])))
+                       (get-in data [:terrainMapping ((comp keyword str) cellId) :terrain])))
                     ((fn [terrainKey]
-                       (get-in data [:terrain terrainKey]))))
+                       (get-in data [:terrain (keyword terrainKey)]))))
         weaponSuitability (get weaponInfo :suitability)
 
         ; 距離為基本命中率
@@ -334,12 +337,13 @@
 
 ; transform
 (defn getUnitTransforms [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::unit) [unit])]}
+  {:pre [(explainValid? (s/tuple ::unit) [unit])]
+   :post [(explainValid? (s/+ keyword?) %)]}
   (let [robotKey (get-in unit [:state :robot])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str "getUnitTransforms[" robotKey "] not found")))
-      (conj (get-in robot [:transform])
+      (conj (mapv keyword (get-in robot [:transform]))
             robotKey))))
 
 (defn getUnitInfo [gameplayCtx unit]
@@ -350,14 +354,14 @@
       (throw (js/Error. (str "getUnitInfo[" robotKey "] not found")))
       (update-in unit [:state] (fn [state]
                                  (merge state
-                                        {:weapons (->> (getUnitWeaponsM gameplayCtx unit)
+                                        {:weapons (->> (getUnitWeapons gameplayCtx unit)
                                                        second
                                                        (map (partial getWeaponInfo gameplayCtx unit)))
                                          :components (->> (getUnitComponentsM gameplayCtx unit)
                                                           second)
-                                         :maxHp (getUnitMaxHpM gameplayCtx unit)
-                                         :maxEn (getUnitMaxEnM gameplayCtx unit)
-                                         :power (getUnitPowerM gameplayCtx unit)}))))))
+                                         :maxHp (getUnitMaxHp gameplayCtx unit)
+                                         :maxEn (getUnitMaxEn gameplayCtx unit)
+                                         :power (getUnitPower gameplayCtx unit)}))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
   {:pre [(explainValid? (s/tuple ::weapon ::unit) [weapon unit])]
@@ -374,7 +378,7 @@
         unitAfter)
       
       (= (get weaponInfo :energyType) :bullet)
-      (let [weapons (getUnitWeaponsM gameplayCtx unit)
+      (let [weapons (getUnitWeapons gameplayCtx unit)
             weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
             weaponsAfter (update-in weapons [1] (fn [vs]
                                                   (replace {weapon weaponAfter} vs)))
@@ -402,13 +406,14 @@
          (apply =))))
 
 (defn getMenuData [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::unit) [unit])]}
+  {:pre [(explainValid? (s/tuple ::unit) [unit])]
+   :post [(explainValid? ::menuData %)]}
   (if (not (isBelongToPlayer gameplayCtx unit))
     [[["cancel"]] {}]
     (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
                            (tool.fsm/currState)
                            (= :unitBattleMenu))
-          weapons (->> (module.default.data/getUnitWeaponsM gameplayCtx unit)
+          weapons (->> (module.default.data/getUnitWeapons gameplayCtx unit)
                        second)
           weaponKeys (->> (range (count weapons))
                           (into []))
@@ -430,7 +435,12 @@
                             :unit unit}]
 
                           :else
-                          [[["move"] weaponKeys (module.default.data/getUnitTransforms gameplayCtx unit) ["sky/ground"] ["ok"] ["cancel"]]
+                          [[["move"] 
+                            weaponKeys 
+                            (module.default.data/getUnitTransforms gameplayCtx unit) 
+                            ["sky/ground"] 
+                            ["ok"] 
+                            ["cancel"]]
                            {:weaponIdx 1
                             :weapons weapons
                             :transformIdx 2
@@ -440,7 +450,7 @@
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
   {:pre [(explainValid? (s/tuple ::unit ::unit ::weapon) [unit fromUnit weapon])]}
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
-        weapon (->> (getUnitWeaponsM gameplayCtx unit)
+        weapon (->> (getUnitWeapons gameplayCtx unit)
                     second
                     reverse
                     (drop-while (fn [weapon]
@@ -539,7 +549,7 @@
 (defn getUnitMovePathTreeTo [gameplayCtx unit pos]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]}
   (let [playmap (app.gameplay.model/getMap gameplayCtx)
-        power (/ (getUnitPowerM gameplayCtx unit) 5)
+        power (/ (getUnitPower gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [cost]} curr]
@@ -556,3 +566,19 @@
 (defn getUnitMovePathTree [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]}
   (getUnitMovePathTreeTo gameplayCtx unit nil))
+
+
+
+(defn unitOnTransform [gameplayCtx unit fromKey toKey]
+  {:pre [(keyword? fromKey) (keyword? toKey)]}
+  (let [[_ weaponsNow] (getUnitWeapons gameplayCtx unit)
+        [_ weaponsNext] (getUnitWeapons gameplayCtx (update-in unit [:state :robot] (constantly toKey)))
+        weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
+                    (merge (select-keys (zipmap (map :weaponKey weaponsNow) weaponsNow)
+                                        (map :weaponKey weaponsNext)))
+                    vals
+                    ((fn [vs]
+                       (into [] vs))))]
+    (-> unit
+        (update-in [:state :robot] (constantly toKey))
+        (update-in [:state :weapons toKey] (constantly weapons)))))

@@ -72,7 +72,7 @@
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
 (defmethod app.module/gameplayGetUnitWeapons :default [_ gameplayCtx unit]
-  (module.default.data/getUnitWeaponsM gameplayCtx unit))
+  (module.default.data/getUnitWeapons gameplayCtx unit))
 
 (defmethod app.module/gameplayGetUnitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
@@ -122,10 +122,10 @@
 
 (defmethod app.module/lobbyGetUnits :default [_ lobbyCtx]
   (->> (get-in module.default.data/data [:robot])
-       (map (fn [[k v]] [k {:cost (get v "cost")}]))
+       (map (fn [[k v]] [k {:cost (get v :cost)}]))
        (into {})))
 
 (defmethod app.module/lobbyGetPilots :default [_ lobbyCtx]
   (->> (get-in module.default.data/data [:pilot])
-       (map (fn [[k v]] [k {:cost (get v "cost")}]))
+       (map (fn [[k v]] [k {:cost (get v :cost)}]))
        (into {})))

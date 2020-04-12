@@ -10,8 +10,8 @@
     (loop [lobbyCtx (-> (or (:lobbyCtx ctx)
                             (app.lobby.model/load))
                         (update-in app.lobby.model/money (constantly (:money ctx))))]
-      
       (let [[cmd args] (a/<! inputCh)]
+        (println "lobby:" cmd args)
         (cond
           (= cmd "getRobotStoreList")
           (let [[id subargs] args]

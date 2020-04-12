@@ -18,7 +18,7 @@
    (let [[menu data] (module.default.data/getMenuData gameplayCtx left)
          [_ weapon] leftAction]
      {:menuCursor (-> (tool.menuCursor/model menu)
-                      (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+                      (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (module.default.data/getUnitWeapons gameplayCtx left)
                                                                                                            second)
                                                                                                        (range))
                                                                                       weaponIdx (indexMap leftWeapon)]
@@ -45,7 +45,7 @@
           menu (tool.menuCursor/getMenu (:menuCursor state))
           weaponIdx (get-in state [:data :weaponIdx])
           attackRange (if (= cursor1 weaponIdx)
-                        (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+                        (-> (module.default.data/getUnitWeapons gameplayCtx left)
                             second
                             (nth cursor2)
                             ((fn [weapon]
@@ -63,7 +63,7 @@
           weaponIdx (get-in state [:data :weaponIdx])
 
           battleMenuSession (if (= cursor1 weaponIdx)
-                              (let [weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+                              (let [weapon (-> (module.default.data/getUnitWeapons gameplayCtx left)
                                                second
                                                (nth cursor2))]
                                 (-> (:battleMenuSession state)
@@ -72,7 +72,7 @@
                               (:battleMenuSession state))
 
           attackRange (if (= cursor1 weaponIdx)
-                        (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+                        (-> (module.default.data/getUnitWeapons gameplayCtx left)
                             second
                             (nth cursor2)
                             ((fn [weapon]
@@ -95,7 +95,7 @@
      (cond
        (= cursor1 weaponIdx)
        (let [cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-             weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx left)
+             weapon (-> (module.default.data/getUnitWeapons gameplayCtx left)
                         second
                         (nth cursor2))
              attackRange (module.default.data/getUnitWeaponRange gameplayCtx left weapon)

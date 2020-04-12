@@ -71,7 +71,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll true
+  (let [testAll false
         right 68
         down 83
         left 65
@@ -83,7 +83,11 @@
         rleft 37
         rright 39]
     (a/go
-      
+      (app.main/defclick (or testAll true) "transform"
+        [enter
+         down down enter
+         down])
+
       (app.main/defclick (or testAll false) "bullet count"
         [right right right right enter
          down right enter
@@ -135,7 +139,7 @@
       (testIt outputToView inputFromView))))
 
 (defn main []
-  (let [phase :debug
+  (let [phase :debug2
         outputToView (a/chan)
         inputFromView (a/chan)]
     (cond
