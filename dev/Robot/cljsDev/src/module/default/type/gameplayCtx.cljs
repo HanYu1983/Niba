@@ -6,6 +6,5 @@
 (s/def ::player (s/keys :req-un [::faction]))
 (s/def ::players (s/map-of keyword? ::player))
 (s/def ::gameplayCtx (s/keys :req-un [::map ::temp ::players ::units ::fsm]))
-(s/def ::appCtx (s/keys :req-un [::gameplayCtx ::lobbyCtx]))
 
 (def instance ::gameplayCtx)
