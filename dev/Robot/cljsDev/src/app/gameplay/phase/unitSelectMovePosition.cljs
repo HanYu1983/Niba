@@ -10,6 +10,8 @@
   (:require-macros [app.gameplay.phase.unitMenuImpl])
   (:require [app.gameplay.phase.common])
   (:require [app.gameplay.step.selectPosition])
+  (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
+  (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
   (:require [module.default.tmp]))
 
 (declare unitMenu)
@@ -55,4 +57,7 @@
                     (recur gameplayCtx)))))))
       (recur gameplayCtx))))
 
+
+(m/defwait unitSkyAnim [ctx args])
+(m/defwait unitGroundAnim [ctx args])
 (app.gameplay.phase.unitMenuImpl/impl)
