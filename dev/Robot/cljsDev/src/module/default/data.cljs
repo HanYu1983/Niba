@@ -1,5 +1,6 @@
 (ns module.default.data
   (:require [module.default.type.gameplayCtx])
+  (:require [module.default.type.unit])
   (:require [tool.units])
   (:require [tool.fsm])
   (:require [clojure.spec.alpha :as s])
@@ -26,10 +27,6 @@
        (println args)
        (throw (js/Error. (str "error"))))))
 
-(s/def ::robot keyword?)
-(s/def ::state (s/keys :req-un [::robot ::pilot ::weapons ::components ::tags]))
-(s/def ::unit (s/keys :req-un [::player ::type ::position ::state]))
-
 
 (s/def ::weaponKey keyword?)
 (s/def ::weapon (s/keys :req-un [::key ::weaponKey ::level ::tags ::bulletCount]))
@@ -39,17 +36,12 @@
 (s/def ::data (s/keys :opt-un [::weaponIdx ::weapons ::unit]))
 (s/def ::menuData (s/tuple (constantly true) ::data))
 
+(s/def ::unit module.default.type.unit/instance)
 (s/def ::gameplayCtx module.default.type.gameplayCtx/instance)
 
 
 
 (def data (js->clj dataJson :keywordize-keys true))
-
-
-
-
-
-
 
 
 (declare getUnitMaxHp setUnitHp getUnitMaxEn setUnitEn getUnitInfo)
