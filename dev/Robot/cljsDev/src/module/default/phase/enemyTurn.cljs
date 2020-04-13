@@ -6,7 +6,7 @@
   (:require [tool.units])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
+  (:require [module.default.phase.common])
   (:require [module.default.data]))
 
 
@@ -35,7 +35,7 @@
                 path (tool.map/buildPath paths nearest)
                 ;_ (println paths)
                 ;_ (println path)
-                _ (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit)
+                _ (a/<! (module.default.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit)
                                                                              :path (map (partial module.default.data/world2local camera) path)}
                                                                 inputCh outputCh))
 

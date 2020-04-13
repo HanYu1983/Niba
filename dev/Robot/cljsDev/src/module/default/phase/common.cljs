@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.common
+(ns module.default.phase.common
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m]))
 

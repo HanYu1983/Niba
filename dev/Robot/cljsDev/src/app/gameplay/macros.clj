@@ -60,12 +60,12 @@
          ~'gameplayCtx ~(if body
                           `(let [] ~@body)
                           'gameplayCtx)]
-     (a/<! (app.gameplay.phase.common/paint nil (module.default.tmp/gameplayFormatToDraw ~'app.module/*module ~'gameplayCtx) ~'inputCh ~'outputCh))
+     (a/<! (module.default.phase.common/paint nil (module.default.tmp/gameplayFormatToDraw ~'app.module/*module ~'gameplayCtx) ~'inputCh ~'outputCh))
      ~'gameplayCtx))
 
 (defmacro handleKeyDown [getter setter & body]
   `(let [~'keycode ~getter
-         ~setter (get app.gameplay.phase.common/actions ~'keycode)]
+         ~setter (get module.default.phase.common/actions ~'keycode)]
      (cond
        ~@body
 

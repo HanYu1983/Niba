@@ -6,11 +6,11 @@
   (:require [tool.units])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
+  (:require [module.default.phase.common])
   (:require [module.default.tmp]))
 
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
   (a/go
     (loop []
-      (a/<! (app.gameplay.phase.common/enemyTurnStart gameplayCtx enemy inputCh outputCh))
+      (a/<! (module.default.phase.common/enemyTurnStart gameplayCtx enemy inputCh outputCh))
       (a/<! (module.default.tmp/gameplayOnEnemyTurn app.module/*module gameplayCtx enemy inputCh outputCh)))))

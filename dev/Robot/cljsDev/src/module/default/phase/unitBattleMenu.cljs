@@ -7,7 +7,7 @@
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
+  (:require [module.default.phase.common])
   (:require [module.default.data])
   (:require [module.default.session.battleMenu])
   (:require [module.default.tmp]))
@@ -103,7 +103,7 @@
              isTargetInRange (some #(= (:position right) %) attackRange)]
          (if (not isTargetInRange)
            (let []
-             (a/<! (app.gameplay.phase.common/showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
+             (a/<! (module.default.phase.common/showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
              (recur gameplayCtx))
            (let [leftAction (get-in state [:battleMenuSession 0 :action])
                  rightAction (get-in state [:battleMenuSession 1 :action])
@@ -119,7 +119,7 @@
                  _ (when (nil? rightAfter)
                      (print (module.default.data/getUnits gameplayCtx))
                      (throw (js/Error. (str "rightAfter " (:key left) " not found"))))
-                 _ (a/<! (app.gameplay.phase.common/unitBattleAnim nil {:units [(module.default.data/mapUnitToLocal gameplayCtx nil left)
+                 _ (a/<! (module.default.phase.common/unitBattleAnim nil {:units [(module.default.data/mapUnitToLocal gameplayCtx nil left)
                                                                                 (module.default.data/mapUnitToLocal gameplayCtx nil right)]
                                                                         :unitsAfter [(module.default.data/mapUnitToLocal gameplayCtx nil leftAfter)
                                                                                      (module.default.data/mapUnitToLocal gameplayCtx nil rightAfter)]
@@ -131,7 +131,7 @@
                                                      ((fn [units]
                                                         (module.default.data/setUnits gameplayCtx units))))
                                      gameplayCtx (a/<! (module.default.tmp/gameplayOnUnitDead app.module/*module gameplayCtx leftAfter))
-                                     _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                     _ (a/<! (module.default.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
                  ; 防守方死亡
@@ -141,7 +141,7 @@
                                                      ((fn [units]
                                                         (module.default.data/setUnits gameplayCtx units))))
                                      gameplayCtx (a/<! (module.default.tmp/gameplayOnUnitDead app.module/*module gameplayCtx rightAfter))
-                                     _ (a/<! (app.gameplay.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                     _ (a/<! (module.default.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]
              (m/returnPop true))))

@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.playerTurn
+(ns module.default.phase.playerTurn
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
@@ -6,9 +6,9 @@
   (:require [tool.units])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
-  (:require [app.gameplay.phase.systemMenu :refer [systemMenu]])
-  (:require [app.gameplay.phase.unitMenu :refer [unitMenu]])
+  (:require [module.default.phase.common])
+  (:require [module.default.phase.systemMenu :refer [systemMenu]])
+  (:require [module.default.phase.unitMenu :refer [unitMenu]])
   (:require [module.default.tmp]))
 
 (m/defstate playerTurn [gameplayCtx _]
@@ -16,7 +16,7 @@
                   (tool.units/mapUnits (fn [unit]
                                          (module.default.tmp/gameplayOnUnitTurnStart app.module/*module gameplayCtx unit))))
         gameplayCtx (-> (module.default.data/setUnits gameplayCtx units))]
-    (a/<! (app.gameplay.phase.common/playerTurnStart gameplayCtx nil inputCh outputCh))
+    (a/<! (module.default.phase.common/playerTurnStart gameplayCtx nil inputCh outputCh))
     gameplayCtx)
 
   (m/basicNotify

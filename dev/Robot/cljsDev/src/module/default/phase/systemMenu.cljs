@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.systemMenu
+(ns module.default.phase.systemMenu
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
@@ -7,7 +7,7 @@
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
+  (:require [module.default.phase.common])
   (:require [app.gameplay.step.menu :refer [menu]]))
 
 (defn systemMenu [gameplayCtx args inputCh outputCh]

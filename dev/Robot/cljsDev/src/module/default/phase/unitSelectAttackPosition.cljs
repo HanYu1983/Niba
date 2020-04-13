@@ -7,7 +7,7 @@
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.phase.common])
+  (:require [module.default.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.step.selectPosition])
   (:require [app.gameplay.step.menu])

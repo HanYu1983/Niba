@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.unitSelectMovePosition
+(ns module.default.phase.unitSelectMovePosition
   (:require [clojure.core.async :as a])
   (:require [clojure.set])
   (:require [tool.map])
@@ -7,8 +7,8 @@
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
-  (:require-macros [app.gameplay.phase.unitMenuImpl])
-  (:require [app.gameplay.phase.common])
+  (:require-macros [module.default.phase.unitMenuImpl])
+  (:require [module.default.phase.common])
   (:require [app.gameplay.step.selectPosition])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
@@ -43,7 +43,7 @@
                              (tool.units/getByPosition cursor))]
         (if unitAtCursor
           (recur gameplayCtx)
-          (do (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit) :path (map (partial module.default.data/world2local camera) path)} inputCh outputCh))
+          (do (a/<! (module.default.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit) :path (map (partial module.default.data/world2local camera) path)} inputCh outputCh))
               (let [tempUnit (module.default.tmp/gameplayOnUnitMove app.module/*module gameplayCtx unit cursor)
                     state (merge state {:tempUnit tempUnit})
                     gameplayCtx (-> gameplayCtx
@@ -60,4 +60,4 @@
 
 (m/defwait unitSkyAnim [ctx args])
 (m/defwait unitGroundAnim [ctx args])
-(app.gameplay.phase.unitMenuImpl/impl)
+(module.default.phase.unitMenuImpl/impl)

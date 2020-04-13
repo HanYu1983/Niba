@@ -2,7 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
   (:require [module.default.data])
-  (:require [app.gameplay.phase.common :refer [playerTurnStart
+  (:require [module.default.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
                                                actions]])

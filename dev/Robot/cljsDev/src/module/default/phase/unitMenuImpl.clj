@@ -1,4 +1,4 @@
-(ns app.gameplay.phase.unitMenuImpl)
+(ns module.default.phase.unitMenuImpl)
 
 (defmacro impl []
   '(m/defstate unitMenu [gameplayCtx {unit :unit}]
