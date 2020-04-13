@@ -1,7 +1,7 @@
 (ns app.gameplay.core
   (:require [clojure.core.async :as a])
   (:require [module.default.phase.playerTurn :refer [playerTurn]])
-  (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
+  (:require [module.default.phase.enemyTurn :refer [enemyTurn]])
   (:require [module.default.phase.common :refer [paint]])
   (:require [app.module])
   (:require [module.default.tmp]))

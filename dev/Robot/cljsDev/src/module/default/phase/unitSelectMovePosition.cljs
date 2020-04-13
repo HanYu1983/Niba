@@ -8,6 +8,7 @@
   (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [module.default.phase.unitMenuImpl])
+  (:require-macros [module.default.phase.unitMenu])
   (:require [module.default.phase.common])
   (:require [app.gameplay.step.selectPosition])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])

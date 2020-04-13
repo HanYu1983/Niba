@@ -5,10 +5,8 @@
   (:require [app.module])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.map])
-  (:require [module.default.data])
   (:require [module.default.session.battleMenu])
-  (:require-macros [module.default.core :as mm])
-  (:require [module.default.phase.enemyTurn]))
+  (:require-macros [module.default.core :as mm]))
 
 (defn gameplayOnInit [_ gameplayCtx]
   (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
@@ -44,9 +42,6 @@
 
 (defn gameplayOnUnitDead [_ gameplayCtx unit]
   (a/go gameplayCtx))
-
-(defn gameplayOnEnemyTurn [_ gameplayCtx enemy inputCh outputCh]
-  (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
 
 (defn gameplayGetUnitMovePathTree [_ gameplayCtx unit]
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
