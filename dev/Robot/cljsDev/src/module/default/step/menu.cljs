@@ -1,6 +1,6 @@
-(ns app.gameplay.step.menu
+(ns module.default.step.menu
   (:require [clojure.core.async :as a])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require [module.default.phase.common])

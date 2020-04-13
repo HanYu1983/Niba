@@ -3,7 +3,7 @@
   (:require [clojure.core.async :as a])
   (:require [module.default.data])
   (:require [app.module])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require [tool.map])
   (:require [module.default.session.battleMenu])
   (:require-macros [module.default.core :as mm]))

@@ -6,11 +6,11 @@
   (:require [tool.units])
   (:require [tool.menuCursor])
   (:require [module.default.data])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require-macros [module.default.phase.unitMenuImpl])
   (:require-macros [module.default.phase.unitMenu])
   (:require [module.default.phase.common])
-  (:require [app.gameplay.step.selectPosition])
+  (:require [module.default.step.selectPosition])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
   (:require [module.default.tmp]))
@@ -18,7 +18,7 @@
 (declare unitMenu)
 
 (m/defbasic unitSelectMovePosition [gameplayCtx {unit :unit paths :paths}]
-  [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
+  [[gameplayCtx result] (a/<! (module.default.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]
 
   nil
 

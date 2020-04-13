@@ -6,7 +6,7 @@
   (:require [tool.units])
   (:require [tool.menuCursor])
   (:require [module.default.data])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require [module.default.phase.common])
   (:require [module.default.data])
   (:require [module.default.session.battleMenu])

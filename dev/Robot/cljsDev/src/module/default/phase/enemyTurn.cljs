@@ -5,7 +5,7 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [module.default.data])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require [module.default.phase.common])
   (:require [module.default.data]))
 

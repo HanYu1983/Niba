@@ -1,6 +1,6 @@
 (ns app.main
   (:require [clojure.core.async :as a])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require-macros [app.main])
   (:require [app.lobby.core])
   (:require [app.module])

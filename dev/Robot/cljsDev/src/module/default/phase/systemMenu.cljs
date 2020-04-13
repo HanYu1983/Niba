@@ -6,9 +6,9 @@
   (:require [tool.units])
   (:require [tool.menuCursor])
   (:require [module.default.data])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require [module.default.phase.common])
-  (:require [app.gameplay.step.menu :refer [menu]]))
+  (:require [module.default.step.menu :refer [menu]]))
 
 (defn systemMenu [gameplayCtx args inputCh outputCh]
   (a/go

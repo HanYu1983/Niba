@@ -1,4 +1,4 @@
-(ns app.gameplay.macros)
+(ns module.default.macros)
 
 (defmacro defwait [name [varCtx args] & body]
   `(defn ~name [~varCtx ~'args ~'inputCh ~'outputCh]
