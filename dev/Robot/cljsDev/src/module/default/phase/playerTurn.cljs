@@ -9,7 +9,7 @@
   (:require [module.default.phase.common])
   (:require [module.default.phase.systemMenu :refer [systemMenu]])
   (:require [module.default.phase.unitMenu :refer [unitMenu]])
-  (:require [module.default.tmp]))
+  (:require [module.default.view]))
 
 (m/defstate playerTurn [gameplayCtx _]
   (let [units (-> (module.default.data/getUnits gameplayCtx)

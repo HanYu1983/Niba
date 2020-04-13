@@ -2,7 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require [module.default.phase.common])
   (:require [module.default.data])
-  (:require [module.default.tmp])
+  (:require [module.default.view])
   (:require [module.default.phase.enemyTurn])
   (:require [module.default.phase.playerTurn]))
 
@@ -66,5 +66,5 @@
                                                           {:robotKey :gundam})
                           (module.default.data/setMap playmap)
                           (merge {:lobbyCtx lobbyCtx}))]
-      (a/<! (module.default.phase.common/paint nil (module.default.tmp/gameplayFormatToDraw nil gameplayCtx) inputCh outputCh))
+      (a/<! (module.default.phase.common/paint nil (module.default.view/gameplayFormatToDraw nil gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

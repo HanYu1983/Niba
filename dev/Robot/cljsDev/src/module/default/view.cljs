@@ -1,4 +1,4 @@
-(ns module.default.tmp
+(ns module.default.view
   (:require [clojure.set])
   (:require [clojure.core.async :as a])
   (:require [module.default.data])
