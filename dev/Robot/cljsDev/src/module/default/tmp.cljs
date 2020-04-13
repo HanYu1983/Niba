@@ -1,20 +1,21 @@
 (ns module.default.tmp
   (:require [clojure.set])
   (:require [clojure.core.async :as a])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require [app.module])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.map])
   (:require [module.default.data])
+  (:require [module.default.session.battleMenu])
   (:require-macros [module.default.core :as mm])
-  (:require [module.default.phase.unitMenu])
   (:require [module.default.phase.enemyTurn])
-  (:require [module.default.tmp]))
+  ;(:require [module.default.phase.unitMenu])
+  )
 
 (defn gameplayOnInit [_ gameplayCtx]
   (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                       [(app.gameplay.model/createUnit gameplayCtx
+                                       [(module.default.data/createUnit gameplayCtx
                                                                        {:player (if (< (rand) 0.5)
                                                                                   :player
                                                                                   :ai1)
@@ -47,7 +48,8 @@
   (a/go gameplayCtx))
 
 (defn gameplayOnUnitMenu [_ gameplayCtx args inputCh outputCh]
-  (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
+  ;(module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh)
+  )
 
 (defn gameplayOnEnemyTurn [_ gameplayCtx enemy inputCh outputCh]
   (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
@@ -66,27 +68,27 @@
   (module.default.data/getUnitInfo gameplayCtx unit))
 
 (defn gameplayFormatToDraw [_ gameplayCtx]
-  (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
+  (let [state (-> (module.default.data/getFsm gameplayCtx)
                   (tool.fsm/currState))
-        stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)
+        stateDetail (-> (module.default.data/getFsm gameplayCtx)
                         (tool.fsm/load))]
-    {:units (app.gameplay.model/getLocalUnits gameplayCtx nil nil)
-     :map (app.gameplay.model/getLocalMap gameplayCtx nil)
-     :cursor (app.gameplay.model/getLocalCursor gameplayCtx nil)
-     :moveRange (app.gameplay.model/getLocalMoveRange gameplayCtx nil)
-     :attackRange (app.gameplay.model/getLocalAttackRange gameplayCtx nil)
+    {:units (module.default.data/getLocalUnits gameplayCtx nil nil)
+     :map (module.default.data/getLocalMap gameplayCtx nil)
+     :cursor (module.default.data/getLocalCursor gameplayCtx nil)
+     :moveRange (module.default.data/getLocalMoveRange gameplayCtx nil)
+     :attackRange (module.default.data/getLocalAttackRange gameplayCtx nil)
      :checkHitRate (when (not= state nil)
                      (->> (get-in gameplayCtx [:temp :checkHitRate])
                           (map (fn [info]
                                  (-> info
-                                     (update :unit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))
-                                     (update :targetUnit (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil)))))))
-     :cellState (let [cursor (app.gameplay.model/getCursor gameplayCtx)
-                      unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+                                     (update :unit (partial module.default.data/mapUnitToLocal gameplayCtx nil))
+                                     (update :targetUnit (partial module.default.data/mapUnitToLocal gameplayCtx nil)))))))
+     :cellState (let [cursor (module.default.data/getCursor gameplayCtx)
+                      unitAtCursor (-> (module.default.data/getUnits gameplayCtx)
                                        (tool.units/getByPosition cursor))
                       terrain (module.default.data/getTerrain gameplayCtx cursor)]
                   {:unit (when unitAtCursor
-                           (app.gameplay.model/mapUnitToLocal gameplayCtx nil unitAtCursor))
+                           (module.default.data/mapUnitToLocal gameplayCtx nil unitAtCursor))
                    :terrain terrain})
      :unitMenu (when (some #(= % state) [:unitMenu :unitBattleMenu])
                  (let [unit (get stateDetail :unit)
@@ -100,7 +102,7 @@
                    (select-keys stateDetail [:menuCursor :data]))
      :battleMenu (when (some #(= % state) [:unitBattleMenu])
                    (let [{battleMenuSession :battleMenuSession} stateDetail]
-                     {:preview (module.default.session.battleMenu/mapUnits battleMenuSession (partial app.gameplay.model/mapUnitToLocal gameplayCtx nil))}))
+                     {:preview (module.default.session.battleMenu/mapUnits battleMenuSession (partial module.default.data/mapUnitToLocal gameplayCtx nil))}))
      :state state
      :stateDetail stateDetail}))
 

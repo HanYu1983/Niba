@@ -2,7 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require [app.gameplay.phase.common])
   (:require [module.default.tmp]))
 

@@ -14,7 +14,7 @@
      (let [weapon (-> (module.default.data/getUnitWeapons gameplayCtx unit)
                       second
                       (nth cursor2))
-           unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
+           unitsNearby (->> (module.default.data/getUnitsByRegion gameplayCtx (:position unit) nil)
                             (filter (comp not (partial module.default.data/isFriendlyUnit gameplayCtx unit))))
            checkHitRate (map (fn [targetUnit]
                                {:unit unit

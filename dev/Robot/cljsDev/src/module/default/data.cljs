@@ -1,7 +1,6 @@
 (ns module.default.data
   (:require [clojure.spec.alpha :as s])
   (:require ["./data.js" :as dataJson])
-  (:require [app.gameplay.model])
   (:require-macros [module.default.core :as mm]))
 
 (defn explainValid? [sp args]
@@ -25,6 +24,220 @@
 (s/def ::menuData (s/tuple (constantly true) ::data))
 
 (def data (js->clj dataJson :keywordize-keys true))
+
+
+
+
+
+
+
+
+(declare getUnitMaxHp setUnitHp getUnitMaxEn setUnitEn getUnitInfo)
+
+; ==============
+; === helper ===
+; ==============
+
+(defn rectByUnit [{[x y] :position}]
+  [x y (+ 0.5 x) (+ 0.5 y)])
+
+(defn world2local [camera position]
+  (map - position camera))
+
+(defn local2world [camera position]
+  (map + position camera))
+
+; ==============
+; === config ===
+; ==============
+
+(def mapViewSize [20 20])
+
+(def defaultGameplayModel {:map nil
+                           :temp {:cursor [0 0]
+                                  :camera [0 0]
+                                  :moveRange []
+                                  :attackRange []
+                                  :mapAttackRange []}
+                           :players {:player {:faction 0}
+                                     :ai1 {:faction 1}
+                                     :ai2 {:faction 1}}
+                           :units tool.units/model
+                           :fsm tool.fsm/model})
+
+(defn getPlayers [ctx]
+  (:players ctx))
+
+; ===================
+; === Phase State ===
+; ===================
+
+(defn getFsm [ctx]
+  (:fsm ctx))
+
+(defn setFsm [ctx fsm]
+  (merge ctx {:fsm fsm}))
+
+; ===========
+; === Map ===
+; ===========
+
+; map
+(declare getCamera)
+
+(defn setMap [ctx map]
+  (update ctx :map (constantly map)))
+
+(defn getMap [ctx]
+  (:map ctx))
+
+(defn getLocalMap [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        playmap (:map ctx)]
+    (tool.map/subMap camera mapViewSize playmap)))
+
+; camera
+(defn setCamera [ctx camera]
+  (update-in ctx [:temp :camera] (constantly camera)))
+
+(defn getCamera [ctx]
+  (get-in ctx [:temp :camera]))
+
+(defn boundCamera [ctx camera]
+  (->> camera
+       (map min (map - (tool.map/getMapSize (getMap ctx)) mapViewSize))
+       (map max [0 0])))
+
+; cursor
+(defn setCursor [ctx cursor]
+  (update-in ctx [:temp :cursor] (constantly cursor)))
+
+(defn getCursor [ctx]
+  (get-in ctx [:temp :cursor]))
+
+(defn boundCursor [ctx cursor]
+  (->> cursor
+       (map max [0 0])
+       (map min (map dec (tool.map/getMapSize (getMap ctx))))))
+
+(defn getLocalCursor [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        cursor (getCursor ctx)]
+    (world2local camera cursor)))
+
+; ============
+; === unit ===
+; ============
+
+(defn updateUnit [ctx unit f]
+  (update ctx :units (fn [origin]
+                       (-> origin
+                           (tool.units/delete unit)
+                           (tool.units/add (f unit))))))
+
+(defn setUnits [ctx units]
+  (update ctx :units (constantly units)))
+
+(defn getUnits [ctx]
+  (:units ctx))
+
+(defn getUnitsInRange [ctx range]
+  (->> (map (fn [pos]
+              (tool.units/getByPosition (getUnits ctx) pos))
+            range)
+       (filter identity)))
+
+(defn getUnitsByRegion [ctx camera searchSize]
+  (let [camera (or camera (getCamera ctx))
+        [p1 p2] (or searchSize [(map - camera mapViewSize)
+                                (map + camera mapViewSize)])
+        units (tool.units/getByRegion (getUnits ctx) p1 p2)]
+    units))
+
+(defn mapUnitToLocal [ctx camera unit]
+  (let [camera (or camera (getCamera ctx))]
+    (-> unit
+        (update :position (partial world2local camera))
+        ((fn [unit]
+           (getUnitInfo ctx unit))))))
+
+(defn getLocalUnits [ctx camera searchSize]
+  (let [camera (or camera (getCamera ctx))]
+    (->> (getUnitsByRegion ctx camera searchSize)
+         (map (fn [unit]
+                (mapUnitToLocal ctx camera unit))))))
+
+; ============
+; === view ===
+; ============
+
+(defn updateTemp [ctx f]
+  (update-in ctx [:temp] f))
+
+(defn setMoveRange [ctx v]
+  (update-in ctx [:temp :moveRange] (constantly v)))
+
+(defn getMoveRange [ctx]
+  (get-in ctx [:temp :moveRange]))
+
+
+(defn setAttackRange [ctx v]
+  (update-in ctx [:temp :attackRange] (constantly v)))
+
+(defn getAttackRange [ctx]
+  (get-in ctx [:temp :attackRange]))
+
+
+(defn getLocalMoveRange [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        moveRange (getMoveRange ctx)]
+    (map (partial world2local camera) moveRange)))
+
+(defn getLocalAttackRange [ctx camera]
+  (let [camera (or camera (getCamera ctx))
+        range (getAttackRange ctx)]
+    (map (partial world2local camera) range)))
+
+; ==============
+; === module ===
+; ==============
+
+(defn gameplayOnUnitCreate [_ gameplayCtx unit {:keys [robotKey] :as args}]
+  (let [unit (merge unit {:state {:robot robotKey
+                                  :pilot :amuro
+                                  :weapons {}
+                                  :components {}
+                                  :tags {}}})]
+    (-> unit
+        ((fn [unit]
+           (setUnitHp unit (getUnitMaxHp gameplayCtx unit))))
+        ((fn [unit]
+           (setUnitEn unit (getUnitMaxEn gameplayCtx unit)))))))
+
+(defn createUnit [ctx {:keys [key position] :as unit} args]
+  (-> (getUnits ctx)
+      (tool.units/add (merge (gameplayOnUnitCreate nil ctx unit args)
+                             {:key (or key (gensym))
+                              :position (or position [0 0])}))
+      ((fn [units]
+         (setUnits ctx units)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 (defn getWeaponData [weaponKey]
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -37,7 +250,7 @@
 
 
 (defn getTerrainKey [gameplayCtx from]
-  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+  (let [playmap (module.default.data/getMap gameplayCtx)
         t1 (get-in data [:terrainMapping
                          (str (get-in playmap (reverse from)))
                          :terrain])]
@@ -56,7 +269,7 @@
                   (contains? :sky))]
     (if isSky
       1
-      (let [playmap (app.gameplay.model/getMap gameplayCtx)
+      (let [playmap (module.default.data/getMap gameplayCtx)
             t1 (get-in data [:terrainMapping
                              ((comp keyword str) (get-in playmap (reverse from)))
                              :terrain])
@@ -272,7 +485,7 @@
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         pilot (getPilotInfo gameplayCtx unit (get-in unit [:state :pilot]))
         targetPilot (getPilotInfo gameplayCtx targetUnit (get-in targetUnit [:state :pilot]))
-        terrain (-> (app.gameplay.model/getMap gameplayCtx)
+        terrain (-> (module.default.data/getMap gameplayCtx)
                     (get-in (reverse (:position targetUnit)))
                     ((fn [cellId]
                        (get-in data [:terrainMapping ((comp keyword str) cellId) :terrain])))
@@ -323,7 +536,7 @@
   {:pre [(explainValid? (s/tuple ::unit ::weapon ::unit) [unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
-        terrain (-> (app.gameplay.model/getMap gameplayCtx)
+        terrain (-> (module.default.data/getMap gameplayCtx)
                     (get-in (reverse (:position targetUnit)))
                     ((fn [cellId]
                        (get-in data [:terrainMapping (str cellId) :terrain])))
@@ -410,10 +623,10 @@
    :post [(explainValid? ::menuData %)]}
   (if (not (isBelongToPlayer gameplayCtx unit))
     [[["cancel"]] {}]
-    (let [isBattleMenu (-> (app.gameplay.model/getFsm gameplayCtx)
+    (let [isBattleMenu (-> (module.default.data/getFsm gameplayCtx)
                            (tool.fsm/currState)
                            (= :unitBattleMenu))
-          weapons (->> (module.default.data/getUnitWeapons gameplayCtx unit)
+          weapons (->> (getUnitWeapons gameplayCtx unit)
                        second)
           weaponKeys (->> (range (count weapons))
                           (into []))
@@ -437,7 +650,7 @@
                           :else
                           [[["move"] 
                             weaponKeys 
-                            (module.default.data/getUnitTransforms gameplayCtx unit) 
+                            (getUnitTransforms gameplayCtx unit) 
                             ["sky/ground"] 
                             ["ok"] 
                             ["cancel"]]
@@ -526,8 +739,8 @@
                                     [leftAfter rightAfter]
                                     [leftAction rightAction])
         gameplayCtx (-> gameplayCtx
-                        (app.gameplay.model/updateUnit left (constantly leftAfter))
-                        (app.gameplay.model/updateUnit right (constantly rightAfter)))]
+                        (module.default.data/updateUnit left (constantly leftAfter))
+                        (module.default.data/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
 (defn formatPathTree [power paths]
@@ -548,7 +761,7 @@
 
 (defn getUnitMovePathTreeTo [gameplayCtx unit pos]
   {:pre [(explainValid? (s/tuple ::unit) [unit])]}
-  (let [playmap (app.gameplay.model/getMap gameplayCtx)
+  (let [playmap (module.default.data/getMap gameplayCtx)
         power (/ (getUnitPower gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)

@@ -4,7 +4,7 @@
   (:require [tool.map])
   (:require [tool.fsm])
   (:require [tool.units])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
   (:require [module.default.data]))
@@ -14,7 +14,7 @@
 
 (defmethod _enemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (a/go
-    (let [units (->> (app.gameplay.model/getUnits gameplayCtx)
+    (let [units (->> (module.default.data/getUnits gameplayCtx)
                      (tool.units/getAll)
                      (filter (fn [unit]
                                (= (get unit :player) enemy))))]
@@ -24,7 +24,7 @@
           (let [unit (first units)
 
                 targetPosition [3 3]
-                camera (app.gameplay.model/getCamera gameplayCtx)
+                camera (module.default.data/getCamera gameplayCtx)
                 paths (module.default.data/getUnitMovePathTreeTo gameplayCtx unit targetPosition)
                 nearest (if (paths targetPosition)
                           targetPosition
@@ -35,11 +35,11 @@
                 path (tool.map/buildPath paths nearest)
                 ;_ (println paths)
                 ;_ (println path)
-                _ (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit)
-                                                                             :path (map (partial app.gameplay.model/world2local camera) path)}
+                _ (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit)
+                                                                             :path (map (partial module.default.data/world2local camera) path)}
                                                                 inputCh outputCh))
 
-                gameplayCtx (-> (app.gameplay.model/updateUnit gameplayCtx unit (fn [unit]
+                gameplayCtx (-> (module.default.data/updateUnit gameplayCtx unit (fn [unit]
                                                                                   unit)))]
             (recur gameplayCtx (rest units)))
           gameplayCtx)))))

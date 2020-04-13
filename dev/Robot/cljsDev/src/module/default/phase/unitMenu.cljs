@@ -5,7 +5,7 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.unitSelectMovePosition :refer [unitSelectMovePosition]])
   (:require [app.gameplay.phase.common])
@@ -41,9 +41,9 @@
           attackRange (module.default.phase.unitMenu/getAttackRange)
           checkHitRate (module.default.phase.unitMenu/getHitRate)
           gameplayCtx (-> gameplayCtx
-                          (app.gameplay.model/updateTemp (fn [temp]
+                          (module.default.data/updateTemp (fn [temp]
                                                            (merge temp {:checkHitRate checkHitRate})))
-                          (app.gameplay.model/setAttackRange attackRange))]
+                          (module.default.data/setAttackRange attackRange))]
       (recur gameplayCtx)))
 
    (some #(= % action) [:left :right])
@@ -55,16 +55,16 @@
           attackRange (module.default.phase.unitMenu/getAttackRange)
           checkHitRate (module.default.phase.unitMenu/getHitRate)
           gameplayCtx (-> gameplayCtx
-                          (app.gameplay.model/updateTemp (fn [temp]
+                          (module.default.data/updateTemp (fn [temp]
                                                            (merge temp {:checkHitRate checkHitRate})))
-                          (app.gameplay.model/setAttackRange attackRange))]
+                          (module.default.data/setAttackRange attackRange))]
       (recur gameplayCtx)))
 
    (= :enter action)
    (let [select (tool.menuCursor/getSelect (:menuCursor state))]
      (cond
        (= "move" select)
-       (let [[mw mh] app.gameplay.model/mapViewSize
+       (let [[mw mh] module.default.data/mapViewSize
              shortestPathTree (module.default.tmp/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
              moveRange (map first shortestPathTree)
              [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
@@ -97,17 +97,17 @@
                                                                     (dissoc tags :sky)
                                                                     (conj tags [:sky true]))))
                  gameplayCtx (-> gameplayCtx
-                                 (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
+                                 (module.default.data/updateUnit unit (constantly transformedUnit)))
                  _ (if (contains? (get-in transformedUnit [:state :tags]) :sky)
-                     (a/<! (unitSkyAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
-                     (a/<! (unitGroundAnim nil {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))
+                     (a/<! (unitSkyAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
+                     (a/<! (unitGroundAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))
                  [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
              (m/returnPop isEnd))
 
            (= cursor1 transformIdx)
            (let [transformedUnit (module.default.data/unitOnTransform gameplayCtx unit (get-in unit [:state :robot]) select)
                  gameplayCtx (-> gameplayCtx
-                                 (app.gameplay.model/updateUnit unit (constantly transformedUnit)))
+                                 (module.default.data/updateUnit unit (constantly transformedUnit)))
                  [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
              (m/returnPop isEnd))
 

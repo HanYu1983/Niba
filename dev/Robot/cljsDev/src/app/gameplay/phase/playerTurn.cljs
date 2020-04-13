@@ -4,7 +4,7 @@
   (:require [tool.map])
   (:require [tool.fsm])
   (:require [tool.units])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
   (:require [app.gameplay.phase.systemMenu :refer [systemMenu]])
@@ -12,10 +12,10 @@
   (:require [module.default.tmp]))
 
 (m/defstate playerTurn [gameplayCtx _]
-  (let [units (-> (app.gameplay.model/getUnits gameplayCtx)
+  (let [units (-> (module.default.data/getUnits gameplayCtx)
                   (tool.units/mapUnits (fn [unit]
                                          (module.default.tmp/gameplayOnUnitTurnStart app.module/*module gameplayCtx unit))))
-        gameplayCtx (-> (app.gameplay.model/setUnits gameplayCtx units))]
+        gameplayCtx (-> (module.default.data/setUnits gameplayCtx units))]
     (a/<! (app.gameplay.phase.common/playerTurnStart gameplayCtx nil inputCh outputCh))
     gameplayCtx)
 
@@ -32,34 +32,34 @@
    (some #(= % action) [:up :down :left :right])
    (m/handleCursor
     cursor
-    (let [unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+    (let [unitAtCursor (-> (module.default.data/getUnits gameplayCtx)
                            (tool.units/getByPosition cursor))
           moveRange (if unitAtCursor
-                      (let [[mw mh] app.gameplay.model/mapViewSize
+                      (let [[mw mh] module.default.data/mapViewSize
                             shortestPathTree (module.default.tmp/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unitAtCursor)
                             moveRange (map first shortestPathTree)]
                         moveRange)
                       (let []
                         []))]
       (recur (-> gameplayCtx
-                 (app.gameplay.model/setMoveRange moveRange)))))
+                 (module.default.data/setMoveRange moveRange)))))
 
    (= :enter action)
-   (let [cursor (app.gameplay.model/getCursor gameplayCtx)
-         unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+   (let [cursor (module.default.data/getCursor gameplayCtx)
+         unitAtCursor (-> (module.default.data/getUnits gameplayCtx)
                           (tool.units/getByPosition cursor))]
      (if unitAtCursor
        (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
          (if isEnd
-           (let [unit (-> (app.gameplay.model/getUnits gameplayCtx)
+           (let [unit (-> (module.default.data/getUnits gameplayCtx)
                           (tool.units/getByKey (:key unitAtCursor)))
                  unitOnDone (module.default.tmp/gameplayOnUnitDone app.module/*module gameplayCtx unit)
                  units (-> gameplayCtx
-                           (app.gameplay.model/getUnits)
+                           (module.default.data/getUnits)
                            (tool.units/delete unit)
                            (tool.units/add unitOnDone))
                  gameplayCtx (-> gameplayCtx
-                                 (app.gameplay.model/setUnits units))]
+                                 (module.default.data/setUnits units))]
              (recur gameplayCtx))
            (recur gameplayCtx)))
        (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]

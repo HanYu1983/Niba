@@ -5,7 +5,7 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [app.gameplay.phase.unitMenuImpl])
   (:require [app.gameplay.phase.common])
@@ -20,12 +20,12 @@
   nil
 
   (m/basicNotify
-   {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
+   {:tempMoveRange (let [[mw mh] module.default.data/mapViewSize
                          shortestPathTree (module.default.tmp/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
                          moveRange (map first shortestPathTree)]
                      moveRange)}
-   (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
-                                                    (app.gameplay.model/getFsm)
+   (module.default.data/setMoveRange gameplayCtx (-> gameplayCtx
+                                                    (module.default.data/getFsm)
                                                     (tool.fsm/load)
                                                     (:tempMoveRange))))
 
@@ -33,25 +33,25 @@
   (m/returnPop false)
 
   (true? result)
-  (let [cursor (app.gameplay.model/getCursor gameplayCtx)
-        camera (app.gameplay.model/getCamera gameplayCtx)
+  (let [cursor (module.default.data/getCursor gameplayCtx)
+        camera (module.default.data/getCamera gameplayCtx)
         path (tool.map/buildPath paths cursor)]
     (if (> (count path) 1)
-      (let [unitAtCursor (-> (app.gameplay.model/getUnits gameplayCtx)
+      (let [unitAtCursor (-> (module.default.data/getUnits gameplayCtx)
                              (tool.units/getByPosition cursor))]
         (if unitAtCursor
           (recur gameplayCtx)
-          (do (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
+          (do (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit) :path (map (partial module.default.data/world2local camera) path)} inputCh outputCh))
               (let [tempUnit (module.default.tmp/gameplayOnUnitMove app.module/*module gameplayCtx unit cursor)
                     state (merge state {:tempUnit tempUnit})
                     gameplayCtx (-> gameplayCtx
-                                    (app.gameplay.model/updateUnit unit (constantly tempUnit))
-                                    (app.gameplay.model/setFsm (tool.fsm/save fsm state)))
+                                    (module.default.data/updateUnit unit (constantly tempUnit))
+                                    (module.default.data/setFsm (tool.fsm/save fsm state)))
                     [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
                 (if isEnd
                   (m/returnPop true)
                   (let [tempUnit (:tempUnit state)
-                        gameplayCtx (app.gameplay.model/updateUnit gameplayCtx tempUnit (constantly unit))]
+                        gameplayCtx (module.default.data/updateUnit gameplayCtx tempUnit (constantly unit))]
                     (recur gameplayCtx)))))))
       (recur gameplayCtx))))
 

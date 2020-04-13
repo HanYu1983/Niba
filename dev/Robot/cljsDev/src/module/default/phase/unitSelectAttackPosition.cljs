@@ -5,7 +5,7 @@
   (:require [tool.fsm])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])

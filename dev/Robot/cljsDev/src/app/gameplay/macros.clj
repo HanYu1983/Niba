@@ -31,13 +31,13 @@
        (a/go
          (println "[model][state]" ~(str name) ~'args)
          (let [~varCtx ~(or (first body)
-                            `(let [~'fsm (-> (app.gameplay.model/getFsm ~varCtx)
+                            `(let [~'fsm (-> (module.default.data/getFsm ~varCtx)
                                              (tool.fsm/pushState (keyword ~(str name))))]
-                               (app.gameplay.model/setFsm ~varCtx ~'fsm)))]
+                               (module.default.data/setFsm ~varCtx ~'fsm)))]
            (loop [~varCtx ~varCtx]
              (let [~varCtx ~(or (first (rest body))
                                 varCtx)
-                   ~'fsm (app.gameplay.model/getFsm ~varCtx)
+                   ~'fsm (module.default.data/getFsm ~varCtx)
                    ~'state (tool.fsm/load ~'fsm)]
                (let [~inputVar ~input]
                  (cond
@@ -54,9 +54,9 @@
 
 
 (defmacro basicNotify [state & body]
-  `(let [~'fsm (app.gameplay.model/getFsm ~'gameplayCtx)
+  `(let [~'fsm (module.default.data/getFsm ~'gameplayCtx)
          ~'state (or (tool.fsm/load ~'fsm) ~state)
-         ~'gameplayCtx (app.gameplay.model/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))
+         ~'gameplayCtx (module.default.data/setFsm ~'gameplayCtx (tool.fsm/save ~'fsm ~'state))
          ~'gameplayCtx ~(if body
                           `(let [] ~@body)
                           'gameplayCtx)]
@@ -73,26 +73,26 @@
        (recur ~'gameplayCtx))))
 
 (defmacro handleCursor [setter & body]
-  `(let [temp# (->> (app.gameplay.model/getCursor ~'gameplayCtx)
+  `(let [temp# (->> (module.default.data/getCursor ~'gameplayCtx)
                     (map + (~'action {:up [0 -1]
                                       :down [0 1]
                                       :left [-1 0]
                                       :right [1 0]}))
-                    (app.gameplay.model/boundCursor ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay.model/setCursor ~'gameplayCtx temp#)
+                    (module.default.data/boundCursor ~'gameplayCtx))
+         ~'gameplayCtx (module.default.data/setCursor ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))
 
 (defmacro handleCamera [setter & body]
   ; 加上~'修改namespace為local
   ; 使用#隨機命名變量
-  `(let [temp# (->> (app.gameplay.model/getCamera ~'gameplayCtx)
+  `(let [temp# (->> (module.default.data/getCamera ~'gameplayCtx)
                     (map + (~'action {:rup [0 -1]
                                       :rdown [0 1]
                                       :rleft [-1 0]
                                       :rright [1 0]}))
-                    (app.gameplay.model/boundCamera ~'gameplayCtx))
-         ~'gameplayCtx (app.gameplay.model/setCamera ~'gameplayCtx temp#)
+                    (module.default.data/boundCamera ~'gameplayCtx))
+         ~'gameplayCtx (module.default.data/setCamera ~'gameplayCtx temp#)
          ~setter temp#]
      ~@body))
 
@@ -102,7 +102,7 @@
                                                                            (~'action {:up dec :down inc}))))
          ~'fsm (tool.fsm/save ~'fsm ~'state)
          ~'gameplayCtx (-> ~'gameplayCtx
-                           (app.gameplay.model/setFsm ~'fsm))]
+                           (module.default.data/setFsm ~'fsm))]
      ~@body))
 
 (defmacro handleMenuCursorLeftRight [& body]
@@ -111,15 +111,15 @@
                                                                            (~'action {:left dec :right inc}))))
          ~'fsm (tool.fsm/save ~'fsm ~'state)
          ~'gameplayCtx (-> ~'gameplayCtx
-                           (app.gameplay.model/setFsm  ~'fsm))]
+                           (module.default.data/setFsm  ~'fsm))]
      ~@body))
 
 (defmacro returnPopCtx []
   `(-> ~'gameplayCtx
-       (app.gameplay.model/updateTemp (fn [~'temp]
+       (module.default.data/updateTemp (fn [~'temp]
                                         (dissoc ~'temp :checkHitRate)))
-       (app.gameplay.model/setAttackRange [])
-       (app.gameplay.model/setFsm (tool.fsm/popState ~'fsm))))
+       (module.default.data/setAttackRange [])
+       (module.default.data/setFsm (tool.fsm/popState ~'fsm))))
 
 (defmacro returnPop [v]
   `[(returnPopCtx)

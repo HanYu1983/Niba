@@ -2,8 +2,7 @@
   (:require [tool.fsm])
   (:require [tool.map])
   (:require [tool.units])
-  (:require [app.module])
-  (:require [module.default.data]))
+  (:require [app.module]))
 
 ; ==============
 ; === helper ===

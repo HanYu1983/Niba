@@ -1,5 +1,6 @@
 (ns module.default.core
-  (:require [clojure.core.async :as a]))
+  (:require [clojure.core.async :as a])
+  (:require [module.default.data]))
 
 (defmethod app.module/loadData :default [_]
   (a/go

@@ -1,7 +1,7 @@
 (ns app.gameplay.step.selectPosition
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint

@@ -4,7 +4,7 @@
   (:require [tool.map])
   (:require [tool.fsm])
   (:require [tool.units])
-  (:require [app.gameplay.model])
+  (:require [module.default.data])
   (:require-macros [app.gameplay.macros :as m])
   (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitBattleMenu :refer [unitBattleMenu]])
@@ -23,8 +23,8 @@
   (m/returnPop false)
 
   (true? result)
-  (let [cursor (app.gameplay.model/getCursor gameplayCtx)
-        units (app.gameplay.model/getUnits gameplayCtx)
+  (let [cursor (module.default.data/getCursor gameplayCtx)
+        units (module.default.data/getUnits gameplayCtx)
         unitAtCursor (tool.units/getByPosition units cursor)]
     (if (and unitAtCursor (not (module.default.data/isFriendlyUnit gameplayCtx unit unitAtCursor)))
       (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
