@@ -3,7 +3,8 @@
   (:require [app.gameplay.phase.playerTurn :refer [playerTurn]])
   (:require [app.gameplay.phase.enemyTurn :refer [enemyTurn]])
   (:require [app.gameplay.phase.common :refer [paint]])
-  (:require [app.module]))
+  (:require [app.module])
+  (:require [module.default.tmp]))
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go-loop [gameplayCtx gameplayCtx]
@@ -35,7 +36,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> (app.module/gameplayOnInit app.module/*module app.gameplay.model/defaultGameplayModel)
+          gameplayCtx (-> (module.default.tmp/gameplayOnInit app.module/*module app.gameplay.model/defaultGameplayModel)
                           (app.gameplay.model/createUnit {:player :player
                                                           :type :robot
                                                           :position [0 0]}
@@ -50,5 +51,5 @@
                                                          {:robotKey :gundam})
                           (app.gameplay.model/setMap playmap)
                           (merge {:lobbyCtx lobbyCtx}))]
-      (a/<! (paint nil (app.module/gameplayFormatToDraw app.module/*module gameplayCtx) inputCh outputCh))
+      (a/<! (paint nil (module.default.tmp/gameplayFormatToDraw app.module/*module gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

@@ -8,13 +8,14 @@
   (:require [module.default.data])
   (:require-macros [module.default.core :as mm])
   (:require [module.default.phase.unitMenu])
-  (:require [module.default.phase.enemyTurn]))
+  (:require [module.default.phase.enemyTurn])
+  (:require [module.default.tmp]))
 
 (defmethod app.module/loadData :default [_]
   (a/go
     module.default.data/data))
 
-(defmethod app.module/gameplayOnInit :default [_ gameplayCtx]
+(defmethod module.default.tmp/gameplayOnInit :default [_ gameplayCtx]
   (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(app.gameplay.model/createUnit gameplayCtx
@@ -28,7 +29,7 @@
                                      [gameplayCtx 1]))]
     gameplayCtx))
 
-(defmethod app.module/gameplayOnUnitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
+(defmethod module.default.tmp/gameplayOnUnitCreate :default [_ gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot :amuro
                                   :weapons {}
@@ -40,7 +41,7 @@
         ((fn [unit]
            (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
 
-(defmethod app.module/gameplayOnUnitMove :default [_ gameplayCtx unit pos]
+(defmethod module.default.tmp/gameplayOnUnitMove :default [_ gameplayCtx unit pos]
   (let [vel (->> (map - (:position unit) pos)
                  (repeat 2)
                  (apply map *)
@@ -50,37 +51,37 @@
         (update-in [:state :tags] #(conj % [:move true]))
         (update-in [:state :tags] #(conj % [:velocity vel])))))
 
-(defmethod app.module/gameplayOnUnitDone :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayOnUnitDone :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] #(conj % [:done true]))))
 
-(defmethod app.module/gameplayOnUnitTurnStart :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayOnUnitTurnStart :default [_ gameplayCtx unit]
   (-> unit
       (update-in [:state :tags] (constantly {}))))
 
-(defmethod app.module/gameplayOnUnitDead :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayOnUnitDead :default [_ gameplayCtx unit]
   (a/go gameplayCtx))
 
-(defmethod app.module/gameplayOnUnitMenu :default [_ gameplayCtx args inputCh outputCh]
+(defmethod module.default.tmp/gameplayOnUnitMenu :default [_ gameplayCtx args inputCh outputCh]
   (module.default.phase.unitMenu/unitMenu gameplayCtx args inputCh outputCh))
 
-(defmethod app.module/gameplayOnEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
+(defmethod module.default.tmp/gameplayOnEnemyTurn :default [_ gameplayCtx enemy inputCh outputCh]
   (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
 
 
-(defmethod app.module/gameplayGetUnitMovePathTree :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayGetUnitMovePathTree :default [_ gameplayCtx unit]
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
-(defmethod app.module/gameplayGetUnitWeapons :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayGetUnitWeapons :default [_ gameplayCtx unit]
   (module.default.data/getUnitWeapons gameplayCtx unit))
 
-(defmethod app.module/gameplayGetUnitIsDead :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayGetUnitIsDead :default [_ gameplayCtx unit]
   (<= (get-in unit [:state :hp]) 0))
 
-(defmethod app.module/gameplayGetUnitInfo :default [_ gameplayCtx unit]
+(defmethod module.default.tmp/gameplayGetUnitInfo :default [_ gameplayCtx unit]
   (module.default.data/getUnitInfo gameplayCtx unit))
 
-(defmethod app.module/gameplayFormatToDraw :default [_ gameplayCtx]
+(defmethod module.default.tmp/gameplayFormatToDraw :default [_ gameplayCtx]
   (let [state (-> (app.gameplay.model/getFsm gameplayCtx)
                   (tool.fsm/currState))
         stateDetail (-> (app.gameplay.model/getFsm gameplayCtx)

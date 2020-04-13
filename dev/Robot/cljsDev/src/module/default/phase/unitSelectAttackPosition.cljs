@@ -10,7 +10,8 @@
   (:require [app.gameplay.phase.common])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [app.gameplay.step.selectPosition])
-  (:require [app.gameplay.step.menu]))
+  (:require [app.gameplay.step.menu])
+  (:require [module.default.tmp]))
 
 (m/defbasic unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
   [[gameplayCtx result] (a/<! (app.gameplay.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]

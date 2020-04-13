@@ -9,7 +9,8 @@
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [app.gameplay.phase.unitMenuImpl])
   (:require [app.gameplay.phase.common])
-  (:require [app.gameplay.step.selectPosition]))
+  (:require [app.gameplay.step.selectPosition])
+  (:require [module.default.tmp]))
 
 (declare unitMenu)
 
@@ -20,7 +21,7 @@
 
   (m/basicNotify
    {:tempMoveRange (let [[mw mh] app.gameplay.model/mapViewSize
-                         shortestPathTree (app.module/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
+                         shortestPathTree (module.default.tmp/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
                          moveRange (map first shortestPathTree)]
                      moveRange)}
    (app.gameplay.model/setMoveRange gameplayCtx (-> gameplayCtx
@@ -41,7 +42,7 @@
         (if unitAtCursor
           (recur gameplayCtx)
           (do (a/<! (app.gameplay.phase.common/unitMoveAnim gameplayCtx {:unit (app.gameplay.model/mapUnitToLocal gameplayCtx nil unit) :path (map (partial app.gameplay.model/world2local camera) path)} inputCh outputCh))
-              (let [tempUnit (app.module/gameplayOnUnitMove app.module/*module gameplayCtx unit cursor)
+              (let [tempUnit (module.default.tmp/gameplayOnUnitMove app.module/*module gameplayCtx unit cursor)
                     state (merge state {:tempUnit tempUnit})
                     gameplayCtx (-> gameplayCtx
                                     (app.gameplay.model/updateUnit unit (constantly tempUnit))

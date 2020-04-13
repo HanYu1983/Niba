@@ -5,8 +5,7 @@
   (:require [app.gameplay.core])
   (:require [app.lobby.core])
   (:require [app.module])
-  (:require [module.default.core])
-  (:require [module.debug.core]))
+  (:require [module.default.core]))
 
 ; debug
 ; (set! app.module/*module :debug)

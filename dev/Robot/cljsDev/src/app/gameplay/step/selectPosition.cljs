@@ -5,7 +5,8 @@
   (:require [app.gameplay.phase.common :refer [playerTurnStart
                                                enemyTurnStart
                                                paint
-                                               actions]]))
+                                               actions]])
+  (:require [module.default.tmp]))
 
 
 (m/defstate selectPosition [gameplayCtx _]

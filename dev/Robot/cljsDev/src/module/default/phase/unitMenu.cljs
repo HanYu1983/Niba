@@ -12,7 +12,8 @@
   (:require [module.default.data])
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
-  (:require-macros [module.default.phase.unitMenu]))
+  (:require-macros [module.default.phase.unitMenu])
+  (:require [module.default.tmp]))
 
 (m/defwait unitSkyAnim [ctx args])
 (m/defwait unitGroundAnim [ctx args])
@@ -64,7 +65,7 @@
      (cond
        (= "move" select)
        (let [[mw mh] app.gameplay.model/mapViewSize
-             shortestPathTree (app.module/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
+             shortestPathTree (module.default.tmp/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
              moveRange (map first shortestPathTree)
              [gameplayCtx isEnd] (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh))]
          (if isEnd
