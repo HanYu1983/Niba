@@ -53,7 +53,7 @@
                                          :offset 0})
           gameplayCtx (-> module.default.data/defaultGameplayModel
                           (module.default.data/setMap playmap)
-                          ((partial module.default.data/gameplayOnInit nil))
+                          ((partial module.default.data/gameplayOnInit ctx))
                           (module.default.data/createUnit {:player :player
                                                            :type :robot
                                                            :position [0 0]}
@@ -65,7 +65,6 @@
                           (module.default.data/createUnit {:player :ai1
                                                            :type :robot
                                                            :position [2 0]}
-                                                          {:robotKey :gundam})
-                          (merge {:lobbyCtx lobbyCtx}))]
+                                                          {:robotKey :gundam}))]
       (a/<! (module.default.phase.common/paint nil (module.default.view/gameplayFormatToDraw nil gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))

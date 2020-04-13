@@ -24,7 +24,7 @@
 
   (m/basicNotify
    {:tempMoveRange (let [[mw mh] module.default.data/mapViewSize
-                         shortestPathTree (module.default.data/gameplayGetUnitMovePathTree app.module/*module gameplayCtx unit)
+                         shortestPathTree (module.default.data/gameplayGetUnitMovePathTree nil gameplayCtx unit)
                          moveRange (map first shortestPathTree)]
                      moveRange)}
    (module.default.data/setMoveRange gameplayCtx (-> gameplayCtx
@@ -45,7 +45,7 @@
         (if unitAtCursor
           (recur gameplayCtx)
           (do (a/<! (module.default.phase.common/unitMoveAnim gameplayCtx {:unit (module.default.data/mapUnitToLocal gameplayCtx nil unit) :path (map (partial module.default.data/world2local camera) path)} inputCh outputCh))
-              (let [tempUnit (module.default.data/gameplayOnUnitMove app.module/*module gameplayCtx unit cursor)
+              (let [tempUnit (module.default.data/gameplayOnUnitMove nil gameplayCtx unit cursor)
                     state (merge state {:tempUnit tempUnit})
                     gameplayCtx (-> gameplayCtx
                                     (module.default.data/updateUnit unit (constantly tempUnit))

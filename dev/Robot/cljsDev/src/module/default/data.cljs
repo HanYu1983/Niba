@@ -843,17 +843,17 @@
          (setUnits ctx units)))))
 
 
-(defn gameplayOnInit [_ gameplayCtx]
+(defn gameplayOnInit [appCtx gameplayCtx]
   (assertSpec ::gameplayCtx gameplayCtx)
   (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                       [(module.default.data/createUnit gameplayCtx
-                                                                        {:player (if (< (rand) 0.5)
-                                                                                   :player
-                                                                                   :ai1)
-                                                                         :type :robot
-                                                                         :position [0 i]}
-                                                                        {:robotKey robotKey})
+                                       [(createUnit gameplayCtx
+                                                    {:player (if (< (rand) 0.5)
+                                                               :player
+                                                               :ai1)
+                                                     :type :robot
+                                                     :position [0 i]}
+                                                    {:robotKey robotKey})
                                         (inc i)])
                                      [gameplayCtx 1]))]
     gameplayCtx))
@@ -887,14 +887,6 @@
   (assertSpec (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])
   (module.default.data/getUnitMovePathTree gameplayCtx unit))
 
-(defn gameplayGetUnitWeapons [_ gameplayCtx unit]
-  (assertSpec (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])
-  (module.default.data/getUnitWeapons gameplayCtx unit))
-
 (defn gameplayGetUnitIsDead [_ gameplayCtx unit]
   (assertSpec (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])
   (<= (get-in unit [:state :hp]) 0))
-
-(defn gameplayGetUnitInfo [_ gameplayCtx unit]
-  (assertSpec (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])
-  (module.default.data/getUnitInfo gameplayCtx unit))
