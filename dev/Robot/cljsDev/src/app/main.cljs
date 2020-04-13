@@ -69,7 +69,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll false
+  (let [testAll true
         right 68
         down 83
         left 65
@@ -81,7 +81,7 @@
         rleft 37
         rright 39]
     (a/go
-      (app.main/defclick (or testAll true) "transform"
+      (app.main/defclick (or testAll false) "transform"
         [enter
          down down enter
          down])
