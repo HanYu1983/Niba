@@ -4,7 +4,7 @@
   (:require [tool.menuCursor])
   (:require [module.default.data])
   (:require [module.default.phase.common])
-  (:require [module.default.data]))
+  (:require [module.default.view]))
 
 
 (m/defstate menu [gameplayCtx {:keys [menu data]}]

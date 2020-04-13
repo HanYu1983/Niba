@@ -3,10 +3,11 @@
   (:require-macros [module.default.macros :as m])
   (:require [module.default.data])
   (:require [module.default.phase.common :refer [playerTurnStart
-                                               enemyTurnStart
-                                               paint
-                                               actions]])
-  (:require [module.default.data]))
+                                                 enemyTurnStart
+                                                 paint
+                                                 actions]])
+  (:require [module.default.data])
+  (:require [module.default.view]))
 
 
 (m/defstate selectPosition [gameplayCtx _]

@@ -51,7 +51,9 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> (module.default.data/gameplayOnInit app.module/*module module.default.data/defaultGameplayModel)
+          gameplayCtx (-> module.default.data/defaultGameplayModel
+                          (module.default.data/setMap playmap)
+                          ((partial module.default.data/gameplayOnInit nil))
                           (module.default.data/createUnit {:player :player
                                                            :type :robot
                                                            :position [0 0]}
@@ -64,7 +66,6 @@
                                                            :type :robot
                                                            :position [2 0]}
                                                           {:robotKey :gundam})
-                          (module.default.data/setMap playmap)
                           (merge {:lobbyCtx lobbyCtx}))]
       (a/<! (module.default.phase.common/paint nil (module.default.view/gameplayFormatToDraw nil gameplayCtx) inputCh outputCh))
       (merge ctx {:gameplay (a/<! (gameplayLoop gameplayCtx inputCh outputCh))}))))
