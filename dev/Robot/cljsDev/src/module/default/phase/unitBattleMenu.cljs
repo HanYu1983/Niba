@@ -10,7 +10,7 @@
   (:require [module.default.phase.common])
   (:require [module.default.data])
   (:require [module.default.session.battleMenu])
-  (:require [module.default.tmp]))
+  (:require [module.default.data]))
 
 (m/defstate unitBattleMenu [gameplayCtx [{left :unit [leftActionType leftWeapon :as leftAction] :action}
                                          {right :unit} :as args]]
@@ -125,22 +125,22 @@
                                                                                      (module.default.data/mapUnitToLocal gameplayCtx nil rightAfter)]
                                                                         :results result} inputCh outputCh))
                  ; 進攻方死亡
-                 gameplayCtx (if (module.default.tmp/gameplayGetUnitIsDead app.module/*module gameplayCtx leftAfter)
+                 gameplayCtx (if (module.default.data/gameplayGetUnitIsDead app.module/*module gameplayCtx leftAfter)
                                (let [gameplayCtx (-> (module.default.data/getUnits gameplayCtx)
                                                      (tool.units/delete leftAfter)
                                                      ((fn [units]
                                                         (module.default.data/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (module.default.tmp/gameplayOnUnitDead app.module/*module gameplayCtx leftAfter))
+                                     gameplayCtx (a/<! (module.default.data/gameplayOnUnitDead app.module/*module gameplayCtx leftAfter))
                                      _ (a/<! (module.default.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)
                  ; 防守方死亡
-                 gameplayCtx (if (module.default.tmp/gameplayGetUnitIsDead app.module/*module gameplayCtx rightAfter)
+                 gameplayCtx (if (module.default.data/gameplayGetUnitIsDead app.module/*module gameplayCtx rightAfter)
                                (let [gameplayCtx (-> (module.default.data/getUnits gameplayCtx)
                                                      (tool.units/delete rightAfter)
                                                      ((fn [units]
                                                         (module.default.data/setUnits gameplayCtx units))))
-                                     gameplayCtx (a/<! (module.default.tmp/gameplayOnUnitDead app.module/*module gameplayCtx rightAfter))
+                                     gameplayCtx (a/<! (module.default.data/gameplayOnUnitDead app.module/*module gameplayCtx rightAfter))
                                      _ (a/<! (module.default.phase.common/unitDeadAnim nil {:unit (module.default.data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                  gameplayCtx)
                                gameplayCtx)]

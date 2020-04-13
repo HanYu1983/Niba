@@ -11,7 +11,7 @@
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.step.selectPosition])
   (:require [module.default.step.menu])
-  (:require [module.default.tmp]))
+  (:require [module.default.data]))
 
 (m/defbasic unitSelectAttackPosition [gameplayCtx {unit :unit paths :paths}]
   [[gameplayCtx result] (a/<! (module.default.step.selectPosition/selectPosition gameplayCtx {} inputCh outputCh))]

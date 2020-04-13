@@ -51,7 +51,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> (module.default.tmp/gameplayOnInit app.module/*module module.default.data/defaultGameplayModel)
+          gameplayCtx (-> (module.default.data/gameplayOnInit app.module/*module module.default.data/defaultGameplayModel)
                           (module.default.data/createUnit {:player :player
                                                            :type :robot
                                                            :position [0 0]}

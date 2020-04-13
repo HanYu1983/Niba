@@ -13,7 +13,7 @@
   (:require [module.default.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.default.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
   (:require-macros [module.default.phase.unitMenu])
-  (:require [module.default.tmp]))
+  (:require [module.default.data]))
 
 
 ; 使用這個方法解決和unitSelectMovePosition的互相依賴

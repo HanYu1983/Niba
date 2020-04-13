@@ -6,7 +6,7 @@
                                                enemyTurnStart
                                                paint
                                                actions]])
-  (:require [module.default.tmp]))
+  (:require [module.default.data]))
 
 
 (m/defstate selectPosition [gameplayCtx _]

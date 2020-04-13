@@ -3,6 +3,12 @@
   (:require [tool.fsm])
   (:require [clojure.spec.alpha :as s])
   (:require ["./data.js" :as dataJson])
+  (:require-macros [module.default.core :as mm])
+  (:require [clojure.set])
+  (:require [clojure.core.async :as a])
+  (:require [app.module])
+  (:require-macros [module.default.macros :as m])
+  (:require [tool.map])
   (:require-macros [module.default.core :as mm]))
 
 (defn explainValid? [sp args]
@@ -797,3 +803,53 @@
     (-> unit
         (update-in [:state :robot] (constantly toKey))
         (update-in [:state :weapons toKey] (constantly weapons)))))
+
+
+
+
+(defn gameplayOnInit [_ gameplayCtx]
+  (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
+                             (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                       [(module.default.data/createUnit gameplayCtx
+                                                                        {:player (if (< (rand) 0.5)
+                                                                                   :player
+                                                                                   :ai1)
+                                                                         :type :robot
+                                                                         :position [0 i]}
+                                                                        {:robotKey robotKey})
+                                        (inc i)])
+                                     [gameplayCtx 1]))]
+    gameplayCtx))
+
+(defn gameplayOnUnitMove [_ gameplayCtx unit pos]
+  (let [vel (->> (map - (:position unit) pos)
+                 (repeat 2)
+                 (apply map *)
+                 (apply +))]
+    (-> unit
+        (merge {:position pos})
+        (update-in [:state :tags] #(conj % [:move true]))
+        (update-in [:state :tags] #(conj % [:velocity vel])))))
+
+(defn gameplayOnUnitDone [_ gameplayCtx unit]
+  (-> unit
+      (update-in [:state :tags] #(conj % [:done true]))))
+
+(defn gameplayOnUnitTurnStart [_ gameplayCtx unit]
+  (-> unit
+      (update-in [:state :tags] (constantly {}))))
+
+(defn gameplayOnUnitDead [_ gameplayCtx unit]
+  (a/go gameplayCtx))
+
+(defn gameplayGetUnitMovePathTree [_ gameplayCtx unit]
+  (module.default.data/getUnitMovePathTree gameplayCtx unit))
+
+(defn gameplayGetUnitWeapons [_ gameplayCtx unit]
+  (module.default.data/getUnitWeapons gameplayCtx unit))
+
+(defn gameplayGetUnitIsDead [_ gameplayCtx unit]
+  (<= (get-in unit [:state :hp]) 0))
+
+(defn gameplayGetUnitInfo [_ gameplayCtx unit]
+  (module.default.data/getUnitInfo gameplayCtx unit))
