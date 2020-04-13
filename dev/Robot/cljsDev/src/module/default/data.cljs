@@ -1,6 +1,7 @@
 (ns module.default.data
   (:require [module.default.type.gameplayCtx])
   (:require [module.default.type.unit])
+  (:require [module.default.type.weapon])
   (:require [tool.units])
   (:require [tool.fsm])
   (:require [clojure.spec.alpha :as s])
@@ -28,14 +29,11 @@
        (throw (js/Error. (str "error"))))))
 
 
-(s/def ::weaponKey keyword?)
-(s/def ::weapon (s/keys :req-un [::key ::weaponKey ::level ::tags ::bulletCount]))
-(s/def ::weaponInfo (s/merge ::weapon (s/keys :req-un [::range ::type ::suitability])))
-(s/def ::weaponSlot (s/tuple keyword? (s/+ ::weapon)))
-
 (s/def ::data (s/keys :opt-un [::weaponIdx ::weapons ::unit]))
 (s/def ::menuData (s/tuple (constantly true) ::data))
 
+(s/def ::weapon module.default.type.weapon/instance)
+(s/def ::weaponSlot (s/tuple keyword? (s/+ ::weapon)))
 (s/def ::unit module.default.type.unit/instance)
 (s/def ::gameplayCtx module.default.type.gameplayCtx/instance)
 
@@ -310,7 +308,6 @@
 ; weapon
 ; =======================
 (defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::unit ::weapon) [unit weapon])]}
   (assertSpec (s/tuple ::gameplayCtx ::unit ::weapon) [gameplayCtx unit weapon])
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -337,7 +334,7 @@
 
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   {:pre [(explainValid? (s/tuple ::unit ::weapon) [unit weapon])]
-   :post [(explainValid? ::weaponInfo %)]}
+   :post [(explainValid? ::weapon %)]}
   (assertSpec (s/tuple ::gameplayCtx ::unit ::weapon) [gameplayCtx unit weapon])
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -421,8 +418,7 @@
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::unit) [unit])]
-   :post [(explainValid? ::weaponSlot %)]}
+  {:post [(explainValid? ::weaponSlot %)]}
   (assertSpec (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])
   (let [transform (get-in unit [:state :robot])
         weapons (get-in unit [:state :weapons transform])]
