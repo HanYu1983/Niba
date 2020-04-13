@@ -2,7 +2,6 @@
   (:require [clojure.core.async :as a])
   (:require-macros [app.gameplay.macros :as m])
   (:require-macros [app.main])
-  (:require [app.gameplay.core])
   (:require [app.lobby.core])
   (:require [app.module])
   (:require [module.default.core]))
@@ -26,7 +25,7 @@
             (recur (merge ctx {:data data})))
 
           (= "startGameplay" cmd)
-          (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))
+          (a/<! (app.module/gameplayStart app.module/*module ctx inputCh outputCh))
 
           (= "startLobby" cmd)
           (recur (a/<! (app.lobby.core/startLobby ctx inputCh outputCh)))

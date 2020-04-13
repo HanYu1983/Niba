@@ -1,4 +1,6 @@
 (ns module.default.data
+  (:require [tool.units])
+  (:require [tool.fsm])
   (:require [clojure.spec.alpha :as s])
   (:require ["./data.js" :as dataJson])
   (:require-macros [module.default.core :as mm]))
