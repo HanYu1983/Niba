@@ -3,7 +3,7 @@
   (:require [tool.map])
   (:require [tool.units])
   (:require [app.module])
-  (:require [module.default.tmp]))
+  (:require [module.default.data]))
 
 ; ==============
 ; === helper ===
@@ -130,7 +130,7 @@
     (-> unit
         (update :position (partial world2local camera))
         ((fn [unit]
-           (module.default.tmp/gameplayGetUnitInfo app.module/*module ctx unit))))))
+           (module.default.data/getUnitInfo ctx unit))))))
 
 (defn getLocalUnits [ctx camera searchSize]
   (let [camera (or camera (getCamera ctx))]
@@ -173,9 +173,21 @@
 ; === module ===
 ; ==============
 
+(defn gameplayOnUnitCreate [_ gameplayCtx unit {:keys [robotKey] :as args}]
+  (let [unit (merge unit {:state {:robot robotKey
+                                  :pilot :amuro
+                                  :weapons {}
+                                  :components {}
+                                  :tags {}}})]
+    (-> unit
+        ((fn [unit]
+           (module.default.data/setUnitHp unit (module.default.data/getUnitMaxHp gameplayCtx unit))))
+        ((fn [unit]
+           (module.default.data/setUnitEn unit (module.default.data/getUnitMaxEn gameplayCtx unit)))))))
+
 (defn createUnit [ctx {:keys [key position] :as unit} args]
   (-> (getUnits ctx)
-      (tool.units/add (merge (module.default.tmp/gameplayOnUnitCreate app.module/*module ctx unit args)
+      (tool.units/add (merge (gameplayOnUnitCreate nil ctx unit args)
                              {:key (or key (gensym))
                               :position (or position [0 0])}))
       ((fn [units]
