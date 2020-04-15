@@ -84,7 +84,7 @@
       (app.main/defclick (or testAll false) "transform"
         [enter
          down down enter
-         down])
+         down cancel])
 
       (app.main/defclick (or testAll false) "bullet count"
         [right right right right enter
@@ -137,7 +137,7 @@
       (testIt outputToView inputFromView))))
 
 (defn main []
-  (let [phase :debug2
+  (let [phase :debug
         outputToView (a/chan)
         inputFromView (a/chan)]
     (cond
@@ -146,8 +146,8 @@
         (installViewRxjs inputFromView outputToView)
         (mainLoop defaultModel inputFromView outputToView)
         (a/go
-          (print "===== start debugView after 5s =====")
-          (a/<! (a/timeout 5000))
+          (print "===== start debugView after 10s =====")
+          (a/<! (a/timeout 10000))
           (testIt nil inputFromView)))
 
       :else
