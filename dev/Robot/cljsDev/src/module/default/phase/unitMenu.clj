@@ -2,7 +2,7 @@
 
 (defmacro getAttackRange []
   '(if (= cursor1 weaponIdx)
-     (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
+     (-> (module.default.data/getUnitWeapons gameplayCtx unit)
          second
          (nth cursor2)
          ((fn [weapon]
@@ -11,10 +11,10 @@
 
 (defmacro getHitRate []
   '(when (= cursor1 weaponIdx)
-     (let [weapon (-> (module.default.data/getUnitWeaponsM gameplayCtx unit)
+     (let [weapon (-> (module.default.data/getUnitWeapons gameplayCtx unit)
                       second
                       (nth cursor2))
-           unitsNearby (->> (app.gameplay.model/getUnitsByRegion gameplayCtx (:position unit) nil)
+           unitsNearby (->> (module.default.data/getUnitsByRegion gameplayCtx (:position unit) nil)
                             (filter (comp not (partial module.default.data/isFriendlyUnit gameplayCtx unit))))
            checkHitRate (map (fn [targetUnit]
                                {:unit unit

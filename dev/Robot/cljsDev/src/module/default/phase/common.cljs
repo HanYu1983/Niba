@@ -1,6 +1,6 @@
-(ns app.gameplay.phase.common
+(ns module.default.phase.common
   (:require [clojure.core.async :as a])
-  (:require-macros [app.gameplay.macros :as m]))
+  (:require-macros [module.default.macros :as m]))
 
 (m/defwait playerTurnStart [ctx args])
 (m/defwait enemyTurnStart [ctx args])
