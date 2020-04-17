@@ -614,7 +614,7 @@
    :post [(explainValid? ::unit %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)]
     (cond
-      (= (get weaponInfo :energyType) :energy)
+      (= (-> weaponInfo :energyType keyword) :energy)
       (let [energyCost (get weaponInfo :energyCost)
             unitAfter (-> (getUnitEn unit)
                           (- energyCost)
@@ -623,7 +623,7 @@
                              (setUnitEn unit en))))]
         unitAfter)
 
-      (= (get weaponInfo :energyType) :bullet)
+      (= (-> weaponInfo :energyType keyword) :bullet)
       (let [weapons (getUnitWeapons gameplayCtx unit)
             weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
             weaponsAfter (update-in weapons [1] (fn [vs]
