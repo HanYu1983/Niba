@@ -76,7 +76,7 @@
                            :fsm tool.fsm/model})
 
 (defn getPlayers [ctx]
-  (assertSpec ::gameplayCtx ctx)
+  {:pre [(explainValid? (s/tuple ::gameplayCtx) [ctx])]}
   (:players ctx))
 
 ; ===================
@@ -178,7 +178,6 @@
 (defn getUnits [ctx]
   {:pre [(explainValid? (s/tuple ::gameplayCtx) [ctx])]
    :post []}
-  (assertSpec ::gameplayCtx ctx)
   (:units ctx))
 
 (defn getUnitsInRange [ctx range]
@@ -447,7 +446,7 @@
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
-   :post []}
+   :post [(explainValid? ::weaponSlot %)]}
   (let [transform (get-in unit [:state :robot])
         weapons (get-in unit [:state :weapons transform])]
     (if weapons
@@ -612,9 +611,10 @@
 (defn useUnitWeapon [gameplayCtx weapon unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::weapon ::unit) [gameplayCtx weapon unit])]
    :post [(explainValid? ::unit %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)]
+  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+        energyType (-> weaponInfo :energyType keyword)]
     (cond
-      (= (-> weaponInfo :energyType keyword) :energy)
+      (= energyType :energy)
       (let [energyCost (get weaponInfo :energyCost)
             unitAfter (-> (getUnitEn unit)
                           (- energyCost)
@@ -623,7 +623,7 @@
                              (setUnitEn unit en))))]
         unitAfter)
 
-      (= (-> weaponInfo :energyType keyword) :bullet)
+      (= energyType :bullet)
       (let [weapons (getUnitWeapons gameplayCtx unit)
             weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
             weaponsAfter (update-in weapons [1] (fn [vs]
@@ -632,7 +632,7 @@
         unitAfter)
 
       :else
-      unit)))
+      (throw (js/Error. (str "unknown energyType " weaponInfo))))))
 
 
 (defn isBelongToPlayer [gameplayCtx unit]

@@ -22,19 +22,27 @@
 
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
-  (a/go-loop [gameplayCtx gameplayCtx]
-    (let [gameplayCtx (a/<! (module.default.phase.playerTurn/playerTurn gameplayCtx nil inputCh outputCh))
-          enemies (->> (:players gameplayCtx)
-                       keys
-                       (filter #(not= :player %)))
-          enemyTurns (a/go-loop [gameplayCtx gameplayCtx
-                                 enemies enemies]
-                       (if (= (count enemies) 0)
-                         gameplayCtx
-                         (let [enemy (first enemies)
-                               gameplayCtx (a/<! (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))]
-                           (recur gameplayCtx (rest enemies)))))]
-      (recur (a/<! enemyTurns)))))
+  (a/go
+    (loop [gameplayCtx gameplayCtx]
+      (let [gameplayCtx (a/<! (module.default.phase.playerTurn/playerTurn gameplayCtx nil inputCh outputCh))
+            ; 回傳空值代表有例外
+            _ (when (nil? gameplayCtx)
+                (throw (js/Error. "stop in module.default.phase.playerTurn/playerTurn")))
+            enemies (->> (:players gameplayCtx)
+                         keys
+                         (filter #(not= :player %)))
+            enemyTurns (a/go-loop [gameplayCtx gameplayCtx
+                                   enemies enemies]
+                         (if (= (count enemies) 0)
+                           gameplayCtx
+                           (let [enemy (first enemies)
+                                 gameplayCtx (a/<! (module.default.phase.enemyTurn/enemyTurn gameplayCtx enemy inputCh outputCh))
+                                 _ (when (nil? gameplayCtx)
+                                     (throw (js/Error. "stop in module.default.phase.enemyTurn/enemyTurn")))]
+                             (recur gameplayCtx (rest enemies)))))
+            _ (when (nil? enemyTurns)
+                (throw (js/Error. "stop in enemyTurns")))]
+        (recur (a/<! enemyTurns))))))
 
 
 (defmethod app.module/gameplayStart :default [_ ctx inputCh outputCh]
