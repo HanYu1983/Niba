@@ -106,10 +106,10 @@
          down up down left left right right
          down down up up cancel])
 
-      (app.main/defclick (or testAll false) "move"
+      (app.main/defclick (or testAll true) "move"
         [enter enter right enter cancel cancel cancel left])
 
-      (app.main/defclick (or testAll true) "attack"
+      (app.main/defclick (or testAll false) "attack"
         [enter down right left enter
          right right enter
          right left right down up enter]

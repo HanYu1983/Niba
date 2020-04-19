@@ -310,11 +310,19 @@
            (get-in data [:terrain (keyword t2) :cost]))))))
 
 
-(defn nextCell [[mw mh] [x y]]
-  [[x (min mh (inc y))]
-   [x (max 0 (dec y))]
-   [(min mw (inc x)) y]
-   [(max 0 (dec x)) y]])
+(defn nextCell [gameplayCtx unit [mw mh] [x y]]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]}
+  (let [possiblePosition [[x (min mh (inc y))]
+                          [x (max 0 (dec y))]
+                          [(min mw (inc x)) y]
+                          [(max 0 (dec x)) y]]
+        unitsInPosition (map #(tool.units/getByPosition (getUnits gameplayCtx) %) possiblePosition)]
+    (->> (zipmap possiblePosition unitsInPosition)
+         (filter (fn [[pos occupyUnit]]
+                   (or (nil? occupyUnit)
+                       (= (get-in gameplayCtx [:players (-> unit :player) :faction])
+                          (get-in gameplayCtx [:players (-> occupyUnit :player) :faction])))))
+         (map first))))
 
 (defn estimateCost [from to]
   (->> (map - from to)
@@ -777,9 +785,9 @@
                         (module.default.data/updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
-(defn formatPathTree [power paths]
-  (let [shouldRemove (filter (fn [[k v]]
-                               (> (:cost v) power))
+(defn formatPathTree [gameplayCtx unit power paths]
+  (let [shouldRemove (filter (fn [[pos info]]
+                               (> (:cost info) power))
                              paths)]
     (reduce (fn [paths [curr info]]
               (let [parent (:prev info)]
@@ -801,14 +809,14 @@
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [cost]} curr]
                               [(or (= curr pos) (>= cost power)) false])
-                            (partial nextCell [mw mh])
+                            (partial nextCell gameplayCtx unit [mw mh])
                             (partial moveCost gameplayCtx unit)
                             (fn [from]
                               (if pos
                                 (estimateCost from pos)
                                 0)))
          ((fn [paths]
-            (formatPathTree power paths))))))
+            (formatPathTree gameplayCtx unit power paths))))))
 
 (defn getUnitMovePathTree [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]}
