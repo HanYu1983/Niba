@@ -43,6 +43,7 @@ export default class ViewController extends cc.Component {
 
     //#region helper
     notifyStartGame() {
+        this.modelController.endLobby();
         this.modelController.startGame();
     }
 

@@ -32,6 +32,10 @@ export default class ModelController extends cc.Component {
         this.send("startLobby");
     }
 
+    endLobby(){
+        this.send("exit");
+    }
+
     loadConfig(cb: (data: any) => void) {
         this.talk("loadConfig", null, cb)
     }

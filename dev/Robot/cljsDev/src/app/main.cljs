@@ -1,12 +1,10 @@
 (ns app.main
   (:require [clojure.core.async :as a])
-  (:require-macros [app.gameplay.macros :as m])
+  (:require-macros [module.default.macros :as m])
   (:require-macros [app.main])
-  (:require [app.gameplay.core])
   (:require [app.lobby.core])
   (:require [app.module])
-  (:require [module.default.core])
-  (:require [module.debug.core]))
+  (:require [module.default.core]))
 
 ; debug
 ; (set! app.module/*module :debug)
@@ -27,7 +25,7 @@
             (recur (merge ctx {:data data})))
 
           (= "startGameplay" cmd)
-          (a/<! (app.gameplay.core/startGameplay ctx inputCh outputCh))
+          (a/<! (app.module/gameplayStart app.module/*module ctx inputCh outputCh))
 
           (= "startLobby" cmd)
           (recur (a/<! (app.lobby.core/startLobby ctx inputCh outputCh)))
@@ -83,7 +81,11 @@
         rleft 37
         rright 39]
     (a/go
-      
+      (app.main/defclick (or testAll false) "transform"
+        [enter
+         down down enter
+         down cancel])
+
       (app.main/defclick (or testAll false) "bullet count"
         [right right right right enter
          down right enter
@@ -104,7 +106,7 @@
          down up down left left right right
          down down up up cancel])
 
-      (app.main/defclick (or testAll false) "move"
+      (app.main/defclick (or testAll true) "move"
         [enter enter right enter cancel cancel cancel left])
 
       (app.main/defclick (or testAll false) "attack"
@@ -144,8 +146,8 @@
         (installViewRxjs inputFromView outputToView)
         (mainLoop defaultModel inputFromView outputToView)
         (a/go
-          (print "===== start debugView after 5s =====")
-          (a/<! (a/timeout 5000))
+          (print "===== start debugView after 10s =====")
+          (a/<! (a/timeout 10000))
           (testIt nil inputFromView)))
 
       :else
