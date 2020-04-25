@@ -192,6 +192,11 @@ public class View : MonoBehaviour {
             });
     }
 
+    public void OnMainPageIconClick()
+    {
+        GetMainPage().ToggleChartGraph();
+    }
+
     public void OpenCalculatePage()
     {
         GetCalculatePage().Open();

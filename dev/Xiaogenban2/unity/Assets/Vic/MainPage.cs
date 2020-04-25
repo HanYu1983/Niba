@@ -12,8 +12,7 @@ public class MainPage : Page, IHasMoneyCar
     public Text ShowCountType;
     public Text Money;
     public LoopVerticalScrollRect ItemScroller;
-    public GameObject EarnRow;
-    public GameObject EarnList;
+    public ChartGraph Chart;
     public int MaxRow = 10;
 
     public Button BtnEarn;
@@ -54,7 +53,15 @@ public class MainPage : Page, IHasMoneyCar
         ECount.THIRTY,
         ECount.HUNDRED
     };
-    //int currentCountType = 0;
+
+    public void ToggleChartGraph()
+    {
+        this.Chart.gameObject.SetActive(!this.Chart.gameObject.active);
+        if (this.Chart.gameObject.active)
+        {
+            UpdateChart();
+        }
+    }
 
     public void ChangeShowType()
     {
@@ -63,15 +70,6 @@ public class MainPage : Page, IHasMoneyCar
         RefreshList(true);
         ItemListToTop();
     }
-
-    //public void ChangeCountType()
-    //{
-    //    if (++currentCountType > countTypes.Length - 1) currentCountType = 0;
-    //    ShowCountType.text = ((int)countTypes[currentCountType]).ToString();
-        
-    //    RefreshList(true);
-    //    ItemListToTop();
-    //}
 
     public void Buy()
     {
@@ -146,12 +144,21 @@ public class MainPage : Page, IHasMoneyCar
         {
             ItemScroller.RefreshCells();
         }
+        UpdateChart();
         UpdateBtn();
     }
 
     public void ItemListToTop()
     {
         ItemScroller.SrollToCell(0, 20000);
+    }
+
+    void UpdateChart()
+    {
+        if (this.Chart.gameObject.active)
+        {
+            this.Chart.UpdateChart(Model.GetItemListCache());
+        }
     }
 
     void UpdateBtn()
