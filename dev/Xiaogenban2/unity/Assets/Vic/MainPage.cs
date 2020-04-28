@@ -57,10 +57,7 @@ public class MainPage : Page, IHasMoneyCar
     public void ToggleChartGraph()
     {
         this.Chart.gameObject.SetActive(!this.Chart.gameObject.active);
-        if (this.Chart.gameObject.active)
-        {
-            UpdateChart();
-        }
+        UpdateChart();
     }
 
     public void ChangeShowType()
@@ -153,11 +150,20 @@ public class MainPage : Page, IHasMoneyCar
         ItemScroller.SrollToCell(0, 20000);
     }
 
+    public void OpenCompareChart()
+    {
+        if (this.Chart.gameObject.active) 
+        {
+            this.Chart.UpdateChartMonth(Model.GetItemListCache(), currentTimeType);
+        }
+    }
+
     void UpdateChart()
     {
         if (this.Chart.gameObject.active)
         {
             this.Chart.UpdateChart(Model.GetItemListCache());
+            this.Chart.UpdateBtnCompare(currentTimeType);
         }
     }
 

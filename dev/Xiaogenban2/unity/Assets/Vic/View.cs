@@ -197,6 +197,11 @@ public class View : MonoBehaviour {
         GetMainPage().ToggleChartGraph();
     }
 
+    public void OnMainPageOpenCompareGraphClick()
+    {
+        GetMainPage().OpenCompareChart();
+    }
+
     public void OpenCalculatePage()
     {
         GetCalculatePage().Open();
