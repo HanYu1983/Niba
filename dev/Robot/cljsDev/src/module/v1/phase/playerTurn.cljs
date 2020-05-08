@@ -9,4 +9,5 @@
       (let [evt (a/<! inputCh)]
         (recur (-> gameplayCtx
                    (common/handleMapView evt)
-                   (common/handleCursorView evt)))))))
+                   (common/handleCursorView evt)
+                   (common/handleMoveRangeView evt)))))))

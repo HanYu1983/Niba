@@ -9,14 +9,13 @@
 
 
 (def mapViewSize [20 20])
-(def gameplayCtx {:mapView {:map [[]]
-                            :camera [0 0]
-                            :viewsize mapViewSize}
-                  :cursorView {:cursor [0 0]
-                               :camera [0 0]
-                               :mapsize [20 20]}
-                  :unitsView {:units []
-                              :camera [0 0]}})
+(def gameplayCtx {:map [[]]
+                  :camera [0 0]
+                  :cursor [0 0]
+                  :viewsize mapViewSize
+                  :mapsize [20 20]
+                  :units []
+                  :moveRange []})
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go
@@ -63,5 +62,5 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (update-in gameplayCtx [:mapView :map] (constantly playmap))]
+          gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
