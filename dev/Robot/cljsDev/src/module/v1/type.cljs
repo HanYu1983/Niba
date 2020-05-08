@@ -5,6 +5,8 @@
 (s/def ::key keyword?)
 (s/def ::position (s/tuple int? int?))
 (s/def ::positions (s/coll-of ::position))
+(s/def ::hp int?)
+(s/def ::en int?)
 
 (s/def ::map (s/coll-of vector?))
 (s/def ::camera ::position)
@@ -34,7 +36,7 @@
 (s/def ::weapons (s/map-of keyword? (s/* ::weapon)))
 (s/def ::components (s/map-of keyword? (s/* ::component)))
 
-(s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags]))
+(s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en]))
 (s/def ::robot (s/keys :req-un [::key ::position ::robotKey ::playerKey ::robotState]))
 
 (s/def ::itemKey ::key)

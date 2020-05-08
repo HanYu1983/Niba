@@ -5,7 +5,6 @@
   (:require [tool.units])
   (:require [tool.map])
   (:require [module.v1.common :as common :refer [explainValid?]])
-  (:require-macros [module.v1.core :as mm])
   (:require [clojure.set]))
 
 
@@ -133,16 +132,12 @@
 ; =======================
 
 ; hp
-(mm/defUnitSetter hp)
-(mm/defUnitGetter hp)
 (defn getUnitMaxHp [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
    :post [(number? %)]}
   10000)
 
 ; en
-(mm/defUnitSetter en)
-(mm/defUnitGetter en)
 (defn getUnitMaxEn [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
    :post [(number? %)]}
@@ -368,11 +363,11 @@
     (cond
       (= energyType :energy)
       (let [energyCost (get weaponInfo :energyCost)
-            unitAfter (-> (getUnitEn unit)
+            unitAfter (-> (:en unit)
                           (- energyCost)
                           (max 0)
                           ((fn [en]
-                             (setUnitEn unit en))))]
+                             (assoc unit :en en))))]
         unitAfter)
 
       (= energyType :bullet)
@@ -493,7 +488,7 @@
                (= rightActionType :guard)
                (conj :guard)
 
-               (<= (- (getUnitHp right) leftMakeDamage) 0)
+               (<= (- (:hp right) leftMakeDamage) 0)
                (conj :dead))
      :damage leftMakeDamage}))
 
@@ -511,11 +506,11 @@
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit ::unit) [gameplayCtx left right])]}
   (let [[{leftDamage :damage} {rightDamage :damage}] result
         [leftAfter rightAfter] (map (fn [unit damage]
-                                      (-> (getUnitHp unit)
+                                      (-> (:hp unit)
                                           (- damage)
                                           (max 0)
                                           ((fn [hp]
-                                             (setUnitHp unit hp)))))
+                                             (assoc unit :hp hp)))))
                                     [left right]
                                     [leftDamage rightDamage])
 
@@ -585,7 +580,7 @@
         (update-in [:state :weapons toKey] (constantly weapons)))))
 
 
-(defn gameplayOnUnitCreate [_ gameplayCtx unit {:keys [robotKey] :as args}]
+(defn gameplayOnUnitCreate [gameplayCtx unit {:keys [robotKey] :as args}]
   (let [unit (merge unit {:state {:robot robotKey
                                   :pilot :amuro
                                   :weapons {}
@@ -593,14 +588,14 @@
                                   :tags {}}})]
     (-> unit
         ((fn [unit]
-           (setUnitHp unit (getUnitMaxHp gameplayCtx unit))))
+           (assoc unit :hp (getUnitMaxHp gameplayCtx unit))))
         ((fn [unit]
-           (setUnitEn unit (getUnitMaxEn gameplayCtx unit)))))))
+           (assoc unit :en (getUnitMaxEn gameplayCtx unit)))))))
 
-(defn createUnit [ctx {:keys [key position] :as unit} args]
-  (-> (getUnits ctx)
-      (tool.units/add (merge (gameplayOnUnitCreate nil ctx unit args)
+(defn createUnit [{units :units :as gameplayCtx} {:keys [key position] :as unit} args]
+  (-> units
+      (tool.units/add (merge (gameplayOnUnitCreate gameplayCtx unit args)
                              {:key (or key (gensym))
                               :position (or position [0 0])}))
       ((fn [units]
-         (setUnits ctx units)))))
+         (assoc gameplayCtx :units units)))))
