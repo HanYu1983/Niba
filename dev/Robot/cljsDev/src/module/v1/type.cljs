@@ -17,7 +17,7 @@
 (s/def ::cursorView (s/keys :req-un [::cursor ::camera ::mapsize]))
 (s/def ::unitsView (s/keys :req-un [::units ::camera]))
 
-(s/def ::gameView (s/keys :req-un [::mapView ::cursorView ::unitsView]))
+(s/def ::gameplayCtx (s/keys :req-un [::mapView ::cursorView ::unitsView]))
 
 
-(def gameView ::gameView)
+(def gameplayCtx ::gameplayCtx)
