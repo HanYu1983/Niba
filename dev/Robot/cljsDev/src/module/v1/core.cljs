@@ -3,6 +3,7 @@
   (:require [app.module])
   (:require [module.v1.type])
   (:require [tool.map])
+  (:require [tool.units])
   (:require-macros [module.v1.core])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
   (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
@@ -14,7 +15,7 @@
                   :cursor [0 0]
                   :viewsize mapViewSize
                   :mapsize [20 20]
-                  :units []
+                  :units tool.units/model
                   :moveRange []})
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]

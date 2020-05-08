@@ -77,7 +77,7 @@
       (cond
         (some #(= % action) [:up :down :left :right])
         (let [{:keys [cursor units]} gameplayCtx
-              unitAtCursor true
+              unitAtCursor (tool.units/getByPosition units cursor)
               moveRange (if unitAtCursor
                           (let []
                             [[0 0] [0 1]])
