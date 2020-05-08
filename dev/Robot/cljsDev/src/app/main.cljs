@@ -4,10 +4,11 @@
   (:require-macros [app.main])
   (:require [app.lobby.core])
   (:require [app.module])
-  (:require [module.default.core]))
+  (:require [module.default.core])
+  (:require [module.v1.core]))
 
 ; debug
-; (set! app.module/*module :debug)
+(set! app.module/*module :v1)
 
 (m/defwait setData [ctx args])
 

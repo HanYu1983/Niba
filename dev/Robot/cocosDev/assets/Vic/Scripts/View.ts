@@ -103,14 +103,23 @@ export default class View extends cc.Component {
     }
 
     private repaintMoveRange(data: number[][]) {
+        if(data == null){
+            return;
+        }
         this.getGamePage().map.showMovableGrid(data);
     }
 
     private repaintAttackRange(data: number[][]) {
+        if(data == null){
+            return;
+        }
         this.getGamePage().map.showWeaponRange(data);
     }
 
     private repaintMapAttackRange(data: number[][], cb: () => void) {
+        if(data == null){
+            return;
+        }
         this.getGamePage().map.showWeaponRange(data);
         cb();
     }
@@ -128,6 +137,9 @@ export default class View extends cc.Component {
     }
 
     private repaintUnits(data: IUnit[]) {
+        if(data == null){
+            return;
+        }
         this.getGamePage().units.setUnits(data);
         this.getGamePage().showUnitSampleInfos(data);
     }
