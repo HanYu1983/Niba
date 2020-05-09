@@ -14,7 +14,7 @@
                             (data/handleMapView evt)
                             (data/handleCursorView evt)
                             (data/handleMoveRangeView evt))]
-        (common/assertSpec type/moveRangeView gameplayCtx)
+        (common/assertSpec ::type/moveRangeView gameplayCtx)
         (cond
           (= "KEY_DOWN" cmd)
           (let [action (common/actions args)]

@@ -15,7 +15,7 @@
 
 
 (defn getTerrainKey [{playmap :map} from]
-  {:pre [(explainValid? (s/tuple type/mapType) [playmap])]
+  {:pre [(explainValid? (s/tuple ::type/map) [playmap])]
    :post []}
   (let [t1 (get-in data [:terrainMapping
                          (str (get-in playmap (reverse from)))
@@ -23,7 +23,7 @@
     t1))
 
 (defn getTerrain [{playmap :map} from]
-  {:pre [(explainValid? (s/tuple type/mapType) [playmap])]
+  {:pre [(explainValid? (s/tuple ::type/map) [playmap])]
    :post []}
   (-> (getTerrainKey {:map playmap} from)
       ((fn [key]
@@ -31,7 +31,7 @@
 
 
 (defn moveCost [{playmap :map} unit from to]
-  {:pre [(explainValid? (s/tuple type/mapType type/unit) [playmap unit])]
+  {:pre [(explainValid? (s/tuple ::type/map ::type/unit) [playmap unit])]
    :post [(number? %)]}
   (let [isSky (-> (get-in unit [:robotState :tags])
                   (contains? :sky))]
@@ -48,7 +48,7 @@
 
 
 (defn nextCell [{units :units players :players} unit [mw mh] [x y]]
-  {:pre [(explainValid? (s/tuple type/units type/players type/unit) [units players unit])]}
+  {:pre [(explainValid? (s/tuple ::type/units ::type/players ::type/unit) [units players unit])]}
   (let [possiblePosition [[x (min mh (inc y))]
                           [x (max 0 (dec y))]
                           [(min mw (inc x)) y]
@@ -71,7 +71,7 @@
 ; pilot
 ; =======================
 (defn getPilotInfo [_ unit pilot]
-  {:pre [(explainValid? (s/tuple type/unit keyword?) [unit pilot])]}
+  {:pre [(explainValid? (s/tuple ::type/unit keyword?) [unit pilot])]}
   (let [data (get-in data [:pilot pilot])]
     (if (nil? data)
       (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
@@ -81,7 +81,7 @@
 ; weapon
 ; =======================
 (defn getWeaponRange [_ unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple type/unit type/weapon) [unit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? (s/tuple number? number?) %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -90,7 +90,7 @@
         [min max]))))
 
 (defn getWeaponType [_ unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple type/unit type/weapon) [unit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? string? %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -99,7 +99,7 @@
         type))))
 
 (defn getWeaponSuitability [_ unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple type/unit type/weapon) [unit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? (s/tuple number? number? number? number?) %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -107,8 +107,8 @@
       (get-in weaponData [:suitability]))))
 
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple type/unit type/weapon) [unit weapon])]
-   :post [(explainValid? type/weapon %)]}
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
+   :post [(explainValid? ::type/weapon %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (do
@@ -127,13 +127,13 @@
 
 ; hp
 (defn getUnitMaxHp [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(number? %)]}
   10000)
 
 ; en
 (defn getUnitMaxEn [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(number? %)]}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -149,7 +149,7 @@
 
 
 (defn getUnitArmor [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(number? %)]}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -165,8 +165,8 @@
 
 ; components
 (defn getUnitComponents [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
-   :post [(explainValid? type/componentEntry %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/componentEntry %)]}
   (let [transform (get-in unit [:robotState :robotKey])
         coms (get-in unit [:robotState :components transform])]
     (if coms
@@ -187,8 +187,8 @@
 
 ; weapons
 (defn getUnitWeapons [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
-   :post [(explainValid? type/weaponEntry %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/weaponEntry %)]}
   (let [transform (get-in unit [:robotState :robotKey])
         weapons (get-in unit [:robotState :weapons transform])]
     (if weapons
@@ -210,14 +210,14 @@
                  (get robot :weapons))))])))
 
 (defn setUnitWeapons [unit weapons]
-  {:pre [(explainValid? (s/tuple type/unit type/weaponEntry) [unit weapons])]
-   :post [(explainValid? type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weaponEntry) [unit weapons])]
+   :post [(explainValid? ::type/unit %)]}
   (update-in unit [:robotState :weapons] (fn [origin]
                                       (conj origin weapons))))
 
 
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit type/weapon) [gameplayCtx unit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/weapon) [gameplayCtx unit weapon])]
    :post []}
   (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
     (->> (tool.map/simpleFindPath [0 0] (dec min))
@@ -228,7 +228,7 @@
 
 ;power
 (defn getUnitPower [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(number? %)]}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -244,7 +244,7 @@
         power))))
 
 (defn getUnitSuitability [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post []}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -253,7 +253,7 @@
       (get robot :suitability))))
 
 (defn getUnitHitRate [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/map ::type/unit ::type/weapon ::type/unit) [gameplayCtx playmap unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         pilot (getPilotInfo gameplayCtx unit (get-in unit [:robotState :pilotKey]))
@@ -306,7 +306,7 @@
     (* basic factor1 factor2 factor3 factor4 factor5 factor6)))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/map ::type/unit ::type/weapon ::type/unit) [gameplayCtx playmap unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         terrain (-> playmap
@@ -323,7 +323,7 @@
 
 ; transform
 (defn getUnitTransforms [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? (s/+ keyword?) %)]}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -333,7 +333,7 @@
             robotKey))))
 
 (defn getUnitInfo [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post []}
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
@@ -351,8 +351,8 @@
                                          :power (getUnitPower gameplayCtx unit)}))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/weapon type/unit) [gameplayCtx weapon unit])]
-   :post [(explainValid? type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/weapon ::type/unit) [gameplayCtx weapon unit])]
+   :post [(explainValid? ::type/unit %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         energyType (-> weaponInfo :energyType keyword)]
     (cond
@@ -367,7 +367,7 @@
 
       (= energyType :bullet)
       (let [weapons (getUnitWeapons gameplayCtx unit)
-            _ (explainValid? type/weaponEntry weapons)
+            _ (explainValid? ::type/weaponEntry weapons)
             weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
             weaponsAfter (update-in weapons [1] (fn [vs]
                                                   (replace {weapon weaponAfter} vs)))
@@ -379,12 +379,12 @@
 
 
 (defn isBelongToPlayer [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? boolean? %)]}
   (= (:playerKey unit) :player))
 
 (defn isFriendlyUnit [{players :players :as gameplayCtx} unit targetUnit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/players type/unit type/unit) [gameplayCtx players unit targetUnit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/players ::type/unit ::type/unit) [gameplayCtx players unit targetUnit])]
    :post [(explainValid? boolean? %)]}
   (if (= unit targetUnit)
     true
@@ -395,7 +395,7 @@
          (apply =))))
 
 (defn getMenuData [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? ::menuData %)]}
   (if (not (isBelongToPlayer gameplayCtx unit))
     [[["cancel"]] {}]
@@ -437,7 +437,7 @@
       [menu data])))
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit type/unit type/weapon) [gameplayCtx unit fromUnit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weapon) [gameplayCtx unit fromUnit weapon])]
    :post [(vector? %)]}
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
         weapon (->> (getUnitWeapons gameplayCtx unit)
@@ -455,7 +455,7 @@
 
 
 (defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit type/unit) [gameplayCtx left right])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
   (let [leftHitRate (cond-> 0
                       (= leftActionType :attack)
                       ((fn [_]
@@ -488,7 +488,7 @@
      :damage leftMakeDamage}))
 
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit type/unit) [gameplayCtx left right])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
   (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
       ((fn [[_ firstResult :as ctx]]
          (if (contains? (:events firstResult) :dead)
@@ -498,7 +498,7 @@
              (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction)))))))))
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit type/unit) [gameplayCtx left right])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
   (let [[{leftDamage :damage} {rightDamage :damage}] result
         [leftAfter rightAfter] (map (fn [unit damage]
                                       (-> (:hp unit)
@@ -521,7 +521,7 @@
     gameplayCtx))
 
 (defn formatPathTree [gameplayCtx unit power paths]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit int?) [gameplayCtx unit power])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit int?) [gameplayCtx unit power])]}
   (let [shouldRemove (filter (fn [[pos info]]
                                (> (:cost info) power))
                              paths)]
@@ -538,7 +538,7 @@
             shouldRemove)))
 
 (defn getUnitMovePathTreeTo [{playmap :map :as gameplayCtx} unit pos]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit) [gameplayCtx playmap unit])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/map ::type/unit) [gameplayCtx playmap unit])]}
   (let [power (/ (getUnitPower gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
@@ -554,14 +554,14 @@
             (formatPathTree gameplayCtx unit power paths))))))
 
 (defn getUnitMovePathTree [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]}
   (getUnitMovePathTreeTo gameplayCtx unit nil))
 
 
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit keyword? keyword?) [gameplayCtx unit fromKey toKey])]
-   :post [(explainValid? type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit keyword? keyword?) [gameplayCtx unit fromKey toKey])]
+   :post [(explainValid? ::type/unit %)]}
   (let [[_ weaponsNow] (getUnitWeapons gameplayCtx unit)
         [_ weaponsNext] (getUnitWeapons gameplayCtx (update-in unit [:robotState :robotKey] (constantly toKey)))
         weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
@@ -576,7 +576,7 @@
 
 
 (defn createUnit [{units :units :as gameplayCtx} {:keys [key position playerKey]} {:keys [robotKey]}]
-  {:pre [(explainValid? (s/tuple type/units keyword? keyword?) [units playerKey robotKey])]}
+  {:pre [(explainValid? (s/tuple ::type/units keyword? keyword?) [units playerKey robotKey])]}
   (->> (tool.units/add units (let [basic {:key (or key (keyword (gensym "unit")))
                                           :position (or position [0 0])
                                           :playerKey (or playerKey :player)
@@ -593,8 +593,8 @@
 
 
 (defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
-  {:pre [(explainValid? (s/tuple type/camera type/viewsize type/units) [camera viewsize units])]
-   :post [(explainValid? (s/* type/unit) %)]}
+  {:pre [(explainValid? (s/tuple ::type/camera ::type/viewsize ::type/units) [camera viewsize units])]
+   :post [(explainValid? (s/* ::type/unit) %)]}
   (let [camera (or targetCamera camera)
         [p1 p2] (or searchSize [(map - camera viewsize)
                                 (map + camera viewsize)])
@@ -602,8 +602,8 @@
     units))
 
 (defn gameplayOnUnitDone [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/robot) [gameplayCtx unit])]
-   :post [(explainValid? type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
+   :post [(explainValid? ::type/unit %)]}
   (-> unit
       (update-in [:robotState :tags] #(conj % [:done true]))))
 
@@ -612,7 +612,7 @@
 
 
 (defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units :as gameplayCtx} targetCamera unit]
-  {:pre [(explainValid? (s/tuple type/camera type/viewsize type/units) [camera viewsize units])]
+  {:pre [(explainValid? (s/tuple ::type/camera ::type/viewsize ::type/units) [camera viewsize units])]
    :post [(explainValid? (constantly true) %)]}
   (let [camera (or targetCamera camera)]
     (-> unit
@@ -622,7 +622,7 @@
 
 
 (defn handleMapView [gameplayCtx [cmd args]]
-  (common/assertSpec module.v1.type/mapView gameplayCtx)
+  (common/assertSpec ::type/mapView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -639,7 +639,7 @@
     gameplayCtx))
 
 (defn handleCursorView [gameplayCtx [cmd args]]
-  (common/assertSpec module.v1.type/cursorView gameplayCtx)
+  (common/assertSpec ::type/cursorView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -657,7 +657,7 @@
 
 
 (defn handleMoveRangeView [gameplayCtx [cmd args]]
-  (common/assertSpec module.v1.type/moveRangeView gameplayCtx)
+  (common/assertSpec ::type/moveRangeView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -680,16 +680,16 @@
 
 
 (defn render [gameplayCtx]
-  {:map (when (s/valid? type/mapView gameplayCtx)
+  {:map (when (s/valid? ::type/mapView gameplayCtx)
           (let [{:keys [camera map viewsize]} gameplayCtx]
             (tool.map/subMap camera viewsize map)))
-   :cursor (when (s/valid? type/cursorView gameplayCtx)
+   :cursor (when (s/valid? ::type/cursorView gameplayCtx)
              (let [{:keys [camera cursor]} gameplayCtx]
                (world2local camera cursor)))
-   :moveRange (when (s/valid? type/moveRangeView gameplayCtx)
+   :moveRange (when (s/valid? ::type/moveRangeView gameplayCtx)
                 (let [{:keys [camera moveRange]} gameplayCtx]
                   (map #(world2local camera %) moveRange)))
-   :units (when (s/valid? type/unitsView gameplayCtx)
+   :units (when (s/valid? ::type/unitsView gameplayCtx)
             (let [{:keys [camera]} gameplayCtx]
               (->> (getUnitsByRegion gameplayCtx nil nil)
                    (map (fn [unit]

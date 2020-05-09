@@ -40,7 +40,7 @@
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
-(s/def ::itemState ::key)
+(s/def ::itemState (s/keys :req-un [::itemKey]))
 (s/def ::item (s/keys :req-un [::key ::position ::itemState]))
 
 (s/def ::unit (s/or :robot ::robot 
@@ -56,19 +56,4 @@
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 
-(def camera ::camera)
-(def viewsize ::viewsize)
-(def mapType ::map)
-(def weapon ::weapon)
-(def weaponEntry ::weaponEntry)
-(def componentEntry ::componentEntry)
-(def robot ::robot)
-(def item ::item)
-(def unit ::unit)
-(def units ::units)
-(def mapView ::mapView)
-(def cursorView ::cursorView)
-(def unitsView ::unitsView)
-(def moveRangeView ::moveRangeView)
-(def players ::players)
-(def gameplayCtx  (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
+(s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
