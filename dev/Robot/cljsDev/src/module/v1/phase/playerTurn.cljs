@@ -3,7 +3,21 @@
   (:require [module.v1.data :as data])
   (:require [module.v1.common :as common])
   (:require [module.v1.type :as type])
-  (:require [tool.units]))
+  (:require [tool.units])
+  (:require-macros [module.v1.core :as core]))
+
+
+(core/defstate selectW [_ arg]
+  {:nameCtx gameplayCtx
+   :initCtx nil
+   :updateCtx (do
+                (common/assertSpec ::type/moveRangeView gameplayCtx)
+                gameplayCtx)
+   :nameFsm fsm
+   :nameState state
+   :initState {}}
+  (let [[cmd args] (a/<! inputCh)]
+    [gameplayCtx false]))
 
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
   (a/go
