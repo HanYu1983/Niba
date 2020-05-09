@@ -17,7 +17,10 @@
                   :viewsize mapViewSize
                   :mapsize [20 20]
                   :units tool.units/model
-                  :moveRange []})
+                  :moveRange []
+                  :players {:player {:faction 0}
+                            :ai1 {:faction 1}
+                            :ai2 {:faction 1}}})
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go

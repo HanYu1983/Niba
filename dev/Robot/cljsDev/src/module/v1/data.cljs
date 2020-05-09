@@ -1,6 +1,7 @@
 (ns module.v1.data
   (:require ["./data.js" :as dataJson])
   (:require [clojure.spec.alpha :as s])
+  (:require [clojure.core.async :as a])
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require [tool.map])
@@ -14,7 +15,7 @@
 
 
 (defn getTerrainKey [{playmap :map} from]
-  {:pre [(explainValid? (s/tuple ::mapType) [playmap])]
+  {:pre [(explainValid? (s/tuple type/mapType) [playmap])]
    :post []}
   (let [t1 (get-in data [:terrainMapping
                          (str (get-in playmap (reverse from)))
@@ -22,7 +23,7 @@
     t1))
 
 (defn getTerrain [{playmap :map} from]
-  {:pre [(explainValid? (s/tuple ::mapType) [playmap])]
+  {:pre [(explainValid? (s/tuple type/mapType) [playmap])]
    :post []}
   (-> (getTerrainKey {:map playmap} from)
       ((fn [key]
@@ -30,7 +31,7 @@
 
 
 (defn moveCost [{playmap :map} unit from to]
-  {:pre [(explainValid? (s/tuple ::mapType type/unit) [playmap unit])]
+  {:pre [(explainValid? (s/tuple type/mapType type/unit) [playmap unit])]
    :post [(number? %)]}
   (let [isSky (-> (get-in unit [:robotState :tags])
                   (contains? :sky))]
@@ -46,7 +47,7 @@
            (get-in data [:terrain (keyword t2) :cost]))))))
 
 
-(defn nextCell [{units :units players type/players} unit [mw mh] [x y]]
+(defn nextCell [{units :units players :players} unit [mw mh] [x y]]
   {:pre [(explainValid? (s/tuple type/units type/players type/unit) [units players unit])]}
   (let [possiblePosition [[x (min mh (inc y))]
                           [x (max 0 (dec y))]
@@ -252,7 +253,7 @@
       (get robot :suitability))))
 
 (defn getUnitHitRate [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx ::mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
+  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         pilot (getPilotInfo gameplayCtx unit (get-in unit [:robotState :pilotKey]))
@@ -305,7 +306,7 @@
     (* basic factor1 factor2 factor3 factor4 factor5 factor6)))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx ::mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
+  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit type/weapon type/unit) [gameplayCtx playmap unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         terrain (-> playmap
@@ -520,6 +521,7 @@
     gameplayCtx))
 
 (defn formatPathTree [gameplayCtx unit power paths]
+  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit int?) [gameplayCtx unit power])]}
   (let [shouldRemove (filter (fn [[pos info]]
                                (> (:cost info) power))
                              paths)]
@@ -535,10 +537,9 @@
             paths
             shouldRemove)))
 
-(defn getUnitMovePathTreeTo [gameplayCtx unit pos]
-  {:pre [(explainValid? (s/tuple type/gameplayCtx type/unit) [gameplayCtx unit])]}
-  (let [playmap (module.default.data/getMap gameplayCtx)
-        power (/ (getUnitPower gameplayCtx unit) 5)
+(defn getUnitMovePathTreeTo [{playmap :map :as gameplayCtx} unit pos]
+  {:pre [(explainValid? (s/tuple type/gameplayCtx type/mapType type/unit) [gameplayCtx playmap unit])]}
+  (let [power (/ (getUnitPower gameplayCtx unit) 5)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [cost]} curr]
@@ -599,6 +600,12 @@
                                 (map + camera viewsize)])
         units (tool.units/getByRegion units p1 p2)]
     units))
+
+(defn gameplayOnUnitDone [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple type/gameplayCtx type/robot) [gameplayCtx unit])]
+   :post [(explainValid? type/unit %)]}
+  (-> unit
+      (update-in [:robotState :tags] #(conj % [:done true]))))
 
 (defn world2local [camera position]
   (mapv - position camera))
@@ -670,8 +677,6 @@
 
     :else
     gameplayCtx))
-
-
 
 
 (defn render [gameplayCtx]
