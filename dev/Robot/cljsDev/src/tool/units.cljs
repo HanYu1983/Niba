@@ -1,5 +1,13 @@
 (ns tool.units
-  (:require [clojure.set]))
+  (:require [clojure.set])
+  (:require [clojure.spec.alpha :as s]))
+
+(s/def ::y (s/map-of int? (constantly true)))
+(s/def ::x (s/map-of int? ::y))
+(s/def ::position ::x)
+(s/def ::key (s/map-of (constantly true) (constantly true)))
+(s/def ::modelType (s/keys :req-un [::key ::position]))
+(def modelType ::modelType)
 
 (def model {:key {}
             :position (sorted-map)})

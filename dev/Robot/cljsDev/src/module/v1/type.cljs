@@ -1,5 +1,6 @@
 (ns module.v1.type
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s])
+  (:require [tool.units]))
 
 
 (s/def ::key keyword?)
@@ -37,29 +38,35 @@
 (s/def ::components (s/map-of keyword? (s/* ::component)))
 
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en]))
-(s/def ::robot (s/keys :req-un [::key ::position ::robotKey ::playerKey ::robotState]))
+(s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
-(s/def ::itemKey ::key)
-(s/def ::item (s/keys :req-un [::key ::position ::itemKey]))
+(s/def ::itemState ::key)
+(s/def ::item (s/keys :req-un [::key ::position ::itemState]))
 
 (s/def ::unit (s/or :robot ::robot 
                     :item ::item))
 
-(s/def ::units (comp not nil?))
-
+(s/def ::units tool.units/modelType)
 
 
 (s/def ::moveRange ::positions)
 
 (s/def ::mapView (s/keys :req-un [::map ::camera ::viewsize]))
 (s/def ::cursorView (s/keys :req-un [::cursor ::camera ::mapsize]))
-(s/def ::unitsView (s/keys :req-un [::units ::camera]))
+(s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 
+(def camera ::camera)
+(def viewsize ::viewsize)
 (def mapType ::map)
+(def weapon ::weapon)
+(def weaponEntry ::weaponEntry)
+(def componentEntry ::componentEntry)
+(def unit ::unit)
 (def units ::units)
 (def mapView ::mapView)
 (def cursorView ::cursorView)
 (def unitsView ::unitsView)
 (def moveRangeView ::moveRangeView)
 (def players ::players)
+(def gameplayCtx (constantly true))

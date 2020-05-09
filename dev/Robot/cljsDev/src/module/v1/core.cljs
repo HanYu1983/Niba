@@ -1,9 +1,10 @@
 (ns module.v1.core
   (:require [clojure.core.async :as a])
   (:require [app.module])
-  (:require [module.v1.type])
   (:require [tool.map])
   (:require [tool.units])
+  (:require [module.v1.type])
+  (:require [module.v1.data :as data])
   (:require-macros [module.v1.core])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
   (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
@@ -63,5 +64,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))]
+          gameplayCtx (-> gameplayCtx
+                          (update-in [:map] (constantly playmap))
+                          (data/createUnit {:playerKey :player} {:robotKey :gundam}))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))

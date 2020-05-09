@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
   (:require-macros [module.v1.core])
-  (:require [module.v1.type])
+  (:require [module.v1.type :as type])
   (:require [tool.map])
   (:require [tool.units]))
 
@@ -33,76 +33,3 @@
               39 :rright})
 
 (module.v1.core/defwait paint [ctx args])
-
-(defn handleMapView [gameplayCtx [cmd args]]
-  (assertSpec module.v1.type/mapView gameplayCtx)
-  (cond
-    (= "KEY_DOWN" cmd)
-    (let [action (actions args)]
-      (cond
-        (some #(= % action) [:rup :rdown :rleft :rright])
-        (update-in gameplayCtx [:camera] #(mapv + % (action {:rup [0 -1]
-                                                             :rdown [0 1]
-                                                             :rleft [-1 0]
-                                                             :rright [1 0]})))
-        :else
-        gameplayCtx))
-
-    :else
-    gameplayCtx))
-
-(defn handleCursorView [gameplayCtx [cmd args]]
-  (assertSpec module.v1.type/cursorView gameplayCtx)
-  (cond
-    (= "KEY_DOWN" cmd)
-    (let [action (actions args)]
-      (cond
-        (some #(= % action) [:up :down :left :right])
-        (update-in gameplayCtx [:cursor] #(mapv + % (action {:up [0 -1]
-                                                             :down [0 1]
-                                                             :left [-1 0]
-                                                             :right [1 0]})))
-        :else
-        gameplayCtx))
-
-    :else
-    gameplayCtx))
-
-
-(defn handleMoveRangeView [gameplayCtx [cmd args]]
-  (assertSpec module.v1.type/moveRangeView gameplayCtx)
-  (cond
-    (= "KEY_DOWN" cmd)
-    (let [action (actions args)]
-      (cond
-        (some #(= % action) [:up :down :left :right])
-        (let [{:keys [cursor units]} gameplayCtx
-              unitAtCursor (tool.units/getByPosition units cursor)
-              moveRange (if unitAtCursor
-                          (let []
-                            [[0 0] [0 1]])
-                          (let []
-                            []))]
-          (update-in gameplayCtx [:moveRange] (constantly moveRange)))
-
-        :else
-        gameplayCtx))
-
-    :else
-    gameplayCtx))
-
-
-(defn world2local [camera position]
-  (map - position camera))
-
-
-(defn render [gameplayCtx]
-  {:map (when (s/valid? module.v1.type/mapView gameplayCtx)
-          (let [{:keys [camera map viewsize]} gameplayCtx]
-            (tool.map/subMap camera viewsize map)))
-   :cursor (when (s/valid? module.v1.type/cursorView gameplayCtx)
-             (let [{:keys [camera cursor]} gameplayCtx]
-               (world2local camera cursor)))
-   :moveRange (when (s/valid? module.v1.type/moveRangeView gameplayCtx)
-                (let [{:keys [camera moveRange]} gameplayCtx]
-                  (map #(world2local camera %) moveRange)))})
