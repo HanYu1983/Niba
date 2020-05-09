@@ -604,7 +604,6 @@
   (mapv - position camera))
 
 
-
 (defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units :as gameplayCtx} targetCamera unit]
   {:pre [(explainValid? (s/tuple type/camera type/viewsize type/units) [camera viewsize units])]
    :post [(explainValid? (constantly true) %)]}
@@ -660,10 +659,10 @@
         (let [{:keys [cursor units]} gameplayCtx
               unitAtCursor (tool.units/getByPosition units cursor)
               moveRange (if unitAtCursor
-                          (let []
-                            [[0 0] [0 1]])
-                          (let []
-                            []))]
+                          (let [shortestPathTree (getUnitMovePathTree gameplayCtx unitAtCursor)
+                                moveRange (map first shortestPathTree)]
+                            moveRange)
+                          [])]
           (update-in gameplayCtx [:moveRange] (constantly moveRange)))
 
         :else

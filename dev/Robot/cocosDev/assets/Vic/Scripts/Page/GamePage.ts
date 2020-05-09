@@ -167,10 +167,10 @@ export default class GamePage extends BasicViewer {
         let en: number[] = [];
         data.forEach((unit: any) => {
             poses.push(unit.position);
-            maxHP.push(unit.state.maxHp);
-            maxEN.push(unit.state.maxEn);
-            hp.push(unit.state.hp);
-            en.push(unit.state.en);
+            maxHP.push(unit.robotState.maxHp);
+            maxEN.push(unit.robotState.maxEn);
+            hp.push(unit.robotState.hp);
+            en.push(unit.robotState.en);
         });
 
         let i = 0;
@@ -197,13 +197,13 @@ export default class GamePage extends BasicViewer {
 
             // 攻擊者的初始狀態+扣EN動畫
             this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unit1.state.en);
-                item.getComponent(UnitSampleInfo).changeEN(unit1.state.maxEn, unitAfter1.state.en);
+                item.getComponent(UnitSampleInfo).showHPEN(unit1.robotState.maxHp, unit1.robotState.hp, unit1.robotState.maxEn, unit1.robotState.en);
+                item.getComponent(UnitSampleInfo).changeEN(unit1.robotState.maxEn, unitAfter1.robotState.en);
             });
 
             // 被攻擊者的初始狀態
             // this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-            //     item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
+            //     item.getComponent(UnitSampleInfo).showHPEN(unit2.robotState.maxHp, unit2.robotState.hp, unit2.robotState.maxEn, unit2.robotState.en);
             // });
         }).delay(.7);
         return tween;
@@ -213,8 +213,8 @@ export default class GamePage extends BasicViewer {
         let tween = cc.tween(this.node).call(() => {
             // 被攻擊者的初始狀態+扣HP動畫
             this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unit2.state.hp, unit2.state.maxEn, unit2.state.en);
-                item.getComponent(UnitSampleInfo).changeHP(unit2.state.maxHp, unitAfter2.state.hp);
+                item.getComponent(UnitSampleInfo).showHPEN(unit2.robotState.maxHp, unit2.robotState.hp, unit2.robotState.maxEn, unit2.robotState.en);
+                item.getComponent(UnitSampleInfo).changeHP(unit2.robotState.maxHp, unitAfter2.robotState.hp);
             });
 
             // this.unitActionInfos.showItems([to1], (item:cc.Node)=>{
@@ -228,8 +228,8 @@ export default class GamePage extends BasicViewer {
         let tween = cc.tween(this.node).call(() => {
             // 攻擊者的扣EN狀態+扣血動畫
             this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
-                item.getComponent(UnitSampleInfo).showHPEN(unit1.state.maxHp, unit1.state.hp, unit1.state.maxEn, unitAfter1.state.en);
-                item.getComponent(UnitSampleInfo).changeHP(unitAfter1.state.maxHp, unitAfter1.state.hp);
+                item.getComponent(UnitSampleInfo).showHPEN(unit1.robotState.maxHp, unit1.robotState.hp, unit1.robotState.maxEn, unitAfter1.robotState.en);
+                item.getComponent(UnitSampleInfo).changeHP(unitAfter1.robotState.maxHp, unitAfter1.robotState.hp);
             });
         }).delay(.7);
         return tween;
@@ -282,8 +282,8 @@ export default class GamePage extends BasicViewer {
 
             // 被攻擊者的扣血狀態+扣EN動畫
             this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
-                item.getComponent(UnitSampleInfo).showHPEN(unit2.state.maxHp, unitAfter2.state.hp, unit2.state.maxEn, unit2.state.en);
-                item.getComponent(UnitSampleInfo).changeEN(unit2.state.maxEn, unitAfter2.state.en);
+                item.getComponent(UnitSampleInfo).showHPEN(unit2.robotState.maxHp, unitAfter2.robotState.hp, unit2.robotState.maxEn, unit2.robotState.en);
+                item.getComponent(UnitSampleInfo).changeEN(unit2.robotState.maxEn, unitAfter2.robotState.en);
             });
         }).delay(.7);
         return tween;
