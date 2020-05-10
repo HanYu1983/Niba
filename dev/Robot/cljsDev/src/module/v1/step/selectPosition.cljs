@@ -2,22 +2,24 @@
   (:require [clojure.core.async :as a])
   (:require-macros [module.v1.core :as core])
   (:require [tool.menuCursor])
-  (:require [module.v1.data])
-  (:require [module.v1.common]))
+  (:require [module.v1.data :as data])
+  (:require [module.v1.common :as common]))
 
 (core/defstate selectPosition _
   {:nameCtx gameplayCtx
    :initCtx nil
+   :initState nil
+   :nameFsm _
+   :nameState _
    :updateCtx
    (do
      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-     gameplayCtx)
-   :nameFsm _
-   :nameState state
-   :initState {:menuCursor (tool.menuCursor/model menu)}}
+     gameplayCtx)}
   (let [[cmd args :as evt] (a/<! inputCh)
         gameplayCtx (-> gameplayCtx
-                        (data/handleMapView evt))]
+                        (data/handleMapView evt)
+                        (data/handleCursorView evt)
+                        (data/handleMoveRangeView evt))]
     (cond
       (= "KEY_DOWN" cmd)
       (let [action (common/actions args)]

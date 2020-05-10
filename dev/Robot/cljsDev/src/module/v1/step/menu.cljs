@@ -9,18 +9,20 @@
 (core/defstate menu {:keys [menu data]}
   {:nameCtx gameplayCtx
    :initCtx nil
+   :initState {:menuCursor (tool.menuCursor/model menu)
+               :data data}
+   :nameFsm _
+   :nameState _
    :updateCtx
    (do
      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-     gameplayCtx)
-   :nameFsm _
-   :nameState state
-   :initState {:menuCursor (tool.menuCursor/model menu)
-               :data data}}
+     gameplayCtx)}
   (let [[cmd args :as evt] (a/<! inputCh)
         gameplayCtx (-> gameplayCtx
                         (data/handleMapView evt)
-                        (data/handleMenuCursor evt))]
+                        (data/handleMenuCursor evt))
+        state (-> gameplayCtx :fsm tool.fsm/load)]
+    (println (:fsm gameplayCtx))
     (cond
       (= "KEY_DOWN" cmd)
       (let [action (common/actions args)]

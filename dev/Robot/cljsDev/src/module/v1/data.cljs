@@ -5,6 +5,7 @@
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require [tool.map])
+  (:require [tool.fsm])
   (:require [tool.menuCursor])
   (:require [module.v1.common :as common :refer [explainValid?]])
   (:require [clojure.set]))
@@ -725,4 +726,9 @@
             (let [{:keys [camera]} gameplayCtx]
               (->> (getUnitsByRegion gameplayCtx nil nil)
                    (map (fn [unit]
-                          (mapUnitToLocal gameplayCtx camera unit))))))})
+                          (mapUnitToLocal gameplayCtx camera unit))))))
+   :systemMenu (when (s/valid? (s/keys :req-un [::type/fsm]) gameplayCtx)
+                 (let [state (-> gameplayCtx :fsm tool.fsm/currState)
+                       stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
+                   (when (some #(= % state) [:menu])
+                     (select-keys stateDetail [:menuCursor :data]))))})
