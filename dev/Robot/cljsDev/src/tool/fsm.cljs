@@ -1,4 +1,8 @@
-(ns tool.fsm)
+(ns tool.fsm
+  (:require [clojure.spec.alpha :as s]))
+
+(s/def ::stack (s/coll-of keyword?))
+(s/def ::model (s/keys :req-un [::stack ::state]))
 
 (def model {:stack []
             :state []})

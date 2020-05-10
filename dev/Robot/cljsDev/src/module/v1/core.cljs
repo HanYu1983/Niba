@@ -3,6 +3,7 @@
   (:require [app.module])
   (:require [tool.map])
   (:require [tool.units])
+  (:require [tool.fsm])
   (:require [module.v1.type])
   (:require [module.v1.data :as data])
   (:require-macros [module.v1.core])
@@ -20,7 +21,8 @@
                   :moveRange []
                   :players {:player {:faction 0}
                             :ai1 {:faction 1}
-                            :ai2 {:faction 1}}})
+                            :ai2 {:faction 1}}
+                  :fsm tool.fsm/model})
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go

@@ -82,6 +82,11 @@
         rleft 37
         rright 39]
     (a/go
+      (app.main/defclick (or testAll true) "system menu and click cancel"
+        [right enter
+         down enter
+         left])
+     
       (app.main/defclick (or testAll false) "transform"
         [enter
          down down enter
@@ -107,7 +112,7 @@
          down up down left left right right
          down down up up cancel])
 
-      (app.main/defclick (or testAll true) "move"
+      (app.main/defclick (or testAll false) "move"
         [enter enter right enter cancel cancel cancel left])
 
       (app.main/defclick (or testAll false) "attack"

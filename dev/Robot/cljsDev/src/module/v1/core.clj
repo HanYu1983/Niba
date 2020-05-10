@@ -31,11 +31,16 @@
                                   (tool.fsm/pushState (keyword ~(str name))))
                         ~ctx (assoc ~ctx :fsm ~'fsm)
                         ~ctx ~(or init ctx)]
-                    ~ctx)]
-         (loop [~ctx ~ctx]
-           (let [~ctx ~(or update ctx)
-                 ~fsm (:fsm ~ctx)
-                 ~state (or (tool.fsm/load ~fsm) ~initState)
-                 [~ctx ~'ret] (a/<! (a/go ~@body))
-                 ~ctx (assoc ~ctx :fsm ~fsm)]
-             [~ctx ~'ret]))))))
+                    ~ctx)
+             [~ctx ~'ret] (loop [~ctx ~ctx]
+                            (let [~ctx ~(or update ctx)
+                                  ~'_fsm (:fsm ~ctx)
+                                  ~'_state (or (tool.fsm/load ~'_fsm) ~initState)
+                                  ~'_fsm (tool.fsm/save ~'_fsm ~'_state)
+                                  ~ctx (assoc ~ctx :fsm ~'_fsm)
+                                  ~fsm ~'_fsm
+                                  ~state ~'_state]
+                              ~@body))
+             ~'_ (common/explainValid? (comp not nil?) ~ctx)
+             ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))]
+         [~ctx ~'ret]))))
