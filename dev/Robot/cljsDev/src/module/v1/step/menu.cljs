@@ -22,7 +22,6 @@
                         (data/handleMapView evt)
                         (data/handleMenuCursor evt))
         state (-> gameplayCtx :fsm tool.fsm/load)]
-    (println (:fsm gameplayCtx))
     (cond
       (= "KEY_DOWN" cmd)
       (let [action (common/actions args)]
