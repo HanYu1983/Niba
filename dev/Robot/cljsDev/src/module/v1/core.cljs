@@ -6,7 +6,8 @@
   (:require [tool.fsm])
   (:require [module.v1.type])
   (:require [module.v1.data :as data])
-  (:require-macros [module.v1.core])
+  (:require-macros [module.v1.core :as core])
+  (:require [module.v1.common :as common])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
   (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
 
@@ -72,4 +73,5 @@
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
                           (data/createUnit {:playerKey :player} {:robotKey :gundam}))]
+      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))

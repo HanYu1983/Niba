@@ -9,6 +9,7 @@
 
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
   (a/go
+    (a/<! (common/playerTurnStart nil (data/render gameplayCtx) inputCh outputCh))
     (loop [gameplayCtx gameplayCtx]
       (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (let [[cmd args :as evt] (a/<! inputCh)
@@ -37,7 +38,7 @@
                       (recur gameplayCtx)))
                   (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]
                     (if endTurn
-                      gameplayCtx 
+                      gameplayCtx
                       (recur gameplayCtx)))))
               :else
               (recur gameplayCtx)))

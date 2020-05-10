@@ -1,7 +1,7 @@
 (ns module.v1.common
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
-  (:require-macros [module.v1.core])
+  (:require-macros [module.v1.core :as core])
   (:require [module.v1.type :as type])
   (:require [tool.map])
   (:require [tool.units]))
@@ -32,4 +32,10 @@
               37 :rleft
               39 :rright})
 
-(module.v1.core/defwait paint [ctx args])
+(core/defwait playerTurnStart [ctx args])
+(core/defwait enemyTurnStart [ctx args])
+(core/defwait unitMoveAnim [ctx args])
+(core/defwait unitBattleAnim [ctx args])
+(core/defwait unitDeadAnim [ctx args])
+(core/defwait paint [ctx args])
+(core/defwait showMessage [ctx args])
