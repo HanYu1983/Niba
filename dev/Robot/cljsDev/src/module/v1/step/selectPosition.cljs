@@ -7,28 +7,27 @@
 
 (core/defstate selectPosition _
   {:nameCtx gameplayCtx
-   :initCtx nil
    :initState nil
-   :nameFsm _
-   :nameState _}
-  (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-  (let [[cmd args :as evt] (a/<! inputCh)
-        gameplayCtx (-> gameplayCtx
-                        (data/handleMapView evt)
-                        (data/handleCursorView evt)
-                        (data/handleMoveRangeView evt))]
-    (cond
-      (= "KEY_DOWN" cmd)
-      (let [action (common/actions args)]
-        (cond
-          (= :cancel action)
-          [gameplayCtx false]
+   :initCtx nil}
+  (loop [gameplayCtx gameplayCtx]
+    (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+    (let [[cmd args :as evt] (a/<! inputCh)
+          gameplayCtx (-> gameplayCtx
+                          (data/handleMapView evt)
+                          (data/handleCursorView evt)
+                          (data/handleMoveRangeView evt))]
+      (cond
+        (= "KEY_DOWN" cmd)
+        (let [action (common/actions args)]
+          (cond
+            (= :cancel action)
+            [gameplayCtx false]
 
-          (= :enter action)
-          [gameplayCtx true]
+            (= :enter action)
+            [gameplayCtx true]
 
-          :else
-          (recur gameplayCtx)))
+            :else
+            (recur gameplayCtx)))
 
-      :else
-      (recur gameplayCtx))))
+        :else
+        (recur gameplayCtx)))))
