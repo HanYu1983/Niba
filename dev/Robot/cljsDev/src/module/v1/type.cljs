@@ -89,10 +89,10 @@
 (s/def ::battleMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)
-                                {:keys [battleMenuSession data menuCursor]} (tool.fsm/load fsm)]
+                                {:keys [battleMenuSession]} (tool.fsm/load fsm)]
                             (and (s/valid? ::fsm fsm)
                                  (s/valid? #{:unitBattleMenu} state)
-                                 (s/valid? (s/tuple ::battleMenu/defaultModel ::menuCursorData ::menuCursor) [battleMenuSession data menuCursor])))))
+                                 (s/valid? (s/tuple ::battleMenu/defaultModel) [battleMenuSession])))))
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
 
 ; for macro
