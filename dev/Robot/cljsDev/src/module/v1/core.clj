@@ -29,6 +29,7 @@
      (a/go
        (let [~ctx (let [~'fsm (-> (:fsm ~ctx)
                                   (tool.fsm/pushState (keyword ~(str name))))
+                        ~ctx (assoc ~ctx :fsm ~'fsm) ; update ctx for initState
                         ~'state (or (tool.fsm/load ~'fsm) ~initState)
                         ~'fsm (tool.fsm/save ~'fsm ~'state)
                         ~ctx (assoc ~ctx :fsm ~'fsm)
