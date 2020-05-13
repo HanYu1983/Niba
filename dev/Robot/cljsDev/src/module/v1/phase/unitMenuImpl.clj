@@ -11,12 +11,9 @@
          :unit unit})
 
       :nameFsm _
-      :nameState _
-      :updateCtx
-      (do
-        (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-        gameplayCtx)}
-     (common/assertSpec type/unitMenuView gameplayCtx) 
+      :nameState _}
+     (common/assertSpec type/unitMenuView gameplayCtx)
+     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
      (let [[cmd args :as evt] (a/<! inputCh)
            gameplayCtx (-> gameplayCtx
                            (data/handleMapView evt)

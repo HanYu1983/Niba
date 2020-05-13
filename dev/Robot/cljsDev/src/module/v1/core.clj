@@ -24,7 +24,7 @@
                (recur ~varCtx))))))))
 
 
-(defmacro defstate [name args {ctx :nameCtx init :initCtx initState :initState fsm :nameFsm state :nameState update :updateCtx} & body]
+(defmacro defstate [name args {ctx :nameCtx init :initCtx initState :initState fsm :nameFsm state :nameState} & body]
   `(defn ~name [~ctx ~args ~'inputCh ~'outputCh]
      (a/go
        (let [~ctx (let [~'fsm (-> (:fsm ~ctx)
@@ -38,8 +38,7 @@
                                   ~'_fsm (tool.fsm/save ~'_fsm ~'_state)
                                   ~ctx (assoc ~ctx :fsm ~'_fsm)
                                   ~fsm ~'_fsm
-                                  ~state ~'_state
-                                  ~ctx ~(or update ctx)]
+                                  ~state ~'_state]
                               ~@body))
              ~'_ (common/explainValid? (comp not nil?) ~ctx)
              ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))]

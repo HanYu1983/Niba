@@ -12,11 +12,8 @@
    :initState {:menuCursor (tool.menuCursor/model menu)
                :data data}
    :nameFsm _
-   :nameState _
-   :updateCtx
-   (do
-     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-     gameplayCtx)}
+   :nameState _}
+  (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
   (let [[cmd args :as evt] (a/<! inputCh)
         gameplayCtx (-> gameplayCtx
                         (data/handleMapView evt)
