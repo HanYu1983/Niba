@@ -593,6 +593,71 @@
                                                                          :en (getUnitMaxEn gameplayCtx basic)}))))
        (assoc gameplayCtx :units)))
 
+(defn updateUnit [gameplayCtx unit f]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post [(explainValid? ::gameplayCtx %)]}
+  (update gameplayCtx :units (fn [origin]
+                               (-> origin
+                                   (tool.units/delete unit)
+                                   (tool.units/add (f unit))))))
+
+
+(defn gameplayOnInit [appCtx gameplayCtx]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx) [gameplayCtx])]
+   :post [(explainValid? ::gameplayCtx %)]}
+  (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
+                             (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                       [(createUnit gameplayCtx
+                                                    {:player (if (< (rand) 0.5)
+                                                               :player
+                                                               :ai1)
+                                                     :type :robot
+                                                     :position [0 i]}
+                                                    {:robotKey robotKey})
+                                        (inc i)])
+                                     [gameplayCtx 1]))]
+    gameplayCtx))
+
+(defn gameplayOnUnitMove [_ gameplayCtx unit pos]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post [(explainValid? ::unit %)]}
+  (let [vel (->> (map - (:position unit) pos)
+                 (repeat 2)
+                 (apply map *)
+                 (apply +))]
+    (-> unit
+        (merge {:position pos})
+        (update-in [:robotState :tags] #(conj % [:move true]))
+        (update-in [:robotState :tags] #(conj % [:velocity vel])))))
+
+(defn gameplayOnUnitDone [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
+   :post [(explainValid? ::type/unit %)]}
+  (-> unit
+      (update-in [:robotState :tags] #(conj % [:done true]))))
+
+(defn gameplayOnUnitTurnStart [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post [(explainValid? ::unit %)]}
+  (-> unit
+      (update-in [:robotState :tags] (constantly {}))))
+
+(defn gameplayOnUnitDead [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post []}
+  (a/go gameplayCtx))
+
+(defn gameplayGetUnitMovePathTree [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post []}
+  (getUnitMovePathTree gameplayCtx unit))
+
+(defn gameplayGetUnitIsDead [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+   :post [(boolean? %)]}
+  (<= (get-in unit [:robotState :hp]) 0))
+
+
 
 (defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
   {:pre [(explainValid? (s/tuple ::type/camera ::type/viewsize ::type/units) [camera viewsize units])]
@@ -603,11 +668,6 @@
         units (tool.units/getByRegion units p1 p2)]
     units))
 
-(defn gameplayOnUnitDone [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (-> unit
-      (update-in [:robotState :tags] #(conj % [:done true]))))
 
 (defn world2local [camera position]
   (mapv - position camera))

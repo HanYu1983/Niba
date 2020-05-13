@@ -39,3 +39,5 @@
 (core/defwait unitDeadAnim [ctx args])
 (core/defwait paint [ctx args])
 (core/defwait showMessage [ctx args])
+(core/defwait unitSkyAnim [ctx args])
+(core/defwait unitGroundAnim [ctx args])
