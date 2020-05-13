@@ -45,18 +45,19 @@
 (core/defstate unitMenu {unit :unit}
   {:nameCtx gameplayCtx
    :initCtx nil
-   :initState 
+   :initState
    (let [[menu data] (data/getMenuData gameplayCtx unit)]
      {:menuCursor (tool.menuCursor/model menu)
       :data data
       :unit unit})
-   
+
    :nameFsm _
    :nameState _
    :updateCtx
    (do
      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
      gameplayCtx)}
+  (common/assertSpec ::type/unitMenuView gameplayCtx)
   (let [[cmd args :as evt] (a/<! inputCh)
         gameplayCtx (-> gameplayCtx
                         (data/handleMapView evt)

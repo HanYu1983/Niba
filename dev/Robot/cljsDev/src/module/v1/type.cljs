@@ -1,8 +1,22 @@
 (ns module.v1.type
   (:require [clojure.spec.alpha :as s])
   (:require [tool.units])
-  (:require [tool.fsm]))
+  (:require [tool.fsm])
+  (:require [tool.menuCursor]))
 
+(defn explainValid? [sp args]
+  (if (clojure.spec.alpha/valid? sp args)
+    true
+    (do (println (clojure.spec.alpha/explain-str sp args))
+        (println args)
+        false)))
+
+(defn assertSpec [sp args]
+  (when true
+    (when (not (clojure.spec.alpha/valid? sp args))
+      (println (clojure.spec.alpha/explain-str sp args))
+      (println args)
+      (throw (js/Error. (str "error"))))))
 
 (s/def ::key keyword?)
 (s/def ::position (s/tuple int? int?))
@@ -52,11 +66,23 @@
 
 (s/def ::moveRange ::positions)
 
+(s/def ::menu ::tool.menuCursor/menu)
+(s/def ::menuCursorData (s/keys :opt-un [::weaponIdx ::transformIdx]))
+(s/def ::menuCursor ::tool.menuCursor/model)
+
+(s/def ::fsm ::tool.fsm/model)
+
+
 (s/def ::mapView (s/keys :req-un [::map ::camera ::viewsize]))
 (s/def ::cursorView (s/keys :req-un [::cursor ::camera ::mapsize]))
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 (s/def ::attackRangeView (s/keys :req-un [::units ::attackRange ::camera]))
-(s/def ::fsm ::tool.fsm/model)
-
+(s/def ::unitMenuView (fn [gameplayCtx]
+                        (let [fsm (:fsm gameplayCtx)
+                              state (tool.fsm/currState fsm)
+                              {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
+                          (and (explainValid? ::fsm fsm)
+                               (explainValid? #{:unitMenu :unitBattleMenu} state)
+                               (explainValid? (s/tuple ::unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
