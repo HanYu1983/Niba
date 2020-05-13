@@ -59,7 +59,7 @@
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
-    (let [playmap (tool.map/generateMap 100 100
+    (let [playmap (tool.map/generateMap 20 20
                                         {:deepsea 0.6
                                          :sea 0.6
                                          :sand 0.1
