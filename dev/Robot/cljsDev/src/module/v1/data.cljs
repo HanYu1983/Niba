@@ -7,6 +7,7 @@
   (:require [tool.map])
   (:require [tool.fsm])
   (:require [tool.menuCursor])
+  (:require [module.v1.session.battleMenu :as battleMenu])
   (:require [module.v1.common :as common :refer [explainValid?]])
   (:require [clojure.set]))
 
@@ -850,6 +851,36 @@
     :else
     gameplayCtx))
 
+
+(defn handleBattleMenuSession [gameplayCtx unit [cmd args]]
+  (cond
+    (= "KEY_DOWN" cmd)
+    (let [action (common/actions args)]
+      (cond
+        (some #(= % action) [:left :right])
+        (let [state (-> gameplayCtx :fsm tool.fsm/load)
+              {:keys [menuCursor battleMenuSession]} state
+              cursor1 (tool.menuCursor/getCursor1 menuCursor)
+              cursor2 (tool.menuCursor/getCursor2 menuCursor)
+              weaponIdx (-> state :data :weaponIdx)
+              battleMenuSession (if (= cursor1 weaponIdx)
+                                  (let [weapon (-> (getUnitWeapons gameplayCtx unit)
+                                                   second
+                                                   (nth cursor2))]
+                                    (-> battleMenuSession
+                                        (battleMenu/setLeftAction [:attack weapon] gameplayCtx getUnitHitRate)
+                                        (battleMenu/setRightActionFromReaction gameplayCtx getUnitHitRate thinkReaction)))
+                                  battleMenuSession)
+              state (assoc state :battleMenuSession battleMenuSession)
+              gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
+          gameplayCtx)
+
+        :else
+        gameplayCtx))
+
+    :else
+    gameplayCtx))
+
 (defn render [gameplayCtx]
   {:map (when (s/valid? ::type/mapView gameplayCtx)
           (let [{:keys [camera map viewsize]} gameplayCtx]
@@ -874,8 +905,12 @@
                    (when (some #(= % state) [:menu])
                      (select-keys stateDetail [:menuCursor :data]))))
    :unitMenu (when (s/valid? ::type/unitMenuView gameplayCtx)
-               (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
-                 (let [{:keys [unit data menuCursor]} stateDetail]
-                   {:menuCursor menuCursor
-                    :data (update data :weapons (fn [weapons]
-                                                  (map (partial getWeaponInfo gameplayCtx unit) weapons)))})))})
+               (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
+                     {:keys [unit data menuCursor]} stateDetail]
+                 {:menuCursor menuCursor
+                  :data (update data :weapons (fn [weapons]
+                                                (map (partial getWeaponInfo gameplayCtx unit) weapons)))}))
+   :battleMenu (when (s/valid? ::type/battleMenuView gameplayCtx)
+                 (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
+                       {battleMenuSession :battleMenuSession} stateDetail]
+                   {:preview (battleMenu/mapUnits battleMenuSession (partial mapUnitToLocal gameplayCtx nil))}))})

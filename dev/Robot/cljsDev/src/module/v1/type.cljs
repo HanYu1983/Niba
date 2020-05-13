@@ -2,7 +2,8 @@
   (:require [clojure.spec.alpha :as s])
   (:require [tool.units])
   (:require [tool.fsm])
-  (:require [tool.menuCursor]))
+  (:require [tool.menuCursor])
+  (:require [module.v1.session.battleMenu :as battleMenu]))
 
 (defn explainValid? [sp args]
   (if (clojure.spec.alpha/valid? sp args)
@@ -78,13 +79,20 @@
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 (s/def ::attackRangeView (s/keys :req-un [::attackRange ::camera]))
-(s/def ::unitMenuView (fn [gameplayCtx]
-                        (let [fsm (:fsm gameplayCtx)
+(s/def ::unitMenuView (fn [ctx]
+                        (let [fsm (:fsm ctx)
                               state (tool.fsm/currState fsm)
                               {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
                           (and (explainValid? ::fsm fsm)
                                (explainValid? #{:unitMenu :unitBattleMenu} state)
                                (explainValid? (s/tuple ::unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
+(s/def ::battleMenuView (fn [ctx]
+                          (let [fsm (:fsm ctx)
+                                state (tool.fsm/currState fsm)
+                                {:keys [battleMenuSession]} (tool.fsm/load fsm)]
+                            (and (explainValid? ::fsm fsm)
+                                 (explainValid? #{:unitBattleMenu} state)
+                                 (explainValid? ::battleMenu/defaultModel battleMenuSession)))))
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
 
 ; for macro

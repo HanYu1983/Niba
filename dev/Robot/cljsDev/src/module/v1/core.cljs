@@ -50,8 +50,7 @@
 
 
 (defmethod app.module/loadData :v1 [_]
-  (a/go
-    nil))
+  (a/go data/data))
 
 (defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx])
 
@@ -72,6 +71,14 @@
                                          :offset 0})
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
-                          (data/createUnit {:playerKey :player} {:robotKey :gundam}))]
+                          (data/createUnit {:playerKey :player
+                                            :position [0 0]} 
+                                           {:robotKey :gundam})
+                          (data/createUnit {:playerKey :player
+                                            :position [4 0]}
+                                           {:robotKey :gaite_land})
+                          (data/createUnit {:playerKey :ai1
+                                            :position [2 0]}
+                                           {:robotKey :gundam}))]
       (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
