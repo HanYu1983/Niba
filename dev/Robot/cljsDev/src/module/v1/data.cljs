@@ -731,4 +731,15 @@
                  (let [state (-> gameplayCtx :fsm tool.fsm/currState)
                        stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
                    (when (some #(= % state) [:menu])
-                     (select-keys stateDetail [:menuCursor :data]))))})
+                     (select-keys stateDetail [:menuCursor :data]))))
+   :attackRange (when (s/valid? ::type/attackRangeView gameplayCtx)
+                  (let [{:keys [camera attackRange]} gameplayCtx]
+                    (map #(world2local camera %) attackRange)))
+   :unitMenu (when (s/valid? (s/keys :req-un [::type/fsm]) gameplayCtx)
+               (let [state (-> gameplayCtx :fsm tool.fsm/currState)
+                     stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
+                 (when (some #(= % state) [:unitMenu :unitBattleMenu])
+                   (let [{:keys [unit data menuCursor]} stateDetail]
+                     {:menuCursor menuCursor
+                      :data (update data :weapons (fn [weapons]
+                                                    (map (partial getWeaponInfo gameplayCtx unit) weapons)))}))))})

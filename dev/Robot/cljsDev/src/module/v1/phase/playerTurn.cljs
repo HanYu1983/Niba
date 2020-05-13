@@ -5,6 +5,7 @@
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require-macros [module.v1.core :as core])
+  (:require [module.v1.phase.unitMenu :refer [unitMenu]])
   (:require [module.v1.phase.systemMenu :refer [systemMenu]]))
 
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
@@ -26,7 +27,7 @@
               (let [{:keys [cursor units]} gameplayCtx
                     unitAtCursor (tool.units/getByPosition units cursor)]
                 (if unitAtCursor
-                  (let [[gameplayCtx isEnd] [gameplayCtx false]]
+                  (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
                     (if isEnd
                       (let [unit (tool.units/getByKey units (:key unitAtCursor))
                             unitOnDone (data/gameplayOnUnitDone nil gameplayCtx unit)

@@ -56,6 +56,7 @@
 (s/def ::cursorView (s/keys :req-un [::cursor ::camera ::mapsize]))
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
+(s/def ::attackRangeView (s/keys :req-un [::units ::attackRange ::camera]))
 (s/def ::fsm ::tool.fsm/model)
 
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
