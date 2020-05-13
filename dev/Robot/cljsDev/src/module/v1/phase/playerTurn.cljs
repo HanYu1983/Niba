@@ -29,7 +29,8 @@
                 (if unitAtCursor
                   (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
                     (if isEnd
-                      (let [unit (tool.units/getByKey units (:key unitAtCursor))
+                      (let [{:keys [units]} gameplayCtx
+                            unit (tool.units/getByKey units (:key unitAtCursor))
                             unitOnDone (data/gameplayOnUnitDone nil gameplayCtx unit)
                             units (-> units
                                       (tool.units/delete unit)
