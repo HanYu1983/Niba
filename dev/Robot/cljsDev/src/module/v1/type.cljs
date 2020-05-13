@@ -86,3 +86,6 @@
                                (explainValid? #{:unitMenu :unitBattleMenu} state)
                                (explainValid? (s/tuple ::unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
+
+; for macro
+(def unitMenuView ::unitMenuView)
