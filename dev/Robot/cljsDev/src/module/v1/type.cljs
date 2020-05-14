@@ -34,7 +34,18 @@
 (s/def ::player (s/keys :req-un [::faction]))
 (s/def ::players (s/map-of keyword? ::player))
 
-(s/def ::tags (s/map-of keyword? (constantly true)))
+(defmulti tagEntry first)
+; 是否飛行
+(defmethod tagEntry :sky [_] (s/tuple keyword? boolean?))
+; 上一回合的移動的速率(兩點間的距離)
+(defmethod tagEntry :velocity [_] (s/tuple keyword? number?))
+; 是否行動完畢
+(defmethod tagEntry :done [_] (s/tuple keyword? boolean?))
+; 是否移動過
+(defmethod tagEntry :move [_] (s/tuple keyword? boolean?))
+(s/def ::tagEntry (s/multi-spec tagEntry ::tagEntry))
+(s/def ::tags (s/and (s/map-of keyword? (constantly true)) 
+                     (s/coll-of ::tagEntry)))
 
 (s/def ::bulletCount int?)
 (s/def ::weaponLevel int?)

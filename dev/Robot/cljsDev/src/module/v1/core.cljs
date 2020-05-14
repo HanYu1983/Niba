@@ -123,7 +123,7 @@
                          (throw (js/Error. (str "unit1 not found"))))
                        gameplayCtx)))
 
-      (core/defclick (or testAll true) "open and close system menu"
+      (core/defclick (or testAll false) "open and close system menu"
         [right enter]
         (core/defexe (fn [gameplayCtx]
                        (when (not (s/valid? ::type/systemMenuView gameplayCtx))
@@ -138,7 +138,7 @@
         (core/defclick true "move cursor back"
           [left]))
 
-      (core/defclick (or testAll true) "open and close unit menu"
+      (core/defclick (or testAll false) "open and close unit menu"
         [enter]
         (core/defexe (fn [gameplayCtx]
                        (when (not (s/valid? ::type/unitMenuView gameplayCtx))
@@ -151,7 +151,7 @@
                          (throw (js/Error. "should close systemMenu")))
                        gameplayCtx)))
 
-      (core/defclick (or testAll true) "test transform"
+      (core/defclick (or testAll false) "test transform"
         []
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
@@ -181,7 +181,7 @@
                          gameplayCtx))))
 
       (let [bulletCount (atom 0)]
-        (core/defclick (or testAll true) "bullet count"
+        (core/defclick (or testAll false) "bullet count"
           []
           (core/defexe (fn [gameplayCtx]
                          (let [{units :units} gameplayCtx
@@ -209,6 +209,26 @@
                              (throw (js/Error. "bullet count must dec")))
                            gameplayCtx)))))
 
+      (core/defclick (or testAll false) "done tag"
+        []
+        (core/defexe (fn [gameplayCtx]
+                       (let [{units :units} gameplayCtx
+                             unit1 (tool.units/getByKey units :unit1)]
+                         (type/assertSpec ::type/unit unit1)
+                         (when (not (contains? (-> unit1 :robotState :tags) :done))
+                           (throw (js/Error. "unit1 must done")))
+                         gameplayCtx)))
+        (core/defclick true "click endTurn"
+          [right enter enter])
+        (a/<! (a/timeout 3000))
+        (core/defexe (fn [gameplayCtx]
+                       (let [{units :units} gameplayCtx
+                             unit1 (tool.units/getByKey units :unit1)]
+                         (type/assertSpec ::type/unit unit1)
+                         (when (contains? (-> unit1 :robotState :tags) :done)
+                           (throw (js/Error. "unit1 must not done")))
+                         gameplayCtx))))
+
       (core/defclick (or testAll false) "move cursor"
         [right down left up])
 
@@ -220,22 +240,10 @@
          down up down left left right right
          down down up up cancel])
 
-      (core/defclick (or testAll false) "move"
+      (core/defclick (or testAll true) "move"
         [enter enter right enter cancel cancel cancel left])
-
-      (core/defclick (or testAll false) "attack"
-        [enter down right left enter
-         right right enter
-         right left right down up enter]
-        ; wait battle animation
-        (a/<! (a/timeout 5000))
-        (core/defclick true "back"
-          [left left]))
 
       (core/defclick (or testAll false) "enemy unit only cancel menu"
         [right right enter enter left left])
-
-      (core/defclick (or testAll false) "enemy turn"
-        [right enter enter])
 
       (print "ok"))))
