@@ -43,8 +43,11 @@
 (defmethod tagEntry :done [_] (s/tuple keyword? boolean?))
 ; 是否移動過
 (defmethod tagEntry :move [_] (s/tuple keyword? boolean?))
+(defmethod tagEntry :moveRangePlus [_] (s/tuple keyword? boolean?))
+(defmethod tagEntry :weaponRangePlus [_] (s/tuple keyword? boolean?))
+
 (s/def ::tagEntry (s/multi-spec tagEntry ::tagEntry))
-(s/def ::tags (s/and (s/map-of keyword? (constantly true)) 
+(s/def ::tags (s/and (s/map-of keyword? (constantly true))
                      (s/coll-of ::tagEntry)))
 
 (s/def ::bulletCount int?)
@@ -70,7 +73,7 @@
 (s/def ::itemState (s/keys :req-un [::itemKey]))
 (s/def ::item (s/keys :req-un [::key ::position ::itemState]))
 
-(s/def ::unit (s/or :robot ::robot 
+(s/def ::unit (s/or :robot ::robot
                     :item ::item))
 
 (s/def ::units tool.units/modelType)
@@ -91,12 +94,12 @@
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 (s/def ::attackRangeView (s/keys :req-un [::attackRange ::camera]))
 (s/def ::systemMenuView (fn [ctx]
-                        (let [fsm (:fsm ctx)
-                              state (tool.fsm/currState fsm)
-                              {:keys [data menuCursor]} (tool.fsm/load fsm)]
-                          (and (s/valid? ::fsm fsm)
-                               (s/valid? #{:menu} state)
-                               (s/valid? (s/tuple ::menuCursorData ::menuCursor) [data menuCursor])))))
+                          (let [fsm (:fsm ctx)
+                                state (tool.fsm/currState fsm)
+                                {:keys [data menuCursor]} (tool.fsm/load fsm)]
+                            (and (s/valid? ::fsm fsm)
+                                 (s/valid? #{:menu} state)
+                                 (s/valid? (s/tuple ::menuCursorData ::menuCursor) [data menuCursor])))))
 (s/def ::unitMenuView (fn [ctx]
                         (let [fsm (:fsm ctx)
                               state (tool.fsm/currState fsm)

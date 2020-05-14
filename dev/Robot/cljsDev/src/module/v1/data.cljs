@@ -89,7 +89,10 @@
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
-      (let [{[min max] :range _ :type} weaponData]
+      (let [{[min max] :range _ :type} weaponData
+            max (if (-> unit :robotState :tags :weaponRangePlus)
+                  (inc max)
+                  max)]
         [min max]))))
 
 (defn getWeaponType [_ unit {:keys [weaponKey] :as weapon}]
@@ -550,6 +553,9 @@
 (defn getUnitMovePathTreeTo [{playmap :map :as gameplayCtx} unit pos]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/map ::type/unit) [gameplayCtx playmap unit])]}
   (let [power (/ (getUnitPower gameplayCtx unit) 5)
+        power (if (-> unit :robotState :tags :moveRangePlus)
+                (+ power 3)
+                power)
         [mw mh] (tool.map/getMapSize playmap)]
     (->> (tool.map/findPath (:position unit)
                             (fn [{:keys [cost]} curr]
