@@ -860,6 +860,7 @@
 
 
 (defn handleBattleMenuSession [gameplayCtx unit [cmd args]]
+  {:pre [(common/explainValid? (s/tuple ::type/battleMenuView ::type/unit) [gameplayCtx unit])]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -906,11 +907,6 @@
    :attackRange (when (s/valid? ::type/attackRangeView gameplayCtx)
                   (let [{:keys [camera attackRange]} gameplayCtx]
                     (map #(world2local camera %) attackRange)))
-   :systemMenu2 (when (s/valid? (s/keys :req-un [::type/fsm]) gameplayCtx)
-                  (let [state (-> gameplayCtx :fsm tool.fsm/currState)
-                        stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
-                    (when (some #(= % state) [:menu])
-                      (select-keys stateDetail [:menuCursor :data]))))
    :systemMenu (when (s/valid? ::type/systemMenuView gameplayCtx)
                  (let [{:keys [data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
                    {:menuCursor menuCursor
