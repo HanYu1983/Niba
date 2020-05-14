@@ -4,5 +4,6 @@
 (defmulti lobbyGetUnits (fn [type lobbyCtx] type))
 (defmulti lobbyGetPilots (fn [type lobbyCtx] type))
 (defmulti gameplayStart (fn [type ctx] type))
+(defmulti testIt (fn [type] type))
 
 (def *module nil)

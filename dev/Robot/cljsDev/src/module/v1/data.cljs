@@ -127,6 +127,13 @@
 ; =======================
 ; unit
 ; =======================
+(defn updateUnit [gameplayCtx unit f]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/gameplayCtx %)]}
+  (update gameplayCtx :units (fn [origin]
+                               (-> origin
+                                   (tool.units/delete unit)
+                                   (tool.units/add (f unit))))))
 
 ; hp
 (defn getUnitMaxHp [gameplayCtx unit]
@@ -519,8 +526,8 @@
                                     [leftAfter rightAfter]
                                     [leftAction rightAction])
         gameplayCtx (-> gameplayCtx
-                        (module.default.data/updateUnit left (constantly leftAfter))
-                        (module.default.data/updateUnit right (constantly rightAfter)))]
+                        (updateUnit left (constantly leftAfter))
+                        (updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
 (defn formatPathTree [gameplayCtx unit power paths]
@@ -594,19 +601,11 @@
                                                                          :en (getUnitMaxEn gameplayCtx basic)}))))
        (assoc gameplayCtx :units)))
 
-(defn updateUnit [gameplayCtx unit f]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
-   :post [(explainValid? ::gameplayCtx %)]}
-  (update gameplayCtx :units (fn [origin]
-                               (-> origin
-                                   (tool.units/delete unit)
-                                   (tool.units/add (f unit))))))
-
 
 (defn gameplayOnInit [appCtx gameplayCtx]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx) [gameplayCtx])]
-   :post [(explainValid? ::gameplayCtx %)]}
-  (let [[gameplayCtx _] (->> (get module.default.data/data :robot)
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx) [gameplayCtx])]
+   :post [(explainValid? ::type/gameplayCtx %)]}
+  (let [[gameplayCtx _] (->> (get data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
                                        [(createUnit gameplayCtx
                                                     {:player (if (< (rand) 0.5)
@@ -620,8 +619,8 @@
     gameplayCtx))
 
 (defn gameplayOnUnitMove [_ gameplayCtx unit pos]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
-   :post [(explainValid? ::unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/unit %)]}
   (let [vel (->> (map - (:position unit) pos)
                  (repeat 2)
                  (apply map *)
@@ -638,23 +637,23 @@
       (update-in [:robotState :tags] #(conj % [:done true]))))
 
 (defn gameplayOnUnitTurnStart [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
-   :post [(explainValid? ::unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/unit %)]}
   (-> unit
       (update-in [:robotState :tags] (constantly {}))))
 
 (defn gameplayOnUnitDead [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post []}
   (a/go gameplayCtx))
 
 (defn gameplayGetUnitMovePathTree [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post []}
   (getUnitMovePathTree gameplayCtx unit))
 
 (defn gameplayGetUnitIsDead [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(boolean? %)]}
   (<= (get-in unit [:robotState :hp]) 0))
 
@@ -683,9 +682,17 @@
         ((fn [unit]
            (getUnitInfo gameplayCtx unit))))))
 
+(defn handleTest [gameplayCtx [cmd args]]
+  (cond
+    (= :test cmd)
+    (let [f args]
+      (f gameplayCtx))
+
+    :else
+    gameplayCtx))
 
 (defn handleMapView [gameplayCtx [cmd args]]
-  (common/assertSpec ::type/mapView gameplayCtx)
+  {:pre [(common/explainValid? ::type/mapView gameplayCtx)]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -702,7 +709,7 @@
     gameplayCtx))
 
 (defn handleCursorView [gameplayCtx [cmd args]]
-  (common/assertSpec ::type/cursorView gameplayCtx)
+  {:pre [(common/explainValid? ::type/cursorView gameplayCtx)]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -720,7 +727,7 @@
 
 
 (defn handleMoveRangeView [gameplayCtx [cmd args]]
-  (common/assertSpec ::type/moveRangeView gameplayCtx)
+  {:pre [(common/explainValid? ::type/moveRangeView gameplayCtx)]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -743,8 +750,8 @@
 
 
 (defn handleMenuCursor [gameplayCtx [cmd args]]
-  (common/assertSpec (s/keys :req-un [::type/fsm]) gameplayCtx)
-  (common/assertSpec (s/keys :req-un [::menuCursor]) (-> gameplayCtx :fsm (tool.fsm/load)))
+  {:pre [(common/explainValid? (s/keys :req-un [::type/fsm]) gameplayCtx)
+         (common/explainValid? (s/keys :req-un [::menuCursor]) (-> gameplayCtx :fsm (tool.fsm/load)))]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -807,7 +814,7 @@
         checkHitRate))))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]
-  (common/assertSpec (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])
+  {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
@@ -899,14 +906,17 @@
    :attackRange (when (s/valid? ::type/attackRangeView gameplayCtx)
                   (let [{:keys [camera attackRange]} gameplayCtx]
                     (map #(world2local camera %) attackRange)))
-   :systemMenu (when (s/valid? (s/keys :req-un [::type/fsm]) gameplayCtx)
-                 (let [state (-> gameplayCtx :fsm tool.fsm/currState)
-                       stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
-                   (when (some #(= % state) [:menu])
-                     (select-keys stateDetail [:menuCursor :data]))))
+   :systemMenu2 (when (s/valid? (s/keys :req-un [::type/fsm]) gameplayCtx)
+                  (let [state (-> gameplayCtx :fsm tool.fsm/currState)
+                        stateDetail (-> gameplayCtx :fsm tool.fsm/load)]
+                    (when (some #(= % state) [:menu])
+                      (select-keys stateDetail [:menuCursor :data]))))
+   :systemMenu (when (s/valid? ::type/systemMenuView gameplayCtx)
+                 (let [{:keys [data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
+                   {:menuCursor menuCursor
+                    :data data}))
    :unitMenu (when (s/valid? ::type/unitMenuView gameplayCtx)
-               (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
-                     {:keys [unit data menuCursor]} stateDetail]
+               (let [{:keys [unit data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
                  {:menuCursor menuCursor
                   :data (update data :weapons (fn [weapons]
                                                 (map (partial getWeaponInfo gameplayCtx unit) weapons)))}))

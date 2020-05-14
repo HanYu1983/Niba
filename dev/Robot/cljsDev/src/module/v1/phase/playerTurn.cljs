@@ -15,6 +15,7 @@
       (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (let [[cmd args :as evt] (a/<! inputCh)
             gameplayCtx (-> gameplayCtx
+                            (data/handleTest evt)
                             (data/handleMapView evt)
                             (data/handleCursorView evt)
                             (data/handleMoveRangeView evt))]

@@ -79,6 +79,13 @@
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 (s/def ::attackRangeView (s/keys :req-un [::attackRange ::camera]))
+(s/def ::systemMenuView (fn [ctx]
+                        (let [fsm (:fsm ctx)
+                              state (tool.fsm/currState fsm)
+                              {:keys [data menuCursor]} (tool.fsm/load fsm)]
+                          (and (s/valid? ::fsm fsm)
+                               (s/valid? #{:menu} state)
+                               (s/valid? (s/tuple ::menuCursorData ::menuCursor) [data menuCursor])))))
 (s/def ::unitMenuView (fn [ctx]
                         (let [fsm (:fsm ctx)
                               state (tool.fsm/currState fsm)
