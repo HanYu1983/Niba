@@ -1,4 +1,5 @@
-(ns app.lobby.model)
+(ns app.lobby.model
+  (:require [cljs.reader]))
 
 (def defaultLobbyModel {:robots {}
                         :pilots {}
