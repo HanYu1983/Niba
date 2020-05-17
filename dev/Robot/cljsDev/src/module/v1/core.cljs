@@ -86,7 +86,10 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll false
+  (let [testAll true
+        ; 有些電腦很像是記憶體的關係, a/go中不能有太多程式碼(還是macro), 會出現macroexpand stack overflow或是a/aset不能解析等
+        ; 要用奇怪的方式把程式碼分散在不同的a/go中, 使用waitCh來block線程
+        waitCh (a/chan)
         right 68
         down 83
         left 65
@@ -150,7 +153,12 @@
                        (when (s/valid? ::type/unitMenuView gameplayCtx)
                          (throw (js/Error. "should close systemMenu")))
                        gameplayCtx)))
+      ; 線程結束
+      (a/>! waitCh true)
+      (print "ok"))
 
+    (a/go 
+      (a/<! waitCh) ;等待線程
       (core/defclick (or testAll false) "test transform"
         []
         (core/defexe (fn [gameplayCtx]
@@ -208,7 +216,11 @@
                            (when (not= (get-in weapons [1 1 :bulletCount]) (dec @bulletCount))
                              (throw (js/Error. "bullet count must dec")))
                            gameplayCtx)))))
+      (a/>! waitCh true)
+      (println "ok"))
 
+    (a/go
+      (a/<! waitCh)
       (core/defclick (or testAll false) "done tag"
         []
         (core/defexe (fn [gameplayCtx]
@@ -245,5 +257,4 @@
 
       (core/defclick (or testAll false) "enemy unit only cancel menu"
         [right right enter enter left left])
-
-      (print "ok"))))
+      (a/>! waitCh true))))
