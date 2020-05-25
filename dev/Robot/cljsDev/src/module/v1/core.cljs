@@ -54,9 +54,15 @@
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
 
-(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx])
+(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx]
+  (->> (get-in data/data [:robot])
+       (map (fn [[k v]] [k {:cost (get v :cost)}]))
+       (into {})))
 
-(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx])
+(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx]
+  (->> (get-in data/data [:pilot])
+       (map (fn [[k v]] [k {:cost (get v :cost)}]))
+       (into {})))
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
