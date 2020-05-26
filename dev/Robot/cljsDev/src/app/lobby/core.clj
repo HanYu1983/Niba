@@ -2,15 +2,16 @@
 
 (defmacro buyImpl [getter setter]
   `(let [[~'id {~'key "key"}] ~'args
+         ~'key (keyword ~'key)
          ~'item (get-in (~getter app.module/*module ~'lobbyCtx) [~'key])]
      (if ~'item
-       (let [~'money (get-in ~'lobbyCtx app.lobby.model/money)
+       (let [~'money (get-in ~'lobbyCtx [:money])
              ~'cost (get-in ~'item [:cost])
              ~'isEnoughMoney (>= ~'money ~'cost)]
          (if ~'isEnoughMoney
            (let [~'lobbyCtx (-> ~'lobbyCtx
-                                (update-in app.lobby.model/money (constantly (- ~'money ~'cost)))
-                                (update-in ~setter #(conj % [(str (cljs.core/random-uuid)) ~'key])))]
+                                (update-in [:money] (constantly (- ~'money ~'cost)))
+                                (update-in ~setter #(conj % [(keyword (str (cljs.core/random-uuid))) ~'key])))]
              (a/>! ~'outputCh ["ok" [~'id [nil ~'lobbyCtx]]])
              (recur (app.lobby.model/save ~'lobbyCtx)))
            (do

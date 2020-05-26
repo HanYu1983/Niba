@@ -19,6 +19,9 @@ export default class MenuCursor extends cc.Component {
     static ON_CURSOR_CHANGE: string = "ON_CURSOR_CHANGE";
 
     setData(data: any, cursors?: any[]) {
+        if(data == null){
+            throw new Error(`data must not null`)
+        }
         this._data = data;
         this._cursor1 = 0;
         this._cursor2 = [];
@@ -53,6 +56,9 @@ export default class MenuCursor extends cc.Component {
     }
 
     next(): Array<number> {
+        if(this._data == null){
+            throw new Error(`must call setData first`)
+        }
         if (++this._cursor1 > this._data.length - 1) {
             this._cursor1 = 0;
         }
