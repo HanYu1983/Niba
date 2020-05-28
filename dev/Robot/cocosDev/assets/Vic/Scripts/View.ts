@@ -53,6 +53,7 @@ export default class View extends cc.Component {
         cb();
     }
 
+    // 上下移動游標, 左右選擇取消, enter確認
     private repaintStartUnitsMenu(info:any){
         if(info){
             console.log(info)
