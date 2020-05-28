@@ -130,7 +130,7 @@
     
     (a/go
       (a/<! waitCh) ;等待線程
-      (core/defclick (or testAll true) "create unit"
+      (core/defclick (or testAll false) "create unit"
         []
         (core/defexe (fn [ctx]
                        (-> ctx

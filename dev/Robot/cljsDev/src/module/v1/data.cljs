@@ -966,7 +966,7 @@
                            {:keys [units selectedUnits cursor]} stateDetail]
                        {:data (map (fn [idx [key robotKey]]
                                      {:key key
-                                      :robotKey robotKey
+                                      :robotState {:robotKey robotKey}
                                       :selected (if (selectedUnits key) true false)
                                       :focus (= cursor idx)})
                                    (range)
