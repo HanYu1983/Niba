@@ -2,6 +2,7 @@
   (:require [clojure.core.async :as a])
   (:require-macros [module.v1.core :as core])
   (:require [tool.menuCursor])
+  (:require [module.v1.type :as type])
   (:require [module.v1.data :as data])
   (:require [module.v1.common :as common]))
 

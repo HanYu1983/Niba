@@ -905,16 +905,18 @@
       (cond
         (action #{:up :down})
         (let [state (-> gameplayCtx :fsm tool.fsm/load)
-              {:keys [units selectedUnits cursor]} state
-              cnt (count units)
-              state (update state :cursor (action {:up dec :down inc}))
+              {:keys [units]} state
+              cnt (count (into [] units))
+              state (update state :cursor (comp #(max 0 %) 
+                                                #(min (dec cnt) %) 
+                                                (action {:up dec :down inc})))
               gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
           gameplayCtx)
 
-        (action #{:enter})
+        (action #{:left :right})
         (let [state (-> gameplayCtx :fsm tool.fsm/load)
               {:keys [units selectedUnits cursor]} state
-              selected (-> units (nth cursor) first)
+              selected (-> units (#(into [] %)) (nth cursor) first)
               selectedUnits (if (contains? selectedUnits selected)
                               (disj selectedUnits selected)
                               (conj selectedUnits selected))
@@ -958,4 +960,14 @@
    :battleMenu (when (s/valid? ::type/battleMenuView gameplayCtx)
                  (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
                        {battleMenuSession :battleMenuSession} stateDetail]
-                   {:preview (battleMenu/mapUnits battleMenuSession (partial mapUnitToLocal gameplayCtx nil))}))})
+                   {:preview (battleMenu/mapUnits battleMenuSession (partial mapUnitToLocal gameplayCtx nil))}))
+   :startUnitsMenu (when (s/valid? ::type/startUnitsMenuView gameplayCtx)
+                     (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
+                           {:keys [units selectedUnits cursor]} stateDetail]
+                       {:data (map (fn [idx [key robotKey]]
+                                     {:key key
+                                      :robotKey robotKey
+                                      :selected (if (selectedUnits key) true false)
+                                      :focus (= cursor idx)})
+                                   (range)
+                                   units)}))})

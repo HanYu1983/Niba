@@ -126,3 +126,4 @@
 
 ; for macro
 (def unitMenuView ::unitMenuView)
+(def gameplayCtx ::gameplayCtx)

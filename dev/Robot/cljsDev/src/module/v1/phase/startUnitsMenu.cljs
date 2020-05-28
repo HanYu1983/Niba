@@ -21,5 +21,16 @@
           gameplayCtx (-> gameplayCtx
                           (data/handleTest evt)
                           (data/handleStartUnitsMenuView evt))]
-      (print (-> gameplayCtx :fsm tool.fsm/load))
-      (recur gameplayCtx))))
+      (common/explainValid? ::type/startUnitsMenuView gameplayCtx)
+      (cond
+        (= "KEY_DOWN" cmd)
+        (let [action (common/actions args)]
+          (cond
+            (action #{:enter})
+            [gameplayCtx (-> gameplayCtx :fsm tool.fsm/load :selectedUnits)]
+
+            :else
+            (recur gameplayCtx)))
+
+        :else
+        (recur gameplayCtx)))))

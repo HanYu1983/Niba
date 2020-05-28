@@ -81,8 +81,18 @@
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
-          _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-          [gameplayCtx _] (a/<! (startUnitsMenu gameplayCtx {:units [[:abc :unit1]]} inputCh outputCh))]
+          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {:test :gundam})} inputCh outputCh))
+          gameplayCtx (->> (map (fn [idx key robotKey]
+                                  [{:key key
+                                    :playerKey :player
+                                    :position [0 (+ idx 1)]}
+                                   {:robotKey robotKey}])
+                                (range)
+                                selectedUnits
+                                (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
+                           (reduce (fn [gameplayCtx [arg1 arg2]]
+                                     (data/createUnit gameplayCtx arg1 arg2))
+                                   gameplayCtx))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 
@@ -114,8 +124,8 @@
     
     (a/go
      (a/<! waitCh) ;等待線程
-     (core/defclick (or testAll true) "select units"
-       [up down enter enter])
+     (core/defclick (or testAll false) "select units"
+       [up down left])
      (a/>! waitCh true))
     
     (a/go

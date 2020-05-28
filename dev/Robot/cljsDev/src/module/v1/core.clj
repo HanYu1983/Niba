@@ -37,7 +37,7 @@
                     ~ctx)
              [~ctx ~'ret] (do
                             ~@body)
-             ~'_ (common/explainValid? (comp not nil?) ~ctx)
+             ~'_ (common/explainValid? ~'type/gameplayCtx ~ctx)
              ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))]
          [~ctx ~'ret]))))
 
