@@ -895,6 +895,39 @@
     :else
     gameplayCtx))
 
+
+(defn handleStartUnitsMenuView [gameplayCtx [cmd args]]
+  {:pre [(common/explainValid? (s/tuple ::type/startUnitsMenuView) [gameplayCtx])]}
+  (common/explainValid? ::type/startUnitsMenuView gameplayCtx)
+  (cond
+    (= "KEY_DOWN" cmd)
+    (let [action (common/actions args)]
+      (cond
+        (action #{:up :down})
+        (let [state (-> gameplayCtx :fsm tool.fsm/load)
+              {:keys [units selectedUnits cursor]} state
+              cnt (count units)
+              state (update state :cursor (action {:up dec :down inc}))
+              gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
+          gameplayCtx)
+
+        (action #{:enter})
+        (let [state (-> gameplayCtx :fsm tool.fsm/load)
+              {:keys [units selectedUnits cursor]} state
+              selected (-> units (nth cursor) first)
+              selectedUnits (if (contains? selectedUnits selected)
+                              (disj selectedUnits selected)
+                              (conj selectedUnits selected))
+              state (assoc state :selectedUnits selectedUnits)
+              gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
+          gameplayCtx)
+
+        :else
+        gameplayCtx))
+
+    :else
+    gameplayCtx))
+
 (defn render [gameplayCtx]
   {:map (when (s/valid? ::type/mapView gameplayCtx)
           (let [{:keys [camera map viewsize]} gameplayCtx]

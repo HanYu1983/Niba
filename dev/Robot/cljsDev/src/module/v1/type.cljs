@@ -3,7 +3,8 @@
   (:require [tool.units])
   (:require [tool.fsm])
   (:require [tool.menuCursor])
-  (:require [module.v1.session.battleMenu :as battleMenu]))
+  (:require [module.v1.session.battleMenu :as battleMenu])
+  (:require [app.lobby.model]))
 
 (defn explainValid? [sp args]
   (if (clojure.spec.alpha/valid? sp args)
@@ -114,6 +115,13 @@
                             (and (s/valid? ::fsm fsm)
                                  (s/valid? #{:unitBattleMenu} state)
                                  (s/valid? (s/tuple ::battleMenu/defaultModel) [battleMenuSession])))))
+(s/def ::startUnitsMenuView (fn [ctx]
+                              (let [fsm (:fsm ctx)
+                                    {:keys [units selectedUnits cursor]} (tool.fsm/load fsm)]
+                                (and (s/valid? (s/coll-of (s/tuple keyword? keyword?)) units)
+                                     (s/valid? (s/and set? (s/coll-of keyword?)) selectedUnits)
+                                     (s/valid? int? cursor)))))
+
 (s/def ::gameplayCtx (s/merge ::mapView ::cursorView ::unitsView ::moveRangeView))
 
 ; for macro

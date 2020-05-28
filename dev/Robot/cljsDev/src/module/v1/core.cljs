@@ -10,6 +10,7 @@
   (:require [module.v1.type :as type])
   (:require-macros [module.v1.core :as core])
   (:require [module.v1.common :as common])
+  (:require [module.v1.phase.startUnitsMenu :refer [startUnitsMenu]])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
   (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
 
@@ -78,8 +79,10 @@
                                          :power 1
                                          :offset 0})
           gameplayCtx (-> gameplayCtx
-                          (update-in [:map] (constantly playmap)))]
-      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+                          (update-in [:map] (constantly playmap))
+                          (assoc :lobbyCtx (:lobbyCtx ctx)))
+          _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+          [gameplayCtx _] (a/<! (startUnitsMenu gameplayCtx {:units [[:abc :unit1]]} inputCh outputCh))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 
@@ -107,6 +110,16 @@
         rleft 37
         rright 39]
     (a/go
+     (a/>! waitCh true))
+    
+    (a/go
+     (a/<! waitCh) ;等待線程
+     (core/defclick (or testAll true) "select units"
+       [up down enter enter])
+     (a/>! waitCh true))
+    
+    (a/go
+      (a/<! waitCh) ;等待線程
       (core/defclick (or testAll true) "create unit"
         []
         (core/defexe (fn [ctx]
@@ -164,7 +177,7 @@
       (print "ok"))
 
     (a/go 
-      (a/<! waitCh) ;等待線程
+      (a/<! waitCh)
       (core/defclick (or testAll false) "test transform"
         []
         (core/defexe (fn [gameplayCtx]
