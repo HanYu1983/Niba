@@ -9,7 +9,8 @@
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.system.startUnitsMenuViewSystem :as startUnitsMenuViewSystem])
   (:require-macros [module.v1.core :as core])
-  (:require [module.v1.system.core :as systemCore]))
+  (:require [module.v1.system.core :as systemCore])
+  (:require-macros [module.v1.system.core :as systemCore]))
 
 (defn handleCore [gameplayCtx inputCh outputCh [cmd args]]
   (common/explainValid? ::spec/startUnitsMenuView gameplayCtx)
@@ -42,10 +43,4 @@
                         (startUnitsMenuViewSystem/handleStartUnitsMenuView evt)
                         (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                         (a/<!))]
-      (let [conform (s/conform ::type/returnCtx returnCtx)]
-        (if (= ::s/invalid conform)
-          (throw (js/Error. (s/explain-str ::type/returnCtx returnCtx)))
-          (let [[returnType _] conform]
-            (condp = returnType
-              :return returnCtx
-              (recur returnCtx))))))))
+      (systemCore/return returnCtx))))

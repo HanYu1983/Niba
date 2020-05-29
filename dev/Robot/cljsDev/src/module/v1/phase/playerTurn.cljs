@@ -5,9 +5,9 @@
   (:require [module.v1.common :as common])
   (:require [module.v1.type :as type])
   (:require [tool.units])
-  (:require-macros [module.v1.core :as core])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.system.core :as systemCore])
+  (:require-macros [module.v1.system.core :as systemCore])
   (:require [module.v1.system.mapViewSystem :as mapViewSystem])
   (:require [module.v1.system.cursorViewSystem :as cursorViewSystem])
   (:require [module.v1.system.moveRangeViewSystem :as moveRangeViewSystem])
@@ -65,12 +65,4 @@
                             (#(systemCore/mapReturn moveRangeViewSystem/handleMoveRangeView % evt))
                             (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                             (a/<!))]
-          (let [conform (s/conform ::type/returnCtx returnCtx)]
-            (if (= ::s/invalid conform)
-              (throw (js/Error. (s/explain-str ::type/returnCtx returnCtx)))
-              (let [[returnType _] conform]
-                (condp = returnType
-                  :return
-                  (let [[gameplayCtx _] returnCtx]
-                    gameplayCtx)
-                  (recur returnCtx))))))))))
+          (systemCore/return-let [[gameplayCtx] returnCtx] gameplayCtx))))))
