@@ -64,13 +64,13 @@
                             (#(systemCore/mapReturn cursorViewSystem/handleCursorView % evt))
                             (#(systemCore/mapReturn moveRangeViewSystem/handleMoveRangeView % evt))
                             (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
-                            (a/<!))
-              conform (s/conform ::type/returnCtx returnCtx)]
-          (if (= ::s/invalid conform)
-            (throw (js/Error. (s/explain-str ::type/returnCtx returnCtx)))
-            (let [[returnType _] conform]
-              (condp = returnType
-                :return
-                (let [[gameplayCtx _] returnCtx]
-                  gameplayCtx)
-                (recur returnCtx)))))))))
+                            (a/<!))]
+          (let [conform (s/conform ::type/returnCtx returnCtx)]
+            (if (= ::s/invalid conform)
+              (throw (js/Error. (s/explain-str ::type/returnCtx returnCtx)))
+              (let [[returnType _] conform]
+                (condp = returnType
+                  :return
+                  (let [[gameplayCtx _] returnCtx]
+                    gameplayCtx)
+                  (recur returnCtx))))))))))
