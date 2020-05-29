@@ -1,4 +1,10 @@
-(ns tool.menuCursor)
+(ns tool.menuCursor
+  (:require [clojure.spec.alpha :as s]))
+
+(s/def ::cursor int?)
+(s/def ::subcursor (s/coll-of int?))
+(s/def ::menu (s/coll-of (s/coll-of (constantly true))))
+(s/def ::model (s/keys :req-un [::cursor ::subcursor ::menu]))
 
 (defn model [menu]
   {:cursor 0

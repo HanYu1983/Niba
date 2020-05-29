@@ -61,10 +61,10 @@ export default class LandUnits extends cc.Component {
         this.clearUnits();
         for (const element of units) {
             const unitId = element.key;
-            const unitName = element.state.robot;
-            const isPlayer = (element["player"] == "player");
-            const isDone = element.state.tags.done != undefined;
-            const isSky = element.state.tags.sky != undefined;
+            const unitName = element.robotState.robotKey;
+            const isPlayer = (element["playerKey"] == "player");
+            const isDone = element.robotState.tags.done != undefined;
+            const isSky = element.robotState.tags.sky != undefined;
             const pos = element["position"];
 
             let unitNode: cc.Node = this._pool.acquire();

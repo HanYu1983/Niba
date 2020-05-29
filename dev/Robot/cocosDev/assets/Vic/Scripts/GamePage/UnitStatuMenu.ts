@@ -57,17 +57,17 @@ export default class UnitStatuMenu extends BasicViewer {
         if (unit != null) {
             this.unitSection.active = true;
 
-            const image = ViewController.instance.imagesAssets.getImageByKey(unit.state.robot);
+            const image = ViewController.instance.imagesAssets.getImageByKey(unit.robotState.robot);
             if (image != undefined) {
                 this.unitImage.spriteFrame = image;
             }
 
-            this.unitName.string = unit.state.robot;
+            this.unitName.string = unit.robotState.robot;
 
-            const hp:number = unit.state.hp;
-            const en:number = unit.state.en;
-            const maxHp:number = unit.state.maxHp;
-            const maxEn:number = unit.state.maxEn;
+            const hp:number = unit.robotState.hp;
+            const en:number = unit.robotState.en;
+            const maxHp:number = unit.robotState.maxHp;
+            const maxEn:number = unit.robotState.maxEn;
             this.unitHpLabal.string = hp + "/" + maxHp;
             this.unitEnLabal.string = en + "/" + maxEn;
             this.unitHpBar.node.scaleX = hp / maxHp;

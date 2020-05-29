@@ -4,10 +4,11 @@
   (:require-macros [app.main])
   (:require [app.lobby.core])
   (:require [app.module])
-  (:require [module.default.core]))
+  (:require [module.default.core])
+  (:require [module.v1.core]))
 
 ; debug
-; (set! app.module/*module :debug)
+(set! app.module/*module :v1)
 
 (m/defwait setData [ctx args])
 
@@ -60,72 +61,6 @@
         (.next (.-viewOb js/window) evtJs)
         (recur)))))
 
-(defn testIt [inputCh outputCh]
-  (when inputCh
-    (a/go
-      (loop []
-        (let [[cmd [id subargs :as args] :as evt] (a/<! inputCh)]
-          ; 使用print強制所有欄位求值. 不然有些程式碼不會運行到
-          (js/console.log (clj->js args))
-          (a/>! outputCh ["ok", [id]])
-          (recur)))))
-  (let [testAll false
-        right 68
-        down 83
-        left 65
-        up 87
-        enter 13
-        cancel 27
-        rup 38
-        rdown 40
-        rleft 37
-        rright 39]
-    (a/go
-      (app.main/defclick (or testAll false) "transform"
-        [enter
-         down down enter
-         down cancel])
-
-      (app.main/defclick (or testAll false) "bullet count"
-        [right right right right enter
-         down right enter
-         left left enter enter]
-        ; wait battle animation
-        (a/<! (a/timeout 5000))
-        (app.main/defclick true "back"
-          [left left]))
-
-      (app.main/defclick (or testAll false) "move cursor"
-        [right down left up])
-
-      (app.main/defclick (or testAll false) "move camera"
-        [rright rdown rleft rup])
-
-      (app.main/defclick (or testAll false) "menu"
-        [left left up up enter
-         down up down left left right right
-         down down up up cancel])
-
-      (app.main/defclick (or testAll true) "move"
-        [enter enter right enter cancel cancel cancel left])
-
-      (app.main/defclick (or testAll false) "attack"
-        [enter down right left enter
-         right right enter
-         right left right down up enter]
-        ; wait battle animation
-        (a/<! (a/timeout 5000))
-        (app.main/defclick true "back"
-          [left left]))
-
-      (app.main/defclick (or testAll false) "enemy unit only cancel menu"
-        [right right enter enter left left])
-
-      (app.main/defclick (or testAll false) "enemy turn"
-        [right enter enter])
-
-      (print "ok"))))
-
 
 (defn debug []
   (let [outputToView (a/chan)
@@ -134,12 +69,12 @@
     (a/go
       (a/>! inputFromView ["startGameplay"])
       (a/<! (a/timeout 1000))
-      (testIt outputToView inputFromView))))
+      (a/<! (app.module/testIt app.module/*module outputToView inputFromView)))))
 
 (defn main []
   (let [phase :debug
         outputToView (a/chan)
-        inputFromView (a/chan)]
+        inputFromView (a/chan)] 
     (cond
       (= phase :debug)
       (do
@@ -148,7 +83,7 @@
         (a/go
           (print "===== start debugView after 10s =====")
           (a/<! (a/timeout 10000))
-          (testIt nil inputFromView)))
+          (a/<! (app.module/testIt app.module/*module nil inputFromView))))
 
       :else
       (do

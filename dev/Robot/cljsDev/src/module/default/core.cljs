@@ -1,5 +1,6 @@
 (ns module.default.core
   (:require [clojure.core.async :as a])
+  (:require [app.module])
   (:require [module.default.phase.common])
   (:require [module.default.data])
   (:require [module.default.view])

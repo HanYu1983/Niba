@@ -1,7 +1,14 @@
-(ns tool.fsm)
+(ns tool.fsm
+  (:require [clojure.spec.alpha :as s]))
+
+(s/def ::stack (s/* keyword?))
+(s/def ::model (s/keys :req-un [::stack ::state]))
 
 (def model {:stack []
             :state []})
+
+(when (not (s/valid? ::model model))
+  (println (s/explain-data ::model model)))
 
 (defn currState [ctx]
   (first (:stack ctx)))
