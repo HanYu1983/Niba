@@ -6,6 +6,7 @@
   (:require [tool.menuCursor])
   (:require [module.v1.data :as data])
   (:require [module.v1.type :as type])
+  (:require [module.v1.system.mapViewSystem :as mapViewSystem])
   (:require [module.v1.common :as common]))
 
 (core/defstate menu {:keys [menu data]}
@@ -18,7 +19,7 @@
     (let [[cmd args :as evt] (a/<! inputCh)
           gameplayCtx (-> gameplayCtx
                           (data/handleTest evt)
-                          (data/handleMapView evt)
+                          (mapViewSystem/handleMapView evt)
                           (data/handleMenuCursor evt))
           state (-> gameplayCtx :fsm tool.fsm/load)]
       (cond

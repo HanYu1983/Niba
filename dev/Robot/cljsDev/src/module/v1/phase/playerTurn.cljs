@@ -5,6 +5,7 @@
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require-macros [module.v1.core :as core])
+  (:require [module.v1.system.mapViewSystem :as mapViewSystem])
   (:require [module.v1.phase.unitMenu :refer [unitMenu]])
   (:require [module.v1.phase.systemMenu :refer [systemMenu]]))
 
@@ -20,7 +21,7 @@
         (let [[cmd args :as evt] (a/<! inputCh)
               gameplayCtx (-> gameplayCtx
                               (data/handleTest evt)
-                              (data/handleMapView evt)
+                              (mapViewSystem/handleMapView evt)
                               (data/handleCursorView evt)
                               (data/handleMoveRangeView evt))]
           (common/assertSpec ::type/moveRangeView gameplayCtx)

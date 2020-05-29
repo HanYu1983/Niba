@@ -697,39 +697,41 @@
     :else
     gameplayCtx))
 
-(defn handleMapView [gameplayCtx [cmd args]]
-  {:pre [(common/explainValid? ::type/mapView gameplayCtx)]}
-  (cond
-    (= "KEY_DOWN" cmd)
-    (let [action (common/actions args)]
-      (cond
-        (some #(= % action) [:rup :rdown :rleft :rright])
-        (update-in gameplayCtx [:camera] #(mapv + % (action {:rup [0 -1]
-                                                             :rdown [0 1]
-                                                             :rleft [-1 0]
-                                                             :rright [1 0]})))
-        :else
-        gameplayCtx))
 
-    :else
-    gameplayCtx))
 
-(defn handleCursorView [gameplayCtx [cmd args]]
-  {:pre [(common/explainValid? ::type/cursorView gameplayCtx)]}
-  (cond
-    (= "KEY_DOWN" cmd)
-    (let [action (common/actions args)]
-      (cond
-        (some #(= % action) [:up :down :left :right])
-        (update-in gameplayCtx [:cursor] #(mapv + % (action {:up [0 -1]
-                                                             :down [0 1]
-                                                             :left [-1 0]
-                                                             :right [1 0]})))
-        :else
-        gameplayCtx))
+(defn getAttackRange [gameplayCtx unit]
+  {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
+  (let [state (-> gameplayCtx :fsm tool.fsm/load)
+        cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+        cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+        weaponIdx (get-in state [:data :weaponIdx])]
+    (if (= cursor1 weaponIdx)
+      (-> (getUnitWeapons gameplayCtx unit)
+          second
+          (nth cursor2)
+          ((fn [weapon]
+             (getUnitWeaponRange gameplayCtx unit weapon))))
+      [])))
 
-    :else
-    gameplayCtx))
+(defn getHitRate  [gameplayCtx unit]
+  {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
+  (let [state (-> gameplayCtx :fsm tool.fsm/load)
+        cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+        cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+        weaponIdx (get-in state [:data :weaponIdx])]
+    (when (= cursor1 weaponIdx)
+      (let [weapon (-> (getUnitWeapons gameplayCtx unit)
+                       second
+                       (nth cursor2))
+            unitsNearby (->> (getUnitsByRegion gameplayCtx (:position unit) nil)
+                             (filter (comp not (partial isFriendlyUnit gameplayCtx unit))))
+            checkHitRate (map (fn [targetUnit]
+                                {:unit unit
+                                 :targetUnit targetUnit
+                                 :weapon weapon
+                                 :hitRate (getUnitHitRate gameplayCtx unit weapon targetUnit)})
+                              unitsNearby)]
+        checkHitRate))))
 
 
 (defn handleMoveRangeView [gameplayCtx [cmd args]]
@@ -784,40 +786,6 @@
         gameplayCtx))
     :else
     gameplayCtx))
-
-(defn getAttackRange [gameplayCtx unit]
-  {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
-  (let [state (-> gameplayCtx :fsm tool.fsm/load)
-        cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
-        cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-        weaponIdx (get-in state [:data :weaponIdx])]
-    (if (= cursor1 weaponIdx)
-      (-> (getUnitWeapons gameplayCtx unit)
-          second
-          (nth cursor2)
-          ((fn [weapon]
-             (getUnitWeaponRange gameplayCtx unit weapon))))
-      [])))
-
-(defn getHitRate  [gameplayCtx unit]
-  {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
-  (let [state (-> gameplayCtx :fsm tool.fsm/load)
-        cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
-        cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-        weaponIdx (get-in state [:data :weaponIdx])]
-    (when (= cursor1 weaponIdx)
-      (let [weapon (-> (getUnitWeapons gameplayCtx unit)
-                       second
-                       (nth cursor2))
-            unitsNearby (->> (getUnitsByRegion gameplayCtx (:position unit) nil)
-                             (filter (comp not (partial isFriendlyUnit gameplayCtx unit))))
-            checkHitRate (map (fn [targetUnit]
-                                {:unit unit
-                                 :targetUnit targetUnit
-                                 :weapon weapon
-                                 :hitRate (getUnitHitRate gameplayCtx unit weapon targetUnit)})
-                              unitsNearby)]
-        checkHitRate))))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]
   {:pre [(common/explainValid? (s/tuple ::type/unitMenuView ::type/unit) [gameplayCtx unit])]}
@@ -907,8 +875,8 @@
         (let [state (-> gameplayCtx :fsm tool.fsm/load)
               {:keys [units]} state
               cnt (count (into [] units))
-              state (update state :cursor (comp #(max 0 %) 
-                                                #(min (dec cnt) %) 
+              state (update state :cursor (comp #(max 0 %)
+                                                #(min (dec cnt) %)
                                                 (action {:up dec :down inc})))
               gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
           gameplayCtx)
@@ -916,13 +884,16 @@
         (action #{:left :right})
         (let [state (-> gameplayCtx :fsm tool.fsm/load)
               {:keys [units selectedUnits cursor]} state
-              selected (-> units (#(into [] %)) (nth cursor) first)
-              selectedUnits (if (contains? selectedUnits selected)
-                              (disj selectedUnits selected)
-                              (conj selectedUnits selected))
-              state (assoc state :selectedUnits selectedUnits)
-              gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
-          gameplayCtx)
+              cnt (count (into [] units))]
+          (if (zero? cnt)
+            gameplayCtx
+            (let [selected (-> units (#(into [] %)) (nth cursor) first)
+                  selectedUnits (if (contains? selectedUnits selected)
+                                  (disj selectedUnits selected)
+                                  (conj selectedUnits selected))
+                  state (assoc state :selectedUnits selectedUnits)
+                  gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]
+              gameplayCtx)))
 
         :else
         gameplayCtx))

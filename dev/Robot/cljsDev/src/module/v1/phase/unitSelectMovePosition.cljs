@@ -12,7 +12,8 @@
   (:require-macros [module.v1.phase.unitMenuImpl])
   (:require [module.v1.phase.unitSelectSingleTarget :refer [unitSelectSingleTarget]])
   (:require [module.v1.phase.unitSelectAttackPosition :refer [unitSelectAttackPosition]])
-  (:require [module.v1.step.selectPosition :refer [selectPosition]]))
+  (:require [module.v1.step.selectPosition :refer [selectPosition]])
+  (:require [module.v1.system.mapViewSystem :as mapViewSystem]))
 
 (declare unitMenu)
 

@@ -8,6 +8,7 @@
   (:require [module.v1.data :as data])
   (:require [module.v1.common :as common])
   (:require [module.v1.type :as type])
+  (:require [module.v1.system.mapViewSystem :as mapViewSystem])
   (:require [module.v1.session.battleMenu :as battleMenu])
   (:require [module.v1.step.selectPosition :refer [selectPosition]]))
 
@@ -34,7 +35,7 @@
     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
     (let [[cmd args :as evt] (a/<! inputCh)
           gameplayCtx (-> gameplayCtx
-                          (data/handleMapView evt)
+                          (mapViewSystem/handleMapView evt)
                           (data/handleMenuCursor evt)
                           (data/handleAttackRangeView left evt)
                           (data/handleHitRateView left evt)
