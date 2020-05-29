@@ -12,7 +12,8 @@
   (:require [module.v1.common :as common])
   (:require [module.v1.phase.startUnitsMenu :refer [startUnitsMenu]])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
-  (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
+  (:require [module.v1.phase.enemyTurn :refer [enemyTurn]])
+  (:require [module.v1.system.spec :as spec]))
 
 
 (def mapViewSize [20 20])
@@ -123,10 +124,11 @@
      (a/>! waitCh true))
     
     (a/go
-     (a/<! waitCh) ;等待線程
-     (core/defclick (or testAll false) "select units"
-       [up down left enter])
-     (a/>! waitCh true))
+      (a/<! waitCh) ;等待線程
+      (core/defclick (or testAll false) "select units"
+        [up down left enter]
+        (a/<! (a/timeout 3000))) ; wait player turn start animation
+      (a/>! waitCh true))
     
     (a/go
       (a/<! waitCh) ;等待線程
@@ -158,13 +160,13 @@
       (core/defclick (or testAll false) "open and close system menu"
         [right enter]
         (core/defexe (fn [gameplayCtx]
-                       (when (not (s/valid? ::type/systemMenuView gameplayCtx))
+                       (when (not (s/valid? ::spec/systemMenuView gameplayCtx))
                          (throw (js/Error. "should open systemMenu")))
                        gameplayCtx))
         (core/defclick true "close system menu"
           [down up down enter])
         (core/defexe (fn [gameplayCtx]
-                       (when (s/valid? ::type/systemMenuView gameplayCtx)
+                       (when (s/valid? ::spec/systemMenuView gameplayCtx)
                          (throw (js/Error. "should close systemMenu")))
                        gameplayCtx))
         (core/defclick true "move cursor back"
@@ -173,14 +175,14 @@
       (core/defclick (or testAll false) "open and close unit menu"
         [enter]
         (core/defexe (fn [gameplayCtx]
-                       (when (not (s/valid? ::type/unitMenuView gameplayCtx))
-                         (throw (js/Error. "should open systemMenu")))
+                       (when (not (s/valid? ::spec/unitMenuView gameplayCtx))
+                         (throw (js/Error. "should open unitMenu")))
                        gameplayCtx))
         (core/defclick true "close unit menu"
           [cancel])
         (core/defexe (fn [gameplayCtx]
-                       (when (s/valid? ::type/unitMenuView gameplayCtx)
-                         (throw (js/Error. "should close systemMenu")))
+                       (when (s/valid? ::spec/unitMenuView gameplayCtx)
+                         (throw (js/Error. "should close unitMenu")))
                        gameplayCtx)))
       ; 線程結束
       (a/>! waitCh true)

@@ -2,18 +2,19 @@
   (:require [clojure.spec.alpha :as s])
   (:require [tool.fsm])
   (:require [tool.menuCursor])
-  (:require [module.v1.session.battleMenu :as battleMenu]))
+  (:require [module.v1.session.battleMenu :as battleMenu])
+  (:require [module.v1.type :as type]))
 
-(s/def ::position (s/tuple int? int?))
-(s/def ::positions (s/coll-of ::position))
+(s/def ::positions (s/coll-of ::type/position))
 (s/def ::moveRange ::positions)
+(s/def ::attackRange ::positions)
 (s/def ::menu ::tool.menuCursor/menu)
 (s/def ::menuCursorData (s/keys :opt-un [::weaponIdx ::transformIdx]))
 (s/def ::menuCursor ::tool.menuCursor/model)
 (s/def ::fsm ::tool.fsm/model)
 (s/def ::map (s/coll-of vector?))
-(s/def ::camera ::position)
-(s/def ::cursor ::position)
+(s/def ::camera ::type/position)
+(s/def ::cursor ::type/position)
 (s/def ::viewsize (s/tuple int? int?))
 (s/def ::mapsize (s/tuple int? int?))
 (s/def ::mapView (s/keys :req-un [::map ::camera ::viewsize]))
@@ -34,7 +35,7 @@
                               {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
                           (and (s/valid? ::fsm fsm)
                                (s/valid? #{:unitMenu :unitBattleMenu} state)
-                               (s/valid? (s/tuple ::unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
+                               (s/valid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::battleMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)
@@ -53,3 +54,5 @@
                                 {:keys [menuCursor]} (tool.fsm/load fsm)]
                             (and (s/valid? ::fsm fsm)
                                  (s/valid? (s/tuple ::menuCursor) [menuCursor])))))
+
+(def unitMenuView ::unitMenuView)

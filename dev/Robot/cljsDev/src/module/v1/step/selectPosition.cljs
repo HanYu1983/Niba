@@ -5,7 +5,9 @@
   (:require [module.v1.type :as type])
   (:require [module.v1.data :as data])
   (:require [module.v1.common :as common])
-  (:require [module.v1.system.mapViewSystem :as mapViewSystem]))
+  (:require [module.v1.system.mapViewSystem :as mapViewSystem])
+  (:require [module.v1.system.cursorViewSystem :as cursorViewSystem])
+  (:require [module.v1.system.moveRangeViewSystem :as moveRangeViewSystem]))
 
 (core/defstate selectPosition _
   {:nameCtx gameplayCtx
@@ -17,8 +19,8 @@
           gameplayCtx (-> gameplayCtx
                           (data/handleTest evt)
                           (mapViewSystem/handleMapView evt)
-                          (data/handleCursorView evt)
-                          (data/handleMoveRangeView evt))]
+                          (cursorViewSystem/handleCursorView evt)
+                          (moveRangeViewSystem/handleMoveRangeView evt))]
       (cond
         (= "KEY_DOWN" cmd)
         (let [action (common/actions args)]

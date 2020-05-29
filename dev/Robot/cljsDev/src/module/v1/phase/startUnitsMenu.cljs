@@ -6,6 +6,8 @@
   (:require [module.v1.type :as type])
   (:require [tool.fsm])
   (:require [tool.units])
+  (:require [module.v1.system.spec :as spec])
+  (:require [module.v1.system.startUnitsMenuViewSystem :as startUnitsMenuViewSystem])
   (:require-macros [module.v1.core :as core]))
 
 (core/defstate startUnitsMenu  {:keys [units]}
@@ -20,8 +22,8 @@
     (let [[cmd args :as evt] (a/<! inputCh)
           gameplayCtx (-> gameplayCtx
                           (data/handleTest evt)
-                          (data/handleStartUnitsMenuView evt))]
-      (common/explainValid? ::type/startUnitsMenuView gameplayCtx)
+                          (startUnitsMenuViewSystem/handleStartUnitsMenuView evt))]
+      (common/explainValid? ::spec/startUnitsMenuView gameplayCtx)
       (cond
         (= "KEY_DOWN" cmd)
         (let [action (common/actions args)]

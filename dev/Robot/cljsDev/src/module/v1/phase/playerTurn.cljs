@@ -5,7 +5,10 @@
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require-macros [module.v1.core :as core])
+  (:require [module.v1.system.spec :as spec])
   (:require [module.v1.system.mapViewSystem :as mapViewSystem])
+  (:require [module.v1.system.cursorViewSystem :as cursorViewSystem])
+  (:require [module.v1.system.moveRangeViewSystem :as moveRangeViewSystem])
   (:require [module.v1.phase.unitMenu :refer [unitMenu]])
   (:require [module.v1.phase.systemMenu :refer [systemMenu]]))
 
@@ -22,9 +25,9 @@
               gameplayCtx (-> gameplayCtx
                               (data/handleTest evt)
                               (mapViewSystem/handleMapView evt)
-                              (data/handleCursorView evt)
-                              (data/handleMoveRangeView evt))]
-          (common/assertSpec ::type/moveRangeView gameplayCtx)
+                              (cursorViewSystem/handleCursorView evt)
+                              (moveRangeViewSystem/handleMoveRangeView evt))]
+          (common/assertSpec ::spec/moveRangeView gameplayCtx)
           (cond
             (= "KEY_DOWN" cmd)
             (let [action (common/actions args)]

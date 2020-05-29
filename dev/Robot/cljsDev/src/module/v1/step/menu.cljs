@@ -7,6 +7,12 @@
   (:require [module.v1.data :as data])
   (:require [module.v1.type :as type])
   (:require [module.v1.system.mapViewSystem :as mapViewSystem])
+  (:require [module.v1.system.cursorViewSystem :as cursorViewSystem])
+  (:require [module.v1.system.moveRangeViewSystem :as moveRangeViewSystem])
+  (:require [module.v1.system.attackRangeViewSystem :as attackRangeViewSystem])
+  (:require [module.v1.system.hitRateViewSystem :as hitRateViewSystem])
+  (:require [module.v1.system.battleMenuViewSystem :as battleMenuViewSystem])
+  (:require [module.v1.system.menuCursorViewSystem :as menuCursorViewSystem])
   (:require [module.v1.common :as common]))
 
 (core/defstate menu {:keys [menu data]}
@@ -20,7 +26,7 @@
           gameplayCtx (-> gameplayCtx
                           (data/handleTest evt)
                           (mapViewSystem/handleMapView evt)
-                          (data/handleMenuCursor evt))
+                          (menuCursorViewSystem/handleMenuCursor evt))
           state (-> gameplayCtx :fsm tool.fsm/load)]
       (cond
         (= "KEY_DOWN" cmd)

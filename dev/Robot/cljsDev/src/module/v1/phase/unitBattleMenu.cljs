@@ -9,6 +9,12 @@
   (:require [module.v1.common :as common])
   (:require [module.v1.type :as type])
   (:require [module.v1.system.mapViewSystem :as mapViewSystem])
+  (:require [module.v1.system.cursorViewSystem :as cursorViewSystem])
+  (:require [module.v1.system.moveRangeViewSystem :as moveRangeViewSystem])
+  (:require [module.v1.system.attackRangeViewSystem :as attackRangeViewSystem])
+  (:require [module.v1.system.hitRateViewSystem :as hitRateViewSystem])
+  (:require [module.v1.system.battleMenuViewSystem :as battleMenuViewSystem])
+  (:require [module.v1.system.menuCursorViewSystem :as menuCursorViewSystem])
   (:require [module.v1.session.battleMenu :as battleMenu])
   (:require [module.v1.step.selectPosition :refer [selectPosition]]))
 
@@ -36,10 +42,10 @@
     (let [[cmd args :as evt] (a/<! inputCh)
           gameplayCtx (-> gameplayCtx
                           (mapViewSystem/handleMapView evt)
-                          (data/handleMenuCursor evt)
-                          (data/handleAttackRangeView left evt)
-                          (data/handleHitRateView left evt)
-                          (data/handleBattleMenuSession left evt))]
+                          (menuCursorViewSystem/handleMenuCursor evt)
+                          (attackRangeViewSystem/handleAttackRangeView left evt)
+                          (hitRateViewSystem/handleHitRateView left evt)
+                          (battleMenuViewSystem/handleBattleMenuSession left evt))]
       (cond
         (= "KEY_DOWN" cmd)
         (let [action (common/actions args)]
