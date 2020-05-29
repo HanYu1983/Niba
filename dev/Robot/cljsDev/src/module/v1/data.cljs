@@ -4,6 +4,7 @@
   (:require [clojure.core.async :as a])
   (:require [module.v1.type :as type])
   (:require [module.v1.system.spec :as spec])
+  (:require [module.v1.viewModel.spec :as viewModelSpec])
   (:require [tool.units])
   (:require [tool.map])
   (:require [tool.fsm])
@@ -736,6 +737,7 @@
 
 
 (defn render [gameplayCtx]
+  {:post [(common/explainValid? ::viewModelSpec/viewModel %)]}
   {:map (when (s/valid? ::spec/mapView gameplayCtx)
           (let [{:keys [camera map viewsize]} gameplayCtx]
             (tool.map/subMap camera viewsize map)))
