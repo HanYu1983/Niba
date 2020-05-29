@@ -2,8 +2,6 @@
   (:require [clojure.spec.alpha :as s])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.common :as common])
-  (:require [module.v1.data :as data])
-  (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require [tool.menuCursor])
   (:require [tool.fsm]))

@@ -1,5 +1,4 @@
 (ns module.v1.system.menuCursorViewSystem
-  (:require [clojure.spec.alpha :as s])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.common :as common])
   (:require [tool.fsm])

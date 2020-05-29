@@ -1,4 +1,5 @@
 (ns module.v1.system.mapViewSystem
+  (:require [clojure.core.async :as a])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.common :as common]))
 

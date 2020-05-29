@@ -3,7 +3,6 @@
   (:require [tool.units])
   (:require [tool.fsm])
   (:require [tool.menuCursor])
-  (:require [module.v1.session.battleMenu :as battleMenu])
   (:require [app.lobby.model]))
 
 (defn explainValid? [sp args]
@@ -71,8 +70,10 @@
 
 (s/def ::units tool.units/modelType)
 
-(s/def ::gameplayCtx (constantly true))
+(s/def ::gameplayCtx map?)
+
+(s/def ::returnCtx (s/or :recur ::gameplayCtx
+                         :return (s/tuple ::gameplayCtx (constantly true))))
 
 ; for macro
-(def unitMenuView ::unitMenuView)
 (def gameplayCtx ::gameplayCtx)
