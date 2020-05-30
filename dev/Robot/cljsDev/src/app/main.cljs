@@ -1,6 +1,5 @@
 (ns app.main
   (:require [clojure.core.async :as a])
-  (:require-macros [module.default.macros :as m])
   (:require-macros [app.main])
   (:require [app.lobby.core])
   (:require [app.module])
@@ -10,8 +9,6 @@
 ; debug
 (set! app.module/*module :v1)
 
-(m/defwait setData [ctx args])
-
 (def defaultModel {:money 100000})
 
 (defn mainLoop [ctx inputCh outputCh]
@@ -20,7 +17,7 @@
       (let [[cmd args] (a/<! inputCh)]
         (cond
           (= "loadConfig" cmd)
-          (let [[id subargs] args
+          (let [[id _] args
                 data (a/<! (app.module/loadData app.module/*module))]
             (a/>! outputCh ["ok", [id data]])
             (recur (merge ctx {:data data})))

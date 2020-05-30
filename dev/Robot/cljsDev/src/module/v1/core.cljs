@@ -12,7 +12,8 @@
   (:require [module.v1.common :as common])
   (:require [module.v1.phase.startUnitsMenu :refer [startUnitsMenu]])
   (:require [module.v1.phase.playerTurn :refer [playerTurn]])
-  (:require [module.v1.phase.enemyTurn :refer [enemyTurn]]))
+  (:require [module.v1.phase.enemyTurn :refer [enemyTurn]])
+  (:require [module.v1.system.spec :as spec]))
 
 
 (def mapViewSize [20 20])
@@ -81,7 +82,7 @@
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
-          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {:test :gundam})} inputCh outputCh))
+          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
           gameplayCtx (->> (map (fn [idx key robotKey]
                                   [{:key key
                                     :playerKey :player
@@ -105,7 +106,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll false
+  (let [testAll true
         ; 有些電腦很像是記憶體的關係, a/go中不能有太多程式碼(還是macro), 會出現macroexpand stack overflow或是a/aset不能解析等
         ; 要用奇怪的方式把程式碼分散在不同的a/go中, 使用waitCh來block線程
         waitCh (a/chan)
@@ -123,10 +124,11 @@
      (a/>! waitCh true))
     
     (a/go
-     (a/<! waitCh) ;等待線程
-     (core/defclick (or testAll false) "select units"
-       [up down left])
-     (a/>! waitCh true))
+      (a/<! waitCh) ;等待線程
+      (core/defclick (or testAll false) "select units"
+        [up down left enter]
+        (a/<! (a/timeout 3000))) ; wait player turn start animation
+      (a/>! waitCh true))
     
     (a/go
       (a/<! waitCh) ;等待線程
@@ -158,13 +160,13 @@
       (core/defclick (or testAll false) "open and close system menu"
         [right enter]
         (core/defexe (fn [gameplayCtx]
-                       (when (not (s/valid? ::type/systemMenuView gameplayCtx))
+                       (when (not (s/valid? ::spec/systemMenuView gameplayCtx))
                          (throw (js/Error. "should open systemMenu")))
                        gameplayCtx))
         (core/defclick true "close system menu"
           [down up down enter])
         (core/defexe (fn [gameplayCtx]
-                       (when (s/valid? ::type/systemMenuView gameplayCtx)
+                       (when (s/valid? ::spec/systemMenuView gameplayCtx)
                          (throw (js/Error. "should close systemMenu")))
                        gameplayCtx))
         (core/defclick true "move cursor back"
@@ -173,14 +175,14 @@
       (core/defclick (or testAll false) "open and close unit menu"
         [enter]
         (core/defexe (fn [gameplayCtx]
-                       (when (not (s/valid? ::type/unitMenuView gameplayCtx))
-                         (throw (js/Error. "should open systemMenu")))
+                       (when (not (s/valid? ::spec/unitMenuView gameplayCtx))
+                         (throw (js/Error. "should open unitMenu")))
                        gameplayCtx))
         (core/defclick true "close unit menu"
           [cancel])
         (core/defexe (fn [gameplayCtx]
-                       (when (s/valid? ::type/unitMenuView gameplayCtx)
-                         (throw (js/Error. "should close systemMenu")))
+                       (when (s/valid? ::spec/unitMenuView gameplayCtx)
+                         (throw (js/Error. "should close unitMenu")))
                        gameplayCtx)))
       ; 線程結束
       (a/>! waitCh true)
