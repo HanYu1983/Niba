@@ -106,7 +106,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll false
+  (let [testAll true
         ; 有些電腦很像是記憶體的關係, a/go中不能有太多程式碼(還是macro), 會出現macroexpand stack overflow或是a/aset不能解析等
         ; 要用奇怪的方式把程式碼分散在不同的a/go中, 使用waitCh來block線程
         waitCh (a/chan)
