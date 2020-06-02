@@ -373,11 +373,11 @@
     (cond
       (= energyType :energy)
       (let [energyCost (get weaponInfo :energyCost)
-            unitAfter (-> (:en unit)
+            unitAfter (-> (-> unit :robotState :en)
                           (- energyCost)
                           (max 0)
                           ((fn [en]
-                             (assoc unit :en en))))]
+                             (update-in unit [:robotState :en] (constantly en)))))]
         unitAfter)
 
       (= energyType :bullet)
@@ -498,12 +498,14 @@
                (= rightActionType :guard)
                (conj :guard)
 
-               (<= (- (:hp right) leftMakeDamage) 0)
+               (<= (- (-> right :robotState :hp) leftMakeDamage) 0)
                (conj :dead))
      :damage leftMakeDamage}))
 
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])
+         (explainValid? ::battleMenu/action leftAction)
+         (explainValid? ::battleMenu/action rightAction)]}
   (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
       ((fn [[_ firstResult :as ctx]]
          (if (contains? (:events firstResult) :dead)
@@ -513,14 +515,16 @@
              (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction)))))))))
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])
+         (explainValid? ::battleMenu/action leftAction)
+         (explainValid? ::battleMenu/action rightAction)]}
   (let [[{leftDamage :damage} {rightDamage :damage}] result
         [leftAfter rightAfter] (map (fn [unit damage]
-                                      (-> (:hp unit)
+                                      (-> (-> unit :robotState :hp)
                                           (- damage)
                                           (max 0)
                                           ((fn [hp]
-                                             (assoc unit :hp hp)))))
+                                             (update-in unit [:robotState :hp] (constantly hp))))))
                                     [left right]
                                     [leftDamage rightDamage])
 

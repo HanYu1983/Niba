@@ -69,7 +69,7 @@
       (a/<! (app.module/testIt app.module/*module outputToView inputFromView)))))
 
 (defn main []
-  (let [phase :debug
+  (let [phase :debugx
         outputToView (a/chan)
         inputFromView (a/chan)] 
     (cond

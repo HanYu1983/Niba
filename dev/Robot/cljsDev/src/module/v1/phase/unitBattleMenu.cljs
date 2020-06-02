@@ -21,7 +21,8 @@
   (:require [module.v1.step.selectPosition :refer [selectPosition]]))
 
 
-(defn handleCore [gameplayCtx [{left :unit} {right :unit}] inputCh outputCh [cmd args]]
+(defn handleCore [gameplayCtx [{left :unit} {right :unit} :as battleMenuModel] inputCh outputCh [cmd args]]
+  {:pre [(common/explainValid? ::battleMenu/defaultModel battleMenuModel)]}
   (a/go
     (cond
       (= "KEY_DOWN" cmd)
@@ -103,7 +104,7 @@
 
 
 (core/defstate unitBattleMenu [{left :unit [leftActionType leftWeapon :as leftAction] :action}
-                               {right :unit} :as args]
+                               {right :unit} :as battleMenuModel]
   {:nameCtx gameplayCtx
    :initState
    (let [[menu data] (data/getMenuData gameplayCtx left)
@@ -115,11 +116,12 @@
                                                                                       weaponIdx (indexMap leftWeapon)]
                                                                                   weaponIdx))))
       :data data
-      :battleMenuSession (-> args
+      :battleMenuSession (-> battleMenuModel
                              (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
       :unit left})
    :initCtx nil}
 
+  (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
   (loop [gameplayCtx gameplayCtx]
     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
     (let [evt (a/<! inputCh)
@@ -129,6 +131,6 @@
                         (attackRangeViewSystem/handleAttackRangeView left evt)
                         (hitRateViewSystem/handleHitRateView left evt)
                         (battleMenuViewSystem/handleBattleMenuSession left evt)
-                        (#(systemCore/asyncMapReturn handleCore % args inputCh outputCh evt))
+                        (#(systemCore/asyncMapReturn handleCore % battleMenuModel inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))

@@ -106,7 +106,7 @@
           (js/console.log (clj->js args))
           (a/>! outputCh ["ok", [id]])
           (recur)))))
-  (let [testAll true
+  (let [testAll false
         ; 有些電腦很像是記憶體的關係, a/go中不能有太多程式碼(還是macro), 會出現macroexpand stack overflow或是a/aset不能解析等
         ; 要用奇怪的方式把程式碼分散在不同的a/go中, 使用waitCh來block線程
         waitCh (a/chan)
@@ -125,14 +125,14 @@
     
     (a/go
       (a/<! waitCh) ;等待線程
-      (core/defclick (or testAll false) "select units"
+      (core/defclick (or testAll true) "select units"
         [up down left enter]
         (a/<! (a/timeout 3000))) ; wait player turn start animation
       (a/>! waitCh true))
     
     (a/go
       (a/<! waitCh) ;等待線程
-      (core/defclick (or testAll false) "create unit"
+      (core/defclick (or testAll true) "create unit"
         []
         (core/defexe (fn [ctx]
                        (-> ctx
@@ -220,7 +220,7 @@
                          gameplayCtx))))
 
       (let [bulletCount (atom 0)]
-        (core/defclick (or testAll false) "bullet count"
+        (core/defclick (or testAll true) "bullet count"
           []
           (core/defexe (fn [gameplayCtx]
                          (let [{units :units} gameplayCtx

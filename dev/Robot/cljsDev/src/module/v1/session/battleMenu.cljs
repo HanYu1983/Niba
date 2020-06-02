@@ -2,9 +2,11 @@
   (:require [clojure.spec.alpha :as s]))
 
 (s/def ::hitRate number?)
-(s/def ::action (s/or :pending (s/tuple #{:pending})
-                      :attack (s/tuple #{:attack} (constantly true))
-                      :evade (s/tuple #{:evade})))
+(defmulti action first)
+(defmethod action :pending [_] (s/tuple #{:pending}))
+(defmethod action :attack [_] (s/tuple #{:attack} (constantly true)))
+(defmethod action :evade [_] (s/tuple #{:evade}))
+(s/def ::action (s/multi-spec action ::action))
 (s/def ::unitAndAction (s/keys :req-un [::unit ::action] :opt-un [::hitRate]))
 (s/def ::defaultModel (s/tuple ::unitAndAction ::unitAndAction))
 
@@ -14,11 +16,15 @@
 (s/explain ::defaultModel defaultModel)
 
 (defn setUnits [ctx left right]
+  {:pre [(s/valid? ::defaultModel ctx)]
+   :post [(s/valid? ::defaultModel %)]}
   (-> ctx
       (update-in [0 :unit] (constantly left))
       (update-in [1 :unit] (constantly right))))
 
 (defn setLeftAction [ctx action gameplayCtx hitRateFn]
+  {:pre [(s/valid? ::defaultModel ctx)]
+   :post [(s/valid? ::defaultModel %)]}
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)]
     (let [[actionType weapon] action
@@ -37,6 +43,8 @@
 
 
 (defn setRightAction [ctx action gameplayCtx hitRateFn]
+  {:pre [(s/valid? ::defaultModel ctx)]
+   :post [(s/valid? ::defaultModel %)]}
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)]
     (let [[actionType weapon] action
@@ -54,6 +62,8 @@
             (update-in [1 :hitRate] (constantly 0)))))))
 
 (defn setRightActionFromReaction [ctx gameplayCtx hitRateFn thinkReactionFn]
+  {:pre [(s/valid? ::defaultModel ctx)]
+   :post [(s/valid? ::defaultModel %)]}
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)
         [leftActionType leftWeapon] (get-in ctx [0 :action] ctx)]
@@ -63,6 +73,8 @@
         (setLeftAction (get-in ctx [0 :action]) gameplayCtx hitRateFn))))
 
 (defn mapUnits [ctx f]
+  {:pre [(s/valid? ::defaultModel ctx)]
+   :post [(s/valid? ::defaultModel %)]}
   (-> ctx
       (update-in [0 :unit] f)
       (update-in [1 :unit] f)))
