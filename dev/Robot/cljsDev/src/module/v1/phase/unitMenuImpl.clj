@@ -10,15 +10,15 @@
          :unit unit})
       :initCtx nil}
      (loop [gameplayCtx gameplayCtx]
-       (common/assertSpec type/unitMenuView gameplayCtx)
+       (common/assertSpec spec/unitMenuView gameplayCtx)
        (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
        (let [[cmd args :as evt] (a/<! inputCh)
              gameplayCtx (-> gameplayCtx
                              (data/handleTest evt)
-                             (data/handleMapView evt)
-                             (data/handleMenuCursor evt)
-                             (data/handleAttackRangeView unit evt)
-                             (data/handleHitRateView unit evt))]
+                             (mapViewSystem/handleMapView evt)
+                             (menuCursorViewSystem/handleMenuCursor evt)
+                             (attackRangeViewSystem/handleAttackRangeView unit evt)
+                             (hitRateViewSystem/handleHitRateView unit evt))]
          (cond
            (= "KEY_DOWN" cmd)
            (let [action (common/actions args)]

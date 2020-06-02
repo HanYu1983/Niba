@@ -6,6 +6,7 @@
   (:require [tool.map])
   (:require [tool.units]))
 
+(def invalid ::s/invalid)
 
 (defn explainValid? [sp args]
   (if (clojure.spec.alpha/valid? sp args)

@@ -350,7 +350,8 @@ public class Model : MonoBehaviour, IModel{
                                 earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, day).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, day).ToUniversalTime().ToString("yyyy/MM/dd");
+                                //earn.memo = new DateTime(year, month, day).ToUniversalTime().ToString("yyyy/MM/dd");
+                                earn.memo = year + "年" + month + "月" + day + "日";
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -380,7 +381,8 @@ public class Model : MonoBehaviour, IModel{
                                 earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, month, 1).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, month, 1).ToUniversalTime().ToString("yyyy/MM");
+                                //earn.memo = new DateTime(year, month, 1).ToUniversalTime().ToString("yyyy/MM");
+                                earn.memo = year + "年" + month + "月";
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
@@ -409,7 +411,8 @@ public class Model : MonoBehaviour, IModel{
                                 earn.id = tempSeqId++;
                                 earn.createUTC = new DateTime(year, 1, 1).ToUniversalTime().Ticks;
                                 earn.money = o.Sum(e => e.money);
-                                earn.memo = new DateTime(year, 1, 1).ToUniversalTime().ToString("yyyy");
+                                //earn.memo = new DateTime(year, 1, 1).ToUniversalTime().ToString("yyyy");
+                                earn.memo = year + "年";
                                 return earn;
                             })
                             .OrderByDescending(earn => earn.createUTC)
