@@ -1,10 +1,10 @@
 (ns app.main
   (:require [clojure.core.async :as a])
   (:require-macros [app.main])
-  (:require [app.lobby.core])
-  (:require [app.module])
-  (:require [module.default.core])
-  (:require [module.v1.core]))
+  (:require [app.lobby.core]
+            [app.module]
+            [module.v1.core]
+            [tool.goal]))
 
 ; debug
 (set! app.module/*module :v1)
@@ -69,7 +69,7 @@
       (a/<! (app.module/testIt app.module/*module outputToView inputFromView)))))
 
 (defn main []
-  (let [phase :debug
+  (let [phase :debug2
         outputToView (a/chan)
         inputFromView (a/chan)] 
     (cond
