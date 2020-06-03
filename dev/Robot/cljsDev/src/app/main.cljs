@@ -3,8 +3,7 @@
   (:require-macros [app.main])
   (:require [app.lobby.core]
             [app.module]
-            [module.v1.core]
-            [tool.goal]))
+            [module.v1.core]))
 
 ; debug
 (set! app.module/*module :v1)
@@ -69,7 +68,7 @@
       (a/<! (app.module/testIt app.module/*module outputToView inputFromView)))))
 
 (defn main []
-  (let [phase :debug2
+  (let [phase :debug
         outputToView (a/chan)
         inputFromView (a/chan)] 
     (cond
