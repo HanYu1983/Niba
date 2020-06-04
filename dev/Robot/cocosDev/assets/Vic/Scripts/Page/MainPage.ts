@@ -89,6 +89,7 @@ export default class MainPage extends BasicViewer {
     }
 
     close() {
+        this.closeAllSub();
         super.close();
     }
 

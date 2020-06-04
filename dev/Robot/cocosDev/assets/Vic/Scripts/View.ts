@@ -55,10 +55,9 @@ export default class View extends cc.Component {
 
     // 上下移動游標, 左右選擇取消, enter確認
     private repaintStartUnitsMenu(info:any){
+        this.getGamePage().closeRobotSelectPanel();
         if(info){
-            console.log(info)
-        } else {
-            // close
+            this.getGamePage().openRobotSelectPanel(info);
         }
     }
 

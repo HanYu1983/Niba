@@ -26,6 +26,7 @@ import UnitSampleInfo from "../GamePage/UnitSampleInfo";
 import TextEffect from "../GamePage/TextEffect";
 import SmallMap from '../GamePage/SmallMap';
 import MenuButton from "../MenuButton";
+import RobotSelectPanel from "../GamePage/RobotSelect/RobotSelectPanel";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 
@@ -75,6 +76,9 @@ export default class GamePage extends BasicViewer {
     @property(SmallMap)
     smallMap: SmallMap = null;
 
+    @property(RobotSelectPanel)
+    robotSelectPanel: RobotSelectPanel = null;
+
     // static ON_GAMEPAGE_ENTER: string = "ON_GAMEPAGE_ENTER";
     // static ON_GAMEPAGE_ESCAPE: string = "ON_GAMEPAGE_ESCAPE";
 
@@ -113,6 +117,15 @@ export default class GamePage extends BasicViewer {
 
     hideCursor() {
         this.cursor.active = false;
+    }
+
+    openRobotSelectPanel(data:any){
+        this.robotSelectPanel.open();
+        this.robotSelectPanel.setRobotList(data);
+    }
+
+    closeRobotSelectPanel(){
+        this.robotSelectPanel.close();
     }
 
     showFightInfo(datas: any) {
