@@ -10,7 +10,7 @@
   (:require [tool.fsm]))
 
 
-(defn handleBattleMenuSession [gameplayCtx unit [cmd args]]
+(defn handleBattleMenuSession [gameplayCtx unit fixRight [cmd args]]
   {:pre [(common/explainValid? (s/tuple ::spec/battleMenuView ::type/unit) [gameplayCtx unit])]}
   (cond
     (= "KEY_DOWN" cmd)
@@ -26,9 +26,12 @@
                                   (let [weapon (-> (data/getUnitWeapons gameplayCtx unit)
                                                    second
                                                    (nth cursor2))]
-                                    (-> battleMenuSession
-                                        (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
-                                        (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction)))
+                                    (cond-> battleMenuSession
+                                      true
+                                      (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
+
+                                      (false? fixRight)
+                                      (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction)))
                                   battleMenuSession)
               state (assoc state :battleMenuSession battleMenuSession)
               gameplayCtx (update gameplayCtx :fsm #(tool.fsm/save % state))]

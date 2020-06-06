@@ -54,16 +54,16 @@
 
 (defn nextCell [{units :units players :players} unit [mw mh] [x y]]
   {:pre [(explainValid? (s/tuple ::type/units ::type/players ::type/unit) [units players unit])]}
-  (let [possiblePosition [[x (min mh (inc y))]
+  (let [possiblePosition [[x (min (dec mh) (inc y))]
                           [x (max 0 (dec y))]
-                          [(min mw (inc x)) y]
+                          [(min (dec mw) (inc x)) y]
                           [(max 0 (dec x)) y]]
         unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)]
     (->> (zipmap possiblePosition unitsInPosition)
          (filter (fn [[_ occupyUnit]]
                    (or (nil? occupyUnit)
-                       (= (get-in players [(-> unit :player) :faction])
-                          (get-in players [(-> occupyUnit :player) :faction])))))
+                       (= (get-in players [(-> unit :playerKey) :faction])
+                          (get-in players [(-> occupyUnit :playerKey) :faction])))))
          (map first))))
 
 (defn estimateCost [from to]
@@ -422,7 +422,7 @@
           weaponKeys (->> (range (count weapons))
                           (into []))
           [menu data] (if isBattleMenu
-                        [[weaponKeys ["cancel"]]
+                        [[weaponKeys ["evade"] ["guard"] ["cancel"]]
                          {:weaponIdx 0
                           :weapons weapons
                           :unit unit}]

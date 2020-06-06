@@ -103,8 +103,9 @@
       gameplayCtx)))
 
 
-(core/defstate unitBattleMenu [{left :unit [leftActionType leftWeapon :as leftAction] :action}
-                               {right :unit} :as battleMenuModel]
+(core/defstate unitBattleMenu {[{left :unit [leftActionType leftWeapon :as leftAction] :action}
+                                {right :unit} :as battleMenuModel] :battleMenu
+                               fixRight :fixRight}
   {:nameCtx gameplayCtx
    :initState
    (let [[menu data] (data/getMenuData gameplayCtx left)
@@ -116,8 +117,7 @@
                                                                                       weaponIdx (indexMap leftWeapon)]
                                                                                   weaponIdx))))
       :data data
-      :battleMenuSession (-> battleMenuModel
-                             (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
+      :battleMenuSession battleMenuModel
       :unit left})
    :initCtx nil}
 
@@ -130,7 +130,7 @@
                         (menuCursorViewSystem/handleMenuCursor evt)
                         (attackRangeViewSystem/handleAttackRangeView left evt)
                         (hitRateViewSystem/handleHitRateView left evt)
-                        (battleMenuViewSystem/handleBattleMenuSession left evt)
+                        (battleMenuViewSystem/handleBattleMenuSession left fixRight evt)
                         (#(systemCore/asyncMapReturn handleCore % battleMenuModel inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))

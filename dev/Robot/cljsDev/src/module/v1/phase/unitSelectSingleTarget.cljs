@@ -28,9 +28,11 @@
               unitAtCursor (tool.units/getByPosition units cursor)]
           (if (and unitAtCursor (not (data/isFriendlyUnit gameplayCtx unit unitAtCursor)))
             (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
-                                                            (-> battleMenu/defaultModel
-                                                                (battleMenu/setUnits unit unitAtCursor)
-                                                                (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate))
+                                                            {:battleMenu (-> battleMenu/defaultModel
+                                                                             (battleMenu/setUnits unit unitAtCursor)
+                                                                             (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
+                                                                             (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
+                                                             :fixRight false}
                                                             inputCh outputCh))]
               (if isEnd
                 [gameplayCtx isEnd]

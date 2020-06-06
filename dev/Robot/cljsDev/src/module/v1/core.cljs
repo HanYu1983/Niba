@@ -93,7 +93,17 @@
                                 (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
                            (reduce (fn [gameplayCtx [arg1 arg2]]
                                      (data/createUnit gameplayCtx arg1 arg2))
-                                   gameplayCtx))]
+                                   gameplayCtx))
+          [gameplayCtx _] (->> (get data/data :robot)
+                               (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                         [(data/createUnit gameplayCtx
+                                                           {:playerKey (if (< (rand) 0.5)
+                                                                         :player
+                                                                         :ai1)
+                                                            :position [1 i]}
+                                                           {:robotKey robotKey})
+                                          (inc i)])
+                                       [gameplayCtx 1]))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 
@@ -156,6 +166,9 @@
                        (when (not (tool.units/getByKey units :unit3))
                          (throw (js/Error. (str "unit1 not found"))))
                        gameplayCtx)))
+
+      (comment (core/defclick (or testAll true) "test ai"
+                 [right enter enter]))
 
       (core/defclick (or testAll false) "open and close system menu"
         [right enter]
@@ -220,7 +233,7 @@
                          gameplayCtx))))
 
       (let [bulletCount (atom 0)]
-        (core/defclick (or testAll true) "bullet count"
+        (core/defclick (or testAll false) "bullet count"
           []
           (core/defexe (fn [gameplayCtx]
                          (let [{units :units} gameplayCtx
