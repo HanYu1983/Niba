@@ -540,7 +540,7 @@
     gameplayCtx))
 
 (defn formatPathTree [gameplayCtx unit power paths]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit int?) [gameplayCtx unit power])]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit number?) [gameplayCtx unit power])]}
   (let [shouldRemove (filter (fn [[pos info]]
                                (> (:cost info) power))
                              paths)]
