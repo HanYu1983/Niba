@@ -52,23 +52,6 @@
            (get-in data [:terrain (keyword t2) :cost]))))))
 
 
-(defn nextCell [{units :units players :players playmap :map} unit power [mw mh] [x y] info]
-  {:pre [(explainValid? (s/tuple ::type/units ::type/players ::type/unit) [units players unit])]}
-  (let [nowCost (:cost info)
-        possiblePosition [[x (min (dec mh) (inc y))]
-                          [x (max 0 (dec y))]
-                          [(min (dec mw) (inc x)) y]
-                          [(max 0 (dec x)) y]]
-        unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
-        costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)]
-    (->> (map vector possiblePosition unitsInPosition costToNext)
-         (filter (fn [[_ occupyUnit cost]]
-                   (and (<= (+ nowCost cost) power)
-                        (or (nil? occupyUnit)
-                            (= (get-in players [(-> unit :playerKey) :faction])
-                               (get-in players [(-> occupyUnit :playerKey) :faction]))))))
-         (map first))))
-
 (defn estimateCost [from to]
   (->> (map - from to)
        (repeat 2)
@@ -559,18 +542,33 @@
             paths
             shouldRemove)))
 
-(defn getUnitMovePathTreeTo [{playmap :map :as gameplayCtx} unit pos]
+(defn getUnitMovePathTreeTo [{units :units players :players playmap :map :as gameplayCtx} unit pos]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
   (let [power (/ (getUnitPower gameplayCtx unit) 5)
         power (if (-> unit :robotState :tags :moveRangePlus)
                 (+ power 3)
                 power)
-        [mw mh] (tool.map/getMapSize playmap)]
-    (tool.map/findPath (:position unit)
+        [mw mh] (tool.map/getMapSize playmap)
+        originPos (:position unit)]
+    (tool.map/findPath originPos
                        (fn [{:keys [cost]} curr]
                          [(or (= curr pos) (>= cost power)) false])
-                       (partial nextCell gameplayCtx unit power [mw mh])
-                       (partial moveCost gameplayCtx unit)
+                       (fn [[x y] info]
+                         (let [nowCost (:cost info)
+                               possiblePosition [[x (min (dec mh) (inc y))]
+                                                 [x (max 0 (dec y))]
+                                                 [(min (dec mw) (inc x)) y]
+                                                 [(max 0 (dec x)) y]]
+                               unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
+                               costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)]
+                           (->> (map vector possiblePosition unitsInPosition costToNext)
+                                (filter (fn [[_ occupyUnit cost]]
+                                          (and (<= (+ nowCost cost) power)
+                                               (or (nil? occupyUnit)
+                                                   (= (get-in players [(-> unit :playerKey) :faction])
+                                                      (get-in players [(-> occupyUnit :playerKey) :faction]))))))
+                                (map first))))
+                       (partial moveCost {:map playmap} unit)
                        (fn [from]
                          (if pos
                            (estimateCost from pos)
