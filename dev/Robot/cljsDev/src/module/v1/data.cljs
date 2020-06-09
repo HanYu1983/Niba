@@ -52,18 +52,21 @@
            (get-in data [:terrain (keyword t2) :cost]))))))
 
 
-(defn nextCell [{units :units players :players} unit [mw mh] [x y]]
+(defn nextCell [{units :units players :players playmap :map} unit power [mw mh] [x y] info]
   {:pre [(explainValid? (s/tuple ::type/units ::type/players ::type/unit) [units players unit])]}
-  (let [possiblePosition [[x (min (dec mh) (inc y))]
+  (let [nowCost (:cost info)
+        possiblePosition [[x (min (dec mh) (inc y))]
                           [x (max 0 (dec y))]
                           [(min (dec mw) (inc x)) y]
                           [(max 0 (dec x)) y]]
-        unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)]
-    (->> (zipmap possiblePosition unitsInPosition)
-         (filter (fn [[_ occupyUnit]]
-                   (or (nil? occupyUnit)
-                       (= (get-in players [(-> unit :playerKey) :faction])
-                          (get-in players [(-> occupyUnit :playerKey) :faction])))))
+        unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
+        costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)]
+    (->> (map vector possiblePosition unitsInPosition costToNext)
+         (filter (fn [[_ occupyUnit cost]]
+                   (and (<= (+ nowCost cost) power)
+                        (or (nil? occupyUnit)
+                            (= (get-in players [(-> unit :playerKey) :faction])
+                               (get-in players [(-> occupyUnit :playerKey) :faction]))))))
          (map first))))
 
 (defn estimateCost [from to]
@@ -250,10 +253,10 @@
     (if (nil? robot)
       (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
       (let [power (->> (concat (map (fn [k]
-                                      (get-in data [:component k :powerCost]))
+                                      (get-in data [:component (keyword k) :powerCost]))
                                     (get robot :components))
                                (map (fn [k]
-                                      (get-in data [:weapon k :powerCost]))
+                                      (get-in data [:weapon (keyword k) :powerCost]))
                                     (get robot :weapons)))
                        (apply - (get robot :power)))]
         power))))
@@ -539,7 +542,7 @@
                         (updateUnit right (constantly rightAfter)))]
     gameplayCtx))
 
-(defn formatPathTree [gameplayCtx unit power paths]
+(defn formatPathTree-xx [gameplayCtx unit power paths]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit number?) [gameplayCtx unit power])]}
   (let [shouldRemove (filter (fn [[pos info]]
                                (> (:cost info) power))
@@ -563,17 +566,15 @@
                 (+ power 3)
                 power)
         [mw mh] (tool.map/getMapSize playmap)]
-    (->> (tool.map/findPath (:position unit)
-                            (fn [{:keys [cost]} curr]
-                              [(or (= curr pos) (>= cost power)) false])
-                            (partial nextCell gameplayCtx unit [mw mh])
-                            (partial moveCost gameplayCtx unit)
-                            (fn [from]
-                              (if pos
-                                (estimateCost from pos)
-                                0)))
-         ((fn [paths]
-            (formatPathTree gameplayCtx unit power paths))))))
+    (tool.map/findPath (:position unit)
+                       (fn [{:keys [cost]} curr]
+                         [(or (= curr pos) (>= cost power)) false])
+                       (partial nextCell gameplayCtx unit power [mw mh])
+                       (partial moveCost gameplayCtx unit)
+                       (fn [from]
+                         (if pos
+                           (estimateCost from pos)
+                           0)))))
 
 (defn getUnitMovePathTree [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]}

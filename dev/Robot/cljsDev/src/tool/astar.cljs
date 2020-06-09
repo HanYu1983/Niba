@@ -20,13 +20,7 @@
                   :cost current-score
                   :totalCost totalScore}
             [isFind isInterrupt] (goal info current)
-            visited (assoc visited current (merge info {:tail isFind
-                                                        :length (if previous
-                                                                  (inc (get-in visited [previous :length]))
-                                                                  0)
-                                                        :priority (if isFind
-                                                                    (count visited)
-                                                                    99999999)}))]
+            visited (assoc visited current (merge info {:tail isFind}))]
         (if isFind
           (if isInterrupt
             visited
@@ -39,5 +33,5 @@
                                        (assoc queue node [(+ score (h node)) score current])
                                        queue)))
                                  (pop queue)
-                                 (graph current)))))
+                                 (graph current info)))))
       visited)))

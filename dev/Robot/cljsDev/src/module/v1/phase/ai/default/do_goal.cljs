@@ -44,8 +44,8 @@
           nearest (if (paths targetPosition)
                     targetPosition
                     (->> paths
-                         (sort-by (fn [[k v]]
-                                    (:priority v)))
+                         (sort-by (fn [[pos _]]
+                                    (data/estimateCost pos targetPosition)))
                          ffirst))
           nearest (loop [pos nearest]
                     (let [occupyUnit (tool.units/getByPosition (:units gameplayCtx) pos)]
