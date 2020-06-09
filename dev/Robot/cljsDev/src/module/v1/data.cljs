@@ -550,10 +550,7 @@
                 power)
         [mw mh] (tool.map/getMapSize playmap)
         originPos (:position unit)]
-    (tool.map/findPath originPos
-                       (fn [{:keys [cost]} curr]
-                         [(or (= curr pos) (>= cost power)) false])
-                       (fn [[x y] info]
+    (tool.map/findPath (fn [[x y] info]
                          (let [nowCost (:cost info)
                                possiblePosition [[x (min (dec mh) (inc y))]
                                                  [x (max 0 (dec y))]
@@ -561,18 +558,19 @@
                                                  [(max 0 (dec x)) y]]
                                unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
                                costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)]
-                           (->> (map vector possiblePosition unitsInPosition costToNext)
-                                (filter (fn [[_ occupyUnit cost]]
+                           (->> (map vector possiblePosition costToNext unitsInPosition)
+                                (filter (fn [[_ cost occupyUnit]]
                                           (and (<= (+ nowCost cost) power)
                                                (or (nil? occupyUnit)
                                                    (= (get-in players [(-> unit :playerKey) :faction])
-                                                      (get-in players [(-> occupyUnit :playerKey) :faction]))))))
-                                (map first))))
-                       (partial moveCost {:map playmap} unit)
+                                                      (get-in players [(-> occupyUnit :playerKey) :faction])))))))))
                        (fn [from]
                          (if pos
                            (estimateCost from pos)
-                           0)))))
+                           0))
+                       originPos
+                       (fn [{:keys [cost]} curr]
+                         [(or (= curr pos) (>= cost power)) false]))))
 
 (defn getUnitMovePathTree [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]}

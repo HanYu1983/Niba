@@ -4,24 +4,21 @@
 
 (def defaultModel {})
 
-(defn buildPath [pathTree end]
-  (tool.astar/buildPath pathTree end))
+(def buildPath tool.astar/buildPath)
 
-(defn findPath [start endFn nextFn costFn estCostFn]
-  (tool.astar/route nextFn costFn estCostFn start endFn))
+(def findPath tool.astar/route)
 
 (def simpleFindPath
   (memoize (fn [start maxCost]
-             (map first (findPath start
+             (map first (findPath (fn [[x y]]
+                                    [[[x (inc y)] 1]
+                                     [[x (dec y)] 1]
+                                     [[(inc x) y] 1]
+                                     [[(dec x) y] 1]])
+                                  (constantly 0)
+                                  start
                                   (fn [{:keys [totalCost]} curr]
-                                    [(>= totalCost maxCost) false])
-                                  (fn [[x y]]
-                                    [[x (inc y)]
-                                     [x (dec y)]
-                                     [(inc x) y]
-                                     [(dec x) y]])
-                                  (constantly 1)
-                                  (constantly 0))))))
+                                    [(>= totalCost maxCost) false]))))))
 
 (defn generateMap [w h {:keys [deepsea sea sand grass hill city tree award power offset]}]
   (->> (_generateMap w h deepsea sea sand grass hill city tree award power offset)

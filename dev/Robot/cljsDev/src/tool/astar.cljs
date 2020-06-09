@@ -11,7 +11,7 @@
 
 ; 從以下網址修改的
 ; https://github.com/arttuka/astar
-(defn route [graph dist h start goal]
+(defn route [graph h start goal]
   (loop [visited {}
          queue (tailrecursion.priority-map/priority-map-keyfn first start [0 0 nil])]
     (if (seq queue)
@@ -25,8 +25,8 @@
           (if isInterrupt
             visited
             (recur visited (pop queue)))
-          (recur visited (reduce (fn [queue node]
-                                   (let [score (+ current-score (dist current node))]
+          (recur visited (reduce (fn [queue [node dist]]
+                                   (let [score (+ current-score dist)]
                                      (if (and (not (contains? visited node))
                                               (or (not (contains? queue node))
                                                   (< score (get-in queue [node 1]))))
