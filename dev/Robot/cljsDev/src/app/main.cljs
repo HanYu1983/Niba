@@ -3,7 +3,8 @@
   (:require-macros [app.main])
   (:require [app.lobby.core]
             [app.module]
-            [module.v1.core]))
+            [module.v1.core]
+            [tool.kmeans]))
 
 ; debug
 (set! app.module/*module :v1)
