@@ -5,6 +5,7 @@
             [tool.fsm]
             [tool.units]
             [tool.goal]
+            [tool.knn]
             [module.v1.data :as data]
             [module.v1.common :as common]
             [module.v1.session.battleMenu :as battleMenu]
@@ -20,6 +21,38 @@
 (defn weaponToUse [gameplayCtx unit targetUnit aiCtx])
 
 (defmulti do-goal (fn [[goalType]] goalType))
+
+
+
+(def knn (let [trainSet `(~@(repeat 3 [[1 1] :attack])
+                          ~@(repeat 3 [[0.5 0.5] :attack])
+                          ~@(repeat 3 [[0 0] :findSupply])
+                          ~@(repeat 3 [[1 0] :findSupply])
+                          ~@(repeat 3 [[0 1] :findSupply]))]
+           (tool.knn/train (mapv first trainSet)
+                           (mapv second trainSet)
+                           {})))
+
+(defn getKnnState [gameplayCtx unit]
+  (let [maxHp (data/getUnitMaxHp gameplayCtx unit)
+        maxEn (data/getUnitMaxEn gameplayCtx unit)
+        hp (-> unit :robotState :hp)
+        en (-> unit :robotState :en)]
+    [(/ hp maxHp) (/ en maxEn)]))
+
+(defmethod do-goal :think [_ gameplayCtx unit inputCh outputCh]
+  (a/go
+    (let [[action] (tool.knn/predict knn [(getKnnState gameplayCtx unit)])
+          nextUnit (cond
+                     (= :attack action)
+                     unit
+                     
+                     (= :findSupply action)
+                     unit
+
+                     :else
+                     unit)]
+      gameplayCtx)))
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]
   (a/go

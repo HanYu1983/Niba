@@ -8,4 +8,8 @@
 (defmethod goalType :findAndAttack [_]
   (s/tuple keyword?))
 
+(defmethod goalType :think [_]
+  (s/tuple keyword?))
+
+
 (s/def ::goal (s/multi-spec goalType ::goal))

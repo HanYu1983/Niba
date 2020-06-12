@@ -4,7 +4,7 @@
   (:require [app.lobby.core]
             [app.module]
             [module.v1.core]
-            [tool.kmeans]))
+            [tool.knn]))
 
 ; debug
 (set! app.module/*module :v1)

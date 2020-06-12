@@ -12,9 +12,7 @@
             [module.v1.common :as common]))
 
 (def basicGoal [:stack
-                [:moveTo [5 5]]
-                [:moveTo [10 10]]
-                [:findAndAttack]])
+                [:think]])
 
 (defn updateUnit [gameplayCtx unit inputCh outputCh]
   (a/go
