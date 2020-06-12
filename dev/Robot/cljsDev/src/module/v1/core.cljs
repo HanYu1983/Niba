@@ -24,9 +24,8 @@
                   :mapsize [20 20]
                   :units tool.units/model
                   :moveRange []
-                  :players {:player {:faction 0}
-                            :ai1 {:faction 1}
-                            :ai2 {:faction 1}}
+                  :players {:player {:faction 0 :playerState nil}
+                            :ai1 {:faction 1 :playerState nil}}
                   :fsm tool.fsm/model})
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
@@ -96,12 +95,13 @@
                                    gameplayCtx))
           [gameplayCtx _] (->> (get data/data :robot)
                                (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                         [(data/createUnit gameplayCtx
-                                                           {:playerKey (if (< (rand) 0.5)
-                                                                         :player
-                                                                         :ai1)
-                                                            :position [1 i]}
-                                                           {:robotKey robotKey})
+                                         [(-> gameplayCtx
+                                              (data/createUnit {:playerKey :player
+                                                                :position [0 i]}
+                                                               {:robotKey robotKey})
+                                              (data/createUnit {:playerKey :ai1
+                                                                :position [19 i]}
+                                                               {:robotKey robotKey}))
                                           (inc i)])
                                        [gameplayCtx 1]))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))

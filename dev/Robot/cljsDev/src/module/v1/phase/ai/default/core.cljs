@@ -5,6 +5,7 @@
             [tool.fsm]
             [tool.units]
             [tool.goal]
+            [tool.kmeans]
             [module.v1.data :as data]
             [module.v1.phase.ai.default.do-goal :as do-goal]
             [module.v1.phase.ai.default.goalType :as goalType]
@@ -24,10 +25,37 @@
           gameplayCtx (a/<! (do-goal/do-goal goal gameplayCtx unit inputCh outputCh))]
       gameplayCtx)))
 
+
+(defn initEnemy [gameplayCtx enemy]
+  (let [units (->> (:units gameplayCtx)
+                   (tool.units/getAll)
+                   (filter (fn [unit]
+                             (= (get unit :playerKey) enemy))))
+        targetUnits (->> (:units gameplayCtx)
+                         (tool.units/getAll)
+                         (filter (fn [unit]
+                                   (= (get unit :playerKey) :player))))
+        {:keys [clusters]} (tool.kmeans/kmeans (map :position units) 4 {})
+        {targetCenteroids :centroids} (tool.kmeans/kmeans (map :position targetUnits) 4 {})
+        nextUnits (map (fn [unit groupIdx]
+                         (let [moveToPosition (mapv Math/floor (-> (nth targetCenteroids groupIdx) :centroid))
+                               goal [:moveTo moveToPosition]
+                               _ (common/assertSpec ::goalType/goal goal)]
+                           (update-in unit [:robotState :goals] (constantly [:stack goal]))))
+                       units
+                       clusters)
+        gameplayCtx (reduce (fn [gameplayCtx [unit nextUnit]]
+                              (data/updateUnit gameplayCtx unit (constantly nextUnit)))
+                            gameplayCtx
+                            (zipmap units nextUnits))]
+    gameplayCtx))
+
+
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
   (a/go
     (a/<! (common/enemyTurnStart gameplayCtx enemy inputCh outputCh))
-    (let [units (->> (:units gameplayCtx)
+    (let [gameplayCtx (initEnemy gameplayCtx enemy)
+          units (->> (:units gameplayCtx)
                      (tool.units/getAll)
                      (filter (fn [unit]
                                (= (get unit :playerKey) enemy))))]

@@ -611,18 +611,20 @@
        (assoc gameplayCtx :units)))
 
 
-(defn gameplayOnInit [appCtx gameplayCtx]
+(defn gameplayOnInit-xx [appCtx gameplayCtx]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx) [gameplayCtx])]
    :post [(explainValid? ::type/gameplayCtx %)]}
   (let [[gameplayCtx _] (->> (get data :robot)
                              (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                       [(createUnit gameplayCtx
-                                                    {:player (if (< (rand) 0.5)
-                                                               :player
-                                                               :ai1)
-                                                     :type :robot
-                                                     :position [0 i]}
-                                                    {:robotKey robotKey})
+                                       [(-> gameplayCtx
+                                            (createUnit {:player :player
+                                                         :type :robot
+                                                         :position [0 i]}
+                                                        {:robotKey robotKey})
+                                            (createUnit {:player :ai1
+                                                         :type :robot
+                                                         :position [7 i]}
+                                                        {:robotKey robotKey}))
                                         (inc i)])
                                      [gameplayCtx 1]))]
     gameplayCtx))

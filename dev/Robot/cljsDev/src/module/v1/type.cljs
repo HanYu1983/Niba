@@ -23,7 +23,7 @@
 (s/def ::position (s/tuple int? int?))
 (s/def ::hp int?)
 (s/def ::en int?)
-(s/def ::player (s/keys :req-un [::faction]))
+(s/def ::player (s/keys :req-un [::faction ::playerState]))
 (s/def ::players (s/map-of keyword? ::player))
 
 (defmulti tagEntry first)

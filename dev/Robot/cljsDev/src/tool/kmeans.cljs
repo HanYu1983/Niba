@@ -2,6 +2,9 @@
   (:require [clojure.spec.alpha :as s])
   (:require ["ml-kmeans" :as ml-kmeans]))
 
+(s/def ::error number?)
+(s/def ::size int?)
+(s/def ::centroids (s/* (s/keys :req-un [::centroid ::error ::size])))
 (s/def ::option (s/keys :req-opt [::initialization ::maxIterations ::tolerance ::withIterations ::distanceFunction ::seed]))
 (s/def ::answer (s/keys :req-un [::clusters ::centroids ::converged ::iterations]))
 
@@ -9,11 +12,12 @@
 (defn kmeans [data num option]
   {:pre [(s/valid? ::option option)]
    :post [(s/valid? ::answer %)]}
-  (let [jsobj (ml-kmeans (clj->js data) num (clj->js option))]
-    {:clusters (js->clj (.-clusters jsobj) :keywordize-keys true)
-     :centroids (js->clj (.-centroids jsobj) :keywordize-keys true)
-     :converged (js->clj (.-converged jsobj) :keywordize-keys true)
-     :iterations (js->clj (.-iterations jsobj) :keywordize-keys true)}))
+  (let [jsobj (ml-kmeans (clj->js data) num (clj->js option))
+        ret {:clusters (js->clj (.-clusters jsobj) :keywordize-keys true)
+             :centroids (js->clj (.-centroids jsobj) :keywordize-keys true)
+             :converged (js->clj (.-converged jsobj) :keywordize-keys true)
+             :iterations (js->clj (.-iterations jsobj) :keywordize-keys true)}]
+    ret))
 
 
 (defn test-it []
