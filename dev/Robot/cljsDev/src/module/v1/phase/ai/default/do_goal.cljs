@@ -24,14 +24,14 @@
 
 
 
-(def knn (let [trainSet `(~@(repeat 3 [[1 1] :attack])
-                          ~@(repeat 3 [[0.5 0.5] :attack])
-                          ~@(repeat 3 [[0 0] :findSupply])
-                          ~@(repeat 3 [[1 0] :findSupply])
-                          ~@(repeat 3 [[0 1] :findSupply]))]
+(def knn (let [trainSet [[[1 1] :attack]
+                         [[0.5 0.5] :attack]
+                         [[0 0] :findSupply]
+                         [[1 0] :findSupply]
+                         [[0 1] :findSupply]]]
            (tool.knn/train (mapv first trainSet)
                            (mapv second trainSet)
-                           {})))
+                           {:k 1})))
 
 (defn getKnnState [gameplayCtx unit]
   (let [maxHp (data/getUnitMaxHp gameplayCtx unit)
