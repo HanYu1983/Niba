@@ -5,11 +5,13 @@
   (:require [module.v1.type :as type])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [tool.fsm]))
+  (:require [tool.fsm])
+  (:require [module.v1.system.spec :as spec]))
 
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]
   {:pre [(common/explainValid? (s/tuple ::type/unit) [unit])]}
+  (common/assertSpec ::spec/unitMenuView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

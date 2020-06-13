@@ -3,10 +3,12 @@
   (:require [module.v1.data :as data])
   (:require [tool.units])
   (:require [tool.menuCursor])
-  (:require [tool.fsm]))
+  (:require [tool.fsm])
+  (:require [module.v1.system.spec :as spec]))
 
 
 (defn handleHitRateView [gameplayCtx unit [cmd args]]
+  (common/assertSpec ::spec/unitMenuView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

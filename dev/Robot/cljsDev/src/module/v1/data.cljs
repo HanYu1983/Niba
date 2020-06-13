@@ -225,7 +225,8 @@
          (into #{})
          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
                                       (into #{})))
-         (map (partial map + (:position unit))))))
+         ; 使用mapv確保類型, 讓clojure.spec驗過
+         (mapv (partial mapv + (:position unit))))))
 
 ;power
 (defn getUnitPower [gameplayCtx unit]
@@ -788,6 +789,13 @@
    :attackRange (when (s/valid? ::spec/attackRangeView gameplayCtx)
                   (let [{:keys [camera attackRange]} gameplayCtx]
                     (map #(world2local camera %) attackRange)))
+   :checkHitRate (when (s/valid? ::spec/checkHitRateView gameplayCtx)
+                   (let [{:keys [camera checkHitRate]} gameplayCtx]
+                     (->> checkHitRate
+                          (map (fn [info]
+                                 (-> info
+                                     (update :unit (partial mapUnitToLocal gameplayCtx camera))
+                                     (update :targetUnit (partial mapUnitToLocal gameplayCtx camera))))))))
    :systemMenu (when (s/valid? ::spec/systemMenuView gameplayCtx)
                  (let [{:keys [data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
                    {:menuCursor menuCursor

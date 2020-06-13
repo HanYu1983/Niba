@@ -22,6 +22,7 @@
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))
 (s/def ::attackRangeView (s/keys :req-un [::attackRange ::camera]))
+(s/def ::checkHitRateView (s/keys :req-un [::checkHitRate ::camera]))
 (s/def ::systemMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)
