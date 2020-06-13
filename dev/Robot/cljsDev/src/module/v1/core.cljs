@@ -80,6 +80,7 @@
                                          :offset 0})
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
+                          (update-in [:mapsize] (constantly (tool.map/getMapSize playmap)))
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
           gameplayCtx (->> (map (fn [idx key robotKey]

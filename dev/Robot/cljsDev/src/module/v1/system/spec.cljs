@@ -17,7 +17,7 @@
 (s/def ::cursor ::type/position)
 (s/def ::viewsize (s/tuple int? int?))
 (s/def ::mapsize (s/tuple int? int?))
-(s/def ::mapView (s/keys :req-un [::map ::camera ::viewsize]))
+(s/def ::mapView (s/keys :req-un [::map ::camera ::viewsize ::mapsize]))
 (s/def ::cursorView (s/keys :req-un [::cursor ::camera ::mapsize]))
 (s/def ::unitsView (s/keys :req-un [::units ::camera ::viewsize]))
 (s/def ::moveRangeView (s/keys :req-un [::units ::moveRange ::camera]))

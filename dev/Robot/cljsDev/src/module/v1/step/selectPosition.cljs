@@ -31,7 +31,7 @@
       :else
       gameplayCtx)))
 
-(core/defstate selectPosition _
+(core/defstate selectPosition {:keys [updateMoveRange?]}
   {:nameCtx gameplayCtx
    :initState nil
    :initCtx nil}
@@ -42,7 +42,7 @@
                         (data/handleTest evt)
                         (mapViewSystem/handleMapView evt)
                         (cursorViewSystem/handleCursorView evt)
-                        (moveRangeViewSystem/handleMoveRangeView evt)
+                        (moveRangeViewSystem/handleMoveRangeView updateMoveRange? evt)
                         (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))

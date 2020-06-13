@@ -10,10 +10,13 @@
     (let [action (common/actions args)]
       (cond
         (some #(= % action) [:up :down :left :right])
-        (update-in gameplayCtx [:cursor] #(mapv + % (action {:up [0 -1]
-                                                             :down [0 1]
-                                                             :left [-1 0]
-                                                             :right [1 0]})))
+        (let [{:keys [mapsize]} gameplayCtx]
+          (update-in gameplayCtx [:cursor] #(->> (mapv + % (action {:up [0 -1]
+                                                                    :down [0 1]
+                                                                    :left [-1 0]
+                                                                    :right [1 0]}))
+                                                 (mapv min (map dec mapsize))
+                                                 (mapv max [0 0]))))
         :else
         gameplayCtx))
 

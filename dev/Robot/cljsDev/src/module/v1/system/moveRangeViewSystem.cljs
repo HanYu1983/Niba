@@ -5,9 +5,12 @@
   (:require [tool.units]))
 
 
-(defn handleMoveRangeView [gameplayCtx [cmd args]]
+(defn handleMoveRangeView [gameplayCtx updateMoveRange? [cmd args]]
   {:pre [(common/explainValid? ::spec/moveRangeView gameplayCtx)]}
   (cond
+    (false? (boolean updateMoveRange?))
+    gameplayCtx
+    
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
       (cond

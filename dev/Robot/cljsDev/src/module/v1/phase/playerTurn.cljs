@@ -62,7 +62,7 @@
                             (#(systemCore/mapReturn data/handleTest % evt))
                             (#(systemCore/mapReturn mapViewSystem/handleMapView % evt))
                             (#(systemCore/mapReturn cursorViewSystem/handleCursorView % evt))
-                            (#(systemCore/mapReturn moveRangeViewSystem/handleMoveRangeView % evt))
+                            (#(systemCore/mapReturn moveRangeViewSystem/handleMoveRangeView % true evt))
                             (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                             (a/<!))]
           (systemCore/return-let [[gameplayCtx] returnCtx] gameplayCtx))))))
