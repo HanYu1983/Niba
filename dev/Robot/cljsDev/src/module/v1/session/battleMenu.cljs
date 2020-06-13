@@ -6,6 +6,7 @@
 (defmethod action :pending [_] (s/tuple #{:pending}))
 (defmethod action :attack [_] (s/tuple #{:attack} (constantly true)))
 (defmethod action :evade [_] (s/tuple #{:evade}))
+(defmethod action :guard [_] (s/tuple #{:guard}))
 (s/def ::action (s/multi-spec action ::action))
 (s/def ::unitAndAction (s/keys :req-un [::unit ::action] :opt-un [::hitRate]))
 (s/def ::defaultModel (s/tuple ::unitAndAction ::unitAndAction))

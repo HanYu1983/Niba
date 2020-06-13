@@ -100,7 +100,7 @@
                                                                 :position [0 i]}
                                                                {:robotKey robotKey})
                                               (data/createUnit {:playerKey :ai1
-                                                                :position [19 i]}
+                                                                :position [5 i]}
                                                                {:robotKey robotKey}))
                                           (inc i)])
                                        [gameplayCtx 1]))]

@@ -90,6 +90,48 @@
                                       gameplayCtx)]
                     [gameplayCtx true])))
 
+              (#{"guard" "evade"} select)
+              (let [leftAction [(keyword select)]
+                    rightAction (get-in battleMenuSession [1 :action])
+                    result (data/calcActionResult gameplayCtx left leftAction right rightAction)
+                    gameplayCtx (data/applyActionResult gameplayCtx left leftAction right rightAction result)
+                    leftAfter (-> (:units gameplayCtx)
+                                  (tool.units/getByKey (:key left)))
+                    rightAfter (-> (:units gameplayCtx)
+                                   (tool.units/getByKey (:key right)))
+                    _ (when (nil? leftAfter)
+                        (print (:units gameplayCtx))
+                        (throw (js/Error. (str "leftAfter " (:key left) " not found"))))
+                    _ (when (nil? rightAfter)
+                        (print (:units gameplayCtx))
+                        (throw (js/Error. (str "rightAfter " (:key left) " not found"))))
+                    _ (a/<! (common/unitBattleAnim nil {:units [(data/mapUnitToLocal gameplayCtx nil left)
+                                                                (data/mapUnitToLocal gameplayCtx nil right)]
+                                                        :unitsAfter [(data/mapUnitToLocal gameplayCtx nil leftAfter)
+                                                                     (data/mapUnitToLocal gameplayCtx nil rightAfter)]
+                                                        :results result} inputCh outputCh))
+                          ; 進攻方死亡
+                    gameplayCtx (if (data/gameplayGetUnitIsDead nil gameplayCtx leftAfter)
+                                  (let [gameplayCtx (-> (:units gameplayCtx)
+                                                        (tool.units/delete leftAfter)
+                                                        ((fn [units]
+                                                           (assoc gameplayCtx :units units))))
+                                        gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx leftAfter))
+                                        _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                    gameplayCtx)
+                                  gameplayCtx)
+                          ; 防守方死亡
+                    gameplayCtx (if (data/gameplayGetUnitIsDead nil gameplayCtx rightAfter)
+                                  (let [gameplayCtx (-> (:units gameplayCtx)
+                                                        (tool.units/delete rightAfter)
+                                                        ((fn [units]
+                                                           (assoc gameplayCtx :units units))))
+                                        gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
+                                        _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                    gameplayCtx)
+                                  gameplayCtx)]
+                [gameplayCtx true])
+
               (= "cancel" select)
               [gameplayCtx false]
 

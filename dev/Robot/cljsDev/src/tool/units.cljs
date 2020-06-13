@@ -30,6 +30,7 @@
                                    o)))))
 
 (defn getByRegion [ctx [x1 y1] [x2 y2]]
+  {:pre [(s/valid? (s/tuple ::modelType int? int? int? int?) [ctx x1 y1 x2 y2])]}
   (let [units (->> (subseq (:position ctx) >= x1 < x2)
                    (map second)
                    (mapcat #(subseq % >= y1 < y2))

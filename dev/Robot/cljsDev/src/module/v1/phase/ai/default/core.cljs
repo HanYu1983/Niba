@@ -39,7 +39,7 @@
                          (let [moveToPosition (mapv Math/floor (-> (nth targetCenteroids groupIdx) :centroid))
                                goal [:moveTo moveToPosition]
                                _ (common/assertSpec ::goalType/goal goal)]
-                           (update-in unit [:robotState :goals] (constantly [:stack goal]))))
+                           (update-in unit [:robotState :orderGoal] (constantly goal))))
                        units
                        clusters)
         gameplayCtx (reduce (fn [gameplayCtx [unit nextUnit]]

@@ -610,6 +610,36 @@
                                                                          :en (getUnitMaxEn gameplayCtx basic)}))))
        (assoc gameplayCtx :units)))
 
+(defn getSelectWeaponWeight [gameplayCtx unit weapon targetUnit]
+  (let [damage (getUnitMakeDamage gameplayCtx unit weapon targetUnit)
+        hitRate (getUnitHitRate gameplayCtx unit weapon targetUnit)
+        w1 (/ (* damage hitRate) 5000)
+        w2 hitRate
+        w3 (if (>= damage (-> targetUnit :robotState :hp))
+             1
+             0)]
+    (+ w1 w2 w3)))
+
+(defn getBestWeapon [gameplayCtx unit weapons targetUnits]
+  {:pre [(common/explainValid? (s/tuple ::type/unit (s/* ::type/weapon) (s/* ::type/unit)) [unit weapons targetUnits])]
+   :post [(common/explainValid? (s/nilable (s/tuple ::type/weapon ::type/unit)) %)]}
+  (let [touchUnitLists (map (fn [weapon]
+                              (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
+                                    units (filter #(weaponRanges (:position %)) targetUnits)]
+                                units))
+                            weapons)
+        weaponWeights (mapcat (fn [weapon touchUnits]
+                                (->> (map (partial getSelectWeaponWeight gameplayCtx unit weapon) touchUnits)
+                                     (map vector (repeat weapon) touchUnits)))
+                              weapons
+                              touchUnitLists)
+        bestItem (-> (sort (fn [[_ _ w]] w) weaponWeights)
+                     reverse
+                     first)]
+    (when bestItem
+      (let [[weapon unit] bestItem]
+        [weapon unit]))))
+
 
 (defn gameplayOnInit-xx [appCtx gameplayCtx]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx) [gameplayCtx])]

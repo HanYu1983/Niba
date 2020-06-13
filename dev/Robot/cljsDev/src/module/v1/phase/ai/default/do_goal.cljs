@@ -9,7 +9,8 @@
             [module.v1.data :as data]
             [module.v1.common :as common]
             [module.v1.session.battleMenu :as battleMenu]
-            [module.v1.phase.unitBattleMenu :refer [unitBattleMenu]]))
+            [module.v1.phase.unitBattleMenu :refer [unitBattleMenu]]
+            [module.v1.phase.ai.default.goalType :as goalType]))
 
 
 (defn myUnits [gameplayCtx enemy])
@@ -24,11 +25,11 @@
 
 
 
-(def knn (let [trainSet [[[1 1] :attack]
-                         [[0.5 0.5] :attack]
-                         [[0 0] :findSupply]
-                         [[1 0] :findSupply]
-                         [[0 1] :findSupply]]]
+(def knn (let [trainSet [[[1 1] "attack"]
+                         [[0.5 0.5] "attack"]
+                         [[0 0] "findSupply"]
+                         [[1 0] "findSupply"]
+                         [[0 1] "findSupply"]]]
            (tool.knn/train (mapv first trainSet)
                            (mapv second trainSet)
                            {:k 1})))
@@ -40,18 +41,42 @@
         en (-> unit :robotState :en)]
     [(/ hp maxHp) (/ en maxEn)]))
 
+
+
 (defmethod do-goal :think [_ gameplayCtx unit inputCh outputCh]
   (a/go
     (let [[action] (tool.knn/predict knn [(getKnnState gameplayCtx unit)])
-          nextUnit (cond
-                     (= :attack action)
-                     unit
-                     
-                     (= :findSupply action)
-                     unit
+          gameplayCtx (cond
+                        (= "attack" action)
+                        (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
+                              targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
+                                                                       (map - (:position unit) [10 10])
+                                                                       (map + (:position unit) [10 10]))
+                                               (filter (fn [unit]
+                                                         (= (get unit :playerKey) :player))))
+                              bestWeaponUnit (data/getBestWeapon gameplayCtx unit weapons targetUnits)
+                              gameplayCtx (if bestWeaponUnit
+                                            (let [[weapon attackUnit] bestWeaponUnit
+                                                  battleMenu [{:unit attackUnit :action [:pending]}
+                                                              {:unit unit
+                                                               :action [:attack weapon]
+                                                               :hitRate (data/getUnitHitRate gameplayCtx unit weapon attackUnit)}]
+                                                  _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
+                                                  [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :fixRight true} inputCh outputCh))]
+                                              gameplayCtx)
+                                            (let [orderGoal (-> unit :robotState :orderGoal)
+                                                  _ (common/assertSpec ::goalType/goal orderGoal)
+                                                  gameplayCtx (if orderGoal
+                                                                (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
+                                                                gameplayCtx)]
+                                              gameplayCtx))]
+                          gameplayCtx)
 
-                     :else
-                     unit)]
+                        (= "findSupply" action)
+                        gameplayCtx
+
+                        :else
+                        gameplayCtx)]
       gameplayCtx)))
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]
@@ -92,7 +117,8 @@
                                        inputCh outputCh))
           nextUnit (-> unit
                        (assoc :position nearest)
-                       (update-in [:robotState :goals] tool.goal/next-goal)
-                       (update-in [:robotState :tags] #(conj % [:done true])))
+                       ;(update-in [:robotState :goals] tool.goal/next-goal)
+                       ;(update-in [:robotState :tags] #(conj % [:done true]))
+                       )
           gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))]
       gameplayCtx)))
