@@ -206,7 +206,7 @@ export default class GamePage extends BasicViewer {
     _showAttackerAim(from1, to1, unit1, unitAfter1, unit2) {
         let tween = cc.tween(this.node).call(() => {
 
-            this.effects.createAimEffect(from1, to1);
+            // this.effects.createAimEffect(from1, to1);
 
             // 攻擊者的初始狀態+扣EN動畫
             this.unitSampleInfos.showItems([from1], (item: cc.Node) => {
@@ -291,7 +291,7 @@ export default class GamePage extends BasicViewer {
 
     _showDeffenderAim(unit2, unitAfter2, from1, to1) {
         let tween = cc.tween(this.node).call(() => {
-            this.effects.createAimEffect(to1, from1);
+            // this.effects.createAimEffect(to1, from1);
 
             // 被攻擊者的扣血狀態+扣EN動畫
             this.unitSampleInfos.showItems([to1], (item: cc.Node) => {
