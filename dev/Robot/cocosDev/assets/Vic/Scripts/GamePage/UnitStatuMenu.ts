@@ -57,12 +57,12 @@ export default class UnitStatuMenu extends BasicViewer {
         if (unit != null) {
             this.unitSection.active = true;
 
-            const image = ViewController.instance.imagesAssets.getImageByKey(unit.robotState.robot);
+            const image = ViewController.instance.imagesAssets.getImageByKey(unit.robotState.robotKey);
             if (image != undefined) {
                 this.unitImage.spriteFrame = image;
             }
 
-            this.unitName.string = unit.robotState.robot;
+            this.unitName.string = unit.robotState.robotKey;
 
             const hp:number = unit.robotState.hp;
             const en:number = unit.robotState.en;

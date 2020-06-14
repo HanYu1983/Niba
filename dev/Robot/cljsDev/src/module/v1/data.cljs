@@ -23,9 +23,9 @@
   {:pre [(explainValid? (s/tuple ::spec/map) [playmap])]
    :post []}
   (let [t1 (get-in data [:terrainMapping
-                         (str (get-in playmap (reverse from)))
+                         ((comp keyword str) (get-in playmap (reverse from)))
                          :terrain])]
-    t1))
+    (keyword t1)))
 
 (defn getTerrain [{playmap :map} from]
   {:pre [(explainValid? (s/tuple ::spec/map) [playmap])]
@@ -793,6 +793,14 @@
                                  (-> info
                                      (update :unit (partial mapUnitToLocal gameplayCtx camera))
                                      (update :targetUnit (partial mapUnitToLocal gameplayCtx camera))))))))
+   :cellState (when (s/valid? ::spec/cellStateView gameplayCtx)
+                (let [{:keys [units cursor]} gameplayCtx
+                      unitAtCursor (-> units
+                                       (tool.units/getByPosition cursor))
+                      terrain (getTerrain gameplayCtx cursor)]
+                  {:unit (when unitAtCursor
+                           (mapUnitToLocal gameplayCtx nil unitAtCursor))
+                   :terrain terrain}))
    :systemMenu (when (s/valid? ::spec/systemMenuView gameplayCtx)
                  (let [{:keys [data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
                    {:menuCursor menuCursor
