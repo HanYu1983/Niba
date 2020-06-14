@@ -520,11 +520,8 @@
                                         (useUnitWeapon gameplayCtx weapon unit)
                                         unit))
                                     [leftAfter rightAfter]
-                                    [leftAction rightAction])
-        gameplayCtx (-> gameplayCtx
-                        (updateUnit left (constantly leftAfter))
-                        (updateUnit right (constantly rightAfter)))]
-    gameplayCtx))
+                                    [leftAction rightAction])]
+    [leftAfter rightAfter]))
 
 (defn formatPathTree-xx [gameplayCtx unit power paths]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit number?) [gameplayCtx unit power])]}

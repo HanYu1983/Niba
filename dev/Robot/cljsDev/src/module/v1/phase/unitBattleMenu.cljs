@@ -21,8 +21,7 @@
   (:require [module.v1.step.selectPosition :refer [selectPosition]]))
 
 
-(defn handleCore [gameplayCtx [{left :unit} {right :unit} :as battleMenuModel] inputCh outputCh [cmd args]]
-  {:pre [(common/explainValid? ::battleMenu/defaultModel battleMenuModel)]}
+(defn handleCore [gameplayCtx fixRight inputCh outputCh [cmd args]]
   (a/go
     (cond
       (= "KEY_DOWN" cmd)
@@ -34,6 +33,7 @@
           (= :enter action)
           (let [state (-> gameplayCtx :fsm tool.fsm/load)
                 {:keys [menuCursor data battleMenuSession]} state
+                [{left :unit} {right :unit}] battleMenuSession
                 cursor1 (tool.menuCursor/getCursor1 menuCursor)
                 weaponIdx (:weaponIdx data)
                 select (tool.menuCursor/getSelect menuCursor)]
@@ -51,23 +51,19 @@
                     gameplayCtx)
                   (let [leftAction (get-in battleMenuSession [0 :action])
                         rightAction (get-in battleMenuSession [1 :action])
-                        result (data/calcActionResult gameplayCtx left leftAction right rightAction)
-                        gameplayCtx (data/applyActionResult gameplayCtx left leftAction right rightAction result)
-                        leftAfter (-> (:units gameplayCtx)
-                                      (tool.units/getByKey (:key left)))
-                        rightAfter (-> (:units gameplayCtx)
-                                       (tool.units/getByKey (:key right)))
-                        _ (when (nil? leftAfter)
-                            (print (:units gameplayCtx))
-                            (throw (js/Error. (str "leftAfter " (:key left) " not found"))))
-                        _ (when (nil? rightAfter)
-                            (print (:units gameplayCtx))
-                            (throw (js/Error. (str "rightAfter " (:key left) " not found"))))
-                        _ (a/<! (common/unitBattleAnim nil {:units [(data/mapUnitToLocal gameplayCtx nil left)
-                                                                    (data/mapUnitToLocal gameplayCtx nil right)]
-                                                            :unitsAfter [(data/mapUnitToLocal gameplayCtx nil leftAfter)
-                                                                         (data/mapUnitToLocal gameplayCtx nil rightAfter)]
-                                                            :results result} inputCh outputCh))
+                        result (if fixRight
+                                 (-> (data/calcActionResult gameplayCtx right rightAction left leftAction)
+                                     reverse)
+                                 (data/calcActionResult gameplayCtx left leftAction right rightAction))
+                        [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
+                        _ (a/<! (common/unitBattleAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [left right]
+                                                                                                                   fixRight reverse))
+                                                            :unitsAfter (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [leftAfter rightAfter]
+                                                                                                                        fixRight reverse))
+                                                            :results (cond-> result fixRight reverse)} inputCh outputCh))
+                        gameplayCtx (-> gameplayCtx
+                                        (data/updateUnit left (constantly leftAfter))
+                                        (data/updateUnit right (constantly rightAfter)))
                           ; 進攻方死亡
                         gameplayCtx (if (data/gameplayGetUnitIsDead nil gameplayCtx leftAfter)
                                       (let [gameplayCtx (-> (:units gameplayCtx)
@@ -93,24 +89,20 @@
               (#{"guard" "evade"} select)
               (let [leftAction [(keyword select)]
                     rightAction (get-in battleMenuSession [1 :action])
-                    result (data/calcActionResult gameplayCtx left leftAction right rightAction)
-                    gameplayCtx (data/applyActionResult gameplayCtx left leftAction right rightAction result)
-                    leftAfter (-> (:units gameplayCtx)
-                                  (tool.units/getByKey (:key left)))
-                    rightAfter (-> (:units gameplayCtx)
-                                   (tool.units/getByKey (:key right)))
-                    _ (when (nil? leftAfter)
-                        (print (:units gameplayCtx))
-                        (throw (js/Error. (str "leftAfter " (:key left) " not found"))))
-                    _ (when (nil? rightAfter)
-                        (print (:units gameplayCtx))
-                        (throw (js/Error. (str "rightAfter " (:key left) " not found"))))
-                    _ (a/<! (common/unitBattleAnim nil {:units [(data/mapUnitToLocal gameplayCtx nil left)
-                                                                (data/mapUnitToLocal gameplayCtx nil right)]
-                                                        :unitsAfter [(data/mapUnitToLocal gameplayCtx nil leftAfter)
-                                                                     (data/mapUnitToLocal gameplayCtx nil rightAfter)]
-                                                        :results result} inputCh outputCh))
-                          ; 進攻方死亡
+                    result (if fixRight
+                             (-> (data/calcActionResult gameplayCtx right rightAction left leftAction)
+                                 reverse)
+                             (data/calcActionResult gameplayCtx left leftAction right rightAction))
+                    [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
+                    _ (a/<! (common/unitBattleAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [left right]
+                                                                                                               fixRight reverse))
+                                                        :unitsAfter (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [leftAfter rightAfter]
+                                                                                                                    fixRight reverse))
+                                                        :results (cond-> result fixRight reverse)} inputCh outputCh))
+                    gameplayCtx (-> gameplayCtx
+                                    (data/updateUnit left (constantly leftAfter))
+                                    (data/updateUnit right (constantly rightAfter)))
+                    ; 進攻方死亡
                     gameplayCtx (if (data/gameplayGetUnitIsDead nil gameplayCtx leftAfter)
                                   (let [gameplayCtx (-> (:units gameplayCtx)
                                                         (tool.units/delete leftAfter)
@@ -120,7 +112,7 @@
                                         _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
                                     gameplayCtx)
                                   gameplayCtx)
-                          ; 防守方死亡
+                    ; 防守方死亡
                     gameplayCtx (if (data/gameplayGetUnitIsDead nil gameplayCtx rightAfter)
                                   (let [gameplayCtx (-> (:units gameplayCtx)
                                                         (tool.units/delete rightAfter)
@@ -173,6 +165,6 @@
                         (attackRangeViewSystem/handleAttackRangeView left evt)
                         (hitRateViewSystem/handleHitRateView left evt)
                         (battleMenuViewSystem/handleBattleMenuSession left fixRight evt)
-                        (#(systemCore/asyncMapReturn handleCore % battleMenuModel inputCh outputCh evt))
+                        (#(systemCore/asyncMapReturn handleCore % fixRight inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))
