@@ -26,18 +26,33 @@
         (true? result)
         (let [{:keys [cursor units]} gameplayCtx
               unitAtCursor (tool.units/getByPosition units cursor)]
-          (if (and unitAtCursor (not (data/isFriendlyUnit gameplayCtx unit unitAtCursor)))
-            (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit unitAtCursor])} inputCh outputCh))
-                  [gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
-                                                            {:battleMenu (-> battleMenu/defaultModel
-                                                                             (battleMenu/setUnits unit unitAtCursor)
-                                                                             (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
-                                                                             (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
-                                                             :fixRight false}
-                                                            inputCh outputCh))]
-              (if isEnd
-                [gameplayCtx isEnd]
-                (recur gameplayCtx)))
+          (if unitAtCursor
+            (let [weaponRange (into #{} (data/getUnitWeaponRange gameplayCtx unit weapon))
+                  unitInRange? (weaponRange cursor)
+                  friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)]
+              (cond
+                (not unitInRange?)
+                (do
+                  (a/<! (common/showMessage nil {:message (str "目標不在範圍內")} inputCh outputCh))
+                  (recur gameplayCtx))
+
+                friendlyUnit?
+                (do
+                  (a/<! (common/showMessage nil {:message (str "請選擇敵方目標")} inputCh outputCh))
+                  (recur gameplayCtx))
+
+                :else
+                (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit unitAtCursor])} inputCh outputCh))
+                      [gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
+                                                                {:battleMenu (-> battleMenu/defaultModel
+                                                                                 (battleMenu/setUnits unit unitAtCursor)
+                                                                                 (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
+                                                                                 (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
+                                                                 :fixRight false}
+                                                                inputCh outputCh))]
+                  (if isEnd
+                    [gameplayCtx isEnd]
+                    (recur gameplayCtx)))))
             (do
               (a/<! (common/showMessage nil {:message (str "請選擇目標")} inputCh outputCh))
               (recur gameplayCtx))))))))
