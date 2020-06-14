@@ -56,12 +56,13 @@
                                                          (= (get unit :playerKey) :player))))
                               bestWeaponUnit (data/getBestWeapon gameplayCtx unit weapons targetUnits)
                               gameplayCtx (if bestWeaponUnit
-                                            (let [[weapon attackUnit] bestWeaponUnit
-                                                  battleMenu [{:unit attackUnit :action [:pending]}
+                                            (let [[weapon targetUnit] bestWeaponUnit
+                                                  battleMenu [{:unit targetUnit :action [:pending]}
                                                               {:unit unit
                                                                :action [:attack weapon]
-                                                               :hitRate (data/getUnitHitRate gameplayCtx unit weapon attackUnit)}]
+                                                               :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
                                                   _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
+                                                  _ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit targetUnit])} inputCh outputCh))
                                                   [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :fixRight true} inputCh outputCh))]
                                               gameplayCtx)
                                             (let [orderGoal (-> unit :robotState :orderGoal)
@@ -83,14 +84,14 @@
   (a/go
     (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
           weapon (first weapons)
-          attackUnit (->> (:units gameplayCtx)
+          targetUnit (->> (:units gameplayCtx)
                           (tool.units/getAll)
                           (filter #(-> % :playerKey (= :player)))
                           first)
-          battleMenu [{:unit attackUnit :action [:pending]}
+          battleMenu [{:unit targetUnit :action [:pending]}
                       {:unit unit
                        :action [:attack weapon]
-                       :hitRate (data/getUnitHitRate gameplayCtx unit weapon attackUnit)}]
+                       :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
           _ (common/explainValid? ::battleMenu/defaultModel battleMenu)
           [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :fixRight true} inputCh outputCh))]
       gameplayCtx)))

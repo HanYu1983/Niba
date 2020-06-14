@@ -27,7 +27,8 @@
         (let [{:keys [cursor units]} gameplayCtx
               unitAtCursor (tool.units/getByPosition units cursor)]
           (if (and unitAtCursor (not (data/isFriendlyUnit gameplayCtx unit unitAtCursor)))
-            (let [[gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
+            (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit unitAtCursor])} inputCh outputCh))
+                  [gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
                                                             {:battleMenu (-> battleMenu/defaultModel
                                                                              (battleMenu/setUnits unit unitAtCursor)
                                                                              (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)

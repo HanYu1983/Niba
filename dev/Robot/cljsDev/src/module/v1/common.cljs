@@ -36,6 +36,7 @@
 (core/defwait playerTurnStart [ctx args])
 (core/defwait enemyTurnStart [ctx args])
 (core/defwait unitMoveAnim [ctx args])
+(core/defwait unitTargetingAnim [ctx args])
 (core/defwait unitBattleAnim [ctx args])
 (core/defwait unitDeadAnim [ctx args])
 (core/defwait paint [ctx args])

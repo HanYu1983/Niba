@@ -83,6 +83,10 @@ export default class ViewController extends cc.Component {
     unitMoveAnim(data: any, cb: () => void) {
         this.view.unitMoveAnim(data, cb)
     }
+    unitTargetingAnim(data: any, cb: ()=>void){
+        console.log(data);
+        cb()
+    }
     unitBattleAnim(data: any, cb: () => void) {
         this.view.unitBattleAnim(data, cb)
     }
