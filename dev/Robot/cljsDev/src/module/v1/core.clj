@@ -24,7 +24,7 @@
                (recur ~varCtx))))))))
 
 
-(defmacro defstate [name args {ctx :nameCtx initState :initState init :initCtx} & body]
+(defmacro defstate [name args {ctx :nameCtx initState :initState init :initCtx exit :exitCtx} & body]
   `(defn ~name [~ctx ~args ~'inputCh ~'outputCh]
      (a/go
        (let [~ctx (let [~'fsm (-> (:fsm ~ctx)
@@ -38,7 +38,8 @@
              [~ctx ~'ret] (do
                             ~@body)
              ~'_ (common/explainValid? ~'type/gameplayCtx ~ctx)
-             ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))]
+             ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))
+             ~ctx ~(or exit ctx)]
          [~ctx ~'ret]))))
 
 (defmacro defclick [enable desc keys & body]

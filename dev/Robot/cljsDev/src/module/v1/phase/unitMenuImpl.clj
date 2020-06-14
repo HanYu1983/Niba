@@ -8,7 +8,8 @@
         {:menuCursor (tool.menuCursor/model menu)
          :data data
          :unit unit})
-      :initCtx nil}
+      :initCtx nil
+      :exitCtx (dissoc gameplayCtx :attackRange :checkHitRate)}
      (loop [gameplayCtx gameplayCtx]
        (common/assertSpec spec/unitMenuView gameplayCtx)
        (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
