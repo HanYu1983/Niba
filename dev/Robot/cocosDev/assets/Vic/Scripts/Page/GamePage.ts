@@ -311,8 +311,9 @@ export default class GamePage extends BasicViewer {
         let from1 = unit1.position;
         let to1 = unit2.position;
 
-        cc.tween(this.node).call(() => {
-            this.effects.createAimEffect(from1, to1);
+        cc.tween(this.node).delay(1).call(() => {
+            this.effects.createAimEffect(from1, to1, .1);
+
         }).delay(1).call(cb).start()
     }
 

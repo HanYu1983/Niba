@@ -20,6 +20,9 @@ export default class View extends cc.Component {
     unitMoveAnim(data: any, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
+    unitAimAnimation(data: any, cb: () => void){
+        this.getGamePage().showAimAnimation(data, cb);
+    }
     unitBattleAnim(data: any, cb: () => void) {
         this.getGamePage().closeFightInfo();
         this.getGamePage().closeAccuracyInfos();

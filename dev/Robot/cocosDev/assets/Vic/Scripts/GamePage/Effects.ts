@@ -37,6 +37,7 @@ export default class Effects extends cc.Component {
     onLoad() {
         this.tracker['toGridPos'] = [0, 0];
         this.tracker['time'] = 0;
+        this.tracker['speed'] = 0.2;
     }
 
     createBlade(hp: number, pos: number[]) {
@@ -58,12 +59,13 @@ export default class Effects extends cc.Component {
         effect.getComponent(TextEffect).setContent("盾防");
     }
 
-    createAimEffect(from: number[], to: number[]) {
+    createAimEffect(from: number[], to: number[], speed:number = .2) {
         let fromGridPos = ViewController.instance.view.getGridPos(from);
         this.tracker.x = fromGridPos[0];
         this.tracker.y = fromGridPos[1];
         this.tracker['toGridPos'] = ViewController.instance.view.getGridPos(to);
         this.tracker['time'] = 0;
+        this.tracker['speed'] = speed;
     }
 
     createExplodePipe(from: number[], to: number[], hp: number) {
@@ -99,8 +101,8 @@ export default class Effects extends cc.Component {
         if (Math.abs(this.tracker['toGridPos'][0] - this.tracker.x) > 1 ||
             Math.abs(this.tracker['toGridPos'][1] - this.tracker.y) > 1) {
 
-            this.tracker.x += (this.tracker['toGridPos'][0] - this.tracker.x) * .2;
-            this.tracker.y += (this.tracker['toGridPos'][1] - this.tracker.y) * .2;
+            this.tracker.x += (this.tracker['toGridPos'][0] - this.tracker.x) * this.tracker['speed'];
+            this.tracker.y += (this.tracker['toGridPos'][1] - this.tracker.y) * this.tracker['speed'];
 
             if (this.tracker['time'] % 1 == 0) {
                 this.aimEffects.createEffect([this.tracker.x, this.tracker.y], false);
