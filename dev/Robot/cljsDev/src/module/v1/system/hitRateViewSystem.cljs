@@ -10,6 +10,7 @@
 
 (defn getHitRate  [gameplayCtx unit]
   {:pre [(common/explainValid? (s/tuple ::spec/unitMenuView ::type/unit) [gameplayCtx unit])]}
+  (common/assertSpec ::spec/unitMenuView gameplayCtx)
   (let [state (-> gameplayCtx :fsm tool.fsm/load)
         cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
@@ -29,7 +30,7 @@
         checkHitRate))))
 
 (defn handleHitRateView [gameplayCtx unit [cmd args]]
-  (common/assertSpec ::spec/unitMenuView gameplayCtx)
+  {:pre [(common/explainValid? (s/tuple ::spec/unitMenuView ::type/unit) [gameplayCtx unit])]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

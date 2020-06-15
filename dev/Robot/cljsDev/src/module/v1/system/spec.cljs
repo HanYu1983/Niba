@@ -5,6 +5,12 @@
   (:require [module.v1.session.battleMenu :as battleMenu])
   (:require [module.v1.type :as type]))
 
+(defn explainValid? [sp args]
+  (if (clojure.spec.alpha/valid? sp args)
+    true
+    (do (println (clojure.spec.alpha/explain-str sp args))
+        false)))
+
 (s/def ::positions (s/coll-of ::type/position))
 (s/def ::moveRange ::positions)
 (s/def ::attackRange ::positions)
@@ -35,9 +41,9 @@
                         (let [fsm (:fsm ctx)
                               state (tool.fsm/currState fsm)
                               {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
-                          (and (s/valid? ::fsm fsm)
-                               (s/valid? #{:unitMenu :unitBattleMenu} state)
-                               (s/valid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
+                          (and (explainValid? ::fsm fsm)
+                               (explainValid? #{:unitMenu :unitBattleMenu} state)
+                               (explainValid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::battleMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)

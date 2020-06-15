@@ -487,7 +487,9 @@
 
                (<= (- (-> right :robotState :hp) leftMakeDamage) 0)
                (conj :dead))
-     :damage leftMakeDamage}))
+     :damage leftMakeDamage
+     :meta {:attackAction leftAction
+            :deffenceAction rightAction}}))
 
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])

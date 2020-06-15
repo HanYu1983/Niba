@@ -109,13 +109,16 @@
       gameplayCtx)))
 
 
-(core/defstate unitBattleMenu {[{left :unit [leftActionType leftWeapon :as leftAction] :action}
+(core/defstate unitBattleMenu {[{left :unit leftAction :action}
                                 {right :unit} :as battleMenuModel] :battleMenu
                                fixRight :fixRight}
   {:nameCtx gameplayCtx
    :initState
-   (let [[menu data] (data/getMenuData gameplayCtx left)
-         [_ weapon] leftAction]
+   (let [_ (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
+         [menu data] (data/getMenuData gameplayCtx left)
+         [leftActionType leftWeapon] leftAction
+         _ (common/assertSpec #{:attack} leftActionType)
+         _ (common/assertSpec ::type/weapon leftWeapon)]
      {:menuCursor (-> (tool.menuCursor/model menu)
                       (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons gameplayCtx left)
                                                                                                            second)
@@ -123,11 +126,9 @@
                                                                                       weaponIdx (indexMap leftWeapon)]
                                                                                   weaponIdx))))
       :data data
-      :battleMenuSession battleMenuModel
-      :unit left})
+      :unit left
+      :battleMenuSession battleMenuModel})
    :initCtx nil}
-
-  (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
   (loop [gameplayCtx gameplayCtx]
     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
     (let [evt (a/<! inputCh)
