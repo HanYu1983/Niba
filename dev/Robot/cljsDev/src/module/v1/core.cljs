@@ -15,13 +15,11 @@
   (:require [module.v1.phase.enemyTurn :refer [enemyTurn]])
   (:require [module.v1.system.spec :as spec]))
 
-
-(def mapViewSize [20 20])
 (def gameplayCtx {:map [[]]
                   :camera [0 0]
                   :cursor [0 0]
-                  :viewsize mapViewSize
-                  :mapsize [20 20]
+                  :viewsize [20 20]
+                  :mapsize [25 25]
                   :units tool.units/model
                   :moveRange []
                   :players {:player {:faction 0 :playerState nil}
@@ -67,7 +65,8 @@
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
-    (let [playmap (tool.map/generateMap 20 20
+    (let [[mw mh] (:mapsize gameplayCtx)
+          playmap (tool.map/generateMap mw mh
                                         {:deepsea 0.6
                                          :sea 0.6
                                          :sand 0.1
@@ -80,21 +79,22 @@
                                          :offset 0})
           gameplayCtx (-> gameplayCtx
                           (update-in [:map] (constantly playmap))
-                          (update-in [:mapsize] (constantly (tool.map/getMapSize playmap)))
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
-          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
-          gameplayCtx (->> (map (fn [idx key robotKey]
-                                  [{:key key
-                                    :playerKey :player
-                                    :position [0 (+ idx 1)]}
-                                   {:robotKey robotKey}])
-                                (range)
-                                selectedUnits
-                                (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
-                           (reduce (fn [gameplayCtx [arg1 arg2]]
-                                     (data/createUnit gameplayCtx arg1 arg2))
-                                   gameplayCtx))
+          ; 選角頁, DEMO版先拿掉
+          ;[gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
+          ;gameplayCtx (->> (map (fn [idx key robotKey]
+          ;                        [{:key key
+          ;                          :playerKey :player
+          ;                          :position [0 (+ idx 1)]}
+          ;                         {:robotKey robotKey}])
+          ;                      (range)
+          ;                      selectedUnits
+          ;                      (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
+          ;                 (reduce (fn [gameplayCtx [arg1 arg2]]
+          ;                           (data/createUnit gameplayCtx arg1 arg2))
+          ;                         gameplayCtx))
           [gameplayCtx _] (->> (get data/data :robot)
+                               (take 4)
                                (reduce (fn [[gameplayCtx i] [robotKey _]]
                                          [(-> gameplayCtx
                                               (data/createUnit {:playerKey :player
@@ -134,12 +134,12 @@
     (a/go
      (a/>! waitCh true))
     
-    (a/go
-      (a/<! waitCh) ;等待線程
-      (core/defclick (or testAll true) "select units"
-        [up down left enter]
-        (a/<! (a/timeout 3000))) ; wait player turn start animation
-      (a/>! waitCh true))
+    (comment  (a/go
+                (a/<! waitCh) ;等待線程
+                (core/defclick (or testAll true) "select units"
+                  [up down left enter]
+                  (a/<! (a/timeout 3000))) ; wait player turn start animation
+                (a/>! waitCh true)))
     
     (a/go
       (a/<! waitCh) ;等待線程

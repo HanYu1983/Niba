@@ -80,11 +80,20 @@
                                second
                                (nth cursor2))
                     attackRange (data/getUnitWeaponRange gameplayCtx left weapon)
-                    isTargetInRange (some #(= (:position right) %) attackRange)]
-                (if (not isTargetInRange)
+                    isTargetInRange (some #(= (:position right) %) attackRange)
+                    invalidWeaponMsg (data/invalidWeapon? gameplayCtx left weapon)]
+                (cond
+                  invalidWeaponMsg
+                  (do
+                    (a/<! (common/showMessage nil {:message invalidWeaponMsg} inputCh outputCh))
+                    gameplayCtx)
+
+                  (not isTargetInRange)
                   (do
                     (a/<! (common/showMessage nil {:message (str "不在範圍內")} inputCh outputCh))
                     gameplayCtx)
+
+                  :else
                   (let [leftAction (get-in battleMenuSession [0 :action])
                         rightAction (get-in battleMenuSession [1 :action])
                         gameplayCtx (a/<! (handleBattle gameplayCtx leftAction rightAction))]

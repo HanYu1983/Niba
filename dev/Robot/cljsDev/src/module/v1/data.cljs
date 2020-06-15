@@ -115,6 +115,25 @@
               :suitability (getWeaponSuitability gameplayCtx unit weapon)}
              weapon))))
 
+(defn invalidWeapon? [gameplayCtx unit weapon]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
+   :post [(explainValid? (s/nilable string?) %)]}
+  (let [{:keys [energyType energyCost bulletCount]} (getWeaponInfo gameplayCtx unit weapon)
+        msg (cond
+              (= energyType "energy")
+              (let [en (-> unit :robotState :en)
+                    enoughEn? (>= en energyCost)]
+                (when (not enoughEn?)
+                  "en is not enough"))
+
+              (= energyType "bullet")
+              (when (zero? bulletCount)
+                "bullet is empty")
+
+              :else
+              (str "energyType not found"))]
+    msg))
+
 ; =======================
 ; unit
 ; =======================

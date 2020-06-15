@@ -29,8 +29,14 @@
           (if unitAtCursor
             (let [weaponRange (into #{} (data/getUnitWeaponRange gameplayCtx unit weapon))
                   unitInRange? (weaponRange cursor)
-                  friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)]
+                  friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)
+                  invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon)]
               (cond
+                invalidWeaponMsg
+                (do
+                  (a/<! (common/showMessage nil {:message invalidWeaponMsg} inputCh outputCh))
+                  (recur gameplayCtx))
+
                 (not unitInRange?)
                 (do
                   (a/<! (common/showMessage nil {:message (str "目標不在範圍內")} inputCh outputCh))

@@ -49,6 +49,7 @@
           gameplayCtx (cond
                         (= "attack" action)
                         (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
+                              weapons (filter #(not (data/invalidWeapon? gameplayCtx unit %)) weapons)
                               targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
                                                                        (map - (:position unit) [10 10])
                                                                        (map + (:position unit) [10 10]))
@@ -58,6 +59,7 @@
                               gameplayCtx (if bestWeaponUnit
                                             (let [[weapon targetUnit] bestWeaponUnit
                                                   [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
+                                                  targetUnitWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
                                                   targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitWeapons [unit])
                                                   targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first weapons))
                                                   targetUnitBestAction (if targetUnitBestWeaponUnit
@@ -82,10 +84,15 @@
                           gameplayCtx)
 
                         (= "findSupply" action)
-                        gameplayCtx
-
+                        (let [orderGoal (-> unit :robotState :orderGoal)
+                              _ (common/assertSpec ::goalType/goal orderGoal)
+                              gameplayCtx (if orderGoal
+                                            (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
+                                            gameplayCtx)]
+                          gameplayCtx)
+                        
                         :else
-                        gameplayCtx)]
+                        (throw (js/Error. (str "action " action " not found"))))]
       gameplayCtx)))
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]
