@@ -116,15 +116,20 @@
    :initState
    (let [_ (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
          [menu data] (data/getMenuData gameplayCtx left)
-         [leftActionType leftWeapon] leftAction
-         _ (common/assertSpec #{:attack} leftActionType)
-         _ (common/assertSpec ::type/weapon leftWeapon)]
-     {:menuCursor (-> (tool.menuCursor/model menu)
-                      (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons gameplayCtx left)
-                                                                                                           second)
-                                                                                                       (range))
-                                                                                      weaponIdx (indexMap leftWeapon)]
-                                                                                  weaponIdx))))
+         [leftActionType leftWeapon] leftAction]
+     {:menuCursor (cond-> (tool.menuCursor/model menu)
+                    (#{:evade} leftActionType)
+                    (tool.menuCursor/mapCursor1 (constantly 1))
+
+                    (#{:guard} leftActionType)
+                    (tool.menuCursor/mapCursor1 (constantly 2))
+
+                    (#{:attack} leftActionType)
+                    (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons gameplayCtx left)
+                                                                                                         second)
+                                                                                                     (range))
+                                                                                    weaponIdx (indexMap leftWeapon)]
+                                                                                weaponIdx))))
       :data data
       :unit left
       :battleMenuSession battleMenuModel})

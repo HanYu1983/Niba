@@ -60,8 +60,11 @@
                                                   [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
                                                   targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitWeapons [unit])
                                                   targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first weapons))
-                                                  battleMenu [{:unit targetUnit 
-                                                               :action [:attack targetUnitBestWeapon]
+                                                  targetUnitBestAction (if targetUnitBestWeaponUnit
+                                                                         [:attack targetUnitBestWeapon]
+                                                                         [:evade])
+                                                  battleMenu [{:unit targetUnit
+                                                               :action targetUnitBestAction
                                                                :hitRate (data/getUnitHitRate gameplayCtx targetUnit targetUnitBestWeapon unit)}
                                                               {:unit unit
                                                                :action [:attack weapon]
