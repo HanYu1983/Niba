@@ -35,9 +35,9 @@ export default class ViewController extends cc.Component {
     start() {
         this.modelController.loadConfig(data => {
             this.setData(data)
-            this.view.openMainPage();
+            // this.view.openMainPage();
             this.notifyStartLobby()
-            // this.view.openGamePage();
+            this.view.openGamePage();
         })
     }
 
