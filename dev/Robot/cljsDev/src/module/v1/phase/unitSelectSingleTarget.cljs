@@ -11,7 +11,7 @@
   (:require [module.v1.step.selectPosition :refer [selectPosition]])
   (:require [module.v1.phase.unitBattleMenu :refer [unitBattleMenu]]))
 
-(core/defstate unitSelectSingleTarget {:keys [unit attackRange weapon]}
+(core/defstate unitSelectSingleTarget {:keys [unit weapon]}
   {:nameCtx gameplayCtx
    :initState nil
    :initCtx nil}

@@ -45,8 +45,7 @@
                    (let [transformIdx (-> state :data :transformIdx)
                          weaponIdx (-> state :data :weaponIdx)
                          cursor1 (-> state :menuCursor tool.menuCursor/getCursor1)
-                         cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)
-                         attackRange (data/getAttackRange gameplayCtx unit)]
+                         cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)]
                      (cond
                        (= select "sky/ground")
                        (let [transformedUnit (update-in unit [:robotState :tags] (fn [tags]
@@ -76,7 +75,7 @@
                          (cond
                            (= "single" weaponType)
                            (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
-                                 [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :attackRange attackRange :weapon weapon} inputCh outputCh))]
+                                 [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]
                              (if isEnd
                                [gameplayCtx isEnd]
                                (recur gameplayCtx)))

@@ -8,6 +8,19 @@
   (:require [tool.fsm])
   (:require [module.v1.system.spec :as spec]))
 
+(defn getAttackRange [gameplayCtx unit]
+  {:pre [(common/explainValid? (s/tuple ::spec/unitMenuView ::type/unit) [gameplayCtx unit])]}
+  (let [state (-> gameplayCtx :fsm tool.fsm/load)
+        cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
+        cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
+        weaponIdx (get-in state [:data :weaponIdx])]
+    (if (= cursor1 weaponIdx)
+      (-> (data/getUnitWeapons gameplayCtx unit)
+          second
+          (nth cursor2)
+          ((fn [weapon]
+             (data/getUnitWeaponRange gameplayCtx unit weapon))))
+      [])))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]
   {:pre [(common/explainValid? (s/tuple ::type/unit) [unit])]}
@@ -17,13 +30,13 @@
     (let [action (common/actions args)]
       (cond
         (some #(= % action) [:up :down])
-        (let [attackRange (data/getAttackRange gameplayCtx unit)
+        (let [attackRange (getAttackRange gameplayCtx unit)
               gameplayCtx (-> gameplayCtx
                               (assoc :attackRange attackRange))]
           gameplayCtx)
 
         (some #(= % action) [:left :right])
-        (let [attackRange (data/getAttackRange gameplayCtx unit)
+        (let [attackRange (getAttackRange gameplayCtx unit)
               gameplayCtx (-> gameplayCtx
                               (assoc :attackRange attackRange))]
           gameplayCtx)
