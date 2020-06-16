@@ -132,15 +132,16 @@
         rleft 37
         rright 39]
     (a/go
-     (a/>! waitCh true))
-    
+      (a/<! (a/timeout 3000))
+      (a/>! waitCh true))
+
     (comment  (a/go
                 (a/<! waitCh) ;等待線程
                 (core/defclick (or testAll true) "select units"
                   [up down left enter]
                   (a/<! (a/timeout 3000))) ; wait player turn start animation
                 (a/>! waitCh true)))
-    
+
     (a/go
       (a/<! waitCh) ;等待線程
       (core/defclick (or testAll true) "create unit"
@@ -167,9 +168,6 @@
                        (when (not (tool.units/getByKey units :unit3))
                          (throw (js/Error. (str "unit1 not found"))))
                        gameplayCtx)))
-
-      (comment (core/defclick (or testAll true) "test ai"
-                 [right enter enter]))
 
       (core/defclick (or testAll false) "open and close system menu"
         [right enter]
@@ -202,7 +200,7 @@
       (a/>! waitCh true)
       (print "ok"))
 
-    (a/go 
+    (a/go
       (a/<! waitCh)
       (core/defclick (or testAll false) "test transform"
         []
@@ -302,4 +300,6 @@
 
       (core/defclick (or testAll false) "enemy unit only cancel menu"
         [right right enter enter left left])
-      (a/>! waitCh true))))
+      (a/>! waitCh true))
+    (a/go
+      (a/<! waitCh))))

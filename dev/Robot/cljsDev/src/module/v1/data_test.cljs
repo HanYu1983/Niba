@@ -38,17 +38,6 @@
         _ (data/getWeaponInfo nil unitA weapon)
         _ (data/invalidWeapon? nil unitA weapon)]))
 
-(deftest test-gameplay []
-  (let [outputToView (a/chan)
-        inputFromView (a/chan)]
-    (async done
-           (app.main/mainLoop app.main/defaultModel inputFromView outputToView)
-           (a/go
-             (a/>! inputFromView ["startGameplay"])
-             (a/<! (a/timeout 1000))
-             (a/<! (app.module/testIt :v1 outputToView inputFromView))
-             (done)))))
-
 (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
   (if (cljs.test/successful? m)
     (println "Success!")

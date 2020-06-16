@@ -1,55 +1,42 @@
 (ns app.core
-  (:require [clojure.core.async :as a])
+  (:require [clojure.core.async :as a]
+            [cljs.test :refer-macros [run-tests]])
   (:require [app.module]
             [module.v1.core]
+            [module.v1.data-test]
+            [module.v1.phase.enemyTurn]
             [app.main]))
 
-; debug
-(set! app.module/*module :v1)
+(defn- test-v1 []
+  (enable-console-print!)
+  (run-tests 'module.v1.data-test)
 
-(defn installViewRxjs [inputFromView outputToView]
-  (let [viewOb (js/rxjs.Subject.)
-        viewNotifyOb (js/rxjs.Subject.)]
-    (set! (.-viewOb js/window)
-          viewOb)
-    (set! (.-viewNotifyOb js/window)
-          viewNotifyOb))
-
-  (let []
-    (.subscribe (.-viewNotifyOb js/window)
-                (fn [e]
-                  ;(js/console.log "[view][receive]" e)
-                  (a/go
-                    (a/>! inputFromView (js->clj e))
-                    ;(js/console.log "[view][receive] consume" e)
-                    )))
-    (a/go-loop []
-      (let [evt (a/<! outputToView)
-            evtJs (clj->js evt)]
-        ;(js/console.log "[model][send]" evtJs)
-        (.next (.-viewOb js/window) evtJs)
-        (recur)))))
-
-(defn main []
-  (let [phase :debug2
-        outputToView (a/chan)
+  (set! app.module/*module :v1)
+  (set! module.v1.phase.enemyTurn/*ai false)
+  (let [outputToView (a/chan)
         inputFromView (a/chan)]
-    (cond
-      (= phase :debug)
-      (do
-        (installViewRxjs inputFromView outputToView)
-        (app.main/mainLoop app.main/defaultModel inputFromView outputToView)
-        (a/go
-          (print "===== start debugView after 10s =====")
-          (a/<! (a/timeout 10000))
-          (a/<! (app.module/testIt app.module/*module nil inputFromView))))
+    (app.main/mainLoop app.main/defaultModel inputFromView outputToView)
+    (a/go
+      (a/>! inputFromView ["startGameplay"])
+      (a/<! (a/timeout 1000))
+      (a/<! (app.module/testIt :v1 outputToView inputFromView)))))
 
-      :else
-      (do
-        (installViewRxjs inputFromView outputToView)
-        (app.main/mainLoop app.main/defaultModel inputFromView outputToView)))
+(defn- main-v1 []
+  (set! app.module/*module :v1)
+  (set! module.v1.phase.enemyTurn/*ai false)
+  (let [outputToView (a/chan)
+        inputFromView (a/chan)]
+    (app.main/installViewRxjs inputFromView outputToView)
+    (app.main/mainLoop app.main/defaultModel inputFromView outputToView)
+    (a/go (a/<! (app.module/testIt app.module/*module nil inputFromView)))))
 
-    (comment "end main")))
+(defn- main []
+  (set! app.module/*module :v1)
+  (let [outputToView (a/chan)
+        inputFromView (a/chan)]
+    (app.main/installViewRxjs inputFromView outputToView)
+    (app.main/mainLoop app.main/defaultModel inputFromView outputToView)))
 
-(set! (.-startApp js/window)
-      main)
+(set! (.-testV1 js/window) test-v1)
+(set! (.-startV1 js/window) main-v1)
+(set! (.-startApp js/window) main)

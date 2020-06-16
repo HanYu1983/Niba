@@ -68,7 +68,8 @@ export default class ModelController extends cc.Component {
     }
 
     private bindModel() {
-        window.startApp();
+        //window.startApp();
+        window.startV1();
         this.viewNotifyOb = window.viewNotifyOb;
         this.viewOb = window.viewOb;
     }
