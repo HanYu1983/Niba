@@ -1,12 +1,14 @@
 (ns module.v1.data-test
-  (:require [cljs.test :refer-macros [deftest is testing async run-tests]]
+  (:require [cljs.test :refer-macros [deftest is async]]
             [clojure.core.async :as a]
             [clojure.spec.alpha :as s]
             [clojure.test.check] ; 注意: 必須引入這個, 不然會錯誤
             [clojure.spec.gen.alpha :as gen])
   (:require [module.v1.data :as data]
             [module.v1.type :as type]
-            [module.v1.system.spec :as spec]))
+            [module.v1.system.spec :as spec]
+            [app.main]
+            [app.module]))
 
 (def playmap [[1 2] [3 4]])
 (def weapon (assoc (gen/generate (s/gen ::type/weapon))
@@ -36,11 +38,16 @@
         _ (data/getWeaponInfo nil unitA weapon)
         _ (data/invalidWeapon? nil unitA weapon)]))
 
-(deftest test-async
-  (testing "the API is awesome 2"
+(deftest test-gameplay []
+  (let [outputToView (a/chan)
+        inputFromView (a/chan)]
     (async done
-           (is (= 0 0))
-           (done))))
+           (app.main/mainLoop app.main/defaultModel inputFromView outputToView)
+           (a/go
+             (a/>! inputFromView ["startGameplay"])
+             (a/<! (a/timeout 1000))
+             (a/<! (app.module/testIt :v1 outputToView inputFromView))
+             (done)))))
 
 (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
   (if (cljs.test/successful? m)
