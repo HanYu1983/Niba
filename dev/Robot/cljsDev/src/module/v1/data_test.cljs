@@ -6,9 +6,7 @@
             [clojure.spec.gen.alpha :as gen])
   (:require [module.v1.data :as data]
             [module.v1.type :as type]
-            [module.v1.system.spec :as spec]
-            [app.main]
-            [app.module]))
+            [module.v1.system.spec :as spec]))
 
 (def playmap [[1 2] [3 4]])
 (def weapon (assoc (gen/generate (s/gen ::type/weapon))
