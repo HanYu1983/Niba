@@ -3,7 +3,7 @@
  ["src"]
 
  :dependencies
- [;[net.mikera/core.matrix "0.62.0"]
+ [[org.clojure/test.check "0.10.0"]
   [org.clojure/core.async "0.6.532"]
   [tailrecursion/cljs-priority-map "1.2.1"]]
 
@@ -17,6 +17,8 @@
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app.main]
                                 :depends-on #{:shared}}
+                          :test {:entries [app.test-runner]
+                                 :depends-on #{:shared}}
                           :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
           :release {:target :browser

@@ -39,20 +39,24 @@
 (defmethod tagEntry :weaponRangePlus [_] (s/tuple keyword? boolean?))
 
 (s/def ::tagEntry (s/multi-spec tagEntry ::tagEntry))
-(s/def ::tags (s/and (s/map-of keyword? (constantly true))
+(s/def ::tags (s/and (s/map-of keyword? any?)
                      (s/coll-of ::tagEntry)))
 
 (s/def ::bulletCount int?)
 (s/def ::weaponLevel int?)
 (s/def ::weaponKey ::key)
+(s/def ::suitability (s/tuple number? number? number? number?))
+(s/def ::type #{"single" "line"})
+(s/def ::range (s/tuple int? int?))
 (s/def ::weapon (s/keys :req-un [::key ::weaponKey ::weaponLevel ::tags ::bulletCount]
                         :opt-un [::range ::type ::suitability]))
-
-(s/def ::component (s/keys :req-un [::key ::componentKey ::tags]))
 
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
 (s/def ::pilotKey ::key)
+(s/def ::componentKey ::key)
+
+(s/def ::component (s/keys :req-un [::key ::componentKey ::tags]))
 
 (s/def ::weaponEntry (s/tuple keyword? (s/* ::weapon)))
 (s/def ::componentEntry (s/tuple keyword? (s/* ::component)))
@@ -62,6 +66,7 @@
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
+(s/def ::itemKey keyword?)
 (s/def ::itemState (s/keys :req-un [::itemKey]))
 (s/def ::item (s/keys :req-un [::key ::position ::itemState]))
 

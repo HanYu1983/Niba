@@ -2,7 +2,7 @@
   (:require [clojure.spec.alpha :as s])
   (:require ["ml-kmeans" :as ml-kmeans]))
 
-(s/def ::error number?)
+(s/def ::error (s/nilable number?))
 (s/def ::size int?)
 (s/def ::centroids (s/* (s/keys :req-un [::centroid ::error ::size])))
 (s/def ::option (s/keys :req-opt [::initialization ::maxIterations ::tolerance ::withIterations ::distanceFunction ::seed]))

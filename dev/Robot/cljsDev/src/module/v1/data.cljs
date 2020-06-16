@@ -14,6 +14,12 @@
   (:require [clojure.set]))
 
 (def data (js->clj dataJson :keywordize-keys true))
+
+
+(s/def ::terrianItem (s/keys :req-un [::title ::cost ::hitRate ::damage]))
+(s/def ::terrain (s/map-of keyword? ::terrianItem))
+(s/def ::data (s/keys :req-un [::terrain]))
+
 ; =======================
 ; map
 ; =======================
@@ -21,7 +27,7 @@
 
 (defn getTerrainKey [{playmap :map} from]
   {:pre [(explainValid? (s/tuple ::spec/map) [playmap])]
-   :post []}
+   :post [(explainValid? keyword? %)]}
   (let [t1 (get-in data [:terrainMapping
                          ((comp keyword str) (get-in playmap (reverse from)))
                          :terrain])]
@@ -29,7 +35,7 @@
 
 (defn getTerrain [{playmap :map} from]
   {:pre [(explainValid? (s/tuple ::spec/map) [playmap])]
-   :post []}
+   :post [(explainValid? ::terrianItem %)]}
   (-> (getTerrainKey {:map playmap} from)
       ((fn [key]
          (get-in data [:terrain key])))))
@@ -137,9 +143,9 @@
 ; =======================
 ; unit
 ; =======================
-(defn updateUnit [gameplayCtx unit f]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/gameplayCtx %)]}
+(defn updateUnit [{:keys [units] :as gameplayCtx} unit f]
+  {:pre [(explainValid? (s/tuple ::type/units ::type/unit) [units unit])]
+   :post [(explainValid? ::type/units (:units %))]}
   (update gameplayCtx :units (fn [origin]
                                (-> origin
                                    (tool.units/delete unit)
