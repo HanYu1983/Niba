@@ -64,5 +64,6 @@
              [unit & restUnits] units]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
         (if unit
-          (recur (a/<! (updateUnit gameplayCtx unit inputCh outputCh)) restUnits)
+          (let [gameplayCtx (assoc gameplayCtx :cursor (:position unit))]
+            (recur (a/<! (updateUnit gameplayCtx unit inputCh outputCh)) restUnits))
           gameplayCtx)))))

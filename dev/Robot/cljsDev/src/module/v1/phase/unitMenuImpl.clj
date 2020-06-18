@@ -4,11 +4,15 @@
   '(core/defstate unitMenu {unit :unit}
      {:nameCtx gameplayCtx
       :initState
-      (let [[menu data] (data/getMenuData gameplayCtx unit)]
+      (let [[menu data] (data/getMenuData gameplayCtx unit (let [playerTurn? true]
+                                                             playerTurn?))]
         {:menuCursor (tool.menuCursor/model menu)
          :data data
          :unit unit})
-      :initCtx nil
+      :initCtx (let [moveRange (let [shortestPathTree (data/getUnitMovePathTree gameplayCtx unit)
+                                     moveRange (map first shortestPathTree)]
+                                 moveRange)]
+                 (assoc gameplayCtx :moveRange moveRange))
       :exitCtx (dissoc gameplayCtx :attackRange :checkHitRate)}
      (loop [gameplayCtx gameplayCtx]
        (common/assertSpec spec/unitMenuView gameplayCtx)

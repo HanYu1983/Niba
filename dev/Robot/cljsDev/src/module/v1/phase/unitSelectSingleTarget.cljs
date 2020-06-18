@@ -54,7 +54,7 @@
                                                                                  (battleMenu/setUnits unit unitAtCursor)
                                                                                  (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
                                                                                  (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction))
-                                                                 :fixRight false}
+                                                                 :playerTurn? true}
                                                                 inputCh outputCh))]
                   (if isEnd
                     [gameplayCtx isEnd]

@@ -81,18 +81,18 @@
                           (update-in [:map] (constantly playmap))
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
           ; 選角頁, DEMO版先拿掉
-          ;[gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
-          ;gameplayCtx (->> (map (fn [idx key robotKey]
-          ;                        [{:key key
-          ;                          :playerKey :player
-          ;                          :position [0 (+ idx 1)]}
-          ;                         {:robotKey robotKey}])
-          ;                      (range)
-          ;                      selectedUnits
-          ;                      (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
-          ;                 (reduce (fn [gameplayCtx [arg1 arg2]]
-          ;                           (data/createUnit gameplayCtx arg1 arg2))
-          ;                         gameplayCtx))
+          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
+          gameplayCtx (->> (map (fn [idx key robotKey]
+                                  [{:key key
+                                    :playerKey :player
+                                    :position [0 (+ idx 1)]}
+                                   {:robotKey robotKey}])
+                                (range)
+                                selectedUnits
+                                (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
+                           (reduce (fn [gameplayCtx [arg1 arg2]]
+                                     (data/createUnit gameplayCtx arg1 arg2))
+                                   gameplayCtx))
           [gameplayCtx _] (->> (get data/data :robot)
                                (take 4)
                                (reduce (fn [[gameplayCtx i] [robotKey _]]
@@ -135,12 +135,12 @@
       (a/<! (a/timeout 3000))
       (a/>! waitCh true))
 
-    (comment  (a/go
-                (a/<! waitCh) ;等待線程
-                (core/defclick (or testAll true) "select units"
-                  [up down left enter]
-                  (a/<! (a/timeout 3000))) ; wait player turn start animation
-                (a/>! waitCh true)))
+    (a/go
+      (a/<! waitCh) ;等待線程
+      (core/defclick (or testAll true) "select units"
+        [up down left enter]
+        (a/<! (a/timeout 3000))) ; wait player turn start animation
+      (a/>! waitCh true))
 
     (a/go
       (a/<! waitCh) ;等待線程

@@ -15,7 +15,7 @@
         false)))
 
 (defn assertSpec [sp args]
-  (when false
+  (when true
     (when (not (clojure.spec.alpha/valid? sp args))
       (println (clojure.spec.alpha/explain-str sp args))
       (throw (js/Error. (str "error"))))))

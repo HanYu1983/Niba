@@ -65,7 +65,7 @@
     (a/go
       (a/>! inputFromView ["startGameplay"])
       (a/<! (a/timeout 1000))
-      (a/<! (app.module/testIt :v1 outputToView inputFromView)))))
+      (a/<! (app.module/testIt app.module/*module outputToView inputFromView)))))
 
 (defn- main-v1 []
   (set! app.module/*module :v1)

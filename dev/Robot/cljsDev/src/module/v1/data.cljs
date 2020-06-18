@@ -421,7 +421,7 @@
                 (get-in players [player :faction])))
          (apply =))))
 
-(defn getMenuData [gameplayCtx unit]
+(defn getMenuData [gameplayCtx unit playerTurn?]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? (s/tuple ::spec/menu ::spec/menuCursorData) %)]}
   (if (not (isBelongToPlayer gameplayCtx unit))
@@ -434,7 +434,9 @@
           weaponKeys (->> (range (count weapons))
                           (into []))
           [menu data] (if isBattleMenu
-                        [[weaponKeys ["evade"] ["guard"] ["cancel"]]
+                        [(if playerTurn?
+                           [weaponKeys ["cancel"]]
+                           [weaponKeys ["evade"] ["guard"]])
                          {:weaponIdx 0
                           :weapons weapons
                           :unit unit}]
@@ -567,7 +569,7 @@
             paths
             shouldRemove)))
 
-(defn getUnitMovePathTreeTo [{units :units players :players playmap :map :as gameplayCtx} unit pos]
+(defn- getUnitMovePathTreeTo [{units :units players :players playmap :map :as gameplayCtx} unit pos]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
   (let [power (/ (getUnitPower gameplayCtx unit) 5)
         power (if (-> unit :robotState :tags :moveRangePlus)
@@ -582,13 +584,16 @@
                                                  [(min (dec mw) (inc x)) y]
                                                  [(max 0 (dec x)) y]]
                                unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
-                               costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)]
+                               costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)
+                               sky? (-> unit :robotState :tags :sky)]
                            (->> (map vector possiblePosition costToNext unitsInPosition)
                                 (filter (fn [[_ cost occupyUnit]]
                                           (and (<= (+ nowCost cost) power)
                                                (or (nil? occupyUnit)
                                                    (= (get-in players [(-> unit :playerKey) :faction])
-                                                      (get-in players [(-> occupyUnit :playerKey) :faction])))))))))
+                                                      (get-in players [(-> occupyUnit :playerKey) :faction]))
+                                                   (let [occupyUnitIsSky? (-> occupyUnit :robotState :tags :sky)]
+                                                     (not= sky? occupyUnitIsSky?)))))))))
                        (fn [from]
                          (if pos
                            (estimateCost from pos)

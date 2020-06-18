@@ -1,5 +1,11 @@
 (ns app.core
-  (:require ["matter-js" :as matter :refer [Engine Render World Bodies]]))
+  (:require ["matter-js" :as matter :refer [Engine Render World Bodies]]
+            [clojure.spec.alpha :as s]))
+
+(s/def ::id string?)
+(s/def ::body (fn [obj]
+                (and (.hasOwnProperty obj "position"))))
+(s/def ::entity (s/keys :req-un [::id ::body]))
 
 (let [engine (.create Engine)
       render (.create Render (clj->js {:element js/document.body

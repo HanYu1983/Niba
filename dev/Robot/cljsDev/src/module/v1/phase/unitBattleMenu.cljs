@@ -27,9 +27,6 @@
       (= "KEY_DOWN" cmd)
       (let [action (common/actions args)]
         (cond
-          (= :cancel action)
-          [gameplayCtx false]
-
           (= :enter action)
           (let [state (-> gameplayCtx :fsm tool.fsm/load)
                 {:keys [menuCursor data battleMenuSession]} state
@@ -71,7 +68,8 @@
                                                            gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
                                                            _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
                                                        gameplayCtx)
-                                                     gameplayCtx)]
+                                                     gameplayCtx)
+                                       gameplayCtx (dissoc gameplayCtx :attackRange :checkHitRate)]
                                    gameplayCtx)))]
             (cond
               (= cursor1 weaponIdx)
@@ -120,11 +118,11 @@
 
 (core/defstate unitBattleMenu {[{left :unit leftAction :action}
                                 {right :unit} :as battleMenuModel] :battleMenu
-                               fixRight :fixRight}
+                               playerTurn? :playerTurn?}
   {:nameCtx gameplayCtx
    :initState
    (let [_ (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
-         [menu data] (data/getMenuData gameplayCtx left)
+         [menu data] (data/getMenuData gameplayCtx left playerTurn?)
          [leftActionType leftWeapon] leftAction]
      {:menuCursor (cond-> (tool.menuCursor/model menu)
                     (#{:evade} leftActionType)
@@ -151,7 +149,7 @@
                         (menuCursorViewSystem/handleMenuCursor evt)
                         (attackRangeViewSystem/handleAttackRangeView left evt)
                         (hitRateViewSystem/handleHitRateView left evt)
-                        (battleMenuViewSystem/handleBattleMenuSession left fixRight evt)
-                        (#(systemCore/asyncMapReturn handleCore % fixRight inputCh outputCh evt))
+                        (battleMenuViewSystem/handleBattleMenuSession left playerTurn? evt)
+                        (#(systemCore/asyncMapReturn handleCore % (not playerTurn?) inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))

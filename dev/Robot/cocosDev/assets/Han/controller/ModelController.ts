@@ -14,10 +14,10 @@ export default class ModelController extends cc.Component {
         this.viewOb.subscribe(e => {
             const [cmd, args] = e;
             if (this.view[cmd]) {
-                //console.log("[ModelController][receive]" + cmd, args);
+                console.log("[ModelController][receive]" + cmd, args);
                 const [id, data] = args;
                 this.view[cmd](data, () => {
-                    //console.log("[ModelController][reply]" + cmd)
+                    console.log("[ModelController][reply]" + cmd)
                     this.send("ok", [id, 0])
                 })
             }
@@ -68,8 +68,8 @@ export default class ModelController extends cc.Component {
     }
 
     private bindModel() {
-        //window.startApp();
-        window.startV1();
+        window.startApp();
+        //window.startV1();
         this.viewNotifyOb = window.viewNotifyOb;
         this.viewOb = window.viewOb;
     }

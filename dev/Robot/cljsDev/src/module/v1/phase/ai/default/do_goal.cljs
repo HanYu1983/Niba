@@ -61,10 +61,10 @@
                                                   [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
                                                   targetUnitWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
                                                   targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitWeapons [unit])
-                                                  targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first weapons))
+                                                  targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
                                                   targetUnitBestAction (if targetUnitBestWeaponUnit
                                                                          [:attack targetUnitBestWeapon]
-                                                                         [:evade])
+                                                                         [:guard])
                                                   battleMenu [{:unit targetUnit
                                                                :action targetUnitBestAction
                                                                :hitRate (data/getUnitHitRate gameplayCtx targetUnit targetUnitBestWeapon unit)}
@@ -73,7 +73,10 @@
                                                                :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
                                                   _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
                                                   _ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit targetUnit])} inputCh outputCh))
-                                                  [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :fixRight true} inputCh outputCh))]
+                                                  [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :playerTurn? false} inputCh outputCh))
+                                                  gameplayCtx (assoc gameplayCtx 
+                                                                     :attackRange []
+                                                                     :checkHitRate [])]
                                               gameplayCtx)
                                             (let [orderGoal (-> unit :robotState :orderGoal)
                                                   _ (common/assertSpec ::goalType/goal orderGoal)
@@ -108,7 +111,7 @@
                        :action [:attack weapon]
                        :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
           _ (common/explainValid? ::battleMenu/defaultModel battleMenu)
-          [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :fixRight true} inputCh outputCh))]
+          [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :playerTurn? false} inputCh outputCh))]
       gameplayCtx)))
 
 (defmethod do-goal :moveTo [[_ targetPosition] gameplayCtx unit inputCh outputCh]
