@@ -43,10 +43,10 @@ export default class Unit extends cc.Component {
     }
 
     toSky(cb: () => void) {
-        cc.tween(this.node).by(.5, { y: 6 }).call(cb).start();
+        cc.tween(this.unit).by(.5, { y: 6 }).call(cb).start();
     }
 
     toLand(cb: () => void) {
-        cc.tween(this.node).by(.5, { y: -6 }).call(cb).start();
+        cc.tween(this.unit).by(.5, { y: -6 }).call(cb).start();
     }
 }

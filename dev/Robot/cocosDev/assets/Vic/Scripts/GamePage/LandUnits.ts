@@ -77,7 +77,7 @@ export default class LandUnits extends cc.Component {
 
             let unit: Unit = unitNode.getComponent(Unit);
             unit.unitId = unitId;
-            if (isSky) unit.node.y += 6;
+            if (isSky) unit.unit.y += 6;
 
             unit.setUnitImage(unitName);
 
