@@ -1,11 +1,13 @@
 (ns module.v1.phase.ai.default.do-goal
   (:require [clojure.core.async :as a]
+            [clojure.spec.alpha :as s]
             [clojure.set])
   (:require [tool.map]
             [tool.fsm]
             [tool.units]
             [tool.goal]
             [tool.knn]
+            [module.v1.type :as type]
             [module.v1.data :as data]
             [module.v1.common :as common]
             [module.v1.session.battleMenu :as battleMenu]
@@ -59,9 +61,11 @@
                               gameplayCtx (if bestWeaponUnit
                                             (let [[weapon targetUnit] bestWeaponUnit
                                                   [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
-                                                  targetUnitWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
-                                                  targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitWeapons [unit])
+                                                  targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
+                                                  targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
                                                   targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
+                                                  _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))
+                                                      (throw (js/Error. (str "[do_goal.cljs] targetUnitBestWeapon must not nil"))))
                                                   targetUnitBestAction (if targetUnitBestWeaponUnit
                                                                          [:attack targetUnitBestWeapon]
                                                                          [:guard])
