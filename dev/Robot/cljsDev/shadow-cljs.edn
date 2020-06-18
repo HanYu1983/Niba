@@ -19,6 +19,13 @@
                                 :depends-on #{:shared}}
                           :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
+          :alpha {:target :browser
+                    :output-dir "../cocosDev/assets/Han"
+                    :modules {:app {:entries [app.core]}}
+                    :compiler-options {:optimizations nil
+                                       :source-map true
+                                       :pretty-print true}}
+
           :release {:target :browser
                     :output-dir "../cocosDev/assets/Han"
                     :modules {:app {:entries [app.core]}}}}}
