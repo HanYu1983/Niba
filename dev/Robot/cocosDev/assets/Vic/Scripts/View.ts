@@ -153,7 +153,7 @@ export default class View extends cc.Component {
             return;
         }
         this.getGamePage().units.setUnits(data);
-        this.getGamePage().showUnitSampleInfos(data);
+        // this.getGamePage().showUnitSampleInfos(data);
     }
 
     private repaintPlayerStart(cb: () => void) {
