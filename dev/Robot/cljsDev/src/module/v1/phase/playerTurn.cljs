@@ -65,4 +65,8 @@
                             (#(systemCore/mapReturn moveRangeViewSystem/handleMoveRangeView % true evt))
                             (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                             (a/<!))]
-          (systemCore/return-let [[gameplayCtx] returnCtx] gameplayCtx))))))
+          (systemCore/return-let [[gameplayCtx] returnCtx]
+                                 (update gameplayCtx
+                                         :units (fn [units]
+                                                  (tool.units/mapUnits units (fn [unit]
+                                                                               (data/gameplayOnUnitTurnEnd nil gameplayCtx unit)))))))))))

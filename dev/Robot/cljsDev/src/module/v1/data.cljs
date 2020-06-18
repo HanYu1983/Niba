@@ -712,7 +712,13 @@
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? ::type/unit %)]}
   (-> unit
-      (update-in [:robotState :tags] (constantly {}))))
+      (update-in [:robotState :tags] identity)))
+
+(defn gameplayOnUnitTurnEnd [_ gameplayCtx unit]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+   :post [(explainValid? ::type/unit %)]}
+  (-> unit
+      (update-in [:robotState :tags] #(dissoc % :done :move))))
 
 (defn gameplayOnUnitDead [_ gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
