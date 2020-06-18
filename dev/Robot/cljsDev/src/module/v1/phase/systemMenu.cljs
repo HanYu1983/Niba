@@ -15,7 +15,7 @@
           (= "endTurn" select)
           [gameplayCtx true]
 
-          (some #(= select %) [:cancel "cancel"])
+          (= "cancel" select)
           [gameplayCtx false]
 
           :else

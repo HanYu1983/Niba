@@ -23,6 +23,9 @@
             (= :enter action)
             (let [select (tool.menuCursor/getSelect (:menuCursor state))]
               [gameplayCtx select])
+            
+            (= :cancel action)
+            [gameplayCtx "cancel"]
 
             :else
             gameplayCtx))
