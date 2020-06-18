@@ -37,7 +37,7 @@ export default class Pool extends cc.Component {
 
     acquire():cc.Node {
         if(this._pool.length == 0){
-            return cc.instantiate(this.instanceNode);
+            this._pool.push(cc.instantiate(this.instanceNode));
         }
         return this._pool.pop();
     }

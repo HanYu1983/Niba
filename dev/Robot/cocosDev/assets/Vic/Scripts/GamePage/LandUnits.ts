@@ -137,6 +137,7 @@ export default class LandUnits extends cc.Component {
     removeUnitByID(id: string) {
         let unit = this.getUnitByID(id);
         if (unit) {
+            this._units.splice(this._units.indexOf(unit.node), 1);
             this._removeUnit(unit.node);
         }
     }
