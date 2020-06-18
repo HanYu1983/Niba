@@ -9,11 +9,24 @@
         {:menuCursor (tool.menuCursor/model menu)
          :data data
          :unit unit})
-      :initCtx (let [moveRange (let [shortestPathTree (data/getUnitMovePathTree gameplayCtx unit)
-                                     moveRange (map first shortestPathTree)]
-                                 moveRange)]
-                 (assoc gameplayCtx :moveRange moveRange))
-      :exitCtx (dissoc gameplayCtx :attackRange :checkHitRate)}
+      :initCtx (let [canMove? (-> gameplayCtx :fsm tool.fsm/load 
+                                  :menuCursor :menu flatten (#(into #{} %) )
+                                  (contains? "move"))
+                     moveRange (if canMove?
+                                 (let [shortestPathTree (data/getUnitMovePathTree gameplayCtx unit)
+                                       moveRange (map first shortestPathTree)]
+                                   moveRange)
+                                 [])
+                     attackRange (attackRangeViewSystem/getAttackRange gameplayCtx unit)
+                     hitRate (hitRateViewSystem/getHitRate gameplayCtx unit)]
+                 (assoc gameplayCtx
+                        :moveRange moveRange
+                        :attackRange attackRange
+                        :checkHitRate hitRate))
+      :exitCtx (-> gameplayCtx
+                   (dissoc :attackRange :checkHitRate)
+                   (assoc :moveRange []
+                          :cursor (:position unit)))}
      (loop [gameplayCtx gameplayCtx]
        (common/assertSpec spec/unitMenuView gameplayCtx)
        (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))

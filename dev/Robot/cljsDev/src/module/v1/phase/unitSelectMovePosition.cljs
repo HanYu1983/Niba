@@ -32,9 +32,9 @@
                      moveRange)}
    :initCtx nil}
   (loop [gameplayCtx gameplayCtx]
-    (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-    (assoc gameplayCtx :moveRange (-> gameplayCtx :fsm tool.fsm/load :tempMoveRange))
-    (let [[gameplayCtx result] (a/<! (selectPosition gameplayCtx {} inputCh outputCh))]
+    (let [gameplayCtx (assoc gameplayCtx :moveRange (-> gameplayCtx :fsm tool.fsm/load :tempMoveRange))
+          _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+          [gameplayCtx result] (a/<! (selectPosition gameplayCtx {} inputCh outputCh))]
       (cond
         (false? result)
         [gameplayCtx false]

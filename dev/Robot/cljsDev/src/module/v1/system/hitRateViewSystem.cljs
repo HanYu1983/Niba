@@ -35,13 +35,7 @@
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
       (cond
-        (some #(= % action) [:up :down])
-        (let [checkHitRate (getHitRate gameplayCtx unit)
-              gameplayCtx (-> gameplayCtx
-                              (assoc :checkHitRate checkHitRate))]
-          gameplayCtx)
-
-        (some #(= % action) [:left :right])
+        (#{:up :down :left :right} action)
         (let [checkHitRate (getHitRate gameplayCtx unit)
               gameplayCtx (-> gameplayCtx
                               (assoc :checkHitRate checkHitRate))]

@@ -29,13 +29,7 @@
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]
       (cond
-        (some #(= % action) [:up :down])
-        (let [attackRange (getAttackRange gameplayCtx unit)
-              gameplayCtx (-> gameplayCtx
-                              (assoc :attackRange attackRange))]
-          gameplayCtx)
-
-        (some #(= % action) [:left :right])
+        (#{:up :down :left :right} action)
         (let [attackRange (getAttackRange gameplayCtx unit)
               gameplayCtx (-> gameplayCtx
                               (assoc :attackRange attackRange))]
