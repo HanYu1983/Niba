@@ -114,6 +114,7 @@
       (do
         (print "=============")
         (print weapon)
+        (print unit)
         (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found"))))
       (merge weaponData
              {:range (getWeaponRange gameplayCtx unit weapon)
