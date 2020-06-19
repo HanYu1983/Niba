@@ -606,6 +606,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.6,
             "damage": 4096,
+            "curage": 110,
             "powerCost": 20
         },
         "beam_mega2": {
@@ -630,6 +631,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.588,
             "damage": 4475,
+            "curage": 110,
             "powerCost": 24
         },
         "beam_mega3": {
@@ -654,6 +656,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.54,
             "damage": 6229,
+            "curage": 120,
             "powerCost": 40
         },
         "beam_mega4": {
@@ -678,6 +681,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.522,
             "damage": 6989,
+            "curage": 120,
             "powerCost": 46
         },
         "beam_mega5": {
@@ -702,6 +706,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.48,
             "damage": 8998,
+            "curage": 130,
             "powerCost": 60
         },
         "beam_mega6": {
@@ -724,8 +729,9 @@ const dataJson =
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.46799999999999997,
+            "accuracy": 0.468,
             "damage": 9636,
+            "curage": 130,
             "powerCost": 64
         },
         "beam_mega7": {
@@ -750,6 +756,7 @@ const dataJson =
             "type": "line",
             "accuracy": 0.42,
             "damage": 12487,
+            "curage": 130,
             "powerCost": 80
         },
         "beam_sniper1": {
@@ -774,6 +781,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 4096,
+            "curage": 0,
             "powerCost": 20
         },
         "beam_sniper2": {
@@ -798,6 +806,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 4640,
+            "curage": 0,
             "powerCost": 24
         },
         "beam_sniper3": {
@@ -822,6 +831,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 7301,
+            "curage": 105,
             "powerCost": 40
         },
         "beam_sniper4": {
@@ -846,6 +856,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8514,
+            "curage": 105,
             "powerCost": 46
         },
         "beam_sniper5": {
@@ -870,6 +881,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 11852,
+            "curage": 110,
             "powerCost": 60
         },
         "beam_sniper6": {
@@ -894,6 +906,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 12944,
+            "curage": 120,
             "powerCost": 64
         },
         "beam_sniper7": {
@@ -918,6 +931,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 17984,
+            "curage": 130,
             "powerCost": 80
         },
         "sniper1": {
@@ -927,7 +941,7 @@ const dataJson =
                 9
             ],
             "energyCost": 0,
-            "maxBulletCount": 4,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -941,6 +955,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 4096,
+            "curage": 0,
             "powerCost": 20
         },
         "sniper2": {
@@ -950,7 +965,7 @@ const dataJson =
                 9
             ],
             "energyCost": 0,
-            "maxBulletCount": 4,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -964,6 +979,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 4640,
+            "curage": 0,
             "powerCost": 24
         },
         "sniper3": {
@@ -987,6 +1003,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 7301,
+            "curage": 0,
             "powerCost": 40
         },
         "sniper4": {
@@ -996,7 +1013,7 @@ const dataJson =
                 12
             ],
             "energyCost": 0,
-            "maxBulletCount": 5,
+            "maxBulletCount": 4,
             "suitability": [
                 1,
                 1,
@@ -1010,6 +1027,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8514,
+            "curage": 0,
             "powerCost": 46
         },
         "sniper5": {
@@ -1019,7 +1037,7 @@ const dataJson =
                 15
             ],
             "energyCost": 0,
-            "maxBulletCount": 6,
+            "maxBulletCount": 3,
             "suitability": [
                 1,
                 1,
@@ -1033,6 +1051,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 11852,
+            "curage": 0,
             "powerCost": 60
         },
         "sniper6": {
@@ -1042,7 +1061,7 @@ const dataJson =
                 15
             ],
             "energyCost": 0,
-            "maxBulletCount": 6,
+            "maxBulletCount": 2,
             "suitability": [
                 1,
                 1,
@@ -1056,6 +1075,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 12944,
+            "curage": 0,
             "powerCost": 64
         },
         "sniper7": {
@@ -1065,7 +1085,7 @@ const dataJson =
                 15
             ],
             "energyCost": 0,
-            "maxBulletCount": 6,
+            "maxBulletCount": 1,
             "suitability": [
                 1,
                 1,
@@ -1079,6 +1099,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 17984,
+            "curage": 0,
             "powerCost": 80
         },
         "beam_gun1": {
@@ -1103,6 +1124,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 2744,
+            "curage": 0,
             "powerCost": 10
         },
         "beam_gun2": {
@@ -1127,6 +1149,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3048,
+            "curage": 0,
             "powerCost": 12
         },
         "beam_gun3": {
@@ -1151,6 +1174,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 4492,
+            "curage": 0,
             "powerCost": 20
         },
         "beam_gun4": {
@@ -1175,6 +1199,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 5132,
+            "curage": 0,
             "powerCost": 23
         },
         "beam_gun5": {
@@ -1199,6 +1224,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 6859,
+            "curage": 0,
             "powerCost": 30
         },
         "beam_gun6": {
@@ -1223,6 +1249,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8000,
+            "curage": 0,
             "powerCost": 34
         },
         "beam_gun7": {
@@ -1247,6 +1274,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 9938,
+            "curage": 0,
             "powerCost": 40
         },
         "beam_gatling1": {
@@ -1272,6 +1300,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 2197,
+            "curage": 0,
             "powerCost": 10
         },
         "beam_gatling2": {
@@ -1297,6 +1326,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 2406,
+            "curage": 0,
             "powerCost": 12
         },
         "beam_gatling3": {
@@ -1322,6 +1352,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 3375,
+            "curage": 0,
             "powerCost": 20
         },
         "beam_gatling4": {
@@ -1347,6 +1378,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 3796,
+            "curage": 0,
             "powerCost": 23
         },
         "beam_gatling5": {
@@ -1372,6 +1404,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 4913,
+            "curage": 0,
             "powerCost": 30
         },
         "beam_gatling6": {
@@ -1397,6 +1430,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 5639,
+            "curage": 0,
             "powerCost": 34
         },
         "beam_gatling7": {
@@ -1422,6 +1456,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 6859,
+            "curage": 0,
             "powerCost": 40
         },
         "gatling1": {
@@ -1431,7 +1466,7 @@ const dataJson =
                 4
             ],
             "energyCost": 0,
-            "maxBulletCount": 6,
+            "maxBulletCount": 8,
             "suitability": [
                 1,
                 1,
@@ -1446,6 +1481,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 2197,
+            "curage": 0,
             "powerCost": 10
         },
         "gatling2": {
@@ -1455,7 +1491,7 @@ const dataJson =
                 4
             ],
             "energyCost": 0,
-            "maxBulletCount": 6,
+            "maxBulletCount": 8,
             "suitability": [
                 1,
                 1,
@@ -1470,6 +1506,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 2406,
+            "curage": 0,
             "powerCost": 12
         },
         "gatling3": {
@@ -1494,6 +1531,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 3375,
+            "curage": 0,
             "powerCost": 20
         },
         "gatling4": {
@@ -1518,6 +1556,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 3796,
+            "curage": 0,
             "powerCost": 23
         },
         "gatling5": {
@@ -1527,7 +1566,7 @@ const dataJson =
                 6
             ],
             "energyCost": 0,
-            "maxBulletCount": 8,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -1542,6 +1581,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 4913,
+            "curage": 0,
             "powerCost": 30
         },
         "gatling6": {
@@ -1551,7 +1591,7 @@ const dataJson =
                 6
             ],
             "energyCost": 0,
-            "maxBulletCount": 8,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -1566,6 +1606,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 5639,
+            "curage": 0,
             "powerCost": 34
         },
         "gatling7": {
@@ -1575,7 +1616,7 @@ const dataJson =
                 6
             ],
             "energyCost": 0,
-            "maxBulletCount": 8,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -1590,6 +1631,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.5,
             "damage": 6859,
+            "curage": 0,
             "powerCost": 40
         },
         "beam_sword1": {
@@ -1615,6 +1657,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3176,
+            "curage": 0,
             "powerCost": 10
         },
         "beam_sword2": {
@@ -1623,7 +1666,7 @@ const dataJson =
                 1,
                 1
             ],
-            "energyCost": 9,
+            "energyCost": 10,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1640,6 +1683,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3581,
+            "curage": 0,
             "powerCost": 12
         },
         "beam_sword3": {
@@ -1648,7 +1692,7 @@ const dataJson =
                 1,
                 2
             ],
-            "energyCost": 15,
+            "energyCost": 20,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1665,6 +1709,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 5545,
+            "curage": 105,
             "powerCost": 20
         },
         "beam_sword4": {
@@ -1673,7 +1718,7 @@ const dataJson =
                 1,
                 2
             ],
-            "energyCost": 17,
+            "energyCost": 23,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1690,6 +1735,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 6434,
+            "curage": 110,
             "powerCost": 23
         },
         "beam_sword5": {
@@ -1698,7 +1744,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 22,
+            "energyCost": 32,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1715,6 +1761,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8869,
+            "curage": 120,
             "powerCost": 30
         },
         "beam_sword6": {
@@ -1723,7 +1770,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 24,
+            "energyCost": 36,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1740,6 +1787,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 10503,
+            "curage": 125,
             "powerCost": 34
         },
         "beam_sword7": {
@@ -1748,7 +1796,7 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 29,
+            "energyCost": 44,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1765,6 +1813,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 13312,
+            "curage": 130,
             "powerCost": 40
         },
         "sword1": {
@@ -1774,7 +1823,7 @@ const dataJson =
                 1
             ],
             "energyCost": 0,
-            "maxBulletCount": 10,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -1789,6 +1838,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3176,
+            "curage": 0,
             "powerCost": 10
         },
         "sword2": {
@@ -1798,7 +1848,7 @@ const dataJson =
                 1
             ],
             "energyCost": 0,
-            "maxBulletCount": 10,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -1813,6 +1863,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3581,
+            "curage": 0,
             "powerCost": 12
         },
         "sword3": {
@@ -1822,7 +1873,7 @@ const dataJson =
                 2
             ],
             "energyCost": 0,
-            "maxBulletCount": 12,
+            "maxBulletCount": 5,
             "suitability": [
                 1,
                 1,
@@ -1837,6 +1888,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 5545,
+            "curage": 0,
             "powerCost": 20
         },
         "sword4": {
@@ -1846,7 +1898,7 @@ const dataJson =
                 2
             ],
             "energyCost": 0,
-            "maxBulletCount": 12,
+            "maxBulletCount": 5,
             "suitability": [
                 1,
                 1,
@@ -1861,6 +1913,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 6434,
+            "curage": 0,
             "powerCost": 23
         },
         "sword5": {
@@ -1870,7 +1923,7 @@ const dataJson =
                 3
             ],
             "energyCost": 0,
-            "maxBulletCount": 14,
+            "maxBulletCount": 4,
             "suitability": [
                 1,
                 1,
@@ -1885,6 +1938,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8869,
+            "curage": 0,
             "powerCost": 30
         },
         "sword6": {
@@ -1894,7 +1948,7 @@ const dataJson =
                 3
             ],
             "energyCost": 0,
-            "maxBulletCount": 14,
+            "maxBulletCount": 4,
             "suitability": [
                 1,
                 1,
@@ -1909,6 +1963,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 10503,
+            "curage": 0,
             "powerCost": 34
         },
         "sword7": {
@@ -1918,7 +1973,7 @@ const dataJson =
                 3
             ],
             "energyCost": 0,
-            "maxBulletCount": 14,
+            "maxBulletCount": 3,
             "suitability": [
                 1,
                 1,
@@ -1933,6 +1988,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 13312,
+            "curage": 0,
             "powerCost": 40
         },
         "gaite_handSword": {
@@ -1957,6 +2013,7 @@ const dataJson =
             "type": "single",
             "accuracy": 0.9,
             "damage": 3800,
+            "curage": 0,
             "powerCost": 12
         },
         "gaite_axe": {
@@ -1965,8 +2022,8 @@ const dataJson =
                 2,
                 3
             ],
-            "energyCost": 35,
-            "maxBulletCount": 0,
+            "energyCost": 0,
+            "maxBulletCount": 3,
             "suitability": [
                 1,
                 1,
@@ -1977,10 +2034,11 @@ const dataJson =
                 "moveAttack",
                 "melee"
             ],
-            "energyType": "energy",
+            "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
             "damage": 10000,
+            "curage": 110,
             "powerCost": 30
         },
         "gaite_beam": {
@@ -2005,6 +2063,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 9000,
+            "curage": 120,
             "powerCost": 30
         },
         "gaite_cannon": {
@@ -2028,6 +2087,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3000,
+            "curage": 0,
             "powerCost": 12
         },
         "gaite_drill": {
@@ -2052,6 +2112,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3500,
+            "curage": 0,
             "powerCost": 12
         },
         "gaite_powerDrill": {
@@ -2076,6 +2137,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 7000,
+            "curage": 110,
             "powerCost": 26
         },
         "gaite_punch": {
@@ -2100,6 +2162,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1.1,
             "damage": 3200,
+            "curage": 0,
             "powerCost": 10
         },
         "gaite_missle": {
@@ -2123,6 +2186,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3000,
+            "curage": 0,
             "powerCost": 12
         },
         "gaite_shan": {
@@ -2147,6 +2211,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 9500,
+            "curage": 120,
             "powerCost": 30
         },
         "moshen_ray": {
@@ -2168,6 +2233,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 2500,
+            "curage": 0,
             "powerCost": 8
         },
         "moshen_punch": {
@@ -2192,6 +2258,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 3300,
+            "curage": 0,
             "powerCost": 10
         },
         "moshen_flypunch": {
@@ -2211,10 +2278,11 @@ const dataJson =
             "ability": [
                 "moveAttack"
             ],
-            "energyType": "",
+            "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
             "damage": 4000,
+            "curage": 0,
             "powerCost": 25
         },
         "moshen_jian": {
@@ -2239,6 +2307,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 6000,
+            "curage": 110,
             "powerCost": 20
         },
         "moshen_fire": {
@@ -2262,6 +2331,7 @@ const dataJson =
             "type": "single",
             "accuracy": 1,
             "damage": 8500,
+            "curage": 120,
             "powerCost": 30
         }
     },

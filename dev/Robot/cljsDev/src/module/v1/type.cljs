@@ -34,7 +34,7 @@
 ; 是否行動完畢
 (defmethod tagEntry :done [_] (s/tuple keyword? boolean?))
 ; 是否移動過
-(defmethod tagEntry :move [_] (s/tuple keyword? boolean?))
+(defmethod tagEntry :moveCount [_] (s/tuple keyword? int?))
 (defmethod tagEntry :moveRangePlus [_] (s/tuple keyword? boolean?))
 (defmethod tagEntry :weaponRangePlus [_] (s/tuple keyword? boolean?))
 

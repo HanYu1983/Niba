@@ -1,11 +1,11 @@
-id/string,title/string,range/int[2],energyCost/int,maxBulletCount/int,suitability/float[4],ability/string[],energyType/string,type/string,accuracy/float,damage/int,curage,powerCost/int
+id/string,title/string,range/int[2],energyCost/int,maxBulletCount/int,suitability/float[4],ability/string[],energyType/string,type/string,accuracy/float,damage/int,curage/int,powerCost/int
 ,,,,,,,,,,,,
 beam_mega1,粒子炮L1,"5,2",32,,"1,0.5,1,1","standAttack,beam",energy,line,0.6,4096,110,20
 beam_mega2,粒子炮L2,"5,2",40,,"1,0.5,1,1","standAttack,beam",energy,line,0.588,4475,110,24
 beam_mega3,粒子炮L3,"6,3",72,,"1,0.5,1,1","standAttack,beam",energy,line,0.54,6229,120,40
 beam_mega4,粒子炮L4,"6,3",84,,"1,0.5,1,1","standAttack,beam",energy,line,0.522,6989,120,46
 beam_mega5,粒子炮L5,"7,4",112,,"1,0.5,1,1","standAttack,beam",energy,line,0.48,8998,130,60
-beam_mega6,粒子炮L6,"7,4",120,,"1,0.5,1,1","standAttack,beam",energy,line,0.46799999999999997,9636,130,64
+beam_mega6,粒子炮L6,"7,4",120,,"1,0.5,1,1","standAttack,beam",energy,line,0.468,9636,130,64
 beam_mega7,粒子炮L7,"7,4",152,,"1,0.5,1,1","standAttack,beam",energy,line,0.42,12487,130,80
 ,,,,,,,,,,,,
 beam_sniper1,光束狙擊鎗L1,"3,9",33,,"1,0.5,1,1","standAttack,beam",energy,single,1,4096,,20

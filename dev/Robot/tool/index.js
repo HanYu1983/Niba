@@ -207,5 +207,5 @@ main({
     ext: ".csv",
     delimiter: ",",
     template: "./template.txt",
-    output: "../cljsDev/src/module/default/data.js"
+    output: "../cljsDev/src/module/v1/data.js"
 }).catch(console.log)

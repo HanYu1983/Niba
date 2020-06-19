@@ -24,7 +24,8 @@
       (update-in [1 :unit] (constantly right))))
 
 (defn setLeftAction [ctx action gameplayCtx hitRateFn]
-  {:pre [(s/valid? ::defaultModel ctx)]
+  {:pre [(s/valid? ::defaultModel ctx)
+         (s/valid? ::action action)]
    :post [(s/valid? ::defaultModel %)]}
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)]
@@ -44,7 +45,8 @@
 
 
 (defn setRightAction [ctx action gameplayCtx hitRateFn]
-  {:pre [(s/valid? ::defaultModel ctx)]
+  {:pre [(s/valid? ::defaultModel ctx) 
+         (s/valid? ::action action)]
    :post [(s/valid? ::defaultModel %)]}
   (let [left (get-in ctx [0 :unit] ctx)
         right (get-in ctx [1 :unit] ctx)]

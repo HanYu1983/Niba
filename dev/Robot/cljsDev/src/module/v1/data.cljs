@@ -67,7 +67,7 @@
 ; =======================
 ; pilot
 ; =======================
-(defn getPilotInfo [_ unit pilot]
+(defn getPilotInfo [gameplayCtx unit pilot]
   {:pre [(explainValid? (s/tuple ::type/unit keyword?) [unit pilot])]}
   (let [data (get-in data [:pilot pilot])]
     (if (nil? data)
@@ -77,7 +77,7 @@
 ; =======================
 ; weapon
 ; =======================
-(defn getWeaponRange [_ unit {:keys [weaponKey] :as weapon}]
+(defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? (s/tuple number? number?) %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
@@ -89,7 +89,7 @@
                   max)]
         [min max]))))
 
-(defn getWeaponType [_ unit {:keys [weaponKey] :as weapon}]
+(defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? string? %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
@@ -98,7 +98,7 @@
       (let [{type :type} weaponData]
         type))))
 
-(defn getWeaponSuitability [_ unit {:keys [weaponKey] :as weapon}]
+(defn getWeaponSuitability [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? (s/tuple number? number? number? number?) %)]}
   (let [weaponData (get-in data [:weapon weaponKey])]
@@ -106,6 +106,14 @@
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:suitability]))))
 
+(defn getWeaponAbility [gameplayCtx unit {:keys [weaponKey] :as weapon}]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]}
+  (let [weaponData (get-in data [:weapon weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
+      (get-in weaponData [:ability]))))
+
+; 注意: 這個函式中不能呼叫getUnitInfo, 不然會無限迴圈
 (defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
   {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
    :post [(explainValid? ::type/weapon %)]}
@@ -116,10 +124,12 @@
         (print weapon)
         (print unit)
         (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found"))))
+      ;  原始資料 + 能力修正後的資料 + 武器現在的狀態 = weaponInfo
       (merge weaponData
              {:range (getWeaponRange gameplayCtx unit weapon)
               :type (getWeaponType gameplayCtx unit weapon)
-              :suitability (getWeaponSuitability gameplayCtx unit weapon)}
+              :suitability (getWeaponSuitability gameplayCtx unit weapon)
+              :ability (getWeaponAbility gameplayCtx unit weapon)}
              weapon))))
 
 (defn invalidWeapon? [gameplayCtx unit weapon]
@@ -286,13 +296,16 @@
   (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
         pilot (getPilotInfo gameplayCtx unit (get-in unit [:robotState :pilotKey]))
         targetPilot (getPilotInfo gameplayCtx targetUnit (get-in targetUnit [:robotState :pilotKey]))
-        terrain (-> playmap
-                    (get-in (reverse (:position targetUnit)))
-                    ((fn [cellId]
-                       (get-in data [:terrainMapping ((comp keyword str) cellId) :terrain])))
-                    ((fn [terrainKey]
-                       (get-in data [:terrain (keyword terrainKey)]))))
-        weaponSuitability (get weaponInfo :suitability)
+        weaponSuitability (:suitability weaponInfo)
+        weaponAbility (:ability weaponInfo)
+        ; 這邊的"missle"拼字是錯的, 後來資料表修正後要改回來
+        missile? (-> (into #{} weaponAbility) (contains? "missle"))
+        fire? (-> (into #{} weaponAbility) (contains? "fire"))
+        lighting? (-> (into #{} weaponAbility) (contains? "lighting?"))
+        targetTerrainKey (getTerrainKey {:map playmap} (:position targetUnit))
+        targetTerrain (-> data :terrain targetTerrainKey)
+        fireActive? (and fire? (= targetTerrainKey :forest))
+        lightingActive? (and lighting? (#{:shallowSea :deepSea} targetTerrainKey))
 
         ; 距離為基本命中率
         basic (let [pos1 (:position unit)
@@ -317,21 +330,32 @@
         factor3 (get weaponSuitability 0)
 
         ; 武器命中補正係數
-        factor4 (get weaponInfo :accuracy)
-
+        factor4 (:accuracy weaponInfo)
+        
         ; 地型補正係數
-        factor5 (get terrain :hitRate)
+        factor5 (cond
+                  (or lightingActive? fireActive?)
+                  1.1
+
+                  :else
+                  (:hitRate targetTerrain))
 
         ; 對方速度
-        factor6 (let [vel (or 0 (get-in targetUnit [:robotState :tags :velocity]))]
+        factor6 (cond
+                  missile?
+                  1
+                  
+                  :else
+                  (let [vel (or (get-in targetUnit [:robotState :tags :velocity]) 0)]
                   (if (= vel 0)
                     1
                     (-> 0.5
                         (* vel)
                         (/ 20)
                         ((fn [v]
-                           (- 1 v))))))]
-    (* basic factor1 factor2 factor3 factor4 factor5 factor6)))
+                           (- 1 v)))
+                        (max 0)))))]
+    (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6))))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit ::type/weapon ::type/unit) [gameplayCtx playmap unit weapon targetUnit])]
@@ -430,8 +454,14 @@
     (let [isBattleMenu (-> (:fsm gameplayCtx)
                            (tool.fsm/currState)
                            (= :unitBattleMenu))
+          moved? (-> unit :robotState :tags :moveCount)
           weapons (->> (getUnitWeapons gameplayCtx unit)
-                       second)
+                       second
+                       (filter (fn [weapon]
+                                 (if moved?
+                                   (let [weaponAbility (getWeaponAbility gameplayCtx unit weapon)]
+                                     (-> (into #{} weaponAbility) (contains? "moveAttack")))
+                                   true))))
           weaponKeys (->> (range (count weapons))
                           (into []))
           [menu data] (if isBattleMenu
@@ -447,7 +477,7 @@
                           [[["cancel"]] {}]
 
                           (-> (get-in unit [:robotState :tags])
-                              (contains? :move))
+                              (contains? :moveCount))
                           [[weaponKeys ["ok"] ["cancel"]]
                            {:weaponIdx 0
                             :weapons weapons
@@ -699,7 +729,7 @@
                  (apply +))]
     (-> unit
         (merge {:position pos})
-        (update-in [:robotState :tags] #(conj % [:move true]))
+        (update-in [:robotState :tags :moveCount] #(if % (inc %) 1))
         (update-in [:robotState :tags] #(conj % [:velocity vel])))))
 
 (defn gameplayOnUnitDone [_ gameplayCtx unit]
@@ -718,7 +748,7 @@
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
    :post [(explainValid? ::type/unit %)]}
   (-> unit
-      (update-in [:robotState :tags] #(dissoc % :done :move))))
+      (update-in [:robotState :tags] #(dissoc % :done :moveCount))))
 
 (defn gameplayOnUnitDead [_ gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
