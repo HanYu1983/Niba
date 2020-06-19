@@ -5,6 +5,7 @@
   (:require [app.module])
   (:require-macros [app.lobby.core]))
 
+(s/check-asserts true)
 
 (defn startLobby [ctx inputCh outputCh]
   (a/go

@@ -24,19 +24,29 @@
         (cond
           (= :enter action)
           (let [{:keys [cursor units]} gameplayCtx
-                unitAtCursor (tool.units/getByPosition units cursor)]
+                unitAtCursor (s/assert
+                              (s/nilable ::type/unit)
+                              (tool.units/getByPosition units cursor))]
             (if unitAtCursor
-              (let [[gameplayCtx isUnitDone] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+              (let [[gameplayCtx isUnitDone] (s/assert
+                                              (s/tuple ::type/gameplayCtx boolean?)
+                                              (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh)))]
                 (if isUnitDone
                   (let [{:keys [units]} gameplayCtx
-                        unit (tool.units/getByKey units (:key unitAtCursor))
+                        unit (s/assert
+                              (s/nilable ::type/unit)
+                              (tool.units/getByKey units (:key unitAtCursor)))
                         ; 機體可能已經死亡
-                        gameplayCtx (if unit
-                                      (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone nil gameplayCtx %))
-                                      gameplayCtx)]
+                        gameplayCtx (s/assert
+                                     ::type/gameplayCtx
+                                     (if unit
+                                       (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone nil gameplayCtx %))
+                                       gameplayCtx))]
                     gameplayCtx)
                   gameplayCtx))
-              (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]
+              (let [[gameplayCtx endTurn] (s/assert
+                                           (s/tuple ::type/gameplayCtx boolean?)
+                                           (a/<! (systemMenu gameplayCtx {} inputCh outputCh)))]
                 (if endTurn
                   [gameplayCtx true]
                   gameplayCtx))))
@@ -48,15 +58,20 @@
 
 
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
+  (s/assert ::type/gameplayCtx gameplayCtx)
   (a/go
-    (let [units (-> (:units gameplayCtx)
-                    (tool.units/mapUnits (fn [unit]
-                                           (data/gameplayOnUnitTurnStart nil gameplayCtx unit))))
+    (let [units (s/assert
+                 ::tool.units/modelType
+                 (-> (:units gameplayCtx)
+                     (tool.units/mapUnits (fn [unit]
+                                            (data/gameplayOnUnitTurnStart nil gameplayCtx unit)))))
           gameplayCtx (assoc gameplayCtx :units units)]
       (a/<! (common/playerTurnStart nil (data/render gameplayCtx) inputCh outputCh))
       (loop [gameplayCtx gameplayCtx]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-        (let [evt (a/<! inputCh)
+        (let [evt (s/assert 
+                   (s/tuple any? any?)
+                   (a/<! inputCh))
               returnCtx (-> gameplayCtx
                             (#(systemCore/mapReturn data/handleTest % evt))
                             (#(systemCore/mapReturn mapViewSystem/handleMapView % evt))
