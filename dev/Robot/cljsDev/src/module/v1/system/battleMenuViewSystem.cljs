@@ -11,25 +11,24 @@
 
 
 (defn handleBattleMenuSession [gameplayCtx unit playerTurn? [cmd args]]
-  {:pre [(common/explainValid? (s/tuple ::spec/battleMenuView ::type/unit) [gameplayCtx unit])]}
+  {:pre [(common/explainValid? (s/tuple ::spec/battleMenuView ::type/unit) [gameplayCtx unit])
+         (common/explainValid? ::spec/unitMenuView gameplayCtx)]}
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)
           handleWeaponView (fn [gameplayCtx]
                              (let [state (-> gameplayCtx :fsm tool.fsm/load)
                                    {:keys [menuCursor battleMenuSession]} state
+                                   {:keys [weapons weaponIdx]} (:data state)
                                    cursor1 (tool.menuCursor/getCursor1 menuCursor)
                                    cursor2 (tool.menuCursor/getCursor2 menuCursor)
-                                   weaponIdx (-> state :data :weaponIdx)
                                    ; 選到武器時, 更新面板
                                    battleMenuSession (if (= cursor1 weaponIdx)
-                                                       (let [weapon (-> (data/getUnitWeapons gameplayCtx unit)
-                                                                        second
-                                                                        (nth cursor2))]
+                                                       (let [weapon (nth weapons cursor2)]
                                                          (cond-> battleMenuSession
                                                            true
                                                            (battleMenu/setLeftAction [:attack weapon] gameplayCtx data/getUnitHitRate)
-                                                           
+
                                                            ; 我方回合並選到武器時, 更新敵方的反應動作
                                                            playerTurn?
                                                            (battleMenu/setRightActionFromReaction gameplayCtx data/getUnitHitRate data/thinkReaction)))

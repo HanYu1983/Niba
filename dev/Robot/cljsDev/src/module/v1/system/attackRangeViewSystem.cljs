@@ -14,13 +14,10 @@
   (let [state (-> gameplayCtx :fsm tool.fsm/load)
         cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-        weaponIdx (get-in state [:data :weaponIdx])]
+        {:keys [weaponIdx weapons]} (:data state)]
     (if (= cursor1 weaponIdx)
-      (-> (data/getUnitWeapons gameplayCtx unit)
-          second
-          (nth cursor2)
-          ((fn [weapon]
-             (data/getUnitWeaponRange gameplayCtx unit weapon))))
+      (->> (nth weapons cursor2)
+           (data/getUnitWeaponRange gameplayCtx unit))
       [])))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]

@@ -14,11 +14,9 @@
   (let [state (-> gameplayCtx :fsm tool.fsm/load)
         cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
-        weaponIdx (get-in state [:data :weaponIdx])]
+        {:keys [weaponIdx weapons]} (:data state)]
     (when (= cursor1 weaponIdx)
-      (let [weapon (-> (data/getUnitWeapons gameplayCtx unit)
-                       second
-                       (nth cursor2))
+      (let [weapon (nth weapons cursor2)
             unitsNearby (->> (data/getUnitsByRegion gameplayCtx (:position unit) nil)
                              (filter (comp not (partial data/isFriendlyUnit gameplayCtx unit))))
             checkHitRate (map (fn [targetUnit]

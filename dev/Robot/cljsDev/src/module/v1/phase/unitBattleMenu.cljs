@@ -31,8 +31,8 @@
           (let [state (-> gameplayCtx :fsm tool.fsm/load)
                 {:keys [menuCursor data battleMenuSession]} state
                 [{left :unit} {right :unit}] battleMenuSession
+                {:keys [weaponIdx weapons]} data
                 cursor1 (tool.menuCursor/getCursor1 menuCursor)
-                weaponIdx (:weaponIdx data)
                 select (tool.menuCursor/getSelect menuCursor)
                 handleBattle (fn [gameplayCtx leftAction rightAction]
                                (a/go
@@ -74,9 +74,7 @@
             (cond
               (= cursor1 weaponIdx)
               (let [cursor2 (tool.menuCursor/getCursor2 menuCursor)
-                    weapon (-> (data/getUnitWeapons gameplayCtx left)
-                               second
-                               (nth cursor2))
+                    weapon (nth weapons cursor2)
                     attackRange (data/getUnitWeaponRange gameplayCtx left weapon)
                     isTargetInRange (some #(= (:position right) %) attackRange)
                     invalidWeaponMsg (data/invalidWeapon? gameplayCtx left weapon)]

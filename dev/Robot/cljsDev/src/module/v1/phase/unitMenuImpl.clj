@@ -60,7 +60,7 @@
 
                    :else
                    (let [transformIdx (-> state :data :transformIdx)
-                         weaponIdx (-> state :data :weaponIdx)
+                         {:keys [weaponIdx weapons]} (-> state :data)
                          cursor1 (-> state :menuCursor tool.menuCursor/getCursor1)
                          cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)]
                      (cond
@@ -85,9 +85,7 @@
                          [gameplayCtx isEnd])
 
                        (= cursor1 weaponIdx)
-                       (let [weapon  (-> (data/getUnitWeapons gameplayCtx unit)
-                                         second
-                                         (nth cursor2))
+                       (let [weapon (nth weapons cursor2)
                              weaponType (data/getWeaponType gameplayCtx unit weapon)]
                          (cond
                            (= "single" weaponType)
