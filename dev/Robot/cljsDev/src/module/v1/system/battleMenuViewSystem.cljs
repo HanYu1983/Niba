@@ -13,6 +13,8 @@
 (defn handleBattleMenuSession [gameplayCtx unit playerTurn? [cmd args]]
   {:pre [(common/explainValid? (s/tuple ::spec/battleMenuView ::type/unit) [gameplayCtx unit])
          (common/explainValid? ::spec/unitMenuView gameplayCtx)]}
+  (common/assertSpec ::spec/battleMenuView gameplayCtx)
+  (common/assertSpec ::spec/unitMenuView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)

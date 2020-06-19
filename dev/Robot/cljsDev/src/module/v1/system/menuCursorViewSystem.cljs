@@ -7,6 +7,7 @@
 
 (defn handleMenuCursor [gameplayCtx [cmd args]]
   {:pre [(common/explainValid? ::spec/menuCursorView gameplayCtx)]}
+  (common/assertSpec ::spec/menuCursorView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

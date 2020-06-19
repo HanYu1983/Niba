@@ -7,6 +7,7 @@
 
 (defn handleMoveRangeView [gameplayCtx updateMoveRange? [cmd args]]
   {:pre [(common/explainValid? ::spec/moveRangeView gameplayCtx)]}
+  (common/assertSpec ::spec/moveRangeView gameplayCtx)
   (cond
     (false? (boolean updateMoveRange?))
     gameplayCtx

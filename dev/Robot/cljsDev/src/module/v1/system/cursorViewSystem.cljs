@@ -5,6 +5,7 @@
 
 (defn handleCursorView [gameplayCtx [cmd args]]
   {:pre [(common/explainValid? ::spec/cursorView gameplayCtx)]}
+  (common/assertSpec ::spec/cursorView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

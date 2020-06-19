@@ -6,6 +6,7 @@
 
 (defn handleMapView [gameplayCtx [cmd args]]
   {:pre [(common/explainValid? ::spec/mapView gameplayCtx)]}
+  (common/assertSpec ::spec/mapView gameplayCtx)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

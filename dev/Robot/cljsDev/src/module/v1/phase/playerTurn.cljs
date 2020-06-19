@@ -26,15 +26,14 @@
           (let [{:keys [cursor units]} gameplayCtx
                 unitAtCursor (tool.units/getByPosition units cursor)]
             (if unitAtCursor
-              (let [[gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
-                (if isEnd
+              (let [[gameplayCtx isUnitDone] (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh))]
+                (if isUnitDone
                   (let [{:keys [units]} gameplayCtx
                         unit (tool.units/getByKey units (:key unitAtCursor))
-                        unitOnDone (data/gameplayOnUnitDone nil gameplayCtx unit)
-                        units (-> units
-                                  (tool.units/delete unit)
-                                  (tool.units/add unitOnDone))
-                        gameplayCtx (assoc gameplayCtx :units units)]
+                        ; 機體可能已經死亡
+                        gameplayCtx (if unit
+                                      (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone nil gameplayCtx %))
+                                      gameplayCtx)]
                     gameplayCtx)
                   gameplayCtx))
               (let [[gameplayCtx endTurn] (a/<! (systemMenu gameplayCtx {} inputCh outputCh))]
