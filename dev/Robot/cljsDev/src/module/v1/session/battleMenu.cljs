@@ -14,7 +14,7 @@
 (def defaultModel [{:unit nil :action [:pending]}
                    {:unit nil :action [:pending]}])
 
-(s/explain ::defaultModel defaultModel)
+(s/assert ::defaultModel defaultModel)
 
 (defn setUnits [ctx left right]
   {:pre [(s/valid? ::defaultModel ctx)]

@@ -155,13 +155,15 @@
 ; unit
 ; =======================
 (defn updateUnit [{:keys [units] :as gameplayCtx} unit f]
-  {:pre [(explainValid? (s/tuple ::type/units ::type/unit) [units unit])]
-   :post [(explainValid? ::type/units (:units %))]}
-  (update gameplayCtx :units (fn [origin]
-                               (-> origin
-                                   (tool.units/delete unit)
-                                   (tool.units/add (f unit))))))
-
+  (common/assertSpec ::type/units units)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   ::type/units
+   :units
+   (update gameplayCtx :units (fn [origin]
+                                (-> origin
+                                    (tool.units/delete unit)
+                                    (tool.units/add (f unit)))))))
 ; hp
 (defn getUnitMaxHp [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
@@ -254,15 +256,17 @@
 
 
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/weapon) [gameplayCtx unit weapon])]
-   :post []}
-  (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
-    (->> (tool.map/simpleFindPath [0 0] (dec min))
-         (into #{})
-         (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                      (into #{})))
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec
+   (s/coll-of vector?)
+   (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
+     (->> (tool.map/simpleFindPath [0 0] (dec min))
+          (into #{})
+          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                       (into #{})))
          ; 使用mapv確保類型, 讓clojure.spec驗過
-         (mapv (partial mapv + (:position unit))))))
+          (mapv (partial mapv + (:position unit)))))))
 
 ;power
 (defn getUnitPower [gameplayCtx unit]
@@ -447,56 +451,58 @@
          (apply =))))
 
 (defn getMenuData [gameplayCtx unit playerTurn?]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? (s/tuple ::spec/menu ::spec/menuCursorData) %)]}
-  (if (not (isBelongToPlayer gameplayCtx unit))
-    [[["cancel"]] {}]
-    (let [isBattleMenu (-> (:fsm gameplayCtx)
-                           (tool.fsm/currState)
-                           (= :unitBattleMenu))
-          moved? (-> unit :robotState :tags :moveCount)
-          weapons (->> (getUnitWeapons gameplayCtx unit)
-                       second
-                       (filter (fn [weapon]
-                                 (if moved?
-                                   (let [weaponAbility (getWeaponAbility gameplayCtx unit weapon)]
-                                     (-> (into #{} weaponAbility) (contains? "moveAttack")))
-                                   true))))
-          _ (when (zero? (count weapons))
-              (throw (js/Error. (str "[data.cljs] weapons count must more then 0"))))
-          weaponKeys (->> (range (count weapons))
-                          (into []))
-          [menu data] (if isBattleMenu
-                        [(if playerTurn?
-                           [weaponKeys ["cancel"]]
-                           [weaponKeys ["evade"] ["guard"]])
-                         {:weaponIdx 0
-                          :weapons weapons
-                          :unit unit}]
-                        (cond
-                          (-> (get-in unit [:robotState :tags])
-                              (contains? :done))
-                          [[["cancel"]] {}]
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec boolean? playerTurn?)
+  (common/assertSpec
+   (s/tuple ::spec/menu ::spec/menuCursorData)
+   (if (not (isBelongToPlayer gameplayCtx unit))
+     [[["cancel"]] {}]
+     (let [isBattleMenu (-> (:fsm gameplayCtx)
+                            (tool.fsm/currState)
+                            (= :unitBattleMenu))
+           moved? (-> unit :robotState :tags :moveCount)
+           weapons (->> (getUnitWeapons gameplayCtx unit)
+                        second
+                        (filter (fn [weapon]
+                                  (if moved?
+                                    (let [weaponAbility (getWeaponAbility gameplayCtx unit weapon)]
+                                      (-> (into #{} weaponAbility) (contains? "moveAttack")))
+                                    true))))
+           _ (when (zero? (count weapons))
+               (throw (js/Error. (str "[data.cljs] weapons count must more then 0"))))
+           weaponKeys (->> (range (count weapons))
+                           (into []))
+           [menu data] (if isBattleMenu
+                         [(if playerTurn?
+                            [weaponKeys ["cancel"]]
+                            [weaponKeys ["evade"] ["guard"]])
+                          {:weaponIdx 0
+                           :weapons weapons
+                           :unit unit}]
+                         (cond
+                           (-> (get-in unit [:robotState :tags])
+                               (contains? :done))
+                           [[["cancel"]] {}]
 
-                          (-> (get-in unit [:robotState :tags])
-                              (contains? :moveCount))
-                          [[weaponKeys ["ok"] ["cancel"]]
-                           {:weaponIdx 0
-                            :weapons weapons
-                            :unit unit}]
+                           (-> (get-in unit [:robotState :tags])
+                               (contains? :moveCount))
+                           [[weaponKeys ["ok"] ["cancel"]]
+                            {:weaponIdx 0
+                             :weapons weapons
+                             :unit unit}]
 
-                          :else
-                          [[["move"]
-                            weaponKeys
-                            (getUnitTransforms gameplayCtx unit)
-                            ["sky/ground"]
-                            ["ok"]
-                            ["cancel"]]
-                           {:weaponIdx 1
-                            :weapons weapons
-                            :transformIdx 2
-                            :unit unit}]))]
-      [menu data])))
+                           :else
+                           [[["move"]
+                             weaponKeys
+                             (getUnitTransforms gameplayCtx unit)
+                             ["sky/ground"]
+                             ["ok"]
+                             ["cancel"]]
+                            {:weaponIdx 1
+                             :weapons weapons
+                             :transformIdx 2
+                             :unit unit}]))]
+       [menu data]))))
 
 
 (defn getSelectWeaponWeight [gameplayCtx unit weapon targetUnit]
@@ -545,10 +551,23 @@
                    [:guard]))]
     action))
 
+(s/def ::events (s/and set?
+                       (s/coll-of #{:damage :evade :guard :dead})))
+(s/def ::damage number?)
+(s/def ::attackAction ::battleMenu/action)
+(s/def ::deffenceAction ::battleMenu/action)
+(s/def ::meta (s/keys :req-opt [::attackAction ::deffenceAction]))
+(s/def ::reactionResult (s/keys :req-un [::events ::damage ::meta]))
 
 (defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])]}
-  (let [leftHitRate (cond-> 0
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit left)
+  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::battleMenu/action leftAction)
+  (common/assertSpec ::battleMenu/action rightAction)
+  (common/assertSpec 
+   ::reactionResult
+   (let [leftHitRate (cond-> 0
                       (= leftActionType :attack)
                       ((fn [_]
                          (getUnitHitRate gameplayCtx left leftWeapon right)))
@@ -579,41 +598,51 @@
                (conj :dead))
      :damage leftMakeDamage
      :meta {:attackAction leftAction
-            :deffenceAction rightAction}}))
+            :deffenceAction rightAction}})))
 
+(s/def ::actionResult (s/tuple ::reactionResult ::reactionResult))
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])
-         (explainValid? ::battleMenu/action leftAction)
-         (explainValid? ::battleMenu/action rightAction)]}
-  (-> [{:events #{} :damage 0} (getReactionResult gameplayCtx left leftAction right rightAction)]
-      ((fn [[_ firstResult :as ctx]]
-         (if (contains? (:events firstResult) :dead)
-           ctx
-           (if (not= (first rightAction) :attack)
-             ctx
-             (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction)))))))))
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit left)
+  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::battleMenu/action leftAction)
+  (common/assertSpec ::battleMenu/action rightAction)
+  (common/assertSpec
+   ::actionResult
+   (-> [{:events #{} :damage 0 :meta {}} (getReactionResult gameplayCtx left leftAction right rightAction)]
+       ((fn [[_ firstResult :as ctx]]
+          (if (contains? (:events firstResult) :dead)
+            ctx
+            (if (not= (first rightAction) :attack)
+              ctx
+              (update ctx 0 (constantly (getReactionResult gameplayCtx right rightAction left leftAction))))))))))
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit) [gameplayCtx left right])
-         (explainValid? ::battleMenu/action leftAction)
-         (explainValid? ::battleMenu/action rightAction)]}
-  (let [[{leftDamage :damage} {rightDamage :damage}] result
-        [leftAfter rightAfter] (map (fn [unit damage]
-                                      (-> (-> unit :robotState :hp)
-                                          (- damage)
-                                          (max 0)
-                                          ((fn [hp]
-                                             (update-in unit [:robotState :hp] (constantly hp))))))
-                                    [left right]
-                                    [leftDamage rightDamage])
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit left)
+  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::battleMenu/action leftAction)
+  (common/assertSpec ::battleMenu/action rightAction)
+  (common/assertSpec ::actionResult result)
+  (common/assertSpec
+   (s/tuple ::type/unit ::type/unit)
+   (let [[{leftDamage :damage} {rightDamage :damage}] result
+         [leftAfter rightAfter] (map (fn [unit damage]
+                                       (-> (-> unit :robotState :hp)
+                                           (- damage)
+                                           (max 0)
+                                           ((fn [hp]
+                                              (update-in unit [:robotState :hp] (constantly hp))))))
+                                     [left right]
+                                     [leftDamage rightDamage])
 
-        [leftAfter rightAfter] (map (fn [unit [actionType weapon]]
-                                      (if (= actionType :attack)
-                                        (useUnitWeapon gameplayCtx weapon unit)
-                                        unit))
-                                    [leftAfter rightAfter]
-                                    [leftAction rightAction])]
-    [leftAfter rightAfter]))
+         [leftAfter rightAfter] (map (fn [unit [actionType weapon]]
+                                       (if (= actionType :attack)
+                                         (useUnitWeapon gameplayCtx weapon unit)
+                                         unit))
+                                     [leftAfter rightAfter]
+                                     [leftAction rightAction])]
+     [leftAfter rightAfter])))
 
 (defn formatPathTree-xx [gameplayCtx unit power paths]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit number?) [gameplayCtx unit power])]}

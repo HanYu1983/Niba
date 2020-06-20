@@ -24,27 +24,27 @@
         (cond
           (= :enter action)
           (let [{:keys [cursor units]} gameplayCtx
-                unitAtCursor (s/assert
+                unitAtCursor (common/assertSpec
                               (s/nilable ::type/unit)
                               (tool.units/getByPosition units cursor))]
             (if unitAtCursor
-              (let [[gameplayCtx isUnitDone] (s/assert
+              (let [[gameplayCtx isUnitDone] (common/assertSpec
                                               (s/tuple ::type/gameplayCtx boolean?)
                                               (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh)))]
                 (if isUnitDone
                   (let [{:keys [units]} gameplayCtx
-                        unit (s/assert
+                        unit (common/assertSpec
                               (s/nilable ::type/unit)
                               (tool.units/getByKey units (:key unitAtCursor)))
                         ; 機體可能已經死亡
-                        gameplayCtx (s/assert
+                        gameplayCtx (common/assertSpec
                                      ::type/gameplayCtx
                                      (if unit
                                        (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone nil gameplayCtx %))
                                        gameplayCtx))]
                     gameplayCtx)
                   gameplayCtx))
-              (let [[gameplayCtx endTurn] (s/assert
+              (let [[gameplayCtx endTurn] (common/assertSpec
                                            (s/tuple ::type/gameplayCtx boolean?)
                                            (a/<! (systemMenu gameplayCtx {} inputCh outputCh)))]
                 (if endTurn
@@ -58,9 +58,9 @@
 
 
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
-  (s/assert ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (a/go
-    (let [units (s/assert
+    (let [units (common/assertSpec
                  ::tool.units/modelType
                  (-> (:units gameplayCtx)
                      (tool.units/mapUnits (fn [unit]
@@ -69,7 +69,7 @@
       (a/<! (common/playerTurnStart nil (data/render gameplayCtx) inputCh outputCh))
       (loop [gameplayCtx gameplayCtx]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-        (let [evt (s/assert 
+        (let [evt (common/assertSpec 
                    (s/tuple any? any?)
                    (a/<! inputCh))
               returnCtx (-> gameplayCtx

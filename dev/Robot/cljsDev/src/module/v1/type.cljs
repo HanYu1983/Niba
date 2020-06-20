@@ -21,8 +21,8 @@
 
 (s/def ::key keyword?)
 (s/def ::position (s/tuple int? int?))
-(s/def ::hp int?)
-(s/def ::en int?)
+(s/def ::hp number?)
+(s/def ::en number?)
 (s/def ::player (s/keys :req-un [::faction ::playerState]))
 (s/def ::players (s/map-of keyword? ::player))
 
@@ -75,7 +75,7 @@
 
 (s/def ::units tool.units/modelType)
 
-(s/def ::gameplayCtx map?)
+(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units]))
 
 (s/def ::returnCtx (s/or :recur ::gameplayCtx
                          :return (s/tuple ::gameplayCtx (constantly true))))

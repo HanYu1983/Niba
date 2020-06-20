@@ -7,8 +7,7 @@
 (def model {:stack []
             :state []})
 
-(when (not (s/valid? ::model model))
-  (println (s/explain-data ::model model)))
+(s/assert ::model model)
 
 (defn currState [ctx]
   (first (:stack ctx)))

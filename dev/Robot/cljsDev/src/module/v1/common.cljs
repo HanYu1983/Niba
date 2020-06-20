@@ -14,11 +14,19 @@
     (do (println (clojure.spec.alpha/explain-str sp args))
         false)))
 
-(defn assertSpec [sp args]
-  (when (s/check-asserts?)
-    (when (not (clojure.spec.alpha/valid? sp args))
-      (println (clojure.spec.alpha/explain-str sp args))
-      (throw (js/Error. (str "error"))))))
+(defn assertSpec
+  ([sp getter args]
+   (if true
+     (if (not (clojure.spec.alpha/valid? sp (getter args)))
+       (throw (js/Error. (clojure.spec.alpha/explain-str sp (getter args))))
+       args)
+     args))
+  ([sp args]
+   (if true
+     (if (not (clojure.spec.alpha/valid? sp args))
+       (throw (js/Error. (clojure.spec.alpha/explain-str sp args)))
+       args)
+     args)))
 
 (def actions {87 :up
               83 :down
