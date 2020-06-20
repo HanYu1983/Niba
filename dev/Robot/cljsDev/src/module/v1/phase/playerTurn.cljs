@@ -60,16 +60,11 @@
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (a/go
-    (let [units (common/assertSpec
-                 ::tool.units/modelType
-                 (-> (:units gameplayCtx)
-                     (tool.units/mapUnits (fn [unit]
-                                            (data/gameplayOnUnitTurnStart nil gameplayCtx unit)))))
-          gameplayCtx (assoc gameplayCtx :units units)]
-      (a/<! (common/playerTurnStart nil (data/render gameplayCtx) inputCh outputCh))
+    (a/<! (common/playerTurnStart nil nil inputCh outputCh))
+    (let [gameplayCtx (a/<! (data/onPlayerTurnStart gameplayCtx inputCh outputCh))]
       (loop [gameplayCtx gameplayCtx]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-        (let [evt (common/assertSpec 
+        (let [evt (common/assertSpec
                    (s/tuple any? any?)
                    (a/<! inputCh))
               returnCtx (-> gameplayCtx

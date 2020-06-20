@@ -13,13 +13,15 @@ export default class ModelController extends cc.Component {
     subscribe() {
         this.viewOb.subscribe(e => {
             const [cmd, args] = e;
+            console.log("[ModelController][receive]" + cmd, args);
             if (this.view[cmd]) {
-                console.log("[ModelController][receive]" + cmd, args);
                 const [id, data] = args;
                 this.view[cmd](data, () => {
                     console.log("[ModelController][reply]" + cmd)
                     this.send("ok", [id, 0])
                 })
+            } else {
+                console.log("[ModelController][warning]no cmd handle")
             }
         })
     }

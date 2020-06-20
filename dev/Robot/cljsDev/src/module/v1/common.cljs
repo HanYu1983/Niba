@@ -49,3 +49,4 @@
 (core/defwait showMessage [ctx args])
 (core/defwait unitSkyAnim [ctx args])
 (core/defwait unitGroundAnim [ctx args])
+(core/defwait unitGetAwardAnim [ctx args])

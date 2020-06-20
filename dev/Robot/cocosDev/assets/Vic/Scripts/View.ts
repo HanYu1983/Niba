@@ -37,6 +37,9 @@ export default class View extends cc.Component {
     unitGroundAnim(data: any, cb: ()=>void){
         this.getGamePage().units.toLandUnit(data.unit.key, cb);
     }
+    unitGetAwardAnim(data: any, cb: ()=>void){
+        console.log("award!", data)
+    }
     showMessage(data: any, cb: ()=>void){
         this.getCommentUI().showAlert(data.message, ()=>{});
         cb()

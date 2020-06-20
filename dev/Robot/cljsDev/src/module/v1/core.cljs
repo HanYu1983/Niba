@@ -105,6 +105,7 @@
                                                                {:robotKey robotKey}))
                                           (inc i)])
                                        [gameplayCtx 1]))]
+      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 
