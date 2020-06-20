@@ -31,6 +31,9 @@ export default class Effects extends cc.Component {
     @property(EffectLayer)
     aimEffects: EffectLayer = null;
 
+    @property(EffectLayer)
+    awardEffects: EffectLayer = null;
+
     @property(cc.Node)
     tracker: cc.Node = null;
 
