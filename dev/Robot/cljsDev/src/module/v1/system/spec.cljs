@@ -41,9 +41,9 @@
                         (let [fsm (:fsm ctx)
                               state (tool.fsm/currState fsm)
                               {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
-                          (and (explainValid? ::fsm fsm)
-                               (explainValid? #{:unitMenu :unitBattleMenu} state)
-                               (explainValid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
+                          (and (s/valid? ::fsm fsm)
+                               (s/valid? #{:unitMenu :unitBattleMenu} state)
+                               (s/valid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::battleMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)
