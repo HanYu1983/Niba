@@ -20,7 +20,7 @@ export default class View extends cc.Component {
     unitMoveAnim(data: any, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
-    unitAimAnimation(data: any, cb: () => void){
+    unitTargetingAnim(data: any, cb: () => void){
         this.getGamePage().showAimAnimation(data, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
@@ -39,6 +39,7 @@ export default class View extends cc.Component {
     }
     unitGetAwardAnim(data: any, cb: ()=>void){
         console.log("award!", data)
+        cb()
     }
     showMessage(data: any, cb: ()=>void){
         this.getCommentUI().showAlert(data.message, ()=>{});

@@ -27,7 +27,7 @@ export default class ViewController extends cc.Component {
     static instance: ViewController;
 
     onLoad() {
-        this.modelController.setConsumer(this);
+        this.modelController.setConsumer(this.view);
         this.model.setModelController(this.modelController);
         ViewController.instance = this;
     }
@@ -74,6 +74,7 @@ export default class ViewController extends cc.Component {
 
 
     //#region consumer
+    /*
     playerTurnStart(data: any, cb: () => void) {
         this.view.playerTurnStart(data, cb)
     }
@@ -83,8 +84,8 @@ export default class ViewController extends cc.Component {
     unitMoveAnim(data: any, cb: () => void) {
         this.view.unitMoveAnim(data, cb)
     }
-    unitTargetingAnim(data: any, cb: ()=>void){
-        this.view.unitAimAnimation(data, cb);
+    unitTargetingAnim(data: any, cb: () => void) {
+        this.view.unitTargetingAnim(data, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
         this.view.unitBattleAnim(data, cb)
@@ -98,11 +99,15 @@ export default class ViewController extends cc.Component {
     unitGroundAnim(data: any, cb: () => void) {
         this.view.unitGroundAnim(data, cb)
     }
+    unitGetAwardAnim(data: any, cb: () => void) {
+        this.view.unitGetAwardAnim(data, cb)
+    }
     showMessage(data: any, cb: () => void) {
         this.view.showMessage(data, cb)
     }
     paint(data: any, cb: () => void) {
         this.view.paint(data, cb)
     }
+    */
     //#endregion
 }
