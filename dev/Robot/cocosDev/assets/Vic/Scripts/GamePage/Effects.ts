@@ -71,6 +71,10 @@ export default class Effects extends cc.Component {
         this.tracker['speed'] = speed;
     }
 
+    createAwardEffect(pos:number[]){
+        cc.tween(this.node).call(()=>{this._createAward(pos);}).delay(.5).start();     
+    }
+
     createExplodePipe(from: number[], to: number[], hp: number) {
         cc.tween(this.node)
             .call(()=>{this.createAimEffect(from, to)})
@@ -93,6 +97,10 @@ export default class Effects extends cc.Component {
 
     private _createExplode(pos: number[]) {
         this.explodeLayer.createEffect(pos);
+    }
+
+    private _createAward(pos:number[]){
+        this.awardEffects.createEffect(pos);
     }
 
     private _createHitHp(hp: number, pos: number[]) {

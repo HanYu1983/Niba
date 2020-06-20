@@ -199,6 +199,7 @@ export default class GamePage extends BasicViewer {
     }
 
     explodeUnit(data: any, cb: () => void) {
+        this.closeUnitSampleInfos();
         this.effects.createUnitExplode(data.unit.position);
         this.units.removeUnitByID(data.unit.key);
         cc.tween(this.node).delay(1).call(cb).start();
@@ -314,8 +315,26 @@ export default class GamePage extends BasicViewer {
 
         cc.tween(this.node).delay(1).call(() => {
             this.effects.createAimEffect(from1, to1, .1);
-
         }).delay(1).call(cb).start()
+    }
+
+    awardUnitAnimation(data:any, cb:()=>void){
+        let beforeUnit = data[0];
+        let afterUnit = data[1];
+        let pos = beforeUnit.position;
+
+        cc.tween(this.node).delay(1).call(()=>{
+            this.effects.createAwardEffect(pos);
+        }).delay(1).call(()=>{
+            this.unitSampleInfos.showItem(pos, (item:cc.Node)=>{
+                item.getComponent(UnitSampleInfo).showHPEN(beforeUnit.robotState.maxHp, beforeUnit.robotState.hp, beforeUnit.robotState.maxEn, beforeUnit.robotState.en);
+                item.getComponent(UnitSampleInfo).changeEN(afterUnit.robotState.maxEn, afterUnit.robotState.en);
+                item.getComponent(UnitSampleInfo).changeHP(afterUnit.robotState.maxHp, afterUnit.robotState.hp);
+            });
+        }).delay(1).call(()=>{
+            this.closeUnitSampleInfos();
+            cb();
+        }).start();
     }
 
     changeUnitHP(data: any, cb: () => void) {
