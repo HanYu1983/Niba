@@ -25,9 +25,9 @@ export default class RobotSelectPanel extends BasicViewer {
     }
 
     setRobotList(data:any){
+        if (data.data.length == 0) return;
         this.robotSelectList.close();
         this.robotSelectList.open();
-
         let cursor;
         let subcursor = [];
         data.data.forEach(element => {
