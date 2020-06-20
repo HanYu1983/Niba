@@ -35,9 +35,9 @@
                         ~ctx (assoc ~ctx :fsm ~'fsm)
                         ~ctx ~(or init ctx)]
                     ~ctx)
-             [~ctx ~'ret] (do
-                            ~@body)
-             ~'_ (common/explainValid? ~'type/gameplayCtx ~ctx)
+             [~ctx ~'ret :as ~'asyncRet] (do
+                                         ~@body)
+             ~'_ (common/assertSpec (clojure.spec.alpha/tuple ~'type/gameplayCtx any?) ~'asyncRet)
              ~ctx (assoc ~ctx :fsm (tool.fsm/popState (:fsm ~ctx)))
              ~ctx ~(or exit ctx)]
          [~ctx ~'ret]))))
