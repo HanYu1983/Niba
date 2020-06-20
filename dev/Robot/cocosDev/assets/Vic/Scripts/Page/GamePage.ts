@@ -129,11 +129,12 @@ export default class GamePage extends BasicViewer {
     }
 
     showFightInfo(datas: any) {
+        this.fightInfoMenu.node.active = true;
         this.fightInfoMenu.showInfos(datas.preview);
     }
 
     closeFightInfo() {
-        this.fightInfoMenu.clearInfo();
+        this.fightInfoMenu.node.active = false;
     }
 
     setSmallMap(data: any[]) {

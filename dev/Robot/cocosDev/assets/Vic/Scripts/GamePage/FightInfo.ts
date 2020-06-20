@@ -8,6 +8,8 @@
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import UnitStatuInfo from "./UnitStatuInfo";
+
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -22,6 +24,9 @@ export default class FightInfo extends cc.Component {
     @property(cc.Label)
     hit: cc.Label = null;
 
+    @property(UnitStatuInfo)
+    unit:UnitStatuInfo = null;
+
     setHitRate(rate: number) {
         this.hit.string = rate === 0 ? "--" : (rate * 100).toFixed(0) + "%";
     }
@@ -32,6 +37,10 @@ export default class FightInfo extends cc.Component {
 
     setWeaponName(name: string) {
         this.weaponName.string = name;
+    }
+
+    setUnit(unit:any){
+        this.unit.setUnit(unit);
     }
 
     showHit(show:boolean){

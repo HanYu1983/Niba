@@ -28,7 +28,6 @@ export default class FightMenu extends cc.Component {
     enemyInfo: FightInfo = null;
 
     showInfos(datas: any[]) {
-        this.clearInfo();
         this.showInfo(this.playerInfo, datas[0]);
         this.showInfo(this.enemyInfo, datas[1]);
     }
@@ -42,6 +41,8 @@ export default class FightMenu extends cc.Component {
 
         this.back.node.active = true;
         info.node.active = true;
+
+        info.setUnit(data.unit);
         
         switch (data.action[0]) {
             case "evade":
@@ -67,9 +68,9 @@ export default class FightMenu extends cc.Component {
         }
     }
 
-    clearInfo() {
-        this.back.node.active = false;
-        this.playerInfo.node.active = false;
-        this.enemyInfo.node.active = false;
-    }
+    // clearInfo() {
+    //     this.back.node.active = false;
+    //     this.playerInfo.node.active = false;
+    //     this.enemyInfo.node.active = false;
+    // }
 }
