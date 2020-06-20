@@ -24,7 +24,6 @@ export default class UnitStatuMenu extends BasicViewer {
     terrainSection: LandStatuInfo = null;
 
     setUnit(unit: any) {
-        cc.log(this.unitSection);
         this.unitSection.setUnit(unit);
     }
 
