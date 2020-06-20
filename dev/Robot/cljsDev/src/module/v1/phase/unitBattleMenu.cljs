@@ -36,7 +36,9 @@
            ; 如果選單中有cancel, 才能按快速鍵跳出
            (and (let [state (-> gameplayCtx :fsm tool.fsm/load)
                       menu (-> state :menuCursor :menu)
-                      cancelButton? (->> menu flatten (into #{}) (#(contains? % "cancel")))]
+                      cancelButton? (common/assertSpec
+                                     boolean?
+                                     (->> menu flatten (into #{}) (#(contains? % "cancel"))))]
                   cancelButton?)
                 (= :cancel action))
            [gameplayCtx false]
