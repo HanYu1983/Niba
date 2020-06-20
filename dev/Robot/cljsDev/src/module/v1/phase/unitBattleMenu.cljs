@@ -90,7 +90,7 @@
                (= cursor1 weaponIdx)
                (let [cursor2 (tool.menuCursor/getCursor2 menuCursor)
                      weapon (common/assertSpec
-                            ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
+                             ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
                              ::type/weapon
                              (nth weapons cursor2))
                      attackRange (data/getUnitWeaponRange gameplayCtx left weapon)

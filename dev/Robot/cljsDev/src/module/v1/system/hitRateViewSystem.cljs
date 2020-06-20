@@ -16,7 +16,9 @@
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
         {:keys [weaponIdx weapons]} (:data state)]
     (when (= cursor1 weaponIdx)
-      (let [weapon (nth weapons cursor2)
+      (let [weapon (common/assertSpec
+                    ::type/weapon
+                    (nth weapons cursor2))
             unitsNearby (->> (data/getUnitsByRegion gameplayCtx (:position unit) nil)
                              (filter (comp not (partial data/isFriendlyUnit gameplayCtx unit))))
             checkHitRate (map (fn [targetUnit]

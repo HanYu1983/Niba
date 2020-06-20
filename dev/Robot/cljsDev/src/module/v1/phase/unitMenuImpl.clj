@@ -97,7 +97,9 @@
                          [gameplayCtx isEnd])
 
                        (= cursor1 weaponIdx)
-                       (let [weapon (nth weapons cursor2)
+                       (let [weapon (common/assertSpec
+                                     type/weapon
+                                     (nth weapons cursor2))
                              weaponType (data/getWeaponType gameplayCtx unit weapon)]
                          (cond
                            (= "single" weaponType)

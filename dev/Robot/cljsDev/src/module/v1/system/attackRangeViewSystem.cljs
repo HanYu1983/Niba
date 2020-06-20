@@ -16,7 +16,9 @@
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
         {:keys [weaponIdx weapons]} (:data state)]
     (if (= cursor1 weaponIdx)
-      (->> (nth weapons cursor2)
+      (->> (common/assertSpec
+            ::type/weapon
+            (nth weapons cursor2))
            (data/getUnitWeaponRange gameplayCtx unit))
       [])))
 
