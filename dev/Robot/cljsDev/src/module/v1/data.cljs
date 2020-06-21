@@ -425,16 +425,16 @@
         [suit1 suit2 suit3 _] (getUnitSuitability gameplayCtx unit)
         costFn (fn [terrainKey]
                  (let [basic (get-in data [:terrain terrainKey :cost])
-                       factor (cond
-                                isSky
-                                suit3
+                       ret (cond
+                             isSky
+                             (* 0.5 (/ 1 suit3))
 
-                                (#{:shallowSea :deepSea} terrainKey)
-                                suit2
+                             (#{:shallowSea :deepSea} terrainKey)
+                             (* basic (/ 1 suit2))
 
-                                :else
-                                suit1)]
-                   (* basic (/ 1 factor))))]
+                             :else
+                             (* basic (/ 1 suit1)))]
+                   ret))]
     (+ (costFn (getTerrainKey gameplayCtx from))
        (costFn (getTerrainKey gameplayCtx to)))))
 
