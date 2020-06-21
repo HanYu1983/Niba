@@ -41,23 +41,6 @@
          (get-in data [:terrain key])))))
 
 
-(defn moveCost [{playmap :map} unit from to]
-  {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
-   :post [(number? %)]}
-  (let [isSky (-> (get-in unit [:robotState :tags])
-                  (contains? :sky))]
-    (if isSky
-      1
-      (let [t1 (get-in data [:terrainMapping
-                             ((comp keyword str) (get-in playmap (reverse from)))
-                             :terrain])
-            t2 (get-in data [:terrainMapping
-                             ((comp keyword str) (get-in playmap (reverse to)))
-                             :terrain])]
-        (+ (get-in data [:terrain (keyword t1) :cost])
-           (get-in data [:terrain (keyword t2) :cost]))))))
-
-
 (defn estimateCost [from to]
   (->> (map - from to)
        (repeat 2)
@@ -433,6 +416,27 @@
       :else
       (throw (js/Error. (str "unknown energyType " weaponInfo))))))
 
+(defn moveCost [{playmap :map :as gameplayCtx} unit from to]
+  {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
+   :post [(number? %)]}
+  (let [isSky (-> (get-in unit [:robotState :tags])
+                  (contains? :sky))
+        ; 陸海空宇
+        [suit1 suit2 suit3 _] (getUnitSuitability gameplayCtx unit)
+        costFn (fn [terrainKey]
+                 (let [basic (get-in data [:terrain terrainKey :cost])
+                       factor (cond
+                                isSky
+                                suit3
+
+                                (#{:shallowSea :deepSea} terrainKey)
+                                suit2
+
+                                :else
+                                suit1)]
+                   (* basic (/ 1 factor))))]
+    (+ (costFn (getTerrainKey gameplayCtx from))
+       (costFn (getTerrainKey gameplayCtx to)))))
 
 (defn isBelongToPlayer [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
@@ -664,7 +668,7 @@
                                                   [(min (dec mw) (inc x)) y]
                                                   [(max 0 (dec x)) y]]
                                 unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
-                                costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)
+                                costToNext (map #(moveCost gameplayCtx unit [x y] %) possiblePosition)
                                 sky? (-> unit :robotState :tags :sky)]
                             (->> (map vector possiblePosition costToNext unitsInPosition)
                                  (filter (fn [[_ cost occupyUnit]]
