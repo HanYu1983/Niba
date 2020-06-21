@@ -824,9 +824,43 @@
         ((fn [unit]
            (getUnitInfo gameplayCtx unit))))))
 
+(defn onEnemyTurnStart [gameplayCtx enemy inputCh outputCh]
+  (a/go
+    (a/<! (common/enemyTurnStart nil enemy inputCh outputCh))
+    (common/assertSpec
+     ::type/gameplayCtx
+     gameplayCtx)))
+
+(defn onEnemyTurnEnd [gameplayCtx enemy inputCh outputCh]
+  (a/go
+    (a/<! (common/enemyTurnStart nil enemy inputCh outputCh))
+    (common/assertSpec
+     ::type/gameplayCtx
+     (let [unitList (common/assertSpec
+                     (s/coll-of ::type/unit)
+                     (->> (tool.units/getAll (:units gameplayCtx))
+                          (filter #(= enemy (:playerKey %)))))
+           nextUnitList (common/assertSpec
+                         (s/coll-of ::type/unit)
+                         (a/<! (a/go-loop [[unit & rest] unitList
+                                           after []]
+                                 (if unit
+                                   (let [nextUnit unit
+                                         nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :done))]
+                                     (recur rest (conj after nextUnit)))
+                                   after))))
+           gameplayCtx (common/assertSpec
+                        ::type/gameplayCtx
+                        (->> (zipmap unitList nextUnitList)
+                             (reduce (fn [gameplayCtx [old next]]
+                                       (updateUnit gameplayCtx old (constantly next)))
+                                     gameplayCtx)))]
+       gameplayCtx))))
+
 (defn onPlayerTurnStart [gameplayCtx inputCh outputCh]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (a/go
+    (a/<! (common/playerTurnStart nil nil inputCh outputCh))
     (common/assertSpec
      ::type/gameplayCtx
      (let [unitList (common/assertSpec

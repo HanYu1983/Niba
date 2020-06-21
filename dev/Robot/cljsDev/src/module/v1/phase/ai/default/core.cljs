@@ -54,8 +54,8 @@
 
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
   (a/go
-    (a/<! (common/enemyTurnStart gameplayCtx enemy inputCh outputCh))
-    (let [gameplayCtx (initEnemy gameplayCtx enemy)
+    (let [gameplayCtx (a/<! (data/onEnemyTurnStart gameplayCtx enemy inputCh outputCh))
+          gameplayCtx (initEnemy gameplayCtx enemy)
           units (->> (:units gameplayCtx)
                      (tool.units/getAll)
                      (filter (fn [unit]
@@ -66,4 +66,4 @@
         (if unit
           (let [gameplayCtx (assoc gameplayCtx :cursor (:position unit))]
             (recur (a/<! (updateUnit gameplayCtx unit inputCh outputCh)) restUnits))
-          gameplayCtx)))))
+          (a/<! (data/onEnemyTurnEnd gameplayCtx enemy inputCh outputCh)))))))

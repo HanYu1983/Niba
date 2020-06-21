@@ -29,6 +29,7 @@
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
+      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (let [gameplayCtx (a/<! (playerTurn gameplayCtx nil inputCh outputCh))
             ; 回傳空值代表有例外
             _ (when (nil? gameplayCtx)
@@ -38,6 +39,7 @@
                          (filter #(not= :player %)))
             enemyTurns (a/go-loop [gameplayCtx gameplayCtx
                                    enemies enemies]
+                         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
                          (if (= (count enemies) 0)
                            gameplayCtx
                            (let [enemy (first enemies)
@@ -105,7 +107,6 @@
                                                                {:robotKey robotKey}))
                                           (inc i)])
                                        [gameplayCtx 1]))]
-      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 

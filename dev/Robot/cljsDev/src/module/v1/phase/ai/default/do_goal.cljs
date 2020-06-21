@@ -87,37 +87,47 @@
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
                        (cond
-                        (= "attack" action)
-                        (a/<! (handleAttack gameplayCtx unit
-                                            (fn [gameplayCtx]
-                                              (a/go
-                                                (let [orderGoal (common/assertSpec
-                                                                 ::goalType/goal
-                                                                 (-> unit :robotState :orderGoal))
-                                                      gameplayCtx (if orderGoal
-                                                                    (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
-                                                                    gameplayCtx)]
-                                                  gameplayCtx)))
-                                            inputCh outputCh))
+                         (= "attack" action)
+                         (let [gameplayCtx (a/<! (handleAttack gameplayCtx unit
+                                                               (fn [gameplayCtx]
+                                                                 (a/go
+                                                                   (let [orderGoal (common/assertSpec
+                                                                                    ::goalType/goal
+                                                                                    (-> unit :robotState :orderGoal))
+                                                                         gameplayCtx (if orderGoal
+                                                                                       (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
+                                                                                       gameplayCtx)]
+                                                                     gameplayCtx)))
+                                                               inputCh outputCh))
+                               ; 重新取得單位
+                               unit (common/assertSpec
+                                    ; 單位可能在攻擊中死亡
+                                     (s/nilable ::type/unit)
+                                     (-> gameplayCtx :units (tool.units/getByKey (:key unit))))
+                               gameplayCtx (if unit
+                                             (let [nextUnit (data/gameplayOnUnitDone nil gameplayCtx unit)]
+                                               (data/updateUnit gameplayCtx unit (constantly nextUnit)))
+                                             gameplayCtx)]
+                           gameplayCtx)
 
-                        (= "findSupply" action)
-                        (let [isAward? (common/assertSpec
-                                        boolean?
-                                        (-> (data/getTerrainKey gameplayCtx (:position unit))
-                                            (= :award)))
-                              gameplayCtx (common/assertSpec
-                                           ::type/gameplayCtx
-                                           (if isAward?
-                                             gameplayCtx
-                                             (let [awardPosition (data/findNearestTerrainPosition gameplayCtx :award (:position unit))
-                                                   gameplayCtx (if awardPosition
-                                                                 (a/<! (do-goal [:moveTo awardPosition] gameplayCtx unit inputCh outputCh))
-                                                                 gameplayCtx)]
-                                               gameplayCtx)))]
-                          gameplayCtx)
+                         (= "findSupply" action)
+                         (let [isAward? (common/assertSpec
+                                         boolean?
+                                         (-> (data/getTerrainKey gameplayCtx (:position unit))
+                                             (= :award)))
+                               gameplayCtx (common/assertSpec
+                                            ::type/gameplayCtx
+                                            (if isAward?
+                                              gameplayCtx
+                                              (let [awardPosition (data/findNearestTerrainPosition gameplayCtx :award (:position unit))
+                                                    gameplayCtx (if awardPosition
+                                                                  (a/<! (do-goal [:moveTo awardPosition] gameplayCtx unit inputCh outputCh))
+                                                                  gameplayCtx)]
+                                                gameplayCtx)))]
+                           gameplayCtx)
 
-                        :else
-                        (throw (js/Error. (str "action " action " not found")))))]
+                         :else
+                         (throw (js/Error. (str "action " action " not found")))))]
       gameplayCtx)))
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]

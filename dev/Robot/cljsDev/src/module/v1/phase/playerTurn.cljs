@@ -60,7 +60,6 @@
 (defn playerTurn [gameplayCtx _ inputCh outputCh]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (a/go
-    (a/<! (common/playerTurnStart nil nil inputCh outputCh))
     (let [gameplayCtx (a/<! (data/onPlayerTurnStart gameplayCtx inputCh outputCh))]
       (loop [gameplayCtx gameplayCtx]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
