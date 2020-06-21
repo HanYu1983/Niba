@@ -18,7 +18,7 @@
 (def unitA {:key :a
             :position [0 0]
             :playerKey :a
-            :robotState {:robotKey :a
+            :robotState {:robotKey :gundam
                          :pilotKey :a
                          :tags {}
                          :hp 0

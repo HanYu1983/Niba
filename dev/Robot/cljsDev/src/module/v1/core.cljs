@@ -84,6 +84,7 @@
                           (assoc :lobbyCtx (:lobbyCtx ctx)))
           ; 選角頁, DEMO版先拿掉
           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
+          ; 產生自己選出的軍隊
           gameplayCtx (->> (map (fn [idx key robotKey]
                                   [{:key key
                                     :playerKey :player
@@ -95,6 +96,7 @@
                            (reduce (fn [gameplayCtx [arg1 arg2]]
                                      (data/createUnit gameplayCtx arg1 arg2))
                                    gameplayCtx))
+          ; 產生測試用的軍隊
           [gameplayCtx _] (->> (get data/data :robot)
                                (take 4)
                                (reduce (fn [[gameplayCtx i] [robotKey _]]
@@ -106,7 +108,26 @@
                                                                 :position [5 i]}
                                                                {:robotKey robotKey}))
                                           (inc i)])
-                                       [gameplayCtx 1]))]
+                                       [gameplayCtx 1]))
+          ; 讓不能在地上的部隊飛起來
+          gameplayCtx (common/assertSpec
+                       ::type/gameplayCtx
+                       (let [unitList (->> (:units gameplayCtx)
+                                           tool.units/getAll)
+                             nextUnitList (map (fn [unit]
+                                                 (common/assertSpec
+                                                  ::type/unit
+                                                  (let [[ground _ _ _] (data/getUnitSuitability gameplayCtx unit)
+                                                        sky? (zero? ground)]
+                                                    (if sky?
+                                                      (update-in unit [:robtoState :tags] #(conj % [:sky true]))
+                                                      unit))))
+                                               unitList)
+                             gameplayCtx (reduce (fn [gameplayCtx [old next]]
+                                                   (data/updateUnit gameplayCtx old (constantly next)))
+                                                 gameplayCtx
+                                                 (zipmap unitList nextUnitList))]
+                         gameplayCtx))]
       (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
 
 

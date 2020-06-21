@@ -77,17 +77,22 @@
                          cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)]
                      (cond
                        (= select "sky/ground")
-                       (let [transformedUnit (update-in unit [:robotState :tags] (fn [tags]
-                                                                                   (if (contains? tags :sky)
-                                                                                     (dissoc tags :sky)
-                                                                                     (conj tags [:sky true]))))
-                             gameplayCtx (-> gameplayCtx
-                                             (data/updateUnit unit (constantly transformedUnit)))
-                             _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
-                                 (a/<! (common/unitSkyAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
-                                 (a/<! (common/unitGroundAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))
-                             [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
-                         [gameplayCtx isEnd])
+                       (let [[_ _ suit3 _] (data/getUnitSuitability gameplayCtx unit)
+                             canSky? (not (zero? suit3))]
+                         (if canSky?
+                           (let [transformedUnit (update-in unit [:robotState :tags] (fn [tags]
+                                                                                       (if (contains? tags :sky)
+                                                                                         (dissoc tags :sky)
+                                                                                         (conj tags [:sky true]))))
+                                 gameplayCtx (-> gameplayCtx
+                                                 (data/updateUnit unit (constantly transformedUnit)))
+                                 _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
+                                     (a/<! (common/unitSkyAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
+                                     (a/<! (common/unitGroundAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))]
+                             (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh)))
+                           (do
+                             (a/<! (common/showMessage nil {:message (str "沒有飛行能力")} inputCh outputCh))
+                             (recur gameplayCtx))))
 
                        (= cursor1 transformIdx)
                        (let [transformedUnit (data/unitOnTransform gameplayCtx unit (get-in unit [:robotState :robotKey]) select)
