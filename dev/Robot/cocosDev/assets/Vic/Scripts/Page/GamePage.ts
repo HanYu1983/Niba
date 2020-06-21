@@ -374,6 +374,7 @@ export default class GamePage extends BasicViewer {
             this.turnStart.node.off("end");
             callback();
         }, this);
+        this.closeUnitSampleInfos();
     }
 
     openSceneMenu(data: any, cursors: any[]) {

@@ -9,7 +9,8 @@
   "wrapMode": 1,
   "curveData": {
     "paths": {
-      "LocalUnit": {
+      "ForAir/LocalUnit": {
+        "comps": {},
         "props": {
           "position": [
             {

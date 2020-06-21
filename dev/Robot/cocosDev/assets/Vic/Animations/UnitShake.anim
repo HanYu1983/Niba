@@ -1,6 +1,6 @@
 {
   "__type__": "cc.AnimationClip",
-  "_name": "ShakeUnit",
+  "_name": "UnitShake",
   "_objFlags": 0,
   "_native": "",
   "_duration": 0.25,
@@ -12,7 +12,8 @@
       "position": []
     },
     "paths": {
-      "LocalUnit": {
+      "ForAir/LocalUnit": {
+        "comps": {},
         "props": {
           "position": [
             {
