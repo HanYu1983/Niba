@@ -829,7 +829,43 @@
     (a/<! (common/enemyTurnStart nil enemy inputCh outputCh))
     (common/assertSpec
      ::type/gameplayCtx
-     gameplayCtx)))
+     (let [unitList (common/assertSpec
+                     (s/coll-of ::type/unit)
+                     (->> (tool.units/getAll (:units gameplayCtx))
+                          (filter #(= enemy (:playerKey %)))))
+           nextUnitList (common/assertSpec
+                         (s/coll-of ::type/unit)
+                         (a/<! (a/go-loop [[unit & rest] unitList
+                                           after []]
+                                 (if unit
+                                   (let [nextUnit unit
+                                         ; award
+                                         award? (common/assertSpec
+                                                 boolean?
+                                                 (-> (getTerrainKey gameplayCtx (:position unit))
+                                                     (= :award)))
+                                         nextUnit (common/assertSpec
+                                                   ::type/unit
+                                                   (if award?
+                                                     (let [maxHp (getUnitMaxHp gameplayCtx unit)
+                                                           maxEn (getUnitMaxEn gameplayCtx unit)
+                                                           nextUnit (-> nextUnit
+                                                                        (update-in [:robotState :hp] #(min (+ % (* maxHp 0.2)) maxHp))
+                                                                        (update-in [:robotState :en] #(min (+ % (* maxEn 0.2)) maxEn)))]
+                                                       (a/<! (common/unitGetAwardAnim nil (map #(mapUnitToLocal gameplayCtx nil %) [unit nextUnit]) inputCh outputCh))
+                                                       nextUnit)
+                                                     nextUnit))
+                                         ; remove velocity
+                                         nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :velocity))]
+                                     (recur rest (conj after nextUnit)))
+                                   after))))
+           gameplayCtx (common/assertSpec
+                        ::type/gameplayCtx
+                        (->> (zipmap unitList nextUnitList)
+                             (reduce (fn [gameplayCtx [old next]]
+                                       (updateUnit gameplayCtx old (constantly next)))
+                                     gameplayCtx)))]
+       gameplayCtx))))
 
 (defn onEnemyTurnEnd [gameplayCtx enemy inputCh outputCh]
   (a/go
@@ -865,7 +901,8 @@
      ::type/gameplayCtx
      (let [unitList (common/assertSpec
                      (s/coll-of ::type/unit)
-                     (tool.units/getAll (:units gameplayCtx)))
+                     (->> (tool.units/getAll (:units gameplayCtx))
+                          (filter #(= :player (:playerKey %)))))
            nextUnitList (common/assertSpec
                          (s/coll-of ::type/unit)
                          (a/<! (a/go-loop [[unit & rest] unitList
