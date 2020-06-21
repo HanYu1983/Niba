@@ -338,6 +338,8 @@ export default class GamePage extends BasicViewer {
     }
 
     changeUnitHP(data: any, cb: () => void) {
+        this.map.closeMapRange();
+        this.map.closeWeaponRange();
         this.closeUnitSampleInfos();
         this.hideCursor();
 
