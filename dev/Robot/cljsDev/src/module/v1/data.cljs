@@ -252,7 +252,7 @@
   {:pre [(explainValid? (s/tuple ::type/unit ::type/weaponEntry) [unit weapons])]
    :post [(explainValid? ::type/unit %)]}
   (update-in unit [:robotState :weapons] (fn [origin]
-                                      (conj origin weapons))))
+                                           (conj origin weapons))))
 
 
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
@@ -335,7 +335,7 @@
 
         ; 武器命中補正係數
         factor4 (:accuracy weaponInfo)
-        
+
         ; 地型補正係數
         factor5 (cond
                   (or lightingActive? fireActive?)
@@ -348,17 +348,17 @@
         factor6 (cond
                   missile?
                   1
-                  
+
                   :else
                   (let [vel (or (get-in targetUnit [:robotState :tags :velocity]) 0)]
-                  (if (= vel 0)
-                    1
-                    (-> 0.5
-                        (* vel)
-                        (/ 20)
-                        ((fn [v]
-                           (- 1 v)))
-                        (max 0)))))]
+                    (if (= vel 0)
+                      1
+                      (-> 0.5
+                          (* vel)
+                          (/ 20)
+                          ((fn [v]
+                             (- 1 v)))
+                          (max 0)))))]
     (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6))))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
@@ -396,15 +396,15 @@
     (if (nil? robot)
       (throw (js/Error. (str "getUnitInfo[" robotKey "] not found")))
       (update-in unit [:robotState] (fn [state]
-                                 (merge state
-                                        {:weapons (->> (getUnitWeapons gameplayCtx unit)
-                                                       second
-                                                       (map (partial getWeaponInfo gameplayCtx unit)))
-                                         :components (->> (getUnitComponents gameplayCtx unit)
-                                                          second)
-                                         :maxHp (getUnitMaxHp gameplayCtx unit)
-                                         :maxEn (getUnitMaxEn gameplayCtx unit)
-                                         :power (getUnitPower gameplayCtx unit)}))))))
+                                      (merge state
+                                             {:weapons (->> (getUnitWeapons gameplayCtx unit)
+                                                            second
+                                                            (map (partial getWeaponInfo gameplayCtx unit)))
+                                              :components (->> (getUnitComponents gameplayCtx unit)
+                                                               second)
+                                              :maxHp (getUnitMaxHp gameplayCtx unit)
+                                              :maxEn (getUnitMaxEn gameplayCtx unit)
+                                              :power (getUnitPower gameplayCtx unit)}))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/weapon ::type/unit) [gameplayCtx weapon unit])]
@@ -565,40 +565,40 @@
   (common/assertSpec ::type/unit right)
   (common/assertSpec ::battleMenu/action leftAction)
   (common/assertSpec ::battleMenu/action rightAction)
-  (common/assertSpec 
+  (common/assertSpec
    ::reactionResult
    (let [leftHitRate (cond-> 0
-                      (= leftActionType :attack)
-                      ((fn [_]
-                         (getUnitHitRate gameplayCtx left leftWeapon right)))
+                       (= leftActionType :attack)
+                       ((fn [_]
+                          (getUnitHitRate gameplayCtx left leftWeapon right)))
 
-                      (= rightActionType :evade)
-                      (/ 2))
-        leftIsHit (< (rand) leftHitRate)
-        leftMakeDamage (cond-> 0
-                         (= leftActionType :attack)
-                         ((fn [_]
-                            (getUnitMakeDamage gameplayCtx left leftWeapon right)))
+                       (= rightActionType :evade)
+                       (/ 2))
+         leftIsHit (< (rand) leftHitRate)
+         leftMakeDamage (cond-> 0
+                          (= leftActionType :attack)
+                          ((fn [_]
+                             (getUnitMakeDamage gameplayCtx left leftWeapon right)))
 
-                         (false? leftIsHit)
-                         ((fn [_] 0))
+                          (false? leftIsHit)
+                          ((fn [_] 0))
 
-                         (= rightActionType :guard)
-                         (/ 2))]
-    {:events (cond-> #{}
-               true
-               (conj (if leftIsHit
-                       :damage
-                       :evade))
+                          (= rightActionType :guard)
+                          (/ 2))]
+     {:events (cond-> #{}
+                true
+                (conj (if leftIsHit
+                        :damage
+                        :evade))
 
-               (= rightActionType :guard)
-               (conj :guard)
+                (= rightActionType :guard)
+                (conj :guard)
 
-               (<= (- (-> right :robotState :hp) leftMakeDamage) 0)
-               (conj :dead))
-     :damage leftMakeDamage
-     :meta {:attackAction leftAction
-            :deffenceAction rightAction}})))
+                (<= (- (-> right :robotState :hp) leftMakeDamage) 0)
+                (conj :dead))
+      :damage leftMakeDamage
+      :meta {:attackAction leftAction
+             :deffenceAction rightAction}})))
 
 (s/def ::actionResult (s/tuple ::reactionResult ::reactionResult))
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
@@ -644,61 +644,65 @@
                                      [leftAction rightAction])]
      [leftAfter rightAfter])))
 
-(defn formatPathTree-xx [gameplayCtx unit power paths]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit number?) [gameplayCtx unit power])]}
-  (let [shouldRemove (filter (fn [[pos info]]
-                               (> (:cost info) power))
-                             paths)]
-    (reduce (fn [paths [curr info]]
-              (let [parent (:prev info)]
-                (cond-> paths
-                  parent
-                  (update parent (fn [n]
-                                   (merge n (select-keys info [:tail :priority]))))
 
-                  true
-                  (dissoc curr))))
-            paths
-            shouldRemove)))
+(defn getUnitMovePathTree
+  ([gameplayCtx unit]
+   (getUnitMovePathTree gameplayCtx unit nil))
 
-(defn- getUnitMovePathTreeTo [{units :units players :players playmap :map :as gameplayCtx} unit pos]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
-  (let [power (/ (getUnitPower gameplayCtx unit) 5)
-        power (if (-> unit :robotState :tags :moveRangePlus)
-                (+ power 3)
-                power)
-        [mw mh] (tool.map/getMapSize playmap)
-        originPos (:position unit)]
-    (tool.map/findPath (fn [[x y] info]
-                         (let [nowCost (:cost info)
-                               possiblePosition [[x (min (dec mh) (inc y))]
-                                                 [x (max 0 (dec y))]
-                                                 [(min (dec mw) (inc x)) y]
-                                                 [(max 0 (dec x)) y]]
-                               unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
-                               costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)
-                               sky? (-> unit :robotState :tags :sky)]
-                           (->> (map vector possiblePosition costToNext unitsInPosition)
-                                (filter (fn [[_ cost occupyUnit]]
-                                          (and (<= (+ nowCost cost) power)
-                                               (or (nil? occupyUnit)
-                                                   (= (get-in players [(-> unit :playerKey) :faction])
-                                                      (get-in players [(-> occupyUnit :playerKey) :faction]))
-                                                   (let [occupyUnitIsSky? (-> occupyUnit :robotState :tags :sky)]
-                                                     (not= sky? occupyUnitIsSky?)))))))))
-                       (fn [from]
-                         (if pos
-                           (estimateCost from pos)
-                           0))
-                       originPos
-                       (fn [{:keys [cost]} curr]
-                         [(or (= curr pos) (>= cost power)) false]))))
+  ([{units :units players :players playmap :map :as gameplayCtx} unit pos]
+   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
+   (let [power (/ (getUnitPower gameplayCtx unit) 5)
+         power (if (-> unit :robotState :tags :moveRangePlus)
+                 (+ power 3)
+                 power)
+         [mw mh] (tool.map/getMapSize playmap)
+         originPos (:position unit)]
+     (tool.map/findPath (fn [[x y] info]
+                          (let [nowCost (:cost info)
+                                possiblePosition [[x (min (dec mh) (inc y))]
+                                                  [x (max 0 (dec y))]
+                                                  [(min (dec mw) (inc x)) y]
+                                                  [(max 0 (dec x)) y]]
+                                unitsInPosition (map #(tool.units/getByPosition units %) possiblePosition)
+                                costToNext (map #(moveCost {:map playmap} unit [x y] %) possiblePosition)
+                                sky? (-> unit :robotState :tags :sky)]
+                            (->> (map vector possiblePosition costToNext unitsInPosition)
+                                 (filter (fn [[_ cost occupyUnit]]
+                                           (and (<= (+ nowCost cost) power)
+                                                (or (nil? occupyUnit)
+                                                    (= (get-in players [(-> unit :playerKey) :faction])
+                                                       (get-in players [(-> occupyUnit :playerKey) :faction]))
+                                                    (let [occupyUnitIsSky? (-> occupyUnit :robotState :tags :sky)]
+                                                      (not= sky? occupyUnitIsSky?)))))))))
+                        (fn [from]
+                          (if pos
+                            (estimateCost from pos)
+                            0))
+                        originPos
+                        (fn [{:keys [cost]} curr]
+                          [(or (= curr pos) (>= cost power)) false])))))
 
-(defn getUnitMovePathTree [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]}
-  (getUnitMovePathTreeTo gameplayCtx unit nil))
-
-
+(defn findNearestTerrainPosition [gameplayCtx targetTerrainKey fromPos]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec
+   (s/nilable ::type/position)
+   (let [{playmap :map units :units} gameplayCtx
+         [mw mh] (tool.map/getMapSize playmap)
+         pos (->> (for [x (range mw)
+                        y (range mh)]
+                    [x y])
+                  ; 不能寫成這樣, 不然運行會出錯
+                  ; (map #([% (getTerrainKey gameplayCtx %)]))
+                  (map (fn [pos]
+                         [pos (getTerrainKey gameplayCtx pos)]))
+                  (filter (fn [[pos terrainKey]]
+                            (and (= terrainKey targetTerrainKey)
+                                 (not (tool.units/getByPosition units pos)))))
+                  (map first)
+                  (sort-by (fn [pos]
+                             (estimateCost fromPos pos)))
+                  first)]
+     pos)))
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit keyword? keyword?) [gameplayCtx unit fromKey toKey])]
@@ -842,11 +846,11 @@
                                          nextUnit (common/assertSpec
                                                    ::type/unit
                                                    (if award?
-                                                     (let [nextUnit (-> nextUnit
-                                                                        (update-in [:robotState :hp] #(min (* % 1.2)
-                                                                                                           (getUnitMaxHp gameplayCtx unit)))
-                                                                        (update-in [:robotState :en] #(min (* % 1.2)
-                                                                                                           (getUnitMaxEn gameplayCtx unit))))]
+                                                     (let [maxHp (getUnitMaxHp gameplayCtx unit)
+                                                           maxEn (getUnitMaxEn gameplayCtx unit)
+                                                           nextUnit (-> nextUnit
+                                                                        (update-in [:robotState :hp] #(min (+ % (* maxHp 0.2)) maxHp))
+                                                                        (update-in [:robotState :en] #(min (+ % (* maxEn 0.2)) maxEn)))]
                                                        (a/<! (common/unitGetAwardAnim nil (map #(mapUnitToLocal gameplayCtx nil %) [unit nextUnit]) inputCh outputCh))
                                                        nextUnit)
                                                      nextUnit))

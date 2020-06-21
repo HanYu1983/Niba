@@ -29,7 +29,7 @@
         (if unit
           (let [targetPosition [3 3]
                 camera (module.default.data/getCamera gameplayCtx)
-                paths (module.default.data/getUnitMovePathTreeTo gameplayCtx unit targetPosition)
+                paths (module.default.data/getUnitMovePathTree gameplayCtx unit targetPosition)
                 nearest (if (paths targetPosition)
                           targetPosition
                           (->> paths

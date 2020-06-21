@@ -44,62 +44,80 @@
     [(/ hp maxHp) (/ en maxEn)]))
 
 
+(defn handleAttack [gameplayCtx unit otherAsyncFn inputCh outputCh]
+  (a/go
+    (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
+          weapons (filter #(not (data/invalidWeapon? gameplayCtx unit %)) weapons)
+          targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
+                                                   (map - (:position unit) [10 10])
+                                                   (map + (:position unit) [10 10]))
+                           (filter (fn [unit]
+                                     (= (get unit :playerKey) :player))))
+          bestWeaponUnit (data/getBestWeapon gameplayCtx unit weapons targetUnits)
+          gameplayCtx (if bestWeaponUnit
+                        (let [[weapon targetUnit] bestWeaponUnit
+                              [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
+                              targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
+                              targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
+                              targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
+                              _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))
+                                  (throw (js/Error. (str "[do_goal.cljs] targetUnitBestWeapon must not nil"))))
+                              targetUnitBestAction (if targetUnitBestWeaponUnit
+                                                     [:attack targetUnitBestWeapon]
+                                                     [:guard])
+                              battleMenu [{:unit targetUnit
+                                           :action targetUnitBestAction
+                                           :hitRate (data/getUnitHitRate gameplayCtx targetUnit targetUnitBestWeapon unit)}
+                                          {:unit unit
+                                           :action [:attack weapon]
+                                           :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
+                              _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
+                              _ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit targetUnit])} inputCh outputCh))
+                              [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :playerTurn? false} inputCh outputCh))
+                              gameplayCtx (assoc gameplayCtx
+                                                 :attackRange []
+                                                 :checkHitRate [])]
+                          gameplayCtx)
+                        (a/<! (otherAsyncFn gameplayCtx)))]
+      gameplayCtx)))
 
 (defmethod do-goal :think [_ gameplayCtx unit inputCh outputCh]
   (a/go
     (let [[action] (tool.knn/predict knn [(getKnnState gameplayCtx unit)])
-          gameplayCtx (cond
+          gameplayCtx (common/assertSpec
+                       ::type/gameplayCtx
+                       (cond
                         (= "attack" action)
-                        (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
-                              weapons (filter #(not (data/invalidWeapon? gameplayCtx unit %)) weapons)
-                              targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
-                                                                       (map - (:position unit) [10 10])
-                                                                       (map + (:position unit) [10 10]))
-                                               (filter (fn [unit]
-                                                         (= (get unit :playerKey) :player))))
-                              bestWeaponUnit (data/getBestWeapon gameplayCtx unit weapons targetUnits)
-                              gameplayCtx (if bestWeaponUnit
-                                            (let [[weapon targetUnit] bestWeaponUnit
-                                                  [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
-                                                  targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
-                                                  targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
-                                                  targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
-                                                  _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))
-                                                      (throw (js/Error. (str "[do_goal.cljs] targetUnitBestWeapon must not nil"))))
-                                                  targetUnitBestAction (if targetUnitBestWeaponUnit
-                                                                         [:attack targetUnitBestWeapon]
-                                                                         [:guard])
-                                                  battleMenu [{:unit targetUnit
-                                                               :action targetUnitBestAction
-                                                               :hitRate (data/getUnitHitRate gameplayCtx targetUnit targetUnitBestWeapon unit)}
-                                                              {:unit unit
-                                                               :action [:attack weapon]
-                                                               :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
-                                                  _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
-                                                  _ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit targetUnit])} inputCh outputCh))
-                                                  [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :playerTurn? false} inputCh outputCh))
-                                                  gameplayCtx (assoc gameplayCtx 
-                                                                     :attackRange []
-                                                                     :checkHitRate [])]
-                                              gameplayCtx)
-                                            (let [orderGoal (-> unit :robotState :orderGoal)
-                                                  _ (common/assertSpec ::goalType/goal orderGoal)
-                                                  gameplayCtx (if orderGoal
-                                                                (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
-                                                                gameplayCtx)]
-                                              gameplayCtx))]
-                          gameplayCtx)
+                        (a/<! (handleAttack gameplayCtx unit
+                                            (fn [gameplayCtx]
+                                              (a/go
+                                                (let [orderGoal (common/assertSpec
+                                                                 ::goalType/goal
+                                                                 (-> unit :robotState :orderGoal))
+                                                      gameplayCtx (if orderGoal
+                                                                    (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
+                                                                    gameplayCtx)]
+                                                  gameplayCtx)))
+                                            inputCh outputCh))
 
                         (= "findSupply" action)
-                        (let [orderGoal (-> unit :robotState :orderGoal)
-                              _ (common/assertSpec ::goalType/goal orderGoal)
-                              gameplayCtx (if orderGoal
-                                            (a/<! (do-goal orderGoal gameplayCtx unit inputCh outputCh))
-                                            gameplayCtx)]
+                        (let [isAward? (common/assertSpec
+                                        boolean?
+                                        (-> (data/getTerrainKey gameplayCtx (:position unit))
+                                            (= :award)))
+                              gameplayCtx (common/assertSpec
+                                           ::type/gameplayCtx
+                                           (if isAward?
+                                             gameplayCtx
+                                             (let [awardPosition (data/findNearestTerrainPosition gameplayCtx :award (:position unit))
+                                                   gameplayCtx (if awardPosition
+                                                                 (a/<! (do-goal [:moveTo awardPosition] gameplayCtx unit inputCh outputCh))
+                                                                 gameplayCtx)]
+                                               gameplayCtx)))]
                           gameplayCtx)
-                        
+
                         :else
-                        (throw (js/Error. (str "action " action " not found"))))]
+                        (throw (js/Error. (str "action " action " not found")))))]
       gameplayCtx)))
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]
@@ -120,28 +138,59 @@
 
 (defmethod do-goal :moveTo [[_ targetPosition] gameplayCtx unit inputCh outputCh]
   (a/go
-    (let [camera (:camera gameplayCtx)
-          paths (data/getUnitMovePathTreeTo gameplayCtx unit targetPosition)
-          nearest (if (paths targetPosition)
+    (let [; 處理移動
+          camera (:camera gameplayCtx)
+          paths (data/getUnitMovePathTree gameplayCtx unit targetPosition)
+          ; 離目標最新的格子
+          nearest (if (and (paths targetPosition)
+                           (not (tool.units/getByPosition (:units gameplayCtx) targetPosition)))
                     targetPosition
                     (->> paths
+                         (filter (fn [[pos _]]
+                                   (let [occupyUnit (tool.units/getByPosition (:units gameplayCtx) pos)]
+                                     (not occupyUnit))))
                          (sort-by (fn [[pos _]]
                                     (data/estimateCost pos targetPosition)))
                          ffirst))
-          nearest (loop [pos nearest]
-                    (let [occupyUnit (tool.units/getByPosition (:units gameplayCtx) pos)]
-                      (if (nil? occupyUnit)
-                        pos
-                        (recur (get-in paths [pos :prev])))))
+          ; 
+          ;nearest (loop [pos nearest]
+          ;          (let [occupyUnit (tool.units/getByPosition (:units gameplayCtx) pos)]
+          ;            (if (nil? occupyUnit)
+          ;              pos
+          ;              (recur (get-in paths [pos :prev])))))
           nearest (or nearest (:position unit))
+
+          ; 建立路徑, 播放動畫
           path (tool.map/buildPath paths nearest)
           _ (a/<! (common/unitMoveAnim gameplayCtx {:unit (data/mapUnitToLocal gameplayCtx nil unit)
                                                     :path (map (partial data/world2local camera) path)}
                                        inputCh outputCh))
-          nextUnit (-> unit
-                       (assoc :position nearest)
-                       ;(update-in [:robotState :goals] tool.goal/next-goal)
-                       ;(update-in [:robotState :tags] #(conj % [:done true]))
-                       )
-          gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))]
+          ; 套用
+          nextUnit (data/gameplayOnUnitMove nil gameplayCtx unit nearest)
+          gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))
+
+          ; 重新取得單位
+          unit (common/assertSpec
+                ::type/unit
+                (-> gameplayCtx :units (tool.units/getByKey (:key nextUnit))))
+
+          ; 攻擊
+          gameplayCtx (a/<! (handleAttack gameplayCtx unit
+                                          #(a/go %)
+                                          inputCh outputCh))
+          ; 重新取得單位
+          unit (common/assertSpec
+                ; 單位可能在攻擊中死亡
+                (s/nilable ::type/unit)
+                (-> gameplayCtx :units (tool.units/getByKey (:key unit))))
+
+          gameplayCtx (common/assertSpec
+                       ::type/gameplayCtx
+                       (if unit
+                         (let [; 單位行動結束
+                               nextUnit (data/gameplayOnUnitDone nil gameplayCtx unit)
+                               ; 套用
+                               gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))]
+                           gameplayCtx)
+                         gameplayCtx))]
       gameplayCtx)))
