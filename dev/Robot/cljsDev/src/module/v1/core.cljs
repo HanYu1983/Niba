@@ -1,19 +1,20 @@
 (ns module.v1.core
-  (:require [clojure.spec.alpha :as s])
-  (:require [clojure.core.async :as a])
-  (:require [app.module])
-  (:require [tool.map])
-  (:require [tool.units])
-  (:require [tool.fsm])
-  (:require [module.v1.type])
-  (:require [module.v1.data :as data])
-  (:require [module.v1.type :as type])
-  (:require-macros [module.v1.core :as core])
-  (:require [module.v1.common :as common])
-  (:require [module.v1.phase.startUnitsMenu :refer [startUnitsMenu]])
-  (:require [module.v1.phase.playerTurn :refer [playerTurn]])
-  (:require [module.v1.phase.enemyTurn :refer [enemyTurn]])
-  (:require [module.v1.system.spec :as spec]))
+  (:require [clojure.spec.alpha :as s]
+            [clojure.core.async :as a]
+            [app.module]
+            [tool.map]
+            [tool.units]
+            [tool.fsm]
+            [tool.kmeans]
+            [module.v1.type]
+            [module.v1.data :as data]
+            [module.v1.type :as type]
+            [module.v1.common :as common]
+            [module.v1.phase.startUnitsMenu :refer [startUnitsMenu]]
+            [module.v1.phase.playerTurn :refer [playerTurn]]
+            [module.v1.phase.enemyTurn :refer [enemyTurn]]
+            [module.v1.system.spec :as spec])
+  (:require-macros [module.v1.core :as core]))
 
 (def gameplayCtx {:map [[]]
                   :camera [0 0]
@@ -97,7 +98,7 @@
                                      (data/createUnit gameplayCtx arg1 arg2))
                                    gameplayCtx))
           ; 產生測試用的軍隊
-          [gameplayCtx _] (->> (get data/data :robot)
+          #_[gameplayCtx _] #_(->> (get data/data :robot)
                                (take 4)
                                (reduce (fn [[gameplayCtx i] [robotKey _]]
                                          [(-> gameplayCtx
@@ -109,6 +110,51 @@
                                                                {:robotKey robotKey}))
                                           (inc i)])
                                        [gameplayCtx 1]))
+          
+          gameplayCtx (common/assertSpec
+                       ::type/gameplayCtx
+                       (let [posList (take 30 (map vector
+                                                   (repeatedly #(rand-int mw))
+                                                   (repeatedly #(rand-int mh))))
+                             beforeCentroids [[4, 4], [15, 4], [4, 15], [15 15]]
+                             clusterCnt (count beforeCentroids)
+                             {:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
+                             ; 團體先偏移到本來設定的集結點
+                             posList (map (fn [pos cluster]
+                                            (let [{:keys [centroid]} (nth centroids cluster)
+                                                  beforeCentroid (nth beforeCentroids cluster)
+                                                  offset (map - beforeCentroid centroid)]
+                                              (mapv + pos offset)))
+                                          posList
+                                          clusters)
+                             ; 團體向團體中心集結
+                             posList (loop [posList posList
+                                            times 0]
+                                       (if (> times 3)
+                                         posList
+                                         (let [{:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
+                                               tmp (map (fn [pos cluster]
+                                                          (let [{:keys [centroid error]} (centroids cluster)
+                                                                offset (if (> error 0.2)
+                                                                         (->> (map - centroid pos)
+                                                                              (map #(/ % 3)))
+                                                                         [0 0])]
+                                                            (mapv + pos offset)))
+                                                        posList
+                                                        clusters)]
+                                           (recur tmp (inc times)))))
+                             ; 取出不重復的點
+                             posList (->> (map #(mapv js/Math.floor %) posList)
+                                          (distinct))
+                             ; 產生軍隊
+                             gameplayCtx (reduce (fn [gameplayCtx pos]
+                                                   (-> gameplayCtx
+                                                       (data/createUnit {:playerKey :ai1
+                                                                         :position pos}
+                                                                        {:robotKey :gundam})))
+                                                 gameplayCtx
+                                                 posList)]
+                         gameplayCtx))
           ; 讓不能在地上的部隊飛起來
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx

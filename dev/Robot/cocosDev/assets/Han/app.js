@@ -35,7 +35,180 @@ $jscomp.generator.Engine_.prototype.nextStep_=function(){for(;this.context_.next
 $jscomp.generator.Generator_=function(d){this.next=function(e){return d.next_(e)};this.throw=function(e){return d.throw_(e)};this.return=function(e){return d.return_(e)};$jscomp.initSymbolIterator();this[Symbol.iterator]=function(){return this}};$jscomp.generator.createGenerator=function(d,e){e=new $jscomp.generator.Generator_(new $jscomp.generator.Engine_(e));$jscomp.setPrototypeOf&&$jscomp.setPrototypeOf(e,d.prototype);return e};
 shadow$provide[0]=function(d,e,u,h){u.exports=function(d,e,h,I,J,O,E,u,M,t,C,K){h=void 0===h?1:h;I=void 0===I?1:I;J=void 0===J?1:J;O=void 0===O?1:O;u=void 0===u?.3:u;M=void 0===M?.3:M;t=void 0===t?.01:t;C=void 0===C?1:C;K=void 0===K?0:K;E=h+I+J+O+(void 0===E?1:E);h/=E;I=I/E+h;J=J/E+I;O=O/E+J;noise.seed(Math.random());E=[];for(var G=0;G<d;++G)for(var L=0;L<e;++L){var D=noise.perlin2(.1*G,.1*L);D=Math.pow(D,C);D=(D+1)/2;D+=K;D>O?E.push(5):D>J?(D=noise.perlin2(.1*Math.floor(.4*G)*3+123,.1*Math.floor(.4*
 L)*3+245),D=(D+1)/2,D>u?(D=noise.perlin2(.1*G*3+300,.1*L*3+20),D=(D+1)/2,D>M?E.push(Math.random()<t?7:3):E.push(Math.random()<t?7:6)):4==G||8==G||12==G||16==G||4==L||8==L||12==L||16==L?E.push(8):E.push(Math.random()<t?7:4)):D>I?E.push(Math.random()<t?7:2):D>h?E.push(Math.random()<t?7:1):E.push(0)}return E}};
-shadow$provide[1]=function(b,c,a,d){a.exports={component:{energy1:{title:"能量夾L1",desc:"增加{0}能量.",value:["40"],powerCost:2,action:"equipment"},energy2:{title:"能量夾L2",desc:"增加{0}能量.",value:["65"],powerCost:3,action:"equipment"},energy3:{title:"能量夾L3",desc:"增加{0}能量.",value:["90"],powerCost:4,action:"equipment"},armor1:{title:"裝甲L1",desc:"增加{0}裝甲.",value:["600"],powerCost:3,action:"equipment"},armor2:{title:"裝甲L2",desc:"增加{0}裝甲.",value:["850"],powerCost:4,action:"equipment"},armor3:{title:"裝甲L3",desc:"增加{0}裝甲.",
+var $jscomp=$jscomp||{};$jscomp.scope={};$jscomp.arrayIteratorImpl=function(d){var f=0;return function(){return f<d.length?{done:!1,value:d[f++]}:{done:!0}}};$jscomp.arrayIterator=function(d){return{next:$jscomp.arrayIteratorImpl(d)}};$jscomp.ASSUME_ES5=!1;$jscomp.ASSUME_NO_NATIVE_MAP=!1;$jscomp.ASSUME_NO_NATIVE_SET=!1;$jscomp.SIMPLE_FROUND_POLYFILL=!1;
+$jscomp.defineProperty=$jscomp.ASSUME_ES5||"function"==typeof Object.defineProperties?Object.defineProperty:function(d,f,z){d!=Array.prototype&&d!=Object.prototype&&(d[f]=z.value)};$jscomp.getGlobal=function(d){return"undefined"!=typeof window&&window===d?d:"undefined"!=typeof global&&null!=global?global:d};$jscomp.global=$jscomp.getGlobal(this);$jscomp.SYMBOL_PREFIX="jscomp_symbol_";$jscomp.initSymbol=function(){$jscomp.initSymbol=function(){};$jscomp.global.Symbol||($jscomp.global.Symbol=$jscomp.Symbol)};
+$jscomp.SymbolClass=function(d,f){this.$jscomp$symbol$id_=d;$jscomp.defineProperty(this,"description",{configurable:!0,writable:!0,value:f})};$jscomp.SymbolClass.prototype.toString=function(){return this.$jscomp$symbol$id_};$jscomp.Symbol=function(){function d(z){if(this instanceof d)throw new TypeError("Symbol is not a constructor");return new $jscomp.SymbolClass($jscomp.SYMBOL_PREFIX+(z||"")+"_"+f++,z)}var f=0;return d}();
+$jscomp.initSymbolIterator=function(){$jscomp.initSymbol();var d=$jscomp.global.Symbol.iterator;d||(d=$jscomp.global.Symbol.iterator=$jscomp.global.Symbol("Symbol.iterator"));"function"!=typeof Array.prototype[d]&&$jscomp.defineProperty(Array.prototype,d,{configurable:!0,writable:!0,value:function(){return $jscomp.iteratorPrototype($jscomp.arrayIteratorImpl(this))}});$jscomp.initSymbolIterator=function(){}};
+$jscomp.initSymbolAsyncIterator=function(){$jscomp.initSymbol();var d=$jscomp.global.Symbol.asyncIterator;d||(d=$jscomp.global.Symbol.asyncIterator=$jscomp.global.Symbol("Symbol.asyncIterator"));$jscomp.initSymbolAsyncIterator=function(){}};$jscomp.iteratorPrototype=function(d){$jscomp.initSymbolIterator();d={next:d};d[$jscomp.global.Symbol.iterator]=function(){return this};return d};
+$jscomp.makeIterator=function(d){var f="undefined"!=typeof Symbol&&Symbol.iterator&&d[Symbol.iterator];return f?f.call(d):$jscomp.arrayIterator(d)};$jscomp.objectCreate=$jscomp.ASSUME_ES5||"function"==typeof Object.create?Object.create:function(d){var f=function(){};f.prototype=d;return new f};$jscomp.underscoreProtoCanBeSet=function(){var d={a:!0},f={};try{return f.__proto__=d,f.a}catch(z){}return!1};
+$jscomp.setPrototypeOf="function"==typeof Object.setPrototypeOf?Object.setPrototypeOf:$jscomp.underscoreProtoCanBeSet()?function(d,f){d.__proto__=f;if(d.__proto__!==f)throw new TypeError(d+" is not extensible");return d}:null;
+$jscomp.inherits=function(d,f){d.prototype=$jscomp.objectCreate(f.prototype);d.prototype.constructor=d;if($jscomp.setPrototypeOf){var z=$jscomp.setPrototypeOf;z(d,f)}else for(z in f)if("prototype"!=z)if(Object.defineProperties){var h=Object.getOwnPropertyDescriptor(f,z);h&&Object.defineProperty(d,z,h)}else d[z]=f[z];d.superClass_=f.prototype};$jscomp.generator={};
+$jscomp.generator.ensureIteratorResultIsObject_=function(d){if(!(d instanceof Object))throw new TypeError("Iterator result "+d+" is not an object");};$jscomp.generator.Context=function(){this.isRunning_=!1;this.yieldAllIterator_=null;this.yieldResult=void 0;this.nextAddress=1;this.finallyAddress_=this.catchAddress_=0;this.finallyContexts_=this.abruptCompletion_=null};
+$jscomp.generator.Context.prototype.start_=function(){if(this.isRunning_)throw new TypeError("Generator is already running");this.isRunning_=!0};$jscomp.generator.Context.prototype.stop_=function(){this.isRunning_=!1};$jscomp.generator.Context.prototype.jumpToErrorHandler_=function(){this.nextAddress=this.catchAddress_||this.finallyAddress_};$jscomp.generator.Context.prototype.next_=function(d){this.yieldResult=d};
+$jscomp.generator.Context.prototype.throw_=function(d){this.abruptCompletion_={exception:d,isException:!0};this.jumpToErrorHandler_()};$jscomp.generator.Context.prototype.return=function(d){this.abruptCompletion_={return:d};this.nextAddress=this.finallyAddress_};$jscomp.generator.Context.prototype.jumpThroughFinallyBlocks=function(d){this.abruptCompletion_={jumpTo:d};this.nextAddress=this.finallyAddress_};$jscomp.generator.Context.prototype.yield=function(d,f){this.nextAddress=f;return{value:d}};
+$jscomp.generator.Context.prototype.yieldAll=function(d,f){d=$jscomp.makeIterator(d);var z=d.next();$jscomp.generator.ensureIteratorResultIsObject_(z);if(z.done)this.yieldResult=z.value,this.nextAddress=f;else return this.yieldAllIterator_=d,this.yield(z.value,f)};$jscomp.generator.Context.prototype.jumpTo=function(d){this.nextAddress=d};$jscomp.generator.Context.prototype.jumpToEnd=function(){this.nextAddress=0};
+$jscomp.generator.Context.prototype.setCatchFinallyBlocks=function(d,f){this.catchAddress_=d;void 0!=f&&(this.finallyAddress_=f)};$jscomp.generator.Context.prototype.setFinallyBlock=function(d){this.catchAddress_=0;this.finallyAddress_=d||0};$jscomp.generator.Context.prototype.leaveTryBlock=function(d,f){this.nextAddress=d;this.catchAddress_=f||0};
+$jscomp.generator.Context.prototype.enterCatchBlock=function(d){this.catchAddress_=d||0;d=this.abruptCompletion_.exception;this.abruptCompletion_=null;return d};$jscomp.generator.Context.prototype.enterFinallyBlock=function(d,f,z){z?this.finallyContexts_[z]=this.abruptCompletion_:this.finallyContexts_=[this.abruptCompletion_];this.catchAddress_=d||0;this.finallyAddress_=f||0};
+$jscomp.generator.Context.prototype.leaveFinallyBlock=function(d,f){f=this.finallyContexts_.splice(f||0)[0];if(f=this.abruptCompletion_=this.abruptCompletion_||f){if(f.isException)return this.jumpToErrorHandler_();void 0!=f.jumpTo&&this.finallyAddress_<f.jumpTo?(this.nextAddress=f.jumpTo,this.abruptCompletion_=null):this.nextAddress=this.finallyAddress_}else this.nextAddress=d};$jscomp.generator.Context.prototype.forIn=function(d){return new $jscomp.generator.Context.PropertyIterator(d)};
+$jscomp.generator.Context.PropertyIterator=function(d){this.object_=d;this.properties_=[];for(var f in d)this.properties_.push(f);this.properties_.reverse()};$jscomp.generator.Context.PropertyIterator.prototype.getNext=function(){for(;0<this.properties_.length;){var d=this.properties_.pop();if(d in this.object_)return d}return null};$jscomp.generator.Engine_=function(d){this.context_=new $jscomp.generator.Context;this.program_=d};
+$jscomp.generator.Engine_.prototype.next_=function(d){this.context_.start_();if(this.context_.yieldAllIterator_)return this.yieldAllStep_(this.context_.yieldAllIterator_.next,d,this.context_.next_);this.context_.next_(d);return this.nextStep_()};
+$jscomp.generator.Engine_.prototype.return_=function(d){this.context_.start_();var f=this.context_.yieldAllIterator_;if(f)return this.yieldAllStep_("return"in f?f["return"]:function(d){return{value:d,done:!0}},d,this.context_.return);this.context_.return(d);return this.nextStep_()};
+$jscomp.generator.Engine_.prototype.throw_=function(d){this.context_.start_();if(this.context_.yieldAllIterator_)return this.yieldAllStep_(this.context_.yieldAllIterator_["throw"],d,this.context_.next_);this.context_.throw_(d);return this.nextStep_()};
+$jscomp.generator.Engine_.prototype.yieldAllStep_=function(d,f,z){try{var h=d.call(this.context_.yieldAllIterator_,f);$jscomp.generator.ensureIteratorResultIsObject_(h);if(!h.done)return this.context_.stop_(),h;var F=h.value}catch(I){return this.context_.yieldAllIterator_=null,this.context_.throw_(I),this.nextStep_()}this.context_.yieldAllIterator_=null;z.call(this.context_,F);return this.nextStep_()};
+$jscomp.generator.Engine_.prototype.nextStep_=function(){for(;this.context_.nextAddress;)try{var d=this.program_(this.context_);if(d)return this.context_.stop_(),{value:d.value,done:!1}}catch(f){this.context_.yieldResult=void 0,this.context_.throw_(f)}this.context_.stop_();if(this.context_.abruptCompletion_){d=this.context_.abruptCompletion_;this.context_.abruptCompletion_=null;if(d.isException)throw d.exception;return{value:d.return,done:!0}}return{value:void 0,done:!0}};
+$jscomp.generator.Generator_=function(d){this.next=function(f){return d.next_(f)};this.throw=function(f){return d.throw_(f)};this.return=function(f){return d.return_(f)};$jscomp.initSymbolIterator();this[Symbol.iterator]=function(){return this}};$jscomp.generator.createGenerator=function(d,f){f=new $jscomp.generator.Generator_(new $jscomp.generator.Engine_(f));$jscomp.setPrototypeOf&&$jscomp.setPrototypeOf(f,d.prototype);return f};
+shadow$provide[1]=function(d,f,z,h){function F(d,f){for(var I=0,h=0;h<d.length;h++)I+=(d[h]-f[h])*(d[h]-f[h]);return I}Object.defineProperty(h,"__esModule",{value:!0});h.squaredEuclidean=F;h.euclidean=function(d,f){return Math.sqrt(F(d,f))}};
+shadow$provide[2]=function(d,f,z,h){function F(d,f,h){h=void 0===h?I:h;var J=h.distanceFunction||I.distanceFunction,z=h.similarityFunction||I.similarityFunction;h=-1;if("function"===typeof z){J=Number.MIN_VALUE;for(var L=0;L<d.length;L++){var M=z(f,d[L]);M>J&&(J=M,h=L)}}else if("function"===typeof J)for(z=Number.MAX_VALUE,L=0;L<d.length;L++)M=J(f,d[L]),M<z&&(z=M,h=L);else throw Error("A similarity or distance function it's required");return h}Object.defineProperty(h,"__esModule",{value:!0});var I=
+{distanceFunction:f(1).squaredEuclidean};h.default=F;h.findNearestVector=function(d,f,h){h=void 0===h?I:h;f=F(d,f,h);return d[f]}};
+shadow$provide[3]=function(d,f,z,h){Object.defineProperty(h,"__esModule",{value:!0});var F=1/16777216;d=function(d){d=void 0===d?Date.now():d;this.state=new Uint32Array(4);this.init(d);this.random=this.getFloat.bind(this)};d.prototype.getUint32=function(){this.nextState();return this.state[3]+this.state[2]>>>0};d.prototype.getFloat=function(){return(this.getUint32()>>>8)*F};d.prototype.init=function(d){if(!Number.isInteger(d))throw new TypeError("seed must be an integer");this.state[0]=d;this.state[1]=
+0;this.state[2]=0;this.state[3]=0;for(d=1;8>d;d++){var f=this.state,h=d&3,I=f[h],z=d,F=1812433253,Q=this.state[d-1&3]^this.state[d-1&3]>>>30>>>0;F>>>=0;Q>>>=0;var N=F&65535;f[h]=I^z+(((F-N)*Q>>>0)+N*Q>>>0)>>>0}this.periodCertification();for(d=0;8>d;d++)this.nextState()};d.prototype.periodCertification=function(){0===this.state[0]&&0===this.state[1]&&0===this.state[2]&&0===this.state[3]&&(this.state[0]=88,this.state[1]=83,this.state[2]=65,this.state[3]=68)};d.prototype.nextState=function(){var d=this.state[0];
+d^=d<<15;d=d^d>>>18^this.state[3]<<11;this.state[0]=this.state[1];this.state[1]=this.state[2];this.state[2]=this.state[3];this.state[3]=d};h.default=d};
+shadow$provide[4]=function(d,f,z,h){Object.defineProperty(h,"__esModule",{value:!0});h.default=function(d,f,h){f=void 0===f?{}:f;h=void 0===h?Math.random:h;var J=f;f=void 0===J.size?1:J.size;var z=void 0===J.replace?!1:J.replace;J=J.probabilities;if("number"===typeof d){for(var I=[],M=0;M<d;M++)I.push(M);d=I}else d=d.slice();if(J){if(!z)throw Error("choice with probabilities and no replacement is not implemented");if(J.length!==d.length)throw Error("the length of probabilities option should be equal to the number of choices");
+var F=[J[0]];for(I=1;I<J.length;I++)F[I]=F[I-1]+J[I];if(1E-8<Math.abs(1-F[F.length-1]))throw Error("probabilities should sum to 1, but instead sums to "+F[F.length-1]);}if(!1===z&&f>d.length)throw Error("size option is too large");J=[];for(I=0;I<f;I++){var N=d.length;M=F;var B=h();if(M){for(N=0;B>M[N];)N++;M=N}else M=Math.floor(B*N);J.push(d[M]);z||d.splice(M,1)}return J}};
+shadow$provide[5]=function(d,f,z,h){Object.defineProperty(h,"__esModule",{value:!0});var F=f(3),I=f(4);d=function(d){d=void 0===d?Math.random:d;this.randomGenerator="number"===typeof d?(new F.default(d)).random:d};d.prototype.choice=function(d,f){return I.default(d,f,this.randomGenerator)};d.prototype.random=function(){return this.randomGenerator()};d.prototype.randInt=function(d,f){void 0===f&&(f=d,d=0);return d+Math.floor(this.randomGenerator()*(f-d))};d.prototype.randomSample=function(d){for(var f=
+[],h=0;h<d;h++)f.push(this.random());return f};h.default=d};
+shadow$provide[6]=function(d,f,z,h){var F=Object.prototype.toString;z.exports=function(d){return F.call(d).endsWith("Array]")}};
+shadow$provide[7]=function(d,f,z,h){var F=function(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}(f(6));z.exports=function(d){if(!F(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");for(var f=d[0],h=1;h<d.length;h++)d[h]>f&&(f=d[h]);return f}};
+shadow$provide[8]=function(d,f,z,h){var F=function(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}(f(6));z.exports=function(d){if(!F(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");for(var f=d[0],h=1;h<d.length;h++)d[h]<f&&(f=d[h]);return f}};
+shadow$provide[9]=function(d,f,z,h){function F(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}var I=F(f(6)),M=F(f(7)),J=F(f(8));z.exports=function(d,f){f=void 0===f?{}:f;if(!I(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");if(void 0!==f.output){if(!I(f.output))throw new TypeError("output option must be an array if specified");var h=f.output}else h=Array(d.length);var z=J(d),F=M(d);if(z===F)throw new RangeError("minimum and maximum input values are equal. Cannot rescale a constant array");
+var B=f,H=void 0===B.min?f.autoMinMax?z:0:B.min;f=void 0===B.max?f.autoMinMax?F:1:B.max;if(H>=f)throw new RangeError("min option must be smaller than max option");F=(f-H)/(F-z);for(f=0;f<d.length;f++)h[f]=(d[f]-z)*F+H;return h}};
+shadow$provide[10]=function(d,f,z,h){function F(){return I(this)}function I(a,b){var c=b=void 0===b?{}:b;b=void 0===c.maxRows?15:c.maxRows;var g=void 0===c.maxColumns?10:c.maxColumns,e=void 0===c.maxNumSize?8:c.maxNumSize;c=a.constructor.name+" {\n"+Z+"[\n"+na;for(var q=a.rows,n=a.columns,l=Math.min(q,b),d=Math.min(n,g),E=[],O=0;O<l;O++){for(var f=[],k=0;k<d;k++)f.push(M(a.get(O,k),e));E.push(""+f.join(" "))}d!==n&&(E[E.length-1]+=" ... "+(n-g)+" more columns");l!==q&&E.push("... "+(q-b)+" more rows");
+b=E.join("\n"+na);return c+b+"\n"+Z+"]\n"+Z+"rows: "+a.rows+"\n"+Z+"columns: "+a.columns+"\n}"}function M(a,b){var c=String(a);if(c.length<=b)return c.padEnd(b," ");c=a.toPrecision(b-2);if(c.length<=b)return c;a=a.toExponential(b-2);c=a.indexOf("e");c=a.slice(c);return a.slice(0,b-c.length)+c}function J(a,b,c){a=c?a.rows:a.rows-1;if(0>b||b>a)throw new RangeError("Row index out of range");}function L(a,b,c){a=c?a.columns:a.columns-1;if(0>b||b>a)throw new RangeError("Column index out of range");}function U(a,
+b){b.to1DArray&&(b=b.to1DArray());if(b.length!==a.columns)throw new RangeError("vector size must be the same as the number of columns");return b}function V(a,b){b.to1DArray&&(b=b.to1DArray());if(b.length!==a.rows)throw new RangeError("vector size must be the same as the number of rows");return b}function Q(a,b,c){return{row:N(a,b),column:B(a,c)}}function N(a,b){if("object"!==typeof b)throw new TypeError("unexpected type for row indices");if(b.some(function(c){return 0>c||c>=a.rows}))throw new RangeError("row indices are out of range");
+Array.isArray(b)||(b=Array.from(b));return b}function B(a,b){if("object"!==typeof b)throw new TypeError("unexpected type for column indices");if(b.some(function(c){return 0>c||c>=a.columns}))throw new RangeError("column indices are out of range");Array.isArray(b)||(b=Array.from(b));return b}function H(a,b,c,g,e){if(5!==arguments.length)throw new RangeError("expected 4 arguments");R("startRow",b);R("endRow",c);R("startColumn",g);R("endColumn",e);if(b>c||g>e||0>b||b>=a.rows||0>c||c>=a.rows||0>g||g>=
+a.columns||0>e||e>=a.columns)throw new RangeError("Submatrix indices are out of range");}function K(a,b){b=void 0===b?0:b;for(var c=[],g=0;g<a;g++)c.push(b);return c}function R(a,b){if("number"!==typeof b)throw new TypeError(a+" must be a number");}function ha(a,b){return a-b}function D(a,b){if(Math.abs(a)>Math.abs(b)){var c=b/a;return Math.abs(a)*Math.sqrt(1+c*c)}return 0!==b?(c=a/b,Math.abs(b)*Math.sqrt(1+c*c)):0}function u(a,b,c){c=void 0===c?!1:c;a=T.checkMatrix(a);b=T.checkMatrix(b);return c?
+(new Y(a)).solve(b):a.isSquare()?(new aa(a)).solve(b):(new da(a)).solve(b)}function C(a){a=A.checkMatrix(a);if(a.isSquare()){if(2===a.columns){var b=a.get(0,0);var c=a.get(0,1);var g=a.get(1,0);a=a.get(1,1);return b*a-c*g}if(3===a.columns){var e=new S(a,[1,2],[1,2]);var q=new S(a,[1,2],[0,2]);var n=new S(a,[1,2],[0,1]);b=a.get(0,0);c=a.get(0,1);g=a.get(0,2);return b*C(e)-c*C(q)+g*C(n)}return(new aa(a)).determinant}throw Error("determinant can only be calculated for a square matrix");}function G(a,
+b){for(var c=[],g=0;g<a;g++)g!==b&&c.push(g);return c}function ia(a,b,c,g,e){g=void 0===g?1E-9:g;if(a>(void 0===e?1E-9:e))return Array(b.rows+1).fill(0);a=b.addRow(c,[0]);for(b=0;b<a.rows;b++)Math.abs(a.get(b,0))<g&&a.set(b,0,0);return a.to1DArray()}function ja(a,b,c,g){if(Math.abs(c)>Math.abs(g)){var e=g/c;c+=e*g;return[(a+e*b)/c,(b-e*a)/c]}e=c/g;c=g+e*c;return[(e*a+b)/c,(e*b-a)/c]}Object.defineProperty(h,"__esModule",{value:!0});var ea=function(a){return a&&"object"===typeof a&&"default"in a?a["default"]:
+a}(f(9)),Z=" ".repeat(2),na=" ".repeat(4),k=function(){};k.from1DArray=function(a,b,c){if(a*b!==c.length)throw new RangeError("data length does not match given dimensions");for(var g=new A(a,b),e=0;e<a;e++)for(var q=0;q<b;q++)g.set(e,q,c[e*b+q]);return g};k.rowVector=function(a){for(var b=new A(1,a.length),c=0;c<a.length;c++)b.set(0,c,a[c]);return b};k.columnVector=function(a){for(var b=new A(a.length,1),c=0;c<a.length;c++)b.set(c,0,a[c]);return b};k.zeros=function(a,b){return new A(a,b)};k.ones=
+function(a,b){return(new A(a,b)).fill(1)};k.rand=function(a,b,c){c=void 0===c?{}:c;if("object"!==typeof c)throw new TypeError("options must be an object");c=void 0===c.random?Math.random:c.random;for(var g=new A(a,b),e=0;e<a;e++)for(var q=0;q<b;q++)g.set(e,q,c());return g};k.randInt=function(a,b,c){c=void 0===c?{}:c;if("object"!==typeof c)throw new TypeError("options must be an object");var g=c;c=void 0===g.min?0:g.min;var e=void 0===g.max?1E3:g.max;g=void 0===g.random?Math.random:g.random;if(!Number.isInteger(c))throw new TypeError("min must be an integer");
+if(!Number.isInteger(e))throw new TypeError("max must be an integer");if(c>=e)throw new RangeError("min must be smaller than max");e-=c;for(var q=new A(a,b),n=0;n<a;n++)for(var l=0;l<b;l++){var d=c+Math.round(g()*e);q.set(n,l,d)}return q};k.eye=function(a,b,c){void 0===b&&(b=a);void 0===c&&(c=1);var g=Math.min(a,b);a=this.zeros(a,b);for(b=0;b<g;b++)a.set(b,b,c);return a};k.diag=function(a,b,c){var g=a.length;void 0===b&&(b=g);void 0===c&&(c=b);g=Math.min(g,b,c);b=this.zeros(b,c);for(c=0;c<g;c++)b.set(c,
+c,a[c]);return b};k.min=function(a,b){a=this.checkMatrix(a);b=this.checkMatrix(b);for(var c=a.rows,g=a.columns,e=new A(c,g),q=0;q<c;q++)for(var n=0;n<g;n++)e.set(q,n,Math.min(a.get(q,n),b.get(q,n)));return e};k.max=function(a,b){a=this.checkMatrix(a);b=this.checkMatrix(b);for(var c=a.rows,g=a.columns,e=new this(c,g),q=0;q<c;q++)for(var n=0;n<g;n++)e.set(q,n,Math.max(a.get(q,n),b.get(q,n)));return e};k.checkMatrix=function(a){return k.isMatrix(a)?a:new A(a)};k.isMatrix=function(a){return null!=a&&
+"Matrix"===a.klass};k.prototype.apply=function(a){if("function"!==typeof a)throw new TypeError("callback must be a function");for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.call(this,b,c);return this};k.prototype.to1DArray=function(){for(var a=[],b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.push(this.get(b,c));return a};k.prototype.to2DArray=function(){for(var a=[],b=0;b<this.rows;b++){a.push([]);for(var c=0;c<this.columns;c++)a[b].push(this.get(b,c))}return a};k.prototype.toJSON=
+function(){return this.to2DArray()};k.prototype.isRowVector=function(){return 1===this.rows};k.prototype.isColumnVector=function(){return 1===this.columns};k.prototype.isVector=function(){return 1===this.rows||1===this.columns};k.prototype.isSquare=function(){return this.rows===this.columns};k.prototype.isSymmetric=function(){if(this.isSquare()){for(var a=0;a<this.rows;a++)for(var b=0;b<=a;b++)if(this.get(a,b)!==this.get(b,a))return!1;return!0}return!1};k.prototype.isEchelonForm=function(){for(var a=
+0,b,c=-1,g=!0,e;a<this.rows&&g;){b=0;for(e=!1;b<this.columns&&!1===e;)0===this.get(a,b)?b++:1===this.get(a,b)&&b>c?(e=!0,c=b):(g=!1,e=!0);a++}return g};k.prototype.isReducedEchelonForm=function(){for(var a=0,b,c=-1,g=!0,e;a<this.rows&&g;){b=0;for(e=!1;b<this.columns&&!1===e;)0===this.get(a,b)?b++:1===this.get(a,b)&&b>c?(e=!0,c=b):(g=!1,e=!0);for(b+=1;b<this.rows;b++)0!==this.get(a,b)&&(g=!1);a++}return g};k.prototype.echelonForm=function(){for(var a=this.clone(),b=0,c=0;b<a.rows&&c<a.columns;){for(var g=
+b,e=b;e<a.rows;e++)a.get(e,c)>a.get(g,c)&&(g=e);if(0!==a.get(g,c)){a.swapRows(b,g);g=a.get(b,c);for(e=c;e<a.columns;e++)a.set(b,e,a.get(b,e)/g);for(g=b+1;g<a.rows;g++){e=a.get(g,c)/a.get(b,c);a.set(g,c,0);for(var q=c+1;q<a.columns;q++)a.set(g,q,a.get(g,q)-a.get(b,q)*e)}b++}c++}return a};k.prototype.reducedEchelonForm=function(){for(var a=this.echelonForm(),b=a.columns,c=a.rows,g=c-1;0<=g;){if(0!==a.maxRow(g)){for(var e=0,q=!1;e<c&&!1===q;)1===a.get(g,e)?q=!0:e++;for(q=0;q<g;q++)for(var n=a.get(q,
+e),l=e;l<b;l++){var d=a.get(q,l)-n*a.get(g,l);a.set(q,l,d)}}g--}return a};k.prototype.set=function(){throw Error("set method is unimplemented");};k.prototype.get=function(){throw Error("get method is unimplemented");};k.prototype.repeat=function(a){a=void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.rows?1:b.rows;b=void 0===b.columns?1:b.columns;if(!Number.isInteger(a)||0>=a)throw new TypeError("rows must be a positive integer");if(!Number.isInteger(b)||
+0>=b)throw new TypeError("columns must be a positive integer");for(var c=new A(this.rows*a,this.columns*b),g=0;g<a;g++)for(var e=0;e<b;e++)c.setSubMatrix(this,this.rows*g,this.columns*e);return c};k.prototype.fill=function(a){for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,a);return this};k.prototype.neg=function(){return this.mulS(-1)};k.prototype.getRow=function(a){J(this,a);for(var b=[],c=0;c<this.columns;c++)b.push(this.get(a,c));return b};k.prototype.getRowVector=function(a){return A.rowVector(this.getRow(a))};
+k.prototype.setRow=function(a,b){J(this,a);b=U(this,b);for(var c=0;c<this.columns;c++)this.set(a,c,b[c]);return this};k.prototype.swapRows=function(a,b){J(this,a);J(this,b);for(var c=0;c<this.columns;c++){var g=this.get(a,c);this.set(a,c,this.get(b,c));this.set(b,c,g)}return this};k.prototype.getColumn=function(a){L(this,a);for(var b=[],c=0;c<this.rows;c++)b.push(this.get(c,a));return b};k.prototype.getColumnVector=function(a){return A.columnVector(this.getColumn(a))};k.prototype.setColumn=function(a,
+b){L(this,a);b=V(this,b);for(var c=0;c<this.rows;c++)this.set(c,a,b[c]);return this};k.prototype.swapColumns=function(a,b){L(this,a);L(this,b);for(var c=0;c<this.rows;c++){var g=this.get(c,a);this.set(c,a,this.get(c,b));this.set(c,b,g)}return this};k.prototype.addRowVector=function(a){a=U(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)+a[c]);return this};k.prototype.subRowVector=function(a){a=U(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,
+c,this.get(b,c)-a[c]);return this};k.prototype.mulRowVector=function(a){a=U(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)*a[c]);return this};k.prototype.divRowVector=function(a){a=U(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[c]);return this};k.prototype.addColumnVector=function(a){a=V(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)+a[b]);return this};k.prototype.subColumnVector=
+function(a){a=V(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)-a[b]);return this};k.prototype.mulColumnVector=function(a){a=V(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)*a[b]);return this};k.prototype.divColumnVector=function(a){a=V(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[b]);return this};k.prototype.mulRow=function(a,b){J(this,a);for(var c=0;c<this.columns;c++)this.set(a,
+c,this.get(a,c)*b);return this};k.prototype.mulColumn=function(a,b){L(this,a);for(var c=0;c<this.rows;c++)this.set(c,a,this.get(c,a)*b);return this};k.prototype.max=function(){for(var a=this.get(0,0),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.get(b,c)>a&&(a=this.get(b,c));return a};k.prototype.maxIndex=function(){for(var a=this.get(0,0),b=[0,0],c=0;c<this.rows;c++)for(var g=0;g<this.columns;g++)this.get(c,g)>a&&(a=this.get(c,g),b[0]=c,b[1]=g);return b};k.prototype.min=function(){for(var a=
+this.get(0,0),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.get(b,c)<a&&(a=this.get(b,c));return a};k.prototype.minIndex=function(){for(var a=this.get(0,0),b=[0,0],c=0;c<this.rows;c++)for(var g=0;g<this.columns;g++)this.get(c,g)<a&&(a=this.get(c,g),b[0]=c,b[1]=g);return b};k.prototype.maxRow=function(a){J(this,a);for(var b=this.get(a,0),c=1;c<this.columns;c++)this.get(a,c)>b&&(b=this.get(a,c));return b};k.prototype.maxRowIndex=function(a){J(this,a);for(var b=this.get(a,0),c=[a,0],g=1;g<
+this.columns;g++)this.get(a,g)>b&&(b=this.get(a,g),c[1]=g);return c};k.prototype.minRow=function(a){J(this,a);for(var b=this.get(a,0),c=1;c<this.columns;c++)this.get(a,c)<b&&(b=this.get(a,c));return b};k.prototype.minRowIndex=function(a){J(this,a);for(var b=this.get(a,0),c=[a,0],g=1;g<this.columns;g++)this.get(a,g)<b&&(b=this.get(a,g),c[1]=g);return c};k.prototype.maxColumn=function(a){L(this,a);for(var b=this.get(0,a),c=1;c<this.rows;c++)this.get(c,a)>b&&(b=this.get(c,a));return b};k.prototype.maxColumnIndex=
+function(a){L(this,a);for(var b=this.get(0,a),c=[0,a],g=1;g<this.rows;g++)this.get(g,a)>b&&(b=this.get(g,a),c[0]=g);return c};k.prototype.minColumn=function(a){L(this,a);for(var b=this.get(0,a),c=1;c<this.rows;c++)this.get(c,a)<b&&(b=this.get(c,a));return b};k.prototype.minColumnIndex=function(a){L(this,a);for(var b=this.get(0,a),c=[0,a],g=1;g<this.rows;g++)this.get(g,a)<b&&(b=this.get(g,a),c[0]=g);return c};k.prototype.diag=function(){for(var a=Math.min(this.rows,this.columns),b=[],c=0;c<a;c++)b.push(this.get(c,
+c));return b};k.prototype.norm=function(a){a=void 0===a?"frobenius":a;var b=0;if("max"===a)return this.max();if("frobenius"===a){for(a=0;a<this.rows;a++)for(var c=0;c<this.columns;c++)b+=this.get(a,c)*this.get(a,c);return Math.sqrt(b)}throw new RangeError("unknown norm type: "+a);};k.prototype.cumulativeSum=function(){for(var a=0,b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a+=this.get(b,c),this.set(b,c,a);return this};k.prototype.dot=function(a){k.isMatrix(a)&&(a=a.to1DArray());var b=this.to1DArray();
+if(b.length!==a.length)throw new RangeError("vectors do not have the same size");for(var c=0,g=0;g<b.length;g++)c+=b[g]*a[g];return c};k.prototype.mmul=function(a){a=A.checkMatrix(a);for(var b=this.rows,c=this.columns,g=a.columns,e=new A(b,g),q=new Float64Array(c),n=0;n<g;n++){for(var l=0;l<c;l++)q[l]=a.get(l,n);for(l=0;l<b;l++){for(var d=0,E=0;E<c;E++)d+=this.get(l,E)*q[E];e.set(l,n,d)}}return e};k.prototype.strassen2x2=function(a){a=A.checkMatrix(a);var b=new A(2,2),c=this.get(0,0),g=a.get(0,0),
+e=this.get(0,1),q=a.get(0,1),n=this.get(1,0),l=a.get(1,0),d=this.get(1,1);a=a.get(1,1);var E=(c+d)*(g+a),O=(n+d)*g,f=c*(q-a),k=d*(l-g),v=(c+e)*a,x=f+v,m=O+k;c=E-O+f+(n-c)*(g+q);b.set(0,0,E+k-v+(e-d)*(l+a));b.set(0,1,x);b.set(1,0,m);b.set(1,1,c);return b};k.prototype.strassen3x3=function(a){a=A.checkMatrix(a);var b=new A(3,3),c=this.get(0,0),g=this.get(0,1),e=this.get(0,2),q=this.get(1,0),n=this.get(1,1),l=this.get(1,2),d=this.get(2,0),E=this.get(2,1),O=this.get(2,2),f=a.get(0,0),k=a.get(0,1),v=a.get(0,
+2),x=a.get(1,0),m=a.get(1,1),p=a.get(1,2),y=a.get(2,0),t=a.get(2,1),r=a.get(2,2),h=(c-q)*(-k+m),B=(-c+q+n)*(f-k+m),u=(q+n)*(-f+k);a=c*f;var D=(-c+d+E)*(f-v+p),C=(-c+d)*(v-p),G=(d+E)*(-f+v),H=(-e+E+O)*(m+y-t),z=(e-O)*(m-t),K=e*y,ea=(E+O)*(-y+t),F=(-e+n+l)*(p+y-r),Z=(e-l)*(p-r),ia=(n+l)*(-y+r),J=(c+g+e-q-n-E-O)*m+B+u+a+H+K+ea;c=a+D+G+(c+g+e-n-l-d-E)*p+K+F+ia;n=h+n*(-f+k+x-m-p-y+r)+B+a+K+F+Z;l=h+B+u+a+l*t;q=K+F+Z+ia+q*v;E=a+D+C+E*(-f+v+x-m-p-y+t)+H+z+K;d=H+z+K+ea+d*k;O=a+D+C+G+O*r;b.set(0,0,a+K+g*x);
+b.set(0,1,J);b.set(0,2,c);b.set(1,0,n);b.set(1,1,l);b.set(1,2,q);b.set(2,0,E);b.set(2,1,d);b.set(2,2,O);return b};k.prototype.mmulStrassen=function(a){function b(a,c,b){var g=a.columns;if(a.rows===c&&g===b)return a;c=k.zeros(c,b);return c=c.setSubMatrix(a,0,0)}function c(a,g,e,q){if(512>=e||512>=q)return a.mmul(g);1===e%2&&1===q%2?(a=b(a,e+1,q+1),g=b(g,e+1,q+1)):1===e%2?(a=b(a,e+1,q),g=b(g,e+1,q)):1===q%2&&(a=b(a,e,q+1),g=b(g,e,q+1));var l=parseInt(a.rows/2,10),n=parseInt(a.columns/2,10),d=a.subMatrix(0,
+l-1,0,n-1),m=g.subMatrix(0,l-1,0,n-1),E=a.subMatrix(0,l-1,n,a.columns-1),oa=g.subMatrix(0,l-1,n,g.columns-1),f=a.subMatrix(l,a.rows-1,0,n-1),r=g.subMatrix(l,g.rows-1,0,n-1),O=a.subMatrix(l,a.rows-1,n,a.columns-1),w=g.subMatrix(l,g.rows-1,n,g.columns-1);a=c(k.add(d,O),k.add(m,w),l,n);var h=c(k.add(f,O),m,l,n);g=c(d,k.sub(oa,w),l,n);var B=c(O,k.sub(r,m),l,n),A=c(k.add(d,E),w,l,n);d=c(k.sub(f,d),k.add(m,oa),l,n);n=c(k.sub(E,O),k.add(r,w),l,n);l=k.add(a,B);l.sub(A);l.add(n);n=k.add(g,A);B=k.add(h,B);
+a=k.sub(a,h);a.add(g);a.add(d);g=k.zeros(2*l.rows,2*l.columns);g=g.setSubMatrix(l,0,0);g=g.setSubMatrix(n,l.rows,0);g=g.setSubMatrix(B,0,l.columns);g=g.setSubMatrix(a,l.rows,l.columns);return g.subMatrix(0,e-1,0,q-1)}a=A.checkMatrix(a);var g=this.clone(),e=g.rows,q=g.columns,n=a.rows,l=a.columns;q!==n&&console.warn("Multiplying "+e+" x "+q+" and "+n+" x "+l+" matrix: dimensions do not match.");e=Math.max(e,n);q=Math.max(q,l);g=b(g,e,q);a=b(a,e,q);return c(g,a,e,q)};k.prototype.scaleRows=function(a){a=
+void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.min?0:b.min;b=void 0===b.max?1:b.max;if(!Number.isFinite(a))throw new TypeError("min must be a number");if(!Number.isFinite(b))throw new TypeError("max must be a number");if(a>=b)throw new RangeError("min must be smaller than max");for(var c=new A(this.rows,this.columns),g=0;g<this.rows;g++){var e=this.getRow(g);ea(e,{min:a,max:b,output:e});c.setRow(g,e)}return c};k.prototype.scaleColumns=
+function(a){a=void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.min?0:b.min;b=void 0===b.max?1:b.max;if(!Number.isFinite(a))throw new TypeError("min must be a number");if(!Number.isFinite(b))throw new TypeError("max must be a number");if(a>=b)throw new RangeError("min must be smaller than max");for(var c=new A(this.rows,this.columns),g=0;g<this.columns;g++){var e=this.getColumn(g);ea(e,{min:a,max:b,output:e});c.setColumn(g,e)}return c};k.prototype.flipRows=
+function(){for(var a=Math.ceil(this.columns/2),b=0;b<this.rows;b++)for(var c=0;c<a;c++){var g=this.get(b,c),e=this.get(b,this.columns-1-c);this.set(b,c,e);this.set(b,this.columns-1-c,g)}return this};k.prototype.flipColumns=function(){for(var a=Math.ceil(this.rows/2),b=0;b<this.columns;b++)for(var c=0;c<a;c++){var g=this.get(c,b),e=this.get(this.rows-1-c,b);this.set(c,b,e);this.set(this.rows-1-c,b,g)}return this};k.prototype.kroneckerProduct=function(a){a=A.checkMatrix(a);for(var b=this.rows,c=this.columns,
+g=a.rows,e=a.columns,q=new A(b*g,c*e),n=0;n<b;n++)for(var l=0;l<c;l++)for(var d=0;d<g;d++)for(var E=0;E<e;E++)q.set(g*n+d,e*l+E,this.get(n,l)*a.get(d,E));return q};k.prototype.transpose=function(){for(var a=new A(this.columns,this.rows),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.set(c,b,this.get(b,c));return a};k.prototype.sortRows=function(a){a=void 0===a?ha:a;for(var b=0;b<this.rows;b++)this.setRow(b,this.getRow(b).sort(a));return this};k.prototype.sortColumns=function(a){a=void 0===a?
+ha:a;for(var b=0;b<this.columns;b++)this.setColumn(b,this.getColumn(b).sort(a));return this};k.prototype.subMatrix=function(a,b,c,g){H(this,a,b,c,g);for(var e=new A(b-a+1,g-c+1),q=a;q<=b;q++)for(var n=c;n<=g;n++)e.set(q-a,n-c,this.get(q,n));return e};k.prototype.subMatrixRow=function(a,b,c){void 0===b&&(b=0);void 0===c&&(c=this.columns-1);if(b>c||0>b||b>=this.columns||0>c||c>=this.columns)throw new RangeError("Argument out of range");for(var g=new A(a.length,c-b+1),e=0;e<a.length;e++)for(var q=b;q<=
+c;q++){if(0>a[e]||a[e]>=this.rows)throw new RangeError("Row index out of range: "+a[e]);g.set(e,q-b,this.get(a[e],q))}return g};k.prototype.subMatrixColumn=function(a,b,c){void 0===b&&(b=0);void 0===c&&(c=this.rows-1);if(b>c||0>b||b>=this.rows||0>c||c>=this.rows)throw new RangeError("Argument out of range");for(var g=new A(c-b+1,a.length),e=0;e<a.length;e++)for(var q=b;q<=c;q++){if(0>a[e]||a[e]>=this.columns)throw new RangeError("Column index out of range: "+a[e]);g.set(q-b,e,this.get(q,a[e]))}return g};
+k.prototype.setSubMatrix=function(a,b,c){a=A.checkMatrix(a);H(this,b,b+a.rows-1,c,c+a.columns-1);for(var g=0;g<a.rows;g++)for(var e=0;e<a.columns;e++)this.set(b+g,c+e,a.get(g,e));return this};k.prototype.selection=function(a,b){var c=Q(this,a,b);a=new A(a.length,b.length);for(b=0;b<c.row.length;b++)for(var g=c.row[b],e=0;e<c.column.length;e++)a.set(b,e,this.get(g,c.column[e]));return a};k.prototype.trace=function(){for(var a=Math.min(this.rows,this.columns),b=0,c=0;c<a;c++)b+=this.get(c,c);return b};
+k.prototype.clone=function(){for(var a=new A(this.rows,this.columns),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.set(b,c,this.get(b,c));return a};k.prototype.sum=function(a){switch(a){case "row":a=K(this.rows);for(var b=0;b<this.rows;++b)for(var c=0;c<this.columns;++c)a[b]+=this.get(b,c);return a;case "column":a=K(this.columns);for(b=0;b<this.rows;++b)for(c=0;c<this.columns;++c)a[c]+=this.get(b,c);return a;case void 0:for(b=a=0;b<this.rows;b++)for(c=0;c<this.columns;c++)a+=this.get(b,c);
+return a;default:throw Error("invalid option: "+a);}};k.prototype.product=function(a){switch(a){case "row":a=K(this.rows,1);for(var b=0;b<this.rows;++b)for(var c=0;c<this.columns;++c)a[b]*=this.get(b,c);return a;case "column":a=K(this.columns,1);for(b=0;b<this.rows;++b)for(c=0;c<this.columns;++c)a[c]*=this.get(b,c);return a;case void 0:a=1;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)a*=this.get(b,c);return a;default:throw Error("invalid option: "+a);}};k.prototype.mean=function(a){var b=this.sum(a);
+switch(a){case "row":for(a=0;a<this.rows;a++)b[a]/=this.columns;return b;case "column":for(a=0;a<this.columns;a++)b[a]/=this.rows;return b;case void 0:return b/this.size;default:throw Error("invalid option: "+a);}};k.prototype.variance=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");var c=b;b=void 0===c.unbiased?!0:c.unbiased;c=void 0===c.mean?this.mean(a):c.mean;if("boolean"!==typeof b)throw new TypeError("unbiased must be a boolean");
+switch(a){case "row":if(!Array.isArray(c))throw new TypeError("mean must be an array");a=this.rows;for(var g=this.columns,e=[],q=0;q<a;q++){for(var n=0,l=0,d,E=0;E<g;E++)d=this.get(q,E)-c[q],n+=d,l+=d*d;b?e.push((l-n*n/g)/(g-1)):e.push((l-n*n/g)/g)}return e;case "column":if(!Array.isArray(c))throw new TypeError("mean must be an array");a=this.rows;g=this.columns;e=[];for(q=0;q<g;q++){for(E=l=n=0;E<a;E++)d=this.get(E,q)-c[q],n+=d,l+=d*d;b?e.push((l-n*n/a)/(a-1)):e.push((l-n*n/a)/a)}return e;case void 0:if("number"!==
+typeof c)throw new TypeError("mean must be a number");a=this.rows;g=this.columns;e=a*g;for(d=n=q=0;d<a;d++)for(E=0;E<g;E++)l=this.get(d,E)-c,q+=l,n+=l*l;return b?(n-q*q/e)/(e-1):(n-q*q/e)/e;default:throw Error("invalid option: "+a);}};k.prototype.standardDeviation=function(a,b){"object"===typeof a&&(b=a,a=void 0);b=this.variance(a,b);if(void 0===a)return Math.sqrt(b);for(a=0;a<b.length;a++)b[a]=Math.sqrt(b[a]);return b};k.prototype.center=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,
+a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");b=void 0===b.center?this.mean(a):b.center;switch(a){case "row":if(!Array.isArray(b))throw new TypeError("center must be an array");for(a=0;a<this.rows;a++)for(var c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b[a]);return this;case "column":if(!Array.isArray(b))throw new TypeError("center must be an array");for(a=0;a<this.rows;a++)for(c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b[c]);return this;case void 0:if("number"!==
+typeof b)throw new TypeError("center must be a number");for(a=0;a<this.rows;a++)for(c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b);return this;default:throw Error("invalid option: "+a);}};k.prototype.scale=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");b=b.scale;switch(a){case "row":if(void 0===b){a=[];for(b=0;b<this.rows;b++){for(var c=0,g=0;g<this.columns;g++)c+=Math.pow(this.get(b,g),2)/(this.columns-
+1);a.push(Math.sqrt(c))}b=a}else if(!Array.isArray(b))throw new TypeError("scale must be an array");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[b]);return this;case "column":if(void 0===b){a=[];for(b=0;b<this.columns;b++){for(g=c=0;g<this.rows;g++)c+=Math.pow(this.get(g,b),2)/(this.rows-1);a.push(Math.sqrt(c))}b=a}else if(!Array.isArray(b))throw new TypeError("scale must be an array");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,
+c)/a[c]);return this;case void 0:if(void 0===b){a=this.size-1;for(c=b=0;c<this.columns;c++)for(g=0;g<this.rows;g++)b+=Math.pow(this.get(g,c),2)/a;b=Math.sqrt(b)}else if("number"!==typeof b)throw new TypeError("scale must be a number");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a);return this;default:throw Error("invalid option: "+a);}};k.prototype.toString=function(a){return I(this,a)};$jscomp.global.Object.defineProperties(k.prototype,{size:{configurable:!0,
+enumerable:!0,get:function(){return this.rows*this.columns}}});k.prototype.klass="Matrix";$jscomp.initSymbol();"undefined"!==typeof Symbol&&($jscomp.initSymbol(),k.prototype[Symbol.for("nodejs.util.inspect.custom")]=F);k.random=k.rand;k.randomInt=k.randInt;k.diagonal=k.diag;k.prototype.diagonal=k.prototype.diag;k.identity=k.eye;k.prototype.negate=k.prototype.neg;k.prototype.tensorProduct=k.prototype.kroneckerProduct;var A=function(a,b){if(A.isMatrix(a))return a.clone();if(Number.isInteger(a)&&0<a)if(this.data=
+[],Number.isInteger(b)&&0<b)for(var c=0;c<a;c++)this.data.push(new Float64Array(b));else throw new TypeError("nColumns must be a positive integer");else if(Array.isArray(a)){c=a;a=c.length;b=c[0].length;if("number"!==typeof b||0===b)throw new TypeError("Data must be a 2D array with at least one element");this.data=[];for(var g=0;g<a;g++){if(c[g].length!==b)throw new RangeError("Inconsistent array dimensions");this.data.push(Float64Array.from(c[g]))}}else throw new TypeError("First argument must be a positive number or an array");
+this.rows=a;this.columns=b;return this};$jscomp.inherits(A,k);A.prototype.set=function(a,b,c){this.data[a][b]=c;return this};A.prototype.get=function(a,b){return this.data[a][b]};A.prototype.removeRow=function(a){J(this,a);if(1===this.rows)throw new RangeError("A matrix cannot have less than one row");this.data.splice(a,1);--this.rows;return this};A.prototype.addRow=function(a,b){void 0===b&&(b=a,a=this.rows);J(this,a,!0);b=Float64Array.from(U(this,b));this.data.splice(a,0,b);this.rows+=1;return this};
+A.prototype.removeColumn=function(a){L(this,a);if(1===this.columns)throw new RangeError("A matrix cannot have less than one column");for(var b=0;b<this.rows;b++){for(var c=new Float64Array(this.columns-1),g=0;g<a;g++)c[g]=this.data[b][g];for(g=a+1;g<this.columns;g++)c[g-1]=this.data[b][g];this.data[b]=c}--this.columns;return this};A.prototype.addColumn=function(a,b){"undefined"===typeof b&&(b=a,a=this.columns);L(this,a,!0);b=V(this,b);for(var c=0;c<this.rows;c++){for(var g=new Float64Array(this.columns+
+1),e=0;e<a;e++)g[e]=this.data[c][e];for(g[e++]=b[c];e<this.columns+1;e++)g[e]=this.data[c][e-1];this.data[c]=g}this.columns+=1;return this};(function(a,b){a.prototype.add=function(a){return"number"===typeof a?this.addS(a):this.addM(a)};a.prototype.addS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)+a);return this};a.prototype.addM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)+a.get(c,e));return this};a.add=function(a,g){return(new b(a)).add(g)};a.prototype.sub=function(a){return"number"===typeof a?this.subS(a):this.subM(a)};a.prototype.subS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)-a);return this};a.prototype.subM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)-a.get(c,e));return this};a.sub=function(a,g){return(new b(a)).sub(g)};a.prototype.subtract=a.prototype.sub;a.prototype.subtractS=a.prototype.subS;a.prototype.subtractM=a.prototype.subM;a.subtract=a.sub;a.prototype.mul=function(a){return"number"===typeof a?this.mulS(a):this.mulM(a)};a.prototype.mulS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)*a);return this};a.prototype.mulM=
+function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)*a.get(c,e));return this};a.mul=function(a,g){return(new b(a)).mul(g)};a.prototype.multiply=a.prototype.mul;a.prototype.multiplyS=a.prototype.mulS;a.prototype.multiplyM=a.prototype.mulM;a.multiply=a.mul;a.prototype.div=function(a){return"number"===typeof a?this.divS(a):this.divM(a)};
+a.prototype.divS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)/a);return this};a.prototype.divM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)/a.get(c,e));return this};a.div=function(a,g){return(new b(a)).div(g)};a.prototype.divide=a.prototype.div;a.prototype.divideS=a.prototype.divS;
+a.prototype.divideM=a.prototype.divM;a.divide=a.div;a.prototype.mod=function(a){return"number"===typeof a?this.modS(a):this.modM(a)};a.prototype.modS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)%a);return this};a.prototype.modM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,
+e)%a.get(c,e));return this};a.mod=function(a,g){return(new b(a)).mod(g)};a.prototype.modulus=a.prototype.mod;a.prototype.modulusS=a.prototype.modS;a.prototype.modulusM=a.prototype.modM;a.modulus=a.mod;a.prototype.and=function(a){return"number"===typeof a?this.andS(a):this.andM(a)};a.prototype.andS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)&a);return this};a.prototype.andM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)&a.get(c,e));return this};a.and=function(a,g){return(new b(a)).and(g)};a.prototype.or=function(a){return"number"===typeof a?this.orS(a):this.orM(a)};a.prototype.orS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)|a);return this};a.prototype.orM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)|a.get(c,e));return this};a.or=function(a,g){return(new b(a)).or(g)};a.prototype.xor=function(a){return"number"===typeof a?this.xorS(a):this.xorM(a)};a.prototype.xorS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)^a);return this};a.prototype.xorM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)^a.get(c,e));return this};a.xor=function(a,g){return(new b(a)).xor(g)};a.prototype.leftShift=function(a){return"number"===typeof a?this.leftShiftS(a):this.leftShiftM(a)};a.prototype.leftShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)<<a);return this};a.prototype.leftShiftM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
+for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)<<a.get(c,e));return this};a.leftShift=function(a,g){return(new b(a)).leftShift(g)};a.prototype.signPropagatingRightShift=function(a){return"number"===typeof a?this.signPropagatingRightShiftS(a):this.signPropagatingRightShiftM(a)};a.prototype.signPropagatingRightShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)>>a);return this};a.prototype.signPropagatingRightShiftM=
+function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)>>a.get(c,e));return this};a.signPropagatingRightShift=function(a,g){return(new b(a)).signPropagatingRightShift(g)};a.prototype.rightShift=function(a){return"number"===typeof a?this.rightShiftS(a):this.rightShiftM(a)};a.prototype.rightShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=
+0;b<this.columns;b++)this.set(c,b,this.get(c,b)>>>a);return this};a.prototype.rightShiftM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,this.get(c,e)>>>a.get(c,e));return this};a.rightShift=function(a,g){return(new b(a)).rightShift(g)};a.prototype.zeroFillRightShift=a.prototype.rightShift;a.prototype.zeroFillRightShiftS=a.prototype.rightShiftS;
+a.prototype.zeroFillRightShiftM=a.prototype.rightShiftM;a.zeroFillRightShift=a.rightShift;a.prototype.not=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,~this.get(a,b));return this};a.not=function(a){return(new b(a)).not()};a.prototype.abs=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.abs(this.get(a,b)));return this};a.abs=function(a){return(new b(a)).abs()};a.prototype.acos=function(){for(var a=0;a<this.rows;a++)for(var b=
+0;b<this.columns;b++)this.set(a,b,Math.acos(this.get(a,b)));return this};a.acos=function(a){return(new b(a)).acos()};a.prototype.acosh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.acosh(this.get(a,b)));return this};a.acosh=function(a){return(new b(a)).acosh()};a.prototype.asin=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.asin(this.get(a,b)));return this};a.asin=function(a){return(new b(a)).asin()};a.prototype.asinh=
+function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.asinh(this.get(a,b)));return this};a.asinh=function(a){return(new b(a)).asinh()};a.prototype.atan=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.atan(this.get(a,b)));return this};a.atan=function(a){return(new b(a)).atan()};a.prototype.atanh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.atanh(this.get(a,b)));return this};a.atanh=
+function(a){return(new b(a)).atanh()};a.prototype.cbrt=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cbrt(this.get(a,b)));return this};a.cbrt=function(a){return(new b(a)).cbrt()};a.prototype.ceil=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.ceil(this.get(a,b)));return this};a.ceil=function(a){return(new b(a)).ceil()};a.prototype.clz32=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,
+b,Math.clz32(this.get(a,b)));return this};a.clz32=function(a){return(new b(a)).clz32()};a.prototype.cos=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cos(this.get(a,b)));return this};a.cos=function(a){return(new b(a)).cos()};a.prototype.cosh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cosh(this.get(a,b)));return this};a.cosh=function(a){return(new b(a)).cosh()};a.prototype.exp=function(){for(var a=0;a<this.rows;a++)for(var b=
+0;b<this.columns;b++)this.set(a,b,Math.exp(this.get(a,b)));return this};a.exp=function(a){return(new b(a)).exp()};a.prototype.expm1=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.expm1(this.get(a,b)));return this};a.expm1=function(a){return(new b(a)).expm1()};a.prototype.floor=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.floor(this.get(a,b)));return this};a.floor=function(a){return(new b(a)).floor()};a.prototype.fround=
+function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.fround(this.get(a,b)));return this};a.fround=function(a){return(new b(a)).fround()};a.prototype.log=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log(this.get(a,b)));return this};a.log=function(a){return(new b(a)).log()};a.prototype.log1p=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log1p(this.get(a,b)));return this};a.log1p=function(a){return(new b(a)).log1p()};
+a.prototype.log10=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log10(this.get(a,b)));return this};a.log10=function(a){return(new b(a)).log10()};a.prototype.log2=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log2(this.get(a,b)));return this};a.log2=function(a){return(new b(a)).log2()};a.prototype.round=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.round(this.get(a,b)));return this};
+a.round=function(a){return(new b(a)).round()};a.prototype.sign=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sign(this.get(a,b)));return this};a.sign=function(a){return(new b(a)).sign()};a.prototype.sin=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sin(this.get(a,b)));return this};a.sin=function(a){return(new b(a)).sin()};a.prototype.sinh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,
+b,Math.sinh(this.get(a,b)));return this};a.sinh=function(a){return(new b(a)).sinh()};a.prototype.sqrt=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sqrt(this.get(a,b)));return this};a.sqrt=function(a){return(new b(a)).sqrt()};a.prototype.tan=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.tan(this.get(a,b)));return this};a.tan=function(a){return(new b(a)).tan()};a.prototype.tanh=function(){for(var a=0;a<this.rows;a++)for(var b=
+0;b<this.columns;b++)this.set(a,b,Math.tanh(this.get(a,b)));return this};a.tanh=function(a){return(new b(a)).tanh()};a.prototype.trunc=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.trunc(this.get(a,b)));return this};a.trunc=function(a){return(new b(a)).trunc()};a.pow=function(a,g){return(new b(a)).pow(g)};a.prototype.pow=function(a){return"number"===typeof a?this.powS(a):this.powM(a)};a.prototype.powS=function(a){for(var b=0;b<this.rows;b++)for(var c=0;c<
+this.columns;c++)this.set(b,c,Math.pow(this.get(b,c),a));return this};a.prototype.powM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var e=0;e<this.columns;e++)this.set(c,e,Math.pow(this.get(c,e),a.get(c,e)));return this}})(k,A);var P=function(a,b,c){this.matrix=a;this.rows=b;this.columns=c;return this};$jscomp.inherits(P,k);d=function(a,b){L(a,b);a=P.call(this,a,a.rows,1)||this;
+a.column=b;return a};$jscomp.inherits(d,P);d.prototype.set=function(a,b,c){this.matrix.set(a,this.column,c);return this};d.prototype.get=function(a){return this.matrix.get(a,this.column)};f=function(a,b){b=B(a,b);a=P.call(this,a,a.rows,b.length)||this;a.columnIndices=b;return a};$jscomp.inherits(f,P);f.prototype.set=function(a,b,c){this.matrix.set(a,this.columnIndices[b],c);return this};f.prototype.get=function(a,b){return this.matrix.get(a,this.columnIndices[b])};z=function(a){return P.call(this,
+a,a.rows,a.columns)||this};$jscomp.inherits(z,P);z.prototype.set=function(a,b,c){this.matrix.set(a,this.columns-b-1,c);return this};z.prototype.get=function(a,b){return this.matrix.get(a,this.columns-b-1)};var ka=function(a){return P.call(this,a,a.rows,a.columns)||this};$jscomp.inherits(ka,P);ka.prototype.set=function(a,b,c){this.matrix.set(this.rows-a-1,b,c);return this};ka.prototype.get=function(a,b){return this.matrix.get(this.rows-a-1,b)};var la=function(a,b){J(a,b);a=P.call(this,a,1,a.columns)||
+this;a.row=b;return a};$jscomp.inherits(la,P);la.prototype.set=function(a,b,c){this.matrix.set(this.row,b,c);return this};la.prototype.get=function(a,b){return this.matrix.get(this.row,b)};var W=function(a,b){b=N(a,b);a=P.call(this,a,b.length,a.columns)||this;a.rowIndices=b;return a};$jscomp.inherits(W,P);W.prototype.set=function(a,b,c){this.matrix.set(this.rowIndices[a],b,c);return this};W.prototype.get=function(a,b){return this.matrix.get(this.rowIndices[a],b)};var S=function(a,b,c){b=Q(a,b,c);
+a=P.call(this,a,b.row.length,b.column.length)||this;a.rowIndices=b.row;a.columnIndices=b.column;return a};$jscomp.inherits(S,P);S.prototype.set=function(a,b,c){this.matrix.set(this.rowIndices[a],this.columnIndices[b],c);return this};S.prototype.get=function(a,b){return this.matrix.get(this.rowIndices[a],this.columnIndices[b])};var ba=function(a,b,c,g,e){H(a,b,c,g,e);a=P.call(this,a,c-b+1,e-g+1)||this;a.startRow=b;a.startColumn=g;return a};$jscomp.inherits(ba,P);ba.prototype.set=function(a,b,c){this.matrix.set(this.startRow+
+a,this.startColumn+b,c);return this};ba.prototype.get=function(a,b){return this.matrix.get(this.startRow+a,this.startColumn+b)};var ca=function(a){return P.call(this,a,a.columns,a.rows)||this};$jscomp.inherits(ca,P);ca.prototype.set=function(a,b,c){this.matrix.set(b,a,c);return this};ca.prototype.get=function(a,b){return this.matrix.get(b,a)};var X=function(a,b){b=void 0===b?{}:b;b=void 0===b.rows?1:b.rows;if(0!==a.length%b)throw Error("the data length is not divisible by the number of rows");this.rows=
+b;this.columns=a.length/b;this.data=a;return this};$jscomp.inherits(X,k);X.prototype.set=function(a,b,c){a=this._calculateIndex(a,b);this.data[a]=c;return this};X.prototype.get=function(a,b){a=this._calculateIndex(a,b);return this.data[a]};X.prototype._calculateIndex=function(a,b){return a*this.columns+b};var T=function(a){this.data=a;this.rows=a.length;this.columns=a[0].length;return this};$jscomp.inherits(T,k);T.prototype.set=function(a,b,c){this.data[a][b]=c;return this};T.prototype.get=function(a,
+b){return this.data[a][b]};var aa=function(a){a=T.checkMatrix(a);a=a.clone();var b=a.rows,c=a.columns,g=new Float64Array(b),e=1,q,n,l,d;for(q=0;q<b;q++)g[q]=q;var E=new Float64Array(b);for(n=0;n<c;n++){for(q=0;q<b;q++)E[q]=a.get(q,n);for(q=0;q<b;q++){var f=Math.min(q,n);for(l=d=0;l<f;l++)d+=a.get(q,l)*E[l];E[q]-=d;a.set(q,n,E[q])}d=n;for(q=n+1;q<b;q++)Math.abs(E[q])>Math.abs(E[d])&&(d=q);if(d!==n){for(l=0;l<c;l++)q=a.get(d,l),a.set(d,l,a.get(n,l)),a.set(n,l,q);l=g[d];g[d]=g[n];g[n]=l;e=-e}if(n<b&&
+0!==a.get(n,n))for(q=n+1;q<b;q++)a.set(q,n,a.get(q,n)/a.get(n,n))}this.LU=a;this.pivotVector=g;this.pivotSign=e};aa.prototype.isSingular=function(){for(var a=this.LU,b=a.columns,c=0;c<b;c++)if(0===a.get(c,c))return!0;return!1};aa.prototype.solve=function(a){a=A.checkMatrix(a);var b=this.LU;if(b.rows!==a.rows)throw Error("Invalid matrix dimensions");if(this.isSingular())throw Error("LU matrix is singular");var c=a.columns;a=a.subMatrixRow(this.pivotVector,0,c-1);var g=b.columns,e,q,d;for(d=0;d<g;d++)for(e=
+d+1;e<g;e++)for(q=0;q<c;q++)a.set(e,q,a.get(e,q)-a.get(d,q)*b.get(e,d));for(d=g-1;0<=d;d--){for(q=0;q<c;q++)a.set(d,q,a.get(d,q)/b.get(d,d));for(e=0;e<d;e++)for(q=0;q<c;q++)a.set(e,q,a.get(e,q)-a.get(d,q)*b.get(e,d))}return a};$jscomp.global.Object.defineProperties(aa.prototype,{determinant:{configurable:!0,enumerable:!0,get:function(){var a=this.LU;if(!a.isSquare())throw Error("Matrix must be square");for(var b=this.pivotSign,c=a.columns,g=0;g<c;g++)b*=a.get(g,g);return b}},lowerTriangularMatrix:{configurable:!0,
+enumerable:!0,get:function(){for(var a=this.LU,b=a.rows,c=a.columns,g=new A(b,c),e=0;e<b;e++)for(var q=0;q<c;q++)e>q?g.set(e,q,a.get(e,q)):e===q?g.set(e,q,1):g.set(e,q,0);return g}},upperTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){for(var a=this.LU,b=a.rows,c=a.columns,g=new A(b,c),e=0;e<b;e++)for(var q=0;q<c;q++)e<=q?g.set(e,q,a.get(e,q)):g.set(e,q,0);return g}},pivotPermutationVector:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.pivotVector)}}});var da=
+function(a){a=T.checkMatrix(a);var b=a.clone(),c=a.rows;a=a.columns;var g=new Float64Array(a),e,q,d;for(d=0;d<a;d++){var l=0;for(e=d;e<c;e++)l=D(l,b.get(e,d));if(0!==l){0>b.get(d,d)&&(l=-l);for(e=d;e<c;e++)b.set(e,d,b.get(e,d)/l);b.set(d,d,b.get(d,d)+1);for(q=d+1;q<a;q++){var f=0;for(e=d;e<c;e++)f+=b.get(e,d)*b.get(e,q);f=-f/b.get(d,d);for(e=d;e<c;e++)b.set(e,q,b.get(e,q)+f*b.get(e,d))}}g[d]=-l}this.QR=b;this.Rdiag=g};da.prototype.solve=function(a){a=A.checkMatrix(a);var b=this.QR,c=b.rows;if(a.rows!==
+c)throw Error("Matrix row dimensions must agree");if(!this.isFullRank())throw Error("Matrix is rank deficient");var g=a.columns;a=a.clone();var e=b.columns,d,n,l;for(l=0;l<e;l++)for(n=0;n<g;n++){var f=0;for(d=l;d<c;d++)f+=b.get(d,l)*a.get(d,n);f=-f/b.get(l,l);for(d=l;d<c;d++)a.set(d,n,a.get(d,n)+f*b.get(d,l))}for(l=e-1;0<=l;l--){for(n=0;n<g;n++)a.set(l,n,a.get(l,n)/this.Rdiag[l]);for(d=0;d<l;d++)for(n=0;n<g;n++)a.set(d,n,a.get(d,n)-a.get(l,n)*b.get(d,l))}return a.subMatrix(0,e-1,0,g-1)};da.prototype.isFullRank=
+function(){for(var a=this.QR.columns,b=0;b<a;b++)if(0===this.Rdiag[b])return!1;return!0};$jscomp.global.Object.defineProperties(da.prototype,{upperTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.QR,b=a.columns,c=new A(b,b),g,e;for(g=0;g<b;g++)for(e=0;e<b;e++)g<e?c.set(g,e,a.get(g,e)):g===e?c.set(g,e,this.Rdiag[g]):c.set(g,e,0);return c}},orthogonalMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.QR,b=a.rows,c=a.columns,g=new A(b,c),e,d,n;for(n=c-1;0<=n;n--){for(e=
+0;e<b;e++)g.set(e,n,0);g.set(n,n,1);for(d=n;d<c;d++)if(0!==a.get(n,n)){var l=0;for(e=n;e<b;e++)l+=a.get(e,n)*g.get(e,d);l=-l/a.get(n,n);for(e=n;e<b;e++)g.set(e,d,g.get(e,d)+l*a.get(e,n))}}return g}}});var Y=function(a,b){b=void 0===b?{}:b;a=T.checkMatrix(a);var c=a.rows,g=a.columns,e=b,d=void 0===e.autoTranspose?!1:e.autoTranspose;b=!(void 0!==e.computeLeftSingularVectors&&!e.computeLeftSingularVectors);e=!(void 0!==e.computeRightSingularVectors&&!e.computeRightSingularVectors);var n=!1;if(c<g)if(d){var l=
+a.transpose();c=l.rows;g=l.columns;n=!0;a=b;b=e;e=a}else l=a.clone(),console.warn("Computing SVD on a matrix with more columns than rows. Consider enabling autoTranspose");else l=a.clone();var f=Math.min(c,g),E=Math.min(c+1,g);a=new Float64Array(E);d=new A(c,f);for(var k=new A(g,g),w=new Float64Array(g),h=new Float64Array(c),v=new Float64Array(E),x=0;x<E;x++)v[x]=x;v=Math.min(c-1,g);E=Math.max(0,Math.min(g-2,c));x=Math.max(v,E);for(var m=0;m<x;m++){if(m<v){a[m]=0;for(var p=m;p<c;p++)a[m]=D(a[m],l.get(p,
+m));if(0!==a[m]){0>l.get(m,m)&&(a[m]=-a[m]);for(p=m;p<c;p++)l.set(p,m,l.get(p,m)/a[m]);l.set(m,m,l.get(m,m)+1)}a[m]=-a[m]}for(p=m+1;p<g;p++){if(m<v&&0!==a[m]){for(var y=0,t=m;t<c;t++)y+=l.get(t,m)*l.get(t,p);y=-y/l.get(m,m);for(t=m;t<c;t++)l.set(t,p,l.get(t,p)+y*l.get(t,m))}w[p]=l.get(m,p)}if(b&&m<v)for(p=m;p<c;p++)d.set(p,m,l.get(p,m));if(m<E){w[m]=0;for(p=m+1;p<g;p++)w[m]=D(w[m],w[p]);if(0!==w[m]){0>w[m+1]&&(w[m]=0-w[m]);for(p=m+1;p<g;p++)w[p]/=w[m];w[m+1]+=1}w[m]=-w[m];if(m+1<c&&0!==w[m]){for(p=
+m+1;p<c;p++)h[p]=0;for(p=m+1;p<c;p++)for(y=m+1;y<g;y++)h[p]+=w[y]*l.get(p,y);for(p=m+1;p<g;p++)for(y=-w[p]/w[m+1],t=m+1;t<c;t++)l.set(t,p,l.get(t,p)+y*h[t])}if(e)for(p=m+1;p<g;p++)k.set(p,m,w[p])}}h=Math.min(g,c+1);v<g&&(a[v]=l.get(v,v));c<h&&(a[h-1]=0);E+1<h&&(w[E]=l.get(E,h-1));w[h-1]=0;if(b){for(l=v;l<f;l++){for(x=0;x<c;x++)d.set(x,l,0);d.set(l,l,1)}for(l=v-1;0<=l;l--)if(0!==a[l]){for(v=l+1;v<f;v++){x=0;for(m=l;m<c;m++)x+=d.get(m,l)*d.get(m,v);x=-x/d.get(l,l);for(m=l;m<c;m++)d.set(m,v,d.get(m,
+v)+x*d.get(m,l))}for(v=l;v<c;v++)d.set(v,l,-d.get(v,l));d.set(l,l,1+d.get(l,l));for(v=0;v<l-1;v++)d.set(v,l,0)}else{for(v=0;v<c;v++)d.set(v,l,0);d.set(l,l,1)}}if(e)for(f=g-1;0<=f;f--){if(f<E&&0!==w[f])for(l=f+1;l<g;l++){v=0;for(x=f+1;x<g;x++)v+=k.get(x,f)*k.get(x,l);v=-v/k.get(f+1,f);for(x=f+1;x<g;x++)k.set(x,l,k.get(x,l)+v*k.get(x,f))}for(l=0;l<g;l++)k.set(l,f,0);k.set(f,f,1)}E=h-1;for(f=Number.EPSILON;0<h;){for(l=h-2;-1<=l&&-1!==l;l--)if(Math.abs(w[l])<=Number.MIN_VALUE+f*Math.abs(a[l]+Math.abs(a[l+
+1]))||Number.isNaN(w[l])){w[l]=0;break}if(l===h-2)v=4;else{for(x=h-1;x>=l&&x!==l;x--)if(Math.abs(a[x])<=f*((x!==h?Math.abs(w[x]):0)+(x!==l+1?Math.abs(w[x-1]):0))){a[x]=0;break}x===l?v=3:x===h-1?v=1:(v=2,l=x)}l++;switch(v){case 1:v=w[h-2];w[h-2]=0;for(x=h-2;x>=l;x--)if(m=D(a[x],v),p=a[x]/m,y=v/m,a[x]=m,x!==l&&(v=-y*w[x-1],w[x-1]*=p),e)for(t=0;t<g;t++)m=p*k.get(t,x)+y*k.get(t,h-1),k.set(t,h-1,-y*k.get(t,x)+p*k.get(t,h-1)),k.set(t,x,m);break;case 2:v=w[l-1];w[l-1]=0;for(x=l;x<h;x++)if(m=D(a[x],v),p=
+a[x]/m,y=v/m,a[x]=m,v=-y*w[x],w[x]*=p,b)for(t=0;t<c;t++)m=p*d.get(t,x)+y*d.get(t,l-1),d.set(t,l-1,-y*d.get(t,x)+p*d.get(t,l-1)),d.set(t,x,m);break;case 3:m=Math.max(Math.abs(a[h-1]),Math.abs(a[h-2]),Math.abs(w[h-2]),Math.abs(a[l]),Math.abs(w[l]));x=a[h-1]/m;y=a[h-2]/m;p=w[h-2]/m;v=a[l]/m;m=w[l]/m;y=((y+x)*(y-x)+p*p)/2;p*=x*p*x;t=0;if(0!==y||0!==p)t=0>y?0-Math.sqrt(y*y+p):Math.sqrt(y*y+p),t=p/(y+t);x=(v+x)*(v-x)+t;v*=m;for(m=l;m<h-1;m++){p=D(x,v);0===p&&(p=Number.MIN_VALUE);y=x/p;t=v/p;m!==l&&(w[m-
+1]=p);x=y*a[m]+t*w[m];w[m]=y*w[m]-t*a[m];v=t*a[m+1];a[m+1]*=y;if(e)for(var r=0;r<g;r++)p=y*k.get(r,m)+t*k.get(r,m+1),k.set(r,m+1,-t*k.get(r,m)+y*k.get(r,m+1)),k.set(r,m,p);p=D(x,v);0===p&&(p=Number.MIN_VALUE);y=x/p;t=v/p;a[m]=p;x=y*w[m]+t*a[m+1];a[m+1]=-t*w[m]+y*a[m+1];v=t*w[m+1];w[m+1]*=y;if(b&&m<c-1)for(r=0;r<c;r++)p=y*d.get(r,m)+t*d.get(r,m+1),d.set(r,m+1,-t*d.get(r,m)+y*d.get(r,m+1)),d.set(r,m,p)}w[h-2]=x;break;case 4:if(0>=a[l]&&(a[l]=0>a[l]?-a[l]:0,e))for(v=0;v<=E;v++)k.set(v,l,-k.get(v,l));
+for(;l<E&&!(a[l]>=a[l+1]);){v=a[l];a[l]=a[l+1];a[l+1]=v;if(e&&l<g-1)for(x=0;x<g;x++)v=k.get(x,l+1),k.set(x,l+1,k.get(x,l)),k.set(x,l,v);if(b&&l<c-1)for(x=0;x<c;x++)v=d.get(x,l+1),d.set(x,l+1,d.get(x,l)),d.set(x,l,v);l++}h--}}n&&(b=k,k=d,d=b);this.m=c;this.n=g;this.s=a;this.U=d;this.V=k};Y.prototype.solve=function(a){for(var b=this.threshold,c=this.s.length,g=A.zeros(c,c),e=0;e<c;e++)Math.abs(this.s[e])<=b?g.set(e,e,0):g.set(e,e,1/this.s[e]);b=this.U;e=this.rightSingularVectors;g=e.mmul(g);e=e.rows;
+for(var d=b.rows,n=A.zeros(e,d),l=0;l<e;l++)for(var f=0;f<d;f++){for(var E=0,k=0;k<c;k++)E+=g.get(l,k)*b.get(f,k);n.set(l,f,E)}return n.mmul(a)};Y.prototype.solveForDiagonal=function(a){return this.solve(A.diag(a))};Y.prototype.inverse=function(){for(var a=this.V,b=this.threshold,c=a.rows,g=a.columns,e=new A(c,this.s.length),d=0;d<c;d++)for(var n=0;n<g;n++)Math.abs(this.s[n])>b&&e.set(d,n,a.get(d,n)/this.s[n]);a=this.U;b=a.rows;g=a.columns;d=new A(c,b);for(n=0;n<c;n++)for(var l=0;l<b;l++){for(var f=
+0,k=0;k<g;k++)f+=e.get(n,k)*a.get(l,k);d.set(n,l,f)}return d};$jscomp.global.Object.defineProperties(Y.prototype,{condition:{configurable:!0,enumerable:!0,get:function(){return this.s[0]/this.s[Math.min(this.m,this.n)-1]}},norm2:{configurable:!0,enumerable:!0,get:function(){return this.s[0]}},rank:{configurable:!0,enumerable:!0,get:function(){for(var a=Math.max(this.m,this.n)*this.s[0]*Number.EPSILON,b=0,c=this.s,g=0,e=c.length;g<e;g++)c[g]>a&&b++;return b}},diagonal:{configurable:!0,enumerable:!0,
+get:function(){return Array.from(this.s)}},threshold:{configurable:!0,enumerable:!0,get:function(){return Number.EPSILON/2*Math.max(this.m,this.n)*this.s[0]}},leftSingularVectors:{configurable:!0,enumerable:!0,get:function(){return this.U}},rightSingularVectors:{configurable:!0,enumerable:!0,get:function(){return this.V}},diagonalMatrix:{configurable:!0,enumerable:!0,get:function(){return A.diag(this.s)}}});var ma=function(a,b){b=void 0===b?{}:b;var c=void 0===b.assumeSymmetric?!1:b.assumeSymmetric;
+a=T.checkMatrix(a);if(!a.isSquare())throw Error("Matrix is not a square matrix");b=a.columns;var g=new A(b,b),e=new Float64Array(b),d=new Float64Array(b),n=a,l,f;if(c||a.isSymmetric()){for(l=0;l<b;l++)for(f=0;f<b;f++)g.set(l,f,n.get(l,f));var k;for(f=0;f<b;f++)e[f]=g.get(b-1,f);for(c=b-1;0<c;c--){for(k=a=f=0;k<c;k++)f+=Math.abs(e[k]);if(0===f)for(d[c]=e[c-1],f=0;f<c;f++)e[f]=g.get(c-1,f),g.set(c,f,0),g.set(f,c,0);else{for(k=0;k<c;k++)e[k]/=f,a+=e[k]*e[k];n=e[c-1];l=Math.sqrt(a);0<n&&(l=-l);d[c]=f*
+l;a-=n*l;e[c-1]=n-l;for(f=0;f<c;f++)d[f]=0;for(f=0;f<c;f++){n=e[f];g.set(f,c,n);l=d[f]+g.get(f,f)*n;for(k=f+1;k<=c-1;k++)l+=g.get(k,f)*e[k],d[k]+=g.get(k,f)*n;d[f]=l}for(f=n=0;f<c;f++)d[f]/=a,n+=d[f]*e[f];n/=a+a;for(f=0;f<c;f++)d[f]-=n*e[f];for(f=0;f<c;f++){n=e[f];l=d[f];for(k=f;k<=c-1;k++)g.set(k,f,g.get(k,f)-(n*d[k]+l*e[k]));e[f]=g.get(c-1,f);g.set(c,f,0)}}e[c]=a}for(c=0;c<b-1;c++){g.set(b-1,c,g.get(c,c));g.set(c,c,1);a=e[c+1];if(0!==a){for(k=0;k<=c;k++)e[k]=g.get(k,c+1)/a;for(f=0;f<=c;f++){for(k=
+l=0;k<=c;k++)l+=g.get(k,c+1)*g.get(k,f);for(k=0;k<=c;k++)g.set(k,f,g.get(k,f)-l*e[k])}}for(k=0;k<=c;k++)g.set(k,c+1,0)}for(f=0;f<b;f++)e[f]=g.get(b-1,f),g.set(b-1,f,0);g.set(b-1,b-1,1);d[0]=0;var h,w;for(a=1;a<b;a++)d[a-1]=d[a];var B=d[b-1]=0,v=0,x=Number.EPSILON;for(l=0;l<b;l++){v=Math.max(v,Math.abs(e[l])+Math.abs(d[l]));for(f=l;f<b&&!(Math.abs(d[f])<=x*v);)f++;if(f>l){do{var m=e[l];c=(e[l+1]-m)/(2*d[l]);var p=D(c,1);0>c&&(p=-p);e[l]=d[l]/(c+p);e[l+1]=d[l]*(c+p);k=e[l+1];n=m-e[l];for(a=l+2;a<b;a++)e[a]-=
+n;B+=n;c=e[f];var y=h=p=1;var t=d[l+1];var r=w=0;for(a=f-1;a>=l;a--)for(y=h,h=p,r=w,m=p*d[a],n=p*c,p=D(c,d[a]),d[a+1]=w*p,w=d[a]/p,p=c/p,c=p*e[a]-w*m,e[a+1]=n+w*(p*m+w*e[a]),m=0;m<b;m++)n=g.get(m,a+1),g.set(m,a+1,w*g.get(m,a)+p*n),g.set(m,a,p*g.get(m,a)-w*n);c=-w*r*y*t*d[l]/k;d[l]=w*c;e[l]=p*c}while(Math.abs(d[l])>x*v)}e[l]+=B;d[l]=0}for(a=0;a<b-1;a++){m=a;c=e[a];for(n=a+1;n<b;n++)e[n]<c&&(m=n,c=e[n]);if(m!==a)for(e[m]=e[a],e[a]=c,n=0;n<b;n++)c=g.get(n,a),g.set(n,a,g.get(n,m)),g.set(n,m,c)}}else{a=
+new A(b,b);c=new Float64Array(b);for(f=0;f<b;f++)for(l=0;l<b;l++)a.set(l,f,n.get(l,f));n=b-1;for(t=1;t<=n-1;t++){w=0;for(h=t;h<=n;h++)w+=Math.abs(a.get(h,t-1));if(0!==w){k=0;for(h=n;h>=t;h--)c[h]=a.get(h,t-1)/w,k+=c[h]*c[h];f=Math.sqrt(k);0<c[t]&&(f=-f);k-=c[t]*f;c[t]-=f;for(y=t;y<b;y++){l=0;for(h=n;h>=t;h--)l+=c[h]*a.get(h,y);l/=k;for(h=t;h<=n;h++)a.set(h,y,a.get(h,y)-l*c[h])}for(h=0;h<=n;h++){l=0;for(y=n;y>=t;y--)l+=c[y]*a.get(h,y);l/=k;for(y=t;y<=n;y++)a.set(h,y,a.get(h,y)-l*c[y])}c[t]*=w;a.set(t,
+t-1,w*f)}}for(h=0;h<b;h++)for(y=0;y<b;y++)g.set(h,y,h===y?1:0);for(t=n-1;1<=t;t--)if(0!==a.get(t,t-1)){for(h=t+1;h<=n;h++)c[h]=a.get(h,t-1);for(y=t;y<=n;y++){f=0;for(h=t;h<=n;h++)f+=c[h]*g.get(h,y);f=f/c[t]/a.get(t,t-1);for(h=t;h<=n;h++)g.set(h,y,g.get(h,y)+f*c[h])}}c=b-1;n=b-1;l=Number.EPSILON;var u=0,C=w=t=y=h=k=f=0,G;for(r=0;r<b;r++){if(0>r||r>n)e[r]=a.get(r,r),d[r]=0;for(p=Math.max(r-1,0);p<b;p++)f+=Math.abs(a.get(r,p))}for(;0<=c;){for(B=c;0<B;){t=Math.abs(a.get(B-1,B-1))+Math.abs(a.get(B,B));
+0===t&&(t=f);if(Math.abs(a.get(B,B-1))<l*t)break;B--}if(B===c)a.set(c,c,a.get(c,c)+u),e[c]=a.get(c,c),d[c]=0,c--,C=0;else if(B===c-1){m=a.get(c,c-1)*a.get(c-1,c);k=(a.get(c-1,c-1)-a.get(c,c))/2;h=k*k+m;w=Math.sqrt(Math.abs(h));a.set(c,c,a.get(c,c)+u);a.set(c-1,c-1,a.get(c-1,c-1)+u);v=a.get(c,c);if(0<=h){w=0<=k?k+w:k-w;e[c-1]=v+w;e[c]=e[c-1];0!==w&&(e[c]=v-m/w);d[c-1]=0;d[c]=0;v=a.get(c,c-1);t=Math.abs(v)+Math.abs(w);k=v/t;h=w/t;y=Math.sqrt(k*k+h*h);k/=y;h/=y;for(p=c-1;p<b;p++)w=a.get(c-1,p),a.set(c-
+1,p,h*w+k*a.get(c,p)),a.set(c,p,h*a.get(c,p)-k*w);for(r=0;r<=c;r++)w=a.get(r,c-1),a.set(r,c-1,h*w+k*a.get(r,c)),a.set(r,c,h*a.get(r,c)-k*w);for(r=0;r<=n;r++)w=g.get(r,c-1),g.set(r,c-1,h*w+k*g.get(r,c)),g.set(r,c,h*g.get(r,c)-k*w)}else e[c-1]=v+k,e[c]=v+k,d[c-1]=w,d[c]=-w;c-=2;C=0}else{v=a.get(c,c);m=x=0;B<c&&(x=a.get(c-1,c-1),m=a.get(c,c-1)*a.get(c-1,c));if(10===C){u+=v;for(r=0;r<=c;r++)a.set(r,r,a.get(r,r)-v);t=Math.abs(a.get(c,c-1))+Math.abs(a.get(c-1,c-2));v=x=.75*t;m=-.4375*t*t}if(30===C&&(t=
+(x-v)/2,t=t*t+m,0<t)){t=Math.sqrt(t);x<v&&(t=-t);t=v-m/((x-v)/2+t);for(r=0;r<=c;r++)a.set(r,r,a.get(r,r)-t);u+=t;v=x=m=.964}C+=1;for(G=c-2;G>=B;){w=a.get(G,G);y=v-w;t=x-w;k=(y*t-m)/a.get(G+1,G)+a.get(G,G+1);h=a.get(G+1,G+1)-w-y-t;y=a.get(G+2,G+1);t=Math.abs(k)+Math.abs(h)+Math.abs(y);k/=t;h/=t;y/=t;if(G===B)break;if(Math.abs(a.get(G,G-1))*(Math.abs(h)+Math.abs(y))<l*Math.abs(k)*(Math.abs(a.get(G-1,G-1))+Math.abs(w)+Math.abs(a.get(G+1,G+1))))break;G--}for(r=G+2;r<=c;r++)a.set(r,r-2,0),r>G+2&&a.set(r,
+r-3,0);for(m=G;m<=c-1;m++){var H=m!==c-1;m!==G&&(k=a.get(m,m-1),h=a.get(m+1,m-1),y=H?a.get(m+2,m-1):0,v=Math.abs(k)+Math.abs(h)+Math.abs(y),0!==v&&(k/=v,h/=v,y/=v));if(0===v)break;t=Math.sqrt(k*k+h*h+y*y);0>k&&(t=-t);if(0!==t){m!==G?a.set(m,m-1,-t*v):B!==G&&a.set(m,m-1,-a.get(m,m-1));k+=t;v=k/t;x=h/t;w=y/t;h/=k;y/=k;for(p=m;p<b;p++)k=a.get(m,p)+h*a.get(m+1,p),H&&(k+=y*a.get(m+2,p),a.set(m+2,p,a.get(m+2,p)-k*w)),a.set(m,p,a.get(m,p)-k*v),a.set(m+1,p,a.get(m+1,p)-k*x);for(r=0;r<=Math.min(c,m+3);r++)k=
+v*a.get(r,m)+x*a.get(r,m+1),H&&(k+=w*a.get(r,m+2),a.set(r,m+2,a.get(r,m+2)-k*y)),a.set(r,m,a.get(r,m)-k),a.set(r,m+1,a.get(r,m+1)-k*h);for(r=0;r<=n;r++)k=v*g.get(r,m)+x*g.get(r,m+1),H&&(k+=w*g.get(r,m+2),g.set(r,m+2,g.get(r,m+2)-k*y)),g.set(r,m,g.get(r,m)-k),g.set(r,m+1,g.get(r,m+1)-k*h)}}}}if(0!==f){for(c=b-1;0<=c;c--)if(k=e[c],h=d[c],0===h)for(B=c,a.set(c,c,1),r=c-1;0<=r;r--){m=a.get(r,r)-k;y=0;for(p=B;p<=c;p++)y+=a.get(r,p)*a.get(p,c);if(0>d[r])w=m,t=y;else if(B=r,0===d[r]?a.set(r,c,0!==m?-y/m:
+-y/(l*f)):(v=a.get(r,r+1),x=a.get(r+1,r),h=(e[r]-k)*(e[r]-k)+d[r]*d[r],u=(v*t-w*y)/h,a.set(r,c,u),a.set(r+1,c,Math.abs(v)>Math.abs(w)?(-y-m*u)/v:(-t-x*u)/w)),u=Math.abs(a.get(r,c)),1<l*u*u)for(p=r;p<=c;p++)a.set(p,c,a.get(p,c)/u)}else if(0>h)for(B=c-1,Math.abs(a.get(c,c-1))>Math.abs(a.get(c-1,c))?(a.set(c-1,c-1,h/a.get(c,c-1)),a.set(c-1,c,-(a.get(c,c)-k)/a.get(c,c-1))):(p=ja(0,-a.get(c-1,c),a.get(c-1,c-1)-k,h),a.set(c-1,c-1,p[0]),a.set(c-1,c,p[1])),a.set(c,c-1,0),a.set(c,c,1),r=c-2;0<=r;r--){C=u=
+0;for(p=B;p<=c;p++)u+=a.get(r,p)*a.get(p,c-1),C+=a.get(r,p)*a.get(p,c);m=a.get(r,r)-k;if(0>d[r])w=m,y=u,t=C;else if(B=r,0===d[r]?(p=ja(-u,-C,m,h),a.set(r,c-1,p[0]),a.set(r,c,p[1])):(v=a.get(r,r+1),x=a.get(r+1,r),p=(e[r]-k)*(e[r]-k)+d[r]*d[r]-h*h,G=2*(e[r]-k)*h,0===p&&0===G&&(p=l*f*(Math.abs(m)+Math.abs(h)+Math.abs(v)+Math.abs(x)+Math.abs(w))),p=ja(v*y-w*u+h*C,v*t-w*C-h*u,p,G),a.set(r,c-1,p[0]),a.set(r,c,p[1]),Math.abs(v)>Math.abs(w)+Math.abs(h)?(a.set(r+1,c-1,(-u-m*a.get(r,c-1)+h*a.get(r,c))/v),a.set(r+
+1,c,(-C-m*a.get(r,c)-h*a.get(r,c-1))/v)):(p=ja(-y-x*a.get(r,c-1),-t-x*a.get(r,c),w,h),a.set(r+1,c-1,p[0]),a.set(r+1,c,p[1]))),u=Math.max(Math.abs(a.get(r,c-1)),Math.abs(a.get(r,c))),1<l*u*u)for(p=r;p<=c;p++)a.set(p,c-1,a.get(p,c-1)/u),a.set(p,c,a.get(p,c)/u)}for(r=0;r<b;r++)if(0>r||r>n)for(p=r;p<b;p++)g.set(r,p,a.get(r,p));for(p=b-1;0<=p;p--)for(r=0;r<=n;r++){for(m=w=0;m<=Math.min(p,n);m++)w+=g.get(r,m)*a.get(m,p);g.set(r,p,w)}}}this.n=b;this.e=d;this.d=e;this.V=g};$jscomp.global.Object.defineProperties(ma.prototype,
+{realEigenvalues:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.d)}},imaginaryEigenvalues:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.e)}},eigenvectorMatrix:{configurable:!0,enumerable:!0,get:function(){return this.V}},diagonalMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.n,b=this.e,c=this.d,d=new A(a,a),e,f;for(e=0;e<a;e++){for(f=0;f<a;f++)d.set(e,f,0);d.set(e,e,c[e]);0<b[e]?d.set(e,e+1,b[e]):0>b[e]&&d.set(e,e-1,b[e])}return d}}});
+var fa=function(a){a=T.checkMatrix(a);if(!a.isSymmetric())throw Error("Matrix is not symmetric");var b=a.rows,c=new A(b,b),d=!0,e,f,k;for(f=0;f<b;f++){var l=0;for(k=0;k<f;k++){var h=0;for(e=0;e<k;e++)h+=c.get(k,e)*c.get(f,e);h=(a.get(f,k)-h)/c.get(k,k);c.set(f,k,h);l+=h*h}l=a.get(f,f)-l;d&=0<l;c.set(f,f,Math.sqrt(Math.max(l,0)));for(k=f+1;k<b;k++)c.set(f,k,0)}this.L=c;this.positiveDefinite=!!d};fa.prototype.isPositiveDefinite=function(){return this.positiveDefinite};fa.prototype.solve=function(a){a=
+T.checkMatrix(a);var b=this.L,c=b.rows;if(a.rows!==c)throw Error("Matrix dimensions do not match");if(!1===this.isPositiveDefinite())throw Error("Matrix is not positive definite");var d=a.columns;a=a.clone();var e,f,k;for(k=0;k<c;k++)for(f=0;f<d;f++){for(e=0;e<k;e++)a.set(k,f,a.get(k,f)-a.get(e,f)*b.get(k,e));a.set(k,f,a.get(k,f)/b.get(k,k))}for(k=c-1;0<=k;k--)for(f=0;f<d;f++){for(e=k+1;e<c;e++)a.set(k,f,a.get(k,f)-a.get(e,f)*b.get(e,k));a.set(k,f,a.get(k,f)/b.get(k,k))}return a};$jscomp.global.Object.defineProperties(fa.prototype,
+{lowerTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){return this.L}}});var pa=function(a,b){b=void 0===b?{}:b;a=T.checkMatrix(a);var c=b.Y,d=void 0===b.scaleScores?!1:b.scaleScores,e=void 0===b.maxIterations?1E3:b.maxIterations,f=void 0===b.terminationCriteria?1E-10:b.terminationCriteria;if(c){c=Array.isArray(c)&&"number"===typeof c[0]?A.columnVector(c):T.checkMatrix(c);if(!c.isColumnVector()||c.rows!==a.rows)throw Error("Y must be a column vector of length X.rows");b=c}else b=a.getColumnVector(0);
+for(var k=1,l,h,B,u,w=0;w<e&&k>f;w++)B=a.transpose().mmul(b).div(b.transpose().mmul(b).get(0,0)),B=B.div(B.norm()),l=a.mmul(B).div(B.transpose().mmul(B).get(0,0)),0<w&&(k=l.clone().sub(u).pow(2).sum()),u=l.clone(),c?(h=c.transpose().mmul(l).div(l.transpose().mmul(l).get(0,0)),h=h.div(h.norm()),b=c.mmul(h).div(h.transpose().mmul(h).get(0,0))):b=l;c?(u=a.transpose().mmul(l).div(l.transpose().mmul(l).get(0,0)),u=u.div(u.norm()),a=a.clone().sub(l.clone().mmul(u.transpose())),d=b.transpose().mmul(l).div(l.transpose().mmul(l).get(0,
+0)),c=c.clone().sub(l.clone().mulS(d.get(0,0)).mmul(h.transpose())),this.t=l,this.p=u.transpose(),this.w=B.transpose(),this.q=h,this.u=b,this.s=l.transpose().mmul(l),this.xResidual=a,this.yResidual=c,this.betas=d):(this.w=B.transpose(),this.s=l.transpose().mmul(l).sqrt(),this.t=d?l.clone().div(this.s.get(0,0)):l,this.xResidual=a.sub(l.mmul(B.transpose())))};h.AbstractMatrix=k;h.CHO=fa;h.CholeskyDecomposition=fa;h.EVD=ma;h.EigenvalueDecomposition=ma;h.LU=aa;h.LuDecomposition=aa;h.Matrix=A;h.MatrixColumnSelectionView=
+f;h.MatrixColumnView=d;h.MatrixFlipColumnView=z;h.MatrixFlipRowView=ka;h.MatrixRowSelectionView=W;h.MatrixRowView=la;h.MatrixSelectionView=S;h.MatrixSubView=ba;h.MatrixTransposeView=ca;h.NIPALS=pa;h.Nipals=pa;h.QR=da;h.QrDecomposition=da;h.SVD=Y;h.SingularValueDecomposition=Y;h.WrapperMatrix1D=X;h.WrapperMatrix2D=T;h.correlation=function(a,b,c){b=void 0===b?a:b;c=void 0===c?{}:c;a=new A(a);var d=!1;"object"!==typeof b||A.isMatrix(b)||Array.isArray(b)?b=new A(b):(c=b,b=a,d=!0);if(a.rows!==b.rows)throw new TypeError("Both matrices must have the same number of rows");
+var e=void 0===c.scale?!0:c.scale;if(void 0===c.center||c.center)a.center("column"),d||b.center("column");e&&(a.scale("column"),d||b.scale("column"));c=a.standardDeviation("column",{unbiased:!0});d=d?c:b.standardDeviation("column",{unbiased:!0});b=a.transpose().mmul(b);for(e=0;e<b.rows;e++)for(var k=0;k<b.columns;k++)b.set(e,k,b.get(e,k)*(1/(c[e]*d[k]))*(1/(a.rows-1)));return b};h.covariance=function(a,b,c){b=void 0===b?a:b;c=void 0===c?{}:c;a=new A(a);var d=!1;"object"!==typeof b||A.isMatrix(b)||
+Array.isArray(b)?b=new A(b):(c=b,b=a,d=!0);if(a.rows!==b.rows)throw new TypeError("Both matrices must have the same number of rows");if(void 0===c.center||c.center)a=a.center("column"),d||(b=b.center("column"));b=a.transpose().mmul(b);for(d=0;d<b.rows;d++)for(c=0;c<b.columns;c++)b.set(d,c,b.get(d,c)*(1/(a.rows-1)));return b};h.default=A;h.determinant=C;h.inverse=function(a,b){b=void 0===b?!1:b;a=T.checkMatrix(a);return b?(new Y(a)).inverse():u(a,A.eye(a.rows))};h.linearDependencies=function(a,b){var c=
+b=void 0===b?{}:b;b=void 0===c.thresholdValue?1E-9:c.thresholdValue;c=void 0===c.thresholdError?1E-9:c.thresholdError;a=A.checkMatrix(a);for(var d=a.rows,e=new A(d,d),k=0;k<d;k++){var f=A.columnVector(a.getRow(k)),l=a.subMatrixRow(G(d,k)).transpose(),h=(new Y(l)).solve(f);f=A.sub(f,l.mmul(h)).abs().max();e.setRow(k,ia(f,h,k,b,c))}return e};h.pseudoInverse=function(a,b){b=void 0===b?Number.EPSILON:b;a=A.checkMatrix(a);var c=new Y(a,{autoTranspose:!0});a=c.leftSingularVectors;var d=c.rightSingularVectors;
+c=c.diagonal;for(var e=0;e<c.length;e++)c[e]=Math.abs(c[e])>b?1/c[e]:0;return d.mmul(A.diag(c).mmul(a.transpose()))};h.solve=u;h.wrap=function(a,b){if(Array.isArray(a))return a[0]&&Array.isArray(a[0])?new T(a):new X(a,b);throw Error("the argument is not an array");}};
+shadow$provide[11]=function(d,f,z,h){function F(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}function I(d,f,h,B){for(var u=0;u<d.length;u++)h[u]=N(f,d[u],{distanceFunction:B});return h}function M(d,f,h,G){var u=new B(G);G=Array(f);G[0]=Math.floor(u.random()*d.length);if(1<f){for(var C=u=-1,D=0;D<d.length;++D)h[G[0]][D]>u&&(u=h[G[0]][D],C=D);G[1]=C;if(2<f)for(u=2;u<f;++u){C={dist:-1,index:-1};for(D=0;D<d.length;++D){for(var H={dist:Number.MAX_VALUE,index:-1},z=0;z<u;++z)h[z][D]<H.dist&&
+-1===G.indexOf(D)&&(H={dist:h[z][D],index:D});H.dist!==Number.MAX_VALUE&&H.dist>C.dist&&(C=Object.assign({},H))}G[u]=C.index}}return G.map(function(k){return d[k]})}function J(d){for(var f=[],h=0;h<d;h++)f.push(h);return f}function L(d){for(var f=[d[0]],h=1;h<d.length;h++)f[h]=f[h-1]+d[h];return f}function U(d,f,h,B,H,z){for(var u=h=I(f,d,h,H.distanceFunction),G=f[0].length,C=Array(B),k=Array(B),A=0;A<B;A++){C[A]=Array(G);for(var D=k[A]=0;D<G;D++)C[A][D]=0}for(A=0;A<f.length;A++)for(k[u[A]]++,D=0;D<
+G;D++)C[u[A]][D]+=f[A][D];for(f=0;f<B;f++)for(u=0;u<G;u++)C[f][u]=k[f]?C[f][u]/k[f]:d[f][u];a:{B=H.distanceFunction;G=H.tolerance;for(k=0;k<C.length;k++)if(B(C[k],d[k])>G){d=!1;break a}d=!0}return new R(h,C,d,z,H.distanceFunction)}function V(d,f,h,B,H){var u,G,C;return $jscomp.generator.createGenerator(V,function(D){1==D.nextAddress&&(u=!1,G=0);if(4!=D.nextAddress){if(u||!(G<H.maxIterations))return D.jumpTo(0);C=U(d,f,h,B,H,++G);return D.yield(C.computeInformation(f),4)}u=C.converged;d=C.centroids;
+return D.jumpTo(2)})}var Q=f(1),N=F(f(2)),B=F(f(5)),H=f(10);$jscomp.initSymbol();var K=Symbol("distance"),R=function(d,f,h,B,H){this.clusters=d;this.centroids=f;this.converged=h;this.iterations=B;this[K]=H};R.prototype.nearest=function(d){var f=Array(d.length),h=this.centroids.map(function(d){return d.centroid});return I(d,h,f,this[K])};R.prototype.computeInformation=function(d){for(var f=this.centroids.map(function(d){return{centroid:d,error:0,size:0}}),h=0;h<d.length;h++)f[this.clusters[h]].error+=
+this[K](d[h],this.centroids[this.clusters[h]]),f[this.clusters[h]].size++;for(d=0;d<this.centroids.length;d++)f[d].error=f[d].size?f[d].error/f[d].size:null;return new R(this.clusters,f,this.converged,this.iterations,this[K])};var ha={maxIterations:100,tolerance:1E-6,withIterations:!1,initialization:"kmeans++",distanceFunction:Q.squaredEuclidean};z.exports=function(d,f,h){h=Object.assign({},ha,h);if(0>=f||f>d.length||!Number.isInteger(f))throw Error("K should be a positive integer smaller than the number of points");
+if(Array.isArray(h.initialization)){if(h.initialization.length!==f)throw Error("The initial centers should have the same length as K");var u=h.initialization}else switch(h.initialization){case "kmeans++":var z=h;z=void 0===z?{}:z;u=new H.Matrix(d);var C=u.rows,K=new B(z.seed),D=[];z=z.localTrials||2+Math.floor(Math.log(f));var F=K.randInt(C);D.push(u.getRow(F));F=new H.Matrix(1,u.rows);for(var k=0;k<u.rows;k++)F.set(0,k,Q.squaredEuclidean(u.getRow(k),D[0]));var A=[L(F.getRow(0))];A=H.Matrix.mul(F,
+1/A[0][C-1]);for(k=1;k<f;k++){A=K.choice(C,{replace:!0,size:z,probabilities:A[0]});for(var I=u.selection(A,J(u.columns)),R=u,N=new H.Matrix(I.rows,R.rows),W=0;W<I.rows;W++)for(var S=0;S<R.rows;S++)N.set(W,S,Q.squaredEuclidean(I.getRow(W),R.getRow(S)));I=N;W=N=R=void 0;for(S=0;S<z;S++){var ba=H.Matrix.min(F,[I.getRow(S)]),ca=ba.sum();if(void 0===R||ca<N)R=A[S],N=ca,W=ba}D[k]=u.getRow(R);F=W;A=[L(F.getRow(0))];A=H.Matrix.mul(F,1/A[0][C-1])}u=D;break;case "random":u=(new B(h.seed)).choice(d,{size:f});
+break;case "mostDistant":u=h.distanceFunction;C=Array(d.length);for(K=0;K<d.length;++K)for(D=K;D<d.length;++D)C[K]||(C[K]=Array(d.length)),C[D]||(C[D]=Array(d.length)),z=u(d[K],d[D]),C[K][D]=z,C[D][K]=z;u=M(d,f,C,h.seed);break;default:throw Error('Unknown initialization method: "'+h.initialization+'"');}0===h.maxIterations&&(h.maxIterations=Number.MAX_VALUE);C=Array(d.length);if(h.withIterations)return V(u,d,C,f,h);K=!1;D=0;for(var X;!K&&D<h.maxIterations;)X=U(u,d,C,f,h,++D),K=X.converged,u=X.centroids;
+return X.computeInformation(d)}};
+shadow$provide[12]=function(d,f,z,h){z.exports={component:{energy1:{title:"能量夾L1",desc:"增加{0}能量.",value:["40"],powerCost:2,action:"equipment"},energy2:{title:"能量夾L2",desc:"增加{0}能量.",value:["65"],powerCost:3,action:"equipment"},energy3:{title:"能量夾L3",desc:"增加{0}能量.",value:["90"],powerCost:4,action:"equipment"},armor1:{title:"裝甲L1",desc:"增加{0}裝甲.",value:["600"],powerCost:3,action:"equipment"},armor2:{title:"裝甲L2",desc:"增加{0}裝甲.",value:["850"],powerCost:4,action:"equipment"},armor3:{title:"裝甲L3",desc:"增加{0}裝甲.",
 value:["1100"],powerCost:5,action:"equipment"},fixPack:{title:"修復包",desc:"回復{0}HP",value:["3000"],powerCost:1,action:"item"},energyPack:{title:"能量包",desc:"回復{0}EN",value:["60"],powerCost:1,action:"item"},beamCoating:{title:"光束鍍層",desc:"吸收光束{0}",value:["2000"],powerCost:5,action:"equipment"},shield:{title:"盾",desc:"機率{0}自動防禦",value:["0.3"],powerCost:5,action:"equipment"},engine:{title:"引擎",desc:"增加{0}power",value:["6"],powerCost:2,action:"equipment"},psArmor:{title:"ps裝甲",desc:"實彈系傷害減少{0}",value:["3000"],
 powerCost:5,action:"equipment"},zeroSystem:{title:"零式系統",desc:"武器的最終命中增加{0}%，自身的最終被命中率減少{1}%",value:["10","15"],powerCost:20,action:"equipment"}},componentAction:{equipment:{title:"裝備"},item:{title:"使用"},itemForSelf:{title:"使用自身"}},config:{"default":{powerCostForMove:5}},pilot:{amuro:{title:"amuro",melee:.75,range:1.25,dex:1,agi:1,tech:1,exp:10}},pilotAbility:{},robot:{gaite_sky:{title:"空蓋特",cost:62500,power:125,weapons:["gaite_handSword","gaite_axe","gaite_beam","gaite_cannon"],components:["energy1",
 "energy2","armor1","armor2"],suitability:[.75,.5,1,1],transform:["gaite_land","gaite_sea"]},gaite_land:{title:"地蓋特",cost:62500,power:125,weapons:["gaite_drill","gaite_missle","gaite_powerDrill"],components:["energy1","energy2","armor1","armor1"],suitability:[1,.75,0,1],transform:["gaite_sky","gaite_sea"]},gaite_sea:{title:"海蓋特",cost:62500,power:125,weapons:["gaite_punch","gaite_missle","gaite_shan"],components:["energy1","energy2","armor2","armor2"],suitability:[.75,1,0,1],transform:["gaite_sky",
@@ -74,165 +247,14 @@ type:"single",accuracy:1,damage:3E3,curage:0,powerCost:12},gaite_shan:{title:"�
 suitability:[1,1,1,1],ability:["moveAttack","melee"],energyType:"energy",type:"single",accuracy:1,damage:3300,curage:0,powerCost:10},moshen_flypunch:{title:"金剛飛拳",range:[1,3],energyCost:0,maxBulletCount:4,suitability:[1,.75,1,1],ability:["moveAttack"],energyType:"bullet",type:"single",accuracy:1,damage:4E3,curage:0,powerCost:25},moshen_jian:{title:"金剛神劍",range:[1,1],energyCost:15,maxBulletCount:0,suitability:[1,1,1,1],ability:["moveAttack","melee"],energyType:"energy",type:"single",accuracy:1,damage:6E3,
 curage:110,powerCost:20},moshen_fire:{title:"魔神火焰",range:[1,2],energyCost:23,maxBulletCount:0,suitability:[1,.75,1,1],ability:["moveAttack"],energyType:"energy",type:"single",accuracy:1,damage:8500,curage:120,powerCost:30}},weaponAbility:{moveAttack:{title:"移動可",desc:"可移動使用",values:[]},standAttack:{title:"狙擊",desc:"原地使用時。命中增加{0}。不可反擊。",values:["1"]},melee:{title:"格鬥",desc:"以格鬥值差距影響命中率. 沒有melee就代表以射擊值影響. ",values:[]},beam:{title:"光束",desc:"",values:[]},physic:{title:"實彈",desc:"",values:[]},fire:{title:"火焰",
 desc:"無視裝甲值. 樹林中傷害x{0}",values:["1.5"]},lighting:{title:"電擊",desc:"無視裝甲值. 水中傷害x{0}",values:["1.2"]},spray:{title:"擴散",desc:"命中x{0}, 傷害x{1}",values:["1.3","0.8"]},multi:{title:"連射",desc:"命中x{0}, 傷害x{1}~{2}",values:["1.1","0.7","1.3"]},missle:{title:"飛彈",desc:"命中x{0}, 會被防禦兵器擊落",values:["1.3"]}},weaponEnergyType:{energy:{title:"energy"},bullet:{title:"bullet"}},weaponType:{single:{title:"single"},line:{title:"line"}}}};
-shadow$provide[2]=function(d,e,u,h){function H(d,e){for(var G=0,h=0;h<d.length;h++)G+=(d[h]-e[h])*(d[h]-e[h]);return G}Object.defineProperty(h,"__esModule",{value:!0});h.squaredEuclidean=H;h.euclidean=function(d,e){return Math.sqrt(H(d,e))}};
-shadow$provide[3]=function(d,e,u,h){function H(d,e,h){h=void 0===h?G:h;var I=h.distanceFunction||G.distanceFunction,E=h.similarityFunction||G.similarityFunction;h=-1;if("function"===typeof E){I=Number.MIN_VALUE;for(var u=0;u<d.length;u++){var J=E(e,d[u]);J>I&&(I=J,h=u)}}else if("function"===typeof I)for(E=Number.MAX_VALUE,u=0;u<d.length;u++)J=I(e,d[u]),J<E&&(E=J,h=u);else throw Error("A similarity or distance function it's required");return h}Object.defineProperty(h,"__esModule",{value:!0});var G=
-{distanceFunction:e(2).squaredEuclidean};h.default=H;h.findNearestVector=function(d,e,h){h=void 0===h?G:h;e=H(d,e,h);return d[e]}};
-shadow$provide[4]=function(d,e,u,h){Object.defineProperty(h,"__esModule",{value:!0});var H=1/16777216;d=function(d){d=void 0===d?Date.now():d;this.state=new Uint32Array(4);this.init(d);this.random=this.getFloat.bind(this)};d.prototype.getUint32=function(){this.nextState();return this.state[3]+this.state[2]>>>0};d.prototype.getFloat=function(){return(this.getUint32()>>>8)*H};d.prototype.init=function(d){if(!Number.isInteger(d))throw new TypeError("seed must be an integer");this.state[0]=d;this.state[1]=
-0;this.state[2]=0;this.state[3]=0;for(d=1;8>d;d++){var e=this.state,h=d&3,G=e[h],u=d,E=1812433253,H=this.state[d-1&3]^this.state[d-1&3]>>>30>>>0;E>>>=0;H>>>=0;var M=E&65535;e[h]=G^u+(((E-M)*H>>>0)+M*H>>>0)>>>0}this.periodCertification();for(d=0;8>d;d++)this.nextState()};d.prototype.periodCertification=function(){0===this.state[0]&&0===this.state[1]&&0===this.state[2]&&0===this.state[3]&&(this.state[0]=88,this.state[1]=83,this.state[2]=65,this.state[3]=68)};d.prototype.nextState=function(){var d=this.state[0];
-d^=d<<15;d=d^d>>>18^this.state[3]<<11;this.state[0]=this.state[1];this.state[1]=this.state[2];this.state[2]=this.state[3];this.state[3]=d};h.default=d};
-shadow$provide[5]=function(d,e,u,h){Object.defineProperty(h,"__esModule",{value:!0});h.default=function(d,e,h){e=void 0===e?{}:e;h=void 0===h?Math.random:h;var I=e;e=void 0===I.size?1:I.size;var u=void 0===I.replace?!1:I.replace;I=I.probabilities;if("number"===typeof d){for(var G=[],E=0;E<d;E++)G.push(E);d=G}else d=d.slice();if(I){if(!u)throw Error("choice with probabilities and no replacement is not implemented");if(I.length!==d.length)throw Error("the length of probabilities option should be equal to the number of choices");
-var L=[I[0]];for(G=1;G<I.length;G++)L[G]=L[G-1]+I[G];if(1E-8<Math.abs(1-L[L.length-1]))throw Error("probabilities should sum to 1, but instead sums to "+L[L.length-1]);}if(!1===u&&e>d.length)throw Error("size option is too large");I=[];for(G=0;G<e;G++){var H=d.length;E=L;var t=h();if(E){for(H=0;t>E[H];)H++;E=H}else E=Math.floor(t*H);I.push(d[E]);u||d.splice(E,1)}return I}};
-shadow$provide[6]=function(d,e,u,h){Object.defineProperty(h,"__esModule",{value:!0});var H=e(4),G=e(5);d=function(d){d=void 0===d?Math.random:d;this.randomGenerator="number"===typeof d?(new H.default(d)).random:d};d.prototype.choice=function(d,e){return G.default(d,e,this.randomGenerator)};d.prototype.random=function(){return this.randomGenerator()};d.prototype.randInt=function(d,e){void 0===e&&(e=d,d=0);return d+Math.floor(this.randomGenerator()*(e-d))};d.prototype.randomSample=function(d){for(var e=
-[],h=0;h<d;h++)e.push(this.random());return e};h.default=d};
-shadow$provide[7]=function(d,e,u,h){var H=Object.prototype.toString;u.exports=function(d){return H.call(d).endsWith("Array]")}};
-shadow$provide[8]=function(d,e,u,h){var H=function(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}(e(7));u.exports=function(d){if(!H(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");for(var e=d[0],h=1;h<d.length;h++)d[h]>e&&(e=d[h]);return e}};
-shadow$provide[9]=function(d,e,u,h){var H=function(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}(e(7));u.exports=function(d){if(!H(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");for(var e=d[0],h=1;h<d.length;h++)d[h]<e&&(e=d[h]);return e}};
-shadow$provide[10]=function(d,e,u,h){function H(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}var G=H(e(7)),L=H(e(8)),I=H(e(9));u.exports=function(d,e){e=void 0===e?{}:e;if(!G(d))throw new TypeError("input must be an array");if(0===d.length)throw new TypeError("input must not be empty");if(void 0!==e.output){if(!G(e.output))throw new TypeError("output option must be an array if specified");var h=e.output}else h=Array(d.length);var u=I(d),H=L(d);if(u===H)throw new RangeError("minimum and maximum input values are equal. Cannot rescale a constant array");
-var t=e,C=void 0===t.min?e.autoMinMax?u:0:t.min;e=void 0===t.max?e.autoMinMax?H:1:t.max;if(C>=e)throw new RangeError("min option must be smaller than max option");H=(e-C)/(H-u);for(e=0;e<d.length;e++)h[e]=(d[e]-u)*H+C;return h}};
-shadow$provide[11]=function(d,e,u,h){function H(){return G(this)}function G(a,b){var c=b=void 0===b?{}:b;b=void 0===c.maxRows?15:c.maxRows;var g=void 0===c.maxColumns?10:c.maxColumns,f=void 0===c.maxNumSize?8:c.maxNumSize;c=a.constructor.name+" {\n"+ba+"[\n"+la;for(var q=a.rows,n=a.columns,l=Math.min(q,b),d=Math.min(n,g),F=[],P=0;P<l;P++){for(var e=[],k=0;k<d;k++)e.push(L(a.get(P,k),f));F.push(""+e.join(" "))}d!==n&&(F[F.length-1]+=" ... "+(n-g)+" more columns");l!==q&&F.push("... "+(q-b)+" more rows");
-b=F.join("\n"+la);return c+b+"\n"+ba+"]\n"+ba+"rows: "+a.rows+"\n"+ba+"columns: "+a.columns+"\n}"}function L(a,b){var c=String(a);if(c.length<=b)return c.padEnd(b," ");c=a.toPrecision(b-2);if(c.length<=b)return c;a=a.toExponential(b-2);c=a.indexOf("e");c=a.slice(c);return a.slice(0,b-c.length)+c}function I(a,b,c){a=c?a.rows:a.rows-1;if(0>b||b>a)throw new RangeError("Row index out of range");}function J(a,b,c){a=c?a.columns:a.columns-1;if(0>b||b>a)throw new RangeError("Column index out of range");
-}function O(a,b){b.to1DArray&&(b=b.to1DArray());if(b.length!==a.columns)throw new RangeError("vector size must be the same as the number of columns");return b}function E(a,b){b.to1DArray&&(b=b.to1DArray());if(b.length!==a.rows)throw new RangeError("vector size must be the same as the number of rows");return b}function U(a,b,c){return{row:M(a,b),column:t(a,c)}}function M(a,b){if("object"!==typeof b)throw new TypeError("unexpected type for row indices");if(b.some(function(c){return 0>c||c>=a.rows}))throw new RangeError("row indices are out of range");
-Array.isArray(b)||(b=Array.from(b));return b}function t(a,b){if("object"!==typeof b)throw new TypeError("unexpected type for column indices");if(b.some(function(c){return 0>c||c>=a.columns}))throw new RangeError("column indices are out of range");Array.isArray(b)||(b=Array.from(b));return b}function C(a,b,c,g,f){if(5!==arguments.length)throw new RangeError("expected 4 arguments");R("startRow",b);R("endRow",c);R("startColumn",g);R("endColumn",f);if(b>c||g>f||0>b||b>=a.rows||0>c||c>=a.rows||0>g||g>=
-a.columns||0>f||f>=a.columns)throw new RangeError("Submatrix indices are out of range");}function K(a,b){b=void 0===b?0:b;for(var c=[],g=0;g<a;g++)c.push(b);return c}function R(a,b){if("number"!==typeof b)throw new TypeError(a+" must be a number");}function fa(a,b){return a-b}function D(a,b){if(Math.abs(a)>Math.abs(b)){var c=b/a;return Math.abs(a)*Math.sqrt(1+c*c)}return 0!==b?(c=a/b,Math.abs(b)*Math.sqrt(1+c*c)):0}function x(a,b,c){c=void 0===c?!1:c;a=T.checkMatrix(a);b=T.checkMatrix(b);return c?
-(new X(a)).solve(b):a.isSquare()?(new Y(a)).solve(b):(new ca(a)).solve(b)}function A(a){a=B.checkMatrix(a);if(a.isSquare()){if(2===a.columns){var b=a.get(0,0);var c=a.get(0,1);var g=a.get(1,0);a=a.get(1,1);return b*a-c*g}if(3===a.columns){var f=new S(a,[1,2],[1,2]);var q=new S(a,[1,2],[0,2]);var n=new S(a,[1,2],[0,1]);b=a.get(0,0);c=a.get(0,1);g=a.get(0,2);return b*A(f)-c*A(q)+g*A(n)}return(new Y(a)).determinant}throw Error("determinant can only be calculated for a square matrix");}function N(a,b){for(var c=
-[],g=0;g<a;g++)g!==b&&c.push(g);return c}function pa(a,b,c,g,f){g=void 0===g?1E-9:g;if(a>(void 0===f?1E-9:f))return Array(b.rows+1).fill(0);a=b.addRow(c,[0]);for(b=0;b<a.rows;b++)Math.abs(a.get(b,0))<g&&a.set(b,0,0);return a.to1DArray()}function ha(a,b,c,g){if(Math.abs(c)>Math.abs(g)){var f=g/c;c+=f*g;return[(a+f*b)/c,(b-f*a)/c]}f=c/g;c=g+f*c;return[(f*a+b)/c,(f*b-a)/c]}Object.defineProperty(h,"__esModule",{value:!0});var da=function(a){return a&&"object"===typeof a&&"default"in a?a["default"]:a}(e(10)),
-ba=" ".repeat(2),la=" ".repeat(4),k=function(){};k.from1DArray=function(a,b,c){if(a*b!==c.length)throw new RangeError("data length does not match given dimensions");for(var g=new B(a,b),f=0;f<a;f++)for(var q=0;q<b;q++)g.set(f,q,c[f*b+q]);return g};k.rowVector=function(a){for(var b=new B(1,a.length),c=0;c<a.length;c++)b.set(0,c,a[c]);return b};k.columnVector=function(a){for(var b=new B(a.length,1),c=0;c<a.length;c++)b.set(c,0,a[c]);return b};k.zeros=function(a,b){return new B(a,b)};k.ones=function(a,
-b){return(new B(a,b)).fill(1)};k.rand=function(a,b,c){c=void 0===c?{}:c;if("object"!==typeof c)throw new TypeError("options must be an object");c=void 0===c.random?Math.random:c.random;for(var g=new B(a,b),f=0;f<a;f++)for(var q=0;q<b;q++)g.set(f,q,c());return g};k.randInt=function(a,b,c){c=void 0===c?{}:c;if("object"!==typeof c)throw new TypeError("options must be an object");var g=c;c=void 0===g.min?0:g.min;var f=void 0===g.max?1E3:g.max;g=void 0===g.random?Math.random:g.random;if(!Number.isInteger(c))throw new TypeError("min must be an integer");
-if(!Number.isInteger(f))throw new TypeError("max must be an integer");if(c>=f)throw new RangeError("min must be smaller than max");f-=c;for(var q=new B(a,b),n=0;n<a;n++)for(var l=0;l<b;l++){var d=c+Math.round(g()*f);q.set(n,l,d)}return q};k.eye=function(a,b,c){void 0===b&&(b=a);void 0===c&&(c=1);var g=Math.min(a,b);a=this.zeros(a,b);for(b=0;b<g;b++)a.set(b,b,c);return a};k.diag=function(a,b,c){var g=a.length;void 0===b&&(b=g);void 0===c&&(c=b);g=Math.min(g,b,c);b=this.zeros(b,c);for(c=0;c<g;c++)b.set(c,
-c,a[c]);return b};k.min=function(a,b){a=this.checkMatrix(a);b=this.checkMatrix(b);for(var c=a.rows,g=a.columns,f=new B(c,g),q=0;q<c;q++)for(var n=0;n<g;n++)f.set(q,n,Math.min(a.get(q,n),b.get(q,n)));return f};k.max=function(a,b){a=this.checkMatrix(a);b=this.checkMatrix(b);for(var c=a.rows,g=a.columns,f=new this(c,g),q=0;q<c;q++)for(var n=0;n<g;n++)f.set(q,n,Math.max(a.get(q,n),b.get(q,n)));return f};k.checkMatrix=function(a){return k.isMatrix(a)?a:new B(a)};k.isMatrix=function(a){return null!=a&&
-"Matrix"===a.klass};k.prototype.apply=function(a){if("function"!==typeof a)throw new TypeError("callback must be a function");for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.call(this,b,c);return this};k.prototype.to1DArray=function(){for(var a=[],b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.push(this.get(b,c));return a};k.prototype.to2DArray=function(){for(var a=[],b=0;b<this.rows;b++){a.push([]);for(var c=0;c<this.columns;c++)a[b].push(this.get(b,c))}return a};k.prototype.toJSON=
-function(){return this.to2DArray()};k.prototype.isRowVector=function(){return 1===this.rows};k.prototype.isColumnVector=function(){return 1===this.columns};k.prototype.isVector=function(){return 1===this.rows||1===this.columns};k.prototype.isSquare=function(){return this.rows===this.columns};k.prototype.isSymmetric=function(){if(this.isSquare()){for(var a=0;a<this.rows;a++)for(var b=0;b<=a;b++)if(this.get(a,b)!==this.get(b,a))return!1;return!0}return!1};k.prototype.isEchelonForm=function(){for(var a=
-0,b,c=-1,g=!0,f;a<this.rows&&g;){b=0;for(f=!1;b<this.columns&&!1===f;)0===this.get(a,b)?b++:1===this.get(a,b)&&b>c?(f=!0,c=b):(g=!1,f=!0);a++}return g};k.prototype.isReducedEchelonForm=function(){for(var a=0,b,c=-1,g=!0,f;a<this.rows&&g;){b=0;for(f=!1;b<this.columns&&!1===f;)0===this.get(a,b)?b++:1===this.get(a,b)&&b>c?(f=!0,c=b):(g=!1,f=!0);for(b+=1;b<this.rows;b++)0!==this.get(a,b)&&(g=!1);a++}return g};k.prototype.echelonForm=function(){for(var a=this.clone(),b=0,c=0;b<a.rows&&c<a.columns;){for(var g=
-b,f=b;f<a.rows;f++)a.get(f,c)>a.get(g,c)&&(g=f);if(0!==a.get(g,c)){a.swapRows(b,g);g=a.get(b,c);for(f=c;f<a.columns;f++)a.set(b,f,a.get(b,f)/g);for(g=b+1;g<a.rows;g++){f=a.get(g,c)/a.get(b,c);a.set(g,c,0);for(var q=c+1;q<a.columns;q++)a.set(g,q,a.get(g,q)-a.get(b,q)*f)}b++}c++}return a};k.prototype.reducedEchelonForm=function(){for(var a=this.echelonForm(),b=a.columns,c=a.rows,g=c-1;0<=g;){if(0!==a.maxRow(g)){for(var f=0,q=!1;f<c&&!1===q;)1===a.get(g,f)?q=!0:f++;for(q=0;q<g;q++)for(var n=a.get(q,
-f),l=f;l<b;l++){var d=a.get(q,l)-n*a.get(g,l);a.set(q,l,d)}}g--}return a};k.prototype.set=function(){throw Error("set method is unimplemented");};k.prototype.get=function(){throw Error("get method is unimplemented");};k.prototype.repeat=function(a){a=void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.rows?1:b.rows;b=void 0===b.columns?1:b.columns;if(!Number.isInteger(a)||0>=a)throw new TypeError("rows must be a positive integer");if(!Number.isInteger(b)||
-0>=b)throw new TypeError("columns must be a positive integer");for(var c=new B(this.rows*a,this.columns*b),g=0;g<a;g++)for(var f=0;f<b;f++)c.setSubMatrix(this,this.rows*g,this.columns*f);return c};k.prototype.fill=function(a){for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,a);return this};k.prototype.neg=function(){return this.mulS(-1)};k.prototype.getRow=function(a){I(this,a);for(var b=[],c=0;c<this.columns;c++)b.push(this.get(a,c));return b};k.prototype.getRowVector=function(a){return B.rowVector(this.getRow(a))};
-k.prototype.setRow=function(a,b){I(this,a);b=O(this,b);for(var c=0;c<this.columns;c++)this.set(a,c,b[c]);return this};k.prototype.swapRows=function(a,b){I(this,a);I(this,b);for(var c=0;c<this.columns;c++){var g=this.get(a,c);this.set(a,c,this.get(b,c));this.set(b,c,g)}return this};k.prototype.getColumn=function(a){J(this,a);for(var b=[],c=0;c<this.rows;c++)b.push(this.get(c,a));return b};k.prototype.getColumnVector=function(a){return B.columnVector(this.getColumn(a))};k.prototype.setColumn=function(a,
-b){J(this,a);b=E(this,b);for(var c=0;c<this.rows;c++)this.set(c,a,b[c]);return this};k.prototype.swapColumns=function(a,b){J(this,a);J(this,b);for(var c=0;c<this.rows;c++){var g=this.get(c,a);this.set(c,a,this.get(c,b));this.set(c,b,g)}return this};k.prototype.addRowVector=function(a){a=O(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)+a[c]);return this};k.prototype.subRowVector=function(a){a=O(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,
-c,this.get(b,c)-a[c]);return this};k.prototype.mulRowVector=function(a){a=O(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)*a[c]);return this};k.prototype.divRowVector=function(a){a=O(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[c]);return this};k.prototype.addColumnVector=function(a){a=E(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)+a[b]);return this};k.prototype.subColumnVector=
-function(a){a=E(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)-a[b]);return this};k.prototype.mulColumnVector=function(a){a=E(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)*a[b]);return this};k.prototype.divColumnVector=function(a){a=E(this,a);for(var b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[b]);return this};k.prototype.mulRow=function(a,b){I(this,a);for(var c=0;c<this.columns;c++)this.set(a,
-c,this.get(a,c)*b);return this};k.prototype.mulColumn=function(a,b){J(this,a);for(var c=0;c<this.rows;c++)this.set(c,a,this.get(c,a)*b);return this};k.prototype.max=function(){for(var a=this.get(0,0),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.get(b,c)>a&&(a=this.get(b,c));return a};k.prototype.maxIndex=function(){for(var a=this.get(0,0),b=[0,0],c=0;c<this.rows;c++)for(var g=0;g<this.columns;g++)this.get(c,g)>a&&(a=this.get(c,g),b[0]=c,b[1]=g);return b};k.prototype.min=function(){for(var a=
-this.get(0,0),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)this.get(b,c)<a&&(a=this.get(b,c));return a};k.prototype.minIndex=function(){for(var a=this.get(0,0),b=[0,0],c=0;c<this.rows;c++)for(var g=0;g<this.columns;g++)this.get(c,g)<a&&(a=this.get(c,g),b[0]=c,b[1]=g);return b};k.prototype.maxRow=function(a){I(this,a);for(var b=this.get(a,0),c=1;c<this.columns;c++)this.get(a,c)>b&&(b=this.get(a,c));return b};k.prototype.maxRowIndex=function(a){I(this,a);for(var b=this.get(a,0),c=[a,0],g=1;g<
-this.columns;g++)this.get(a,g)>b&&(b=this.get(a,g),c[1]=g);return c};k.prototype.minRow=function(a){I(this,a);for(var b=this.get(a,0),c=1;c<this.columns;c++)this.get(a,c)<b&&(b=this.get(a,c));return b};k.prototype.minRowIndex=function(a){I(this,a);for(var b=this.get(a,0),c=[a,0],g=1;g<this.columns;g++)this.get(a,g)<b&&(b=this.get(a,g),c[1]=g);return c};k.prototype.maxColumn=function(a){J(this,a);for(var b=this.get(0,a),c=1;c<this.rows;c++)this.get(c,a)>b&&(b=this.get(c,a));return b};k.prototype.maxColumnIndex=
-function(a){J(this,a);for(var b=this.get(0,a),c=[0,a],g=1;g<this.rows;g++)this.get(g,a)>b&&(b=this.get(g,a),c[0]=g);return c};k.prototype.minColumn=function(a){J(this,a);for(var b=this.get(0,a),c=1;c<this.rows;c++)this.get(c,a)<b&&(b=this.get(c,a));return b};k.prototype.minColumnIndex=function(a){J(this,a);for(var b=this.get(0,a),c=[0,a],g=1;g<this.rows;g++)this.get(g,a)<b&&(b=this.get(g,a),c[0]=g);return c};k.prototype.diag=function(){for(var a=Math.min(this.rows,this.columns),b=[],c=0;c<a;c++)b.push(this.get(c,
-c));return b};k.prototype.norm=function(a){a=void 0===a?"frobenius":a;var b=0;if("max"===a)return this.max();if("frobenius"===a){for(a=0;a<this.rows;a++)for(var c=0;c<this.columns;c++)b+=this.get(a,c)*this.get(a,c);return Math.sqrt(b)}throw new RangeError("unknown norm type: "+a);};k.prototype.cumulativeSum=function(){for(var a=0,b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a+=this.get(b,c),this.set(b,c,a);return this};k.prototype.dot=function(a){k.isMatrix(a)&&(a=a.to1DArray());var b=this.to1DArray();
-if(b.length!==a.length)throw new RangeError("vectors do not have the same size");for(var c=0,g=0;g<b.length;g++)c+=b[g]*a[g];return c};k.prototype.mmul=function(a){a=B.checkMatrix(a);for(var b=this.rows,c=this.columns,g=a.columns,f=new B(b,g),q=new Float64Array(c),n=0;n<g;n++){for(var l=0;l<c;l++)q[l]=a.get(l,n);for(l=0;l<b;l++){for(var d=0,F=0;F<c;F++)d+=this.get(l,F)*q[F];f.set(l,n,d)}}return f};k.prototype.strassen2x2=function(a){a=B.checkMatrix(a);var b=new B(2,2),c=this.get(0,0),g=a.get(0,0),
-f=this.get(0,1),q=a.get(0,1),n=this.get(1,0),l=a.get(1,0),d=this.get(1,1);a=a.get(1,1);var F=(c+d)*(g+a),P=(n+d)*g,e=c*(q-a),k=d*(l-g),w=(c+f)*a,y=e+w,m=P+k;c=F-P+e+(n-c)*(g+q);b.set(0,0,F+k-w+(f-d)*(l+a));b.set(0,1,y);b.set(1,0,m);b.set(1,1,c);return b};k.prototype.strassen3x3=function(a){a=B.checkMatrix(a);var b=new B(3,3),c=this.get(0,0),g=this.get(0,1),f=this.get(0,2),q=this.get(1,0),n=this.get(1,1),l=this.get(1,2),d=this.get(2,0),F=this.get(2,1),P=this.get(2,2),e=a.get(0,0),k=a.get(0,1),w=a.get(0,
-2),y=a.get(1,0),m=a.get(1,1),p=a.get(1,2),h=a.get(2,0),v=a.get(2,1),r=a.get(2,2),t=(c-q)*(-k+m),D=(-c+q+n)*(e-k+m),x=(q+n)*(-e+k);a=c*e;var A=(-c+d+F)*(e-w+p),u=(-c+d)*(w-p),N=(d+F)*(-e+w),C=(-f+F+P)*(m+h-v),K=(f-P)*(m-v),E=f*h,I=(F+P)*(-h+v),da=(-f+n+l)*(p+h-r),G=(f-l)*(p-r),H=(n+l)*(-h+r),ba=(c+g+f-q-n-F-P)*m+D+x+a+C+E+I;c=a+A+N+(c+g+f-n-l-d-F)*p+E+da+H;n=t+n*(-e+k+y-m-p-h+r)+D+a+E+da+G;l=t+D+x+a+l*v;q=E+da+G+H+q*w;F=a+A+u+F*(-e+w+y-m-p-h+v)+C+K+E;d=C+K+E+I+d*k;P=a+A+u+N+P*r;b.set(0,0,a+E+g*y);
-b.set(0,1,ba);b.set(0,2,c);b.set(1,0,n);b.set(1,1,l);b.set(1,2,q);b.set(2,0,F);b.set(2,1,d);b.set(2,2,P);return b};k.prototype.mmulStrassen=function(a){function b(a,c,b){var g=a.columns;if(a.rows===c&&g===b)return a;c=k.zeros(c,b);return c=c.setSubMatrix(a,0,0)}function c(a,g,f,q){if(512>=f||512>=q)return a.mmul(g);1===f%2&&1===q%2?(a=b(a,f+1,q+1),g=b(g,f+1,q+1)):1===f%2?(a=b(a,f+1,q),g=b(g,f+1,q)):1===q%2&&(a=b(a,f,q+1),g=b(g,f,q+1));var l=parseInt(a.rows/2,10),n=parseInt(a.columns/2,10),d=a.subMatrix(0,
-l-1,0,n-1),m=g.subMatrix(0,l-1,0,n-1),F=a.subMatrix(0,l-1,n,a.columns-1),ma=g.subMatrix(0,l-1,n,g.columns-1),e=a.subMatrix(l,a.rows-1,0,n-1),r=g.subMatrix(l,g.rows-1,0,n-1),P=a.subMatrix(l,a.rows-1,n,a.columns-1),h=g.subMatrix(l,g.rows-1,n,g.columns-1);a=c(k.add(d,P),k.add(m,h),l,n);var na=c(k.add(e,P),m,l,n);g=c(d,k.sub(ma,h),l,n);var t=c(P,k.sub(r,m),l,n),D=c(k.add(d,F),h,l,n);d=c(k.sub(e,d),k.add(m,ma),l,n);n=c(k.sub(F,P),k.add(r,h),l,n);l=k.add(a,t);l.sub(D);l.add(n);n=k.add(g,D);t=k.add(na,t);
-a=k.sub(a,na);a.add(g);a.add(d);g=k.zeros(2*l.rows,2*l.columns);g=g.setSubMatrix(l,0,0);g=g.setSubMatrix(n,l.rows,0);g=g.setSubMatrix(t,0,l.columns);g=g.setSubMatrix(a,l.rows,l.columns);return g.subMatrix(0,f-1,0,q-1)}a=B.checkMatrix(a);var g=this.clone(),f=g.rows,q=g.columns,n=a.rows,l=a.columns;q!==n&&console.warn("Multiplying "+f+" x "+q+" and "+n+" x "+l+" matrix: dimensions do not match.");f=Math.max(f,n);q=Math.max(q,l);g=b(g,f,q);a=b(a,f,q);return c(g,a,f,q)};k.prototype.scaleRows=function(a){a=
-void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.min?0:b.min;b=void 0===b.max?1:b.max;if(!Number.isFinite(a))throw new TypeError("min must be a number");if(!Number.isFinite(b))throw new TypeError("max must be a number");if(a>=b)throw new RangeError("min must be smaller than max");for(var c=new B(this.rows,this.columns),g=0;g<this.rows;g++){var f=this.getRow(g);da(f,{min:a,max:b,output:f});c.setRow(g,f)}return c};k.prototype.scaleColumns=
-function(a){a=void 0===a?{}:a;if("object"!==typeof a)throw new TypeError("options must be an object");var b=a;a=void 0===b.min?0:b.min;b=void 0===b.max?1:b.max;if(!Number.isFinite(a))throw new TypeError("min must be a number");if(!Number.isFinite(b))throw new TypeError("max must be a number");if(a>=b)throw new RangeError("min must be smaller than max");for(var c=new B(this.rows,this.columns),g=0;g<this.columns;g++){var f=this.getColumn(g);da(f,{min:a,max:b,output:f});c.setColumn(g,f)}return c};k.prototype.flipRows=
-function(){for(var a=Math.ceil(this.columns/2),b=0;b<this.rows;b++)for(var c=0;c<a;c++){var g=this.get(b,c),f=this.get(b,this.columns-1-c);this.set(b,c,f);this.set(b,this.columns-1-c,g)}return this};k.prototype.flipColumns=function(){for(var a=Math.ceil(this.rows/2),b=0;b<this.columns;b++)for(var c=0;c<a;c++){var g=this.get(c,b),f=this.get(this.rows-1-c,b);this.set(c,b,f);this.set(this.rows-1-c,b,g)}return this};k.prototype.kroneckerProduct=function(a){a=B.checkMatrix(a);for(var b=this.rows,c=this.columns,
-g=a.rows,f=a.columns,q=new B(b*g,c*f),n=0;n<b;n++)for(var l=0;l<c;l++)for(var d=0;d<g;d++)for(var F=0;F<f;F++)q.set(g*n+d,f*l+F,this.get(n,l)*a.get(d,F));return q};k.prototype.transpose=function(){for(var a=new B(this.columns,this.rows),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.set(c,b,this.get(b,c));return a};k.prototype.sortRows=function(a){a=void 0===a?fa:a;for(var b=0;b<this.rows;b++)this.setRow(b,this.getRow(b).sort(a));return this};k.prototype.sortColumns=function(a){a=void 0===a?
-fa:a;for(var b=0;b<this.columns;b++)this.setColumn(b,this.getColumn(b).sort(a));return this};k.prototype.subMatrix=function(a,b,c,g){C(this,a,b,c,g);for(var f=new B(b-a+1,g-c+1),q=a;q<=b;q++)for(var n=c;n<=g;n++)f.set(q-a,n-c,this.get(q,n));return f};k.prototype.subMatrixRow=function(a,b,c){void 0===b&&(b=0);void 0===c&&(c=this.columns-1);if(b>c||0>b||b>=this.columns||0>c||c>=this.columns)throw new RangeError("Argument out of range");for(var g=new B(a.length,c-b+1),f=0;f<a.length;f++)for(var q=b;q<=
-c;q++){if(0>a[f]||a[f]>=this.rows)throw new RangeError("Row index out of range: "+a[f]);g.set(f,q-b,this.get(a[f],q))}return g};k.prototype.subMatrixColumn=function(a,b,c){void 0===b&&(b=0);void 0===c&&(c=this.rows-1);if(b>c||0>b||b>=this.rows||0>c||c>=this.rows)throw new RangeError("Argument out of range");for(var g=new B(c-b+1,a.length),f=0;f<a.length;f++)for(var q=b;q<=c;q++){if(0>a[f]||a[f]>=this.columns)throw new RangeError("Column index out of range: "+a[f]);g.set(q-b,f,this.get(q,a[f]))}return g};
-k.prototype.setSubMatrix=function(a,b,c){a=B.checkMatrix(a);C(this,b,b+a.rows-1,c,c+a.columns-1);for(var g=0;g<a.rows;g++)for(var f=0;f<a.columns;f++)this.set(b+g,c+f,a.get(g,f));return this};k.prototype.selection=function(a,b){var c=U(this,a,b);a=new B(a.length,b.length);for(b=0;b<c.row.length;b++)for(var g=c.row[b],f=0;f<c.column.length;f++)a.set(b,f,this.get(g,c.column[f]));return a};k.prototype.trace=function(){for(var a=Math.min(this.rows,this.columns),b=0,c=0;c<a;c++)b+=this.get(c,c);return b};
-k.prototype.clone=function(){for(var a=new B(this.rows,this.columns),b=0;b<this.rows;b++)for(var c=0;c<this.columns;c++)a.set(b,c,this.get(b,c));return a};k.prototype.sum=function(a){switch(a){case "row":a=K(this.rows);for(var b=0;b<this.rows;++b)for(var c=0;c<this.columns;++c)a[b]+=this.get(b,c);return a;case "column":a=K(this.columns);for(b=0;b<this.rows;++b)for(c=0;c<this.columns;++c)a[c]+=this.get(b,c);return a;case void 0:for(b=a=0;b<this.rows;b++)for(c=0;c<this.columns;c++)a+=this.get(b,c);
-return a;default:throw Error("invalid option: "+a);}};k.prototype.product=function(a){switch(a){case "row":a=K(this.rows,1);for(var b=0;b<this.rows;++b)for(var c=0;c<this.columns;++c)a[b]*=this.get(b,c);return a;case "column":a=K(this.columns,1);for(b=0;b<this.rows;++b)for(c=0;c<this.columns;++c)a[c]*=this.get(b,c);return a;case void 0:a=1;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)a*=this.get(b,c);return a;default:throw Error("invalid option: "+a);}};k.prototype.mean=function(a){var b=this.sum(a);
-switch(a){case "row":for(a=0;a<this.rows;a++)b[a]/=this.columns;return b;case "column":for(a=0;a<this.columns;a++)b[a]/=this.rows;return b;case void 0:return b/this.size;default:throw Error("invalid option: "+a);}};k.prototype.variance=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");var c=b;b=void 0===c.unbiased?!0:c.unbiased;c=void 0===c.mean?this.mean(a):c.mean;if("boolean"!==typeof b)throw new TypeError("unbiased must be a boolean");
-switch(a){case "row":if(!Array.isArray(c))throw new TypeError("mean must be an array");a=this.rows;for(var g=this.columns,f=[],q=0;q<a;q++){for(var n=0,l=0,d,F=0;F<g;F++)d=this.get(q,F)-c[q],n+=d,l+=d*d;b?f.push((l-n*n/g)/(g-1)):f.push((l-n*n/g)/g)}return f;case "column":if(!Array.isArray(c))throw new TypeError("mean must be an array");a=this.rows;g=this.columns;f=[];for(q=0;q<g;q++){for(F=l=n=0;F<a;F++)d=this.get(F,q)-c[q],n+=d,l+=d*d;b?f.push((l-n*n/a)/(a-1)):f.push((l-n*n/a)/a)}return f;case void 0:if("number"!==
-typeof c)throw new TypeError("mean must be a number");a=this.rows;g=this.columns;f=a*g;for(d=n=q=0;d<a;d++)for(F=0;F<g;F++)l=this.get(d,F)-c,q+=l,n+=l*l;return b?(n-q*q/f)/(f-1):(n-q*q/f)/f;default:throw Error("invalid option: "+a);}};k.prototype.standardDeviation=function(a,b){"object"===typeof a&&(b=a,a=void 0);b=this.variance(a,b);if(void 0===a)return Math.sqrt(b);for(a=0;a<b.length;a++)b[a]=Math.sqrt(b[a]);return b};k.prototype.center=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,
-a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");b=void 0===b.center?this.mean(a):b.center;switch(a){case "row":if(!Array.isArray(b))throw new TypeError("center must be an array");for(a=0;a<this.rows;a++)for(var c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b[a]);return this;case "column":if(!Array.isArray(b))throw new TypeError("center must be an array");for(a=0;a<this.rows;a++)for(c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b[c]);return this;case void 0:if("number"!==
-typeof b)throw new TypeError("center must be a number");for(a=0;a<this.rows;a++)for(c=0;c<this.columns;c++)this.set(a,c,this.get(a,c)-b);return this;default:throw Error("invalid option: "+a);}};k.prototype.scale=function(a,b){b=void 0===b?{}:b;"object"===typeof a&&(b=a,a=void 0);if("object"!==typeof b)throw new TypeError("options must be an object");b=b.scale;switch(a){case "row":if(void 0===b){a=[];for(b=0;b<this.rows;b++){for(var c=0,g=0;g<this.columns;g++)c+=Math.pow(this.get(b,g),2)/(this.columns-
-1);a.push(Math.sqrt(c))}b=a}else if(!Array.isArray(b))throw new TypeError("scale must be an array");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a[b]);return this;case "column":if(void 0===b){a=[];for(b=0;b<this.columns;b++){for(g=c=0;g<this.rows;g++)c+=Math.pow(this.get(g,b),2)/(this.rows-1);a.push(Math.sqrt(c))}b=a}else if(!Array.isArray(b))throw new TypeError("scale must be an array");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,
-c)/a[c]);return this;case void 0:if(void 0===b){a=this.size-1;for(c=b=0;c<this.columns;c++)for(g=0;g<this.rows;g++)b+=Math.pow(this.get(g,c),2)/a;b=Math.sqrt(b)}else if("number"!==typeof b)throw new TypeError("scale must be a number");a=b;for(b=0;b<this.rows;b++)for(c=0;c<this.columns;c++)this.set(b,c,this.get(b,c)/a);return this;default:throw Error("invalid option: "+a);}};k.prototype.toString=function(a){return G(this,a)};$jscomp.global.Object.defineProperties(k.prototype,{size:{configurable:!0,
-enumerable:!0,get:function(){return this.rows*this.columns}}});k.prototype.klass="Matrix";$jscomp.initSymbol();"undefined"!==typeof Symbol&&($jscomp.initSymbol(),k.prototype[Symbol.for("nodejs.util.inspect.custom")]=H);k.random=k.rand;k.randomInt=k.randInt;k.diagonal=k.diag;k.prototype.diagonal=k.prototype.diag;k.identity=k.eye;k.prototype.negate=k.prototype.neg;k.prototype.tensorProduct=k.prototype.kroneckerProduct;var B=function(a,b){if(B.isMatrix(a))return a.clone();if(Number.isInteger(a)&&0<a)if(this.data=
-[],Number.isInteger(b)&&0<b)for(var c=0;c<a;c++)this.data.push(new Float64Array(b));else throw new TypeError("nColumns must be a positive integer");else if(Array.isArray(a)){c=a;a=c.length;b=c[0].length;if("number"!==typeof b||0===b)throw new TypeError("Data must be a 2D array with at least one element");this.data=[];for(var g=0;g<a;g++){if(c[g].length!==b)throw new RangeError("Inconsistent array dimensions");this.data.push(Float64Array.from(c[g]))}}else throw new TypeError("First argument must be a positive number or an array");
-this.rows=a;this.columns=b;return this};$jscomp.inherits(B,k);B.prototype.set=function(a,b,c){this.data[a][b]=c;return this};B.prototype.get=function(a,b){return this.data[a][b]};B.prototype.removeRow=function(a){I(this,a);if(1===this.rows)throw new RangeError("A matrix cannot have less than one row");this.data.splice(a,1);--this.rows;return this};B.prototype.addRow=function(a,b){void 0===b&&(b=a,a=this.rows);I(this,a,!0);b=Float64Array.from(O(this,b));this.data.splice(a,0,b);this.rows+=1;return this};
-B.prototype.removeColumn=function(a){J(this,a);if(1===this.columns)throw new RangeError("A matrix cannot have less than one column");for(var b=0;b<this.rows;b++){for(var c=new Float64Array(this.columns-1),g=0;g<a;g++)c[g]=this.data[b][g];for(g=a+1;g<this.columns;g++)c[g-1]=this.data[b][g];this.data[b]=c}--this.columns;return this};B.prototype.addColumn=function(a,b){"undefined"===typeof b&&(b=a,a=this.columns);J(this,a,!0);b=E(this,b);for(var c=0;c<this.rows;c++){for(var g=new Float64Array(this.columns+
-1),f=0;f<a;f++)g[f]=this.data[c][f];for(g[f++]=b[c];f<this.columns+1;f++)g[f]=this.data[c][f-1];this.data[c]=g}this.columns+=1;return this};(function(a,b){a.prototype.add=function(a){return"number"===typeof a?this.addS(a):this.addM(a)};a.prototype.addS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)+a);return this};a.prototype.addM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)+a.get(c,f));return this};a.add=function(a,g){return(new b(a)).add(g)};a.prototype.sub=function(a){return"number"===typeof a?this.subS(a):this.subM(a)};a.prototype.subS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)-a);return this};a.prototype.subM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)-a.get(c,f));return this};a.sub=function(a,g){return(new b(a)).sub(g)};a.prototype.subtract=a.prototype.sub;a.prototype.subtractS=a.prototype.subS;a.prototype.subtractM=a.prototype.subM;a.subtract=a.sub;a.prototype.mul=function(a){return"number"===typeof a?this.mulS(a):this.mulM(a)};a.prototype.mulS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)*a);return this};a.prototype.mulM=
-function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)*a.get(c,f));return this};a.mul=function(a,g){return(new b(a)).mul(g)};a.prototype.multiply=a.prototype.mul;a.prototype.multiplyS=a.prototype.mulS;a.prototype.multiplyM=a.prototype.mulM;a.multiply=a.mul;a.prototype.div=function(a){return"number"===typeof a?this.divS(a):this.divM(a)};
-a.prototype.divS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)/a);return this};a.prototype.divM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)/a.get(c,f));return this};a.div=function(a,g){return(new b(a)).div(g)};a.prototype.divide=a.prototype.div;a.prototype.divideS=a.prototype.divS;
-a.prototype.divideM=a.prototype.divM;a.divide=a.div;a.prototype.mod=function(a){return"number"===typeof a?this.modS(a):this.modM(a)};a.prototype.modS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)%a);return this};a.prototype.modM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,
-f)%a.get(c,f));return this};a.mod=function(a,g){return(new b(a)).mod(g)};a.prototype.modulus=a.prototype.mod;a.prototype.modulusS=a.prototype.modS;a.prototype.modulusM=a.prototype.modM;a.modulus=a.mod;a.prototype.and=function(a){return"number"===typeof a?this.andS(a):this.andM(a)};a.prototype.andS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)&a);return this};a.prototype.andM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)&a.get(c,f));return this};a.and=function(a,g){return(new b(a)).and(g)};a.prototype.or=function(a){return"number"===typeof a?this.orS(a):this.orM(a)};a.prototype.orS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)|a);return this};a.prototype.orM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)|a.get(c,f));return this};a.or=function(a,g){return(new b(a)).or(g)};a.prototype.xor=function(a){return"number"===typeof a?this.xorS(a):this.xorM(a)};a.prototype.xorS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)^a);return this};a.prototype.xorM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)^a.get(c,f));return this};a.xor=function(a,g){return(new b(a)).xor(g)};a.prototype.leftShift=function(a){return"number"===typeof a?this.leftShiftS(a):this.leftShiftM(a)};a.prototype.leftShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)<<a);return this};a.prototype.leftShiftM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");
-for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)<<a.get(c,f));return this};a.leftShift=function(a,g){return(new b(a)).leftShift(g)};a.prototype.signPropagatingRightShift=function(a){return"number"===typeof a?this.signPropagatingRightShiftS(a):this.signPropagatingRightShiftM(a)};a.prototype.signPropagatingRightShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=0;b<this.columns;b++)this.set(c,b,this.get(c,b)>>a);return this};a.prototype.signPropagatingRightShiftM=
-function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)>>a.get(c,f));return this};a.signPropagatingRightShift=function(a,g){return(new b(a)).signPropagatingRightShift(g)};a.prototype.rightShift=function(a){return"number"===typeof a?this.rightShiftS(a):this.rightShiftM(a)};a.prototype.rightShiftS=function(a){for(var c=0;c<this.rows;c++)for(var b=
-0;b<this.columns;b++)this.set(c,b,this.get(c,b)>>>a);return this};a.prototype.rightShiftM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,this.get(c,f)>>>a.get(c,f));return this};a.rightShift=function(a,g){return(new b(a)).rightShift(g)};a.prototype.zeroFillRightShift=a.prototype.rightShift;a.prototype.zeroFillRightShiftS=a.prototype.rightShiftS;
-a.prototype.zeroFillRightShiftM=a.prototype.rightShiftM;a.zeroFillRightShift=a.rightShift;a.prototype.not=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,~this.get(a,b));return this};a.not=function(a){return(new b(a)).not()};a.prototype.abs=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.abs(this.get(a,b)));return this};a.abs=function(a){return(new b(a)).abs()};a.prototype.acos=function(){for(var a=0;a<this.rows;a++)for(var b=
-0;b<this.columns;b++)this.set(a,b,Math.acos(this.get(a,b)));return this};a.acos=function(a){return(new b(a)).acos()};a.prototype.acosh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.acosh(this.get(a,b)));return this};a.acosh=function(a){return(new b(a)).acosh()};a.prototype.asin=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.asin(this.get(a,b)));return this};a.asin=function(a){return(new b(a)).asin()};a.prototype.asinh=
-function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.asinh(this.get(a,b)));return this};a.asinh=function(a){return(new b(a)).asinh()};a.prototype.atan=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.atan(this.get(a,b)));return this};a.atan=function(a){return(new b(a)).atan()};a.prototype.atanh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.atanh(this.get(a,b)));return this};a.atanh=
-function(a){return(new b(a)).atanh()};a.prototype.cbrt=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cbrt(this.get(a,b)));return this};a.cbrt=function(a){return(new b(a)).cbrt()};a.prototype.ceil=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.ceil(this.get(a,b)));return this};a.ceil=function(a){return(new b(a)).ceil()};a.prototype.clz32=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,
-b,Math.clz32(this.get(a,b)));return this};a.clz32=function(a){return(new b(a)).clz32()};a.prototype.cos=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cos(this.get(a,b)));return this};a.cos=function(a){return(new b(a)).cos()};a.prototype.cosh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.cosh(this.get(a,b)));return this};a.cosh=function(a){return(new b(a)).cosh()};a.prototype.exp=function(){for(var a=0;a<this.rows;a++)for(var b=
-0;b<this.columns;b++)this.set(a,b,Math.exp(this.get(a,b)));return this};a.exp=function(a){return(new b(a)).exp()};a.prototype.expm1=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.expm1(this.get(a,b)));return this};a.expm1=function(a){return(new b(a)).expm1()};a.prototype.floor=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.floor(this.get(a,b)));return this};a.floor=function(a){return(new b(a)).floor()};a.prototype.fround=
-function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.fround(this.get(a,b)));return this};a.fround=function(a){return(new b(a)).fround()};a.prototype.log=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log(this.get(a,b)));return this};a.log=function(a){return(new b(a)).log()};a.prototype.log1p=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log1p(this.get(a,b)));return this};a.log1p=function(a){return(new b(a)).log1p()};
-a.prototype.log10=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log10(this.get(a,b)));return this};a.log10=function(a){return(new b(a)).log10()};a.prototype.log2=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.log2(this.get(a,b)));return this};a.log2=function(a){return(new b(a)).log2()};a.prototype.round=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.round(this.get(a,b)));return this};
-a.round=function(a){return(new b(a)).round()};a.prototype.sign=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sign(this.get(a,b)));return this};a.sign=function(a){return(new b(a)).sign()};a.prototype.sin=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sin(this.get(a,b)));return this};a.sin=function(a){return(new b(a)).sin()};a.prototype.sinh=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,
-b,Math.sinh(this.get(a,b)));return this};a.sinh=function(a){return(new b(a)).sinh()};a.prototype.sqrt=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.sqrt(this.get(a,b)));return this};a.sqrt=function(a){return(new b(a)).sqrt()};a.prototype.tan=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.tan(this.get(a,b)));return this};a.tan=function(a){return(new b(a)).tan()};a.prototype.tanh=function(){for(var a=0;a<this.rows;a++)for(var b=
-0;b<this.columns;b++)this.set(a,b,Math.tanh(this.get(a,b)));return this};a.tanh=function(a){return(new b(a)).tanh()};a.prototype.trunc=function(){for(var a=0;a<this.rows;a++)for(var b=0;b<this.columns;b++)this.set(a,b,Math.trunc(this.get(a,b)));return this};a.trunc=function(a){return(new b(a)).trunc()};a.pow=function(a,g){return(new b(a)).pow(g)};a.prototype.pow=function(a){return"number"===typeof a?this.powS(a):this.powM(a)};a.prototype.powS=function(a){for(var b=0;b<this.rows;b++)for(var c=0;c<
-this.columns;c++)this.set(b,c,Math.pow(this.get(b,c),a));return this};a.prototype.powM=function(a){a=b.checkMatrix(a);if(this.rows!==a.rows||this.columns!==a.columns)throw new RangeError("Matrices dimensions must be equal");for(var c=0;c<this.rows;c++)for(var f=0;f<this.columns;f++)this.set(c,f,Math.pow(this.get(c,f),a.get(c,f)));return this}})(k,B);var Q=function(a,b,c){this.matrix=a;this.rows=b;this.columns=c;return this};$jscomp.inherits(Q,k);d=function(a,b){J(a,b);a=Q.call(this,a,a.rows,1)||this;
-a.column=b;return a};$jscomp.inherits(d,Q);d.prototype.set=function(a,b,c){this.matrix.set(a,this.column,c);return this};d.prototype.get=function(a){return this.matrix.get(a,this.column)};e=function(a,b){b=t(a,b);a=Q.call(this,a,a.rows,b.length)||this;a.columnIndices=b;return a};$jscomp.inherits(e,Q);e.prototype.set=function(a,b,c){this.matrix.set(a,this.columnIndices[b],c);return this};e.prototype.get=function(a,b){return this.matrix.get(a,this.columnIndices[b])};u=function(a){return Q.call(this,
-a,a.rows,a.columns)||this};$jscomp.inherits(u,Q);u.prototype.set=function(a,b,c){this.matrix.set(a,this.columns-b-1,c);return this};u.prototype.get=function(a,b){return this.matrix.get(a,this.columns-b-1)};var ia=function(a){return Q.call(this,a,a.rows,a.columns)||this};$jscomp.inherits(ia,Q);ia.prototype.set=function(a,b,c){this.matrix.set(this.rows-a-1,b,c);return this};ia.prototype.get=function(a,b){return this.matrix.get(this.rows-a-1,b)};var ja=function(a,b){I(a,b);a=Q.call(this,a,1,a.columns)||
-this;a.row=b;return a};$jscomp.inherits(ja,Q);ja.prototype.set=function(a,b,c){this.matrix.set(this.row,b,c);return this};ja.prototype.get=function(a,b){return this.matrix.get(this.row,b)};var V=function(a,b){b=M(a,b);a=Q.call(this,a,b.length,a.columns)||this;a.rowIndices=b;return a};$jscomp.inherits(V,Q);V.prototype.set=function(a,b,c){this.matrix.set(this.rowIndices[a],b,c);return this};V.prototype.get=function(a,b){return this.matrix.get(this.rowIndices[a],b)};var S=function(a,b,c){b=U(a,b,c);
-a=Q.call(this,a,b.row.length,b.column.length)||this;a.rowIndices=b.row;a.columnIndices=b.column;return a};$jscomp.inherits(S,Q);S.prototype.set=function(a,b,c){this.matrix.set(this.rowIndices[a],this.columnIndices[b],c);return this};S.prototype.get=function(a,b){return this.matrix.get(this.rowIndices[a],this.columnIndices[b])};var Z=function(a,b,c,g,f){C(a,b,c,g,f);a=Q.call(this,a,c-b+1,f-g+1)||this;a.startRow=b;a.startColumn=g;return a};$jscomp.inherits(Z,Q);Z.prototype.set=function(a,b,c){this.matrix.set(this.startRow+
-a,this.startColumn+b,c);return this};Z.prototype.get=function(a,b){return this.matrix.get(this.startRow+a,this.startColumn+b)};var aa=function(a){return Q.call(this,a,a.columns,a.rows)||this};$jscomp.inherits(aa,Q);aa.prototype.set=function(a,b,c){this.matrix.set(b,a,c);return this};aa.prototype.get=function(a,b){return this.matrix.get(b,a)};var W=function(a,b){b=void 0===b?{}:b;b=void 0===b.rows?1:b.rows;if(0!==a.length%b)throw Error("the data length is not divisible by the number of rows");this.rows=
-b;this.columns=a.length/b;this.data=a;return this};$jscomp.inherits(W,k);W.prototype.set=function(a,b,c){a=this._calculateIndex(a,b);this.data[a]=c;return this};W.prototype.get=function(a,b){a=this._calculateIndex(a,b);return this.data[a]};W.prototype._calculateIndex=function(a,b){return a*this.columns+b};var T=function(a){this.data=a;this.rows=a.length;this.columns=a[0].length;return this};$jscomp.inherits(T,k);T.prototype.set=function(a,b,c){this.data[a][b]=c;return this};T.prototype.get=function(a,
-b){return this.data[a][b]};var Y=function(a){a=T.checkMatrix(a);a=a.clone();var b=a.rows,c=a.columns,g=new Float64Array(b),f=1,q,d,l,e;for(q=0;q<b;q++)g[q]=q;var F=new Float64Array(b);for(d=0;d<c;d++){for(q=0;q<b;q++)F[q]=a.get(q,d);for(q=0;q<b;q++){var k=Math.min(q,d);for(l=e=0;l<k;l++)e+=a.get(q,l)*F[l];F[q]-=e;a.set(q,d,F[q])}e=d;for(q=d+1;q<b;q++)Math.abs(F[q])>Math.abs(F[e])&&(e=q);if(e!==d){for(l=0;l<c;l++)q=a.get(e,l),a.set(e,l,a.get(d,l)),a.set(d,l,q);l=g[e];g[e]=g[d];g[d]=l;f=-f}if(d<b&&
-0!==a.get(d,d))for(q=d+1;q<b;q++)a.set(q,d,a.get(q,d)/a.get(d,d))}this.LU=a;this.pivotVector=g;this.pivotSign=f};Y.prototype.isSingular=function(){for(var a=this.LU,b=a.columns,c=0;c<b;c++)if(0===a.get(c,c))return!0;return!1};Y.prototype.solve=function(a){a=B.checkMatrix(a);var b=this.LU;if(b.rows!==a.rows)throw Error("Invalid matrix dimensions");if(this.isSingular())throw Error("LU matrix is singular");var c=a.columns;a=a.subMatrixRow(this.pivotVector,0,c-1);var g=b.columns,f,q,d;for(d=0;d<g;d++)for(f=
-d+1;f<g;f++)for(q=0;q<c;q++)a.set(f,q,a.get(f,q)-a.get(d,q)*b.get(f,d));for(d=g-1;0<=d;d--){for(q=0;q<c;q++)a.set(d,q,a.get(d,q)/b.get(d,d));for(f=0;f<d;f++)for(q=0;q<c;q++)a.set(f,q,a.get(f,q)-a.get(d,q)*b.get(f,d))}return a};$jscomp.global.Object.defineProperties(Y.prototype,{determinant:{configurable:!0,enumerable:!0,get:function(){var a=this.LU;if(!a.isSquare())throw Error("Matrix must be square");for(var b=this.pivotSign,c=a.columns,g=0;g<c;g++)b*=a.get(g,g);return b}},lowerTriangularMatrix:{configurable:!0,
-enumerable:!0,get:function(){for(var a=this.LU,b=a.rows,c=a.columns,g=new B(b,c),f=0;f<b;f++)for(var q=0;q<c;q++)f>q?g.set(f,q,a.get(f,q)):f===q?g.set(f,q,1):g.set(f,q,0);return g}},upperTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){for(var a=this.LU,b=a.rows,c=a.columns,g=new B(b,c),f=0;f<b;f++)for(var q=0;q<c;q++)f<=q?g.set(f,q,a.get(f,q)):g.set(f,q,0);return g}},pivotPermutationVector:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.pivotVector)}}});var ca=
-function(a){a=T.checkMatrix(a);var b=a.clone(),c=a.rows;a=a.columns;var g=new Float64Array(a),f,q,d;for(d=0;d<a;d++){var l=0;for(f=d;f<c;f++)l=D(l,b.get(f,d));if(0!==l){0>b.get(d,d)&&(l=-l);for(f=d;f<c;f++)b.set(f,d,b.get(f,d)/l);b.set(d,d,b.get(d,d)+1);for(q=d+1;q<a;q++){var e=0;for(f=d;f<c;f++)e+=b.get(f,d)*b.get(f,q);e=-e/b.get(d,d);for(f=d;f<c;f++)b.set(f,q,b.get(f,q)+e*b.get(f,d))}}g[d]=-l}this.QR=b;this.Rdiag=g};ca.prototype.solve=function(a){a=B.checkMatrix(a);var b=this.QR,c=b.rows;if(a.rows!==
-c)throw Error("Matrix row dimensions must agree");if(!this.isFullRank())throw Error("Matrix is rank deficient");var g=a.columns;a=a.clone();var f=b.columns,d,n,l;for(l=0;l<f;l++)for(n=0;n<g;n++){var e=0;for(d=l;d<c;d++)e+=b.get(d,l)*a.get(d,n);e=-e/b.get(l,l);for(d=l;d<c;d++)a.set(d,n,a.get(d,n)+e*b.get(d,l))}for(l=f-1;0<=l;l--){for(n=0;n<g;n++)a.set(l,n,a.get(l,n)/this.Rdiag[l]);for(d=0;d<l;d++)for(n=0;n<g;n++)a.set(d,n,a.get(d,n)-a.get(l,n)*b.get(d,l))}return a.subMatrix(0,f-1,0,g-1)};ca.prototype.isFullRank=
-function(){for(var a=this.QR.columns,b=0;b<a;b++)if(0===this.Rdiag[b])return!1;return!0};$jscomp.global.Object.defineProperties(ca.prototype,{upperTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.QR,b=a.columns,c=new B(b,b),g,f;for(g=0;g<b;g++)for(f=0;f<b;f++)g<f?c.set(g,f,a.get(g,f)):g===f?c.set(g,f,this.Rdiag[g]):c.set(g,f,0);return c}},orthogonalMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.QR,b=a.rows,c=a.columns,g=new B(b,c),f,d,n;for(n=c-1;0<=n;n--){for(f=
-0;f<b;f++)g.set(f,n,0);g.set(n,n,1);for(d=n;d<c;d++)if(0!==a.get(n,n)){var l=0;for(f=n;f<b;f++)l+=a.get(f,n)*g.get(f,d);l=-l/a.get(n,n);for(f=n;f<b;f++)g.set(f,d,g.get(f,d)+l*a.get(f,n))}}return g}}});var X=function(a,b){b=void 0===b?{}:b;a=T.checkMatrix(a);var c=a.rows,g=a.columns,f=b,d=void 0===f.autoTranspose?!1:f.autoTranspose;b=!(void 0!==f.computeLeftSingularVectors&&!f.computeLeftSingularVectors);f=!(void 0!==f.computeRightSingularVectors&&!f.computeRightSingularVectors);var n=!1;if(c<g)if(d){var l=
-a.transpose();c=l.rows;g=l.columns;n=!0;a=b;b=f;f=a}else l=a.clone(),console.warn("Computing SVD on a matrix with more columns than rows. Consider enabling autoTranspose");else l=a.clone();var e=Math.min(c,g),F=Math.min(c+1,g);a=new Float64Array(F);d=new B(c,e);for(var k=new B(g,g),h=new Float64Array(g),t=new Float64Array(c),w=new Float64Array(F),y=0;y<F;y++)w[y]=y;w=Math.min(c-1,g);F=Math.max(0,Math.min(g-2,c));y=Math.max(w,F);for(var m=0;m<y;m++){if(m<w){a[m]=0;for(var p=m;p<c;p++)a[m]=D(a[m],l.get(p,
-m));if(0!==a[m]){0>l.get(m,m)&&(a[m]=-a[m]);for(p=m;p<c;p++)l.set(p,m,l.get(p,m)/a[m]);l.set(m,m,l.get(m,m)+1)}a[m]=-a[m]}for(p=m+1;p<g;p++){if(m<w&&0!==a[m]){for(var z=0,v=m;v<c;v++)z+=l.get(v,m)*l.get(v,p);z=-z/l.get(m,m);for(v=m;v<c;v++)l.set(v,p,l.get(v,p)+z*l.get(v,m))}h[p]=l.get(m,p)}if(b&&m<w)for(p=m;p<c;p++)d.set(p,m,l.get(p,m));if(m<F){h[m]=0;for(p=m+1;p<g;p++)h[m]=D(h[m],h[p]);if(0!==h[m]){0>h[m+1]&&(h[m]=0-h[m]);for(p=m+1;p<g;p++)h[p]/=h[m];h[m+1]+=1}h[m]=-h[m];if(m+1<c&&0!==h[m]){for(p=
-m+1;p<c;p++)t[p]=0;for(p=m+1;p<c;p++)for(z=m+1;z<g;z++)t[p]+=h[z]*l.get(p,z);for(p=m+1;p<g;p++)for(z=-h[p]/h[m+1],v=m+1;v<c;v++)l.set(v,p,l.get(v,p)+z*t[v])}if(f)for(p=m+1;p<g;p++)k.set(p,m,h[p])}}t=Math.min(g,c+1);w<g&&(a[w]=l.get(w,w));c<t&&(a[t-1]=0);F+1<t&&(h[F]=l.get(F,t-1));h[t-1]=0;if(b){for(l=w;l<e;l++){for(y=0;y<c;y++)d.set(y,l,0);d.set(l,l,1)}for(l=w-1;0<=l;l--)if(0!==a[l]){for(w=l+1;w<e;w++){y=0;for(m=l;m<c;m++)y+=d.get(m,l)*d.get(m,w);y=-y/d.get(l,l);for(m=l;m<c;m++)d.set(m,w,d.get(m,
-w)+y*d.get(m,l))}for(w=l;w<c;w++)d.set(w,l,-d.get(w,l));d.set(l,l,1+d.get(l,l));for(w=0;w<l-1;w++)d.set(w,l,0)}else{for(w=0;w<c;w++)d.set(w,l,0);d.set(l,l,1)}}if(f)for(e=g-1;0<=e;e--){if(e<F&&0!==h[e])for(l=e+1;l<g;l++){w=0;for(y=e+1;y<g;y++)w+=k.get(y,e)*k.get(y,l);w=-w/k.get(e+1,e);for(y=e+1;y<g;y++)k.set(y,l,k.get(y,l)+w*k.get(y,e))}for(l=0;l<g;l++)k.set(l,e,0);k.set(e,e,1)}F=t-1;for(e=Number.EPSILON;0<t;){for(l=t-2;-1<=l&&-1!==l;l--)if(Math.abs(h[l])<=Number.MIN_VALUE+e*Math.abs(a[l]+Math.abs(a[l+
-1]))||Number.isNaN(h[l])){h[l]=0;break}if(l===t-2)w=4;else{for(y=t-1;y>=l&&y!==l;y--)if(Math.abs(a[y])<=e*((y!==t?Math.abs(h[y]):0)+(y!==l+1?Math.abs(h[y-1]):0))){a[y]=0;break}y===l?w=3:y===t-1?w=1:(w=2,l=y)}l++;switch(w){case 1:w=h[t-2];h[t-2]=0;for(y=t-2;y>=l;y--)if(m=D(a[y],w),p=a[y]/m,z=w/m,a[y]=m,y!==l&&(w=-z*h[y-1],h[y-1]*=p),f)for(v=0;v<g;v++)m=p*k.get(v,y)+z*k.get(v,t-1),k.set(v,t-1,-z*k.get(v,y)+p*k.get(v,t-1)),k.set(v,y,m);break;case 2:w=h[l-1];h[l-1]=0;for(y=l;y<t;y++)if(m=D(a[y],w),p=
-a[y]/m,z=w/m,a[y]=m,w=-z*h[y],h[y]*=p,b)for(v=0;v<c;v++)m=p*d.get(v,y)+z*d.get(v,l-1),d.set(v,l-1,-z*d.get(v,y)+p*d.get(v,l-1)),d.set(v,y,m);break;case 3:m=Math.max(Math.abs(a[t-1]),Math.abs(a[t-2]),Math.abs(h[t-2]),Math.abs(a[l]),Math.abs(h[l]));y=a[t-1]/m;z=a[t-2]/m;p=h[t-2]/m;w=a[l]/m;m=h[l]/m;z=((z+y)*(z-y)+p*p)/2;p*=y*p*y;v=0;if(0!==z||0!==p)v=0>z?0-Math.sqrt(z*z+p):Math.sqrt(z*z+p),v=p/(z+v);y=(w+y)*(w-y)+v;w*=m;for(m=l;m<t-1;m++){p=D(y,w);0===p&&(p=Number.MIN_VALUE);z=y/p;v=w/p;m!==l&&(h[m-
-1]=p);y=z*a[m]+v*h[m];h[m]=z*h[m]-v*a[m];w=v*a[m+1];a[m+1]*=z;if(f)for(var r=0;r<g;r++)p=z*k.get(r,m)+v*k.get(r,m+1),k.set(r,m+1,-v*k.get(r,m)+z*k.get(r,m+1)),k.set(r,m,p);p=D(y,w);0===p&&(p=Number.MIN_VALUE);z=y/p;v=w/p;a[m]=p;y=z*h[m]+v*a[m+1];a[m+1]=-v*h[m]+z*a[m+1];w=v*h[m+1];h[m+1]*=z;if(b&&m<c-1)for(r=0;r<c;r++)p=z*d.get(r,m)+v*d.get(r,m+1),d.set(r,m+1,-v*d.get(r,m)+z*d.get(r,m+1)),d.set(r,m,p)}h[t-2]=y;break;case 4:if(0>=a[l]&&(a[l]=0>a[l]?-a[l]:0,f))for(w=0;w<=F;w++)k.set(w,l,-k.get(w,l));
-for(;l<F&&!(a[l]>=a[l+1]);){w=a[l];a[l]=a[l+1];a[l+1]=w;if(f&&l<g-1)for(y=0;y<g;y++)w=k.get(y,l+1),k.set(y,l+1,k.get(y,l)),k.set(y,l,w);if(b&&l<c-1)for(y=0;y<c;y++)w=d.get(y,l+1),d.set(y,l+1,d.get(y,l)),d.set(y,l,w);l++}t--}}n&&(b=k,k=d,d=b);this.m=c;this.n=g;this.s=a;this.U=d;this.V=k};X.prototype.solve=function(a){for(var b=this.threshold,c=this.s.length,g=B.zeros(c,c),f=0;f<c;f++)Math.abs(this.s[f])<=b?g.set(f,f,0):g.set(f,f,1/this.s[f]);b=this.U;f=this.rightSingularVectors;g=f.mmul(g);f=f.rows;
-for(var d=b.rows,n=B.zeros(f,d),l=0;l<f;l++)for(var e=0;e<d;e++){for(var k=0,h=0;h<c;h++)k+=g.get(l,h)*b.get(e,h);n.set(l,e,k)}return n.mmul(a)};X.prototype.solveForDiagonal=function(a){return this.solve(B.diag(a))};X.prototype.inverse=function(){for(var a=this.V,b=this.threshold,c=a.rows,g=a.columns,f=new B(c,this.s.length),d=0;d<c;d++)for(var n=0;n<g;n++)Math.abs(this.s[n])>b&&f.set(d,n,a.get(d,n)/this.s[n]);a=this.U;b=a.rows;g=a.columns;d=new B(c,b);for(n=0;n<c;n++)for(var l=0;l<b;l++){for(var e=
-0,k=0;k<g;k++)e+=f.get(n,k)*a.get(l,k);d.set(n,l,e)}return d};$jscomp.global.Object.defineProperties(X.prototype,{condition:{configurable:!0,enumerable:!0,get:function(){return this.s[0]/this.s[Math.min(this.m,this.n)-1]}},norm2:{configurable:!0,enumerable:!0,get:function(){return this.s[0]}},rank:{configurable:!0,enumerable:!0,get:function(){for(var a=Math.max(this.m,this.n)*this.s[0]*Number.EPSILON,b=0,c=this.s,g=0,f=c.length;g<f;g++)c[g]>a&&b++;return b}},diagonal:{configurable:!0,enumerable:!0,
-get:function(){return Array.from(this.s)}},threshold:{configurable:!0,enumerable:!0,get:function(){return Number.EPSILON/2*Math.max(this.m,this.n)*this.s[0]}},leftSingularVectors:{configurable:!0,enumerable:!0,get:function(){return this.U}},rightSingularVectors:{configurable:!0,enumerable:!0,get:function(){return this.V}},diagonalMatrix:{configurable:!0,enumerable:!0,get:function(){return B.diag(this.s)}}});var ka=function(a,b){b=void 0===b?{}:b;var c=void 0===b.assumeSymmetric?!1:b.assumeSymmetric;
-a=T.checkMatrix(a);if(!a.isSquare())throw Error("Matrix is not a square matrix");b=a.columns;var g=new B(b,b),f=new Float64Array(b),d=new Float64Array(b),n=a,l,e;if(c||a.isSymmetric()){for(l=0;l<b;l++)for(e=0;e<b;e++)g.set(l,e,n.get(l,e));var k;for(e=0;e<b;e++)f[e]=g.get(b-1,e);for(c=b-1;0<c;c--){for(k=a=e=0;k<c;k++)e+=Math.abs(f[k]);if(0===e)for(d[c]=f[c-1],e=0;e<c;e++)f[e]=g.get(c-1,e),g.set(c,e,0),g.set(e,c,0);else{for(k=0;k<c;k++)f[k]/=e,a+=f[k]*f[k];n=f[c-1];l=Math.sqrt(a);0<n&&(l=-l);d[c]=e*
-l;a-=n*l;f[c-1]=n-l;for(e=0;e<c;e++)d[e]=0;for(e=0;e<c;e++){n=f[e];g.set(e,c,n);l=d[e]+g.get(e,e)*n;for(k=e+1;k<=c-1;k++)l+=g.get(k,e)*f[k],d[k]+=g.get(k,e)*n;d[e]=l}for(e=n=0;e<c;e++)d[e]/=a,n+=d[e]*f[e];n/=a+a;for(e=0;e<c;e++)d[e]-=n*f[e];for(e=0;e<c;e++){n=f[e];l=d[e];for(k=e;k<=c-1;k++)g.set(k,e,g.get(k,e)-(n*d[k]+l*f[k]));f[e]=g.get(c-1,e);g.set(c,e,0)}}f[c]=a}for(c=0;c<b-1;c++){g.set(b-1,c,g.get(c,c));g.set(c,c,1);a=f[c+1];if(0!==a){for(k=0;k<=c;k++)f[k]=g.get(k,c+1)/a;for(e=0;e<=c;e++){for(k=
-l=0;k<=c;k++)l+=g.get(k,c+1)*g.get(k,e);for(k=0;k<=c;k++)g.set(k,e,g.get(k,e)-l*f[k])}}for(k=0;k<=c;k++)g.set(k,c+1,0)}for(e=0;e<b;e++)f[e]=g.get(b-1,e),g.set(b-1,e,0);g.set(b-1,b-1,1);d[0]=0;var h,t;for(a=1;a<b;a++)d[a-1]=d[a];var x=d[b-1]=0,w=0,y=Number.EPSILON;for(l=0;l<b;l++){w=Math.max(w,Math.abs(f[l])+Math.abs(d[l]));for(e=l;e<b&&!(Math.abs(d[e])<=y*w);)e++;if(e>l){do{var m=f[l];c=(f[l+1]-m)/(2*d[l]);var p=D(c,1);0>c&&(p=-p);f[l]=d[l]/(c+p);f[l+1]=d[l]*(c+p);k=f[l+1];n=m-f[l];for(a=l+2;a<b;a++)f[a]-=
-n;x+=n;c=f[e];var z=h=p=1;var v=d[l+1];var r=t=0;for(a=e-1;a>=l;a--)for(z=h,h=p,r=t,m=p*d[a],n=p*c,p=D(c,d[a]),d[a+1]=t*p,t=d[a]/p,p=c/p,c=p*f[a]-t*m,f[a+1]=n+t*(p*m+t*f[a]),m=0;m<b;m++)n=g.get(m,a+1),g.set(m,a+1,t*g.get(m,a)+p*n),g.set(m,a,p*g.get(m,a)-t*n);c=-t*r*z*v*d[l]/k;d[l]=t*c;f[l]=p*c}while(Math.abs(d[l])>y*w)}f[l]+=x;d[l]=0}for(a=0;a<b-1;a++){m=a;c=f[a];for(n=a+1;n<b;n++)f[n]<c&&(m=n,c=f[n]);if(m!==a)for(f[m]=f[a],f[a]=c,n=0;n<b;n++)c=g.get(n,a),g.set(n,a,g.get(n,m)),g.set(n,m,c)}}else{a=
-new B(b,b);c=new Float64Array(b);for(e=0;e<b;e++)for(l=0;l<b;l++)a.set(l,e,n.get(l,e));n=b-1;for(v=1;v<=n-1;v++){t=0;for(h=v;h<=n;h++)t+=Math.abs(a.get(h,v-1));if(0!==t){k=0;for(h=n;h>=v;h--)c[h]=a.get(h,v-1)/t,k+=c[h]*c[h];e=Math.sqrt(k);0<c[v]&&(e=-e);k-=c[v]*e;c[v]-=e;for(z=v;z<b;z++){l=0;for(h=n;h>=v;h--)l+=c[h]*a.get(h,z);l/=k;for(h=v;h<=n;h++)a.set(h,z,a.get(h,z)-l*c[h])}for(h=0;h<=n;h++){l=0;for(z=n;z>=v;z--)l+=c[z]*a.get(h,z);l/=k;for(z=v;z<=n;z++)a.set(h,z,a.get(h,z)-l*c[z])}c[v]*=t;a.set(v,
-v-1,t*e)}}for(h=0;h<b;h++)for(z=0;z<b;z++)g.set(h,z,h===z?1:0);for(v=n-1;1<=v;v--)if(0!==a.get(v,v-1)){for(h=v+1;h<=n;h++)c[h]=a.get(h,v-1);for(z=v;z<=n;z++){e=0;for(h=v;h<=n;h++)e+=c[h]*g.get(h,z);e=e/c[v]/a.get(v,v-1);for(h=v;h<=n;h++)g.set(h,z,g.get(h,z)+e*c[h])}}c=b-1;n=b-1;l=Number.EPSILON;var A=0,u=t=v=z=h=k=e=0,C;for(r=0;r<b;r++){if(0>r||r>n)f[r]=a.get(r,r),d[r]=0;for(p=Math.max(r-1,0);p<b;p++)e+=Math.abs(a.get(r,p))}for(;0<=c;){for(x=c;0<x;){v=Math.abs(a.get(x-1,x-1))+Math.abs(a.get(x,x));
-0===v&&(v=e);if(Math.abs(a.get(x,x-1))<l*v)break;x--}if(x===c)a.set(c,c,a.get(c,c)+A),f[c]=a.get(c,c),d[c]=0,c--,u=0;else if(x===c-1){m=a.get(c,c-1)*a.get(c-1,c);k=(a.get(c-1,c-1)-a.get(c,c))/2;h=k*k+m;t=Math.sqrt(Math.abs(h));a.set(c,c,a.get(c,c)+A);a.set(c-1,c-1,a.get(c-1,c-1)+A);w=a.get(c,c);if(0<=h){t=0<=k?k+t:k-t;f[c-1]=w+t;f[c]=f[c-1];0!==t&&(f[c]=w-m/t);d[c-1]=0;d[c]=0;w=a.get(c,c-1);v=Math.abs(w)+Math.abs(t);k=w/v;h=t/v;z=Math.sqrt(k*k+h*h);k/=z;h/=z;for(p=c-1;p<b;p++)t=a.get(c-1,p),a.set(c-
-1,p,h*t+k*a.get(c,p)),a.set(c,p,h*a.get(c,p)-k*t);for(r=0;r<=c;r++)t=a.get(r,c-1),a.set(r,c-1,h*t+k*a.get(r,c)),a.set(r,c,h*a.get(r,c)-k*t);for(r=0;r<=n;r++)t=g.get(r,c-1),g.set(r,c-1,h*t+k*g.get(r,c)),g.set(r,c,h*g.get(r,c)-k*t)}else f[c-1]=w+k,f[c]=w+k,d[c-1]=t,d[c]=-t;c-=2;u=0}else{w=a.get(c,c);m=y=0;x<c&&(y=a.get(c-1,c-1),m=a.get(c,c-1)*a.get(c-1,c));if(10===u){A+=w;for(r=0;r<=c;r++)a.set(r,r,a.get(r,r)-w);v=Math.abs(a.get(c,c-1))+Math.abs(a.get(c-1,c-2));w=y=.75*v;m=-.4375*v*v}if(30===u&&(v=
-(y-w)/2,v=v*v+m,0<v)){v=Math.sqrt(v);y<w&&(v=-v);v=w-m/((y-w)/2+v);for(r=0;r<=c;r++)a.set(r,r,a.get(r,r)-v);A+=v;w=y=m=.964}u+=1;for(C=c-2;C>=x;){t=a.get(C,C);z=w-t;v=y-t;k=(z*v-m)/a.get(C+1,C)+a.get(C,C+1);h=a.get(C+1,C+1)-t-z-v;z=a.get(C+2,C+1);v=Math.abs(k)+Math.abs(h)+Math.abs(z);k/=v;h/=v;z/=v;if(C===x)break;if(Math.abs(a.get(C,C-1))*(Math.abs(h)+Math.abs(z))<l*Math.abs(k)*(Math.abs(a.get(C-1,C-1))+Math.abs(t)+Math.abs(a.get(C+1,C+1))))break;C--}for(r=C+2;r<=c;r++)a.set(r,r-2,0),r>C+2&&a.set(r,
-r-3,0);for(m=C;m<=c-1;m++){var N=m!==c-1;m!==C&&(k=a.get(m,m-1),h=a.get(m+1,m-1),z=N?a.get(m+2,m-1):0,w=Math.abs(k)+Math.abs(h)+Math.abs(z),0!==w&&(k/=w,h/=w,z/=w));if(0===w)break;v=Math.sqrt(k*k+h*h+z*z);0>k&&(v=-v);if(0!==v){m!==C?a.set(m,m-1,-v*w):x!==C&&a.set(m,m-1,-a.get(m,m-1));k+=v;w=k/v;y=h/v;t=z/v;h/=k;z/=k;for(p=m;p<b;p++)k=a.get(m,p)+h*a.get(m+1,p),N&&(k+=z*a.get(m+2,p),a.set(m+2,p,a.get(m+2,p)-k*t)),a.set(m,p,a.get(m,p)-k*w),a.set(m+1,p,a.get(m+1,p)-k*y);for(r=0;r<=Math.min(c,m+3);r++)k=
-w*a.get(r,m)+y*a.get(r,m+1),N&&(k+=t*a.get(r,m+2),a.set(r,m+2,a.get(r,m+2)-k*z)),a.set(r,m,a.get(r,m)-k),a.set(r,m+1,a.get(r,m+1)-k*h);for(r=0;r<=n;r++)k=w*g.get(r,m)+y*g.get(r,m+1),N&&(k+=t*g.get(r,m+2),g.set(r,m+2,g.get(r,m+2)-k*z)),g.set(r,m,g.get(r,m)-k),g.set(r,m+1,g.get(r,m+1)-k*h)}}}}if(0!==e){for(c=b-1;0<=c;c--)if(k=f[c],h=d[c],0===h)for(x=c,a.set(c,c,1),r=c-1;0<=r;r--){m=a.get(r,r)-k;z=0;for(p=x;p<=c;p++)z+=a.get(r,p)*a.get(p,c);if(0>d[r])t=m,v=z;else if(x=r,0===d[r]?a.set(r,c,0!==m?-z/m:
--z/(l*e)):(w=a.get(r,r+1),y=a.get(r+1,r),h=(f[r]-k)*(f[r]-k)+d[r]*d[r],A=(w*v-t*z)/h,a.set(r,c,A),a.set(r+1,c,Math.abs(w)>Math.abs(t)?(-z-m*A)/w:(-v-y*A)/t)),A=Math.abs(a.get(r,c)),1<l*A*A)for(p=r;p<=c;p++)a.set(p,c,a.get(p,c)/A)}else if(0>h)for(x=c-1,Math.abs(a.get(c,c-1))>Math.abs(a.get(c-1,c))?(a.set(c-1,c-1,h/a.get(c,c-1)),a.set(c-1,c,-(a.get(c,c)-k)/a.get(c,c-1))):(p=ha(0,-a.get(c-1,c),a.get(c-1,c-1)-k,h),a.set(c-1,c-1,p[0]),a.set(c-1,c,p[1])),a.set(c,c-1,0),a.set(c,c,1),r=c-2;0<=r;r--){u=A=
-0;for(p=x;p<=c;p++)A+=a.get(r,p)*a.get(p,c-1),u+=a.get(r,p)*a.get(p,c);m=a.get(r,r)-k;if(0>d[r])t=m,z=A,v=u;else if(x=r,0===d[r]?(p=ha(-A,-u,m,h),a.set(r,c-1,p[0]),a.set(r,c,p[1])):(w=a.get(r,r+1),y=a.get(r+1,r),p=(f[r]-k)*(f[r]-k)+d[r]*d[r]-h*h,C=2*(f[r]-k)*h,0===p&&0===C&&(p=l*e*(Math.abs(m)+Math.abs(h)+Math.abs(w)+Math.abs(y)+Math.abs(t))),p=ha(w*z-t*A+h*u,w*v-t*u-h*A,p,C),a.set(r,c-1,p[0]),a.set(r,c,p[1]),Math.abs(w)>Math.abs(t)+Math.abs(h)?(a.set(r+1,c-1,(-A-m*a.get(r,c-1)+h*a.get(r,c))/w),a.set(r+
-1,c,(-u-m*a.get(r,c)-h*a.get(r,c-1))/w)):(p=ha(-z-y*a.get(r,c-1),-v-y*a.get(r,c),t,h),a.set(r+1,c-1,p[0]),a.set(r+1,c,p[1]))),A=Math.max(Math.abs(a.get(r,c-1)),Math.abs(a.get(r,c))),1<l*A*A)for(p=r;p<=c;p++)a.set(p,c-1,a.get(p,c-1)/A),a.set(p,c,a.get(p,c)/A)}for(r=0;r<b;r++)if(0>r||r>n)for(p=r;p<b;p++)g.set(r,p,a.get(r,p));for(p=b-1;0<=p;p--)for(r=0;r<=n;r++){for(m=t=0;m<=Math.min(p,n);m++)t+=g.get(r,m)*a.get(m,p);g.set(r,p,t)}}}this.n=b;this.e=d;this.d=f;this.V=g};$jscomp.global.Object.defineProperties(ka.prototype,
-{realEigenvalues:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.d)}},imaginaryEigenvalues:{configurable:!0,enumerable:!0,get:function(){return Array.from(this.e)}},eigenvectorMatrix:{configurable:!0,enumerable:!0,get:function(){return this.V}},diagonalMatrix:{configurable:!0,enumerable:!0,get:function(){var a=this.n,b=this.e,c=this.d,d=new B(a,a),f,e;for(f=0;f<a;f++){for(e=0;e<a;e++)d.set(f,e,0);d.set(f,f,c[f]);0<b[f]?d.set(f,f+1,b[f]):0>b[f]&&d.set(f,f-1,b[f])}return d}}});
-var ea=function(a){a=T.checkMatrix(a);if(!a.isSymmetric())throw Error("Matrix is not symmetric");var b=a.rows,c=new B(b,b),d=!0,f,e,k;for(e=0;e<b;e++){var l=0;for(k=0;k<e;k++){var h=0;for(f=0;f<k;f++)h+=c.get(k,f)*c.get(e,f);h=(a.get(e,k)-h)/c.get(k,k);c.set(e,k,h);l+=h*h}l=a.get(e,e)-l;d&=0<l;c.set(e,e,Math.sqrt(Math.max(l,0)));for(k=e+1;k<b;k++)c.set(e,k,0)}this.L=c;this.positiveDefinite=!!d};ea.prototype.isPositiveDefinite=function(){return this.positiveDefinite};ea.prototype.solve=function(a){a=
-T.checkMatrix(a);var b=this.L,c=b.rows;if(a.rows!==c)throw Error("Matrix dimensions do not match");if(!1===this.isPositiveDefinite())throw Error("Matrix is not positive definite");var d=a.columns;a=a.clone();var f,e,k;for(k=0;k<c;k++)for(e=0;e<d;e++){for(f=0;f<k;f++)a.set(k,e,a.get(k,e)-a.get(f,e)*b.get(k,f));a.set(k,e,a.get(k,e)/b.get(k,k))}for(k=c-1;0<=k;k--)for(e=0;e<d;e++){for(f=k+1;f<c;f++)a.set(k,e,a.get(k,e)-a.get(f,e)*b.get(f,k));a.set(k,e,a.get(k,e)/b.get(k,k))}return a};$jscomp.global.Object.defineProperties(ea.prototype,
-{lowerTriangularMatrix:{configurable:!0,enumerable:!0,get:function(){return this.L}}});var oa=function(a,b){b=void 0===b?{}:b;a=T.checkMatrix(a);var c=b.Y,d=void 0===b.scaleScores?!1:b.scaleScores,f=void 0===b.maxIterations?1E3:b.maxIterations,e=void 0===b.terminationCriteria?1E-10:b.terminationCriteria;if(c){c=Array.isArray(c)&&"number"===typeof c[0]?B.columnVector(c):T.checkMatrix(c);if(!c.isColumnVector()||c.rows!==a.rows)throw Error("Y must be a column vector of length X.rows");b=c}else b=a.getColumnVector(0);
-for(var k=1,l,h,t,x,D=0;D<f&&k>e;D++)t=a.transpose().mmul(b).div(b.transpose().mmul(b).get(0,0)),t=t.div(t.norm()),l=a.mmul(t).div(t.transpose().mmul(t).get(0,0)),0<D&&(k=l.clone().sub(x).pow(2).sum()),x=l.clone(),c?(h=c.transpose().mmul(l).div(l.transpose().mmul(l).get(0,0)),h=h.div(h.norm()),b=c.mmul(h).div(h.transpose().mmul(h).get(0,0))):b=l;c?(x=a.transpose().mmul(l).div(l.transpose().mmul(l).get(0,0)),x=x.div(x.norm()),a=a.clone().sub(l.clone().mmul(x.transpose())),d=b.transpose().mmul(l).div(l.transpose().mmul(l).get(0,
-0)),c=c.clone().sub(l.clone().mulS(d.get(0,0)).mmul(h.transpose())),this.t=l,this.p=x.transpose(),this.w=t.transpose(),this.q=h,this.u=b,this.s=l.transpose().mmul(l),this.xResidual=a,this.yResidual=c,this.betas=d):(this.w=t.transpose(),this.s=l.transpose().mmul(l).sqrt(),this.t=d?l.clone().div(this.s.get(0,0)):l,this.xResidual=a.sub(l.mmul(t.transpose())))};h.AbstractMatrix=k;h.CHO=ea;h.CholeskyDecomposition=ea;h.EVD=ka;h.EigenvalueDecomposition=ka;h.LU=Y;h.LuDecomposition=Y;h.Matrix=B;h.MatrixColumnSelectionView=
-e;h.MatrixColumnView=d;h.MatrixFlipColumnView=u;h.MatrixFlipRowView=ia;h.MatrixRowSelectionView=V;h.MatrixRowView=ja;h.MatrixSelectionView=S;h.MatrixSubView=Z;h.MatrixTransposeView=aa;h.NIPALS=oa;h.Nipals=oa;h.QR=ca;h.QrDecomposition=ca;h.SVD=X;h.SingularValueDecomposition=X;h.WrapperMatrix1D=W;h.WrapperMatrix2D=T;h.correlation=function(a,b,c){b=void 0===b?a:b;c=void 0===c?{}:c;a=new B(a);var d=!1;"object"!==typeof b||B.isMatrix(b)||Array.isArray(b)?b=new B(b):(c=b,b=a,d=!0);if(a.rows!==b.rows)throw new TypeError("Both matrices must have the same number of rows");
-var f=void 0===c.scale?!0:c.scale;if(void 0===c.center||c.center)a.center("column"),d||b.center("column");f&&(a.scale("column"),d||b.scale("column"));c=a.standardDeviation("column",{unbiased:!0});d=d?c:b.standardDeviation("column",{unbiased:!0});b=a.transpose().mmul(b);for(f=0;f<b.rows;f++)for(var e=0;e<b.columns;e++)b.set(f,e,b.get(f,e)*(1/(c[f]*d[e]))*(1/(a.rows-1)));return b};h.covariance=function(a,b,c){b=void 0===b?a:b;c=void 0===c?{}:c;a=new B(a);var d=!1;"object"!==typeof b||B.isMatrix(b)||
-Array.isArray(b)?b=new B(b):(c=b,b=a,d=!0);if(a.rows!==b.rows)throw new TypeError("Both matrices must have the same number of rows");if(void 0===c.center||c.center)a=a.center("column"),d||(b=b.center("column"));b=a.transpose().mmul(b);for(d=0;d<b.rows;d++)for(c=0;c<b.columns;c++)b.set(d,c,b.get(d,c)*(1/(a.rows-1)));return b};h.default=B;h.determinant=A;h.inverse=function(a,b){b=void 0===b?!1:b;a=T.checkMatrix(a);return b?(new X(a)).inverse():x(a,B.eye(a.rows))};h.linearDependencies=function(a,b){var c=
-b=void 0===b?{}:b;b=void 0===c.thresholdValue?1E-9:c.thresholdValue;c=void 0===c.thresholdError?1E-9:c.thresholdError;a=B.checkMatrix(a);for(var d=a.rows,f=new B(d,d),e=0;e<d;e++){var k=B.columnVector(a.getRow(e)),l=a.subMatrixRow(N(d,e)).transpose(),h=(new X(l)).solve(k);k=B.sub(k,l.mmul(h)).abs().max();f.setRow(e,pa(k,h,e,b,c))}return f};h.pseudoInverse=function(a,b){b=void 0===b?Number.EPSILON:b;a=B.checkMatrix(a);var c=new X(a,{autoTranspose:!0});a=c.leftSingularVectors;var d=c.rightSingularVectors;
-c=c.diagonal;for(var f=0;f<c.length;f++)c[f]=Math.abs(c[f])>b?1/c[f]:0;return d.mmul(B.diag(c).mmul(a.transpose()))};h.solve=x;h.wrap=function(a,b){if(Array.isArray(a))return a[0]&&Array.isArray(a[0])?new T(a):new W(a,b);throw Error("the argument is not an array");}};
-shadow$provide[12]=function(d,e,u,h){function H(d){return d&&"object"===typeof d&&"default"in d?d["default"]:d}function G(d,e,h,t){for(var x=0;x<d.length;x++)h[x]=M(e,d[x],{distanceFunction:t});return h}function L(d,e,h,C){var x=new t(C);C=Array(e);C[0]=Math.floor(x.random()*d.length);if(1<e){for(var D=x=-1,A=0;A<d.length;++A)h[C[0]][A]>x&&(x=h[C[0]][A],D=A);C[1]=D;if(2<e)for(x=2;x<e;++x){D={dist:-1,index:-1};for(A=0;A<d.length;++A){for(var u={dist:Number.MAX_VALUE,index:-1},N=0;N<x;++N)h[N][A]<u.dist&&
--1===C.indexOf(A)&&(u={dist:h[N][A],index:A});u.dist!==Number.MAX_VALUE&&u.dist>D.dist&&(D=Object.assign({},u))}C[x]=D.index}}return C.map(function(e){return d[e]})}function I(d){for(var e=[],h=0;h<d;h++)e.push(h);return e}function J(d){for(var e=[d[0]],h=1;h<d.length;h++)e[h]=e[h-1]+d[h];return e}function O(d,e,h,t,C,u){for(var x=h=G(e,d,h,C.distanceFunction),A=e[0].length,D=Array(t),k=Array(t),B=0;B<t;B++){D[B]=Array(A);for(var N=k[B]=0;N<A;N++)D[B][N]=0}for(B=0;B<e.length;B++)for(k[x[B]]++,N=0;N<
-A;N++)D[x[B]][N]+=e[B][N];for(e=0;e<t;e++)for(x=0;x<A;x++)D[e][x]=k[e]?D[e][x]/k[e]:d[e][x];a:{t=C.distanceFunction;A=C.tolerance;for(k=0;k<D.length;k++)if(t(D[k],d[k])>A){d=!1;break a}d=!0}return new R(h,D,d,u,C.distanceFunction)}function E(d,e,h,t,C){var x,A,D;return $jscomp.generator.createGenerator(E,function(u){1==u.nextAddress&&(x=!1,A=0);if(4!=u.nextAddress){if(x||!(A<C.maxIterations))return u.jumpTo(0);D=O(d,e,h,t,C,++A);return u.yield(D.computeInformation(e),4)}x=D.converged;d=D.centroids;
-return u.jumpTo(2)})}var U=e(2),M=H(e(3)),t=H(e(6)),C=e(11);$jscomp.initSymbol();var K=Symbol("distance"),R=function(d,e,h,t,C){this.clusters=d;this.centroids=e;this.converged=h;this.iterations=t;this[K]=C};R.prototype.nearest=function(d){var e=Array(d.length),h=this.centroids.map(function(d){return d.centroid});return G(d,h,e,this[K])};R.prototype.computeInformation=function(d){for(var e=this.centroids.map(function(d){return{centroid:d,error:0,size:0}}),h=0;h<d.length;h++)e[this.clusters[h]].error+=
-this[K](d[h],this.centroids[this.clusters[h]]),e[this.clusters[h]].size++;for(d=0;d<this.centroids.length;d++)e[d].error=e[d].size?e[d].error/e[d].size:null;return new R(this.clusters,e,this.converged,this.iterations,this[K])};var fa={maxIterations:100,tolerance:1E-6,withIterations:!1,initialization:"kmeans++",distanceFunction:U.squaredEuclidean};u.exports=function(d,e,h){h=Object.assign({},fa,h);if(0>=e||e>d.length||!Number.isInteger(e))throw Error("K should be a positive integer smaller than the number of points");
-if(Array.isArray(h.initialization)){if(h.initialization.length!==e)throw Error("The initial centers should have the same length as K");var u=h.initialization}else switch(h.initialization){case "kmeans++":var x=h;x=void 0===x?{}:x;u=new C.Matrix(d);var A=u.rows,D=new t(x.seed),K=[];x=x.localTrials||2+Math.floor(Math.log(e));var G=D.randInt(A);K.push(u.getRow(G));G=new C.Matrix(1,u.rows);for(var k=0;k<u.rows;k++)G.set(0,k,U.squaredEuclidean(u.getRow(k),K[0]));var B=[J(G.getRow(0))];B=C.Matrix.mul(G,
-1/B[0][A-1]);for(k=1;k<e;k++){B=D.choice(A,{replace:!0,size:x,probabilities:B[0]});for(var H=u.selection(B,I(u.columns)),R=u,M=new C.Matrix(H.rows,R.rows),V=0;V<H.rows;V++)for(var S=0;S<R.rows;S++)M.set(V,S,U.squaredEuclidean(H.getRow(V),R.getRow(S)));H=M;V=M=R=void 0;for(S=0;S<x;S++){var Z=C.Matrix.min(G,[H.getRow(S)]),aa=Z.sum();if(void 0===R||aa<M)R=B[S],M=aa,V=Z}K[k]=u.getRow(R);G=V;B=[J(G.getRow(0))];B=C.Matrix.mul(G,1/B[0][A-1])}u=K;break;case "random":u=(new t(h.seed)).choice(d,{size:e});break;
-case "mostDistant":u=h.distanceFunction;A=Array(d.length);for(D=0;D<d.length;++D)for(K=D;K<d.length;++K)A[D]||(A[D]=Array(d.length)),A[K]||(A[K]=Array(d.length)),x=u(d[D],d[K]),A[D][K]=x,A[K][D]=x;u=L(d,e,A,h.seed);break;default:throw Error('Unknown initialization method: "'+h.initialization+'"');}0===h.maxIterations&&(h.maxIterations=Number.MAX_VALUE);A=Array(d.length);if(h.withIterations)return E(u,d,A,e,h);D=!1;K=0;for(var W;!D&&K<h.maxIterations;)W=O(u,d,A,e,h,++K),D=W.converged,u=W.centroids;
-return W.computeInformation(d)}};
-shadow$provide[13]=function(d,e,u,h){function H(d,e,h){this.obj=d;this.right=this.left=null;this.parent=h;this.dimension=e}function G(d){var e=new H(d.obj,d.dimension,null);d.left&&(e.left=G(d.left));d.right&&(e.right=G(d.right));return e}function L(d,e,h,u){var t=e%u.length;if(0===d.length)return null;if(1===d.length)return new H(d[0],t,h);d.sort(function(d,e){return d[u[t]]-e[u[t]]});var C=Math.floor(d.length/2);h=new H(d[C],t,h);h.left=L(d.slice(0,C),e+1,h,u);h.right=L(d.slice(C+1),e+1,h,u);return h}
-function I(d){d.left&&(d.left.parent=d,I(d.left));d.right&&(d.right.parent=d,I(d.right))}function J(d,e){e=d.kdTree.nearest(e,d.k);var h={},t=-1,u=-1,C=e[0][0].length-1;d=$jscomp.makeIterator(d.classes);for(var x=d.next();!x.done;x=d.next())h[x.value]=0;for(d=0;d<e.length;++d){x=e[d][0][C];var A=++h[x];A>u&&(t=x,u=A)}return t}var O=e(2),E=function(d,e){if(Array.isArray(d)){this.dimensions=Array(d[0].length);for(var h=0;h<this.dimensions.length;h++)this.dimensions[h]=h;this.root=L(d,0,null,this.dimensions)}else this.dimensions=
-d.dimensions,this.root=d,I(this.root);this.metric=e};E.prototype.toJSON=function(){var d=G(this.root);d.dimensions=this.dimensions;return d};E.prototype.nearest=function(d,e,h){function t(h){var x=C[h.dimension],D=u(d,h.obj),G={},E;for(E=0;E<C.length;E+=1)G[C[E]]=E===h.dimension?d[C[E]]:h.obj[C[E]];G=u(G,h.obj);if(null===h.right&&null===h.left){if(A.size()<e||D<A.peek()[1])A.push([h,D]),A.size()>e&&A.pop()}else{x=null===h.right?h.left:null===h.left?h.right:d[x]<h.obj[x]?h.left:h.right;t(x);if(A.size()<
-e||D<A.peek()[1])A.push([h,D]),A.size()>e&&A.pop();if(A.size()<e||Math.abs(G)<A.peek()[1])h=x===h.left?h.right:h.left,null!==h&&t(h)}}var u=this.metric,C=this.dimensions,x,A=new U(function(d){return-d[1]});if(h)for(x=0;x<e;x+=1)A.push([null,h]);this.root&&t(this.root);h=[];for(x=0;x<Math.min(e,A.content.length);x+=1)A.content[x][0]&&h.push([A.content[x][0].obj,A.content[x][1]]);return h};var U=function(d){this.content=[];this.scoreFunction=d};U.prototype.push=function(d){this.content.push(d);this.bubbleUp(this.content.length-
-1)};U.prototype.pop=function(){var d=this.content[0],e=this.content.pop();0<this.content.length&&(this.content[0]=e,this.sinkDown(0));return d};U.prototype.peek=function(){return this.content[0]};U.prototype.size=function(){return this.content.length};U.prototype.bubbleUp=function(d){for(var e=this.content[d];0<d;){var h=Math.floor((d+1)/2)-1,t=this.content[h];if(this.scoreFunction(e)<this.scoreFunction(t))this.content[h]=e,this.content[d]=t,d=h;else break}};U.prototype.sinkDown=function(d){for(var e=
-this.content.length,h=this.content[d],t=this.scoreFunction(h);;){var u=2*(d+1),D=u-1,x=null;if(D<e){var A=this.scoreFunction(this.content[D]);A<t&&(x=D)}u<e&&this.scoreFunction(this.content[u])<(null===x?t:A)&&(x=u);if(null!==x)this.content[d]=this.content[x],this.content[x]=h,d=x;else break}};var M=function(d,e,h){h=void 0===h?{}:h;if(!0===d)this.kdTree=new E(e.kdTree,h),this.k=e.k,this.classes=new Set(e.classes),this.isEuclidean=e.isEuclidean;else{var t=new Set(e),u=h;h=void 0===u.distance?O.euclidean:
-u.distance;u=void 0===u.k?t.size+1:u.k;for(var C=Array(d.length),x=0;x<C.length;++x)C[x]=d[x].slice();for(x=0;x<e.length;++x)C[x].push(e[x]);this.kdTree=new E(C,h);this.k=u;this.classes=t;this.isEuclidean=h===O.euclidean}};M.load=function(d,e){e=void 0===e?O.euclidean:e;if("KNN"!==d.name)throw Error("invalid model: "+d.name);if(!d.isEuclidean&&e===O.euclidean)throw Error("a custom distance function was used to create the model. Please provide it again");if(d.isEuclidean&&e!==O.euclidean)throw Error("the model was created with the default distance function. Do not load it with another one");
-return new M(!0,d,e)};M.prototype.toJSON=function(){return{name:"KNN",kdTree:this.kdTree,k:this.k,classes:Array.from(this.classes),isEuclidean:this.isEuclidean}};M.prototype.predict=function(d){if(Array.isArray(d)){if("number"===typeof d[0])return J(this,d);if(Array.isArray(d[0])&&"number"===typeof d[0][0]){for(var e=Array(d.length),h=0;h<d.length;h++)e[h]=J(this,d[h]);return e}}throw new TypeError("dataset to predict must be an array or a matrix");};u.exports=M};
+shadow$provide[13]=function(d,f,z,h){function F(d,f,h){this.obj=d;this.right=this.left=null;this.parent=h;this.dimension=f}function I(d){var f=new F(d.obj,d.dimension,null);d.left&&(f.left=I(d.left));d.right&&(f.right=I(d.right));return f}function M(d,f,h,z){var B=f%z.length;if(0===d.length)return null;if(1===d.length)return new F(d[0],B,h);d.sort(function(d,f){return d[z[B]]-f[z[B]]});var H=Math.floor(d.length/2);h=new F(d[H],B,h);h.left=M(d.slice(0,H),f+1,h,z);h.right=M(d.slice(H+1),f+1,h,z);return h}
+function J(d){d.left&&(d.left.parent=d,J(d.left));d.right&&(d.right.parent=d,J(d.right))}function L(d,f){f=d.kdTree.nearest(f,d.k);var h={},B=-1,z=-1,H=f[0][0].length-1;d=$jscomp.makeIterator(d.classes);for(var u=d.next();!u.done;u=d.next())h[u.value]=0;for(d=0;d<f.length;++d){u=f[d][0][H];var C=++h[u];C>z&&(B=u,z=C)}return B}var U=f(1),V=function(d,f){if(Array.isArray(d)){this.dimensions=Array(d[0].length);for(var h=0;h<this.dimensions.length;h++)this.dimensions[h]=h;this.root=M(d,0,null,this.dimensions)}else this.dimensions=
+d.dimensions,this.root=d,J(this.root);this.metric=f};V.prototype.toJSON=function(){var d=I(this.root);d.dimensions=this.dimensions;return d};V.prototype.nearest=function(d,f,h){function B(h){var u=D[h.dimension],H=z(d,h.obj),F={},G;for(G=0;G<D.length;G+=1)F[D[G]]=G===h.dimension?d[D[G]]:h.obj[D[G]];F=z(F,h.obj);if(null===h.right&&null===h.left){if(C.size()<f||H<C.peek()[1])C.push([h,H]),C.size()>f&&C.pop()}else{u=null===h.right?h.left:null===h.left?h.right:d[u]<h.obj[u]?h.left:h.right;B(u);if(C.size()<
+f||H<C.peek()[1])C.push([h,H]),C.size()>f&&C.pop();if(C.size()<f||Math.abs(F)<C.peek()[1])h=u===h.left?h.right:h.left,null!==h&&B(h)}}var z=this.metric,D=this.dimensions,u,C=new Q(function(d){return-d[1]});if(h)for(u=0;u<f;u+=1)C.push([null,h]);this.root&&B(this.root);h=[];for(u=0;u<Math.min(f,C.content.length);u+=1)C.content[u][0]&&h.push([C.content[u][0].obj,C.content[u][1]]);return h};var Q=function(d){this.content=[];this.scoreFunction=d};Q.prototype.push=function(d){this.content.push(d);this.bubbleUp(this.content.length-
+1)};Q.prototype.pop=function(){var d=this.content[0],f=this.content.pop();0<this.content.length&&(this.content[0]=f,this.sinkDown(0));return d};Q.prototype.peek=function(){return this.content[0]};Q.prototype.size=function(){return this.content.length};Q.prototype.bubbleUp=function(d){for(var f=this.content[d];0<d;){var h=Math.floor((d+1)/2)-1,B=this.content[h];if(this.scoreFunction(f)<this.scoreFunction(B))this.content[h]=f,this.content[d]=B,d=h;else break}};Q.prototype.sinkDown=function(d){for(var f=
+this.content.length,h=this.content[d],B=this.scoreFunction(h);;){var z=2*(d+1),D=z-1,u=null;if(D<f){var C=this.scoreFunction(this.content[D]);C<B&&(u=D)}z<f&&this.scoreFunction(this.content[z])<(null===u?B:C)&&(u=z);if(null!==u)this.content[d]=this.content[u],this.content[u]=h,d=u;else break}};var N=function(d,f,h){h=void 0===h?{}:h;if(!0===d)this.kdTree=new V(f.kdTree,h),this.k=f.k,this.classes=new Set(f.classes),this.isEuclidean=f.isEuclidean;else{var z=new Set(f),B=h;h=void 0===B.distance?U.euclidean:
+B.distance;B=void 0===B.k?z.size+1:B.k;for(var D=Array(d.length),u=0;u<D.length;++u)D[u]=d[u].slice();for(u=0;u<f.length;++u)D[u].push(f[u]);this.kdTree=new V(D,h);this.k=B;this.classes=z;this.isEuclidean=h===U.euclidean}};N.load=function(d,f){f=void 0===f?U.euclidean:f;if("KNN"!==d.name)throw Error("invalid model: "+d.name);if(!d.isEuclidean&&f===U.euclidean)throw Error("a custom distance function was used to create the model. Please provide it again");if(d.isEuclidean&&f!==U.euclidean)throw Error("the model was created with the default distance function. Do not load it with another one");
+return new N(!0,d,f)};N.prototype.toJSON=function(){return{name:"KNN",kdTree:this.kdTree,k:this.k,classes:Array.from(this.classes),isEuclidean:this.isEuclidean}};N.prototype.predict=function(d){if(Array.isArray(d)){if("number"===typeof d[0])return L(this,d);if(Array.isArray(d[0])&&"number"===typeof d[0][0]){for(var f=Array(d.length),h=0;h<d.length;h++)f[h]=L(this,d[h]);return f}}throw new TypeError("dataset to predict must be an array or a matrix");};z.exports=N};
 var m, aa = this;
 function ba(a) {
   return "string" == typeof a;
@@ -7116,6 +7138,11 @@ function zk(a) {
 function Ak(a, b) {
   return 0 < a ? new yk(null, a, b, null) : Qf;
 }
+function BR(a) {
+  return new oj(null, function() {
+    return Xg(a.h ? a.h() : a.call(null), BR(a));
+  }, null, null);
+}
 var Bk = {};
 function Ck(a, b, c, d, e) {
   this.G = a;
@@ -12754,6 +12781,9 @@ function Yo(a) {
     }();
   }(nk(Uj));
 }
+function VS(a) {
+  return Math.floor(Math.random() * a);
+}
 function Zo(a, b) {
   return Ne(Qc(function(c, d) {
     var e = a.b ? a.b(d) : a.call(null, d);
@@ -13310,9 +13340,9 @@ m.ac = function(a, b) {
 };
 function yp() {
   function a() {
-    return Math.floor(16 * Math.random()).toString(16);
+    return VS(16).toString(16);
   }
-  var b = (8 | 3 & Math.floor(16 * Math.random())).toString(16);
+  var b = (8 | 3 & VS(16)).toString(16);
   return new xp([w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), "-", w.b(a()), w.b(a()), w.b(a()), w.b(a()), "-4", w.b(a()), w.b(a()), w.b(a()), "-", w.b(b), w.b(a()), w.b(a()), w.b(a()), "-", w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a()), w.b(a())].join("").toLowerCase());
 }
 function zp(a) {
@@ -13411,8 +13441,8 @@ new A(null, "end-line", "end-line", 1837326455), uq = new Df(null, "fn*", "fn*",
 Iq = new A(null, "circle", "circle", 1903212362), $V = new A("module.v1.data", "meta", "module.v1.data/meta", -1357989585), cp = new A(null, "descendants", "descendants", 1824886031), Jq = new A(null, "weaponRangePlus", "weaponRangePlus", -4828411), Kq = new A(null, "start", "start", -355208981), Lq = new A("module.v1.type", "weapons", "module.v1.type/weapons", -286398447), Oq = new Df(null, "meta114324", "meta114324", 1033462480, null), Pq = new Df(null, "opt-un", "opt-un", -1770993273, null), aW = 
 new A("module.v1.data", "events", "module.v1.data/events", -272059696), Qq = new Df("cljs.core", "deref", "cljs.core/deref", 1901963335, null), Rq = new A(null, "goals", "goals", -1712076283), X = new A(null, "recur", "recur", -437573268), Sq = new A("cljs.spec.alpha", "nil", "cljs.spec.alpha/nil", 1733813950), Tq = new A("cljs.spec.alpha", "kind-form", "cljs.spec.alpha/kind-form", -1047104697), Uq = new Df(null, "conform-into", "conform-into", -1039113729, null), Vq = new A(null, "begin-test-var", 
 "begin-test-var", -908571100), Wq = new A(null, "mandatory", "mandatory", 542802336), Xq = new A("tool.menuCursor", "menu", "tool.menuCursor/menu", -263609047), Yq = new A(null, "length", "length", 588987862), Zq = new A(null, "end-column", "end-column", 1425389514), $q = new Df("cljs.spec.alpha", "multi-spec", "cljs.spec.alpha/multi-spec", 175821274, null), ar = new A("tool.fsm", "state", "tool.fsm/state", 1294877879), br = new A(null, "return", "return", -1891502105), cr = new A(null, "sand", "sand", 
-1204438373), dr = new Df(null, "int?", "int?", 1799729645, null), er = new Df(null, "with-open", "with-open", 172119667, null), fr = new A(null, "terrain", "terrain", 704966005), gr = new A(null, "ps", "ps", 292358046), hr = new A("tool.units", "modelType", "tool.units/modelType", -264770405), ir = new A(null, "not-delivered", "not-delivered", 1599158697), jr = new Df(null, "if-not", "if-not", -265415609, null), kr = new Df("module.v1.session.battleMenu", "action", "module.v1.session.battleMenu/action", 
-1110776415, null), lr = new A(null, "clusters", "clusters", 273881275), mr = new Df("clojure.test.check.generators", "string-alphanumeric", "clojure.test.check.generators/string-alphanumeric", 836374939, null), nr = new Df(null, "meta119801", "meta119801", -1477254222, null), or = new A("module.v1.viewModel.spec", "menuCursor", "module.v1.viewModel.spec/menuCursor", -1569163329), pr = new A(null, "state", "state", -1988618099), qr = new A(null, "base-args", "base-args", -1268706822), rr = new A(null, 
+1204438373), dr = new Df(null, "int?", "int?", 1799729645, null), er = new Df(null, "with-open", "with-open", 172119667, null), fr = new A(null, "terrain", "terrain", 704966005), gr = new A(null, "ps", "ps", 292358046), hr = new A("tool.units", "modelType", "tool.units/modelType", -264770405), ir = new A(null, "not-delivered", "not-delivered", 1599158697), jr = new Df(null, "if-not", "if-not", -265415609, null), lr = new A(null, "clusters", "clusters", 273881275), kr = new Df("module.v1.session.battleMenu", 
+"action", "module.v1.session.battleMenu/action", 1110776415, null), mr = new Df("clojure.test.check.generators", "string-alphanumeric", "clojure.test.check.generators/string-alphanumeric", 836374939, null), nr = new Df(null, "meta119801", "meta119801", -1477254222, null), or = new A("module.v1.viewModel.spec", "menuCursor", "module.v1.viewModel.spec/menuCursor", -1569163329), pr = new A(null, "state", "state", -1988618099), qr = new A(null, "base-args", "base-args", -1268706822), rr = new A(null, 
 "itemKey", "itemKey", -369743230), sr = new Df("cljs.core", "unquote", "cljs.core/unquote", 1013085760, null), tr = new A("cljs.spec.alpha", "pred", "cljs.spec.alpha/pred", -798342594), qn = new A("cljs.core", "not-found", "cljs.core/not-found", -1572889185), ur = new A("module.v1.type", "returnCtx", "module.v1.type/returnCtx", -1237357739), vr = new A(null, "end-test-vars", "end-test-vars", -1394419713), wr = new A("tool.knn", "distance", "tool.knn/distance", -642298225), xr = new A(null, "attackAction", 
 "attackAction", 1390343791), yr = new Df("tool.units", "modelType", "tool.units/modelType", 1375761122, null), zr = new A("module.v1.system.spec", "unitsView", "module.v1.system.spec/unitsView", -1117820053), Ar = new Df(null, "module.v1.type", "module.v1.type", 1140624492, null), Br = new A(null, "def", "def", -1043430536), Cr = new Df(null, "dotimes", "dotimes", -818708397, null), Dr = new A(null, "players", "players", -1361554569), Er = new A("cljs.test", "block?", "cljs.test/block?", 686379965), 
 Fr = new Df(null, "max-count", "max-count", -1115250464, null), Gr = new A(null, "conform-keys", "conform-keys", -1800041814), Hr = new Df(null, "finally", "finally", -1065347064, null), Ir = new A(null, "dex", "dex", 1158931958), Jr = new Df(null, "/", "/", -1371932971, null), Kr = new A("module.v1.system.spec", "unitMenuView", "module.v1.system.spec/unitMenuView", -1206147361), Lr = new A(null, "buffering", "buffering", -876713613), Mr = new A(null, "gaite_sky", "gaite_sky", -1537357050), Nr = 
@@ -13421,8 +13451,8 @@ Ur = new Df("clojure.test.check.generators", "such-that", "clojure.test.check.ge
 -1570493991, null), as = new Df(null, "pred", "pred", -727012372, null), bs = new A("module.v1.system.spec", "mapsize", "module.v1.system.spec/mapsize", -882737047), cs = new Df(null, "locking", "locking", 1542862874, null), ds = new A(null, "sea", "sea", 1263489086), es = new Df("cljs.core", "constantly", "cljs.core/constantly", 119002258, null), fs = new A(null, "selectedUnits", "selectedUnits", -74222769), gs = new A(null, "directive", "directive", 793559132), hs = new Df(null, "map__119038", 
 "map__119038", -734212227, null), is = new A("module.v1.system.spec", "moveRange", "module.v1.system.spec/moveRange", 9493120), js = new Df(null, "kfn", "kfn", 729311001, null), ks = new Df("clojure.test.check.generators", "return", "clojure.test.check.generators/return", 1744522038, null), ls = new Df(null, "cform", "cform", 1319506748, null), ms = new A("module.v1.system.spec", "systemMenuView", "module.v1.system.spec/systemMenuView", 623730769), ns = new Df(null, "kind-form", "kind-form", 1155997457, 
 null), os = new A(null, "loop", "loop", -395552849), ps = new A(null, "seq", "seq", -1817803783), qs = new A(null, "v1", "v1", 513124261), rs = new A(null, "set", "set", 304602554), ss = new Df("cljs.core", "or", "cljs.core/or", 1201033885, null), ts = new A(null, "weapons", "weapons", -1983639898), us = new A("cljs.spec.alpha", "name", "cljs.spec.alpha/name", 205233570), vs = new A("module.v1.viewModel.spec", "data", "module.v1.viewModel.spec/data", -1769915255), ws = new Df("clojure.test.check.generators", 
-"shuffle", "clojure.test.check.generators/shuffle", 1032401055, null), xs = new A(null, "error", "error", -978969032), ys = new A(null, "base", "base", 185279322), zs = new A(null, "actual", "actual", 107306363), As = new A(null, "selected", "selected", 574897764), Bs = new A(null, "gundam", "gundam", 1909716752), Cs = new A("module.v1.system.spec", "startUnitsMenuView", "module.v1.system.spec/startUnitsMenuView", 940874245), Ds = new A("tool.kmeans", "distanceFunction", "tool.kmeans/distanceFunction", 
-325525656), Es = new A(null, "award", "award", -1781002392), Fs = new A(null, "trailing-white-space", "trailing-white-space", 1496006996), Gs = new Df(null, "letfn*", "letfn*", -110097810, null), Hs = new Df(null, "opt", "opt", 845825158, null), Is = new A("app.lobby.model", "weaponKey", "app.lobby.model/weaponKey", -1298487431), Js = new A(null, "prefix", "prefix", -265908465), Ks = new Df(null, "keyword?", "keyword?", 1917797069, null), Ls = new A(null, "maxBulletCount", "maxBulletCount", -2055872940), 
+"shuffle", "clojure.test.check.generators/shuffle", 1032401055, null), xs = new A(null, "error", "error", -978969032), ys = new A(null, "base", "base", 185279322), zs = new A(null, "actual", "actual", 107306363), As = new A(null, "selected", "selected", 574897764), Bs = new A(null, "gundam", "gundam", 1909716752), Ds = new A("tool.kmeans", "distanceFunction", "tool.kmeans/distanceFunction", 325525656), Cs = new A("module.v1.system.spec", "startUnitsMenuView", "module.v1.system.spec/startUnitsMenuView", 
+940874245), Es = new A(null, "award", "award", -1781002392), Fs = new A(null, "trailing-white-space", "trailing-white-space", 1496006996), Gs = new Df(null, "letfn*", "letfn*", -110097810, null), Hs = new Df(null, "opt", "opt", 845825158, null), Is = new A("app.lobby.model", "weaponKey", "app.lobby.model/weaponKey", -1298487431), Js = new A(null, "prefix", "prefix", -265908465), Ks = new Df(null, "keyword?", "keyword?", 1917797069, null), Ls = new A(null, "maxBulletCount", "maxBulletCount", -2055872940), 
 Ms = new Df(null, "unit", "unit", 2015706702, null), Ps = new A(null, "catch-exception", "catch-exception", -1997306795), Qs = new A(null, "right-params", "right-params", -1790676237), Rs = new A("module.v1.type", "robotKey", "module.v1.type/robotKey", -665318335), Ss = new A(null, "start-pos", "start-pos", 668789086), To = new A(null, "keyword-fn", "keyword-fn", -64566675), Ts = new Df(null, "distinct?", "distinct?", -1684357959, null), Us = new A(null, "first", "first", -644103046), Vs = new Df(null, 
 "let*", "let*", 1920721458, null), Ws = new A("module.v1.system.spec", "attackRange", "module.v1.system.spec/attackRange", 256985247), Xs = new A(null, "async", "async", 1050769601), Ys = new Df(null, "meta119170", "meta119170", -11729731, null), Zs = new Df(null, "last-was-whitespace?", "last-was-whitespace?", -1073928093, null), $s = new Df("cljs.spec.alpha", "*", "cljs.spec.alpha/*", -1238084288, null), at = new Df(null, "when-first", "when-first", 821699168, null), bt = new A(null, "evade", "evade", 
 -20204359), ct = new A(null, "fail", "fail", 1706214930), dt = new A("module.v1.type", "suitability", "module.v1.type/suitability", -1985441771), et = new Df("clojure.test.check.generators", "symbol", "clojure.test.check.generators/symbol", -1305461065, null), ft = new A("module.v1.system.spec", "menu", "module.v1.system.spec/menu", 13436423), gt = new A(null, "events", "events", 1792552201), ht = new A(null, "player", "player", -97687400), it = new A(null, "finally-block", "finally-block", 832982472), 
@@ -13434,44 +13464,44 @@ null), At = new Df(null, "opt-specs", "opt-specs", 1255626077, null), Bt = new D
 "pilots", 353525853), Vt = new A("module.v1.type", "player", "module.v1.type/player", -1826931901), Wt = new A(null, "right", "right", -452581833), Xt = new A(null, "focus", "focus", 234677911), Yt = new Df(null, "meta117023", "meta117023", 757875042, null), Zt = new A("module.v1.system.spec", "units", "module.v1.system.spec/units", -58490824), $t = new Df("cljs.core", "number?", "cljs.core/number?", -811857295, null), au = new Df(null, "when", "when", 1064114221, null), oK = new A("cljs.spec.alpha", 
 "failure", "cljs.spec.alpha/failure", 188258592), bu = new Df("cljs.spec.alpha", "coll-of", "cljs.spec.alpha/coll-of", 1019430407, null), cu = new A("module.v1.data", "data", "module.v1.data/data", -2060232314), du = new Df("cljs.core", "set?", "cljs.core/set?", -1176684971, null), eu = new A(null, "logical-blocks", "logical-blocks", -1466339776), fu = new A(null, "battleMenuSession", "battleMenuSession", 302984435), gu = new A("module.v1.type", "robot", "module.v1.type/robot", 137868169), hu = new A(null, 
 "colinc", "colinc", -584873385), iu = new Df("cljs.spec.alpha", "or", "cljs.spec.alpha/or", -831679639, null), ju = new A(null, "logical-block", "logical-block", -581022564), ku = new A("module.v1.system.spec", "mapView", "module.v1.system.spec/mapView", 648749079), lu = new A("module.v1.system.spec", "attackRangeView", "module.v1.system.spec/attackRangeView", -1454370638), mu = new A(null, "max-elements", "max-elements", 433034073), nu = new Df(null, "nil?", "nil?", 1612038930, null), ou = new Df("clojure.test.check.generators", 
-"vector", "clojure.test.check.generators/vector", 1081775325, null), pu = new A(null, "col", "col", -1959363084), qu = new Df(null, "or", "or", 1876275696, null), ru = new Df("tool.goal", "goalType", "tool.goal/goalType", 2798374, null), su = new Df(null, "min-count", "min-count", -1059726756, null), tu = new A(null, "current", "current", -1088038603), uu = new A(null, "writing", "writing", -1486865108), vu = new Df(null, "cursor", "cursor", -1642498285, null), wu = new A(null, "start-col", "start-col", 
-668080143), xu = new Df(null, "any?", "any?", -318999933, null), yu = new A(null, "into", "into", -150836029), zu = new A(null, "suppress-namespaces", "suppress-namespaces", 2130686956), bW = new A("module.v1.data", "attackAction", "module.v1.data/attackAction", -862949204), Au = new A("module.v1.viewModel.spec", "map", "module.v1.viewModel.spec/map", -899626197), Bu = new Df(null, "set!", "set!", 250714521, null), Cu = new A(null, "seed", "seed", 68613327), Du = new A(null, "energyCost", "energyCost", 
--1260494099), Eu = new A(null, "parent", "parent", -878878779), Fu = new A(null, "title", "title", 636505583), Gu = new A(null, "energy", "energy", 129856526), Hu = new A("module.v1.type", "componentKey", "module.v1.type/componentKey", 1605199558), Iu = new Df(null, "constantly", "constantly", -271143939, null), Ju = new A(null, "robot", "robot", 2102507998), Ku = new Df("cljs.core", "map?", "cljs.core/map?", -1390345523, null), Lu = new Df(null, "\x26", "\x26", -2144855648, null), Mu = new A(null, 
-"stack", "stack", -793405930), Nu = new A(null, "3", "3", 2097825370), Ou = new Df("clojure.test.check.generators", "fmap", "clojure.test.check.generators/fmap", 1957997092, null), Pu = new A(null, "1", "1", -521621649), Qu = new A(null, "2", "2", -1645882217), Ru = new A(null, "gaite_land", "gaite_land", 1268251356), Su = new A("cljs.test", "default", "cljs.test/default", -1581405322), Tu = new A("module.v1.viewModel.spec", "battleMenu", "module.v1.viewModel.spec/battleMenu", -160503332), Uu = new A(null, 
-"ex-kind", "ex-kind", 1581199296), Xu = new A("module.v1.data", "title", "module.v1.data/title", -1696476126), Yu = new Df(null, "meta117034", "meta117034", 552021212, null), Zu = new Df("cljs.core", "int?", "cljs.core/int?", 50730120, null), $u = new A(null, "right-bracket", "right-bracket", 951856080), av = new A(null, "cancel", "cancel", -1964088360), bv = new A("module.v1.data", "cost", "module.v1.data/cost", 869024214), cv = new A(null, "amp", "amp", 271690571), dv = new Df(null, "preds", "preds", 
-150921777, null), ev = new Df("clojure.test.check.generators", "elements", "clojure.test.check.generators/elements", 438991326, null), fv = new Df(null, "p1__119886#", "p1__119886#", -1814578370, null), gv = new A("cljs.spec.alpha", "cpred", "cljs.spec.alpha/cpred", -693471218), hv = new Df(null, "predx", "predx", 2063470948, null), iv = new Df("clojure.test.check.generators", "char", "clojure.test.check.generators/char", -1426343459, null), jv = new Df(null, "map__119477", "map__119477", 1862730345, 
-null), kv = new Df(null, "meta117067", "meta117067", -1924924763, null), lv = new Df(null, "-Inf", "-Inf", -2123243689, null), mv = new A("module.v1.type", "faction", "module.v1.type/faction", -709251669), nv = new A(null, "maxEn", "maxEn", -277477277), ov = new Df(null, "meta119483", "meta119483", -1261283300, null), pv = new Df("module.v1.phase.ai.default.goalType", "goalType", "module.v1.phase.ai.default.goalType/goalType", 43976211, null), qv = new Df("clojure.test.check.generators", "generator?", 
-"clojure.test.check.generators/generator?", -1378210460, null), rv = new A(null, "totalCost", "totalCost", 1838061113), wp = new A(null, "default", "default", -1987822328), sv = new Df("clojure.core", "deref", "clojure.core/deref", 188719157, null), tv = new A(null, "hill", "hill", -27655053), uv = new A(null, "padchar", "padchar", 2018584530), vv = new Df(null, "miser-width", "miser-width", 330482090, null), wv = new Df(null, "module.v1.session.battleMenu", "module.v1.session.battleMenu", 635292526, 
-null), xv = new A(null, "bulletCount", "bulletCount", 1743690935), yv = new Df(null, "meta119231", "meta119231", -1625655153, null), zv = new A(null, "moveRangePlus", "moveRangePlus", -587828073), Av = new Df(null, "meta117051", "meta117051", -925621852, null), Bv = new A("module.v1.viewModel.spec", "preview", "module.v1.viewModel.spec/preview", -2075819712), Cv = new A("module.v1.type", "range", "module.v1.type/range", 220566083), nc = new A(null, "print-length", "print-length", 1931866356), Dv = 
-new A(null, "nil", "nil", 99600501), Ev = new Df("clojure.test.check.generators", "uuid", "clojure.test.check.generators/uuid", 1589373144, null), Fv = new Df("s", "tuple", "s/tuple", 1167863840, null), Gv = new A(null, "buffer-block", "buffer-block", -10937307), Hv = new Df("cljs.spec.alpha", "tuple", "cljs.spec.alpha/tuple", -415901908, null), Iv = new A(null, "reader-exception", "reader-exception", -1938323098), Jv = new A(null, "cellState", "cellState", 1997102261), Kv = new A("app.lobby.model", 
-"weaponLevelByWeaponUpgradeKey", "app.lobby.model/weaponLevelByWeaponUpgradeKey", -1476218701), Lv = new A(null, "maybe", "maybe", -314397560), Mv = new A("module.v1.viewModel.spec", "moveRange", "module.v1.viewModel.spec/moveRange", 1982816843), Nv = new A(null, "remaining-arg-count", "remaining-arg-count", -1216589335), Ov = new A(null, "req-un", "req-un", 1074571008), Pv = new Df("cljs.core", "let", "cljs.core/let", -308701135, null), Qv = new A(null, "forms", "forms", 2045992350), Rv = new A(null, 
-"cur", "cur", 1153190599), Sv = new Df("cljs.spec.alpha", "and", "cljs.spec.alpha/and", -2060279705, null), Tv = new Df(null, "def", "def", 597100991, null), Uv = new A("module.v1.system.spec", "cursor", "module.v1.system.spec/cursor", 1224929779), Xo = new A(null, "keywordize-keys", "keywordize-keys", 1310784252), Vv = new A(null, "viewsize", "viewsize", 1871510407), Wv = new Df("cljs.core", "and", "cljs.core/and", -6692549, null), Xv = new A(null, "down", "down", 1565245570), Yv = new A(null, "pos", 
-"pos", -864607220), Zv = new A(null, "unitsAfter", "unitsAfter", -1147101185), $v = new A("module.v1.data", "terrain", "module.v1.data/terrain", -730631380), aw = new A("cljs.spec.alpha", "v", "cljs.spec.alpha/v", 552625740), bw = new A(null, "message", "message", -406056002), cw = new A("module.v1.type", "bulletCount", "module.v1.type/bulletCount", 12145902), dw = new A("tool.knn", "k", "tool.knn/k", 1147175324), ew = new A("cljs.spec.alpha", "k", "cljs.spec.alpha/k", -1602615178), fw = new A("module.v1.type", 
-"position", "module.v1.type/position", -1603714695), gw = new Df(null, "retag", "retag", 528972725, null), hw = new A(null, "testing-contexts", "testing-contexts", -1485646523), iw = new A(null, "commainterval", "commainterval", -1980061083), jw = new A(null, "robotByComponent", "robotByComponent", -1354204672), kw = new A(null, "separator", "separator", -1628749125), lw = new A(null, "weaponLevel", "weaponLevel", -31127032), mw = new Df(null, "dval", "dval", 835211877, null), nw = new Df("cljs.spec.alpha", 
-"alt", "cljs.spec.alpha/alt", -2130750332, null), ow = new A(null, "preview", "preview", 451279890), pw = new Df(null, "defonce", "defonce", -1681484013, null), qw = new Df("cljs.core", "sequential?", "cljs.core/sequential?", 1777854658, null), rw = new A(null, "continue-block", "continue-block", -1852047850), sw = new Df(null, "%", "%", -950237169, null), tw = new Df("clojure.test.check.generators", "one-of", "clojure.test.check.generators/one-of", -183339191, null), uw = new A(null, "pretty-writer", 
-"pretty-writer", -1222834267), vw = new Df(null, "..", "..", -300507420, null), ww = new A("module.v1.system.spec", "cursorView", "module.v1.system.spec/cursorView", 1021385988), xw = new A(null, "menu", "menu", 352255198), yw = new A("module.v1.system.spec", "checkHitRate", "module.v1.system.spec/checkHitRate", 1497948304), zw = new A(null, "component", "component", 1555936782), Aw = new A(null, "pretty", "pretty", -1916372486), Bw = new A(null, "buffer-level", "buffer-level", 928864731), Cw = new A(null, 
-"rup", "rup", 1419423120), Dw = new A(null, "max-tries-or-opts", "max-tries-or-opts", -609860571), Ew = new A(null, "summary", "summary", 380847952), Po = new A(null, "pending", "pending", -220036727), Fw = new A("cljs.spec.alpha", "invalid", "cljs.spec.alpha/invalid", -1220295119), Gw = new A("cljs.spec.alpha", "pcat", "cljs.spec.alpha/pcat", 26406623), yG = new A(null, "robtoState", "robtoState", 1013228657), Hw = new A(null, "each-fixtures", "each-fixtures", 802243977), Iw = new A(null, "faction", 
-"faction", 724804352), uS = new Df("module.v1.type", "gameplayCtx", "module.v1.type/gameplayCtx", -948067057, null), Jw = new Df("clojure.test.check.generators", "bind", "clojure.test.check.generators/bind", -361313906, null), jc = new A(null, "readably", "readably", 1129599760), Kw = new A("module.v1.data", "terrianItem", "module.v1.data/terrianItem", 1893390380), Lw = new A(null, "file", "file", -1269645878), Mw = new A(null, "moveTo", "moveTo", -1811437462), Nw = new A(null, "fill", "fill", 883462889), 
-Ow = new A(null, "rdown", "rdown", -677004416), Pw = new Df(null, "menuCursor", "menuCursor", -304055348, null), Qw = new A("module.v1.data", "damage", "module.v1.data/damage", -1628935027), Rw = new Df(null, "unc", "unc", -465250751, null), Sw = new A(null, "radix", "radix", 857016463), Tw = new A("module.v1.type", "robotState", "module.v1.type/robotState", 1610790385), Uw = new A("module.v1.type", "weaponLevel", "module.v1.type/weaponLevel", -1996552077), Vw = new Df(null, "kind", "kind", 923265724, 
-null), Ww = new A("module.v1.type", "unit", "module.v1.type/unit", 1845940938), Xw = new Df(null, "meta119405", "meta119405", 11835674, null), Yw = new A(null, "distinct", "distinct", -1788879121), Zw = new Df(null, "uuid", "uuid", -504564192, null), $w = new Df(null, "queue", "queue", -1198599890, null), ax = new A(null, "block", "block", 664686210), bx = new A(null, "pilotKey", "pilotKey", 563380320), cx = new A(null, "else", "else", -1508377146), dx = new Df(null, "case*", "case*", -1938255072, 
-null), ex = new Df("clojure.test.check.generators", "generate", "clojure.test.check.generators/generate", -690390711, null), fx = new Df("clojure.test.check.generators", "tuple", "clojure.test.check.generators/tuple", -143711557, null), gx = new A("app.lobby.model", "key", "app.lobby.model/key", -1830062111), hx = new A(null, "params", "params", 710516235), ix = new Df("cljs.core", "count", "cljs.core/count", -921270233, null), dp = new A(null, "ancestors", "ancestors", -776045424), jx = new A("module.v1.system.spec", 
-"menuCursor", "module.v1.system.spec/menuCursor", -1738154002), kx = new Df("clojure.test.check.generators", "frequency", "clojure.test.check.generators/frequency", 2090703177, null), lx = new A(null, "mapsize", "mapsize", -1621988348), mx = new Df(null, "struct-map", "struct-map", -1387540878, null), cW = new A("module.v1.type", "fsm", "module.v1.type/fsm", 15103719), nx = new A(null, "hitRate", "hitRate", 1282634223), ox = new A(null, "rest", "rest", -1241696419), px = new A(null, "min-remaining", 
-"min-remaining", 962687677), qx = new A(null, "targetUnit", "targetUnit", -1658156262), rx = new A("tool.kmeans", "option", "tool.kmeans/option", -971282937), sx = new A(null, "offset", "offset", 296498311), tx = new A("app.lobby.model", "componentKey", "app.lobby.model/componentKey", -115122625), ux = new A(null, "var", "var", -769682797), vx = new A(null, "commachar", "commachar", 652859327), wx = new A(null, "deepsea", "deepsea", 1112594925), xx = new A(null, "begin-test-ns", "begin-test-ns", 
--1701237033), yx = new Df("cljs.core", "\x3c\x3d", "cljs.core/\x3c\x3d", 1677001748, null), zx = new A("app.lobby.model", "pilotKey", "app.lobby.model/pilotKey", -231955044), Jo = new A(null, "val", "val", 128701612), Ax = new Df("cljs.core", "zipmap", "cljs.core/zipmap", -1902130674, null), Bx = new Df(null, "-\x3e", "-\x3e", -2139605430, null), Cx = new A(null, "checkHitRate", "checkHitRate", 1297780081), Dx = new Df(null, "p__119037", "p__119037", -1203707584, null), Ex = new A(null, "arglists", 
-"arglists", 1661989754), Fx = new Df(null, "js*", "js*", -1134233646, null), Gx = new A(null, "end-pos", "end-pos", -1643883926), Hx = new A("module.v1.system.spec", "map", "module.v1.system.spec/map", 636502774), Ix = new A(null, "weapon", "weapon", -504830232), Jx = new A(null, "pred-forms", "pred-forms", 172611832), Kx = new A("module.v1.system.spec", "fsm", "module.v1.system.spec/fsm", 733584453), Lx = new A(null, "pass", "pass", 1574159993), Mx = new Df(null, "catch", "catch", -1616370245, null), 
-Nx = new A("tool.units", "key", "tool.units/key", 293167822), Ox = new Df(null, "describe-form", "describe-form", -1410156588, null), Px = new A(null, "tree", "tree", -196312028), Qx = new A(null, "subcursor", "subcursor", -2024718872), Rx = new A("cljs.spec.alpha", "kvs-\x3emap", "cljs.spec.alpha/kvs-\x3emap", 579713455), Sx = new A(null, "kind", "kind", -717265803), Tx = new A(null, "enter", "enter", 1792452624), Ux = new A(null, "gen", "gen", 142575302), Vx = new Df(null, "tool.goal", "tool.goal", 
--1629335829, null), Wx = new A(null, "tempUnit", "tempUnit", 217874255), Xx = new A("module.v1.system.spec", "camera", "module.v1.system.spec/camera", -1394695710), Yx = new Df(null, "cnt", "cnt", 1924510325, null), Zx = new Df(null, "defn", "defn", -126010802, null), $x = new Df(null, "struct", "struct", 325972931, null), ay = new Df(null, "opt-keys", "opt-keys", -1391747508, null), by = new A("module.v1.type", "componentEntry", "module.v1.type/componentEntry", -982037207), cy = new A(null, "reporter", 
-"reporter", -805360621), dy = new Df(null, "method", "method", 1696235119, null), ey = new Df("tool.fsm", "currState", "tool.fsm/currState", 682546540, null), fy = new A(null, "gfn", "gfn", 791517474), gy = new Df(null, "check?", "check?", 409539557, null), hy = new Df("clojure.test.check.generators", "keyword", "clojure.test.check.generators/keyword", 24530530, null), iy = new A(null, "namespaced-map", "namespaced-map", 1235665380), jy = new A("cljs.spec.alpha", "accept", "cljs.spec.alpha/accept", 
-370988198), ky = new A(null, "max-tries", "max-tries", -1824441792), my = new A(null, "suitability", "suitability", 444786340), gG = new A(null, "deepSea", "deepSea", 1538262720), ny = new A(null, "transform", "transform", 1381301764), oy = new A(null, "req-opt", "req-opt", -1521083624), py = new A("cljs.test", "async-disabled", "cljs.test/async-disabled", -772095377), qy = new A(null, "tag", "tag", -1290361223), ry = new A("app.lobby.model", "robots", "app.lobby.model/robots", -255913043), sy = 
-new A(null, "linear", "linear", 872268697), ty = new Df(null, "new", "new", -444906321, null), az = new A(null, "dead", "dead", -1946604091), bz = new Df(null, "meta115784", "meta115784", -114586689, null), cz = new A(null, "componentKey", "componentKey", 142306323), dz = new A(null, "sections", "sections", -886710106), ez = new A(null, "lines", "lines", -700165781), fz = new A(null, "playerState", "playerState", -1522189795), gz = new Df(null, "do", "do", 1686842252, null), hz = new A(null, "colon", 
-"colon", -965200945), iz = new Df(null, "p__119476", "p__119476", -1214183213, null), jz = new A(null, "keys-pred", "keys-pred", 858984739), kz = new A(null, "num-elements", "num-elements", 1960422107), lz = new A("module.v1.type", "gameplayCtx", "module.v1.type/gameplayCtx", 1706368712), mz = new A(null, "testing-vars", "testing-vars", -2114769150), nz = new Df(null, "cpred?", "cpred?", 35589515, null), oz = new A("app.lobby.model", "money", "app.lobby.model/money", -1037844059), pz = new A(null, 
-"itemState", "itemState", 1418087458), qz = new A(null, "test", "test", 577538877), rz = new A(null, "minpad", "minpad", 323570901), sz = new A("app.lobby.model", "pilots", "app.lobby.model/pilots", -995523687), xo = new A(null, "alt-impl", "alt-impl", 670969595), tz = new Df("clojure.test.check.generators", "symbol-ns", "clojure.test.check.generators/symbol-ns", -862629490, null), uz = new Df(null, "meta114468", "meta114468", 989726749, null), vz = new A(null, "tags", "tags", 1771418977), wz = new Df("cljs.spec.alpha", 
-"keys", "cljs.spec.alpha/keys", 1109346032, null), xz = new A("tool.kmeans", "tolerance", "tool.kmeans/tolerance", -688519791), yz = new A(null, "path", "path", -188191168), zz = new Df(null, "with-local-vars", "with-local-vars", 837642072, null), Az = new A(null, "formatter", "formatter", -483008823), Bz = new Df(null, "form", "form", 16469056, null), Cz = new A(null, "min-elements", "min-elements", 949370780), Dz = new Df(null, "req-un", "req-un", -1579864761, null), Ez = new Df(null, "and", "and", 
-668631710, null), Fz = new Df(null, "meta119904", "meta119904", -1829158884, null), Gz = new Df(null, "req-specs", "req-specs", -2100473456, null), Hz = new Df("clojure.test.check.generators", "large-integer*", "clojure.test.check.generators/large-integer*", -437830670, null), Iz = new A("tool.units", "position", "tool.units/position", -735233073), Jz = new A(null, "tail", "tail", -1146023564), Kz = new Df(null, "try", "try", -1273693247, null), Lz = new Df(null, "specs", "specs", -1227865028, null), 
-Mz = new Df(null, "req-keys", "req-keys", -2140116548, null), Nz = new A("module.v1.system.spec", "weaponIdx", "module.v1.system.spec/weaponIdx", 1605634731), Oz = new Df(null, "throw", "throw", 595905694, null), Pz = new A("module.v1.type", "units", "module.v1.type/units", -945841002), Qz = new A(null, "playerTurn?", "playerTurn?", 2137238772), Rz = new A(null, "via", "via", -1904457336), Sz = new Df("clojure.test.check.generators", "keyword-ns", "clojure.test.check.generators/keyword-ns", -1492628482, 
-null), Tz = new A(null, "pilot", "pilot", -1812704347), Uz = new A("module.v1.session.battleMenu", "hitRate", "module.v1.session.battleMenu/hitRate", -1852343537), Vz = new Df(null, "let", "let", 358118826, null), Wz = new A("tool.kmeans", "initialization", "tool.kmeans/initialization", -1154461689), Xz = new Df("clojure.test.check.generators", "choose", "clojure.test.check.generators/choose", 909997832, null), ic = new A(null, "flush-on-newline", "flush-on-newline", -151457939), Yz = new Df(null, 
-"ctx", "ctx", 1146921409, null), Zz = new A(null, "opt-specs", "opt-specs", -384905450), $z = new A("module.v1.system.spec", "cellStateView", "module.v1.system.spec/cellStateView", -894192037), aA = new A("module.v1.phase.ai.default.goalType", "goal", "module.v1.phase.ai.default.goalType/goal", 1788451727), bA = new A(null, "after", "after", 594996914), cA = new A(null, "robots", "robots", -1582878607), dA = new A("module.v1.system.spec", "positions", "module.v1.system.spec/positions", -1050371371), 
-eA = new A(null, "pred-exprs", "pred-exprs", 1792271395), fA = new A(null, "energyType", "energyType", -1124163545), gA = new Df(null, "id", "id", 252129435, null), hA = new Df(null, "keys", "keys", -1586012071, null), iA = new Df(null, "if", "if", 1181717262, null), jA = new A(null, "character", "character", 380652989), kA = new A("cljs.spec.alpha", "kfn", "cljs.spec.alpha/kfn", 672643897), lA = new A("tool.kmeans", "size", "tool.kmeans/size", 12970054), mA = new Df("clojure.test.check.generators", 
+"vector", "clojure.test.check.generators/vector", 1081775325, null), pu = new A(null, "col", "col", -1959363084), qu = new Df(null, "or", "or", 1876275696, null), ru = new Df("tool.goal", "goalType", "tool.goal/goalType", 2798374, null), su = new Df(null, "min-count", "min-count", -1059726756, null), tu = new A(null, "current", "current", -1088038603), uu = new A(null, "writing", "writing", -1486865108), WS = new A(null, "initialization", "initialization", -77103026), vu = new Df(null, "cursor", 
+"cursor", -1642498285, null), wu = new A(null, "start-col", "start-col", 668080143), xu = new Df(null, "any?", "any?", -318999933, null), yu = new A(null, "into", "into", -150836029), zu = new A(null, "suppress-namespaces", "suppress-namespaces", 2130686956), bW = new A("module.v1.data", "attackAction", "module.v1.data/attackAction", -862949204), Au = new A("module.v1.viewModel.spec", "map", "module.v1.viewModel.spec/map", -899626197), Bu = new Df(null, "set!", "set!", 250714521, null), Cu = new A(null, 
+"seed", "seed", 68613327), Du = new A(null, "energyCost", "energyCost", -1260494099), Eu = new A(null, "parent", "parent", -878878779), Fu = new A(null, "title", "title", 636505583), Gu = new A(null, "energy", "energy", 129856526), Hu = new A("module.v1.type", "componentKey", "module.v1.type/componentKey", 1605199558), Iu = new Df(null, "constantly", "constantly", -271143939, null), Ju = new A(null, "robot", "robot", 2102507998), Ku = new Df("cljs.core", "map?", "cljs.core/map?", -1390345523, null), 
+Lu = new Df(null, "\x26", "\x26", -2144855648, null), Mu = new A(null, "stack", "stack", -793405930), Nu = new A(null, "3", "3", 2097825370), Ou = new Df("clojure.test.check.generators", "fmap", "clojure.test.check.generators/fmap", 1957997092, null), Pu = new A(null, "1", "1", -521621649), Qu = new A(null, "2", "2", -1645882217), Ru = new A(null, "gaite_land", "gaite_land", 1268251356), Su = new A("cljs.test", "default", "cljs.test/default", -1581405322), Tu = new A("module.v1.viewModel.spec", "battleMenu", 
+"module.v1.viewModel.spec/battleMenu", -160503332), Uu = new A(null, "ex-kind", "ex-kind", 1581199296), Xu = new A("module.v1.data", "title", "module.v1.data/title", -1696476126), Yu = new Df(null, "meta117034", "meta117034", 552021212, null), Zu = new Df("cljs.core", "int?", "cljs.core/int?", 50730120, null), $u = new A(null, "right-bracket", "right-bracket", 951856080), av = new A(null, "cancel", "cancel", -1964088360), bv = new A("module.v1.data", "cost", "module.v1.data/cost", 869024214), cv = 
+new A(null, "amp", "amp", 271690571), dv = new Df(null, "preds", "preds", 150921777, null), ev = new Df("clojure.test.check.generators", "elements", "clojure.test.check.generators/elements", 438991326, null), fv = new Df(null, "p1__119886#", "p1__119886#", -1814578370, null), gv = new A("cljs.spec.alpha", "cpred", "cljs.spec.alpha/cpred", -693471218), hv = new Df(null, "predx", "predx", 2063470948, null), iv = new Df("clojure.test.check.generators", "char", "clojure.test.check.generators/char", -1426343459, 
+null), jv = new Df(null, "map__119477", "map__119477", 1862730345, null), kv = new Df(null, "meta117067", "meta117067", -1924924763, null), lv = new Df(null, "-Inf", "-Inf", -2123243689, null), mv = new A("module.v1.type", "faction", "module.v1.type/faction", -709251669), nv = new A(null, "maxEn", "maxEn", -277477277), ov = new Df(null, "meta119483", "meta119483", -1261283300, null), pv = new Df("module.v1.phase.ai.default.goalType", "goalType", "module.v1.phase.ai.default.goalType/goalType", 43976211, 
+null), qv = new Df("clojure.test.check.generators", "generator?", "clojure.test.check.generators/generator?", -1378210460, null), rv = new A(null, "totalCost", "totalCost", 1838061113), wp = new A(null, "default", "default", -1987822328), sv = new Df("clojure.core", "deref", "clojure.core/deref", 188719157, null), tv = new A(null, "hill", "hill", -27655053), uv = new A(null, "padchar", "padchar", 2018584530), vv = new Df(null, "miser-width", "miser-width", 330482090, null), wv = new Df(null, "module.v1.session.battleMenu", 
+"module.v1.session.battleMenu", 635292526, null), xv = new A(null, "bulletCount", "bulletCount", 1743690935), yv = new Df(null, "meta119231", "meta119231", -1625655153, null), zv = new A(null, "moveRangePlus", "moveRangePlus", -587828073), Av = new Df(null, "meta117051", "meta117051", -925621852, null), Bv = new A("module.v1.viewModel.spec", "preview", "module.v1.viewModel.spec/preview", -2075819712), Cv = new A("module.v1.type", "range", "module.v1.type/range", 220566083), nc = new A(null, "print-length", 
+"print-length", 1931866356), Dv = new A(null, "nil", "nil", 99600501), Ev = new Df("clojure.test.check.generators", "uuid", "clojure.test.check.generators/uuid", 1589373144, null), Fv = new Df("s", "tuple", "s/tuple", 1167863840, null), Gv = new A(null, "buffer-block", "buffer-block", -10937307), Hv = new Df("cljs.spec.alpha", "tuple", "cljs.spec.alpha/tuple", -415901908, null), Iv = new A(null, "reader-exception", "reader-exception", -1938323098), Jv = new A(null, "cellState", "cellState", 1997102261), 
+Kv = new A("app.lobby.model", "weaponLevelByWeaponUpgradeKey", "app.lobby.model/weaponLevelByWeaponUpgradeKey", -1476218701), Lv = new A(null, "maybe", "maybe", -314397560), Mv = new A("module.v1.viewModel.spec", "moveRange", "module.v1.viewModel.spec/moveRange", 1982816843), Nv = new A(null, "remaining-arg-count", "remaining-arg-count", -1216589335), Ov = new A(null, "req-un", "req-un", 1074571008), Pv = new Df("cljs.core", "let", "cljs.core/let", -308701135, null), Qv = new A(null, "forms", "forms", 
+2045992350), Rv = new A(null, "cur", "cur", 1153190599), Sv = new Df("cljs.spec.alpha", "and", "cljs.spec.alpha/and", -2060279705, null), Tv = new Df(null, "def", "def", 597100991, null), Uv = new A("module.v1.system.spec", "cursor", "module.v1.system.spec/cursor", 1224929779), Xo = new A(null, "keywordize-keys", "keywordize-keys", 1310784252), Vv = new A(null, "viewsize", "viewsize", 1871510407), Wv = new Df("cljs.core", "and", "cljs.core/and", -6692549, null), Xv = new A(null, "down", "down", 1565245570), 
+Yv = new A(null, "pos", "pos", -864607220), Zv = new A(null, "unitsAfter", "unitsAfter", -1147101185), $v = new A("module.v1.data", "terrain", "module.v1.data/terrain", -730631380), aw = new A("cljs.spec.alpha", "v", "cljs.spec.alpha/v", 552625740), bw = new A(null, "message", "message", -406056002), cw = new A("module.v1.type", "bulletCount", "module.v1.type/bulletCount", 12145902), dw = new A("tool.knn", "k", "tool.knn/k", 1147175324), ew = new A("cljs.spec.alpha", "k", "cljs.spec.alpha/k", -1602615178), 
+fw = new A("module.v1.type", "position", "module.v1.type/position", -1603714695), gw = new Df(null, "retag", "retag", 528972725, null), hw = new A(null, "testing-contexts", "testing-contexts", -1485646523), iw = new A(null, "commainterval", "commainterval", -1980061083), jw = new A(null, "robotByComponent", "robotByComponent", -1354204672), kw = new A(null, "separator", "separator", -1628749125), lw = new A(null, "weaponLevel", "weaponLevel", -31127032), mw = new Df(null, "dval", "dval", 835211877, 
+null), nw = new Df("cljs.spec.alpha", "alt", "cljs.spec.alpha/alt", -2130750332, null), ow = new A(null, "preview", "preview", 451279890), pw = new Df(null, "defonce", "defonce", -1681484013, null), qw = new Df("cljs.core", "sequential?", "cljs.core/sequential?", 1777854658, null), rw = new A(null, "continue-block", "continue-block", -1852047850), sw = new Df(null, "%", "%", -950237169, null), tw = new Df("clojure.test.check.generators", "one-of", "clojure.test.check.generators/one-of", -183339191, 
+null), uw = new A(null, "pretty-writer", "pretty-writer", -1222834267), vw = new Df(null, "..", "..", -300507420, null), ww = new A("module.v1.system.spec", "cursorView", "module.v1.system.spec/cursorView", 1021385988), xw = new A(null, "menu", "menu", 352255198), yw = new A("module.v1.system.spec", "checkHitRate", "module.v1.system.spec/checkHitRate", 1497948304), zw = new A(null, "component", "component", 1555936782), Aw = new A(null, "pretty", "pretty", -1916372486), Bw = new A(null, "buffer-level", 
+"buffer-level", 928864731), Cw = new A(null, "rup", "rup", 1419423120), Dw = new A(null, "max-tries-or-opts", "max-tries-or-opts", -609860571), Ew = new A(null, "summary", "summary", 380847952), Po = new A(null, "pending", "pending", -220036727), Fw = new A("cljs.spec.alpha", "invalid", "cljs.spec.alpha/invalid", -1220295119), Gw = new A("cljs.spec.alpha", "pcat", "cljs.spec.alpha/pcat", 26406623), yG = new A(null, "robtoState", "robtoState", 1013228657), Hw = new A(null, "each-fixtures", "each-fixtures", 
+802243977), Iw = new A(null, "faction", "faction", 724804352), uS = new Df("module.v1.type", "gameplayCtx", "module.v1.type/gameplayCtx", -948067057, null), Jw = new Df("clojure.test.check.generators", "bind", "clojure.test.check.generators/bind", -361313906, null), jc = new A(null, "readably", "readably", 1129599760), Kw = new A("module.v1.data", "terrianItem", "module.v1.data/terrianItem", 1893390380), Lw = new A(null, "file", "file", -1269645878), Mw = new A(null, "moveTo", "moveTo", -1811437462), 
+Nw = new A(null, "fill", "fill", 883462889), Ow = new A(null, "rdown", "rdown", -677004416), Pw = new Df(null, "menuCursor", "menuCursor", -304055348, null), Qw = new A("module.v1.data", "damage", "module.v1.data/damage", -1628935027), Rw = new Df(null, "unc", "unc", -465250751, null), Sw = new A(null, "radix", "radix", 857016463), Tw = new A("module.v1.type", "robotState", "module.v1.type/robotState", 1610790385), Uw = new A("module.v1.type", "weaponLevel", "module.v1.type/weaponLevel", -1996552077), 
+Vw = new Df(null, "kind", "kind", 923265724, null), Ww = new A("module.v1.type", "unit", "module.v1.type/unit", 1845940938), Xw = new Df(null, "meta119405", "meta119405", 11835674, null), Yw = new A(null, "distinct", "distinct", -1788879121), Zw = new Df(null, "uuid", "uuid", -504564192, null), $w = new Df(null, "queue", "queue", -1198599890, null), ax = new A(null, "block", "block", 664686210), bx = new A(null, "pilotKey", "pilotKey", 563380320), cx = new A(null, "else", "else", -1508377146), dx = 
+new Df(null, "case*", "case*", -1938255072, null), ex = new Df("clojure.test.check.generators", "generate", "clojure.test.check.generators/generate", -690390711, null), fx = new Df("clojure.test.check.generators", "tuple", "clojure.test.check.generators/tuple", -143711557, null), gx = new A("app.lobby.model", "key", "app.lobby.model/key", -1830062111), hx = new A(null, "params", "params", 710516235), ix = new Df("cljs.core", "count", "cljs.core/count", -921270233, null), dp = new A(null, "ancestors", 
+"ancestors", -776045424), jx = new A("module.v1.system.spec", "menuCursor", "module.v1.system.spec/menuCursor", -1738154002), kx = new Df("clojure.test.check.generators", "frequency", "clojure.test.check.generators/frequency", 2090703177, null), lx = new A(null, "mapsize", "mapsize", -1621988348), mx = new Df(null, "struct-map", "struct-map", -1387540878, null), cW = new A("module.v1.type", "fsm", "module.v1.type/fsm", 15103719), nx = new A(null, "hitRate", "hitRate", 1282634223), ox = new A(null, 
+"rest", "rest", -1241696419), px = new A(null, "min-remaining", "min-remaining", 962687677), rx = new A("tool.kmeans", "option", "tool.kmeans/option", -971282937), qx = new A(null, "targetUnit", "targetUnit", -1658156262), sx = new A(null, "offset", "offset", 296498311), tx = new A("app.lobby.model", "componentKey", "app.lobby.model/componentKey", -115122625), ux = new A(null, "var", "var", -769682797), vx = new A(null, "commachar", "commachar", 652859327), wx = new A(null, "deepsea", "deepsea", 
+1112594925), xx = new A(null, "begin-test-ns", "begin-test-ns", -1701237033), yx = new Df("cljs.core", "\x3c\x3d", "cljs.core/\x3c\x3d", 1677001748, null), zx = new A("app.lobby.model", "pilotKey", "app.lobby.model/pilotKey", -231955044), Jo = new A(null, "val", "val", 128701612), Ax = new Df("cljs.core", "zipmap", "cljs.core/zipmap", -1902130674, null), Bx = new Df(null, "-\x3e", "-\x3e", -2139605430, null), Cx = new A(null, "checkHitRate", "checkHitRate", 1297780081), Dx = new Df(null, "p__119037", 
+"p__119037", -1203707584, null), Ex = new A(null, "arglists", "arglists", 1661989754), Fx = new Df(null, "js*", "js*", -1134233646, null), Gx = new A(null, "end-pos", "end-pos", -1643883926), Hx = new A("module.v1.system.spec", "map", "module.v1.system.spec/map", 636502774), Ix = new A(null, "weapon", "weapon", -504830232), Jx = new A(null, "pred-forms", "pred-forms", 172611832), Kx = new A("module.v1.system.spec", "fsm", "module.v1.system.spec/fsm", 733584453), Lx = new A(null, "pass", "pass", 1574159993), 
+Mx = new Df(null, "catch", "catch", -1616370245, null), Nx = new A("tool.units", "key", "tool.units/key", 293167822), Ox = new Df(null, "describe-form", "describe-form", -1410156588, null), Px = new A(null, "tree", "tree", -196312028), Qx = new A(null, "subcursor", "subcursor", -2024718872), Rx = new A("cljs.spec.alpha", "kvs-\x3emap", "cljs.spec.alpha/kvs-\x3emap", 579713455), Sx = new A(null, "kind", "kind", -717265803), Tx = new A(null, "enter", "enter", 1792452624), Ux = new A(null, "gen", "gen", 
+142575302), Vx = new Df(null, "tool.goal", "tool.goal", -1629335829, null), Wx = new A(null, "tempUnit", "tempUnit", 217874255), Xx = new A("module.v1.system.spec", "camera", "module.v1.system.spec/camera", -1394695710), Yx = new Df(null, "cnt", "cnt", 1924510325, null), Zx = new Df(null, "defn", "defn", -126010802, null), $x = new Df(null, "struct", "struct", 325972931, null), ay = new Df(null, "opt-keys", "opt-keys", -1391747508, null), by = new A("module.v1.type", "componentEntry", "module.v1.type/componentEntry", 
+-982037207), cy = new A(null, "reporter", "reporter", -805360621), dy = new Df(null, "method", "method", 1696235119, null), ey = new Df("tool.fsm", "currState", "tool.fsm/currState", 682546540, null), fy = new A(null, "gfn", "gfn", 791517474), gy = new Df(null, "check?", "check?", 409539557, null), hy = new Df("clojure.test.check.generators", "keyword", "clojure.test.check.generators/keyword", 24530530, null), iy = new A(null, "namespaced-map", "namespaced-map", 1235665380), jy = new A("cljs.spec.alpha", 
+"accept", "cljs.spec.alpha/accept", 370988198), ky = new A(null, "max-tries", "max-tries", -1824441792), my = new A(null, "suitability", "suitability", 444786340), gG = new A(null, "deepSea", "deepSea", 1538262720), ny = new A(null, "transform", "transform", 1381301764), oy = new A(null, "req-opt", "req-opt", -1521083624), py = new A("cljs.test", "async-disabled", "cljs.test/async-disabled", -772095377), qy = new A(null, "tag", "tag", -1290361223), ry = new A("app.lobby.model", "robots", "app.lobby.model/robots", 
+-255913043), sy = new A(null, "linear", "linear", 872268697), ty = new Df(null, "new", "new", -444906321, null), az = new A(null, "dead", "dead", -1946604091), bz = new Df(null, "meta115784", "meta115784", -114586689, null), cz = new A(null, "componentKey", "componentKey", 142306323), dz = new A(null, "sections", "sections", -886710106), ez = new A(null, "lines", "lines", -700165781), fz = new A(null, "playerState", "playerState", -1522189795), gz = new Df(null, "do", "do", 1686842252, null), hz = 
+new A(null, "colon", "colon", -965200945), iz = new Df(null, "p__119476", "p__119476", -1214183213, null), jz = new A(null, "keys-pred", "keys-pred", 858984739), kz = new A(null, "num-elements", "num-elements", 1960422107), lz = new A("module.v1.type", "gameplayCtx", "module.v1.type/gameplayCtx", 1706368712), mz = new A(null, "testing-vars", "testing-vars", -2114769150), nz = new Df(null, "cpred?", "cpred?", 35589515, null), oz = new A("app.lobby.model", "money", "app.lobby.model/money", -1037844059), 
+pz = new A(null, "itemState", "itemState", 1418087458), qz = new A(null, "test", "test", 577538877), rz = new A(null, "minpad", "minpad", 323570901), sz = new A("app.lobby.model", "pilots", "app.lobby.model/pilots", -995523687), xo = new A(null, "alt-impl", "alt-impl", 670969595), tz = new Df("clojure.test.check.generators", "symbol-ns", "clojure.test.check.generators/symbol-ns", -862629490, null), uz = new Df(null, "meta114468", "meta114468", 989726749, null), vz = new A(null, "tags", "tags", 1771418977), 
+wz = new Df("cljs.spec.alpha", "keys", "cljs.spec.alpha/keys", 1109346032, null), xz = new A("tool.kmeans", "tolerance", "tool.kmeans/tolerance", -688519791), yz = new A(null, "path", "path", -188191168), zz = new Df(null, "with-local-vars", "with-local-vars", 837642072, null), Az = new A(null, "formatter", "formatter", -483008823), Bz = new Df(null, "form", "form", 16469056, null), Cz = new A(null, "min-elements", "min-elements", 949370780), Dz = new Df(null, "req-un", "req-un", -1579864761, null), 
+Ez = new Df(null, "and", "and", 668631710, null), Fz = new Df(null, "meta119904", "meta119904", -1829158884, null), Gz = new Df(null, "req-specs", "req-specs", -2100473456, null), Hz = new Df("clojure.test.check.generators", "large-integer*", "clojure.test.check.generators/large-integer*", -437830670, null), Iz = new A("tool.units", "position", "tool.units/position", -735233073), Jz = new A(null, "tail", "tail", -1146023564), Kz = new Df(null, "try", "try", -1273693247, null), Lz = new Df(null, "specs", 
+"specs", -1227865028, null), Mz = new Df(null, "req-keys", "req-keys", -2140116548, null), Nz = new A("module.v1.system.spec", "weaponIdx", "module.v1.system.spec/weaponIdx", 1605634731), Oz = new Df(null, "throw", "throw", 595905694, null), Pz = new A("module.v1.type", "units", "module.v1.type/units", -945841002), Qz = new A(null, "playerTurn?", "playerTurn?", 2137238772), Rz = new A(null, "via", "via", -1904457336), Sz = new Df("clojure.test.check.generators", "keyword-ns", "clojure.test.check.generators/keyword-ns", 
+-1492628482, null), Tz = new A(null, "pilot", "pilot", -1812704347), Uz = new A("module.v1.session.battleMenu", "hitRate", "module.v1.session.battleMenu/hitRate", -1852343537), Vz = new Df(null, "let", "let", 358118826, null), Wz = new A("tool.kmeans", "initialization", "tool.kmeans/initialization", -1154461689), Xz = new Df("clojure.test.check.generators", "choose", "clojure.test.check.generators/choose", 909997832, null), ic = new A(null, "flush-on-newline", "flush-on-newline", -151457939), Yz = 
+new Df(null, "ctx", "ctx", 1146921409, null), Zz = new A(null, "opt-specs", "opt-specs", -384905450), $z = new A("module.v1.system.spec", "cellStateView", "module.v1.system.spec/cellStateView", -894192037), aA = new A("module.v1.phase.ai.default.goalType", "goal", "module.v1.phase.ai.default.goalType/goal", 1788451727), bA = new A(null, "after", "after", 594996914), cA = new A(null, "robots", "robots", -1582878607), dA = new A("module.v1.system.spec", "positions", "module.v1.system.spec/positions", 
+-1050371371), eA = new A(null, "pred-exprs", "pred-exprs", 1792271395), fA = new A(null, "energyType", "energyType", -1124163545), gA = new Df(null, "id", "id", 252129435, null), hA = new Df(null, "keys", "keys", -1586012071, null), iA = new Df(null, "if", "if", 1181717262, null), jA = new A(null, "character", "character", 380652989), kA = new A("cljs.spec.alpha", "kfn", "cljs.spec.alpha/kfn", 672643897), lA = new A("tool.kmeans", "size", "tool.kmeans/size", 12970054), mA = new Df("clojure.test.check.generators", 
 "map", "clojure.test.check.generators/map", 45738796, null), nA = new Df(null, "loop*", "loop*", 615029416, null), oA = new A(null, "before", "before", -1633692388), pA = new Df(null, "conform-all", "conform-all", -980179459, null), dW = new A("module.v1.data", "reactionResult", "module.v1.data/reactionResult", -535335845), qA = new A(null, "min-count", "min-count", 1594709013), rA = new A(null, "sync", "sync", -624148946), sA = new A(null, "last", "last", 1105735132), tA = new A("module.v1.type", 
 "item", "module.v1.type/item", -1106839101), uA = new Df(null, "quote", "quote", 1377916282, null), vA = new A(null, "NaN?", "NaN?", -1917767651), wA = new Df("cljs.core", "vector?", "cljs.core/vector?", -1550392028, null), xA = new Df("cljs.core", "lift-ns", "cljs.core/lift-ns", 463499081, null), yA = new Df(null, "gen-into", "gen-into", 592640985, null), zA = new Df(null, "meta114824", "meta114824", 1028411735, null), AA = new A(null, "k", "k", -2146297393), BA = new A(null, "hierarchy", "hierarchy", 
 -1053470341), CA = new A("module.v1.system.spec", "battleMenuView", "module.v1.system.spec/battleMenuView", 769198982), DA = new A("cljs.spec.alpha", "value", "cljs.spec.alpha/value", 1974786274), EA = new A(null, "e", "e", 1381269198), FA = new A(null, "d", "d", 1972142424), GA = new Df(null, "meta119287", "meta119287", -681471121, null), HA = new A(null, "_", "_", 1453416199), IA = new Df(null, "meta119041", "meta119041", 1851022488, null), JA = new A("module.v1.type", "playerKey", "module.v1.type/playerKey", 
@@ -17412,8 +17442,8 @@ function VJ(a) {
   return a instanceof Pl ? nD : (null != a ? a.i & 32768 || Tb === a.Ke || (a.i ? 0 : Dc(Kd, a)) : Dc(Kd, a)) ? VE : a instanceof Df ? SA : Lh(a) ? kE : vh(a) ? qC : xh(a) ? sB : sh(a) ? rs : null == a ? null : wp;
 }
 if ("undefined" === typeof Qb || "undefined" === typeof $G || "undefined" === typeof WJ) {
-  var WJ, BR = nk(Uj), VS = nk(Uj), WS = nk(Uj), XS = nk(Uj), ZS = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  WJ = new vp(Jf.c("cljs.pprint", "simple-dispatch"), VJ, ZS, BR, VS, WS, XS);
+  var WJ, XS = nk(Uj), ZS = nk(Uj), bT = nk(Uj), cT = nk(Uj), dT = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  WJ = new vp(Jf.c("cljs.pprint", "simple-dispatch"), VJ, dT, XS, ZS, bT, cT);
 }
 kp(WJ, kE, function(a) {
   if (sc(MJ(a))) {
@@ -18501,8 +18531,8 @@ var mK = function(a) {
   return null;
 }, jK, gK, gK, dK, dK, jK, jK, dK])));
 if ("undefined" === typeof Qb || "undefined" === typeof $G || "undefined" === typeof nK) {
-  var nK, bT = nk(Uj), cT = nk(Uj), dT = nk(Uj), eT = nk(Uj), oT = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  nK = new vp(Jf.c("cljs.pprint", "code-dispatch"), VJ, oT, bT, cT, dT, eT);
+  var nK, eT = nk(Uj), oT = nk(Uj), pT = nk(Uj), oV = nk(Uj), pV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  nK = new vp(Jf.c("cljs.pprint", "code-dispatch"), VJ, pV, eT, oT, pT, oV);
 }
 kp(nK, kE, function(a) {
   if (sc(MJ(a))) {
@@ -21876,8 +21906,8 @@ function vO(a, b) {
   return null == b ? Dv : "string" === typeof b ? lq : b instanceof A ? NA : "number" === typeof b ? NA : b instanceof Df ? NA : xh(b) ? sB : Ri(b) ? kE : vh(b) ? qC : sh(b) ? rs : G.c(b, !0) ? NA : G.c(b, !1) ? NA : Fc(b);
 }
 if ("undefined" === typeof Qb || "undefined" === typeof bO || "undefined" === typeof cO || "undefined" === typeof dO || "undefined" === typeof sO || "undefined" === typeof uO) {
-  var uO, pT = nk(Uj), oV = nk(Uj), pV = nk(Uj), qV = nk(Uj), rV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  uO = new vp(Jf.c("cljs.tools.reader.impl.inspect", "inspect*"), vO, rV, pT, oV, pV, qV);
+  var uO, qV = nk(Uj), rV = nk(Uj), sV = nk(Uj), uV = nk(Uj), vV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  uO = new vp(Jf.c("cljs.tools.reader.impl.inspect", "inspect*"), vO, vV, qV, rV, sV, uV);
 }
 uO.N(null, lq, function(a, b) {
   a = n(a) ? 5 : 20;
@@ -23433,6 +23463,44 @@ function dQ(a, b) {
 function eQ(a) {
   return I(pr.b(a));
 }
+;var QS = $N(11, {});
+iN(PF, P(FF, $t), UN($t, rc, null));
+iN(lA, Zu, Ph);
+iN(TE, P($s, P(wz, Ov, new T(null, 3, 5, V, [zE, PF, lA], null))), IN(P(wz, Ov, new T(null, 3, 5, V, [zE, PF, lA], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [new T(null, 3, 5, V, [zE, PF, lA], null), null, null, new T(null, 4, 5, V, [function(a) {
+  return vh(a);
+}, function(a) {
+  return Vh(a, YC);
+}, function(a) {
+  return Vh(a, xs);
+}, function(a) {
+  return Vh(a, Wp);
+}], null), function(a) {
+  return vh(a) && Vh(a, YC) && Vh(a, xs) && Vh(a, Wp);
+}, eh, new T(null, 3, 5, V, [zE, PF, lA], null), null, new T(null, 3, 5, V, [YC, xs, Wp], null), eh, new T(null, 4, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, YC)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, xs)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, Wp))], null), null]))));
+iN(rx, P(wz, oy, new T(null, 6, 5, V, [Wz, IB, xz, fq, Ds, uF], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [null, null, null, new T(null, 1, 5, V, [function(a) {
+  return vh(a);
+}], null), function(a) {
+  return vh(a);
+}, eh, eh, null, eh, eh, new T(null, 1, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw))], null), null])));
+iN(tB, P(wz, Ov, new T(null, 4, 5, V, [hB, TE, MD, Zp], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [new T(null, 4, 5, V, [hB, TE, MD, Zp], null), null, null, new T(null, 5, 5, V, [function(a) {
+  return vh(a);
+}, function(a) {
+  return Vh(a, lr);
+}, function(a) {
+  return Vh(a, bq);
+}, function(a) {
+  return Vh(a, jB);
+}, function(a) {
+  return Vh(a, ot);
+}], null), function(a) {
+  return vh(a) && Vh(a, lr) && Vh(a, bq) && Vh(a, jB) && Vh(a, ot);
+}, eh, new T(null, 4, 5, V, [hB, TE, MD, Zp], null), null, new T(null, 4, 5, V, [lr, bq, jB, ot], null), eh, new T(null, 5, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, lr)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, bq)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, jB)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, ot))], null), null])));
+function RS(a, b, c) {
+  a = So(a);
+  c = So(c);
+  b = QS(a, b, c);
+  return new hc(null, 4, [lr, Wo(b.clusters, Yg([Xo, !0])), bq, Wo(b.centroids, Yg([Xo, !0])), jB, Wo(b.converged, Yg([Xo, !0])), ot, Wo(b.iterations, Yg([Xo, !0]))], null);
+}
 ;iN(Gt, Zu, Ph);
 iN(aB, P(bu, Zu), CN(dr, Ph, new hc(null, 4, [Tq, null, gv, function(a) {
   return rh(a);
@@ -23608,8 +23676,8 @@ iN(CF, P(SD, Ht, Vt), CN(P(Hv, Ks, Vt), tN(new T(null, 2, 5, V, [Ht, Vt], null),
   return Ig(b, 0);
 }, GF, !0, gD, P(SD, Ht, Vt)], null), null));
 if ("undefined" === typeof nQ || "undefined" === typeof oQ || "undefined" === typeof pQ || "undefined" === typeof sQ) {
-  var sQ, sV = nk(Uj), uV = nk(Uj), vV = nk(Uj), wV = nk(Uj), xV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  sQ = new vp(Jf.c("module.v1.type", "tagEntry"), I, xV, sV, uV, vV, wV);
+  var sQ, wV = nk(Uj), xV = nk(Uj), yV = nk(Uj), zV = nk(Uj), AV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  sQ = new vp(Jf.c("module.v1.type", "tagEntry"), I, AV, wV, xV, yV, zV);
 }
 sQ.N(null, cC, function() {
   return tN(new T(null, 2, 5, V, [Ht, iC], null), new T(null, 2, 5, V, [Xi, Kh], null));
@@ -23752,12 +23820,12 @@ iN(lz, P(wz, Ov, new T(null, 2, 5, V, [cW, Pz], null)), qN(Om([Ov, Rr, fy, eA, j
   return vh(a) && Vh(a, hC) && Vh(a, OE);
 }, eh, new T(null, 2, 5, V, [cW, Pz], null), null, new T(null, 2, 5, V, [hC, OE], null), eh, new T(null, 3, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, hC)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, OE))], null), null])));
 iN(ur, P(iu, X, lz, br, P(Hv, lz, P(es, !0))), wN(new T(null, 2, 5, V, [X, br], null), new T(null, 2, 5, V, [lz, P(Hv, lz, P(es, !0))], null), new T(null, 2, 5, V, [lz, tN(new T(null, 2, 5, V, [lz, P(es, !0)], null), new T(null, 2, 5, V, [lz, dk(!0)], null))], null), null));
-var yQ = $N(1, {});
+var yQ = $N(12, {});
 var zQ = {}, AQ = {};
 iN(Uz, $t, rc);
 if ("undefined" === typeof nQ || "undefined" === typeof oQ || "undefined" === typeof zQ || "undefined" === typeof AQ || "undefined" === typeof BQ) {
-  var BQ, yV = nk(Uj), zV = nk(Uj), AV = nk(Uj), BV = nk(Uj), GV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  BQ = new vp(Jf.c("module.v1.session.battleMenu", "action"), I, GV, yV, zV, AV, BV);
+  var BQ, BV = nk(Uj), GV = nk(Uj), NV = nk(Uj), PV = nk(Uj), QV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  BQ = new vp(Jf.c("module.v1.session.battleMenu", "action"), I, QV, BV, GV, NV, PV);
 }
 BQ.N(null, Po, function() {
   return tN(new T(null, 1, 5, V, [new sn(null, new hc(null, 1, [Po, "null"], null), null)], null), new T(null, 1, 5, V, [new sn(null, new hc(null, 1, [Po, null], null), null)], null));
@@ -25959,35 +26027,35 @@ function MV(a, b, c, d) {
                           var Be = Re[1];
                           if (7 === Be) {
                             var Xc = Re[7], de = Re[8], Gf = Re[9], Rf = Re[10], vd = Re[11], Ce = Re[12], dd = Re[13], Hf = Re[14], xc = mR(Gf), De = [VA, tF], ed = new T(null, 2, 5, V, De, null), tf = function() {
-                              return function(me, vf, bf, Sf, Tf, wg) {
-                                return function(Uf) {
-                                  Uf += 0.2 * wg;
-                                  return Uf < wg ? Uf : wg;
+                              return function(me, vf, bf, Sf, Tf, wg, Uf, Vf, bg) {
+                                return function(Ve) {
+                                  Ve += 0.2 * bg;
+                                  return Ve < bg ? Ve : bg;
                                 };
-                              }(Hf, Ce, vd, xc, Gf, 10000, uc, Xc, de, dd, Gf, Hf, Gf, Ce, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
+                              }(uc, Xc, dd, Rf, xc, Gf, Hf, Gf, 10000, Ce, dd, vd, Xc, Gf, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
                             }(), Ee = Rk.f(Gf, ed, tf), wd = [VA, WD], Fe = new T(null, 2, 5, V, wd, null), Od = function() {
-                              return function(me, vf, bf, Sf) {
-                                return function(Tf) {
-                                  Tf += 0.2 * Sf;
-                                  return Tf < Sf ? Tf : Sf;
+                              return function(me, vf, bf, Sf, Tf) {
+                                return function(wg) {
+                                  wg += 0.2 * Tf;
+                                  return wg < Tf ? wg : Tf;
                                 };
-                              }(Hf, Ce, vd, xc, Gf, 10000, uc, Xc, de, dd, Gf, Hf, Gf, Ce, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, tf, Ee, V, wd, Fe, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
+                              }(uc, Xc, dd, Rf, xc, Gf, Hf, Gf, 10000, Ce, dd, vd, Xc, Gf, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, tf, Ee, V, wd, Fe, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
                             }(), Ge = Rk.f(Ee, Fe, Od), te = sk.c(function() {
                               return function() {
                                 return function(me) {
                                   return LR(a, null, me);
                                 };
-                              }(Hf, Ce, vd, xc, Gf, 10000, uc, Xc, de, dd, Gf, Hf, Ge, Ce, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, tf, Ee, V, wd, Fe, Od, Ge, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
+                              }(uc, Xc, dd, Rf, xc, Gf, Hf, Gf, 10000, Ce, dd, vd, Xc, Ge, Xc, de, Gf, Rf, vd, Ce, dd, Hf, 10000, xc, V, De, ed, tf, Ee, V, wd, Fe, Od, Ge, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
                             }(), new T(null, 2, 5, V, [Gf, Ge], null));
                             te = DV(te, c, d);
-                            Re[10] = Ge;
+                            Re[8] = Ge;
                             return OG(Re, 10, te);
                           }
                           if (1 === Be) {
-                            return te = Nf(uc), de = I(te), vd = Xf(te), Hf = uc, dd = eh, Re[8] = de, Re[11] = vd, Re[13] = dd, Re[14] = Hf, Re[2] = null, Re[1] = 2, X;
+                            return te = Nf(uc), Rf = I(te), Hf = Xf(te), Xc = uc, vd = eh, Re[7] = Xc, Re[10] = Rf, Re[11] = vd, Re[14] = Hf, Re[2] = null, Re[1] = 2, X;
                           }
                           if (4 === Be) {
-                            return Xc = Re[7], Gf = Re[9], te = bB.b(Gf), te = cR(a, te), te = G.c(te, Es), te = iW(Kh, te), Re[7] = te, Re[1] = n(te) ? 7 : 8, X;
+                            return Gf = Re[9], Ce = Re[12], te = bB.b(Gf), te = cR(a, te), te = G.c(te, Es), te = iW(Kh, te), Re[12] = te, Re[1] = n(te) ? 7 : 8, X;
                           }
                           if (6 === Be) {
                             return Re[2] = Re[2], Re[1] = 3, X;
@@ -25996,20 +26064,20 @@ function MV(a, b, c, d) {
                             return QG(Re, Re[2]);
                           }
                           if (2 === Be) {
+                            Xc = Re[7];
                             Gf = Re[9];
-                            Hf = Re[14];
-                            te = Nf(Hf);
+                            te = Nf(Xc);
                             var Te = I(te);
-                            Ce = Xf(te);
+                            dd = Xf(te);
                             Re[9] = Te;
-                            Re[12] = Ce;
+                            Re[13] = dd;
                             Re[1] = n(Te) ? 4 : 5;
                             return X;
                           }
                           if (9 === Be) {
                             Xc = Re[7];
-                            de = Re[8];
                             Gf = Re[9];
+                            Rf = Re[10];
                             vd = Re[11];
                             Ce = Re[12];
                             dd = Re[13];
@@ -26020,16 +26088,16 @@ function MV(a, b, c, d) {
                                 return function(me) {
                                   return kh.c(me, KF);
                                 };
-                              }(Hf, Ce, vd, Gf, uc, Xc, de, dd, Gf, Hf, af, Ce, Xc, de, Gf, vd, Ce, dd, Hf, uf, af, V, Ue, He, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
+                              }(uc, Xc, dd, Rf, Gf, Hf, Gf, Ce, dd, vd, Xc, af, Xc, Gf, Rf, vd, Ce, dd, Hf, uf, af, V, Ue, He, Be, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be, ce, Oc, je, wc, Yb, Pe, Wd, jd, ke, qe, ud, Qe, le);
                             }());
-                            te = dh.c(dd, te);
-                            Re[13] = te;
-                            Re[14] = Ce;
+                            te = dh.c(vd, te);
+                            Re[7] = dd;
+                            Re[11] = te;
                             Re[2] = null;
                             Re[1] = 2;
                             return X;
                           }
-                          return 5 === Be ? (dd = Re[13], Re[2] = dd, Re[1] = 6, X) : 10 === Be ? (Rf = Re[10], Re[15] = Re[2], Re[2] = Rf, Re[1] = 9, X) : 8 === Be ? (Gf = Re[9], Re[2] = Gf, Re[1] = 9, X) : null;
+                          return 5 === Be ? (vd = Re[11], Re[2] = vd, Re[1] = 6, X) : 10 === Be ? (de = Re[8], Re[15] = Re[2], Re[2] = de, Re[1] = 9, X) : 8 === Be ? (Gf = Re[9], Re[2] = Gf, Re[1] = 9, X) : null;
                         };
                       }(fa, Z, da, ka, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd), fa, Z, da, ka, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd);
                     }(), Ud = function() {
@@ -26041,18 +26109,18 @@ function MV(a, b, c, d) {
                   };
                 }(M, ca, B, r, Ww, t, null, z, F, E, q, D, v, S, N, C, M, Ww, H, null, K, Q, R, W, Y, ca, p, g);
               }());
-              l[8] = Y;
-              l[9] = u;
-              l[10] = r;
               l[7] = M;
+              l[8] = u;
+              l[9] = Y;
+              l[10] = r;
               return OG(l, 7, ca);
             }
             if (5 === p || 6 === p) {
               return l[2] = l[2], l[1] = 4, X;
             }
             if (7 === p) {
-              Y = l[8];
               B = l[7];
+              Y = l[9];
               var y = l[2], J = iW(Y, y);
               u = function() {
                 return function() {
@@ -26061,7 +26129,7 @@ function MV(a, b, c, d) {
                     Z = O(Z, 1, null);
                     return lR(fa, da, dk(Z));
                   };
-                }(B, J, Y, B, y, J, p, g);
+                }(B, J, B, Y, y, J, p, g);
               }();
               var U = zn(B, J);
               u = Qc(u, a, U);
@@ -26212,15 +26280,15 @@ function OV(a, b) {
                             rd = Nf(Kc);
                             var Ud = I(rd), uc = Xf(rd), hd = Kc;
                             rd = eh;
-                            qd[7] = rd;
-                            qd[8] = Ud;
-                            qd[9] = hd;
-                            qd[10] = uc;
+                            qd[7] = hd;
+                            qd[8] = uc;
+                            qd[9] = rd;
+                            qd[10] = Ud;
                             qd[2] = null;
                             qd[1] = 2;
                             return X;
                           }
-                          return 2 === rd ? (hd = qd[9], Ud = Nf(hd), rd = I(Ud), Ud = Xf(Ud), qd[12] = Ud, qd[11] = rd, qd[1] = n(rd) ? 4 : 5, X) : 3 === rd ? QG(qd, qd[2]) : 4 === rd ? (rd = qd[7], Ud = qd[12], uc = qd[11], uc = HR(uc), rd = dh.c(rd, uc), qd[7] = rd, qd[9] = Ud, qd[2] = null, qd[1] = 2, X) : 5 === rd ? (rd = qd[7], qd[2] = rd, qd[1] = 6, X) : 6 === rd ? (qd[2] = qd[2], qd[1] = 3, X) : null;
+                          return 2 === rd ? (hd = qd[7], Ud = Nf(hd), rd = I(Ud), Ud = Xf(Ud), qd[12] = Ud, qd[11] = rd, qd[1] = n(rd) ? 4 : 5, X) : 3 === rd ? QG(qd, qd[2]) : 4 === rd ? (Ud = qd[12], uc = qd[11], rd = qd[9], uc = HR(uc), rd = dh.c(rd, uc), qd[7] = Ud, qd[9] = rd, qd[2] = null, qd[1] = 2, X) : 5 === rd ? (rd = qd[9], qd[2] = rd, qd[1] = 6, X) : 6 === rd ? (qd[2] = qd[2], qd[1] = 3, X) : null;
                         };
                       }(y, J, U, fa, Z, da, ka, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb), y, J, U, fa, Z, da, ka, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb);
                     }(), Ec = function() {
@@ -26233,13 +26301,13 @@ function OV(a, b) {
                 }(v, Q, l, Ww, p, null, u, B, r, t, z, F, E, q, D, v, Ww, S, null, N, C, M, H, K, Q, g, h);
               }());
               k[7] = v;
-              k[8] = R;
-              k[9] = K;
+              k[8] = K;
+              k[9] = R;
               return OG(k, 2, Q);
             }
             if (2 === g) {
               l = k[7];
-              K = k[9];
+              K = k[8];
               var W = k[2], Y = iW(K, W);
               R = function() {
                 return function() {
@@ -26653,15 +26721,15 @@ function TR(a, b, c, d) {
               v = bQ(D, v);
               D = ih.f(a, hC, v);
               var S = eQ(v);
+              E[10] = D;
               E[8] = S;
               E[9] = v;
-              E[10] = D;
               E[1] = n(S) ? 2 : 3;
               return X;
             }
             if (4 === q) {
-              v = E[9];
               D = E[10];
+              v = E[9];
               v = dQ(v, E[2]);
               var N = ih.f(D, hC, v);
               E[11] = N;
@@ -27083,22 +27151,22 @@ function eS(a, b, c) {
             }
             if (1 === q) {
               var D = E[8], v = E[9];
-              v = hC.b(a);
-              D = mj.b("selectPosition");
-              D = bQ(v, D);
-              v = ih.f(a, hC, D);
-              var S = eQ(D);
-              E[8] = D;
-              E[9] = S;
-              E[10] = v;
+              D = hC.b(a);
+              v = mj.b("selectPosition");
+              v = bQ(D, v);
+              D = ih.f(a, hC, v);
+              var S = eQ(v);
+              E[8] = S;
+              E[9] = v;
+              E[10] = D;
               E[1] = n(S) ? 2 : 3;
               return X;
             }
             if (4 === q) {
-              D = E[8];
-              v = E[10];
-              D = dQ(D, E[2]);
-              var N = ih.f(v, hC, D);
+              v = E[9];
+              D = E[10];
+              v = dQ(v, E[2]);
+              var N = ih.f(D, hC, v);
               E[11] = N;
               E[2] = null;
               E[1] = 5;
@@ -27108,20 +27176,20 @@ function eS(a, b, c) {
               return E[2] = E[2], E[1] = 12, X;
             }
             if (13 === q) {
-              return v = E[12], E[2] = v, E[1] = 15, X;
+              return D = E[12], E[2] = D, E[1] = 15, X;
             }
             if (6 === q) {
               S = E[2];
-              v = O(S, 0, null);
-              D = O(S, 1, null);
+              D = O(S, 0, null);
+              v = O(S, 1, null);
               var C = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null));
               S = iW(C, S);
-              C = hC.b(v);
+              C = hC.b(D);
               C = cQ(C);
-              v = [ih.f(v, hC, C), D];
-              v = new T(null, 2, 5, V, v, null);
+              D = [ih.f(D, hC, C), v];
+              D = new T(null, 2, 5, V, D, null);
               E[13] = S;
-              return QG(E, v);
+              return QG(E, D);
             }
             if (3 === q) {
               return E[2] = null, E[1] = 4, X;
@@ -27130,39 +27198,39 @@ function eS(a, b, c) {
               return E[2] = E[2], E[1] = 6, X;
             }
             if (2 === q) {
-              return v = E[9], E[2] = v, E[1] = 4, X;
+              return D = E[8], E[2] = D, E[1] = 4, X;
             }
             if (11 === q) {
-              return v = E[14], v = O(v, 0, null), v = G.c(br, v), E[1] = v ? 13 : 14, X;
+              return D = E[14], D = O(D, 0, null), D = G.c(br, D), E[1] = D ? 13 : 14, X;
             }
             if (9 === q) {
-              return v = E[14], v = E[12], v = E[2], D = $M(ur, v), S = G.c(Fw, D), E[14] = D, E[12] = v, E[1] = S ? 10 : 11, X;
+              return D = E[12], D = E[14], D = E[2], v = $M(ur, D), S = G.c(Fw, v), E[12] = D, E[14] = v, E[1] = S ? 10 : 11, X;
             }
             if (5 === q) {
-              return N = E[11], v = NR(N), v = YQ(v, b, c), OG(E, 7, v);
+              return N = E[11], D = NR(N), D = YQ(D, b, c), OG(E, 7, D);
             }
             if (14 === q) {
-              return N = v = E[12], E[11] = N, E[2] = null, E[1] = 5, X;
+              return N = D = E[12], E[11] = N, E[2] = null, E[1] = 5, X;
             }
             if (10 === q) {
-              throw v = E[12], E = fN(ur, v), Error(E);
+              throw D = E[12], E = fN(ur, D), Error(E);
             }
             if (8 === q) {
               N = E[11];
               var M = E[2];
-              v = function() {
+              D = function() {
                 return function(H, K) {
                   return function(Q) {
                     return QR(dS, Yg([Q, b, c, K]));
                   };
                 }(N, M, N, M, q, r, t, z, F);
               }();
-              D = MR(N, M);
-              D = UR(D, M);
-              D = VR(D, M);
-              D = WR(D, F, M);
-              v = v.b ? v.b(D) : v.call(null, D);
-              return OG(E, 9, v);
+              v = MR(N, M);
+              v = UR(v, M);
+              v = VR(v, M);
+              v = WR(v, F, M);
+              D = D.b ? D.b(v) : D.call(null, v);
+              return OG(E, 9, D);
             }
             return null;
           };
@@ -27236,7 +27304,7 @@ function eS(a, b, c) {
           return function(q) {
             var D = q[1];
             if (65 === D) {
-              var v = q[7], S = q[8], N = q[9], C = [mj.b(N)], M = new T(null, 1, 5, V, C, null), H = Pk(S, new T(null, 2, 5, V, [1, hD], null)), K = v.f ? v.f(a, M, H) : v.call(null, a, M, H), Q = q;
+              var v = q[7], S = q[8], N = q[9], C = [mj.b(v)], M = new T(null, 1, 5, V, C, null), H = Pk(N, new T(null, 2, 5, V, [1, hD], null)), K = S.f ? S.f(a, M, H) : S.call(null, a, M, H), Q = q;
               return OG(Q, 68, K);
             }
             if (70 === D) {
@@ -27360,24 +27428,27 @@ function eS(a, b, c) {
               return X;
             }
             if (50 === D) {
-              U = q[10];
-              var Xb = q[15], Lb = q[16], Ec = q[17], Kc = q[18], qd = q[19];
+              var Xb = q[15], Lb = q[16], Ec = q[17], Kc = q[18];
               v = q[7];
+              var qd = q[19];
               S = q[8];
-              var rd = q[20], Ud = q[21], uc = q[22];
-              N = q[9];
+              var rd = q[20];
               kb = q[14];
-              var hd = q[23], Md = q[24], kc = q[25], vc = q[26], Wc = gQ(vc), Ac = Ig(Kc, Wc), id = iW($B, Ac), ae = rR(Ud, id);
+              var Ud = q[21], uc = q[22];
+              U = q[10];
+              var hd = q[23], Md = q[24];
+              N = q[9];
+              var kc = q[25], vc = q[26], Wc = gQ(Md), Ac = Ig(Kc, Wc), id = iW($B, Ac), ae = rR(uc, id);
               Ya = ak(function() {
-                return function(Lc, Gj, pm, kl, Se, nf, Kn, Ln, qm, Mn, ll, Nn, ml, On, nl, ol, rm, pl) {
-                  return function(ql) {
-                    return G.c(bB.b(pl), ql);
+                return function(Lc, Gj, pm, kl, Se, nf, Kn, Ln, qm, Mn, ll, Nn, ml, On, nl, ol, rm, pl, ql) {
+                  return function(Pn) {
+                    return G.c(bB.b(ql), Pn);
                   };
-                }(Md, kb, N, Ud, Lb, vc, Kc, v, hd, id, S, Wc, U, S, Xb, ae, qd, uc, rd, kc, U, Xb, Lb, Ec, Kc, qd, v, S, rd, Ud, uc, N, kb, hd, Md, kc, vc, Wc, Ac, id, ae, D, t, z, F, E);
+                }(qd, kc, kb, v, uc, Md, Kc, S, id, Lb, rd, Wc, N, U, hd, N, ae, vc, Ec, Xb, Xb, Lb, Ec, Kc, v, qd, S, rd, kb, Ud, uc, U, hd, Md, N, kc, vc, Wc, Ac, id, ae, D, t, z, F, E);
               }(), ae);
-              var sd = kR(a, Ud, id);
-              q[17] = sd;
+              var sd = kR(a, uc, id);
               q[13] = Ya;
+              q[21] = sd;
               Q = q;
               Q[1] = n(sd) ? 53 : 54;
               return X;
@@ -27396,15 +27467,15 @@ function eS(a, b, c) {
               return X;
             }
             if (31 === D) {
-              Lb = q[16];
-              S = q[8];
+              qd = q[19];
               ya = q[12];
+              N = q[9];
               var fc = q[2];
-              Ud = x.c(fc, iF);
-              var Vd = O(S, 1, null), be = sc(null == Vd);
-              q[16] = fc;
-              q[21] = Ud;
+              uc = x.c(fc, iF);
+              var Vd = O(N, 1, null), be = sc(null == Vd);
+              q[19] = fc;
               q[12] = Vd;
+              q[22] = uc;
               Q = q;
               Q[1] = be ? 32 : 33;
               return X;
@@ -27420,9 +27491,9 @@ function eS(a, b, c) {
               kb = q[14];
               hd = q[23];
               var je = q[2];
-              uc = x.c(je, iF);
+              Ec = x.c(je, iF);
               var wc = sc(null == kb);
-              q[22] = uc;
+              q[17] = Ec;
               q[23] = je;
               Q = q;
               Q[1] = wc ? 41 : 42;
@@ -27448,17 +27519,18 @@ function eS(a, b, c) {
               return X;
             }
             if (22 === D) {
-              S = q[8];
-              rd = q[20];
-              var ke = q[28], qe = q[2];
-              vc = x.c(qe, mt);
+              Lb = q[16];
+              var ke = q[28];
+              N = q[9];
+              var qe = q[2];
+              Md = x.c(qe, mt);
               kb = x.c(qe, oq);
               var ud = x.c(qe, fu), Qe = O(ud, 0, null), le = sc(null == Qe);
-              q[8] = ud;
-              q[20] = qe;
+              q[16] = qe;
               q[14] = kb;
               q[28] = Qe;
-              q[26] = vc;
+              q[24] = Md;
+              q[9] = ud;
               Q = q;
               Q[1] = le ? 23 : 24;
               return X;
@@ -27483,9 +27555,9 @@ function eS(a, b, c) {
               return X;
             }
             if (61 === D) {
-              v = q[7];
               S = q[8];
-              var Gf = Pk(S, new T(null, 2, 5, V, [0, hD], null)), Rf = Pk(S, new T(null, 2, 5, V, [1, hD], null)), vd = v.f ? v.f(a, Gf, Rf) : v.call(null, a, Gf, Rf);
+              N = q[9];
+              var Gf = Pk(N, new T(null, 2, 5, V, [0, hD], null)), Rf = Pk(N, new T(null, 2, 5, V, [1, hD], null)), vd = S.f ? S.f(a, Gf, Rf) : S.call(null, a, Gf, Rf);
               Q = q;
               return OG(Q, 64, vd);
             }
@@ -27521,8 +27593,8 @@ function eS(a, b, c) {
               return X;
             }
             if (51 === D) {
-              N = q[9];
-              var Fe = new sn(null, new hc(null, 2, ["evade", null, "guard", null], null), null), Od = Fe.b ? Fe.b(N) : Fe.call(null, N);
+              v = q[7];
+              var Fe = new sn(null, new hc(null, 2, ["evade", null, "guard", null], null), null), Od = Fe.b ? Fe.b(v) : Fe.call(null, v);
               Q = q;
               Q[1] = n(Od) ? 65 : 66;
               return X;
@@ -27552,24 +27624,24 @@ function eS(a, b, c) {
               return Q = q, Q[1] = 75, X;
             }
             if (2 === D) {
+              Xb = q[15];
               xc = q[29];
-              kc = q[25];
               var uf = RQ.b ? RQ.b(E) : RQ.call(null, E), af = hC.b(a), Ue = eQ(af), He = mt.b(Ue), me = xw.b(He), vf = function() {
                 return function() {
                   return function(Lc) {
                     return Vh(Lc, "cancel");
                   };
-                }(uf, Ue, me, xc, kc, uf, af, Ue, He, me, D, t, z, F, E);
+                }(uf, Ue, me, Xb, xc, uf, af, Ue, He, me, D, t, z, F, E);
               }(), bf = Kk(me), Sf = Lk.c(un, bf), Tf = vf.b ? vf.b(Sf) : vf.call(null, Sf), wg = iW(Kh, Tf);
+              q[15] = uf;
               q[29] = wg;
-              q[25] = uf;
               Q = q;
               Q[1] = n(wg) ? 5 : 6;
               return X;
             }
             if (66 === D) {
-              N = q[9];
-              var Uf = G.c("cancel", N);
+              v = q[7];
+              var Uf = G.c("cancel", v);
               Q = q;
               Q[1] = Uf ? 69 : 70;
               return X;
@@ -27626,15 +27698,15 @@ function eS(a, b, c) {
               return X;
             }
             if (9 === D) {
-              kc = q[25];
-              var Zh = G.c(Tx, kc);
+              Xb = q[15];
+              var Zh = G.c(Tx, Xb);
               Q = q;
               Q[1] = Zh ? 11 : 12;
               return X;
             }
             if (5 === D) {
-              kc = q[25];
-              var eg = G.c(av, kc), Fi = Q = q;
+              Xb = q[15];
+              var eg = G.c(av, Xb), Fi = Q = q;
               Fi[2] = eg;
               Fi[1] = 7;
               return X;
@@ -27653,8 +27725,8 @@ function eS(a, b, c) {
               return X;
             }
             if (53 === D) {
-              Ec = q[17];
-              var zg = Om([bw], [Ec]), Xh = ZQ(zg, c, d);
+              Ud = q[21];
+              var zg = Om([bw], [Ud]), Xh = ZQ(zg, c, d);
               Q = q;
               return OG(Q, 56, Xh);
             }
@@ -27763,23 +27835,23 @@ function eS(a, b, c) {
               return X;
             }
             if (49 === D) {
-              U = q[10];
               Xb = q[15];
               Lb = q[16];
+              Ec = q[17];
               Kc = q[18];
+              v = q[7];
               qd = q[19];
-              S = q[8];
               rd = q[20];
-              Ud = q[21];
-              uc = q[22];
-              N = q[9];
               kb = q[14];
+              uc = q[22];
+              U = q[10];
               hd = q[23];
               Md = q[24];
+              N = q[9];
               kc = q[25];
               vc = q[26];
-              var Bi = q[2], mf = x.c(Bi, tC), Ci = x.c(Bi, ts), Bc = iD.b(vc), Zb = hQ(vc);
-              v = function() {
+              var Bi = q[2], mf = x.c(Bi, tC), Ci = x.c(Bi, ts), Bc = iD.b(Md), Zb = hQ(Md);
+              S = function() {
                 return function(Lc, Gj, pm, kl, Se, nf, Kn, Ln, qm, Mn, ll, Nn, ml, On, nl, ol, rm, pl, ql, Pn, Qn, Rn, Sn, Tn, Un, lp, rl, sl, Vn, Wn, Xn, Yn, tl, ul, vl, mp, Zn, np, sm, $n, ao) {
                   return function(tm, bo, co) {
                     var wl = SG(1);
@@ -27848,10 +27920,10 @@ function eS(a, b, c) {
                                     return function(AW) {
                                       return ih.f(OQ, OE, AW);
                                     };
-                                  }(CQ, gW, DQ, hW, vT, nV, vT, nV, CQ, DQ, gW, hW, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
+                                  }(DQ, hW, vT, CQ, gW, nV, vT, nV, CQ, DQ, gW, hW, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
                                 }();
                                 var LS = OE.b(nV);
-                                LS = ZP(LS, hW);
+                                LS = ZP(LS, CQ);
                                 uT = uT.b ? uT.b(LS) : uT.call(null, LS);
                                 uT = IR(uT);
                                 return OG(zO, 23, uT);
@@ -27863,44 +27935,44 @@ function eS(a, b, c) {
                                 return uT = zO[14], zO[15] = zO[2], zO[2] = uT, zO[1] = 22, X;
                               }
                               if (4 === tT) {
+                                vT = zO[8];
                                 CQ = zO[10];
                                 DQ = zO[11];
-                                gW = zO[12];
                                 hW = zO[13];
-                                var MS = zO[2], AS = iW(eW, MS), BS = AR(tm, Tg, bo, VC, co, AS), tQ = O(BS, 0, null), PS = O(BS, 1, null), CS = [OE, Zv, sF], YS = function() {
+                                var MS = zO[2], AS = iW(eW, MS), BS = AR(tm, Eh, bo, $y, co, AS), tQ = O(BS, 0, null), PS = O(BS, 1, null), CS = [OE, Zv, sF], YS = function() {
                                   return function() {
                                     return function(LV) {
                                       return LR(tm, null, LV);
                                     };
-                                  }(AS, BS, tQ, PS, CQ, DQ, gW, hW, MS, AS, BS, tQ, PS, CS, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
+                                  }(AS, BS, tQ, PS, vT, CQ, DQ, hW, MS, AS, BS, tQ, PS, CS, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
                                 }();
-                                uT = new T(null, 2, 5, V, [Tg, VC], null);
-                                zO[16] = YS;
-                                zO[10] = AS;
-                                zO[11] = tQ;
-                                zO[17] = CS;
-                                zO[12] = BS;
-                                zO[13] = PS;
+                                uT = new T(null, 2, 5, V, [Eh, $y], null);
+                                zO[8] = tQ;
+                                zO[10] = PS;
+                                zO[11] = AS;
+                                zO[16] = CS;
                                 zO[7] = uT;
+                                zO[13] = BS;
+                                zO[17] = YS;
                                 zO[1] = n(b) ? 6 : 7;
                                 return X;
                               }
                               if (15 === tT) {
                                 vT = zO[8];
                                 CQ = zO[10];
-                                var wS = zO[18];
                                 DQ = zO[11];
                                 gW = zO[12];
                                 hW = zO[13];
+                                var wS = zO[18];
                                 uT = function() {
                                   return function(LV, DS, FS, zW, aD, OQ) {
                                     return function(AW) {
                                       return ih.f(OQ, OE, AW);
                                     };
-                                  }(CQ, gW, DQ, hW, vT, wS, vT, CQ, wS, DQ, gW, hW, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
+                                  }(DQ, hW, vT, CQ, gW, wS, vT, CQ, DQ, gW, hW, wS, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
                                 }();
                                 LS = OE.b(wS);
-                                LS = ZP(LS, DQ);
+                                LS = ZP(LS, vT);
                                 uT = uT.b ? uT.b(LS) : uT.call(null, LS);
                                 uT = IR(uT);
                                 return OG(zO, 18, uT);
@@ -27909,7 +27981,7 @@ function eS(a, b, c) {
                                 return nV = zO[9], zO[2] = nV, zO[1] = 22, X;
                               }
                               if (13 === tT) {
-                                return CQ = zO[10], zO[2] = CQ, zO[1] = 14, X;
+                                return DQ = zO[11], zO[2] = DQ, zO[1] = 14, X;
                               }
                               if (22 === tT) {
                                 return uT = iW(lz, zO[2]), uT = kh.g(uT, VB, Yg([Cx])), uT = iW(lz, uT), QG(zO, uT);
@@ -27918,23 +27990,23 @@ function eS(a, b, c) {
                                 return uT = zO[7], uT = Ui(uT), zO[2] = uT, zO[1] = 8, X;
                               }
                               if (17 === tT) {
-                                return nV = zO[9], hW = zO[13], uT = iW(lz, zO[2]), LS = 0 >= Pk(hW, new T(null, 2, 5, V, [VA, tF], null)), zO[9] = uT, zO[1] = LS ? 20 : 21, X;
+                                return nV = zO[9], CQ = zO[10], uT = iW(lz, zO[2]), LS = 0 >= Pk(CQ, new T(null, 2, 5, V, [VA, tF], null)), zO[9] = uT, zO[1] = LS ? 20 : 21, X;
                               }
                               if (3 === tT) {
-                                return uT = zR(tm, Tg, bo, VC, co), zO[2] = uT, zO[1] = 4, X;
+                                return uT = zR(tm, Eh, bo, $y, co), zO[2] = uT, zO[1] = 4, X;
                               }
                               if (12 === tT) {
-                                return CQ = zO[10], uT = Ui(CQ), zO[2] = uT, zO[1] = 14, X;
+                                return DQ = zO[11], uT = Ui(DQ), zO[2] = uT, zO[1] = 14, X;
                               }
                               if (2 === tT) {
-                                return uT = zR(tm, VC, co, Tg, bo), uT = Ui(uT), uT = Lk.c(eh, uT), zO[2] = uT, zO[1] = 4, X;
+                                return uT = zR(tm, $y, co, Eh, bo), uT = Ui(uT), uT = Lk.c(eh, uT), zO[2] = uT, zO[1] = 4, X;
                               }
                               if (23 === tT) {
+                                CQ = zO[10];
                                 uT = zO[14];
-                                hW = zO[13];
                                 uT = zO[2];
                                 LS = [iF];
-                                var IV = [LR(uT, null, hW)];
+                                var IV = [LR(uT, null, CQ)];
                                 LS = Om(LS, IV);
                                 LS = XQ(LS, c, d);
                                 zO[14] = uT;
@@ -27950,12 +28022,12 @@ function eS(a, b, c) {
                                 return LS = zO[23], uT = Ui(LS), zO[2] = uT, zO[1] = 11, X;
                               }
                               if (5 === tT) {
-                                return wS = zO[18], DQ = zO[11], hW = zO[13], vT = zO[2], uT = lR(tm, Tg, dk(DQ)), uT = lR(uT, VC, dk(hW)), LS = 0 >= Pk(DQ, new T(null, 2, 5, V, [VA, tF], null)), zO[8] = vT, zO[18] = uT, zO[1] = LS ? 15 : 16, X;
+                                return vT = zO[8], CQ = zO[10], wS = zO[18], gW = zO[2], uT = lR(tm, Eh, dk(vT)), uT = lR(uT, $y, dk(CQ)), LS = 0 >= Pk(vT, new T(null, 2, 5, V, [VA, tF], null)), zO[12] = gW, zO[18] = uT, zO[1] = LS ? 15 : 16, X;
                               }
                               if (14 === tT) {
-                                var JV = zO[24];
-                                CS = zO[17];
                                 uT = zO[22];
+                                CS = zO[16];
+                                var JV = zO[24];
                                 uT = Om(CS, [JV, uT, zO[2]]);
                                 uT = WQ(uT, c, d);
                                 return OG(zO, 5, uT);
@@ -27967,14 +28039,14 @@ function eS(a, b, c) {
                                 return LS = zO[23], zO[2] = LS, zO[1] = 11, X;
                               }
                               if (18 === tT) {
-                                return uT = zO[19], DQ = zO[11], uT = zO[2], LS = [iF], IV = [LR(uT, null, DQ)], LS = Om(LS, IV), LS = XQ(LS, c, d), zO[19] = uT, OG(zO, 19, LS);
+                                return uT = zO[19], vT = zO[8], uT = zO[2], LS = [iF], IV = [LR(uT, null, vT)], LS = Om(LS, IV), LS = XQ(LS, c, d), zO[19] = uT, OG(zO, 19, LS);
                               }
                               if (8 === tT) {
-                                YS = zO[16];
+                                vT = zO[8];
                                 CQ = zO[10];
                                 DQ = zO[11];
-                                gW = zO[12];
                                 hW = zO[13];
+                                YS = zO[17];
                                 var KV = zO[2];
                                 JV = sk.c(YS, KV);
                                 uT = function() {
@@ -27982,12 +28054,12 @@ function eS(a, b, c) {
                                     return function(LV) {
                                       return LR(tm, null, LV);
                                     };
-                                  }(CQ, gW, DQ, hW, YS, CQ, DQ, gW, hW, KV, JV, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
+                                  }(DQ, hW, vT, CQ, vT, CQ, DQ, hW, YS, KV, JV, tT, Ns, fj, wm, Nq, Tg, Eh, Xd, Xy, Wu, TC, UC, Yy, Zy, Os, VC, $y, SJ, Vu, NT, OT, PT, QT, RC, SC, XJ, wO, xO, sK, qK, pK, ZJ, YJ, uQ, AO, EQ, FQ, vQ, wQ, yO, GQ, xQ, vS);
                                 }();
-                                LS = new T(null, 2, 5, V, [DQ, hW], null);
-                                zO[24] = JV;
-                                zO[23] = LS;
+                                LS = new T(null, 2, 5, V, [vT, CQ], null);
                                 zO[21] = uT;
+                                zO[23] = LS;
+                                zO[24] = JV;
                                 zO[1] = n(b) ? 9 : 10;
                                 return X;
                               }
@@ -28004,15 +28076,15 @@ function eS(a, b, c) {
                     }(wl, Lc, Gj, pm, kl, Se, nf, Kn, Ln, qm, Mn, ll, Nn, ml, On, nl, ol, rm, pl, ql, Pn, Qn, Rn, Sn, Tn, Un, lp, rl, sl, Vn, Wn, Xn, Yn, tl, ul, vl, mp, Zn, np, sm, $n, ao));
                     return wl;
                   };
-                }(mf, kb, Zb, Ud, Lb, vc, Ci, hd, S, U, S, Bi, Bc, uc, rd, kc, U, Xb, Lb, Kc, qd, S, rd, Ud, uc, N, kb, hd, Md, kc, vc, Bi, mf, Ci, Bc, Zb, D, t, z, F, E);
+                }(qd, mf, kb, Zb, uc, Md, Ci, Lb, Bi, N, U, hd, N, Bc, Ec, Xb, Xb, Lb, Ec, Kc, v, qd, rd, kb, uc, U, hd, Md, N, kc, vc, Bi, mf, Ci, Bc, Zb, D, t, z, F, E);
               }();
               var $e = G.c(Bc, mf);
-              q[15] = Bi;
               q[18] = Ci;
-              q[19] = Bc;
-              q[7] = v;
-              q[9] = Zb;
-              q[24] = mf;
+              q[7] = Zb;
+              q[8] = S;
+              q[20] = Bi;
+              q[25] = mf;
+              q[26] = Bc;
               Q = q;
               Q[1] = $e ? 50 : 51;
               return X;
@@ -28086,62 +28158,57 @@ function gS(a, b, c, d) {
             var Fa = ta[1];
             if (7 === Fa) {
               var Ha = ta[7], ya = ta[2], Ja = new sn(null, new hc(null, 1, [oB, null], null), null);
-              Ha = Ja.b ? Ja.b(Ha) : Ja.call(null, Ha);
+              Ja = Ja.b ? Ja.b(Ha) : Ja.call(null, Ha);
               ta[8] = ya;
-              ta[1] = n(Ha) ? 8 : 9;
+              ta[1] = n(Ja) ? 8 : 9;
               return X;
             }
             if (20 === Fa) {
-              return Ha = ta[9], Ha = O(Ha, 0, null), Ha = G.c(br, Ha), ta[1] = Ha ? 22 : 23, X;
+              return ya = ta[9], ya = O(ya, 0, null), ya = G.c(br, ya), ta[1] = ya ? 22 : 23, X;
             }
             if (1 === Fa) {
-              Ha = ta[10];
-              Ha = ta[11];
-              Ha = hC.b(a);
-              ya = mj.b("unitBattleMenu");
-              Ha = bQ(Ha, ya);
-              var jb = ih.f(a, hC, Ha);
-              ya = eQ(Ha);
-              ta[10] = ya;
-              ta[11] = Ha;
-              ta[12] = jb;
-              ta[1] = n(ya) ? 2 : 3;
-              return X;
+              return Ja = ta[10], ya = ta[11], ya = hC.b(a), Ja = mj.b("unitBattleMenu"), Ja = bQ(ya, Ja), ya = ih.f(a, hC, Ja), Ha = eQ(Ja), ta[12] = ya, ta[10] = Ja, ta[11] = Ha, ta[1] = n(Ha) ? 2 : 3, X;
             }
             if (24 === Fa) {
               return ta[2] = ta[2], ta[1] = 21, X;
             }
             if (4 === Fa) {
-              Ha = ta[11];
-              jb = ta[12];
-              Ha = dQ(Ha, ta[2]);
-              var Qa = ih.f(jb, hC, Ha);
-              ta[13] = Qa;
+              ya = ta[12];
+              Ja = ta[10];
+              Ja = dQ(Ja, ta[2]);
+              var jb = ih.f(ya, hC, Ja);
+              ta[13] = jb;
               ta[2] = null;
               ta[1] = 14;
               return X;
             }
             if (15 === Fa) {
-              Ja = ta[2];
-              Ha = O(Ja, 0, null);
-              ya = O(Ja, 1, null);
-              var Oa = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null));
-              Ja = iW(Oa, Ja);
-              Oa = hC.b(Ha);
-              Oa = cQ(Oa);
-              Ha = [ih.f(Ha, hC, Oa), ya];
-              Ha = new T(null, 2, 5, V, Ha, null);
-              ta[14] = Ja;
-              return QG(ta, Ha);
+              Ha = ta[2];
+              ya = O(Ha, 0, null);
+              Ja = O(Ha, 1, null);
+              var Qa = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null));
+              Ha = iW(Qa, Ha);
+              Qa = hC.b(ya);
+              Qa = cQ(Qa);
+              ya = [ih.f(ya, hC, Qa), Ja];
+              ya = new T(null, 2, 5, V, ya, null);
+              ta[14] = Ha;
+              return QG(ta, ya);
             }
             if (21 === Fa) {
               return ta[2] = ta[2], ta[1] = 15, X;
             }
             if (13 === Fa) {
-              return ya = ta[15], jb = ta[16], Ha = [iW(SE, ta[2]), ya, Z, xa], Ha = Om(jb, Ha), ta[2] = Ha, ta[1] = 4, X;
+              Qa = ta[15];
+              var Oa = ta[16];
+              ya = [iW(SE, ta[2]), Oa, Z, xa];
+              ya = Om(Qa, ya);
+              ta[2] = ya;
+              ta[1] = 4;
+              return X;
             }
             if (22 === Fa) {
-              return Ha = ta[17], ta[2] = Ha, ta[1] = 24, X;
+              return ya = ta[17], ta[2] = ya, ta[1] = 24, X;
             }
             if (6 === Fa) {
               var db = ta[18];
@@ -28150,44 +28217,44 @@ function gS(a, b, c, d) {
               return X;
             }
             if (17 === Fa) {
-              Qa = ta[13];
+              jb = ta[13];
               var Mb = ta[2];
-              Ha = function() {
+              ya = function() {
                 return function(Ob, kb, ec, Xb, Lb, Ec, Kc, qd, rd, Ud, uc, hd, Md, kc, vc, Wc, Ac, id) {
                   return function(ae) {
                     return QR(fS, Yg([ae, sc(id), c, d, kb]));
                   };
-                }(Qa, Mb, Qa, Mb, Fa, Y, ca, y, J, U, fa, Z, da, ka, ra, ua, xa, Aa);
+                }(jb, Mb, jb, Mb, Fa, Y, ca, y, J, U, fa, Z, da, ka, ra, ua, xa, Aa);
               }();
-              ya = UR(Qa, Mb);
-              ya = cS(ya, Mb);
-              ya = ZR(ya, Z, Mb);
-              ya = aS(ya, Z, Mb);
-              ya = bS(ya, Z, Aa, Mb);
-              Ha = Ha.b ? Ha.b(ya) : Ha.call(null, ya);
-              return OG(ta, 18, Ha);
+              Ja = UR(jb, Mb);
+              Ja = cS(Ja, Mb);
+              Ja = ZR(Ja, Z, Mb);
+              Ja = aS(Ja, Z, Mb);
+              Ja = bS(Ja, Z, Aa, Mb);
+              ya = ya.b ? ya.b(Ja) : ya.call(null, Ja);
+              return OG(ta, 18, ya);
             }
             if (3 === Fa) {
+              ya = ta[12];
               Ha = ta[7];
-              jb = ta[12];
               Ja = iW(Tr, xa);
-              Oa = iW(Kh, Aa);
-              Ha = xR(jb, Z, Aa);
-              db = O(Ha, 0, null);
-              ya = O(Ha, 1, null);
+              Ha = iW(Kh, Aa);
+              ya = xR(ya, Z, Aa);
+              db = O(ya, 0, null);
+              Oa = O(ya, 1, null);
               var Ya = O(da, 0, null);
-              Ha = O(da, 1, null);
-              jb = [mt, oq, iF, fu];
+              ya = O(da, 1, null);
+              Qa = [mt, oq, iF, fu];
               db = fQ(db);
               var Ab = new sn(null, new hc(null, 1, [bt, null], null), null);
               Ab = Ab.b ? Ab.b(Ya) : Ab.call(null, Ya);
-              ta[15] = ya;
-              ta[19] = Ha;
               ta[7] = Ya;
-              ta[20] = Oa;
-              ta[21] = Ja;
+              ta[15] = Qa;
+              ta[16] = Oa;
+              ta[19] = Ja;
               ta[18] = db;
-              ta[16] = jb;
+              ta[20] = Ha;
+              ta[21] = ya;
               ta[1] = n(Ab) ? 5 : 6;
               return X;
             }
@@ -28195,16 +28262,16 @@ function gS(a, b, c, d) {
               return Ja = ta[22], ta[2] = Ja, ta[1] = 13, X;
             }
             if (2 === Fa) {
-              return Ha = ta[10], ta[2] = Ha, ta[1] = 4, X;
+              return ya = ta[11], ta[2] = ya, ta[1] = 4, X;
             }
             if (23 === Fa) {
-              return Qa = Ha = ta[17], ta[13] = Qa, ta[2] = null, ta[1] = 14, X;
+              return jb = ya = ta[17], ta[13] = jb, ta[2] = null, ta[1] = 14, X;
             }
             if (19 === Fa) {
-              throw Ha = ta[17], ta = fN(ur, Ha), Error(ta);
+              throw ya = ta[17], ta = fN(ur, ya), Error(ta);
             }
-            return 11 === Fa ? (ya = ta[15], Ha = ta[19], Ja = ta[22], jb = ta[12], ya = tC.b(ya), Oa = pR(Z), Oa = bh(Oa), Oa = zn(Oa, Jn()), Ha = Oa.b ? Oa.b(Ha) : Oa.call(null, Ha), Ha = jQ(Ja, ya, dk(Ha)), ta[2] = Ha, ta[1] = 13, X) : 9 === Fa ? (ya = ta[8], ta[2] = ya, ta[1] = 10, X) : 5 === Fa ? (db = ta[18], Ha = iQ(db, dk(1)), ta[2] = Ha, ta[1] = 7, X) : 14 === Fa ? (Qa = ta[13], Ha = NR(Qa), Ha = YQ(Ha, c, d), OG(ta, 16, Ha)) : 16 === Fa ? (ta[23] = ta[2], OG(ta, 17, c)) : 10 === Fa ? (Ha = 
-            ta[7], Ja = ta[2], ya = new sn(null, new hc(null, 1, [oF, null], null), null), Ha = ya.b ? ya.b(Ha) : ya.call(null, Ha), ta[22] = Ja, ta[1] = n(Ha) ? 11 : 12, X) : 18 === Fa ? (Ha = ta[17], Ha = ta[9], Ha = ta[2], ya = $M(ur, Ha), Ja = G.c(Fw, ya), ta[17] = Ha, ta[9] = ya, ta[1] = Ja ? 19 : 20, X) : 8 === Fa ? (ya = ta[8], Ha = iQ(ya, dk(2)), ta[2] = Ha, ta[1] = 10, X) : null;
+            return 11 === Fa ? (Ja = ta[22], ya = ta[12], Oa = ta[16], ya = ta[21], Ha = tC.b(Oa), Qa = pR(Z), Qa = bh(Qa), Qa = zn(Qa, Jn()), ya = Qa.b ? Qa.b(ya) : Qa.call(null, ya), ya = jQ(Ja, Ha, dk(ya)), ta[2] = ya, ta[1] = 13, X) : 9 === Fa ? (ya = ta[8], ta[2] = ya, ta[1] = 10, X) : 5 === Fa ? (db = ta[18], ya = iQ(db, dk(1)), ta[2] = ya, ta[1] = 7, X) : 14 === Fa ? (jb = ta[13], ya = NR(jb), ya = YQ(ya, c, d), OG(ta, 16, ya)) : 16 === Fa ? (ta[23] = ta[2], OG(ta, 17, c)) : 10 === Fa ? (Ha = 
+            ta[7], Ja = ta[2], ya = new sn(null, new hc(null, 1, [oF, null], null), null), ya = ya.b ? ya.b(Ha) : ya.call(null, Ha), ta[22] = Ja, ta[1] = n(ya) ? 11 : 12, X) : 18 === Fa ? (ya = ta[9], ya = ta[17], ya = ta[2], Ja = $M(ur, ya), Ha = G.c(Fw, Ja), ta[9] = Ja, ta[17] = ya, ta[1] = Ha ? 19 : 20, X) : 8 === Fa ? (ya = ta[8], ya = iQ(ya, dk(2)), ta[2] = ya, ta[1] = 10, X) : null;
           };
         }(z, F, E, q, D, v, S, N, C, M, H, K, Q), z, F, E, q, D, v, S, N, C, M, H, K, Q);
       }(), W = function() {
@@ -28290,41 +28357,43 @@ function gS(a, b, c, d) {
             }
             if (1 === S) {
               var ca = v[10], y = v[11], J = hC.b(a), U = mj.b("unitSelectSingleTarget"), fa = bQ(J, U), Z = ih.f(a, hC, fa), da = eQ(fa);
-              v[10] = fa;
               v[12] = Z;
+              v[10] = fa;
               v[11] = da;
               H = v;
               H[1] = n(da) ? 2 : 3;
               return X;
             }
             if (24 === S) {
-              var ka = v[13], ra = v[14], ua = v[15], xa = v[16];
+              var ka = v[13];
               R = v[9];
-              var Aa = rR(q, D), ta = Lk.c(un, Aa), Fa = ta.b ? ta.b(xa) : ta.call(null, xa), Ha = wR(ra, q, ka), ya = kR(ra, q, D);
-              v[17] = Ha;
-              v[18] = Fa;
-              v[15] = ta;
+              var ra = v[14], ua = v[15], xa = v[16], Aa = rR(q, D), ta = Lk.c(un, Aa), Fa = ta.b ? ta.b(xa) : ta.call(null, xa), Ha = wR(ra, q, ka), ya = kR(ra, q, D);
               v[9] = ya;
+              v[17] = Fa;
+              v[18] = Ha;
+              v[15] = ta;
               H = v;
               H[1] = n(ya) ? 27 : 28;
               return X;
             }
             if (39 === S) {
               ka = v[13];
-              Ha = v[17];
-              var Ja = v[19], jb = v[20];
+              var Ja = v[19];
+              R = v[9];
+              var jb = v[20];
+              Fa = v[17];
               ra = v[14];
-              Fa = v[18];
+              Ha = v[18];
               var Qa = v[21];
               ua = v[15];
+              var Oa = v[22];
               xa = v[16];
-              R = v[9];
-              var Oa = v[22], db = [OE], Mb = [sk.c(function() {
+              var db = [OE], Mb = [sk.c(function() {
                 return function(Zh, eg, Fi, $h, Gi, Fh, zg, Xh, zh) {
                   return function(Yh) {
                     return LR(zh, null, Yh);
                   };
-                }(Ja, Oa, Qa, Fa, ka, R, Ha, xa, ra, jb, ua, ka, Ha, Ja, jb, ra, Fa, Qa, ua, xa, R, Oa, db, S, z, F, E, q, D);
+                }(Ja, Fa, ka, Oa, R, Ha, xa, jb, ra, Qa, ua, ka, Ja, R, jb, Fa, ra, Ha, Qa, ua, Oa, xa, db, S, z, F, E, q, D);
               }(), new T(null, 2, 5, V, [q, ka], null))], Ya = Om(db, Mb), Ab = VQ(Ya, c, d);
               H = v;
               return OG(H, 42, Ab);
@@ -28336,8 +28405,8 @@ function gS(a, b, c, d) {
               return X;
             }
             if (4 === S) {
-              ca = v[10];
               Z = v[12];
+              ca = v[10];
               var ec = dQ(ca, v[2]), Xb = ih.f(Z, hC, ec), Lb = tN(new T(null, 2, 5, V, [Ww, $B], null), new T(null, 2, 5, V, [Ww, $B], null)), Ec = qQ(Lb, new T(null, 2, 5, V, [q, D], null));
               N = Xb;
               v[23] = Ec;
@@ -28367,7 +28436,7 @@ function gS(a, b, c, d) {
               return OG(H, 34, Md);
             }
             if (32 === S) {
-              return Ha = v[17], H = v, H[1] = n(Ha) ? 35 : 36, X;
+              return Ha = v[18], H = v, H[1] = n(Ha) ? 35 : 36, X;
             }
             if (40 === S) {
               var kc = H = v;
@@ -28405,8 +28474,8 @@ function gS(a, b, c, d) {
             }
             if (43 === S) {
               var td = v[24], ob = v[2], fc = O(ob, 0, null), Vd = O(ob, 1, null);
-              v[25] = fc;
               v[24] = Vd;
+              v[25] = fc;
               H = v;
               H[1] = n(Vd) ? 44 : 45;
               return X;
@@ -28418,8 +28487,8 @@ function gS(a, b, c, d) {
               return X;
             }
             if (44 === S) {
-              fc = v[25];
               td = v[24];
+              fc = v[25];
               var Oc = new T(null, 2, 5, V, [fc, td], null), je = H = v;
               je[2] = Oc;
               je[1] = 46;
@@ -28432,7 +28501,7 @@ function gS(a, b, c, d) {
               return QG(H, Qe);
             }
             if (28 === S) {
-              Fa = v[18];
+              Fa = v[17];
               var le = sc(Fa);
               H = v;
               H[1] = le ? 31 : 32;
@@ -28483,13 +28552,13 @@ function gS(a, b, c, d) {
             if (23 === S) {
               ka = v[13];
               Ja = v[19];
+              jb = v[20];
               xa = v[16];
-              Oa = v[22];
               var dd = v[2], Hf = x.c(dd, iD), xc = x.c(dd, OE), De = XP(xc, Hf);
               v[13] = De;
               v[19] = xc;
+              v[20] = dd;
               v[16] = Hf;
-              v[22] = dd;
               H = v;
               H[1] = n(De) ? 24 : 25;
               return X;
@@ -28498,8 +28567,8 @@ function gS(a, b, c, d) {
               ra = v[14];
               var ed = v[2];
               N = ra;
-              v[7] = N;
               v[28] = ed;
+              v[7] = N;
               var tf = H = v;
               tf[2] = null;
               tf[1] = 5;
@@ -28565,8 +28634,8 @@ function gS(a, b, c, d) {
               ra = v[14];
               var Tf = v[2];
               N = ra;
-              v[29] = Tf;
               v[7] = N;
+              v[29] = Tf;
               var wg = H = v;
               wg[2] = null;
               wg[1] = 5;
@@ -28584,8 +28653,8 @@ function gS(a, b, c, d) {
               return X;
             }
             if (10 === S) {
-              jb = v[20];
-              var bg = !0 === jb;
+              Qa = v[21];
+              var bg = !0 === Qa;
               H = v;
               H[1] = n(bg) ? 12 : 13;
               return X;
@@ -28611,14 +28680,14 @@ function gS(a, b, c, d) {
               return X;
             }
             if (8 === S) {
-              jb = v[20];
               Qa = v[21];
+              Oa = v[22];
               var Xe = v[2];
               ra = O(Xe, 0, null);
               var wf = O(Xe, 1, null), yg = !1 === wf;
-              v[20] = wf;
               v[14] = ra;
-              v[21] = Xe;
+              v[21] = wf;
+              v[22] = Xe;
               H = v;
               H[1] = n(yg) ? 9 : 10;
               return X;
@@ -28776,22 +28845,22 @@ function jS(a, b, c, d) {
             }
             if (1 === S) {
               var N = v[8], C = v[9];
-              N = hC.b(a);
-              C = mj.b("menu");
-              C = bQ(N, C);
-              N = ih.f(a, hC, C);
-              var M = eQ(C);
-              v[10] = N;
-              v[8] = M;
-              v[9] = C;
+              C = hC.b(a);
+              N = mj.b("menu");
+              N = bQ(C, N);
+              C = ih.f(a, hC, N);
+              var M = eQ(N);
+              v[8] = N;
+              v[9] = M;
+              v[10] = C;
               v[1] = n(M) ? 2 : 3;
               return X;
             }
             if (4 === S) {
-              N = v[10];
-              C = v[9];
-              C = dQ(C, v[2]);
-              var H = ih.f(N, hC, C);
+              N = v[8];
+              C = v[10];
+              N = dQ(N, v[2]);
+              var H = ih.f(C, hC, N);
               v[11] = H;
               v[2] = null;
               v[1] = 5;
@@ -28801,60 +28870,60 @@ function jS(a, b, c, d) {
               return v[2] = v[2], v[1] = 12, X;
             }
             if (13 === S) {
-              return N = v[12], v[2] = N, v[1] = 15, X;
+              return C = v[12], v[2] = C, v[1] = 15, X;
             }
             if (6 === S) {
               M = v[2];
-              N = O(M, 0, null);
-              C = O(M, 1, null);
+              C = O(M, 0, null);
+              N = O(M, 1, null);
               var K = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null));
               M = iW(K, M);
-              K = hC.b(N);
+              K = hC.b(C);
               K = cQ(K);
-              N = [ih.f(N, hC, K), C];
-              N = new T(null, 2, 5, V, N, null);
+              C = [ih.f(C, hC, K), N];
+              C = new T(null, 2, 5, V, C, null);
               v[13] = M;
-              return QG(v, N);
+              return QG(v, C);
             }
             if (3 === S) {
-              return N = [mt, oq], C = [fQ(q), D], N = Om(N, C), v[2] = N, v[1] = 4, X;
+              return C = [mt, oq], N = [fQ(q), D], C = Om(C, N), v[2] = C, v[1] = 4, X;
             }
             if (12 === S) {
               return v[2] = v[2], v[1] = 6, X;
             }
             if (2 === S) {
-              return N = v[8], v[2] = N, v[1] = 4, X;
+              return C = v[9], v[2] = C, v[1] = 4, X;
             }
             if (11 === S) {
-              return N = v[14], N = O(N, 0, null), N = G.c(br, N), v[1] = N ? 13 : 14, X;
+              return C = v[14], C = O(C, 0, null), C = G.c(br, C), v[1] = C ? 13 : 14, X;
             }
             if (9 === S) {
-              return N = v[12], N = v[14], N = v[2], C = $M(ur, N), M = G.c(Fw, C), v[12] = N, v[14] = C, v[1] = M ? 10 : 11, X;
+              return C = v[14], C = v[12], C = v[2], N = $M(ur, C), M = G.c(Fw, N), v[14] = N, v[12] = C, v[1] = M ? 10 : 11, X;
             }
             if (5 === S) {
-              return H = v[11], N = NR(H), N = YQ(N, c, d), OG(v, 7, N);
+              return H = v[11], C = NR(H), C = YQ(C, c, d), OG(v, 7, C);
             }
             if (14 === S) {
-              return H = N = v[12], v[11] = H, v[2] = null, v[1] = 5, X;
+              return H = C = v[12], v[11] = H, v[2] = null, v[1] = 5, X;
             }
             if (10 === S) {
-              throw N = v[12], v = fN(ur, N), Error(v);
+              throw C = v[12], v = fN(ur, C), Error(v);
             }
             if (8 === S) {
               H = v[11];
               var Q = v[2];
-              N = function() {
+              C = function() {
                 return function(R, W) {
                   return function(Y) {
                     return QR(iS, Yg([Y, c, d, W]));
                   };
                 }(H, Q, H, Q, S, z, F, E, q, D);
               }();
-              C = MR(H, Q);
-              C = UR(C, Q);
-              C = cS(C, Q);
-              N = N.b ? N.b(C) : N.call(null, C);
-              return OG(v, 9, N);
+              N = MR(H, Q);
+              N = UR(N, Q);
+              N = cS(N, Q);
+              C = C.b ? C.b(N) : C.call(null, N);
+              return OG(v, 9, C);
             }
             return null;
           };
@@ -28939,14 +29008,14 @@ function jS(a, b, c, d) {
               S = bQ(v, S);
               v = ih.f(a, hC, S);
               var N = eQ(S);
-              D[11] = v;
               D[9] = S;
               D[10] = N;
+              D[11] = v;
               D[1] = n(N) ? 2 : 3;
               return X;
             }
             if (4 === v) {
-              return v = D[11], S = D[9], S = dQ(S, D[2]), v = ih.f(v, hC, S), S = tN(new T(null, 1, 5, V, [Ww], null), new T(null, 1, 5, V, [Ww], null)), S = qQ(S, new T(null, 1, 5, V, [q], null)), D[7] = v, D[12] = S, D[2] = null, D[1] = 5, X;
+              return S = D[9], v = D[11], S = dQ(S, D[2]), v = ih.f(v, hC, S), S = tN(new T(null, 1, 5, V, [Ww], null), new T(null, 1, 5, V, [Ww], null)), S = qQ(S, new T(null, 1, 5, V, [q], null)), D[7] = v, D[12] = S, D[2] = null, D[1] = 5, X;
             }
             if (15 === v) {
               return S = D[2], v = O(S, 0, null), S = O(S, 1, null), N = new sn(null, new hc(null, 2, ["cancel", null, av, null], null), null), S = N.b ? N.b(S) : N.call(null, S), D[13] = v, D[1] = n(S) ? 16 : 17, X;
@@ -29060,25 +29129,25 @@ function jS(a, b, c, d) {
             }
             if (1 === S) {
               var ca = v[11], y = v[12], J = hC.b(a), U = mj.b("unitSelectMovePosition"), fa = bQ(J, U), Z = ih.f(a, hC, fa), da = eQ(fa);
-              v[13] = Z;
               v[11] = fa;
               v[12] = da;
+              v[13] = Z;
               H = v;
               H[1] = n(da) ? 2 : 3;
               return X;
             }
             if (24 === S) {
-              var ka = v[14];
+              var ka = v[14], ra = v[15];
               R = v[9];
-              var ra = v[15], ua = OE.b(R), xa = XP(ua, ka);
+              var ua = OE.b(R), xa = XP(ua, ka);
               v[15] = xa;
               H = v;
               H[1] = n(xa) ? 27 : 28;
               return X;
             }
             if (4 === S) {
-              Z = v[13];
               ca = v[11];
+              Z = v[13];
               var Aa = dQ(ca, v[2]);
               W = ih.f(Z, hC, Aa);
               v[10] = W;
@@ -29116,8 +29185,9 @@ function jS(a, b, c, d) {
               return X;
             }
             if (33 === S) {
+              var Ya = v[17];
               Qa = v[16];
-              var Ya = v[17], Ab = Wx.b(Ya);
+              var Ab = Wx.b(Ya);
               W = lR(Qa, Ab, dk(q));
               v[10] = W;
               var Ob = H = v;
@@ -29156,7 +29226,7 @@ function jS(a, b, c, d) {
             if (28 === S) {
               var vc = v[19], Wc = v[20];
               R = v[9];
-              var Ac = [iF, yz], id = LR(R, null, q), ae = sk.c(fk(KR, vc), Wc), sd = Om(Ac, [id, ae]), td = UQ(R, sd, c, d);
+              var Ac = [iF, yz], id = LR(R, null, q), ae = sk.c(fk(KR, Wc), vc), sd = Om(Ac, [id, ae]), td = UQ(R, sd, c, d);
               H = v;
               return OG(H, 30, td);
             }
@@ -29201,15 +29271,16 @@ function jS(a, b, c, d) {
               return X;
             }
             if (23 === S) {
+              var Wd = v[21];
               ka = v[14];
-              Wc = v[20];
-              var Wd = v[21], jd = v[2], ke = x.c(jd, iD);
-              vc = x.c(jd, eE);
+              vc = v[19];
+              var jd = v[2], ke = x.c(jd, iD);
+              Wc = x.c(jd, eE);
               var qe = NP.c ? NP.c(D, ke) : NP.call(null, D, ke), ud = 1 < Hg(qe);
-              v[19] = vc;
-              v[14] = ke;
-              v[20] = qe;
               v[21] = jd;
+              v[14] = ke;
+              v[19] = qe;
+              v[20] = Wc;
               H = v;
               H[1] = n(ud) ? 24 : 25;
               return X;
@@ -29268,22 +29339,22 @@ function jS(a, b, c, d) {
               return X;
             }
             if (30 === S) {
-              C = v[8];
-              vc = v[19];
-              ka = v[14];
-              Wc = v[20];
-              R = v[9];
-              var wd = v[22];
-              ra = v[15];
-              var Fe = v[23];
               Ya = v[17];
               Wd = v[21];
+              C = v[8];
+              var wd = v[22];
+              ka = v[14];
+              var Fe = v[23];
+              vc = v[19];
+              Wc = v[20];
+              ra = v[15];
+              R = v[9];
               var Od = v[2], Ge = FR(q, ka), te = hC.b(R), Te = eQ(te), uf = [Wx], af = [Ge], Ue = Om(uf, af), He = nn.g(Yg([Te, Ue])), me = dk(Ge), vf = lR(R, q, me), bf = Sk(vf, hC, function() {
-                return function(cg, Wf, xg, Vg, dg, Pd) {
-                  return function(We) {
-                    return dQ(We, Pd);
+                return function(cg, Wf, xg, Vg, dg) {
+                  return function(Pd) {
+                    return dQ(Pd, dg);
                   };
-                }(wd, Wc, ra, C, ka, He, Ge, Wd, R, Fe, vc, C, vc, ka, Wc, R, wd, ra, Fe, Ya, Wd, Od, Ge, te, Te, uf, af, Ue, He, me, vf, S, z, F, E, q, D);
+                }(vc, ra, C, ka, He, Ge, R, Fe, Wd, wd, Wc, Ya, Wd, C, wd, ka, Fe, vc, Wc, ra, R, Od, Ge, te, Te, uf, af, Ue, He, me, vf, S, z, F, E, q, D);
               }()), Sf = Om([iF], [Ge]), Tf = mS.B ? mS.B(bf, Sf, c, d) : mS.call(null, bf, Sf, c, d);
               v[17] = He;
               v[24] = Od;
@@ -29315,9 +29386,9 @@ function jS(a, b, c, d) {
               var Ve = v[2];
               R = O(Ve, 0, null);
               var Ug = O(Ve, 1, null), If = !1 === Ug;
-              v[9] = R;
               v[22] = Ve;
               v[23] = Ug;
+              v[9] = R;
               H = v;
               H[1] = n(If) ? 9 : 10;
               return X;
@@ -29336,6 +29407,750 @@ function jS(a, b, c, d) {
   return k;
 }
 var mS = function mS(a, b, c, d) {
+  var f = null != b && (b.i & 64 || Tb === b.I) ? Lj(gn, b) : b, h = x.c(f, iF), k = SG(1);
+  pG(function(g, l, p, u) {
+    return function() {
+      var B = function() {
+        return function(t) {
+          return function() {
+            function z(q) {
+              for (;;) {
+                a: {
+                  try {
+                    for (;;) {
+                      var D = t(q);
+                      if (!Yi(D, X)) {
+                        var v = D;
+                        break a;
+                      }
+                    }
+                  } catch (S) {
+                    if (S instanceof Object) {
+                      q[5] = S, RG(q), v = X;
+                    } else {
+                      throw S;
+                    }
+                  }
+                }
+                if (!Yi(v, X)) {
+                  return v;
+                }
+              }
+            }
+            function F() {
+              var q = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+              q[0] = E;
+              q[1] = 1;
+              return q;
+            }
+            var E = null;
+            E = function(q) {
+              switch(arguments.length) {
+                case 0:
+                  return F.call(this);
+                case 1:
+                  return z.call(this, q);
+              }
+              throw Error("Invalid arity: " + arguments.length);
+            };
+            E.h = F;
+            E.b = z;
+            return E;
+          }();
+        }(function(t, z, F, E) {
+          return function(q) {
+            var D = q[1];
+            if (65 === D) {
+              var v = q, S = v;
+              S[2] = q[2];
+              S[1] = 62;
+              return X;
+            }
+            if (70 === D) {
+              var N = q[7], C = q[8], M = Om([iF, Ix], [E, C]), H = kS(N, M, c, d);
+              v = q;
+              return OG(v, 73, H);
+            }
+            if (62 === D) {
+              var K = q[2], Q = v = q;
+              Q[2] = K;
+              Q[1] = 58;
+              return X;
+            }
+            if (74 === D) {
+              var R = q[9], W = q[10], Y = new T(null, 2, 5, V, [W, R], null), ca = v = q;
+              ca[2] = Y;
+              ca[1] = 76;
+              return X;
+            }
+            if (7 === D) {
+              var y = q[11], J = q[12], U = iW(J, q[2]), fa = YR(y, E), Z = $R(y, E), da = ih.g(y, Mp, U, Yg([VB, fa, Cx, Z]));
+              q[13] = da;
+              var ka = v = q;
+              ka[2] = null;
+              ka[1] = 8;
+              return X;
+            }
+            if (59 === D) {
+              var ra = q[2], ua = O(ra, 0, null), xa = O(ra, 1, null), Aa = new T(null, 2, 5, V, [ua, xa], null), ta = v = q;
+              ta[2] = Aa;
+              ta[1] = 58;
+              return X;
+            }
+            if (86 === D) {
+              da = N = q[7];
+              q[13] = da;
+              var Fa = v = q;
+              Fa[2] = null;
+              Fa[1] = 8;
+              return X;
+            }
+            if (20 === D) {
+              var Ha = q[2], ya = v = q;
+              ya[2] = Ha;
+              ya[1] = 17;
+              return X;
+            }
+            if (72 === D) {
+              var Ja = q[2], jb = v = q;
+              jb[2] = Ja;
+              jb[1] = 65;
+              return X;
+            }
+            if (58 === D) {
+              var Qa = q[2], Oa = v = q;
+              Oa[2] = Qa;
+              Oa[1] = 45;
+              return X;
+            }
+            if (60 === D) {
+              var db = q[14], Mb = q[15];
+              N = q[7];
+              C = q[8];
+              var Ya = q[16], Ab = Ig(db, Ya), Ob = iW($B, Ab), kb = hR(Ob), ec = G.c("single", kb);
+              q[15] = kb;
+              q[8] = Ob;
+              v = q;
+              v[1] = ec ? 63 : 64;
+              return X;
+            }
+            if (27 === D) {
+              var Xb = q[2], Lb = v = q;
+              Lb[2] = Xb;
+              Lb[1] = 20;
+              return X;
+            }
+            if (1 === D) {
+              var Ec = q[17], Kc = q[18], qd = hC.b(a), rd = mj.b("unitMenu"), Ud = bQ(qd, rd), uc = ih.f(a, hC, Ud), hd = eQ(Ud);
+              q[19] = uc;
+              q[17] = Ud;
+              q[18] = hd;
+              v = q;
+              v[1] = n(hd) ? 2 : 3;
+              return X;
+            }
+            if (69 === D) {
+              var Md = q[2], kc = v = q;
+              kc[2] = Md;
+              kc[1] = 65;
+              return X;
+            }
+            if (24 === D) {
+              var vc = q[2], Wc = v = q;
+              Wc[2] = vc;
+              Wc[1] = 20;
+              return X;
+            }
+            if (55 === D) {
+              N = q[7];
+              var Ac = q[2];
+              da = N;
+              q[13] = da;
+              q[20] = Ac;
+              var id = v = q;
+              id[2] = null;
+              id[1] = 8;
+              return X;
+            }
+            if (85 === D) {
+              var ae = q[2], sd = v = q;
+              sd[2] = ae;
+              sd[1] = 17;
+              return X;
+            }
+            if (39 === D) {
+              var td = q[2], ob = v = q;
+              ob[2] = td;
+              ob[1] = 36;
+              return X;
+            }
+            if (88 === D) {
+              var fc = q[2], Vd = v = q;
+              Vd[2] = fc;
+              Vd[1] = 85;
+              return X;
+            }
+            if (46 === D) {
+              var be = q[21], ce = q[22], Oc = q[23], je = q[24], wc = q[25];
+              db = q[14];
+              var Yb = q[26], Pe = q[27], Wd = q[28];
+              N = q[7];
+              var jd = q[29], ke = q[30], qe = q[31], ud = q[32], Qe = q[33], le = q[34], Re = q[35];
+              Ya = q[16];
+              var Be = [VA, vz], Xc = new T(null, 2, 5, V, Be, null), de = Rk.f(E, Xc, function() {
+                return function() {
+                  return function(La) {
+                    return Vh(La, cC) ? kh.c(La, cC) : dh.c(La, new T(null, 2, 5, V, [cC, !0], null));
+                  };
+                }(Pe, ke, wc, Qe, ce, ud, qe, Wd, db, Yb, Ya, ke, be, le, je, N, Oc, Re, be, ce, Oc, je, wc, db, Yb, Pe, Wd, N, jd, ke, qe, ud, Qe, le, Re, Ya, V, Be, Xc, D, t, z, F, E);
+              }()), Gf = lR(N, E, dk(de)), Rf = Pk(de, new T(null, 2, 5, V, [VA, vz], null)), vd = Vh(Rf, cC);
+              q[36] = Gf;
+              q[29] = de;
+              v = q;
+              v[1] = vd ? 49 : 50;
+              return X;
+            }
+            if (4 === D) {
+              uc = q[19];
+              Ec = q[17];
+              y = q[11];
+              var Ce = q[2], dd = dQ(Ec, Ce), Hf = ih.f(uc, hC, dd), xc = function() {
+                return function() {
+                  return function(La) {
+                    return Lk.c(un, La);
+                  };
+                }(dd, Hf, Ce, uc, Ec, y, Ce, dd, Hf, D, t, z, F, E);
+              }(), De = hC.b(Hf), ed = eQ(De), tf = mt.b(ed), Ee = xw.b(tf), wd = Kk(Ee), Fe = xc.b ? xc.b(wd) : xc.call(null, wd), Od = Vh(Fe, "move"), Ge = iW(Kh, Od), te = [Tq, gv, GF, gD], Te = function() {
+                return function() {
+                  return function(La) {
+                    return rh(La);
+                  };
+                }(dd, Hf, Ce, Ge, uc, Ec, y, Ce, dd, Hf, xc, De, ed, tf, Ee, wd, Fe, Od, Ge, bC, te, null, D, t, z, F, E);
+              }(), uf = P(bu, wA), af = Om(te, [null, Te, !0, uf]);
+              J = CN(bC, xh, af, null);
+              q[11] = Hf;
+              q[12] = J;
+              v = q;
+              v[1] = n(Ge) ? 5 : 6;
+              return X;
+            }
+            if (77 === D) {
+              da = N = q[7];
+              q[13] = da;
+              var Ue = v = q;
+              Ue[2] = null;
+              Ue[1] = 8;
+              return X;
+            }
+            if (54 === D) {
+              var He = q[2], me = v = q;
+              me[2] = He;
+              me[1] = 48;
+              return X;
+            }
+            if (15 === D) {
+              be = q[21];
+              N = q[7];
+              ud = q[32];
+              var vf = hC.b(N), bf = eQ(vf), Sf = mt.b(bf), Tf = hQ(Sf), wg = G.c("move", Tf);
+              q[21] = bf;
+              q[32] = Tf;
+              v = q;
+              v[1] = wg ? 18 : 19;
+              return X;
+            }
+            if (48 === D) {
+              var Uf = q[2], Vf = v = q;
+              Vf[2] = Uf;
+              Vf[1] = 45;
+              return X;
+            }
+            if (50 === D) {
+              Gf = q[36];
+              jd = q[29];
+              var bg = [iF], Ve = [LR(Gf, null, jd)], Ug = Om(bg, Ve), If = aR(Ug, c, d);
+              v = q;
+              return OG(v, 53, If);
+            }
+            if (75 === D) {
+              da = W = q[10];
+              q[13] = da;
+              var cg = v = q;
+              cg[2] = null;
+              cg[1] = 8;
+              return X;
+            }
+            if (21 === D) {
+              var Wf = q[37], xg = iW(Wf, q[2]), Vg = O(xg, 0, null), dg = O(xg, 1, null);
+              q[38] = Vg;
+              v = q;
+              v[1] = n(dg) ? 22 : 23;
+              return X;
+            }
+            if (31 === D) {
+              be = q[21];
+              var Pd = q[39], We = oq.b(be);
+              le = $D.b(We);
+              var Xe = oq.b(be), wf = sc(null == Xe);
+              q[39] = Xe;
+              q[34] = le;
+              v = q;
+              v[1] = wf ? 34 : 35;
+              return X;
+            }
+            if (32 === D) {
+              var yg = v = q;
+              yg[2] = null;
+              yg[1] = 33;
+              return X;
+            }
+            if (40 === D) {
+              Pd = q[39];
+              var Zh = Lj(gn, Pd), eg = v = q;
+              eg[2] = Zh;
+              eg[1] = 42;
+              return X;
+            }
+            if (91 === D) {
+              var Fi = q[2], $h = v = q;
+              $h[2] = Fi;
+              $h[1] = 14;
+              return X;
+            }
+            if (56 === D) {
+              N = q[7];
+              ud = q[32];
+              Pk(E, new T(null, 2, 5, V, [VA, eC], null));
+              var Gi = CR(E, ud), Fh = lR(N, E, dk(Gi)), zg = Om([iF], [Gi]), Xh = mS.B ? mS.B(Fh, zg, c, d) : mS.call(null, Fh, zg, c, d);
+              v = q;
+              return OG(v, 59, Xh);
+            }
+            if (33 === D) {
+              var zh = q[2], Yh = v = q;
+              Yh[2] = zh;
+              Yh[1] = 30;
+              return X;
+            }
+            if (13 === D) {
+              return v = q, v[1] = 89, X;
+            }
+            if (22 === D) {
+              Vg = q[38];
+              var Ah = new T(null, 2, 5, V, [Vg, !0], null), Ai = v = q;
+              Ai[2] = Ah;
+              Ai[1] = 24;
+              return X;
+            }
+            if (90 === D) {
+              var Bh = v = q;
+              Bh[2] = null;
+              Bh[1] = 91;
+              return X;
+            }
+            if (36 === D) {
+              var qg = q[2];
+              v = q;
+              v[1] = n(qg) ? 40 : 41;
+              return X;
+            }
+            if (41 === D) {
+              Pd = q[39];
+              var aj = v = q;
+              aj[2] = Pd;
+              aj[1] = 42;
+              return X;
+            }
+            if (89 === D) {
+              da = N = q[7];
+              q[13] = da;
+              var Ch = v = q;
+              Ch[2] = null;
+              Ch[1] = 8;
+              return X;
+            }
+            if (43 === D) {
+              wc = q[25];
+              Wd = q[28];
+              N = q[7];
+              Qe = q[33];
+              var Dh = HV(E), Ng = O(Dh, 0, null), Og = O(Dh, 1, null), Pg = O(Dh, 2, null);
+              Yb = O(Dh, 3, null);
+              var bj = sc(0 === Pg);
+              q[25] = Dh;
+              q[26] = Yb;
+              q[28] = bj;
+              q[40] = Og;
+              q[33] = Pg;
+              q[41] = Ng;
+              v = q;
+              v[1] = bj ? 46 : 47;
+              return X;
+            }
+            if (61 === D) {
+              return v = q, v[1] = 80, X;
+            }
+            if (29 === D) {
+              return v = q, v[1] = 31, X;
+            }
+            if (44 === D) {
+              Oc = q[23];
+              le = q[34];
+              var ag = G.c(Oc, le);
+              v = q;
+              v[1] = ag ? 56 : 57;
+              return X;
+            }
+            if (6 === D) {
+              var Qg = v = q;
+              Qg[2] = eh;
+              Qg[1] = 7;
+              return X;
+            }
+            if (28 === D) {
+              N = q[7];
+              var rg = new T(null, 2, 5, V, [N, !1], null), sg = v = q;
+              sg[2] = rg;
+              sg[1] = 30;
+              return X;
+            }
+            if (64 === D) {
+              Mb = q[15];
+              var Rg = G.c("line", Mb);
+              v = q;
+              v[1] = Rg ? 70 : 71;
+              return X;
+            }
+            if (51 === D) {
+              Gf = q[36];
+              jd = q[29];
+              var Ej = q[2], cj = Om([iF], [jd]), dj = mS.B ? mS.B(Gf, cj, c, d) : mS.call(null, Gf, cj, c, d);
+              q[42] = Ej;
+              v = q;
+              return OG(v, 54, dj);
+            }
+            if (25 === D) {
+              N = q[7];
+              var tg = new T(null, 2, 5, V, [N, !0], null), re = v = q;
+              re[2] = tg;
+              re[1] = 27;
+              return X;
+            }
+            if (34 === D) {
+              Pd = q[39];
+              var Sg = Tb === Pd.I, Fj = Pd.i & 64 || Sg;
+              v = q;
+              v[1] = n(Fj) ? 37 : 38;
+              return X;
+            }
+            if (17 === D) {
+              var ej = q[2], Bi = v = q;
+              Bi[2] = ej;
+              Bi[1] = 14;
+              return X;
+            }
+            if (3 === D) {
+              uc = q[19];
+              var mf = iW(lz, uc), Ci = iW(Ww, E), Bc = xR(uc, E, !0), Zb = O(Bc, 0, null), $e = O(Bc, 1, null), Lc = [mt, oq, iF], Gj = [fQ(Zb), $e, E], pm = Om(Lc, Gj);
+              q[43] = mf;
+              q[44] = Ci;
+              var kl = v = q;
+              kl[2] = pm;
+              kl[1] = 4;
+              return X;
+            }
+            if (12 === D) {
+              qe = q[31];
+              Re = q[35];
+              var Se = RQ.b ? RQ.b(qe) : RQ.call(null, qe), nf = G.c(Tx, Se);
+              q[35] = Se;
+              v = q;
+              v[1] = nf ? 15 : 16;
+              return X;
+            }
+            if (2 === D) {
+              Kc = q[18];
+              var Kn = v = q;
+              Kn[2] = Kc;
+              Kn[1] = 4;
+              return X;
+            }
+            if (66 === D) {
+              var Ln = q[45], qm = q[2], Mn = O(qm, 0, null), ll = O(qm, 1, null);
+              q[45] = ll;
+              q[46] = Mn;
+              v = q;
+              v[1] = n(ll) ? 67 : 68;
+              return X;
+            }
+            if (23 === D) {
+              da = Vg = q[38];
+              q[13] = da;
+              var Nn = v = q;
+              Nn[2] = null;
+              Nn[1] = 8;
+              return X;
+            }
+            if (47 === D) {
+              var ml = Om([bw], ["沒有飛行能力"]), On = ZQ(ml, c, d);
+              v = q;
+              return OG(v, 55, On);
+            }
+            if (35 === D) {
+              var nl = v = q;
+              nl[2] = !1;
+              nl[1] = 36;
+              return X;
+            }
+            if (82 === D) {
+              var ol = q[2], rm = v = q;
+              rm[2] = ol;
+              rm[1] = 62;
+              return X;
+            }
+            if (76 === D) {
+              var pl = q[2], ql = v = q;
+              ql[2] = pl;
+              ql[1] = 72;
+              return X;
+            }
+            if (19 === D) {
+              ud = q[32];
+              var Pn = G.c("ok", ud);
+              v = q;
+              v[1] = Pn ? 25 : 26;
+              return X;
+            }
+            if (57 === D) {
+              ce = q[22];
+              Oc = q[23];
+              var Qn = G.c(Oc, ce);
+              v = q;
+              v[1] = Qn ? 60 : 61;
+              return X;
+            }
+            if (68 === D) {
+              da = Mn = q[46];
+              q[13] = da;
+              var Rn = v = q;
+              Rn[2] = null;
+              Rn[1] = 8;
+              return X;
+            }
+            if (11 === D) {
+              da = q[13];
+              Pe = q[27];
+              ke = q[30];
+              var Sn = q[2], Tn = O(Sn, 0, null);
+              qe = O(Sn, 1, null);
+              var Un = MR(da, Sn), lp = UR(Un, Sn), rl = cS(lp, Sn), sl = ZR(rl, E, Sn);
+              N = aS(sl, E, Sn);
+              var Vn = G.c("KEY_DOWN", Tn);
+              q[27] = Tn;
+              q[7] = N;
+              q[30] = Sn;
+              q[31] = qe;
+              v = q;
+              v[1] = Vn ? 12 : 13;
+              return X;
+            }
+            if (9 === D) {
+              var Wn = q[2], Xn = O(Wn, 0, null), Yn = O(Wn, 1, null), tl = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null)), ul = iW(tl, Wn), vl = hC.b(Xn), mp = cQ(vl), Zn = ih.f(Xn, hC, mp), np = kh.g(Zn, VB, Yg([Cx])), sm = bB.b(E), $n = [ih.g(np, Mp, eh, Yg([iD, sm])), Yn], ao = new T(null, 2, 5, V, $n, null);
+              q[47] = ul;
+              v = q;
+              return QG(v, ao);
+            }
+            if (5 === D) {
+              y = q[11];
+              var tm = EV(y, E, null), bo = sk.c(I, tm), co = v = q;
+              co[2] = bo;
+              co[1] = 7;
+              return X;
+            }
+            if (83 === D) {
+              N = q[7];
+              var wl = new T(null, 2, 5, V, [N, !1], null), um = v = q;
+              um[2] = wl;
+              um[1] = 85;
+              return X;
+            }
+            if (14 === D) {
+              var uk = q[2], qp = v = q;
+              qp[2] = uk;
+              qp[1] = 9;
+              return X;
+            }
+            if (45 === D) {
+              var Di = q[2], Ei = v = q;
+              Ei[2] = Di;
+              Ei[1] = 33;
+              return X;
+            }
+            if (53 === D) {
+              var vg = q[2], vm = v = q;
+              vm[2] = vg;
+              vm[1] = 51;
+              return X;
+            }
+            if (78 === D) {
+              var ug = v = q;
+              ug[2] = null;
+              ug[1] = 79;
+              return X;
+            }
+            if (26 === D) {
+              ud = q[32];
+              var Mq = G.c("cancel", ud);
+              v = q;
+              v[1] = Mq ? 28 : 29;
+              return X;
+            }
+            if (16 === D) {
+              Re = q[35];
+              var op = G.c(av, Re);
+              v = q;
+              v[1] = op ? 83 : 84;
+              return X;
+            }
+            if (81 === D) {
+              var pp = v = q;
+              pp[2] = null;
+              pp[1] = 82;
+              return X;
+            }
+            if (79 === D) {
+              var uy = q[2], vy = v = q;
+              vy[2] = uy;
+              vy[1] = 72;
+              return X;
+            }
+            if (38 === D) {
+              var wy = v = q;
+              wy[2] = !1;
+              wy[1] = 39;
+              return X;
+            }
+            if (87 === D) {
+              var xy = v = q;
+              xy[2] = null;
+              xy[1] = 88;
+              return X;
+            }
+            if (30 === D) {
+              var yy = q[2], eo = v = q;
+              eo[2] = yy;
+              eo[1] = 27;
+              return X;
+            }
+            if (73 === D) {
+              R = q[9];
+              var zy = q[2];
+              W = O(zy, 0, null);
+              var Ay = O(zy, 1, null);
+              q[9] = Ay;
+              q[10] = W;
+              v = q;
+              v[1] = n(Ay) ? 74 : 75;
+              return X;
+            }
+            if (10 === D) {
+              return q[48] = q[2], v = q, OG(v, 11, c);
+            }
+            if (18 === D) {
+              N = q[7];
+              var By = EV(N, E, null);
+              Wf = tN(new T(null, 2, 5, V, [uS, iC], null), new T(null, 2, 5, V, [lz, Kh], null));
+              var Cy = Om([iF, oD], [E, By]), Dy = lS(N, Cy, c, d);
+              q[37] = Wf;
+              v = q;
+              return OG(v, 21, Dy);
+            }
+            if (52 === D) {
+              var Ey = q[2], Fy = v = q;
+              Fy[2] = Ey;
+              Fy[1] = 51;
+              return X;
+            }
+            if (67 === D) {
+              Ln = q[45];
+              Mn = q[46];
+              var Gy = new T(null, 2, 5, V, [Mn, Ln], null), Hy = v = q;
+              Hy[2] = Gy;
+              Hy[1] = 69;
+              return X;
+            }
+            if (71 === D) {
+              return v = q, v[1] = 77, X;
+            }
+            if (42 === D) {
+              be = q[21];
+              je = q[24];
+              ud = q[32];
+              var Iy = q[2];
+              ce = x.c(Iy, tC);
+              db = x.c(Iy, ts);
+              var Jy = mt.b(be);
+              Oc = iD.b(Jy);
+              var Ky = mt.b(be);
+              Ya = gQ(Ky);
+              var Ly = G.c(ud, "sky/ground");
+              q[22] = ce;
+              q[23] = Oc;
+              q[24] = Iy;
+              q[14] = db;
+              q[16] = Ya;
+              v = q;
+              v[1] = Ly ? 43 : 44;
+              return X;
+            }
+            if (80 === D) {
+              da = N = q[7];
+              q[13] = da;
+              var My = v = q;
+              My[2] = null;
+              My[1] = 8;
+              return X;
+            }
+            if (37 === D) {
+              var Ny = v = q;
+              Ny[2] = !0;
+              Ny[1] = 39;
+              return X;
+            }
+            if (63 === D) {
+              N = q[7];
+              C = q[8];
+              var Oy = Om([iF, Ix], [E, C]), Py = hS(N, Oy, c, d);
+              v = q;
+              return OG(v, 66, Py);
+            }
+            if (8 === D) {
+              da = q[13];
+              var Qy = iW(Kr, da), Ry = NR(da), Sy = YQ(Ry, c, d);
+              q[49] = Qy;
+              v = q;
+              return OG(v, 10, Sy);
+            }
+            if (49 === D) {
+              Gf = q[36];
+              jd = q[29];
+              var Ty = [iF], Uy = [LR(Gf, null, jd)], Vy = Om(Ty, Uy), Wy = $Q(Vy, c, d);
+              v = q;
+              return OG(v, 52, Wy);
+            }
+            return 84 === D ? (v = q, v[1] = 86, X) : null;
+          };
+        }(g, l, p, u), g, l, p, u);
+      }(), r = function() {
+        var t = B.h ? B.h() : B.call(null);
+        t[6] = g;
+        return t;
+      }();
+      return NG(r);
+    };
+  }(k, b, f, h));
+  return k;
+};
+var nS = function nS(a, b, c, d) {
   var f = null != b && (b.i & 64 || Tb === b.I) ? Lj(gn, b) : b, h = x.c(f, iF), k = SG(1);
   pG(function(g, l, p, u) {
     return function() {
@@ -29453,10 +30268,10 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (60 === D) {
-              var db = q[14], Mb = q[15];
+              var db = q[14], Mb = q[15], Ya = q[16];
               N = q[7];
               C = q[8];
-              var Ya = q[16], Ab = Ig(db, Ya), Ob = iW($B, Ab), kb = hR(Ob), ec = G.c("single", kb);
+              var Ab = Ig(Ya, db), Ob = iW($B, Ab), kb = hR(Ob), ec = G.c("single", kb);
               q[15] = kb;
               q[7] = Ob;
               v = q;
@@ -29472,8 +30287,8 @@ var mS = function mS(a, b, c, d) {
             if (1 === D) {
               var Ec = q[17], Kc = q[18], qd = hC.b(a), rd = mj.b("unitMenu"), Ud = bQ(qd, rd), uc = ih.f(a, hC, Ud), hd = eQ(Ud);
               q[17] = Ud;
-              q[18] = hd;
               q[19] = uc;
+              q[18] = hd;
               v = q;
               v[1] = n(hd) ? 2 : 3;
               return X;
@@ -29522,19 +30337,19 @@ var mS = function mS(a, b, c, d) {
             if (46 === D) {
               var be = q[21], ce = q[22], Oc = q[23], je = q[24], wc = q[25], Yb = q[26], Pe = q[27];
               db = q[14];
-              var Wd = q[28];
-              C = q[8];
-              var jd = q[29], ke = q[30], qe = q[31];
+              var Wd = q[28], jd = q[29], ke = q[30], qe = q[31], ud = q[32], Qe = q[33];
               Ya = q[16];
-              var ud = q[32], Qe = q[33], le = q[34], Re = q[35], Be = [VA, vz], Xc = new T(null, 2, 5, V, Be, null), de = Rk.f(E, Xc, function() {
+              var le = q[34];
+              C = q[8];
+              var Re = q[35], Be = [VA, vz], Xc = new T(null, 2, 5, V, Be, null), de = Rk.f(E, Xc, function() {
                 return function() {
                   return function(La) {
                     return Vh(La, cC) ? kh.c(La, cC) : dh.c(La, new T(null, 2, 5, V, [cC, !0], null));
                   };
-                }(qe, ke, jd, ce, Wd, ud, wc, Oc, db, Re, be, Ya, Oc, Yb, Qe, C, je, le, be, ce, Oc, je, wc, Yb, Pe, db, Wd, C, jd, ke, qe, Ya, ud, Qe, le, Re, V, Be, Xc, D, t, z, F, E);
+                }(le, ke, Yb, Pe, ce, Qe, Ya, Re, db, Oc, Wd, ud, je, Oc, C, be, wc, jd, be, ce, Oc, je, wc, Yb, Pe, db, Wd, jd, ke, qe, ud, Qe, Ya, le, C, Re, V, Be, Xc, D, t, z, F, E);
               }()), Gf = lR(C, E, dk(de)), Rf = Pk(de, new T(null, 2, 5, V, [VA, vz], null)), vd = Vh(Rf, cC);
-              q[27] = de;
               q[36] = Gf;
+              q[31] = de;
               v = q;
               v[1] = vd ? 49 : 50;
               return X;
@@ -29578,12 +30393,12 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (15 === D) {
-              Yb = q[26];
+              Pe = q[27];
               Wd = q[28];
               C = q[8];
               var vf = hC.b(C), bf = eQ(vf), Sf = mt.b(bf), Tf = hQ(Sf), wg = G.c("move", Tf);
-              q[26] = bf;
-              q[28] = Tf;
+              q[27] = Tf;
+              q[28] = bf;
               v = q;
               v[1] = wg ? 18 : 19;
               return X;
@@ -29595,9 +30410,9 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (50 === D) {
-              Pe = q[27];
               Gf = q[36];
-              var bg = [iF], Ve = [LR(Gf, null, Pe)], Ug = Om(bg, Ve), If = aR(Ug, c, d);
+              qe = q[31];
+              var bg = [iF], Ve = [LR(Gf, null, qe)], Ug = Om(bg, Ve), If = aR(Ug, c, d);
               v = q;
               return OG(v, 53, If);
             }
@@ -29617,12 +30432,13 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (31 === D) {
-              Yb = q[26];
-              var Pd = q[39], We = oq.b(Yb);
-              Qe = $D.b(We);
-              var Xe = oq.b(Yb), wf = sc(null == Xe);
+              var Pd = q[39];
+              Wd = q[28];
+              var We = oq.b(Wd);
+              je = $D.b(We);
+              var Xe = oq.b(Wd), wf = sc(null == Xe);
               q[39] = Xe;
-              q[33] = Qe;
+              q[24] = je;
               v = q;
               v[1] = wf ? 34 : 35;
               return X;
@@ -29647,10 +30463,10 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (56 === D) {
-              Wd = q[28];
+              Pe = q[27];
               C = q[8];
               Pk(E, new T(null, 2, 5, V, [VA, eC], null));
-              var Gi = CR(E, Wd), Fh = lR(C, E, dk(Gi)), zg = Om([iF], [Gi]), Xh = mS.B ? mS.B(Fh, zg, c, d) : mS.call(null, Fh, zg, c, d);
+              var Gi = CR(E, Pe), Fh = lR(C, E, dk(Gi)), zg = Om([iF], [Gi]), Xh = nS.B ? nS.B(Fh, zg, c, d) : nS.call(null, Fh, zg, c, d);
               v = q;
               return OG(v, 59, Xh);
             }
@@ -29699,18 +30515,18 @@ var mS = function mS(a, b, c, d) {
             }
             if (43 === D) {
               be = q[21];
-              wc = q[25];
+              ke = q[30];
+              Qe = q[33];
               C = q[8];
-              jd = q[29];
               var Dh = HV(E), Ng = O(Dh, 0, null), Og = O(Dh, 1, null), Pg = O(Dh, 2, null);
               Re = O(Dh, 3, null);
               var bj = sc(0 === Pg);
               q[21] = Dh;
-              q[25] = bj;
+              q[30] = Pg;
               q[40] = Og;
-              q[29] = Pg;
-              q[41] = Ng;
+              q[33] = bj;
               q[35] = Re;
+              q[41] = Ng;
               v = q;
               v[1] = bj ? 46 : 47;
               return X;
@@ -29723,8 +30539,8 @@ var mS = function mS(a, b, c, d) {
             }
             if (44 === D) {
               je = q[24];
-              Qe = q[33];
-              var ag = G.c(je, Qe);
+              wc = q[25];
+              var ag = G.c(wc, je);
               v = q;
               v[1] = ag ? 56 : 57;
               return X;
@@ -29750,9 +30566,9 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (51 === D) {
-              Pe = q[27];
               Gf = q[36];
-              var Ej = q[2], cj = Om([iF], [Pe]), dj = mS.B ? mS.B(Gf, cj, c, d) : mS.call(null, Gf, cj, c, d);
+              qe = q[31];
+              var Ej = q[2], cj = Om([iF], [qe]), dj = nS.B ? nS.B(Gf, cj, c, d) : nS.call(null, Gf, cj, c, d);
               q[42] = Ej;
               v = q;
               return OG(v, 54, dj);
@@ -29780,18 +30596,18 @@ var mS = function mS(a, b, c, d) {
             if (3 === D) {
               uc = q[19];
               var mf = iW(lz, uc), Ci = iW(Ww, E), Bc = xR(uc, E, !0), Zb = O(Bc, 0, null), $e = O(Bc, 1, null), Lc = [mt, oq, iF], Gj = [fQ(Zb), $e, E], pm = Om(Lc, Gj);
-              q[43] = Ci;
-              q[44] = mf;
+              q[43] = mf;
+              q[44] = Ci;
               var kl = v = q;
               kl[2] = pm;
               kl[1] = 4;
               return X;
             }
             if (12 === D) {
-              ud = q[32];
-              le = q[34];
-              var Se = RQ.b ? RQ.b(ud) : RQ.call(null, ud), nf = G.c(Tx, Se);
-              q[34] = Se;
+              ce = q[22];
+              jd = q[29];
+              var Se = RQ.b ? RQ.b(ce) : RQ.call(null, ce), nf = G.c(Tx, Se);
+              q[29] = Se;
               v = q;
               v[1] = nf ? 15 : 16;
               return X;
@@ -29843,16 +30659,16 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (19 === D) {
-              Wd = q[28];
-              var Pn = G.c("ok", Wd);
+              Pe = q[27];
+              var Pn = G.c("ok", Pe);
               v = q;
               v[1] = Pn ? 25 : 26;
               return X;
             }
             if (57 === D) {
-              ce = q[22];
-              je = q[24];
-              var Qn = G.c(je, ce);
+              wc = q[25];
+              Yb = q[26];
+              var Qn = G.c(wc, Yb);
               v = q;
               v[1] = Qn ? 60 : 61;
               return X;
@@ -29868,16 +30684,16 @@ var mS = function mS(a, b, c, d) {
             if (11 === D) {
               Oc = q[23];
               da = q[13];
-              qe = q[31];
+              le = q[34];
               var Sn = q[2], Tn = O(Sn, 0, null);
-              ud = O(Sn, 1, null);
+              ce = O(Sn, 1, null);
               var Un = MR(da, Sn), lp = UR(Un, Sn), rl = cS(lp, Sn), sl = ZR(rl, E, Sn);
               C = aS(sl, E, Sn);
               var Vn = G.c("KEY_DOWN", Tn);
+              q[22] = ce;
               q[23] = Sn;
+              q[34] = Tn;
               q[8] = C;
-              q[31] = Tn;
-              q[32] = ud;
               v = q;
               v[1] = Vn ? 12 : 13;
               return X;
@@ -29927,15 +30743,15 @@ var mS = function mS(a, b, c, d) {
               return X;
             }
             if (26 === D) {
-              Wd = q[28];
-              var Mq = G.c("cancel", Wd);
+              Pe = q[27];
+              var Mq = G.c("cancel", Pe);
               v = q;
               v[1] = Mq ? 28 : 29;
               return X;
             }
             if (16 === D) {
-              le = q[34];
-              var op = G.c(av, le);
+              jd = q[29];
+              var op = G.c(av, jd);
               v = q;
               v[1] = op ? 83 : 84;
               return X;
@@ -30011,21 +30827,21 @@ var mS = function mS(a, b, c, d) {
               return v = q, v[1] = 77, X;
             }
             if (42 === D) {
-              Yb = q[26];
+              Pe = q[27];
               Wd = q[28];
-              ke = q[30];
+              ud = q[32];
               var Iy = q[2];
-              ce = x.c(Iy, tC);
-              db = x.c(Iy, ts);
-              var Jy = mt.b(Yb);
-              je = iD.b(Jy);
-              var Ky = mt.b(Yb);
-              Ya = gQ(Ky);
-              var Ly = G.c(Wd, "sky/ground");
-              q[22] = ce;
-              q[24] = je;
+              Yb = x.c(Iy, tC);
+              Ya = x.c(Iy, ts);
+              var Jy = mt.b(Wd);
+              wc = iD.b(Jy);
+              var Ky = mt.b(Wd);
+              db = gQ(Ky);
+              var Ly = G.c(Pe, "sky/ground");
+              q[25] = wc;
+              q[26] = Yb;
               q[14] = db;
-              q[30] = Iy;
+              q[32] = Iy;
               q[16] = Ya;
               v = q;
               v[1] = Ly ? 43 : 44;
@@ -30060,753 +30876,9 @@ var mS = function mS(a, b, c, d) {
               return OG(v, 10, Sy);
             }
             if (49 === D) {
-              Pe = q[27];
               Gf = q[36];
-              var Ty = [iF], Uy = [LR(Gf, null, Pe)], Vy = Om(Ty, Uy), Wy = $Q(Vy, c, d);
-              v = q;
-              return OG(v, 52, Wy);
-            }
-            return 84 === D ? (v = q, v[1] = 86, X) : null;
-          };
-        }(g, l, p, u), g, l, p, u);
-      }(), r = function() {
-        var t = B.h ? B.h() : B.call(null);
-        t[6] = g;
-        return t;
-      }();
-      return NG(r);
-    };
-  }(k, b, f, h));
-  return k;
-};
-var nS = function nS(a, b, c, d) {
-  var f = null != b && (b.i & 64 || Tb === b.I) ? Lj(gn, b) : b, h = x.c(f, iF), k = SG(1);
-  pG(function(g, l, p, u) {
-    return function() {
-      var B = function() {
-        return function(t) {
-          return function() {
-            function z(q) {
-              for (;;) {
-                a: {
-                  try {
-                    for (;;) {
-                      var D = t(q);
-                      if (!Yi(D, X)) {
-                        var v = D;
-                        break a;
-                      }
-                    }
-                  } catch (S) {
-                    if (S instanceof Object) {
-                      q[5] = S, RG(q), v = X;
-                    } else {
-                      throw S;
-                    }
-                  }
-                }
-                if (!Yi(v, X)) {
-                  return v;
-                }
-              }
-            }
-            function F() {
-              var q = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
-              q[0] = E;
-              q[1] = 1;
-              return q;
-            }
-            var E = null;
-            E = function(q) {
-              switch(arguments.length) {
-                case 0:
-                  return F.call(this);
-                case 1:
-                  return z.call(this, q);
-              }
-              throw Error("Invalid arity: " + arguments.length);
-            };
-            E.h = F;
-            E.b = z;
-            return E;
-          }();
-        }(function(t, z, F, E) {
-          return function(q) {
-            var D = q[1];
-            if (65 === D) {
-              var v = q, S = v;
-              S[2] = q[2];
-              S[1] = 62;
-              return X;
-            }
-            if (70 === D) {
-              var N = q[7], C = q[8], M = Om([iF, Ix], [E, C]), H = kS(N, M, c, d);
-              v = q;
-              return OG(v, 73, H);
-            }
-            if (62 === D) {
-              var K = q[2], Q = v = q;
-              Q[2] = K;
-              Q[1] = 58;
-              return X;
-            }
-            if (74 === D) {
-              var R = q[9], W = q[10], Y = new T(null, 2, 5, V, [R, W], null), ca = v = q;
-              ca[2] = Y;
-              ca[1] = 76;
-              return X;
-            }
-            if (7 === D) {
-              var y = q[11], J = q[12], U = iW(y, q[2]), fa = YR(J, E), Z = $R(J, E), da = ih.g(J, Mp, U, Yg([VB, fa, Cx, Z]));
-              q[13] = da;
-              var ka = v = q;
-              ka[2] = null;
-              ka[1] = 8;
-              return X;
-            }
-            if (59 === D) {
-              var ra = q[2], ua = O(ra, 0, null), xa = O(ra, 1, null), Aa = new T(null, 2, 5, V, [ua, xa], null), ta = v = q;
-              ta[2] = Aa;
-              ta[1] = 58;
-              return X;
-            }
-            if (86 === D) {
-              da = N = q[7];
-              q[13] = da;
-              var Fa = v = q;
-              Fa[2] = null;
-              Fa[1] = 8;
-              return X;
-            }
-            if (20 === D) {
-              var Ha = q[2], ya = v = q;
-              ya[2] = Ha;
-              ya[1] = 17;
-              return X;
-            }
-            if (72 === D) {
-              var Ja = q[2], jb = v = q;
-              jb[2] = Ja;
-              jb[1] = 65;
-              return X;
-            }
-            if (58 === D) {
-              var Qa = q[2], Oa = v = q;
-              Oa[2] = Qa;
-              Oa[1] = 45;
-              return X;
-            }
-            if (60 === D) {
-              var db = q[14], Mb = q[15];
-              N = q[7];
-              C = q[8];
-              var Ya = q[16], Ab = Ig(Mb, db), Ob = iW($B, Ab), kb = hR(Ob), ec = G.c("single", kb);
-              q[8] = Ob;
-              q[16] = kb;
-              v = q;
-              v[1] = ec ? 63 : 64;
-              return X;
-            }
-            if (27 === D) {
-              var Xb = q[2], Lb = v = q;
-              Lb[2] = Xb;
-              Lb[1] = 20;
-              return X;
-            }
-            if (1 === D) {
-              var Ec = q[17], Kc = q[18], qd = hC.b(a), rd = mj.b("unitMenu"), Ud = bQ(qd, rd), uc = ih.f(a, hC, Ud), hd = eQ(Ud);
-              q[17] = Ud;
-              q[19] = uc;
-              q[18] = hd;
-              v = q;
-              v[1] = n(hd) ? 2 : 3;
-              return X;
-            }
-            if (69 === D) {
-              var Md = q[2], kc = v = q;
-              kc[2] = Md;
-              kc[1] = 65;
-              return X;
-            }
-            if (24 === D) {
-              var vc = q[2], Wc = v = q;
-              Wc[2] = vc;
-              Wc[1] = 20;
-              return X;
-            }
-            if (55 === D) {
-              N = q[7];
-              var Ac = q[2];
-              da = N;
-              q[20] = Ac;
-              q[13] = da;
-              var id = v = q;
-              id[2] = null;
-              id[1] = 8;
-              return X;
-            }
-            if (85 === D) {
-              var ae = q[2], sd = v = q;
-              sd[2] = ae;
-              sd[1] = 17;
-              return X;
-            }
-            if (39 === D) {
-              var td = q[2], ob = v = q;
-              ob[2] = td;
-              ob[1] = 36;
-              return X;
-            }
-            if (88 === D) {
-              var fc = q[2], Vd = v = q;
-              Vd[2] = fc;
-              Vd[1] = 85;
-              return X;
-            }
-            if (46 === D) {
-              db = q[14];
-              var be = q[21];
-              Mb = q[15];
-              var ce = q[22], Oc = q[23], je = q[24], wc = q[25], Yb = q[26];
-              N = q[7];
-              var Pe = q[27], Wd = q[28], jd = q[29], ke = q[30], qe = q[31], ud = q[32], Qe = q[33], le = q[34], Re = q[35], Be = [VA, vz], Xc = new T(null, 2, 5, V, Be, null), de = Rk.f(E, Xc, function() {
-                return function() {
-                  return function(La) {
-                    return Vh(La, cC) ? kh.c(La, cC) : dh.c(La, new T(null, 2, 5, V, [cC, !0], null));
-                  };
-                }(wc, ke, Oc, Pe, Yb, qe, ud, je, Mb, jd, db, ke, Re, Wd, be, N, Qe, le, db, be, Mb, ce, Oc, je, wc, Yb, N, Pe, Wd, jd, ke, qe, ud, Qe, le, Re, V, Be, Xc, D, t, z, F, E);
-              }()), Gf = lR(N, E, dk(de)), Rf = Pk(de, new T(null, 2, 5, V, [VA, vz], null)), vd = Vh(Rf, cC);
-              q[22] = de;
-              q[36] = Gf;
-              v = q;
-              v[1] = vd ? 49 : 50;
-              return X;
-            }
-            if (4 === D) {
-              Ec = q[17];
-              uc = q[19];
-              J = q[12];
-              var Ce = q[2], dd = dQ(Ec, Ce), Hf = ih.f(uc, hC, dd), xc = function() {
-                return function() {
-                  return function(La) {
-                    return Lk.c(un, La);
-                  };
-                }(dd, Hf, Ce, Ec, uc, J, Ce, dd, Hf, D, t, z, F, E);
-              }(), De = hC.b(Hf), ed = eQ(De), tf = mt.b(ed), Ee = xw.b(tf), wd = Kk(Ee), Fe = xc.b ? xc.b(wd) : xc.call(null, wd), Od = Vh(Fe, "move"), Ge = iW(Kh, Od), te = [Tq, gv, GF, gD], Te = function() {
-                return function() {
-                  return function(La) {
-                    return rh(La);
-                  };
-                }(dd, Hf, Ce, Ge, Ec, uc, J, Ce, dd, Hf, xc, De, ed, tf, Ee, wd, Fe, Od, Ge, bC, te, null, D, t, z, F, E);
-              }(), uf = P(bu, wA), af = Om(te, [null, Te, !0, uf]);
-              y = CN(bC, xh, af, null);
-              q[11] = y;
-              q[12] = Hf;
-              v = q;
-              v[1] = n(Ge) ? 5 : 6;
-              return X;
-            }
-            if (77 === D) {
-              da = N = q[7];
-              q[13] = da;
-              var Ue = v = q;
-              Ue[2] = null;
-              Ue[1] = 8;
-              return X;
-            }
-            if (54 === D) {
-              var He = q[2], me = v = q;
-              me[2] = He;
-              me[1] = 48;
-              return X;
-            }
-            if (15 === D) {
-              Yb = q[26];
-              N = q[7];
-              Re = q[35];
-              var vf = hC.b(N), bf = eQ(vf), Sf = mt.b(bf), Tf = hQ(Sf), wg = G.c("move", Tf);
-              q[26] = Tf;
-              q[35] = bf;
-              v = q;
-              v[1] = wg ? 18 : 19;
-              return X;
-            }
-            if (48 === D) {
-              var Uf = q[2], Vf = v = q;
-              Vf[2] = Uf;
-              Vf[1] = 45;
-              return X;
-            }
-            if (50 === D) {
-              ce = q[22];
-              Gf = q[36];
-              var bg = [iF], Ve = [LR(Gf, null, ce)], Ug = Om(bg, Ve), If = aR(Ug, c, d);
-              v = q;
-              return OG(v, 53, If);
-            }
-            if (75 === D) {
-              da = R = q[9];
-              q[13] = da;
-              var cg = v = q;
-              cg[2] = null;
-              cg[1] = 8;
-              return X;
-            }
-            if (21 === D) {
-              var Wf = q[37], xg = iW(Wf, q[2]), Vg = O(xg, 0, null), dg = O(xg, 1, null);
-              q[38] = Vg;
-              v = q;
-              v[1] = n(dg) ? 22 : 23;
-              return X;
-            }
-            if (31 === D) {
-              var Pd = q[39];
-              Re = q[35];
-              var We = oq.b(Re);
-              be = $D.b(We);
-              var Xe = oq.b(Re), wf = sc(null == Xe);
-              q[21] = be;
-              q[39] = Xe;
-              v = q;
-              v[1] = wf ? 34 : 35;
-              return X;
-            }
-            if (32 === D) {
-              var yg = v = q;
-              yg[2] = null;
-              yg[1] = 33;
-              return X;
-            }
-            if (40 === D) {
-              Pd = q[39];
-              var Zh = Lj(gn, Pd), eg = v = q;
-              eg[2] = Zh;
-              eg[1] = 42;
-              return X;
-            }
-            if (91 === D) {
-              var Fi = q[2], $h = v = q;
-              $h[2] = Fi;
-              $h[1] = 14;
-              return X;
-            }
-            if (56 === D) {
-              Yb = q[26];
-              N = q[7];
-              Pk(E, new T(null, 2, 5, V, [VA, eC], null));
-              var Gi = CR(E, Yb), Fh = lR(N, E, dk(Gi)), zg = Om([iF], [Gi]), Xh = nS.B ? nS.B(Fh, zg, c, d) : nS.call(null, Fh, zg, c, d);
-              v = q;
-              return OG(v, 59, Xh);
-            }
-            if (33 === D) {
-              var zh = q[2], Yh = v = q;
-              Yh[2] = zh;
-              Yh[1] = 30;
-              return X;
-            }
-            if (13 === D) {
-              return v = q, v[1] = 89, X;
-            }
-            if (22 === D) {
-              Vg = q[38];
-              var Ah = new T(null, 2, 5, V, [Vg, !0], null), Ai = v = q;
-              Ai[2] = Ah;
-              Ai[1] = 24;
-              return X;
-            }
-            if (90 === D) {
-              var Bh = v = q;
-              Bh[2] = null;
-              Bh[1] = 91;
-              return X;
-            }
-            if (36 === D) {
-              var qg = q[2];
-              v = q;
-              v[1] = n(qg) ? 40 : 41;
-              return X;
-            }
-            if (41 === D) {
-              Pd = q[39];
-              var aj = v = q;
-              aj[2] = Pd;
-              aj[1] = 42;
-              return X;
-            }
-            if (89 === D) {
-              da = N = q[7];
-              q[13] = da;
-              var Ch = v = q;
-              Ch[2] = null;
-              Ch[1] = 8;
-              return X;
-            }
-            if (43 === D) {
-              Oc = q[23];
-              je = q[24];
-              N = q[7];
-              ud = q[32];
-              var Dh = HV(E), Ng = O(Dh, 0, null), Og = O(Dh, 1, null), Pg = O(Dh, 2, null);
-              jd = O(Dh, 3, null);
-              var bj = sc(0 === Pg);
-              q[23] = Pg;
-              q[24] = Dh;
-              q[40] = Ng;
-              q[29] = jd;
-              q[41] = Og;
-              q[32] = bj;
-              v = q;
-              v[1] = bj ? 46 : 47;
-              return X;
-            }
-            if (61 === D) {
-              return v = q, v[1] = 80, X;
-            }
-            if (29 === D) {
-              return v = q, v[1] = 31, X;
-            }
-            if (44 === D) {
-              be = q[21];
-              Qe = q[33];
-              var ag = G.c(Qe, be);
-              v = q;
-              v[1] = ag ? 56 : 57;
-              return X;
-            }
-            if (6 === D) {
-              var Qg = v = q;
-              Qg[2] = eh;
-              Qg[1] = 7;
-              return X;
-            }
-            if (28 === D) {
-              N = q[7];
-              var rg = new T(null, 2, 5, V, [N, !1], null), sg = v = q;
-              sg[2] = rg;
-              sg[1] = 30;
-              return X;
-            }
-            if (64 === D) {
-              Ya = q[16];
-              var Rg = G.c("line", Ya);
-              v = q;
-              v[1] = Rg ? 70 : 71;
-              return X;
-            }
-            if (51 === D) {
-              ce = q[22];
-              Gf = q[36];
-              var Ej = q[2], cj = Om([iF], [ce]), dj = nS.B ? nS.B(Gf, cj, c, d) : nS.call(null, Gf, cj, c, d);
-              q[42] = Ej;
-              v = q;
-              return OG(v, 54, dj);
-            }
-            if (25 === D) {
-              N = q[7];
-              var tg = new T(null, 2, 5, V, [N, !0], null), re = v = q;
-              re[2] = tg;
-              re[1] = 27;
-              return X;
-            }
-            if (34 === D) {
-              Pd = q[39];
-              var Sg = Tb === Pd.I, Fj = Pd.i & 64 || Sg;
-              v = q;
-              v[1] = n(Fj) ? 37 : 38;
-              return X;
-            }
-            if (17 === D) {
-              var ej = q[2], Bi = v = q;
-              Bi[2] = ej;
-              Bi[1] = 14;
-              return X;
-            }
-            if (3 === D) {
-              uc = q[19];
-              var mf = iW(lz, uc), Ci = iW(Ww, E), Bc = xR(uc, E, !0), Zb = O(Bc, 0, null), $e = O(Bc, 1, null), Lc = [mt, oq, iF], Gj = [fQ(Zb), $e, E], pm = Om(Lc, Gj);
-              q[43] = Ci;
-              q[44] = mf;
-              var kl = v = q;
-              kl[2] = pm;
-              kl[1] = 4;
-              return X;
-            }
-            if (12 === D) {
               qe = q[31];
-              le = q[34];
-              var Se = RQ.b ? RQ.b(qe) : RQ.call(null, qe), nf = G.c(Tx, Se);
-              q[34] = Se;
-              v = q;
-              v[1] = nf ? 15 : 16;
-              return X;
-            }
-            if (2 === D) {
-              Kc = q[18];
-              var Kn = v = q;
-              Kn[2] = Kc;
-              Kn[1] = 4;
-              return X;
-            }
-            if (66 === D) {
-              var Ln = q[45], qm = q[2], Mn = O(qm, 0, null), ll = O(qm, 1, null);
-              q[45] = ll;
-              q[46] = Mn;
-              v = q;
-              v[1] = n(ll) ? 67 : 68;
-              return X;
-            }
-            if (23 === D) {
-              da = Vg = q[38];
-              q[13] = da;
-              var Nn = v = q;
-              Nn[2] = null;
-              Nn[1] = 8;
-              return X;
-            }
-            if (47 === D) {
-              var ml = Om([bw], ["沒有飛行能力"]), On = ZQ(ml, c, d);
-              v = q;
-              return OG(v, 55, On);
-            }
-            if (35 === D) {
-              var nl = v = q;
-              nl[2] = !1;
-              nl[1] = 36;
-              return X;
-            }
-            if (82 === D) {
-              var ol = q[2], rm = v = q;
-              rm[2] = ol;
-              rm[1] = 62;
-              return X;
-            }
-            if (76 === D) {
-              var pl = q[2], ql = v = q;
-              ql[2] = pl;
-              ql[1] = 72;
-              return X;
-            }
-            if (19 === D) {
-              Yb = q[26];
-              var Pn = G.c("ok", Yb);
-              v = q;
-              v[1] = Pn ? 25 : 26;
-              return X;
-            }
-            if (57 === D) {
-              Pe = q[27];
-              Qe = q[33];
-              var Qn = G.c(Qe, Pe);
-              v = q;
-              v[1] = Qn ? 60 : 61;
-              return X;
-            }
-            if (68 === D) {
-              da = Mn = q[46];
-              q[13] = da;
-              var Rn = v = q;
-              Rn[2] = null;
-              Rn[1] = 8;
-              return X;
-            }
-            if (11 === D) {
-              wc = q[25];
-              ke = q[30];
-              da = q[13];
-              var Sn = q[2], Tn = O(Sn, 0, null);
-              qe = O(Sn, 1, null);
-              var Un = MR(da, Sn), lp = UR(Un, Sn), rl = cS(lp, Sn), sl = ZR(rl, E, Sn);
-              N = aS(sl, E, Sn);
-              var Vn = G.c("KEY_DOWN", Tn);
-              q[25] = Tn;
-              q[7] = N;
-              q[30] = Sn;
-              q[31] = qe;
-              v = q;
-              v[1] = Vn ? 12 : 13;
-              return X;
-            }
-            if (9 === D) {
-              var Wn = q[2], Xn = O(Wn, 0, null), Yn = O(Wn, 1, null), tl = tN(new T(null, 2, 5, V, [uS, dE], null), new T(null, 2, 5, V, [lz, Cc], null)), ul = iW(tl, Wn), vl = hC.b(Xn), mp = cQ(vl), Zn = ih.f(Xn, hC, mp), np = kh.g(Zn, VB, Yg([Cx])), sm = bB.b(E), $n = [ih.g(np, Mp, eh, Yg([iD, sm])), Yn], ao = new T(null, 2, 5, V, $n, null);
-              q[47] = ul;
-              v = q;
-              return QG(v, ao);
-            }
-            if (5 === D) {
-              J = q[12];
-              var tm = EV(J, E, null), bo = sk.c(I, tm), co = v = q;
-              co[2] = bo;
-              co[1] = 7;
-              return X;
-            }
-            if (83 === D) {
-              N = q[7];
-              var wl = new T(null, 2, 5, V, [N, !1], null), um = v = q;
-              um[2] = wl;
-              um[1] = 85;
-              return X;
-            }
-            if (14 === D) {
-              var uk = q[2], qp = v = q;
-              qp[2] = uk;
-              qp[1] = 9;
-              return X;
-            }
-            if (45 === D) {
-              var Di = q[2], Ei = v = q;
-              Ei[2] = Di;
-              Ei[1] = 33;
-              return X;
-            }
-            if (53 === D) {
-              var vg = q[2], vm = v = q;
-              vm[2] = vg;
-              vm[1] = 51;
-              return X;
-            }
-            if (78 === D) {
-              var ug = v = q;
-              ug[2] = null;
-              ug[1] = 79;
-              return X;
-            }
-            if (26 === D) {
-              Yb = q[26];
-              var Mq = G.c("cancel", Yb);
-              v = q;
-              v[1] = Mq ? 28 : 29;
-              return X;
-            }
-            if (16 === D) {
-              le = q[34];
-              var op = G.c(av, le);
-              v = q;
-              v[1] = op ? 83 : 84;
-              return X;
-            }
-            if (81 === D) {
-              var pp = v = q;
-              pp[2] = null;
-              pp[1] = 82;
-              return X;
-            }
-            if (79 === D) {
-              var uy = q[2], vy = v = q;
-              vy[2] = uy;
-              vy[1] = 72;
-              return X;
-            }
-            if (38 === D) {
-              var wy = v = q;
-              wy[2] = !1;
-              wy[1] = 39;
-              return X;
-            }
-            if (87 === D) {
-              var xy = v = q;
-              xy[2] = null;
-              xy[1] = 88;
-              return X;
-            }
-            if (30 === D) {
-              var yy = q[2], eo = v = q;
-              eo[2] = yy;
-              eo[1] = 27;
-              return X;
-            }
-            if (73 === D) {
-              W = q[10];
-              var zy = q[2];
-              R = O(zy, 0, null);
-              var Ay = O(zy, 1, null);
-              q[9] = R;
-              q[10] = Ay;
-              v = q;
-              v[1] = n(Ay) ? 74 : 75;
-              return X;
-            }
-            if (10 === D) {
-              return q[48] = q[2], v = q, OG(v, 11, c);
-            }
-            if (18 === D) {
-              N = q[7];
-              var By = EV(N, E, null);
-              Wf = tN(new T(null, 2, 5, V, [uS, iC], null), new T(null, 2, 5, V, [lz, Kh], null));
-              var Cy = Om([iF, oD], [E, By]), Dy = lS(N, Cy, c, d);
-              q[37] = Wf;
-              v = q;
-              return OG(v, 21, Dy);
-            }
-            if (52 === D) {
-              var Ey = q[2], Fy = v = q;
-              Fy[2] = Ey;
-              Fy[1] = 51;
-              return X;
-            }
-            if (67 === D) {
-              Ln = q[45];
-              Mn = q[46];
-              var Gy = new T(null, 2, 5, V, [Mn, Ln], null), Hy = v = q;
-              Hy[2] = Gy;
-              Hy[1] = 69;
-              return X;
-            }
-            if (71 === D) {
-              return v = q, v[1] = 77, X;
-            }
-            if (42 === D) {
-              Yb = q[26];
-              Wd = q[28];
-              Re = q[35];
-              var Iy = q[2];
-              Pe = x.c(Iy, tC);
-              Mb = x.c(Iy, ts);
-              var Jy = mt.b(Re);
-              Qe = iD.b(Jy);
-              var Ky = mt.b(Re);
-              db = gQ(Ky);
-              var Ly = G.c(Yb, "sky/ground");
-              q[14] = db;
-              q[15] = Mb;
-              q[27] = Pe;
-              q[28] = Iy;
-              q[33] = Qe;
-              v = q;
-              v[1] = Ly ? 43 : 44;
-              return X;
-            }
-            if (80 === D) {
-              da = N = q[7];
-              q[13] = da;
-              var My = v = q;
-              My[2] = null;
-              My[1] = 8;
-              return X;
-            }
-            if (37 === D) {
-              var Ny = v = q;
-              Ny[2] = !0;
-              Ny[1] = 39;
-              return X;
-            }
-            if (63 === D) {
-              N = q[7];
-              C = q[8];
-              var Oy = Om([iF, Ix], [E, C]), Py = hS(N, Oy, c, d);
-              v = q;
-              return OG(v, 66, Py);
-            }
-            if (8 === D) {
-              da = q[13];
-              var Qy = iW(Kr, da), Ry = NR(da), Sy = YQ(Ry, c, d);
-              q[49] = Qy;
-              v = q;
-              return OG(v, 10, Sy);
-            }
-            if (49 === D) {
-              ce = q[22];
-              Gf = q[36];
-              var Ty = [iF], Uy = [LR(Gf, null, ce)], Vy = Om(Ty, Uy), Wy = $Q(Vy, c, d);
+              var Ty = [iF], Uy = [LR(Gf, null, qe)], Vy = Om(Ty, Uy), Wy = $Q(Vy, c, d);
               v = q;
               return OG(v, 52, Wy);
             }
@@ -30968,9 +31040,9 @@ function oS(a, b, c) {
             }
             if (20 === q) {
               var D = E[7], v = E[8], S = E[9];
-              D = iW(D, E[2]);
-              var N = O(D, 0, null), C = O(D, 1, null);
-              E[8] = D;
+              v = iW(v, E[2]);
+              var N = O(v, 0, null), C = O(v, 1, null);
+              E[7] = v;
               E[10] = N;
               E[9] = C;
               E[1] = n(C) ? 21 : 22;
@@ -30980,10 +31052,10 @@ function oS(a, b, c) {
               return E[2] = !0, E[1] = 29, X;
             }
             if (1 === q) {
-              return D = G.c("KEY_DOWN", z), E[1] = D ? 2 : 3, X;
+              return v = G.c("KEY_DOWN", z), E[1] = v ? 2 : 3, X;
             }
             if (24 === q) {
-              return N = E[10], D = Tb === N.I, E[1] = n(N.i & 64 || D) ? 27 : 28, X;
+              return N = E[10], v = Tb === N.I, E[1] = n(N.i & 64 || v) ? 27 : 28, X;
             }
             if (39 === q) {
               return E[2] = E[2], E[1] = 19, X;
@@ -31002,14 +31074,14 @@ function oS(a, b, c) {
             }
             if (32 === q) {
               var M = E[11], H = E[12], K = E[13], Q = E[14];
-              D = E[2];
-              C = x.c(D, OE);
-              var R = UN(Ww, Ww, null), W = sE.b(K);
+              v = E[2];
+              C = x.c(v, OE);
+              var R = UN(Ww, Ww, null), W = sE.b(M);
               W = WP(C, W);
               R = iW(R, W);
-              E[11] = D;
-              E[12] = R;
-              E[14] = C;
+              E[12] = C;
+              E[13] = v;
+              E[14] = R;
               E[1] = n(R) ? 33 : 34;
               return X;
             }
@@ -31018,29 +31090,28 @@ function oS(a, b, c) {
             }
             if (33 === q) {
               M = E[11];
-              var Y = E[15], ca = E[16];
-              v = E[8];
+              D = E[7];
               H = E[12];
-              var y = E[17];
-              K = E[13];
               N = E[10];
+              var Y = E[15], ca = E[16], y = E[17];
+              K = E[13];
               S = E[9];
               Q = E[14];
-              D = lR(N, H, function() {
+              v = lR(N, Q, function() {
                 return function() {
                   return function(J) {
                     return GR(J);
                   };
-                }(Q, K, S, M, H, y, Y, N, v, ca, M, Y, ca, v, H, y, K, N, S, Q, q, r, t, z, F);
+                }(H, M, S, ca, Q, Y, K, N, D, y, M, D, H, N, Y, ca, y, K, S, Q, q, r, t, z, F);
               }());
-              E[2] = D;
+              E[2] = v;
               E[1] = 35;
               return X;
             }
-            return 13 === q ? (E[2] = E[2], E[1] = 10, X) : 22 === q ? (N = E[10], E[2] = N, E[1] = 23, X) : 36 === q ? (D = E[18], C = iW(D, E[2]), D = O(C, 0, null), C = O(C, 1, null), E[19] = D, E[1] = n(C) ? 37 : 38, X) : 41 === q ? (E[2] = null, E[1] = 42, X) : 43 === q ? (E[2] = a, E[1] = 45, X) : 29 === q ? (E[2] = E[2], E[1] = 26, X) : 44 === q ? (E[2] = null, E[1] = 45, X) : 6 === q ? (E[1] = 40, X) : 28 === q ? (E[2] = !1, E[1] = 29, X) : 25 === q ? (E[2] = !1, E[1] = 26, X) : 34 === q ? 
-            (N = E[10], E[2] = N, E[1] = 35, X) : 17 === q ? (K = E[13], D = tN(new T(null, 2, 5, V, [lz, iC], null), new T(null, 2, 5, V, [lz, Kh], null)), C = Om([iF], [K]), C = nS(a, C, b, c), E[7] = D, OG(E, 20, C)) : 3 === q ? (E[1] = 43, X) : 12 === q ? (E[2] = !1, E[1] = 13, X) : 2 === q ? (ca = E[16], D = RQ.b ? RQ.b(F) : RQ.call(null, F), C = G.c(Tx, D), E[16] = D, E[1] = C ? 5 : 6, X) : 23 === q ? (E[2] = E[2], E[1] = 19, X) : 35 === q ? (D = iW(lz, E[2]), E[2] = D, E[1] = 23, X) : 19 === 
-            q ? (E[2] = E[2], E[1] = 7, X) : 11 === q ? (E[2] = !0, E[1] = 13, X) : 9 === q ? (E[2] = !1, E[1] = 10, X) : 5 === q ? (E[1] = sc(null == a) ? 8 : 9, X) : 14 === q ? (D = Lj(gn, a), E[2] = D, E[1] = 16, X) : 45 === q ? (E[2] = E[2], E[1] = 4, X) : 26 === q ? (E[1] = n(E[2]) ? 30 : 31, X) : 16 === q ? (Y = E[15], y = E[17], K = E[13], D = E[2], C = x.c(D, iD), W = x.c(D, OE), R = UN(Ww, Ww, null), W = XP(W, C), R = iW(R, W), E[15] = C, E[17] = D, E[13] = R, E[1] = n(R) ? 17 : 18, X) : 
-            38 === q ? (D = E[19], E[2] = D, E[1] = 39, X) : 30 === q ? (N = E[10], D = Lj(gn, N), E[2] = D, E[1] = 32, X) : 10 === q ? (E[1] = n(E[2]) ? 14 : 15, X) : 18 === q ? (D = tN(new T(null, 2, 5, V, [lz, iC], null), new T(null, 2, 5, V, [lz, Kh], null)), C = oS(a, b, c), E[18] = D, OG(E, 36, C)) : 42 === q ? (E[2] = E[2], E[1] = 7, X) : 37 === q ? (D = E[19], E[2] = new T(null, 2, 5, V, [D, !0], null), E[1] = 39, X) : 8 === q ? (D = Tb === a.I, E[1] = n(a.i & 64 || D) ? 11 : 12, X) : null;
+            return 13 === q ? (E[2] = E[2], E[1] = 10, X) : 22 === q ? (N = E[10], E[2] = N, E[1] = 23, X) : 36 === q ? (v = E[18], C = iW(v, E[2]), v = O(C, 0, null), C = O(C, 1, null), E[19] = v, E[1] = n(C) ? 37 : 38, X) : 41 === q ? (E[2] = null, E[1] = 42, X) : 43 === q ? (E[2] = a, E[1] = 45, X) : 29 === q ? (E[2] = E[2], E[1] = 26, X) : 44 === q ? (E[2] = null, E[1] = 45, X) : 6 === q ? (E[1] = 40, X) : 28 === q ? (E[2] = !1, E[1] = 29, X) : 25 === q ? (E[2] = !1, E[1] = 26, X) : 34 === q ? 
+            (N = E[10], E[2] = N, E[1] = 35, X) : 17 === q ? (M = E[11], v = tN(new T(null, 2, 5, V, [lz, iC], null), new T(null, 2, 5, V, [lz, Kh], null)), C = Om([iF], [M]), C = nS(a, C, b, c), E[8] = v, OG(E, 20, C)) : 3 === q ? (E[1] = 43, X) : 12 === q ? (E[2] = !1, E[1] = 13, X) : 2 === q ? (y = E[17], v = RQ.b ? RQ.b(F) : RQ.call(null, F), C = G.c(Tx, v), E[17] = v, E[1] = C ? 5 : 6, X) : 23 === q ? (E[2] = E[2], E[1] = 19, X) : 35 === q ? (v = iW(lz, E[2]), E[2] = v, E[1] = 23, X) : 19 === 
+            q ? (E[2] = E[2], E[1] = 7, X) : 11 === q ? (E[2] = !0, E[1] = 13, X) : 9 === q ? (E[2] = !1, E[1] = 10, X) : 5 === q ? (E[1] = sc(null == a) ? 8 : 9, X) : 14 === q ? (v = Lj(gn, a), E[2] = v, E[1] = 16, X) : 45 === q ? (E[2] = E[2], E[1] = 4, X) : 26 === q ? (E[1] = n(E[2]) ? 30 : 31, X) : 16 === q ? (M = E[11], Y = E[15], ca = E[16], v = E[2], C = x.c(v, iD), W = x.c(v, OE), R = UN(Ww, Ww, null), W = XP(W, C), R = iW(R, W), E[11] = R, E[15] = C, E[16] = v, E[1] = n(R) ? 17 : 18, X) : 
+            38 === q ? (v = E[19], E[2] = v, E[1] = 39, X) : 30 === q ? (N = E[10], v = Lj(gn, N), E[2] = v, E[1] = 32, X) : 10 === q ? (E[1] = n(E[2]) ? 14 : 15, X) : 18 === q ? (v = tN(new T(null, 2, 5, V, [lz, iC], null), new T(null, 2, 5, V, [lz, Kh], null)), C = oS(a, b, c), E[18] = v, OG(E, 36, C)) : 42 === q ? (E[2] = E[2], E[1] = 7, X) : 37 === q ? (v = E[19], E[2] = new T(null, 2, 5, V, [v, !0], null), E[1] = 39, X) : 8 === q ? (v = Tb === a.I, E[1] = n(a.i & 64 || v) ? 11 : 12, X) : null;
           };
         }(k, g, l, p), k, g, l, p);
       }(), B = function() {
@@ -31113,8 +31184,8 @@ function qS(a, b, c) {
               p = g[8];
               p = g[2];
               var u = $M(ur, p), B = G.c(Fw, u);
-              g[7] = u;
-              g[8] = p;
+              g[7] = p;
+              g[8] = u;
               g[1] = B ? 8 : 9;
               return X;
             }
@@ -31171,16 +31242,16 @@ function qS(a, b, c) {
               return r = g[9], p = NR(r), p = YQ(p, b, c), OG(g, 5, p);
             }
             if (12 === l) {
-              return r = p = g[8], g[9] = r, g[2] = null, g[1] = 3, X;
+              return r = p = g[7], g[9] = r, g[2] = null, g[1] = 3, X;
             }
             if (2 === l) {
               return r = g[2], g[9] = r, g[2] = null, g[1] = 3, X;
             }
             if (11 === l) {
-              return p = g[8], p = O(p, 0, null), p = OV(p, ht), OG(g, 14, p);
+              return p = g[7], p = O(p, 0, null), p = OV(p, ht), OG(g, 14, p);
             }
             if (9 === l) {
-              return p = g[7], p = O(p, 0, null), p = G.c(br, p), g[1] = p ? 11 : 12, X;
+              return p = g[8], p = O(p, 0, null), p = G.c(br, p), g[1] = p ? 11 : 12, X;
             }
             if (5 === l) {
               return p = g[2], t = tN(new T(null, 2, 5, V, [dE, dE], null), new T(null, 2, 5, V, [Cc, Cc], null)), g[11] = p, g[10] = t, OG(g, 6, b);
@@ -31192,7 +31263,7 @@ function qS(a, b, c) {
               return g[2] = g[2], g[1] = 4, X;
             }
             if (8 === l) {
-              throw p = g[8], g = fN(ur, p), Error(g);
+              throw p = g[7], g = fN(ur, p), Error(g);
             }
             return null;
           };
@@ -31209,8 +31280,8 @@ function qS(a, b, c) {
 }
 ;var rS = {};
 if ("undefined" === typeof MP || "undefined" === typeof rS || "undefined" === typeof sS) {
-  var sS, NV = nk(Uj), PV = nk(Uj), QV = nk(Uj), SV = nk(Uj), TV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  sS = new vp(Jf.c("tool.goal", "goalType"), I, TV, NV, PV, QV, SV);
+  var sS, SV = nk(Uj), TV = nk(Uj), UV = nk(Uj), VV = nk(Uj), WV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  sS = new vp(Jf.c("tool.goal", "goalType"), I, WV, SV, TV, UV, VV);
 }
 sS.N(null, wp, function() {
   return GN(new T(null, 2, 5, V, [rt, KD], null), new T(null, 2, 5, V, [Xi, IN(P(es, !0), dk(!0))], null), new T(null, 2, 5, V, [Ht, P($s, P(es, !0))], null));
@@ -31228,8 +31299,8 @@ iN(MA, P($q, ru, MA), rN(ru, new Kf(function() {
   return sS;
 }, ru, Om([Hp, kD, Lw, Zq, rE, Yp, tq, Ex, dC, qz], [Vx, tt, "tool/goal.cljs", 19, 1, 4, 4, Qf, null, n(sS) ? sS.Od : null])), MA));
 if ("undefined" === typeof MP || "undefined" === typeof rS || "undefined" === typeof yS) {
-  var yS, UV = nk(Uj), VV = nk(Uj), WV = nk(Uj), XV = nk(Uj), YV = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  yS = new vp(Jf.c("tool.goal", "get-goal"), I, YV, UV, VV, WV, XV);
+  var yS, XV = nk(Uj), YV = nk(Uj), ZV = nk(Uj), jW = nk(Uj), kW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  yS = new vp(Jf.c("tool.goal", "get-goal"), I, kW, XV, YV, ZV, jW);
 }
 yS.N(null, wp, function(a) {
   return null == a ? new T(null, 1, 5, V, [st], null) : a;
@@ -31262,8 +31333,8 @@ yS.N(null, Mu, function(a) {
   return yS.b ? yS.b(b) : yS.call(null, b);
 });
 if ("undefined" === typeof MP || "undefined" === typeof rS || "undefined" === typeof ES) {
-  var ES, ZV = nk(Uj), jW = nk(Uj), kW = nk(Uj), lW = nk(Uj), mW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  ES = new vp(Jf.c("tool.goal", "next-goal"), I, mW, ZV, jW, kW, lW);
+  var ES, lW = nk(Uj), mW = nk(Uj), nW = nk(Uj), oW = nk(Uj), pW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  ES = new vp(Jf.c("tool.goal", "next-goal"), I, pW, lW, mW, nW, oW);
 }
 ES.N(null, wp, function(a) {
   return a;
@@ -31328,8 +31399,8 @@ ES.N(null, Mu, function(a) {
   }();
 });
 if ("undefined" === typeof MP || "undefined" === typeof rS || "undefined" === typeof KS) {
-  var KS, nW = nk(Uj), oW = nk(Uj), pW = nk(Uj), qW = nk(Uj), rW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  KS = new vp(Jf.c("tool.goal", "push-goal"), I, rW, nW, oW, pW, qW);
+  var KS, qW = nk(Uj), rW = nk(Uj), sW = nk(Uj), tW = nk(Uj), uW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  KS = new vp(Jf.c("tool.goal", "push-goal"), I, uW, qW, rW, sW, tW);
 }
 KS.N(null, wp, function(a) {
   return a;
@@ -31449,46 +31520,7 @@ KS.N(null, Mu, function(a, b) {
   }
   return null;
 })();
-var QS = $N(12, {});
-iN(PF, P(FF, $t), UN($t, rc, null));
-iN(lA, Zu, Ph);
-iN(TE, P($s, P(wz, Ov, new T(null, 3, 5, V, [zE, PF, lA], null))), IN(P(wz, Ov, new T(null, 3, 5, V, [zE, PF, lA], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [new T(null, 3, 5, V, [zE, PF, lA], null), null, null, new T(null, 4, 5, V, [function(a) {
-  return vh(a);
-}, function(a) {
-  return Vh(a, YC);
-}, function(a) {
-  return Vh(a, xs);
-}, function(a) {
-  return Vh(a, Wp);
-}], null), function(a) {
-  return vh(a) && Vh(a, YC) && Vh(a, xs) && Vh(a, Wp);
-}, eh, new T(null, 3, 5, V, [zE, PF, lA], null), null, new T(null, 3, 5, V, [YC, xs, Wp], null), eh, new T(null, 4, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, YC)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, xs)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, Wp))], null), null]))));
-iN(rx, P(wz, oy, new T(null, 6, 5, V, [Wz, IB, xz, fq, Ds, uF], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [null, null, null, new T(null, 1, 5, V, [function(a) {
-  return vh(a);
-}], null), function(a) {
-  return vh(a);
-}, eh, eh, null, eh, eh, new T(null, 1, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw))], null), null])));
-iN(tB, P(wz, Ov, new T(null, 4, 5, V, [hB, TE, MD, Zp], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [new T(null, 4, 5, V, [hB, TE, MD, Zp], null), null, null, new T(null, 5, 5, V, [function(a) {
-  return vh(a);
-}, function(a) {
-  return Vh(a, lr);
-}, function(a) {
-  return Vh(a, bq);
-}, function(a) {
-  return Vh(a, jB);
-}, function(a) {
-  return Vh(a, ot);
-}], null), function(a) {
-  return vh(a) && Vh(a, lr) && Vh(a, bq) && Vh(a, jB) && Vh(a, ot);
-}, eh, new T(null, 4, 5, V, [hB, TE, MD, Zp], null), null, new T(null, 4, 5, V, [lr, bq, jB, ot], null), eh, new T(null, 5, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, lr)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, bq)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, jB)), P(Gq, new T(null, 1, 5, V, [sw], null), P(UA, sw, ot))], null), null])));
-function RS(a, b) {
-  var c = Uj;
-  a = So(a);
-  c = So(c);
-  b = QS(a, b, c);
-  return new hc(null, 4, [lr, Wo(b.clusters, Yg([Xo, !0])), bq, Wo(b.centroids, Yg([Xo, !0])), jB, Wo(b.converged, Yg([Xo, !0])), ot, Wo(b.iterations, Yg([Xo, !0]))], null);
-}
-;var SS = $N(13, {});
+var SS = $N(13, {});
 iN(dw, Zu, Ph);
 iN(wr, UD, lh);
 iN(XE, P(wz, oy, new T(null, 2, 5, V, [dw, wr], null)), qN(Om([Ov, Rr, fy, eA, jz, XD, vB, fB, BE, Zz, Jx, bF], [null, null, null, new T(null, 1, 5, V, [function(a) {
@@ -31498,8 +31530,8 @@ iN(XE, P(wz, oy, new T(null, 2, 5, V, [dw, wr], null)), qN(Om([Ov, Rr, fy, eA, j
 }, eh, eh, null, eh, eh, new T(null, 1, 5, V, [P(Gq, new T(null, 1, 5, V, [sw], null), P(Ku, sw))], null), null])));
 var TS = {};
 if ("undefined" === typeof nQ || "undefined" === typeof oQ || "undefined" === typeof RR || "undefined" === typeof TS || "undefined" === typeof TS.default || "undefined" === typeof TS.default.$e || "undefined" === typeof TS.default.$e.$e) {
-  var US, sW = nk(Uj), tW = nk(Uj), uW = nk(Uj), vW = nk(Uj), wW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
-  US = new vp(Jf.c("module.v1.phase.ai.default.goalType", "goalType"), I, wW, sW, tW, uW, vW);
+  var US, vW = nk(Uj), wW = nk(Uj), BW = nk(Uj), CW = nk(Uj), DW = x.f(Uj, BA, ap.h ? ap.h() : ap.call(null));
+  US = new vp(Jf.c("module.v1.phase.ai.default.goalType", "goalType"), I, DW, vW, wW, BW, CW);
 }
 US.N(null, Mw, function() {
   return tN(new T(null, 2, 5, V, [Ht, P(Hv, Zu, Zu)], null), new T(null, 2, 5, V, [Xi, tN(new T(null, 2, 5, V, [Zu, Zu], null), new T(null, 2, 5, V, [Ph, Ph], null))], null));
@@ -31523,9 +31555,9 @@ if ("undefined" === typeof nQ || "undefined" === typeof oQ || "undefined" === ty
     }(a, b, c, d, e), e, a, b, c, d);
   }();
 }
-var aT, xW = new T(null, 5, 5, V, [new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 1], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0.5, 0.5], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 1], null), "findSupply"], null)], null), BW = Mk.c(I, xW), CW = Mk.c(bh, xW), DW = new hc(null, 1, [AA, 
+var aT, xW = new T(null, 5, 5, V, [new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 1], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0.5, 0.5], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 1], null), "findSupply"], null)], null), EW = Mk.c(I, xW), FW = Mk.c(bh, xW), GW = new hc(null, 1, [AA, 
 1], null);
-aT = new SS(So(BW), So(CW), So(DW));
+aT = new SS(So(EW), So(FW), So(GW));
 function fT(a) {
   var b = mR(a), c = tF.b(VA.b(a));
   a = WD.b(VA.b(a));
@@ -31614,8 +31646,8 @@ function yW(a, b, c, d, e) {
               t = VP(t, M, H);
               r = Hk(r, t);
               t = ER(a, b, C, r);
-              p[8] = D;
-              p[9] = C;
+              p[8] = C;
+              p[9] = D;
               p[10] = t;
               p[11] = r;
               p[1] = n(t) ? 2 : 3;
@@ -31628,29 +31660,29 @@ function yW(a, b, c, d, e) {
               return t = p[2], r = O(t, 0, null), t = O(t, 1, null), r = ih.g(r, VB, eh, Yg([Cx, eh])), p[12] = t, p[2] = r, p[1] = 4, X;
             }
             if (13 === u) {
-              var K = p[13];
               z = p[8];
+              var K = p[13];
               F = p[9];
-              B = p[7];
-              var Q = p[14];
+              var Q = p[14], R = p[15];
               E = p[10];
-              var R = p[15], W = p[16], Y = p[17], ca = p[18], y = p[19];
+              var W = p[16], Y = p[17], ca = p[18];
               q = p[11];
-              var J = p[2], U = [iF, hD, nx], fa = MQ(a, ca, B, b), Z = [ca, J, fa], da = Om(U, Z), ka = [iF, hD, nx], ra = [oF, Q], ua = new T(null, 2, 5, V, ra, null), xa = MQ(a, b, Q, ca), Aa = [b, ua, xa], ta = Om(ka, Aa), Fa = [da, ta], Ha = new T(null, 2, 5, V, Fa, null), ya = iW(Tr, Ha), Ja = [OE];
+              B = p[7];
+              var y = p[19], J = p[2], U = [iF, hD, nx], fa = MQ(a, K, B, b), Z = [K, J, fa], da = Om(U, Z), ka = [iF, hD, nx], ra = [oF, Y], ua = new T(null, 2, 5, V, ra, null), xa = MQ(a, b, Y, K), Aa = [b, ua, xa], ta = Om(ka, Aa), Fa = [da, ta], Ha = new T(null, 2, 5, V, Fa, null), ya = iW(Tr, Ha), Ja = [OE];
               r = [sk.c(function() {
                 return function() {
                   return function(Ab) {
                     return LR(a, null, Ab);
                   };
-                }(ca, E, J, R, F, ya, Q, E, Y, q, z, Ha, y, B, W, K, z, F, B, Q, E, R, W, Y, ca, y, q, J, V, U, fa, Z, da, ka, V, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, u, l);
-              }(), new T(null, 2, 5, V, [b, ca], null))];
+                }(K, J, E, Q, z, ya, Y, E, F, y, q, Ha, ca, B, W, z, K, F, Q, R, E, W, Y, ca, q, B, y, J, V, U, fa, Z, da, ka, V, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, u, l);
+              }(), new T(null, 2, 5, V, [b, K], null))];
               r = Om(Ja, r);
               r = VQ(r, d, e);
-              p[13] = Ha;
+              p[15] = Ha;
               return OG(p, 14, r);
             }
             if (6 === u) {
-              return Y = p[17], r = I(Y), p[2] = r, p[1] = 7, X;
+              return y = p[19], r = I(y), p[2] = r, p[1] = 7, X;
             }
             if (3 === u) {
               return r = c.b ? c.b(a) : c.call(null, a), OG(p, 16, r);
@@ -31660,33 +31692,33 @@ function yW(a, b, c, d, e) {
             }
             if (2 === u) {
               z = p[8];
+              K = p[13];
               F = p[9];
-              var jb = p[20];
               Q = p[14];
               E = p[10];
-              R = p[15];
               W = p[16];
+              var jb = p[20];
               Y = p[17];
               ca = p[18];
-              y = p[19];
               q = p[11];
+              y = p[19];
               var Qa = O(E, 0, null), Oa = O(E, 1, null), db = pR(Oa), Mb = O(db, 0, null), Ya = O(db, 1, null);
               r = Hk(function() {
                 return function(Ab) {
                   return function(Ob) {
                     return sc(kR(a, Ab, Ob));
                   };
-                }(Oa, E, db, F, Mb, Qa, E, Ya, q, z, z, F, jb, Q, E, R, W, Y, ca, y, q, Qa, Oa, db, Mb, Ya, u, l);
+                }(Oa, E, db, z, Mb, Qa, E, F, Ya, q, z, K, F, Q, E, W, jb, Y, ca, q, y, Qa, Oa, db, Mb, Ya, u, l);
               }(), Ya);
               t = ER(a, Oa, r, new T(null, 1, 5, V, [b], null));
               M = I(t);
-              p[20] = M;
-              p[14] = Qa;
-              p[15] = db;
+              p[13] = Oa;
+              p[14] = db;
               p[16] = r;
-              p[17] = Ya;
-              p[18] = Oa;
-              p[19] = t;
+              p[20] = M;
+              p[17] = Qa;
+              p[18] = t;
+              p[19] = Ya;
               p[1] = n(M) ? 5 : 6;
               return X;
             }
@@ -31700,13 +31732,13 @@ function yW(a, b, c, d, e) {
               return jb = p[20], p[2] = jb, p[1] = 7, X;
             }
             if (14 === u) {
-              return K = p[13], r = p[2], t = Om([gC, Qz], [K, !1]), t = gS(a, t, d, e), p[21] = r, OG(p, 15, t);
+              return R = p[15], r = p[2], t = Om([gC, Qz], [R, !1]), t = gS(a, t, d, e), p[21] = r, OG(p, 15, t);
             }
             if (16 === u) {
               return p[2] = p[2], p[1] = 4, X;
             }
             if (10 === u) {
-              return y = p[19], p[22] = p[2], p[1] = n(y) ? 11 : 12, X;
+              return ca = p[18], p[22] = p[2], p[1] = n(ca) ? 11 : 12, X;
             }
             if (8 === u) {
               throw Error("[do_goal.cljs] targetUnitBestWeapon must not nil");
@@ -31810,7 +31842,7 @@ $S.N(null, Wr, function(a, b, c, d, e) {
               return u = l[10], u = bB.b(c), u = FV(b, u), l[10] = u, l[1] = n(u) ? 15 : 16, X;
             }
             if (6 === p) {
-              return u = l[7], t = l[11], z = GR(t), u = lR(u, t, dk(z)), l[2] = u, l[1] = 8, X;
+              return t = l[11], u = l[7], z = GR(t), u = lR(u, t, dk(z)), l[2] = u, l[1] = 8, X;
             }
             if (17 === p) {
               return l[2] = l[2], l[1] = 14, X;
@@ -31904,16 +31936,16 @@ $S.N(null, Wr, function(a, b, c, d, e) {
               return u = bB.b(c), u = cR(b, u), u = G.c(u, Es), u = iW(Kh, u), l[1] = n(u) ? 12 : 13, X;
             }
             if (5 === p) {
-              u = l[7];
               t = l[11];
+              u = l[7];
               u = l[2];
               t = UN(Ww, Ww, null);
               z = OE.b(u);
               var F = sE.b(c);
               z = WP(z, F);
               t = iW(t, z);
-              l[7] = u;
               l[11] = t;
+              l[7] = u;
               l[1] = n(t) ? 6 : 7;
               return X;
             }
@@ -32138,8 +32170,8 @@ $S.N(null, Mw, function(a, b, c, d, e) {
             }
             if (12 === D) {
               v = q[11];
-              var K = q[13];
               C = q[12];
+              var K = q[13];
               v = q[2];
               C = UN(Ww, Ww, null);
               M = OE.b(v);
@@ -32155,11 +32187,11 @@ $S.N(null, Mw, function(a, b, c, d, e) {
               return v = OE.b(b), v = XP(v, E), q[2] = sc(v), q[1] = 4, X;
             }
             if (11 === D) {
+              var R = q[14];
               N = q[10];
               K = q[13];
-              var R = q[14], W = q[15];
               S = q[9];
-              var Y = q[2], ca = FR(c, R), y = dk(ca), J = lR(b, c, y), U = OE.b(J), fa = sE.b(ca), Z = WP(U, fa), da = iW(Ww, Z);
+              var W = q[15], Y = q[2], ca = FR(c, W), y = dk(ca), J = lR(b, c, y), U = OE.b(J), fa = sE.b(ca), Z = WP(U, fa), da = iW(Ww, Z);
               v = yW(J, da, function() {
                 return function(ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd, rd, Ud) {
                   return function(uc) {
@@ -32228,7 +32260,7 @@ $S.N(null, Mw, function(a, b, c, d, e) {
                     }(hd, ra, ua, xa, Aa, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd, rd, Ud));
                     return hd;
                   };
-                }(N, S, R, W, Y, ca, J, da, N, K, R, W, S, Y, ca, y, J, U, fa, Z, da, D, t, z, F, E);
+                }(N, S, W, R, Y, ca, J, da, R, N, K, S, W, Y, ca, y, J, U, fa, Z, da, D, t, z, F, E);
               }(), d, e);
               q[13] = da;
               return OG(q, 12, v);
@@ -32243,10 +32275,10 @@ $S.N(null, Mw, function(a, b, c, d, e) {
               return v = q[11], q[2] = v, q[1] = 15, X;
             }
             if (10 === D) {
-              N = q[10];
               R = q[14];
-              W = q[15];
+              N = q[10];
               S = q[9];
+              W = q[15];
               v = q[2];
               C = NP.c ? NP.c(S, v) : NP.call(null, S, v);
               M = [iF, yz];
@@ -32254,8 +32286,8 @@ $S.N(null, Mw, function(a, b, c, d, e) {
               var ka = sk.c(fk(KR, N), C);
               M = Om(M, [Q, ka]);
               M = UQ(b, M, d, e);
-              q[14] = v;
-              q[15] = C;
+              q[14] = C;
+              q[15] = v;
               return OG(q, 11, M);
             }
             return 8 === D ? (v = q[7], q[2] = v, q[1] = 10, X) : null;
@@ -32372,7 +32404,7 @@ function iT(a, b) {
   if (0 === e) {
     return a;
   }
-  var f = RS(sk.c(bB, c), e), h = null != f && (f.i & 64 || Tb === f.I) ? Lj(gn, f) : f, k = x.c(h, lr), g = RS(sk.c(bB, d), e), l = null != g && (g.i & 64 || Tb === g.I) ? Lj(gn, g) : g, p = x.c(l, bq), u = sk.f(function(B, r, t, z, F, E) {
+  var f = RS(sk.c(bB, c), e, Uj), h = null != f && (f.i & 64 || Tb === f.I) ? Lj(gn, f) : f, k = x.c(h, lr), g = RS(sk.c(bB, d), e, Uj), l = null != g && (g.i & 64 || Tb === g.I) ? Lj(gn, g) : g, p = x.c(l, bq), u = sk.f(function(B, r, t, z, F, E) {
     return function(q, D) {
       D = Mk.c(Math.floor, YC.b(Ig(E, D)));
       D = new T(null, 2, 5, V, [Mw, D], null);
@@ -32453,8 +32485,8 @@ function jT(a, b, c, d) {
               return QG(l, l[2]);
             }
             if (6 === p) {
-              B = l[8];
               u = l[7];
+              B = l[8];
               var r = bB.b(B);
               u = ih.f(u, iD, r);
               B = hT(u, B, c, d);
@@ -32479,9 +32511,9 @@ function jT(a, b, c, d) {
               u = I(r);
               r = Xf(r);
               l[9] = B;
-              l[11] = u;
+              l[11] = r;
               l[7] = z;
-              l[12] = r;
+              l[12] = u;
               l[2] = null;
               l[1] = 3;
               return X;
@@ -32672,14 +32704,14 @@ function nT(a, b, c) {
               return g[2] = null, g[1] = 11, X;
             }
             if (8 === l) {
-              r = g[11];
               B = g[9];
+              r = g[11];
               var t = g[2], z = function() {
                 return function() {
                   return function(v) {
                     return Qj(ht, v);
                   };
-                }(r, t, r, B, t, l, k);
+                }(r, t, B, r, t, l, k);
               }(), F = Dr.b(r), E = $l(F), q = Hk(z, E), D = SG(1);
               u = pG(function() {
                 return function(v, S, N, C, M, H, K, Q, R, W, Y, ca, y, J) {
@@ -32783,10 +32815,10 @@ function nT(a, b, c) {
                     }();
                     return NG(fa);
                   };
-                }(r, t, q, D, r, B, t, z, F, E, q, D, l, k);
+                }(r, t, q, D, B, r, t, z, F, E, q, D, l, k);
               }());
-              g[12] = u;
               g[9] = D;
+              g[12] = u;
               g[1] = n(null == D) ? 9 : 10;
               return X;
             }
@@ -32915,7 +32947,7 @@ XK.N(null, qs, function(a, b, c, d) {
               }
             }
             function l() {
-              var u = [null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+              var u = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
               u[0] = p;
               u[1] = 1;
               return u;
@@ -32937,92 +32969,351 @@ XK.N(null, qs, function(a, b, c, d) {
         }(function(k) {
           return function(g) {
             var l = g[1];
+            if (7 === l) {
+              var p = g, u = p;
+              u[2] = !1;
+              u[1] = 8;
+              return X;
+            }
+            if (20 === l) {
+              var B = g[7], r = Tb === B.I, t = B.i & 64 || r;
+              p = g;
+              p[1] = n(t) ? 23 : 24;
+              return X;
+            }
+            if (27 === l) {
+              B = g[7];
+              var z = p = g;
+              z[2] = B;
+              z[1] = 28;
+              return X;
+            }
             if (1 === l) {
-              var p = g[7], u = g[8], B = g[9], r = g[10], t = g[11];
-              r = lx.b(mT);
-              var z = O(r, 0, null), F = O(r, 1, null), E = Om([Px, cr, sx, Es, UE, wx, zD, tv, LC, ds], [0.4, 0.1, 0, 0.01, 0.3, 0.6, 1, 1, 1, 0.6]);
-              E = QP(z, F, E);
-              var q = Rk.f(mT, new T(null, 1, 5, V, [qC], null), dk(E)), D = OB.b(b);
-              q = ih.f(q, OB, D);
-              D = [OE];
-              var v = OB.b(b);
-              v = cA.b(v);
-              g[7] = r;
-              g[8] = F;
-              g[12] = D;
-              g[9] = z;
-              g[13] = q;
-              g[10] = v;
-              g[11] = E;
-              g[1] = n(v) ? 3 : 4;
+              var F = g[8], E = g[9], q = g[10], D = g[11], v = g[12], S = lx.b(mT), N = O(S, 0, null), C = O(S, 1, null), M = Om([Px, cr, sx, Es, UE, wx, zD, tv, LC, ds], [0.4, 0.1, 0, 0.01, 0.3, 0.6, 1, 1, 1, 0.6]), H = QP(N, C, M), K = Rk.f(mT, new T(null, 1, 5, V, [qC], null), dk(H)), Q = OB.b(b), R = ih.f(K, OB, Q), W = [OE], Y = OB.b(b), ca = cA.b(Y);
+              g[13] = R;
+              g[8] = N;
+              g[9] = H;
+              g[14] = W;
+              g[10] = S;
+              g[11] = C;
+              g[12] = ca;
+              p = g;
+              p[1] = n(ca) ? 3 : 4;
+              return X;
+            }
+            if (24 === l) {
+              var y = p = g;
+              y[2] = !1;
+              y[1] = 25;
+              return X;
+            }
+            if (4 === l) {
+              var J = p = g;
+              J[2] = dm;
+              J[1] = 5;
+              return X;
+            }
+            if (15 === l) {
+              var U = g[15], fa = 3 < U;
+              p = g;
+              p[1] = n(fa) ? 17 : 18;
+              return X;
+            }
+            if (21 === l) {
+              var Z = p = g;
+              Z[2] = !1;
+              Z[1] = 22;
+              return X;
+            }
+            if (13 === l) {
+              var da = g[16], ka = p = g;
+              ka[2] = da;
+              ka[1] = 14;
+              return X;
+            }
+            if (22 === l) {
+              var ra = g[2];
+              p = g;
+              p[1] = n(ra) ? 26 : 27;
+              return X;
+            }
+            if (29 === l) {
+              var ua = g[2];
+              p = g;
+              return QG(p, ua);
+            }
+            if (6 === l) {
+              da = g[16];
+              var xa = Tb === da.I, Aa = da.i & 64 || xa;
+              p = g;
+              p[1] = n(Aa) ? 9 : 10;
+              return X;
+            }
+            if (28 === l) {
+              var ta = g[17], Fa = g[18];
+              F = g[8];
+              var Ha = g[19], ya = g[20];
+              E = g[9];
+              var Ja = g[21], jb = g[22];
+              q = g[10];
+              D = g[11];
+              var Qa = g[23];
+              U = g[15];
+              var Oa = g[2], db = x.c(Oa, lr), Mb = x.c(Oa, bq), Ya = sk.f(function() {
+                return function(vf, bf, Sf, Tf, wg, Uf, Vf, bg, Ve, Ug, If, cg, Wf, xg, Vg, dg, Pd, We, Xe, wf, yg, Zh, eg, Fi, $h, Gi, Fh, zg, Xh, zh, Yh, Ah) {
+                  return function(Ai, Bh) {
+                    Bh = xg.b ? xg.b(Bh) : xg.call(null, Bh);
+                    var qg = null != Bh && (Bh.i & 64 || Tb === Bh.I) ? Lj(gn, Bh) : Bh, aj = x.c(qg, YC), Ch = x.c(qg, xs);
+                    Bh = 0.2 < Ch ? sk.c(function() {
+                      return function(Dh) {
+                        return Dh / 3;
+                      };
+                    }(Bh, qg, aj, Ch, vf, bf, Sf, Tf, wg, Uf, Vf, bg, Ve, Ug, If, cg, Wf, xg, Vg, dg, Pd, We, Xe, wf, yg, Zh, eg, Fi, $h, Gi, Fh, zg, Xh, zh, Yh, Ah), sk.f(ri, aj, Ai)) : new T(null, 2, 5, V, [0, 0], null);
+                    return Mk.f(qi, Ai, Bh);
+                  };
+                }(db, jb, D, q, E, Ja, Ha, Oa, U, F, Fa, Qa, ya, Mb, ta, ta, Fa, F, Ha, ya, E, Ja, jb, q, D, Qa, U, Oa, db, Mb, l, k);
+              }(), ta, db), Ab = U + 1;
+              g[17] = Ya;
+              g[15] = Ab;
+              var Ob = p = g;
+              Ob[2] = null;
+              Ob[1] = 15;
+              return X;
+            }
+            if (25 === l) {
+              var kb = g[2], ec = p = g;
+              ec[2] = kb;
+              ec[1] = 22;
+              return X;
+            }
+            if (17 === l) {
+              ta = g[17];
+              var Xb = p = g;
+              Xb[2] = ta;
+              Xb[1] = 19;
+              return X;
+            }
+            if (3 === l) {
+              v = g[12];
+              var Lb = p = g;
+              Lb[2] = v;
+              Lb[1] = 5;
+              return X;
+            }
+            if (12 === l) {
+              da = g[16];
+              var Ec = Lj(gn, da), Kc = p = g;
+              Kc[2] = Ec;
+              Kc[1] = 14;
               return X;
             }
             if (2 === l) {
-              p = g[7];
-              u = g[8];
-              B = g[9];
-              t = g[11];
-              var S = g[2], N = O(S, 0, null), C = O(S, 1, null), M = function() {
+              da = g[16];
+              Fa = g[18];
+              F = g[8];
+              var qd = g[24];
+              Ha = g[19];
+              ya = g[20];
+              E = g[9];
+              Ja = g[21];
+              q = g[10];
+              D = g[11];
+              Qa = g[23];
+              var rd = g[2], Ud = O(rd, 0, null), uc = O(rd, 1, null), hd = function() {
                 return function() {
-                  return function(ta, Fa) {
-                    var Ha = O(Fa, 0, null);
-                    Fa = O(Fa, 1, null);
-                    return DR(ta, Ha, Fa);
+                  return function(vf, bf) {
+                    var Sf = O(bf, 0, null);
+                    bf = O(bf, 1, null);
+                    return DR(vf, Sf, bf);
                   };
-                }(p, B, u, t, N, S, C, p, u, B, t, S, N, C, l, k);
-              }(), H = function() {
+                }(q, F, D, E, Ud, rd, uc, da, Fa, F, qd, Ha, ya, E, Ja, q, D, Qa, rd, Ud, uc, l, k);
+              }(), Md = function() {
                 return function() {
-                  return function(ta, Fa, Ha) {
-                    return new T(null, 2, 5, V, [new hc(null, 3, [sE, Fa, CC, ht, bB, new T(null, 2, 5, V, [0, ta + 1], null)], null), new hc(null, 1, [eC, Ha], null)], null);
+                  return function(vf, bf, Sf) {
+                    return new T(null, 2, 5, V, [new hc(null, 3, [sE, bf, CC, ht, bB, new T(null, 2, 5, V, [0, vf + 1], null)], null), new hc(null, 1, [eC, Sf], null)], null);
                   };
-                }(p, B, u, t, N, S, C, p, u, B, t, S, N, C, M, l, k);
-              }(), K = Jn(), Q = function() {
+                }(q, F, D, E, Ud, rd, uc, da, Fa, F, qd, Ha, ya, E, Ja, q, D, Qa, rd, Ud, uc, hd, l, k);
+              }(), kc = Jn(), vc = function() {
                 return function() {
-                  return function(ta) {
-                    var Fa = cA.b(OB.b(b));
-                    return ta.b ? ta.b(Fa) : ta.call(null, Fa);
+                  return function(vf) {
+                    var bf = cA.b(OB.b(b));
+                    return vf.b ? vf.b(bf) : vf.call(null, bf);
                   };
-                }(p, B, u, t, N, S, C, p, u, B, t, S, N, C, M, H, K, l, k);
-              }(), R = sk.c(Q, C), W = sk.B(H, K, C, R), Y = Qc(M, N, W), ca = function() {
+                }(q, F, D, E, Ud, rd, uc, da, Fa, F, qd, Ha, ya, E, Ja, q, D, Qa, rd, Ud, uc, hd, Md, kc, l, k);
+              }(), Wc = sk.c(vc, uc), Ac = sk.B(Md, kc, uc, Wc), id = Qc(hd, Ud, Ac), ae = function() {
+                return function(vf, bf) {
+                  return function() {
+                    return VS(bf);
+                  };
+                }(q, F, D, E, id, rd, uc, da, Fa, F, qd, Ha, ya, E, Ja, q, D, Qa, rd, Ud, uc, hd, Md, kc, vc, Wc, Ac, id, l, k);
+              }(), sd = BR(ae), td = sk.f(El, sd, BR(function() {
+                return function(vf, bf, Sf) {
+                  return function() {
+                    return VS(Sf);
+                  };
+                }(q, F, D, E, id, rd, uc, da, Fa, F, qd, Ha, ya, E, Ja, q, D, Qa, rd, Ud, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, l, k);
+              }())), ob = tk.c(30, td), fc = new T(null, 4, 5, V, [new T(null, 2, 5, V, [4, 4], null), new T(null, 2, 5, V, [15, 4], null), new T(null, 2, 5, V, [4, 15], null), new T(null, 2, 5, V, [15, 15], null)], null), Vd = Hg(fc), be = Om([WS], [fc]), ce = RS(ob, Vd, be), Oc = sc(null == ce);
+              g[16] = ce;
+              g[18] = rd;
+              g[24] = ob;
+              g[19] = fc;
+              g[20] = id;
+              g[21] = Vd;
+              g[23] = uc;
+              p = g;
+              p[1] = Oc ? 6 : 7;
+              return X;
+            }
+            if (23 === l) {
+              var je = p = g;
+              je[2] = !0;
+              je[1] = 25;
+              return X;
+            }
+            if (19 === l) {
+              var wc = g[2], Yb = p = g;
+              Yb[2] = wc;
+              Yb[1] = 16;
+              return X;
+            }
+            if (11 === l) {
+              var Pe = g[2], Wd = p = g;
+              Wd[2] = Pe;
+              Wd[1] = 8;
+              return X;
+            }
+            if (9 === l) {
+              var jd = p = g;
+              jd[2] = !0;
+              jd[1] = 11;
+              return X;
+            }
+            if (5 === l) {
+              R = g[13];
+              W = g[14];
+              var ke = Om(W, [g[2]]), qe = TR(R, ke, c, d);
+              p = g;
+              return OG(p, 2, qe);
+            }
+            if (14 === l) {
+              Fa = g[18];
+              F = g[8];
+              qd = g[24];
+              var ud = g[25];
+              Ha = g[19];
+              ya = g[20];
+              E = g[9];
+              Ja = g[21];
+              var Qe = g[26];
+              jb = g[22];
+              q = g[10];
+              D = g[11];
+              Qa = g[23];
+              var le = g[2], Re = x.c(le, lr), Be = x.c(le, bq);
+              ta = sk.f(function() {
+                return function(vf, bf, Sf, Tf, wg, Uf, Vf, bg, Ve, Ug, If, cg) {
+                  return function(Wf, xg) {
+                    var Vg = Ig(cg, xg);
+                    Vg = null != Vg && (Vg.i & 64 || Tb === Vg.I) ? Lj(gn, Vg) : Vg;
+                    Vg = x.c(Vg, YC);
+                    xg = Ig(Vf, xg);
+                    xg = sk.f(ri, xg, Vg);
+                    return Mk.f(qi, Wf, xg);
+                  };
+                }(Re, le, D, q, E, Ja, Ha, F, Fa, Qa, ya, Be, qd, Fa, F, qd, ud, Ha, ya, E, Ja, Qe, jb, q, D, Qa, le, Re, Be, l, k);
+              }(), qd, Re);
+              U = 0;
+              g[17] = ta;
+              g[25] = Re;
+              g[26] = Be;
+              g[22] = le;
+              g[15] = U;
+              var Xc = p = g;
+              Xc[2] = null;
+              Xc[1] = 15;
+              return X;
+            }
+            if (26 === l) {
+              B = g[7];
+              var de = Lj(gn, B), Gf = p = g;
+              Gf[2] = de;
+              Gf[1] = 28;
+              return X;
+            }
+            if (16 === l) {
+              Fa = g[18];
+              F = g[8];
+              ud = g[25];
+              Ha = g[19];
+              ya = g[20];
+              E = g[9];
+              Ja = g[21];
+              Qe = g[26];
+              jb = g[22];
+              q = g[10];
+              D = g[11];
+              Qa = g[23];
+              var Rf = g[2], vd = function() {
                 return function() {
-                  return function(ta, Fa) {
-                    var Ha = O(ta, 0, null);
-                    ta = O(ta, 1, null);
-                    var ya = O(Fa, 0, null);
-                    O(Fa, 1, null);
-                    return new T(null, 2, 5, V, [DR(DR(Ha, new hc(null, 2, [CC, ht, bB, new T(null, 2, 5, V, [0, ta], null)], null), new hc(null, 1, [eC, ya], null)), new hc(null, 2, [CC, QB, bB, new T(null, 2, 5, V, [5, ta], null)], null), new hc(null, 1, [eC, ya], null)), ta + 1], null);
+                  return function(vf) {
+                    return Mk.c(Math.floor, vf);
                   };
-                }(p, B, u, t, Y, S, C, p, u, B, t, S, N, C, M, H, K, Q, R, W, Y, l, k);
-              }(), y = [Y, 1], J = new T(null, 2, 5, V, y, null), U = x.c(bR, Ju), fa = tk.c(4, U), Z = Qc(ca, J, fa), da = O(Z, 0, null), ka = O(Z, 1, null), ra = OE.b(da), ua = tV(ra), xa = function() {
-                return function(ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd, rd, Ud, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be) {
-                  return function(ce) {
+                }(ud, jb, D, q, E, Ja, Ha, F, Fa, Qa, ya, Qe, Rf, Fa, F, ud, Ha, ya, E, Ja, Qe, jb, q, D, Qa, Rf, l, k);
+              }(), Ce = sk.c(vd, Rf), dd = xn(Ce), Hf = function() {
+                return function() {
+                  return function(vf, bf) {
+                    return DR(vf, new hc(null, 2, [CC, QB, bB, bf], null), new hc(null, 1, [eC, Bs], null));
+                  };
+                }(ud, jb, D, q, E, Ja, Ha, F, Fa, Qa, ya, Qe, dd, Fa, F, ud, Ha, ya, E, Ja, Qe, jb, q, D, Qa, Rf, vd, Ce, dd, l, k);
+              }(), xc = Qc(Hf, ya, dd), De = iW(lz, xc), ed = OE.b(De), tf = tV(ed), Ee = function() {
+                return function(vf, bf, Sf, Tf, wg, Uf, Vf, bg, Ve, Ug, If, cg, Wf, xg, Vg, dg, Pd, We, Xe, wf, yg, Zh, eg, Fi, $h, Gi, Fh, zg, Xh, zh, Yh) {
+                  return function(Ah) {
                     return iW(Ww, function() {
-                      var Oc = HV(ce), je = O(Oc, 0, null), wc = O(Oc, 1, null), Yb = O(Oc, 2, null), Pe = O(Oc, 3, null), Wd = 0 === je;
-                      return Wd ? Rk.f(ce, new T(null, 2, 5, V, [yG, vz], null), function() {
-                        return function(jd) {
-                          return dh.c(jd, new T(null, 2, 5, V, [cC, !0], null));
+                      var Ai = HV(Ah), Bh = O(Ai, 0, null), qg = O(Ai, 1, null), aj = O(Ai, 2, null), Ch = O(Ai, 3, null), Dh = 0 === Bh;
+                      return Dh ? Rk.f(Ah, new T(null, 2, 5, V, [yG, vz], null), function() {
+                        return function(Ng) {
+                          return dh.c(Ng, new T(null, 2, 5, V, [cC, !0], null));
                         };
-                      }(Oc, je, wc, Yb, Pe, Wd, ta, Fa, Ha, ya, Ja, jb, Qa, Oa, db, Mb, Ya, Ab, Ob, kb, ec, Xb, Lb, Ec, Kc, qd, rd, Ud, uc, hd, Md, kc, vc, Wc, Ac, id, ae, sd, td, ob, fc, Vd, be)) : ce;
+                      }(Ai, Bh, qg, aj, Ch, Dh, vf, bf, Sf, Tf, wg, Uf, Vf, bg, Ve, Ug, If, cg, Wf, xg, Vg, dg, Pd, We, Xe, wf, yg, Zh, eg, Fi, $h, Gi, Fh, zg, Xh, zh, Yh)) : Ah;
                     }());
                   };
-                }(S, p, ua, u, t, ka, B, C, Z, da, p, u, B, t, S, N, C, M, H, K, Q, R, W, Y, ca, V, y, J, U, fa, Z, da, ka, ra, ua, l, k);
-              }(), Aa = sk.c(xa, ua);
-              r = function() {
+                }(q, F, D, E, De, Fa, Qa, tf, Fa, F, ud, Ha, ya, E, Ja, Qe, jb, q, D, Qa, Rf, vd, Ce, dd, Hf, xc, De, ed, tf, l, k);
+              }(), wd = sk.c(Ee, tf), Fe = function() {
                 return function() {
-                  return function(ta, Fa) {
-                    var Ha = O(Fa, 0, null);
-                    Fa = O(Fa, 1, null);
-                    return lR(ta, Ha, dk(Fa));
+                  return function(vf, bf) {
+                    var Sf = O(bf, 0, null);
+                    bf = O(bf, 1, null);
+                    return lR(vf, Sf, dk(bf));
                   };
-                }(S, p, ua, u, t, ka, B, C, Z, da, Aa, p, u, B, t, S, N, C, M, H, K, Q, R, W, Y, ca, V, y, J, U, fa, Z, da, ka, ra, ua, xa, Aa, l, k);
-              }();
-              z = zn(ua, Aa);
-              r = Qc(r, da, z);
-              r = iW(lz, r);
-              r = nT(r, c, d);
-              return OG(g, 6, r);
+                }(tf, D, q, E, F, Fa, Qa, De, wd, Fa, F, ud, Ha, ya, E, Ja, Qe, jb, q, D, Qa, Rf, vd, Ce, dd, Hf, xc, De, ed, tf, Ee, wd, l, k);
+              }(), Od = zn(tf, wd), Ge = Qc(Fe, De, Od), te = iW(lz, Ge), Te = nT(te, c, d);
+              p = g;
+              return OG(p, 29, Te);
             }
-            return 3 === l ? (r = g[10], g[2] = r, g[1] = 5, X) : 4 === l ? (g[2] = dm, g[1] = 5, X) : 5 === l ? (D = g[12], q = g[13], r = Om(D, [g[2]]), r = TR(q, r, c, d), OG(g, 2, r)) : 6 === l ? QG(g, g[2]) : null;
+            if (10 === l) {
+              var uf = p = g;
+              uf[2] = !1;
+              uf[1] = 11;
+              return X;
+            }
+            if (18 === l) {
+              ta = g[17];
+              B = g[7];
+              Ha = g[19];
+              Ja = g[21];
+              var af = Om([WS], [Ha]), Ue = RS(ta, Ja, af), He = sc(null == Ue);
+              g[7] = Ue;
+              p = g;
+              p[1] = He ? 20 : 21;
+              return X;
+            }
+            if (8 === l) {
+              var me = g[2];
+              p = g;
+              p[1] = n(me) ? 12 : 13;
+              return X;
+            }
+            return null;
           };
         }(e), e);
       }(), h = function() {
@@ -33106,8 +33397,8 @@ YK.N(null, qs, function(a, b, c) {
               p = console.log(p);
               u = new T(null, 2, 5, V, ["ok", new T(null, 1, 5, V, [u], null)], null);
               k[7] = g;
-              k[8] = l;
-              k[9] = p;
+              k[8] = p;
+              k[9] = l;
               return PG(k, 5, c, u);
             }
             return 5 === g ? (k[10] = k[2], k[2] = null, k[1] = 2, X) : null;
@@ -33397,8 +33688,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (60 === J) {
               var kb = y[17], ec = y[2], Xb = Pf(kb);
-              y[17] = Xb;
               y[18] = ec;
+              y[17] = Xb;
               var Lb = Z = y;
               Lb[2] = null;
               Lb[1] = 54;
@@ -33468,8 +33759,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (54 === J) {
-              kb = y[17];
               ta = y[10];
+              kb = y[17];
               var id = I(kb);
               y[10] = id;
               Z = y;
@@ -33619,16 +33910,17 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (44 === J) {
+              var Od = y[38];
               Vd = y[25];
-              var Od = y[38], Ge = I(Vd);
+              var Ge = I(Vd);
               y[38] = Ge;
               Z = y;
               Z[1] = n(Ge) ? 46 : 47;
               return X;
             }
             if (6 === J) {
-              var te = y[39], Te = y[40], uf = I(Te);
-              y[39] = uf;
+              var te = y[39], Te = y[40], uf = I(te);
+              y[40] = uf;
               Z = y;
               Z[1] = n(uf) ? 8 : 9;
               return X;
@@ -33646,9 +33938,9 @@ YK.N(null, qs, function(a, b, c) {
               De = y[35];
               var Ue = new T(null, 1, 5, V, [K], null), He = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dopen and close unit menu\x3d\x3d\x3d\x3d\x3d\x3d"]));
               kb = Ue;
+              y[35] = Ue;
               y[42] = He;
               y[17] = kb;
-              y[35] = Ue;
               var me = Z = y;
               me[2] = null;
               me[1] = 54;
@@ -33657,8 +33949,8 @@ YK.N(null, qs, function(a, b, c) {
             if (25 === J) {
               jb = y[14];
               var vf = y[2], bf = Go(Yg(["press", jb])), Sf = new T(null, 2, 5, V, ["KEY_DOWN", jb], null);
-              y[43] = bf;
-              y[44] = vf;
+              y[43] = vf;
+              y[44] = bf;
               Z = y;
               return PG(Z, 26, c, Sf);
             }
@@ -33671,9 +33963,9 @@ YK.N(null, qs, function(a, b, c) {
               Ec = y[19];
               var wg = new T(null, 2, 5, V, [N, K], null), Uf = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dopen and close system menu\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Ja = wg;
+              y[19] = wg;
               y[45] = Uf;
               y[13] = Ja;
-              y[19] = wg;
               var Vf = Z = y;
               Vf[2] = null;
               Vf[1] = 20;
@@ -33682,20 +33974,20 @@ YK.N(null, qs, function(a, b, c) {
             if (3 === J) {
               ae = y[23];
               var bg = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dcreate unit\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              Te = eh;
-              y[23] = eh;
+              te = eh;
+              y[39] = te;
               y[46] = bg;
-              y[40] = Te;
+              y[23] = eh;
               var Ve = Z = y;
               Ve[2] = null;
               Ve[1] = 6;
               return X;
             }
             if (12 === J) {
-              Te = y[40];
-              var Ug = y[2], If = Pf(Te);
+              te = y[39];
+              var Ug = y[2], If = Pf(te);
               y[47] = Ug;
-              y[40] = If;
+              y[39] = If;
               var cg = Z = y;
               cg[2] = null;
               cg[1] = 6;
@@ -33753,10 +34045,10 @@ YK.N(null, qs, function(a, b, c) {
               return OG(Z, 71, yg);
             }
             if (11 === J) {
-              te = y[39];
-              var Zh = y[2], eg = Go(Yg(["press", te])), Fi = new T(null, 2, 5, V, ["KEY_DOWN", te], null);
-              y[51] = Zh;
-              y[52] = eg;
+              Te = y[40];
+              var Zh = y[2], eg = Go(Yg(["press", Te])), Fi = new T(null, 2, 5, V, ["KEY_DOWN", Te], null);
+              y[51] = eg;
+              y[52] = Zh;
               Z = y;
               return PG(Z, 12, c, Fi);
             }
@@ -33791,8 +34083,8 @@ YK.N(null, qs, function(a, b, c) {
             if (26 === J) {
               Ja = y[13];
               var Yh = y[2], Ah = Pf(Ja);
-              y[56] = Yh;
               y[13] = Ah;
+              y[56] = Yh;
               var Ai = Z = y;
               Ai[2] = null;
               Ai[1] = 20;
@@ -33877,16 +34169,16 @@ YK.N(null, qs, function(a, b, c) {
             if (37 === J) {
               ke = y[30];
               var re = y[2], Sg = Go(Yg(["press", ke])), Fj = new T(null, 2, 5, V, ["KEY_DOWN", ke], null);
-              y[61] = re;
-              y[62] = Sg;
+              y[61] = Sg;
+              y[62] = re;
               Z = y;
               return PG(Z, 38, c, Fj);
             }
             if (63 === J) {
               var ej = new T(null, 1, 5, V, [Q], null), Bi = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dclose unit menu\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Oa = ej;
-              y[63] = Bi;
               y[15] = Oa;
+              y[63] = Bi;
               var mf = Z = y;
               mf[2] = null;
               mf[1] = 66;
@@ -33900,8 +34192,8 @@ YK.N(null, qs, function(a, b, c) {
             if (49 === J) {
               Od = y[38];
               var Bc = y[2], Zb = Go(Yg(["press", Od])), $e = new T(null, 2, 5, V, ["KEY_DOWN", Od], null);
-              y[64] = Zb;
-              y[65] = Bc;
+              y[64] = Bc;
+              y[65] = Zb;
               Z = y;
               return PG(Z, 50, c, $e);
             }
@@ -33987,8 +34279,8 @@ YK.N(null, qs, function(a, b, c) {
             if (62 === J) {
               var xa = new T(null, 2, 5, V, [M, M], null), Aa = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dback\x3d\x3d\x3d\x3d\x3d\x3d"]));
               fa = xa;
-              y[11] = Aa;
               y[8] = fa;
+              y[11] = Aa;
               var ta = da = y;
               ta[2] = null;
               ta[1] = 65;
@@ -34074,8 +34366,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (24 === J) {
               var vc = y[24], Wc = y[2], Ac = Pf(vc);
-              y[25] = Wc;
               y[24] = Ac;
+              y[25] = Wc;
               var id = da = y;
               id[2] = null;
               id[1] = 18;
@@ -34091,8 +34383,8 @@ YK.N(null, qs, function(a, b, c) {
               Ya = y[17];
               var td = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dbullet count\x3d\x3d\x3d\x3d\x3d\x3d"])), ob = eh;
               y[17] = eh;
-              y[26] = td;
-              y[27] = ob;
+              y[26] = ob;
+              y[27] = td;
               var fc = da = y;
               fc[2] = null;
               fc[1] = 42;
@@ -34111,8 +34403,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (54 === J) {
-              Lb = y[20];
               jb = y[14];
+              Lb = y[20];
               var Oc = I(Lb);
               y[14] = Oc;
               da = y;
@@ -34130,10 +34422,10 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (48 === J) {
-              ob = y[27];
+              ob = y[26];
               var Pe = y[2], Wd = Pf(ob);
+              y[26] = Wd;
               y[29] = Pe;
-              y[27] = Wd;
               var jd = da = y;
               jd[2] = null;
               jd[1] = 42;
@@ -34204,8 +34496,8 @@ YK.N(null, qs, function(a, b, c) {
             if (36 === J) {
               uc = y[22];
               var Ce = y[2], dd = Pf(uc);
-              y[22] = dd;
               y[33] = Ce;
+              y[22] = dd;
               var Hf = da = y;
               Hf[2] = null;
               Hf[1] = 30;
@@ -34256,8 +34548,8 @@ YK.N(null, qs, function(a, b, c) {
             if (51 === J) {
               var uf = new T(null, 8, 5, V, [K, C, N, K, N, N, K, K], null), af = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dopen menu and attack use bullet weapon\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Lb = uf;
-              y[20] = Lb;
               y[41] = af;
+              y[20] = Lb;
               var Ue = da = y;
               Ue[2] = null;
               Ue[1] = 54;
@@ -34332,8 +34624,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (23 === J) {
               var Wf = y[47], xg = y[2], Vg = Go(Yg(["press", Wf])), dg = new T(null, 2, 5, V, ["KEY_DOWN", Wf], null);
-              y[48] = xg;
-              y[49] = Vg;
+              y[48] = Vg;
+              y[49] = xg;
               da = y;
               return PG(da, 24, c, dg);
             }
@@ -34424,8 +34716,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (30 === J) {
-              uc = y[22];
               yg = y[53];
+              uc = y[22];
               var Pg = I(uc);
               y[53] = Pg;
               da = y;
@@ -34445,8 +34737,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (18 === J) {
-              Wf = y[47];
               vc = y[24];
+              Wf = y[47];
               var sg = I(vc);
               y[47] = sg;
               da = y;
@@ -34475,8 +34767,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (42 === J) {
+              ob = y[26];
               Pd = y[50];
-              ob = y[27];
               var re = I(ob);
               y[50] = re;
               da = y;
@@ -34645,8 +34937,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (58 === J) {
               var Ha = new T(null, 8, 5, V, [K, K, N, K, Q, Q, Q, M], null), ya = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dmove\x3d\x3d\x3d\x3d\x3d\x3d"])), Ja = Ha;
-              y[9] = ya;
-              y[10] = Ja;
+              y[9] = Ja;
+              y[10] = ya;
               var jb = U = y;
               jb[2] = null;
               jb[1] = 61;
@@ -34676,8 +34968,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (24 === J) {
               var Ya = y[12], Ab = y[2], Ob = Pf(Ya);
-              y[12] = Ob;
               y[13] = Ab;
+              y[12] = Ob;
               var kb = U = y;
               kb[2] = null;
               kb[1] = 18;
@@ -34697,8 +34989,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (46 === J) {
               var Ec = y[14], Kc = y[2], qd = Go(Yg(["press", Ec])), rd = new T(null, 2, 5, V, ["KEY_DOWN", Ec], null);
-              y[15] = qd;
-              y[16] = Kc;
+              y[15] = Kc;
+              y[16] = qd;
               U = y;
               return PG(U, 47, c, rd);
             }
@@ -34710,8 +35002,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (77 === J) {
               var uc = y[17], hd = y[2], Md = Pf(uc);
-              y[17] = Md;
               y[18] = hd;
+              y[17] = Md;
               var kc = U = y;
               kc[2] = null;
               kc[1] = 71;
@@ -34726,8 +35018,8 @@ YK.N(null, qs, function(a, b, c) {
             if (15 === J) {
               var Wc = new T(null, 3, 5, V, [N, K, K], null), Ac = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dclick endTurn\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Ya = Wc;
-              y[12] = Ya;
               y[19] = Ac;
+              y[12] = Ya;
               var id = U = y;
               id[2] = null;
               id[1] = 18;
@@ -34762,8 +35054,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (31 === J) {
-              var Oc = y[23], je = y[24], wc = I(je);
-              y[23] = wc;
+              var Oc = y[23], je = y[24], wc = I(Oc);
+              y[24] = wc;
               U = y;
               U[1] = n(wc) ? 33 : 34;
               return X;
@@ -34783,8 +35075,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (56 === J) {
               var jd = y[26], ke = y[2], qe = Go(Yg(["press", jd])), ud = new T(null, 2, 5, V, ["KEY_DOWN", jd], null);
-              y[27] = ke;
-              y[28] = qe;
+              y[27] = qe;
+              y[28] = ke;
               U = y;
               return PG(U, 57, c, ud);
             }
@@ -34819,10 +35111,10 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (36 === J) {
-              Oc = y[23];
-              var Gf = y[2], Rf = Go(Yg(["press", Oc])), vd = new T(null, 2, 5, V, ["KEY_DOWN", Oc], null);
-              y[31] = Rf;
-              y[32] = Gf;
+              je = y[24];
+              var Gf = y[2], Rf = Go(Yg(["press", je])), vd = new T(null, 2, 5, V, ["KEY_DOWN", je], null);
+              y[31] = Gf;
+              y[32] = Rf;
               U = y;
               return PG(U, 37, c, vd);
             }
@@ -34840,7 +35132,7 @@ YK.N(null, qs, function(a, b, c) {
               return OG(U, 46, Hf);
             }
             if (61 === J) {
-              Ja = y[10];
+              Ja = y[9];
               var xc = y[34], De = I(Ja);
               y[34] = De;
               U = y;
@@ -34860,17 +35152,17 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (6 === J) {
-              var Ee = y[35], wd = y[36], Fe = I(Ee);
-              y[36] = Fe;
+              var Ee = y[35], wd = y[36], Fe = I(wd);
+              y[35] = Fe;
               U = y;
               U[1] = n(Fe) ? 8 : 9;
               return X;
             }
             if (28 === J) {
               var Od = new T(null, 4, 5, V, [N, C, M, H], null), Ge = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3dmove cursor\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              je = Od;
+              Oc = Od;
+              y[23] = Oc;
               y[37] = Ge;
-              y[24] = je;
               var te = U = y;
               te[2] = null;
               te[1] = 31;
@@ -34912,19 +35204,19 @@ YK.N(null, qs, function(a, b, c) {
             if (3 === J) {
               le = y[29];
               var bf = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3ddone tag\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              Ee = eh;
-              y[29] = eh;
+              wd = eh;
               y[40] = bf;
-              y[35] = Ee;
+              y[36] = wd;
+              y[29] = eh;
               var Sf = U = y;
               Sf[2] = null;
               Sf[1] = 6;
               return X;
             }
             if (12 === J) {
-              Ee = y[35];
-              var Tf = y[2], wg = Pf(Ee);
-              y[35] = wg;
+              wd = y[36];
+              var Tf = y[2], wg = Pf(wd);
+              y[36] = wg;
               y[41] = Tf;
               var Uf = U = y;
               Uf[2] = null;
@@ -34941,23 +35233,23 @@ YK.N(null, qs, function(a, b, c) {
             if (66 === J) {
               xc = y[34];
               var bg = y[2], Ve = Go(Yg(["press", xc])), Ug = new T(null, 2, 5, V, ["KEY_DOWN", xc], null);
-              y[43] = Ve;
-              y[44] = bg;
+              y[43] = bg;
+              y[44] = Ve;
               U = y;
               return PG(U, 67, c, Ug);
             }
             if (23 === J) {
               var If = y[45], cg = y[2], Wf = Go(Yg(["press", If])), xg = new T(null, 2, 5, V, ["KEY_DOWN", If], null);
-              y[46] = Wf;
-              y[47] = cg;
+              y[46] = cg;
+              y[47] = Wf;
               U = y;
               return PG(U, 24, c, xg);
             }
             if (47 === J) {
               Ce = y[33];
               var Vg = y[2], dg = Pf(Ce);
-              y[48] = Vg;
               y[33] = dg;
+              y[48] = Vg;
               var Pd = U = y;
               Pd[2] = null;
               Pd[1] = 41;
@@ -34971,8 +35263,8 @@ YK.N(null, qs, function(a, b, c) {
             }
             if (76 === J) {
               var wf = y[49], yg = y[2], Zh = Go(Yg(["press", wf])), eg = new T(null, 2, 5, V, ["KEY_DOWN", wf], null);
-              y[50] = yg;
-              y[51] = Zh;
+              y[50] = Zh;
+              y[51] = yg;
               U = y;
               return PG(U, 77, c, eg);
             }
@@ -34995,18 +35287,18 @@ YK.N(null, qs, function(a, b, c) {
             if (68 === J) {
               var Xh = new T(null, 6, 5, V, [N, N, K, K, M, M], null), zh = Go(Yg(["\x3d\x3d\x3d\x3d\x3d\x3denemy unit only cancel menu\x3d\x3d\x3d\x3d\x3d\x3d"]));
               uc = Xh;
-              y[17] = uc;
               y[53] = zh;
+              y[17] = uc;
               var Yh = U = y;
               Yh[2] = null;
               Yh[1] = 71;
               return X;
             }
             if (11 === J) {
-              wd = y[36];
-              var Ah = y[2], Ai = Go(Yg(["press", wd])), Bh = new T(null, 2, 5, V, ["KEY_DOWN", wd], null);
-              y[54] = Ai;
-              y[55] = Ah;
+              Ee = y[35];
+              var Ah = y[2], Ai = Go(Yg(["press", Ee])), Bh = new T(null, 2, 5, V, ["KEY_DOWN", Ee], null);
+              y[54] = Ah;
+              y[55] = Ai;
               U = y;
               return PG(U, 12, c, Bh);
             }
@@ -35097,8 +35389,8 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (18 === J) {
-              Ya = y[12];
               If = y[45];
+              Ya = y[12];
               var tg = I(Ya);
               y[45] = tg;
               U = y;
@@ -35112,10 +35404,10 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (67 === J) {
-              Ja = y[10];
+              Ja = y[9];
               var Fj = y[2], ej = Pf(Ja);
               y[61] = Fj;
-              y[10] = ej;
+              y[9] = ej;
               var Bi = U = y;
               Bi[2] = null;
               Bi[1] = 61;
@@ -35137,10 +35429,10 @@ YK.N(null, qs, function(a, b, c) {
               return X;
             }
             if (37 === J) {
-              je = y[24];
-              var Zb = y[2], $e = Pf(je);
+              Oc = y[23];
+              var Zb = y[2], $e = Pf(Oc);
               y[62] = Zb;
-              y[24] = $e;
+              y[23] = $e;
               var Lc = U = y;
               Lc[2] = null;
               Lc[1] = 31;
@@ -35239,12 +35531,12 @@ YK.N(null, qs, function(a, b, c) {
   }(d, !0, a, 68, 83, 65, 87, 13, 27, 38, 40, 37, 39));
   return d;
 });
-for (var dL = {}, eL = {}, EW = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
+for (var dL = {}, eL = {}, HW = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
 null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
 null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-null, null, null, null, null, null, null, null, null, null], FW = EW[0] = 0;;) {
-  if (256 > FW) {
-    EW[FW] = EW[FW >> 1] + (FW & 1), FW += 1;
+null, null, null, null, null, null, null, null, null, null], IW = HW[0] = 0;;) {
+  if (256 > IW) {
+    HW[IW] = HW[IW >> 1] + (IW & 1), IW += 1;
   } else {
     break;
   }
@@ -35252,7 +35544,7 @@ null, null, null, null, null, null, null, null, null, null], FW = EW[0] = 0;;) {
 function qT(a) {
   var b = a.pa;
   a = a.oa;
-  return EW[b & 255] + EW[b >> 8 & 255] + EW[b >> 16 & 255] + EW[b >> 24 & 255] + EW[a & 255] + EW[a >> 8 & 255] + EW[a >> 16 & 255] + EW[a >> 24 & 255];
+  return HW[b & 255] + HW[b >> 8 & 255] + HW[b >> 16 & 255] + HW[b >> 24 & 255] + HW[a & 255] + HW[a >> 8 & 255] + HW[a >> 16 & 255] + HW[a >> 24 & 255];
 }
 ;function rT(a, b) {
   var c = a.oa >>> 16, d = a.oa & 65535, e = a.pa >>> 16;
@@ -35284,14 +35576,14 @@ function qT(a) {
 }
 ;var sT;
 a: {
-  for (var GW = 53, HW = 1;;) {
-    if (0 === GW) {
-      sT = HW;
+  for (var JW = 53, KW = 1;;) {
+    if (0 === JW) {
+      sT = KW;
       break a;
     }
-    var IW = HW / 2;
-    --GW;
-    HW = IW;
+    var LW = KW / 2;
+    --JW;
+    KW = LW;
   }
 }
 var wT = 4294967296 * sT;
@@ -37318,14 +37610,14 @@ function lV(a, b) {
               k = O(g, 0, null);
               g = O(g, 1, null);
               var l = G.c("loadConfig", k);
-              h[9] = g;
               h[8] = k;
+              h[9] = g;
               h[1] = l ? 5 : 6;
               return X;
             }
             return 15 === k ? (k = h[8], k = G.c("exit", k), h[1] = k ? 18 : 19, X) : 21 === k ? (g = h[7], h[7] = g, h[2] = null, h[1] = 2, X) : 13 === k ? (h[2] = h[2], h[1] = 12, X) : 22 === k ? (h[2] = null, h[1] = 23, X) : 6 === k ? (k = h[8], k = G.c("startGameplay", k), h[1] = k ? 10 : 11, X) : 17 === k ? (g = h[2], h[7] = g, h[2] = null, h[1] = 2, X) : 3 === k ? QG(h, h[2]) : 12 === k ? (h[2] = h[2], h[1] = 7, X) : 2 === k ? OG(h, 4, a) : 23 === k ? (h[2] = h[2], h[1] = 20, X) : 19 === k ? 
-            (h[1] = 21, X) : 11 === k ? (k = h[8], k = G.c("startLobby", k), h[1] = k ? 14 : 15, X) : 9 === k ? (l = h[10], g = h[7], k = h[2], l = Om([oq], [l]), g = nn.g(Yg([g, l])), h[11] = k, h[7] = g, h[2] = null, h[1] = 2, X) : 5 === k ? (g = h[9], k = O(g, 0, null), g = O(g, 1, null), l = UK.b ? UK.b(ZK) : UK.call(null, ZK), h[12] = k, h[13] = g, OG(h, 8, l)) : 14 === k ? (g = h[7], k = jV(g, a, b), OG(h, 17, k)) : 16 === k ? (h[2] = h[2], h[1] = 12, X) : 10 === k ? (g = h[7], k = XK.B ? XK.B(ZK, 
-            g, a, b) : XK.call(null, ZK, g, a, b), OG(h, 13, k)) : 18 === k ? (g = h[7], h[2] = g, h[1] = 20, X) : 8 === k ? (k = h[12], g = h[2], k = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [k, g], null)], null), h[10] = g, PG(h, 9, b, k)) : null;
+            (h[1] = 21, X) : 11 === k ? (k = h[8], k = G.c("startLobby", k), h[1] = k ? 14 : 15, X) : 9 === k ? (g = h[7], k = h[2], l = Om([oq], [h[10]]), g = nn.g(Yg([g, l])), h[7] = g, h[11] = k, h[2] = null, h[1] = 2, X) : 5 === k ? (g = h[9], k = O(g, 0, null), g = O(g, 1, null), l = UK.b ? UK.b(ZK) : UK.call(null, ZK), h[12] = g, h[13] = k, OG(h, 8, l)) : 14 === k ? (g = h[7], k = jV(g, a, b), OG(h, 17, k)) : 16 === k ? (h[2] = h[2], h[1] = 12, X) : 10 === k ? (g = h[7], k = XK.B ? XK.B(ZK, 
+            g, a, b) : XK.call(null, ZK, g, a, b), OG(h, 13, k)) : 18 === k ? (g = h[7], h[2] = g, h[1] = 20, X) : 8 === k ? (k = h[13], g = h[2], k = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [k, g], null)], null), h[10] = g, PG(h, 9, b, k)) : null;
           };
         }(d), d);
       }(), f = function() {
