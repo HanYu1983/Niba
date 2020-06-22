@@ -135,7 +135,7 @@
                                          (let [{:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
                                                tmp (map (fn [pos cluster]
                                                           (let [{:keys [centroid error]} (centroids cluster)
-                                                                offset (if (> error 0.2)
+                                                                offset (if (> error 5)
                                                                          (->> (map - centroid pos)
                                                                               (map #(/ % 3)))
                                                                          [0 0])]
