@@ -93,4 +93,7 @@ export default class Model extends cc.Component {
             }
         });
     }
+    // 參數和和使用方法和robot,pilot完全一樣
+    //getWeaponStoreList,getWeaponList,buyWeaponById
+    //getComponentStoreList,getComponentList,buyComponentById
 }
