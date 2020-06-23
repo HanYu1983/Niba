@@ -27,7 +27,7 @@
         (let [{:keys [cursor units]} gameplayCtx
               unitAtCursor (tool.units/getByPosition units cursor)]
           (if unitAtCursor
-            (let [weaponRange (into #{} (data/getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon))
+            (let [weaponRange (into #{} (data/getUnitWeaponRange gameplayCtx unit weapon))
                   unitInRange? (weaponRange cursor)
                   friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)
                   invalidWeaponMsg (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]

@@ -49,90 +49,6 @@
        (apply +)))
 
 ; =======================
-; pilot
-; =======================
-(defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilot]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
-  (let [data (get-in data [:pilot pilot])]
-    (if (nil? data)
-      (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
-      data)))
-
-; =======================
-; weapon
-; =======================
-(defn getWeaponRange [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [weaponData (get-in data [:weapon weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
-      (let [{[min max] :range _ :type} weaponData
-            max (if (-> unit :robotState :tags :weaponRangePlus)
-                  (inc max)
-                  max)]
-        [min max]))))
-
-(defn getWeaponType [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [weaponData (get-in data [:weapon weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
-      (let [{type :type} weaponData]
-        type))))
-
-(defn getWeaponSuitability [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [weaponData (get-in data [:weapon weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
-      (get-in weaponData [:suitability]))))
-
-(defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [weaponData (get-in data [:weapon weaponKey])]
-    (if (nil? weaponData)
-      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
-      (get-in weaponData [:ability]))))
-
-(defn invalidWeapon? [{:keys [gameplayCtx lobbyCtx]} unit weapon]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [{:keys [energyType energyCost]} (common/assertSpec
-                                         (s/keys :req-un [::energyType ::energyCost])
-                                         (get-in data [:weapon (:weaponKey weapon)]))
-        bulletCount (:bulletCount weapon)
-        msg (cond
-              (= energyType "energy")
-              (let [en (-> unit :robotState :en)
-                    enoughEn? (>= en energyCost)]
-                (when (not enoughEn?)
-                  "en is not enough"))
-
-              (= energyType "bullet")
-              (when (zero? bulletCount)
-                "bullet is empty")
-
-              :else
-              (str "energyType not found"))]
-    msg))
-
-; =======================
 ; unit
 ; =======================
 
@@ -226,19 +142,6 @@
                  (get robot :weapons))))])))
 
 
-(defn getUnitWeaponRange [ctx unit weapon]
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (common/assertSpec
-   (s/coll-of vector?)
-   (let [[min max] (getWeaponRange ctx unit weapon)]
-     (->> (tool.map/simpleFindPath [0 0] (dec min))
-          (into #{})
-          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
-                                       (into #{})))
-         ; 使用mapv確保類型, 讓clojure.spec驗過
-          (mapv (partial mapv + (:position unit)))))))
-
 ;power
 (defn getUnitPower [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -278,6 +181,106 @@
       (throw (js/Error. (str "getUnitTransforms[" robotKey "] not found")))
       (conj (mapv keyword (get-in robot [:transform]))
             robotKey))))
+
+; =======================
+; pilot
+; =======================
+(defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilot]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec (s/nilable ::type/unit) unit)
+  (let [data (get-in data [:pilot pilot])]
+    (if (nil? data)
+      (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
+      data)))
+
+; =======================
+; weapon
+; =======================
+(defn getWeaponRange [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [weaponData (get-in data [:weapon weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
+      (let [{[min max] :range _ :type} weaponData
+            max (if (-> unit :robotState :tags :weaponRangePlus)
+                  (inc max)
+                  max)]
+        [min max]))))
+
+(defn getWeaponType [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [weaponData (get-in data [:weapon weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
+      (let [{type :type} weaponData]
+        type))))
+
+(defn getWeaponSuitability [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [weaponData (get-in data [:weapon weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
+      (get-in weaponData [:suitability]))))
+
+(defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [weaponData (get-in data [:weapon weaponKey])]
+    (if (nil? weaponData)
+      (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
+      (get-in weaponData [:ability]))))
+
+(defn invalidWeapon? [{:keys [gameplayCtx lobbyCtx]} unit weapon]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [{:keys [energyType energyCost]} (common/assertSpec
+                                         (s/keys :req-un [::energyType ::energyCost])
+                                         (get-in data [:weapon (:weaponKey weapon)]))
+        bulletCount (:bulletCount weapon)
+        msg (cond
+              (= energyType "energy")
+              (let [en (-> unit :robotState :en)
+                    enoughEn? (>= en energyCost)]
+                (when (not enoughEn?)
+                  "en is not enough"))
+
+              (= energyType "bullet")
+              (when (zero? bulletCount)
+                "bullet is empty")
+
+              :else
+              (str "energyType not found"))]
+    msg))
+
+; ===============================
+
+(defn getUnitWeaponRange [gameplayCtx unit weapon]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec
+   (s/coll-of vector?)
+   (let [[min max] (getWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
+     (->> (tool.map/simpleFindPath [0 0] (dec min))
+          (into #{})
+          (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
+                                       (into #{})))
+         ; 使用mapv確保類型, 讓clojure.spec驗過
+          (mapv (partial mapv + (:position unit)))))))
 
 (defn getUnitHitRate [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
@@ -517,7 +520,7 @@
   {:pre [(common/explainValid? (s/tuple ::type/unit (s/* ::type/weapon) (s/* ::type/unit)) [unit weapons targetUnits])]
    :post [(common/explainValid? (s/nilable (s/tuple ::type/weapon ::type/unit)) %)]}
   (let [touchUnitLists (map (fn [weapon]
-                              (let [weaponRanges (into #{} (getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon))
+                              (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
                                     units (filter #(weaponRanges (:position %)) targetUnits)]
                                 units))
                             weapons)
