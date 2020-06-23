@@ -68,7 +68,10 @@
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
-    (let [[mw mh] (:mapsize gameplayCtx)
+    (let [; copy lobbyCtx first
+          gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))
+          ; create map
+          [mw mh] (:mapsize gameplayCtx)
           playmap (tool.map/generateMap mw mh
                                         {:deepsea 0.6
                                          :sea 0.6
@@ -80,9 +83,7 @@
                                          :award 0.01
                                          :power 1
                                          :offset 0})
-          gameplayCtx (-> gameplayCtx
-                          (update-in [:map] (constantly playmap))
-                          (assoc :lobbyCtx (:lobbyCtx ctx)))
+          gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))
           ; 選角頁, DEMO版先拿掉
           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
           ; 產生自己選出的軍隊
@@ -99,18 +100,18 @@
                                    gameplayCtx))
           ; 產生測試用的軍隊
           #_[gameplayCtx _] #_(->> (get data/data :robot)
-                               (take 4)
-                               (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                         [(-> gameplayCtx
-                                              (data/createUnit {:playerKey :player
-                                                                :position [0 i]}
-                                                               {:robotKey robotKey})
-                                              (data/createUnit {:playerKey :ai1
-                                                                :position [5 i]}
-                                                               {:robotKey robotKey}))
-                                          (inc i)])
-                                       [gameplayCtx 1]))
-          
+                                   (take 4)
+                                   (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                             [(-> gameplayCtx
+                                                  (data/createUnit {:playerKey :player
+                                                                    :position [0 i]}
+                                                                   {:robotKey robotKey})
+                                                  (data/createUnit {:playerKey :ai1
+                                                                    :position [5 i]}
+                                                                   {:robotKey robotKey}))
+                                              (inc i)])
+                                           [gameplayCtx 1]))
+
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
                        (let [posList (take 30 (map vector

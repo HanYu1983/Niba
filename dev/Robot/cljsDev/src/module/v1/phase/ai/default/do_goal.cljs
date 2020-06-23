@@ -72,7 +72,7 @@
                                            :action [:attack weapon]
                                            :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
                               _ (common/assertSpec ::battleMenu/defaultModel battleMenu)
-                              _ (a/<! (common/unitTargetingAnim nil {:units (map #(->> (data/getUnitInfo gameplayCtx %)
+                              _ (a/<! (common/unitTargetingAnim nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                        (data/mapUnitToLocal gameplayCtx nil)) [unit targetUnit])} inputCh outputCh))
                               [gameplayCtx _] (a/<! (unitBattleMenu gameplayCtx {:battleMenu battleMenu :playerTurn? false} inputCh outputCh))
                               gameplayCtx (assoc gameplayCtx
@@ -173,7 +173,7 @@
 
           ; 建立路徑, 播放動畫
           path (tool.map/buildPath paths nearest)
-          _ (a/<! (common/unitMoveAnim gameplayCtx {:unit (->> (data/getUnitInfo gameplayCtx unit)
+          _ (a/<! (common/unitMoveAnim gameplayCtx {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                                                                (data/mapUnitToLocal gameplayCtx nil))
                                                     :path (map (partial data/world2local camera) path)}
                                        inputCh outputCh))

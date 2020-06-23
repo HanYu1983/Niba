@@ -7,12 +7,10 @@
 
 (defn startLobby [ctx inputCh outputCh]
   (a/go
-    (loop [lobbyCtx (-> (or (:lobbyCtx ctx)
-                            (app.lobby.model/load))
+    (loop [lobbyCtx (-> (:lobbyCtx ctx)
                         (update-in [:money] (constantly (:money ctx))))]
-
-      (when (not (s/valid? ::model/model lobbyCtx))
-        (s/explain ::model/model lobbyCtx))
+      
+      (s/assert ::model/model lobbyCtx)
 
       (let [[cmd args] (a/<! inputCh)]
         (println "lobby:" cmd args)

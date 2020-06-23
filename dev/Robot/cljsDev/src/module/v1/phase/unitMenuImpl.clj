@@ -87,9 +87,9 @@
                                  gameplayCtx (-> gameplayCtx
                                                  (data/updateUnit unit (constantly transformedUnit)))
                                  _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
-                                     (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo gameplayCtx transformedUnit)
+                                     (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
                                                                                (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
-                                     (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo gameplayCtx transformedUnit)
+                                     (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
                                                                                   (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh)))]
                              (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh)))
                            (do

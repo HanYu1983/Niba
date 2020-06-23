@@ -62,10 +62,10 @@
                                                         (into []))
                                                    (data/calcActionResult gameplayCtx left leftAction right rightAction)))
                                          [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
-                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(->> (data/getUnitInfo gameplayCtx %)
+                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                                (data/mapUnitToLocal gameplayCtx nil)) (cond-> [left right]
                                                                                                                                     fixRight reverse))
-                                                                             :unitsAfter (map #(->> (data/getUnitInfo gameplayCtx %)
+                                                                             :unitsAfter (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                                     (data/mapUnitToLocal gameplayCtx nil)) (cond-> [leftAfter rightAfter]
                                                                                                                                              fixRight reverse))
                                                                              :results (cond-> result fixRight reverse)} inputCh outputCh))
@@ -81,7 +81,7 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx leftAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo gameplayCtx leftAfter)
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} leftAfter)
                                                                                                            (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
@@ -94,7 +94,7 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo gameplayCtx rightAfter)
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} rightAfter)
                                                                                                            (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))

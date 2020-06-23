@@ -2,6 +2,7 @@
   (:require ["./data.js" :as dataJson])
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
+  (:require [app.lobby.model])
   (:require [module.v1.type :as type])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.viewModel.spec :as viewModelSpec])
@@ -789,7 +790,7 @@
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/weapon weapon)
   (common/assertSpec
-   any?
+   map?
    (let [weaponData (common/assertSpec
                      map?
                      (get-in data [:weapon weaponKey]))]
@@ -801,23 +802,23 @@
              :ability (getWeaponAbility gameplayCtx unit weapon)}
             weapon))))
 
-(defn getUnitInfo [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post []}
-  (let [robotKey (get-in unit [:robotState :robotKey])
-        robot (get-in data [:robot robotKey])]
-    (if (nil? robot)
-      (throw (js/Error. (str "getUnitInfo[" robotKey "] not found")))
-      (update-in unit [:robotState] (fn [state]
-                                      (merge state
-                                             {:weapons (->> (getUnitWeapons gameplayCtx unit)
-                                                            second
-                                                            (map (partial getWeaponInfo gameplayCtx unit)))
-                                              :components (->> (getUnitComponents gameplayCtx unit)
-                                                               second)
-                                              :maxHp (getUnitMaxHp gameplayCtx unit)
-                                              :maxEn (getUnitMaxEn gameplayCtx unit)
-                                              :power (getUnitPower gameplayCtx unit)}))))))
+(defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   map?
+   (let [robotKey (get-in unit [:robotState :robotKey])]
+     (update-in unit [:robotState] (fn [state]
+                                     (merge state
+                                            {:weapons (->> (getUnitWeapons gameplayCtx unit)
+                                                           second
+                                                           (map (partial getWeaponInfo gameplayCtx unit)))
+                                             :components (->> (getUnitComponents gameplayCtx unit)
+                                                              second)
+                                             :maxHp (getUnitMaxHp gameplayCtx unit)
+                                             :maxEn (getUnitMaxEn gameplayCtx unit)
+                                             :power (getUnitPower gameplayCtx unit)}))))))
 
 (defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units} targetCamera unit]
   {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]
@@ -856,7 +857,7 @@
                                                            nextUnit (-> nextUnit
                                                                         (update-in [:robotState :hp] #(min (+ % (* maxHp 0.2)) maxHp))
                                                                         (update-in [:robotState :en] #(min (+ % (* maxEn 0.2)) maxEn)))]
-                                                       (a/<! (common/unitGetAwardAnim nil (map #(->> (getUnitInfo gameplayCtx %)
+                                                       (a/<! (common/unitGetAwardAnim nil (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                                      (mapUnitToLocal gameplayCtx nil)) [unit nextUnit]) inputCh outputCh))
                                                        nextUnit)
                                                      nextUnit))
@@ -927,7 +928,7 @@
    :units (when (s/valid? ::spec/unitsView gameplayCtx)
             (let [{:keys [camera]} gameplayCtx]
               (->> (getUnitsByRegion gameplayCtx nil nil)
-                   (map #(->> (getUnitInfo gameplayCtx %)
+                   (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                               (mapUnitToLocal gameplayCtx camera))))))
    :attackRange (when (s/valid? ::spec/attackRangeView gameplayCtx)
                   (let [{:keys [camera attackRange]} gameplayCtx]
@@ -937,9 +938,9 @@
                      (->> checkHitRate
                           (map (fn [info]
                                  (-> info
-                                     (update :unit #(->> (getUnitInfo gameplayCtx %)
+                                     (update :unit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                          (mapUnitToLocal gameplayCtx camera)))
-                                     (update :targetUnit #(->> (getUnitInfo gameplayCtx %)
+                                     (update :targetUnit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                (mapUnitToLocal gameplayCtx camera)))))))))
    :cellState (when (s/valid? ::spec/cellStateView gameplayCtx)
                 (let [{:keys [units cursor]} gameplayCtx
@@ -947,7 +948,7 @@
                                        (tool.units/getByPosition cursor))
                       terrain (getTerrain gameplayCtx cursor)]
                   {:unit (when unitAtCursor
-                           (->> (getUnitInfo gameplayCtx unitAtCursor)
+                           (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unitAtCursor)
                                 (mapUnitToLocal gameplayCtx nil)))
                    :terrain terrain}))
    :systemMenu (when (s/valid? ::spec/systemMenuView gameplayCtx)
@@ -962,7 +963,7 @@
    :battleMenu (when (s/valid? ::spec/battleMenuView gameplayCtx)
                  (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
                        {battleMenuSession :battleMenuSession} stateDetail]
-                   {:preview (battleMenu/mapUnits battleMenuSession #(->> (getUnitInfo gameplayCtx %)
+                   {:preview (battleMenu/mapUnits battleMenuSession #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                           (mapUnitToLocal gameplayCtx nil)))}))
    :startUnitsMenu (when (s/valid? ::spec/startUnitsMenuView gameplayCtx)
                      (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)

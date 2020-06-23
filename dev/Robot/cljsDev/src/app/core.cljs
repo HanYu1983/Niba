@@ -2,12 +2,14 @@
   (:require [clojure.core.async :as a]
             [cljs.test :refer-macros [run-tests]])
   (:require [app.module]
+            [app.lobby.model]
             [module.v1.core]
             [module.v1.data-test]
             [module.v1.phase.enemyTurn]
             [app.lobby.core]))
 
-(def defaultModel {:money 100000})
+(def defaultModel {:money 100000
+                   :lobbyCtx (app.lobby.model/load)})
 
 (defn mainLoop [ctx inputCh outputCh]
   (a/go
