@@ -64,6 +64,15 @@
              [unit & restUnits] units]
         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
         (if unit
-          (let [gameplayCtx (assoc gameplayCtx :cursor (:position unit))]
+          (let [{:keys [viewsize mapsize]} gameplayCtx
+                [vw vh] viewsize
+                [mw mh] mapsize
+                gameplayCtx (assoc gameplayCtx :cursor (:position unit))
+                gameplayCtx (assoc gameplayCtx :camera (->> (:position unit)
+                                                            (map + [(- (js/Math.floor (/ vw 2))) (- (js/Math.floor (/ vh 2)))])
+                                                            ((fn [[x y]]
+                                                               [(max 0 (min x (- mw vw)))
+                                                                (max 0 (min y (- mh vh)))]))))
+                _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))]
             (recur (a/<! (updateUnit gameplayCtx unit inputCh outputCh)) restUnits))
           (a/<! (data/onEnemyTurnEnd gameplayCtx enemy inputCh outputCh)))))))

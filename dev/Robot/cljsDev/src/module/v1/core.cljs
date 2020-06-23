@@ -21,7 +21,7 @@
                   :camera [0 0]
                   :cursor [0 0]
                   :viewsize [20 20]
-                  :mapsize [25 25]
+                  :mapsize [40 40]
                   :units tool.units/model
                   :moveRange []
                   :players {:player {:faction 0 :playerState nil}
@@ -188,7 +188,7 @@
                        (let [posList (take 30 (map vector
                                                    (repeatedly #(rand-int mw))
                                                    (repeatedly #(rand-int mh))))
-                             beforeCentroids [[4, 4], [15, 4], [4, 15], [15 15]]
+                             beforeCentroids [[10, 10], [15, 10], [10, 15], [15 15]]
                              clusterCnt (count beforeCentroids)
                              {:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
                              ; 團體先偏移到本來設定的集結點
@@ -215,8 +215,11 @@
                                                         posList
                                                         clusters)]
                                            (recur tmp (inc times)))))
-                             ; 取出不重復的點
+                             ; 限制在地圖內並取出不重復的點
                              posList (->> (map #(mapv js/Math.floor %) posList)
+                                          (map (fn [[x y]]
+                                                 [(max 0 (min (dec mw) x))
+                                                  (max 0 (min (dec mh) y))]))
                                           (distinct))
                              ; 產生軍隊
                              gameplayCtx (reduce (fn [gameplayCtx pos]
