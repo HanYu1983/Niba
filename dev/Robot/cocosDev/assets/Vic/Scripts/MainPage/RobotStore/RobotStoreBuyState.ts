@@ -1,5 +1,3 @@
-import DefaultState from "../DefaultState";
-import MainPage from "../Page/MainPage";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -7,6 +5,9 @@ import MainPage from "../Page/MainPage";
 //  - https://docs.cocos.com/creator/manual/en/scripting/reference/attributes.html
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
+
+import DefaultState from "../../DefaultState";
+import MainPage from "../../Page/MainPage";
 
 const {ccclass, property} = cc._decorator;
 

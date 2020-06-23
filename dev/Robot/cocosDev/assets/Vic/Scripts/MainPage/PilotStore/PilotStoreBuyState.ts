@@ -1,5 +1,5 @@
-import DefaultState from "../DefaultState";
-import MainPage from "../Page/MainPage";
+import DefaultState from "../../DefaultState";
+import MainPage from "../../Page/MainPage";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html

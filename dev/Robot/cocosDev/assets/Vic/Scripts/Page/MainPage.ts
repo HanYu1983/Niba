@@ -16,19 +16,19 @@ import ViewController from '../ViewController';
 import RobotStore from '../MainPage/RobotStore/RobotStore';
 import PilotStore from '../MainPage/PilotStore/PilotStore';
 import StandBy from '../MainPage/StandBy/StandBy';
-import RobotStoreState from '../MainPage/RobotStoreState';
 import MenuButton from '../MenuButton';
-import RobotStoreBuyState from '../MainPage/RobotStoreBuyState';
-import PilotStoreState from '../MainPage/PilotStoreState';
-import PilotStoreBuyState from '../MainPage/PilotStoreBuyState';
-import StandByState from '../MainPage/StandyByState';
-import StandByRobotDetailState from '../MainPage/StandyByRobotDetailState';
-import StandByRobotPilotState from '../MainPage/StandyByRobotPilotState';
-import StandByRobotPilotPopState from '../MainPage/StandyByRobotPilotPopState';
 import MainMenu from '../MainPage/MainMenu/MainMenu';
 import PrepareMenu from '../MainPage/PrepareMenu/PrepareMenu';
 import MainMenuState from '../MainPage/MainMenu/MainMenuState';
 import PrepareMenuState from '../MainPage/PrepareMenu/PrepareMenuState';
+import RobotStoreBuyState from '../MainPage/RobotStore/RobotStoreBuyState';
+import PilotStoreBuyState from '../MainPage/PilotStore/PilotStoreBuyState';
+import PilotStoreState from '../MainPage/PilotStore/PilotStoreState';
+import RobotStoreState from '../MainPage/RobotStore/RobotStoreState';
+import StandByRobotDetailState from '../MainPage/StandBy/StandyByRobotDetailState';
+import StandByRobotPilotState from '../MainPage/StandBy/StandyByRobotPilotState';
+import StandByState from '../MainPage/StandBy/StandyByState';
+import StandByRobotPilotPopState from '../MainPage/StandBy/StandyByRobotPilotPopState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
