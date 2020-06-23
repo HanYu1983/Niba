@@ -1,5 +1,6 @@
 (ns app.core
   (:require [clojure.core.async :as a]
+            [clojure.spec.alpha :as s]
             [cljs.test :refer-macros [run-tests]])
   (:require [app.module]
             [app.lobby.model]

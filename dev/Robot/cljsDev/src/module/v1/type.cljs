@@ -48,12 +48,11 @@
 (s/def ::suitability (s/tuple number? number? number? number?))
 (s/def ::type #{"single" "line"})
 (s/def ::range (s/tuple int? int?))
-(s/def ::weapon (s/keys :req-un [::key ::weaponKey ::weaponLevel ::tags ::bulletCount]
-                        :opt-un [::range ::type ::suitability]))
+(s/def ::weapon (s/keys :req-un [::key ::weaponKey ::tags ::bulletCount]))
 
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
-(s/def ::pilotKey ::key)
+(s/def ::pilotKey (s/nilable ::key))
 (s/def ::componentKey ::key)
 
 (s/def ::component (s/keys :req-un [::key ::componentKey ::tags]))

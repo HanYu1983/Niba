@@ -2,6 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
             [app.module]
+            [app.lobby.model]
             [tool.map]
             [tool.units]
             [tool.fsm]
@@ -20,7 +21,7 @@
                   :camera [0 0]
                   :cursor [0 0]
                   :viewsize [20 20]
-                  :mapsize [25 25]
+                  :mapsize [40 40]
                   :units tool.units/model
                   :moveRange []
                   :players {:player {:faction 0 :playerState nil}
@@ -56,15 +57,85 @@
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
 
-(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:robot])
-       (map (fn [[k v]] [k {:cost (get v :cost)}]))
-       (into {})))
+(s/def ::lobbyAskGetRobotStoreList (s/keys :req-un [::getRobotStoreList]))
+(s/def ::lobbyAskGetPilotStoreList (s/keys :req-un [::getPilotStoreList]))
+(s/def ::lobbyAskGetWeaponStoreList (s/keys :req-un [::getWeaponStoreList]))
+(s/def ::lobbyAskGetComponentStoreList (s/keys :req-un [::getComponentStoreList]))
+(s/def ::lobbyAskGetRobotList (s/keys :req-un [::getRobotList]))
+(s/def ::lobbyAskGetPilotList (s/keys :req-un [::getPilotList]))
+(s/def ::lobbyAskGetWeaponList (s/keys :req-un [::getWeaponList]))
+(s/def ::lobbyAskGetComponentList (s/keys :req-un [::getComponentList]))
+(s/def ::lobbyAskQuestion (s/or :getRobotStoreList ::lobbyAskGetRobotStoreList
+                                :getPilotStoreList ::lobbyAskGetPilotStoreList
+                                :getWeaponStoreList ::lobbyAskGetWeaponStoreList
+                                :getComponentStoreList ::lobbyAskGetComponentStoreList
+                                :getRobotList ::lobbyAskGetRobotList
+                                :getPilotList ::lobbyAskGetPilotList
+                                :getWeaponList ::lobbyAskGetWeaponList
+                                :getComponentList ::lobbyAskGetComponentList))
 
-(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:pilot])
-       (map (fn [[k v]] [k {:cost (get v :cost)}]))
-       (into {})))
+(defmethod app.module/lobbyAsk :v1 [_ lobbyCtx question]
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::lobbyAskQuestion question)
+  (let [[spec value] (s/conform ::lobbyAskQuestion question)]
+    (cond
+      (= :getRobotList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:robots lobbyCtx)
+                      (map (fn [[key robotKey]]
+                             (common/assertSpec
+                              ::type/unit
+                              {:key key
+                               :position [0 0]
+                               :playerKey :player
+                               :robotState {:robotKey robotKey
+                                            :pilotKey nil
+                                            :weapons {}
+                                            :components {}
+                                            :tags {}
+                                            :hp 0
+                                            :en 0}})))
+                      (map (fn [unit]
+                             (data/getUnitInfo {:lobbyCtx lobbyCtx} unit)))
+                      (zipmap (-> lobbyCtx :robots keys)))]
+         ret))
+
+      (= :getWeaponList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:weapons lobbyCtx)
+                      (map (fn [[key weaponKey]]
+                             (common/assertSpec
+                              ::type/weapon
+                              {:key key
+                               :weaponKey weaponKey
+                               :tags {}
+                               :bulletCount 0})))
+                      (map (fn [weapon]
+                             (data/getWeaponInfo {:lobbyCtx lobbyCtx} nil weapon)))
+                      (zipmap (-> lobbyCtx :weapons keys)))]
+         ret))
+
+      (= :getPilotList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:pilots lobbyCtx)
+                      (map (fn [[key pilotKey]]
+                             pilotKey))
+                      (map (fn [pilot]
+                             (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
+                      (zipmap (-> lobbyCtx :pilots keys)))]
+         ret))
+      
+      :else
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [field (spec {:getRobotStoreList :robot
+                          :getPilotStoreList :pilot
+                          :getWeaponStoreList :weapon
+                          :getComponentStoreList :component})]
+         (field data/data))))))
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
@@ -117,7 +188,7 @@
                        (let [posList (take 30 (map vector
                                                    (repeatedly #(rand-int mw))
                                                    (repeatedly #(rand-int mh))))
-                             beforeCentroids [[4, 4], [15, 4], [4, 15], [15 15]]
+                             beforeCentroids [[10, 10], [15, 10], [10, 15], [15 15]]
                              clusterCnt (count beforeCentroids)
                              {:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
                              ; 團體先偏移到本來設定的集結點
@@ -144,8 +215,11 @@
                                                         posList
                                                         clusters)]
                                            (recur tmp (inc times)))))
-                             ; 取出不重復的點
+                             ; 限制在地圖內並取出不重復的點
                              posList (->> (map #(mapv js/Math.floor %) posList)
+                                          (map (fn [[x y]]
+                                                 [(max 0 (min (dec mw) x))
+                                                  (max 0 (min (dec mh) y))]))
                                           (distinct))
                              ; 產生軍隊
                              gameplayCtx (reduce (fn [gameplayCtx pos]
