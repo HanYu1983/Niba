@@ -2,6 +2,7 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
             [app.module]
+            [app.lobby.model]
             [tool.map]
             [tool.units]
             [tool.fsm]
@@ -56,15 +57,104 @@
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
 
-(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx]
+(s/def ::lobbyAskGetRobotStoreList (s/keys :req-un [::getRobotStoreList]))
+(s/def ::lobbyAskGetPilotStoreList (s/keys :req-un [::getPilotStoreList]))
+(s/def ::lobbyAskGetWeaponStoreList (s/keys :req-un [::getWeaponStoreList]))
+(s/def ::lobbyAskGetComponentStoreList (s/keys :req-un [::getComponentStoreList]))
+(s/def ::lobbyAskGetRobotList (s/keys :req-un [::getRobotList]))
+(s/def ::lobbyAskGetPilotList (s/keys :req-un [::getPilotList]))
+(s/def ::lobbyAskGetWeaponList (s/keys :req-un [::getWeaponList]))
+(s/def ::lobbyAskGetComponentList (s/keys :req-un [::getComponentList]))
+(s/def ::lobbyAskQuestion (s/or :getRobotStoreList ::lobbyAskGetRobotStoreList
+                                :getPilotStoreList ::lobbyAskGetPilotStoreList
+                                :getWeaponStoreList ::lobbyAskGetWeaponStoreList
+                                :getComponentStoreList ::lobbyAskGetComponentStoreList
+                                :getRobotList ::lobbyAskGetRobotList
+                                :getPilotList ::lobbyAskGetPilotList
+                                :getWeaponList ::lobbyAskGetWeaponList
+                                :getComponentList ::lobbyAskGetComponentList))
+
+(defmethod app.module/lobbyAsk :v1 [_ lobbyCtx question]
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::lobbyAskQuestion question)
+  (let [[spec value] (s/conform ::lobbyAskQuestion question)]
+    (cond
+      (= :getRobotList spec)
+      (common/assertSpec
+       (s/coll-of (s/tuple keyword? any?))
+       (let [ret (->> (:robots lobbyCtx)
+                      (map (fn [[key robotKey]]
+                             (common/assertSpec
+                              ::type/unit
+                              {:key key
+                               :position [0 0]
+                               :playerKey :player
+                               :robotState {:robotKey robotKey
+                                            :pilotKey nil
+                                            :weapons {}
+                                            :components {}
+                                            :tags {}
+                                            :hp 0
+                                            :en 0}})))
+                      (map (fn [unit]
+                             (data/getUnitInfo (assoc gameplayCtx :lobbyCtx lobbyCtx) unit)))
+                      (map vector (-> lobbyCtx :robots keys)))]
+         ret))
+
+      #_(= :getWeaponList spec)
+      #_(common/assertSpec
+       (s/coll-of (s/tuple keyword? any?))
+       (let [ret (->> (:robots lobbyCtx)
+                      (map (fn [[key weaponKey]]
+                             (common/assertSpec
+                              ::type/weapon
+                              {:key key
+                               :position [0 0]
+                               :playerKey :player
+                               :robotState {:robotKey robotKey
+                                            :pilotKey nil
+                                            :weapons {}
+                                            :components {}
+                                            :tags {}
+                                            :hp 0
+                                            :en 0}})))
+                      (map (fn [unit]
+                             (data/getUnitInfo (assoc gameplayCtx :lobbyCtx lobbyCtx) unit)))
+                      (map vector (-> lobbyCtx :robots keys)))]
+         ret))
+
+
+      :else
+      (common/assertSpec
+       (s/map-of keyword? any?)
+       (let [field (spec {:getRobotStoreList :robot
+                          :getPilotStoreList :pilot
+                          :getWeaponStoreList :weapon
+                          :getComponentStoreList :component})]
+         (->> (field data/data)
+              (map (fn [[k v]] [k v]))
+              (into {})))))))
+
+#_(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx]
   (->> (get-in data/data [:robot])
-       (map (fn [[k v]] [k {:cost (get v :cost)}]))
+       (map (fn [[k v]] [k v]))
        (into {})))
 
-(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx]
+#_(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx]
   (->> (get-in data/data [:pilot])
-       (map (fn [[k v]] [k {:cost (get v :cost)}]))
+       (map (fn [[k v]] [k v]))
        (into {})))
+
+#_(defmethod app.module/lobbyGetWeapons :v1 [_ lobbyCtx]
+  (->> (get-in data/data [:weapon])
+       (map (fn [[k v]] [k v]))
+       (into {})))
+
+#_(defmethod app.module/lobbyGetComponents :v1 [_ lobbyCtx]
+  (->> (get-in data/data [:component])
+       (map (fn [[k v]] [k v]))
+       (into {})))
+
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go
@@ -99,18 +189,18 @@
                                    gameplayCtx))
           ; 產生測試用的軍隊
           #_[gameplayCtx _] #_(->> (get data/data :robot)
-                               (take 4)
-                               (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                         [(-> gameplayCtx
-                                              (data/createUnit {:playerKey :player
-                                                                :position [0 i]}
-                                                               {:robotKey robotKey})
-                                              (data/createUnit {:playerKey :ai1
-                                                                :position [5 i]}
-                                                               {:robotKey robotKey}))
-                                          (inc i)])
-                                       [gameplayCtx 1]))
-          
+                                   (take 4)
+                                   (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                             [(-> gameplayCtx
+                                                  (data/createUnit {:playerKey :player
+                                                                    :position [0 i]}
+                                                                   {:robotKey robotKey})
+                                                  (data/createUnit {:playerKey :ai1
+                                                                    :position [5 i]}
+                                                                   {:robotKey robotKey}))
+                                              (inc i)])
+                                           [gameplayCtx 1]))
+
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
                        (let [posList (take 30 (map vector

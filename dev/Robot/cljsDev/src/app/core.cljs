@@ -1,5 +1,6 @@
 (ns app.core
   (:require [clojure.core.async :as a]
+            [clojure.spec.alpha :as s]
             [cljs.test :refer-macros [run-tests]])
   (:require [app.module]
             [module.v1.core]
@@ -7,6 +8,7 @@
             [module.v1.phase.enemyTurn]
             [app.lobby.core]))
 
+(s/check-asserts true)
 (def defaultModel {:money 100000})
 
 (defn mainLoop [ctx inputCh outputCh]

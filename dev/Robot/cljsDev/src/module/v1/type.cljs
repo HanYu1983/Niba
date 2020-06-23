@@ -53,7 +53,7 @@
 
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
-(s/def ::pilotKey ::key)
+(s/def ::pilotKey (s/nilable ::key))
 (s/def ::componentKey ::key)
 
 (s/def ::component (s/keys :req-un [::key ::componentKey ::tags]))

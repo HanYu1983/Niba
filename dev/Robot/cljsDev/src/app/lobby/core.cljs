@@ -10,9 +10,8 @@
     (loop [lobbyCtx (-> (or (:lobbyCtx ctx)
                             (app.lobby.model/load))
                         (update-in [:money] (constantly (:money ctx))))]
-
-      (when (not (s/valid? ::model/model lobbyCtx))
-        (s/explain ::model/model lobbyCtx))
+      
+      (s/assert ::model/model lobbyCtx)
 
       (let [[cmd args] (a/<! inputCh)]
         (println "lobby:" cmd args)
@@ -29,6 +28,18 @@
                                                (into []))]]])
             (recur lobbyCtx))
 
+          (= cmd "getWeaponStoreList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetWeapons app.module/*module lobbyCtx)
+                                               (into []))]]])
+            (recur lobbyCtx))
+
+          (= cmd "getComponentStoreList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetComponents app.module/*module lobbyCtx)
+                                               (into []))]]])
+            (recur lobbyCtx))
+
           (= cmd "getRobotList")
           (let [[id subargs] args]
             (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:robots])
@@ -41,11 +52,29 @@
                                                (into []))]]])
             (recur lobbyCtx))
 
+          (= cmd "getWeaponList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:weapons])
+                                               (into []))]]])
+            (recur lobbyCtx))
+
+          (= cmd "getComponentList")
+          (let [[id subargs] args]
+            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:components])
+                                               (into []))]]])
+            (recur lobbyCtx))
+
           (= cmd "buyRobotById")
           (app.lobby.core/buyImpl app.module/lobbyGetUnits [:robots])
 
           (= cmd "buyPilotById")
           (app.lobby.core/buyImpl app.module/lobbyGetPilots [:pilots])
+
+          (= cmd "buyWeaponById")
+          (app.lobby.core/buyImpl app.module/lobbyGetWeapons [:weapons])
+
+          (= cmd "buyComponentById")
+          (app.lobby.core/buyImpl app.module/lobbyGetComponents [:components])
 
           (= cmd "setRobotPilot")
           (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args
