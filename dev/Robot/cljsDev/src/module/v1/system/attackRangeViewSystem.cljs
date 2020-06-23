@@ -19,7 +19,7 @@
       (->> (common/assertSpec
             ::type/weapon
             (nth weapons cursor2))
-           (data/getUnitWeaponRange gameplayCtx unit))
+           (data/getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit))
       [])))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]

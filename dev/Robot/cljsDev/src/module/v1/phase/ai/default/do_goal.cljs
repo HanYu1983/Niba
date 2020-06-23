@@ -37,8 +37,8 @@
                            {:k 1})))
 
 (defn getKnnState [gameplayCtx unit]
-  (let [maxHp (data/getUnitMaxHp gameplayCtx unit)
-        maxEn (data/getUnitMaxEn gameplayCtx unit)
+  (let [maxHp (data/getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+        maxEn (data/getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
         hp (-> unit :robotState :hp)
         en (-> unit :robotState :en)]
     [(/ hp maxHp) (/ en maxEn)]))
@@ -46,8 +46,8 @@
 
 (defn handleAttack [gameplayCtx unit otherAsyncFn inputCh outputCh]
   (a/go
-    (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
-          weapons (filter #(not (data/invalidWeapon? gameplayCtx unit %)) weapons)
+    (let [[_ weapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+          weapons (filter #(not (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %)) weapons)
           targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
                                                    (map - (:position unit) [10 10])
                                                    (map + (:position unit) [10 10]))
@@ -56,8 +56,8 @@
           bestWeaponUnit (data/getBestWeapon gameplayCtx unit weapons targetUnits)
           gameplayCtx (if bestWeaponUnit
                         (let [[weapon targetUnit] bestWeaponUnit
-                              [_ targetUnitWeapons] (data/getUnitWeapons gameplayCtx targetUnit)
-                              targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit %)) targetUnitWeapons)
+                              [_ targetUnitWeapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+                              targetUnitValidWeapons (filter #(not (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit %)) targetUnitWeapons)
                               targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
                               targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
                               _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))
@@ -133,7 +133,7 @@
 
 (defmethod do-goal :findAndAttack [_ gameplayCtx unit inputCh outputCh]
   (a/go
-    (let [[_ weapons] (data/getUnitWeapons gameplayCtx unit)
+    (let [[_ weapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
           weapon (first weapons)
           targetUnit (->> (:units gameplayCtx)
                           (tool.units/getAll)

@@ -164,7 +164,7 @@
                              nextUnitList (map (fn [unit]
                                                  (common/assertSpec
                                                   ::type/unit
-                                                  (let [[ground _ _ _] (data/getUnitSuitability gameplayCtx unit)
+                                                  (let [[ground _ _ _] (data/getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                                                         sky? (zero? ground)]
                                                     (if sky?
                                                       (update-in unit [:robtoState :tags] #(conj % [:sky true]))
@@ -307,7 +307,7 @@
           (core/defexe (fn [gameplayCtx]
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
-                               weapons (data/getUnitWeapons gameplayCtx unit1)]
+                               weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
                            (type/assertSpec ::type/unit unit1)
                            (type/assertSpec ::type/weaponEntry weapons)
                            (reset! bulletCount (get-in weapons [1 1 :bulletCount]))
@@ -323,7 +323,7 @@
           (core/defexe (fn [gameplayCtx]
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
-                               weapons (data/getUnitWeapons gameplayCtx unit1)]
+                               weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
                            (type/assertSpec ::type/unit unit1)
                            (type/assertSpec ::type/weaponEntry weapons)
                            (when (not= (get-in weapons [1 1 :bulletCount]) (dec @bulletCount))

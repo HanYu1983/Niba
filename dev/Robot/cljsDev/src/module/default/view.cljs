@@ -35,7 +35,7 @@
                  (let [unit (get stateDetail :unit)
                        data (-> (get stateDetail :data)
                                 (update :weapons (fn [weapons]
-                                                   (map (partial module.default.data/getWeaponInfo gameplayCtx unit) weapons))))
+                                                   (map (partial module.default.data/getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit) weapons))))
                        menuCursor (get stateDetail :menuCursor)]
                    {:menuCursor menuCursor
                     :data data}))
