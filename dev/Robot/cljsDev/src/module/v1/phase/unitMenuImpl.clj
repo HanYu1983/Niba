@@ -87,8 +87,10 @@
                                  gameplayCtx (-> gameplayCtx
                                                  (data/updateUnit unit (constantly transformedUnit)))
                                  _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
-                                     (a/<! (common/unitSkyAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
-                                     (a/<! (common/unitGroundAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))]
+                                     (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo gameplayCtx transformedUnit)
+                                                                               (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                                     (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo gameplayCtx transformedUnit)
+                                                                                  (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh)))]
                              (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh)))
                            (do
                              (a/<! (common/showMessage nil {:message (str "沒有飛行能力")} inputCh outputCh))

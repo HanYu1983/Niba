@@ -62,10 +62,12 @@
                                                         (into []))
                                                    (data/calcActionResult gameplayCtx left leftAction right rightAction)))
                                          [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
-                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [left right]
+                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(->> (data/getUnitInfo gameplayCtx %)
+                                                                                               (data/mapUnitToLocal gameplayCtx nil)) (cond-> [left right]
                                                                                                                                     fixRight reverse))
-                                                                             :unitsAfter (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [leftAfter rightAfter]
-                                                                                                                                         fixRight reverse))
+                                                                             :unitsAfter (map #(->> (data/getUnitInfo gameplayCtx %)
+                                                                                                    (data/mapUnitToLocal gameplayCtx nil)) (cond-> [leftAfter rightAfter]
+                                                                                                                                             fixRight reverse))
                                                                              :results (cond-> result fixRight reverse)} inputCh outputCh))
                                          gameplayCtx (-> gameplayCtx
                                                          (data/updateUnit left (constantly leftAfter))
@@ -79,7 +81,8 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx leftAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo gameplayCtx leftAfter)
+                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                        ; 防守方死亡
@@ -91,7 +94,8 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo gameplayCtx rightAfter)
+                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                          gameplayCtx (dissoc gameplayCtx :attackRange :checkHitRate)]

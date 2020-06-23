@@ -48,7 +48,8 @@
                   (recur gameplayCtx))
 
                 :else
-                (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit unitAtCursor])} inputCh outputCh))
+                (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(->> (data/getUnitInfo gameplayCtx %)
+                                                                               (data/mapUnitToLocal gameplayCtx nil)) [unit unitAtCursor])} inputCh outputCh))
                       [gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
                                                                 {:battleMenu (-> battleMenu/defaultModel
                                                                                  (battleMenu/setUnits unit unitAtCursor)
