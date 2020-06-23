@@ -29,20 +29,22 @@ import StandByRobotDetailState from '../MainPage/StandBy/StandyByRobotDetailStat
 import StandByRobotPilotState from '../MainPage/StandBy/StandyByRobotPilotState';
 import StandByState from '../MainPage/StandBy/StandyByState';
 import StandByRobotPilotPopState from '../MainPage/StandBy/StandyByRobotPilotPopState';
+import QuestMenu from '../MainPage/QuestMenu/QuestMenu';
+import QuestMenuState from '../MainPage/QuestMenu/QuestMenuState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
 @requireComponent(cc.Layout)
 export default class MainPage extends BasicViewer {
 
-    @property(MenuButtons)
-    menu: MenuButtons = null;
-
     @property(MainMenu)
     mainMenu:MainMenu = null;
 
     @property(PrepareMenu)
     prepareMenu:PrepareMenu = null;
+
+    @property(QuestMenu)
+    questMenu:QuestMenu = null;
 
     @property(RobotStore)
     robotStore: RobotStore = null;
@@ -60,20 +62,10 @@ export default class MainPage extends BasicViewer {
 
     init() {
         this._state = this.node.getComponent(StateController);
-
-        this.menu.updateItem = (btn: MenuButton, data: any) => {
-            btn.setLabel(data);
-        };
     }
 
     open() {
         super.open();
-
-
-        // this.menu.open();
-        // // this.menu.setData(["整備部隊", "購買機體", "雇傭駕駛", "出擊"]);
-        // this.menu.setData(["整備部隊", "進入副本", "儲存", "讀取"]);
-
         this.backToLooby();
     }
 
@@ -104,6 +96,32 @@ export default class MainPage extends BasicViewer {
         super.close();
     }
 
+    //#region QuestMenu
+    onQuestUpClick(){
+        this.questMenu.onPrevClick();
+    }
+
+    onQuestDownClick(){
+        this.questMenu.onNextClick();
+    }
+
+    onQuestLeftClick(){
+        this.questMenu.onLeftClick();
+    }
+
+    onQuestRightClick(){
+        this.questMenu.onRightClick();
+    }
+
+    onQuestEnterClick(){
+        ViewController.instance.view.openGamePage();
+    }
+
+    onQuestEscClick(){
+        this.openPrepareMenu();
+    }
+    //#endregion
+
     //#region MainPageDefaultState 最外層的選單
 
     onMenuUpClick() {
@@ -115,31 +133,23 @@ export default class MainPage extends BasicViewer {
     }
 
     onMenuEnterClick() {
-        // this.mainMenu.onEnterClick();
         switch (this.mainMenu.menu.getFocus()) {
             case "整備部隊":
                 {
-                    // 整備部隊
-                    // this.openStandBy();
                     this.openPrepareMenu();
                 }
                 break;
             case "進入副本":
                 {
-                    // 購買機體
-                    // this.openRobotStore();
+                    this.openQuestMenu();
                 }
                 break;
             case "儲存":
                 {
-                    // 雇傭駕駛
-                    // this.openPilotStore();
                 }
                 break;
             case "讀取":
                 {
-                    // 出擊
-                    // ViewController.instance.view.openGamePage();
                 }
                 break;
         }
@@ -428,6 +438,12 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new PrepareMenuState());
     }
 
+    openQuestMenu(){
+        this.closeAllPage();
+        this.questMenu.open();
+        this._state.changeState(new QuestMenuState());
+    }
+
     openRobotStore() {
         this.closeAllPage();
         this.robotStore.open();
@@ -458,6 +474,7 @@ export default class MainPage extends BasicViewer {
     closeAllPage(){
         this.mainMenu.close();
         this.prepareMenu.close();
+        this.questMenu.close();
         this.robotStore.close();
         this.pilotStore.close();
         this.standBy.close();
