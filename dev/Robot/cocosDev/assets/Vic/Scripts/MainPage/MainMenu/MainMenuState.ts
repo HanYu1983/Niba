@@ -1,11 +1,10 @@
-
-import DefaultState from "../DefaultState";
-import MainPage from "../Page/MainPage";
+import DefaultState from "../../DefaultState";
+import MainPage from "../../Page/MainPage";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class MainPageDefaultState extends DefaultState {
+export default class MainMenuState extends DefaultState {
     onPrevClick(owner: any) {
         (owner as MainPage).onMenuUpClick();
     }

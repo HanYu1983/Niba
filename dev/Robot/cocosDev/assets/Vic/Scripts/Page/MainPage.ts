@@ -12,7 +12,6 @@ import BasicViewer from '../BasicViewer'
 import MenuButtons from '../MenuButtons';
 import InputSensor from '../InputSensor';
 import StateController from '../StateController';
-import MainPageDefaultState from '../MainPage/MainPageDefaultState';
 import ViewController from '../ViewController';
 import RobotStore from '../MainPage/RobotStore/RobotStore';
 import PilotStore from '../MainPage/PilotStore/PilotStore';
@@ -26,6 +25,10 @@ import StandByState from '../MainPage/StandyByState';
 import StandByRobotDetailState from '../MainPage/StandyByRobotDetailState';
 import StandByRobotPilotState from '../MainPage/StandyByRobotPilotState';
 import StandByRobotPilotPopState from '../MainPage/StandyByRobotPilotPopState';
+import MainMenu from '../MainPage/MainMenu/MainMenu';
+import PrepareMenu from '../MainPage/PrepareMenu/PrepareMenu';
+import MainMenuState from '../MainPage/MainMenu/MainMenuState';
+import PrepareMenuState from '../MainPage/PrepareMenu/PrepareMenuState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -34,6 +37,12 @@ export default class MainPage extends BasicViewer {
 
     @property(MenuButtons)
     menu: MenuButtons = null;
+
+    @property(MainMenu)
+    mainMenu:MainMenu = null;
+
+    @property(PrepareMenu)
+    prepareMenu:PrepareMenu = null;
 
     @property(RobotStore)
     robotStore: RobotStore = null;
@@ -60,8 +69,10 @@ export default class MainPage extends BasicViewer {
     open() {
         super.open();
 
-        this.menu.open();
-        this.menu.setData(["整備部隊", "購買機體", "雇傭駕駛", "出擊"]);
+
+        // this.menu.open();
+        // // this.menu.setData(["整備部隊", "購買機體", "雇傭駕駛", "出擊"]);
+        // this.menu.setData(["整備部隊", "進入副本", "儲存", "讀取"]);
 
         this.backToLooby();
     }
@@ -89,45 +100,95 @@ export default class MainPage extends BasicViewer {
     }
 
     close() {
-        this.closeAllSub();
+        this.closeAllPage();
         super.close();
     }
 
     //#region MainPageDefaultState 最外層的選單
 
     onMenuUpClick() {
-        this.menu.onPrevClick();
+        this.mainMenu.onPrevClick();
     }
 
     onMenuDownClick() {
-        this.menu.onNextClick();
+        this.mainMenu.onNextClick();
     }
 
     onMenuEnterClick() {
-        switch (this.menu.getFocus()) {
+        // this.mainMenu.onEnterClick();
+        switch (this.mainMenu.menu.getFocus()) {
             case "整備部隊":
                 {
-                    this.openStandBy();
+                    // 整備部隊
+                    // this.openStandBy();
+                    this.openPrepareMenu();
                 }
                 break;
-            case "購買機體":
+            case "進入副本":
                 {
-                    this.openRobotStore();
+                    // 購買機體
+                    // this.openRobotStore();
                 }
                 break;
-            case "雇傭駕駛":
+            case "儲存":
                 {
-                    this.openPilotStore();
+                    // 雇傭駕駛
+                    // this.openPilotStore();
                 }
                 break;
-            case "出擊":
+            case "讀取":
                 {
-                    ViewController.instance.view.openGamePage();
+                    // 出擊
+                    // ViewController.instance.view.openGamePage();
                 }
                 break;
         }
     }
 
+    //#endregion
+
+    //#region PrepareMenuState
+
+    onPrepareMenuPrevClick(){
+        this.prepareMenu.menu.onPrevClick();
+    }
+
+    onPrepareMenuNextClick(){
+        this.prepareMenu.menu.onNextClick();
+    } 
+
+    onPrepareMenuEnterClick(){
+        switch(this.prepareMenu.menu.getFocus()){
+            case "購買機甲":{
+                this.openRobotStore();
+                break;
+            }
+            case "雇傭駕駛":{
+                this.openPilotStore();
+                break;
+            }
+            case "購買軍火":{
+                break;
+            }
+            case "購買配件":{
+                break;
+            }
+            case "配置駕駛":{
+                this.openStandBy();
+                break;
+            }
+            case "配置軍火":{
+                break;
+            }
+            case "配置配件":{
+                break;
+            }
+        }
+    } 
+
+    onPrepareMenuEscClick(){
+        this.backToLooby();
+    } 
     //#endregion
 
     //#region RobotStoreState 最外層的選單-》買機體的選單
@@ -156,7 +217,7 @@ export default class MainPage extends BasicViewer {
     }
 
     onRobotStoreEscClick() {
-        this.backToLooby();
+        this.openPrepareMenu();
     }
 
     //#endregion
@@ -187,7 +248,7 @@ export default class MainPage extends BasicViewer {
     }
 
     onPilotStoreEscClick() {
-        this.backToLooby();
+        this.openPrepareMenu();
     }
 
     //#endregion
@@ -277,7 +338,7 @@ export default class MainPage extends BasicViewer {
     }
 
     onStandByEscClick() {
-        this.backToLooby();
+        this.openPrepareMenu();
     }
 
     //#endregion
@@ -361,33 +422,42 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    openPrepareMenu(){
+        this.closeAllPage();
+        this.prepareMenu.open();
+        this._state.changeState(new PrepareMenuState());
+    }
+
     openRobotStore() {
-        this.closeAllSub();
+        this.closeAllPage();
         this.robotStore.open();
         this.robotStore.setRobotList();
         this._state.changeState(new RobotStoreState());
     }
 
     openPilotStore() {
-        this.closeAllSub();
+        this.closeAllPage();
         this.pilotStore.open();
         this.pilotStore.setPilotList();
         this._state.changeState(new PilotStoreState());
     }
 
     openStandBy() {
-        this.closeAllSub();
+        this.closeAllPage();
         this.standBy.open();
         this.standBy.setRobotList();
         this._state.changeState(new StandByState());
     }
 
     backToLooby() {
-        this.closeAllSub();
-        this._state.changeState(new MainPageDefaultState());
+        this.closeAllPage();
+        this.mainMenu.open();
+        this._state.changeState(new MainMenuState());
     }
 
-    closeAllSub() {
+    closeAllPage(){
+        this.mainMenu.close();
+        this.prepareMenu.close();
         this.robotStore.close();
         this.pilotStore.close();
         this.standBy.close();
