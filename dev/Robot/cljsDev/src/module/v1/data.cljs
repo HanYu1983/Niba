@@ -51,8 +51,10 @@
 ; =======================
 ; pilot
 ; =======================
-(defn getPilotInfo [gameplayCtx unit pilot]
-  {:pre [(explainValid? (s/tuple ::type/unit keyword?) [unit pilot])]}
+(defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilot]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (let [data (get-in data [:pilot pilot])]
     (if (nil? data)
       (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
@@ -806,7 +808,7 @@
 (defn getWeaponInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (common/assertSpec ::type/weapon weapon)
   (common/assertSpec
    map?

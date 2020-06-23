@@ -81,7 +81,7 @@
     (cond
       (= :getRobotList spec)
       (common/assertSpec
-       (s/coll-of (s/tuple keyword? any?))
+       (s/map-of keyword? map?)
        (let [ret (->> (:robots lobbyCtx)
                       (map (fn [[key robotKey]]
                              (common/assertSpec
@@ -97,64 +97,45 @@
                                             :hp 0
                                             :en 0}})))
                       (map (fn [unit]
-                             (data/getUnitInfo (assoc gameplayCtx :lobbyCtx lobbyCtx) unit)))
-                      (map vector (-> lobbyCtx :robots keys)))]
+                             (data/getUnitInfo {:lobbyCtx lobbyCtx} unit)))
+                      (zipmap (-> lobbyCtx :robots keys)))]
          ret))
 
-      #_(= :getWeaponList spec)
-      #_(common/assertSpec
-       (s/coll-of (s/tuple keyword? any?))
-       (let [ret (->> (:robots lobbyCtx)
+      (= :getWeaponList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:weapons lobbyCtx)
                       (map (fn [[key weaponKey]]
                              (common/assertSpec
                               ::type/weapon
                               {:key key
-                               :position [0 0]
-                               :playerKey :player
-                               :robotState {:robotKey robotKey
-                                            :pilotKey nil
-                                            :weapons {}
-                                            :components {}
-                                            :tags {}
-                                            :hp 0
-                                            :en 0}})))
-                      (map (fn [unit]
-                             (data/getUnitInfo (assoc gameplayCtx :lobbyCtx lobbyCtx) unit)))
-                      (map vector (-> lobbyCtx :robots keys)))]
+                               :weaponKey weaponKey
+                               :tags {}
+                               :bulletCount 0})))
+                      (map (fn [weapon]
+                             (data/getWeaponInfo {:lobbyCtx lobbyCtx} nil weapon)))
+                      (zipmap (-> lobbyCtx :weapons keys)))]
          ret))
 
-
+      (= :getPilotList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:pilots lobbyCtx)
+                      (map (fn [[key pilotKey]]
+                             pilotKey))
+                      (map (fn [pilot]
+                             (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
+                      (zipmap (-> lobbyCtx :pilots keys)))]
+         ret))
+      
       :else
       (common/assertSpec
-       (s/map-of keyword? any?)
+       (s/map-of keyword? map?)
        (let [field (spec {:getRobotStoreList :robot
                           :getPilotStoreList :pilot
                           :getWeaponStoreList :weapon
                           :getComponentStoreList :component})]
-         (->> (field data/data)
-              (map (fn [[k v]] [k v]))
-              (into {})))))))
-
-#_(defmethod app.module/lobbyGetUnits :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:robot])
-       (map (fn [[k v]] [k v]))
-       (into {})))
-
-#_(defmethod app.module/lobbyGetPilots :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:pilot])
-       (map (fn [[k v]] [k v]))
-       (into {})))
-
-#_(defmethod app.module/lobbyGetWeapons :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:weapon])
-       (map (fn [[k v]] [k v]))
-       (into {})))
-
-#_(defmethod app.module/lobbyGetComponents :v1 [_ lobbyCtx]
-  (->> (get-in data/data [:component])
-       (map (fn [[k v]] [k v]))
-       (into {})))
-
+         (field data/data))))))
 
 (defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
   (a/go

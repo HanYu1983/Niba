@@ -17,63 +17,63 @@
         (cond
           (= cmd "getRobotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetUnits app.module/*module lobbyCtx)
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotStoreList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetPilots app.module/*module lobbyCtx)
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotStoreList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getWeaponStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetWeapons app.module/*module lobbyCtx)
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponStoreList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getComponentStoreList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyGetComponents app.module/*module lobbyCtx)
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentStoreList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getRobotList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:robots])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:pilots])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getWeaponList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:weapons])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "getComponentList")
           (let [[id subargs] args]
-            (a/>! outputCh ["ok" [id [nil (->> (get-in lobbyCtx [:components])
+            (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentList true})
                                                (into []))]]])
             (recur lobbyCtx))
 
           (= cmd "buyRobotById")
-          (app.lobby.core/buyImpl app.module/lobbyGetUnits [:robots])
+          (app.lobby.core/buyImpl (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotStoreList true}) [:robots])
 
           (= cmd "buyPilotById")
-          (app.lobby.core/buyImpl app.module/lobbyGetPilots [:pilots])
+          (app.lobby.core/buyImpl (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotStoreList true}) [:pilots])
 
           (= cmd "buyWeaponById")
-          (app.lobby.core/buyImpl app.module/lobbyGetWeapons [:weapons])
+          (app.lobby.core/buyImpl (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponStoreList true}) [:weapons])
 
           (= cmd "buyComponentById")
-          (app.lobby.core/buyImpl app.module/lobbyGetComponents [:components])
+          (app.lobby.core/buyImpl (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentStoreList true}) [:components])
 
           (= cmd "setRobotPilot")
           (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args

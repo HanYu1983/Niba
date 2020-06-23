@@ -3,7 +3,7 @@
 (defmacro buyImpl [getter setter]
   `(let [[~'id {~'key "key"}] ~'args
          ~'key (keyword ~'key)
-         ~'item (get-in (~getter app.module/*module ~'lobbyCtx) [~'key])]
+         ~'item (get-in ~getter [~'key])]
      (if ~'item
        (let [~'money (get-in ~'lobbyCtx [:money])
              ~'cost (get-in ~'item [:cost])
