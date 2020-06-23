@@ -47,7 +47,8 @@
                                    (tool.units/getByPosition cursor))]
               (if unitAtCursor
                 (recur gameplayCtx)
-                (do (a/<! (common/unitMoveAnim gameplayCtx {:unit (data/mapUnitToLocal gameplayCtx nil unit) :path (map (partial data/world2local camera) path)} inputCh outputCh))
+                (do (a/<! (common/unitMoveAnim gameplayCtx {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                       (data/mapUnitToLocal gameplayCtx nil)) :path (map (partial data/world2local camera) path)} inputCh outputCh))
                     (let [tempUnit (data/gameplayOnUnitMove nil gameplayCtx unit cursor)
                           state (-> gameplayCtx :fsm tool.fsm/load)
                           state (merge state {:tempUnit tempUnit})

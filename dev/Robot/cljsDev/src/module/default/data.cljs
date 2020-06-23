@@ -521,7 +521,7 @@
 (defn getUnitHitRate [gameplayCtx unit weapon targetUnit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit ::weapon ::unit) [gameplayCtx unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+  (let [weaponInfo (getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         pilot (getPilotInfo gameplayCtx unit (get-in unit [:state :pilot]))
         targetPilot (getPilotInfo gameplayCtx targetUnit (get-in targetUnit [:state :pilot]))
         terrain (-> (module.default.data/getMap gameplayCtx)
@@ -574,7 +574,7 @@
 (defn getUnitMakeDamage [gameplayCtx unit weapon targetUnit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::unit ::weapon ::unit) [gameplayCtx unit weapon targetUnit])]
    :post [(explainValid? number? %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+  (let [weaponInfo (getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         terrain (-> (module.default.data/getMap gameplayCtx)
                     (get-in (reverse (:position targetUnit)))
                     ((fn [cellId]
@@ -609,7 +609,7 @@
                                  (merge state
                                         {:weapons (->> (getUnitWeapons gameplayCtx unit)
                                                        second
-                                                       (map (partial getWeaponInfo gameplayCtx unit)))
+                                                       (map (partial getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)))
                                          :components (->> (getUnitComponents gameplayCtx unit)
                                                           second)
                                          :maxHp (getUnitMaxHp gameplayCtx unit)
@@ -619,7 +619,7 @@
 (defn useUnitWeapon [gameplayCtx weapon unit]
   {:pre [(explainValid? (s/tuple ::gameplayCtx ::weapon ::unit) [gameplayCtx weapon unit])]
    :post [(explainValid? ::unit %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
+  (let [weaponInfo (getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         energyType (-> weaponInfo :energyType keyword)]
     (cond
       (= energyType :energy)

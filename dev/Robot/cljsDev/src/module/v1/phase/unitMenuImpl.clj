@@ -77,7 +77,7 @@
                          cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)]
                      (cond
                        (= select "sky/ground")
-                       (let [[_ _ suit3 _] (data/getUnitSuitability gameplayCtx unit)
+                       (let [[_ _ suit3 _] (data/getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                              canSky? (not (zero? suit3))]
                          (if canSky?
                            (let [transformedUnit (update-in unit [:robotState :tags] (fn [tags]
@@ -87,8 +87,10 @@
                                  gameplayCtx (-> gameplayCtx
                                                  (data/updateUnit unit (constantly transformedUnit)))
                                  _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
-                                     (a/<! (common/unitSkyAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh))
-                                     (a/<! (common/unitGroundAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil transformedUnit)} inputCh outputCh)))]
+                                     (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
+                                                                               (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                                     (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
+                                                                                  (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh)))]
                              (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh)))
                            (do
                              (a/<! (common/showMessage nil {:message (str "沒有飛行能力")} inputCh outputCh))
@@ -105,7 +107,7 @@
                        (let [weapon (common/assertSpec
                                      type/weapon
                                      (nth weapons cursor2))
-                             weaponType (data/getWeaponType gameplayCtx unit weapon)]
+                             weaponType (data/getWeaponType {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
                          (cond
                            (= "single" weaponType)
                            (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續

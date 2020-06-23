@@ -62,10 +62,12 @@
                                                         (into []))
                                                    (data/calcActionResult gameplayCtx left leftAction right rightAction)))
                                          [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
-                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [left right]
+                                         _ (a/<! (common/unitBattleAnim nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                                               (data/mapUnitToLocal gameplayCtx nil)) (cond-> [left right]
                                                                                                                                     fixRight reverse))
-                                                                             :unitsAfter (map #(data/mapUnitToLocal gameplayCtx nil %) (cond-> [leftAfter rightAfter]
-                                                                                                                                         fixRight reverse))
+                                                                             :unitsAfter (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                                                    (data/mapUnitToLocal gameplayCtx nil)) (cond-> [leftAfter rightAfter]
+                                                                                                                                             fixRight reverse))
                                                                              :results (cond-> result fixRight reverse)} inputCh outputCh))
                                          gameplayCtx (-> gameplayCtx
                                                          (data/updateUnit left (constantly leftAfter))
@@ -79,7 +81,8 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx leftAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil leftAfter)} inputCh outputCh))]
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} leftAfter)
+                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                        ; 防守方死亡
@@ -91,7 +94,8 @@
                                                                               ((fn [units]
                                                                                  (assoc gameplayCtx :units units))))
                                                               gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (data/mapUnitToLocal gameplayCtx nil rightAfter)} inputCh outputCh))]
+                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} rightAfter)
+                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                          gameplayCtx (dissoc gameplayCtx :attackRange :checkHitRate)]
@@ -103,9 +107,9 @@
                              ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
                              ::type/weapon
                              (nth weapons cursor2))
-                     attackRange (data/getUnitWeaponRange gameplayCtx left weapon)
+                     attackRange (data/getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} left weapon)
                      isTargetInRange (some #(= (:position right) %) attackRange)
-                     invalidWeaponMsg (data/invalidWeapon? gameplayCtx left weapon)]
+                     invalidWeaponMsg (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} left weapon)]
                  (cond
                    invalidWeaponMsg
                    (do
@@ -161,7 +165,7 @@
                      (tool.menuCursor/mapCursor1 (constantly 2))
 
                      (#{:attack} leftActionType)
-                     (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons gameplayCtx left)
+                     (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} left)
                                                                                                           second)
                                                                                                       (range))
                                                                                      weaponIdx (indexMap leftWeapon)]

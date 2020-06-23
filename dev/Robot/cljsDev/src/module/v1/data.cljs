@@ -2,6 +2,7 @@
   (:require ["./data.js" :as dataJson])
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
+  (:require [app.lobby.model])
   (:require [module.v1.type :as type])
   (:require [module.v1.system.spec :as spec])
   (:require [module.v1.viewModel.spec :as viewModelSpec])
@@ -60,9 +61,11 @@
 ; =======================
 ; weapon
 ; =======================
-(defn getWeaponRange [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
-   :post [(explainValid? (s/tuple number? number?) %)]}
+(defn getWeaponRange [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
@@ -72,53 +75,46 @@
                   max)]
         [min max]))))
 
-(defn getWeaponType [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
-   :post [(explainValid? string? %)]}
+(defn getWeaponType [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (let [{type :type} weaponData]
         type))))
 
-(defn getWeaponSuitability [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
-   :post [(explainValid? (s/tuple number? number? number? number?) %)]}
+(defn getWeaponSuitability [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:suitability]))))
 
-(defn getWeaponAbility [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]}
+(defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:ability]))))
 
-; 注意: 這個函式中不能呼叫getUnitInfo, 不然會無限迴圈
-(defn getWeaponInfo [gameplayCtx unit {:keys [weaponKey] :as weapon}]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
-   :post [(explainValid? ::type/weapon %)]}
-  (let [weaponData (get-in data [:weapon weaponKey])]
-    (if (nil? weaponData)
-      (do
-        (print "=============")
-        (print weapon)
-        (print unit)
-        (throw (js/Error. (str "getWeaponInfo[" weaponKey "] not found"))))
-      ;  原始資料 + 能力修正後的資料 + 武器現在的狀態 = weaponInfo
-      (merge weaponData
-             {:range (getWeaponRange gameplayCtx unit weapon)
-              :type (getWeaponType gameplayCtx unit weapon)
-              :suitability (getWeaponSuitability gameplayCtx unit weapon)
-              :ability (getWeaponAbility gameplayCtx unit weapon)}
-             weapon))))
-
-(defn invalidWeapon? [gameplayCtx unit weapon]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weapon) [unit weapon])]
-   :post [(explainValid? (s/nilable string?) %)]}
-  (let [{:keys [energyType energyCost bulletCount]} (getWeaponInfo gameplayCtx unit weapon)
+(defn invalidWeapon? [{:keys [gameplayCtx lobbyCtx]} unit weapon]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (let [{:keys [energyType energyCost]} (common/assertSpec
+                                         (s/keys :req-un [::energyType ::energyCost])
+                                         (get-in data [:weapon (:weaponKey weapon)]))
+        bulletCount (:bulletCount weapon)
         msg (cond
               (= energyType "energy")
               (let [en (-> unit :robotState :en)
@@ -137,26 +133,19 @@
 ; =======================
 ; unit
 ; =======================
-(defn updateUnit [{:keys [units] :as gameplayCtx} unit f]
-  (common/assertSpec ::type/units units)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec
-   ::type/units
-   :units
-   (update gameplayCtx :units (fn [origin]
-                                (-> origin
-                                    (tool.units/delete unit)
-                                    (tool.units/add (f unit)))))))
+
 ; hp
-(defn getUnitMaxHp [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(number? %)]}
+(defn getUnitMaxHp [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   10000)
 
 ; en
-(defn getUnitMaxEn [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(number? %)]}
+(defn getUnitMaxEn [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -170,9 +159,10 @@
         en))))
 
 
-(defn getUnitArmor [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(number? %)]}
+(defn getUnitArmor [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -186,9 +176,10 @@
         value))))
 
 ; components
-(defn getUnitComponents [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/componentEntry %)]}
+(defn getUnitComponents [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [transform (get-in unit [:robotState :robotKey])
         coms (get-in unit [:robotState :components transform])]
     (if coms
@@ -208,9 +199,10 @@
                  (get robot :components))))])))
 
 ; weapons
-(defn getUnitWeapons [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/weaponEntry %)]}
+(defn getUnitWeapons [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [transform (get-in unit [:robotState :robotKey])
         weapons (get-in unit [:robotState :weapons transform])]
     (if weapons
@@ -231,19 +223,13 @@
                         :bulletCount (get weapon :maxBulletCount)})))
                  (get robot :weapons))))])))
 
-(defn setUnitWeapons [unit weapons]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weaponEntry) [unit weapons])]
-   :post [(explainValid? ::type/unit %)]}
-  (update-in unit [:robotState :weapons] (fn [origin]
-                                           (conj origin weapons))))
 
-
-(defn getUnitWeaponRange [gameplayCtx unit weapon]
+(defn getUnitWeaponRange [ctx unit weapon]
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/weapon weapon)
   (common/assertSpec
    (s/coll-of vector?)
-   (let [[min max] (getWeaponRange gameplayCtx unit weapon)]
+   (let [[min max] (getWeaponRange ctx unit weapon)]
      (->> (tool.map/simpleFindPath [0 0] (dec min))
           (into #{})
           (clojure.set/difference (->> (tool.map/simpleFindPath [0 0] max)
@@ -252,9 +238,10 @@
           (mapv (partial mapv + (:position unit)))))))
 
 ;power
-(defn getUnitPower [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(number? %)]}
+(defn getUnitPower [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -268,23 +255,41 @@
                        (apply - (get robot :power)))]
         power))))
 
-(defn getUnitSuitability [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post []}
+(defn getUnitSuitability [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
       (get robot :suitability))))
 
+; transform
+(defn getUnitTransforms [{:keys [gameplayCtx lobbyCtx]} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (let [robotKey (get-in unit [:robotState :robotKey])
+        robot (get-in data [:robot robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str "getUnitTransforms[" robotKey "] not found")))
+      (conj (mapv keyword (get-in robot [:transform]))
+            robotKey))))
+
 (defn getUnitHitRate [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit ::type/weapon ::type/unit) [gameplayCtx playmap unit weapon targetUnit])]
-   :post [(explainValid? number? %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
-        pilot (getPilotInfo gameplayCtx unit (get-in unit [:robotState :pilotKey]))
-        targetPilot (getPilotInfo gameplayCtx targetUnit (get-in targetUnit [:robotState :pilotKey]))
-        weaponSuitability (:suitability weaponInfo)
-        weaponAbility (:ability weaponInfo)
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::spec/map playmap)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/unit targetUnit)
+  (let [accuracy (common/assertSpec
+                  number?
+                  (get-in data [:weapon (:weaponKey weapon) :accuracy]))
+        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotKey]))
+        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotKey]))
+        weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+        weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         ; 這邊的"missle"拼字是錯的, 後來資料表修正後要改回來
         missile? (-> (into #{} weaponAbility) (contains? "missle"))
         fire? (-> (into #{} weaponAbility) (contains? "fire"))
@@ -305,7 +310,7 @@
                 (max 0.05 (- 0.9 (* dist 0.05))))
 
         ; 格鬥或射擊係數
-        factor1 (let [isMelee (some #(= (keyword %) :melee) (get weaponInfo :ability))]
+        factor1 (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
                   (if isMelee
                     (/ (get pilot :melee) (get targetPilot :melee))
                     (/ (get pilot :range) (get targetPilot :range))))
@@ -317,7 +322,7 @@
         factor3 (get weaponSuitability 0)
 
         ; 武器命中補正係數
-        factor4 (:accuracy weaponInfo)
+        factor4 accuracy
 
         ; 地型補正係數
         factor5 (cond
@@ -345,58 +350,48 @@
     (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6))))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit ::type/weapon ::type/unit) [gameplayCtx playmap unit weapon targetUnit])]
-   :post [(explainValid? number? %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
-        terrain (-> playmap
-                    (get-in (reverse (:position targetUnit)))
-                    ((fn [cellId]
-                       (get-in data [:terrainMapping (str cellId) :terrain])))
-                    ((fn [terrainKey]
-                       (get-in data [:terrain terrainKey]))))
-        weaponSuitability (getWeaponSuitability gameplayCtx unit weapon)
-        targetArmor (getUnitArmor gameplayCtx targetUnit)
-        damage (get weaponInfo :damage)]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/unit targetUnit)
+  (let [damage (common/assertSpec
+                int?
+                (get-in data [:weapon (:weaponKey weapon) :damage]))
+        targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)]
     (-> (- damage targetArmor)
         (max 100))))
 
-; transform
-(defn getUnitTransforms [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? (s/+ keyword?) %)]}
-  (let [robotKey (get-in unit [:robotState :robotKey])
-        robot (get-in data [:robot robotKey])]
-    (if (nil? robot)
-      (throw (js/Error. (str "getUnitTransforms[" robotKey "] not found")))
-      (conj (mapv keyword (get-in robot [:transform]))
-            robotKey))))
 
-(defn getUnitInfo [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post []}
-  (let [robotKey (get-in unit [:robotState :robotKey])
-        robot (get-in data [:robot robotKey])]
-    (if (nil? robot)
-      (throw (js/Error. (str "getUnitInfo[" robotKey "] not found")))
-      (update-in unit [:robotState] (fn [state]
-                                      (merge state
-                                             {:weapons (->> (getUnitWeapons gameplayCtx unit)
-                                                            second
-                                                            (map (partial getWeaponInfo gameplayCtx unit)))
-                                              :components (->> (getUnitComponents gameplayCtx unit)
-                                                               second)
-                                              :maxHp (getUnitMaxHp gameplayCtx unit)
-                                              :maxEn (getUnitMaxEn gameplayCtx unit)
-                                              :power (getUnitPower gameplayCtx unit)}))))))
+
+(defn setUnitWeapons [unit weapons]
+  {:pre [(explainValid? (s/tuple ::type/unit ::type/weaponEntry) [unit weapons])]
+   :post [(explainValid? ::type/unit %)]}
+  (update-in unit [:robotState :weapons] (fn [origin]
+                                           (conj origin weapons))))
+
+(defn updateUnit [{:keys [units] :as gameplayCtx} unit f]
+  (common/assertSpec ::type/units units)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   ::type/units
+   :units
+   (update gameplayCtx :units (fn [origin]
+                                (-> origin
+                                    (tool.units/delete unit)
+                                    (tool.units/add (f unit)))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/weapon ::type/unit) [gameplayCtx weapon unit])]
    :post [(explainValid? ::type/unit %)]}
-  (let [weaponInfo (getWeaponInfo gameplayCtx unit weapon)
-        energyType (-> weaponInfo :energyType keyword)]
+  (let [energyType (common/assertSpec
+                    #{:energy :bullet}
+                    (-> (get-in data [:weapon (:weaponKey weapon) :energyType])
+                        keyword))]
     (cond
       (= energyType :energy)
-      (let [energyCost (get weaponInfo :energyCost)
+      (let [energyCost (common/assertSpec
+                        int?
+                        (get-in data [:weapon (:weaponKey weapon) :energyCost]))
             unitAfter (-> (-> unit :robotState :en)
                           (- energyCost)
                           (max 0)
@@ -405,16 +400,13 @@
         unitAfter)
 
       (= energyType :bullet)
-      (let [weapons (getUnitWeapons gameplayCtx unit)
+      (let [weapons (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
             _ (explainValid? ::type/weaponEntry weapons)
             weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
             weaponsAfter (update-in weapons [1] (fn [vs]
                                                   (replace {weapon weaponAfter} vs)))
             unitAfter (setUnitWeapons unit weaponsAfter)]
-        unitAfter)
-
-      :else
-      (throw (js/Error. (str "unknown energyType " weaponInfo))))))
+        unitAfter))))
 
 (defn moveCost [{playmap :map :as gameplayCtx} unit from to]
   {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
@@ -422,7 +414,7 @@
   (let [isSky (-> (get-in unit [:robotState :tags])
                   (contains? :sky))
         ; 陸海空宇
-        [suit1 suit2 suit3 _] (getUnitSuitability gameplayCtx unit)
+        [suit1 suit2 suit3 _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
         costFn (fn [terrainKey]
                  (let [basic (get-in data [:terrain terrainKey :cost])
                        ret (cond
@@ -465,11 +457,11 @@
                             (tool.fsm/currState)
                             (= :unitBattleMenu))
            moved? (-> unit :robotState :tags :moveCount)
-           weapons (->> (getUnitWeapons gameplayCtx unit)
+           weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                         second
                         (filter (fn [weapon]
                                   (if moved?
-                                    (let [weaponAbility (getWeaponAbility gameplayCtx unit weapon)]
+                                    (let [weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
                                       (-> (into #{} weaponAbility) (contains? "moveAttack")))
                                     true))))
            _ (when (zero? (count weapons))
@@ -498,7 +490,7 @@
                            :else
                            [[["move"]
                              weaponKeys
-                             (getUnitTransforms gameplayCtx unit)
+                             (getUnitTransforms {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                              ["sky/ground"]
                              ["ok"]
                              ["cancel"]]
@@ -523,7 +515,7 @@
   {:pre [(common/explainValid? (s/tuple ::type/unit (s/* ::type/weapon) (s/* ::type/unit)) [unit weapons targetUnits])]
    :post [(common/explainValid? (s/nilable (s/tuple ::type/weapon ::type/unit)) %)]}
   (let [touchUnitLists (map (fn [weapon]
-                              (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
+                              (let [weaponRanges (into #{} (getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon))
                                     units (filter #(weaponRanges (:position %)) targetUnits)]
                                 units))
                             weapons)
@@ -543,9 +535,9 @@
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weapon) [gameplayCtx unit fromUnit weapon])]
    :post [(vector? %)]}
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
-        weapons (->> (getUnitWeapons gameplayCtx unit)
+        weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                      second
-                     (filter #(not (invalidWeapon? gameplayCtx unit %))))
+                     (filter #(not (invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))))
         bestWeaponUnit (getBestWeapon gameplayCtx unit weapons [fromUnit])
         action (if bestWeaponUnit
                  (let [[bestWeapon _] bestWeaponUnit]
@@ -655,7 +647,7 @@
 
   ([{units :units players :players playmap :map :as gameplayCtx} unit pos]
    {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
-   (let [power (/ (getUnitPower gameplayCtx unit) 5)
+   (let [power (/ (getUnitPower {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit) 5)
          power (if (-> unit :robotState :tags :moveRangePlus)
                  (+ power 3)
                  power)
@@ -711,8 +703,8 @@
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit keyword? keyword?) [gameplayCtx unit fromKey toKey])]
    :post [(explainValid? ::type/unit %)]}
-  (let [[_ weaponsNow] (getUnitWeapons gameplayCtx unit)
-        [_ weaponsNext] (getUnitWeapons gameplayCtx (update-in unit [:robotState :robotKey] (constantly toKey)))
+  (let [[_ weaponsNow] (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+        [_ weaponsNext] (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} (update-in unit [:robotState :robotKey] (constantly toKey)))
         weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
                     (merge (select-keys (zipmap (map :weaponKey weaponsNow) weaponsNow)
                                         (map :weaponKey weaponsNext)))
@@ -736,27 +728,9 @@
                                                        :tags {}
                                                        :hp 0
                                                        :en 0}}]
-                               (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp gameplayCtx basic)
-                                                                         :en (getUnitMaxEn gameplayCtx basic)}))))
+                               (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
+                                                                         :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))))
        (assoc gameplayCtx :units)))
-
-(defn gameplayOnInit-xx [appCtx gameplayCtx]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx) [gameplayCtx])]
-   :post [(explainValid? ::type/gameplayCtx %)]}
-  (let [[gameplayCtx _] (->> (get data :robot)
-                             (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                       [(-> gameplayCtx
-                                            (createUnit {:player :player
-                                                         :type :robot
-                                                         :position [0 i]}
-                                                        {:robotKey robotKey})
-                                            (createUnit {:player :ai1
-                                                         :type :robot
-                                                         :position [7 i]}
-                                                        {:robotKey robotKey}))
-                                        (inc i)])
-                                     [gameplayCtx 1]))]
-    gameplayCtx))
 
 (defn gameplayOnUnitMove [_ gameplayCtx unit pos]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
@@ -818,15 +792,59 @@
 (defn world2local [camera position]
   (mapv - position camera))
 
+; ===================================================
+; 
+; 
+; 這裡以上的函式不得呼叫getWeaponInfo, getUnitInfo
+; 
+; 
+; ===================================================
+; 
 
-(defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units :as gameplayCtx} targetCamera unit]
+
+; 注意: 這個函式中不能呼叫getUnitInfo, 不然會無限迴圈
+(defn getWeaponInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [weaponKey] :as weapon}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec
+   map?
+   (let [weaponData (common/assertSpec
+                     map?
+                     (get-in data [:weapon weaponKey]))]
+      ;  原始資料 + 能力修正後的資料 + 武器現在的狀態 = weaponInfo
+     (merge weaponData
+            {:range (getWeaponRange ctx unit weapon)
+             :type (getWeaponType ctx unit weapon)
+             :suitability (getWeaponSuitability ctx unit weapon)
+             :ability (getWeaponAbility ctx unit weapon)}
+            weapon))))
+
+(defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   map?
+   (let [robotKey (get-in unit [:robotState :robotKey])]
+     (update-in unit [:robotState] (fn [state]
+                                     (merge state
+                                            {:weapons (->> (getUnitWeapons ctx unit)
+                                                           second
+                                                           (map (partial getWeaponInfo ctx unit)))
+                                             :components (->> (getUnitComponents ctx unit)
+                                                              second)
+                                             :maxHp (getUnitMaxHp ctx unit)
+                                             :maxEn (getUnitMaxEn ctx unit)
+                                             :power (getUnitPower ctx unit)}))))))
+
+(defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units} targetCamera unit]
   {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]
    :post [(explainValid? (constantly true) %)]}
   (let [camera (or targetCamera camera)]
     (-> unit
-        (update :position (partial world2local camera))
-        ((fn [unit]
-           (getUnitInfo gameplayCtx unit))))))
+        (update :position (partial world2local camera)))))
 
 (defn onEnemyTurnStart [gameplayCtx enemy inputCh outputCh]
   (a/go
@@ -853,12 +871,13 @@
                                          nextUnit (common/assertSpec
                                                    ::type/unit
                                                    (if award?
-                                                     (let [maxHp (getUnitMaxHp gameplayCtx unit)
-                                                           maxEn (getUnitMaxEn gameplayCtx unit)
+                                                     (let [maxHp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                           maxEn (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                                                            nextUnit (-> nextUnit
                                                                         (update-in [:robotState :hp] #(min (+ % (* maxHp 0.2)) maxHp))
                                                                         (update-in [:robotState :en] #(min (+ % (* maxEn 0.2)) maxEn)))]
-                                                       (a/<! (common/unitGetAwardAnim nil (map #(mapUnitToLocal gameplayCtx nil %) [unit nextUnit]) inputCh outputCh))
+                                                       (a/<! (common/unitGetAwardAnim nil (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                                                     (mapUnitToLocal gameplayCtx nil)) [unit nextUnit]) inputCh outputCh))
                                                        nextUnit)
                                                      nextUnit))
                                          ; remove velocity
@@ -928,8 +947,8 @@
    :units (when (s/valid? ::spec/unitsView gameplayCtx)
             (let [{:keys [camera]} gameplayCtx]
               (->> (getUnitsByRegion gameplayCtx nil nil)
-                   (map (fn [unit]
-                          (mapUnitToLocal gameplayCtx camera unit))))))
+                   (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                              (mapUnitToLocal gameplayCtx camera))))))
    :attackRange (when (s/valid? ::spec/attackRangeView gameplayCtx)
                   (let [{:keys [camera attackRange]} gameplayCtx]
                     (map #(world2local camera %) attackRange)))
@@ -938,15 +957,18 @@
                      (->> checkHitRate
                           (map (fn [info]
                                  (-> info
-                                     (update :unit (partial mapUnitToLocal gameplayCtx camera))
-                                     (update :targetUnit (partial mapUnitToLocal gameplayCtx camera))))))))
+                                     (update :unit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                         (mapUnitToLocal gameplayCtx camera)))
+                                     (update :targetUnit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                               (mapUnitToLocal gameplayCtx camera)))))))))
    :cellState (when (s/valid? ::spec/cellStateView gameplayCtx)
                 (let [{:keys [units cursor]} gameplayCtx
                       unitAtCursor (-> units
                                        (tool.units/getByPosition cursor))
                       terrain (getTerrain gameplayCtx cursor)]
                   {:unit (when unitAtCursor
-                           (mapUnitToLocal gameplayCtx nil unitAtCursor))
+                           (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unitAtCursor)
+                                (mapUnitToLocal gameplayCtx nil)))
                    :terrain terrain}))
    :systemMenu (when (s/valid? ::spec/systemMenuView gameplayCtx)
                  (let [{:keys [data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
@@ -956,11 +978,12 @@
                (let [{:keys [unit data menuCursor]} (-> gameplayCtx :fsm tool.fsm/load)]
                  {:menuCursor menuCursor
                   :data (update data :weapons (fn [weapons]
-                                                (map (partial getWeaponInfo gameplayCtx unit) weapons)))}))
+                                                (map (partial getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit) weapons)))}))
    :battleMenu (when (s/valid? ::spec/battleMenuView gameplayCtx)
                  (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
                        {battleMenuSession :battleMenuSession} stateDetail]
-                   {:preview (battleMenu/mapUnits battleMenuSession (partial mapUnitToLocal gameplayCtx nil))}))
+                   {:preview (battleMenu/mapUnits battleMenuSession #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                          (mapUnitToLocal gameplayCtx nil)))}))
    :startUnitsMenu (when (s/valid? ::spec/startUnitsMenuView gameplayCtx)
                      (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
                            {:keys [units selectedUnits cursor]} stateDetail]

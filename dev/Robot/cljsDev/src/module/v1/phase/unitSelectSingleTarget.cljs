@@ -27,10 +27,10 @@
         (let [{:keys [cursor units]} gameplayCtx
               unitAtCursor (tool.units/getByPosition units cursor)]
           (if unitAtCursor
-            (let [weaponRange (into #{} (data/getUnitWeaponRange gameplayCtx unit weapon))
+            (let [weaponRange (into #{} (data/getUnitWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon))
                   unitInRange? (weaponRange cursor)
                   friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)
-                  invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon)]
+                  invalidWeaponMsg (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
               (cond
                 invalidWeaponMsg
                 (do
@@ -48,7 +48,8 @@
                   (recur gameplayCtx))
 
                 :else
-                (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(data/mapUnitToLocal gameplayCtx nil %) [unit unitAtCursor])} inputCh outputCh))
+                (let [_ (a/<! (common/unitTargetingAnim nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                               (data/mapUnitToLocal gameplayCtx nil)) [unit unitAtCursor])} inputCh outputCh))
                       [gameplayCtx isEnd] (a/<! (unitBattleMenu gameplayCtx
                                                                 {:battleMenu (-> battleMenu/defaultModel
                                                                                  (battleMenu/setUnits unit unitAtCursor)
