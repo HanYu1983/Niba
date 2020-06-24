@@ -85,6 +85,19 @@
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])
 
+       (println "設置駕駛")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [robots pilots]} (a/<! outputToView)
+             robotA (ffirst robots)
+             pilotA (ffirst pilots)
+             _ (a/>! inputFromView ["setRobotPilot" ["any" {"robotKey" robotA "pilotKey" pilotA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByPilot]} (a/<! outputToView)
+             _ (assert (= (keyword robotA) (robotByPilot (keyword pilotA))))])
+
        (println "買武器")
        (let [_ (a/>! inputFromView ["buyWeaponById" ["any" {"key" "beam_mega1"}]])
              [_ [_ [err _]]] (a/<! outputToView)]
@@ -95,6 +108,31 @@
              [_ [_ [_ res]]] (a/<! outputToView)
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])
+
+       (println "設置武器")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [robots weapons]} (a/<! outputToView)
+             robotA (ffirst robots)
+             weaponA (ffirst weapons)
+             _ (a/>! inputFromView ["addRobotWeapon" ["any" {"robotKey" robotA "weaponKey" weaponA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByWeapon]} (a/<! outputToView)
+             _ (assert (= (keyword robotA) (robotByWeapon (keyword weaponA))))])
+
+       (println "移除武器")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [weapons]} (a/<! outputToView)
+             weaponA (ffirst weapons)
+             _ (a/>! inputFromView ["removeRobotWeapon" ["any" {"weaponKey" weaponA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByWeapon]} (a/<! outputToView)
+             _ (s/assert nil? (robotByWeapon (keyword weaponA)))])
 
        (println "買配件")
        (let [_ (a/>! inputFromView ["buyComponentById" ["any" {"key" "energy1"}]])
@@ -107,13 +145,29 @@
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])
 
-       (println "設置駕駛")
+       (println "設置配件")
        (let [_ (a/>! inputFromView [:test identity])
-             {:keys [robots pilots]} (a/<! outputToView)
+             {:keys [robots components]} (a/<! outputToView)
              robotA (ffirst robots)
-             pilotA (ffirst pilots)
-             _ (a/>! inputFromView ["setRobotPilot" ["any" {"robotKey" robotA "pilotKey" pilotA}]])
-             [_ [_ [err _]]] (a/<! outputToView)]
-         (s/assert nil? err))
+             componentA (ffirst components)
+             _ (a/>! inputFromView ["addRobotComponent" ["any" {"robotKey" robotA "componentKey" componentA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByComponent]} (a/<! outputToView)
+             _ (assert (= (keyword robotA) (robotByComponent (keyword componentA))))])
+
+       (println "移除配件")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [components]} (a/<! outputToView)
+             componentA (ffirst components)
+             _ (a/>! inputFromView ["removeRobotComponent" ["any" {"componentKey" componentA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByComponent]} (a/<! outputToView)
+             _ (s/assert nil? (robotByComponent (keyword componentA)))])
 
        (done)))))
