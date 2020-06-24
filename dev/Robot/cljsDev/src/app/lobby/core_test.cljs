@@ -1,0 +1,119 @@
+(ns app.lobby.core-test
+  (:require [cljs.test :refer-macros [deftest is async]]
+            [clojure.core.async :as a]
+            [clojure.spec.alpha :as s]
+            [clojure.test.check]
+            [clojure.spec.gen.alpha :as gen])
+  (:require [app.lobby.core]
+            [app.lobby.model]))
+
+
+(deftest test-basic
+  (async
+   done
+   (let [outputToView (a/chan)
+         inputFromView (a/chan)
+         model app.lobby.model/defaultLobbyModel]
+     (a/go
+       (a/<! (app.lobby.core/startLobby {:lobbyCtx model
+                                         :money 0} inputFromView outputToView)))
+     (a/go
+       (let [_ (a/>! inputFromView ["getRobotStoreList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getPilotStoreList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getWeaponStoreList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getComponentStoreList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getRobotList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getPilotList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getWeaponList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+       (let [_ (a/>! inputFromView ["getComponentList"])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+
+       (println "一開始0元, 必須沒錢買跳錯誤")
+       (let [_ (a/>! inputFromView ["buyRobotById" ["any" {"key" "gundam"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert string? err))
+
+       (println "增加100000元")
+       (let [_ (a/>! inputFromView [:test (fn [lobby]
+                                            (assoc lobby :money 100000))])
+             _ (a/<! outputToView)])
+
+       (println "買鋼彈成功")
+       (let [_ (a/>! inputFromView ["buyRobotById" ["any" {"key" "gundam"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert nil? err))
+       (let [_ (a/>! inputFromView [:test identity])
+             lobbyCtx (a/<! outputToView)]
+         (assert (= 83100 (:money lobbyCtx))))
+
+       (println "買到不存在的機器必須錯誤")
+       (let [_ (a/>! inputFromView ["buyRobotById" ["any" {"key" "gundam2"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert string? err))
+
+       (println "檢查所買的機體庫存")
+       (let [_ (a/>! inputFromView ["getRobotList"])
+             [_ [_ [_ res]]] (a/<! outputToView)
+             _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
+             _ (assert (= 1 (count res)))
+             [_ robot] (first res)
+             _ (assert (= :gundam (-> robot :robotState :robotKey)))])
+
+       (println "買駕駛")
+       (let [_ (a/>! inputFromView ["buyPilotById" ["any" {"key" "amuro"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert nil? err))
+
+       (println "檢查所買的駕駛庫存")
+       (let [_ (a/>! inputFromView ["getPilotList"])
+             [_ [_ [_ res]]] (a/<! outputToView)
+             _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
+             _ (assert (= 1 (count res)))])
+
+       (println "買武器")
+       (let [_ (a/>! inputFromView ["buyWeaponById" ["any" {"key" "beam_mega1"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert nil? err))
+
+       (println "檢查所買的武器庫存")
+       (let [_ (a/>! inputFromView ["getWeaponList"])
+             [_ [_ [_ res]]] (a/<! outputToView)
+             _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
+             _ (assert (= 1 (count res)))])
+
+       (println "買配件")
+       (let [_ (a/>! inputFromView ["buyComponentById" ["any" {"key" "energy1"}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert nil? err))
+
+       (println "檢查所買的配件庫存")
+       (let [_ (a/>! inputFromView ["getComponentList"])
+             [_ [_ [_ res]]] (a/<! outputToView)
+             _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
+             _ (assert (= 1 (count res)))])
+
+       (println "設置駕駛")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [robots pilots]} (a/<! outputToView)
+             robotA (ffirst robots)
+             pilotA (ffirst pilots)
+             _ (a/>! inputFromView ["setRobotPilot" ["any" {"robotKey" robotA "pilotKey" pilotA}]])
+             [_ [_ [err _]]] (a/<! outputToView)]
+         (s/assert nil? err))
+
+       (done)))))

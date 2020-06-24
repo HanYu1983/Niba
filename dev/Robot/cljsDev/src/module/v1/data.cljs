@@ -200,7 +200,7 @@
 (defn getWeaponRange [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -214,7 +214,7 @@
 (defn getWeaponType [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -225,7 +225,7 @@
 (defn getWeaponSuitability [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -235,16 +235,15 @@
 (defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/nilable ::type/unit) unit)
   (common/assertSpec ::type/weapon weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:ability]))))
 
-(defn invalidWeapon? [{:keys [gameplayCtx lobbyCtx]} unit weapon]
+(defn invalidWeapon? [gameplayCtx unit weapon]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/weapon weapon)
   (let [{:keys [energyType energyCost]} (common/assertSpec
@@ -542,7 +541,7 @@
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
         weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                      second
-                     (filter #(not (invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))))
+                     (filter #(not (invalidWeapon? gameplayCtx  unit %))))
         bestWeaponUnit (getBestWeapon gameplayCtx unit weapons [fromUnit])
         action (if bestWeaponUnit
                  (let [[bestWeapon _] bestWeaponUnit]

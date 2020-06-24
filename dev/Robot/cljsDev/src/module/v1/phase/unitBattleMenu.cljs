@@ -109,7 +109,7 @@
                              (nth weapons cursor2))
                      attackRange (data/getUnitWeaponRange gameplayCtx left weapon)
                      isTargetInRange (some #(= (:position right) %) attackRange)
-                     invalidWeaponMsg (data/invalidWeapon? {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} left weapon)]
+                     invalidWeaponMsg (data/invalidWeapon? gameplayCtx  left weapon)]
                  (cond
                    invalidWeaponMsg
                    (do

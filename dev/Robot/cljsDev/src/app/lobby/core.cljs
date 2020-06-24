@@ -15,6 +15,12 @@
       (let [[cmd args] (a/<! inputCh)]
         (println "lobby:" cmd args)
         (cond
+          (= cmd :test)
+          (let [f args
+                lobbyCtx (f lobbyCtx)]
+            (a/>! outputCh lobbyCtx)
+            (recur lobbyCtx))
+
           (= cmd "getRobotStoreList")
           (let [[id subargs] args]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotStoreList true})
@@ -81,6 +87,40 @@
                 pilotKey (keyword pilotKey)
                 lobbyCtx (-> lobbyCtx
                              (update-in [:robotByPilot] #(conj % [pilotKey robotKey])))]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+            (recur (app.lobby.model/save lobbyCtx)))
+
+          (= cmd "addRobotWeapon")
+          (let [[id {robotKey "robotKey" weaponKey "weaponKey"}] args
+                robotKey (keyword robotKey)
+                weaponKey (keyword weaponKey)
+                lobbyCtx (-> lobbyCtx
+                             (update-in [:robotByWeapon] #(conj % [weaponKey robotKey])))]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+            (recur (app.lobby.model/save lobbyCtx)))
+
+          (= cmd "removeRobotWeapon")
+          (let [[id {weaponKey "weaponKey"}] args
+                weaponKey (keyword weaponKey)
+                lobbyCtx (-> lobbyCtx
+                             (update-in [:robotByWeapon] #(dissoc % weaponKey)))]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+            (recur (app.lobby.model/save lobbyCtx)))
+
+          (= cmd "addRobotComponent")
+          (let [[id {robotKey "robotKey" componentKey "componentKey"}] args
+                robotKey (keyword robotKey)
+                componentKey (keyword componentKey)
+                lobbyCtx (-> lobbyCtx
+                             (update-in [:robotByComponent] #(conj % [componentKey robotKey])))]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+            (recur (app.lobby.model/save lobbyCtx)))
+
+          (= cmd "removeRobotComponent")
+          (let [[id {componentKey "componentKey"}] args
+                componentKey (keyword componentKey)
+                lobbyCtx (-> lobbyCtx
+                             (update-in [:robotByComponent] #(dissoc % componentKey)))]
             (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
             (recur (app.lobby.model/save lobbyCtx)))
 

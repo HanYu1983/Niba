@@ -4,11 +4,13 @@
             [cljs.test :refer-macros [run-tests]])
   (:require [app.module]
             [app.lobby.model]
+            [app.lobby.core-test]
             [module.v1.core]
             [module.v1.data-test]
             [module.v1.phase.enemyTurn]
             [app.lobby.core]))
 
+(s/check-asserts true)
 (def defaultModel {:money 100000
                    :lobbyCtx (app.lobby.model/load)})
 
@@ -58,7 +60,9 @@
 
 (defn- test-v1 []
   (enable-console-print!)
-  (run-tests 'module.v1.data-test)
+  (run-tests
+   'app.lobby.core-test
+   'module.v1.data-test)
 
   (set! app.module/*module :v1)
   (set! module.v1.phase.enemyTurn/*ai false)

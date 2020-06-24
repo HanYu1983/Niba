@@ -127,7 +127,18 @@
                              (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
                       (zipmap (-> lobbyCtx :pilots keys)))]
          ret))
-      
+
+      (= :getComponentList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (let [ret (->> (:components lobbyCtx)
+                      (map (fn [[key componentKey]]
+                             componentKey))
+                      (map (fn [component]
+                             (-> data/data :component component)))
+                      (zipmap (-> lobbyCtx :components keys)))]
+         ret))
+
       :else
       (common/assertSpec
        (s/map-of keyword? map?)
