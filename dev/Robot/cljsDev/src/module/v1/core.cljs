@@ -148,7 +148,7 @@
                           :getComponentStoreList :component})]
          (field data/data))))))
 
-(defmethod app.module/gameplayStart :v1 [_ ctx inputCh outputCh]
+(defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
   (a/go
     (let [; copy lobbyCtx first
           gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))

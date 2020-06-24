@@ -99,7 +99,14 @@
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
   (let [transform (get-in unit [:robotState :robotKey])
-        coms (get-in unit [:robotState :components transform])]
+        coms (get-in unit [:robotState :components transform])
+        addedComKeys (common/assertSpec
+                      (s/coll-of keyword?)
+                      (->> lobbyCtx :robotByComponent
+                           (filter (fn [[_ robot]]
+                                     (= robot (:key unit))))
+                           (map first)
+                           (map #(-> lobbyCtx :components %))))]
     (if coms
       [transform coms]
       [transform
@@ -108,13 +115,14 @@
          (if (nil? robot)
            (throw (js/Error. (str "getUnitComponents[" robotKey "] not found")))
            (mapv (fn [key]
-                   (let [com (get-in data [:component (keyword key)])]
+                   (let [com (get-in data [:component key])]
                      (if (nil? com)
                        (throw (js/Error. (str "getUnitComponents[" key "] not found")))
-                       {:key (keyword key)
-                        :componentKey (keyword key)
+                       {:key key
+                        :componentKey key
                         :tags {}})))
-                 (get robot :components))))])))
+                 (concat (map keyword (get robot :components))
+                         addedComKeys))))])))
 
 ; weapons
 (defn getUnitWeapons [{:keys [gameplayCtx lobbyCtx]} unit]
@@ -127,19 +135,27 @@
       [transform weapons]
       [transform
        (let [robotKey (get-in unit [:robotState :robotKey])
-             robot (get-in data [:robot robotKey])]
+             robot (get-in data [:robot robotKey])
+             addedWeaponKeys (common/assertSpec
+                              (s/coll-of keyword?)
+                              (->> lobbyCtx :robotByWeapon
+                                   (filter (fn [[_ robot]]
+                                             (= robot (:key unit))))
+                                   (map first)
+                                   (map #(-> lobbyCtx :weapons %))))]
          (if (nil? robot)
            (throw (js/Error. (str "getUnitWeapons robotKey[" robotKey "]not found")))
            (mapv (fn [weaponKey]
-                   (let [weapon (get-in data [:weapon (keyword weaponKey)])]
+                   (let [weapon (get-in data [:weapon weaponKey])]
                      (if (nil? weapon)
                        (throw (js/Error. (str "getUnitWeapons weaponKey[" weaponKey "] not found")))
-                       {:key (keyword weaponKey) ; 在這個不能使用gensym, 因為這個方法是getter
-                        :weaponKey (keyword weaponKey)
+                       {:key weaponKey ; 在這個不能使用gensym, 因為這個方法是getter
+                        :weaponKey weaponKey
                         :weaponLevel 0
                         :tags {}
                         :bulletCount (get weapon :maxBulletCount)})))
-                 (get robot :weapons))))])))
+                 (concat (map keyword (get robot :weapons))
+                         addedWeaponKeys))))])))
 
 
 ;power
