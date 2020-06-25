@@ -154,17 +154,22 @@
           gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))
           ; create map
           [mw mh] (:mapsize gameplayCtx)
-          playmap (tool.map/generateMap mw mh
-                                        {:deepsea 0.6
-                                         :sea 0.6
-                                         :sand 0.1
-                                         :grass 1
-                                         :hill 1
-                                         :city 0.3
-                                         :tree 0.4
-                                         :award 0.01
-                                         :power 1
-                                         :offset 0})
+          playmap (tool.map/generateMap
+                   {:seed 0
+                    :x 0
+                    :y 0
+                    :w mw
+                    :h mh}
+                   {:deepsea 0.6
+                    :sea 0.6
+                    :sand 0.1
+                    :grass 1
+                    :hill 1
+                    :city 0.3
+                    :tree 0.4
+                    :award 0.01
+                    :power 1
+                    :offset 0})
           gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))
           ; 選角頁, DEMO版先拿掉
           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))

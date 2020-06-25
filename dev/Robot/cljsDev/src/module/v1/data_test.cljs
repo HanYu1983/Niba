@@ -28,7 +28,11 @@
                          :components {:a [component]}}})
 
 (deftest test-fn-spec
-  (let [playmap (tool.map/generateMap 20 20
+  (let [playmap (tool.map/generateMap {:seed 0
+                                       :x 0
+                                       :y 0
+                                       :w 20
+                                       :h 20}
                                       {:deepsea 0.6
                                        :sea 0.6
                                        :sand 0.1

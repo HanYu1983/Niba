@@ -1,5 +1,6 @@
 function generateMap(
-    w, h,
+    seed,
+    sx, sy, w, h,
     deepsea = 1,
     sea = 1,
     sand = 1,
@@ -17,11 +18,14 @@ function generateMap(
     let sandIn = sand / total + seaIn;
     let grassIn = grass / total + sandIn;
 
-    noise.seed(Math.random());
+    noise.seed(seed);
     let scale = .1;
     let map = [];
-    for (let i = 0; i < w; ++i) {
-        for (let j = 0; j < h; ++j) {
+    for(let x=0; x< w; ++x){
+        for(let y=0; y<h; ++y){
+            const i = sx+x;
+            const j = sy+y;
+
             let f = noise.perlin2(i * scale, j * scale);
             f = Math.pow(f, power);
             f = (f + 1) / 2;

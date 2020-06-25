@@ -20,8 +20,8 @@
                                   (fn [{:keys [totalCost]} curr]
                                     [(>= totalCost maxCost) false]))))))
 
-(defn generateMap [w h {:keys [deepsea sea sand grass hill city tree award power offset]}]
-  (->> (_generateMap w h deepsea sea sand grass hill city tree award power offset)
+(defn generateMap [{:keys [seed x y w h]} {:keys [deepsea sea sand grass hill city tree award power offset]}]
+  (->> (_generateMap seed x y w h deepsea sea sand grass hill city tree award power offset)
        (partition w)
        (map (partial into []))
        (into [])))
