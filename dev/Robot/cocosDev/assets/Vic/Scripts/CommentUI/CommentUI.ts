@@ -1,5 +1,7 @@
-import AnimationendCallback from "./AnimationEndCallback";
+
 import PopPanel from "./PopPanel";
+import RobotDetailPanel from "./RobotDetailPanel/RobotDetailPanel";
+import AnimationendCallback from "../AnimationEndCallback";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -14,6 +16,9 @@ export default class CommentUI extends cc.Component {
     @property(PopPanel)
     popPanel: PopPanel = null;
 
+    @property(RobotDetailPanel)
+    robotDetailPanel:RobotDetailPanel = null;
+
     showAlert(content: string, cb?: () => void) {
         this.alert.active = false;
         this.alert.active = true;
@@ -26,6 +31,16 @@ export default class CommentUI extends cc.Component {
             this.alert.off(AnimationendCallback.ON_ANIMATION_END);
             if (cb) cb();
         });
+    }
+
+    openRobotDetail(unit:any, menu:any){
+        this.robotDetailPanel.open();
+        this.robotDetailPanel.setUnit(unit);
+        this.robotDetailPanel.setMenu(menu);
+    }
+
+    closeRobotDetail(){
+        this.robotDetailPanel.close();
     }
 
     openPopup(content: string) {

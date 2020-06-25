@@ -18,6 +18,8 @@ export default class RobotStore extends BasicViewer {
     @property(MenuButtons)
     robotList: MenuButtons = null;
 
+    private _pageId:number = 0;
+
     init() {
         this.robotList.updateItem = (btn, data) => {
             const robotItem = btn as RobotListItem;
@@ -26,9 +28,19 @@ export default class RobotStore extends BasicViewer {
         };
     }
 
+    prevPage(){
+        if(--this._pageId < 0) this._pageId = 0;
+        this.setRobotList();
+    }
+
+    nextPage(){
+        this._pageId++;
+        this.setRobotList();
+    }
+
     setRobotList() {
         this.robotList.open();
-        ViewController.instance.model.getRobotStoreList(0, 10, (err:any, data:any)=>{
+        ViewController.instance.model.getRobotStoreList(this._pageId, 10, (err:any, data:any)=>{
             const detailDatail = data.map(element=>{
                 const [key, data] = element;
                 let detail = ViewController.instance.getRobot(key);

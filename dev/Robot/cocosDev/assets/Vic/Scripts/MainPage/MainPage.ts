@@ -9,14 +9,12 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import BasicViewer from '../BasicViewer'
-import MenuButtons from '../MenuButtons';
 import InputSensor from '../InputSensor';
 import StateController from '../StateController';
 import ViewController from '../ViewController';
 import RobotStore from '../MainPage/RobotStore/RobotStore';
 import PilotStore from '../MainPage/PilotStore/PilotStore';
 import StandBy from '../MainPage/StandBy/StandBy';
-import MenuButton from '../MenuButton';
 import MainMenu from '../MainPage/MainMenu/MainMenu';
 import PrepareMenu from '../MainPage/PrepareMenu/PrepareMenu';
 import MainMenuState from '../MainPage/MainMenu/MainMenuState';
@@ -31,6 +29,7 @@ import StandByState from '../MainPage/StandBy/StandyByState';
 import StandByRobotPilotPopState from '../MainPage/StandBy/StandyByRobotPilotPopState';
 import QuestMenu from '../MainPage/QuestMenu/QuestMenu';
 import QuestMenuState from '../MainPage/QuestMenu/QuestMenuState';
+import RobotDetailOnStoreState from '../CommentUI/RobotDetailPanel/RobotDetailOnStoreState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -212,18 +211,20 @@ export default class MainPage extends BasicViewer {
     }
 
     onRobotStoreLeftClick() {
-        this.robotStore.robotList.onLeftClick(this);
+        this.robotStore.prevPage();
     }
 
     onRobotStoreRightClick() {
-        this.robotStore.robotList.onRightClick(this);
+        this.robotStore.nextPage();
     }
 
     onRobotStoreEnterClick() {
-        this._state.changeState(new RobotStoreBuyState());
 
         const data = this.robotStore.robotList.getFocus();
-        ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+        ViewController.instance.view.getCommentUI().openRobotDetail(data, ["購買","取消"]);
+        this._state.changeState(new RobotDetailOnStoreState());
+
+        
     }
 
     onRobotStoreEscClick() {
@@ -312,12 +313,12 @@ export default class MainPage extends BasicViewer {
             });
         }
         ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new RobotStoreState())
+        this._state.changeState(new RobotDetailOnStoreState())
     }
 
     onRobotStoreBuyEscClick() {
         ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new RobotStoreState())
+        this._state.changeState(new RobotDetailOnStoreState())
     }
 
     //#endregion
@@ -432,6 +433,37 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    //#region RobotDetailOnStoreState
+    onRobotDetailOnStoreUpClick(){
+        ViewController.instance.view.commentUI.robotDetailPanel.menu.onPrevClick();
+    }
+
+    onRobotDetailOnStoreDownClick(){
+        ViewController.instance.view.commentUI.robotDetailPanel.menu.onNextClick();
+    }
+
+    onRobotDetailOnStoreEnterClick(){
+        switch(ViewController.instance.view.commentUI.robotDetailPanel.menu.getFocus()){
+            case "購買":{
+                const data = this.robotStore.robotList.getFocus();
+                ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+                this._state.changeState(new RobotStoreBuyState());
+                break;
+            }
+            case "取消":{
+                this.onRobotDetailOnStoreEscClick();
+                break;
+            }
+        }
+    }
+
+    onRobotDetailOnStoreEscClick(){
+        ViewController.instance.view.commentUI.closeRobotDetail();
+        this._state.changeState(new RobotStoreState());
+    }
+
+    //#endregion
+
     openPrepareMenu(){
         this.closeAllPage();
         this.prepareMenu.open();
@@ -478,6 +510,7 @@ export default class MainPage extends BasicViewer {
         this.robotStore.close();
         this.pilotStore.close();
         this.standBy.close();
+        ViewController.instance.view.commentUI.closeRobotDetail();
     }
 
     setMoney(money: number) {

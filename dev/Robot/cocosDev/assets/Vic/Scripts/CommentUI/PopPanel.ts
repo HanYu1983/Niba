@@ -1,7 +1,6 @@
-import MenuCursor from "./MenuCursor";
-import IState from "./IState";
-import BasicViewer from "./BasicViewer";
-import MenuButton from "./MenuButton";
+import MenuCursor from "../MenuCursor";
+import MenuButton from "../MenuButton";
+import BasicViewer from "../BasicViewer";
 
 const { ccclass, property, requireComponent } = cc._decorator;
 

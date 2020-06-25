@@ -1,7 +1,7 @@
 import BasicViewer from "./BasicViewer";
-import MainPage from "./Page/MainPage";
-import GamePage from './Page/GamePage';
-import CommentUI from './CommentUI';
+import CommentUI from "./CommentUI/CommentUI";
+import MainPage from "./MainPage/MainPage";
+import GamePage from "./GamePage/GamePage";
 
 const { ccclass, property } = cc._decorator;
 
