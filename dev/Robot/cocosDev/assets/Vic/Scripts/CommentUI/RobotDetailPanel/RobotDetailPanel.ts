@@ -8,6 +8,7 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import MenuButton from "../../MenuButton";
+import WeaponMenu from "../../GamePage/WeaponMenu";
 
 
 const {ccclass, property} = cc._decorator;
@@ -18,6 +19,9 @@ export default class RobotDetailPanel extends BasicViewer {
     @property(MenuButtons)
     menu:MenuButtons = null;
 
+    @property(WeaponMenu)
+    weapons:WeaponMenu = null;
+
     init(){
         this.menu.updateItem = (btn: MenuButton, data: any) => {
             btn.setLabel(data);
@@ -26,6 +30,7 @@ export default class RobotDetailPanel extends BasicViewer {
 
     setUnit(unit:any){
         cc.log(unit);
+        this.weapons.setWeapons(unit.weapons);
     }
 
     setMenu(menu:any){

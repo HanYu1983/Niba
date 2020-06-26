@@ -2,6 +2,7 @@ import BasicViewer from "./BasicViewer";
 import CommentUI from "./CommentUI/CommentUI";
 import MainPage from "./MainPage/MainPage";
 import GamePage from "./GamePage/GamePage";
+import ViewController from "./ViewController";
 
 const { ccclass, property } = cc._decorator;
 
@@ -246,5 +247,15 @@ export default class View extends cc.Component {
         let pos = [id % 20, Math.floor(id / 20)];
         cc.log(id % 20, Math.floor(id / 20));
         return pos;
+    }
+    
+    getWeaponConfig(keys:string[]){
+        let ws = [];
+        for (let id in keys) {
+            let key = keys[id];
+            let weaponDetail = ViewController.instance.getWeapon(key);
+            ws.push(weaponDetail);
+        }
+        return ws;
     }
 }

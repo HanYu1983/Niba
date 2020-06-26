@@ -221,10 +221,10 @@ export default class MainPage extends BasicViewer {
     onRobotStoreEnterClick() {
 
         const data = this.robotStore.robotList.getFocus();
+        data.weapons = ViewController.instance.view.getWeaponConfig(data.weapons);
+
         ViewController.instance.view.getCommentUI().openRobotDetail(data, ["購買","取消"]);
         this._state.changeState(new RobotDetailOnStoreState());
-
-        
     }
 
     onRobotStoreEscClick() {
