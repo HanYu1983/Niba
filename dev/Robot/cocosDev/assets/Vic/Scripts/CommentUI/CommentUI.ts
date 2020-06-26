@@ -2,6 +2,7 @@
 import PopPanel from "./PopPanel";
 import RobotDetailPanel from "./RobotDetailPanel/RobotDetailPanel";
 import AnimationendCallback from "../AnimationEndCallback";
+import PilotDetailPanel from "./PilotDetailPanel/PilotDetailPanel";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -18,6 +19,9 @@ export default class CommentUI extends cc.Component {
 
     @property(RobotDetailPanel)
     robotDetailPanel:RobotDetailPanel = null;
+
+    @property(PilotDetailPanel)
+    pilotDetailPanel:PilotDetailPanel = null;
 
     showAlert(content: string, cb?: () => void) {
         this.alert.active = false;
@@ -39,8 +43,18 @@ export default class CommentUI extends cc.Component {
         this.robotDetailPanel.setMenu(menu);
     }
 
+    openPilotDetail(pilot:any, menu:any){
+        this.pilotDetailPanel.open();
+        this.pilotDetailPanel.setPilot(pilot);
+        this.pilotDetailPanel.setMenu(menu);
+    }
+
     closeRobotDetail(){
         this.robotDetailPanel.close();
+    }
+
+    closePilotDetail(){
+        this.pilotDetailPanel.close();
     }
 
     openPopup(content: string) {

@@ -30,6 +30,7 @@ import StandByRobotPilotPopState from '../MainPage/StandBy/StandyByRobotPilotPop
 import QuestMenu from '../MainPage/QuestMenu/QuestMenu';
 import QuestMenuState from '../MainPage/QuestMenu/QuestMenuState';
 import RobotDetailOnStoreState from '../CommentUI/RobotDetailPanel/RobotDetailOnStoreState';
+import PilotDetailOnStoreState from '../CommentUI/PilotDetailPanel/PilotDetailOnStoreState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -252,10 +253,9 @@ export default class MainPage extends BasicViewer {
     }
 
     onPilotStoreEnterClick() {
-        this._state.changeState(new PilotStoreBuyState());
-
         const data = this.pilotStore.pilotList.getFocus();
-        ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+        ViewController.instance.view.getCommentUI().openPilotDetail(data, ["確定","取消"]);
+        this._state.changeState(new PilotDetailOnStoreState());
     }
 
     onPilotStoreEscClick() {
@@ -279,17 +279,17 @@ export default class MainPage extends BasicViewer {
         if (cursor[0] == 0) {
             const buyPilot = this.pilotStore.pilotList.getFocus();
             ViewController.instance.model.buyPilotById(buyPilot.key, (err: any, data: any) => {
-                cc.log(data);
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
-        ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new PilotStoreState())
+        this.onPilotStoreBuyEscClick();
+        // ViewController.instance.view.getCommentUI().closePop();
+        // this._state.changeState(new PilotDetailOnStoreState())
     }
 
     onPilotStoreBuyEscClick() {
         ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new PilotStoreState())
+        this._state.changeState(new PilotDetailOnStoreState())
     }
 
     //#endregion
@@ -312,8 +312,7 @@ export default class MainPage extends BasicViewer {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
-        ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new RobotDetailOnStoreState())
+        this.onRobotStoreBuyEscClick();
     }
 
     onRobotStoreBuyEscClick() {
@@ -464,6 +463,43 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    //#region PilotDetailOnStoreState
+    onPilotDetailOnStoreUpClick(){
+        ViewController.instance.view.commentUI.pilotDetailPanel.menu.onPrevClick();
+    }
+
+    onPilotDetailOnStoreDownClick(){
+        ViewController.instance.view.commentUI.pilotDetailPanel.menu.onNextClick();
+    }
+
+    onPilotDetailOnStoreLeftClick(){
+        
+    }
+
+    onPilotDetailOnStoreRightClick(){
+        
+    }
+
+    onPilotDetailOnStoreEnterClick(){
+        switch(ViewController.instance.view.commentUI.pilotDetailPanel.menu.getFocus()){
+            case "確定":{
+                const data = this.pilotStore.pilotList.getFocus();
+                ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+                this._state.changeState(new PilotStoreBuyState());
+                break;
+            }
+            case "取消":{
+                this.onPilotDetailOnStoreEscClick();
+                break;
+            }
+        }
+    }
+
+    onPilotDetailOnStoreEscClick(){
+        ViewController.instance.view.commentUI.closePilotDetail();
+        this._state.changeState(new PilotStoreState());
+    }
+    //#endregion
     openPrepareMenu(){
         this.closeAllPage();
         this.prepareMenu.open();
