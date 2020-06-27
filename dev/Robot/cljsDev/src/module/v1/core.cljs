@@ -53,7 +53,7 @@
                 (throw (js/Error. "stop in enemyTurns")))]
         (recur (a/<! enemyTurns))))))
 
-
+ 
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
 
@@ -139,11 +139,33 @@
                       (zipmap (-> lobbyCtx :components keys)))]
          ret))
 
+      (= :getRobotStoreList spec)
+      (common/assertSpec
+       (s/map-of keyword? map?)
+       (->> data/data :robot
+            (map (fn [[robotKey value]]
+                   (merge
+                    value
+                    (common/assertSpec
+                     ::type/unit
+                     {:key (keyword robotKey)
+                      :position [0 0]
+                      :playerKey :player
+                      :robotState {:robotKey (keyword robotKey)
+                                   :pilotKey nil
+                                   :weapons {}
+                                   :components {}
+                                   :tags {}
+                                   :hp 0
+                                   :en 0}}))))
+            (map #(data/getUnitInfo {:lobbyCtx lobbyCtx} %))
+            (map (fn [unit] [(:key unit) unit]))
+            (into {})))
+
       :else
       (common/assertSpec
        (s/map-of keyword? map?)
-       (let [field (spec {:getRobotStoreList :robot
-                          :getPilotStoreList :pilot
+       (let [field (spec {:getPilotStoreList :pilot
                           :getWeaponStoreList :weapon
                           :getComponentStoreList :component})]
          (field data/data))))))
