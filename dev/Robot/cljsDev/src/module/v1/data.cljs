@@ -833,13 +833,13 @@
    (let [weaponData (common/assertSpec
                      map?
                      (get-in data [:weapon weaponKey]))]
-      ;  原始資料 + 能力修正後的資料 + 武器現在的狀態 = weaponInfo
+      ;  原始資料 + 武器現在的狀態 + 能力修正後的資料  = weaponInfo
      (merge weaponData
+            weapon
             {:range (getWeaponRange ctx unit weapon)
              :type (getWeaponType ctx unit weapon)
              :suitability (getWeaponSuitability ctx unit weapon)
-             :ability (getWeaponAbility ctx unit weapon)}
-            weapon))))
+             :ability (getWeaponAbility ctx unit weapon)}))))
 
 (defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -847,9 +847,11 @@
   (common/assertSpec ::type/unit unit)
   (common/assertSpec
    map?
-   (let [robotKey (get-in unit [:robotState :robotKey])]
+   (let [robotKey (get-in unit [:robotState :robotKey])
+         robotData (->> data :robot robotKey)]
      (update-in unit [:robotState] (fn [state]
-                                     (merge state
+                                     (merge robotData
+                                            state
                                             {:weapons (->> (getUnitWeapons ctx unit)
                                                            second
                                                            (map (partial getWeaponInfo ctx unit)))

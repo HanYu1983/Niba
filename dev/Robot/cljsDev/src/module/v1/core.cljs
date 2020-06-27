@@ -141,11 +141,11 @@
 
       (= :getRobotStoreList spec)
       (common/assertSpec
-       (s/map-of keyword? map?)
+       (s/map-of keyword? (s/keys :req-un [::cost]))
        (->> data/data :robot
             (map (fn [[robotKey value]]
                    (merge
-                    value
+                    {:cost (:cost value)}
                     (common/assertSpec
                      ::type/unit
                      {:key (keyword robotKey)
