@@ -1,6 +1,7 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import ViewController from "../../ViewController";
+import StoreListPanel from "../../StoreListPanel";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -12,34 +13,13 @@ import ViewController from "../../ViewController";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class WeaponStore extends BasicViewer {
+export default class WeaponStore extends StoreListPanel {
 
-    @property(MenuButtons)
-    list: MenuButtons = null;
+    updateItem(btn, data){
 
-    private _pageId:number = 0;
-
-    init() {
-        this.list.updateItem = (btn, data) => {
-        };
     }
 
-    prevPage(){
-        if(--this._pageId < 0) this._pageId = 0;
-        this.setlist();
+    getData(pageId:number, cb:(err:any, data:any)=>void){
+        ViewController.instance.model.getWeaponStoreList(pageId, 10, cb);
     }
-
-    nextPage(){
-        this._pageId++;
-        this.setlist();
-    }
-
-    setlist() {
-        this.list.open();
-        ViewController.instance.model.getWeaponStoreList(this._pageId, 10, (err:any, data:any)=>{
-            this.list.setData(data);
-        });
-    }
-
-    
 }
