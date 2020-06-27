@@ -17,6 +17,15 @@ export default class Model extends cc.Component {
     setModelController(ctr: ModelController) {
         this.modelController = ctr;
     }
+
+    getWeaponStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [{}]);
+    }
+
+    getComponentStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [{}]);
+    }
+
     getRobotStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
@@ -39,6 +48,14 @@ export default class Model extends cc.Component {
         });
     }
 
+    getComponentList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [{}]);
+    }
+
+    getWeaponList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [{}]);
+    }
+
     getRobotList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
@@ -59,6 +76,14 @@ export default class Model extends cc.Component {
                 cb(err, info);
             }
         });
+    }
+
+    buyComponentById(key: string, cb: (err: any, data: any) => void) {
+        cb(null, [{}]);
+    }
+
+    buyWeaponById(key: string, cb: (err: any, data: any) => void) {
+        cb(null, [{}]);
     }
 
     buyRobotById(robotKey: string, cb: (err: any, data: any) => void) {
