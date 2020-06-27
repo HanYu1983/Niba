@@ -27375,7 +27375,7 @@
       "__id__": 702
     },
     "_enabled": true,
-    "robotList": {
+    "list": {
       "__id__": 725
     },
     "_id": "76aapY8MxAvYr9n1spEZUQ"
@@ -28389,7 +28389,7 @@
       "__id__": 728
     },
     "_enabled": true,
-    "pilotList": {
+    "list": {
       "__id__": 751
     },
     "_id": "21npO8xWxKRbsKBs2y42av"
