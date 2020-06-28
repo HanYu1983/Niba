@@ -18,57 +18,52 @@ export default class Model extends cc.Component {
         this.modelController = ctr;
     }
 
+    getList(cmd:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void){
+        this.modelController.talk(cmd, { offset: pageId * count, limit: count }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
+    }
+
+
     getWeaponStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [{}]);
+        this.getList("getWeaponStoreList", pageId, count, cb);
     }
 
     getComponentStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [{}]);
+        this.getList("getComponentStoreList", pageId, count, cb);
     }
 
     getRobotStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        this.modelController.talk("getRobotStoreList", { offset: pageId * count, limit: count }, answer => {
-            const [err, info] = answer;
-            if (err) {
-                ViewController.instance.view.getCommentUI().showAlert(err);
-            } else {
-                cb(err, info);
-            }
-        });
+        this.getList("getRobotStoreList", pageId, count, cb);
     }
 
     getPilotStoreList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        this.modelController.talk("getPilotStoreList", { offset: pageId * count, limit: count }, answer => {
-            const [err, info] = answer;
-            if (err) {
-                ViewController.instance.view.getCommentUI().showAlert(err);
-            } else {
-                cb(err, info);
-            }
-        });
+        this.getList("getPilotStoreList", pageId, count, cb);
     }
 
     getComponentList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [{}]);
+        this.getList("getComponentList", pageId, count, cb);
     }
 
     getWeaponList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [{}]);
+        this.getList("getWeaponList", pageId, count, cb);
     }
 
     getRobotList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        this.modelController.talk("getRobotList", { offset: pageId * count, limit: count }, answer => {
-            const [err, info] = answer;
-            if (err) {
-                ViewController.instance.view.getCommentUI().showAlert(err);
-            } else {
-                cb(err, info);
-            }
-        })
+        this.getList("getRobotList", pageId, count, cb);
     }
 
     getPilotList(pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        this.modelController.talk("getPilotList", { offset: pageId * count, limit: count }, answer => {
+        this.getList("getPilotList", pageId, count, cb);
+    }
+
+    buyItemById(cmd:string, componentKey: string, cb: (err: any, data: any) => void){
+        this.modelController.talk(cmd, { key: componentKey }, answer => {
             const [err, info] = answer;
             if (err) {
                 ViewController.instance.view.getCommentUI().showAlert(err);
@@ -78,34 +73,20 @@ export default class Model extends cc.Component {
         });
     }
 
-    buyComponentById(key: string, cb: (err: any, data: any) => void) {
-        cb(null, [{}]);
+    buyComponentById(componentKey: string, cb: (err: any, data: any) => void) {
+        this.buyItemById("buyComponentById", componentKey, cb);
     }
 
-    buyWeaponById(key: string, cb: (err: any, data: any) => void) {
-        cb(null, [{}]);
+    buyWeaponById(weaponKey: string, cb: (err: any, data: any) => void) {
+        this.buyItemById("buyWeaponById", weaponKey, cb);
     }
 
     buyRobotById(robotKey: string, cb: (err: any, data: any) => void) {
-        this.modelController.talk("buyRobotById", { key: robotKey }, answer => {
-            const [err, info] = answer;
-            if (err) {
-                ViewController.instance.view.getCommentUI().showAlert(err);
-            } else {
-                cb(err, info);
-            }
-        });
+        this.buyItemById("buyRobotById", robotKey, cb);
     }
 
     buyPilotById(pilotKey: string, cb: (err: any, data: any) => void) {
-        this.modelController.talk("buyPilotById", { key: pilotKey }, answer => {
-            const [err, info] = answer;
-            if (err) {
-                ViewController.instance.view.getCommentUI().showAlert(err);
-            } else {
-                cb(err, info);
-            }
-        });
+        this.buyItemById("buyPilotById", pilotKey, cb);
     }
 
     setRobotPilot(robotKey: string, pilotKey: string, cb: (err: any, data: any) => void) {
