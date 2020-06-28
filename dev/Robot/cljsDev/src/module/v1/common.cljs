@@ -7,7 +7,7 @@
 
 (def invalid ::s/invalid)
 
-(def assert? false)
+(def assert? true)
 
 (defn explainValid? [sp args]
   (if (clojure.spec.alpha/valid? sp args)

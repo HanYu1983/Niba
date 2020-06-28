@@ -22,51 +22,107 @@
             (recur lobbyCtx))
 
           (= cmd "getRobotStoreList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotStoreList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotStoreList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotStoreList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getWeaponStoreList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponStoreList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getComponentStoreList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentStoreList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getRobotList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getPilotList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getWeaponList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "getComponentList")
-          (let [[id subargs] args]
+          (let [[id subargs] args
+                {offset "offset" limit "limit"} (s/assert
+                                                 (s/and map?
+                                                        #(% "offset")
+                                                        #(% "limit"))
+                                                 subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentList true})
-                                               (into []))]]])
+                                               (into [])
+                                               (drop offset)
+                                               (take limit))]]])
             (recur lobbyCtx))
 
           (= cmd "buyRobotById")

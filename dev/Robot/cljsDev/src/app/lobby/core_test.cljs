@@ -18,28 +18,28 @@
        (a/<! (app.lobby.core/startLobby {:lobbyCtx model
                                          :money 0} inputFromView outputToView)))
      (a/go
-       (let [_ (a/>! inputFromView ["getRobotStoreList"])
+       (let [_ (a/>! inputFromView ["getRobotStoreList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getPilotStoreList"])
+       (let [_ (a/>! inputFromView ["getPilotStoreList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getWeaponStoreList"])
+       (let [_ (a/>! inputFromView ["getWeaponStoreList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getComponentStoreList"])
+       (let [_ (a/>! inputFromView ["getComponentStoreList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getRobotList"])
+       (let [_ (a/>! inputFromView ["getRobotList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getPilotList"])
+       (let [_ (a/>! inputFromView ["getPilotList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getWeaponList"])
+       (let [_ (a/>! inputFromView ["getWeaponList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
-       (let [_ (a/>! inputFromView ["getComponentList"])
+       (let [_ (a/>! inputFromView ["getComponentList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]
          (s/assert (s/coll-of (s/tuple keyword? map?)) res))
 
@@ -67,7 +67,7 @@
          (s/assert string? err))
 
        (println "檢查所買的機體庫存")
-       (let [_ (a/>! inputFromView ["getRobotList"])
+       (let [_ (a/>! inputFromView ["getRobotList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))
@@ -80,7 +80,7 @@
          (s/assert nil? err))
 
        (println "檢查所買的駕駛庫存")
-       (let [_ (a/>! inputFromView ["getPilotList"])
+       (let [_ (a/>! inputFromView ["getPilotList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])
@@ -104,7 +104,7 @@
          (s/assert nil? err))
 
        (println "檢查所買的武器庫存")
-       (let [_ (a/>! inputFromView ["getWeaponList"])
+       (let [_ (a/>! inputFromView ["getWeaponList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])
@@ -140,7 +140,7 @@
          (s/assert nil? err))
 
        (println "檢查所買的配件庫存")
-       (let [_ (a/>! inputFromView ["getComponentList"])
+       (let [_ (a/>! inputFromView ["getComponentList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)
              _ (s/assert (s/coll-of (s/tuple keyword? map?)) res)
              _ (assert (= 1 (count res)))])

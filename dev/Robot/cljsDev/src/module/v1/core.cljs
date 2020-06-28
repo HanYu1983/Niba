@@ -172,7 +172,12 @@
 
 (defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
   (a/go
-    (let [; copy lobbyCtx first
+    (let [matchs (re-find #"(\d+)_(\d+)" (or args "0_0"))
+          [_ levelType level] (if matchs
+                                matchs
+                                [0 0 0])
+          _ (println {:level level :levelType levelType})
+          ; copy lobbyCtx first
           gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))
           ; create map
           [mw mh] (:mapsize gameplayCtx)
