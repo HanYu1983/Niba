@@ -8,7 +8,6 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import MenuButton from "../../MenuButton";
-import WeaponMenu from "../../GamePage/WeaponMenu";
 
 
 const {ccclass, property} = cc._decorator;
