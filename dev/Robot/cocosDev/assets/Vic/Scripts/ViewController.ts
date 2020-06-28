@@ -42,7 +42,11 @@ export default class ViewController extends cc.Component {
     }
 
     //#region helper
+    // args example: 0_2
+    // 第一個參數：0隨機副本；1陸副本；2海副本；3空副本
+    // 第二個參數：難度：0~9
     notifyStartGame(args:any) {
+        cc.log(args)
         this.modelController.endLobby();
         this.modelController.startGame(args);
     }
