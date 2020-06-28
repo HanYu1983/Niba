@@ -29,8 +29,8 @@ export default class QuestMenu extends BasicViewer {
     @property(MenuButtons)
     skyMenu:MenuButtons = null;
 
-    @property(MenuButtons)
-    actionMenu:MenuButtons = null;
+    // @property(MenuButtons)
+    // actionMenu:MenuButtons = null;
 
     private _menus:Array<MenuButtons>;
     private _menuId:number = 0;
@@ -52,12 +52,12 @@ export default class QuestMenu extends BasicViewer {
         this.skyMenu.updateItem = (btn: MenuButton, data: any) => {
             btn.setLabel(data);
         };
-        this.actionMenu.updateItem = (btn: MenuButton, data: any) => {
-            btn.setLabel(data);
-        };
+        // this.actionMenu.updateItem = (btn: MenuButton, data: any) => {
+        //     btn.setLabel(data);
+        // };
 
         this._menus = [
-            this.levelMenu, this.landMenu, this.seaMenu, this.skyMenu, this.actionMenu
+            this.levelMenu, this.landMenu, this.seaMenu, this.skyMenu
         ];
     }
 
@@ -65,7 +65,7 @@ export default class QuestMenu extends BasicViewer {
         super.open();
 
         this.titleFocus.open();
-        this.titleFocus.setData(["","","","",""]);
+        this.titleFocus.setData(["難度","陸","海","空"]);
 
         this.levelMenu.open();
         this.levelMenu.setData(["難度一","難度二","難度三","難度四","難度五","難度六","難度七","難度八","難度九","難度十"]);
@@ -79,8 +79,24 @@ export default class QuestMenu extends BasicViewer {
         this.skyMenu.open();
         this.skyMenu.setData(["空難度一","空難度二","空難度三","空難度四","空難度五","空難度六","空難度七","空難度八","空難度九","空難度十"]);
 
-        this.actionMenu.open();
-        this.actionMenu.setData(["隨機副本"]);
+        // this.actionMenu.open();
+        // this.actionMenu.setData(["隨機副本"]);
+    }
+
+    getButtonId(){
+        const title = this.titleFocus.getFocusId()[0];
+        const level = this.levelMenu.getFocusId()[0];
+        const sky_level = this.skyMenu.getFocusId()[0];
+        const land_level = this.landMenu.getFocusId()[0];
+        const sea_level = this.seaMenu.getFocusId()[0];
+        let buttonId = title.toString();
+        switch(title){
+            case 0: buttonId += "_" + level; break;
+            case 1: buttonId += "_" + land_level; break;
+            case 2: buttonId += "_" + sea_level; break;
+            case 3: buttonId += "_" + sky_level; break;
+        }
+        return buttonId;
     }
 
     onPrevClick(owner?: any) {
