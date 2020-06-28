@@ -42,9 +42,9 @@ export default class ViewController extends cc.Component {
     }
 
     //#region helper
-    notifyStartGame() {
+    notifyStartGame(args:any) {
         this.modelController.endLobby();
-        this.modelController.startGame();
+        this.modelController.startGame(args);
     }
 
     notifyStartLobby() {

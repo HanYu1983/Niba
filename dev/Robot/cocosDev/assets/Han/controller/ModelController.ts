@@ -26,8 +26,8 @@ export default class ModelController extends cc.Component {
         })
     }
 
-    startGame() {
-        this.send("startGameplay");
+    startGame(args: any) {
+        this.send("startGameplay", args);
     }
 
     startLobby() {
