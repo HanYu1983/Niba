@@ -16,10 +16,15 @@ const { ccclass, property } = cc._decorator;
 export default class ComponentStore extends StoreListPanel {
 
     updateItem(btn, data){
-
+        btn.setLabel(data.detail.title);
     }
 
     getData(pageId:number, cb:(err:any, data:any)=>void){
-        ViewController.instance.model.getComponentStoreList(pageId, 10, cb);
+        ViewController.instance.model.getComponentStoreList(pageId, 10, (err, data)=>{
+            let usingData = data.map((item)=>{
+                return {"key":item[0], "detail":item[1]};
+            })
+            cb(err, usingData);
+        });
     }
 }

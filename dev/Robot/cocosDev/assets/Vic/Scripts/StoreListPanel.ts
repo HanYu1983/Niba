@@ -8,6 +8,7 @@
 import MenuButtons from "./MenuButtons";
 import ViewController from "./ViewController";
 import BasicViewer from "./BasicViewer";
+import MenuButton from "./MenuButton";
 
 const {ccclass, property} = cc._decorator;
 
@@ -41,7 +42,7 @@ export default class StoreListPanel extends BasicViewer {
     }
 
     // 子類覆寫，更新按鈕的方法
-    updateItem(btn, data){
+    updateItem(btn:MenuButton, data:any){
 
     }
 
