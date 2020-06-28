@@ -33,6 +33,12 @@ import RobotDetailOnStoreState from '../CommentUI/RobotDetailPanel/RobotDetailOn
 import PilotDetailOnStoreState from '../CommentUI/PilotDetailPanel/PilotDetailOnStoreState';
 import WeaponStore from './WeaponStore/WeaponStore';
 import WeaponStoreState from './WeaponStore/WeaponStoreState';
+import ComponentStore from './ComponentStore/ComponentStore';
+import ComponentStoreState from './ComponentStore/ComponentStoreState';
+import ComponentDetailOnStoreState from '../CommentUI/ComponentDetailPanel/ComponentDetailOnStoreState';
+import ComponentStoreBuyState from './ComponentStore/ComponentStoreBuyState';
+import WeaponDetailOnStoreState from '../CommentUI/WeaponDetailPanel/WeaponDetailOnStoreState';
+import WeaponStoreBuyState from './WeaponStore/WeaponStoreBuyState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -56,6 +62,9 @@ export default class MainPage extends BasicViewer {
 
     @property(WeaponStore)
     weaponStore: WeaponStore = null;
+
+    @property(ComponentStore)
+    componentStore:ComponentStore = null;
 
     @property(StandBy)
     standBy: StandBy = null;
@@ -187,6 +196,7 @@ export default class MainPage extends BasicViewer {
                 break;
             }
             case "購買配件":{
+                this.openComponentStore();
                 break;
             }
             case "配置駕駛":{
@@ -260,7 +270,7 @@ export default class MainPage extends BasicViewer {
 
     onPilotStoreEnterClick() {
         const data = this.pilotStore.list.getFocus();
-        ViewController.instance.view.getCommentUI().openPilotDetail(data, ["確定","取消"]);
+        ViewController.instance.view.getCommentUI().openPilotDetail(data, ["購買","取消"]);
         this._state.changeState(new PilotDetailOnStoreState());
     }
 
@@ -283,14 +293,12 @@ export default class MainPage extends BasicViewer {
     onPilotStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            const buyPilot = this.pilotStore.pilotList.getFocus();
+            const buyPilot = this.pilotStore.list.getFocus();
             ViewController.instance.model.buyPilotById(buyPilot.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
         this.onPilotStoreBuyEscClick();
-        // ViewController.instance.view.getCommentUI().closePop();
-        // this._state.changeState(new PilotDetailOnStoreState())
     }
 
     onPilotStoreBuyEscClick() {
@@ -488,8 +496,8 @@ export default class MainPage extends BasicViewer {
 
     onPilotDetailOnStoreEnterClick(){
         switch(ViewController.instance.view.commentUI.pilotDetailPanel.menu.getFocus()){
-            case "確定":{
-                const data = this.pilotStore.pilotList.getFocus();
+            case "購買":{
+                const data = this.pilotStore.list.getFocus();
                 ViewController.instance.view.getCommentUI().openPopup("確定要買？");
                 this._state.changeState(new PilotStoreBuyState());
                 break;
@@ -519,17 +527,17 @@ export default class MainPage extends BasicViewer {
     onWeaponStoreBuyEnterClick() {
         const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
         if (cursor[0] == 0) {
-            const buyRobot = this.weaponStore.list.getFocus();
-            ViewController.instance.model.buyRobotById(buyRobot.key, (err: any, data: any) => {
+            const buyWeapon = this.weaponStore.list.getFocus();
+            ViewController.instance.model.buyWeaponById(buyWeapon.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
             });
         }
-        this.onRobotStoreBuyEscClick();
+        this.onWeaponStoreBuyEscClick();
     }
 
     onWeaponStoreBuyEscClick() {
         ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new RobotDetailOnStoreState())
+        this._state.changeState(new WeaponDetailOnStoreState())
     }
     //#endregion
 
@@ -552,12 +560,9 @@ export default class MainPage extends BasicViewer {
     }
 
     onWeaponStoreEnterClick() {
-
         const data = this.weaponStore.list.getFocus();
-        data.weapons = ViewController.instance.view.getWeaponConfig(data.weapons);
-
-        ViewController.instance.view.getCommentUI().openRobotDetail(data, ["購買","取消"]);
-        this._state.changeState(new RobotDetailOnStoreState());
+        ViewController.instance.view.getCommentUI().openWeaponDetail(data, ["購買","取消"]);
+        this._state.changeState(new WeaponDetailOnStoreState());
     }
 
     onWeaponStoreEscClick() {
@@ -566,6 +571,137 @@ export default class MainPage extends BasicViewer {
 
     //#endregion
 
+    //#region 確定購買配件的popup
+    onComponentStoreBuyLeftClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
+    }
+
+    onComponentStoreBuyRightClick() {
+        ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+    }
+
+    onComponentStoreBuyEnterClick() {
+        const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
+        if (cursor[0] == 0) {
+            const buyComponent = this.componentStore.list.getFocus();
+            ViewController.instance.model.buyComponentById(buyComponent.key, (err: any, data: any) => {
+                ViewController.instance.view.getCommentUI().showAlert("已購買");
+            });
+        }
+        this.onComponentStoreBuyEscClick();
+    }
+
+    onComponentStoreBuyEscClick() {
+        ViewController.instance.view.getCommentUI().closePop();
+        this._state.changeState(new ComponentDetailOnStoreState())
+    }
+    //#endregion
+
+    //#region 買配件的選單
+
+    onComponentStoreUpClick() {
+        this.componentStore.list.onPrevClick(this);
+    }
+
+    onComponentStoreDownClick() {
+        this.componentStore.list.onNextClick(this);
+    }
+
+    onComponentStoreLeftClick() {
+        this.componentStore.prevPage();
+    }
+
+    onComponentStoreRightClick() {
+        this.componentStore.nextPage();
+    }
+
+    onComponentStoreEnterClick() {
+        const data = this.componentStore.list.getFocus();
+        ViewController.instance.view.getCommentUI().openComponentDetail(data, ["購買","取消"]);
+        this._state.changeState(new ComponentDetailOnStoreState());
+    }
+
+    onComponentStoreEscClick() {
+        this.openPrepareMenu();
+    }
+
+    //#endregion
+
+    //#region ComponentDetailOnStoreState
+    onComponentDetailOnStoreUpClick(){
+        ViewController.instance.view.commentUI.componentDetailPanel.menu.onPrevClick();
+    }
+
+    onComponentDetailOnStoreDownClick(){
+        ViewController.instance.view.commentUI.componentDetailPanel.menu.onNextClick();
+    }
+
+    onComponentDetailOnStoreLeftClick(){
+        
+    }
+
+    onComponentDetailOnStoreRightClick(){
+        
+    }
+
+    onComponentDetailOnStoreEnterClick(){
+        switch(ViewController.instance.view.commentUI.componentDetailPanel.menu.getFocus()){
+            case "購買":{
+                const data = this.componentStore.list.getFocus();
+                ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+                this._state.changeState(new ComponentStoreBuyState());
+                break;
+            }
+            case "取消":{
+                this.onComponentDetailOnStoreEscClick();
+                break;
+            }
+        }
+    }
+
+    onComponentDetailOnStoreEscClick(){
+        ViewController.instance.view.commentUI.closeComponentDetail();
+        this._state.changeState(new ComponentStoreState());
+    }
+    //#endregion
+    
+    //#region WeaponDetailOnStoreState
+    onWeaponDetailOnStoreUpClick(){
+        ViewController.instance.view.commentUI.weaponDetailPanel.menu.onPrevClick();
+    }
+
+    onWeaponDetailOnStoreDownClick(){
+        ViewController.instance.view.commentUI.weaponDetailPanel.menu.onNextClick();
+    }
+
+    onWeaponDetailOnStoreLeftClick(){
+        
+    }
+
+    onWeaponDetailOnStoreRightClick(){
+        
+    }
+
+    onWeaponDetailOnStoreEnterClick(){
+        switch(ViewController.instance.view.commentUI.weaponDetailPanel.menu.getFocus()){
+            case "購買":{
+                const data = this.weaponStore.list.getFocus();
+                ViewController.instance.view.getCommentUI().openPopup("確定要買？");
+                this._state.changeState(new WeaponStoreBuyState());
+                break;
+            }
+            case "取消":{
+                this.onWeaponDetailOnStoreEscClick();
+                break;
+            }
+        }
+    }
+
+    onWeaponDetailOnStoreEscClick(){
+        ViewController.instance.view.commentUI.closeWeaponDetail();
+        this._state.changeState(new WeaponStoreState());
+    }
+    //#endregion
     openPrepareMenu(){
         this.closeAllPage();
         this.prepareMenu.open();
@@ -599,6 +735,13 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new WeaponStoreState());
     }
 
+    openComponentStore() {
+        this.closeAllPage();
+        this.componentStore.open();
+        this.componentStore.setlist();
+        this._state.changeState(new ComponentStoreState());
+    }
+
     openStandBy() {
         this.closeAllPage();
         this.standBy.open();
@@ -620,6 +763,7 @@ export default class MainPage extends BasicViewer {
         this.pilotStore.close();
         this.standBy.close();
         this.weaponStore.close();
+        this.componentStore.close();
         ViewController.instance.view.commentUI.closeRobotDetail();
     }
 

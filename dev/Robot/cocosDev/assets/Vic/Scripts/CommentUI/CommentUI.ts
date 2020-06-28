@@ -3,6 +3,8 @@ import PopPanel from "./PopPanel";
 import RobotDetailPanel from "./RobotDetailPanel/RobotDetailPanel";
 import AnimationendCallback from "../AnimationEndCallback";
 import PilotDetailPanel from "./PilotDetailPanel/PilotDetailPanel";
+import WeaponDetailPanel from "./WeaponDetailPanel/WeaponDetailPanel";
+import ComponentDetailPanel from "./ComponentDetailPanel/ComponentDetailPanel";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -22,6 +24,12 @@ export default class CommentUI extends cc.Component {
 
     @property(PilotDetailPanel)
     pilotDetailPanel:PilotDetailPanel = null;
+
+    @property(WeaponDetailPanel)
+    weaponDetailPanel:WeaponDetailPanel = null;
+
+    @property(ComponentDetailPanel)
+    componentDetailPanel:ComponentDetailPanel = null;
 
     showAlert(content: string, cb?: () => void) {
         this.alert.active = false;
@@ -49,12 +57,32 @@ export default class CommentUI extends cc.Component {
         this.pilotDetailPanel.setMenu(menu);
     }
 
+    openComponentDetail(component:any, menu:any){
+        this.componentDetailPanel.open();
+        this.componentDetailPanel.setComponent(component);
+        this.componentDetailPanel.setMenu(menu);
+    }
+
+    openWeaponDetail(weapon:any, menu:any){
+        this.weaponDetailPanel.open();
+        this.weaponDetailPanel.setWeapon(weapon);
+        this.weaponDetailPanel.setMenu(menu);
+    }
+
     closeRobotDetail(){
         this.robotDetailPanel.close();
     }
 
     closePilotDetail(){
         this.pilotDetailPanel.close();
+    }
+
+    closeWeaponDetail(){
+        this.weaponDetailPanel.close();
+    }
+
+    closeComponentDetail(){
+        this.componentDetailPanel.close();
     }
 
     openPopup(content: string) {
