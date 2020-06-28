@@ -14,7 +14,7 @@
   {:nameCtx gameplayCtx
    :initState nil
    :initCtx nil}
-  (type/explainValid? (s/tuple ::type/unit) [unit])
+  (common/explainValid? (s/tuple ::type/unit) [unit])
   (loop [gameplayCtx gameplayCtx]
     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
     (let [[gameplayCtx result] (a/<! (selectPosition gameplayCtx {} inputCh outputCh))]
