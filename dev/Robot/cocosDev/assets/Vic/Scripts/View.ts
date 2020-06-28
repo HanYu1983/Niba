@@ -185,6 +185,7 @@ export default class View extends cc.Component {
     }
 
     private performUnitMoveAnim(unitKey: string, path: number[][], cb: () => void) {
+        this.getGamePage().closeUnitSampleInfos();
         this.getGamePage().units.moveUnitByID(unitKey, path, cb);
     }
 
@@ -243,9 +244,7 @@ export default class View extends cc.Component {
     }
 
     getXYByIndex(id: number): number[] {
-        cc.log(id);
         let pos = [id % 20, Math.floor(id / 20)];
-        cc.log(id % 20, Math.floor(id / 20));
         return pos;
     }
     
