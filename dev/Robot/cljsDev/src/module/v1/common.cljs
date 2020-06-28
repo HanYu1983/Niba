@@ -2,11 +2,12 @@
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
   (:require-macros [module.v1.core :as core])
-  (:require [module.v1.type :as type])
   (:require [tool.map])
   (:require [tool.units]))
 
 (def invalid ::s/invalid)
+
+(def assert? false)
 
 (defn explainValid? [sp args]
   (if (clojure.spec.alpha/valid? sp args)
@@ -16,13 +17,13 @@
 
 (defn assertSpec
   ([sp getter args]
-   (if true
+   (if assert?
      (if (not (clojure.spec.alpha/valid? sp (getter args)))
        (throw (js/Error. (clojure.spec.alpha/explain-str sp (getter args))))
        args)
      args))
   ([sp args]
-   (if true
+   (if assert?
      (if (not (clojure.spec.alpha/valid? sp args))
        (throw (js/Error. (clojure.spec.alpha/explain-str sp args)))
        args)

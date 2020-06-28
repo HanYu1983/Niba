@@ -389,7 +389,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (type/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/unit unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_land)
                            (throw (js/Error. "should gaite_land")))
                          gameplayCtx)))
@@ -399,7 +399,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (type/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/unit unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_sky)
                            (throw (js/Error. "should transform to sky")))
                          gameplayCtx)))
@@ -408,7 +408,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (type/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/unit unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_land)
                            (throw (js/Error. "should gaite_land")))
                          gameplayCtx))))
@@ -420,8 +420,8 @@
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
                                weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
-                           (type/assertSpec ::type/unit unit1)
-                           (type/assertSpec ::type/weaponEntry weapons)
+                           (common/assertSpec ::type/unit unit1)
+                           (common/assertSpec ::type/weaponEntry weapons)
                            (reset! bulletCount (get-in weapons [1 1 :bulletCount]))
                            gameplayCtx)))
           (core/defclick true "open menu and attack use bullet weapon"
@@ -436,8 +436,8 @@
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
                                weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
-                           (type/assertSpec ::type/unit unit1)
-                           (type/assertSpec ::type/weaponEntry weapons)
+                           (common/assertSpec ::type/unit unit1)
+                           (common/assertSpec ::type/weaponEntry weapons)
                            (when (not= (get-in weapons [1 1 :bulletCount]) (dec @bulletCount))
                              (throw (js/Error. "bullet count must dec")))
                            gameplayCtx)))))
@@ -451,7 +451,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (type/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/unit unit1)
                          (when (not (contains? (-> unit1 :robotState :tags) :done))
                            (throw (js/Error. "unit1 must done")))
                          gameplayCtx)))
@@ -461,7 +461,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (type/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/unit unit1)
                          (when (contains? (-> unit1 :robotState :tags) :done)
                            (throw (js/Error. "unit1 must not done")))
                          gameplayCtx))))

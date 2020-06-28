@@ -5,20 +5,6 @@
   (:require [tool.menuCursor])
   (:require [app.lobby.model]))
 
-(defn explainValid? [sp args]
-  (if (clojure.spec.alpha/valid? sp args)
-    true
-    (do (println (clojure.spec.alpha/explain-str sp args))
-        (println args)
-        false)))
-
-(defn assertSpec [sp args]
-  (when true
-    (when (not (clojure.spec.alpha/valid? sp args))
-      (println (clojure.spec.alpha/explain-str sp args))
-      (println args)
-      (throw (js/Error. (str "error"))))))
-
 (s/def ::key keyword?)
 (s/def ::position (s/tuple int? int?))
 (s/def ::hp number?)
