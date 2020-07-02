@@ -174,29 +174,59 @@
   (a/go
     (let [matchs (re-find #"(\d+)_(\d+)" (or args "0_0"))
           [_ levelType level] (if matchs
-                                matchs
+                                (map js/parseInt matchs)
                                 [0 0 0])
-          _ (println {:level level :levelType levelType})
+          levelProps {0 {:deepsea 0.6
+                         :sea 0.6
+                         :sand 0.1
+                         :grass 1
+                         :hill 1
+                         :city 0.3
+                         :tree 0.4
+                         :award 0.01
+                         :power 1
+                         :offset 0}
+                      1 {:deepsea 0.3
+                         :sea 0.3
+                         :sand 0.1
+                         :grass 1
+                         :hill 1
+                         :city 0.5
+                         :tree 0.4
+                         :award 0.01
+                         :power 1
+                         :offset 0}
+                      2 {:deepsea 0.8
+                         :sea 0.8
+                         :sand 0.2
+                         :grass 0.3
+                         :hill 0.1
+                         :city 0.1
+                         :tree 0.1
+                         :award 0.01
+                         :power 1
+                         :offset 0}
+                      3 {:deepsea 0.6
+                         :sea 0.6
+                         :sand 0.1
+                         :grass 1
+                         :hill 1
+                         :city 0.3
+                         :tree 0.4
+                         :award 0.01
+                         :power 1
+                         :offset 0}}
           ; copy lobbyCtx first
           gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))
           ; create map
           [mw mh] (:mapsize gameplayCtx)
           playmap (tool.map/generateMap
                    {:seed 0
-                    :x 0
+                    :x (* level mw)
                     :y 0
                     :w mw
                     :h mh}
-                   {:deepsea 0.6
-                    :sea 0.6
-                    :sand 0.1
-                    :grass 1
-                    :hill 1
-                    :city 0.3
-                    :tree 0.4
-                    :award 0.01
-                    :power 1
-                    :offset 0})
+                   (levelProps levelType))
           gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))
           ; 選角頁, DEMO版先拿掉
           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
