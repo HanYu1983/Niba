@@ -26,7 +26,8 @@
                         tx (.getTransform body)
                         _ (condp = (.getType shape)
                             "circle"
-                            0
+                            (let [worldPoint (.getWorldPoint body (.getCenter shape))
+                                  _ (js/console.log worldPoint)])
                             "polygon"
                             (let [worldVertices (-> shape
                                                     (.-m_vertices)
