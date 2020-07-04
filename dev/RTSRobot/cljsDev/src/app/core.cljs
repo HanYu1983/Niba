@@ -47,7 +47,7 @@
             (.createFixture (pl/Box 10 10)))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
-(defn reduce-entities [f ctx]
+(defn reduce-bodies [f ctx]
   (s/assert ::gameplay gameplay)
   (let [ctx (loop [body (.getBodyList (:world gameplay))
                    ctx ctx]
@@ -101,7 +101,7 @@
                                  :angle 1})
         _ (println gameplay)
         _ (js/console.log (render gameplay))
-        gameplay (reduce-entities (fn [gameplay body]
+        gameplay (reduce-bodies (fn [gameplay body]
                                     (let [id (.getUserData body)]
                                       (update-in gameplay [:entities id] #(assoc % :win true))))
                                   gameplay)
