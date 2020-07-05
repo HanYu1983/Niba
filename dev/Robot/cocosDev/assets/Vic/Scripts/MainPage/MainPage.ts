@@ -39,6 +39,14 @@ import ComponentDetailOnStoreState from '../CommentUI/ComponentDetailPanel/Compo
 import ComponentStoreBuyState from './ComponentStore/ComponentStoreBuyState';
 import WeaponDetailOnStoreState from '../CommentUI/WeaponDetailPanel/WeaponDetailOnStoreState';
 import WeaponStoreBuyState from './WeaponStore/WeaponStoreBuyState';
+import ComponentSetting from './ComponentSetting/ComponentSetting';
+import ComponentSettingComponentState from './ComponentSetting/ComponentSettingComponentState';
+import ComponentSettingRobotState from './ComponentSetting/ComponentSettingRobotState';
+import ComponentSettingRobotEquipState from './ComponentSetting/ComponentSettingRobotEquipState';
+import WeaponSetting from './WeaponSetting/WeaponSetting';
+import WeaponSettingRobotEquipState from './WeaponSetting/WeaponSettingRobotEquipState';
+import WeaponSettingRobotState from './WeaponSetting/WeaponSettingRobotState';
+import WeaponSettingComponentState from './WeaponSetting/WeaponSettingComponentState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -68,6 +76,12 @@ export default class MainPage extends BasicViewer {
 
     @property(StandBy)
     standBy: StandBy = null;
+
+    @property(ComponentSetting)
+    componentSetting:ComponentSetting = null;
+
+    @property(WeaponSetting)
+    weaponSetting:WeaponSetting = null;
 
     @property(cc.Label)
     money: cc.Label = null;
@@ -204,9 +218,11 @@ export default class MainPage extends BasicViewer {
                 break;
             }
             case "配置軍火":{
+                this.openWeaponSetting();
                 break;
             }
             case "配置配件":{
+                this.openComponentSetting();
                 break;
             }
         }
@@ -702,6 +718,179 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new WeaponStoreState());
     }
     //#endregion
+    
+    //#region ComponentSettingComponentState
+
+    onComponentSettingComponentStateUpClick(){
+        this.componentSetting.upComponentList();
+    }
+
+    onComponentSettingComponentStateDownClick(){
+        this.componentSetting.downComponentList();
+        
+    }
+    onComponentSettingComponentStateLeftClick(){
+        
+    }
+    onComponentSettingComponentStateRightClick(){
+        
+    }
+    onComponentSettingComponentStateEnterClick(){
+        let component = this.componentSetting.componentList.list.getFocus();
+        let equip = this.componentSetting.robotEquipList.list.getFocus();
+        let robot = this.componentSetting.robotList.list.getFocus();
+
+        cc.log(component);
+        cc.log(equip);
+        cc.log(robot);
+    }
+    onComponentSettingComponentStateEscClick(){
+        this._state.changeState(new ComponentSettingRobotEquipState());
+        this.componentSetting.prevFocus();
+    }
+
+    //#endregion
+    
+    //#region ComponentSettingRobotState
+
+    onComponentSettingRobotStateUpClick(){
+        this.componentSetting.upRobotList();
+    }
+
+    onComponentSettingRobotStateDownClick(){
+        this.componentSetting.downRobotList();
+        
+    }
+    onComponentSettingRobotStateLeftClick(){
+        
+    }
+    onComponentSettingRobotStateRightClick(){
+        
+    }
+    onComponentSettingRobotStateEnterClick(){
+        this._state.changeState(new ComponentSettingRobotEquipState());
+        this.componentSetting.nextFocus();
+    }
+    onComponentSettingRobotStateEscClick(){
+        this.openPrepareMenu();
+    }
+
+    //#endregion
+    
+    
+    //#region ComponentSettingRobotEquipState
+
+    onComponentSettingRobotEquipStateUpClick(){
+        this.componentSetting.upRobotEquipList();
+    }
+
+    onComponentSettingRobotEquipStateDownClick(){
+        this.componentSetting.downRobotEquipList();
+        
+    }
+    onComponentSettingRobotEquipStateLeftClick(){
+        
+    }
+    onComponentSettingRobotEquipStateRightClick(){
+        
+    }
+    onComponentSettingRobotEquipStateEnterClick(){
+        this._state.changeState(new ComponentSettingComponentState());
+        this.componentSetting.nextFocus();
+    }
+    onComponentSettingRobotEquipStateEscClick(){
+        this._state.changeState(new ComponentSettingRobotState());
+        this.componentSetting.prevFocus();
+    }
+
+    //#endregion
+
+    //#region WeaponSettingComponentState
+
+    onWeaponSettingComponentStateUpClick(){
+        this.weaponSetting.upComponentList();
+    }
+
+    onWeaponSettingComponentStateDownClick(){
+        this.weaponSetting.downComponentList();
+        
+    }
+    onWeaponSettingComponentStateLeftClick(){
+        
+    }
+    onWeaponSettingComponentStateRightClick(){
+        
+    }
+    onWeaponSettingComponentStateEnterClick(){
+        let component = this.weaponSetting.componentList.list.getFocus();
+        let equip = this.weaponSetting.robotEquipList.list.getFocus();
+        let robot = this.weaponSetting.robotList.list.getFocus();
+
+        cc.log(component);
+        cc.log(equip);
+        cc.log(robot);
+    }
+    onWeaponSettingComponentStateEscClick(){
+        this._state.changeState(new WeaponSettingRobotEquipState());
+        this.weaponSetting.prevFocus();
+    }
+
+    //#endregion
+    
+    //#region WeaponSettingRobotState
+
+    onWeaponSettingRobotStateUpClick(){
+        this.weaponSetting.upRobotList();
+    }
+
+    onWeaponSettingRobotStateDownClick(){
+        this.weaponSetting.downRobotList();
+        
+    }
+    onWeaponSettingRobotStateLeftClick(){
+        
+    }
+    onWeaponSettingRobotStateRightClick(){
+        
+    }
+    onWeaponSettingRobotStateEnterClick(){
+        this._state.changeState(new WeaponSettingRobotEquipState());
+        this.weaponSetting.nextFocus();
+    }
+    onWeaponSettingRobotStateEscClick(){
+        this.openPrepareMenu();
+    }
+
+    //#endregion
+    
+    
+    //#region WeaponSettingRobotEquipState
+
+    onWeaponSettingRobotEquipStateUpClick(){
+        this.weaponSetting.upRobotEquipList();
+    }
+
+    onWeaponSettingRobotEquipStateDownClick(){
+        this.weaponSetting.downRobotEquipList();
+        
+    }
+    onWeaponSettingRobotEquipStateLeftClick(){
+        
+    }
+    onWeaponSettingRobotEquipStateRightClick(){
+        
+    }
+    onWeaponSettingRobotEquipStateEnterClick(){
+        this._state.changeState(new WeaponSettingComponentState());
+        this.weaponSetting.nextFocus();
+    }
+    onWeaponSettingRobotEquipStateEscClick(){
+        this._state.changeState(new WeaponSettingRobotState());
+        this.weaponSetting.prevFocus();
+    }
+
+    //#endregion
+    
     openPrepareMenu(){
         this.closeAllPage();
         this.prepareMenu.open();
@@ -749,6 +938,18 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new StandByState());
     }
 
+    openComponentSetting(){
+        this.closeAllPage();
+        this.componentSetting.open();
+        this._state.changeState(new ComponentSettingRobotState());
+    }
+
+    openWeaponSetting(){
+        this.closeAllPage();
+        this.weaponSetting.open();
+        this._state.changeState(new WeaponSettingRobotState());
+    }
+
     backToLooby() {
         this.closeAllPage();
         this.mainMenu.open();
@@ -763,7 +964,9 @@ export default class MainPage extends BasicViewer {
         this.pilotStore.close();
         this.standBy.close();
         this.weaponStore.close();
+        this.weaponSetting.close();
         this.componentStore.close();
+        this.componentSetting.close();
         ViewController.instance.view.commentUI.closeRobotDetail();
     }
 

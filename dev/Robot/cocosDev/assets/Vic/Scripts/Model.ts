@@ -18,6 +18,7 @@ export default class Model extends cc.Component {
         this.modelController = ctr;
     }
 
+    //#region getList
     getList(cmd:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void){
         this.modelController.talk(cmd, { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
@@ -62,6 +63,16 @@ export default class Model extends cc.Component {
         this.getList("getPilotList", pageId, count, cb);
     }
 
+    getRobotComponentList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
+    }
+
+    getRobotWeaponList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
+    }
+    //#endregion
+
+    //#region buy item
     buyItemById(cmd:string, componentKey: string, cb: (err: any, data: any) => void){
         this.modelController.talk(cmd, { key: componentKey }, answer => {
             const [err, info] = answer;
@@ -88,6 +99,7 @@ export default class Model extends cc.Component {
     buyPilotById(pilotKey: string, cb: (err: any, data: any) => void) {
         this.buyItemById("buyPilotById", pilotKey, cb);
     }
+    //#endregion
 
     setRobotPilot(robotKey: string, pilotKey: string, cb: (err: any, data: any) => void) {
         this.modelController.talk("setRobotPilot", { robotKey: robotKey, pilotKey: pilotKey }, answer => {
@@ -99,7 +111,20 @@ export default class Model extends cc.Component {
             }
         });
     }
-    // 參數和和使用方法和robot,pilot完全一樣
-    //getWeaponStoreList,getWeaponList,buyWeaponById
-    //getComponentStoreList,getComponentList,buyComponentById
+
+    removeUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
+        cb(null, []);
+    }
+
+    addUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
+        cb(null, []);
+    }
+
+    removeUnitWeapon(robotKey:string, wenponKey:string, cb:(err:any, data:any) => void ){
+        cb(null, []);
+    }
+
+    addUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
+        cb(null, []);
+    }
 }
