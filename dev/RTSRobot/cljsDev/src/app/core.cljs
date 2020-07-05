@@ -2,7 +2,8 @@
   (:require ["planck-js" :as pl]
             ["p5" :as p5]
             [clojure.spec.alpha :as s]
-            [clojure.core.async :as a]))
+            [clojure.core.async :as a])
+  (:require ["./test.js" :as test-js]))
 
 (s/check-asserts true)
 
@@ -19,11 +20,11 @@
 (s/def ::gameplay (s/keys :req-un [::world ::life ::score ::end? ::camera ::viewport ::entities]))
 (def gameplay (s/assert
                ::gameplay
-               {:world (pl/World. (js-obj "gravity" (pl/Vec2. 0 100)))
+               {:world (pl/World. (js-obj "gravity" (pl/Vec2 0 0)))
                 :life 3
                 :score 0
                 :end? false
-                :camera (pl/Vec3. 0 0 1)
+                :camera (pl/Vec3. 0 0 0.01)
                 :viewport (pl/Vec2. 800 640)
                 :entities {}}))
 
@@ -31,14 +32,14 @@
   (s/assert ::gameplay gameplay)
   (s/assert ::entity entity)
   (let [body (-> gameplay :world
-                 (.createDynamicBody (js-obj "position" (pl/Vec2. 0 0)
-                                             "userData" (:id entity)
-                                             "linearVelocity" (pl/Vec2. 0 0)
-                                             "angularVelocity" 1)))
+                 (.createDynamicBody (js-obj "position" (pl/Vec2 0 0)
+                                             "userData" (:id entity))))
         _ (doto body
-            (.createFixture (pl/Box 10 10))
-            (.applyForce (.getWorldVector body (pl/Vec2. 10 10)) (.getWorldPoint body (pl/Vec2.)) true)
-            (.applyAngularImpulse 1000000 true))]
+             ; 加上density才會計算轉動
+            (.createFixture (pl/Polygon (array (pl/Vec2 -0.2 -0.1)
+                                               (pl/Vec2 0.2 0)
+                                               (pl/Vec2 -0.2 0.1)))
+                            (js-obj "density" 1000)))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
 (defn create-enemy [gameplay entity {:keys [position angle]}]
@@ -47,11 +48,11 @@
   (s/assert (s/nilable #(instance? pl/Vec2 %)) position)
   (s/assert (s/nilable number?) angle)
   (let [body (-> gameplay :world
-                 (.createDynamicBody (js-obj "position" (or position (pl/Vec2. 0 0))
+                 (.createDynamicBody (js-obj "position" (or position (pl/Vec2 0 0))
                                              "angle" (or angle 0)
                                              "userData" (:id entity))))
         _ (doto body
-            (.createFixture (pl/Box 10 10)))]
+            (.createFixture (pl/Box 10 10) (js-obj "density" 0.1)))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
 (defn reduce-bodies [f ctx]
@@ -176,13 +177,13 @@
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. -1 0 0)))
 
         38
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 1 0)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 -1 0)))
 
         39
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 1 0 0)))
 
         40
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 -1 0)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 1 0)))
 
         187
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 -0.1)))
@@ -216,13 +217,15 @@
                                                                 :bullet true
                                                                 :timeout 3000}
                                                   bulletBody (-> gameplay :world
-                                                                 (.createBody (js-obj "type" "dynamic"
-                                                                                      "position" (.getWorldPoint body (pl/Vec2. 10 0))
-                                                                                      "angle" (.getAngle body)
-                                                                                      "userData" (:id bulletEntity))))
+                                                                 (.createDynamicBody (js-obj "position" (.getWorldPoint body (pl/Vec2 20 0))
+                                                                                             "userData" (:id bulletEntity))))
        
                                                   _ (doto bulletBody
-                                                      (.createFixture (pl/Box 30 5)))
+                                                      (.createFixture (pl/Box 1 1) (js-obj "density" 0.1))
+                                                      (.applyForce (pl/Vec2 0 -1000000000000000)
+                                                                   (.getWorldPoint bulletBody (pl/Vec2 0 5))
+                                                                   true)
+                                                      (.applyAngularImpulse 100 true))
                                                   gameplay (update gameplay :entities #(assoc % (:id bulletEntity) bulletEntity))]
                                               gameplay)
                                             gameplay))
@@ -239,22 +242,25 @@
                                         (let [key args]
                                           (condp = key
                                             87
-                                            (let [heading (-> (pl/Rot. (.getAngle body))
-                                                              (.getXAxis))]
-                                              (.applyForce body heading (pl/Vec2. 0 0) true)
+                                            (do
+                                              (.applyLinearImpulse body 
+                                                           (.getWorldVector body (pl/Vec2 1 0)) 
+                                                           (.getWorldPoint body (pl/Vec2)) 
+                                                           true)
                                               gameplay)
                                             83
-                                            (let [heading (-> (pl/Rot. (.getAngle body))
-                                                              (.getXAxis)
-                                                              .neg)]
-                                              (.applyForce body heading (pl/Vec2. 0 0) true)
+                                            (do
+                                              (.applyLinearImpulse body
+                                                                   (.getWorldVector body (pl/Vec2 -1 0))
+                                                                   (.getWorldPoint body (pl/Vec2))
+                                                                   true)
                                               gameplay)
                                             68
-                                            (let [force 0.1]
+                                            (let [force 0.01]
                                               (.applyAngularImpulse body force true)
                                               gameplay)
                                             65
-                                            (let [force -0.1]
+                                            (let [force -0.01]
                                               (.applyAngularImpulse body force true)
                                               gameplay)
                                             gameplay))
@@ -290,17 +296,17 @@
                                 :angle 1})
         _ (-> (:world gameplay)
               (.createBody (js-obj "position" (pl/Vec2 0 100)
-                                   "angle" 0.2))
+                                   "angle" 0.1))
               (.createFixture (pl/Box. 500 10)))
 
-        objA (-> (:world gameplay)
-                 (.createDynamicBody (js-obj "position" (pl/Vec2 0 50))))
-        _ (doto objA
-            (.createFixture (pl/Box. 20 20 (pl/Vec2.) 0))
-            (.applyForce (pl/Vec2. 100 0) (.getWorldPoint objA (pl/Vec2.)) true)
-            (.applyAngularImpulse -100 true))
-        
-        
+        #_objA #_(-> (:world gameplay)
+                     (.createDynamicBody (js-obj "position" (pl/Vec2 0 50))))
+        #__ #_(doto objA
+                (.createFixture (pl/Box. 20 20 (pl/Vec2.) 0))
+                (.applyForce (pl/Vec2. 100 0) (.getWorldPoint objA (pl/Vec2.)) true)
+                (.applyAngularImpulse -100 true))
+
+
         atom-gameplay (atom gameplay)
         inputCh (a/chan)
         outputCh (a/chan)
@@ -319,7 +325,7 @@
         gameplay (create-player gameplay {:id (str (gensym))})
         gameplay (create-enemy gameplay
                                {:id (str (gensym))}
-                               {:position (pl/Vec2. 100 100)
+                               {:position (pl/Vec2 100 100)
                                 :angle 1})
         _ (println gameplay)
         _ (println (render gameplay))
@@ -336,7 +342,7 @@
                                                   "userData" (js-obj "id" 20)))
                 (.createFixture (pl/Circle. (pl/Vec2. 0 0) 1) (js-obj "friction" 0.1
                                                                       "restitution" 0.99
-                                                                      "density" 1
+                                                                      "density" 0.1
                                                                       "userData" "ball")))
         _ (-> (.createBody world (js-obj "position" (pl/Vec2 10 10)
                                          "angle" 1))
