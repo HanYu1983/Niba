@@ -122,6 +122,10 @@
              {:keys [robotByWeapon]} (a/<! outputToView)
              _ (assert (= (keyword robotA) (robotByWeapon (keyword weaponA))))])
 
+       (let [_ (a/>! inputFromView ["getRobotList" ["any" {"offset" 0 "limit" 20}]])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
+
        (println "移除武器")
        (let [_ (a/>! inputFromView [:test identity])
              {:keys [weapons]} (a/<! outputToView)
@@ -157,6 +161,10 @@
              _ (a/>! inputFromView [:test identity])
              {:keys [robotByComponent]} (a/<! outputToView)
              _ (assert (= (keyword robotA) (robotByComponent (keyword componentA))))])
+       
+       (let [_ (a/>! inputFromView ["getRobotList" ["any" {"offset" 0 "limit" 20}]])
+             [_ [_ [_ res]]] (a/<! outputToView)]
+         (s/assert (s/coll-of (s/tuple keyword? map?)) res))
 
        (println "移除配件")
        (let [_ (a/>! inputFromView [:test identity])
@@ -169,5 +177,7 @@
              _ (a/>! inputFromView [:test identity])
              {:keys [robotByComponent]} (a/<! outputToView)
              _ (s/assert nil? (robotByComponent (keyword componentA)))])
+
+
 
        (done)))))

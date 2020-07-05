@@ -106,7 +106,7 @@
        (let [robotKey (get-in unit [:robotState :robotKey])
              robot (get-in data [:robot robotKey])
              addedComKeys (common/assertSpec
-                           (s/coll-of keyword?)
+                           (s/coll-of (s/tuple keyword? keyword?))
                            (->> lobbyCtx :robotByComponent
                                 (filter (fn [[_ robot]]
                                           (= robot (:key unit))))
