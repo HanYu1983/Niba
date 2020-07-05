@@ -21,7 +21,7 @@
                   :camera [0 0]
                   :cursor [0 0]
                   :viewsize [20 20]
-                  :mapsize [40 40]
+                  :mapsize [20 20]
                   :units tool.units/model
                   :moveRange []
                   :players {:player {:faction 0 :playerState nil}
@@ -259,10 +259,10 @@
 
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
-                       (let [posList (take 30 (map vector
+                       (let [posList (take 5 (map vector
                                                    (repeatedly #(rand-int mw))
                                                    (repeatedly #(rand-int mh))))
-                             beforeCentroids [[10, 10], [15, 10], [10, 15], [15 15]]
+                             beforeCentroids [[15, 15]]
                              clusterCnt (count beforeCentroids)
                              {:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
                              ; 團體先偏移到本來設定的集結點
