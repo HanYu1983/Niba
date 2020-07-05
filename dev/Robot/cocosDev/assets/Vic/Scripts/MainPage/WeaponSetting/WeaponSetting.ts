@@ -59,9 +59,7 @@ export default class WeaponSetting extends BasicViewer {
         this.robotEquipList.open();
         
         this.setCompnentList();
-        this.setRobotList(()=>{
-            this.setRobotEquipList();
-        });
+        this.setRobotList();
 
         this.titleMenu.open();
         this.titleMenu.setData(["機體列表","裝備列表","武器列表"]);
@@ -121,8 +119,8 @@ export default class WeaponSetting extends BasicViewer {
         });
     }
 
-    setRobotList(cb:()=>void){
-        
+    setRobotList(){
+        let focusId = this.robotList.list.getFocusId()[0];
         ViewController.instance.model.getRobotList(this.robotList.pageId, 10, (err, data)=>{
             let items = data.map((data)=>{
                 return data[1];
@@ -130,8 +128,9 @@ export default class WeaponSetting extends BasicViewer {
 
             this.robotList.list.open();
             this.robotList.list.setData(items);
+            while(this.robotList.list.getFocusId()[0] < focusId) this.robotList.list.onNextClick();
 
-            cb();
+            this.setRobotEquipList();
         });
     }
 

@@ -63,6 +63,14 @@ export default class Model extends cc.Component {
         this.getList("getPilotList", pageId, count, cb);
     }
 
+    getRobotComponentList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
+    }
+
+    getRobotWeaponList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
+        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
+    }
+
     //#endregion
 
     //#region buy item
@@ -140,6 +148,7 @@ export default class Model extends cc.Component {
     }
 
     addUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
+        cc.log("removeUnitWeapon", robotKey, weaponKey);
         this.modelController.talk("addRobotWeapon", { robotKey: robotKey, weaponKey: weaponKey }, answer => {
             const [err, info] = answer;
             if (err) {

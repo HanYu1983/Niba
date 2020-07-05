@@ -121,8 +121,8 @@ export default class ComponentSetting extends BasicViewer {
         });
     }
 
-    setRobotList(cb:()=>void){
-        
+    setRobotList(){
+        let focusId = this.robotList.list.getFocusId()[0];
         ViewController.instance.model.getRobotList(this.robotList.pageId, 10, (err, data)=>{
             let items = data.map((data)=>{
                 return data[1];
@@ -130,33 +130,17 @@ export default class ComponentSetting extends BasicViewer {
 
             this.robotList.list.open();
             this.robotList.list.setData(items);
-
-            cb();
+            while(this.robotList.list.getFocusId()[0] < focusId) this.robotList.list.onNextClick();
+            this.setRobotEquipList();
         });
     }
 
     setRobotEquipList(){
-
         let robot = this.robotList.list.getFocus();
-        cc.log(robot);
-
-        let items = robot.robotState.components;
-
+        let items = robot.robotState.components.slice();
+        items.push({title:"新增"});
         this.robotEquipList.list.close()
         this.robotEquipList.list.open();
         this.robotEquipList.list.setData(items);
-
-        // // let key = this.robotList.list.getFocus().robotState.robotKey;
-        // let key = this.robotList.list.getFocus().key;
-        // cc.log(key);
-        // ViewController.instance.model.getRobotComponentList(key, this.robotEquipList.pageId, 10, (err, data)=>{
-        //     let items = data.map((data)=>{
-        //         return data[1];
-        //     });
-        //     items.push({title:"新增配件"});
-        //     this.robotEquipList.list.close()
-        //     this.robotEquipList.list.open();
-        //     this.robotEquipList.list.setData(items);
-        // });
     }
 }

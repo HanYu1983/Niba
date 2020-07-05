@@ -740,9 +740,27 @@ export default class MainPage extends BasicViewer {
         let equip = this.componentSetting.robotEquipList.list.getFocus();
         let robot = this.componentSetting.robotList.list.getFocus();
 
-        cc.log(component);
-        cc.log(equip);
+        
+        
         cc.log(robot);
+        cc.log(equip);
+        cc.log(component);
+
+        let callback = (err, data)=>{
+            this.componentSetting.setRobotList();
+            this.onComponentSettingComponentStateEscClick();
+        }
+
+        if( equip.title == "新增"){
+            ViewController.instance.model.addUnitComponent(robot.key, component.key, callback);
+        }else{
+            if( component.title == "拆除"){
+                ViewController.instance.model.removeUnitComponent(robot.key, equip.key, callback);
+            }else{
+                ViewController.instance.model.removeUnitComponent(robot.key, equip.key, callback);
+                ViewController.instance.model.addUnitComponent(robot.key, component.key, callback);
+            }
+        }
     }
     onComponentSettingComponentStateEscClick(){
         this._state.changeState(new ComponentSettingRobotEquipState());
@@ -827,19 +845,20 @@ export default class MainPage extends BasicViewer {
         let robot = this.weaponSetting.robotList.list.getFocus();
 
         let callback = (err, data)=>{
-            this.weaponSetting.setRobotEquipList();
+            this.weaponSetting.setRobotList();
             this.onWeaponSettingComponentStateEscClick();
         }
 
-        if( component.title == "拆除"){
-            ViewController.instance.model.removeUnitWeapon(robot.key, equip.key, callback);
+        if( equip.title == "新增"){
+            ViewController.instance.model.addUnitWeapon(robot.key, component.key, callback);
         }else{
-            ViewController.instance.model.removeUnitWeapon(robot.key, component.key, callback);
-            ViewController.instance.model.addUnitWeapon(robot.key, equip.key, callback);
+            if( component.title == "拆除"){
+                ViewController.instance.model.removeUnitWeapon(robot.key, equip.key, callback);
+            }else{
+                ViewController.instance.model.removeUnitWeapon(robot.key, equip.key, callback);
+                ViewController.instance.model.addUnitWeapon(robot.key, component.key, callback);
+            }
         }
-        cc.log(component);
-        cc.log(equip);
-        cc.log(robot);
     }
     onWeaponSettingComponentStateEscClick(){
         this._state.changeState(new WeaponSettingRobotEquipState());
