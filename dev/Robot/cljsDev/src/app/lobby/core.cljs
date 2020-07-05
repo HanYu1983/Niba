@@ -142,8 +142,10 @@
             (if (and robotKey pilotKey)
               (let [robotKey (keyword robotKey)
                     pilotKey (keyword pilotKey)
-                    lobbyCtx (-> lobbyCtx
-                                 (update-in [:robotByPilot] #(conj % [pilotKey robotKey])))]
+                    lobbyCtx (s/assert
+                              ::model/model
+                              (-> lobbyCtx
+                                 (update-in [:robotByPilot] #(conj % [pilotKey robotKey]))))]
                 (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                 (recur (app.lobby.model/save lobbyCtx)))
               (do
@@ -155,8 +157,10 @@
             (if (and robotKey weaponKey)
               (let [robotKey (keyword robotKey)
                     weaponKey (keyword weaponKey)
-                    lobbyCtx (-> lobbyCtx
-                                 (update-in [:robotByWeapon] #(conj % [weaponKey robotKey])))]
+                    lobbyCtx (s/assert
+                              ::model/model
+                              (-> lobbyCtx
+                                 (update-in [:robotByWeapon] #(conj % [weaponKey robotKey]))))]
                 (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                 (recur (app.lobby.model/save lobbyCtx)))
               (do
@@ -167,8 +171,10 @@
           (let [[id {weaponKey "weaponKey"}] args]
             (if (and weaponKey)
               (let [weaponKey (keyword weaponKey)
-                    lobbyCtx (-> lobbyCtx
-                                 (update-in [:robotByWeapon] #(dissoc % weaponKey)))]
+                    lobbyCtx (s/assert
+                              ::model/model
+                              (-> lobbyCtx
+                                 (update-in [:robotByWeapon] #(dissoc % weaponKey))))]
                 (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                 (recur (app.lobby.model/save lobbyCtx)))
               (do
@@ -180,8 +186,10 @@
             (if (and robotKey componentKey)
               (let [robotKey (keyword robotKey)
                     componentKey (keyword componentKey)
-                    lobbyCtx (-> lobbyCtx
-                                 (update-in [:robotByComponent] #(conj % [componentKey robotKey])))]
+                    lobbyCtx (s/assert
+                              ::model/model
+                              (-> lobbyCtx
+                                  (update-in [:robotByComponent] #(conj % [componentKey robotKey]))))]
                 (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                 (recur (app.lobby.model/save lobbyCtx)))
               (do
@@ -192,8 +200,10 @@
           (let [[id {componentKey "componentKey"}] args]
             (if (and componentKey)
               (let [componentKey (keyword componentKey)
-                    lobbyCtx (-> lobbyCtx
-                                 (update-in [:robotByComponent] #(dissoc % componentKey)))]
+                    lobbyCtx (s/assert
+                              ::model/model
+                              (-> lobbyCtx
+                                  (update-in [:robotByComponent] #(dissoc % componentKey))))]
                 (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
                 (recur (app.lobby.model/save lobbyCtx)))
               (do

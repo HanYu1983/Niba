@@ -49,12 +49,13 @@
 (s/assert ::model defaultLobbyModel)
 
 (defn load []
-  {:post [(s/valid? ::model %)]}
-  (or (-> (aget js/localStorage "lobby")
-          (cljs.reader/read-string))
-      defaultLobbyModel))
+  (s/assert
+   ::model
+   (or (-> (aget js/localStorage "lobby")
+           (cljs.reader/read-string))
+       defaultLobbyModel)))
 
 (defn save [lobbyCtx]
-  {:pre [(s/valid? ::model lobbyCtx)]}
+  (s/assert ::model lobbyCtx)
   (.setItem js/localStorage "lobby" (str lobbyCtx))
   lobbyCtx)

@@ -133,9 +133,10 @@
        (s/map-of keyword? map?)
        (let [ret (->> (:components lobbyCtx)
                       (map (fn [[key componentKey]]
-                             componentKey))
+                             {:key key
+                              :componentKey componentKey}))
                       (map (fn [component]
-                             (-> data/data :component component)))
+                             (data/getComponentInfo {:lobbyCtx lobbyCtx} nil component)))
                       (zipmap (-> lobbyCtx :components keys)))]
          ret))
 
