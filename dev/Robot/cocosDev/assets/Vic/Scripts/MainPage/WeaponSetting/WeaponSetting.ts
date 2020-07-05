@@ -136,17 +136,11 @@ export default class WeaponSetting extends BasicViewer {
     }
 
     setRobotEquipList(){
-        // let key = this.robotList.list.getFocus().robotState.robotKey;
-        let key = this.robotList.list.getFocus().key;
-        cc.log(key);
-        ViewController.instance.model.getRobotWeaponList(key, this.robotEquipList.pageId, 10, (err, data)=>{
-            let items = data.map((data)=>{
-                return data[1];
-            });
-            items.push({title:"新增配件"});
-            this.robotEquipList.list.close()
-            this.robotEquipList.list.open();
-            this.robotEquipList.list.setData(items);
-        });
+        let robot = this.robotList.list.getFocus();
+        let items = robot.robotState.weapons.slice();
+        items.push({title:"新增"});
+        this.robotEquipList.list.close()
+        this.robotEquipList.list.open();
+        this.robotEquipList.list.setData(items);
     }
 }

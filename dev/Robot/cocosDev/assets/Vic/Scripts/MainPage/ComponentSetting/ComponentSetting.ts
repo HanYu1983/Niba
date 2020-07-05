@@ -136,17 +136,27 @@ export default class ComponentSetting extends BasicViewer {
     }
 
     setRobotEquipList(){
-        // let key = this.robotList.list.getFocus().robotState.robotKey;
-        let key = this.robotList.list.getFocus().key;
-        cc.log(key);
-        ViewController.instance.model.getRobotComponentList(key, this.robotEquipList.pageId, 10, (err, data)=>{
-            let items = data.map((data)=>{
-                return data[1];
-            });
-            items.push({title:"新增配件"});
-            this.robotEquipList.list.close()
-            this.robotEquipList.list.open();
-            this.robotEquipList.list.setData(items);
-        });
+
+        let robot = this.robotList.list.getFocus();
+        cc.log(robot);
+
+        let items = robot.robotState.components;
+
+        this.robotEquipList.list.close()
+        this.robotEquipList.list.open();
+        this.robotEquipList.list.setData(items);
+
+        // // let key = this.robotList.list.getFocus().robotState.robotKey;
+        // let key = this.robotList.list.getFocus().key;
+        // cc.log(key);
+        // ViewController.instance.model.getRobotComponentList(key, this.robotEquipList.pageId, 10, (err, data)=>{
+        //     let items = data.map((data)=>{
+        //         return data[1];
+        //     });
+        //     items.push({title:"新增配件"});
+        //     this.robotEquipList.list.close()
+        //     this.robotEquipList.list.open();
+        //     this.robotEquipList.list.setData(items);
+        // });
     }
 }

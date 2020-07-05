@@ -63,13 +63,6 @@ export default class Model extends cc.Component {
         this.getList("getPilotList", pageId, count, cb);
     }
 
-    getRobotComponentList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
-    }
-
-    getRobotWeaponList(robotKey:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
-        cb(null, [["",{title:"a"}],["",{title:"b"}]]);
-    }
     //#endregion
 
     //#region buy item
@@ -134,8 +127,9 @@ export default class Model extends cc.Component {
         });
     }
 
-    removeUnitWeapon(robotKey:string, wenponKey:string, cb:(err:any, data:any) => void ){
-        this.modelController.talk("removeRobotWeapon", { robotKey: robotKey, weaponKey: wenponKey }, answer => {
+    removeUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
+        cc.log("removeUnitWeapon", robotKey, weaponKey);
+        this.modelController.talk("removeRobotWeapon", { robotKey: robotKey, weaponKey: weaponKey }, answer => {
             const [err, info] = answer;
             if (err) {
                 ViewController.instance.view.getCommentUI().showAlert(err);

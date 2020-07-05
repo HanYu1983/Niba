@@ -826,6 +826,17 @@ export default class MainPage extends BasicViewer {
         let equip = this.weaponSetting.robotEquipList.list.getFocus();
         let robot = this.weaponSetting.robotList.list.getFocus();
 
+        let callback = (err, data)=>{
+            this.weaponSetting.setRobotEquipList();
+            this.onWeaponSettingComponentStateEscClick();
+        }
+
+        if( component.title == "拆除"){
+            ViewController.instance.model.removeUnitWeapon(robot.key, equip.key, callback);
+        }else{
+            ViewController.instance.model.removeUnitWeapon(robot.key, component.key, callback);
+            ViewController.instance.model.addUnitWeapon(robot.key, equip.key, callback);
+        }
         cc.log(component);
         cc.log(equip);
         cc.log(robot);
