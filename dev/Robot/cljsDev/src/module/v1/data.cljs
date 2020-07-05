@@ -99,29 +99,37 @@
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
   (let [transform (get-in unit [:robotState :robotKey])
-        coms (get-in unit [:robotState :components transform])
-        addedComKeys (common/assertSpec
-                      (s/coll-of keyword?)
-                      (->> lobbyCtx :robotByComponent
-                           (filter (fn [[_ robot]]
-                                     (= robot (:key unit))))
-                           (map first)
-                           (map #(-> lobbyCtx :components %))))]
+        coms (get-in unit [:robotState :components transform])]
     (if coms
       [transform coms]
       [transform
        (let [robotKey (get-in unit [:robotState :robotKey])
-             robot (get-in data [:robot robotKey])]
+             robot (get-in data [:robot robotKey])
+             addedComKeys (common/assertSpec
+                           (s/coll-of keyword?)
+                           (->> lobbyCtx :robotByComponent
+                                (filter (fn [[_ robot]]
+                                          (= robot (:key unit))))
+                                (map first)
+                                (map (fn [key]
+                                       [key (-> lobbyCtx :components key)]))))
+             belongComKeys (common/assertSpec
+                            (s/coll-of (s/tuple keyword? keyword?))
+                            (if (not (nil? robot))
+                              (map (fn [componentKey]
+                                     [(keyword componentKey) (keyword componentKey)])
+                                   (get robot :components))
+                              []))]
          (if (nil? robot)
            (throw (js/Error. (str "getUnitComponents[" robotKey "] not found")))
-           (mapv (fn [key]
-                   (let [com (get-in data [:component key])]
+           (mapv (fn [[key componentKey]]
+                   (let [com (get-in data [:component componentKey])]
                      (if (nil? com)
-                       (throw (js/Error. (str "getUnitComponents[" key "] not found")))
+                       (throw (js/Error. (str "getUnitComponents[" componentKey "] not found")))
                        {:key key
-                        :componentKey key
+                        :componentKey componentKey
                         :tags {}})))
-                 (concat (map keyword (get robot :components))
+                 (concat belongComKeys
                          addedComKeys))))])))
 
 ; weapons
@@ -137,24 +145,32 @@
        (let [robotKey (get-in unit [:robotState :robotKey])
              robot (get-in data [:robot robotKey])
              addedWeaponKeys (common/assertSpec
-                              (s/coll-of keyword?)
+                              (s/coll-of (s/tuple keyword? keyword?))
                               (->> lobbyCtx :robotByWeapon
                                    (filter (fn [[_ robot]]
                                              (= robot (:key unit))))
                                    (map first)
-                                   (map #(-> lobbyCtx :weapons %))))]
+                                   (map (fn [key]
+                                          [key (-> lobbyCtx :weapons key)]))))
+             belongWeaponsKeys (common/assertSpec
+                                (s/coll-of (s/tuple keyword? keyword?))
+                                (if (not (nil? robot))
+                                  (map (fn [weaponKey]
+                                         [(keyword weaponKey) (keyword weaponKey)])
+                                       (get robot :weapons))
+                                  []))]
          (if (nil? robot)
            (throw (js/Error. (str "getUnitWeapons robotKey[" robotKey "]not found")))
-           (mapv (fn [weaponKey]
+           (mapv (fn [[key weaponKey]]
                    (let [weapon (get-in data [:weapon weaponKey])]
                      (if (nil? weapon)
                        (throw (js/Error. (str "getUnitWeapons weaponKey[" weaponKey "] not found")))
-                       {:key weaponKey ; 在這個不能使用gensym, 因為這個方法是getter
+                       {:key key ; 在這個不能使用gensym, 因為這個方法是getter
                         :weaponKey weaponKey
                         :weaponLevel 0
                         :tags {}
                         :bulletCount (get weapon :maxBulletCount)})))
-                 (concat (map keyword (get robot :weapons))
+                 (concat belongWeaponsKeys
                          addedWeaponKeys))))])))
 
 
@@ -848,6 +864,19 @@
              :suitability (getWeaponSuitability ctx unit weapon)
              :ability (getWeaponAbility ctx unit weapon)}))))
 
+(defn getComponentInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [componentKey] :as component}]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::app.lobby.model/model lobbyCtx)
+  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec
+   map?
+   (let [componentData (common/assertSpec
+                     map?
+                     (get-in data [:component componentKey]))]
+     (merge componentData
+            component))))
+
+
 (defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
@@ -863,7 +892,8 @@
                                                            second
                                                            (map (partial getWeaponInfo ctx unit)))
                                              :components (->> (getUnitComponents ctx unit)
-                                                              second)
+                                                              second
+                                                              (map (partial getComponentInfo ctx unit)))
                                              :maxHp (getUnitMaxHp ctx unit)
                                              :maxEn (getUnitMaxEn ctx unit)
                                              :power (getUnitPower ctx unit)}))))))
