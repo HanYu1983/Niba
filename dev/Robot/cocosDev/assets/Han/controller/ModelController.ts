@@ -44,6 +44,7 @@ export default class ModelController extends cc.Component {
 
     private seqId: number = 0;
     talk(q: string, args: any, callback: (answer: any) => void) {
+        console.log("[talk][send]", q, args)
         const id = this.seqId++;
         this.viewNotifyOb.next([q, [id + "", args]]);
         if (callback == null) {

@@ -138,47 +138,67 @@
           (app.lobby.core/buyImpl (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentStoreList true}) [:components])
 
           (= cmd "setRobotPilot")
-          (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args
-                robotKey (keyword robotKey)
-                pilotKey (keyword pilotKey)
-                lobbyCtx (-> lobbyCtx
-                             (update-in [:robotByPilot] #(conj % [pilotKey robotKey])))]
-            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur (app.lobby.model/save lobbyCtx)))
+          (let [[id {robotKey "robotKey" pilotKey "pilotKey"}] args]
+            (if (and robotKey pilotKey)
+              (let [robotKey (keyword robotKey)
+                    pilotKey (keyword pilotKey)
+                    lobbyCtx (-> lobbyCtx
+                                 (update-in [:robotByPilot] #(conj % [pilotKey robotKey])))]
+                (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+                (recur (app.lobby.model/save lobbyCtx)))
+              (do
+                (a/>! outputCh ["ok" [id [(str "args not right:" args) lobbyCtx]]])
+                (recur lobbyCtx))))
 
           (= cmd "addRobotWeapon")
-          (let [[id {robotKey "robotKey" weaponKey "weaponKey"}] args
-                robotKey (keyword robotKey)
-                weaponKey (keyword weaponKey)
-                lobbyCtx (-> lobbyCtx
-                             (update-in [:robotByWeapon] #(conj % [weaponKey robotKey])))]
-            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur (app.lobby.model/save lobbyCtx)))
+          (let [[id {robotKey "robotKey" weaponKey "weaponKey"}] args]
+            (if (and robotKey weaponKey)
+              (let [robotKey (keyword robotKey)
+                    weaponKey (keyword weaponKey)
+                    lobbyCtx (-> lobbyCtx
+                                 (update-in [:robotByWeapon] #(conj % [weaponKey robotKey])))]
+                (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+                (recur (app.lobby.model/save lobbyCtx)))
+              (do
+                (a/>! outputCh ["ok" [id [(str "args not right:" args) lobbyCtx]]])
+                (recur lobbyCtx))))
 
           (= cmd "removeRobotWeapon")
-          (let [[id {weaponKey "weaponKey"}] args
-                weaponKey (keyword weaponKey)
-                lobbyCtx (-> lobbyCtx
-                             (update-in [:robotByWeapon] #(dissoc % weaponKey)))]
-            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur (app.lobby.model/save lobbyCtx)))
+          (let [[id {weaponKey "weaponKey"}] args]
+            (if (and weaponKey)
+              (let [weaponKey (keyword weaponKey)
+                    lobbyCtx (-> lobbyCtx
+                                 (update-in [:robotByWeapon] #(dissoc % weaponKey)))]
+                (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+                (recur (app.lobby.model/save lobbyCtx)))
+              (do
+                (a/>! outputCh ["ok" [id [(str "args not right:" args) lobbyCtx]]])
+                (recur lobbyCtx))))
 
           (= cmd "addRobotComponent")
-          (let [[id {robotKey "robotKey" componentKey "componentKey"}] args
-                robotKey (keyword robotKey)
-                componentKey (keyword componentKey)
-                lobbyCtx (-> lobbyCtx
-                             (update-in [:robotByComponent] #(conj % [componentKey robotKey])))]
-            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur (app.lobby.model/save lobbyCtx)))
+          (let [[id {robotKey "robotKey" componentKey "componentKey"}] args]
+            (if (and robotKey componentKey)
+              (let [robotKey (keyword robotKey)
+                    componentKey (keyword componentKey)
+                    lobbyCtx (-> lobbyCtx
+                                 (update-in [:robotByComponent] #(conj % [componentKey robotKey])))]
+                (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+                (recur (app.lobby.model/save lobbyCtx)))
+              (do
+                (a/>! outputCh ["ok" [id [(str "args not right:" args) lobbyCtx]]])
+                (recur lobbyCtx))))
 
           (= cmd "removeRobotComponent")
-          (let [[id {componentKey "componentKey"}] args
-                componentKey (keyword componentKey)
-                lobbyCtx (-> lobbyCtx
-                             (update-in [:robotByComponent] #(dissoc % componentKey)))]
-            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
-            (recur (app.lobby.model/save lobbyCtx)))
+          (let [[id {componentKey "componentKey"}] args]
+            (if (and componentKey)
+              (let [componentKey (keyword componentKey)
+                    lobbyCtx (-> lobbyCtx
+                                 (update-in [:robotByComponent] #(dissoc % componentKey)))]
+                (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+                (recur (app.lobby.model/save lobbyCtx)))
+              (do
+                (a/>! outputCh ["ok" [id [(str "args not right:" args) lobbyCtx]]])
+                (recur lobbyCtx))))
 
           (= cmd "exit")
           (update ctx :lobbyCtx (constantly lobbyCtx))
