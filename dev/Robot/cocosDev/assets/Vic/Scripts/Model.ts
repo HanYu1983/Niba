@@ -113,18 +113,46 @@ export default class Model extends cc.Component {
     }
 
     removeUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
-        cb(null, []);
+        this.modelController.talk("removeRobotComponent", { robotKey: robotKey, componentKey: componentKey }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
     }
 
     addUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
-        cb(null, []);
+        this.modelController.talk("addRobotComponent", { robotKey: robotKey, componentKey: componentKey }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
     }
 
     removeUnitWeapon(robotKey:string, wenponKey:string, cb:(err:any, data:any) => void ){
-        cb(null, []);
+        this.modelController.talk("removeRobotWeapon", { robotKey: robotKey, weaponKey: wenponKey }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
     }
 
     addUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
-        cb(null, []);
+        this.modelController.talk("addRobotWeapon", { robotKey: robotKey, weaponKey: weaponKey }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
     }
 }
