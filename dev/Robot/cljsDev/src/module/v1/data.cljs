@@ -326,8 +326,7 @@
         targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotKey]))
         weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
-        ; 這邊的"missle"拼字是錯的, 後來資料表修正後要改回來
-        missile? (-> (into #{} weaponAbility) (contains? "missle"))
+        missile? (-> (into #{} weaponAbility) (contains? "missile"))
         fire? (-> (into #{} weaponAbility) (contains? "fire"))
         lighting? (-> (into #{} weaponAbility) (contains? "lighting?"))
         targetTerrainKey (getTerrainKey {:map playmap} (:position targetUnit))
@@ -382,20 +381,65 @@
                           (/ 20)
                           ((fn [v]
                              (- 1 v)))
-                          (max 0)))))]
-    (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6))))
+                          (max 0)))))
+        ; 氣力
+        factor7 (common/assertSpec
+                 number?
+                 (-> unit :robotState :curage (/ 100)))]
+    (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6 factor7))))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/weapon weapon)
   (common/assertSpec ::type/unit targetUnit)
-  (let [damage (common/assertSpec
-                int?
-                (get-in data [:weapon (:weaponKey weapon) :damage]))
-        targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)]
-    (-> (- damage targetArmor)
-        (max 100))))
+  (common/assertSpec
+   int?
+   (let [unitWeaponDamage (common/assertSpec
+                          int?
+                          (get-in data [:weapon (:weaponKey weapon) :damage]))
+        targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+
+        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotKey]))
+        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotKey]))
+        weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+        weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+        fire? (-> (into #{} weaponAbility) (contains? "fire"))
+        lighting? (-> (into #{} weaponAbility) (contains? "lighting?"))
+        targetTerrainKey (getTerrainKey {:map playmap} (:position targetUnit))
+        targetTerrain (-> data :terrain targetTerrainKey)
+        fireActive? (and fire? (= targetTerrainKey :forest))
+        lightingActive? (and lighting? (#{:shallowSea :deepSea} targetTerrainKey))
+
+        ; 格鬥或射擊係數
+        factor1 (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
+                  (if isMelee
+                    (/ (get pilot :melee) (get targetPilot :melee))
+                    (/ (get pilot :range) (get targetPilot :range))))
+
+        ; 地型適性係數
+        factor2 (get weaponSuitability 0)
+
+        ; 地型補正係數
+        factor3 (cond
+                  (or lightingActive? fireActive?)
+                  1.1
+
+                  :else
+                  (:damage targetTerrain))
+        ; 氣力
+        factor4 (common/assertSpec
+                 number?
+                 (/ (-> unit :robotState :curage)
+                    (-> targetUnit :robotState :curage)))
+
+        ; 除1是因為以敵方為主計算, 所以factor要反過來
+        targetValue (* targetArmor (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
+
+        damage1 (* unitWeaponDamage (- 1 (/ targetValue 4800)))
+        damage2 (- unitWeaponDamage targetArmor)
+        final (+ (* damage1 1 (/ 2 3)) (* damage2 (/ 1 3)))]
+    (js/Math.floor (max 100 final)))))
 
 
 
@@ -665,16 +709,29 @@
   (common/assertSpec ::actionResult result)
   (common/assertSpec
    (s/tuple ::type/unit ::type/unit)
-   (let [[{leftDamage :damage} {rightDamage :damage}] result
+   (let [[{leftDamage :damage
+           leftEvents :events}
+          {rightDamage :damage
+           rightEvents :events}] result
+         [leftAfter rightAfter] [left right]
+         ; 增加氣力
+         [leftAfter rightAfter] (map (fn [unit selfEvents targetEvents]
+                                       (if (-> targetEvents :dead)
+                                         (update-in unit [:robotState :curage] #(+ 5 %))
+                                         (update-in unit [:robotState :curage] #(+ 1 %))))
+                                     [leftAfter rightAfter]
+                                     [leftEvents rightEvents]
+                                     [rightEvents leftEvents])
+         ; 扣血
          [leftAfter rightAfter] (map (fn [unit damage]
                                        (-> (-> unit :robotState :hp)
                                            (- damage)
                                            (max 0)
                                            ((fn [hp]
                                               (update-in unit [:robotState :hp] (constantly hp))))))
-                                     [left right]
+                                     [leftAfter rightAfter]
                                      [leftDamage rightDamage])
-
+         ; 消費武器
          [leftAfter rightAfter] (map (fn [unit [actionType weapon]]
                                        (if (= actionType :attack)
                                          (useUnitWeapon gameplayCtx weapon unit)
@@ -770,7 +827,8 @@
                                                        :components {}
                                                        :tags {}
                                                        :hp 0
-                                                       :en 0}}]
+                                                       :en 0
+                                                       :curage 100}}]
                                (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
                                                                          :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))))
        (assoc gameplayCtx :units)))

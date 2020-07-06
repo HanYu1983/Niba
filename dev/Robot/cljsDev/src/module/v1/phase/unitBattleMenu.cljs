@@ -165,9 +165,7 @@
                      (tool.menuCursor/mapCursor1 (constantly 2))
 
                      (#{:attack} leftActionType)
-                     (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (-> (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} left)
-                                                                                                          second)
-                                                                                                      (range))
+                     (tool.menuCursor/mapCursor2 (:weaponIdx data) (constantly (let [indexMap (zipmap (:weapons data) (range))
                                                                                      weaponIdx (indexMap leftWeapon)]
                                                                                  weaponIdx)))))
       :data data

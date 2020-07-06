@@ -9,6 +9,7 @@
 (s/def ::position (s/tuple int? int?))
 (s/def ::hp number?)
 (s/def ::en number?)
+(s/def ::curage int?)
 (s/def ::player (s/keys :req-un [::faction ::playerState]))
 (s/def ::players (s/map-of keyword? ::player))
 
@@ -48,7 +49,7 @@
 (s/def ::weapons (s/map-of keyword? (s/* ::weapon)))
 (s/def ::components (s/map-of keyword? (s/* ::component)))
 
-(s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en]))
+(s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en ::curage]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
 (s/def ::itemKey keyword?)

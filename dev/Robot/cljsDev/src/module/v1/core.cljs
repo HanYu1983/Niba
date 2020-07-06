@@ -59,7 +59,8 @@
                                             :components {}
                                             :tags {}
                                             :hp 0
-                                            :en 0}})))
+                                            :en 0
+                                            :curage 100}})))
                       (map (fn [unit]
                              (data/getUnitInfo {:lobbyCtx lobbyCtx} unit)))
                       (zipmap (-> lobbyCtx :robots keys)))]
@@ -122,7 +123,8 @@
                                    :components {}
                                    :tags {}
                                    :hp 0
-                                   :en 0}}))))
+                                   :en 0
+                                   :curage 100}}))))
             (map #(data/getUnitInfo {:lobbyCtx lobbyCtx} %))
             (map (fn [unit] [(:key unit) unit]))
             (into {})))
