@@ -36,6 +36,8 @@
                                 ::components
                                 ::robotByComponent]))
 
+(def modelType ::model)
+
 (def defaultLobbyModel {:robots {}
                         :pilots {}
                         :robotByPilot {}
