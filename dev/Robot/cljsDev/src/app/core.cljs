@@ -2,15 +2,20 @@
   (:require [clojure.core.async :as a]
             [clojure.spec.alpha :as s]
             [cljs.test :refer-macros [run-tests]])
-  (:require [app.module]
+  (:require [tool.core]
+            [app.module]
             [app.lobby.model]
             [app.lobby.core-test]
             [module.v1.core]
             [module.v1.data-test]
             [module.v1.phase.enemyTurn]
+            [module.v1.common]
             [app.lobby.core]))
 
 (s/check-asserts true)
+(set! module.v1.common/assert? true)
+(set! tool.core/assert? true)
+
 (def defaultModel {:money 100000
                    :lobbyCtx (app.lobby.model/load)})
 
