@@ -107,8 +107,14 @@
                        (let [weapon (common/assertSpec
                                      type/weapon
                                      (nth weapons cursor2))
+                             invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon)
                              weaponType (data/getWeaponType {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
                          (cond
+                           invalidWeaponMsg
+                           (do
+                             (a/<! (common/showMessage nil {:message invalidWeaponMsg} inputCh outputCh))
+                             (recur gameplayCtx))
+                           
                            (= "single" weaponType)
                            (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
                                  [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]

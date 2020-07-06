@@ -278,17 +278,23 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/weapon weapon)
-  (let [{:keys [energyType energyCost]} (common/assertSpec
-                                         (s/keys :req-un [::energyType ::energyCost])
-                                         (get-in data [:weapon (:weaponKey weapon)]))
+  (let [{:keys [energyType energyCost curage]} (common/assertSpec
+                                                (s/keys :req-un [::energyType ::energyCost ::curage])
+                                                (get-in data [:weapon (:weaponKey weapon)]))
         bulletCount (:bulletCount weapon)
         msg (cond
+              ; 氣力要夠
+              (< (-> unit :robotState :curage) curage)
+              (str "curage must be " curage "(" (-> unit :robotState :curage) ")")
+              
+              ; 能量要夠
               (= energyType "energy")
               (let [en (-> unit :robotState :en)
                     enoughEn? (>= en energyCost)]
                 (when (not enoughEn?)
                   "en is not enough"))
 
+              ; 彈數要夠
               (= energyType "bullet")
               (when (zero? bulletCount)
                 "bullet is empty")
@@ -599,24 +605,27 @@
     (+ w1 w2 w3)))
 
 (defn getBestWeapon [gameplayCtx unit weapons targetUnits]
-  {:pre [(common/explainValid? (s/tuple ::type/unit (s/* ::type/weapon) (s/* ::type/unit)) [unit weapons targetUnits])]
-   :post [(common/explainValid? (s/nilable (s/tuple ::type/weapon ::type/unit)) %)]}
-  (let [touchUnitLists (map (fn [weapon]
-                              (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
-                                    units (filter #(weaponRanges (:position %)) targetUnits)]
-                                units))
-                            weapons)
-        weaponWeights (mapcat (fn [weapon touchUnits]
-                                (->> (map (partial getSelectWeaponWeight gameplayCtx unit weapon) touchUnits)
-                                     (map vector (repeat weapon) touchUnits)))
-                              weapons
-                              touchUnitLists)
-        bestItem (-> (sort (fn [[_ _ w]] w) weaponWeights)
-                     reverse
-                     first)]
-    (when bestItem
-      (let [[weapon unit] bestItem]
-        [weapon unit]))))
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec (s/* ::type/weapon) weapons)
+  (common/assertSpec (s/* ::type/unit) targetUnits)
+  (common/assertSpec
+   (s/nilable (s/tuple ::type/weapon ::type/unit))
+   (let [touchUnitLists (map (fn [weapon]
+                               (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
+                                     units (filter #(weaponRanges (:position %)) targetUnits)]
+                                 units))
+                             weapons)
+         weaponWeights (mapcat (fn [weapon touchUnits]
+                                 (->> (map (partial getSelectWeaponWeight gameplayCtx unit weapon) touchUnits)
+                                      (map vector (repeat weapon) touchUnits)))
+                               weapons
+                               touchUnitLists)
+         bestItem (-> (sort (fn [[_ _ w]] w) weaponWeights)
+                      reverse
+                      first)]
+     (when bestItem
+       (let [[weapon unit] bestItem]
+         [weapon unit])))))
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weapon) [gameplayCtx unit fromUnit weapon])]
