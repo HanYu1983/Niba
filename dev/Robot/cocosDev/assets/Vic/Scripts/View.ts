@@ -21,7 +21,7 @@ export default class View extends cc.Component {
     unitMoveAnim(data: any, cb: () => void) {
         this.performUnitMoveAnim(data.unit.key, data.path, cb);
     }
-    unitTargetingAnim(data: any, cb: () => void){
+    unitTargetingAnim(data: any, cb: () => void) {
         this.getGamePage().showAimAnimation(data, cb);
     }
     unitBattleAnim(data: any, cb: () => void) {
@@ -29,20 +29,20 @@ export default class View extends cc.Component {
         this.getGamePage().closeAccuracyInfos();
         this.getGamePage().changeUnitHP(data, cb);
     }
-    unitDeadAnim(data: any, cb: ()=>void){
+    unitDeadAnim(data: any, cb: () => void) {
         this.getGamePage().explodeUnit(data, cb);
     }
-    unitSkyAnim(data: any, cb: ()=>void){
+    unitSkyAnim(data: any, cb: () => void) {
         this.getGamePage().units.toSkyUnit(data.unit.key, cb);
     }
-    unitGroundAnim(data: any, cb: ()=>void){
+    unitGroundAnim(data: any, cb: () => void) {
         this.getGamePage().units.toLandUnit(data.unit.key, cb);
     }
-    unitGetAwardAnim(data: any, cb: ()=>void){
+    unitGetAwardAnim(data: any, cb: () => void) {
         this.getGamePage().awardUnitAnimation(data, cb);
     }
-    showMessage(data: any, cb: ()=>void){
-        this.getCommentUI().showAlert(data.message, ()=>{});
+    showMessage(data: any, cb: () => void) {
+        this.getCommentUI().showAlert(data.message, () => { });
         cb()
     }
     paint(data: any, cb: () => void) {
@@ -59,39 +59,45 @@ export default class View extends cc.Component {
         this.repaintStartUnitsMenu(data.startUnitsMenu);
         cb();
     }
+    // 遊戲結束, 依照cause來判斷要跳到哪一頁
+    gameplayDone(data: any, cb: () => void) {
+        console.log(data)
+        const { cause } = data
+        cb()
+    }
 
     // 上下移動游標, 左右選擇取消, enter確認
-    private repaintStartUnitsMenu(info:any){
+    private repaintStartUnitsMenu(info: any) {
         this.getGamePage().closeRobotSelectPanel();
-        if(info){
+        if (info) {
             this.getGamePage().openRobotSelectPanel(info);
         }
     }
 
-    private repaintCellstate(cellstate:any){
+    private repaintCellstate(cellstate: any) {
         this.getGamePage().closeUnitStatuMenu();
-        if(cellstate){
+        if (cellstate) {
             this.getGamePage().openUnitStatuMenu(cellstate);
         }
     }
 
-    private repaintBattleMenu(battleMenu:any){
-        if(battleMenu){
+    private repaintBattleMenu(battleMenu: any) {
+        if (battleMenu) {
             this.getGamePage().showFightInfo(battleMenu);
-        }else{
+        } else {
             this.getGamePage().closeFightInfo();
         }
     }
 
-    private repaintHitInfo(checkHitRate:any){
-        if(checkHitRate){
+    private repaintHitInfo(checkHitRate: any) {
+        if (checkHitRate) {
             this.getGamePage().showAccuracyInfos(checkHitRate);
-        }else{
+        } else {
             this.getGamePage().closeAccuracyInfos();
         }
     }
 
-    private repaintUnitMenu(pos:number[], unitMenu: any) {
+    private repaintUnitMenu(pos: number[], unitMenu: any) {
         if (unitMenu) {
             this.createOrUpdateUnitMenu(
                 pos,
@@ -119,21 +125,21 @@ export default class View extends cc.Component {
     }
 
     private repaintMoveRange(data: number[][]) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         this.getGamePage().map.showMovableGrid(data);
     }
 
     private repaintAttackRange(data: number[][]) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         this.getGamePage().map.showWeaponRange(data);
     }
 
     private repaintMapAttackRange(data: number[][], cb: () => void) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         this.getGamePage().map.showWeaponRange(data);
@@ -153,7 +159,7 @@ export default class View extends cc.Component {
     }
 
     private repaintUnits(data: IUnit[]) {
-        if(data == null){
+        if (data == null) {
             return;
         }
         this.getGamePage().units.setUnits(data);
@@ -176,7 +182,7 @@ export default class View extends cc.Component {
         this.getGamePage().closeSceneMenu();
     }
 
-    private createOrUpdateUnitMenu(pos:number[], menu: any, info: any, cursor: number, subcursor: number[]) {
+    private createOrUpdateUnitMenu(pos: number[], menu: any, info: any, cursor: number, subcursor: number[]) {
         this.getGamePage().openUnitMenu(pos, [menu, info], [cursor, subcursor]);
     }
 
@@ -193,7 +199,7 @@ export default class View extends cc.Component {
     pages: BasicViewer[] = [];
 
     @property(CommentUI)
-    commentUI:CommentUI = null;
+    commentUI: CommentUI = null;
 
     closeAllPages() {
         this.pages.forEach(element => {
@@ -227,7 +233,7 @@ export default class View extends cc.Component {
         this.pages[2].close();
     }
 
-    getCommentUI():CommentUI{
+    getCommentUI(): CommentUI {
         return this.commentUI;
     }
 
@@ -247,8 +253,8 @@ export default class View extends cc.Component {
         let pos = [id % 20, Math.floor(id / 20)];
         return pos;
     }
-    
-    getWeaponConfig(keys:string[]){
+
+    getWeaponConfig(keys: string[]) {
         let ws = [];
         for (let id in keys) {
             let key = keys[id];

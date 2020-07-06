@@ -10,13 +10,16 @@
 (defn systemMenu [gameplayCtx _ inputCh outputCh]
   (a/go
     (loop [gameplayCtx gameplayCtx]
-      (let [[gameplayCtx select] (a/<! (menu gameplayCtx {:menu [["endTurn"] ["cancel"]] :data {}} inputCh outputCh))]
+      (let [[gameplayCtx select] (a/<! (menu gameplayCtx {:menu [["cancel"] ["endTurn"] ["giveUp"]] :data {}} inputCh outputCh))]
         (cond
           (= "endTurn" select)
           [gameplayCtx true]
 
           (= "cancel" select)
           [gameplayCtx false]
+          
+          (= "giveUp" select)
+          [(update gameplayCtx :done (constantly {:cause :giveUp})) true]
 
           :else
           (recur gameplayCtx))))))

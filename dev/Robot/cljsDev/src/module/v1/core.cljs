@@ -17,42 +17,6 @@
             [module.v1.system.spec :as spec])
   (:require-macros [module.v1.core :as core]))
 
-(def gameplayCtx {:map [[]]
-                  :camera [0 0]
-                  :cursor [0 0]
-                  :viewsize [20 20]
-                  :mapsize [20 20]
-                  :units tool.units/model
-                  :moveRange []
-                  :players {:player {:faction 0 :playerState nil}
-                            :ai1 {:faction 1 :playerState nil}}
-                  :fsm tool.fsm/model})
-
-(defn gameplayLoop [gameplayCtx inputCh outputCh]
-  (a/go
-    (loop [gameplayCtx gameplayCtx]
-      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-      (let [gameplayCtx (a/<! (playerTurn gameplayCtx nil inputCh outputCh))
-            ; 回傳空值代表有例外
-            _ (when (nil? gameplayCtx)
-                (throw (js/Error. "stop in playerTurn")))
-            enemies (->> (:players gameplayCtx)
-                         keys
-                         (filter #(not= :player %)))
-            enemyTurns (a/go-loop [gameplayCtx gameplayCtx
-                                   enemies enemies]
-                         (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
-                         (if (= (count enemies) 0)
-                           gameplayCtx
-                           (let [enemy (first enemies)
-                                 gameplayCtx (a/<! (enemyTurn gameplayCtx enemy inputCh outputCh))
-                                 _ (when (nil? gameplayCtx)
-                                     (throw (js/Error. "stop in enemyTurn")))]
-                             (recur gameplayCtx (rest enemies)))))
-            _ (when (nil? enemyTurns)
-                (throw (js/Error. "stop in enemyTurns")))]
-        (recur (a/<! enemyTurns))))))
-
  
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
@@ -171,6 +135,45 @@
                           :getComponentStoreList :component})]
          (field data/data))))))
 
+(def gameplayCtx {:map [[]]
+                  :camera [0 0]
+                  :cursor [0 0]
+                  :viewsize [20 20]
+                  :mapsize [20 20]
+                  :units tool.units/model
+                  :moveRange []
+                  :players {:player {:faction 0 :playerState nil}
+                            :ai1 {:faction 1 :playerState nil}}
+                  :fsm tool.fsm/model})
+
+(defn gameplayLoop [gameplayCtx inputCh outputCh]
+  (a/go
+    (loop [gameplayCtx gameplayCtx]
+      (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+      (let [gameplayCtx (common/assertSpec
+                         ::type/gameplayCtx
+                         (a/<! (playerTurn gameplayCtx nil inputCh outputCh)))
+            gameplayCtx (common/assertSpec
+                         ::type/gameplayCtx
+                         (if (-> gameplayCtx :done)
+                           gameplayCtx
+                           (let [enemies (->> (:players gameplayCtx)
+                                              keys
+                                              (filter #(not= :player %)))]
+                             (a/<! (a/go-loop [gameplayCtx gameplayCtx
+                                               enemies enemies]
+                                     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+                                     (if (= (count enemies) 0)
+                                       gameplayCtx
+                                       (let [enemy (first enemies)
+                                             gameplayCtx (common/assertSpec
+                                                          ::type/gameplayCtx
+                                                          (a/<! (enemyTurn gameplayCtx enemy inputCh outputCh)))]
+                                         (recur gameplayCtx (rest enemies)))))))))]
+        (if (-> gameplayCtx :done)
+          gameplayCtx
+          (recur gameplayCtx))))))
+
 (defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
   (a/go
     (let [matchs (re-find #"(\d+)_(\d+)" (or args "0_0"))
@@ -260,8 +263,8 @@
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
                        (let [posList (take 5 (map vector
-                                                   (repeatedly #(rand-int mw))
-                                                   (repeatedly #(rand-int mh))))
+                                                  (repeatedly #(rand-int mw))
+                                                  (repeatedly #(rand-int mh))))
                              beforeCentroids [[15, 15]]
                              clusterCnt (count beforeCentroids)
                              {:keys [clusters centroids]} (tool.kmeans/kmeans posList clusterCnt {:initialization beforeCentroids})
@@ -322,8 +325,14 @@
                                                    (data/updateUnit gameplayCtx old (constantly next)))
                                                  gameplayCtx
                                                  (zipmap unitList nextUnitList))]
-                         gameplayCtx))]
-      (a/<! (gameplayLoop gameplayCtx inputCh outputCh)))))
+                         gameplayCtx))
+          gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
+          _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
+          ; 取代lobbyCtx
+          ctx (assoc ctx
+                     :lobbyCtx (:lobbyCtx gameplayCtx)
+                     :gameplayCtx gameplayCtx)]
+      ctx)))
 
 
 (defmethod app.module/testIt :v1 [_ inputCh outputCh]
@@ -492,7 +501,7 @@
                            (throw (js/Error. "unit1 must done")))
                          gameplayCtx)))
         (core/defclick true "click endTurn"
-          [right enter enter])
+          [right enter down enter])
         (a/<! (a/timeout 3000))
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx

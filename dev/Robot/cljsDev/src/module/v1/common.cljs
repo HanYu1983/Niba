@@ -53,3 +53,4 @@
 (core/defwait unitSkyAnim [ctx args])
 (core/defwait unitGroundAnim [ctx args])
 (core/defwait unitGetAwardAnim [ctx args])
+(core/defwait gameplayDone [ctx args])

@@ -60,7 +60,8 @@
 
 (s/def ::units tool.units/modelType)
 
-(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units]))
+(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units]
+                             :req-opt [::done]))
 
 (s/def ::returnCtx (s/or :recur ::gameplayCtx
                          :return (s/tuple ::gameplayCtx (constantly true))))

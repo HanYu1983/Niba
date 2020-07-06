@@ -31,8 +31,7 @@
             (recur (merge ctx {:data data})))
 
           (= "startGameplay" cmd)
-          (a/<! (let [args args]
-                  (app.module/gameplayStart app.module/*module ctx args inputCh outputCh)))
+          (recur (a/<! (app.module/gameplayStart app.module/*module ctx args inputCh outputCh)))
 
           (= "startLobby" cmd)
           (recur (a/<! (app.lobby.core/startLobby ctx inputCh outputCh)))
