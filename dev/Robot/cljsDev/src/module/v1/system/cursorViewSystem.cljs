@@ -46,7 +46,10 @@
                                          (not= (-> unit :position) cursor)))
 
                            true
-                           second))
+                           ((fn [list]
+                              (if (= 1 (count list))
+                                (first list)
+                                (second list))))))
                gameplayCtx (if nextUnit
                              (update gameplayCtx :cursor (constantly (-> nextUnit :position)))
                              gameplayCtx)]
