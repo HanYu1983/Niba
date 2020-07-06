@@ -38,7 +38,9 @@
               38 :rup
               40 :rdown
               37 :rleft
-              39 :rright})
+              39 :rright
+              81 :L
+              69 :R})
 
 (core/defwait playerTurnStart [ctx args])
 (core/defwait enemyTurnStart [ctx args])
