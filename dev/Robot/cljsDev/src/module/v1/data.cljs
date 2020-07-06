@@ -282,11 +282,20 @@
                                                 (s/keys :req-un [::energyType ::energyCost ::curage])
                                                 (get-in data [:weapon (:weaponKey weapon)]))
         bulletCount (:bulletCount weapon)
+        moved? (-> unit :robotState :tags :moveCount)
         msg (cond
+              ; 移動後必須有moveAttack能力的武器才能用
+              moved?
+              (when (->> (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+                         (into #{})
+                         (#(% "moveAttack"))
+                         not)
+                (str "no ability [moveAttack]"))
+
               ; 氣力要夠
               (< (-> unit :robotState :curage) curage)
               (str "curage must be " curage "(" (-> unit :robotState :curage) ")")
-              
+
               ; 能量要夠
               (= energyType "energy")
               (let [en (-> unit :robotState :en)
@@ -467,32 +476,42 @@
                                     (tool.units/add (f unit)))))))
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/weapon ::type/unit) [gameplayCtx weapon unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (let [energyType (common/assertSpec
-                    #{:energy :bullet}
-                    (-> (get-in data [:weapon (:weaponKey weapon) :energyType])
-                        keyword))]
-    (cond
-      (= energyType :energy)
-      (let [energyCost (common/assertSpec
-                        int?
-                        (get-in data [:weapon (:weaponKey weapon) :energyCost]))
-            unitAfter (-> (-> unit :robotState :en)
-                          (- energyCost)
-                          (max 0)
-                          ((fn [en]
-                             (update-in unit [:robotState :en] (constantly en)))))]
-        unitAfter)
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   ::type/unit
+   (let [energyType (common/assertSpec
+                     #{:energy :bullet}
+                     (-> (get-in data [:weapon (:weaponKey weapon) :energyType])
+                         keyword))]
+     (cond
+       (= energyType :energy)
+       (let [energyCost (common/assertSpec
+                         int?
+                         (get-in data [:weapon (:weaponKey weapon) :energyCost]))
+             unitAfter (-> (-> unit :robotState :en)
+                           (- energyCost)
+                           (max 0)
+                           ((fn [en]
+                              (update-in unit [:robotState :en] (constantly en)))))]
+         unitAfter)
 
-      (= energyType :bullet)
-      (let [weapons (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-            _ (explainValid? ::type/weaponEntry weapons)
-            weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
-            weaponsAfter (update-in weapons [1] (fn [vs]
-                                                  (replace {weapon weaponAfter} vs)))
-            unitAfter (setUnitWeapons unit weaponsAfter)]
-        unitAfter))))
+       (= energyType :bullet)
+       (let [weaponAfter (update-in weapon [:bulletCount] (comp (partial max 0) dec))
+             weaponEntry (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+             _ (when (->> (second weaponEntry)
+                          (into #{})
+                          (#(% weapon))
+                          not)
+                 (throw (js/Error. (str "內部錯誤, 使用的武器必須在武器列表中, 請檢查是否有在weapon多塞了額外的欄位:" weapon))))
+             weaponEntryAfter (update-in weaponEntry [1] (fn [vs]
+                                                           (replace {weapon weaponAfter} vs)))
+             unitAfter (setUnitWeapons unit weaponEntryAfter)]
+         unitAfter)
+       
+       :else
+       (throw (js/Error. (str energyType " not found")))))))
 
 (defn moveCost [{playmap :map :as gameplayCtx} unit from to]
   {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
@@ -542,16 +561,13 @@
      (let [isBattleMenu (-> (:fsm gameplayCtx)
                             (tool.fsm/currState)
                             (= :unitBattleMenu))
-           moved? (-> unit :robotState :tags :moveCount)
-           weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                        second
-                        (filter (fn [weapon]
-                                  (if moved?
-                                    (let [weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
-                                      (-> (into #{} weaponAbility) (contains? "moveAttack")))
-                                    true))))
-           #__ #_(when (zero? (count weapons))
-                   (throw (js/Error. (str "[data.cljs] weapons count must more then 0"))))
+           weapons (common/assertSpec
+                    (s/* ::type/weapon)
+                    (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                         second))
+           invalidWeapons (map (fn [weapon]
+                                 (invalidWeapon? gameplayCtx unit weapon))
+                               weapons)
            weaponKeys (->> (range (count weapons))
                            (into []))
            noWeapon? (zero? (count weapons))
@@ -559,10 +575,11 @@
                          [(if playerTurn?
                             [weaponKeys ["cancel"]]
                             [weaponKeys ["evade"] ["guard"]])
-                          {:weaponIdx (if noWeapon? 
+                          {:weaponIdx (if noWeapon?
                                         -1
                                         0)
                            :weapons weapons
+                           :invalidWeapons invalidWeapons
                            :unit unit}]
                          (cond
                            (-> (get-in unit [:robotState :tags])
@@ -576,6 +593,7 @@
                                           -1
                                           0)
                              :weapons weapons
+                             :invalidWeapons invalidWeapons
                              :unit unit}]
 
                            :else
@@ -589,6 +607,7 @@
                                           -1
                                           1)
                              :weapons weapons
+                             :invalidWeapons invalidWeapons
                              :transformIdx 2
                              :unit unit}]))]
        [menu data]))))
