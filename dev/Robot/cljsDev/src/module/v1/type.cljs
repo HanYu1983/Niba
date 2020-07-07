@@ -39,9 +39,11 @@
 
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
-(s/def ::pilotKey (s/nilable ::key))
-(s/def ::componentKey ::key)
 
+(s/def ::pilotKey (s/nilable ::key))
+(s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey])))
+
+(s/def ::componentKey ::key)
 (s/def ::componentState (s/keys :req-un [::key ::componentKey ::tags]))
 
 (s/def ::weaponEntry (s/tuple keyword? (s/* ::weaponState)))
@@ -49,7 +51,7 @@
 (s/def ::weapons (s/map-of keyword? (s/* ::weaponState)))
 (s/def ::components (s/map-of keyword? (s/* ::componentState)))
 
-(s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en ::curage]))
+(s/def ::robotState (s/keys :req-un [::robotKey ::pilotState ::weapons ::components ::tags ::hp ::en ::curage]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
 (s/def ::itemKey keyword?)

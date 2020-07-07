@@ -20,7 +20,7 @@
             :position [0 0]
             :playerKey :a
             :robotState {:robotKey :gundam
-                         :pilotKey :a
+                         :pilotState nil
                          :tags {}
                          :hp 0
                          :en 0

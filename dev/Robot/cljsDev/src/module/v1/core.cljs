@@ -54,7 +54,7 @@
                                :position [0 0]
                                :playerKey :player
                                :robotState {:robotKey robotKey
-                                            :pilotKey nil
+                                            :pilotState nil
                                             :weapons {}
                                             :components {}
                                             :tags {}
@@ -87,7 +87,8 @@
        (s/map-of keyword? map?)
        (let [ret (->> (:pilots lobbyCtx)
                       (map (fn [[key pilotKey]]
-                             pilotKey))
+                             {:key key
+                              :pilotKey pilotKey}))
                       (map (fn [pilot]
                              (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
                       (zipmap (-> lobbyCtx :pilots keys)))]
@@ -118,7 +119,7 @@
                       :position [0 0]
                       :playerKey :player
                       :robotState {:robotKey (keyword robotKey)
-                                   :pilotKey nil
+                                   :pilotState nil
                                    :weapons {}
                                    :components {}
                                    :tags {}

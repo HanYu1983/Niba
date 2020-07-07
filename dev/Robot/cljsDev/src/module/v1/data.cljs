@@ -221,7 +221,8 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (let [data (get-in data [:pilot pilot])]
+  (common/assertSpec ::type/pilotState pilot)
+  (let [data (get-in data [:pilot (:pilotKey pilot)])]
     (if (nil? data)
       (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
       data)))
@@ -299,8 +300,8 @@
   (let [accuracy (common/assertSpec
                   number?
                   (get-in data [:weapon (:weaponKey weapon) :accuracy]))
-        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotKey]))
-        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotKey]))
+        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotState]))
+        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotState]))
         weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         missile? (-> (into #{} weaponAbility) (contains? "missile"))
@@ -377,8 +378,8 @@
                           (get-in data [:weapon (:weaponKey weapon) :damage]))
         targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
 
-        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotKey]))
-        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotKey]))
+        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotState]))
+        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotState]))
         weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
         fire? (-> (into #{} weaponAbility) (contains? "fire"))
@@ -859,7 +860,7 @@
                                           :position (or position [0 0])
                                           :playerKey (or playerKey :player)
                                           :robotState {:robotKey robotKey
-                                                       :pilotKey :amuro
+                                                       :pilotState {:key :amuro :pilotKey :amuro}
                                                        :weapons {}
                                                        :components {}
                                                        :tags {}
