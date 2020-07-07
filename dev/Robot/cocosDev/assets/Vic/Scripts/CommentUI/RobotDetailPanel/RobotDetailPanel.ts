@@ -29,7 +29,6 @@ export default class RobotDetailPanel extends BasicViewer {
     }
 
     setUnit(unit:any){
-        cc.log(unit);
         this.weapons.setWeapons(unit.weapons);
     }
 
