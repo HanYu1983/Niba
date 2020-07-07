@@ -109,6 +109,18 @@
              {:keys [robotByPilot]} (a/<! outputToView)
              _ (assert (= (keyword robotA) (robotByPilot (keyword pilotA))))])
 
+       (println "移除駕駛")
+       (let [_ (a/>! inputFromView [:test identity])
+             {:keys [pilots]} (a/<! outputToView)
+             pilotA (clj->js (ffirst pilots))
+             _ (a/>! inputFromView ["removeRobotPilot" ["any" {"pilotKey" pilotA}]])
+             [_ [_ [err _]]] (a/<! outputToView)
+             _ (s/assert nil? err)
+
+             _ (a/>! inputFromView [:test identity])
+             {:keys [robotByPilot]} (a/<! outputToView)
+             _ (s/assert nil? (robotByPilot (keyword pilotA)))])
+
        (println "設置不存在的駕駛和機體必須吐出錯誤")
        (let [_ (a/>! inputFromView ["setRobotPilot" ["any" {"robotKey" "abc" "pilotKey" "abc"}]])
              [_ [_ [err _]]] (a/<! outputToView)

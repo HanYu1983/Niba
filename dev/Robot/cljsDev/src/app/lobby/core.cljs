@@ -147,6 +147,9 @@
           (= cmd "addRobotComponent")
           (app.lobby.core/setKey1ByKey2Impl robot component)
 
+          (= cmd "removeRobotPilot")
+          (app.lobby.core/removeKey2Impl robot pilot)
+
           (= cmd "removeRobotWeapon")
           (app.lobby.core/removeKey2Impl robot weapon)
 

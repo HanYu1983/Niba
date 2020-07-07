@@ -113,6 +113,18 @@ export default class Model extends cc.Component {
         });
     }
 
+    removeRobotPilot(robotKey:string, pilotKey:string, cb:(err:any, data:any) => void ){
+        cc.log("removeRobotPilot", robotKey, pilotKey);
+        this.modelController.talk("removeRobotPilot", { pilotKey: pilotKey }, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
+    }
+
     removeUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
         this.modelController.talk("removeRobotComponent", { robotKey: robotKey, componentKey: componentKey }, answer => {
             const [err, info] = answer;
