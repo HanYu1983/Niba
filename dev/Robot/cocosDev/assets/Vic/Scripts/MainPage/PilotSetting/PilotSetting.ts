@@ -62,7 +62,7 @@ export default class PilotSetting extends BasicViewer {
         this.setRobotList();
 
         this.titleMenu.open();
-        this.titleMenu.setData(["機體列表","裝備列表","武器列表"]);
+        this.titleMenu.setData(["機體列表","搭乘駕駛","駕駛列表"]);
     }
 
     close(){
@@ -115,7 +115,7 @@ export default class PilotSetting extends BasicViewer {
                 item.key = data[0];
                 return item;
             });
-            // items.unshift({title:"拆除"})
+            items.unshift({title:"拆除"})
             this.componentList.list.open();
             this.componentList.list.setData(items);
         });
@@ -140,7 +140,7 @@ export default class PilotSetting extends BasicViewer {
 
     setRobotEquipList(){
         let robot = this.robotList.list.getFocus();
-        let pilot = robot.robotState.pilotKey;
+        let pilot = robot.robotState.pilotState;
         if (pilot == null){
             pilot = {title:"新增"}
         }

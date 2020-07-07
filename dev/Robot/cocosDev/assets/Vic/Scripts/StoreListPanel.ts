@@ -37,7 +37,7 @@ export default class StoreListPanel extends BasicViewer {
     setlist() {
         this.list.open();
         this.getData(this._pageId, (err:any, data:any)=>{
-            this.list.setData(data);
+            if(data.length > 0) this.list.setData(data);
         });
     }
 
