@@ -217,15 +217,18 @@
 ; =======================
 ; pilot
 ; =======================
-(defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilot]
+(defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilotState]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/pilotState pilot)
-  (let [data (get-in data [:pilot (:pilotKey pilot)])]
-    (if (nil? data)
-      (throw (js/Error. (str "getPilotInfo[" pilot "] not found")))
-      data)))
+  (common/assertSpec ::type/pilotState pilotState)
+  (common/assertSpec
+   ::type/pilotState
+   (when pilotState
+     (let [data (get-in data [:pilot (:pilotKey pilotState)])]
+       (if (nil? data)
+         (throw (js/Error. (str "getPilotInfo[" (:pilotKey pilotState) "] not found")))
+         (merge data pilotState))))))
 
 ; =======================
 ; weapon
@@ -984,7 +987,8 @@
      (update-in unit [:robotState] (fn [state]
                                      (merge robotData
                                             state
-                                            {:weapons (->> (getUnitWeapons ctx unit)
+                                            {:pilotState (getPilotInfo ctx unit (-> unit :robotState :pilotState))
+                                             :weapons (->> (getUnitWeapons ctx unit)
                                                            second
                                                            (map (partial getWeaponInfo ctx unit)))
                                              :components (->> (getUnitComponents ctx unit)

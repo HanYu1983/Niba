@@ -40,7 +40,7 @@
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
 
-(s/def ::pilotKey (s/nilable ::key))
+(s/def ::pilotKey ::key)
 (s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey])))
 
 (s/def ::componentKey ::key)

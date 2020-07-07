@@ -54,7 +54,17 @@
                                :position [0 0]
                                :playerKey :player
                                :robotState {:robotKey robotKey
-                                            :pilotState nil
+                                            :pilotState (let [keyForPilot (common/assertSpec
+                                                                           (s/nilable keyword?)
+                                                                           (->> (:robotByPilot lobbyCtx)
+                                                                                (filter (fn [[_ robotKey]]
+                                                                                          (= robotKey key)))
+                                                                                ffirst))]
+                                                          (when keyForPilot
+                                                            {:key keyForPilot
+                                                             :pilotKey (common/assertSpec
+                                                                        keyword?
+                                                                        ((:pilots lobbyCtx) keyForPilot))}))
                                             :weapons {}
                                             :components {}
                                             :tags {}
