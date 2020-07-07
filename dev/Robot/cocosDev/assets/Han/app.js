@@ -20276,8 +20276,8 @@ function kT(a) {
   return a instanceof om ? xF : (null != a ? a.i & 32768 || jc === a.Ke || (a.i ? 0 : ed(re, a)) : ed(re, a)) ? wH : a instanceof tg ? WC : li(a) ? IG : ci(a) ? zE : ei(a) ? zD : Th(a) ? qu : null == a ? null : tq;
 }
 if ("undefined" === typeof ec || "undefined" === typeof pQ || "undefined" === typeof lT) {
-  var lT, $4 = Kk(ok), a5 = Kk(ok), b5 = Kk(ok), c5 = Kk(ok), H5 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  lT = new sq(wg.c("cljs.pprint", "simple-dispatch"), kT, H5, $4, a5, b5, c5);
+  var lT, U6 = Kk(ok), V6 = Kk(ok), W6 = Kk(ok), X6 = Kk(ok), Y6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  lT = new sq(wg.c("cljs.pprint", "simple-dispatch"), kT, Y6, U6, V6, W6, X6);
 }
 nq(lT, IG, function(a) {
   if (Uc(cT(a))) {
@@ -21365,8 +21365,8 @@ var CT = function(a) {
   return null;
 }, zT, wT, wT, tT, tT, zT, zT, tT])));
 if ("undefined" === typeof ec || "undefined" === typeof pQ || "undefined" === typeof DT) {
-  var DT, I5 = Kk(ok), J5 = Kk(ok), K5 = Kk(ok), L5 = Kk(ok), M5 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  DT = new sq(wg.c("cljs.pprint", "code-dispatch"), kT, M5, I5, J5, K5, L5);
+  var DT, Z6 = Kk(ok), d7 = Kk(ok), e7 = Kk(ok), k7 = Kk(ok), n7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  DT = new sq(wg.c("cljs.pprint", "code-dispatch"), kT, n7, Z6, d7, e7, k7);
 }
 nq(DT, IG, function(a) {
   if (Uc(cT(a))) {
@@ -21962,8 +21962,8 @@ function LU(a, b) {
   return null == b ? Ux : "string" === typeof b ? Jr : b instanceof B ? PC : "number" === typeof b ? PC : b instanceof tg ? PC : ei(b) ? zD : kj(b) ? IG : ci(b) ? zE : Th(b) ? qu : G.c(b, !0) ? PC : G.c(b, !1) ? PC : fd(b);
 }
 if ("undefined" === typeof ec || "undefined" === typeof oU || "undefined" === typeof pU || "undefined" === typeof qU || "undefined" === typeof IU || "undefined" === typeof KU) {
-  var KU, N5 = Kk(ok), O5 = Kk(ok), P5 = Kk(ok), Q5 = Kk(ok), R5 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  KU = new sq(wg.c("cljs.tools.reader.impl.inspect", "inspect*"), LU, R5, N5, O5, P5, Q5);
+  var KU, o7 = Kk(ok), p7 = Kk(ok), q7 = Kk(ok), r7 = Kk(ok), s7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  KU = new sq(wg.c("cljs.tools.reader.impl.inspect", "inspect*"), LU, s7, o7, p7, q7, r7);
 }
 KU.P(null, Jr, function(a, b) {
   a = m(a) ? 5 : 20;
@@ -24194,7 +24194,7 @@ function SX(a, b, c) {
             }
             function h() {
               var v = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 
-              null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+              null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
               v[0] = r;
               v[1] = 1;
               return v;
@@ -24216,2984 +24216,3204 @@ function SX(a, b, c) {
         }(function(n) {
           return function(f) {
             var h = f[1];
+            if (357 === h) {
+              var r = f, v = r;
+              v[2] = !1;
+              v[1] = 358;
+              return X;
+            }
             if (275 === h) {
-              var r = f[7], v = f[8], w = f[9], p = f[10], u = f[11], z = f[12], H = f[13], F = f[14], t = f[15], E = [$q], y = new T(null, 1, 5, V, E, null), O = yl.f(r, y, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              var w = f[7], p = f[8], u = f[9], z = f[10], H = f[11], F = f[12], t = f[13], E = f[14], y = f[15], O = [$q], S = new T(null, 1, 5, V, O, null), D = yl.f(z, S, function() {
+                return function($4, a5, b5, J5, I5, c5, H5) {
+                  return function(K5) {
+                    return Ah.c(K5, new T(null, 2, 5, V, [H5, a5], null));
                   };
-                }(p, H, F, t, w, r, u, z, v, F, r, v, w, p, u, z, H, F, t, V, E, y, h, n);
-              }()), S = f, D = S;
-              D[2] = O;
-              D[1] = 276;
+                }(t, p, y, H, y, F, w, z, u, E, w, p, u, z, H, F, t, E, y, V, O, S, h, n);
+              }()), N = r = f;
+              N[2] = D;
+              N[1] = 276;
               return X;
             }
             if (291 === h) {
-              var N = f[16], x = S = f;
-              x[2] = N;
-              x[1] = 292;
+              var x = f[16], P = r = f;
+              P[2] = x;
+              P[1] = 292;
               return X;
             }
             if (249 === h) {
-              return r = f[7], f[17] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[17] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (299 === h) {
-              var P = f[18], J = f[19], R = f[2], W = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [P, new T(null, 2, 5, V, [null, R], null)], null)], null);
-              f[19] = R;
-              S = f;
-              return uJ(S, 303, c, W);
+              var J = f[18], R = f[19], W = f[2], Z = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [J, new T(null, 2, 5, V, [null, W], null)], null)], null);
+              f[19] = W;
+              r = f;
+              return uJ(r, 303, c, Z);
             }
             if (121 === h) {
-              var Z = f[2];
-              S = f;
-              S[1] = m(Z) ? 125 : 126;
+              var da = f[2];
+              r = f;
+              r[1] = m(da) ? 125 : 126;
               return X;
             }
             if (287 === h) {
-              var da = S = f;
-              da[2] = !0;
-              da[1] = 289;
+              var C = r = f;
+              C[2] = !0;
+              C[1] = 289;
               return X;
             }
             if (65 === h) {
-              var C = S = f;
-              C[2] = !0;
-              C[1] = 67;
+              var M = r = f;
+              M[2] = !0;
+              M[1] = 67;
               return X;
             }
             if (70 === h) {
-              r = f[7];
-              var M = f[20], U = f[2], fa = A.c(U, "offset"), Y = A.c(U, "limit"), ba = pn([gA], [!0]), oa = jU.f ? jU.f(nU, r, ba) : jU.call(null, nU, r, ba), sa = sl.c(Bh, oa), ta = [null, Qk.c(Y, Rk(fa, sa))], ua = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [M, new T(null, 2, 5, V, ta, null)], null)], null);
-              S = f;
-              return uJ(S, 71, c, ua);
+              var U = f[20];
+              z = f[10];
+              var fa = f[2], Y = A.c(fa, "offset"), ba = A.c(fa, "limit"), oa = pn([gA], [!0]), sa = jU.f ? jU.f(nU, z, oa) : jU.call(null, nU, z, oa), ta = sl.c(Bh, sa), ua = [null, Qk.c(ba, Rk(Y, ta))], Ga = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [U, new T(null, 2, 5, V, ua, null)], null)], null);
+              r = f;
+              return uJ(r, 71, c, Ga);
             }
             if (218 === h) {
-              var Ga = f[21];
-              F = f[14];
-              var va = K(F, 0, null), Fa = K(F, 1, null), wa = Uc(null == Fa);
-              f[21] = Fa;
-              f[22] = va;
-              S = f;
-              S[1] = wa ? 221 : 222;
+              var va = f[21];
+              y = f[15];
+              var Fa = K(y, 0, null), wa = K(y, 1, null), Ha = Uc(null == wa);
+              f[22] = Fa;
+              f[21] = wa;
+              r = f;
+              r[1] = Ha ? 221 : 222;
               return X;
             }
             if (62 === h) {
-              var Ha = f[23], Ma = jc === Ha.o, Ta = Ha.i & 64 || Ma;
-              S = f;
-              S[1] = m(Ta) ? 65 : 66;
+              var Ma = f[23], Ta = jc === Ma.o, Ra = Ma.i & 64 || Ta;
+              r = f;
+              r[1] = m(Ra) ? 65 : 66;
               return X;
             }
             if (74 === h) {
-              var Ra = f[2], Sa = S = f;
-              Sa[2] = Ra;
-              Sa[1] = 55;
+              var Sa = f[2], Va = r = f;
+              Va[2] = Sa;
+              Va[1] = 55;
               return X;
             }
             if (164 === h) {
-              var Va = f[24], Ab = S = f;
-              Ab[2] = Va;
-              Ab[1] = 165;
+              var Ab = f[24], cb = r = f;
+              cb[2] = Ab;
+              cb[1] = 165;
               return X;
             }
             if (282 === h) {
-              p = f[10];
-              var cb = G.c(p, "removeRobotWeapon");
-              S = f;
-              S[1] = cb ? 304 : 305;
+              t = f[13];
+              var ub = G.c(t, "removeRobotPilot");
+              r = f;
+              r[1] = ub ? 304 : 305;
               return X;
             }
             if (273 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              u = f[11];
-              var ub = f[25], Cb = f[26];
-              z = f[12];
-              F = f[14];
-              var $a = MI(f, 271, 270), Fc = M4(ad, Cb), Dc = M4(ad, ub), Lb = function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    var q3 = bC.b(p3);
-                    return r3.b ? r3.b(q3) : r3.call(null, q3);
+              var Cb = f[25];
+              u = f[9];
+              z = f[10];
+              H = f[11];
+              t = f[13];
+              E = f[14];
+              y = f[15];
+              var $a = f[26], Fc = MI(f, 271, 270), Dc = M4(ad, Cb), Lb = M4(ad, $a), hc = function() {
+                return function($4, a5, b5, J5, I5, c5, H5, K5) {
+                  return function(L5) {
+                    var M5 = bC.b(K5);
+                    return L5.b ? L5.b(M5) : L5.call(null, M5);
                   };
-                }(p, Cb, F, Dc, ub, r, u, z, v, F, r, v, p, u, ub, Cb, z, F, $a, Fc, Dc, h, n);
-              }(), hc = Aj.b(Cb), Pb = [q.b(Cb), " not found in ", q.b(bC)].join(""), ob = T5(Lb, hc, Pb), Gb = function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    var q3 = su.b(p3);
-                    return r3.b ? r3.b(q3) : r3.call(null, q3);
+                }(t, Cb, y, H, y, Lb, $a, z, u, E, Cb, u, z, H, t, E, y, $a, Fc, Dc, Lb, h, n);
+              }(), Pb = Aj.b(Cb), ob = [q.b(Cb), " not found in ", q.b(bC)].join(""), Gb = T5(hc, Pb, ob), mc = function() {
+                return function($4, a5, b5, J5, I5, c5, H5, K5) {
+                  return function(L5) {
+                    var M5 = su.b(K5);
+                    return L5.b ? L5.b(M5) : L5.call(null, M5);
                   };
-                }(p, Cb, F, ob, ub, r, u, z, v, F, r, v, p, u, ub, Cb, z, F, $a, Fc, Dc, Lb, hc, Pb, ob, h, n);
-              }(), mc = Aj.b(ub), pb = [q.b(ub), " not found in ", q.b(su)].join("");
-              t = T5(Gb, mc, pb);
-              H = Aj.b(Cb);
-              w = Aj.b(ub);
-              f[27] = Fc;
-              f[9] = w;
-              f[13] = H;
-              f[15] = t;
-              S = f;
-              S[1] = BM ? 274 : 275;
+                }(t, Cb, y, H, y, Gb, $a, z, u, E, Cb, u, z, H, t, E, y, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, h, n);
+              }(), pb = Aj.b($a), Sb = [q.b($a), " not found in ", q.b(su)].join("");
+              F = T5(mc, pb, Sb);
+              p = Aj.b(Cb);
+              w = Aj.b($a);
+              f[7] = w;
+              f[8] = p;
+              f[27] = Dc;
+              f[12] = F;
+              r = f;
+              r[1] = BM ? 274 : 275;
               return X;
             }
             if (186 === h) {
-              var Sb = f[2], $b = S = f;
-              $b[2] = Sb;
-              $b[1] = 169;
+              var $b = f[2], Mb = r = f;
+              Mb[2] = $b;
+              Mb[1] = 169;
+              return X;
+            }
+            if (370 === h) {
+              var Xb = f[28];
+              u = f[9];
+              var Kc = f[29];
+              z = f[10];
+              t = f[13];
+              var xc = f[30], Tb = f[31];
+              y = f[15];
+              var Wc = [Dy], de = new T(null, 1, 5, V, Wc, null), sd = yl.f(z, de, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
+                  };
+                }(t, y, y, Kc, xc, Xb, z, u, Tb, Xb, u, Kc, z, t, xc, Tb, y, V, Wc, de, h, n);
+              }()), Vb = r = f;
+              Vb[2] = sd;
+              Vb[1] = 371;
               return X;
             }
             if (233 === h) {
-              r = f[7];
-              var Mb = f[28];
-              v = f[8];
-              var Xb = f[29];
-              p = f[10];
-              var Kc = f[30];
-              F = f[14];
-              va = f[22];
-              $a = MI(f, 231, 230);
-              var xc = M4(ad, Xb), Tb = Aj.b(Xb), Wc = [BE], de = [!0], sd = pn(Wc, de), Vb = jU.f ? jU.f(nU, r, sd) : jU.call(null, nU, r, sd), nc = [Tb], Td = new T(null, 1, 5, V, nc, null), De = wl(Vb, Td), ne = M4(ci, De), we = [LG], ud = new T(null, 1, 5, V, we, null), Pc = wl(r, ud), Jd = [gs], Ud = new T(null, 1, 5, V, Jd, null), Ee = wl(ne, Ud), Ed = function() {
-                return function(aW, DU) {
-                  return function(FU) {
-                    return FU >= DU;
+              var nc = f[32];
+              Fa = f[22];
+              u = f[9];
+              z = f[10];
+              var Td = f[33];
+              t = f[13];
+              y = f[15];
+              var De = f[34];
+              Fc = MI(f, 231, 230);
+              var ne = M4(ad, De), we = Aj.b(De), ud = [BE], Pc = [!0], Jd = pn(ud, Pc), Ud = jU.f ? jU.f(nU, z, Jd) : jU.call(null, nU, z, Jd), Ee = [we], Ed = new T(null, 1, 5, V, Ee, null), pc = wl(Ud, Ed), Ec = M4(ci, pc), ee = [LG], Kd = new T(null, 1, 5, V, ee, null), Xc = wl(z, Kd), La = [gs], Yb = new T(null, 1, 5, V, La, null), Yc = wl(Ec, Yb), mb = function() {
+                return function($4, a5) {
+                  return function(b5) {
+                    return b5 >= a5;
                   };
-                }(p, Ee, Mb, F, Pc, F, Tb, xc, ne, r, va, v, r, Mb, v, Xb, p, Kc, F, va, $a, xc, Tb, Wc, de, sd, Vb, V, nc, Td, De, ne, V, we, ud, Pc, V, Jd, Ud, Ee, h, n);
-              }(), pc = T5(Ed, Pc, "money not enough"), Ec = [LG], ee = new T(null, 1, 5, V, Ec, null), Kd = Pc - Ee, Xc = Ak(Kd), La = yl.f(r, ee, Xc), Yb = [Gq], Yc = new T(null, 1, 5, V, Yb, null), mb = yl.f(La, Yc, function() {
-                return function(aW, DU, FU, bW, o3, p3, r3) {
-                  return function(q3) {
-                    return Ah.c(q3, new T(null, 2, 5, V, [Aj.b(q.b(vq())), r3], null));
+                }(t, Yc, y, Xc, nc, y, we, ne, Ec, z, u, Fa, nc, Fa, u, z, Td, t, y, De, Fc, ne, we, ud, Pc, Jd, Ud, V, Ee, Ed, pc, Ec, V, ee, Kd, Xc, V, La, Yb, Yc, h, n);
+              }(), Bc = T5(mb, Xc, "money not enough"), dd = [LG], zc = new T(null, 1, 5, V, dd, null), zb = Xc - Yc, Qd = Ak(zb), gc = yl.f(z, zc, Qd), rc = [Gq], Nb = new T(null, 1, 5, V, rc, null), Fd = yl.f(gc, Nb, function() {
+                return function($4, a5, b5, J5, I5, c5, H5) {
+                  return function(K5) {
+                    return Ah.c(K5, new T(null, 2, 5, V, [Aj.b(q.b(vq())), H5], null));
                   };
-                }(p, Ee, Mb, F, Pc, F, Tb, pc, ne, r, va, v, r, Mb, v, Xb, p, Kc, F, va, $a, xc, Tb, Wc, de, sd, Vb, V, nc, Td, De, ne, V, we, ud, Pc, V, Jd, Ud, Ee, Ed, pc, V, Ec, ee, Kd, Xc, La, V, Yb, Yc, h, n);
-              }()), Bc = M4(OG, mb), dd = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [va, new T(null, 2, 5, V, [null, Bc], null)], null)], null);
-              f[30] = Bc;
-              S = f;
-              return uJ(S, 234, c, dd);
+                }(t, Yc, y, Xc, nc, y, we, Bc, Ec, z, u, Fa, nc, Fa, u, z, Td, t, y, De, Fc, ne, we, ud, Pc, Jd, Ud, V, Ee, Ed, pc, Ec, V, ee, Kd, Xc, V, La, Yb, Yc, mb, Bc, V, dd, zc, zb, Qd, gc, V, rc, Nb, h, n);
+              }()), Ld = M4(OG, Fd), oe = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Fa, new T(null, 2, 5, V, [null, Ld], null)], null)], null);
+              f[33] = Ld;
+              r = f;
+              return uJ(r, 234, c, oe);
             }
             if (298 === h) {
-              var zc = f[31];
-              r = f[7];
-              v = f[8];
-              P = f[18];
-              p = f[10];
-              var zb = f[32], Qd = f[33];
-              F = f[14];
-              var gc = f[34], rc = [Dy], Nb = new T(null, 1, 5, V, rc, null), Fd = yl.f(r, Nb, function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    return Ah.c(r3, new T(null, 2, 5, V, [p3, DU], null));
+              var Gd = f[35];
+              J = f[18];
+              u = f[9];
+              var Zc = f[36], pe = f[37];
+              z = f[10];
+              var Vd = f[38];
+              t = f[13];
+              y = f[15];
+              var Md = [Dy], fe = new T(null, 1, 5, V, Md, null), Le = yl.f(z, fe, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Ah.c(H5, new T(null, 2, 5, V, [c5, b5], null));
                   };
-                }(p, gc, F, F, zc, zb, r, Qd, P, v, zc, r, v, P, p, zb, Qd, F, gc, V, rc, Nb, h, n);
-              }()), Ld = S = f;
-              Ld[2] = Fd;
-              Ld[1] = 299;
+                }(t, Vd, Zc, y, Gd, pe, y, z, u, J, Gd, J, u, Zc, pe, z, Vd, t, y, V, Md, fe, h, n);
+              }()), Me = r = f;
+              Me[2] = Le;
+              Me[1] = 299;
               return X;
             }
             if (188 === h) {
-              var oe = S = f;
-              oe[2] = !1;
-              oe[1] = 189;
+              var vf = r = f;
+              vf[2] = !1;
+              vf[1] = 189;
               return X;
             }
             if (240 === h) {
-              var Gd = f[2];
-              S = f;
-              S[1] = m(Gd) ? 244 : 245;
+              var wf = f[2];
+              r = f;
+              r[1] = m(wf) ? 244 : 245;
               return X;
             }
             if (110 === h) {
-              F = f[14];
-              var Zc = K(F, 0, null), pe = K(F, 1, null);
-              f[35] = Zc;
-              f[36] = pe;
-              S = f;
-              S[1] = BM ? 113 : 114;
+              y = f[15];
+              var bf = K(y, 0, null), mf = K(y, 1, null);
+              f[39] = bf;
+              f[40] = mf;
+              r = f;
+              r[1] = BM ? 113 : 114;
               return X;
             }
             if (130 === h) {
-              p = f[10];
-              var Vd = G.c(p, "getComponentList");
-              S = f;
-              S[1] = Vd ? 148 : 149;
+              t = f[13];
+              var Bf = G.c(t, "getComponentList");
+              r = f;
+              r[1] = Bf ? 148 : 149;
               return X;
             }
             if (311 === h) {
-              var Md = S = f;
-              Md[2] = !1;
-              Md[1] = 312;
+              var Pe = r = f;
+              Pe[2] = !1;
+              Pe[1] = 312;
               return X;
             }
             if (128 === h) {
-              r = f[7];
-              var fe = f[2], Le = r;
-              f[7] = Le;
-              f[37] = fe;
-              var Me = S = f;
-              Me[2] = null;
-              Me[1] = 2;
-              return X;
-            }
-            if (259 === h) {
-              p = f[10];
-              var vf = G.c(p, "addRobotComponent");
-              S = f;
-              S[1] = vf ? 281 : 282;
-              return X;
-            }
-            if (210 === h) {
-              var wf = f[38], bf = fk(In, wf), mf = S = f;
-              mf[2] = bf;
-              mf[1] = 212;
-              return X;
-            }
-            if (229 === h) {
-              Mb = f[28];
-              var Bf = f[2];
-              Xb = A.c(Bf, "key");
-              f[28] = Bf;
-              f[29] = Xb;
-              var Pe = S = f;
-              Pe[2] = null;
-              Pe[1] = 233;
-              return X;
-            }
-            if (153 === h) {
-              Va = f[24];
-              var gg = f[2], Wd = Uc(null == gg);
-              f[24] = gg;
-              S = f;
-              S[1] = Wd ? 157 : 158;
-              return X;
-            }
-            if (213 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var Lc = S = f;
+              z = f[10];
+              var gg = f[2], Wd = z;
+              f[10] = Wd;
+              f[41] = gg;
+              var Lc = r = f;
               Lc[2] = null;
               Lc[1] = 2;
               return X;
             }
+            if (377 === h) {
+              var me = r = f;
+              me[2] = null;
+              me[1] = 378;
+              return X;
+            }
+            if (259 === h) {
+              t = f[13];
+              var Fe = G.c(t, "addRobotComponent");
+              r = f;
+              r[1] = Fe ? 281 : 282;
+              return X;
+            }
+            if (210 === h) {
+              var xf = f[42], nf = fk(In, xf), yf = r = f;
+              yf[2] = nf;
+              yf[1] = 212;
+              return X;
+            }
+            if (229 === h) {
+              nc = f[32];
+              var Of = f[2];
+              De = A.c(Of, "key");
+              f[32] = Of;
+              f[34] = De;
+              var of = r = f;
+              of[2] = null;
+              of[1] = 233;
+              return X;
+            }
+            if (153 === h) {
+              Ab = f[24];
+              var Cf = f[2], Pf = Uc(null == Cf);
+              f[24] = Cf;
+              r = f;
+              r[1] = Pf ? 157 : 158;
+              return X;
+            }
+            if (213 === h) {
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var Jg = r = f;
+              Jg[2] = null;
+              Jg[1] = 2;
+              return X;
+            }
             if (343 === h) {
-              var me = new zg(function() {
+              var $f = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), Fe = se(me);
-              S = f;
-              S[1] = m(Fe) ? 346 : 347;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), Qf = se($f);
+              r = f;
+              r[1] = m(Qf) ? 346 : 347;
               return X;
             }
             if (7 === h) {
-              r = f[7];
-              var xf = oQ(OG, r), nf = S = f;
-              nf[2] = xf;
-              nf[1] = 9;
+              z = f[10];
+              var cf = oQ(OG, z), qe = r = f;
+              qe[2] = cf;
+              qe[1] = 9;
               return X;
             }
             if (59 === h) {
-              r = f[7];
-              v = f[8];
-              var yf = f[39];
-              M = f[20];
-              p = f[10];
-              F = f[14];
-              var Of = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), of = function() {
+              U = f[20];
+              var Rf = f[43];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              y = f[15];
+              var Df = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), Kg = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, M, yf, r, v, yf, M, p, F, Of, V, h, n);
-              }(), Cf = fM(Of, new T(null, 3, 5, V, [ci, of, function() {
+                }(z, u, t, y, y, U, Rf, U, Rf, u, z, t, y, Df, V, h, n);
+              }(), Hd = fM(Df, new T(null, 3, 5, V, [ci, Kg, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, M, yf, r, v, yf, M, p, F, Of, V, of, h, n);
-              }()], null), null), Pf = oQ(Cf, yf), Jg = S = f;
-              Jg[2] = Pf;
-              Jg[1] = 61;
+                }(z, u, t, y, y, U, Rf, U, Rf, u, z, t, y, Df, V, Kg, h, n);
+              }()], null), null), Qc = oQ(Hd, Rf), Rc = r = f;
+              Rc[2] = Qc;
+              Rc[1] = 61;
               return X;
             }
             if (86 === h) {
-              var $f = f[2], Qf = S = f;
-              Qf[2] = $f;
-              Qf[1] = 83;
+              var Qe = f[2], Re = r = f;
+              Re[2] = Qe;
+              Re[1] = 83;
               return X;
             }
             if (154 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              var cf = f[40], qe = f[41];
-              F = f[14];
-              var Rf = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), Df = function() {
+              var Ef = f[44];
+              u = f[9];
+              z = f[10];
+              var df = f[45];
+              t = f[13];
+              y = f[15];
+              var Ff = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), pf = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, qe, cf, r, v, p, cf, qe, F, Rf, V, h, n);
-              }(), Kg = fM(Rf, new T(null, 3, 5, V, [ci, Df, function() {
+                }(z, u, t, y, y, df, Ef, Ef, u, z, df, t, y, Ff, V, h, n);
+              }(), Sf = fM(Ff, new T(null, 3, 5, V, [ci, pf, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, qe, cf, r, v, p, cf, qe, F, Rf, V, Df, h, n);
-              }()], null), null), Hd = oQ(Kg, cf), Qc = S = f;
-              Qc[2] = Hd;
-              Qc[1] = 156;
+                }(z, u, t, y, y, df, Ef, Ef, u, z, df, t, y, Ff, V, pf, h, n);
+              }()], null), null), ag = oQ(Sf, Ef), Gf = r = f;
+              Gf[2] = ag;
+              Gf[1] = 156;
               return X;
             }
             if (20 === h) {
-              var Rc = f[42], Qe = f[2], Re = Uc(null == Qe);
-              f[42] = Qe;
-              S = f;
-              S[1] = Re ? 24 : 25;
+              var hg = f[46], Uf = f[2], qf = Uc(null == Uf);
+              f[46] = Uf;
+              r = f;
+              r[1] = qf ? 24 : 25;
               return X;
             }
             if (224 === h) {
-              var Ef = S = f;
-              Ef[2] = !0;
-              Ef[1] = 226;
+              var Hf = r = f;
+              Hf[2] = !0;
+              Hf[1] = 226;
               return X;
             }
             if (355 === h) {
-              var df = f[2], Ff = S = f;
-              Ff[2] = df;
-              Ff[1] = 352;
+              var Id = f[2];
+              r = f;
+              r[1] = m(Id) ? 359 : 360;
               return X;
             }
             if (72 === h) {
-              F = f[14];
-              var pf = K(F, 0, null), Sf = K(F, 1, null);
-              f[43] = Sf;
-              f[44] = pf;
-              S = f;
-              S[1] = BM ? 75 : 76;
+              y = f[15];
+              var ig = K(y, 0, null), Lg = K(y, 1, null);
+              f[47] = Lg;
+              f[48] = ig;
+              r = f;
+              r[1] = BM ? 75 : 76;
               return X;
             }
             if (58 === h) {
-              Ha = f[23];
-              var ag = f[2], Gf = Uc(null == ag);
-              f[23] = ag;
-              S = f;
-              S[1] = Gf ? 62 : 63;
+              Ma = f[23];
+              var xe = f[2], Ge = Uc(null == xe);
+              f[23] = xe;
+              r = f;
+              r[1] = Ge ? 62 : 63;
               return X;
             }
             if (205 === h) {
-              var hg = S = f;
-              hg[2] = !1;
-              hg[1] = 206;
+              var xg = r = f;
+              xg[2] = !1;
+              xg[1] = 206;
               return X;
             }
             if (60 === h) {
-              yf = f[39];
-              var Uf = S = f;
-              Uf[2] = yf;
-              Uf[1] = 61;
+              Rf = f[43];
+              var Se = r = f;
+              Se[2] = Rf;
+              Se[1] = 61;
               return X;
             }
             if (175 === h) {
-              var qf = f[2], Hf = S = f;
-              Hf[2] = qf;
-              Hf[1] = 172;
+              var jg = f[2], Te = r = f;
+              Te[2] = jg;
+              Te[1] = 172;
               return X;
             }
             if (322 === h) {
-              var Id = f[45], ig = f[46], Lg = f[2], xe = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Id, new T(null, 2, 5, V, [null, Lg], null)], null)], null);
-              f[46] = Lg;
-              S = f;
-              return uJ(S, 326, c, xe);
+              var Fh = f[49], Wh = f[50], yg = f[2], bg = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Fh, new T(null, 2, 5, V, [null, yg], null)], null)], null);
+              f[50] = yg;
+              r = f;
+              return uJ(r, 326, c, bg);
             }
             if (27 === h) {
-              var Ge = S = f;
-              Ge[2] = !0;
-              Ge[1] = 29;
+              var ih = r = f;
+              ih[2] = !0;
+              ih[1] = 29;
               return X;
             }
             if (352 === h) {
-              var xg = f[2], Se = S = f;
-              Se[2] = xg;
-              Se[1] = 329;
+              var Gh = f[2], rh = r = f;
+              rh[2] = Gh;
+              rh[1] = 329;
               return X;
             }
             if (1 === h) {
-              var jg = WD.b(a), Te = new T(null, 1, 5, V, [LG], null), Fh = LG.b(a);
-              r = yl.f(jg, Te, Ak(Fh));
-              f[7] = r;
-              var Wh = S = f;
-              Wh[2] = null;
-              Wh[1] = 2;
+              var kg = WD.b(a), Mg = new T(null, 1, 5, V, [LG], null), Hh = LG.b(a);
+              z = yl.f(kg, Mg, Ak(Hh));
+              f[10] = z;
+              var $c = r = f;
+              $c[2] = null;
+              $c[1] = 2;
               return X;
             }
             if (69 === h) {
-              Ha = f[23];
-              var yg = S = f;
-              yg[2] = Ha;
-              yg[1] = 70;
+              Ma = f[23];
+              var sc = r = f;
+              sc[2] = Ma;
+              sc[1] = 70;
               return X;
             }
             if (101 === h) {
-              var bg = S = f;
-              bg[2] = !1;
-              bg[1] = 102;
+              var If = r = f;
+              If[2] = !1;
+              If[1] = 102;
               return X;
             }
             if (24 === h) {
-              Rc = f[42];
-              var ih = jc === Rc.o, Gh = Rc.i & 64 || ih;
-              S = f;
-              S[1] = m(Gh) ? 27 : 28;
+              hg = f[46];
+              var Mc = jc === hg.o, Xh = hg.i & 64 || Mc;
+              r = f;
+              r[1] = m(Xh) ? 27 : 28;
               return X;
             }
             if (102 === h) {
-              var rh = f[2];
-              S = f;
-              S[1] = m(rh) ? 106 : 107;
+              var rk = f[2];
+              r = f;
+              r[1] = m(rk) ? 106 : 107;
               return X;
             }
             if (135 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              var kg = f[47], Mg = f[48];
-              F = f[14];
-              var Hh = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), $c = function() {
+              var Ij = f[51];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              var Jf = f[52];
+              y = f[15];
+              var cg = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), Yh = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, Mg, kg, r, v, p, kg, Mg, F, Hh, V, h, n);
-              }(), sc = fM(Hh, new T(null, 3, 5, V, [ci, $c, function() {
+                }(z, u, t, y, y, Jf, Ij, Ij, u, z, t, Jf, y, cg, V, h, n);
+              }(), Jj = fM(cg, new T(null, 3, 5, V, [ci, Yh, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, Mg, kg, r, v, p, kg, Mg, F, Hh, V, $c, h, n);
-              }()], null), null), If = oQ(sc, kg), Mc = S = f;
-              Mc[2] = If;
-              Mc[1] = 137;
+                }(z, u, t, y, y, Jf, Ij, Ij, u, z, t, Jf, y, cg, V, Yh, h, n);
+              }()], null), null), lg = oQ(Jj, Ij), Zh = r = f;
+              Zh[2] = lg;
+              Zh[1] = 137;
               return X;
             }
             if (354 === h) {
-              var Xh = S = f;
-              Xh[2] = null;
-              Xh[1] = 355;
+              var Kj = r = f;
+              Kj[2] = !1;
+              Kj[1] = 355;
+              return X;
+            }
+            if (360 === h) {
+              var Tk = f[53], Uk = r = f;
+              Uk[2] = Tk;
+              Uk[1] = 361;
               return X;
             }
             if (55 === h) {
-              var rk = f[2], Ij = S = f;
-              Ij[2] = rk;
-              Ij[1] = 36;
+              var $h = f[2], Vk = r = f;
+              Vk[2] = $h;
+              Vk[1] = 36;
               return X;
             }
             if (269 === h) {
-              u = f[11];
-              var Jf = f[2];
-              Cb = A.c(Jf, "robotKey");
-              ub = A.c(Jf, "weaponKey");
-              f[11] = Jf;
-              f[25] = ub;
-              f[26] = Cb;
-              var cg = S = f;
-              cg[2] = null;
-              cg[1] = 273;
+              H = f[11];
+              var Em = f[2];
+              Cb = A.c(Em, "robotKey");
+              $a = A.c(Em, "weaponKey");
+              f[25] = Cb;
+              f[11] = Em;
+              f[26] = $a;
+              var On = r = f;
+              On[2] = null;
+              On[1] = 273;
               return X;
             }
             if (206 === h) {
-              var Yh = f[2];
-              S = f;
-              S[1] = m(Yh) ? 210 : 211;
+              var Pn = f[2];
+              r = f;
+              r[1] = m(Pn) ? 210 : 211;
               return X;
             }
             if (165 === h) {
-              r = f[7];
-              qe = f[41];
-              var Jj = f[2], lg = A.c(Jj, "offset"), Zh = A.c(Jj, "limit"), Kj = pn([RE], [!0]), Tk = jU.f ? jU.f(nU, r, Kj) : jU.call(null, nU, r, Kj), Uk = sl.c(Bh, Tk), $h = [null, Qk.c(Zh, Rk(lg, Uk))], Vk = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [qe, new T(null, 2, 5, V, $h, null)], null)], null);
-              S = f;
-              return uJ(S, 166, c, Vk);
+              z = f[10];
+              df = f[45];
+              var Ki = f[2], Lj = A.c(Ki, "offset"), qp = A.c(Ki, "limit"), Qn = pn([RE], [!0]), ct = jU.f ? jU.f(nU, z, Qn) : jU.call(null, nU, z, Qn), dt = sl.c(Bh, ct), rp = [null, Qk.c(qp, Rk(Lj, dt))], Li = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [df, new T(null, 2, 5, V, rp, null)], null)], null);
+              r = f;
+              return uJ(r, 166, c, Li);
             }
             if (85 === h) {
-              var Em = S = f;
-              Em[2] = !1;
-              Em[1] = 86;
+              var Rn = r = f;
+              Rn[2] = !1;
+              Rn[1] = 86;
               return X;
             }
             if (225 === h) {
-              var On = S = f;
-              On[2] = !1;
-              On[1] = 226;
+              var Wk = r = f;
+              Wk[2] = !1;
+              Wk[1] = 226;
               return X;
             }
             if (297 === h) {
-              var Pn = new zg(function() {
+              var sp = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), Ki = se(Pn);
-              S = f;
-              S[1] = m(Ki) ? 300 : 301;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), jr = se(sp);
+              r = f;
+              r[1] = m(jr) ? 300 : 301;
               return X;
             }
             if (39 === h) {
-              var Lj = f[49], qp = f[2], Qn = Uc(null == qp);
-              f[49] = qp;
-              S = f;
-              S[1] = Qn ? 43 : 44;
+              var Xk = f[54], tp = f[2], Zg = Uc(null == tp);
+              f[54] = tp;
+              r = f;
+              r[1] = Zg ? 43 : 44;
               return X;
             }
             if (274 === h) {
-              var ct = new zg(function() {
+              var Sn = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), dt = se(ct);
-              S = f;
-              S[1] = m(dt) ? 277 : 278;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), et = se(Sn);
+              r = f;
+              r[1] = m(et) ? 277 : 278;
               return X;
             }
             if (88 === h) {
-              var rp = f[50], Li = S = f;
-              Li[2] = rp;
-              Li[1] = 89;
+              var ft = f[55], kr = r = f;
+              kr[2] = ft;
+              kr[1] = 89;
               return X;
             }
             if (217 === h) {
-              var Rn = f[51], Wk = f[2], sp = $V(Rn);
-              f[52] = Wk;
-              S = f;
-              S[2] = sp;
-              wJ(S);
+              var lr = f[56], mr = f[2], Nl = $V(lr);
+              f[57] = mr;
+              r = f;
+              r[2] = Nl;
+              wJ(r);
               return X;
             }
             if (46 === h) {
-              var jr = S = f;
-              jr[2] = !0;
-              jr[1] = 48;
+              var Tn = r = f;
+              Tn[2] = !0;
+              Tn[1] = 48;
               return X;
             }
             if (149 === h) {
-              p = f[10];
-              var Xk = G.c(p, "buyRobotById");
-              S = f;
-              S[1] = Xk ? 167 : 168;
+              t = f[13];
+              var sh = G.c(t, "buyRobotById");
+              r = f;
+              r[1] = sh ? 167 : 168;
               return X;
             }
             if (239 === h) {
-              var tp = S = f;
-              tp[2] = !1;
-              tp[1] = 240;
+              var Un = r = f;
+              Un[2] = !1;
+              Un[1] = 240;
               return X;
             }
             if (157 === h) {
-              Va = f[24];
-              var Zg = jc === Va.o, Sn = Va.i & 64 || Zg;
-              S = f;
-              S[1] = m(Sn) ? 160 : 161;
+              Ab = f[24];
+              var up = jc === Ab.o, vp = Ab.i & 64 || up;
+              r = f;
+              r[1] = m(vp) ? 160 : 161;
               return X;
             }
             if (345 === h) {
-              var et = f[53], ft = f[54], kr = f[2], lr = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [et, new T(null, 2, 5, V, [null, kr], null)], null)], null);
-              f[54] = kr;
-              S = f;
-              return uJ(S, 349, c, lr);
+              var wp = f[58], nr = f[59], xp = f[2], yp = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [nr, new T(null, 2, 5, V, [null, xp], null)], null)], null);
+              f[58] = xp;
+              r = f;
+              return uJ(r, 349, c, yp);
             }
             if (300 === h) {
-              zc = f[31];
-              r = f[7];
-              v = f[8];
-              P = f[18];
-              p = f[10];
-              zb = f[32];
-              Qd = f[33];
-              F = f[14];
-              gc = f[34];
-              var mr = [Dy], Nl = new T(null, 1, 5, V, mr, null), Tn = yl.f(r, Nl, function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    return Ah.c(r3, new T(null, 2, 5, V, [p3, DU], null));
+              Gd = f[35];
+              J = f[18];
+              u = f[9];
+              Zc = f[36];
+              pe = f[37];
+              z = f[10];
+              Vd = f[38];
+              t = f[13];
+              y = f[15];
+              var zp = [Dy], Mj = new T(null, 1, 5, V, zp, null), ai = yl.f(z, Mj, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Ah.c(H5, new T(null, 2, 5, V, [c5, b5], null));
                   };
-                }(p, gc, F, F, zc, zb, r, Qd, P, v, zc, r, v, P, p, zb, Qd, F, gc, V, mr, Nl, h, n);
-              }()), sh = oQ(OG, Tn), Un = S = f;
-              Un[2] = sh;
-              Un[1] = 302;
+                }(t, Vd, Zc, y, Gd, pe, y, z, u, J, Gd, J, u, Zc, pe, z, Vd, t, y, V, zp, Mj, h, n);
+              }()), or = oQ(OG, ai), Fm = r = f;
+              Fm[2] = or;
+              Fm[1] = 302;
               return X;
             }
             if (4 === h) {
-              var up = new zg(function() {
+              var Gm = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), vp = se(up);
-              S = f;
-              S[1] = m(vp) ? 7 : 8;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), Yk = se(Gm);
+              r = f;
+              r[1] = m(Yk) ? 7 : 8;
               return X;
             }
             if (204 === h) {
-              wf = f[38];
-              var wp = jc === wf.o, nr = wf.i & 64 || wp;
-              S = f;
-              S[1] = m(nr) ? 207 : 208;
+              xf = f[42];
+              var Ol = jc === xf.o, Pl = xf.i & 64 || Ol;
+              r = f;
+              r[1] = m(Pl) ? 207 : 208;
               return X;
             }
             if (77 === h) {
-              rp = f[50];
-              var xp = f[2], yp = Uc(null == xp);
-              f[50] = xp;
-              S = f;
-              S[1] = yp ? 81 : 82;
+              ft = f[55];
+              var Ap = f[2], Hm = Uc(null == Ap);
+              f[55] = Ap;
+              r = f;
+              r[1] = Hm ? 81 : 82;
               return X;
             }
             if (106 === h) {
-              var zp = f[55], Mj = fk(In, zp), ai = S = f;
-              ai[2] = Mj;
-              ai[1] = 108;
+              var Bp = f[60], Im = fk(In, Bp), sk = r = f;
+              sk[2] = Im;
+              sk[1] = 108;
               return X;
             }
             if (197 === h) {
-              r = f[7];
-              var or = f[56], Fm = f[2], Gm = console.log(Fm), Yk = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [or, new T(null, 2, 5, V, [Fm, r], null)], null)], null);
-              f[57] = Gm;
-              S = f;
-              return uJ(S, 198, c, Yk);
+              z = f[10];
+              var Cp = f[61], pr = f[2], Ql = console.log(pr), Dp = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Cp, new T(null, 2, 5, V, [pr, z], null)], null)], null);
+              f[62] = Ql;
+              r = f;
+              return uJ(r, 198, c, Dp);
             }
             if (232 === h) {
-              return r = f[7], f[58] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[63] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (260 === h) {
-              var Ol = f[2], Pl = S = f;
-              Pl[2] = Ol;
-              Pl[1] = 237;
+              var Vn = f[2], Wn = r = f;
+              Wn[2] = Vn;
+              Wn[1] = 237;
               return X;
             }
             if (267 === h) {
-              var Ap = f[59], Hm = fk(In, Ap), Bp = S = f;
-              Bp[2] = Hm;
-              Bp[1] = 269;
+              var Jm = f[64], qr = fk(In, Jm), Xn = r = f;
+              Xn[2] = qr;
+              Xn[1] = 269;
               return X;
             }
             if (119 === h) {
-              var Im = f[60], sk = jc === Im.o, Cp = Im.i & 64 || sk;
-              S = f;
-              S[1] = m(Cp) ? 122 : 123;
+              var Yn = f[65], Zn = jc === Yn.o, Ep = Yn.i & 64 || Zn;
+              r = f;
+              r[1] = m(Ep) ? 122 : 123;
               return X;
             }
             if (319 === h) {
-              r = f[7];
-              v = f[8];
-              Id = f[45];
-              var pr = f[61];
-              p = f[10];
-              var Ql = f[62];
-              F = f[14];
-              $a = MI(f, 317, 316);
-              var Dp = function() {
-                return function(aW) {
-                  return function(DU) {
-                    var FU = su.b(aW);
-                    return DU.b ? DU.b(FU) : DU.call(null, FU);
+              var Fp = f[66];
+              Fh = f[49];
+              var Gp = f[67];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              y = f[15];
+              Fc = MI(f, 317, 316);
+              var $n = function() {
+                return function($4) {
+                  return function(a5) {
+                    var b5 = fw.b($4);
+                    return a5.b ? a5.b(b5) : a5.call(null, b5);
                   };
-                }(r, v, p, F, F, Id, Ql, pr, r, v, Id, pr, p, Ql, F, $a, h, n);
-              }(), Vn = Aj.b(pr), Wn = [q.b(pr), " not found in ", q.b(su)].join(""), Jm = T5(Dp, Vn, Wn), qr = Aj.b(pr);
-              f[63] = qr;
-              f[64] = Jm;
-              S = f;
-              S[1] = BM ? 320 : 321;
+                }(z, u, t, y, y, Fh, Fp, Gp, Fp, Fh, Gp, u, z, t, y, Fc, h, n);
+              }(), Km = Aj.b(Gp), rr = [q.b(Gp), " not found in ", q.b(fw)].join(""), ao = T5($n, Km, rr), Zk = Aj.b(Gp);
+              f[68] = ao;
+              f[69] = Zk;
+              r = f;
+              r[1] = BM ? 320 : 321;
               return X;
             }
             if (222 === h) {
-              var Xn = S = f;
-              Xn[2] = !1;
-              Xn[1] = 223;
+              var Hp = r = f;
+              Hp[2] = !1;
+              Hp[1] = 223;
               return X;
             }
             if (293 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var Yn = S = f;
-              Yn[2] = null;
-              Yn[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var sr = r = f;
+              sr[2] = null;
+              sr[1] = 2;
               return X;
             }
             if (95 === h) {
-              var Zn = f[65], Ep = S = f;
-              Ep[2] = Zn;
-              Ep[1] = 96;
+              var tr = f[70], Lm = r = f;
+              Lm[2] = tr;
+              Lm[1] = 96;
               return X;
             }
             if (329 === h) {
-              var Fp = f[2], Gp = S = f;
-              Gp[2] = Fp;
-              Gp[1] = 306;
+              var bo = f[2], Ip = r = f;
+              Ip[2] = bo;
+              Ip[1] = 306;
               return X;
             }
             if (144 === h) {
-              var $n = f[66], Km = fk(In, $n), rr = S = f;
-              rr[2] = Km;
-              rr[1] = 146;
+              var ur = f[71], Nj = fk(In, ur), $k = r = f;
+              $k[2] = Nj;
+              $k[1] = 146;
               return X;
             }
             if (176 === h) {
-              var ao = f[67], Zk = fk(In, ao), Hp = S = f;
-              Hp[2] = Zk;
-              Hp[1] = 178;
+              var al = f[72], hj = fk(In, al), dg = r = f;
+              dg[2] = hj;
+              dg[1] = 178;
               return X;
             }
             if (349 === h) {
-              ft = f[54];
-              var sr = f[2], tr = $V(ft);
-              f[68] = sr;
-              S = f;
-              S[2] = tr;
-              wJ(S);
+              wp = f[58];
+              var tk = f[2], Oj = $V(wp);
+              f[73] = tk;
+              r = f;
+              r[2] = Oj;
+              wJ(r);
               return X;
             }
             if (192 === h) {
-              var Lm = f[2], bo = S = f;
-              bo[2] = Lm;
-              bo[1] = 189;
+              var Pj = f[2], co = r = f;
+              co[2] = Pj;
+              co[1] = 189;
               return X;
             }
             if (54 === h) {
-              p = f[10];
-              var Ip = G.c(p, "getComponentStoreList");
-              S = f;
-              S[1] = Ip ? 72 : 73;
+              t = f[13];
+              var Mm = G.c(t, "getComponentStoreList");
+              r = f;
+              r[1] = Mm ? 72 : 73;
               return X;
             }
             if (92 === h) {
-              p = f[10];
-              var ur = G.c(p, "getPilotList");
-              S = f;
-              S[1] = ur ? 110 : 111;
+              t = f[13];
+              var eo = G.c(t, "getPilotList");
+              r = f;
+              r[1] = eo ? 110 : 111;
               return X;
             }
             if (221 === h) {
-              Ga = f[21];
-              var Nj = jc === Ga.o, $k = Ga.i & 64 || Nj;
-              S = f;
-              S[1] = m($k) ? 224 : 225;
+              va = f[21];
+              var Ng = jc === va.o, Jp = va.i & 64 || Ng;
+              r = f;
+              r[1] = m(Jp) ? 224 : 225;
               return X;
             }
             if (141 === h) {
-              var al = S = f;
-              al[2] = !0;
-              al[1] = 143;
+              var fo = r = f;
+              fo[2] = !0;
+              fo[1] = 143;
               return X;
             }
             if (307 === h) {
-              var hj = f[69], dg = jc === hj.o, tk = hj.i & 64 || dg;
-              S = f;
-              S[1] = m(tk) ? 310 : 311;
+              var vr = f[74], Ih = jc === vr.o, Kp = vr.i & 64 || Ih;
+              r = f;
+              r[1] = m(Kp) ? 310 : 311;
               return X;
             }
             if (290 === h) {
-              N = f[16];
-              var Oj = fk(In, N), Pj = S = f;
-              Pj[2] = Oj;
-              Pj[1] = 292;
+              x = f[16];
+              var wr = fk(In, x), xr = r = f;
+              xr[2] = wr;
+              xr[1] = 292;
+              return X;
+            }
+            if (361 === h) {
+              Kc = f[29];
+              var yr = f[2], gt = A.c(yr, "componentKey");
+              f[29] = yr;
+              f[75] = gt;
+              var ht = r = f;
+              ht[2] = null;
+              ht[1] = 365;
               return X;
             }
             if (264 === h) {
-              var co = S = f;
-              co[2] = !0;
-              co[1] = 266;
+              var it = r = f;
+              it[2] = !0;
+              it[1] = 266;
               return X;
             }
             if (137 === h) {
-              var Mm = f[2], eo = S = f;
-              eo[2] = Mm;
-              eo[1] = 134;
+              var jt = f[2], kt = r = f;
+              kt[2] = jt;
+              kt[1] = 134;
+              return X;
+            }
+            if (356 === h) {
+              var lt = r = f;
+              lt[2] = !0;
+              lt[1] = 358;
               return X;
             }
             if (327 === h) {
-              var Ng = f[70];
-              F = f[14];
-              et = K(F, 0, null);
-              var Jp = K(F, 1, null), fo = Uc(null == Jp);
-              f[70] = Jp;
-              f[53] = et;
-              S = f;
-              S[1] = fo ? 330 : 331;
+              var mt = f[76];
+              y = f[15];
+              nr = K(y, 0, null);
+              var nt = K(y, 1, null), hv = Uc(null == nt);
+              f[59] = nr;
+              f[76] = nt;
+              r = f;
+              r[1] = hv ? 330 : 331;
               return X;
             }
             if (234 === h) {
-              Kc = f[30];
-              var vr = f[2], Ih = $V(Kc);
-              f[71] = vr;
-              S = f;
-              S[2] = Ih;
-              wJ(S);
+              Td = f[33];
+              var iv = f[2], jv = $V(Td);
+              f[77] = iv;
+              r = f;
+              r[2] = jv;
+              wJ(r);
               return X;
             }
             if (104 === h) {
-              var Kp = S = f;
-              Kp[2] = !1;
-              Kp[1] = 105;
+              var kv = r = f;
+              kv[2] = !1;
+              kv[1] = 105;
               return X;
             }
             if (353 === h) {
-              Le = r = f[7];
-              f[7] = Le;
-              var wr = S = f;
-              wr[2] = null;
-              wr[1] = 2;
+              Tk = f[53];
+              var zr = jc === Tk.o, Ar = Tk.i & 64 || zr;
+              r = f;
+              r[1] = m(Ar) ? 356 : 357;
               return X;
             }
             if (15 === h) {
-              F = f[14];
-              var xr = K(F, 0, null), yr = K(F, 1, null);
-              f[72] = yr;
-              f[73] = xr;
-              S = f;
-              S[1] = BM ? 18 : 19;
+              y = f[15];
+              var ot = K(y, 0, null), lv = K(y, 1, null);
+              f[78] = ot;
+              f[79] = lv;
+              r = f;
+              r[1] = BM ? 18 : 19;
               return X;
             }
             if (48 === h) {
-              var gt = f[2], ht = S = f;
-              ht[2] = gt;
-              ht[1] = 45;
+              var pt = f[2], qt = r = f;
+              qt[2] = pt;
+              qt[1] = 45;
               return X;
             }
             if (242 === h) {
-              var it = S = f;
-              it[2] = !1;
-              it[1] = 243;
+              var mv = r = f;
+              mv[2] = !1;
+              mv[1] = 243;
               return X;
             }
             if (50 === h) {
-              Lj = f[49];
-              var jt = S = f;
-              jt[2] = Lj;
-              jt[1] = 51;
+              Xk = f[54];
+              var rt = r = f;
+              rt[2] = Xk;
+              rt[1] = 51;
               return X;
             }
             if (251 === h) {
-              var kt = new zg(function() {
+              var go = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), lt = se(kt);
-              S = f;
-              S[1] = m(lt) ? 254 : 255;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), Br = se(go);
+              r = f;
+              r[1] = m(Br) ? 254 : 255;
               return X;
             }
             if (116 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              Zc = f[35];
-              F = f[14];
-              pe = f[36];
-              var mt = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), nt = function() {
+              bf = f[39];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              mf = f[40];
+              y = f[15];
+              var Ua = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), rf = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, Zc, pe, r, v, p, Zc, F, pe, mt, V, h, n);
-              }(), hv = fM(mt, new T(null, 3, 5, V, [ci, nt, function() {
+                }(z, u, t, y, y, bf, mf, bf, u, z, t, mf, y, Ua, V, h, n);
+              }(), wb = fM(Ua, new T(null, 3, 5, V, [ci, rf, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, Zc, pe, r, v, p, Zc, F, pe, mt, V, nt, h, n);
-              }()], null), null), iv = oQ(hv, pe), jv = S = f;
-              jv[2] = iv;
-              jv[1] = 118;
+                }(z, u, t, y, y, bf, mf, bf, u, z, t, mf, y, Ua, V, rf, h, n);
+              }()], null), null), ho = oQ(wb, mf), jh = r = f;
+              jh[2] = ho;
+              jh[1] = 118;
               return X;
             }
             if (75 === h) {
-              var kv = new zg(function() {
+              var th = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), zr = se(kv);
-              S = f;
-              S[1] = m(zr) ? 78 : 79;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), ij = se(th);
+              r = f;
+              r[1] = m(ij) ? 78 : 79;
               return X;
             }
             if (159 === h) {
-              var Ar = f[2];
-              S = f;
-              S[1] = m(Ar) ? 163 : 164;
+              var Rl = f[2];
+              r = f;
+              r[1] = m(Rl) ? 163 : 164;
               return X;
             }
             if (99 === h) {
-              var ot = f[2], lv = S = f;
-              lv[2] = ot;
-              lv[1] = 96;
+              var Lp = f[2], Ue = r = f;
+              Ue[2] = Lp;
+              Ue[1] = 96;
               return X;
             }
             if (281 === h) {
-              N = f[16];
-              F = f[14];
-              P = K(F, 0, null);
-              var pt = K(F, 1, null), qt = Uc(null == pt);
-              f[18] = P;
-              f[16] = pt;
-              S = f;
-              S[1] = qt ? 284 : 285;
+              x = f[16];
+              y = f[15];
+              J = K(y, 0, null);
+              var nv = K(y, 1, null), Mp = Uc(null == nv);
+              f[18] = J;
+              f[16] = nv;
+              r = f;
+              r[1] = Mp ? 284 : 285;
               return X;
             }
             if (309 === h) {
-              var mv = f[2];
-              S = f;
-              S[1] = m(mv) ? 313 : 314;
+              var Cr = f[2];
+              r = f;
+              r[1] = m(Cr) ? 313 : 314;
               return X;
             }
             if (21 === h) {
-              r = f[7];
-              v = f[8];
-              yr = f[72];
-              xr = f[73];
-              p = f[10];
-              F = f[14];
-              var rt = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), go = function() {
+              ot = f[78];
+              lv = f[79];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              y = f[15];
+              var ov = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), pv = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, xr, yr, r, v, yr, xr, p, F, rt, V, h, n);
-              }(), Br = fM(rt, new T(null, 3, 5, V, [ci, go, function() {
+                }(z, u, t, y, y, ot, lv, ot, lv, u, z, t, y, ov, V, h, n);
+              }(), st = fM(ov, new T(null, 3, 5, V, [ci, pv, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, xr, yr, r, v, yr, xr, p, F, rt, V, go, h, n);
-              }()], null), null), Ua = oQ(Br, yr), rf = S = f;
-              rf[2] = Ua;
-              rf[1] = 23;
+                }(z, u, t, y, y, ot, lv, ot, lv, u, z, t, y, ov, V, pv, h, n);
+              }()], null), null), tt = oQ(st, lv), Np = r = f;
+              Np[2] = tt;
+              Np[1] = 23;
               return X;
             }
             if (31 === h) {
-              Rc = f[42];
-              var wb = S = f;
-              wb[2] = Rc;
-              wb[1] = 32;
+              hg = f[46];
+              var bi = r = f;
+              bi[2] = hg;
+              bi[1] = 32;
               return X;
             }
             if (113 === h) {
-              var ho = new zg(function() {
+              var Cx = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), jh = se(ho);
-              S = f;
-              S[1] = m(jh) ? 116 : 117;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), qv = se(Cx);
+              r = f;
+              r[1] = m(qv) ? 116 : 117;
               return X;
             }
             if (32 === h) {
-              r = f[7];
-              xr = f[73];
-              var th = f[2], ij = A.c(th, "offset"), Rl = A.c(th, "limit"), Lp = pn([js], [!0]), Ue = jU.f ? jU.f(nU, r, Lp) : jU.call(null, nU, r, Lp), nv = sl.c(Bh, Ue), Mp = [null, Qk.c(Rl, Rk(ij, nv))], Cr = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [xr, new T(null, 2, 5, V, Mp, null)], null)], null);
-              S = f;
-              return uJ(S, 33, c, Cr);
+              ot = f[78];
+              z = f[10];
+              var Dx = f[2], ut = A.c(Dx, "offset"), bl = A.c(Dx, "limit"), io = pn([js], [!0]), Ex = jU.f ? jU.f(nU, z, io) : jU.call(null, nU, z, io), rB = sl.c(Bh, Ex), Fx = [null, Qk.c(bl, Rk(ut, rB))], Gx = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [ot, new T(null, 2, 5, V, Fx, null)], null)], null);
+              r = f;
+              return uJ(r, 33, c, Gx);
             }
             if (136 === h) {
-              kg = f[47];
-              var ov = S = f;
-              ov[2] = kg;
-              ov[1] = 137;
+              Ij = f[51];
+              var DM = r = f;
+              DM[2] = Ij;
+              DM[1] = 137;
               return X;
             }
             if (139 === h) {
-              var pv = S = f;
-              pv[2] = !1;
-              pv[1] = 140;
+              var EM = r = f;
+              EM[2] = !1;
+              EM[1] = 140;
               return X;
             }
             if (174 === h) {
-              var st = S = f;
-              st[2] = !1;
-              st[1] = 175;
+              var Dr = r = f;
+              Dr[2] = !1;
+              Dr[1] = 175;
               return X;
             }
             if (331 === h) {
-              var tt = S = f;
-              tt[2] = !1;
-              tt[1] = 332;
+              var FM = r = f;
+              FM[2] = !1;
+              FM[1] = 332;
               return X;
             }
+            if (363 === h) {
+              z = f[10];
+              Tb = f[31];
+              var g_ = f[2], GM = console.log(g_), h_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Tb, new T(null, 2, 5, V, [g_, z], null)], null)], null);
+              f[80] = GM;
+              r = f;
+              return uJ(r, 364, c, h_);
+            }
             if (284 === h) {
-              N = f[16];
-              var Np = jc === N.o, bi = N.i & 64 || Np;
-              S = f;
-              S[1] = m(bi) ? 287 : 288;
+              x = f[16];
+              var i_ = jc === x.o, HM = x.i & 64 || i_;
+              r = f;
+              r[1] = m(HM) ? 287 : 288;
               return X;
             }
             if (208 === h) {
-              var Cx = S = f;
-              Cx[2] = !1;
-              Cx[1] = 209;
+              var j_ = r = f;
+              j_[2] = !1;
+              j_[1] = 209;
               return X;
             }
             if (305 === h) {
-              p = f[10];
-              var qv = G.c(p, "removeRobotComponent");
-              S = f;
-              S[1] = qv ? 327 : 328;
+              t = f[13];
+              var k_ = G.c(t, "removeRobotWeapon");
+              r = f;
+              r[1] = k_ ? 327 : 328;
               return X;
             }
             if (182 === h) {
-              var Dx = f[74];
-              r = f[7];
-              var ut = f[75];
-              v = f[8];
-              var bl = f[76], io = f[77];
-              p = f[10];
-              F = f[14];
-              $a = MI(f, 180, 179);
-              var Ex = M4(ad, bl), rB = Aj.b(bl), Fx = [js], Gx = [!0], DM = pn(Fx, Gx), EM = jU.f ? jU.f(nU, r, DM) : jU.call(null, nU, r, DM), Dr = [rB], FM = new T(null, 1, 5, V, Dr, null), g_ = wl(EM, FM), GM = M4(ci, g_), h_ = [LG], i_ = new T(null, 1, 5, V, h_, null), HM = wl(r, i_), j_ = [gs], k_ = new T(null, 1, 5, V, j_, null), l_ = wl(GM, k_), m_ = function() {
-                return function(aW, DU) {
-                  return function(FU) {
-                    return FU >= DU;
+              var l_ = f[81], m_ = f[82], n_ = f[83], IM = f[84];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              y = f[15];
+              Fc = MI(f, 180, 179);
+              var o_ = M4(ad, m_), p_ = Aj.b(m_), JM = [js], q_ = [!0], KM = pn(JM, q_), r_ = jU.f ? jU.f(nU, z, KM) : jU.call(null, nU, z, KM), s_ = [p_], t_ = new T(null, 1, 5, V, s_, null), u_ = wl(r_, t_), LM = M4(ci, u_), v_ = [LG], MM = new T(null, 1, 5, V, v_, null), NM = wl(z, MM), OM = [gs], w_ = new T(null, 1, 5, V, OM, null), x_ = wl(LM, w_), PM = function() {
+                return function($4, a5) {
+                  return function(b5) {
+                    return b5 >= a5;
                   };
-                }(p, l_, F, HM, rB, Ex, GM, r, F, ut, v, Dx, Dx, r, ut, v, bl, io, p, F, $a, Ex, rB, Fx, Gx, DM, EM, V, Dr, FM, g_, GM, V, h_, i_, HM, V, j_, k_, l_, h, n);
-              }(), n_ = T5(m_, HM, "money not enough"), IM = [LG], o_ = new T(null, 1, 5, V, IM, null), p_ = HM - l_, JM = Ak(p_), q_ = yl.f(r, o_, JM), KM = [bC], r_ = new T(null, 1, 5, V, KM, null), s_ = yl.f(q_, r_, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [Aj.b(q.b(vq())), o3], null));
+                }(t, x_, y, y, NM, p_, o_, LM, z, u, n_, l_, l_, m_, n_, IM, u, z, t, y, Fc, o_, p_, JM, q_, KM, r_, V, s_, t_, u_, LM, V, v_, MM, NM, V, OM, w_, x_, h, n);
+              }(), QM = T5(PM, NM, "money not enough"), y_ = [LG], RM = new T(null, 1, 5, V, y_, null), z_ = NM - x_, SM = Ak(z_), TM = yl.f(z, RM, SM), A_ = [bC], B_ = new T(null, 1, 5, V, A_, null), C_ = yl.f(TM, B_, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Ah.c(H5, new T(null, 2, 5, V, [Aj.b(q.b(vq())), c5], null));
                   };
-                }(p, l_, F, HM, rB, n_, GM, r, F, ut, v, Dx, Dx, r, ut, v, bl, io, p, F, $a, Ex, rB, Fx, Gx, DM, EM, V, Dr, FM, g_, GM, V, h_, i_, HM, V, j_, k_, l_, m_, n_, V, IM, o_, p_, JM, q_, V, KM, r_, h, n);
-              }()), t_ = M4(OG, s_), u_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [ut, new T(null, 2, 5, V, [null, t_], null)], null)], null);
-              f[77] = t_;
-              S = f;
-              return uJ(S, 183, c, u_);
+                }(t, x_, y, y, NM, p_, QM, LM, z, u, n_, l_, l_, m_, n_, IM, u, z, t, y, Fc, o_, p_, JM, q_, KM, r_, V, s_, t_, u_, LM, V, v_, MM, NM, V, OM, w_, x_, PM, QM, V, y_, RM, z_, SM, TM, V, A_, B_, h, n);
+              }()), UM = M4(OG, C_), VM = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n_, new T(null, 2, 5, V, [null, UM], null)], null)], null);
+              f[84] = UM;
+              r = f;
+              return uJ(r, 183, c, VM);
             }
             if (256 === h) {
-              var LM = f[2], v_ = S = f;
-              v_[2] = LM;
-              v_[1] = 253;
+              var D_ = f[2], WM = r = f;
+              WM[2] = D_;
+              WM[1] = 253;
               return X;
             }
             if (214 === h) {
-              r = f[7];
-              var MM = f[78], NM = f[2], OM = console.log(NM), w_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [MM, new T(null, 2, 5, V, [NM, r], null)], null)], null);
-              f[79] = OM;
-              S = f;
-              return uJ(S, 215, c, w_);
+              var XM = f[85];
+              z = f[10];
+              var E_ = f[2], YM = console.log(E_), F_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [XM, new T(null, 2, 5, V, [E_, z], null)], null)], null);
+              f[86] = YM;
+              r = f;
+              return uJ(r, 215, c, F_);
             }
             if (193 === h) {
-              var x_ = f[80], PM = fk(In, x_), QM = S = f;
-              QM[2] = PM;
-              QM[1] = 195;
+              var ZM = f[87], $M = fk(In, ZM), G_ = r = f;
+              G_[2] = $M;
+              G_[1] = 195;
               return X;
             }
             if (241 === h) {
-              var y_ = S = f;
-              y_[2] = !0;
-              y_[1] = 243;
+              var H_ = r = f;
+              H_[2] = !0;
+              H_[1] = 243;
               return X;
             }
             if (314 === h) {
-              hj = f[69];
-              var RM = S = f;
-              RM[2] = hj;
-              RM[1] = 315;
+              vr = f[74];
+              var aN = r = f;
+              aN[2] = vr;
+              aN[1] = 315;
               return X;
             }
             if (226 === h) {
-              var z_ = f[2], SM = S = f;
-              SM[2] = z_;
-              SM[1] = 223;
+              var bN = f[2], I_ = r = f;
+              I_[2] = bN;
+              I_[1] = 223;
               return X;
             }
             if (235 === h) {
-              var TM = f[81];
-              F = f[14];
-              var A_ = K(F, 0, null), B_ = K(F, 1, null), C_ = Uc(null == B_);
-              f[82] = A_;
-              f[81] = B_;
-              S = f;
-              S[1] = C_ ? 238 : 239;
+              var cN = f[88];
+              y = f[15];
+              var dN = K(y, 0, null), J_ = K(y, 1, null), eN = Uc(null == J_);
+              f[88] = J_;
+              f[89] = dN;
+              r = f;
+              r[1] = eN ? 238 : 239;
               return X;
             }
             if (262 === h) {
-              var UM = S = f;
-              UM[2] = !1;
-              UM[1] = 263;
+              var vt = r = f;
+              vt[2] = !1;
+              vt[1] = 263;
               return X;
             }
             if (263 === h) {
-              var VM = f[2];
-              S = f;
-              S[1] = m(VM) ? 267 : 268;
+              var fN = f[2];
+              r = f;
+              r[1] = m(fN) ? 267 : 268;
               return X;
             }
             if (304 === h) {
-              hj = f[69];
-              F = f[14];
-              Id = K(F, 0, null);
-              var D_ = K(F, 1, null), WM = Uc(null == D_);
-              f[45] = Id;
-              f[69] = D_;
-              S = f;
-              S[1] = WM ? 307 : 308;
+              vr = f[74];
+              y = f[15];
+              Fh = K(y, 0, null);
+              var K_ = K(y, 1, null), gN = Uc(null == K_);
+              f[49] = Fh;
+              f[74] = K_;
+              r = f;
+              r[1] = gN ? 307 : 308;
               return X;
             }
             if (40 === h) {
-              r = f[7];
-              var XM = f[83];
-              v = f[8];
-              var E_ = f[84];
-              p = f[10];
-              F = f[14];
-              var YM = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), F_ = function() {
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              var L_ = f[90], hN = f[91];
+              y = f[15];
+              var M_ = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), iN = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, XM, E_, r, XM, v, E_, p, F, YM, V, h, n);
-              }(), ZM = fM(YM, new T(null, 3, 5, V, [ci, F_, function() {
+                }(z, u, t, y, y, L_, hN, u, z, t, L_, hN, y, M_, V, h, n);
+              }(), jN = fM(M_, new T(null, 3, 5, V, [ci, iN, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, XM, E_, r, XM, v, E_, p, F, YM, V, F_, h, n);
-              }()], null), null), $M = oQ(ZM, E_), G_ = S = f;
-              G_[2] = $M;
-              G_[1] = 42;
+                }(z, u, t, y, y, L_, hN, u, z, t, L_, hN, y, M_, V, iN, h, n);
+              }()], null), null), N_ = oQ(jN, hN), kN = r = f;
+              kN[2] = N_;
+              kN[1] = 42;
               return X;
             }
             if (129 === h) {
-              return F = f[14], Mg = K(F, 0, null), kg = K(F, 1, null), f[47] = kg, f[48] = Mg, S = f, S[1] = BM ? 132 : 133, X;
+              return y = f[15], Jf = K(y, 0, null), Ij = K(y, 1, null), f[51] = Ij, f[52] = Jf, r = f, r[1] = BM ? 132 : 133, X;
             }
             if (317 === h) {
-              r = f[7];
-              Id = f[45];
-              var H_ = f[2], aN = console.log(H_), bN = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Id, new T(null, 2, 5, V, [H_, r], null)], null)], null);
-              f[85] = aN;
-              S = f;
-              return uJ(S, 318, c, bN);
+              Fh = f[49];
+              z = f[10];
+              var O_ = f[2], lN = console.log(O_), P_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Fh, new T(null, 2, 5, V, [O_, z], null)], null)], null);
+              f[92] = lN;
+              r = f;
+              return uJ(r, 318, c, P_);
             }
             if (294 === h) {
-              r = f[7];
-              P = f[18];
-              var I_ = f[2], cN = console.log(I_), dN = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [P, new T(null, 2, 5, V, [I_, r], null)], null)], null);
-              f[86] = cN;
-              S = f;
-              return uJ(S, 295, c, dN);
+              J = f[18];
+              z = f[10];
+              var mN = f[2], Q_ = console.log(mN), nN = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [J, new T(null, 2, 5, V, [mN, z], null)], null)], null);
+              f[93] = Q_;
+              r = f;
+              return uJ(r, 295, c, nN);
             }
             if (91 === h) {
-              F = f[14];
-              var J_ = K(F, 0, null);
-              Zn = K(F, 1, null);
-              f[65] = Zn;
-              f[87] = J_;
-              S = f;
-              S[1] = BM ? 94 : 95;
+              y = f[15];
+              var oN = K(y, 0, null);
+              tr = K(y, 1, null);
+              f[70] = tr;
+              f[94] = oN;
+              r = f;
+              r[1] = BM ? 94 : 95;
               return X;
             }
+            if (364 === h) {
+              return z = f[10], f[95] = f[2], r = f, r[2] = z, wJ(r), X;
+            }
             if (341 === h) {
-              return r = f[7], f[88] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[96] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (117 === h) {
-              pe = f[36];
-              var eN = S = f;
-              eN[2] = pe;
-              eN[1] = 118;
+              mf = f[40];
+              var pN = r = f;
+              pN[2] = mf;
+              pN[1] = 118;
               return X;
             }
             if (172 === h) {
-              var vt = f[2];
-              S = f;
-              S[1] = m(vt) ? 176 : 177;
+              var R_ = f[2];
+              r = f;
+              r[1] = m(R_) ? 176 : 177;
               return X;
             }
             if (108 === h) {
-              r = f[7];
-              J_ = f[87];
-              var fN = f[2], K_ = A.c(fN, "offset"), gN = A.c(fN, "limit"), L_ = pn([Ru], [!0]), hN = jU.f ? jU.f(nU, r, L_) : jU.call(null, nU, r, L_), M_ = sl.c(Bh, hN), iN = [null, Qk.c(gN, Rk(K_, M_))], jN = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [J_, new T(null, 2, 5, V, iN, null)], null)], null);
-              S = f;
-              return uJ(S, 109, c, jN);
+              z = f[10];
+              oN = f[94];
+              var S_ = f[2], qN = A.c(S_, "offset"), T_ = A.c(S_, "limit"), U_ = pn([Ru], [!0]), V_ = jU.f ? jU.f(nU, z, U_) : jU.call(null, nU, z, U_), W_ = sl.c(Bh, V_), X_ = [null, Qk.c(T_, Rk(qN, W_))], Y_ = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [oN, new T(null, 2, 5, V, X_, null)], null)], null);
+              r = f;
+              return uJ(r, 109, c, Y_);
             }
             if (156 === h) {
-              var N_ = f[2], kN = S = f;
-              kN[2] = N_;
-              kN[1] = 153;
+              var Op = f[2], Z_ = r = f;
+              Z_[2] = Op;
+              Z_[1] = 153;
+              return X;
+            }
+            if (358 === h) {
+              var $_ = f[2], rN = r = f;
+              rN[2] = $_;
+              rN[1] = 355;
               return X;
             }
             if (308 === h) {
-              var O_ = S = f;
-              O_[2] = !1;
-              O_[1] = 309;
+              var sN = r = f;
+              sN[2] = !1;
+              sN[1] = 309;
               return X;
             }
             if (223 === h) {
-              var lN = f[2];
-              S = f;
-              S[1] = m(lN) ? 227 : 228;
+              var a0 = f[2];
+              r = f;
+              r[1] = m(a0) ? 227 : 228;
+              return X;
+            }
+            if (365 === h) {
+              u = f[9];
+              Kc = f[29];
+              z = f[10];
+              gt = f[75];
+              t = f[13];
+              Tb = f[31];
+              y = f[15];
+              Fc = MI(f, 363, 362);
+              var b0 = function() {
+                return function($4) {
+                  return function(a5) {
+                    var b5 = Gq.b($4);
+                    return a5.b ? a5.b(b5) : a5.call(null, b5);
+                  };
+                }(z, u, t, y, y, Tb, Kc, gt, u, Kc, z, gt, t, Tb, y, Fc, h, n);
+              }(), c0 = Aj.b(gt), d0 = [q.b(gt), " not found in ", q.b(Gq)].join("");
+              xc = T5(b0, c0, d0);
+              Xb = Aj.b(gt);
+              f[28] = Xb;
+              f[30] = xc;
+              r = f;
+              r[1] = BM ? 366 : 367;
               return X;
             }
             if (181 === h) {
-              return r = f[7], f[89] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[97] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (278 === h) {
-              r = f[7];
-              v = f[8];
-              w = f[9];
-              p = f[10];
-              u = f[11];
-              z = f[12];
-              H = f[13];
-              F = f[14];
-              t = f[15];
-              var P_ = [$q], mN = new T(null, 1, 5, V, P_, null), Q_ = yl.f(r, mN, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              w = f[7];
+              p = f[8];
+              u = f[9];
+              z = f[10];
+              H = f[11];
+              F = f[12];
+              t = f[13];
+              E = f[14];
+              y = f[15];
+              var tN = [$q], e0 = new T(null, 1, 5, V, tN, null), uN = yl.f(z, e0, function() {
+                return function($4, a5, b5, J5, I5, c5, H5) {
+                  return function(K5) {
+                    return Ah.c(K5, new T(null, 2, 5, V, [H5, a5], null));
                   };
-                }(p, H, F, t, w, r, u, z, v, F, r, v, w, p, u, z, H, F, t, V, P_, mN, h, n);
-              }()), nN = S = f;
-              nN[2] = Q_;
-              nN[1] = 279;
+                }(t, p, y, H, y, F, w, z, u, E, w, p, u, z, H, F, t, E, y, V, tN, e0, h, n);
+              }()), f0 = r = f;
+              f0[2] = uN;
+              f0[1] = 279;
               return X;
             }
             if (56 === h) {
-              var oN = new zg(function() {
+              var g0 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), pN = se(oN);
-              S = f;
-              S[1] = m(pN) ? 59 : 60;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), vN = se(g0);
+              r = f;
+              r[1] = m(vN) ? 59 : 60;
               return X;
             }
             if (33 === h) {
-              r = f[7];
-              var R_ = f[2];
-              Le = r;
-              f[7] = Le;
-              f[90] = R_;
-              var S_ = S = f;
-              S_[2] = null;
-              S_[1] = 2;
+              z = f[10];
+              var wN = f[2];
+              Wd = z;
+              f[98] = wN;
+              f[10] = Wd;
+              var h0 = r = f;
+              h0[2] = null;
+              h0[1] = 2;
               return X;
             }
             if (13 === h) {
-              var qN = f[2], T_ = S = f;
-              T_[2] = qN;
-              T_[1] = 3;
+              var xN = f[2], AF = r = f;
+              AF[2] = xN;
+              AF[1] = 3;
               return X;
             }
             if (22 === h) {
-              yr = f[72];
-              var U_ = S = f;
-              U_[2] = yr;
-              U_[1] = 23;
+              lv = f[79];
+              var sB = r = f;
+              sB[2] = lv;
+              sB[1] = 23;
               return X;
             }
             if (257 === h) {
-              var V_ = f[91], W_ = f[2], X_ = $V(V_);
-              f[92] = W_;
-              S = f;
-              S[2] = X_;
-              wJ(S);
+              var yN = f[99], zN = f[2], AN = $V(yN);
+              f[100] = zN;
+              r = f;
+              r[2] = AN;
+              wJ(r);
               return X;
             }
             if (338 === h) {
-              var Y_ = f[93], Op = f[2], Z_ = A.c(Op, "componentKey");
-              f[94] = Z_;
-              f[93] = Op;
-              var $_ = S = f;
-              $_[2] = null;
-              $_[1] = 342;
+              var BN = f[101], CN = f[2], DN = A.c(CN, "weaponKey");
+              f[102] = DN;
+              f[101] = CN;
+              var EN = r = f;
+              EN[2] = null;
+              EN[1] = 342;
               return X;
             }
             if (168 === h) {
-              p = f[10];
-              var rN = G.c(p, "buyPilotById");
-              S = f;
-              S[1] = rN ? 184 : 185;
+              t = f[13];
+              var i0 = G.c(t, "buyPilotById");
+              r = f;
+              r[1] = i0 ? 184 : 185;
               return X;
             }
             if (347 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              et = f[53];
-              var sN = f[95];
-              Y_ = f[93];
-              var a0 = f[96];
-              F = f[14];
-              var b0 = [Dy], c0 = new T(null, 1, 5, V, b0, null), d0 = yl.f(r, c0, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Lh.c(p3, o3);
+              var j0 = f[103], FN = f[104];
+              nr = f[59];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              BN = f[101];
+              y = f[15];
+              var k0 = [$q], GN = new T(null, 1, 5, V, k0, null), HN = yl.f(z, GN, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Lh.c(c5, I5);
                   };
-                }(p, F, a0, Y_, sN, r, F, et, v, r, v, p, et, sN, Y_, a0, F, V, b0, c0, h, n);
-              }()), tN = S = f;
-              tN[2] = d0;
-              tN[1] = 348;
+                }(t, BN, y, j0, FN, z, u, y, nr, j0, FN, nr, u, z, t, BN, y, V, k0, GN, h, n);
+              }()), l0 = r = f;
+              l0[2] = HN;
+              l0[1] = 348;
               return X;
             }
             if (90 === h) {
-              r = f[7];
-              var e0 = f[2];
-              Le = r;
-              f[7] = Le;
-              f[97] = e0;
-              var uN = S = f;
-              uN[2] = null;
-              uN[1] = 2;
+              z = f[10];
+              var m0 = f[2];
+              Wd = z;
+              f[10] = Wd;
+              f[105] = m0;
+              var n0 = r = f;
+              n0[2] = null;
+              n0[1] = 2;
               return X;
             }
             if (237 === h) {
-              var f0 = f[2], g0 = S = f;
-              g0[2] = f0;
-              g0[1] = 220;
+              var o0 = f[2], p0 = r = f;
+              p0[2] = o0;
+              p0[1] = 220;
               return X;
             }
             if (292 === h) {
-              Qd = f[33];
-              var vN = f[2], wN = A.c(vN, "robotKey"), h0 = A.c(vN, "componentKey");
-              f[98] = h0;
-              f[99] = wN;
-              f[33] = vN;
-              var xN = S = f;
-              xN[2] = null;
-              xN[1] = 296;
+              Vd = f[38];
+              var IN = f[2], JN = A.c(IN, "robotKey"), q0 = A.c(IN, "componentKey");
+              f[38] = IN;
+              f[106] = q0;
+              f[107] = JN;
+              var BF = r = f;
+              BF[2] = null;
+              BF[1] = 296;
               return X;
             }
             if (109 === h) {
-              r = f[7];
-              var AF = f[2];
-              Le = r;
-              f[7] = Le;
-              f[100] = AF;
-              var sB = S = f;
-              sB[2] = null;
-              sB[1] = 2;
+              z = f[10];
+              var r0 = f[2];
+              Wd = z;
+              f[10] = Wd;
+              f[108] = r0;
+              var KN = r = f;
+              KN[2] = null;
+              KN[1] = 2;
               return X;
             }
             if (216 === h) {
-              r = f[7];
-              v = f[8];
-              var yN = f[101], zN = f[102];
-              Rn = f[51];
-              MM = f[78];
-              p = f[10];
-              F = f[14];
-              $a = MI(f, 214, 213);
-              var AN = M4(ad, yN), BN = Aj.b(yN), CN = [gA], DN = [!0], EN = pn(CN, DN), i0 = jU.f ? jU.f(nU, r, EN) : jU.call(null, nU, r, EN), j0 = [BN], FN = new T(null, 1, 5, V, j0, null), k0 = wl(i0, FN), GN = M4(ci, k0), HN = [LG], l0 = new T(null, 1, 5, V, HN, null), m0 = wl(r, l0), n0 = [gs], o0 = new T(null, 1, 5, V, n0, null), p0 = wl(GN, o0), IN = function() {
-                return function(aW, DU) {
-                  return function(FU) {
-                    return FU >= DU;
+              XM = f[85];
+              var s0 = f[109];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              lr = f[56];
+              var LN = f[110];
+              y = f[15];
+              Fc = MI(f, 214, 213);
+              var t0 = M4(ad, s0), MN = Aj.b(s0), NN = [gA], u0 = [!0], ON = pn(NN, u0), PN = jU.f ? jU.f(nU, z, ON) : jU.call(null, nU, z, ON), v0 = [MN], QN = new T(null, 1, 5, V, v0, null), RN = wl(PN, QN), w0 = M4(ci, RN), x0 = [LG], SN = new T(null, 1, 5, V, x0, null), y0 = wl(z, SN), z0 = [gs], TN = new T(null, 1, 5, V, z0, null), A0 = wl(w0, TN), B0 = function() {
+                return function($4, a5) {
+                  return function(b5) {
+                    return b5 >= a5;
                   };
-                }(p, p0, F, F, m0, BN, AN, zN, GN, r, MM, v, r, v, yN, zN, Rn, MM, p, F, $a, AN, BN, CN, DN, EN, i0, V, j0, FN, k0, GN, V, HN, l0, m0, V, n0, o0, p0, h, n);
-              }(), JN = T5(IN, m0, "money not enough"), q0 = [LG], BF = new T(null, 1, 5, V, q0, null), r0 = m0 - p0, KN = Ak(r0), s0 = yl.f(r, BF, KN), LN = [su], t0 = new T(null, 1, 5, V, LN, null), MN = yl.f(s0, t0, function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    return Ah.c(r3, new T(null, 2, 5, V, [Aj.b(q.b(vq())), p3], null));
+                }(t, A0, y, y0, MN, t0, w0, z, LN, y, u, XM, XM, s0, u, z, t, lr, LN, y, Fc, t0, MN, NN, u0, ON, PN, V, v0, QN, RN, w0, V, x0, SN, y0, V, z0, TN, A0, h, n);
+              }(), C0 = T5(B0, y0, "money not enough"), D0 = [LG], UN = new T(null, 1, 5, V, D0, null), VN = y0 - A0, E0 = Ak(VN), F0 = yl.f(z, UN, E0), WN = [su], G0 = new T(null, 1, 5, V, WN, null), XN = yl.f(F0, G0, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Ah.c(c5, new T(null, 2, 5, V, [Aj.b(q.b(vq())), I5], null));
                   };
-                }(p, p0, F, F, m0, BN, JN, zN, GN, r, MM, v, r, v, yN, zN, Rn, MM, p, F, $a, AN, BN, CN, DN, EN, i0, V, j0, FN, k0, GN, V, HN, l0, m0, V, n0, o0, p0, IN, JN, V, q0, BF, r0, KN, s0, V, LN, t0, h, n);
-              }()), NN = M4(OG, MN), u0 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [MM, new T(null, 2, 5, V, [null, NN], null)], null)], null);
-              f[51] = NN;
-              S = f;
-              return uJ(S, 217, c, u0);
+                }(t, A0, y, y0, MN, C0, w0, z, LN, y, u, XM, XM, s0, u, z, t, lr, LN, y, Fc, t0, MN, NN, u0, ON, PN, V, v0, QN, RN, w0, V, x0, SN, y0, V, z0, TN, A0, B0, C0, V, D0, UN, VN, E0, F0, V, WN, G0, h, n);
+              }()), H0 = M4(OG, XN), I0 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [XM, new T(null, 2, 5, V, [null, H0], null)], null)], null);
+              f[56] = H0;
+              r = f;
+              return uJ(r, 217, c, I0);
             }
             if (191 === h) {
-              var ON = S = f;
-              ON[2] = !1;
-              ON[1] = 192;
+              var YN = r = f;
+              YN[2] = !1;
+              YN[1] = 192;
+              return X;
+            }
+            if (375 === h) {
+              var J0 = f[2], K0 = r = f;
+              K0[2] = J0;
+              K0[1] = 352;
+              return X;
+            }
+            if (367 === h) {
+              Xb = f[28];
+              u = f[9];
+              Kc = f[29];
+              z = f[10];
+              t = f[13];
+              xc = f[30];
+              Tb = f[31];
+              y = f[15];
+              var L0 = [Dy], M0 = new T(null, 1, 5, V, L0, null), N0 = yl.f(z, M0, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
+                  };
+                }(t, y, y, Kc, xc, Xb, z, u, Tb, Xb, u, Kc, z, t, xc, Tb, y, V, L0, M0, h, n);
+              }()), ZN = r = f;
+              ZN[2] = N0;
+              ZN[1] = 368;
               return X;
             }
             if (143 === h) {
-              var PN = f[2], v0 = S = f;
-              v0[2] = PN;
-              v0[1] = 140;
+              var O0 = f[2], P0 = r = f;
+              P0[2] = O0;
+              P0[1] = 140;
               return X;
             }
             if (178 === h) {
-              Dx = f[74];
-              var QN = f[2];
-              bl = A.c(QN, "key");
-              f[74] = QN;
-              f[76] = bl;
-              var RN = S = f;
-              RN[2] = null;
-              RN[1] = 182;
+              l_ = f[81];
+              var Q0 = f[2];
+              m_ = A.c(Q0, "key");
+              f[81] = Q0;
+              f[82] = m_;
+              var $N = r = f;
+              $N[2] = null;
+              $N[1] = 182;
               return X;
             }
             if (247 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var w0 = S = f;
-              w0[2] = null;
-              w0[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var R0 = r = f;
+              R0[2] = null;
+              R0[1] = 2;
               return X;
             }
             if (328 === h) {
-              p = f[10];
-              var x0 = G.c(p, "exit");
-              S = f;
-              S[1] = x0 ? 350 : 351;
+              t = f[13];
+              var aO = G.c(t, "removeRobotComponent");
+              r = f;
+              r[1] = aO ? 350 : 351;
               return X;
             }
             if (167 === h) {
-              ao = f[67];
-              F = f[14];
-              ut = K(F, 0, null);
-              var SN = K(F, 1, null), y0 = Uc(null == SN);
-              f[75] = ut;
-              f[67] = SN;
-              S = f;
-              S[1] = y0 ? 170 : 171;
+              al = f[72];
+              y = f[15];
+              n_ = K(y, 0, null);
+              var S0 = K(y, 1, null), bO = Uc(null == S0);
+              f[83] = n_;
+              f[72] = S0;
+              r = f;
+              r[1] = bO ? 170 : 171;
               return X;
             }
             if (36 === h) {
-              var z0 = f[2], TN = S = f;
-              TN[2] = z0;
-              TN[1] = 17;
+              var T0 = f[2], cO = r = f;
+              cO[2] = T0;
+              cO[1] = 17;
               return X;
             }
             if (41 === h) {
-              E_ = f[84];
-              var A0 = S = f;
-              A0[2] = E_;
-              A0[1] = 42;
+              hN = f[91];
+              var U0 = r = f;
+              U0[2] = hN;
+              U0[1] = 42;
               return X;
             }
             if (187 === h) {
-              x_ = f[80];
-              var B0 = jc === x_.o, C0 = x_.i & 64 || B0;
-              S = f;
-              S[1] = m(C0) ? 190 : 191;
+              ZM = f[87];
+              var V0 = jc === ZM.o, dO = ZM.i & 64 || V0;
+              r = f;
+              r[1] = m(dO) ? 190 : 191;
+              return X;
+            }
+            if (376 === h) {
+              Wd = z = f[10];
+              f[10] = Wd;
+              var W0 = r = f;
+              W0[2] = null;
+              W0[1] = 2;
               return X;
             }
             if (195 === h) {
-              var D0 = f[103], UN = f[2], VN = A.c(UN, "key");
-              f[103] = UN;
-              f[104] = VN;
-              var E0 = S = f;
-              E0[2] = null;
-              E0[1] = 199;
+              var eO = f[111], X0 = f[2], fO = A.c(X0, "key");
+              f[111] = X0;
+              f[112] = fO;
+              var gO = r = f;
+              gO[2] = null;
+              gO[1] = 199;
               return X;
             }
             if (316 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var F0 = S = f;
-              F0[2] = null;
-              F0[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var hO = r = f;
+              hO[2] = null;
+              hO[1] = 2;
               return X;
             }
             if (303 === h) {
-              J = f[19];
-              var WN = f[2], G0 = $V(J);
-              f[105] = WN;
-              S = f;
-              S[2] = G0;
-              wJ(S);
+              R = f[19];
+              var iO = f[2], jO = $V(R);
+              f[113] = iO;
+              r = f;
+              r[2] = jO;
+              wJ(r);
               return X;
             }
+            if (368 === h) {
+              var Y0 = f[114];
+              Tb = f[31];
+              var kO = f[2], lO = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Tb, new T(null, 2, 5, V, [null, kO], null)], null)], null);
+              f[114] = kO;
+              r = f;
+              return uJ(r, 372, c, lO);
+            }
             if (310 === h) {
-              var XN = S = f;
-              XN[2] = !0;
-              XN[1] = 312;
+              var Z0 = r = f;
+              Z0[2] = !0;
+              Z0[1] = 312;
+              return X;
+            }
+            if (366 === h) {
+              var mO = new zg(function() {
+                return CM;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), $0 = se(mO);
+              r = f;
+              r[1] = m($0) ? 369 : 370;
               return X;
             }
             if (118 === h) {
-              var H0 = f[2], I0 = S = f;
-              I0[2] = H0;
-              I0[1] = 115;
+              var nO = f[2], a1 = r = f;
+              a1[2] = nO;
+              a1[1] = 115;
               return X;
             }
             if (150 === h) {
-              var YN = f[2], J0 = S = f;
-              J0[2] = YN;
-              J0[1] = 131;
+              var oO = f[2], b1 = r = f;
+              b1[2] = oO;
+              b1[1] = 131;
               return X;
             }
             if (313 === h) {
-              hj = f[69];
-              var K0 = fk(In, hj), L0 = S = f;
-              L0[2] = K0;
-              L0[1] = 315;
+              vr = f[74];
+              var c1 = fk(In, vr), pO = r = f;
+              pO[2] = c1;
+              pO[1] = 315;
               return X;
             }
             if (238 === h) {
-              TM = f[81];
-              var M0 = jc === TM.o, N0 = TM.i & 64 || M0;
-              S = f;
-              S[1] = m(N0) ? 241 : 242;
+              cN = f[88];
+              var d1 = jc === cN.o, e1 = cN.i & 64 || d1;
+              r = f;
+              r[1] = m(e1) ? 241 : 242;
               return X;
             }
             if (196 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var ZN = S = f;
-              ZN[2] = null;
-              ZN[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var f1 = r = f;
+              f1[2] = null;
+              f1[1] = 2;
               return X;
             }
             if (162 === h) {
-              var O0 = f[2], P0 = S = f;
-              P0[2] = O0;
-              P0[1] = 159;
+              var g1 = f[2], h1 = r = f;
+              h1[2] = g1;
+              h1[1] = 159;
               return X;
             }
             if (184 === h) {
-              x_ = f[80];
-              F = f[14];
-              or = K(F, 0, null);
-              var Q0 = K(F, 1, null), $N = Uc(null == Q0);
-              f[80] = Q0;
-              f[56] = or;
-              S = f;
-              S[1] = $N ? 187 : 188;
+              ZM = f[87];
+              y = f[15];
+              Cp = K(y, 0, null);
+              var qO = K(y, 1, null), rO = Uc(null == qO);
+              f[87] = qO;
+              f[61] = Cp;
+              r = f;
+              r[1] = rO ? 187 : 188;
               return X;
             }
             if (219 === h) {
-              p = f[10];
-              var R0 = G.c(p, "setRobotPilot");
-              S = f;
-              S[1] = R0 ? 235 : 236;
+              t = f[13];
+              var sO = G.c(t, "setRobotPilot");
+              r = f;
+              r[1] = sO ? 235 : 236;
               return X;
             }
             if (89 === h) {
-              r = f[7];
-              pf = f[44];
-              var aO = f[2], S0 = A.c(aO, "offset"), bO = A.c(aO, "limit"), T0 = pn([BE], [!0]), cO = jU.f ? jU.f(nU, r, T0) : jU.call(null, nU, r, T0), U0 = sl.c(Bh, cO), V0 = [null, Qk.c(bO, Rk(S0, U0))], dO = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [pf, new T(null, 2, 5, V, V0, null)], null)], null);
-              S = f;
-              return uJ(S, 90, c, dO);
+              z = f[10];
+              ig = f[48];
+              var tO = f[2], CF = A.c(tO, "offset"), uO = A.c(tO, "limit"), i1 = pn([BE], [!0]), j1 = jU.f ? jU.f(nU, z, i1) : jU.call(null, nU, z, i1), vO = sl.c(Bh, j1), Hx = [null, Qk.c(uO, Rk(CF, vO))], wO = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [ig, new T(null, 2, 5, V, Hx, null)], null)], null);
+              r = f;
+              return uJ(r, 90, c, wO);
             }
             if (100 === h) {
-              zp = f[55];
-              var W0 = jc === zp.o, eO = zp.i & 64 || W0;
-              S = f;
-              S[1] = m(eO) ? 103 : 104;
+              Bp = f[60];
+              var k1 = jc === Bp.o, xO = Bp.i & 64 || k1;
+              r = f;
+              r[1] = m(xO) ? 103 : 104;
               return X;
             }
             if (351 === h) {
-              return S = f, S[1] = 353, X;
+              t = f[13];
+              var yO = G.c(t, "exit");
+              r = f;
+              r[1] = yO ? 373 : 374;
+              return X;
             }
             if (243 === h) {
-              var X0 = f[2], fO = S = f;
-              fO[2] = X0;
-              fO[1] = 240;
+              var l1 = f[2], zO = r = f;
+              zO[2] = l1;
+              zO[1] = 240;
               return X;
             }
             if (131 === h) {
-              var gO = f[2], hO = S = f;
-              hO[2] = gO;
-              hO[1] = 112;
+              var m1 = f[2], AO = r = f;
+              AO[2] = m1;
+              AO[1] = 112;
               return X;
             }
             if (122 === h) {
-              var iO = S = f;
-              iO[2] = !0;
-              iO[1] = 124;
+              var DF = r = f;
+              DF[2] = !0;
+              DF[1] = 124;
               return X;
             }
             if (43 === h) {
-              Lj = f[49];
-              var jO = jc === Lj.o, Y0 = Lj.i & 64 || jO;
-              S = f;
-              S[1] = m(Y0) ? 46 : 47;
+              Xk = f[54];
+              var tB = jc === Xk.o, Ix = Xk.i & 64 || tB;
+              r = f;
+              r[1] = m(Ix) ? 46 : 47;
               return X;
             }
             if (231 === h) {
-              r = f[7];
-              va = f[22];
-              var kO = f[2], lO = console.log(kO), Z0 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [va, new T(null, 2, 5, V, [kO, r], null)], null)], null);
-              f[106] = lO;
-              S = f;
-              return uJ(S, 232, c, Z0);
+              Fa = f[22];
+              z = f[10];
+              var uB = f[2], BO = console.log(uB), CO = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Fa, new T(null, 2, 5, V, [uB, z], null)], null)], null);
+              f[115] = BO;
+              r = f;
+              return uJ(r, 232, c, CO);
             }
             if (61 === h) {
-              var mO = f[2], $0 = S = f;
-              $0[2] = mO;
-              $0[1] = 58;
+              var DO = f[2], EO = r = f;
+              EO[2] = DO;
+              EO[1] = 58;
               return X;
             }
             if (29 === h) {
-              var nO = f[2], a1 = S = f;
-              a1[2] = nO;
-              a1[1] = 26;
+              var FO = f[2], GO = r = f;
+              GO[2] = FO;
+              GO[1] = 26;
               return X;
             }
             if (151 === h) {
-              var oO = new zg(function() {
+              var n1 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), b1 = se(oO);
-              S = f;
-              S[1] = m(b1) ? 154 : 155;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), HO = se(n1);
+              r = f;
+              r[1] = m(HO) ? 154 : 155;
+              return X;
+            }
+            if (369 === h) {
+              Xb = f[28];
+              u = f[9];
+              Kc = f[29];
+              z = f[10];
+              t = f[13];
+              xc = f[30];
+              Tb = f[31];
+              y = f[15];
+              var o1 = [Dy], IO = new T(null, 1, 5, V, o1, null), JO = yl.f(z, IO, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
+                  };
+                }(t, y, y, Kc, xc, Xb, z, u, Tb, Xb, u, Kc, z, t, xc, Tb, y, V, o1, IO, h, n);
+              }()), KO = oQ(OG, JO), p1 = r = f;
+              p1[2] = KO;
+              p1[1] = 371;
               return X;
             }
             if (348 === h) {
-              var c1 = f[2], pO = S = f;
-              pO[2] = c1;
-              pO[1] = 345;
+              var LO = f[2], EF = r = f;
+              EF[2] = LO;
+              EF[1] = 345;
               return X;
             }
             if (44 === h) {
-              var d1 = S = f;
-              d1[2] = !1;
-              d1[1] = 45;
+              var q1 = r = f;
+              q1[2] = !1;
+              q1[1] = 45;
               return X;
             }
             if (258 === h) {
-              Ap = f[59];
-              F = f[14];
-              z = K(F, 0, null);
-              var e1 = K(F, 1, null), f1 = Uc(null == e1);
-              f[59] = e1;
-              f[12] = z;
-              S = f;
-              S[1] = f1 ? 261 : 262;
+              Jm = f[64];
+              y = f[15];
+              E = K(y, 0, null);
+              var MO = K(y, 1, null), r1 = Uc(null == MO);
+              f[64] = MO;
+              f[14] = E;
+              r = f;
+              r[1] = r1 ? 261 : 262;
               return X;
             }
             if (250 === h) {
-              r = f[7];
-              var g1 = f[107];
-              v = f[8];
-              A_ = f[82];
-              p = f[10];
-              var h1 = f[108];
-              F = f[14];
-              var qO = f[109];
-              $a = MI(f, 248, 247);
-              var rO = M4(ad, h1), sO = M4(ad, qO), tO = function() {
-                return function(aW, DU, FU, bW, o3, p3, r3) {
-                  return function(q3) {
-                    var d5 = bC.b(r3);
-                    return q3.b ? q3.b(d5) : q3.call(null, d5);
+              var NO = f[116];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              var OO = f[117];
+              dN = f[89];
+              y = f[15];
+              var PO = f[118];
+              Fc = MI(f, 248, 247);
+              var QO = M4(ad, OO), RO = M4(ad, PO), SO = function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    var K5 = bC.b(c5);
+                    return H5.b ? H5.b(K5) : H5.call(null, K5);
                   };
-                }(p, h1, F, sO, qO, F, r, A_, v, g1, r, g1, v, A_, p, h1, F, qO, $a, rO, sO, h, n);
-              }(), CF = Aj.b(h1), uO = [q.b(h1), " not found in ", q.b(bC)].join(""), i1 = T5(tO, CF, uO), j1 = function() {
-                return function(aW, DU, FU, bW, o3, p3, r3) {
-                  return function(q3) {
-                    var d5 = fw.b(r3);
-                    return q3.b ? q3.b(d5) : q3.call(null, d5);
+                }(t, OO, y, RO, PO, z, NO, u, y, dN, NO, u, z, t, OO, dN, y, PO, Fc, QO, RO, h, n);
+              }(), TO = Aj.b(OO), UO = [q.b(OO), " not found in ", q.b(bC)].join(""), VO = T5(SO, TO, UO), WO = function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    var K5 = fw.b(c5);
+                    return H5.b ? H5.b(K5) : H5.call(null, K5);
                   };
-                }(p, h1, F, i1, qO, F, r, A_, v, g1, r, g1, v, A_, p, h1, F, qO, $a, rO, sO, tO, CF, uO, i1, h, n);
-              }(), vO = Aj.b(qO), Hx = [q.b(qO), " not found in ", q.b(fw)].join(""), wO = T5(j1, vO, Hx), k1 = Aj.b(h1), xO = Aj.b(qO);
-              f[110] = xO;
-              f[111] = wO;
-              f[112] = rO;
-              f[113] = k1;
-              S = f;
-              S[1] = BM ? 251 : 252;
+                }(t, OO, y, VO, PO, z, NO, u, y, dN, NO, u, z, t, OO, dN, y, PO, Fc, QO, RO, SO, TO, UO, VO, h, n);
+              }(), XO = Aj.b(PO), YO = [q.b(PO), " not found in ", q.b(fw)].join(""), s1 = T5(WO, XO, YO), t1 = Aj.b(OO), ZO = Aj.b(PO);
+              f[119] = t1;
+              f[120] = ZO;
+              f[121] = s1;
+              f[122] = QO;
+              r = f;
+              r[1] = BM ? 251 : 252;
               return X;
             }
             if (301 === h) {
-              zc = f[31];
-              r = f[7];
-              v = f[8];
-              P = f[18];
-              p = f[10];
-              zb = f[32];
-              Qd = f[33];
-              F = f[14];
-              gc = f[34];
-              var yO = [Dy], l1 = new T(null, 1, 5, V, yO, null), zO = yl.f(r, l1, function() {
-                return function(aW, DU, FU, bW, o3, p3) {
-                  return function(r3) {
-                    return Ah.c(r3, new T(null, 2, 5, V, [p3, DU], null));
+              Gd = f[35];
+              J = f[18];
+              u = f[9];
+              Zc = f[36];
+              pe = f[37];
+              z = f[10];
+              Vd = f[38];
+              t = f[13];
+              y = f[15];
+              var u1 = [Dy], v1 = new T(null, 1, 5, V, u1, null), $O = yl.f(z, v1, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Ah.c(H5, new T(null, 2, 5, V, [c5, b5], null));
                   };
-                }(p, gc, F, F, zc, zb, r, Qd, P, v, zc, r, v, P, p, zb, Qd, F, gc, V, yO, l1, h, n);
-              }()), m1 = S = f;
-              m1[2] = zO;
-              m1[1] = 302;
+                }(t, Vd, Zc, y, Gd, pe, y, z, u, J, Gd, J, u, Zc, pe, z, Vd, t, y, V, u1, v1, h, n);
+              }()), w1 = r = f;
+              w1[2] = $O;
+              w1[1] = 302;
               return X;
             }
             if (93 === h) {
-              var AO = f[2], DF = S = f;
-              DF[2] = AO;
-              DF[1] = 74;
+              var x1 = f[2], y1 = r = f;
+              y1[2] = x1;
+              y1[1] = 74;
               return X;
             }
             if (6 === h) {
-              return f[114] = f[2], S = f, tJ(S, 10, b);
+              return f[123] = f[2], r = f, tJ(r, 10, b);
             }
             if (111 === h) {
-              p = f[10];
-              var tB = G.c(p, "getWeaponList");
-              S = f;
-              S[1] = tB ? 129 : 130;
+              t = f[13];
+              var z1 = G.c(t, "getWeaponList");
+              r = f;
+              r[1] = z1 ? 129 : 130;
               return X;
             }
             if (28 === h) {
-              var Ix = S = f;
-              Ix[2] = !1;
-              Ix[1] = 29;
+              var aP = r = f;
+              aP[2] = !1;
+              aP[1] = 29;
               return X;
             }
+            if (374 === h) {
+              return r = f, r[1] = 376, X;
+            }
             if (134 === h) {
-              $n = f[66];
-              var uB = f[2], BO = Uc(null == uB);
-              f[66] = uB;
-              S = f;
-              S[1] = BO ? 138 : 139;
+              ur = f[71];
+              var A1 = f[2], B1 = Uc(null == A1);
+              f[71] = A1;
+              r = f;
+              r[1] = B1 ? 138 : 139;
               return X;
             }
             if (64 === h) {
-              var CO = f[2];
-              S = f;
-              S[1] = m(CO) ? 68 : 69;
+              var FF = f[2];
+              r = f;
+              r[1] = m(FF) ? 68 : 69;
               return X;
             }
             if (334 === h) {
-              var DO = S = f;
-              DO[2] = !1;
-              DO[1] = 335;
+              var bP = r = f;
+              bP[2] = !1;
+              bP[1] = 335;
               return X;
             }
             if (323 === h) {
-              r = f[7];
-              v = f[8];
-              Id = f[45];
-              p = f[10];
-              Ql = f[62];
-              qr = f[63];
-              Jm = f[64];
-              F = f[14];
-              var EO = [$q], FO = new T(null, 1, 5, V, EO, null), GO = yl.f(r, FO, function() {
-                return function(aW, DU, FU, bW) {
-                  return function(o3) {
-                    return Lh.c(o3, bW);
+              Fp = f[66];
+              Fh = f[49];
+              ao = f[68];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              Zk = f[69];
+              y = f[15];
+              var C1 = [nG], D1 = new T(null, 1, 5, V, C1, null), cP = yl.f(z, D1, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
                   };
-                }(p, F, Jm, qr, r, F, Id, v, Ql, r, v, Id, p, Ql, qr, Jm, F, V, EO, FO, h, n);
-              }()), n1 = oQ(OG, GO), HO = S = f;
-              HO[2] = n1;
-              HO[1] = 325;
+                }(t, y, y, Fp, ao, Zk, z, u, Fh, Fp, Fh, ao, u, z, t, Zk, y, V, C1, D1, h, n);
+              }()), E1 = oQ(OG, cP), dP = r = f;
+              dP[2] = E1;
+              dP[1] = 325;
               return X;
             }
             if (189 === h) {
-              var o1 = f[2];
-              S = f;
-              S[1] = m(o1) ? 193 : 194;
+              var F1 = f[2];
+              r = f;
+              r[1] = m(F1) ? 193 : 194;
               return X;
             }
             if (280 === h) {
-              var IO = f[115], JO = f[2], KO = $V(IO);
-              f[116] = JO;
-              S = f;
-              S[2] = KO;
-              wJ(S);
+              var G1 = f[124], H1 = f[2], eP = $V(G1);
+              f[125] = H1;
+              r = f;
+              r[2] = eP;
+              wJ(r);
               return X;
             }
             if (198 === h) {
-              return r = f[7], f[117] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[126] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (155 === h) {
-              cf = f[40];
-              var p1 = S = f;
-              p1[2] = cf;
-              p1[1] = 156;
+              Ef = f[44];
+              var GF = r = f;
+              GF[2] = Ef;
+              GF[1] = 156;
               return X;
             }
             if (295 === h) {
-              return r = f[7], f[118] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[127] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (248 === h) {
-              r = f[7];
-              A_ = f[82];
-              var LO = f[2], EF = console.log(LO), q1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [A_, new T(null, 2, 5, V, [LO, r], null)], null)], null);
-              f[119] = EF;
-              S = f;
-              return uJ(S, 249, c, q1);
+              z = f[10];
+              dN = f[89];
+              var HF = f[2], fP = console.log(HF), gP = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [dN, new T(null, 2, 5, V, [HF, z], null)], null)], null);
+              f[128] = fP;
+              r = f;
+              return uJ(r, 249, c, gP);
             }
             if (285 === h) {
-              var MO = S = f;
-              MO[2] = !1;
-              MO[1] = 286;
+              var hP = r = f;
+              hP[2] = !1;
+              hP[1] = 286;
               return X;
             }
             if (227 === h) {
-              Ga = f[21];
-              var r1 = fk(In, Ga), NO = S = f;
-              NO[2] = r1;
-              NO[1] = 229;
+              va = f[21];
+              var iP = fk(In, va), jP = r = f;
+              jP[2] = iP;
+              jP[1] = 229;
               return X;
             }
             if (220 === h) {
-              var OO = f[2], PO = S = f;
-              PO[2] = OO;
-              PO[1] = 203;
+              var kP = f[2], lP = r = f;
+              lP[2] = kP;
+              lP[1] = 203;
               return X;
             }
             if (103 === h) {
-              var QO = S = f;
-              QO[2] = !0;
-              QO[1] = 105;
+              var mP = r = f;
+              mP[2] = !0;
+              mP[1] = 105;
               return X;
             }
             if (170 === h) {
-              ao = f[67];
-              var RO = jc === ao.o, SO = ao.i & 64 || RO;
-              S = f;
-              S[1] = m(SO) ? 173 : 174;
+              al = f[72];
+              var I1 = jc === al.o, J1 = al.i & 64 || I1;
+              r = f;
+              r[1] = m(J1) ? 173 : 174;
               return X;
             }
             if (51 === h) {
-              r = f[7];
-              XM = f[83];
-              var TO = f[2], UO = A.c(TO, "offset"), VO = A.c(TO, "limit"), WO = pn([wt], [!0]), XO = jU.f ? jU.f(nU, r, WO) : jU.call(null, nU, r, WO), YO = sl.c(Bh, XO), s1 = [null, Qk.c(VO, Rk(UO, YO))], t1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [XM, new T(null, 2, 5, V, s1, null)], null)], null);
-              S = f;
-              return uJ(S, 52, c, t1);
+              z = f[10];
+              L_ = f[90];
+              var K1 = f[2], nP = A.c(K1, "offset"), oP = A.c(K1, "limit"), L1 = pn([wt], [!0]), pP = jU.f ? jU.f(nU, z, L1) : jU.call(null, nU, z, L1), qP = sl.c(Bh, pP), IF = [null, Qk.c(oP, Rk(nP, qP))], rP = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [L_, new T(null, 2, 5, V, IF, null)], null)], null);
+              r = f;
+              return uJ(r, 52, c, rP);
             }
             if (25 === h) {
-              var ZO = S = f;
-              ZO[2] = !1;
-              ZO[1] = 26;
+              var sP = r = f;
+              sP[2] = !1;
+              sP[1] = 26;
               return X;
             }
             if (261 === h) {
-              Ap = f[59];
-              var u1 = jc === Ap.o, v1 = Ap.i & 64 || u1;
-              S = f;
-              S[1] = m(v1) ? 264 : 265;
+              Jm = f[64];
+              var tP = jc === Jm.o, uP = Jm.i & 64 || tP;
+              r = f;
+              r[1] = m(uP) ? 264 : 265;
               return X;
             }
             if (201 === h) {
-              wf = f[38];
-              F = f[14];
-              MM = K(F, 0, null);
-              var $O = K(F, 1, null), w1 = Uc(null == $O);
-              f[78] = MM;
-              f[38] = $O;
-              S = f;
-              S[1] = w1 ? 204 : 205;
+              xf = f[42];
+              y = f[15];
+              XM = K(y, 0, null);
+              var vP = K(y, 1, null), M1 = Uc(null == vP);
+              f[85] = XM;
+              f[42] = vP;
+              r = f;
+              r[1] = M1 ? 204 : 205;
               return X;
             }
             if (166 === h) {
-              r = f[7];
-              var x1 = f[2];
-              Le = r;
-              f[7] = Le;
-              f[120] = x1;
-              var y1 = S = f;
-              y1[2] = null;
-              y1[1] = 2;
+              z = f[10];
+              var N1 = f[2];
+              Wd = z;
+              f[129] = N1;
+              f[10] = Wd;
+              var wP = r = f;
+              wP[2] = null;
+              wP[1] = 2;
               return X;
             }
             if (34 === h) {
-              return F = f[14], XM = K(F, 0, null), E_ = K(F, 1, null), f[83] = XM, f[84] = E_, S = f, S[1] = BM ? 37 : 38, X;
+              return y = f[15], L_ = K(y, 0, null), hN = K(y, 1, null), f[90] = L_, f[91] = hN, r = f, r[1] = BM ? 37 : 38, X;
             }
             if (252 === h) {
-              r = f[7];
-              g1 = f[107];
-              v = f[8];
-              xO = f[110];
-              A_ = f[82];
-              p = f[10];
-              wO = f[111];
-              k1 = f[113];
-              F = f[14];
-              var z1 = [nG], aP = new T(null, 1, 5, V, z1, null), A1 = yl.f(r, aP, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              t1 = f[119];
+              ZO = f[120];
+              NO = f[116];
+              s1 = f[121];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              dN = f[89];
+              y = f[15];
+              var O1 = [nG], P1 = new T(null, 1, 5, V, O1, null), xP = yl.f(z, P1, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Ah.c(c5, new T(null, 2, 5, V, [I5, a5], null));
                   };
-                }(p, k1, F, wO, xO, F, r, A_, v, g1, r, g1, v, xO, A_, p, wO, k1, F, V, z1, aP, h, n);
-              }()), B1 = S = f;
-              B1[2] = A1;
-              B1[1] = 253;
+                }(t, t1, y, s1, ZO, z, NO, u, y, dN, t1, ZO, NO, s1, u, z, t, dN, y, V, O1, P1, h, n);
+              }()), yP = r = f;
+              yP[2] = xP;
+              yP[1] = 253;
               return X;
             }
             if (325 === h) {
-              var FF = f[2], bP = S = f;
-              bP[2] = FF;
-              bP[1] = 322;
+              var Q1 = f[2], zP = r = f;
+              zP[2] = Q1;
+              zP[1] = 322;
               return X;
             }
             if (146 === h) {
-              r = f[7];
-              Mg = f[48];
-              var C1 = f[2], D1 = A.c(C1, "offset"), cP = A.c(C1, "limit"), E1 = pn([RG], [!0]), dP = jU.f ? jU.f(nU, r, E1) : jU.call(null, nU, r, E1), F1 = sl.c(Bh, dP), G1 = [null, Qk.c(cP, Rk(D1, F1))], H1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Mg, new T(null, 2, 5, V, G1, null)], null)], null);
-              S = f;
-              return uJ(S, 147, c, H1);
+              z = f[10];
+              Jf = f[52];
+              var AP = f[2], BP = A.c(AP, "offset"), CP = A.c(AP, "limit"), DP = pn([RG], [!0]), R1 = jU.f ? jU.f(nU, z, DP) : jU.call(null, nU, z, DP), EP = sl.c(Bh, R1), FP = [null, Qk.c(CP, Rk(BP, EP))], S1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Jf, new T(null, 2, 5, V, FP, null)], null)], null);
+              r = f;
+              return uJ(r, 147, c, S1);
             }
             if (228 === h) {
-              Ga = f[21];
-              var eP = S = f;
-              eP[2] = Ga;
-              eP[1] = 229;
+              va = f[21];
+              var GP = r = f;
+              GP[2] = va;
+              GP[1] = 229;
               return X;
             }
             if (306 === h) {
-              var GF = f[2], HF = S = f;
-              HF[2] = GF;
-              HF[1] = 283;
+              var T1 = f[2], HP = r = f;
+              HP[2] = T1;
+              HP[1] = 283;
               return X;
             }
             if (125 === h) {
-              Im = f[60];
-              var fP = fk(In, Im), gP = S = f;
-              gP[2] = fP;
-              gP[1] = 127;
+              Yn = f[65];
+              var IP = fk(In, Yn), U1 = r = f;
+              U1[2] = IP;
+              U1[1] = 127;
               return X;
             }
             if (276 === h) {
-              IO = f[115];
-              z = f[12];
-              var hP = f[2], iP = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [z, new T(null, 2, 5, V, [null, hP], null)], null)], null);
-              f[115] = hP;
-              S = f;
-              return uJ(S, 280, c, iP);
+              G1 = f[124];
+              E = f[14];
+              var JP = f[2], V1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [E, new T(null, 2, 5, V, [null, JP], null)], null)], null);
+              f[124] = JP;
+              r = f;
+              return uJ(r, 280, c, V1);
             }
             if (340 === h) {
-              r = f[7];
-              et = f[53];
-              var jP = f[2], kP = console.log(jP), lP = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [et, new T(null, 2, 5, V, [jP, r], null)], null)], null);
-              f[121] = kP;
-              S = f;
-              return uJ(S, 341, c, lP);
+              nr = f[59];
+              z = f[10];
+              var KP = f[2], LP = console.log(KP), W1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [nr, new T(null, 2, 5, V, [KP, z], null)], null)], null);
+              f[130] = LP;
+              r = f;
+              return uJ(r, 341, c, W1);
             }
             if (148 === h) {
-              return F = f[14], qe = K(F, 0, null), cf = K(F, 1, null), f[40] = cf, f[41] = qe, S = f, S[1] = BM ? 151 : 152, X;
+              return y = f[15], df = K(y, 0, null), Ef = K(y, 1, null), f[44] = Ef, f[45] = df, r = f, r[1] = BM ? 151 : 152, X;
             }
             if (17 === h) {
-              var mP = f[2], I1 = S = f;
-              I1[2] = mP;
-              I1[1] = 13;
+              var MP = f[2], X1 = r = f;
+              X1[2] = MP;
+              X1[1] = 13;
               return X;
             }
             if (312 === h) {
-              var J1 = f[2], K1 = S = f;
-              K1[2] = J1;
-              K1[1] = 309;
+              var JF = f[2], KF = r = f;
+              KF[2] = JF;
+              KF[1] = 309;
               return X;
             }
             if (3 === h) {
-              var nP = f[2];
-              S = f;
-              return vJ(S, nP);
+              var NP = f[2];
+              r = f;
+              return vJ(r, NP);
             }
             if (286 === h) {
-              var oP = f[2];
-              S = f;
-              S[1] = m(oP) ? 290 : 291;
+              var Y1 = f[2];
+              r = f;
+              r[1] = m(Y1) ? 290 : 291;
               return X;
             }
             if (279 === h) {
-              var L1 = f[2], pP = S = f;
-              pP[2] = L1;
-              pP[1] = 276;
+              var Z1 = f[2], $1 = r = f;
+              $1[2] = Z1;
+              $1[1] = 276;
               return X;
             }
             if (12 === h) {
-              p = f[10];
-              var qP = G.c(p, "getRobotStoreList");
-              S = f;
-              S[1] = qP ? 15 : 16;
+              t = f[13];
+              var OP = G.c(t, "getRobotStoreList");
+              r = f;
+              r[1] = OP ? 15 : 16;
               return X;
             }
             if (332 === h) {
-              var IF = f[2];
-              S = f;
-              S[1] = m(IF) ? 336 : 337;
+              var PP = f[2];
+              r = f;
+              r[1] = m(PP) ? 336 : 337;
               return X;
             }
             if (330 === h) {
-              Ng = f[70];
-              var rP = jc === Ng.o, sP = Ng.i & 64 || rP;
-              S = f;
-              S[1] = m(sP) ? 333 : 334;
+              mt = f[76];
+              var QP = jc === mt.o, a2 = mt.i & 64 || QP;
+              r = f;
+              r[1] = m(a2) ? 333 : 334;
               return X;
             }
             if (152 === h) {
-              cf = f[40];
-              var tP = S = f;
-              tP[2] = cf;
-              tP[1] = 153;
+              Ef = f[44];
+              var b2 = r = f;
+              b2[2] = Ef;
+              b2[1] = 153;
               return X;
             }
             if (342 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              et = f[53];
-              Z_ = f[94];
-              Y_ = f[93];
-              F = f[14];
-              $a = MI(f, 340, 339);
-              var uP = function() {
-                return function(aW) {
-                  return function(DU) {
-                    var FU = Gq.b(aW);
-                    return DU.b ? DU.b(FU) : DU.call(null, FU);
+              nr = f[59];
+              u = f[9];
+              z = f[10];
+              DN = f[102];
+              t = f[13];
+              BN = f[101];
+              y = f[15];
+              Fc = MI(f, 340, 339);
+              var c2 = function() {
+                return function($4) {
+                  return function(a5) {
+                    var b5 = su.b($4);
+                    return a5.b ? a5.b(b5) : a5.call(null, b5);
                   };
-                }(r, v, p, F, F, et, Y_, Z_, r, v, p, et, Z_, Y_, F, $a, h, n);
-              }(), vP = Aj.b(Z_), M1 = [q.b(Z_), " not found in ", q.b(Gq)].join("");
-              a0 = T5(uP, vP, M1);
-              sN = Aj.b(Z_);
-              f[95] = sN;
-              f[96] = a0;
-              S = f;
-              S[1] = BM ? 343 : 344;
+                }(z, u, t, y, y, nr, BN, DN, nr, u, z, DN, t, BN, y, Fc, h, n);
+              }(), RP = Aj.b(DN), d2 = [q.b(DN), " not found in ", q.b(su)].join("");
+              j0 = T5(c2, RP, d2);
+              FN = Aj.b(DN);
+              f[103] = j0;
+              f[104] = FN;
+              r = f;
+              r[1] = BM ? 343 : 344;
               return X;
             }
             if (2 === h) {
-              return S = f, S[1] = BM ? 4 : 5, X;
+              return r = f, r[1] = BM ? 4 : 5, X;
             }
             if (66 === h) {
-              var N1 = S = f;
-              N1[2] = !1;
-              N1[1] = 67;
+              var SP = r = f;
+              SP[2] = !1;
+              SP[1] = 67;
               return X;
             }
             if (236 === h) {
-              p = f[10];
-              var wP = G.c(p, "addRobotWeapon");
-              S = f;
-              S[1] = wP ? 258 : 259;
+              t = f[13];
+              var e2 = G.c(t, "addRobotWeapon");
+              r = f;
+              r[1] = e2 ? 258 : 259;
+              return X;
+            }
+            if (373 === h) {
+              z = f[10];
+              var TP = zl(a, WD, Ak(z)), UP = r = f;
+              UP[2] = TP;
+              UP[1] = 375;
               return X;
             }
             if (142 === h) {
-              var O1 = S = f;
-              O1[2] = !1;
-              O1[1] = 143;
+              var f2 = r = f;
+              f2[2] = !1;
+              f2[1] = 143;
+              return X;
+            }
+            if (359 === h) {
+              Tk = f[53];
+              var VP = fk(In, Tk), WP = r = f;
+              WP[2] = VP;
+              WP[1] = 361;
+              return X;
+            }
+            if (371 === h) {
+              var g2 = f[2], h2 = r = f;
+              h2[2] = g2;
+              h2[1] = 368;
               return X;
             }
             if (107 === h) {
-              zp = f[55];
-              var P1 = S = f;
-              P1[2] = zp;
-              P1[1] = 108;
+              Bp = f[60];
+              var XP = r = f;
+              XP[2] = Bp;
+              XP[1] = 108;
               return X;
             }
             if (23 === h) {
-              var xP = f[2], yP = S = f;
-              yP[2] = xP;
-              yP[1] = 20;
+              var i2 = f[2], YP = r = f;
+              YP[2] = i2;
+              YP[1] = 20;
               return X;
             }
             if (230 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var Q1 = S = f;
-              Q1[2] = null;
-              Q1[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var ZP = r = f;
+              ZP[2] = null;
+              ZP[1] = 2;
               return X;
             }
             if (47 === h) {
-              var zP = S = f;
-              zP[2] = !1;
-              zP[1] = 48;
+              var j2 = r = f;
+              j2[2] = !1;
+              j2[1] = 48;
               return X;
             }
             if (180 === h) {
-              r = f[7];
-              ut = f[75];
-              var AP = f[2], BP = console.log(AP), CP = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [ut, new T(null, 2, 5, V, [AP, r], null)], null)], null);
-              f[122] = BP;
-              S = f;
-              return uJ(S, 181, c, CP);
+              n_ = f[83];
+              z = f[10];
+              var $P = f[2], aQ = console.log($P), k2 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n_, new T(null, 2, 5, V, [$P, z], null)], null)], null);
+              f[131] = aQ;
+              r = f;
+              return uJ(r, 181, c, k2);
             }
             if (158 === h) {
-              var DP = S = f;
-              DP[2] = !1;
-              DP[1] = 159;
+              var bQ = r = f;
+              bQ[2] = !1;
+              bQ[1] = 159;
               return X;
             }
             if (350 === h) {
-              r = f[7];
-              var R1 = zl(a, WD, Ak(r)), EP = S = f;
-              EP[2] = R1;
-              EP[1] = 352;
+              Tk = f[53];
+              y = f[15];
+              Tb = K(y, 0, null);
+              var l2 = K(y, 1, null), cQ = Uc(null == l2);
+              f[53] = l2;
+              f[31] = Tb;
+              r = f;
+              r[1] = cQ ? 353 : 354;
               return X;
             }
             if (35 === h) {
-              p = f[10];
-              var FP = G.c(p, "getWeaponStoreList");
-              S = f;
-              S[1] = FP ? 53 : 54;
+              t = f[13];
+              var m2 = G.c(t, "getWeaponStoreList");
+              r = f;
+              r[1] = m2 ? 53 : 54;
               return X;
             }
             if (127 === h) {
-              r = f[7];
-              Zc = f[35];
-              var S1 = f[2], GP = A.c(S1, "offset"), T1 = A.c(S1, "limit"), HP = pn([cF], [!0]), IP = jU.f ? jU.f(nU, r, HP) : jU.call(null, nU, r, HP), U1 = sl.c(Bh, IP), JP = [null, Qk.c(T1, Rk(GP, U1))], V1 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Zc, new T(null, 2, 5, V, JP, null)], null)], null);
-              S = f;
-              return uJ(S, 128, c, V1);
+              bf = f[39];
+              z = f[10];
+              var dQ = f[2], eQ = A.c(dQ, "offset"), n2 = A.c(dQ, "limit"), fQ = pn([cF], [!0]), gQ = jU.f ? jU.f(nU, z, fQ) : jU.call(null, nU, z, fQ), o2 = sl.c(Bh, gQ), hQ = [null, Qk.c(n2, Rk(eQ, o2))], p2 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [bf, new T(null, 2, 5, V, hQ, null)], null)], null);
+              r = f;
+              return uJ(r, 128, c, p2);
             }
             if (302 === h) {
-              var KP = f[2], LP = S = f;
-              LP[2] = KP;
-              LP[1] = 299;
+              var q2 = f[2], r2 = r = f;
+              r2[2] = q2;
+              r2[1] = 299;
               return X;
             }
             if (82 === h) {
-              var W1 = S = f;
-              W1[2] = !1;
-              W1[1] = 83;
+              var iQ = r = f;
+              iQ[2] = !1;
+              iQ[1] = 83;
               return X;
             }
             if (76 === h) {
-              Sf = f[43];
-              var MP = S = f;
-              MP[2] = Sf;
-              MP[1] = 77;
+              Lg = f[47];
+              var s2 = r = f;
+              s2[2] = Lg;
+              s2[1] = 77;
               return X;
             }
             if (215 === h) {
-              return r = f[7], f[123] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[132] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (97 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              Zn = f[65];
-              J_ = f[87];
-              F = f[14];
-              var X1 = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), JF = function() {
+              tr = f[70];
+              u = f[9];
+              z = f[10];
+              oN = f[94];
+              t = f[13];
+              y = f[15];
+              var t2 = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), u2 = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, J_, Zn, r, v, p, Zn, J_, F, X1, V, h, n);
-              }(), KF = fM(X1, new T(null, 3, 5, V, [ci, JF, function() {
+                }(z, u, t, y, y, oN, tr, tr, u, z, oN, t, y, t2, V, h, n);
+              }(), v2 = fM(t2, new T(null, 3, 5, V, [ci, u2, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, J_, Zn, r, v, p, Zn, J_, F, X1, V, JF, h, n);
-              }()], null), null), NP = oQ(KF, Zn), Y1 = S = f;
-              Y1[2] = NP;
-              Y1[1] = 99;
+                }(z, u, t, y, y, oN, tr, tr, u, z, oN, t, y, t2, V, u2, h, n);
+              }()], null), null), jQ = oQ(v2, tr), w2 = r = f;
+              w2[2] = jQ;
+              w2[1] = 99;
               return X;
             }
             if (277 === h) {
-              r = f[7];
-              v = f[8];
-              w = f[9];
-              p = f[10];
-              u = f[11];
-              z = f[12];
-              H = f[13];
-              F = f[14];
-              t = f[15];
-              var Z1 = [$q], $1 = new T(null, 1, 5, V, Z1, null), OP = yl.f(r, $1, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              w = f[7];
+              p = f[8];
+              u = f[9];
+              z = f[10];
+              H = f[11];
+              F = f[12];
+              t = f[13];
+              E = f[14];
+              y = f[15];
+              var x2 = [$q], kQ = new T(null, 1, 5, V, x2, null), lQ = yl.f(z, kQ, function() {
+                return function($4, a5, b5, J5, I5, c5, H5) {
+                  return function(K5) {
+                    return Ah.c(K5, new T(null, 2, 5, V, [H5, a5], null));
                   };
-                }(p, H, F, t, w, r, u, z, v, F, r, v, w, p, u, z, H, F, t, V, Z1, $1, h, n);
-              }()), PP = oQ(OG, OP), QP = S = f;
-              QP[2] = PP;
-              QP[1] = 279;
+                }(t, p, y, H, y, F, w, z, u, E, w, p, u, z, H, F, t, E, y, V, x2, kQ, h, n);
+              }()), y2 = oQ(OG, lQ), mQ = r = f;
+              mQ[2] = y2;
+              mQ[1] = 279;
               return X;
             }
             if (19 === h) {
-              yr = f[72];
-              var a2 = S = f;
-              a2[2] = yr;
-              a2[1] = 20;
+              lv = f[79];
+              var nQ = r = f;
+              nQ[2] = lv;
+              nQ[1] = 20;
               return X;
             }
             if (335 === h) {
-              var b2 = f[2], c2 = S = f;
-              c2[2] = b2;
-              c2[1] = 332;
+              var Db = f[2], Mn = r = f;
+              Mn[2] = Db;
+              Mn[1] = 332;
               return X;
             }
             if (57 === h) {
-              yf = f[39];
-              var RP = S = f;
-              RP[2] = yf;
-              RP[1] = 58;
+              Rf = f[43];
+              var gr = r = f;
+              gr[2] = Rf;
+              gr[1] = 58;
               return X;
             }
             if (202 === h) {
-              p = f[10];
-              var d2 = G.c(p, "buyComponentById");
-              S = f;
-              S[1] = d2 ? 218 : 219;
+              t = f[13];
+              var hr = G.c(t, "buyComponentById");
+              r = f;
+              r[1] = hr ? 218 : 219;
               return X;
             }
             if (68 === h) {
-              Ha = f[23];
-              var SP = fk(In, Ha), e2 = S = f;
-              e2[2] = SP;
-              e2[1] = 70;
+              Ma = f[23];
+              var Nn = fk(In, Ma), Sk = r = f;
+              Sk[2] = Nn;
+              Sk[1] = 70;
               return X;
             }
             if (200 === h) {
-              var TP = f[124], UP = f[2], f2 = $V(TP);
-              f[125] = UP;
-              S = f;
-              S[2] = f2;
-              wJ(S);
+              var ir = f[133], bt = f[2], pp = $V(ir);
+              f[134] = bt;
+              r = f;
+              r[2] = pp;
+              wJ(r);
               return X;
             }
             if (11 === h) {
-              r = f[7];
-              var VP = f[126];
-              F = f[14];
-              var WP = F.b ? F.b(r) : F.call(null, r);
-              f[126] = WP;
-              S = f;
-              return uJ(S, 14, c, WP);
+              z = f[10];
+              var zF = f[135];
+              y = f[15];
+              var MU = y.b ? y.b(z) : y.call(null, z);
+              f[135] = MU;
+              r = f;
+              return uJ(r, 14, c, MU);
             }
             if (115 === h) {
-              Im = f[60];
-              var g2 = f[2], h2 = Uc(null == g2);
-              f[60] = g2;
-              S = f;
-              S[1] = h2 ? 119 : 120;
+              Yn = f[65];
+              var M3 = f[2], NU = Uc(null == M3);
+              f[65] = M3;
+              r = f;
+              r[1] = NU ? 119 : 120;
               return X;
             }
             if (339 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var XP = S = f;
-              XP[2] = null;
-              XP[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var OU = r = f;
+              OU[2] = null;
+              OU[1] = 2;
               return X;
             }
             if (337 === h) {
-              Ng = f[70];
-              var i2 = S = f;
-              i2[2] = Ng;
-              i2[1] = 338;
+              mt = f[76];
+              var P3 = r = f;
+              P3[2] = mt;
+              P3[1] = 338;
               return X;
             }
             if (255 === h) {
-              r = f[7];
-              g1 = f[107];
-              v = f[8];
-              xO = f[110];
-              A_ = f[82];
-              p = f[10];
-              wO = f[111];
-              k1 = f[113];
-              F = f[14];
-              var YP = [nG], ZP = new T(null, 1, 5, V, YP, null), j2 = yl.f(r, ZP, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              t1 = f[119];
+              ZO = f[120];
+              NO = f[116];
+              s1 = f[121];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              dN = f[89];
+              y = f[15];
+              var Q3 = [nG], PU = new T(null, 1, 5, V, Q3, null), R3 = yl.f(z, PU, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Ah.c(c5, new T(null, 2, 5, V, [I5, a5], null));
                   };
-                }(p, k1, F, wO, xO, F, r, A_, v, g1, r, g1, v, xO, A_, p, wO, k1, F, V, YP, ZP, h, n);
-              }()), $P = S = f;
-              $P[2] = j2;
-              $P[1] = 256;
+                }(t, t1, y, s1, ZO, z, NO, u, y, dN, t1, ZO, NO, s1, u, z, t, dN, y, V, Q3, PU, h, n);
+              }()), QU = r = f;
+              QU[2] = R3;
+              QU[1] = 256;
               return X;
             }
             if (9 === h) {
-              var aQ = f[2], k2 = S = f;
-              k2[2] = aQ;
-              k2[1] = 6;
+              var S3 = f[2], GY = r = f;
+              GY[2] = S3;
+              GY[1] = 6;
               return X;
             }
             if (145 === h) {
-              $n = f[66];
-              var bQ = S = f;
-              bQ[2] = $n;
-              bQ[1] = 146;
+              ur = f[71];
+              var HY = r = f;
+              HY[2] = ur;
+              HY[1] = 146;
               return X;
             }
             if (5 === h) {
-              r = f[7];
-              var l2 = S = f;
-              l2[2] = r;
-              l2[1] = 6;
+              z = f[10];
+              var c4 = r = f;
+              c4[2] = z;
+              c4[1] = 6;
               return X;
             }
             if (244 === h) {
-              TM = f[81];
-              var cQ = fk(In, TM), m2 = S = f;
-              m2[2] = cQ;
-              m2[1] = 246;
+              cN = f[88];
+              var IY = fk(In, cN), d4 = r = f;
+              d4[2] = IY;
+              d4[1] = 246;
               return X;
             }
             if (289 === h) {
-              var dQ = f[2], eQ = S = f;
-              eQ[2] = dQ;
-              eQ[1] = 286;
+              var JY = f[2], e4 = r = f;
+              e4[2] = JY;
+              e4[1] = 286;
               return X;
             }
             if (112 === h) {
-              var n2 = f[2], fQ = S = f;
-              fQ[2] = n2;
-              fQ[1] = 93;
+              var KY = f[2], PY = r = f;
+              PY[2] = KY;
+              PY[1] = 93;
               return X;
             }
             if (179 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var gQ = S = f;
-              gQ[2] = null;
-              gQ[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var f4 = r = f;
+              f4[2] = null;
+              f4[1] = 2;
               return X;
             }
             if (344 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              et = f[53];
-              sN = f[95];
-              Y_ = f[93];
-              a0 = f[96];
-              F = f[14];
-              var o2 = [Dy], hQ = new T(null, 1, 5, V, o2, null), p2 = yl.f(r, hQ, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Lh.c(p3, o3);
+              j0 = f[103];
+              FN = f[104];
+              nr = f[59];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              BN = f[101];
+              y = f[15];
+              var QY = [$q], RY = new T(null, 1, 5, V, QY, null), j4 = yl.f(z, RY, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Lh.c(c5, I5);
                   };
-                }(p, F, a0, Y_, sN, r, F, et, v, r, v, p, et, sN, Y_, a0, F, V, o2, hQ, h, n);
-              }()), q2 = S = f;
-              q2[2] = p2;
-              q2[1] = 345;
+                }(t, BN, y, j0, FN, z, u, y, nr, j0, FN, nr, u, z, t, BN, y, V, QY, RY, h, n);
+              }()), SY = r = f;
+              SY[2] = j4;
+              SY[1] = 345;
               return X;
             }
             if (245 === h) {
-              TM = f[81];
-              var r2 = S = f;
-              r2[2] = TM;
-              r2[1] = 246;
+              cN = f[88];
+              var k4 = r = f;
+              k4[2] = cN;
+              k4[1] = 246;
+              return X;
+            }
+            if (378 === h) {
+              var l4 = f[2], m4 = r = f;
+              m4[2] = l4;
+              m4[1] = 375;
               return X;
             }
             if (266 === h) {
-              var iQ = f[2], s2 = S = f;
-              s2[2] = iQ;
-              s2[1] = 263;
+              var TY = f[2], n4 = r = f;
+              n4[2] = TY;
+              n4[1] = 263;
               return X;
             }
             if (324 === h) {
-              r = f[7];
-              v = f[8];
-              Id = f[45];
-              p = f[10];
-              Ql = f[62];
-              qr = f[63];
-              Jm = f[64];
-              F = f[14];
-              var t2 = [$q], u2 = new T(null, 1, 5, V, t2, null), v2 = yl.f(r, u2, function() {
-                return function(aW, DU, FU, bW) {
-                  return function(o3) {
-                    return Lh.c(o3, bW);
+              Fp = f[66];
+              Fh = f[49];
+              ao = f[68];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              Zk = f[69];
+              y = f[15];
+              var o4 = [nG], p4 = new T(null, 1, 5, V, o4, null), q4 = yl.f(z, p4, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
                   };
-                }(p, F, Jm, qr, r, F, Id, v, Ql, r, v, Id, p, Ql, qr, Jm, F, V, t2, u2, h, n);
-              }()), jQ = S = f;
-              jQ[2] = v2;
-              jQ[1] = 325;
+                }(t, y, y, Fp, ao, Zk, z, u, Fh, Fp, Fh, ao, u, z, t, Zk, y, V, o4, p4, h, n);
+              }()), i3 = r = f;
+              i3[2] = q4;
+              i3[1] = 325;
               return X;
             }
             if (254 === h) {
-              r = f[7];
-              g1 = f[107];
-              v = f[8];
-              xO = f[110];
-              A_ = f[82];
-              p = f[10];
-              wO = f[111];
-              k1 = f[113];
-              F = f[14];
-              var w2 = [nG], x2 = new T(null, 1, 5, V, w2, null), kQ = yl.f(r, x2, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [o3, DU], null));
+              t1 = f[119];
+              ZO = f[120];
+              NO = f[116];
+              s1 = f[121];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              dN = f[89];
+              y = f[15];
+              var r4 = [nG], s4 = new T(null, 1, 5, V, r4, null), j3 = yl.f(z, s4, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Ah.c(c5, new T(null, 2, 5, V, [I5, a5], null));
                   };
-                }(p, k1, F, wO, xO, F, r, A_, v, g1, r, g1, v, xO, A_, p, wO, k1, F, V, w2, x2, h, n);
-              }()), lQ = oQ(OG, kQ), y2 = S = f;
-              y2[2] = lQ;
-              y2[1] = 256;
+                }(t, t1, y, s1, ZO, z, NO, u, y, dN, t1, ZO, NO, s1, u, z, t, dN, y, V, r4, s4, h, n);
+              }()), k3 = oQ(OG, j3), t4 = r = f;
+              t4[2] = k3;
+              t4[1] = 256;
               return X;
             }
             if (283 === h) {
-              var mQ = f[2], nQ = S = f;
-              nQ[2] = mQ;
-              nQ[1] = 260;
+              var l3 = f[2], m3 = r = f;
+              m3[2] = l3;
+              m3[1] = 260;
               return X;
             }
             if (83 === h) {
-              var Db = f[2];
-              S = f;
-              S[1] = m(Db) ? 87 : 88;
+              var mT = f[2];
+              r = f;
+              r[1] = m(mT) ? 87 : 88;
               return X;
             }
             if (138 === h) {
-              $n = f[66];
-              var Mn = jc === $n.o, gr = $n.i & 64 || Mn;
-              S = f;
-              S[1] = m(gr) ? 141 : 142;
+              ur = f[71];
+              var qT = jc === ur.o, ET = ur.i & 64 || qT;
+              r = f;
+              r[1] = m(ET) ? 141 : 142;
               return X;
             }
             if (346 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              et = f[53];
-              sN = f[95];
-              Y_ = f[93];
-              a0 = f[96];
-              F = f[14];
-              var hr = [Dy], Nn = new T(null, 1, 5, V, hr, null), Sk = yl.f(r, Nn, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Lh.c(p3, o3);
+              j0 = f[103];
+              FN = f[104];
+              nr = f[59];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              BN = f[101];
+              y = f[15];
+              var GT = [$q], HT = new T(null, 1, 5, V, GT, null), pT = yl.f(z, HT, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Lh.c(c5, I5);
                   };
-                }(p, F, a0, Y_, sN, r, F, et, v, r, v, p, et, sN, Y_, a0, F, V, hr, Nn, h, n);
-              }()), ir = oQ(OG, Sk), bt = S = f;
-              bt[2] = ir;
-              bt[1] = 348;
+                }(t, BN, y, j0, FN, z, u, y, nr, j0, FN, nr, u, z, t, BN, y, V, GT, HT, h, n);
+              }()), nT = oQ(OG, pT), oT = r = f;
+              oT[2] = nT;
+              oT[1] = 348;
               return X;
             }
             if (14 === h) {
-              VP = f[126];
-              var pp = f[2];
-              r = VP;
-              f[7] = r;
-              f[127] = pp;
-              var zF = S = f;
-              zF[2] = null;
-              zF[1] = 2;
+              zF = f[135];
+              var FT = f[2];
+              z = zF;
+              f[10] = z;
+              f[136] = FT;
+              var L3 = r = f;
+              L3[2] = null;
+              L3[1] = 2;
               return X;
             }
             if (265 === h) {
-              var MU = S = f;
-              MU[2] = !1;
-              MU[1] = 266;
+              var e5 = r = f;
+              e5[2] = !1;
+              e5[1] = 266;
               return X;
             }
             if (333 === h) {
-              var M3 = S = f;
-              M3[2] = !0;
-              M3[1] = 335;
+              var u3 = r = f;
+              u3[2] = !0;
+              u3[1] = 335;
               return X;
             }
             if (326 === h) {
-              ig = f[46];
-              var NU = f[2], OU = $V(ig);
-              f[128] = NU;
-              S = f;
-              S[2] = OU;
-              wJ(S);
+              Wh = f[50];
+              var v3 = f[2], w3 = $V(Wh);
+              f[137] = v3;
+              r = f;
+              r[2] = w3;
+              wJ(r);
               return X;
             }
             if (45 === h) {
-              var P3 = f[2];
-              S = f;
-              S[1] = m(P3) ? 49 : 50;
+              var f5 = f[2];
+              r = f;
+              r[1] = m(f5) ? 49 : 50;
               return X;
             }
             if (53 === h) {
-              return F = f[14], M = K(F, 0, null), yf = K(F, 1, null), f[39] = yf, f[20] = M, S = f, S[1] = BM ? 56 : 57, X;
+              return y = f[15], U = K(y, 0, null), Rf = K(y, 1, null), f[20] = U, f[43] = Rf, r = f, r[1] = BM ? 56 : 57, X;
             }
             if (78 === h) {
-              r = f[7];
-              v = f[8];
-              p = f[10];
-              Sf = f[43];
-              pf = f[44];
-              F = f[14];
-              var Q3 = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), PU = function() {
+              u = f[9];
+              z = f[10];
+              Lg = f[47];
+              ig = f[48];
+              t = f[13];
+              y = f[15];
+              var x3 = new T(null, 3, 5, V, [Zw, Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "offset")), Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Ny, "limit"))], null), y3 = function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("offset") : aW.call(null, "offset");
+                  return function($4) {
+                    return $4.b ? $4.b("offset") : $4.call(null, "offset");
                   };
-                }(r, v, p, F, F, pf, Sf, r, v, p, Sf, pf, F, Q3, V, h, n);
-              }(), R3 = fM(Q3, new T(null, 3, 5, V, [ci, PU, function() {
+                }(z, u, t, y, y, ig, Lg, u, z, Lg, ig, t, y, x3, V, h, n);
+              }(), g5 = fM(x3, new T(null, 3, 5, V, [ci, y3, function() {
                 return function() {
-                  return function(aW) {
-                    return aW.b ? aW.b("limit") : aW.call(null, "limit");
+                  return function($4) {
+                    return $4.b ? $4.b("limit") : $4.call(null, "limit");
                   };
-                }(r, v, p, F, F, pf, Sf, r, v, p, Sf, pf, F, Q3, V, PU, h, n);
-              }()], null), null), QU = oQ(R3, Sf), S3 = S = f;
-              S3[2] = QU;
-              S3[1] = 80;
+                }(z, u, t, y, y, ig, Lg, u, z, Lg, ig, t, y, x3, V, y3, h, n);
+              }()], null), null), h5 = oQ(g5, Lg), i5 = r = f;
+              i5[2] = h5;
+              i5[1] = 80;
               return X;
             }
             if (315 === h) {
-              Ql = f[62];
-              var GY = f[2];
-              pr = A.c(GY, "weaponKey");
-              f[61] = pr;
-              f[62] = GY;
-              var HY = S = f;
-              HY[2] = null;
-              HY[1] = 319;
+              Fp = f[66];
+              var j5 = f[2];
+              Gp = A.c(j5, "pilotKey");
+              f[66] = j5;
+              f[67] = Gp;
+              var A3 = r = f;
+              A3[2] = null;
+              A3[1] = 319;
               return X;
             }
             if (132 === h) {
-              var c4 = new zg(function() {
+              var k5 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), IY = se(c4);
-              S = f;
-              S[1] = m(IY) ? 135 : 136;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), B3 = se(k5);
+              r = f;
+              r[1] = m(B3) ? 135 : 136;
               return X;
             }
             if (26 === h) {
-              var d4 = f[2];
-              S = f;
-              S[1] = m(d4) ? 30 : 31;
+              var l5 = f[2];
+              r = f;
+              r[1] = m(l5) ? 30 : 31;
               return X;
             }
             if (123 === h) {
-              var JY = S = f;
-              JY[2] = !1;
-              JY[1] = 124;
+              var C3 = r = f;
+              C3[2] = !1;
+              C3[1] = 124;
               return X;
             }
             if (203 === h) {
-              var e4 = f[2], KY = S = f;
-              KY[2] = e4;
-              KY[1] = 186;
+              var D3 = f[2], m5 = r = f;
+              m5[2] = D3;
+              m5[1] = 186;
               return X;
             }
             if (140 === h) {
-              var PY = f[2];
-              S = f;
-              S[1] = m(PY) ? 144 : 145;
+              var E3 = f[2];
+              r = f;
+              r[1] = m(E3) ? 144 : 145;
               return X;
             }
             if (321 === h) {
-              r = f[7];
-              v = f[8];
-              Id = f[45];
-              p = f[10];
-              Ql = f[62];
-              qr = f[63];
-              Jm = f[64];
-              F = f[14];
-              var f4 = [$q], QY = new T(null, 1, 5, V, f4, null), RY = yl.f(r, QY, function() {
-                return function(aW, DU, FU, bW) {
-                  return function(o3) {
-                    return Lh.c(o3, bW);
+              Fp = f[66];
+              Fh = f[49];
+              ao = f[68];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              Zk = f[69];
+              y = f[15];
+              var I3 = [nG], n5 = new T(null, 1, 5, V, I3, null), o5 = yl.f(z, n5, function() {
+                return function($4, a5, b5, J5, I5, c5) {
+                  return function(H5) {
+                    return Lh.c(H5, c5);
                   };
-                }(p, F, Jm, qr, r, F, Id, v, Ql, r, v, Id, p, Ql, qr, Jm, F, V, f4, QY, h, n);
-              }()), j4 = S = f;
-              j4[2] = RY;
-              j4[1] = 322;
+                }(t, y, y, Fp, ao, Zk, z, u, Fh, Fp, Fh, ao, u, z, t, Zk, y, V, I3, n5, h, n);
+              }()), J3 = r = f;
+              J3[2] = o5;
+              J3[1] = 322;
               return X;
             }
             if (268 === h) {
-              Ap = f[59];
-              var SY = S = f;
-              SY[2] = Ap;
-              SY[1] = 269;
+              Jm = f[64];
+              var p5 = r = f;
+              p5[2] = Jm;
+              p5[1] = 269;
               return X;
             }
             if (16 === h) {
-              p = f[10];
-              var k4 = G.c(p, "getPilotStoreList");
-              S = f;
-              S[1] = k4 ? 34 : 35;
+              t = f[13];
+              var K3 = G.c(t, "getPilotStoreList");
+              r = f;
+              r[1] = K3 ? 34 : 35;
               return X;
             }
             if (320 === h) {
-              var l4 = new zg(function() {
+              var u4 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), m4 = se(l4);
-              S = f;
-              S[1] = m(m4) ? 323 : 324;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), v4 = se(u4);
+              r = f;
+              r[1] = m(v4) ? 323 : 324;
               return X;
             }
             if (133 === h) {
-              kg = f[47];
-              var TY = S = f;
-              TY[2] = kg;
-              TY[1] = 134;
+              Ij = f[51];
+              var q5 = r = f;
+              q5[2] = Ij;
+              q5[1] = 134;
               return X;
             }
             if (288 === h) {
-              var n4 = S = f;
-              n4[2] = !1;
-              n4[1] = 289;
+              var w4 = r = f;
+              w4[2] = !1;
+              w4[1] = 289;
               return X;
             }
             if (163 === h) {
-              Va = f[24];
-              var o4 = fk(In, Va), p4 = S = f;
-              p4[2] = o4;
-              p4[1] = 165;
+              Ab = f[24];
+              var r5 = fk(In, Ab), s5 = r = f;
+              s5[2] = r5;
+              s5[1] = 165;
               return X;
             }
             if (81 === h) {
-              rp = f[50];
-              var q4 = jc === rp.o, i3 = rp.i & 64 || q4;
-              S = f;
-              S[1] = m(i3) ? 84 : 85;
+              ft = f[55];
+              var x4 = jc === ft.o, t5 = ft.i & 64 || x4;
+              r = f;
+              r[1] = m(t5) ? 84 : 85;
               return X;
             }
             if (120 === h) {
-              var r4 = S = f;
-              r4[2] = !1;
-              r4[1] = 121;
+              var y4 = r = f;
+              y4[2] = !1;
+              y4[1] = 121;
               return X;
             }
             if (79 === h) {
-              Sf = f[43];
-              var s4 = S = f;
-              s4[2] = Sf;
-              s4[1] = 80;
+              Lg = f[47];
+              var u5 = r = f;
+              u5[2] = Lg;
+              u5[1] = 80;
               return X;
             }
             if (211 === h) {
-              wf = f[38];
-              var j3 = S = f;
-              j3[2] = wf;
-              j3[1] = 212;
+              xf = f[42];
+              var z4 = r = f;
+              z4[2] = xf;
+              z4[1] = 212;
               return X;
             }
             if (38 === h) {
-              E_ = f[84];
-              var k3 = S = f;
-              k3[2] = E_;
-              k3[1] = 39;
+              hN = f[91];
+              var v5 = r = f;
+              v5[2] = hN;
+              v5[1] = 39;
               return X;
             }
             if (173 === h) {
-              var t4 = S = f;
-              t4[2] = !0;
-              t4[1] = 175;
+              var A4 = r = f;
+              A4[2] = !0;
+              A4[1] = 175;
               return X;
             }
             if (126 === h) {
-              Im = f[60];
-              var l3 = S = f;
-              l3[2] = Im;
-              l3[1] = 127;
+              Yn = f[65];
+              var w5 = r = f;
+              w5[2] = Yn;
+              w5[1] = 127;
               return X;
             }
             if (98 === h) {
-              Zn = f[65];
-              var m3 = S = f;
-              m3[2] = Zn;
-              m3[1] = 99;
+              tr = f[70];
+              var B4 = r = f;
+              B4[2] = tr;
+              B4[1] = 99;
               return X;
             }
             if (124 === h) {
-              var mT = f[2], qT = S = f;
-              qT[2] = mT;
-              qT[1] = 121;
+              var C4 = f[2], x5 = r = f;
+              x5[2] = C4;
+              x5[1] = 121;
               return X;
             }
             if (171 === h) {
-              var ET = S = f;
-              ET[2] = !1;
-              ET[1] = 172;
+              var D4 = r = f;
+              D4[2] = !1;
+              D4[1] = 172;
               return X;
             }
             if (87 === h) {
-              rp = f[50];
-              var GT = fk(In, rp), HT = S = f;
-              HT[2] = GT;
-              HT[1] = 89;
+              ft = f[55];
+              var E4 = fk(In, ft), y5 = r = f;
+              y5[2] = E4;
+              y5[1] = 89;
               return X;
             }
             if (169 === h) {
-              var pT = f[2], nT = S = f;
-              nT[2] = pT;
-              nT[1] = 150;
+              var F4 = f[2], z5 = r = f;
+              z5[2] = F4;
+              z5[1] = 150;
               return X;
             }
             if (160 === h) {
-              var oT = S = f;
-              oT[2] = !0;
-              oT[1] = 162;
+              var A5 = r = f;
+              A5[2] = !0;
+              A5[1] = 162;
               return X;
             }
             if (30 === h) {
-              Rc = f[42];
-              var FT = fk(In, Rc), L3 = S = f;
-              L3[2] = FT;
-              L3[1] = 32;
+              hg = f[46];
+              var B5 = fk(In, hg), G4 = r = f;
+              G4[2] = B5;
+              G4[1] = 32;
               return X;
             }
             if (207 === h) {
-              var e5 = S = f;
-              e5[2] = !0;
-              e5[1] = 209;
+              var H4 = r = f;
+              H4[2] = !0;
+              H4[1] = 209;
               return X;
             }
             if (194 === h) {
-              x_ = f[80];
-              var u3 = S = f;
-              u3[2] = x_;
-              u3[1] = 195;
+              ZM = f[87];
+              var C5 = r = f;
+              C5[2] = ZM;
+              C5[1] = 195;
               return X;
             }
             if (73 === h) {
-              p = f[10];
-              var v3 = G.c(p, "getRobotList");
-              S = f;
-              S[1] = v3 ? 91 : 92;
+              t = f[13];
+              var D5 = G.c(t, "getRobotList");
+              r = f;
+              r[1] = D5 ? 91 : 92;
               return X;
             }
             if (336 === h) {
-              Ng = f[70];
-              var w3 = fk(In, Ng), f5 = S = f;
-              f5[2] = w3;
-              f5[1] = 338;
+              mt = f[76];
+              var E5 = fk(In, mt), F5 = r = f;
+              F5[2] = E5;
+              F5[1] = 338;
               return X;
             }
             if (96 === h) {
-              zp = f[55];
-              var x3 = f[2], y3 = Uc(null == x3);
-              f[55] = x3;
-              S = f;
-              S[1] = y3 ? 100 : 101;
+              Bp = f[60];
+              var I4 = f[2], J4 = Uc(null == I4);
+              f[60] = I4;
+              r = f;
+              r[1] = J4 ? 100 : 101;
               return X;
             }
             if (10 === h) {
-              v = f[8];
-              p = f[10];
-              F = f[14];
-              var g5 = f[2], h5 = K(g5, 0, null), i5 = K(g5, 1, null), j5 = ip(uh(["lobby:", h5, i5])), A3 = G.c(h5, lB);
-              f[8] = g5;
-              f[129] = j5;
-              f[10] = h5;
-              f[14] = i5;
-              S = f;
-              S[1] = A3 ? 11 : 12;
+              u = f[9];
+              t = f[13];
+              y = f[15];
+              var s3 = f[2], V5 = K(s3, 0, null), K4 = K(s3, 1, null), W5 = ip(uh(["lobby:", V5, K4])), X5 = G.c(V5, lB);
+              f[9] = s3;
+              f[138] = W5;
+              f[13] = V5;
+              f[15] = K4;
+              r = f;
+              r[1] = X5 ? 11 : 12;
               return X;
             }
             if (272 === h) {
-              return r = f[7], f[130] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[139] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (270 === h) {
-              r = M4(OG, f[2]);
-              f[7] = r;
-              var k5 = S = f;
-              k5[2] = null;
-              k5[1] = 2;
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var Y5 = r = f;
+              Y5[2] = null;
+              Y5[1] = 2;
               return X;
             }
             if (271 === h) {
-              r = f[7];
-              z = f[12];
-              var B3 = f[2], l5 = console.log(B3), C3 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [z, new T(null, 2, 5, V, [B3, r], null)], null)], null);
-              f[131] = l5;
-              S = f;
-              return uJ(S, 272, c, C3);
+              z = f[10];
+              E = f[14];
+              var L4 = f[2], N4 = console.log(L4), Z5 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [E, new T(null, 2, 5, V, [L4, z], null)], null)], null);
+              f[140] = N4;
+              r = f;
+              return uJ(r, 272, c, Z5);
             }
             if (18 === h) {
-              var D3 = new zg(function() {
+              var O4 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), m5 = se(D3);
-              S = f;
-              S[1] = m(m5) ? 21 : 22;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), $5 = se(O4);
+              r = f;
+              r[1] = m($5) ? 21 : 22;
               return X;
             }
             if (105 === h) {
-              var E3 = f[2], I3 = S = f;
-              I3[2] = E3;
-              I3[1] = 102;
+              var P4 = f[2], a6 = r = f;
+              a6[2] = P4;
+              a6[1] = 102;
               return X;
             }
             if (185 === h) {
-              p = f[10];
-              var n5 = G.c(p, "buyWeaponById");
-              S = f;
-              S[1] = n5 ? 201 : 202;
+              t = f[13];
+              var Q4 = G.c(t, "buyWeaponById");
+              r = f;
+              r[1] = Q4 ? 201 : 202;
               return X;
             }
             if (52 === h) {
-              r = f[7];
-              var o5 = f[2];
-              Le = r;
-              f[7] = Le;
-              f[132] = o5;
-              var J3 = S = f;
-              J3[2] = null;
-              J3[1] = 2;
+              z = f[10];
+              var R4 = f[2];
+              Wd = z;
+              f[141] = R4;
+              f[10] = Wd;
+              var b6 = r = f;
+              b6[2] = null;
+              b6[1] = 2;
               return X;
             }
             if (114 === h) {
-              pe = f[36];
-              var p5 = S = f;
-              p5[2] = pe;
-              p5[1] = 115;
+              mf = f[40];
+              var c6 = r = f;
+              c6[2] = mf;
+              c6[1] = 115;
               return X;
             }
             if (253 === h) {
-              V_ = f[91];
-              A_ = f[82];
-              var K3 = f[2], u4 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [A_, new T(null, 2, 5, V, [null, K3], null)], null)], null);
-              f[91] = K3;
-              S = f;
-              return uJ(S, 257, c, u4);
+              yN = f[99];
+              dN = f[89];
+              var S4 = f[2], d6 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [dN, new T(null, 2, 5, V, [null, S4], null)], null)], null);
+              f[99] = S4;
+              r = f;
+              return uJ(r, 257, c, d6);
             }
             if (209 === h) {
-              var v4 = f[2], q5 = S = f;
-              q5[2] = v4;
-              q5[1] = 206;
+              var e6 = f[2], f6 = r = f;
+              f6[2] = e6;
+              f6[1] = 206;
               return X;
             }
             if (147 === h) {
-              r = f[7];
-              var w4 = f[2];
-              Le = r;
-              f[7] = Le;
-              f[133] = w4;
-              var r5 = S = f;
-              r5[2] = null;
-              r5[1] = 2;
+              z = f[10];
+              var g6 = f[2];
+              Wd = z;
+              f[142] = g6;
+              f[10] = Wd;
+              var T4 = r = f;
+              T4[2] = null;
+              T4[1] = 2;
               return X;
             }
             if (67 === h) {
-              var s5 = f[2], x4 = S = f;
-              x4[2] = s5;
-              x4[1] = 64;
+              var U4 = f[2], h6 = r = f;
+              h6[2] = U4;
+              h6[1] = 64;
               return X;
             }
             if (296 === h) {
-              r = f[7];
-              v = f[8];
-              h0 = f[98];
-              P = f[18];
-              wN = f[99];
-              p = f[10];
-              Qd = f[33];
-              F = f[14];
-              $a = MI(f, 294, 293);
-              var t5 = M4(ad, wN), y4 = M4(ad, h0), u5 = function() {
-                return function(aW, DU, FU, bW, o3, p3, r3) {
-                  return function(q3) {
-                    var d5 = bC.b(r3);
-                    return q3.b ? q3.b(d5) : q3.call(null, d5);
+              J = f[18];
+              u = f[9];
+              z = f[10];
+              Vd = f[38];
+              t = f[13];
+              q0 = f[106];
+              JN = f[107];
+              y = f[15];
+              Fc = MI(f, 294, 293);
+              var i6 = M4(ad, JN), j6 = M4(ad, q0), k6 = function() {
+                return function($4, a5, b5, J5, I5, c5, H5, K5) {
+                  return function(L5) {
+                    var M5 = bC.b(K5);
+                    return L5.b ? L5.b(M5) : L5.call(null, M5);
                   };
-                }(p, wN, F, F, y4, h0, r, Qd, P, v, r, v, h0, P, wN, p, Qd, F, $a, t5, y4, h, n);
-              }(), z4 = Aj.b(wN), v5 = [q.b(wN), " not found in ", q.b(bC)].join(""), A4 = T5(u5, z4, v5), w5 = function() {
-                return function(aW, DU, FU, bW, o3, p3, r3) {
-                  return function(q3) {
-                    var d5 = Gq.b(r3);
-                    return q3.b ? q3.b(d5) : q3.call(null, d5);
+                }(t, Vd, JN, y, j6, q0, y, z, u, J, J, u, z, Vd, t, q0, JN, y, Fc, i6, j6, h, n);
+              }(), V4 = Aj.b(JN), l6 = [q.b(JN), " not found in ", q.b(bC)].join(""), W4 = T5(k6, V4, l6), X4 = function() {
+                return function($4, a5, b5, J5, I5, c5, H5, K5) {
+                  return function(L5) {
+                    var M5 = Gq.b(K5);
+                    return L5.b ? L5.b(M5) : L5.call(null, M5);
                   };
-                }(p, wN, F, F, A4, h0, r, Qd, P, v, r, v, h0, P, wN, p, Qd, F, $a, t5, y4, u5, z4, v5, A4, h, n);
-              }(), B4 = Aj.b(h0), C4 = [q.b(h0), " not found in ", q.b(Gq)].join("");
-              zc = T5(w5, B4, C4);
-              gc = Aj.b(wN);
-              zb = Aj.b(h0);
-              f[31] = zc;
-              f[32] = zb;
-              f[134] = t5;
-              f[34] = gc;
-              S = f;
-              S[1] = BM ? 297 : 298;
+                }(t, Vd, JN, y, W4, q0, y, z, u, J, J, u, z, Vd, t, q0, JN, y, Fc, i6, j6, k6, V4, l6, W4, h, n);
+              }(), NI = Aj.b(q0), IT = [q.b(q0), " not found in ", q.b(Gq)].join("");
+              Gd = T5(X4, NI, IT);
+              Zc = Aj.b(JN);
+              pe = Aj.b(q0);
+              f[35] = Gd;
+              f[36] = Zc;
+              f[37] = pe;
+              f[143] = i6;
+              r = f;
+              r[1] = BM ? 297 : 298;
               return X;
             }
             if (318 === h) {
-              return r = f[7], f[135] = f[2], S = f, S[2] = r, wJ(S), X;
+              return z = f[10], f[144] = f[2], r = f, r[2] = z, wJ(r), X;
             }
             if (161 === h) {
-              var x5 = S = f;
-              x5[2] = !1;
-              x5[1] = 162;
+              var GU = r = f;
+              GU[2] = !1;
+              GU[1] = 162;
+              return X;
+            }
+            if (372 === h) {
+              Y0 = f[114];
+              var gW = f[2], aW = $V(Y0);
+              f[145] = gW;
+              r = f;
+              r[2] = aW;
+              wJ(r);
               return X;
             }
             if (71 === h) {
-              r = f[7];
-              var D4 = f[2];
-              Le = r;
-              f[7] = Le;
-              f[136] = D4;
-              var E4 = S = f;
-              E4[2] = null;
-              E4[1] = 2;
+              z = f[10];
+              var DU = f[2];
+              Wd = z;
+              f[146] = DU;
+              f[10] = Wd;
+              var FU = r = f;
+              FU[2] = null;
+              FU[1] = 2;
               return X;
             }
             if (42 === h) {
-              var y5 = f[2], F4 = S = f;
-              F4[2] = y5;
-              F4[1] = 39;
+              var bW = f[2], o3 = r = f;
+              o3[2] = bW;
+              o3[1] = 39;
               return X;
             }
             if (80 === h) {
-              var z5 = f[2], A5 = S = f;
-              A5[2] = z5;
-              A5[1] = 77;
+              var p3 = f[2], r3 = r = f;
+              r3[2] = p3;
+              r3[1] = 77;
               return X;
             }
             if (199 === h) {
-              r = f[7];
-              v = f[8];
-              D0 = f[103];
-              VN = f[104];
-              TP = f[124];
-              p = f[10];
-              or = f[56];
-              F = f[14];
-              $a = MI(f, 197, 196);
-              var B5 = M4(ad, VN), G4 = Aj.b(VN), H4 = [wt], C5 = [!0], D5 = pn(H4, C5), E5 = jU.f ? jU.f(nU, r, D5) : jU.call(null, nU, r, D5), F5 = [G4], I4 = new T(null, 1, 5, V, F5, null), J4 = wl(E5, I4), s3 = M4(ci, J4), V5 = [LG], K4 = new T(null, 1, 5, V, V5, null), W5 = wl(r, K4), X5 = [gs], Y5 = new T(null, 1, 5, V, X5, null), L4 = wl(s3, Y5), N4 = function() {
-                return function(aW, DU) {
-                  return function(FU) {
-                    return FU >= DU;
+              eO = f[111];
+              ir = f[133];
+              fO = f[112];
+              u = f[9];
+              z = f[10];
+              t = f[13];
+              Cp = f[61];
+              y = f[15];
+              Fc = MI(f, 197, 196);
+              var q3 = M4(ad, fO), d5 = Aj.b(fO), R5 = [wt], p6 = [!0], Q5 = pn(R5, p6), q6 = jU.f ? jU.f(nU, z, Q5) : jU.call(null, nU, z, Q5), r6 = [d5], s6 = new T(null, 1, 5, V, r6, null), t6 = wl(q6, s6), O5 = M4(ci, t6), u6 = [LG], v6 = new T(null, 1, 5, V, u6, null), N5 = wl(z, v6), w6 = [gs], x6 = new T(null, 1, 5, V, w6, null), P5 = wl(O5, x6), A6 = function() {
+                return function($4, a5) {
+                  return function(b5) {
+                    return b5 >= a5;
                   };
-                }(p, L4, F, W5, G4, B5, F, s3, r, or, v, D0, r, v, D0, VN, TP, p, or, F, $a, B5, G4, H4, C5, D5, E5, V, F5, I4, J4, s3, V, V5, K4, W5, V, X5, Y5, L4, h, n);
-              }(), Z5 = T5(N4, W5, "money not enough"), O4 = [LG], $5 = new T(null, 1, 5, V, O4, null), P4 = W5 - L4, a6 = Ak(P4), Q4 = yl.f(r, $5, a6), R4 = [fw], b6 = new T(null, 1, 5, V, R4, null), c6 = yl.f(Q4, b6, function() {
-                return function(aW, DU, FU, bW, o3) {
-                  return function(p3) {
-                    return Ah.c(p3, new T(null, 2, 5, V, [Aj.b(q.b(vq())), o3], null));
+                }(t, P5, y, N5, d5, q3, O5, z, u, y, Cp, eO, eO, ir, fO, u, z, t, Cp, y, Fc, q3, d5, R5, p6, Q5, q6, V, r6, s6, t6, O5, V, u6, v6, N5, V, w6, x6, P5, h, n);
+              }(), B6 = T5(A6, N5, "money not enough"), C6 = [LG], D6 = new T(null, 1, 5, V, C6, null), E6 = N5 - P5, F6 = Ak(E6), G6 = yl.f(z, D6, F6), H6 = [fw], I6 = new T(null, 1, 5, V, H6, null), u7 = yl.f(G6, I6, function() {
+                return function($4, a5, b5, J5, I5) {
+                  return function(c5) {
+                    return Ah.c(c5, new T(null, 2, 5, V, [Aj.b(q.b(vq())), I5], null));
                   };
-                }(p, L4, F, W5, G4, Z5, F, s3, r, or, v, D0, r, v, D0, VN, TP, p, or, F, $a, B5, G4, H4, C5, D5, E5, V, F5, I4, J4, s3, V, V5, K4, W5, V, X5, Y5, L4, N4, Z5, V, O4, $5, P4, a6, Q4, V, R4, b6, h, n);
-              }()), S4 = M4(OG, c6), d6 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [or, new T(null, 2, 5, V, [null, S4], null)], null)], null);
-              f[124] = S4;
-              S = f;
-              return uJ(S, 200, c, d6);
+                }(t, P5, y, N5, d5, B6, O5, z, u, y, Cp, eO, eO, ir, fO, u, z, t, Cp, y, Fc, q3, d5, R5, p6, Q5, q6, V, r6, s6, t6, O5, V, u6, v6, N5, V, w6, x6, P5, A6, B6, V, C6, D6, E6, F6, G6, V, H6, I6, h, n);
+              }()), J6 = M4(OG, u7), v7 = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [Cp, new T(null, 2, 5, V, [null, J6], null)], null)], null);
+              f[133] = J6;
+              r = f;
+              return uJ(r, 200, c, v7);
             }
             if (37 === h) {
-              var e6 = new zg(function() {
+              var w7 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), f6 = se(e6);
-              S = f;
-              S[1] = m(f6) ? 40 : 41;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), x7 = se(w7);
+              r = f;
+              r[1] = m(x7) ? 40 : 41;
               return X;
             }
             if (183 === h) {
-              io = f[77];
-              var g6 = f[2], T4 = $V(io);
-              f[137] = g6;
-              S = f;
-              S[2] = T4;
-              wJ(S);
+              IM = f[84];
+              var y7 = f[2], z7 = $V(IM);
+              f[147] = y7;
+              r = f;
+              r[2] = z7;
+              wJ(r);
               return X;
             }
             if (63 === h) {
-              var U4 = S = f;
-              U4[2] = !1;
-              U4[1] = 64;
+              var K6 = r = f;
+              K6[2] = !1;
+              K6[1] = 64;
               return X;
             }
             if (212 === h) {
-              zN = f[102];
-              var h6 = f[2];
-              yN = A.c(h6, "key");
-              f[101] = yN;
-              f[102] = h6;
-              var i6 = S = f;
-              i6[2] = null;
-              i6[1] = 216;
+              LN = f[110];
+              var L6 = f[2];
+              s0 = A.c(L6, "key");
+              f[109] = s0;
+              f[110] = L6;
+              var M6 = r = f;
+              M6[2] = null;
+              M6[1] = 216;
               return X;
             }
             if (94 === h) {
-              var j6 = new zg(function() {
+              var A7 = new zg(function() {
                 return CM;
-              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), k6 = se(j6);
-              S = f;
-              S[1] = m(k6) ? 97 : 98;
+              }, iI, pn([ds, Eq, uF, iz, Bs, PG, EE, Wq, Rr, eA, mE, lB], [!0, QE, Vv, "cljs/spec/alpha.cljs", 20, 1, !0, 1477, 1479, Fg, null, CM ? CM.vb : null])), B7 = se(A7);
+              r = f;
+              r[1] = m(B7) ? 97 : 98;
+              return X;
+            }
+            if (362 === h) {
+              z = M4(OG, f[2]);
+              f[10] = z;
+              var N6 = r = f;
+              N6[2] = null;
+              N6[1] = 2;
               return X;
             }
             if (8 === h) {
-              r = f[7];
-              var V4 = S = f;
-              V4[2] = r;
-              V4[1] = 9;
+              z = f[10];
+              var O6 = r = f;
+              O6[2] = z;
+              O6[1] = 9;
               return X;
             }
             if (246 === h) {
-              g1 = f[107];
-              var l6 = f[2];
-              h1 = A.c(l6, "robotKey");
-              qO = A.c(l6, "pilotKey");
-              f[107] = l6;
-              f[108] = h1;
-              f[109] = qO;
-              var W4 = S = f;
-              W4[2] = null;
-              W4[1] = 250;
+              NO = f[116];
+              var z6 = f[2];
+              OO = A.c(z6, "robotKey");
+              PO = A.c(z6, "pilotKey");
+              f[116] = z6;
+              f[117] = OO;
+              f[118] = PO;
+              var P6 = r = f;
+              P6[2] = null;
+              P6[1] = 250;
               return X;
             }
             if (190 === h) {
-              var X4 = S = f;
-              X4[2] = !0;
-              X4[1] = 192;
+              var Q6 = r = f;
+              Q6[2] = !0;
+              Q6[1] = 192;
               return X;
             }
             if (177 === h) {
-              ao = f[67];
-              var NI = S = f;
-              NI[2] = ao;
-              NI[1] = 178;
+              al = f[72];
+              var R6 = r = f;
+              R6[2] = al;
+              R6[1] = 178;
               return X;
             }
             if (49 === h) {
-              Lj = f[49];
-              var IT = fk(In, Lj), GU = S = f;
-              GU[2] = IT;
-              GU[1] = 51;
+              Xk = f[54];
+              var C7 = fk(In, Xk), S6 = r = f;
+              S6[2] = C7;
+              S6[1] = 51;
               return X;
             }
             if (84 === h) {
-              var gW = S = f;
-              gW[2] = !0;
-              gW[1] = 86;
+              var T6 = r = f;
+              T6[2] = !0;
+              T6[1] = 86;
               return X;
             }
             return null;
@@ -28074,8 +28294,8 @@ PL(gI, Q(oG, Pv, gw), iM(Q(Yx, Ku, gw), $L(new T(null, 2, 5, V, [Pv, gw], null),
   return kh(b, 0);
 }, lI, !0, qF, Q(oG, Pv, gw)], null), null));
 if ("undefined" === typeof CY || "undefined" === typeof DY || "undefined" === typeof EY || "undefined" === typeof FY) {
-  var FY, p6 = Kk(ok), q6 = Kk(ok), r6 = Kk(ok), s6 = Kk(ok), t6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  FY = new sq(wg.c("module.v1.type", "tagEntry"), I, t6, p6, q6, r6, s6);
+  var FY, t7 = Kk(ok), D7 = Kk(ok), E7 = Kk(ok), F7 = Kk(ok), G7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  FY = new sq(wg.c("module.v1.type", "tagEntry"), I, G7, t7, D7, E7, F7);
 }
 FY.P(null, lE, function() {
   return $L(new T(null, 2, 5, V, [Pv, rE], null), new T(null, 2, 5, V, [qj, ki], null));
@@ -28230,8 +28450,8 @@ var LY = WX(12, {});
 var MY = {}, NY = {};
 PL(TB, kw, Tc);
 if ("undefined" === typeof CY || "undefined" === typeof DY || "undefined" === typeof MY || "undefined" === typeof NY || "undefined" === typeof OY) {
-  var OY, u6 = Kk(ok), v6 = Kk(ok), w6 = Kk(ok), x6 = Kk(ok), z6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  OY = new sq(wg.c("module.v1.session.battleMenu", "action"), I, z6, u6, v6, w6, x6);
+  var OY, H7 = Kk(ok), I7 = Kk(ok), J7 = Kk(ok), K7 = Kk(ok), L7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  OY = new sq(wg.c("module.v1.session.battleMenu", "action"), I, L7, H7, I7, J7, K7);
 }
 OY.P(null, Rp, function() {
   return $L(new T(null, 1, 5, V, [new qo(null, new Ac(null, 1, [Rp, "null"], null), null)], null), new T(null, 1, 5, V, [new qo(null, new Ac(null, 1, [Rp, null], null), null)], null));
@@ -36221,8 +36441,8 @@ function f3(a, b, c) {
 }
 ;var g3 = {};
 if ("undefined" === typeof aY || "undefined" === typeof g3 || "undefined" === typeof h3) {
-  var h3, A6 = Kk(ok), B6 = Kk(ok), C6 = Kk(ok), D6 = Kk(ok), E6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  h3 = new sq(wg.c("tool.goal", "goalType"), I, E6, A6, B6, C6, D6);
+  var h3, M7 = Kk(ok), N7 = Kk(ok), O7 = Kk(ok), P7 = Kk(ok), Q7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  h3 = new sq(wg.c("tool.goal", "goalType"), I, Q7, M7, N7, O7, P7);
 }
 h3.P(null, tq, function() {
   return mM(new T(null, 2, 5, V, [zv, gG], null), new T(null, 2, 5, V, [qj, oM(Q(eu, !0), Ak(!0))], null), new T(null, 2, 5, V, [Pv, Q(Yu, Q(eu, !0))], null));
@@ -36240,8 +36460,8 @@ PL(OC, Q(zs, Dw, OC), YL(Dw, new zg(function() {
   return h3;
 }, Dw, pn([Eq, uF, iz, Bs, PG, Wq, Rr, eA, mE, lB], [wA, Bv, "tool/goal.cljs", 19, 1, 4, 4, Fg, null, m(h3) ? h3.vb : null])), OC));
 if ("undefined" === typeof aY || "undefined" === typeof g3 || "undefined" === typeof n3) {
-  var n3, F6 = Kk(ok), G6 = Kk(ok), H6 = Kk(ok), I6 = Kk(ok), J6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  n3 = new sq(wg.c("tool.goal", "get-goal"), I, J6, F6, G6, H6, I6);
+  var n3, R7 = Kk(ok), S7 = Kk(ok), T7 = Kk(ok), U7 = Kk(ok), V7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  n3 = new sq(wg.c("tool.goal", "get-goal"), I, V7, R7, S7, T7, U7);
 }
 n3.P(null, tq, function(a) {
   return null == a ? new T(null, 1, 5, V, [Av], null) : a;
@@ -36274,8 +36494,8 @@ n3.P(null, bx, function(a) {
   return n3.b ? n3.b(b) : n3.call(null, b);
 });
 if ("undefined" === typeof aY || "undefined" === typeof g3 || "undefined" === typeof t3) {
-  var t3, K6 = Kk(ok), L6 = Kk(ok), M6 = Kk(ok), N6 = Kk(ok), O6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  t3 = new sq(wg.c("tool.goal", "next-goal"), I, O6, K6, L6, M6, N6);
+  var t3, W7 = Kk(ok), X7 = Kk(ok), Y7 = Kk(ok), Z7 = Kk(ok), $7 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  t3 = new sq(wg.c("tool.goal", "next-goal"), I, $7, W7, X7, Y7, Z7);
 }
 t3.P(null, tq, function(a) {
   return a;
@@ -36340,8 +36560,8 @@ t3.P(null, bx, function(a) {
   }();
 });
 if ("undefined" === typeof aY || "undefined" === typeof g3 || "undefined" === typeof z3) {
-  var z3, P6 = Kk(ok), Q6 = Kk(ok), R6 = Kk(ok), S6 = Kk(ok), T6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  z3 = new sq(wg.c("tool.goal", "push-goal"), I, T6, P6, Q6, R6, S6);
+  var z3, a8 = Kk(ok), b8 = Kk(ok), c8 = Kk(ok), d8 = Kk(ok), e8 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  z3 = new sq(wg.c("tool.goal", "push-goal"), I, e8, a8, b8, c8, d8);
 }
 z3.P(null, tq, function(a) {
   return a;
@@ -36471,8 +36691,8 @@ PL(yH, Q(vB, QA, new T(null, 2, 5, V, [wy, Zs], null)), XL(pn([fy, Qt, HA, fC, e
 }, Bh, Bh, null, Bh, Bh, new T(null, 1, 5, V, [Q(fs, new T(null, 1, 5, V, [Ny], null), Q(Zw, Ny))], null), null])));
 var G3 = {};
 if ("undefined" === typeof CY || "undefined" === typeof DY || "undefined" === typeof H2 || "undefined" === typeof G3 || "undefined" === typeof G3.default || "undefined" === typeof G3.default.$e || "undefined" === typeof G3.default.$e.$e) {
-  var H3, U6 = Kk(ok), V6 = Kk(ok), W6 = Kk(ok), X6 = Kk(ok), Y6 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
-  H3 = new sq(wg.c("module.v1.phase.ai.default.goalType", "goalType"), I, Y6, U6, V6, W6, X6);
+  var H3, f8 = Kk(ok), g8 = Kk(ok), h8 = Kk(ok), i8 = Kk(ok), j8 = A.f(ok, CC, dq.h ? dq.h() : dq.call(null));
+  H3 = new sq(wg.c("module.v1.phase.ai.default.goalType", "goalType"), I, j8, f8, g8, h8, i8);
 }
 H3.P(null, jz, function() {
   return $L(new T(null, 2, 5, V, [Pv, Q(Yx, mx, mx)], null), new T(null, 2, 5, V, [qj, $L(new T(null, 2, 5, V, [mx, mx], null), new T(null, 2, 5, V, [pi, pi], null))], null));
@@ -36496,9 +36716,9 @@ if ("undefined" === typeof CY || "undefined" === typeof DY || "undefined" === ty
     }(a, b, c, d, e), e, a, b, c, d);
   }();
 }
-var O3, Z6 = new T(null, 5, 5, V, [new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 1], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0.5, 0.5], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 1], null), "findSupply"], null)], null), d7 = tl.c(I, Z6), e7 = tl.c(yh, Z6), k7 = new Ac(null, 1, [BC, 
+var O3, k8 = new T(null, 5, 5, V, [new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 1], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0.5, 0.5], null), "attack"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [1, 0], null), "findSupply"], null), new T(null, 2, 5, V, [new T(null, 2, 5, V, [0, 1], null), "findSupply"], null)], null), l8 = tl.c(I, k8), m8 = tl.c(yh, k8), n8 = new Ac(null, 1, [BC, 
 1], null);
-O3 = new F3(Up(d7), Up(e7), Up(k7));
+O3 = new F3(Up(l8), Up(m8), Up(n8));
 function T3(a, b) {
   var c = uZ(new Ac(null, 2, [Sy, a, WD, WD.b(a)], null), b);
   a = vZ(new Ac(null, 2, [Sy, a, WD, WD.b(a)], null), b);
@@ -40801,21 +41021,25 @@ function h4(a, b) {
               return k[2] = k[2], k[1] = 16, X;
             }
             if (1 === n) {
-              return n = g4, k[7] = n, k[2] = null, k[1] = 2, X;
+              var f = g4;
+              k[7] = f;
+              k[2] = null;
+              k[1] = 2;
+              return X;
             }
             if (4 === n) {
-              var f = k[2];
-              n = K(f, 0, null);
-              f = K(f, 1, null);
-              var h = G.c("loadConfig", n);
-              k[9] = f;
-              k[8] = n;
+              n = k[2];
+              f = K(n, 0, null);
+              n = K(n, 1, null);
+              var h = G.c("loadConfig", f);
+              k[9] = n;
+              k[8] = f;
               k[1] = h ? 5 : 6;
               return X;
             }
-            return 15 === n ? (n = k[8], n = G.c("exit", n), k[1] = n ? 18 : 19, X) : 21 === n ? (n = k[7], k[7] = n, k[2] = null, k[1] = 2, X) : 13 === n ? (n = k[2], k[7] = n, k[2] = null, k[1] = 2, X) : 22 === n ? (k[2] = null, k[1] = 23, X) : 6 === n ? (n = k[8], n = G.c("startGameplay", n), k[1] = n ? 10 : 11, X) : 17 === n ? (n = k[2], k[7] = n, k[2] = null, k[1] = 2, X) : 3 === n ? vJ(k, k[2]) : 12 === n ? (k[2] = k[2], k[1] = 7, X) : 2 === n ? tJ(k, 4, a) : 23 === n ? (k[2] = k[2], k[1] = 
-            20, X) : 19 === n ? (k[1] = 21, X) : 11 === n ? (n = k[8], n = G.c("startLobby", n), k[1] = n ? 14 : 15, X) : 9 === n ? (h = k[10], n = k[7], f = k[2], h = pn([Mr], [h]), n = lo.g(uh([n, h])), k[7] = n, k[11] = f, k[2] = null, k[1] = 2, X) : 5 === n ? (f = k[9], n = K(f, 0, null), f = K(f, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[12] = n, k[13] = f, tJ(k, 8, h)) : 14 === n ? (n = k[7], n = SX(n, a, b), tJ(k, 17, n)) : 16 === n ? (k[2] = k[2], k[1] = 12, X) : 10 === n ? (f = 
-            k[9], n = k[7], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 13, n)) : 18 === n ? (n = k[7], k[2] = n, k[1] = 20, X) : 8 === n ? (n = k[12], f = k[2], n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, f], null)], null), k[10] = f, uJ(k, 9, b, n)) : null;
+            return 15 === n ? (n = k[8], n = G.c("exit", n), k[1] = n ? 18 : 19, X) : 21 === n ? (f = k[7], k[7] = f, k[2] = null, k[1] = 2, X) : 13 === n ? (f = k[2], k[7] = f, k[2] = null, k[1] = 2, X) : 22 === n ? (k[2] = null, k[1] = 23, X) : 6 === n ? (n = k[8], n = G.c("startGameplay", n), k[1] = n ? 10 : 11, X) : 17 === n ? (f = k[2], k[7] = f, k[2] = null, k[1] = 2, X) : 3 === n ? vJ(k, k[2]) : 12 === n ? (k[2] = k[2], k[1] = 7, X) : 2 === n ? tJ(k, 4, a) : 23 === n ? (k[2] = k[2], k[1] = 
+            20, X) : 19 === n ? (k[1] = 21, X) : 11 === n ? (n = k[8], n = G.c("startLobby", n), k[1] = n ? 14 : 15, X) : 9 === n ? (f = k[7], n = k[2], h = pn([Mr], [k[10]]), f = lo.g(uh([f, h])), k[7] = f, k[11] = n, k[2] = null, k[1] = 2, X) : 5 === n ? (n = k[9], f = K(n, 0, null), n = K(n, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[12] = n, k[13] = f, tJ(k, 8, h)) : 14 === n ? (f = k[7], n = SX(f, a, b), tJ(k, 17, n)) : 16 === n ? (k[2] = k[2], k[1] = 12, X) : 10 === n ? (f = k[7], 
+            n = k[9], n = lU.N ? lU.N(nU, f, n, a, b) : lU.call(null, nU, f, n, a, b), tJ(k, 13, n)) : 18 === n ? (f = k[7], k[2] = f, k[1] = 20, X) : 8 === n ? (f = k[13], n = k[2], f = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [f, n], null)], null), k[10] = n, uJ(k, 9, b, f)) : null;
           };
         }(d), d);
       }(), g = function() {
