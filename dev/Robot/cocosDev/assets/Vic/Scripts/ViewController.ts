@@ -36,7 +36,6 @@ export default class ViewController extends cc.Component {
         this.modelController.loadConfig(data => {
             this.setData(data)
             this.view.openMainPage();
-            this.notifyStartLobby()
             // this.view.openGamePage();
         })
     }
@@ -46,12 +45,13 @@ export default class ViewController extends cc.Component {
     // 第一個參數：0隨機副本；1陸副本；2海副本；3空副本
     // 第二個參數：難度：0~9
     notifyStartGame(args:any) {
-        cc.log(args)
+        cc.log("notifyStartGame")
         this.modelController.endLobby();
         this.modelController.startGame(args);
     }
 
     notifyStartLobby() {
+        cc.log("notifyStartLobby")
         this.modelController.startLobby();
     }
 

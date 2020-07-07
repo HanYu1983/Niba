@@ -94,6 +94,7 @@ export default class MainPage extends BasicViewer {
 
     open() {
         super.open();
+        ViewController.instance.notifyStartLobby();
         this.backToLooby();
     }
 
