@@ -17,7 +17,7 @@
         {:keys [weaponIdx weapons]} (:data state)]
     (when (= cursor1 weaponIdx)
       (let [weapon (common/assertSpec
-                    ::type/weapon
+                    ::type/weaponState
                     (nth weapons cursor2))
             unitsNearby (->> (data/getUnitsByRegion gameplayCtx (:position unit) nil)
                              (filter (comp not (partial data/isFriendlyUnit gameplayCtx unit))))

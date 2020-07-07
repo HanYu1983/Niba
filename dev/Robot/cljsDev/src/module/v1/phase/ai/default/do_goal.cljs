@@ -60,7 +60,7 @@
                               targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit % nil)) targetUnitWeapons)
                               targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
                               targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
-                              _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))
+                              _ (when (not (s/valid? ::type/weaponState targetUnitBestWeapon))
                                   (throw (js/Error. (str "[do_goal.cljs] targetUnitBestWeapon must not nil"))))
                               targetUnitBestAction (if targetUnitBestWeaponUnit
                                                      [:attack targetUnitBestWeapon]

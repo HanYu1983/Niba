@@ -72,7 +72,7 @@
        (let [ret (->> (:weapons lobbyCtx)
                       (map (fn [[key weaponKey]]
                              (common/assertSpec
-                              ::type/weapon
+                              ::type/weaponState
                               {:key key
                                :weaponKey weaponKey
                                :tags {}

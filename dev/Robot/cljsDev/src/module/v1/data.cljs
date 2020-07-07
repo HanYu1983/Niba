@@ -233,7 +233,7 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponRange[" weaponKey "] not found")))
@@ -247,7 +247,7 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
@@ -258,7 +258,7 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
@@ -268,7 +268,7 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
@@ -279,7 +279,7 @@
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec
    (s/coll-of vector?)
    (let [[min max] (getWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
@@ -294,7 +294,7 @@
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::spec/map playmap)
   (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec ::type/unit targetUnit)
   (let [accuracy (common/assertSpec
                   number?
@@ -368,7 +368,7 @@
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec ::type/unit targetUnit)
   (common/assertSpec
    int?
@@ -439,7 +439,7 @@
 
 (defn useUnitWeapon [gameplayCtx weapon unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec
    ::type/unit
@@ -478,7 +478,7 @@
 (defn invalidWeapon? [gameplayCtx unit weapon targetUnit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec (s/nilable ::type/unit) unit)
   (let [{:keys [energyType energyCost curage]} (common/assertSpec
                                                 (s/keys :req-un [::energyType ::energyCost ::curage])
@@ -571,7 +571,7 @@
                             (tool.fsm/currState)
                             (= :unitBattleMenu))
            weapons (common/assertSpec
-                    (s/* ::type/weapon)
+                    (s/* ::type/weaponState)
                     (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                          second))
            invalidWeapons (map (fn [weapon]
@@ -634,10 +634,10 @@
 
 (defn getBestWeapon [gameplayCtx unit weapons targetUnits]
   (common/assertSpec ::type/unit unit)
-  (common/assertSpec (s/* ::type/weapon) weapons)
+  (common/assertSpec (s/* ::type/weaponState) weapons)
   (common/assertSpec (s/* ::type/unit) targetUnits)
   (common/assertSpec
-   (s/nilable (s/tuple ::type/weapon ::type/unit))
+   (s/nilable (s/tuple ::type/weaponState ::type/unit))
    (let [touchUnitLists (map (fn [weapon]
                                (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
                                      units (filter #(weaponRanges (:position %)) targetUnits)]
@@ -656,7 +656,7 @@
          [weapon unit])))))
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weapon) [gameplayCtx unit fromUnit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weaponState) [gameplayCtx unit fromUnit weapon])]
    :post [(vector? %)]}
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
         weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
@@ -945,7 +945,7 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec (s/nilable ::type/unit) unit)
-  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec
    map?
    (let [weaponData (common/assertSpec

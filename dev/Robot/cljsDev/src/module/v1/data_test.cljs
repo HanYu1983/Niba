@@ -13,9 +13,9 @@
             [module.v1.system.spec :as spec]))
 
 
-(def weapon (assoc (gen/generate (s/gen ::type/weapon))
+(def weapon (assoc (gen/generate (s/gen ::type/weaponState))
                    :weaponKey :beam_mega1))
-(def component (gen/generate (s/gen ::type/component)))
+(def component (gen/generate (s/gen ::type/componentState)))
 (def unitA {:key :a
             :position [0 0]
             :playerKey :a
@@ -24,6 +24,7 @@
                          :tags {}
                          :hp 0
                          :en 0
+                         :curage 0
                          :weapons {:a [weapon]}
                          :components {:a [component]}}})
 

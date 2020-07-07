@@ -35,19 +35,19 @@
 (s/def ::suitability (s/tuple number? number? number? number?))
 (s/def ::type #{"single" "line"})
 (s/def ::range (s/tuple int? int?))
-(s/def ::weapon (s/keys :req-un [::key ::weaponKey ::tags ::bulletCount]))
+(s/def ::weaponState (s/keys :req-un [::key ::weaponKey ::tags ::bulletCount]))
 
 (s/def ::playerKey ::key)
 (s/def ::robotKey ::key)
 (s/def ::pilotKey (s/nilable ::key))
 (s/def ::componentKey ::key)
 
-(s/def ::component (s/keys :req-un [::key ::componentKey ::tags]))
+(s/def ::componentState (s/keys :req-un [::key ::componentKey ::tags]))
 
-(s/def ::weaponEntry (s/tuple keyword? (s/* ::weapon)))
-(s/def ::componentEntry (s/tuple keyword? (s/* ::component)))
-(s/def ::weapons (s/map-of keyword? (s/* ::weapon)))
-(s/def ::components (s/map-of keyword? (s/* ::component)))
+(s/def ::weaponEntry (s/tuple keyword? (s/* ::weaponState)))
+(s/def ::componentEntry (s/tuple keyword? (s/* ::componentState)))
+(s/def ::weapons (s/map-of keyword? (s/* ::weaponState)))
+(s/def ::components (s/map-of keyword? (s/* ::componentState)))
 
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotKey ::weapons ::components ::tags ::hp ::en ::curage]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
@@ -71,4 +71,4 @@
 (def gameplayCtx ::gameplayCtx)
 (def returnCtx ::returnCtx)
 (def unit ::unit)
-(def weapon ::weapon)
+(def weaponState ::weaponState)

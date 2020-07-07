@@ -17,7 +17,7 @@
         {:keys [weaponIdx weapons]} (:data state)]
     (if (= cursor1 weaponIdx)
       (->> (common/assertSpec
-            ::type/weapon
+            ::type/weaponState
             (nth weapons cursor2))
            (data/getUnitWeaponRange gameplayCtx unit))
       [])))

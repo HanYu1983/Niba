@@ -105,7 +105,7 @@
 
                        (= cursor1 weaponIdx)
                        (let [weapon (common/assertSpec
-                                     type/weapon
+                                     type/weaponState
                                      (nth weapons cursor2))
                              invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon nil)
                              weaponType (data/getWeaponType {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
