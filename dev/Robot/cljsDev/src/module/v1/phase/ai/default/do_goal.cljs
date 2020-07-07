@@ -47,7 +47,7 @@
 (defn handleAttack [gameplayCtx unit otherAsyncFn inputCh outputCh]
   (a/go
     (let [[_ weapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-          weapons (filter #(not (data/invalidWeapon? gameplayCtx  unit %)) weapons)
+          weapons (filter #(not (data/invalidWeapon? gameplayCtx unit % nil)) weapons)
           targetUnits (->> (tool.units/getByRegion (:units gameplayCtx)
                                                    (map - (:position unit) [10 10])
                                                    (map + (:position unit) [10 10]))
@@ -57,7 +57,7 @@
           gameplayCtx (if bestWeaponUnit
                         (let [[weapon targetUnit] bestWeaponUnit
                               [_ targetUnitWeapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
-                              targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx  targetUnit %)) targetUnitWeapons)
+                              targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit % nil)) targetUnitWeapons)
                               targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
                               targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
                               _ (when (not (s/valid? ::type/weapon targetUnitBestWeapon))

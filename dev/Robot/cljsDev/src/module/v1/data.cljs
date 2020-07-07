@@ -274,43 +274,6 @@
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:ability]))))
 
-(defn invalidWeapon? [gameplayCtx unit weapon]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::type/unit unit)
-  (common/assertSpec ::type/weapon weapon)
-  (let [{:keys [energyType energyCost curage]} (common/assertSpec
-                                                (s/keys :req-un [::energyType ::energyCost ::curage])
-                                                (get-in data [:weapon (:weaponKey weapon)]))
-        bulletCount (:bulletCount weapon)
-        moved? (-> unit :robotState :tags :moveCount)
-        msg (try
-              ; 移動後必須有moveAttack能力的武器才能用
-              (when (and moved?
-                         (->> (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
-                              (into #{})
-                              (#(% "moveAttack"))
-                              not))
-                (throw (js/Error. "no ability [moveAttack]")))
-
-               ; 氣力要夠
-              (when (< (-> unit :robotState :curage) curage)
-                (throw (js/Error. (str "curage must be " curage "(" (-> unit :robotState :curage) ")"))))
-
-              ; 能量要夠
-              (when (= energyType "energy")
-                (let [en (-> unit :robotState :en)
-                      enoughEn? (>= en energyCost)]
-                  (when (not enoughEn?)
-                    (throw (js/Error. "en is not enough")))))
-               ; 彈數要夠
-              (when (= energyType "bullet")
-                (when (zero? bulletCount)
-                  (throw (js/Error. "bullet is empty"))))
-
-              (catch js/Error e
-                (.-message e)))]
-    msg))
-
 ; ===============================
 
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
@@ -512,6 +475,52 @@
        :else
        (throw (js/Error. (str energyType " not found")))))))
 
+(defn invalidWeapon? [gameplayCtx unit weapon targetUnit]
+  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/weapon weapon)
+  (common/assertSpec (s/nilable ::type/unit) unit)
+  (let [{:keys [energyType energyCost curage]} (common/assertSpec
+                                                (s/keys :req-un [::energyType ::energyCost ::curage])
+                                                (get-in data [:weapon (:weaponKey weapon)]))
+        bulletCount (:bulletCount weapon)
+        moved? (-> unit :robotState :tags :moveCount)
+
+        msg (try
+              (when targetUnit
+                (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
+                      canTouchTarget (weaponRanges (:position targetUnit))]
+                  (when (not canTouchTarget)
+                    (throw (js/Error. "can not touch target")))))
+
+              ; 移動後必須有moveAttack能力的武器才能用
+              (when (and moved?
+                         (->> (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+                              (into #{})
+                              (#(% "moveAttack"))
+                              not))
+                (throw (js/Error. "no ability [moveAttack]")))
+
+               ; 氣力要夠
+              (when (< (-> unit :robotState :curage) curage)
+                (throw (js/Error. (str "curage must be " curage "(" (-> unit :robotState :curage) ")"))))
+
+              ; 能量要夠
+              (when (= energyType "energy")
+                (let [en (-> unit :robotState :en)
+                      enoughEn? (>= en energyCost)]
+                  (when (not enoughEn?)
+                    (throw (js/Error. "en is not enough")))))
+               ; 彈數要夠
+              (when (= energyType "bullet")
+                (when (zero? bulletCount)
+                  (throw (js/Error. "bullet is empty"))))
+
+              (catch js/Error e
+                (.-message e)))]
+    msg))
+
+
 (defn moveCost [{playmap :map :as gameplayCtx} unit from to]
   {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
    :post [(number? %)]}
@@ -550,9 +559,10 @@
                 (get-in players [player :faction])))
          (apply =))))
 
-(defn getMenuData [gameplayCtx unit playerTurn?]
+(defn getMenuData [gameplayCtx unit playerTurn? targetUnit]
   (common/assertSpec ::type/unit unit)
   (common/assertSpec boolean? playerTurn?)
+  (common/assertSpec (s/nilable ::type/unit) targetUnit)
   (common/assertSpec
    (s/tuple ::spec/menu ::spec/menuCursorData)
    (if (not (isBelongToPlayer gameplayCtx unit))
@@ -565,7 +575,7 @@
                     (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                          second))
            invalidWeapons (map (fn [weapon]
-                                 (invalidWeapon? gameplayCtx unit weapon))
+                                 (invalidWeapon? gameplayCtx unit weapon targetUnit))
                                weapons)
            weaponKeys (->> (range (count weapons))
                            (into []))
@@ -651,7 +661,7 @@
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
         weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                      second
-                     (filter #(not (invalidWeapon? gameplayCtx  unit %))))
+                     (filter #(not (invalidWeapon? gameplayCtx  unit % fromUnit))))
         bestWeaponUnit (getBestWeapon gameplayCtx unit weapons [fromUnit])
         action (if bestWeaponUnit
                  (let [[bestWeapon _] bestWeaponUnit]

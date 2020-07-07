@@ -109,7 +109,7 @@
                              (nth weapons cursor2))
                      attackRange (data/getUnitWeaponRange gameplayCtx left weapon)
                      isTargetInRange (some #(= (:position right) %) attackRange)
-                     invalidWeaponMsg (data/invalidWeapon? gameplayCtx left weapon)]
+                     invalidWeaponMsg (data/invalidWeapon? gameplayCtx left weapon right)]
                  (cond
                    invalidWeaponMsg
                    (do
@@ -153,7 +153,7 @@
    :initState
    (let [_ (common/assertSpec ::battleMenu/defaultModel battleMenuModel)
          _ (common/assertSpec boolean? playerTurn?)
-         [menu data] (data/getMenuData gameplayCtx left playerTurn?)
+         [menu data] (data/getMenuData gameplayCtx left playerTurn? right)
          [leftActionType leftWeapon] leftAction]
      {:menuCursor (common/assertSpec
                    ::tool.menuCursor/model
