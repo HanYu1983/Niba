@@ -10,6 +10,7 @@ const {ccclass, property} = cc._decorator;
 export default class PilotStore extends StoreListPanel {
 
     updateItem(btn, data){
+        cc.log(data);
         let robotItem = btn as PilotListItem;
         robotItem.setLabel(data.title);
         robotItem.money.string = data.cost;

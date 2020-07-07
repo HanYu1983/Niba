@@ -14,7 +14,6 @@ import StateController from '../StateController';
 import ViewController from '../ViewController';
 import RobotStore from '../MainPage/RobotStore/RobotStore';
 import PilotStore from '../MainPage/PilotStore/PilotStore';
-import StandBy from '../MainPage/StandBy/StandBy';
 import MainMenu from '../MainPage/MainMenu/MainMenu';
 import PrepareMenu from '../MainPage/PrepareMenu/PrepareMenu';
 import MainMenuState from '../MainPage/MainMenu/MainMenuState';
@@ -23,10 +22,6 @@ import RobotStoreBuyState from '../MainPage/RobotStore/RobotStoreBuyState';
 import PilotStoreBuyState from '../MainPage/PilotStore/PilotStoreBuyState';
 import PilotStoreState from '../MainPage/PilotStore/PilotStoreState';
 import RobotStoreState from '../MainPage/RobotStore/RobotStoreState';
-import StandByRobotDetailState from '../MainPage/StandBy/StandyByRobotDetailState';
-import StandByRobotPilotState from '../MainPage/StandBy/StandyByRobotPilotState';
-import StandByState from '../MainPage/StandBy/StandyByState';
-import StandByRobotPilotPopState from '../MainPage/StandBy/StandyByRobotPilotPopState';
 import QuestMenu from '../MainPage/QuestMenu/QuestMenu';
 import QuestMenuState from '../MainPage/QuestMenu/QuestMenuState';
 import RobotDetailOnStoreState from '../CommentUI/RobotDetailPanel/RobotDetailOnStoreState';
@@ -47,6 +42,10 @@ import WeaponSetting from './WeaponSetting/WeaponSetting';
 import WeaponSettingRobotEquipState from './WeaponSetting/WeaponSettingRobotEquipState';
 import WeaponSettingRobotState from './WeaponSetting/WeaponSettingRobotState';
 import WeaponSettingComponentState from './WeaponSetting/WeaponSettingComponentState';
+import PilotSetting from './PilotSetting/PilotSetting';
+import PilotSettingRobotEquipState from './PilotSetting/PilotSettingRobotEquipState';
+import PilotSettingComponentState from './PilotSetting/PilotSettingComponentState';
+import PilotSettingRobotState from './PilotSetting/PilotSettingRobotState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
@@ -74,14 +73,14 @@ export default class MainPage extends BasicViewer {
     @property(ComponentStore)
     componentStore:ComponentStore = null;
 
-    @property(StandBy)
-    standBy: StandBy = null;
-
     @property(ComponentSetting)
     componentSetting:ComponentSetting = null;
 
     @property(WeaponSetting)
     weaponSetting:WeaponSetting = null;
+
+    @property(PilotSetting)
+    pilotSetting:PilotSetting = null;
 
     @property(cc.Label)
     money: cc.Label = null;
@@ -215,7 +214,7 @@ export default class MainPage extends BasicViewer {
                 break;
             }
             case "配置駕駛":{
-                this.openStandBy();
+                this.openPilotSetting();
                 break;
             }
             case "配置軍火":{
@@ -355,111 +354,111 @@ export default class MainPage extends BasicViewer {
 
     //#region StandByState 最外層的選單-》整備選單
 
-    onStandByUpClick() {
-        this.standBy.robotList.onPrevClick(this);
-    }
+    // onStandByUpClick() {
+    //     this.standBy.robotList.onPrevClick(this);
+    // }
 
-    onStandByDownClick() {
-        this.standBy.robotList.onNextClick(this);
-    }
+    // onStandByDownClick() {
+    //     this.standBy.robotList.onNextClick(this);
+    // }
 
-    onStandByLeftClick() {
-        this.standBy.robotList.onLeftClick(this);
-    }
+    // onStandByLeftClick() {
+    //     this.standBy.robotList.onLeftClick(this);
+    // }
 
-    onStandByRightClick() {
-        this.standBy.robotList.onRightClick(this);
-    }
+    // onStandByRightClick() {
+    //     this.standBy.robotList.onRightClick(this);
+    // }
 
-    onStandByEnterClick() {
-        this._state.changeState(new StandByRobotDetailState());
-        const data = this.standBy.robotList.getFocus();
+    // onStandByEnterClick() {
+    //     this._state.changeState(new StandByRobotDetailState());
+    //     const data = this.standBy.robotList.getFocus();
 
-        this.standBy.openRobotDetail();
-    }
+    //     this.standBy.openRobotDetail();
+    // }
 
-    onStandByEscClick() {
-        this.openPrepareMenu();
-    }
+    // onStandByEscClick() {
+    //     this.openPrepareMenu();
+    // }
 
     //#endregion
 
     //#region StandByRobotDetail 最外層的選單-》整備選單-》機體詳細
-    onStandByRobotDetailEnterClick() {
-        const buttonId = this.standBy.robotDetail.feature.getFocusId();
-        const robotId = this.standBy.robotList.getFocusId();
-        cc.log("buttonId", buttonId);
-        cc.log("robotId", robotId);
+    // onStandByRobotDetailEnterClick() {
+    //     const buttonId = this.standBy.robotDetail.feature.getFocusId();
+    //     const robotId = this.standBy.robotList.getFocusId();
+    //     cc.log("buttonId", buttonId);
+    //     cc.log("robotId", robotId);
 
-        if (buttonId[0] == 0) {
-            this.standBy.setPilotList();
-            this._state.changeState(new StandByRobotPilotState())
-        }
-    }
+    //     if (buttonId[0] == 0) {
+    //         this.standBy.setPilotList();
+    //         this._state.changeState(new StandByRobotPilotState())
+    //     }
+    // }
 
-    onStandByRobotDetailEscClick() {
-        this.standBy.closeRobotDetail();
-        this._state.changeState(new StandByState());
-    }
+    // onStandByRobotDetailEscClick() {
+    //     this.standBy.closeRobotDetail();
+    //     this._state.changeState(new StandByState());
+    // }
     //#endregion
 
     //#region StandByRobotPilot 最外層的選單-》整備選單-》機體詳細-》切換駕駛選單
 
-    onStandByRobotPilotUpClick() {
-        this.standBy.pilotList.onPrevClick();
-    }
+    // onStandByRobotPilotUpClick() {
+    //     this.standBy.pilotList.onPrevClick();
+    // }
 
-    onStandByRobotPilotDownClick() {
-        this.standBy.pilotList.onNextClick();
-    }
+    // onStandByRobotPilotDownClick() {
+    //     this.standBy.pilotList.onNextClick();
+    // }
 
-    onStandByRobotPilotEnterClick() {
-        const pilotId = this.standBy.pilotList.getFocusId();
-        cc.log("pilotId", pilotId);
+    // onStandByRobotPilotEnterClick() {
+    //     const pilotId = this.standBy.pilotList.getFocusId();
+    //     cc.log("pilotId", pilotId);
 
-        ViewController.instance.view.getCommentUI().openPopup("確定？");
-        this._state.changeState(new StandByRobotPilotPopState());
-    }
+    //     ViewController.instance.view.getCommentUI().openPopup("確定？");
+    //     this._state.changeState(new StandByRobotPilotPopState());
+    // }
 
-    onStandByRobotPilotEscClick() {
-        this.standBy.pilotList.close();
-        this._state.changeState(new StandByRobotDetailState());
-    }
-    //#endregion
+    // onStandByRobotPilotEscClick() {
+    //     this.standBy.pilotList.close();
+    //     this._state.changeState(new StandByRobotDetailState());
+    // }
+    // //#endregion
 
-    //#region StandByRobotPilotPop 最外層的選單-》整備選單-》機體詳細-》切換駕駛選單-》切換駕駛選單的確認選單
-    onStandByRobotPilotPopLeftClick() {
-        ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
-    }
+    // //#region StandByRobotPilotPop 最外層的選單-》整備選單-》機體詳細-》切換駕駛選單-》切換駕駛選單的確認選單
+    // onStandByRobotPilotPopLeftClick() {
+    //     ViewController.instance.view.getCommentUI().popPanel.onLeftClick();
+    // }
 
-    onStandByRobotPilotPopRightClick() {
-        ViewController.instance.view.getCommentUI().popPanel.onRightClick();
+    // onStandByRobotPilotPopRightClick() {
+    //     ViewController.instance.view.getCommentUI().popPanel.onRightClick();
 
-    }
+    // }
 
-    onStandByRobotPilotPopEnterClick() {
-        const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
-        if (cursor[0] == 0) {
-            const robot = this.standBy.robotList.getFocus();
-            const pilot = this.standBy.pilotList.getFocus();
+    // onStandByRobotPilotPopEnterClick() {
+    //     const cursor: number[] = ViewController.instance.view.getCommentUI().popPanel.getCursor();
+    //     if (cursor[0] == 0) {
+    //         const robot = this.standBy.robotList.getFocus();
+    //         const pilot = this.standBy.pilotList.getFocus();
 
-            ViewController.instance.model.setRobotPilot(robot.standbyKey, pilot.standbyKey, (err: any, data: any) => {
-                cc.log(data);
-                ViewController.instance.view.getCommentUI().showAlert("已修改");
+    //         ViewController.instance.model.setRobotPilot(robot.standbyKey, pilot.standbyKey, (err: any, data: any) => {
+    //             cc.log(data);
+    //             ViewController.instance.view.getCommentUI().showAlert("已修改");
 
-                this.standBy.pilotList.close();
-                ViewController.instance.view.getCommentUI().closePop();
-                this._state.changeState(new StandByRobotDetailState());
-            });
-        } else {
-            this.onStandByRobotPilotPopEscClick();
-        }
-    }
+    //             this.standBy.pilotList.close();
+    //             ViewController.instance.view.getCommentUI().closePop();
+    //             this._state.changeState(new StandByRobotDetailState());
+    //         });
+    //     } else {
+    //         this.onStandByRobotPilotPopEscClick();
+    //     }
+    // }
 
-    onStandByRobotPilotPopEscClick() {
-        ViewController.instance.view.getCommentUI().closePop();
-        this._state.changeState(new StandByRobotPilotState());
-    }
+    // onStandByRobotPilotPopEscClick() {
+    //     ViewController.instance.view.getCommentUI().closePop();
+    //     this._state.changeState(new StandByRobotPilotState());
+    // }
 
     //#endregion
 
@@ -921,6 +920,108 @@ export default class MainPage extends BasicViewer {
     }
 
     //#endregion
+
+    //#region PilotSettingComponentState
+
+    onPilotSettingComponentStateUpClick(){
+        this.pilotSetting.upComponentList();
+    }
+
+    onPilotSettingComponentStateDownClick(){
+        this.pilotSetting.downComponentList();
+        
+    }
+    onPilotSettingComponentStateLeftClick(){
+        
+    }
+    onPilotSettingComponentStateRightClick(){
+        
+    }
+    onPilotSettingComponentStateEnterClick(){
+        let component = this.pilotSetting.componentList.list.getFocus();
+        let equip = this.pilotSetting.robotEquipList.list.getFocus();
+        let robot = this.pilotSetting.robotList.list.getFocus();
+
+        let callback = (err, data)=>{
+            // cc.log(err, data);
+            this.pilotSetting.setRobotList();
+            this.onPilotSettingComponentStateEscClick();
+        }
+
+        // cc.log("onPilotSettingComponentStateEnterClick");
+        // cc.log(robot, component);
+        ViewController.instance.model.setRobotPilot(robot.key, component.key, callback);
+
+        // if( equip.title == "新增"){
+        //     ViewController.instance.model.setRobotPilot(robot.key, component.key, callback);
+        // }else{
+        //     if( component.title == "拆除"){
+        //         ViewController.instance.model.removeUnitPilot(robot.key, equip.key, callback);
+        //     }else{
+        //         ViewController.instance.model.removeUnitPilot(robot.key, equip.key, callback);
+        //         ViewController.instance.model.addUnitPilot(robot.key, component.key, callback);
+        //     }
+        // }
+    }
+    onPilotSettingComponentStateEscClick(){
+        this._state.changeState(new PilotSettingRobotEquipState());
+        this.pilotSetting.prevFocus();
+    }
+
+    //#endregion
+    
+    //#region PilotSettingRobotState
+
+    onPilotSettingRobotStateUpClick(){
+        this.pilotSetting.upRobotList();
+    }
+
+    onPilotSettingRobotStateDownClick(){
+        this.pilotSetting.downRobotList();
+        
+    }
+    onPilotSettingRobotStateLeftClick(){
+        
+    }
+    onPilotSettingRobotStateRightClick(){
+        
+    }
+    onPilotSettingRobotStateEnterClick(){
+        this._state.changeState(new PilotSettingRobotEquipState());
+        this.pilotSetting.nextFocus();
+    }
+    onPilotSettingRobotStateEscClick(){
+        this.openPrepareMenu();
+    }
+
+    //#endregion
+    
+    //#region PilotSettingRobotEquipState
+
+    onPilotSettingRobotEquipStateUpClick(){
+        this.pilotSetting.upRobotEquipList();
+    }
+
+    onPilotSettingRobotEquipStateDownClick(){
+        this.pilotSetting.downRobotEquipList();
+        
+    }
+    onPilotSettingRobotEquipStateLeftClick(){
+        
+    }
+    onPilotSettingRobotEquipStateRightClick(){
+        
+    }
+    onPilotSettingRobotEquipStateEnterClick(){
+        this._state.changeState(new PilotSettingComponentState());
+        this.pilotSetting.nextFocus();
+    }
+    onPilotSettingRobotEquipStateEscClick(){
+        this._state.changeState(new PilotSettingRobotState());
+        this.pilotSetting.prevFocus();
+    }
+
+    //#endregion
     
     openPrepareMenu(){
         this.closeAllPage();
@@ -962,11 +1063,10 @@ export default class MainPage extends BasicViewer {
         this._state.changeState(new ComponentStoreState());
     }
 
-    openStandBy() {
+    openPilotSetting() {
         this.closeAllPage();
-        this.standBy.open();
-        this.standBy.setRobotList();
-        this._state.changeState(new StandByState());
+        this.pilotSetting.open();
+        this._state.changeState(new PilotSettingRobotState());
     }
 
     openComponentSetting(){
@@ -993,7 +1093,7 @@ export default class MainPage extends BasicViewer {
         this.questMenu.close();
         this.robotStore.close();
         this.pilotStore.close();
-        this.standBy.close();
+        this.pilotSetting.close();
         this.weaponStore.close();
         this.weaponSetting.close();
         this.componentStore.close();
