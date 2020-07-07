@@ -36,4 +36,7 @@ export default class WeaponMenuItem extends cc.Component {
 
     @property(cc.Sprite)
     backColor:cc.Sprite = null;
+
+    @property(cc.Sprite)
+    coverColor:cc.Sprite = null;
 }

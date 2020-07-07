@@ -418,12 +418,13 @@ export default class GamePage extends BasicViewer {
         if (weaponInfo) {
             let weaponId = weaponInfo.weaponIdx;
             let weapons = weaponInfo.weapons;
+            let invalidWeapons = weaponInfo.invalidWeapons;
 
             if (cursors) {
                 const c1 = cursors[0];
                 const c2 = cursors[1][cursors[0]];
                 if (c1 == weaponId) {
-                    this.openWeaponMenu(weapons);
+                    this.openWeaponMenu(weapons, invalidWeapons);
                     this.weaponMenu.showCurrentWeapon(c2);
                 }
             }
@@ -436,13 +437,14 @@ export default class GamePage extends BasicViewer {
         this.weaponMenu.close();
     }
 
-    openWeaponMenu(data: any) {
+    openWeaponMenu(data: any, invalid:any) {
 
         let ws = [];
         for (let key in data) {
             let weapon = data[key];
             //let weaponDetail = ViewController.instance.getWeapon(weapon.weaponKey);
             let weaponDetail = weapon;
+            weaponDetail.invalid = invalid[key];
             /**
              * range:number[]
              * energyCost:number

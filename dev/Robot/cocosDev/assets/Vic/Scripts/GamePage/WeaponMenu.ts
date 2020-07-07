@@ -41,6 +41,8 @@ export default class WeaponMenu extends BasicViewer {
                 weapon.weaponType.string = weaponData.type;
                 weapon.weaponBullet.string = "彈 " + weaponData.bulletCount + "/" + weaponData.maxBulletCount;
                 weapon.weaponEN.string = "EN " + weaponData.energyCost;
+
+                this.weaponItems[i].coverColor.node.active = (weaponData.invalid != null);
             }else{
                 this.weaponItems[i].node.active = false;
             }
