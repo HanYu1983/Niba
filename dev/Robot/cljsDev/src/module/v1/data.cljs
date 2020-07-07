@@ -283,33 +283,32 @@
                                                 (get-in data [:weapon (:weaponKey weapon)]))
         bulletCount (:bulletCount weapon)
         moved? (-> unit :robotState :tags :moveCount)
-        msg (cond
+        msg (try
               ; 移動後必須有moveAttack能力的武器才能用
-              moved?
-              (when (->> (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
-                         (into #{})
-                         (#(% "moveAttack"))
-                         not)
-                (str "no ability [moveAttack]"))
+              (when (and moved?
+                         (->> (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+                              (into #{})
+                              (#(% "moveAttack"))
+                              not))
+                (throw (js/Error. "no ability [moveAttack]")))
 
-              ; 氣力要夠
-              (< (-> unit :robotState :curage) curage)
-              (str "curage must be " curage "(" (-> unit :robotState :curage) ")")
+               ; 氣力要夠
+              (when (< (-> unit :robotState :curage) curage)
+                (throw (js/Error. (str "curage must be " curage "(" (-> unit :robotState :curage) ")"))))
 
               ; 能量要夠
-              (= energyType "energy")
-              (let [en (-> unit :robotState :en)
-                    enoughEn? (>= en energyCost)]
-                (when (not enoughEn?)
-                  "en is not enough"))
+              (when (= energyType "energy")
+                (let [en (-> unit :robotState :en)
+                      enoughEn? (>= en energyCost)]
+                  (when (not enoughEn?)
+                    (throw (js/Error. "en is not enough")))))
+               ; 彈數要夠
+              (when (= energyType "bullet")
+                (when (zero? bulletCount)
+                  (throw (js/Error. "bullet is empty"))))
 
-              ; 彈數要夠
-              (= energyType "bullet")
-              (when (zero? bulletCount)
-                "bullet is empty")
-
-              :else
-              (str "energyType not found"))]
+              (catch js/Error e
+                (.-message e)))]
     msg))
 
 ; ===============================
