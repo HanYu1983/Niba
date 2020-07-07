@@ -62,8 +62,10 @@ export default class View extends cc.Component {
     // 遊戲結束, 依照cause來判斷要跳到哪一頁
     gameplayDone(data: any, cb: () => void) {
         const { cause } = data
-        this.openMainPage();
-        cb()
+        this.getGamePage().showGiveup(()=>{
+            cb();
+            this.openMainPage();
+        });
     }
 
     // 上下移動游標, 左右選擇取消, enter確認

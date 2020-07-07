@@ -371,7 +371,15 @@ export default class GamePage extends BasicViewer {
     }
 
     openTurnStart(isPlayer: boolean, callback: () => void) {
-        this.turnStart.setContent(isPlayer ? "玩家回合開始" : "敵軍回合開始");
+        this.showSceneMessage(isPlayer, isPlayer ? "玩家回合開始" : "敵軍回合開始", callback);
+    }
+
+    showGiveup(callback: () => void){
+        this.showSceneMessage(true, "放棄了送", callback);
+    }
+
+    showSceneMessage(isPlayer:boolean = true, content:string, callback:()=>void){
+        this.turnStart.setContent(content);
         this.turnStart.setPlayer(isPlayer);
         this.turnStart.open();
         this.turnStart.node.on("end", () => {
