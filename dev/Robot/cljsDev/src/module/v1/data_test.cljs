@@ -52,7 +52,7 @@
         _ (data/getWeaponType {:gameplayCtx gameplayCtx :lobbyCtx lobbyCtx} unitA weapon)
         _ (data/getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx lobbyCtx} unitA weapon)
         _ (data/getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx lobbyCtx} unitA weapon)
-        _ (data/invalidWeapon? gameplayCtx unitA weapon)
+        _ (data/invalidWeapon? gameplayCtx unitA weapon nil)
         _ (data/findNearestTerrainPosition gameplayCtx :award [0 0])]))
 
 (defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]

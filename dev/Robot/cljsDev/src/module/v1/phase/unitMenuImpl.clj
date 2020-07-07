@@ -6,7 +6,7 @@
       :initState
       (let [_ (common/assertSpec type/gameplayCtx gameplayCtx)
             _ (common/assertSpec type/unit unit)
-            [menu data] (data/getMenuData gameplayCtx unit true)]
+            [menu data] (data/getMenuData gameplayCtx unit true nil)]
         {:menuCursor (tool.menuCursor/model menu)
          :data data
          :unit unit})
@@ -107,7 +107,7 @@
                        (let [weapon (common/assertSpec
                                      type/weapon
                                      (nth weapons cursor2))
-                             invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon)
+                             invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon nil)
                              weaponType (data/getWeaponType {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)]
                          (cond
                            invalidWeaponMsg

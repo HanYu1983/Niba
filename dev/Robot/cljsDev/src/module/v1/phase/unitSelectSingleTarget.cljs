@@ -30,7 +30,7 @@
             (let [weaponRange (into #{} (data/getUnitWeaponRange gameplayCtx unit weapon))
                   unitInRange? (weaponRange cursor)
                   friendlyUnit? (data/isFriendlyUnit gameplayCtx unit unitAtCursor)
-                  invalidWeaponMsg (data/invalidWeapon? gameplayCtx  unit weapon)]
+                  invalidWeaponMsg (data/invalidWeapon? gameplayCtx unit weapon nil)]
               (cond
                 invalidWeaponMsg
                 (do
