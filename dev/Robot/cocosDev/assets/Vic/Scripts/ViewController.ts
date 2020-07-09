@@ -45,14 +45,29 @@ export default class ViewController extends cc.Component {
     // 第一個參數：0隨機副本；1陸副本；2海副本；3空副本
     // 第二個參數：難度：0~9
     notifyStartGame(args:any) {
-        cc.log("notifyStartGame")
         this.modelController.endLobby();
         this.modelController.startGame(args);
     }
 
     notifyStartLobby() {
-        cc.log("notifyStartLobby")
         this.modelController.startLobby();
+    }
+
+    // 讀取gameplay
+    notifyLoadGame(){
+        this.modelController.endLobby();
+        this.modelController.loadGame()
+    }
+
+    // 清空記憶
+    notifyNewGame(cb:()=>void){
+        this.modelController.talk("newGame", null, cb)
+    }
+
+    // 判斷gameplay有沒有記憶可以讀取
+    // 先呼叫這個判斷讀取按鈕能不能按
+    notifyCheckLoadGameplay(cb:(v:boolean)=>void){
+        this.modelController.talk("checkLoadGameplay", null, cb)
     }
 
     private _data: any;
@@ -74,44 +89,5 @@ export default class ViewController extends cc.Component {
     getPilot(key: string): any {
         return this.getData().pilot[key];
     }
-    //#endregion
-
-
-    //#region consumer
-    /*
-    playerTurnStart(data: any, cb: () => void) {
-        this.view.playerTurnStart(data, cb)
-    }
-    enemyTurnStart(enemyName: any, cb: () => void) {
-        this.view.enemyTurnStart(enemyName, cb)
-    }
-    unitMoveAnim(data: any, cb: () => void) {
-        this.view.unitMoveAnim(data, cb)
-    }
-    unitTargetingAnim(data: any, cb: () => void) {
-        this.view.unitTargetingAnim(data, cb);
-    }
-    unitBattleAnim(data: any, cb: () => void) {
-        this.view.unitBattleAnim(data, cb)
-    }
-    unitDeadAnim(data: any, cb: () => void) {
-        this.view.unitDeadAnim(data, cb)
-    }
-    unitSkyAnim(data: any, cb: () => void) {
-        this.view.unitSkyAnim(data, cb)
-    }
-    unitGroundAnim(data: any, cb: () => void) {
-        this.view.unitGroundAnim(data, cb)
-    }
-    unitGetAwardAnim(data: any, cb: () => void) {
-        this.view.unitGetAwardAnim(data, cb)
-    }
-    showMessage(data: any, cb: () => void) {
-        this.view.showMessage(data, cb)
-    }
-    paint(data: any, cb: () => void) {
-        this.view.paint(data, cb)
-    }
-    */
     //#endregion
 }

@@ -38,6 +38,10 @@ export default class ModelController extends cc.Component {
         this.send("exit");
     }
 
+    loadGame(){
+        this.send("loadGameplay")
+    }
+
     loadConfig(cb: (data: any) => void) {
         this.talk("loadConfig", null, cb)
     }

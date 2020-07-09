@@ -30,24 +30,32 @@
             (a/>! outputCh ["ok", [id data]])
             (recur (merge ctx {:data data})))
 
-          (= "checkLoad" cmd)
+          ; 新遊戲, 清空所有記憶
+          (= "newGame" cmd)
+          (let [_ (.removeItem js/localStorage "lobby")
+                _ (.removeItem js/localStorage "gameplay")]
+            ctx)
+
+          ; 判斷gameplay有沒有記憶可以讀取
+          (= "checkLoadGameplay" cmd)
           (let [[id _] args
-                gameplayMemonto (.-gameplay js/localStorage)]
-            (if gameplayMemonto
-              (do (a/>! outputCh ["ok" [id "loadGameplay"]])
-                  (recur ctx))
-              (do (a/>! outputCh ["ok" [id "startLobby"]])
-                  (recur ctx))))
+                _ (a/>! outputCh ["ok" [id (boolean (.-gameplay js/localStorage))]])]
+            (recur ctx))
 
+          ; 讀取最後記憶的gameplay
           (= "loadGameplay" cmd)
-          (recur (a/<! (app.module/gameplayLoad app.module/*module ctx args inputCh outputCh)))
+          (recur (a/<! (app.module/gameplayLoad app.module/*module ctx inputCh outputCh)))
 
+          ; 開始gameplay
           (= "startGameplay" cmd)
           (recur (a/<! (app.module/gameplayStart app.module/*module ctx args inputCh outputCh)))
 
+          ; 開始整備
+          ; lobby是自動記憶, 不像gameplay要手動按
           (= "startLobby" cmd)
           (recur (a/<! (app.lobby.core/startLobby ctx inputCh outputCh)))
 
+          ; 跳出程式
           (= "exit" cmd)
           ctx
 
