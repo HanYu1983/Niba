@@ -1,7 +1,8 @@
 (ns module.v1.core
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
-            [app.module]
+            [cljs.reader])
+  (:require [app.module]
             [app.lobby.model]
             [tool.map]
             [tool.units]
@@ -17,7 +18,7 @@
             [module.v1.system.spec :as spec])
   (:require-macros [module.v1.core :as core]))
 
- 
+
 (defmethod app.module/loadData :v1 [_]
   (a/go data/data))
 
@@ -148,16 +149,7 @@
                           :getComponentStoreList :component})]
          (field data/data))))))
 
-(def gameplayCtx {:map [[]]
-                  :camera [0 0]
-                  :cursor [0 0]
-                  :viewsize [20 20]
-                  :mapsize [20 20]
-                  :units tool.units/model
-                  :moveRange []
-                  :players {:player {:faction 0 :playerState nil}
-                            :ai1 {:faction 1 :playerState nil}}
-                  :fsm tool.fsm/model})
+
 
 (defn gameplayLoop [gameplayCtx inputCh outputCh]
   (a/go
@@ -187,95 +179,130 @@
           gameplayCtx
           (recur gameplayCtx))))))
 
+
+(defn createMapByLevel [gameplayCtx levelStr]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec
+   ::type/gameplayCtx
+   (let [matchs (re-find #"(\d+)_(\d+)" (or levelStr "0_0"))
+         [_ levelType level] (if matchs
+                               (map js/parseInt matchs)
+                               [0 0 0])
+         levelProps {0 {:deepsea 0.6
+                        :sea 0.6
+                        :sand 0.1
+                        :grass 1
+                        :hill 1
+                        :city 0.3
+                        :tree 0.4
+                        :award 0.01
+                        :power 1
+                        :offset 0}
+                     1 {:deepsea 0.3
+                        :sea 0.3
+                        :sand 0.1
+                        :grass 1
+                        :hill 1
+                        :city 0.5
+                        :tree 0.4
+                        :award 0.01
+                        :power 1
+                        :offset 0}
+                     2 {:deepsea 0.8
+                        :sea 0.8
+                        :sand 0.2
+                        :grass 0.3
+                        :hill 0.1
+                        :city 0.1
+                        :tree 0.1
+                        :award 0.01
+                        :power 1
+                        :offset 0}
+                     3 {:deepsea 0.6
+                        :sea 0.6
+                        :sand 0.1
+                        :grass 1
+                        :hill 1
+                        :city 0.3
+                        :tree 0.4
+                        :award 0.01
+                        :power 1
+                        :offset 0}}
+          ; create map
+         [mw mh] (:mapsize gameplayCtx)
+         playmap (tool.map/generateMap
+                  {:seed 0
+                   :x (* level mw)
+                   :y 0
+                   :w mw
+                   :h mh}
+                  (levelProps levelType))
+         gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))]
+     gameplayCtx)))
+
+(defn createTestUnits [gameplayCtx]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec
+   ::type/gameplayCtx
+   (let [[gameplayCtx _] (->> (get data/data :robot)
+                              (take 4)
+                              (reduce (fn [[gameplayCtx i] [robotKey _]]
+                                        [(-> gameplayCtx
+                                             (data/createUnit {:playerKey :player
+                                                               :position [0 i]}
+                                                              {:robotKey robotKey})
+                                             (data/createUnit {:playerKey :ai1
+                                                               :position [5 i]}
+                                                              {:robotKey robotKey}))
+                                         (inc i)])
+                                      [gameplayCtx 1]))]
+     gameplayCtx)))
+
+(defn createUserSelectedUnitsAsync [gameplayCtx lobbyCtx inputCh outputCh]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (a/go
+    (common/assertSpec
+     ::type/gameplayCtx
+     (let [; 選角頁
+           [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> lobbyCtx :robots) {})} inputCh outputCh))
+          ; 產生自己選出的軍隊
+           gameplayCtx (->> (map (fn [idx key robotKey]
+                                   [{:key key
+                                     :playerKey :player
+                                     :position [0 (+ idx 1)]}
+                                    {:robotKey robotKey}])
+                                 (range)
+                                 selectedUnits
+                                 (map #(-> lobbyCtx :robots %) selectedUnits))
+                            (reduce (fn [gameplayCtx [arg1 arg2]]
+                                      (data/createUnit gameplayCtx arg1 arg2))
+                                    gameplayCtx))]
+       gameplayCtx))))
+
+
+(defmethod app.module/gameplayLoad :v1 [_ ctx inputCh outputCh]
+  (let [gameplayCtx (data/load! data/gameplayCtx)
+        gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
+        _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
+          ; 取代lobbyCtx
+        ctx (assoc ctx
+                   :lobbyCtx (:lobbyCtx gameplayCtx)
+                   :gameplayCtx gameplayCtx)]
+    ctx))
+
 (defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
   (a/go
-    (let [matchs (re-find #"(\d+)_(\d+)" (or args "0_0"))
-          [_ levelType level] (if matchs
-                                (map js/parseInt matchs)
-                                [0 0 0])
-          levelProps {0 {:deepsea 0.6
-                         :sea 0.6
-                         :sand 0.1
-                         :grass 1
-                         :hill 1
-                         :city 0.3
-                         :tree 0.4
-                         :award 0.01
-                         :power 1
-                         :offset 0}
-                      1 {:deepsea 0.3
-                         :sea 0.3
-                         :sand 0.1
-                         :grass 1
-                         :hill 1
-                         :city 0.5
-                         :tree 0.4
-                         :award 0.01
-                         :power 1
-                         :offset 0}
-                      2 {:deepsea 0.8
-                         :sea 0.8
-                         :sand 0.2
-                         :grass 0.3
-                         :hill 0.1
-                         :city 0.1
-                         :tree 0.1
-                         :award 0.01
-                         :power 1
-                         :offset 0}
-                      3 {:deepsea 0.6
-                         :sea 0.6
-                         :sand 0.1
-                         :grass 1
-                         :hill 1
-                         :city 0.3
-                         :tree 0.4
-                         :award 0.01
-                         :power 1
-                         :offset 0}}
-          ; copy lobbyCtx first
-          gameplayCtx (assoc gameplayCtx :lobbyCtx (:lobbyCtx ctx))
-          ; create map
-          [mw mh] (:mapsize gameplayCtx)
-          playmap (tool.map/generateMap
-                   {:seed 0
-                    :x (* level mw)
-                    :y 0
-                    :w mw
-                    :h mh}
-                   (levelProps levelType))
-          gameplayCtx (update-in gameplayCtx [:map] (constantly playmap))
-          ; 選角頁, DEMO版先拿掉
-          [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> ctx :lobbyCtx :robots) {})} inputCh outputCh))
+    (let [; copy lobbyCtx first
+          gameplayCtx (assoc data/gameplayCtx :lobbyCtx (:lobbyCtx ctx))
+          ; 建立地圖
+          gameplayCtx (createMapByLevel gameplayCtx args)
           ; 產生自己選出的軍隊
-          gameplayCtx (->> (map (fn [idx key robotKey]
-                                  [{:key key
-                                    :playerKey :player
-                                    :position [0 (+ idx 1)]}
-                                   {:robotKey robotKey}])
-                                (range)
-                                selectedUnits
-                                (map #(-> ctx :lobbyCtx :robots %) selectedUnits))
-                           (reduce (fn [gameplayCtx [arg1 arg2]]
-                                     (data/createUnit gameplayCtx arg1 arg2))
-                                   gameplayCtx))
-          ; 產生測試用的軍隊
-          #_[gameplayCtx _] #_(->> (get data/data :robot)
-                                   (take 4)
-                                   (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                             [(-> gameplayCtx
-                                                  (data/createUnit {:playerKey :player
-                                                                    :position [0 i]}
-                                                                   {:robotKey robotKey})
-                                                  (data/createUnit {:playerKey :ai1
-                                                                    :position [5 i]}
-                                                                   {:robotKey robotKey}))
-                                              (inc i)])
-                                           [gameplayCtx 1]))
-
+          gameplayCtx (a/<! (createUserSelectedUnitsAsync gameplayCtx (:lobbyCtx ctx) inputCh outputCh))
+          ; 產生敵機
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
-                       (let [posList (take 5 (map vector
+                       (let [[mw mh] (:mapsize gameplayCtx)
+                             posList (take 5 (map vector
                                                   (repeatedly #(rand-int mw))
                                                   (repeatedly #(rand-int mh))))
                              beforeCentroids [[15, 15]]

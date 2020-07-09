@@ -30,6 +30,18 @@
             (a/>! outputCh ["ok", [id data]])
             (recur (merge ctx {:data data})))
 
+          (= "checkLoad" cmd)
+          (let [[id _] args
+                gameplayMemonto (.-gameplay js/localStorage)]
+            (if gameplayMemonto
+              (do (a/>! outputCh ["ok" [id "loadGameplay"]])
+                  (recur ctx))
+              (do (a/>! outputCh ["ok" [id "startLobby"]])
+                  (recur ctx))))
+
+          (= "loadGameplay" cmd)
+          (recur (a/<! (app.module/gameplayLoad app.module/*module ctx args inputCh outputCh)))
+
           (= "startGameplay" cmd)
           (recur (a/<! (app.module/gameplayStart app.module/*module ctx args inputCh outputCh)))
 

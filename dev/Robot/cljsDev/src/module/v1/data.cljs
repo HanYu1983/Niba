@@ -1,4 +1,5 @@
 (ns module.v1.data
+  (:require [cljs.reader])
   (:require ["./data.js" :as dataJson])
   (:require [clojure.spec.alpha :as s])
   (:require [clojure.core.async :as a])
@@ -460,7 +461,9 @@
                            (- energyCost)
                            (max 0)
                            ((fn [en]
-                              (update-in unit [:robotState :en] (constantly en)))))]
+                              (update-in unit [:robotState :en] (constantly en)))))
+             unitAfter (update-in unitAfter [:robotState :tags] (fn [tags]
+                                                                  (assoc tags :attackWeapon weapon)))]
          unitAfter)
 
        (= energyType :bullet)
@@ -473,7 +476,9 @@
                  (throw (js/Error. (str "內部錯誤, 使用的武器必須在武器列表中, 請檢查是否有在weapon多塞了額外的欄位:" weapon))))
              weaponEntryAfter (update-in weaponEntry [1] (fn [vs]
                                                            (replace {weapon weaponAfter} vs)))
-             unitAfter (setUnitWeapons unit weaponEntryAfter)]
+             unitAfter (setUnitWeapons unit weaponEntryAfter)
+             unitAfter (update-in unitAfter [:robotState :tags] (fn [tags]
+                                                                  (assoc tags :attackWeapon weapon)))]
          unitAfter)
        
        :else
@@ -1168,3 +1173,49 @@
 
 (defn onPlayerTurnEnd [gameplayCtx inputCh outputCh]
   (onEnemyTurnEnd gameplayCtx :player inputCh outputCh))
+
+
+
+(def gameplayCtx {:map [[]]
+                  :camera [0 0]
+                  :cursor [0 0]
+                  :viewsize [20 20]
+                  :mapsize [20 20]
+                  :units tool.units/model
+                  :moveRange []
+                  :players {:player {:faction 0 :playerState nil}
+                            :ai1 {:faction 1 :playerState nil}}
+                  :fsm tool.fsm/model})
+
+(defn save! [gameplayCtx]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (let [units (-> (:units gameplayCtx)
+                  (tool.units/getAll))
+        memonto (merge {:unitList units}
+                       (select-keys gameplayCtx [:lobbyCtx
+                                                 :map
+                                                 :camera
+                                                 :viewsize
+                                                 :mapsize
+                                                 :cursor
+                                                 :players]))
+        _ (.setItem js/localStorage "gameplay" (str memonto))]))
+
+(defn load! [gameplayCtx]
+  (common/assertSpec
+   ::type/gameplayCtx
+   (let [gameplayMemonto (cljs.reader/read-string (.-gameplay js/localStorage))
+         gameplayCtx (common/assertSpec
+                      ::type/gameplayCtx
+                      (if gameplayMemonto
+                        (let [unitsList (:unitList gameplayMemonto)
+                              gameplayCtx (merge gameplayCtx
+                                                 (dissoc gameplayMemonto :unitList))
+                              gameplayCtx (reduce (fn [gameplayCtx unit]
+                                                    (update gameplayCtx :units (fn [units]
+                                                                                 (tool.units/add units unit))))
+                                                  gameplayCtx
+                                                  unitsList)]
+                          gameplayCtx)
+                        gameplayCtx))]
+     gameplayCtx)))

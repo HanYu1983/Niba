@@ -13,22 +13,6 @@
 (s/def ::player (s/keys :req-un [::faction ::playerState]))
 (s/def ::players (s/map-of keyword? ::player))
 
-(defmulti tagEntry first)
-; 是否飛行
-(defmethod tagEntry :sky [_] (s/tuple keyword? boolean?))
-; 上一回合的移動的速率(兩點間的距離)
-(defmethod tagEntry :velocity [_] (s/tuple keyword? number?))
-; 是否行動完畢
-(defmethod tagEntry :done [_] (s/tuple keyword? boolean?))
-; 是否移動過
-(defmethod tagEntry :moveCount [_] (s/tuple keyword? int?))
-(defmethod tagEntry :moveRangePlus [_] (s/tuple keyword? boolean?))
-(defmethod tagEntry :weaponRangePlus [_] (s/tuple keyword? boolean?))
-
-(s/def ::tagEntry (s/multi-spec tagEntry ::tagEntry))
-(s/def ::tags (s/and (s/map-of keyword? any?)
-                     (s/coll-of ::tagEntry)))
-
 (s/def ::bulletCount int?)
 (s/def ::weaponLevel int?)
 (s/def ::weaponKey ::key)
@@ -50,6 +34,24 @@
 (s/def ::componentEntry (s/tuple keyword? (s/* ::componentState)))
 (s/def ::weapons (s/map-of keyword? (s/* ::weaponState)))
 (s/def ::components (s/map-of keyword? (s/* ::componentState)))
+
+(defmulti tagEntry first)
+; 是否飛行
+(defmethod tagEntry :sky [_] (s/tuple keyword? boolean?))
+; 上一回合的移動的速率(兩點間的距離)
+(defmethod tagEntry :velocity [_] (s/tuple keyword? number?))
+; 是否行動完畢
+(defmethod tagEntry :done [_] (s/tuple keyword? boolean?))
+; 是否移動過
+(defmethod tagEntry :moveCount [_] (s/tuple keyword? int?))
+(defmethod tagEntry :moveRangePlus [_] (s/tuple keyword? boolean?))
+(defmethod tagEntry :weaponRangePlus [_] (s/tuple keyword? boolean?))
+; 是否攻擊過與攻擊的武器
+(defmethod tagEntry :attackWeapon [_] (s/tuple keyword? ::weaponState))
+
+(s/def ::tagEntry (s/multi-spec tagEntry ::tagEntry))
+(s/def ::tags (s/and (s/map-of keyword? any?)
+                     (s/coll-of ::tagEntry)))
 
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotState ::weapons ::components ::tags ::hp ::en ::curage]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
