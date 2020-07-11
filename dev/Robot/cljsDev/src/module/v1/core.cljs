@@ -65,7 +65,11 @@
                                                             {:key keyForPilot
                                                              :pilotKey (common/assertSpec
                                                                         keyword?
-                                                                        ((:pilots lobbyCtx) keyForPilot))}))
+                                                                        ((:pilots lobbyCtx) keyForPilot))
+                                                             :expEvade 0
+                                                             :expGuard 0
+                                                             :expMelee 0
+                                                             :expRange 0}))
                                             :weapons {}
                                             :components {}
                                             :tags {}
@@ -98,8 +102,14 @@
        (s/map-of keyword? map?)
        (let [ret (->> (:pilots lobbyCtx)
                       (map (fn [[key pilotKey]]
-                             {:key key
-                              :pilotKey pilotKey}))
+                             (common/assertSpec
+                              ::type/pilotState
+                              {:key key
+                               :pilotKey pilotKey
+                               :expMelee 0
+                               :expRange 0
+                               :expEvade 0
+                               :expGuard 0})))
                       (map (fn [pilot]
                              (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
                       (zipmap (-> lobbyCtx :pilots keys)))]
@@ -270,12 +280,27 @@
                                    [{:key key
                                      :playerKey :player
                                      :position [0 (+ idx 1)]}
-                                    {:robotKey robotKey}])
+                                    {:robotKey robotKey
+                                     :pilotState (let [keyForPilot (common/assertSpec
+                                                                    (s/nilable keyword?)
+                                                                    (->> (:robotByPilot lobbyCtx)
+                                                                         (filter (fn [[_ robotKey]]
+                                                                                   (= robotKey key)))
+                                                                         ffirst))]
+                                                   (when keyForPilot
+                                                     {:key keyForPilot
+                                                      :pilotKey (common/assertSpec
+                                                                 keyword?
+                                                                 ((:pilots lobbyCtx) keyForPilot))
+                                                      :expEvade 0
+                                                      :expGuard 0
+                                                      :expMelee 0
+                                                      :expRange 0}))}])
                                  (range)
                                  selectedUnits
                                  (map #(-> lobbyCtx :robots %) selectedUnits))
-                            (reduce (fn [gameplayCtx [arg1 arg2]]
-                                      (data/createUnit gameplayCtx arg1 arg2))
+                            (reduce (fn [gameplayCtx [entity state]]
+                                      (data/createUnit gameplayCtx entity state))
                                     gameplayCtx))]
        gameplayCtx))))
 
@@ -418,7 +443,13 @@
                            (data/createUnit {:key :unit1
                                              :playerKey :player
                                              :position [0 0]}
-                                            {:robotKey :gaite_land})
+                                            {:robotKey :gaite_land
+                                             :pilotState {:key :test
+                                                          :pilotKey :amuro
+                                                          :expEvade 0
+                                                          :expGuard 0
+                                                          :expMelee 0
+                                                          :expRange 0}})
                            (data/createUnit {:key :unit2
                                              :playerKey :player
                                              :position [4 0]}

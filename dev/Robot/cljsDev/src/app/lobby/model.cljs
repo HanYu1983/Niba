@@ -10,6 +10,7 @@
 
 (s/def ::robots (s/map-of ::key ::robotKey))
 (s/def ::pilots (s/map-of ::key ::pilotKey))
+(s/def ::pilotStateByPilot (s/map-of ::key any?))
 (s/def ::robotByPilot (s/map-of ::key ::key))
 
 (s/def ::weaponKey keyword?)
@@ -34,7 +35,8 @@
                                 ::robotByWeapon
                                 ::weaponLevelByKey 
                                 ::components
-                                ::robotByComponent]))
+                                ::robotByComponent
+                                ::pilotStateByPilot]))
 
 (def modelType ::model)
 
@@ -46,7 +48,8 @@
                         :robotByWeapon {}
                         :weaponLevelByKey {}
                         :components {}
-                        :robotByComponent {}})
+                        :robotByComponent {}
+                        :pilotStateByPilot {}})
 
 (s/assert ::model defaultLobbyModel)
 

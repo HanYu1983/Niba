@@ -25,7 +25,7 @@
 (s/def ::robotKey ::key)
 
 (s/def ::pilotKey ::key)
-(s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey])))
+(s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey ::expMelee ::expRange ::expEvade ::expGuard])))
 
 (s/def ::componentKey ::key)
 (s/def ::componentState (s/keys :req-un [::key ::componentKey ::tags]))

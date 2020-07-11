@@ -229,7 +229,11 @@
      (let [data (get-in data [:pilot (:pilotKey pilotState)])]
        (if (nil? data)
          (throw (js/Error. (str "getPilotInfo[" (:pilotKey pilotState) "] not found")))
-         (merge data pilotState))))))
+         (merge data
+                pilotState
+                (common/assertSpec
+                 ::type/pilotState
+                 (-> lobbyCtx :pilotStateByPilot (:key pilotState)))))))))
 
 ; =======================
 ; weapon
@@ -327,13 +331,36 @@
                 (max 0.05 (- 0.9 (* dist 0.05))))
 
         ; 格鬥或射擊係數
-        factor1 (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
-                  (if isMelee
-                    (/ (get pilot :melee) (get targetPilot :melee))
-                    (/ (get pilot :range) (get targetPilot :range))))
+        factor1 (cond
+                  (and pilot targetPilot)
+                  (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
+                    (if isMelee
+                      (/ (get pilot :melee) (get targetPilot :melee))
+                      (/ (get pilot :range) (get targetPilot :range))))
+
+                  pilot
+                  5
+
+                  targetPilot
+                  (/ 1 5)
+
+                  :else
+                  1)
+
 
         ; 命中回避係數
-        factor2 (/ (get pilot :dex) (get targetPilot :agi))
+        factor2 (cond
+                  (and pilot targetPilot)
+                  (/ (get pilot :dex) (get targetPilot :agi))
+
+                  pilot
+                  5
+
+                  targetPilot
+                  (/ 1 5)
+
+                  :else
+                  1)
 
         ; 地型適性係數
         factor3 (get weaponSuitability 0)
@@ -378,50 +405,61 @@
   (common/assertSpec
    int?
    (let [unitWeaponDamage (common/assertSpec
-                          int?
-                          (get-in data [:weapon (:weaponKey weapon) :damage]))
-        targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+                           int?
+                           (get-in data [:weapon (:weaponKey weapon) :damage]))
+         targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
 
-        pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotState]))
-        targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotState]))
-        weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
-        weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
-        fire? (-> (into #{} weaponAbility) (contains? "fire"))
-        lighting? (-> (into #{} weaponAbility) (contains? "lighting?"))
-        targetTerrainKey (getTerrainKey {:map playmap} (:position targetUnit))
-        targetTerrain (-> data :terrain targetTerrainKey)
-        fireActive? (and fire? (= targetTerrainKey :forest))
-        lightingActive? (and lighting? (#{:shallowSea :deepSea} targetTerrainKey))
+         pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotState]))
+         targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotState]))
+         weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+         weaponAbility (getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
+         fire? (-> (into #{} weaponAbility) (contains? "fire"))
+         lighting? (-> (into #{} weaponAbility) (contains? "lighting?"))
+         targetTerrainKey (getTerrainKey {:map playmap} (:position targetUnit))
+         targetTerrain (-> data :terrain targetTerrainKey)
+         fireActive? (and fire? (= targetTerrainKey :forest))
+         lightingActive? (and lighting? (#{:shallowSea :deepSea} targetTerrainKey))
 
         ; 格鬥或射擊係數
-        factor1 (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
-                  (if isMelee
-                    (/ (get pilot :melee) (get targetPilot :melee))
-                    (/ (get pilot :range) (get targetPilot :range))))
+         factor1 (cond
+                   (and pilot targetPilot)
+                   (let [isMelee (some #(= (keyword %) :melee) weaponAbility)]
+                     (if isMelee
+                       (/ (get pilot :melee) (get targetPilot :melee))
+                       (/ (get pilot :range) (get targetPilot :range))))
 
+                   pilot
+                   5
+
+                   targetPilot
+                   (/ 1 5)
+
+                   :else
+                   1)
+         
         ; 地型適性係數
-        factor2 (get weaponSuitability 0)
+         factor2 (get weaponSuitability 0)
 
         ; 地型補正係數
-        factor3 (cond
-                  (or lightingActive? fireActive?)
-                  1.1
+         factor3 (cond
+                   (or lightingActive? fireActive?)
+                   1.1
 
-                  :else
-                  (:damage targetTerrain))
+                   :else
+                   (:damage targetTerrain))
         ; 氣力
-        factor4 (common/assertSpec
-                 number?
-                 (/ (-> unit :robotState :curage)
-                    (-> targetUnit :robotState :curage)))
+         factor4 (common/assertSpec
+                  number?
+                  (/ (-> unit :robotState :curage)
+                     (-> targetUnit :robotState :curage)))
 
         ; 除1是因為以敵方為主計算, 所以factor要反過來
-        targetValue (* targetArmor (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
+         targetValue (* targetArmor (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
 
-        damage1 (* unitWeaponDamage (- 1 (/ targetValue 4800)))
-        damage2 (- unitWeaponDamage targetArmor)
-        final (+ (* damage1 1 (/ 2 3)) (* damage2 (/ 1 3)))]
-    (js/Math.floor (max 100 final)))))
+         damage1 (* unitWeaponDamage (- 1 (/ targetValue 4800)))
+         damage2 (- unitWeaponDamage targetArmor)
+         final (+ (* damage1 1 (/ 2 3)) (* damage2 (/ 1 3)))]
+     (js/Math.floor (max 100 final)))))
 
 
 
@@ -480,7 +518,7 @@
              unitAfter (update-in unitAfter [:robotState :tags] (fn [tags]
                                                                   (assoc tags :attackWeapon weapon)))]
          unitAfter)
-       
+
        :else
        (throw (js/Error. (str energyType " not found")))))))
 
@@ -783,7 +821,35 @@
                                          (useUnitWeapon gameplayCtx weapon unit)
                                          unit))
                                      [leftAfter rightAfter]
-                                     [leftAction rightAction])]
+                                     [leftAction rightAction])
+         
+         ; 增加經驗
+         [leftAfter rightAfter] (map (fn [unit [actionType weapon] selfEvents targetEvents]
+                                       (common/assertSpec
+                                        ::type/unit
+                                        (cond-> unit
+                                          (and (= actionType :attack)
+                                               (targetEvents :damage))
+                                          ((fn [unit]
+                                             (let [ability (into #{} (getWeaponAbility gameplayCtx unit weapon))
+                                                   melee? (ability "melee")]
+                                               (update-in unit [:robotState :pilotState] (fn [pilot]
+                                                                                           (when pilot
+                                                                                             (update pilot (if melee? :expMelee :expRange) inc)))))))
+
+                                          (selfEvents :damage)
+                                          (update-in [:robotState :pilotState] (fn [pilot]
+                                                                                 (when pilot
+                                                                                   (update pilot :expGuard inc))))
+
+                                          (selfEvents :evade)
+                                          (update-in [:robotState :pilotState] (fn [pilot]
+                                                                                 (when pilot
+                                                                                   (update pilot :expEvade inc)))))))
+                                     [leftAfter rightAfter]
+                                     [leftAction rightAction]
+                                     [leftEvents rightEvents]
+                                     [rightEvents leftEvents])]
      [leftAfter rightAfter])))
 
 
@@ -862,19 +928,21 @@
         (update-in [:robotState :weapons toKey] (constantly weapons)))))
 
 
-(defn createUnit [{units :units :as gameplayCtx} {:keys [key position playerKey]} {:keys [robotKey]}]
-  {:pre [(explainValid? (s/tuple ::type/units keyword? keyword?) [units playerKey robotKey])]}
+(defn createUnit [{units :units :as gameplayCtx} {:keys [key position playerKey]} robotState]
+  (common/assertSpec ::type/units units)
+  (common/assertSpec keyword? playerKey)
+  (common/assertSpec (s/keys :req-un [::type/robotKey] :req-opt [::type/pilotState]) robotState)
   (->> (tool.units/add units (let [basic {:key (or key (keyword (gensym "unit")))
                                           :position (or position [0 0])
                                           :playerKey (or playerKey :player)
-                                          :robotState {:robotKey robotKey
-                                                       :pilotState {:key :amuro :pilotKey :amuro}
-                                                       :weapons {}
-                                                       :components {}
-                                                       :tags {}
-                                                       :hp 0
-                                                       :en 0
-                                                       :curage 100}}]
+                                          :robotState (merge {:pilotState nil
+                                                              :weapons {}
+                                                              :components {}
+                                                              :tags {}
+                                                              :hp 0
+                                                              :en 0
+                                                              :curage 100}
+                                                             robotState)}]
                                (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
                                                                          :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))))
        (assoc gameplayCtx :units)))
@@ -975,8 +1043,8 @@
   (common/assertSpec
    map?
    (let [componentData (common/assertSpec
-                     map?
-                     (get-in data [:component componentKey]))]
+                        map?
+                        (get-in data [:component componentKey]))]
      (merge componentData
             component))))
 
