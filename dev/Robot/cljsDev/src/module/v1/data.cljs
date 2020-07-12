@@ -401,7 +401,9 @@
         ; 氣力
         factor7 (common/assertSpec
                  number?
-                 (-> unit :robotState :curage (/ 100)))]
+                 (if pilot
+                   (-> pilot :curage (/ 100))
+                   0.5))]
     (max 0.1 (* basic factor1 factor2 factor3 factor4 factor5 factor6 factor7))))
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
@@ -443,7 +445,7 @@
 
                    :else
                    1)
-         
+
         ; 地型適性係數
          factor2 (get weaponSuitability 0)
 
@@ -457,8 +459,19 @@
         ; 氣力
          factor4 (common/assertSpec
                   number?
-                  (/ (-> unit :robotState :curage)
-                     (-> targetUnit :robotState :curage)))
+                  (cond
+                    (and pilot targetPilot)
+                    (/ (-> pilot :curage)
+                       (-> targetPilot :curage))
+
+                    pilot
+                    5
+
+                    targetPilot
+                    (/ 1 5)
+
+                    :else
+                    1))
 
         ; 除1是因為以敵方為主計算, 所以factor要反過來
          targetValue (* targetArmor (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
@@ -556,8 +569,8 @@
                 (throw (js/Error. "no ability [moveAttack]")))
 
                ; 氣力要夠
-              (when (< (-> unit :robotState :curage) curage)
-                (throw (js/Error. (str "curage must be " curage "(" (-> unit :robotState :curage) ")"))))
+              (when (< (-> unit :robotState :pilotState :curage) curage)
+                (throw (js/Error. (str "curage must be " curage "(" (-> unit :robotState :pilotState :curage) ")"))))
 
               ; 能量要夠
               (when (= energyType "energy")
@@ -807,9 +820,11 @@
          [leftAfter rightAfter] [left right]
          ; 增加氣力
          [leftAfter rightAfter] (map (fn [unit selfEvents targetEvents]
-                                       (if (-> targetEvents :dead)
-                                         (update-in unit [:robotState :curage] #(+ 5 %))
-                                         (update-in unit [:robotState :curage] #(+ 1 %))))
+                                       (if (-> unit :robotState :pilotState)
+                                         (if (-> targetEvents :dead)
+                                           (update-in unit [:robotState :pilotState :curage] #(+ 5 %))
+                                           (update-in unit [:robotState :pilotState :curage] #(+ 1 %)))
+                                         unit))
                                      [leftAfter rightAfter]
                                      [leftEvents rightEvents]
                                      [rightEvents leftEvents])
@@ -947,8 +962,7 @@
                                                               :components {}
                                                               :tags {}
                                                               :hp 0
-                                                              :en 0
-                                                              :curage 100}
+                                                              :en 0}
                                                              robotState)}]
                                (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
                                                                          :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))))

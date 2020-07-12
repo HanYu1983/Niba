@@ -25,7 +25,7 @@
 (s/def ::robotKey ::key)
 
 (s/def ::pilotKey ::key)
-(s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey ::expMelee ::expRange ::expEvade ::expGuard])))
+(s/def ::pilotState (s/nilable (s/keys :req-un [::key ::pilotKey ::expMelee ::expRange ::expEvade ::expGuard ::curage])))
 
 (s/def ::componentKey ::key)
 (s/def ::componentState (s/keys :req-un [::key ::componentKey ::tags]))
@@ -53,7 +53,7 @@
 (s/def ::tags (s/and (s/map-of keyword? any?)
                      (s/coll-of ::tagEntry)))
 
-(s/def ::robotState (s/keys :req-un [::robotKey ::pilotState ::weapons ::components ::tags ::hp ::en ::curage]))
+(s/def ::robotState (s/keys :req-un [::robotKey ::pilotState ::weapons ::components ::tags ::hp ::en]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
 (s/def ::itemKey keyword?)

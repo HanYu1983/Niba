@@ -69,13 +69,13 @@
                                                              :expEvade 0
                                                              :expGuard 0
                                                              :expMelee 0
-                                                             :expRange 0}))
+                                                             :expRange 0
+                                                             :curage 100}))
                                             :weapons {}
                                             :components {}
                                             :tags {}
                                             :hp 0
-                                            :en 0
-                                            :curage 100}})))
+                                            :en 0}})))
                       (map (fn [unit]
                              (data/getUnitInfo {:lobbyCtx lobbyCtx} unit)))
                       (zipmap (-> lobbyCtx :robots keys)))]
@@ -91,7 +91,7 @@
                               {:key key
                                :weaponKey weaponKey
                                :tags {}
-                               :bulletCount 0})))
+                               :bulletCount 100})))
                       (map (fn [weapon]
                              (data/getWeaponInfo {:lobbyCtx lobbyCtx} nil weapon)))
                       (zipmap (-> lobbyCtx :weapons keys)))]
@@ -109,7 +109,8 @@
                                :expMelee 0
                                :expRange 0
                                :expEvade 0
-                               :expGuard 0})))
+                               :expGuard 0
+                               :curage 100})))
                       (map (fn [pilot]
                              (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
                       (zipmap (-> lobbyCtx :pilots keys)))]
@@ -145,8 +146,7 @@
                                    :components {}
                                    :tags {}
                                    :hp 0
-                                   :en 0
-                                   :curage 100}}))))
+                                   :en 0}}))))
             (map #(data/getUnitInfo {:lobbyCtx lobbyCtx} %))
             (map (fn [unit] [(:key unit) unit]))
             (into {})))
@@ -295,7 +295,8 @@
                                                       :expEvade 0
                                                       :expGuard 0
                                                       :expMelee 0
-                                                      :expRange 0}))}])
+                                                      :expRange 0
+                                                      :curage 100}))}])
                                  (range)
                                  selectedUnits
                                  (map #(-> lobbyCtx :robots %) selectedUnits))
@@ -449,7 +450,8 @@
                                                           :expEvade 0
                                                           :expGuard 0
                                                           :expMelee 0
-                                                          :expRange 0}})
+                                                          :expRange 0
+                                                          :curage 0}})
                            (data/createUnit {:key :unit2
                                              :playerKey :player
                                              :position [4 0]}
