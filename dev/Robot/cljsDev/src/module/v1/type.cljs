@@ -65,11 +65,11 @@
 
 (s/def ::units tool.units/modelType)
 
-(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units]
-                             :req-opt [::done]))
+(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units ::numberOfTurn]
+                             :req-opt [::done ::activePlayer]))
 
 (s/def ::returnCtx (s/or :recur ::gameplayCtx
-                         :return (s/tuple ::gameplayCtx (constantly true))))
+                         :return (s/tuple ::gameplayCtx any?)))
 
 ; for macro
 (def gameplayCtx ::gameplayCtx)

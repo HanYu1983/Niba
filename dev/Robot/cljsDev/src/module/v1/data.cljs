@@ -86,13 +86,20 @@
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
       (throw (js/Error. (str "getUnitArmor[" robotKey "] not found")))
-      (let [value (->> (get robot :components)
+      (let [basic (->> (get robot :components)
                        (filter (fn [k]
                                  (some #(= % k) ["armor1" "armor2" "armor3"])))
                        (map (fn [k] (get-in data [:component (keyword k) :value 0])))
                        (map int)
-                       (apply +))]
-        value))))
+                       (apply +))
+            ; 固守配件
+            ; 如果在敵人回合並且自己回合沒有攻擊過時增加裝甲
+            basic (if (and true
+                           (not= :player (-> gameplayCtx :activePlayer))
+                           (not (-> unit :robotState :tags :attackWeapon)))
+                    (+ basic 3000)
+                    basic)]
+        basic))))
 
 ; components
 (defn getUnitComponents [{:keys [gameplayCtx lobbyCtx]} unit]
@@ -1200,7 +1207,8 @@
                                                        nextUnit)
                                                      nextUnit))
                                          ; remove velocity
-                                         nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :velocity))]
+                                         nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :velocity))
+                                         nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :attackWeapon))]
                                      (recur rest (conj after nextUnit)))
                                    after))))
            gameplayCtx (common/assertSpec
@@ -1253,7 +1261,8 @@
                   :moveRange []
                   :players {:player {:faction 0 :playerState nil}
                             :ai1 {:faction 1 :playerState nil}}
-                  :fsm tool.fsm/model})
+                  :fsm tool.fsm/model
+                  :numberOfTurn 0})
 
 (defn save! [gameplayCtx]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)

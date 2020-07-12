@@ -5,10 +5,11 @@
 (def *ai true)
 
 (defn enemyTurn [gameplayCtx enemy inputCh outputCh]
-  (if *ai
-    (module.v1.phase.ai.default.core/enemyTurn gameplayCtx enemy inputCh outputCh)
-    (a/go
-      gameplayCtx)))
+  (let [gameplayCtx (update gameplayCtx :activePlayer enemy)]
+    (if *ai
+      (module.v1.phase.ai.default.core/enemyTurn gameplayCtx enemy inputCh outputCh)
+      (a/go
+        gameplayCtx))))
 
 
 
