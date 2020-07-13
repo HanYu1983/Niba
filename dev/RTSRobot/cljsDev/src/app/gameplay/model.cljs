@@ -99,7 +99,7 @@
                 (when fixture
                   (let [shape (.getShape fixture)
                         body (.getBody fixture)
-                        userData (.getUserData body)
+                        id (.getUserData body)
                         shapeType (.getType shape)
                         _ (condp = shapeType
                             "circle"
@@ -108,7 +108,7 @@
                                                      (js-obj "type" shapeType
                                                              "point" worldPoint
                                                              "radius" (* distFactor (.-m_radius shape))
-                                                             "userData" userData))
+                                                             "meta" (-> (get-in gameplay [:entities id]) clj->js)))
                                                    %))
                             "polygon"
                             (swap! entities #(cons (let [worldVertices (-> shape
@@ -119,7 +119,7 @@
                                                                                    (getCameraPoint viewport camera v))))]
                                                      (js-obj "type" shapeType
                                                              "vertices" worldVertices
-                                                             "userData" userData))
+                                                             "meta" (-> (get-in gameplay [:entities id]) clj->js)))
                                                    %))
                             0)])
                   (recur (.getNext fixture))))

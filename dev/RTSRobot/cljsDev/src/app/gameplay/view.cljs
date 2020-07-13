@@ -59,7 +59,7 @@
                    (.stroke p 255)
                    (.forEach fixtures
                              (fn [fix]
-                               (let [meta (aget @atom-gameplay "entities" (.-userData fix))]
+                               (let [meta (.-meta fix)]
                                  (.stroke p 255)
                                  (condp = (.-type fix)
                                    "circle"
