@@ -86,4 +86,4 @@
 
         _ (.subscribe model-signal
                       (fn [gameplay]
-                        (swap! atom-gameplay (constantly (app.gameplay.model/render gameplay)))))]))
+                        (reset! atom-gameplay (app.gameplay.model/render gameplay))))]))
