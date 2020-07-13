@@ -403,11 +403,15 @@
                                               (.pipe (rx-op/switchMap (fn [] mouse-dragged-signal))
                                                      (rx-op/takeUntil mouse-released-signal)
                                                      (rx-op/repeat)))
+        
+        mouse-press-pos (atom [0 0])
+        _ (.subscribe mouse-pressed-signal (fn [[_ pos]]
+                                             (reset! mouse-press-pos pos)))
 
-        select-box-draging-signal (-> (rx/combineLatest mouse-pressed-signal select-box-draging-prepare-signal)
+        select-box-draging-signal (-> select-box-draging-prepare-signal
                                       (.pipe (rx-op/map (fn [args]
-                                                          (let [[_ [p1x p1y]] (aget args 0)
-                                                                [_ [p2x p2y]] (aget args 1)
+                                                          (let [[_ [p1x p1y]] args
+                                                                [p2x p2y] @mouse-press-pos
                                                                 minx (min p1x p2x)
                                                                 miny (min p1y p2y)
                                                                 maxx (max p1x p2x)
