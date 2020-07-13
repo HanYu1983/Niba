@@ -24,7 +24,7 @@
                 :life 3
                 :score 0
                 :end? false
-                :camera (pl/Vec3. 0 0 0.01)
+                :camera (pl/Vec3. 0 0 0.1)
                 :viewport (pl/Vec2. 800 640)
                 :entities {}}))
 
@@ -36,10 +36,10 @@
                                              "userData" (:id entity))))
         _ (doto body
              ; 加上density才會計算轉動
-            (.createFixture (pl/Polygon (array (pl/Vec2 -0.2 -0.1)
-                                               (pl/Vec2 0.2 0)
-                                               (pl/Vec2 -0.2 0.1)))
-                            (js-obj "density" 1000)))]
+            (.createFixture (pl/Polygon (array (pl/Vec2 -2 -1)
+                                               (pl/Vec2 2 0)
+                                               (pl/Vec2 -2 1)))
+                            (js-obj "density" 1)))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
 (defn create-enemy [gameplay entity {:keys [position angle]}]
@@ -186,10 +186,10 @@
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 1 0)))
 
         187
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 -0.1)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 -0.01)))
 
         189
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 0.1)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 0.01)))
 
         gameplay))
     gameplay))
@@ -217,14 +217,15 @@
                                                                 :bullet true
                                                                 :timeout 3000}
                                                   bulletBody (-> gameplay :world
-                                                                 (.createDynamicBody (js-obj "position" (.getWorldPoint body (pl/Vec2 20 0))
+                                                                 (.createDynamicBody (js-obj "position" (.getWorldPoint body (pl/Vec2 5 0))
+                                                                                             "angle" (.getAngle body)
                                                                                              "userData" (:id bulletEntity))))
        
                                                   _ (doto bulletBody
                                                       (.createFixture (pl/Box 1 1) (js-obj "density" 0.1))
-                                                      (.applyForce (pl/Vec2 0 -1000000000000000)
-                                                                   (.getWorldPoint bulletBody (pl/Vec2 0 5))
-                                                                   true)
+                                                      (.applyLinearImpulse (.getWorldVector body (pl/Vec2 1000 0))
+                                                                           (.getWorldPoint bulletBody (pl/Vec2 0 5))
+                                                                           true)
                                                       (.applyAngularImpulse 100 true))
                                                   gameplay (update gameplay :entities #(assoc % (:id bulletEntity) bulletEntity))]
                                               gameplay)
@@ -244,23 +245,23 @@
                                             87
                                             (do
                                               (.applyLinearImpulse body 
-                                                           (.getWorldVector body (pl/Vec2 1 0)) 
+                                                           (.getWorldVector body (pl/Vec2 5 0)) 
                                                            (.getWorldPoint body (pl/Vec2)) 
                                                            true)
                                               gameplay)
                                             83
                                             (do
                                               (.applyLinearImpulse body
-                                                                   (.getWorldVector body (pl/Vec2 -1 0))
+                                                                   (.getWorldVector body (pl/Vec2 -5 0))
                                                                    (.getWorldPoint body (pl/Vec2))
                                                                    true)
                                               gameplay)
                                             68
-                                            (let [force 0.01]
+                                            (let [force 1]
                                               (.applyAngularImpulse body force true)
                                               gameplay)
                                             65
-                                            (let [force -0.01]
+                                            (let [force -1]
                                               (.applyAngularImpulse body force true)
                                               gameplay)
                                             gameplay))
