@@ -1,9 +1,12 @@
 (ns app.core
   (:require ["planck-js" :as pl]
             ["p5" :as p5]
+            ["rxjs" :as rx]
+            ["rxjs/operators" :as rx-op]
             [clojure.spec.alpha :as s]
             [clojure.core.async :as a])
   (:require ["./test.js" :as test-js]))
+
 
 (s/check-asserts true)
 
@@ -14,10 +17,13 @@
 (s/def ::camera #(instance? pl/Vec3 %))
 (s/def ::viewport #(instance? pl/Vec2 %))
 (s/def ::id string?)
+(s/def ::selected? boolean?)
 (s/def ::entity (s/keys :req-un [::id]
-                        :req-opt []))
+                        :req-opt [::selected?]))
 (s/def ::entities (s/map-of ::id ::entity))
-(s/def ::gameplay (s/keys :req-un [::world ::life ::score ::end? ::camera ::viewport ::entities]))
+(s/def ::select-box (s/tuple (s/tuple int? int?) (s/tuple int? int?)))
+(s/def ::gameplay (s/keys :req-un [::world ::life ::score ::end? ::camera ::viewport ::entities]
+                          :req-opt [::select-box]))
 (def gameplay (s/assert
                ::gameplay
                {:world (pl/World. (js-obj "gravity" (pl/Vec2 0 0)))
@@ -26,7 +32,8 @@
                 :end? false
                 :camera (pl/Vec3. 0 0 0.1)
                 :viewport (pl/Vec2. 800 640)
-                :entities {}}))
+                :entities {}
+                :select-box nil}))
 
 (defn create-player [gameplay entity]
   (s/assert ::gameplay gameplay)
@@ -76,6 +83,18 @@
          p (pl/Vec2.add p (pl/Vec2.mul viewport (/ 1 2)))]
      p)))
 
+(defn getWorldPoint [viewport camera cameraPoint]
+  (s/assert #(instance? pl/Vec2 %) viewport)
+  (s/assert ::camera camera)
+  (s/assert #(instance? pl/Vec2 %) cameraPoint)
+  (s/assert
+   #(instance? pl/Vec2 %)
+   (let [p (pl/Vec2.sub cameraPoint (pl/Vec2.mul viewport (/ 1 2)))
+         distFactor (.-z camera)
+         p (pl/Vec2.mul p distFactor)
+         p (pl/Vec2.add p camera)]
+     p)))
+
 (defn render-fixtures [gameplay]
   (s/assert ::gameplay gameplay)
   (let [entities (atom '())
@@ -118,54 +137,6 @@
   (s/assert ::gameplay gameplay)
   (clj->js (assoc gameplay :fixtures (render-fixtures gameplay))))
 
-(defn view [atom-gameplay outputCh]
-  (p5. (fn [p]
-         (set! (.-keyPressed p)
-               (fn []
-                 (println ".-keyPressed" (.-key p) (.-keyCode p))
-                 (a/go (a/>! outputCh [:keyPressed (.-keyCode p)]))))
-
-         (set! (.-setup p)
-               (let [_ 0]
-                 (fn []
-                   (.createCanvas p 800 640))))
-
-         (set! (.-draw p)
-               (fn []
-                 (doseq [key [(.-UP_ARROW p) 
-                              (.-LEFT_ARROW p) 
-                              (.-DOWN_ARROW p) 
-                              (.-RIGHT_ARROW p)
-                              32
-                              187
-                              189
-                              87 68 83 65]
-                         :when (.keyIsDown p key)]
-                   (a/go (a/>! outputCh [:keyIsDown key])))
-
-                 (let [fixtures (.-fixtures @atom-gameplay)]
-                   (.background p 0)
-                   (.fill p 100)
-                   (.stroke p 255)
-                   (.forEach fixtures
-                             (fn [fix]
-                               (condp = (.-type fix)
-                                 "circle"
-                                 (.ellipse p
-                                           (-> fix .-point .-x)
-                                           (-> fix .-point .-y)
-                                           (-> fix .-radius)
-                                           (-> fix .-radius))
-
-                                 "polygon"
-                                 (do
-                                   (.beginShape p)
-                                   (.forEach (-> fix .-vertices)
-                                             (fn [v]
-                                               (.vertex p (.-x v) (.-y v))))
-                                   (.endShape p (.-CLOSE p)))
-                                 0)))))))
-       "canvas"))
 
 (defn camera-control [gameplay [cmd args]]
   (condp = cmd
@@ -270,27 +241,142 @@
       gameplay)
     gameplay))
 
+(defn select-box-control [gameplay [cmd args]]
+  (cond
+    (= cmd :select-box-draging)
+    (let [gameplay (assoc gameplay :entities (->> (:entities gameplay)
+                                                  vals
+                                                  (map (fn [entity]
+                                                         (dissoc entity :selected?)))
+                                                  (zipmap (keys (:entities gameplay)))))
+          {:keys [camera viewport]} gameplay
+          [[x1 y1] [x2 y2]] (s/assert ::select-box args)
+           
+          atom-selected (atom [])
+          _ (.queryAABB (:world gameplay)
+                        (pl/AABB. (getWorldPoint viewport camera (pl/Vec2. x1 y1)) 
+                                  (getWorldPoint viewport camera (pl/Vec2. x2 y2)))
+                        (fn [fixture]
+                          (when (-> fixture .getBody .getUserData)
+                            (swap! atom-selected #(cons (-> fixture .getBody .getUserData) %)))
+                          true))
+          gameplay (reduce (fn [gameplay id]
+                             (update-in gameplay [:entities id] (fn [entity]
+                                                                  (assoc entity :selected? true))))
+                           gameplay
+                           @atom-selected)
+          gameplay (assoc gameplay :select-box args)]
+      gameplay)
+
+    (= cmd :mouseReleased)
+    (dissoc gameplay :select-box)
+
+    :else
+    gameplay))
+
+
 (defn comp-reduce [fns ctx args]
   (reduce (fn [ctx f]
             (f ctx args))
           ctx
           fns))
 
-(defn model [atom-gameplay inputCh outputCh]
-  (a/go
-   (loop [gameplay @atom-gameplay]
-     (reset! atom-gameplay (render gameplay))
-     (let [evt (a/<! inputCh)
-           update-fn (partial comp-reduce [camera-control
-                                           player-control
-                                           step-world])
-           gameplay (update-fn gameplay evt)]
-       (recur gameplay)))))
+(defn view [atom-gameplay input-signal]
+  (p5. (fn [p]
+         (set! (.-keyPressed p)
+               (fn []
+                 ;(println ".-keyPressed" (.-key p) (.-keyCode p))
+                 (.next input-signal [:keyPressed (.-keyCode p)])))
 
+         (set! (.-keyReleased p)
+               (fn []
+                 ;(println ".-keyReleased" (.-key p) (.-keyCode p))
+                 (.next input-signal [:keyReleased (.-keyCode p)])))
 
-(defn test3 []
+         (set! (.-mousePressed p)
+               (fn []
+                 ;(println ".-mousePressed" (.-mouseButton p))
+                 (.next input-signal [:mousePressed [(.-mouseX p) (.-mouseY p) (.-mouseButton p)]])))
+
+         (set! (.-mouseReleased p)
+               (fn []
+                 ;(println ".-mouseReleased" (.-mouseButton p))
+                 (.next input-signal [:mouseReleased [(.-mouseX p) (.-mouseY p) (.-mouseButton p)]])))
+
+         (set! (.-mouseMoved p)
+               (fn []
+                 ;(println ".-mouseMoved")
+                 (.next input-signal [:mouseMoved])))
+
+         (set! (.-mouseDragged p)
+               (fn []
+                 (.next input-signal [:mouseDragged [(.-mouseX p) (.-mouseY p)]])))
+
+         (set! (.-setup p)
+               (let [_ 0]
+                 (fn []
+                   (.createCanvas p 800 640))))
+
+         (set! (.-draw p)
+               (fn []
+                 ;(js/console.log @atom-gameplay)
+
+                 (doseq [key [(.-UP_ARROW p)
+                              (.-LEFT_ARROW p)
+                              (.-DOWN_ARROW p)
+                              (.-RIGHT_ARROW p)
+                              32
+                              187
+                              189
+                              87 68 83 65]
+                         :when (.keyIsDown p key)]
+                   (.next input-signal [:keyIsDown key]))
+
+                 (let [fixtures (.-fixtures @atom-gameplay)]
+                   (.background p 0)
+                   (.fill p 100)
+                   (.stroke p 255)
+                   (.forEach fixtures
+                             (fn [fix]
+                               (let [meta (aget @atom-gameplay "entities" (.-userData fix))]
+                                 (.stroke p 255)
+                                 (condp = (.-type fix)
+                                   "circle"
+                                   (.ellipse p
+                                             (-> fix .-point .-x)
+                                             (-> fix .-point .-y)
+                                             (-> fix .-radius)
+                                             (-> fix .-radius))
+
+                                   "polygon"
+                                   (do
+                                     (when meta
+                                       (let [v (aget fix "vertices" 0)]
+                                         (.text p (.-id meta) (.-x v) (.-y v)))
+                                       (when (aget meta "selected?")
+                                         (.stroke p 0 255 0)))
+
+                                     (.beginShape p)
+                                     (.forEach (-> fix .-vertices)
+                                               (fn [v]
+                                                 (.vertex p (.-x v) (.-y v))))
+                                     (.endShape p (.-CLOSE p)))
+                                   0)))))
+
+                 (let [select-box (aget @atom-gameplay "select-box")]
+                   (when select-box
+                     (.fill p 0 255 0 100)
+                     (.rect p
+                            (aget select-box 0 0)
+                            (aget select-box 0 1)
+                            (- (aget select-box 1 0) (aget select-box 0 0))
+                            (- (aget select-box 1 1) (aget select-box 0 1))))))))
+       "canvas"))
+
+(defn test4 []
   (let [gameplay (create-player gameplay {:id (str (gensym))
-                                          :player true})
+                                          :player true
+                                          :position (pl/Vec2. 1 1)})
         gameplay (create-enemy gameplay
                                {:id (str (gensym))}
                                {:position (pl/Vec2. 100 100)
@@ -300,95 +386,53 @@
                                    "angle" 0.1))
               (.createFixture (pl/Box. 500 10)))
 
-        #_objA #_(-> (:world gameplay)
-                     (.createDynamicBody (js-obj "position" (pl/Vec2 0 50))))
-        #__ #_(doto objA
-                (.createFixture (pl/Box. 20 20 (pl/Vec2.) 0))
-                (.applyForce (pl/Vec2. 100 0) (.getWorldPoint objA (pl/Vec2.)) true)
-                (.applyAngularImpulse -100 true))
-
 
         atom-gameplay (atom gameplay)
-        inputCh (a/chan)
-        outputCh (a/chan)
-        _ (a/go-loop []
-            (a/>! inputCh [:tick (/ 1 60)])
-            (a/<! (a/timeout (/ 1000 60)))
-            (recur))
-        _ (model atom-gameplay inputCh outputCh)
-        _ (view atom-gameplay inputCh)]))
-
-(test3)
+        input-signal (rx/Subject.)
+        _ (view atom-gameplay input-signal)
 
 
-(defn test2 []
-  (let [gameplay gameplay
-        gameplay (create-player gameplay {:id (str (gensym))})
-        gameplay (create-enemy gameplay
-                               {:id (str (gensym))}
-                               {:position (pl/Vec2 100 100)
-                                :angle 1})
-        _ (println gameplay)
-        _ (println (render gameplay))
-        gameplay (reduce-bodies (fn [gameplay body]
-                                  (let [id (.getUserData body)]
-                                    (update-in gameplay [:entities id] #(assoc % :win true))))
-                                gameplay)
-        _ (view (atom (render gameplay)) nil)]))
+        tick-signal (let [fps 30]
+                      (-> (rx/interval (/ 1 fps))
+                          (.pipe (rx-op/map (fn [] [:tick (/ 1 fps)])))))
+        mouse-pressed-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mousePressed)))))
+        mouse-released-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mouseReleased)))))
+        mouse-dragged-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mouseDragged)))))
+
+        select-box-draging-prepare-signal (-> mouse-pressed-signal
+                                              (.pipe (rx-op/switchMap (fn [] mouse-dragged-signal))
+                                                     (rx-op/takeUntil mouse-released-signal)
+                                                     (rx-op/repeat)))
+
+        select-box-draging-signal (-> (rx/combineLatest mouse-pressed-signal select-box-draging-prepare-signal)
+                                      (.pipe (rx-op/map (fn [args]
+                                                          (let [[_ [p1x p1y]] (aget args 0)
+                                                                [_ [p2x p2y]] (aget args 1)
+                                                                minx (min p1x p2x)
+                                                                miny (min p1y p2y)
+                                                                maxx (max p1x p2x)
+                                                                maxy (max p1y p2y)]
+                                                            [:select-box-draging [[minx miny] [maxx maxy]]])))))
+
+        select-box-done-signal (-> select-box-draging-signal
+                                   (.pipe (rx-op/switchMap (fn [] mouse-released-signal))))
 
 
-(defn test-pl []
-  (let [world (pl/World. (js-obj))
-        fix (-> (.createDynamicBody world (js-obj "position" (pl/Vec2. 0 0)
-                                                  "userData" (js-obj "id" 20)))
-                (.createFixture (pl/Circle. (pl/Vec2. 0 0) 1) (js-obj "friction" 0.1
-                                                                      "restitution" 0.99
-                                                                      "density" 0.1
-                                                                      "userData" "ball")))
-        _ (-> (.createBody world (js-obj "position" (pl/Vec2 10 10)
-                                         "angle" 1))
-              (.createFixture (pl/Box. 1 1)))
-        ; render
-        _ (loop [body (.getBodyList world)]
-            (when body
-              (loop [fixture (.getFixtureList body)]
-                (when fixture
-                  (let [shape (.getShape fixture)
-                        body (.getBody fixture)
-                        tx (.getTransform body)
-                        _ (condp = (.getType shape)
-                            "circle"
-                            (let [worldPoint (.getWorldPoint body (.getCenter shape))
-                                  _ (js/console.log worldPoint)])
-                            "polygon"
-                            (let [worldVertices (-> shape
-                                                    (.-m_vertices)
-                                                    (.map (pl/Transform.mulFn tx)))
-                                  _ (js/console.log worldVertices)])
-                            0)])
-                  (js/console.log "store:" fixture)
-                  (recur (.getNext fixture))))
-              (recur (.getNext body))))
+        update-fn (partial comp-reduce [camera-control
+                                        player-control
+                                        select-box-control
+                                        step-world])
+        model-signal (-> (rx/merge
+                          tick-signal
+                          select-box-draging-signal
+                          select-box-done-signal
+                          input-signal)
+                         (.pipe (rx-op/scan update-fn gameplay)))
 
-        ; apply force
-        body (.getBody fix)
-        _ (.applyForce body (pl/Vec2. 1 1) (pl/Vec2. 0 0) true)
-        ; apply force
-        _ (.step world 10)
-        shape (.getShape fix)
-        _ (js/console.log body)
-        _ (js/console.log shape (.getCenter shape) (.getWorldPoint body (.getCenter shape)))
-        ; query aabb
-        _ (.queryAABB world
-                      (pl/AABB. (pl/Vec2. 0 0) (pl/Vec2. 5 5))
-                      (fn [fixture]
-                        (js/console.log "find" fixture (.getUserData fixture))
-                        true))
-        ; change position
-        _ (.setPosition body (pl/Vec2 10 10))
-        ; query aabb again
-        _ (.queryAABB world
-                      (pl/AABB. (pl/Vec2. 0 0) (pl/Vec2. 15 15))
-                      (fn [fixture]
-                        (js/console.log "find" fixture (.getUserData fixture))
-                        true))]))
+        _ (.subscribe
+           model-signal
+           (fn [gameplay]
+             (swap! atom-gameplay (constantly (render gameplay)))))]))
+
+
+(test4)
