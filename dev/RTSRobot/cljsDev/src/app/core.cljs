@@ -157,10 +157,10 @@
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 1 0)))
 
         187
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 -0.01)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 -0.1)))
 
         189
-        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 0.01)))
+        (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. 0 0 0.1)))
 
         gameplay))
     gameplay))
