@@ -35,8 +35,8 @@
         _ (app.gameplay.view/view atom-gameplay input-signal)
 
 
-        tick-signal (let [fps 30]
-                      (-> (rx/interval (/ 1 fps))
+        tick-signal (let [fps 60]
+                      (-> (rx/interval (/ 1000 fps))
                           (.pipe (rx-op/map (fn [] [:tick (/ 1 fps)])))))
         mouse-pressed-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mousePressed)))))
         mouse-released-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mouseReleased)))))
