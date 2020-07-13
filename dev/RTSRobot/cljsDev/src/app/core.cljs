@@ -243,7 +243,7 @@
 
 (defn select-box-control [gameplay [cmd args]]
   (cond
-    (= cmd :select-box-draging)
+    (= cmd :select-box-done)
     (let [gameplay (assoc gameplay :entities (->> (:entities gameplay)
                                                   vals
                                                   (map (fn [entity]
@@ -265,11 +265,11 @@
                                                                   (assoc entity :selected? true))))
                            gameplay
                            @atom-selected)
-          gameplay (assoc gameplay :select-box args)]
+          gameplay (dissoc gameplay :select-box)]
       gameplay)
 
-    (= cmd :mouseReleased)
-    (dissoc gameplay :select-box)
+    (= cmd :select-box-dragging)
+    (assoc gameplay :select-box args)
 
     :else
     gameplay))
@@ -399,27 +399,35 @@
         mouse-released-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mouseReleased)))))
         mouse-dragged-signal (-> input-signal (.pipe (rx-op/filter (fn [[type _]] (= type :mouseDragged)))))
 
-        select-box-draging-prepare-signal (-> mouse-pressed-signal
+        select-box-dragging-prepare-signal (-> mouse-pressed-signal
                                               (.pipe (rx-op/switchMap (fn [] mouse-dragged-signal))
                                                      (rx-op/takeUntil mouse-released-signal)
                                                      (rx-op/repeat)))
-        
+
         mouse-press-pos (atom [0 0])
         _ (.subscribe mouse-pressed-signal (fn [[_ pos]]
                                              (reset! mouse-press-pos pos)))
 
-        select-box-draging-signal (-> select-box-draging-prepare-signal
-                                      (.pipe (rx-op/map (fn [args]
-                                                          (let [[_ [p1x p1y]] args
-                                                                [p2x p2y] @mouse-press-pos
-                                                                minx (min p1x p2x)
-                                                                miny (min p1y p2y)
-                                                                maxx (max p1x p2x)
-                                                                maxy (max p1y p2y)]
-                                                            [:select-box-draging [[minx miny] [maxx maxy]]])))))
+        select-box-dragging-signal (-> select-box-dragging-prepare-signal
+                                       (.pipe (rx-op/map (fn [args]
+                                                           (let [[_ [p1x p1y]] args
+                                                                 [p2x p2y] @mouse-press-pos
+                                                                 minx (min p1x p2x)
+                                                                 miny (min p1y p2y)
+                                                                 maxx (max p1x p2x)
+                                                                 maxy (max p1y p2y)]
+                                                             [:select-box-dragging [[minx miny] [maxx maxy]]])))))
 
-        select-box-done-signal (-> select-box-draging-signal
-                                   (.pipe (rx-op/switchMap (fn [] mouse-released-signal))))
+        select-box-done-signal (-> select-box-dragging-signal
+                                   (.pipe (rx-op/switchMap (fn [] mouse-released-signal))
+                                          (rx-op/map (fn [args]
+                                                       (let [[_ [p1x p1y]] args
+                                                             [p2x p2y] @mouse-press-pos
+                                                             minx (min p1x p2x)
+                                                             miny (min p1y p2y)
+                                                             maxx (max p1x p2x)
+                                                             maxy (max p1y p2y)]
+                                                         [:select-box-done [[minx miny] [maxx maxy]]])))))
 
 
         update-fn (partial comp-reduce [camera-control
@@ -428,7 +436,7 @@
                                         step-world])
         model-signal (-> (rx/merge
                           tick-signal
-                          select-box-draging-signal
+                          select-box-dragging-signal
                           select-box-done-signal
                           input-signal)
                          (.pipe (rx-op/scan update-fn gameplay)))
