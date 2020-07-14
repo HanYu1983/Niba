@@ -77,29 +77,49 @@
                          cursor2 (-> state :menuCursor tool.menuCursor/getCursor2)]
                      (cond
                        (= select "sky/ground")
-                       (let [[_ _ suit3 _] (data/getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                             canSky? (not (zero? suit3))]
-                         (if canSky?
-                           (let [transformedUnit (update-in unit [:robotState :tags] (fn [tags]
-                                                                                       (if (contains? tags :sky)
-                                                                                         (dissoc tags :sky)
-                                                                                         (conj tags [:sky true]))))
-                                 gameplayCtx (-> gameplayCtx
-                                                 (data/updateUnit unit (constantly transformedUnit)))
-                                 _ (if (contains? (get-in transformedUnit [:robotState :tags]) :sky)
-                                     (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
-                                                                               (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
-                                     (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} transformedUnit)
-                                                                                  (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh)))]
-                             (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh)))
-                           (do
-                             (a/<! (common/showMessage nil {:message (str "沒有飛行能力")} inputCh outputCh))
-                             (recur gameplayCtx))))
+                       (let [[ground _ air _] (data/getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                             sky? (-> unit :robotState :tags :sky)
+                             transformedUnit (cond
+                                               (and sky? (zero? ground))
+                                               (do
+                                                 (a/<! (common/showMessage nil {:message (str "沒有地面能力")} inputCh outputCh))
+                                                 unit)
 
-                       (= cursor1 transformIdx)
-                       (let [transformedUnit (data/unitOnTransform gameplayCtx unit (get-in unit [:robotState :robotKey]) select)
+                                               (and (not sky?) (zero? air))
+                                               (do
+                                                 (a/<! (common/showMessage nil {:message (str "沒有飛行能力")} inputCh outputCh))
+                                                 unit)
+
+                                               :else
+                                               (if sky?
+                                                 (do
+                                                   (a/<! (common/unitGroundAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                                                (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                                                   (update-in unit [:robotState :tags] #(dissoc % :sky)))
+                                                 (do
+                                                   (a/<! (common/unitSkyAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                                             (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                                                   (update-in unit [:robotState :tags] #(conj % [:sky true])))))
                              gameplayCtx (-> gameplayCtx
                                              (data/updateUnit unit (constantly transformedUnit)))
+                             [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
+                         [gameplayCtx isEnd])
+
+                       (= cursor1 transformIdx)
+                       (let [; 變形
+                             transformedUnit (data/unitOnTransform gameplayCtx unit (get-in unit [:robotState :robotKey]) select)
+                             ; 先畫變形
+                             gameplayCtx (-> gameplayCtx
+                                             (data/updateUnit unit (constantly transformedUnit)))
+                             _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
+                             
+                             unit transformedUnit
+                             ; 調整到空中或地面並播放動畫
+                             transformedUnit (a/<! (data/fixUnitSkyGround gameplayCtx unit inputCh outputCh))
+                             ; 再畫結果
+                             gameplayCtx (-> gameplayCtx
+                                             (data/updateUnit unit (constantly transformedUnit)))
+                             _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
                              [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit transformedUnit} inputCh outputCh))]
                          [gameplayCtx isEnd])
 
@@ -114,7 +134,7 @@
                            (do
                              (a/<! (common/showMessage nil {:message invalidWeaponMsg} inputCh outputCh))
                              (recur gameplayCtx))
-                           
+
                            (= "single" weaponType)
                            (let [; 注意gameplayCtx的名稱不要打錯, 若打成gameplay, 不會報錯結果造成狀態沒有連續
                                  [gameplayCtx isEnd] (a/<! (unitSelectSingleTarget gameplayCtx {:unit unit :weapon weapon} inputCh outputCh))]

@@ -1203,6 +1203,34 @@
                                    (range)
                                    units)}))})
 
+(defn fixUnitSkyGround [gameplayCtx unit inputCh outputCh]
+  (common/assertSpec ::type/unit unit)
+  (a/go
+    (common/assertSpec
+     ::type/unit
+     (let [[ground naval air _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+           _ naval
+           sky? (-> unit :robotState :tags :sky)
+           unit (cond
+                  ; 如果在空中卻不能飛, 降到地面
+                  (and sky? (zero? air))
+                  (do
+                    (a/<! (common/unitGroundAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                 (mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                    (update-in unit [:robotState :tags] #(dissoc % :sky)))
+
+                  ; 如果在地面卻沒有地面能力又有空中能力的話, 飛到空中
+                  (and (not sky?) (zero? ground) (> air 0))
+                  (do
+                    (a/<! (common/unitSkyAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                              (mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+                    (update-in unit [:robotState :tags] #(conj % [:sky true])))
+
+                  :else
+                  unit)]
+       unit))))
+
+
 (defn onEnemyTurnStart [gameplayCtx enemy inputCh outputCh]
   (a/go
     (if (= :player enemy)

@@ -373,25 +373,19 @@
                                                  gameplayCtx
                                                  posList)]
                          gameplayCtx))
+          _ (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
           ; 讓不能在地上的部隊飛起來
-          gameplayCtx (common/assertSpec
-                       ::type/gameplayCtx
-                       (let [unitList (->> (:units gameplayCtx)
-                                           tool.units/getAll)
-                             nextUnitList (map (fn [unit]
-                                                 (common/assertSpec
-                                                  ::type/unit
-                                                  (let [[ground _ _ _] (data/getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                                                        sky? (zero? ground)]
-                                                    (if sky?
-                                                      (update-in unit [:robtoState :tags] #(conj % [:sky true]))
-                                                      unit))))
-                                               unitList)
-                             gameplayCtx (reduce (fn [gameplayCtx [old next]]
-                                                   (data/updateUnit gameplayCtx old (constantly next)))
-                                                 gameplayCtx
-                                                 (zipmap unitList nextUnitList))]
-                         gameplayCtx))
+          gameplayCtx (a/<! (a/go
+                              (common/assertSpec
+                               ::type/gameplayCtx
+                               (loop [gameplayCtx gameplayCtx
+                                      unitList (-> (:units gameplayCtx) tool.units/getAll)]
+                                 (let [[unit & unitList] unitList]
+                                   (if unit
+                                     (let [nextUnit (a/<! (data/fixUnitSkyGround gameplayCtx unit inputCh outputCh))
+                                           gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))]
+                                       (recur gameplayCtx unitList))
+                                     gameplayCtx))))))
           gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
           _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
           ; 取代lobbyCtx
@@ -455,7 +449,7 @@
                            (data/createUnit {:key :unit2
                                              :playerKey :player
                                              :position [4 0]}
-                                            {:robotKey :gundam})
+                                            {:robotKey :zgundam_sky})
                            (data/createUnit {:key :unit3
                                              :playerKey :ai1
                                              :position [2 0]}
@@ -468,6 +462,20 @@
                        (when (not (tool.units/getByKey units :unit3))
                          (throw (js/Error. (str "unit1 not found"))))
                        gameplayCtx)))
+
+      (core/defclick (or testAll false) "test gundam from ground to sky"
+        [right right right right enter]
+        (core/defexe (fn [gameplayCtx]
+                       (when (not (s/valid? ::spec/unitMenuView gameplayCtx))
+                         (throw (js/Error. "should open unitMenu")))
+                       gameplayCtx))
+        (core/defclick true "move to sky button and click"
+          [down down down enter]
+          (a/<! (a/timeout 500)))
+        (core/defexe (fn [gameplayCtx]
+                       gameplayCtx))
+        (core/defclick true "move cursor back"
+          [cancel left left left left]))
 
       (core/defclick (or testAll false) "open and close system menu"
         [right enter]
