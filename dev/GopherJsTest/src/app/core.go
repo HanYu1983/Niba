@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/gopherjs/gopherjs/js"
+	"github.com/rafaeldias/async"
 )
 
 // Println is
@@ -73,4 +74,53 @@ func Test3() {
 			time.Sleep(time.Second)
 		}
 	}()
+}
+
+func fib(p, c int) (int, int) {
+	return c, p + c
+}
+
+// Test4 is
+func Test4() {
+
+	// execution in series.
+	res, e := async.Waterfall(async.Tasks{
+		fib,
+		fib,
+		fib,
+		func(p, c int) (int, error) {
+			return c, nil
+		},
+	}, 0, 1)
+
+	if e != nil {
+		fmt.Printf("Error executing a Waterfall (%s)\n", e.Error())
+	}
+
+	fmt.Println(res[0].(int)) // Prints 3
+}
+
+// Test5 is
+func Test5() {
+	// cannot find package "github.com/cenkalti/backoff/v4"
+	/*
+		ch := make(chan rxgo.Item)
+		go func() {
+			for i := 0; i < 3; i++ {
+				ch <- rxgo.Of(i)
+			}
+			close(ch)
+		}()
+		observable := rxgo.FromChannel(ch)
+
+		// First Observer
+		for item := range observable.Observe() {
+			fmt.Println(item.V)
+		}
+
+		// Second Observer
+		for item := range observable.Observe() {
+			fmt.Println(item.V)
+		}
+	*/
 }
