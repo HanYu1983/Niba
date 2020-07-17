@@ -7,6 +7,7 @@ import (
 
 	"github.com/gopherjs/gopherjs/js"
 	"github.com/rafaeldias/async"
+	"github.com/ricardolonga/jsongo"
 )
 
 // Println is
@@ -123,4 +124,13 @@ func Test5() {
 			fmt.Println(item.V)
 		}
 	*/
+}
+
+func Test6() {
+	json := jsongo.Object().Put("name", "Ricardo Longa").
+		Put("idade", 28).
+		Put("owner", true).
+		Put("skills", jsongo.Array().Put("Golang").
+			Put("Android"))
+	Println(json)
 }
