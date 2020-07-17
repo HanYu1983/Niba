@@ -1,3 +1,2 @@
 SET GOPATH=D:\Documents\git\Niba\dev\GopherJsTest\
-SET GOOS=linux
-gopherjs build .\main.go
+go get github.com/gopherjs/gopherjs

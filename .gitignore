@@ -133,5 +133,5 @@ Thumbs.db
 .vscode/
 
 pkg/
-
+*.exe
 
