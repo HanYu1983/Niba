@@ -12,6 +12,7 @@ import BasicViewer from "../BasicViewer"
 import UnitStatuInfo from "./UnitStatuInfo"
 import ViewController from "../ViewController";
 import LandStatuInfo from "./LandStatuInfo";
+import PilotStateInfo from "./PilotStatuInfo";
 const { ccclass, property } = cc._decorator;
 
 @ccclass
@@ -19,15 +20,28 @@ export default class UnitStatuMenu extends BasicViewer {
 
     @property(UnitStatuInfo)
     unitSection: UnitStatuInfo = null;
+    
+    @property(PilotStateInfo)
+    pilotSection:PilotStateInfo = null;
 
     @property(LandStatuInfo)
     terrainSection: LandStatuInfo = null;
 
     setUnit(unit: any) {
         this.unitSection.setUnit(unit);
+        if(unit){
+            this._setPilot(unit.robotState.pilotState);
+        }else{
+            this._setPilot(null);
+        }
     }
-
+    
     setTerrain(terrain: any) {
         this.terrainSection.setTerrain(terrain);
     }
+
+    private _setPilot(pilot:any){
+        this.pilotSection.setPilot(pilot);
+    }
+
 }

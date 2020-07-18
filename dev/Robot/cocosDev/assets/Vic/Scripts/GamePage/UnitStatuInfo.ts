@@ -33,10 +33,7 @@ export default class UnitStatuInfo extends BasicViewer {
 
     @property(cc.Sprite)
     unitEnBar: cc.Sprite = null;
-
-    @property(cc.Label)
-    unitCurage: cc.Label = null;
-
+    
     setUnit(unit: any) {
         this.node.active = false;
         if (unit != null) {
@@ -58,7 +55,6 @@ export default class UnitStatuInfo extends BasicViewer {
             this.unitEnLabal.string = en + "/" + maxEn;
             this.unitHpBar.node.scaleX = hp / maxHp;
             this.unitEnBar.node.scaleX = en / maxEn;
-            this.unitCurage.string = curage + "氣力";
         }
     }
 }

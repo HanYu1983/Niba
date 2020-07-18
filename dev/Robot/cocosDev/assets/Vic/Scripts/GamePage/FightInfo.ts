@@ -9,6 +9,7 @@
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import UnitStatuInfo from "./UnitStatuInfo";
+import PilotStateInfo from "./PilotStatuInfo";
 
 const { ccclass, property } = cc._decorator;
 
@@ -27,6 +28,9 @@ export default class FightInfo extends cc.Component {
     @property(UnitStatuInfo)
     unit:UnitStatuInfo = null;
 
+    @property(PilotStateInfo)
+    pilot:PilotStateInfo = null;
+
     setHitRate(rate: number) {
         this.hit.string = rate === 0 ? "--" : (rate * 100).toFixed(0) + "%";
     }
@@ -41,6 +45,7 @@ export default class FightInfo extends cc.Component {
 
     setUnit(unit:any){
         this.unit.setUnit(unit);
+        this.pilot.setPilot(unit.robotState.pilotState);
     }
 
     showHit(show:boolean){
