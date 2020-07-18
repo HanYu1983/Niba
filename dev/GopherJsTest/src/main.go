@@ -12,4 +12,5 @@ func main() {
 	app.Test5()
 	app.Test6()
 	app.Test7()
+	app.Test8()
 }

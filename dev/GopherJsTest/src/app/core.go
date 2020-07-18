@@ -149,3 +149,13 @@ func Test7() {
 		})
 	}, "canvas")
 }
+
+// Test8 is
+func Test8() {
+	ask := make(chan int)
+	go func() {
+		time.Sleep(time.Second)
+		ask <- 1000
+	}()
+	Println(<-ask)
+}
