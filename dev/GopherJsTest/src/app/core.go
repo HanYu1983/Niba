@@ -2,7 +2,6 @@ package app
 
 import (
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -43,8 +42,8 @@ func Test1() {
 	Println("XX")
 	Println(js.Global.Get("pet"))
 
-	resp, err := http.Get("http://www.yahoo.com.tw")
-	Println(resp, err.Error())
+	//resp, err := http.Get("http://www.yahoo.com.tw")
+	//Println(resp, err.Error())
 }
 
 func sum(s []int, c chan int) {
@@ -138,5 +137,15 @@ func Test6() {
 
 // Test7 is
 func Test7() {
-	js.Global.Call("require", "p5")
+	js.Global.Get("p5").New(func(p *js.Object) {
+		p.Set("setup", func() {
+			p.Call("createCanvas", 800, 640)
+		})
+		p.Set("draw", func() {
+			p.Call("background", 0)
+			p.Call("fill", 100)
+			p.Call("stroke", 255)
+			p.Call("ellipse", 100, 100, 50, 50)
+		})
+	}, "canvas")
 }
