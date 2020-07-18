@@ -3,3 +3,4 @@ go get github.com/gopherjs/gopherjs
 go get github.com/rafaeldias/async
 go get github.com/reactivex/rxgo
 go get github.com/ricardolonga/jsongo
+go get github.com/tdewolff/canvas

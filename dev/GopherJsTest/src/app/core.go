@@ -126,6 +126,7 @@ func Test5() {
 	*/
 }
 
+// Test6 is
 func Test6() {
 	json := jsongo.Object().Put("name", "Ricardo Longa").
 		Put("idade", 28).
@@ -133,4 +134,9 @@ func Test6() {
 		Put("skills", jsongo.Array().Put("Golang").
 			Put("Android"))
 	Println(json)
+}
+
+// Test7 is
+func Test7() {
+	js.Global.Call("require", "p5")
 }
