@@ -159,3 +159,19 @@ func Test8() {
 	}()
 	Println(<-ask)
 }
+
+// A ...
+type A struct {
+	Age  int
+	Name string
+}
+
+type Game struct {
+	Player A
+	Enemy  []A
+}
+
+// Test9 is
+func Test9() {
+	Println(Game{A{80, "abc"}, []A{A{100, "b"}}}, map[string]interface{}{"abc": 0, "cde": "sss"})
+}
