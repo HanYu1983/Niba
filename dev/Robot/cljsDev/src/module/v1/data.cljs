@@ -1206,20 +1206,24 @@
     (let [; 移除死亡機體
           gameplayCtx (update gameplayCtx :units (fn [units]
                                                    (tool.units/delete units targetUnit)))
-
           _ (a/<! (common/unitDeadAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
                                                        (mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
-         ; 增加友方全體氣力
+          ; 增加它方全體氣力
           gameplayCtx (update gameplayCtx :units
                               (fn [units]
                                 (tool.units/mapUnits units
                                                      (fn [unit]
-                                                       (if (= (:playerKey unit) (:playerKey targetUnit))
+                                                       (if (not= (:playerKey unit) (:playerKey targetUnit))
                                                          (update-in unit [:robotState :pilotState]
                                                                     (fn [pilotState]
                                                                       (when pilotState
                                                                         (update pilotState :curage inc))))
-                                                         unit)))))]
+                                                         unit)))))
+          money 1000
+          _ (a/<! (common/showMessage nil {:message (str "earn " money)} inputCh outputCh))
+          gameplayCtx (if (= :ai (:playerKey targetUnit))
+                        (update gameplayCtx :money #(+ % money))
+                        gameplayCtx)]
       gameplayCtx)))
 
 (defn isUnitDead? [gameplayCtx unit]
