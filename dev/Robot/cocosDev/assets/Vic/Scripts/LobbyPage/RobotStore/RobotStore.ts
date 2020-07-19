@@ -18,17 +18,18 @@ export default class RobotStore extends StoreListPanel {
 
     updateItem(btn, data){
         const robotItem = btn as RobotListItem;
-        robotItem.setLabel(data.title);
-        robotItem.money.string = data.cost;
+        robotItem.setLabel(data.robotState.title);
+        robotItem.money.string = data.robotState.cost;
     }
 
     getData(pageId:number, cb:(err:any, data:any)=>void){
         ViewController.instance.model.getRobotStoreList(pageId, 10, (err:any, data:any)=>{
             const robotDetail = data.map(element=>{
                 const [key, data] = element;
-                let detail = ViewController.instance.getRobot(key);
-                detail.key = key;
-                return detail;
+                // let detail = ViewController.instance.getRobot(key);
+                // detail.key = key;
+                // return detail;
+                return data;
             });
             cb(err, robotDetail);
         });
