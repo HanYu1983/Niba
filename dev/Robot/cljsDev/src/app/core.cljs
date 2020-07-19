@@ -33,7 +33,7 @@
           (= "newGame" cmd)
           (let [_ (.removeItem js/localStorage "lobby")
                 _ (.removeItem js/localStorage "gameplay")]
-            ctx)
+            (assoc ctx :lobbyCtx app.lobby.model/defaultLobbyModel))
 
           ; 判斷gameplay有沒有記憶可以讀取
           (= "checkLoadGameplay" cmd)

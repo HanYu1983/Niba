@@ -20,6 +20,11 @@
                 lobbyCtx (f lobbyCtx)]
             (a/>! outputCh lobbyCtx)
             (recur lobbyCtx))
+          
+          (= cmd "getLobbyCtx")
+          (let [[id _] args]
+            (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
+            (recur lobbyCtx))
 
           (= cmd "getRobotStoreList")
           (let [[id subargs] args

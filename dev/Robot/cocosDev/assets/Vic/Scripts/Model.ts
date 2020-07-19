@@ -19,7 +19,7 @@ export default class Model extends cc.Component {
     }
 
     //#region getList
-    getList(cmd:string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void){
+    getList(cmd: string, pageId: number, count: number = 10, cb: (err: any, data: any[]) => void) {
         this.modelController.talk(cmd, { offset: pageId * count, limit: count }, answer => {
             const [err, info] = answer;
             if (err) {
@@ -66,7 +66,7 @@ export default class Model extends cc.Component {
     //#endregion
 
     //#region buy item
-    buyItemById(cmd:string, componentKey: string, cb: (err: any, data: any) => void){
+    buyItemById(cmd: string, componentKey: string, cb: (err: any, data: any) => void) {
         this.modelController.talk(cmd, { key: componentKey }, answer => {
             const [err, info] = answer;
             if (err) {
@@ -105,7 +105,7 @@ export default class Model extends cc.Component {
         });
     }
 
-    removeRobotPilot(robotKey:string, pilotKey:string, cb:(err:any, data:any) => void ){
+    removeRobotPilot(robotKey: string, pilotKey: string, cb: (err: any, data: any) => void) {
         cc.log("removeRobotPilot", robotKey, pilotKey);
         this.modelController.talk("removeRobotPilot", { pilotKey: pilotKey }, answer => {
             const [err, info] = answer;
@@ -117,7 +117,7 @@ export default class Model extends cc.Component {
         });
     }
 
-    removeUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
+    removeUnitComponent(robotKey: string, componentKey: string, cb: (err: any, data: any) => void) {
         this.modelController.talk("removeRobotComponent", { robotKey: robotKey, componentKey: componentKey }, answer => {
             const [err, info] = answer;
             if (err) {
@@ -128,7 +128,7 @@ export default class Model extends cc.Component {
         });
     }
 
-    addUnitComponent(robotKey:string, componentKey:string, cb:(err:any, data:any) => void ){
+    addUnitComponent(robotKey: string, componentKey: string, cb: (err: any, data: any) => void) {
         this.modelController.talk("addRobotComponent", { robotKey: robotKey, componentKey: componentKey }, answer => {
             const [err, info] = answer;
             if (err) {
@@ -139,7 +139,7 @@ export default class Model extends cc.Component {
         });
     }
 
-    removeUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
+    removeUnitWeapon(robotKey: string, weaponKey: string, cb: (err: any, data: any) => void) {
         cc.log("removeUnitWeapon", robotKey, weaponKey);
         this.modelController.talk("removeRobotWeapon", { robotKey: robotKey, weaponKey: weaponKey }, answer => {
             const [err, info] = answer;
@@ -151,7 +151,7 @@ export default class Model extends cc.Component {
         });
     }
 
-    addUnitWeapon(robotKey:string, weaponKey:string, cb:(err:any, data:any) => void ){
+    addUnitWeapon(robotKey: string, weaponKey: string, cb: (err: any, data: any) => void) {
         cc.log("removeUnitWeapon", robotKey, weaponKey);
         this.modelController.talk("addRobotWeapon", { robotKey: robotKey, weaponKey: weaponKey }, answer => {
             const [err, info] = answer;
@@ -162,4 +162,18 @@ export default class Model extends cc.Component {
             }
         });
     }
+
+    // 取得金錢等資料
+    getLobbyCtx(cb: (err: any, data: any) => void) {
+        cc.log("getLobbyCtx");
+        this.modelController.talk("getLobbyCtx", null, answer => {
+            const [err, info] = answer;
+            if (err) {
+                ViewController.instance.view.getCommentUI().showAlert(err);
+            } else {
+                cb(err, info);
+            }
+        });
+    }
+
 }
