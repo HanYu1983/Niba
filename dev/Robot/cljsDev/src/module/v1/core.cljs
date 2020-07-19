@@ -360,11 +360,12 @@
     ctx))
 
 (defmethod app.module/gameplayLoad :v1 [_ ctx inputCh outputCh]
-  (let [gameplayCtx (data/load! data/gameplayCtx)
-        gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
-        _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
-        ctx (gameplayDone ctx gameplayCtx)]
-    ctx))
+  (a/go
+    (let [gameplayCtx (data/load! data/gameplayCtx)
+          gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
+          _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
+          ctx (gameplayDone ctx gameplayCtx)]
+      ctx)))
 
 (defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
   (a/go
