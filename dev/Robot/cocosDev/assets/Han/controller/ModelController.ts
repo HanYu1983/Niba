@@ -55,6 +55,7 @@ export default class ModelController extends cc.Component {
             return;
         }
         const sub = this.viewOb.subscribe(e => {
+            console.log("[talk][receive]" + e);
             const [cmd, args] = e;
             if (cmd == "ok") {
                 const [resId, resArgs] = args;

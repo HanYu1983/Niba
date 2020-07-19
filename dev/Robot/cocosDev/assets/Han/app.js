@@ -41913,8 +41913,8 @@ function h4(a, b) {
               n = k[2];
               var f = WD.b(n);
               f = $V(f);
-              k[7] = n;
-              k[8] = f;
+              k[7] = f;
+              k[8] = n;
               k[2] = null;
               k[1] = 2;
               return X;
@@ -41923,26 +41923,26 @@ function h4(a, b) {
               return k[2] = k[2], k[1] = 23, X;
             }
             if (1 === n) {
-              return n = g4, k[7] = n, k[2] = null, k[1] = 2, X;
+              return n = g4, k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (24 === n) {
-              return n = k[2], f = WD.b(n), f = $V(f), k[7] = n, k[9] = f, k[2] = null, k[1] = 2, X;
+              return n = k[2], f = WD.b(n), f = $V(f), k[9] = f, k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (4 === n) {
               f = k[2];
               n = K(f, 0, null);
               f = K(f, 1, null);
               var h = G.c("loadConfig", n);
-              k[10] = n;
               k[11] = f;
+              k[10] = n;
               k[1] = h ? 5 : 6;
               return X;
             }
-            return 15 === n ? (k[2] = k[2], k[1] = 12, X) : 21 === n ? (n = k[7], f = k[11], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 24, n)) : 31 === n ? (k[2] = k[2], k[1] = 27, X) : 32 === n ? (n = k[7], k[7] = n, k[2] = null, k[1] = 2, X) : 33 === n ? (k[2] = null, k[1] = 34, X) : 13 === n ? (f = k[11], n = K(f, 0, null), f = K(f, 1, null), n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, ni(localStorage.gameplay)], null)], null), k[12] = f, uJ(k, 16, b, 
-            n)) : 22 === n ? (n = k[10], n = G.c("startLobby", n), k[1] = n ? 25 : 26, X) : 29 === n ? (n = k[7], k[2] = n, k[1] = 31, X) : 6 === n ? (n = k[10], n = G.c("newGame", n), k[1] = n ? 10 : 11, X) : 28 === n ? (n = k[2], k[7] = n, k[2] = null, k[1] = 2, X) : 25 === n ? (n = k[7], n = SX(n, a, b), tJ(k, 28, n)) : 34 === n ? (k[2] = k[2], k[1] = 31, X) : 17 === n ? (n = k[7], n = p7.C ? p7.C(nU, n, a, b) : p7.call(null, nU, n, a, b), tJ(k, 20, n)) : 3 === n ? vJ(k, k[2]) : 12 === n ? (k[2] = 
-            k[2], k[1] = 7, X) : 2 === n ? tJ(k, 4, a) : 23 === n ? (k[2] = k[2], k[1] = 19, X) : 19 === n ? (k[2] = k[2], k[1] = 15, X) : 11 === n ? (n = k[10], n = G.c("checkLoadGameplay", n), k[1] = n ? 13 : 14, X) : 9 === n ? (h = k[13], n = k[7], f = k[2], h = pn([Mr], [h]), n = lo.g(uh([n, h])), k[7] = n, k[14] = f, k[2] = null, k[1] = 2, X) : 5 === n ? (f = k[11], n = K(f, 0, null), f = K(f, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[15] = n, k[16] = f, tJ(k, 8, h)) : 14 === n ? 
-            (n = k[10], n = G.c("loadGameplay", n), k[1] = n ? 17 : 18, X) : 26 === n ? (n = k[10], n = G.c("exit", n), k[1] = n ? 29 : 30, X) : 16 === n ? (n = k[7], f = k[2], k[7] = n, k[17] = f, k[2] = null, k[1] = 2, X) : 30 === n ? (k[1] = 32, X) : 10 === n ? (n = k[7], f = localStorage.removeItem("lobby"), h = localStorage.removeItem("gameplay"), n = Jh.f(n, WD, ZV), k[18] = f, k[19] = h, k[2] = n, k[1] = 12, X) : 18 === n ? (n = k[10], n = G.c("startGameplay", n), k[1] = n ? 21 : 22, X) : 
-            8 === n ? (n = k[15], f = k[2], n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, f], null)], null), k[13] = f, uJ(k, 9, b, n)) : null;
+            return 15 === n ? (k[2] = k[2], k[1] = 12, X) : 21 === n ? (f = k[11], n = k[8], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 24, n)) : 31 === n ? (k[2] = k[2], k[1] = 27, X) : 32 === n ? (n = k[8], k[8] = n, k[2] = null, k[1] = 2, X) : 33 === n ? (k[2] = null, k[1] = 34, X) : 13 === n ? (f = k[11], n = K(f, 0, null), f = K(f, 1, null), n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, ni(localStorage.gameplay)], null)], null), k[12] = f, uJ(k, 16, b, 
+            n)) : 22 === n ? (n = k[10], n = G.c("startLobby", n), k[1] = n ? 25 : 26, X) : 29 === n ? (n = k[8], k[2] = n, k[1] = 31, X) : 6 === n ? (n = k[10], n = G.c("newGame", n), k[1] = n ? 10 : 11, X) : 28 === n ? (n = k[2], k[8] = n, k[2] = null, k[1] = 2, X) : 25 === n ? (n = k[8], n = SX(n, a, b), tJ(k, 28, n)) : 34 === n ? (k[2] = k[2], k[1] = 31, X) : 17 === n ? (n = k[8], n = p7.C ? p7.C(nU, n, a, b) : p7.call(null, nU, n, a, b), tJ(k, 20, n)) : 3 === n ? vJ(k, k[2]) : 12 === n ? (k[2] = 
+            k[2], k[1] = 7, X) : 2 === n ? tJ(k, 4, a) : 23 === n ? (k[2] = k[2], k[1] = 19, X) : 19 === n ? (k[2] = k[2], k[1] = 15, X) : 11 === n ? (n = k[10], n = G.c("checkLoadGameplay", n), k[1] = n ? 13 : 14, X) : 9 === n ? (n = k[8], f = k[2], h = pn([Mr], [k[13]]), n = lo.g(uh([n, h])), k[8] = n, k[14] = f, k[2] = null, k[1] = 2, X) : 5 === n ? (f = k[11], n = K(f, 0, null), f = K(f, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[15] = f, k[16] = n, tJ(k, 8, h)) : 14 === n ? (n = k[10], 
+            n = G.c("loadGameplay", n), k[1] = n ? 17 : 18, X) : 26 === n ? (n = k[10], n = G.c("exit", n), k[1] = n ? 29 : 30, X) : 16 === n ? (n = k[8], f = k[2], k[17] = f, k[8] = n, k[2] = null, k[1] = 2, X) : 30 === n ? (k[1] = 32, X) : 10 === n ? (n = k[8], f = localStorage.removeItem("lobby"), h = localStorage.removeItem("gameplay"), n = Jh.f(n, WD, ZV), k[18] = h, k[19] = f, k[8] = n, k[2] = null, k[1] = 2, X) : 18 === n ? (n = k[10], n = G.c("startGameplay", n), k[1] = n ? 21 : 22, X) : 
+            8 === n ? (n = k[16], f = k[2], n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, f], null)], null), k[13] = f, uJ(k, 9, b, n)) : null;
           };
         }(d), d);
       }(), g = function() {

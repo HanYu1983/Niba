@@ -32,8 +32,9 @@
           ; 新遊戲, 清空所有記憶
           (= "newGame" cmd)
           (let [_ (.removeItem js/localStorage "lobby")
-                _ (.removeItem js/localStorage "gameplay")]
-            (assoc ctx :lobbyCtx app.lobby.model/defaultLobbyModel))
+                _ (.removeItem js/localStorage "gameplay")
+                ctx (assoc ctx :lobbyCtx app.lobby.model/defaultLobbyModel)]
+            (recur ctx))
 
           ; 判斷gameplay有沒有記憶可以讀取
           (= "checkLoadGameplay" cmd)
