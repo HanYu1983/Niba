@@ -20,7 +20,7 @@
                 lobbyCtx (f lobbyCtx)]
             (a/>! outputCh lobbyCtx)
             (recur lobbyCtx))
-          
+
           (= cmd "getLobbyCtx")
           (let [[id _] args]
             (a/>! outputCh ["ok" [id [nil lobbyCtx]]])
@@ -61,6 +61,8 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponStoreList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
@@ -74,6 +76,8 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentStoreList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
@@ -87,10 +91,12 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getRobotList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
-
+          
           (= cmd "getPilotList")
           (let [[id subargs] args
                 {offset "offset" limit "limit"} (s/assert
@@ -100,6 +106,8 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getPilotList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
@@ -113,6 +121,8 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getWeaponList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
@@ -126,6 +136,8 @@
                                                  subargs)]
             (a/>! outputCh ["ok" [id [nil (->> (app.module/lobbyAsk app.module/*module lobbyCtx {:getComponentList true})
                                                (into [])
+                                               (sort-by (fn [[_ info]]
+                                                          (:title info)))
                                                (drop offset)
                                                (take limit))]]])
             (recur lobbyCtx))
