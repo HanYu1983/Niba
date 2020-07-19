@@ -75,15 +75,15 @@
                                          ; 進攻方死亡
                                          gameplayCtx (common/assertSpec
                                                       ::type/gameplayCtx
-                                                      (if (data/gameplayGetUnitIsDead gameplayCtx leftAfter)
-                                                        (let [gameplayCtx (a/<! (data/gameplayOnUnitDead gameplayCtx leftAfter inputCh outputCh))]
+                                                      (if (data/isUnitDead? gameplayCtx leftAfter)
+                                                        (let [gameplayCtx (a/<! (data/onGameplayUnitDead gameplayCtx leftAfter inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                          ; 防守方死亡
                                          gameplayCtx (common/assertSpec
                                                       ::type/gameplayCtx
-                                                      (if (data/gameplayGetUnitIsDead gameplayCtx rightAfter)
-                                                        (let [gameplayCtx (a/<! (data/gameplayOnUnitDead gameplayCtx rightAfter inputCh outputCh))]
+                                                      (if (data/isUnitDead? gameplayCtx rightAfter)
+                                                        (let [gameplayCtx (a/<! (data/onGameplayUnitDead gameplayCtx rightAfter inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                          gameplayCtx (dissoc gameplayCtx :attackRange :checkHitRate)]

@@ -1170,7 +1170,7 @@
                                    (range)
                                    units)}))})
 
-(defn gameplayOnUnitMove [gameplayCtx unit pos]
+(defn onUnitMove [gameplayCtx unit pos]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec ::type/position pos)
@@ -1185,7 +1185,7 @@
          (update-in [:robotState :tags :moveCount] #(if % (inc %) 1))
          (update-in [:robotState :tags] #(conj % [:velocity vel]))))))
 
-(defn gameplayOnUnitDone [gameplayCtx unit]
+(defn onUnitDone [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec
@@ -1193,7 +1193,7 @@
    (-> unit
        (update-in [:robotState :tags] #(conj % [:done true])))))
 
-(defn gameplayOnUnitTurnEnd [gameplayCtx unit]
+(defn onUnitTurnEnd [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec
@@ -1201,7 +1201,7 @@
    (-> unit
        (update-in [:robotState :tags] #(dissoc % :done :moveCount)))))
 
-(defn gameplayOnUnitDead [gameplayCtx targetUnit inputCh outputCh]
+(defn onGameplayUnitDead [gameplayCtx targetUnit inputCh outputCh]
   (a/go
     (let [; 移除死亡機體
           gameplayCtx (update gameplayCtx :units (fn [units]
@@ -1222,12 +1222,7 @@
                                                          unit)))))]
       gameplayCtx)))
 
-(defn gameplayGetUnitMovePathTree [gameplayCtx unit]
-  (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
-  (getUnitMovePathTree gameplayCtx unit))
-
-(defn gameplayGetUnitIsDead [gameplayCtx unit]
+(defn isUnitDead? [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (common/assertSpec
@@ -1337,7 +1332,7 @@
                                            after []]
                                  (if unit
                                    (let [nextUnit unit
-                                         nextUnit (gameplayOnUnitTurnEnd gameplayCtx nextUnit)]
+                                         nextUnit (onUnitTurnEnd gameplayCtx nextUnit)]
                                      (recur rest (conj after nextUnit)))
                                    after))))
            gameplayCtx (common/assertSpec
