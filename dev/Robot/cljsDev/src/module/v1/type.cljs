@@ -65,7 +65,7 @@
 
 (s/def ::units tool.units/modelType)
 
-(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units ::numberOfTurn]
+(s/def ::gameplayCtx (s/keys :req-un [::fsm ::units ::numberOfTurn ::money]
                              :req-opt [::done ::activePlayer]))
 
 (s/def ::returnCtx (s/or :recur ::gameplayCtx

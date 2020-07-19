@@ -56,7 +56,7 @@
                      select (tool.menuCursor/getSelect (:menuCursor state))]
                  (cond
                    (= "move" select)
-                   (let [shortestPathTree (data/gameplayGetUnitMovePathTree nil gameplayCtx unit)
+                   (let [shortestPathTree (data/gameplayGetUnitMovePathTree gameplayCtx unit)
                          [gameplayCtx isEnd] (common/assertSpec
                                               (s/tuple type/gameplayCtx boolean?)
                                               (a/<! (unitSelectMovePosition gameplayCtx {:unit unit :paths shortestPathTree} inputCh outputCh)))]

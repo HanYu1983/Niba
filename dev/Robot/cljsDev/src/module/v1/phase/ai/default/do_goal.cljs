@@ -106,7 +106,7 @@
                                      (s/nilable ::type/unit)
                                      (-> gameplayCtx :units (tool.units/getByKey (:key unit))))
                                gameplayCtx (if unit
-                                             (let [nextUnit (data/gameplayOnUnitDone nil gameplayCtx unit)]
+                                             (let [nextUnit (data/gameplayOnUnitDone gameplayCtx unit)]
                                                (data/updateUnit gameplayCtx unit (constantly nextUnit)))
                                              gameplayCtx)]
                            gameplayCtx)
@@ -178,7 +178,7 @@
                                                     :path (map (partial data/world2local camera) path)}
                                        inputCh outputCh))
           ; 套用
-          nextUnit (data/gameplayOnUnitMove nil gameplayCtx unit nearest)
+          nextUnit (data/gameplayOnUnitMove gameplayCtx unit nearest)
           gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))
 
           ; 重新取得單位
@@ -200,7 +200,7 @@
                        ::type/gameplayCtx
                        (if unit
                          (let [; 單位行動結束
-                               nextUnit (data/gameplayOnUnitDone nil gameplayCtx unit)
+                               nextUnit (data/gameplayOnUnitDone gameplayCtx unit)
                                ; 套用
                                gameplayCtx (data/updateUnit gameplayCtx unit (constantly nextUnit))]
                            gameplayCtx)

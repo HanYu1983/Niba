@@ -501,15 +501,15 @@
          ; 射擊王
          ; 若所有武器都是射擊系，裝甲增加
          damage (if (and true
-                        (common/assertSpec
-                         boolean?
-                         (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                              second
-                              (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
-                              (every? (fn [ability]
-                                        (not ((into #{} ability) "melee")))))))
-                 (* damage 1.2)
-                 damage)]
+                         (common/assertSpec
+                          boolean?
+                          (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                               second
+                               (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
+                               (every? (fn [ability]
+                                         (not ((into #{} ability) "melee")))))))
+                  (* damage 1.2)
+                  damage)]
      (js/Math.floor (max 100 damage)))))
 
 
@@ -1012,53 +1012,6 @@
                                                          :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))]
      basic)))
 
-(defn gameplayOnUnitMove [_ gameplayCtx unit pos]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (let [vel (->> (map - (:position unit) pos)
-                 (repeat 2)
-                 (apply map *)
-                 (apply +))]
-    (-> unit
-        (merge {:position pos})
-        (update-in [:robotState :tags :moveCount] #(if % (inc %) 1))
-        (update-in [:robotState :tags] #(conj % [:velocity vel])))))
-
-(defn gameplayOnUnitDone [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (-> unit
-      (update-in [:robotState :tags] #(conj % [:done true]))))
-
-(defn gameplayOnUnitTurnStart-xx [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (-> unit
-      (update-in [:robotState :tags] identity)))
-
-(defn gameplayOnUnitTurnEnd [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(explainValid? ::type/unit %)]}
-  (-> unit
-      (update-in [:robotState :tags] #(dissoc % :done :moveCount))))
-
-(defn gameplayOnUnitDead [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post []}
-  (a/go gameplayCtx))
-
-(defn gameplayGetUnitMovePathTree [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post []}
-  (getUnitMovePathTree gameplayCtx unit))
-
-(defn gameplayGetUnitIsDead [_ gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
-   :post [(boolean? %)]}
-  (<= (get-in unit [:robotState :hp]) 0))
-
-
-
 (defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
   {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]
    :post [(explainValid? (s/* ::type/unit) %)]}
@@ -1217,7 +1170,72 @@
                                    (range)
                                    units)}))})
 
+(defn gameplayOnUnitMove [gameplayCtx unit pos]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/position pos)
+  (common/assertSpec
+   ::type/unit
+   (let [vel (->> (map - (:position unit) pos)
+                  (repeat 2)
+                  (apply map *)
+                  (apply +))]
+     (-> unit
+         (merge {:position pos})
+         (update-in [:robotState :tags :moveCount] #(if % (inc %) 1))
+         (update-in [:robotState :tags] #(conj % [:velocity vel]))))))
+
+(defn gameplayOnUnitDone [gameplayCtx unit]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   ::type/unit
+   (-> unit
+       (update-in [:robotState :tags] #(conj % [:done true])))))
+
+(defn gameplayOnUnitTurnEnd [gameplayCtx unit]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   ::type/unit
+   (-> unit
+       (update-in [:robotState :tags] #(dissoc % :done :moveCount)))))
+
+(defn gameplayOnUnitDead [gameplayCtx targetUnit inputCh outputCh]
+  (a/go
+    (let [; 移除死亡機體
+          gameplayCtx (update gameplayCtx :units (fn [units]
+                                                   (tool.units/delete units targetUnit)))
+
+          _ (a/<! (common/unitDeadAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+                                                       (mapUnitToLocal gameplayCtx nil))} inputCh outputCh))
+         ; 增加友方全體氣力
+          gameplayCtx (update gameplayCtx :units
+                              (fn [units]
+                                (tool.units/mapUnits units
+                                                     (fn [unit]
+                                                       (if (= (:playerKey unit) (:playerKey targetUnit))
+                                                         (update-in unit [:robotState :pilotState]
+                                                                    (fn [pilotState]
+                                                                      (when pilotState
+                                                                        (update pilotState :curage inc))))
+                                                         unit)))))]
+      gameplayCtx)))
+
+(defn gameplayGetUnitMovePathTree [gameplayCtx unit]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (getUnitMovePathTree gameplayCtx unit))
+
+(defn gameplayGetUnitIsDead [gameplayCtx unit]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec
+   boolean?
+   (<= (get-in unit [:robotState :hp]) 0)))
+
 (defn fixUnitSkyGround [gameplayCtx unit inputCh outputCh]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/unit unit)
   (a/go
     (common/assertSpec
@@ -1319,7 +1337,7 @@
                                            after []]
                                  (if unit
                                    (let [nextUnit unit
-                                         nextUnit (gameplayOnUnitTurnEnd nil gameplayCtx nextUnit)]
+                                         nextUnit (gameplayOnUnitTurnEnd gameplayCtx nextUnit)]
                                      (recur rest (conj after nextUnit)))
                                    after))))
            gameplayCtx (common/assertSpec
@@ -1336,8 +1354,6 @@
 (defn onPlayerTurnEnd [gameplayCtx inputCh outputCh]
   (onEnemyTurnEnd gameplayCtx :player inputCh outputCh))
 
-
-
 (def gameplayCtx {:map [[]]
                   :camera [0 0]
                   :cursor [0 0]
@@ -1348,7 +1364,8 @@
                   :players {:player {:faction 0 :playerState nil}
                             :ai1 {:faction 1 :playerState nil}}
                   :fsm tool.fsm/model
-                  :numberOfTurn 0})
+                  :numberOfTurn 0
+                  :money 0})
 
 (defn save! [gameplayCtx]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)

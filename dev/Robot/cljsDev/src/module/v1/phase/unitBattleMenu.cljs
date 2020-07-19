@@ -64,7 +64,7 @@
                                          [leftAfter rightAfter] (data/applyActionResult gameplayCtx left leftAction right rightAction result)
                                          _ (a/<! (common/unitBattleAnim nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                                (data/mapUnitToLocal gameplayCtx nil)) (cond-> [left right]
-                                                                                                                                    fixRight reverse))
+                                                                                                                                        fixRight reverse))
                                                                              :unitsAfter (map #(->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
                                                                                                     (data/mapUnitToLocal gameplayCtx nil)) (cond-> [leftAfter rightAfter]
                                                                                                                                              fixRight reverse))
@@ -72,30 +72,18 @@
                                          gameplayCtx (-> gameplayCtx
                                                          (data/updateUnit left (constantly leftAfter))
                                                          (data/updateUnit right (constantly rightAfter)))
-                                       ; 進攻方死亡
+                                         ; 進攻方死亡
                                          gameplayCtx (common/assertSpec
                                                       ::type/gameplayCtx
-                                                      (if (data/gameplayGetUnitIsDead nil gameplayCtx leftAfter)
-                                                        (let [gameplayCtx (-> (:units gameplayCtx)
-                                                                              (tool.units/delete leftAfter)
-                                                                              ((fn [units]
-                                                                                 (assoc gameplayCtx :units units))))
-                                                              gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx leftAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} leftAfter)
-                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
+                                                      (if (data/gameplayGetUnitIsDead gameplayCtx leftAfter)
+                                                        (let [gameplayCtx (a/<! (data/gameplayOnUnitDead gameplayCtx leftAfter inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
-                                       ; 防守方死亡
+                                         ; 防守方死亡
                                          gameplayCtx (common/assertSpec
                                                       ::type/gameplayCtx
-                                                      (if (data/gameplayGetUnitIsDead nil gameplayCtx rightAfter)
-                                                        (let [gameplayCtx (-> (:units gameplayCtx)
-                                                                              (tool.units/delete rightAfter)
-                                                                              ((fn [units]
-                                                                                 (assoc gameplayCtx :units units))))
-                                                              gameplayCtx (a/<! (data/gameplayOnUnitDead nil gameplayCtx rightAfter))
-                                                              _ (a/<! (common/unitDeadAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} rightAfter)
-                                                                                                           (data/mapUnitToLocal gameplayCtx nil))} inputCh outputCh))]
+                                                      (if (data/gameplayGetUnitIsDead gameplayCtx rightAfter)
+                                                        (let [gameplayCtx (a/<! (data/gameplayOnUnitDead gameplayCtx rightAfter inputCh outputCh))]
                                                           gameplayCtx)
                                                         gameplayCtx))
                                          gameplayCtx (dissoc gameplayCtx :attackRange :checkHitRate)]

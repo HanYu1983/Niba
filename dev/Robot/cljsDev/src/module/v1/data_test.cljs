@@ -45,9 +45,7 @@
                                        :power 1
                                        :offset 0})
         lobbyCtx app.lobby.model/defaultLobbyModel
-        gameplayCtx {:map playmap :fsm tool.fsm/model :units tool.units/model
-                     :lobbyCtx lobbyCtx
-                     :numberOfTurn 0}
+        gameplayCtx data/gameplayCtx
         _ (data/getTerrain gameplayCtx [0 0])
         _ (data/moveCost gameplayCtx unitA [0 0] [0 1])
         _ (data/getWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx lobbyCtx} unitA weapon)

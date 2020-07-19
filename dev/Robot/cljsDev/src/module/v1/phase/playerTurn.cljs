@@ -40,7 +40,7 @@
                         gameplayCtx (common/assertSpec
                                      ::type/gameplayCtx
                                      (if unit
-                                       (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone nil gameplayCtx %))
+                                       (data/updateUnit gameplayCtx unit #(data/gameplayOnUnitDone gameplayCtx %))
                                        gameplayCtx))]
                     gameplayCtx)
                   gameplayCtx))
