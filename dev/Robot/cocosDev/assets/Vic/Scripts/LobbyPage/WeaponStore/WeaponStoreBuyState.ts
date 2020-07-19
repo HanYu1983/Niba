@@ -7,7 +7,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import DefaultState from "../../DefaultState";
-import MainPage from "../MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
@@ -20,15 +20,15 @@ export default class WeaponStoreBuyState extends DefaultState {
         
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onWeaponStoreBuyLeftClick();
+        (owner as LobbyPage).onWeaponStoreBuyLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onWeaponStoreBuyRightClick();
+        (owner as LobbyPage).onWeaponStoreBuyRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onWeaponStoreBuyEnterClick();
+        (owner as LobbyPage).onWeaponStoreBuyEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onWeaponStoreBuyEscClick();
+        (owner as LobbyPage).onWeaponStoreBuyEscClick();
     }
 }

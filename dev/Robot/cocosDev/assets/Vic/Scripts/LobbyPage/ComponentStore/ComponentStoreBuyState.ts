@@ -7,7 +7,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import DefaultState from "../../DefaultState";
-import MainPage from "../MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
@@ -20,15 +20,15 @@ export default class ComponentStoreBuyState extends DefaultState {
         
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onComponentStoreBuyLeftClick();
+        (owner as LobbyPage).onComponentStoreBuyLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onComponentStoreBuyRightClick();
+        (owner as LobbyPage).onComponentStoreBuyRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onComponentStoreBuyEnterClick();
+        (owner as LobbyPage).onComponentStoreBuyEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onComponentStoreBuyEscClick();
+        (owner as LobbyPage).onComponentStoreBuyEscClick();
     }
 }

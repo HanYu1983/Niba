@@ -1,15 +1,15 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../../Page/MainPage";
+import LobbyPage from "../LobbyPage";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class PrepareMenuState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onPrepareMenuPrevClick();
+        (owner as LobbyPage).onPrepareMenuPrevClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onPrepareMenuNextClick();
+        (owner as LobbyPage).onPrepareMenuNextClick();
     }
     onLeftClick(owner: any) {
         
@@ -18,9 +18,9 @@ export default class PrepareMenuState extends DefaultState {
         
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onPrepareMenuEnterClick();
+        (owner as LobbyPage).onPrepareMenuEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onPrepareMenuEscClick();
+        (owner as LobbyPage).onPrepareMenuEscClick();
     }
 }

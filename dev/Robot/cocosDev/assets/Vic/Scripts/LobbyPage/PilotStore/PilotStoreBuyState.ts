@@ -1,5 +1,5 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../../Page/MainPage";
+import LobbyPage from "../LobbyPage";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -19,15 +19,15 @@ export default class PilotStoreBuyState extends DefaultState {
         
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onPilotStoreBuyLeftClick();
+        (owner as LobbyPage).onPilotStoreBuyLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onPilotStoreBuyRightClick();
+        (owner as LobbyPage).onPilotStoreBuyRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onPilotStoreBuyEnterClick();
+        (owner as LobbyPage).onPilotStoreBuyEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onPilotStoreBuyEscClick();
+        (owner as LobbyPage).onPilotStoreBuyEscClick();
     }
 }

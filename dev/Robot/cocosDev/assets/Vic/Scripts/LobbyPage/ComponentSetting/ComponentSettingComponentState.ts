@@ -1,26 +1,26 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class ComponentSettingComponentState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateUpClick();
+        (owner as LobbyPage).onComponentSettingComponentStateUpClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateDownClick();
+        (owner as LobbyPage).onComponentSettingComponentStateDownClick();
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateLeftClick();
+        (owner as LobbyPage).onComponentSettingComponentStateLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateRightClick();
+        (owner as LobbyPage).onComponentSettingComponentStateRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateEnterClick();
+        (owner as LobbyPage).onComponentSettingComponentStateEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onComponentSettingComponentStateEscClick();
+        (owner as LobbyPage).onComponentSettingComponentStateEscClick();
     }
 }

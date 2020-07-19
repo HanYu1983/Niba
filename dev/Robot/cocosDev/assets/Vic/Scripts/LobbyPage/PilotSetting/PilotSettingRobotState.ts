@@ -1,26 +1,26 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class PilotSettingRobotState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateUpClick();
+        (owner as LobbyPage).onPilotSettingRobotStateUpClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateDownClick();
+        (owner as LobbyPage).onPilotSettingRobotStateDownClick();
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateLeftClick();
+        (owner as LobbyPage).onPilotSettingRobotStateLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateRightClick();
+        (owner as LobbyPage).onPilotSettingRobotStateRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateEnterClick();
+        (owner as LobbyPage).onPilotSettingRobotStateEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onPilotSettingRobotStateEscClick();
+        (owner as LobbyPage).onPilotSettingRobotStateEscClick();
     }
 }

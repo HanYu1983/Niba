@@ -59,9 +59,7 @@ export default class ComponentSetting extends BasicViewer {
         this.robotEquipList.open();
         
         this.setCompnentList();
-        this.setRobotList(()=>{
-            this.setRobotEquipList();
-        });
+        this.setRobotList();
 
         this.titleMenu.open();
         this.titleMenu.setData(["機體列表","裝備列表","配件列表"]);

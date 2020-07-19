@@ -1,26 +1,26 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class WeaponSettingRobotState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateUpClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateUpClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateDownClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateDownClick();
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateLeftClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateRightClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateEnterClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onWeaponSettingRobotStateEscClick();
+        (owner as LobbyPage).onWeaponSettingRobotStateEscClick();
     }
 }

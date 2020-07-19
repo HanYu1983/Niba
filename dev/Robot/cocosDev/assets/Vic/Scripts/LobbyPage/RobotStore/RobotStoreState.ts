@@ -1,26 +1,26 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../../Page/MainPage";
+import LobbyPage from "../LobbyPage";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class RobotStoreState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onRobotStoreUpClick();
+        (owner as LobbyPage).onRobotStoreUpClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onRobotStoreDownClick();
+        (owner as LobbyPage).onRobotStoreDownClick();
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onRobotStoreLeftClick();
+        (owner as LobbyPage).onRobotStoreLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onRobotStoreRightClick();
+        (owner as LobbyPage).onRobotStoreRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onRobotStoreEnterClick();
+        (owner as LobbyPage).onRobotStoreEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onRobotStoreEscClick();
+        (owner as LobbyPage).onRobotStoreEscClick();
     }
 }

@@ -1,26 +1,27 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../../Page/MainPage";
+import LobbyPage from "../LobbyPage";
+
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class WeaponStoreState extends DefaultState {
     onPrevClick(owner: any) {
-        (owner as MainPage).onWeaponStoreUpClick();
+        (owner as LobbyPage).onWeaponStoreUpClick();
     }
     onNextClick(owner: any) {
-        (owner as MainPage).onWeaponStoreDownClick();
+        (owner as LobbyPage).onWeaponStoreDownClick();
     }
     onLeftClick(owner: any) {
-        (owner as MainPage).onWeaponStoreLeftClick();
+        (owner as LobbyPage).onWeaponStoreLeftClick();
     }
     onRightClick(owner: any) {
-        (owner as MainPage).onWeaponStoreRightClick();
+        (owner as LobbyPage).onWeaponStoreRightClick();
     }
     onEnterClick(owner: any) {
-        (owner as MainPage).onWeaponStoreEnterClick();
+        (owner as LobbyPage).onWeaponStoreEnterClick();
     }
     onEscClick(owner: any) {
-        (owner as MainPage).onWeaponStoreEscClick();
+        (owner as LobbyPage).onWeaponStoreEscClick();
     }
 }
