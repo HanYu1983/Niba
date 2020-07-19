@@ -45,7 +45,6 @@ import PilotStoreState from './PilotStore/PilotStoreState';
 const { ccclass, property, requireComponent } = cc._decorator;
 
 @ccclass
-@requireComponent(cc.Layout)
 export default class LobbyPage extends BasicViewer {
 
     @property(PrepareMenu)
@@ -100,7 +99,7 @@ export default class LobbyPage extends BasicViewer {
 
     removeListenser() {
         super.removeListenser();
-
+        
         this.node.off(InputSensor.CURSOR_UP, this._onMainPageCursorUp, this);
         this.node.off(InputSensor.CURSOR_LEFT, this._onMainPageCursorLeft, this);
         this.node.off(InputSensor.CURSOR_RIGHT, this._onMainPageCursorRight, this);

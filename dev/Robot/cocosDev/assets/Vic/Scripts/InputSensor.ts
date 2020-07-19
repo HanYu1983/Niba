@@ -27,13 +27,12 @@ export default class InputSensor extends cc.Component {
     static ESCAPE: string = "ESCAPE";
 
     start() {
-        // 會呼叫2次, 先刪除再說
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN);
+        this.onDestroy();
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }
 
     onDestroy() {
-        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN);
+        cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }
 
     onKeyUp(evt: cc.Event.EventKeyboard) {
