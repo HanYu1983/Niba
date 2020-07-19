@@ -222,13 +222,19 @@ export default class View extends cc.Component {
         return this.getLobbyPage();
     }
 
-    openGamePage(): GamePage {
+    openGamePage(questId:string = ""): GamePage {
         this.closeAllPages();
         this.openLoadingPage();
 
         this.node.runAction(cc.sequence(cc.delayTime(.1), cc.callFunc(function () {
             this.pages[1].open();
             this.closeLoadingPage();
+
+            if(questId != ""){
+                ViewController.instance.notifyStartGame(questId);
+            }else{
+                ViewController.instance.notifyLoadGame();
+            }
         }, this)));
 
         return this.getGamePage();

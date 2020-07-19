@@ -42,7 +42,6 @@ export default class MainPage extends BasicViewer {
     addListener() {
         super.addListener();
 
-        cc.log("addListener", this.node)
         this.node.on(InputSensor.CURSOR_UP, this._onMainPageCursorUp, this);
         this.node.on(InputSensor.CURSOR_LEFT, this._onMainPageCursorLeft, this);
         this.node.on(InputSensor.CURSOR_RIGHT, this._onMainPageCursorRight, this);
@@ -54,7 +53,6 @@ export default class MainPage extends BasicViewer {
     removeListenser() {
         super.removeListenser();
 
-        cc.log("removeListenser")
         this.node.off(InputSensor.CURSOR_UP, this._onMainPageCursorUp, this);
         this.node.off(InputSensor.CURSOR_LEFT, this._onMainPageCursorLeft, this);
         this.node.off(InputSensor.CURSOR_RIGHT, this._onMainPageCursorRight, this);
@@ -86,7 +84,7 @@ export default class MainPage extends BasicViewer {
     }
 
     onQuestEnterClick(){
-        ViewController.instance.view.openGamePage();
+        ViewController.instance.view.openGamePage(this.questMenu.getButtonId());
     }
 
     onQuestEscClick(){
@@ -118,7 +116,7 @@ export default class MainPage extends BasicViewer {
                 break;
             case "繼續中途戰":
                 {
-                    ViewController.instance.notifyLoadGame();
+                    ViewController.instance.view.openGamePage();
                 }
                 break;
             case "新游戲":

@@ -240,6 +240,7 @@ export default class LobbyPage extends BasicViewer {
             const buyPilot = this.pilotStore.list.getFocus();
             ViewController.instance.model.buyPilotById(buyPilot.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
+                this.updateStorage();
             });
         }
         this.onPilotStoreBuyEscClick();
@@ -268,6 +269,7 @@ export default class LobbyPage extends BasicViewer {
             const buyRobot = this.robotStore.list.getFocus();
             ViewController.instance.model.buyRobotById(buyRobot.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
+                this.updateStorage();
             });
         }
         this.onRobotStoreBuyEscClick();
@@ -364,6 +366,7 @@ export default class LobbyPage extends BasicViewer {
             const buyWeapon = this.weaponStore.list.getFocus();
             ViewController.instance.model.buyWeaponById(buyWeapon.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
+                this.updateStorage();
             });
         }
         this.onWeaponStoreBuyEscClick();
@@ -420,6 +423,7 @@ export default class LobbyPage extends BasicViewer {
             const buyComponent = this.componentStore.list.getFocus();
             ViewController.instance.model.buyComponentById(buyComponent.key, (err: any, data: any) => {
                 ViewController.instance.view.getCommentUI().showAlert("已購買");
+                this.updateStorage();
             });
         }
         this.onComponentStoreBuyEscClick();

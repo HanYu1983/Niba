@@ -104,9 +104,7 @@ export default class GamePage extends BasicViewer {
     open() {
         super.open();
         this.map.resetUV();
-
-        // notifyStartGame中傳副本頁按到的button就行了
-        ViewController.instance.notifyStartGame(ViewController.instance.view.getMainPage().questMenu.getButtonId());
+ 
         ViewController.instance.audioController.gamePage();
     }
 
