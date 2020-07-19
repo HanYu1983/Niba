@@ -34,8 +34,7 @@
       :exitCtx
       (-> gameplayCtx
           (dissoc :attackRange :checkHitRate)
-          (assoc :moveRange []
-                 :cursor (:position unit)))}
+          (assoc :moveRange []))}
      
      (loop [gameplayCtx gameplayCtx]
        (common/assertSpec spec/unitMenuView gameplayCtx)
