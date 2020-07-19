@@ -3,6 +3,7 @@ import CommentUI from "./CommentUI/CommentUI";
 import MainPage from "./MainPage/MainPage";
 import GamePage from "./GamePage/GamePage";
 import ViewController from "./ViewController";
+import LobbyPage from "./LobbyPage/LobbyPage";
 
 const { ccclass, property } = cc._decorator;
 
@@ -215,6 +216,12 @@ export default class View extends cc.Component {
         return this.getMainPage();
     }
 
+    openLobbyPage():LobbyPage{
+        this.closeAllPages();
+        this.pages[3].open();
+        return this.getLobbyPage();
+    }
+
     openGamePage(): GamePage {
         this.closeAllPages();
         this.openLoadingPage();
@@ -245,6 +252,10 @@ export default class View extends cc.Component {
 
     getMainPage(): MainPage {
         return this.pages[0] as MainPage;
+    }
+
+    getLobbyPage():LobbyPage{
+        return this.pages[3] as LobbyPage;
     }
 
     getGridPos(pos: number[]) {
