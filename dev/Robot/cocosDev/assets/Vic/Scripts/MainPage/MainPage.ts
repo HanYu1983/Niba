@@ -172,12 +172,16 @@ export default class MainPage extends BasicViewer {
                     this.openQuestMenu();
                 }
                 break;
-            case "儲存":
+            case "繼續中途戰":
                 {
+                    ViewController.instance.notifyLoadGame();
                 }
                 break;
-            case "讀取":
+            case "新游戲":
                 {
+                    ViewController.instance.notifyNewGame(()=>{
+                        ViewController.instance.view.openMainPage();
+                    });
                 }
                 break;
         }

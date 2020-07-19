@@ -1,5 +1,5 @@
 import DefaultState from "../../DefaultState";
-import MainPage from "../../Page/MainPage";
+import MainPage from "../MainPage";
 
 const { ccclass, property } = cc._decorator;
 
