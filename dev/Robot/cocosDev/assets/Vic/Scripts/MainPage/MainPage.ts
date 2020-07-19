@@ -93,8 +93,7 @@ export default class MainPage extends BasicViewer {
 
     open() {
         super.open();
-        ViewController.instance.notifyStartLobby();
-        this.backToLooby();
+        this.backToLooby();        
     }
 
     addListener() {
@@ -146,7 +145,7 @@ export default class MainPage extends BasicViewer {
     }
 
     onQuestEscClick(){
-        this.openPrepareMenu();
+        this.backToLooby();
     }
     //#endregion
 
@@ -233,6 +232,7 @@ export default class MainPage extends BasicViewer {
     } 
 
     onPrepareMenuEscClick(){
+        ViewController.instance.notifyEndLobby();
         this.backToLooby();
     } 
     //#endregion
@@ -908,11 +908,19 @@ export default class MainPage extends BasicViewer {
     }
 
     //#endregion
+
+    updateStorage(){
+        ViewController.instance.model.getLobbyCtx((err, data)=>{
+            this.money.string = data.money;
+        });
+    }
     
     openPrepareMenu(){
+        ViewController.instance.notifyStartLobby();
         this.closeAllPage();
         this.prepareMenu.open();
         this._state.changeState(new PrepareMenuState());
+        this.updateStorage();
     }
 
     openQuestMenu(){

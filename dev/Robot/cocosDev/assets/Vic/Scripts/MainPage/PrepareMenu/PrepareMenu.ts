@@ -8,6 +8,7 @@
 import BasicViewer from "../../BasicViewer";
 import MenuButtons from "../../MenuButtons";
 import MenuButton from "../../MenuButton";
+import ViewController from "../../ViewController";
 
 const {ccclass, property} = cc._decorator;
 
@@ -28,6 +29,10 @@ export default class PrepareMenu extends BasicViewer {
 
         this.menu.open();
         this.menu.setData(["購買機甲", "雇傭駕駛", "購買軍火", "購買配件", "配置駕駛", "配置軍火", "配置配件"]);
+        
+        // ViewController.instance.model.getLobbyCtx((err, data)=>{
+        //     cc.log(data);
+        // });
     }
 
     onPrevClick(){

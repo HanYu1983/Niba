@@ -26,15 +26,14 @@ export default class MainMenu extends BasicViewer {
 
     open(){
         super.open();
-        // ViewController.instance.notifyCheckLoadGameplay((v:boolean)=>{
-        //     this.menu.open();
-        //     if(v){
-        //         this.menu.setData(["整備部隊", "進入副本", "繼續中途戰", "新游戲"]);
-        //     }else{
-        //         this.menu.setData(["整備部隊", "進入副本", "新游戲"]);
-        //     }
-        // });
-        this.menu.setData(["整備部隊", "進入副本", "繼續中途戰", "新游戲"]);
+        ViewController.instance.notifyCheckLoadGameplay((v:boolean)=>{
+            this.menu.open();
+            if(v){
+                this.menu.setData(["整備部隊", "進入副本", "繼續中途戰", "新游戲"]);
+            }else{
+                this.menu.setData(["整備部隊", "進入副本", "新游戲"]);
+            }
+        });
     }
 
     onPrevClick(){

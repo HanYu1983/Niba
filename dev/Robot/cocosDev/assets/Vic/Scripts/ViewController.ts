@@ -45,7 +45,6 @@ export default class ViewController extends cc.Component {
     // 第一個參數：0隨機副本；1陸副本；2海副本；3空副本
     // 第二個參數：難度：0~9
     notifyStartGame(args:any) {
-        this.modelController.endLobby();
         this.modelController.startGame(args);
     }
 
@@ -53,9 +52,12 @@ export default class ViewController extends cc.Component {
         this.modelController.startLobby();
     }
 
+    notifyEndLobby(){
+        this.modelController.endLobby();
+    }
+
     // 讀取gameplay
     notifyLoadGame(){
-        this.modelController.endLobby();
         this.modelController.loadGame()
     }
 
