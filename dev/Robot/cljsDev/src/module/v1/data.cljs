@@ -106,9 +106,9 @@
          (throw (js/Error. (str "getPilotInfo[" (:pilotKey pilotState) "] not found")))
          (merge data
                 pilotState
-                (common/assertSpec
-                 ::type/pilotState
-                 (-> lobbyCtx :pilotStateByPilot (:key pilotState)))))))))
+                #_(common/assertSpec
+                   ::type/pilotState
+                   (-> lobbyCtx :pilotStateByPilot (:key pilotState)))))))))
 
 ;======================================================
 ;
@@ -262,10 +262,10 @@
                            (common/assertSpec
                             boolean?
                             (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                                second
-                                (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
-                                (every? (fn [ability]
-                                          (not ((into #{} ability) "melee")))))))
+                                 second
+                                 (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
+                                 (every? (fn [ability]
+                                           (not ((into #{} ability) "melee")))))))
                     (+ basic 300)
                     basic)]
         basic))))
@@ -874,7 +874,7 @@
                                          unit))
                                      [leftAfter rightAfter]
                                      [leftAction rightAction])
-         
+
          ; 增加經驗
          [leftAfter rightAfter] (map (fn [unit [actionType weapon] selfEvents targetEvents]
                                        (common/assertSpec
@@ -979,24 +979,32 @@
         (update-in [:robotState :robotKey] (constantly toKey))
         (update-in [:robotState :weapons toKey] (constantly weapons)))))
 
+(defn createUnit [gameplayCtx unit]
+  (common/assertSpec
+   ::type/robot
+   (let [basic (merge-with (fn [l r]
+                             (cond
+                               (map? l)
+                               (merge l r)
 
-(defn createUnit [{units :units :as gameplayCtx} {:keys [key position playerKey]} robotState]
-  (common/assertSpec ::type/units units)
-  (common/assertSpec keyword? playerKey)
-  (common/assertSpec (s/keys :req-un [::type/robotKey] :req-opt [::type/pilotState]) robotState)
-  (->> (tool.units/add units (let [basic {:key (or key (keyword (gensym "unit")))
-                                          :position (or position [0 0])
-                                          :playerKey (or playerKey :player)
-                                          :robotState (merge {:pilotState nil
-                                                              :weapons {}
-                                                              :components {}
-                                                              :tags {}
-                                                              :hp 0
-                                                              :en 0}
-                                                             robotState)}]
-                               (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
-                                                                         :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))))
-       (assoc gameplayCtx :units)))
+                               r
+                               r
+
+                               :else
+                               l))
+                           {:key (keyword (gensym "_unit_"))
+                            :position [0 0]
+                            :playerKey :player
+                            :robotState {:pilotState nil
+                                         :weapons {}
+                                         :components {}
+                                         :tags {}
+                                         :hp 0
+                                         :en 0}}
+                           unit)
+         basic (update-in basic [:robotState] #(merge % {:hp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)
+                                                         :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))]
+     basic)))
 
 (defn gameplayOnUnitMove [_ gameplayCtx unit pos]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]

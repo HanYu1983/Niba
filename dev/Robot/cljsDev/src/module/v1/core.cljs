@@ -257,13 +257,15 @@
    (let [[gameplayCtx _] (->> (get data/data :robot)
                               (take 4)
                               (reduce (fn [[gameplayCtx i] [robotKey _]]
-                                        [(-> gameplayCtx
-                                             (data/createUnit {:playerKey :player
-                                                               :position [0 i]}
-                                                              {:robotKey robotKey})
-                                             (data/createUnit {:playerKey :ai1
-                                                               :position [5 i]}
-                                                              {:robotKey robotKey}))
+                                        [(-> (:units gameplayCtx)
+                                             (tool.units/add (data/createUnit gameplayCtx {:playerKey :player
+                                                                                           :position [0 i]
+                                                                                           :robotState {:robotKey robotKey}}))
+                                             (tool.units/add (data/createUnit gameplayCtx {:playerKey :ai1
+                                                                                           :position [5 i]
+                                                                                           :robotState {:robotKey robotKey}}))
+                                             ((fn [units]
+                                                (assoc gameplayCtx :units units))))
                                          (inc i)])
                                       [gameplayCtx 1]))]
      gameplayCtx)))
@@ -277,31 +279,50 @@
            [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> lobbyCtx :robots) {})} inputCh outputCh))
           ; 產生自己選出的軍隊
            gameplayCtx (->> (map (fn [idx key robotKey]
-                                   [{:key key
-                                     :playerKey :player
-                                     :position [0 (+ idx 1)]}
-                                    {:robotKey robotKey
-                                     :pilotState (let [keyForPilot (common/assertSpec
-                                                                    (s/nilable keyword?)
-                                                                    (->> (:robotByPilot lobbyCtx)
-                                                                         (filter (fn [[_ robotKey]]
-                                                                                   (= robotKey key)))
-                                                                         ffirst))]
-                                                   (when keyForPilot
-                                                     {:key keyForPilot
-                                                      :pilotKey (common/assertSpec
-                                                                 keyword?
-                                                                 ((:pilots lobbyCtx) keyForPilot))
-                                                      :expEvade 0
-                                                      :expGuard 0
-                                                      :expMelee 0
-                                                      :expRange 0
-                                                      :curage 100}))}])
+                                   {:key key
+                                    :playerKey :player
+                                    :position [0 (+ idx 1)]
+                                    :robotState {:robotKey robotKey
+                                                 :pilotState (let [keyForPilot (common/assertSpec
+                                                                                (s/nilable keyword?)
+                                                                                (->> (:robotByPilot lobbyCtx)
+                                                                                     (filter (fn [[_ robotKey]]
+                                                                                               (= robotKey key)))
+                                                                                     ffirst))
+                                                                   #_pilotState #_(common/assertSpec
+                                                                                   ::type/pilotState
+                                                                                   (-> lobbyCtx :pilotStateByPilot keyForPilot))
+                                                                   #_pilotState #_(common/assertSpec
+                                                                                   ::type/pilotState
+                                                                                   (if pilotState
+                                                                                     pilotState
+                                                                                     (when keyForPilot
+                                                                                       {:key keyForPilot
+                                                                                        :pilotKey (common/assertSpec
+                                                                                                   keyword?
+                                                                                                   ((:pilots lobbyCtx) keyForPilot))
+                                                                                        :expEvade 0
+                                                                                        :expGuard 0
+                                                                                        :expMelee 0
+                                                                                        :expRange 0
+                                                                                        :curage 100})))]
+                                                               (when keyForPilot
+                                                                 {:key keyForPilot
+                                                                  :pilotKey (common/assertSpec
+                                                                             keyword?
+                                                                             ((:pilots lobbyCtx) keyForPilot))
+                                                                  :expEvade 0
+                                                                  :expGuard 0
+                                                                  :expMelee 0
+                                                                  :expRange 0
+                                                                  :curage 100}))}})
                                  (range)
                                  selectedUnits
                                  (map #(-> lobbyCtx :robots %) selectedUnits))
-                            (reduce (fn [gameplayCtx [entity state]]
-                                      (data/createUnit gameplayCtx entity state))
+                            (reduce (fn [gameplayCtx unit]
+                                      (update gameplayCtx :units (fn [units]
+                                                                   (-> units
+                                                                       (tool.units/add (data/createUnit gameplayCtx unit))))))
                                     gameplayCtx))]
        gameplayCtx))))
 
@@ -366,10 +387,11 @@
                                           (distinct))
                              ; 產生軍隊
                              gameplayCtx (reduce (fn [gameplayCtx pos]
-                                                   (-> gameplayCtx
-                                                       (data/createUnit {:playerKey :ai1
-                                                                         :position pos}
-                                                                        {:robotKey :gundam})))
+                                                   (update gameplayCtx :units (fn [units]
+                                                                                (-> units
+                                                                                    (tool.units/add (data/createUnit gameplayCtx {:playerKey :ai1
+                                                                                                                                  :position pos
+                                                                                                                                  :robotState {:robotKey :gundam}}))))))
                                                  gameplayCtx
                                                  posList)]
                          gameplayCtx))
@@ -433,34 +455,35 @@
       (a/<! waitCh) ;等待線程
       (core/defclick (or testAll true) "create unit"
         []
-        (core/defexe (fn [ctx]
-                       (-> ctx
-                           (data/createUnit {:key :unit1
-                                             :playerKey :player
-                                             :position [0 0]}
-                                            {:robotKey :gaite_land
-                                             :pilotState {:key :test
-                                                          :pilotKey :amuro
-                                                          :expEvade 0
-                                                          :expGuard 0
-                                                          :expMelee 0
-                                                          :expRange 0
-                                                          :curage 0}})
-                           (data/createUnit {:key :unit2
-                                             :playerKey :player
-                                             :position [4 0]}
-                                            {:robotKey :zgundam_sky})
-                           (data/createUnit {:key :unit3
-                                             :playerKey :ai1
-                                             :position [2 0]}
-                                            {:robotKey :gundam}))))
+        (core/defexe (fn [gameplayCtx]
+                       (update gameplayCtx :units (fn [units]
+                                                    (-> units
+                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit1
+                                                                                                      :playerKey :player
+                                                                                                      :position [0 0]
+                                                                                                      :robotState {:robotKey :gaite_land
+                                                                                                                   :pilotState {:key :test
+                                                                                                                                :pilotKey :amuro
+                                                                                                                                :expEvade 0
+                                                                                                                                :expGuard 0
+                                                                                                                                :expMelee 0
+                                                                                                                                :expRange 0
+                                                                                                                                :curage 0}}}))
+                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit2
+                                                                                                      :playerKey :player
+                                                                                                      :position [4 0]
+                                                                                                      :robotState {:robotKey :zgundam_sky}}))
+                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit3
+                                                                                                      :playerKey :ai1
+                                                                                                      :position [2 0]
+                                                                                                      :robotState {:robotKey :gundam}})))))))
         (core/defexe (fn [{units :units :as gameplayCtx}]
                        (when (not (tool.units/getByKey units :unit1))
                          (throw (js/Error. (str "unit1 not found"))))
                        (when (not (tool.units/getByKey units :unit2))
-                         (throw (js/Error. (str "unit1 not found"))))
+                         (throw (js/Error. (str "unit2 not found"))))
                        (when (not (tool.units/getByKey units :unit3))
-                         (throw (js/Error. (str "unit1 not found"))))
+                         (throw (js/Error. (str "unit3 not found"))))
                        gameplayCtx)))
 
       (core/defclick (or testAll false) "test gundam from ground to sky"
