@@ -171,7 +171,97 @@ type Game struct {
 	Enemy  []A
 }
 
+type P5 struct {
+	background   func(v int)
+	setup        func()
+	createCanvas func(w int, h int)
+}
+
 // Test9 is
 func Test9() {
-	Println(Game{A{80, "abc"}, []A{A{100, "b"}}}, map[string]interface{}{"abc": 0, "cde": "sss"})
+	Println(Game{A{80, "abc"}, []A{A{100, "b"}}})
+	Println(map[string]interface{}{
+		"abc": 0,
+		"cde": "sss",
+		"doA": func() {
+			Println("abc")
+		},
+	})
+	js.Global.Set("TestModule", map[string]interface{}{
+		"doA": func() {
+			Println("abc")
+		},
+	})
+
+	var a = map[string]interface{}{"name": "han"}
+	var b = a
+	b["name"] = "han2"
+	Println(a)
+}
+
+type EventType int
+
+const (
+	OnStartApp EventType = iota
+	OnInputChange
+)
+
+type Event struct {
+	Type EventType
+	Args interface{}
+}
+
+type Model struct {
+	Search string
+}
+
+func Test10() {
+	react := js.Global.Get("React")
+	reactDom := js.Global.Get("ReactDOM")
+	document := js.Global.Get("document")
+
+	input := make(chan Event)
+	output := make(chan Model)
+
+	go func(input <-chan Event, output chan<- Model) {
+		model := Model{""}
+		for {
+			select {
+			case evt := <-input:
+				switch evt.Type {
+				case OnStartApp:
+					output <- model
+					break
+				case OnInputChange:
+					v := evt.Args.(*js.Object).String()
+					model.Search = v
+					output <- model
+					break
+				default:
+					break
+				}
+			}
+		}
+	}(input, output)
+
+	go func(input <-chan Model, output chan<- Event) {
+		for {
+			select {
+			case model := <-input:
+				elm := react.Call("createElement", "input", map[string]interface{}{
+					"onChange": func(e *js.Object) {
+						v := e.Get("target").Get("value")
+						go func() {
+							output <- Event{OnInputChange, v}
+						}()
+					},
+					"value": model.Search,
+				})
+				reactDom.Call("render", elm, document.Call("getElementById", "example"))
+				break
+			}
+		}
+	}(output, input)
+
+	input <- Event{OnStartApp, nil}
 }
