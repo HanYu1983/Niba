@@ -321,15 +321,49 @@
                                     gameplayCtx))]
        gameplayCtx))))
 
+(defn gameplayDone [ctx gameplayCtx]
+  (let [doneInfo (common/assertSpec
+                  ::type/done
+                  (:done gameplayCtx))
+        lobbyCtx (:lobbyCtx gameplayCtx)
+        lobbyCtx (common/assertSpec
+                  ::app.lobby.model/model
+                  (cond
+                    #_(= :giveUp (-> doneInfo :cause))
+                    #_ctx
+
+                    (= :giveUp (-> doneInfo :cause))
+                    (let [; 保存駕駛
+                          units (common/assertSpec
+                                 (s/* ::type/unit)
+                                 (->> (:units gameplayCtx)
+                                      (tool.units/getAll)
+                                      (filter (fn [unit]
+                                                (= (:playerKey unit) :player)))))
+                          pilots (common/assertSpec
+                                  (s/* ::type/pilotState)
+                                  (->> units
+                                       (map #(-> % :robotState :pilotState))
+                                       (filter identity)))
+                          lobbyCtx (common/assertSpec
+                                    ::app.lobby.model/model
+                                    (update lobbyCtx :pilotStateByPilot (fn [ctx]
+                                                                          (into ctx (zipmap (map :key pilots) pilots)))))
+                         ; 增加金錢
+                          lobbyCtx (update lobbyCtx :money #(+ % (:money gameplayCtx)))]
+                      lobbyCtx)
+
+                    :else
+                    lobbyCtx))
+        ; 取代lobbyCtx
+        ctx (assoc ctx :lobbyCtx lobbyCtx)]
+    ctx))
 
 (defmethod app.module/gameplayLoad :v1 [_ ctx inputCh outputCh]
   (let [gameplayCtx (data/load! data/gameplayCtx)
         gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
         _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
-          ; 取代lobbyCtx
-        ctx (assoc ctx
-                   :lobbyCtx (:lobbyCtx gameplayCtx)
-                   :gameplayCtx gameplayCtx)]
+        ctx (gameplayDone ctx gameplayCtx)]
     ctx))
 
 (defmethod app.module/gameplayStart :v1 [_ ctx args inputCh outputCh]
@@ -405,10 +439,7 @@
                                      gameplayCtx))))))
           gameplayCtx (a/<! (gameplayLoop gameplayCtx inputCh outputCh))
           _ (a/<! (common/gameplayDone nil (:done gameplayCtx) inputCh outputCh))
-          ; 取代lobbyCtx
-          ctx (assoc ctx
-                     :lobbyCtx (:lobbyCtx gameplayCtx)
-                     :gameplayCtx gameplayCtx)]
+          ctx (gameplayDone ctx gameplayCtx)]
       ctx)))
 
 

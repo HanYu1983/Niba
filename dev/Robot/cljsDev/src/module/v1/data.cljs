@@ -1034,7 +1034,6 @@
 ; ===================================================
 ; 
 
-
 ; 注意: 這個函式中不能呼叫getUnitInfo, 不然會無限迴圈
 (defn getWeaponInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -1066,7 +1065,6 @@
      (merge componentData
             component))))
 
-
 (defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
@@ -1096,8 +1094,6 @@
     (-> unit
         (update :position (partial world2local camera)))))
 
-
-
 (defn handleTest [gameplayCtx [cmd args]]
   (cond
     (= :test cmd)
@@ -1110,7 +1106,8 @@
 
 (defn render [gameplayCtx]
   {:post [(common/explainValid? ::viewModelSpec/viewModel %)]}
-  {:map (when (s/valid? ::spec/mapView gameplayCtx)
+  {:money (:money gameplayCtx)
+   :map (when (s/valid? ::spec/mapView gameplayCtx)
           (let [{:keys [camera map viewsize]} gameplayCtx]
             (tool.map/subMap camera viewsize map)))
    :cursor (when (s/valid? ::spec/cursorView gameplayCtx)
@@ -1220,9 +1217,10 @@
                                                                         (update pilotState :curage inc))))
                                                          unit)))))
           money 1000
-          _ (a/<! (common/showMessage nil {:message (str "earn " money)} inputCh outputCh))
-          gameplayCtx (if (= :ai (:playerKey targetUnit))
-                        (update gameplayCtx :money #(+ % money))
+          gameplayCtx (if (not= :player (:playerKey targetUnit))
+                        (do
+                          (a/<! (common/showMessage nil {:message (str "earn " money)} inputCh outputCh))
+                          (update gameplayCtx :money #(+ % money)))
                         gameplayCtx)]
       gameplayCtx)))
 

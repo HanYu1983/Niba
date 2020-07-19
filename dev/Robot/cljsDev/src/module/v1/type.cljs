@@ -65,6 +65,9 @@
 
 (s/def ::units tool.units/modelType)
 
+(s/def ::money int?)
+(s/def ::cause #{:giveUp :pass})
+(s/def ::done (s/keys :req-un [::cause]))
 (s/def ::gameplayCtx (s/keys :req-un [::fsm ::units ::numberOfTurn ::money]
                              :req-opt [::done ::activePlayer]))
 
