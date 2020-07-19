@@ -106,7 +106,12 @@ export default class MainPage extends BasicViewer {
         switch (this.mainMenu.menu.getFocus()) {
             case "整備部隊":
                 {
-                    ViewController.instance.view.openLobbyPage();
+                    // 不知道爲什麽在大廳的enter時間會被這裏按的enter影響到，呼叫timeout之後，就不會了
+                    let tid = setTimeout(() => {
+                        ViewController.instance.view.openLobbyPage();
+                        clearTimeout(tid);
+                    }, 0);
+                    
                 }
                 break;
             case "進入副本":
