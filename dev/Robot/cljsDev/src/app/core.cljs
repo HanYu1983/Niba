@@ -16,8 +16,7 @@
 (set! module.v1.common/assert? true)
 (set! tool.core/assert? true)
 
-(def defaultModel {:money 100000
-                   :lobbyCtx (app.lobby.model/load)})
+(def defaultModel {:lobbyCtx (app.lobby.model/load)})
 
 (defn mainLoop [ctx inputCh outputCh]
   (a/go
@@ -44,11 +43,15 @@
 
           ; 讀取最後記憶的gameplay
           (= "loadGameplay" cmd)
-          (recur (a/<! (app.module/gameplayLoad app.module/*module ctx inputCh outputCh)))
+          (recur (let [ctx (a/<! (app.module/gameplayLoad app.module/*module ctx inputCh outputCh))
+                       _ (app.lobby.model/save (:lobbyCtx ctx))]
+                   ctx))
 
           ; 開始gameplay
           (= "startGameplay" cmd)
-          (recur (a/<! (app.module/gameplayStart app.module/*module ctx args inputCh outputCh)))
+          (recur (let [ctx (a/<! (app.module/gameplayStart app.module/*module ctx args inputCh outputCh))
+                       _ (app.lobby.model/save (:lobbyCtx ctx))]
+                   ctx))
 
           ; 開始整備
           ; lobby是自動記憶, 不像gameplay要手動按

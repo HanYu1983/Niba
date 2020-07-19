@@ -8,8 +8,7 @@
 
 (defn startLobby [ctx inputCh outputCh]
   (a/go
-    (loop [lobbyCtx (-> (:lobbyCtx ctx)
-                        (update-in [:money] (constantly (:money ctx))))]
+    (loop [lobbyCtx (:lobbyCtx ctx)]
       
       (s/assert ::model/model lobbyCtx)
 

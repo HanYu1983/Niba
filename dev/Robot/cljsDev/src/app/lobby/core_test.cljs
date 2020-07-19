@@ -13,10 +13,9 @@
    done
    (let [outputToView (a/chan)
          inputFromView (a/chan)
-         model app.lobby.model/defaultLobbyModel]
+         model (assoc app.lobby.model/defaultLobbyModel :money 0)]
      (a/go
-       (a/<! (app.lobby.core/startLobby {:lobbyCtx model
-                                         :money 0} inputFromView outputToView)))
+       (a/<! (app.lobby.core/startLobby {:lobbyCtx model} inputFromView outputToView)))
      (a/go
        (let [_ (a/>! inputFromView ["getRobotStoreList" ["any" {"offset" 0 "limit" 20}]])
              [_ [_ [_ res]]] (a/<! outputToView)]

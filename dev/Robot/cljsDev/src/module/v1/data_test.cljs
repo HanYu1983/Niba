@@ -45,7 +45,9 @@
                                        :power 1
                                        :offset 0})
         lobbyCtx app.lobby.model/defaultLobbyModel
-        gameplayCtx data/gameplayCtx
+        gameplayCtx (assoc data/gameplayCtx 
+                           :map playmap
+                           :lobbyCtx lobbyCtx)
         _ (data/getTerrain gameplayCtx [0 0])
         _ (data/moveCost gameplayCtx unitA [0 0] [0 1])
         _ (data/getWeaponRange {:gameplayCtx gameplayCtx :lobbyCtx lobbyCtx} unitA weapon)
