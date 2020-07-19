@@ -59,39 +59,41 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
-  (let [transform (get-in unit [:robotState :robotKey])
-        coms (get-in unit [:robotState :components transform])]
-    (if coms
-      [transform coms]
-      [transform
-       (let [robotKey (get-in unit [:robotState :robotKey])
-             robot (get-in data [:robot robotKey])
-             addedComKeys (common/assertSpec
-                           (s/coll-of (s/tuple keyword? keyword?))
-                           (->> lobbyCtx :robotByComponent
-                                (filter (fn [[_ robot]]
-                                          (= robot (:key unit))))
-                                (map first)
-                                (map (fn [key]
-                                       [key (-> lobbyCtx :components key)]))))
-             belongComKeys (common/assertSpec
+  (common/assertSpec
+   ::type/componentEntry
+   (let [transform (get-in unit [:robotState :robotKey])
+         coms (get-in unit [:robotState :components transform])]
+     (if coms
+       [transform coms]
+       [transform
+        (let [robotKey (get-in unit [:robotState :robotKey])
+              robot (get-in data [:robot robotKey])
+              addedComKeys (common/assertSpec
                             (s/coll-of (s/tuple keyword? keyword?))
-                            (if (not (nil? robot))
-                              (map (fn [componentKey]
-                                     [(keyword componentKey) (keyword componentKey)])
-                                   (get robot :components))
-                              []))]
-         (if (nil? robot)
-           (throw (js/Error. (str "getUnitComponents[" robotKey "] not found")))
-           (mapv (fn [[key componentKey]]
-                   (let [com (get-in data [:component componentKey])]
-                     (if (nil? com)
-                       (throw (js/Error. (str "getUnitComponents[" componentKey "] not found")))
-                       {:key key
-                        :componentKey componentKey
-                        :tags {}})))
-                 (concat belongComKeys
-                         addedComKeys))))])))
+                            (->> lobbyCtx :robotByComponent
+                                 (filter (fn [[_ robot]]
+                                           (= robot (:key unit))))
+                                 (map first)
+                                 (map (fn [key]
+                                        [key (-> lobbyCtx :components key)]))))
+              belongComKeys (common/assertSpec
+                             (s/coll-of (s/tuple keyword? keyword?))
+                             (if (not (nil? robot))
+                               (map (fn [componentKey]
+                                      [(keyword componentKey) (keyword componentKey)])
+                                    (get robot :components))
+                               []))]
+          (if (nil? robot)
+            (throw (js/Error. (str "getUnitComponents[" robotKey "] not found")))
+            (mapv (fn [[key componentKey]]
+                    (let [com (get-in data [:component componentKey])]
+                      (if (nil? com)
+                        (throw (js/Error. (str "getUnitComponents[" componentKey "] not found")))
+                        {:key key
+                         :componentKey componentKey
+                         :tags {}})))
+                  (concat belongComKeys
+                          addedComKeys))))]))))
 
 (defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilotState]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -101,14 +103,18 @@
   (common/assertSpec
    ::type/pilotState
    (when pilotState
-     (let [data (get-in data [:pilot (:pilotKey pilotState)])]
+     (let [data (get-in data [:pilot (:pilotKey pilotState)])
+           {:keys [melee range guard evade]} data
+           basicExp (:exp data)
+           {:keys [exp expMelee expRange expEvade expGuard]} pilotState]
        (if (nil? data)
          (throw (js/Error. (str "getPilotInfo[" (:pilotKey pilotState) "] not found")))
          (merge data
                 pilotState
-                #_(common/assertSpec
-                   ::type/pilotState
-                   (-> lobbyCtx :pilotStateByPilot (:key pilotState)))))))))
+                {:melee (+ 1 (* melee expMelee) (* melee (+ basicExp exp) (/ 1 2)))
+                 :range (+ 1 (* range expRange) (* range (+ basicExp exp) (/ 1 2)))
+                 :guard (+ 1 (* guard expGuard) (* guard (+ basicExp exp) (/ 1 2)))
+                 :evade (+ 1 (* evade expEvade) (* evade (+ basicExp exp) (/ 1 2)))}))))))
 
 ;======================================================
 ;
@@ -120,41 +126,43 @@
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
-  (let [transform (get-in unit [:robotState :robotKey])
-        weapons (get-in unit [:robotState :weapons transform])]
-    (if weapons
-      [transform weapons]
-      [transform
-       (let [robotKey (get-in unit [:robotState :robotKey])
-             robot (get-in data [:robot robotKey])
-             addedWeaponKeys (common/assertSpec
-                              (s/coll-of (s/tuple keyword? keyword?))
-                              (->> lobbyCtx :robotByWeapon
-                                   (filter (fn [[_ robot]]
-                                             (= robot (:key unit))))
-                                   (map first)
-                                   (map (fn [key]
-                                          [key (-> lobbyCtx :weapons key)]))))
-             belongWeaponsKeys (common/assertSpec
-                                (s/coll-of (s/tuple keyword? keyword?))
-                                (if (not (nil? robot))
-                                  (map (fn [weaponKey]
-                                         [(keyword weaponKey) (keyword weaponKey)])
-                                       (get robot :weapons))
-                                  []))]
-         (if (nil? robot)
-           (throw (js/Error. (str "getUnitWeapons robotKey[" robotKey "]not found")))
-           (mapv (fn [[key weaponKey]]
-                   (let [weapon (get-in data [:weapon weaponKey])]
-                     (if (nil? weapon)
-                       (throw (js/Error. (str "getUnitWeapons weaponKey[" weaponKey "] not found")))
-                       {:key key ; 在這個不能使用gensym, 因為這個方法是getter
-                        :weaponKey weaponKey
-                        :weaponLevel 0
-                        :tags {}
-                        :bulletCount (get weapon :maxBulletCount)})))
-                 (concat belongWeaponsKeys
-                         addedWeaponKeys))))])))
+  (common/assertSpec
+   ::type/weaponEntry
+   (let [transform (get-in unit [:robotState :robotKey])
+         weapons (get-in unit [:robotState :weapons transform])]
+     (if weapons
+       [transform weapons]
+       [transform
+        (let [robotKey (get-in unit [:robotState :robotKey])
+              robot (get-in data [:robot robotKey])
+              addedWeaponKeys (common/assertSpec
+                               (s/coll-of (s/tuple keyword? keyword?))
+                               (->> lobbyCtx :robotByWeapon
+                                    (filter (fn [[_ robot]]
+                                              (= robot (:key unit))))
+                                    (map first)
+                                    (map (fn [key]
+                                           [key (-> lobbyCtx :weapons key)]))))
+              belongWeaponsKeys (common/assertSpec
+                                 (s/coll-of (s/tuple keyword? keyword?))
+                                 (if (not (nil? robot))
+                                   (map (fn [weaponKey]
+                                          [(keyword weaponKey) (keyword weaponKey)])
+                                        (get robot :weapons))
+                                   []))]
+          (if (nil? robot)
+            (throw (js/Error. (str "getUnitWeapons robotKey[" robotKey "]not found")))
+            (mapv (fn [[key weaponKey]]
+                    (let [weapon (get-in data [:weapon weaponKey])]
+                      (if (nil? weapon)
+                        (throw (js/Error. (str "getUnitWeapons weaponKey[" weaponKey "] not found")))
+                        {:key key ; 在這個不能使用gensym, 因為這個方法是getter
+                         :weaponKey weaponKey
+                         :weaponLevel 0
+                         :tags {}
+                         :bulletCount (get weapon :maxBulletCount)})))
+                  (concat belongWeaponsKeys
+                          addedWeaponKeys))))]))))
 
 (defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -212,11 +220,44 @@
       (throw (js/Error. (str "getWeaponType[" weaponKey "] not found")))
       (get-in weaponData [:suitability]))))
 
-(defn getUnitMaxHp [{:keys [gameplayCtx lobbyCtx]} unit]
+(defn getUnitMaxHp [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/unit unit)
-  10000)
+  (let [robotKey (get-in unit [:robotState :robotKey])
+        robot (get-in data [:robot robotKey])]
+    (if (nil? robot)
+      (throw (js/Error. (str "getUnitMaxHp[" robotKey "] not found")))
+      (let [basic (common/assertSpec
+                   number?
+                   (->> (getUnitComponents ctx unit)
+                        second
+                        (filter (fn [{:keys [componentKey]}]
+                                  (#{:armor1 :armor2 :armor3} componentKey)))
+                        (map (fn [{:keys [componentKey]}] (get-in data [:component componentKey :value 0])))
+                        (map int)
+                        (apply +)))
+            ; 固守配件
+            ; 如果在敵人回合並且自己回合沒有攻擊過時增加裝甲
+            #_basic #_(if (and true
+                               (not= :player (-> gameplayCtx :activePlayer))
+                               (not (-> unit :robotState :tags :attackWeapon)))
+                        (+ basic 3000)
+                        basic)
+
+            ; 射擊王
+            ; 若所有武器都是射擊系，裝甲增加
+            #_basic #_(if (and true
+                               (common/assertSpec
+                                boolean?
+                                (->> (getUnitWeapons ctx unit)
+                                     second
+                                     (map #(getWeaponAbility ctx unit %))
+                                     (every? (fn [ability]
+                                               (not ((into #{} ability) "melee")))))))
+                        (+ basic 300)
+                        basic)]
+        basic))))
 
 (defn getUnitMaxEn [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -233,42 +274,6 @@
                     (map int)
                     (apply +))]
         en))))
-
-(defn getUnitArmor [{:keys [gameplayCtx lobbyCtx]} unit]
-  (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
-  (let [robotKey (get-in unit [:robotState :robotKey])
-        robot (get-in data [:robot robotKey])]
-    (if (nil? robot)
-      (throw (js/Error. (str "getUnitArmor[" robotKey "] not found")))
-      (let [basic (->> (get robot :components)
-                       (filter (fn [k]
-                                 (some #(= % k) ["armor1" "armor2" "armor3"])))
-                       (map (fn [k] (get-in data [:component (keyword k) :value 0])))
-                       (map int)
-                       (apply +))
-            ; 固守配件
-            ; 如果在敵人回合並且自己回合沒有攻擊過時增加裝甲
-            basic (if (and true
-                           (not= :player (-> gameplayCtx :activePlayer))
-                           (not (-> unit :robotState :tags :attackWeapon)))
-                    (+ basic 3000)
-                    basic)
-
-            ; 射擊王
-            ; 若所有武器都是射擊系，裝甲增加
-            basic (if (and true
-                           (common/assertSpec
-                            boolean?
-                            (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                                 second
-                                 (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
-                                 (every? (fn [ability]
-                                           (not ((into #{} ability) "melee")))))))
-                    (+ basic 300)
-                    basic)]
-        basic))))
 
 (defn getUnitPower [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -432,8 +437,6 @@
    (let [unitWeaponDamage (common/assertSpec
                            int?
                            (get-in data [:weapon (:weaponKey weapon) :damage]))
-         targetArmor (getUnitArmor {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
-
          pilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit (get-in unit [:robotState :pilotState]))
          targetPilot (getPilotInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit (get-in targetUnit [:robotState :pilotState]))
          weaponSuitability (getWeaponSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit weapon)
@@ -490,16 +493,14 @@
                     1))
 
         ; 除1是因為以敵方為主計算, 所以factor要反過來
-         targetValue (* targetArmor (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
+         targetValue (* 1000 (/ 1 factor1) (/ 1 factor2) (/ 1 factor3) (/ 1 factor4))
 
-         damage1 (* unitWeaponDamage (- 1 (/ targetValue 4800)))
-         damage2 (- unitWeaponDamage targetArmor)
-         final (+ (* damage1 1 (/ 2 3)) (* damage2 (/ 1 3)))
+         damage (* unitWeaponDamage (- 1 (/ targetValue 4800)))
 
 
          ; 射擊王
          ; 若所有武器都是射擊系，裝甲增加
-         final (if (and true
+         damage (if (and true
                         (common/assertSpec
                          boolean?
                          (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
@@ -507,9 +508,9 @@
                               (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit %))
                               (every? (fn [ability]
                                         (not ((into #{} ability) "melee")))))))
-                 (* final 1.2)
-                 final)]
-     (js/Math.floor (max 100 final)))))
+                 (* damage 1.2)
+                 damage)]
+     (js/Math.floor (max 100 damage)))))
 
 
 
@@ -880,6 +881,11 @@
                                        (common/assertSpec
                                         ::type/unit
                                         (cond-> unit
+                                          true
+                                          (update-in [:robotState :pilotState] (fn [pilot]
+                                                                                 (when pilot
+                                                                                   (update pilot :exp inc))))
+
                                           (and (= actionType :attack)
                                                (targetEvents :damage))
                                           ((fn [unit]

@@ -60,17 +60,22 @@
                                                                            (->> (:robotByPilot lobbyCtx)
                                                                                 (filter (fn [[_ robotKey]]
                                                                                           (= robotKey key)))
-                                                                                ffirst))]
-                                                          (when keyForPilot
-                                                            {:key keyForPilot
-                                                             :pilotKey (common/assertSpec
-                                                                        keyword?
-                                                                        ((:pilots lobbyCtx) keyForPilot))
-                                                             :expEvade 0
-                                                             :expGuard 0
-                                                             :expMelee 0
-                                                             :expRange 0
-                                                             :curage 100}))
+                                                                                ffirst))
+                                                              pilotState (common/assertSpec
+                                                                          ::type/pilotState
+                                                                          (when keyForPilot
+                                                                            (merge {:key keyForPilot
+                                                                                    :pilotKey (common/assertSpec
+                                                                                               keyword?
+                                                                                               ((:pilots lobbyCtx) keyForPilot))
+                                                                                    :expEvade 0
+                                                                                    :expGuard 0
+                                                                                    :expMelee 0
+                                                                                    :expRange 0
+                                                                                    :exp 0
+                                                                                    :curage 100}
+                                                                                   (-> lobbyCtx :pilotStateByPilot keyForPilot))))]
+                                                          pilotState)
                                             :weapons {}
                                             :components {}
                                             :tags {}
@@ -110,6 +115,7 @@
                                :expRange 0
                                :expEvade 0
                                :expGuard 0
+                               :exp 0
                                :curage 100})))
                       (map (fn [pilot]
                              (data/getPilotInfo {:lobbyCtx lobbyCtx} nil pilot)))
@@ -270,14 +276,15 @@
                                       [gameplayCtx 1]))]
      gameplayCtx)))
 
-(defn createUserSelectedUnitsAsync [gameplayCtx lobbyCtx inputCh outputCh]
+(defn createUserSelectedUnitsAsync [gameplayCtx inputCh outputCh]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (a/go
     (common/assertSpec
      ::type/gameplayCtx
-     (let [; 選角頁
+     (let [lobbyCtx (:lobbyCtx gameplayCtx)
+           ; 選角頁
            [gameplayCtx selectedUnits] (a/<! (startUnitsMenu gameplayCtx {:units (or (-> lobbyCtx :robots) {})} inputCh outputCh))
-          ; 產生自己選出的軍隊
+           ; 產生自己選出的軍隊
            gameplayCtx (->> (map (fn [idx key robotKey]
                                    {:key key
                                     :playerKey :player
@@ -289,33 +296,21 @@
                                                                                      (filter (fn [[_ robotKey]]
                                                                                                (= robotKey key)))
                                                                                      ffirst))
-                                                                   #_pilotState #_(common/assertSpec
-                                                                                   ::type/pilotState
-                                                                                   (-> lobbyCtx :pilotStateByPilot keyForPilot))
-                                                                   #_pilotState #_(common/assertSpec
-                                                                                   ::type/pilotState
-                                                                                   (if pilotState
-                                                                                     pilotState
-                                                                                     (when keyForPilot
-                                                                                       {:key keyForPilot
-                                                                                        :pilotKey (common/assertSpec
-                                                                                                   keyword?
-                                                                                                   ((:pilots lobbyCtx) keyForPilot))
-                                                                                        :expEvade 0
-                                                                                        :expGuard 0
-                                                                                        :expMelee 0
-                                                                                        :expRange 0
-                                                                                        :curage 100})))]
-                                                               (when keyForPilot
-                                                                 {:key keyForPilot
-                                                                  :pilotKey (common/assertSpec
-                                                                             keyword?
-                                                                             ((:pilots lobbyCtx) keyForPilot))
-                                                                  :expEvade 0
-                                                                  :expGuard 0
-                                                                  :expMelee 0
-                                                                  :expRange 0
-                                                                  :curage 100}))}})
+                                                                   pilotState (common/assertSpec
+                                                                               ::type/pilotState
+                                                                               (when keyForPilot
+                                                                                 (merge {:key keyForPilot
+                                                                                         :pilotKey (common/assertSpec
+                                                                                                    keyword?
+                                                                                                    ((:pilots lobbyCtx) keyForPilot))
+                                                                                         :expEvade 0
+                                                                                         :expGuard 0
+                                                                                         :expMelee 0
+                                                                                         :expRange 0
+                                                                                         :exp 0
+                                                                                         :curage 100}
+                                                                                        (-> lobbyCtx :pilotStateByPilot keyForPilot))))]
+                                                               pilotState)}})
                                  (range)
                                  selectedUnits
                                  (map #(-> lobbyCtx :robots %) selectedUnits))
@@ -344,7 +339,7 @@
           ; 建立地圖
           gameplayCtx (createMapByLevel gameplayCtx args)
           ; 產生自己選出的軍隊
-          gameplayCtx (a/<! (createUserSelectedUnitsAsync gameplayCtx (:lobbyCtx ctx) inputCh outputCh))
+          gameplayCtx (a/<! (createUserSelectedUnitsAsync gameplayCtx inputCh outputCh))
           ; 產生敵機
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
@@ -468,6 +463,7 @@
                                                                                                                                 :expGuard 0
                                                                                                                                 :expMelee 0
                                                                                                                                 :expRange 0
+                                                                                                                                :exp 0
                                                                                                                                 :curage 0}}}))
                                                         (tool.units/add (data/createUnit gameplayCtx {:key :unit2
                                                                                                       :playerKey :player
