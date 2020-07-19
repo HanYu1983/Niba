@@ -43,7 +43,7 @@
 (def defaultLobbyModel {:robots {}
                         :pilots {}
                         :robotByPilot {}
-                        :money 10000
+                        :money 100000
                         :weapons {}
                         :robotByWeapon {}
                         :weaponLevelByKey {}
