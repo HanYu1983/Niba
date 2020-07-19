@@ -42,26 +42,4 @@ export default class PrepareMenu extends BasicViewer {
     onNextClick(){
         this.menu.onNextClick();
     }
-
-    onEnterClick(){
-        cc.log(this.menu.getFocus())
-        switch (this.menu.getFocus()) {
-            case "整備部隊":
-                {
-                }
-                break;
-            case "進入副本":
-                {
-                }
-                break;
-            case "儲存":
-                {
-                }
-                break;
-            case "讀取":
-                {
-                }
-                break;
-        }
-    }
 }
