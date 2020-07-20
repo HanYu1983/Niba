@@ -264,10 +264,10 @@
                               (take 4)
                               (reduce (fn [[gameplayCtx i] [robotKey _]]
                                         [(-> (:units gameplayCtx)
-                                             (tool.units/add (data/createUnit gameplayCtx {:playerKey :player
+                                             (tool.units/add (data/createRobot gameplayCtx {:playerKey :player
                                                                                            :position [0 i]
                                                                                            :robotState {:robotKey robotKey}}))
-                                             (tool.units/add (data/createUnit gameplayCtx {:playerKey :ai1
+                                             (tool.units/add (data/createRobot gameplayCtx {:playerKey :ai1
                                                                                            :position [5 i]
                                                                                            :robotState {:robotKey robotKey}}))
                                              ((fn [units]
@@ -317,7 +317,7 @@
                             (reduce (fn [gameplayCtx unit]
                                       (update gameplayCtx :units (fn [units]
                                                                    (-> units
-                                                                       (tool.units/add (data/createUnit gameplayCtx unit))))))
+                                                                       (tool.units/add (data/createRobot gameplayCtx unit))))))
                                     gameplayCtx))]
        gameplayCtx))))
 
@@ -419,7 +419,7 @@
                              gameplayCtx (reduce (fn [gameplayCtx pos]
                                                    (update gameplayCtx :units (fn [units]
                                                                                 (-> units
-                                                                                    (tool.units/add (data/createUnit gameplayCtx {:playerKey :ai1
+                                                                                    (tool.units/add (data/createRobot gameplayCtx {:playerKey :ai1
                                                                                                                                   :position pos
                                                                                                                                   :robotState {:robotKey :gundam}}))))))
                                                  gameplayCtx
@@ -485,26 +485,28 @@
         (core/defexe (fn [gameplayCtx]
                        (update gameplayCtx :units (fn [units]
                                                     (-> units
-                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit1
-                                                                                                      :playerKey :player
-                                                                                                      :position [0 0]
-                                                                                                      :robotState {:robotKey :gaite_land
-                                                                                                                   :pilotState {:key :test
-                                                                                                                                :pilotKey :amuro
-                                                                                                                                :expEvade 0
-                                                                                                                                :expGuard 0
-                                                                                                                                :expMelee 0
-                                                                                                                                :expRange 0
-                                                                                                                                :exp 0
-                                                                                                                                :curage 0}}}))
-                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit2
-                                                                                                      :playerKey :player
-                                                                                                      :position [4 0]
-                                                                                                      :robotState {:robotKey :zgundam_sky}}))
-                                                        (tool.units/add (data/createUnit gameplayCtx {:key :unit3
-                                                                                                      :playerKey :ai1
-                                                                                                      :position [2 0]
-                                                                                                      :robotState {:robotKey :gundam}})))))))
+                                                        (tool.units/add (data/createRobot gameplayCtx {:key :unit1
+                                                                                                       :playerKey :player
+                                                                                                       :position [0 0]
+                                                                                                       :robotState {:robotKey :gaite_land
+                                                                                                                    :pilotState {:key :test
+                                                                                                                                 :pilotKey :amuro
+                                                                                                                                 :expEvade 0
+                                                                                                                                 :expGuard 0
+                                                                                                                                 :expMelee 0
+                                                                                                                                 :expRange 0
+                                                                                                                                 :exp 0
+                                                                                                                                 :curage 0}}}))
+                                                        (tool.units/add (data/createRobot gameplayCtx {:key :unit2
+                                                                                                       :playerKey :player
+                                                                                                       :position [4 0]
+                                                                                                       :robotState {:robotKey :zgundam_sky}}))
+                                                        (tool.units/add (data/createRobot gameplayCtx {:key :unit3
+                                                                                                       :playerKey :ai1
+                                                                                                       :position [2 0]
+                                                                                                       :robotState {:robotKey :gundam}}))
+                                                        (tool.units/add (data/createItem gameplayCtx {:key :item1
+                                                                                                      :position [5 0]})))))))
         (core/defexe (fn [{units :units :as gameplayCtx}]
                        (when (not (tool.units/getByKey units :unit1))
                          (throw (js/Error. (str "unit1 not found"))))

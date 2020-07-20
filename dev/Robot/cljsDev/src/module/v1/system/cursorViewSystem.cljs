@@ -25,15 +25,16 @@
                                                   (mapv max [0 0]))))
          (#{:L :R} action)
          (let [{:keys [cursor units]} gameplayCtx
-               ourUnits (cond->> (tool.units/getAll units)
+               ourUnits (common/assertSpec
+                         (s/coll-of ::type/robot)
+                         (cond->> (tool.units/getAll units)
                           true
                           (filter (fn [unit]
-                                    (common/assertSpec ::type/robot unit)
                                     (and (= (-> unit :playerKey) :player)
                                          (not (-> unit :robotState :tags :done)))))
 
                           (= action :L)
-                          reverse)
+                          reverse))
                ; 如果遊標指在己方未行動的機體上
                isSelfUnitAtCursor (and (tool.units/getByPosition units cursor)
                                        (= (-> (tool.units/getByPosition units cursor) :playerKey) :player)

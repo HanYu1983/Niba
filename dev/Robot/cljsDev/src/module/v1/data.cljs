@@ -647,15 +647,29 @@
   (= (:playerKey unit) :player))
 
 (defn isFriendlyUnit [{players :players :as gameplayCtx} unit targetUnit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/players ::type/robot ::type/robot) [gameplayCtx players unit targetUnit])]
-   :post [(explainValid? boolean? %)]}
-  (if (= unit targetUnit)
-    true
-    (->> [unit targetUnit]
-         (map :playerKey)
-         (map (fn [player]
-                (get-in players [player :faction])))
-         (apply =))))
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/players players)
+  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/unit targetUnit)
+  (common/assertSpec
+   boolean?
+   (if (= unit targetUnit)
+     true
+     (let [[unitSpec] (s/conform ::type/unit unit)
+           [targetUnitSpec] (s/conform ::type/unit targetUnit)]
+       (cond
+         (or (= :item unitSpec) (= :item targetUnitSpec))
+         true
+         
+         (and (= :robot unitSpec) (= :robot targetUnitSpec))
+         (->> [unit targetUnit]
+              (map :playerKey)
+              (map (fn [player]
+                     (get-in players [player :faction])))
+              (apply =))
+
+         :else
+         (throw (js/Error. "can not reach here.")))))))
 
 (defn getMenuData [gameplayCtx unit playerTurn? targetUnit]
   (common/assertSpec ::type/robot unit)
@@ -985,7 +999,7 @@
         (update-in [:robotState :robotKey] (constantly toKey))
         (update-in [:robotState :weapons toKey] (constantly weapons)))))
 
-(defn createUnit [gameplayCtx unit]
+(defn createRobot [gameplayCtx unit]
   (common/assertSpec
    ::type/robot
    (let [basic (merge-with (fn [l r]
@@ -998,7 +1012,7 @@
 
                                :else
                                l))
-                           {:key (keyword (gensym "_unit_"))
+                           {:key (keyword (gensym "_robot_"))
                             :position [0 0]
                             :playerKey :player
                             :robotState {:pilotState nil
@@ -1012,14 +1026,37 @@
                                                          :en (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} basic)}))]
      basic)))
 
+(defn createItem [gameplayCtx unit]
+  (common/assertSpec
+   ::type/item
+   (let [basic (merge-with (fn [l r]
+                             (cond
+                               (map? l)
+                               (merge l r)
+
+                               r
+                               r
+
+                               :else
+                               l))
+                           {:key (keyword (gensym "_item_"))
+                            :position [0 0]
+                            :itemState {:itemKeyTypeList []
+                                        :itemRareRate 0}}
+                           unit)]
+     basic)))
+
 (defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
-  {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]
-   :post [(explainValid? (s/* ::type/robot) %)]}
-  (let [camera (or targetCamera camera)
-        [p1 p2] (or searchSize [(map - camera viewsize)
-                                (map + camera viewsize)])
-        units (tool.units/getByRegion units p1 p2)]
-    units))
+  (common/assertSpec ::spec/camera camera)
+  (common/assertSpec ::spec/viewsize viewsize)
+  (common/assertSpec ::type/units units)
+  (common/assertSpec
+   (s/* ::type/unit)
+   (let [camera (or targetCamera camera)
+         [p1 p2] (or searchSize [(map - camera viewsize)
+                                 (map + camera viewsize)])
+         units (tool.units/getByRegion units p1 p2)]
+     units)))
 
 
 (defn world2local [camera position]
@@ -1068,24 +1105,32 @@
 (defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/robot unit)
+  (common/assertSpec ::type/unit unit)
   (common/assertSpec
    map?
-   (let [robotKey (get-in unit [:robotState :robotKey])
-         robotData (->> data :robot robotKey)]
-     (update-in unit [:robotState] (fn [state]
-                                     (merge robotData
-                                            state
-                                            {:pilotState (getPilotInfo ctx unit (-> unit :robotState :pilotState))
-                                             :weapons (->> (getUnitWeapons ctx unit)
-                                                           second
-                                                           (map (partial getWeaponInfo ctx unit)))
-                                             :components (->> (getUnitComponents ctx unit)
-                                                              second
-                                                              (map (partial getComponentInfo ctx unit)))
-                                             :maxHp (getUnitMaxHp ctx unit)
-                                             :maxEn (getUnitMaxEn ctx unit)
-                                             :power (getUnitPower ctx unit)}))))))
+   (let [[unitSpec] (s/conform ::type/unit unit)]
+     (cond
+       (= :robot unitSpec)
+       (let [robotKey (get-in unit [:robotState :robotKey])
+             robotData (->> data :robot robotKey)]
+         (update-in unit [:robotState] (fn [state]
+                                         (merge robotData
+                                                state
+                                                {:pilotState (getPilotInfo ctx unit (-> unit :robotState :pilotState))
+                                                 :weapons (->> (getUnitWeapons ctx unit)
+                                                               second
+                                                               (map (partial getWeaponInfo ctx unit)))
+                                                 :components (->> (getUnitComponents ctx unit)
+                                                                  second
+                                                                  (map (partial getComponentInfo ctx unit)))
+                                                 :maxHp (getUnitMaxHp ctx unit)
+                                                 :maxEn (getUnitMaxEn ctx unit)
+                                                 :power (getUnitPower ctx unit)}))))
+       (= :item unitSpec)
+       unit
+
+       :else
+       (throw (js/Error. "can not reach here."))))))
 
 (defn mapUnitToLocal [{camera :camera viewsize :viewsize units :units} targetCamera unit]
   {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]

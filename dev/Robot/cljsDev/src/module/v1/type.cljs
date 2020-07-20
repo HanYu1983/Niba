@@ -56,8 +56,13 @@
 (s/def ::robotState (s/keys :req-un [::robotKey ::pilotState ::weapons ::components ::tags ::hp ::en]))
 (s/def ::robot (s/keys :req-un [::key ::position ::playerKey ::robotState]))
 
+(s/def ::itemKeyType #{:weapon :component})
 (s/def ::itemKey keyword?)
-(s/def ::itemState (s/keys :req-un [::itemKey]))
+(s/def ::itemAmount int?)
+(s/def ::itemKeyType (s/keys :req-un [::itemKeyType ::itemKey ::itemAmount]))
+(s/def ::itemKeyTypeList (s/coll-of ::itemKeyType))
+(s/def ::itemRareRate number?)
+(s/def ::itemState (s/keys :req-un [::itemKeyTypeList ::itemRareRate]))
 (s/def ::item (s/keys :req-un [::key ::position ::itemState]))
 
 (s/def ::unit (s/or :robot ::robot
