@@ -19,7 +19,7 @@ export default class WeaponStore extends StoreListPanel {
 
     updateItem(btn:MenuButton, data:any){
         btn.setLabel(data.detail.title);
-        // (btn as WeaponListItem).money = 
+        (btn as WeaponListItem).money.string = data.detail.cost;
     }
 
     getData(pageId:number, cb:(err:any, data:any)=>void){

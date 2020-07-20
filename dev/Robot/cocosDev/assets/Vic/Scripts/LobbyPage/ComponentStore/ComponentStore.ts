@@ -1,7 +1,6 @@
-import BasicViewer from "../../BasicViewer";
-import MenuButtons from "../../MenuButtons";
 import ViewController from "../../ViewController";
 import StoreListPanel from "../../StoreListPanel";
+import ComponentListItem from "./ComponentListItem";
 
 // Learn TypeScript:
 //  - https://docs.cocos.com/creator/manual/en/scripting/typescript.html
@@ -17,6 +16,7 @@ export default class ComponentStore extends StoreListPanel {
 
     updateItem(btn, data){
         btn.setLabel(data.detail.title);
+        (btn as ComponentListItem).money.string = data.detail.cost;
     }
 
     getData(pageId:number, cb:(err:any, data:any)=>void){
