@@ -82,14 +82,14 @@
                                           gameplayCtx)
                                         gameplayCtx)]
                       [gameplayCtx true])
-                    (let [; 將箱子回復原狀
+                    (let [; 將機體回復原樣
+                          tempUnit (:tempUnit state)
+                          gameplayCtx (data/updateUnit gameplayCtx tempUnit (constantly unit))
+                          ; 將箱子回復原狀
                           gameplayCtx (if (= :item unitSpecAtCursor)
                                         (update gameplayCtx :units (fn [units]
                                                                      (tool.units/add units unitAtCursor)))
-                                        gameplayCtx)
-                          ; 將機體回復原樣
-                          tempUnit (:tempUnit state)
-                          gameplayCtx (data/updateUnit gameplayCtx tempUnit (constantly unit))]
+                                        gameplayCtx)]
                       (recur gameplayCtx))))
 
                 :else
