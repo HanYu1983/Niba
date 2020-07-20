@@ -1,9 +1,0 @@
-id/string	title/string	desc/string	value/string[]	powerCost/int	action/string
-energy1	能量夾	增加{0}能量.	80	1	
-energy2	能量夾	增加{0}能量.	170	2	
-energy3	能量夾	增加{0}能量.	260	3	
-armor1	鐵板	增加{0}裝甲.	100	2	
-armor2	鋼板	增加{0}裝甲.	170	3	
-armor3	鋼彈合金	增加{0}裝甲.	240	4	
-	修復包	回復{0}HP	3000	1	
-	能量包	回復{0}EN	60	1	

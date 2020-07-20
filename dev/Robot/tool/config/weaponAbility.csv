@@ -2,10 +2,10 @@ id/string,title/string,desc/string,values/string[]
 moveAttack,移動可,可移動使用,
 standAttack,狙擊,原地使用時。命中增加{0}。不可反擊。,1
 melee,格鬥,以格鬥值差距影響命中率. 沒有melee就代表以射擊值影響. ,
-beam,光束,,
+beam,光束,裝甲的防禦效果減半,
 physic,實彈,,
-fire,火焰,無視裝甲值. 樹林中傷害x{0},1.5
-lighting,電擊,無視裝甲值. 水中傷害x{0},1.2
+fire,火焰,對象不受樹林地型補正.,
+lighting,電擊,對象不受水域地型補正.,
 spray,擴散,"命中x{0}, 傷害x{1}","1.3,0.8"
 multi,連射,"命中x{0}, 傷害x{1}~{2}","1.1,0.7,1.3"
-missle,飛彈,"命中x{0}, 會被防禦兵器擊落",1.3
+missile,飛彈,"命中率不受對象移動率影響, 會被防禦兵器擊落",

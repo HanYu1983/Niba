@@ -125,6 +125,11 @@ async function main(config) {
                         break;
                     default:
                         {
+                            if(type == null){
+                                console.log(`${tableKey}/${k} has not type. ignore this field`)
+                                break
+                            }
+
                             let result = type.match(/int\[(\d+)\]/)
                             if (result) {
                                 const [_, num] = result
