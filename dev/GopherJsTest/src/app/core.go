@@ -135,15 +135,28 @@ func Test6() {
 	Println(json)
 }
 
+type P5 struct {
+	*js.Object
+}
+
+func (p *P5) Background(v int) {
+	p.Call("background", v)
+}
+
+func (p *P5) Fill(v int) {
+	p.Call("fill", v)
+}
+
 // Test7 is
 func Test7() {
 	js.Global.Get("p5").New(func(p *js.Object) {
+		p5 := P5{p}
 		p.Set("setup", func() {
 			p.Call("createCanvas", 800, 640)
 		})
 		p.Set("draw", func() {
-			p.Call("background", 0)
-			p.Call("fill", 100)
+			p5.Background(120)
+			p5.Fill(100)
 			p.Call("stroke", 255)
 			p.Call("ellipse", 100, 100, 50, 50)
 		})
@@ -169,12 +182,6 @@ type A struct {
 type Game struct {
 	Player A
 	Enemy  []A
-}
-
-type P5 struct {
-	background   func(v int)
-	setup        func()
-	createCanvas func(w int, h int)
 }
 
 // Test9 is
