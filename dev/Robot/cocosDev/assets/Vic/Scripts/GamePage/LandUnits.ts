@@ -61,41 +61,48 @@ export default class LandUnits extends cc.Component {
         this.clearUnits();
         for (const element of units) {
             const unitId = element.key;
-            const unitName = element.robotState.robotKey;
-            const isPlayer = (element["playerKey"] == "player");
-            const isDone = element.robotState.tags.done != undefined;
-            const isSky = element.robotState.tags.sky != undefined;
-            const pos = element["position"];
 
-            let unitNode: cc.Node = this._pool.acquire();
-            unitNode.setParent(this.node);
+            if (element.itemState != undefined){
+                cc.log("item!")
+                cc.log(element)
+            }else{
+                const unitName = element.robotState.robotKey;
+                const isPlayer = (element["playerKey"] == "player");
+                const isDone = element.robotState.tags.done != undefined;
+                const isSky = element.robotState.tags.sky != undefined;
+                const pos = element["position"];
 
-            let gridPos = ViewController.instance.view.getGridPos(pos);
-            unitNode.x = gridPos[0];
-            unitNode.y = gridPos[1];
-            unitNode.active = true;
+                let unitNode: cc.Node = this._pool.acquire();
+                unitNode.setParent(this.node);
 
-            let unit: Unit = unitNode.getComponent(Unit);
-            unit.unitId = unitId;
-            if (isSky) unit.unit.y += 6;
+                let gridPos = ViewController.instance.view.getGridPos(pos);
+                unitNode.x = gridPos[0];
+                unitNode.y = gridPos[1];
+                unitNode.active = true;
 
-            unit.setUnitImage(unitName);
+                let unit: Unit = unitNode.getComponent(Unit);
+                unit.unitId = unitId;
+                if (isSky) unit.unit.y += 6;
 
-            if (isPlayer) {
-                if (isDone) {
-                    unit.setColor(this.playerEndColor);
+                unit.setUnitImage(unitName);
+
+                if (isPlayer) {
+                    if (isDone) {
+                        unit.setColor(this.playerEndColor);
+                    } else {
+                        unit.setColor(this.playerColor);
+                    }
                 } else {
-                    unit.setColor(this.playerColor);
+                    if (isDone) {
+                        unit.setColor(this.enemyEndColor);
+                    } else {
+                        unit.setColor(this.enemyColor);
+                    }
                 }
-            } else {
-                if (isDone) {
-                    unit.setColor(this.enemyEndColor);
-                } else {
-                    unit.setColor(this.enemyColor);
-                }
+
+                this._units.push(unitNode);
             }
-
-            this._units.push(unitNode);
+            
         }
     }
 
