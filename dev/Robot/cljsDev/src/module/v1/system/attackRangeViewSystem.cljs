@@ -9,8 +9,8 @@
   (:require [module.v1.system.spec :as spec]))
 
 (defn getAttackRange [gameplayCtx unit]
-  {:pre [(common/explainValid? (s/tuple ::spec/unitMenuView ::type/robot) [gameplayCtx unit])]}
   (common/assertSpec ::spec/unitMenuView gameplayCtx)
+  (common/assertSpec ::type/robot unit)
   (let [state (-> gameplayCtx :fsm tool.fsm/load)
         cursor1 (tool.menuCursor/getCursor1 (:menuCursor state))
         cursor2 (tool.menuCursor/getCursor2 (:menuCursor state))
@@ -23,7 +23,8 @@
       [])))
 
 (defn handleAttackRangeView [gameplayCtx unit [cmd args]]
-  {:pre [(common/explainValid? (s/tuple ::spec/unitMenuView ::type/robot) [gameplayCtx unit])]}
+  (common/assertSpec ::spec/unitMenuView gameplayCtx)
+  (common/assertSpec ::type/robot unit)
   (cond
     (= "KEY_DOWN" cmd)
     (let [action (common/actions args)]

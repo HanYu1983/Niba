@@ -987,12 +987,14 @@
                                 sky? (-> unit :robotState :tags :sky)]
                             (->> (map vector possiblePosition costToNext unitsInPosition)
                                  (filter (fn [[_ cost occupyUnit]]
-                                           (and (<= (+ nowCost cost) power)
-                                                (or (nil? occupyUnit)
-                                                    (= (get-in players [(-> unit :playerKey) :faction])
-                                                       (get-in players [(-> occupyUnit :playerKey) :faction]))
-                                                    (let [occupyUnitIsSky? (-> occupyUnit :robotState :tags :sky)]
-                                                      (not= sky? occupyUnitIsSky?)))))))))
+                                           (and
+                                            ; 行動力要夠
+                                            (<= (+ nowCost cost) power)
+                                            ; 空格或是友好佔據或是佔據的對象在空中
+                                            (or (nil? occupyUnit)
+                                                (isFriendlyUnit gameplayCtx unit occupyUnit)
+                                                (let [occupyUnitIsSky? (-> occupyUnit :robotState :tags :sky)]
+                                                  (not= sky? occupyUnitIsSky?)))))))))
                         (fn [from]
                           (if pos
                             (estimateCost from pos)
@@ -1206,7 +1208,7 @@
                       unitAtCursor (-> units
                                        (tool.units/getByPosition cursor))
                       terrain (getTerrain gameplayCtx cursor)]
-                  {:unit (when unitAtCursor
+                  {:unit (when (and unitAtCursor (s/valid? ::type/robot unitAtCursor))
                            (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unitAtCursor)
                                 (mapUnitToLocal gameplayCtx nil)))
                    :terrain terrain}))
