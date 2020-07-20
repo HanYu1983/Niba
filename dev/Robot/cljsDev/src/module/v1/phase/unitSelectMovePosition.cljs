@@ -43,10 +43,21 @@
         (let [{:keys [cursor camera]} gameplayCtx
               path (tool.map/buildPath paths cursor)]
           (if (> (count path) 1)
-            (let [unitAtCursor (-> (:units gameplayCtx)
-                                   (tool.units/getByPosition cursor))]
-              (if unitAtCursor
+            (let [unitAtCursor (common/assertSpec
+                                (s/nilable ::type/unit)
+                                (-> (:units gameplayCtx)
+                                    (tool.units/getByPosition cursor)))
+                  [unitSpec] (if unitAtCursor
+                               (s/conform ::type/unit unitAtCursor)
+                               [nil])]
+              (cond
+                (and unitAtCursor (= :robot unitSpec))
                 (recur gameplayCtx)
+
+                (and unitAtCursor (= :item unitSpec))
+                (recur gameplayCtx)
+
+                (not unitAtCursor)
                 (do (a/<! (common/unitMoveAnim gameplayCtx {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
                                                                        (data/mapUnitToLocal gameplayCtx nil)) :path (map (partial data/world2local camera) path)} inputCh outputCh))
                     (let [tempUnit (data/onUnitMove gameplayCtx unit cursor)
@@ -60,7 +71,10 @@
                         [gameplayCtx true]
                         (let [tempUnit (:tempUnit state)
                               gameplayCtx (data/updateUnit gameplayCtx tempUnit (constantly unit))]
-                          (recur gameplayCtx)))))))
+                          (recur gameplayCtx)))))
+                
+                :else
+                (throw (js/Error. "can not reach here. please check."))))
             (recur gameplayCtx)))
 
         :else

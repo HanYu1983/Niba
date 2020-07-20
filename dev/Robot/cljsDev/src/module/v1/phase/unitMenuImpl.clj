@@ -5,7 +5,7 @@
      {:nameCtx gameplayCtx
       :initState
       (let [_ (common/assertSpec type/gameplayCtx gameplayCtx)
-            _ (common/assertSpec type/unit unit)
+            _ (common/assertSpec type/robot unit)
             [menu data] (data/getMenuData gameplayCtx unit true nil)]
         {:menuCursor (tool.menuCursor/model menu)
          :data data

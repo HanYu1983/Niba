@@ -58,7 +58,7 @@
 (defn getUnitComponents [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
    ::type/componentEntry
    (let [transform (get-in unit [:robotState :robotKey])
@@ -98,7 +98,7 @@
 (defn getPilotInfo [{:keys [gameplayCtx lobbyCtx]} unit pilotState]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/pilotState pilotState)
   (common/assertSpec
    ::type/pilotState
@@ -125,7 +125,7 @@
 (defn getUnitWeapons [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
    ::type/weaponEntry
    (let [transform (get-in unit [:robotState :robotKey])
@@ -167,7 +167,7 @@
 (defn getWeaponAbility [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -183,7 +183,7 @@
 (defn getWeaponRange [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -202,7 +202,7 @@
 (defn getWeaponType [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -213,7 +213,7 @@
 (defn getWeaponSuitability [{:keys [gameplayCtx lobbyCtx]} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/weaponState weapon)
   (let [weaponData (get-in data [:weapon weaponKey])]
     (if (nil? weaponData)
@@ -223,7 +223,7 @@
 (defn getUnitMaxHp [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -262,7 +262,7 @@
 (defn getUnitMaxEn [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -278,7 +278,7 @@
 (defn getUnitPower [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -295,7 +295,7 @@
 (defn getUnitSuitability [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -305,7 +305,7 @@
 (defn getUnitTransforms [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (let [robotKey (get-in unit [:robotState :robotKey])
         robot (get-in data [:robot robotKey])]
     (if (nil? robot)
@@ -315,7 +315,7 @@
 
 (defn getUnitWeaponRange [gameplayCtx unit weapon]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec
    (s/coll-of vector?)
@@ -330,9 +330,9 @@
 (defn getUnitHitRate [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::spec/map playmap)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec ::type/weaponState weapon)
-  (common/assertSpec ::type/unit targetUnit)
+  (common/assertSpec ::type/robot targetUnit)
   (let [accuracy (common/assertSpec
                   number?
                   (get-in data [:weapon (:weaponKey weapon) :accuracy]))
@@ -429,9 +429,9 @@
 
 (defn getUnitMakeDamage [{playmap :map :as gameplayCtx} unit weapon targetUnit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec ::type/weaponState weapon)
-  (common/assertSpec ::type/unit targetUnit)
+  (common/assertSpec ::type/robot targetUnit)
   (common/assertSpec
    int?
    (let [unitWeaponDamage (common/assertSpec
@@ -515,14 +515,14 @@
 
 
 (defn setUnitWeapons [unit weapons]
-  {:pre [(explainValid? (s/tuple ::type/unit ::type/weaponEntry) [unit weapons])]
-   :post [(explainValid? ::type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/robot ::type/weaponEntry) [unit weapons])]
+   :post [(explainValid? ::type/robot %)]}
   (update-in unit [:robotState :weapons] (fn [origin]
                                            (conj origin weapons))))
 
 (defn updateUnit [{:keys [units] :as gameplayCtx} unit f]
   (common/assertSpec ::type/units units)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
    ::type/units
    :units
@@ -534,9 +534,9 @@
 (defn useUnitWeapon [gameplayCtx weapon unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
   (common/assertSpec ::type/weaponState weapon)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
-   ::type/unit
+   ::type/robot
    (let [energyType (common/assertSpec
                      #{:energy :bullet}
                      (-> (get-in data [:weapon (:weaponKey weapon) :energyType])
@@ -575,9 +575,9 @@
 
 (defn invalidWeapon? [gameplayCtx unit weapon targetUnit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec ::type/weaponState weapon)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (let [{:keys [energyType energyCost curage]} (common/assertSpec
                                                 (s/keys :req-un [::energyType ::energyCost ::curage])
                                                 (get-in data [:weapon (:weaponKey weapon)]))
@@ -620,7 +620,7 @@
 
 
 (defn moveCost [{playmap :map :as gameplayCtx} unit from to]
-  {:pre [(explainValid? (s/tuple ::spec/map ::type/unit) [playmap unit])]
+  {:pre [(explainValid? (s/tuple ::spec/map ::type/robot) [playmap unit])]
    :post [(number? %)]}
   (let [isSky (-> (get-in unit [:robotState :tags])
                   (contains? :sky))
@@ -642,12 +642,12 @@
        (costFn (getTerrainKey gameplayCtx to)))))
 
 (defn isBelongToPlayer [gameplayCtx unit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit) [gameplayCtx unit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
    :post [(explainValid? boolean? %)]}
   (= (:playerKey unit) :player))
 
 (defn isFriendlyUnit [{players :players :as gameplayCtx} unit targetUnit]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/players ::type/unit ::type/unit) [gameplayCtx players unit targetUnit])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/players ::type/robot ::type/robot) [gameplayCtx players unit targetUnit])]
    :post [(explainValid? boolean? %)]}
   (if (= unit targetUnit)
     true
@@ -658,9 +658,9 @@
          (apply =))))
 
 (defn getMenuData [gameplayCtx unit playerTurn? targetUnit]
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec boolean? playerTurn?)
-  (common/assertSpec (s/nilable ::type/unit) targetUnit)
+  (common/assertSpec (s/nilable ::type/robot) targetUnit)
   (common/assertSpec
    (s/tuple ::spec/menu ::spec/menuCursorData)
    (if (not (isBelongToPlayer gameplayCtx unit))
@@ -731,11 +731,11 @@
     (+ w1 w2 w3)))
 
 (defn getBestWeapon [gameplayCtx unit weapons targetUnits]
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec (s/* ::type/weaponState) weapons)
-  (common/assertSpec (s/* ::type/unit) targetUnits)
+  (common/assertSpec (s/* ::type/robot) targetUnits)
   (common/assertSpec
-   (s/nilable (s/tuple ::type/weaponState ::type/unit))
+   (s/nilable (s/tuple ::type/weaponState ::type/robot))
    (let [touchUnitLists (map (fn [weapon]
                                (let [weaponRanges (into #{} (getUnitWeaponRange gameplayCtx unit weapon))
                                      units (filter #(weaponRanges (:position %)) targetUnits)]
@@ -754,7 +754,7 @@
          [weapon unit])))))
 
 (defn thinkReaction [gameplayCtx unit fromUnit weapon]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit ::type/unit ::type/weaponState) [gameplayCtx unit fromUnit weapon])]
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot ::type/robot ::type/weaponState) [gameplayCtx unit fromUnit weapon])]
    :post [(vector? %)]}
   (let [hitRate (getUnitHitRate gameplayCtx fromUnit weapon unit)
         weapons (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
@@ -779,8 +779,8 @@
 
 (defn getReactionResult [gameplayCtx left [leftActionType leftWeapon :as leftAction] right [rightActionType rightWeapon :as rightAction]]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit left)
-  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::type/robot left)
+  (common/assertSpec ::type/robot right)
   (common/assertSpec ::battleMenu/action leftAction)
   (common/assertSpec ::battleMenu/action rightAction)
   (common/assertSpec
@@ -821,8 +821,8 @@
 (s/def ::actionResult (s/tuple ::reactionResult ::reactionResult))
 (defn calcActionResult [gameplayCtx left leftAction right rightAction]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit left)
-  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::type/robot left)
+  (common/assertSpec ::type/robot right)
   (common/assertSpec ::battleMenu/action leftAction)
   (common/assertSpec ::battleMenu/action rightAction)
   (common/assertSpec
@@ -837,13 +837,13 @@
 
 (defn applyActionResult [gameplayCtx left leftAction right rightAction result]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit left)
-  (common/assertSpec ::type/unit right)
+  (common/assertSpec ::type/robot left)
+  (common/assertSpec ::type/robot right)
   (common/assertSpec ::battleMenu/action leftAction)
   (common/assertSpec ::battleMenu/action rightAction)
   (common/assertSpec ::actionResult result)
   (common/assertSpec
-   (s/tuple ::type/unit ::type/unit)
+   (s/tuple ::type/robot ::type/robot)
    (let [[{leftDamage :damage
            leftEvents :events}
           {rightDamage :damage
@@ -879,7 +879,7 @@
          ; 增加經驗
          [leftAfter rightAfter] (map (fn [unit [actionType weapon] selfEvents targetEvents]
                                        (common/assertSpec
-                                        ::type/unit
+                                        ::type/robot
                                         (cond-> unit
                                           true
                                           (update-in [:robotState :pilotState] (fn [pilot]
@@ -916,7 +916,7 @@
    (getUnitMovePathTree gameplayCtx unit nil))
 
   ([{units :units players :players playmap :map :as gameplayCtx} unit pos]
-   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/unit) [gameplayCtx playmap unit])]}
+   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::spec/map ::type/robot) [gameplayCtx playmap unit])]}
    (let [power (/ (getUnitPower {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit) 5)
          power (if (-> unit :robotState :tags :moveRangePlus)
                  (+ power 3)
@@ -971,8 +971,8 @@
      pos)))
 
 (defn unitOnTransform [gameplayCtx unit fromKey toKey]
-  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/unit keyword? keyword?) [gameplayCtx unit fromKey toKey])]
-   :post [(explainValid? ::type/unit %)]}
+  {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot keyword? keyword?) [gameplayCtx unit fromKey toKey])]
+   :post [(explainValid? ::type/robot %)]}
   (let [[_ weaponsNow] (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
         [_ weaponsNext] (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} (update-in unit [:robotState :robotKey] (constantly toKey)))
         weapons (-> (zipmap (map :weaponKey weaponsNext) weaponsNext)
@@ -1014,7 +1014,7 @@
 
 (defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
   {:pre [(explainValid? (s/tuple ::spec/camera ::spec/viewsize ::type/units) [camera viewsize units])]
-   :post [(explainValid? (s/* ::type/unit) %)]}
+   :post [(explainValid? (s/* ::type/robot) %)]}
   (let [camera (or targetCamera camera)
         [p1 p2] (or searchSize [(map - camera viewsize)
                                 (map + camera viewsize)])
@@ -1038,7 +1038,7 @@
 (defn getWeaponInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [weaponKey] :as weapon}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec ::type/weaponState weapon)
   (common/assertSpec
    map?
@@ -1056,7 +1056,7 @@
 (defn getComponentInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit {:keys [componentKey] :as component}]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec (s/nilable ::type/unit) unit)
+  (common/assertSpec (s/nilable ::type/robot) unit)
   (common/assertSpec
    map?
    (let [componentData (common/assertSpec
@@ -1068,7 +1068,7 @@
 (defn getUnitInfo [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
    map?
    (let [robotKey (get-in unit [:robotState :robotKey])
@@ -1169,10 +1169,10 @@
 
 (defn onUnitMove [gameplayCtx unit pos]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec ::type/position pos)
   (common/assertSpec
-   ::type/unit
+   ::type/robot
    (let [vel (->> (map - (:position unit) pos)
                   (repeat 2)
                   (apply map *)
@@ -1184,17 +1184,17 @@
 
 (defn onUnitDone [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
-   ::type/unit
+   ::type/robot
    (-> unit
        (update-in [:robotState :tags] #(conj % [:done true])))))
 
 (defn onUnitTurnEnd [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
-   ::type/unit
+   ::type/robot
    (-> unit
        (update-in [:robotState :tags] #(dissoc % :done :moveCount)))))
 
@@ -1226,17 +1226,17 @@
 
 (defn isUnitDead? [gameplayCtx unit]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (common/assertSpec
    boolean?
    (<= (get-in unit [:robotState :hp]) 0)))
 
 (defn fixUnitSkyGround [gameplayCtx unit inputCh outputCh]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
-  (common/assertSpec ::type/unit unit)
+  (common/assertSpec ::type/robot unit)
   (a/go
     (common/assertSpec
-     ::type/unit
+     ::type/robot
      (let [[ground naval air _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
            _ naval
            sky? (-> unit :robotState :tags :sky)
@@ -1268,11 +1268,11 @@
     (common/assertSpec
      ::type/gameplayCtx
      (let [unitList (common/assertSpec
-                     (s/coll-of ::type/unit)
+                     (s/coll-of ::type/robot)
                      (->> (tool.units/getAll (:units gameplayCtx))
                           (filter #(= enemy (:playerKey %)))))
            nextUnitList (common/assertSpec
-                         (s/coll-of ::type/unit)
+                         (s/coll-of ::type/robot)
                          (a/<! (a/go-loop [[unit & rest] unitList
                                            after []]
                                  (if unit
@@ -1283,7 +1283,7 @@
                                                  (-> (getTerrainKey gameplayCtx (:position unit))
                                                      (= :award)))
                                          nextUnit (common/assertSpec
-                                                   ::type/unit
+                                                   ::type/robot
                                                    (if award?
                                                      (let [; move cursor
                                                            {:keys [viewsize mapsize]} gameplayCtx
@@ -1325,11 +1325,11 @@
     (common/assertSpec
      ::type/gameplayCtx
      (let [unitList (common/assertSpec
-                     (s/coll-of ::type/unit)
+                     (s/coll-of ::type/robot)
                      (->> (tool.units/getAll (:units gameplayCtx))
                           (filter #(= enemy (:playerKey %)))))
            nextUnitList (common/assertSpec
-                         (s/coll-of ::type/unit)
+                         (s/coll-of ::type/robot)
                          (a/<! (a/go-loop [[unit & rest] unitList
                                            after []]
                                  (if unit

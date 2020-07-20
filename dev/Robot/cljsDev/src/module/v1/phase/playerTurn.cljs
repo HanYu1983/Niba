@@ -26,15 +26,19 @@
           (let [{:keys [cursor units]} gameplayCtx
                 unitAtCursor (common/assertSpec
                               (s/nilable ::type/unit)
-                              (tool.units/getByPosition units cursor))]
-            (if unitAtCursor
+                              (tool.units/getByPosition units cursor))
+                [unitSpec] (if unitAtCursor
+                             (s/conform ::type/unit unitAtCursor)
+                             [nil])]
+            (cond
+              (and unitAtCursor (= unitSpec :robot))
               (let [[gameplayCtx isUnitDone] (common/assertSpec
                                               (s/tuple ::type/gameplayCtx boolean?)
                                               (a/<! (unitMenu gameplayCtx {:unit unitAtCursor} inputCh outputCh)))]
                 (if isUnitDone
                   (let [{:keys [units]} gameplayCtx
                         unit (common/assertSpec
-                              (s/nilable ::type/unit)
+                              (s/nilable ::type/robot)
                               (tool.units/getByKey units (:key unitAtCursor)))
                         ; 機體可能已經死亡
                         gameplayCtx (common/assertSpec
@@ -44,12 +48,20 @@
                                        gameplayCtx))]
                     gameplayCtx)
                   gameplayCtx))
+
+              (and unitAtCursor (= unitSpec :item))
+              gameplayCtx
+
+              (not unitAtCursor)
               (let [[gameplayCtx endTurn] (common/assertSpec
                                            (s/tuple ::type/gameplayCtx boolean?)
                                            (a/<! (systemMenu gameplayCtx {} inputCh outputCh)))]
                 (if endTurn
                   [gameplayCtx true]
-                  gameplayCtx))))
+                  gameplayCtx))
+
+              :else
+              (throw (js/Error. "can not reach here. please check."))))
           :else
           gameplayCtx))
 

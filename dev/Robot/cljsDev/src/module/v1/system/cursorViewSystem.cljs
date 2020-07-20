@@ -28,7 +28,7 @@
                ourUnits (cond->> (tool.units/getAll units)
                           true
                           (filter (fn [unit]
-                                    (common/assertSpec ::type/unit unit)
+                                    (common/assertSpec ::type/robot unit)
                                     (and (= (-> unit :playerKey) :player)
                                          (not (-> unit :robotState :tags :done)))))
 
@@ -39,7 +39,7 @@
                                        (= (-> (tool.units/getByPosition units cursor) :playerKey) :player)
                                        (not (-> (tool.units/getByPosition units cursor) :robotState :tags :done)))
                nextUnit (common/assertSpec
-                         (s/nilable ::type/unit)
+                         (s/nilable ::type/robot)
                          (cond->> ourUnits
                            isSelfUnitAtCursor
                            (drop-while (fn [unit]

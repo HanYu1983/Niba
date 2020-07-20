@@ -43,7 +43,7 @@
                               {:keys [unit data menuCursor]} (tool.fsm/load fsm)]
                           (and (s/valid? ::fsm fsm)
                                (s/valid? #{:unitMenu :unitBattleMenu} state)
-                               (s/valid? (s/tuple ::type/unit ::menuCursorData ::menuCursor) [unit data menuCursor])))))
+                               (s/valid? (s/tuple ::type/robot ::menuCursorData ::menuCursor) [unit data menuCursor])))))
 (s/def ::battleMenuView (fn [ctx]
                           (let [fsm (:fsm ctx)
                                 state (tool.fsm/currState fsm)

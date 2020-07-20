@@ -78,4 +78,5 @@
 (def gameplayCtx ::gameplayCtx)
 (def returnCtx ::returnCtx)
 (def unit ::unit)
+(def robot ::robot)
 (def weaponState ::weaponState)

@@ -50,7 +50,7 @@
        (let [ret (->> (:robots lobbyCtx)
                       (map (fn [[key robotKey]]
                              (common/assertSpec
-                              ::type/unit
+                              ::type/robot
                               {:key key
                                :position [0 0]
                                :playerKey :player
@@ -142,7 +142,7 @@
                    (merge
                     {:cost (:cost value)}
                     (common/assertSpec
-                     ::type/unit
+                     ::type/robot
                      {:key (keyword robotKey)
                       :position [0 0]
                       :playerKey :player
@@ -335,7 +335,7 @@
                     (= :giveUp (-> doneInfo :cause))
                     (let [; 保存駕駛
                           units (common/assertSpec
-                                 (s/* ::type/unit)
+                                 (s/* ::type/robot)
                                  (->> (:units gameplayCtx)
                                       (tool.units/getAll)
                                       (filter (fn [unit]
@@ -566,7 +566,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (common/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/robot unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_land)
                            (throw (js/Error. "should gaite_land")))
                          gameplayCtx)))
@@ -576,7 +576,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (common/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/robot unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_sky)
                            (throw (js/Error. "should transform to sky")))
                          gameplayCtx)))
@@ -585,7 +585,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (common/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/robot unit1)
                          (when (not= (-> unit1 :robotState :robotKey) :gaite_land)
                            (throw (js/Error. "should gaite_land")))
                          gameplayCtx))))
@@ -597,7 +597,7 @@
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
                                weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
-                           (common/assertSpec ::type/unit unit1)
+                           (common/assertSpec ::type/robot unit1)
                            (common/assertSpec ::type/weaponEntry weapons)
                            (reset! bulletCount (get-in weapons [1 1 :bulletCount]))
                            gameplayCtx)))
@@ -613,7 +613,7 @@
                          (let [{units :units} gameplayCtx
                                unit1 (tool.units/getByKey units :unit1)
                                weapons (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit1)]
-                           (common/assertSpec ::type/unit unit1)
+                           (common/assertSpec ::type/robot unit1)
                            (common/assertSpec ::type/weaponEntry weapons)
                            (when (not= (get-in weapons [1 1 :bulletCount]) (dec @bulletCount))
                              (throw (js/Error. "bullet count must dec")))
@@ -628,7 +628,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (common/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/robot unit1)
                          (when (not (contains? (-> unit1 :robotState :tags) :done))
                            (throw (js/Error. "unit1 must done")))
                          gameplayCtx)))
@@ -638,7 +638,7 @@
         (core/defexe (fn [gameplayCtx]
                        (let [{units :units} gameplayCtx
                              unit1 (tool.units/getByKey units :unit1)]
-                         (common/assertSpec ::type/unit unit1)
+                         (common/assertSpec ::type/robot unit1)
                          (when (contains? (-> unit1 :robotState :tags) :done)
                            (throw (js/Error. "unit1 must not done")))
                          gameplayCtx))))

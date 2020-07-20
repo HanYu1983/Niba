@@ -103,7 +103,7 @@
                                ; 重新取得單位
                                unit (common/assertSpec
                                     ; 單位可能在攻擊中死亡
-                                     (s/nilable ::type/unit)
+                                     (s/nilable ::type/robot)
                                      (-> gameplayCtx :units (tool.units/getByKey (:key unit))))
                                gameplayCtx (if unit
                                              (let [nextUnit (data/onUnitDone gameplayCtx unit)]
@@ -183,7 +183,7 @@
 
           ; 重新取得單位
           unit (common/assertSpec
-                ::type/unit
+                ::type/robot
                 (-> gameplayCtx :units (tool.units/getByKey (:key nextUnit))))
 
           ; 攻擊
@@ -193,7 +193,7 @@
           ; 重新取得單位
           unit (common/assertSpec
                 ; 單位可能在攻擊中死亡
-                (s/nilable ::type/unit)
+                (s/nilable ::type/robot)
                 (-> gameplayCtx :units (tool.units/getByKey (:key unit))))
 
           gameplayCtx (common/assertSpec
