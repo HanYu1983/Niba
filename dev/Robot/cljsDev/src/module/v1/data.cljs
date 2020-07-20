@@ -49,6 +49,25 @@
        (apply map *)
        (apply +)))
 
+(defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
+  (common/assertSpec ::spec/camera camera)
+  (common/assertSpec ::spec/viewsize viewsize)
+  (common/assertSpec ::type/units units)
+  (common/assertSpec (s/nilable ::type/position) targetCamera)
+  (common/assertSpec (s/nilable ::type/position) searchSize)
+  (common/assertSpec
+   (s/* ::type/unit)
+   (let [viewsize (or searchSize viewsize)
+         camera (or targetCamera camera)
+         [p1 p2] [(map - camera viewsize)
+                  (map + camera viewsize)]
+         units (tool.units/getByRegion units p1 p2)]
+     units)))
+
+
+(defn world2local [camera position]
+  (mapv - position camera))
+
 ;======================================================
 ;
 ; 基礎能力. 作為依賴的底層, 比較難依能力變更
@@ -103,18 +122,32 @@
   (common/assertSpec
    ::type/pilotState
    (when pilotState
-     (let [data (get-in data [:pilot (:pilotKey pilotState)])
-           {:keys [melee range guard evade]} data
-           basicExp (:exp data)
-           {:keys [exp expMelee expRange expEvade expGuard]} pilotState]
+     (let [data (get-in data [:pilot (:pilotKey pilotState)])]
        (if (nil? data)
          (throw (js/Error. (str "getPilotInfo[" (:pilotKey pilotState) "] not found")))
-         (merge data
-                pilotState
-                {:melee (+ 1 (* melee expMelee) (* melee (+ basicExp exp) (/ 1 2)))
-                 :range (+ 1 (* range expRange) (* range (+ basicExp exp) (/ 1 2)))
-                 :guard (+ 1 (* guard expGuard) (* guard (+ basicExp exp) (/ 1 2)))
-                 :evade (+ 1 (* evade expEvade) (* evade (+ basicExp exp) (/ 1 2)))}))))))
+         (let [{:keys [melee range guard evade]} data
+               basicExp (:exp data)
+               basicExpMelee (:expMelee data)
+               basicExpRange (:expRange data)
+               basicExpEvade (:expEvade data)
+               basicExpGuard (:expGuard data)
+               {:keys [exp expMelee expRange expEvade expGuard]} pilotState
+               exp (+ basicExp exp)
+               expMelee (+ basicExpMelee expMelee)
+               expRange (+ basicExpRange expRange)
+               expEvade (+ basicExpEvade expEvade)
+               expGuard (+ basicExpGuard expGuard)]
+           (merge data
+                  pilotState
+                  {:expMelee expMelee
+                   :expRange expRange
+                   :expEvade expEvade
+                   :expGuard expGuard
+                   :exp exp
+                   :melee (+ 1 (* melee expMelee) (* melee exp (/ 1 2)))
+                   :range (+ 1 (* range expRange) (* range exp (/ 1 2)))
+                   :guard (+ 1 (* guard expGuard) (* guard exp (/ 1 2)))
+                   :evade (+ 1 (* evade expEvade) (* evade exp (/ 1 2)))})))))))
 
 ;======================================================
 ;
@@ -236,27 +269,7 @@
                                   (#{:armor1 :armor2 :armor3} componentKey)))
                         (map (fn [{:keys [componentKey]}] (get-in data [:component componentKey :value 0])))
                         (map int)
-                        (apply +)))
-            ; 固守配件
-            ; 如果在敵人回合並且自己回合沒有攻擊過時增加裝甲
-            #_basic #_(if (and true
-                               (not= :player (-> gameplayCtx :activePlayer))
-                               (not (-> unit :robotState :tags :attackWeapon)))
-                        (+ basic 3000)
-                        basic)
-
-            ; 射擊王
-            ; 若所有武器都是射擊系，裝甲增加
-            #_basic #_(if (and true
-                               (common/assertSpec
-                                boolean?
-                                (->> (getUnitWeapons ctx unit)
-                                     second
-                                     (map #(getWeaponAbility ctx unit %))
-                                     (every? (fn [ability]
-                                               (not ((into #{} ability) "melee")))))))
-                        (+ basic 300)
-                        basic)]
+                        (apply +)))]
         basic))))
 
 (defn getUnitMaxEn [{:keys [gameplayCtx lobbyCtx]} unit]
@@ -497,9 +510,30 @@
 
          damage (* unitWeaponDamage (- 1 (/ targetValue 4800)))
 
+         ; 對方有固守配件
+         ; 如果在敵人回合並且自己回合沒有攻擊過時增加裝甲
+         ; 因為是在敵方回合時才計算, 所以targetUnit一定是我方
+         damage (if (and true
+                         (not= :player (-> gameplayCtx :activePlayer))
+                         (not (-> targetUnit :robotState :tags :attackWeapon)))
+                  (- damage 3000)
+                  damage)
+
+         ; 對方是射擊王
+         ; 若對方所有武器都是射擊系，傷害減少
+         damage (if (and true
+                         (common/assertSpec
+                          boolean?
+                          (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+                               second
+                               (map #(getWeaponAbility {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit %))
+                               (every? (fn [ability]
+                                         (not ((into #{} ability) "melee")))))))
+                  (- damage 300)
+                  damage)
 
          ; 射擊王
-         ; 若所有武器都是射擊系，裝甲增加
+         ; 若所有武器都是射擊系，傷害增加
          damage (if (and true
                          (common/assertSpec
                           boolean?
@@ -619,28 +653,6 @@
     msg))
 
 
-(defn moveCost [{playmap :map :as gameplayCtx} unit from to]
-  {:pre [(explainValid? (s/tuple ::spec/map ::type/robot) [playmap unit])]
-   :post [(number? %)]}
-  (let [isSky (-> (get-in unit [:robotState :tags])
-                  (contains? :sky))
-        ; 陸海空宇
-        [suit1 suit2 suit3 _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-        costFn (fn [terrainKey]
-                 (let [basic (get-in data [:terrain terrainKey :cost])
-                       ret (cond
-                             isSky
-                             (* 0.5 (/ 1 suit3))
-
-                             (#{:shallowSea :deepSea} terrainKey)
-                             (* basic (/ 1 suit2))
-
-                             :else
-                             (* basic (/ 1 suit1)))]
-                   ret))]
-    (+ (costFn (getTerrainKey gameplayCtx from))
-       (costFn (getTerrainKey gameplayCtx to)))))
-
 (defn isBelongToPlayer [gameplayCtx unit]
   {:pre [(explainValid? (s/tuple ::type/gameplayCtx ::type/robot) [gameplayCtx unit])]
    :post [(explainValid? boolean? %)]}
@@ -670,6 +682,33 @@
 
          :else
          (throw (js/Error. "can not reach here.")))))))
+
+(defn moveCost [{playmap :map :as gameplayCtx} unit from to]
+  {:pre [(explainValid? (s/tuple ::spec/map ::type/robot) [playmap unit])
+         (explainValid? ::type/position from)
+         (explainValid? ::type/position to)]
+   :post [(number? %)]}
+  (let [isSky (-> (get-in unit [:robotState :tags])
+                  (contains? :sky))
+        ; 陸海空宇
+        [suit1 suit2 suit3 _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+        costFn (fn [terrainKey]
+                 (let [basic (get-in data [:terrain terrainKey :cost])
+                       ret (cond
+                             isSky
+                             (* 0.5 (/ 1 suit3))
+
+                             (#{:shallowSea :deepSea} terrainKey)
+                             (* basic (/ 1 suit2))
+
+                             :else
+                             (* basic (/ 1 suit1)))]
+                   ret))
+        nearbyHostile (->> (getUnitsByRegion gameplayCtx to [3 3])
+                           (filter #(not (isFriendlyUnit gameplayCtx unit %))))]
+    (+ (costFn (getTerrainKey gameplayCtx from))
+       (costFn (getTerrainKey gameplayCtx to))
+       (* (count nearbyHostile) 1))))
 
 (defn getMenuData [gameplayCtx unit playerTurn? targetUnit]
   (common/assertSpec ::type/robot unit)
@@ -1045,22 +1084,6 @@
                                         :itemRareRate 0}}
                            unit)]
      basic)))
-
-(defn getUnitsByRegion [{camera :camera viewsize :viewsize units :units} targetCamera searchSize]
-  (common/assertSpec ::spec/camera camera)
-  (common/assertSpec ::spec/viewsize viewsize)
-  (common/assertSpec ::type/units units)
-  (common/assertSpec
-   (s/* ::type/unit)
-   (let [camera (or targetCamera camera)
-         [p1 p2] (or searchSize [(map - camera viewsize)
-                                 (map + camera viewsize)])
-         units (tool.units/getByRegion units p1 p2)]
-     units)))
-
-
-(defn world2local [camera position]
-  (mapv - position camera))
 
 ; ===================================================
 ; 
