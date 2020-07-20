@@ -265,15 +265,18 @@
                               (reduce (fn [[gameplayCtx i] [robotKey _]]
                                         [(-> (:units gameplayCtx)
                                              (tool.units/add (data/createRobot gameplayCtx {:playerKey :player
-                                                                                           :position [0 i]
-                                                                                           :robotState {:robotKey robotKey}}))
+                                                                                            :position [10 i]
+                                                                                            :robotState {:robotKey robotKey}}))
                                              (tool.units/add (data/createRobot gameplayCtx {:playerKey :ai1
-                                                                                           :position [5 i]
-                                                                                           :robotState {:robotKey robotKey}}))
+                                                                                            :position [15 i]
+                                                                                            :robotState {:robotKey robotKey}}))
                                              ((fn [units]
                                                 (assoc gameplayCtx :units units))))
                                          (inc i)])
-                                      [gameplayCtx 1]))]
+                                      [gameplayCtx 1]))
+         gameplayCtx (update gameplayCtx :units (fn [units]
+                                                  (-> units
+                                                      (tool.units/add (data/createItem gameplayCtx {:position [11 0]})))))]
      gameplayCtx)))
 
 (defn createUserSelectedUnitsAsync [gameplayCtx inputCh outputCh]
@@ -375,6 +378,7 @@
           gameplayCtx (createMapByLevel gameplayCtx args)
           ; 產生自己選出的軍隊
           gameplayCtx (a/<! (createUserSelectedUnitsAsync gameplayCtx inputCh outputCh))
+          gameplayCtx (createTestUnits gameplayCtx)
           ; 產生敵機
           gameplayCtx (common/assertSpec
                        ::type/gameplayCtx
@@ -414,14 +418,18 @@
                                           (map (fn [[x y]]
                                                  [(max 0 (min (dec mw) x))
                                                   (max 0 (min (dec mh) y))]))
-                                          (distinct))
+                                          (distinct)
+                                          (filter (fn [pos]
+                                                    (-> (:units gameplayCtx)
+                                                        (tool.units/getByPosition pos)
+                                                        not))))
                              ; 產生軍隊
                              gameplayCtx (reduce (fn [gameplayCtx pos]
                                                    (update gameplayCtx :units (fn [units]
                                                                                 (-> units
                                                                                     (tool.units/add (data/createRobot gameplayCtx {:playerKey :ai1
-                                                                                                                                  :position pos
-                                                                                                                                  :robotState {:robotKey :gundam}}))))))
+                                                                                                                                   :position pos
+                                                                                                                                   :robotState {:robotKey :gundam}}))))))
                                                  gameplayCtx
                                                  posList)]
                          gameplayCtx))
@@ -431,7 +439,11 @@
                               (common/assertSpec
                                ::type/gameplayCtx
                                (loop [gameplayCtx gameplayCtx
-                                      unitList (-> (:units gameplayCtx) tool.units/getAll)]
+                                      unitList (->> (:units gameplayCtx)
+                                                    tool.units/getAll
+                                                    (filter (fn [unit]
+                                                              (let [[unitSpec] (s/conform ::type/unit unit)]
+                                                                (= :robot unitSpec)))))]
                                  (let [[unit & unitList] unitList]
                                    (if unit
                                      (let [nextUnit (a/<! (data/fixUnitSkyGround gameplayCtx unit inputCh outputCh))
