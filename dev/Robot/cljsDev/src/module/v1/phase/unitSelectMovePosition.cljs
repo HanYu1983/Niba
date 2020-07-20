@@ -47,32 +47,51 @@
                                 (s/nilable ::type/unit)
                                 (-> (:units gameplayCtx)
                                     (tool.units/getByPosition cursor)))
-                  [unitSpec] (if unitAtCursor
-                               (s/conform ::type/unit unitAtCursor)
-                               [nil])]
+                  [unitSpecAtCursor] (if unitAtCursor
+                                       (s/conform ::type/unit unitAtCursor)
+                                       [nil])]
               (cond
-                (and unitAtCursor (= :robot unitSpec))
+                (and unitAtCursor (= :robot unitSpecAtCursor))
                 (recur gameplayCtx)
 
-                (and unitAtCursor (= :item unitSpec))
-                (recur gameplayCtx)
+                ; 如果是空位或是箱子
+                (or (not unitAtCursor) (= :item unitSpecAtCursor))
+                (let [_ (a/<! (common/unitMoveAnim nil {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                   (data/mapUnitToLocal gameplayCtx nil)) :path (map (partial data/world2local camera) path)} inputCh outputCh))
+                      ; 若是箱子要先移除才能移動機體
+                      gameplayCtx (if (= :item unitSpecAtCursor)
+                                    (update gameplayCtx :units (fn [units]
+                                                                 (tool.units/delete units unitAtCursor)))
+                                    gameplayCtx)
 
-                (not unitAtCursor)
-                (do (a/<! (common/unitMoveAnim gameplayCtx {:unit (->> (data/getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
-                                                                       (data/mapUnitToLocal gameplayCtx nil)) :path (map (partial data/world2local camera) path)} inputCh outputCh))
-                    (let [tempUnit (data/onUnitMove gameplayCtx unit cursor)
-                          state (-> gameplayCtx :fsm tool.fsm/load)
-                          state (merge state {:tempUnit tempUnit})
-                          gameplayCtx (-> gameplayCtx
-                                          (data/updateUnit unit (constantly tempUnit))
-                                          (update :fsm #(tool.fsm/save % state)))
-                          [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
-                      (if isEnd
-                        [gameplayCtx true]
-                        (let [tempUnit (:tempUnit state)
-                              gameplayCtx (data/updateUnit gameplayCtx tempUnit (constantly unit))]
-                          (recur gameplayCtx)))))
-                
+                      ; 將移動後的機體暫存, 用來回復操作
+                      tempUnit (data/onUnitMove gameplayCtx unit cursor)
+                      state (-> gameplayCtx :fsm tool.fsm/load)
+                      state (merge state {:tempUnit tempUnit})
+                      ; 套用移動後的機體
+                      gameplayCtx (-> gameplayCtx
+                                      (data/updateUnit unit (constantly tempUnit))
+                                      (update :fsm #(tool.fsm/save % state)))
+                      [gameplayCtx isEnd] (a/<! (unitMenu gameplayCtx {:unit tempUnit} inputCh outputCh))]
+                  (if isEnd
+                    (let [; 結束操作時才判斷是否踩到箱子
+                          ; 取得獎勵
+                          gameplayCtx (if (= :item unitSpecAtCursor)
+                                        (let [_ (a/<! (common/showMessage nil {:message (str "you got item")} inputCh outputCh))
+                                              gameplayCtx (data/onGameplayUnitGetItemAward gameplayCtx unit unitAtCursor)]
+                                          gameplayCtx)
+                                        gameplayCtx)]
+                      [gameplayCtx true])
+                    (let [; 將箱子回復原狀
+                          gameplayCtx (if (= :item unitSpecAtCursor)
+                                        (update gameplayCtx :units (fn [units]
+                                                                     (tool.units/add units unitAtCursor)))
+                                        gameplayCtx)
+                          ; 將機體回復原樣
+                          tempUnit (:tempUnit state)
+                          gameplayCtx (data/updateUnit gameplayCtx tempUnit (constantly unit))]
+                      (recur gameplayCtx))))
+
                 :else
                 (throw (js/Error. "can not reach here. please check."))))
             (recur gameplayCtx)))

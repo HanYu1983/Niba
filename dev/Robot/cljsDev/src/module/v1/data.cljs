@@ -660,7 +660,7 @@
        (cond
          (or (= :item unitSpec) (= :item targetUnitSpec))
          true
-         
+
          (and (= :robot unitSpec) (= :robot targetUnitSpec))
          (->> [unit targetUnit]
               (map :playerKey)
@@ -1211,6 +1211,14 @@
                                       :focus (= cursor idx)})
                                    (range)
                                    units)}))})
+
+(defn onGameplayUnitGetItemAward [gameplayCtx unit item]
+  (common/assertSpec ::type/gameplayCtx gameplayCtx)
+  (common/assertSpec ::type/robot unit)
+  (common/assertSpec ::type/item item)
+  (common/assertSpec
+   ::type/gameplayCtx
+   gameplayCtx))
 
 (defn onUnitMove [gameplayCtx unit pos]
   (common/assertSpec ::type/gameplayCtx gameplayCtx)
