@@ -195,8 +195,9 @@ func Test9() {
 		},
 	})
 	js.Global.Set("TestModule", map[string]interface{}{
-		"doA": func() {
-			Println("abc")
+		"doA": func(obj *js.Object) *js.Object {
+			Println("TestModule", obj)
+			return obj
 		},
 	})
 
@@ -204,6 +205,9 @@ func Test9() {
 	var b = a
 	b["name"] = "han2"
 	Println(a)
+
+	var jsObj = js.Global.Get("TestModule").Call("doA", Game{Player: A{20, "han"}})
+	Println("Test9", jsObj)
 }
 
 type EventType int
