@@ -16,6 +16,9 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class PilotStateInfo extends BasicViewer {
 
+    @property(cc.Node)
+    back:cc.Node = null;
+
     @property(cc.Sprite)
     pilot: cc.Sprite = null;
 
@@ -41,6 +44,12 @@ export default class PilotStateInfo extends BasicViewer {
         this.node.active = false;
         if (pilot != null) {
             this.node.active = true;
+            this.back.color = cc.Color.WHITE;
+
+            if (pilot.curage == undefined){
+                this.back.color = cc.Color.RED;
+                return;
+            }
 
             cc.log(pilot)
             // const image = ViewController.instance.imagesAssets.getImageByKey(unit.robotState.robotKey);
@@ -49,10 +58,10 @@ export default class PilotStateInfo extends BasicViewer {
             // }
 
             this.pilotName.string = pilot.title;
-            this.melee.string = (pilot.melee * 100) + "";
-            this.range.string = (pilot.range * 100) + "";
-            this.evade.string = (pilot.agi * 100) + "";
-            this.guard.string = (pilot.dex * 100) + "";
+            this.melee.string = Math.floor(pilot.melee) + "";
+            this.range.string = Math.floor(pilot.range) + "";
+            this.evade.string = Math.floor(pilot.evade) + "";
+            this.guard.string = Math.floor(pilot.guard) + "";
             this.unitCurage.string = pilot.curage + "氣力";
         }
     }

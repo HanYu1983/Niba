@@ -52,8 +52,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
-      "height": 90
+      "width": 340,
+      "height": 100
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -64,8 +64,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
+        345,
         100,
-        -175,
         0,
         0,
         0,
@@ -119,8 +119,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 200,
-      "height": 90
+      "width": 340,
+      "height": 100
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -132,7 +132,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -45,
+        -50,
         0,
         0,
         0,
@@ -268,7 +268,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -95,
+        -165,
         -5,
         0,
         0,
@@ -405,8 +405,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -95,
-        -88,
+        -165,
+        -98,
         0,
         0,
         0,
@@ -534,8 +534,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
-      "height": 80
+      "width": 255,
+      "height": 90
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -546,7 +546,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        95,
+        165,
         -5,
         0,
         0,
@@ -613,8 +613,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -21.985,
-        -80,
+        -94.485,
+        -90,
         0,
         0,
         0,
@@ -748,8 +748,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
-      "height": 60
+      "width": 255,
+      "height": 70
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -760,8 +760,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -55,
-        -30,
+        -127.5,
+        -35,
         0,
         0,
         0,
@@ -822,7 +822,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
+      "width": 255,
       "height": 15
     },
     "_anchorPoint": {
@@ -834,8 +834,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -55,
-        15,
+        -127.5,
+        20,
         0,
         0,
         0,
@@ -893,7 +893,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
+      "width": 125,
       "height": 15
     },
     "_anchorPoint": {
@@ -999,7 +999,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 22
@@ -1109,7 +1109,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        50,
+        125,
         0,
         0,
         0,
@@ -1136,7 +1136,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 26
@@ -1276,7 +1276,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
+      "width": 125,
       "height": 15
     },
     "_anchorPoint": {
@@ -1288,7 +1288,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        105,
+        255,
         15,
         0,
         0,
@@ -1355,7 +1355,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -50,
+        -125,
         0,
         0,
         0,
@@ -1382,7 +1382,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 33
@@ -1519,7 +1519,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 37
@@ -1599,7 +1599,7 @@
     "_target": null,
     "_alignFlags": 33,
     "_left": 50,
-    "_right": 5,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_verticalCenter": 0,
@@ -1635,10 +1635,10 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 110,
+      "width": 255,
       "height": 15
     },
-    "_resize": 0,
+    "_resize": 2,
     "_N$layoutType": 1,
     "_N$padding": 0,
     "_N$cellSize": {
@@ -1733,7 +1733,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 110,
+      "width": 255,
       "height": 15
     },
     "_anchorPoint": {
@@ -1745,8 +1745,8 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        -55,
-        -3,
+        -127.5,
+        2,
         0,
         0,
         0,
@@ -1804,7 +1804,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
+      "width": 125,
       "height": 15
     },
     "_anchorPoint": {
@@ -1910,7 +1910,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 48
@@ -2020,7 +2020,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        50,
+        125,
         0,
         0,
         0,
@@ -2047,7 +2047,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 52
@@ -2187,7 +2187,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 50,
+      "width": 125,
       "height": 15
     },
     "_anchorPoint": {
@@ -2199,7 +2199,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        55,
+        130,
         15,
         0,
         0,
@@ -2293,7 +2293,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 59
@@ -2403,7 +2403,7 @@
       "__type__": "TypedArray",
       "ctor": "Float64Array",
       "array": [
-        50,
+        125,
         0,
         0,
         0,
@@ -2430,7 +2430,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 63
@@ -2510,7 +2510,7 @@
     "_target": null,
     "_alignFlags": 33,
     "_left": 50,
-    "_right": 5,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_verticalCenter": 0,
@@ -2546,10 +2546,10 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 110,
+      "width": 255,
       "height": 15
     },
-    "_resize": 0,
+    "_resize": 2,
     "_N$layoutType": 1,
     "_N$padding": 0,
     "_N$cellSize": {
@@ -2821,7 +2821,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 74
@@ -2958,7 +2958,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 78
@@ -3204,7 +3204,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "Melee<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 85
@@ -3341,7 +3341,7 @@
   },
   {
     "__type__": "cc.Label",
-    "_name": "",
+    "_name": "MeleeValue<Label>",
     "_objFlags": 0,
     "node": {
       "__id__": 89
@@ -3555,8 +3555,8 @@
     "_enabled": true,
     "_layoutSize": {
       "__type__": "cc.Size",
-      "width": 300,
-      "height": 200
+      "width": 255,
+      "height": 70
     },
     "_resize": 0,
     "_N$layoutType": 2,
@@ -3599,8 +3599,8 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 37,
-    "_left": 0,
+    "_alignFlags": 45,
+    "_left": 80,
     "_right": 5,
     "_top": 5,
     "_bottom": 5,
@@ -3612,7 +3612,7 @@
     "_isAbsBottom": true,
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
-    "_originalWidth": 0,
+    "_originalWidth": 110,
     "_originalHeight": 50,
     "_id": ""
   },
@@ -3637,9 +3637,9 @@
     "_enabled": true,
     "alignMode": 1,
     "_target": null,
-    "_alignFlags": 40,
-    "_left": 0,
-    "_right": 0,
+    "_alignFlags": 5,
+    "_left": 520.0000000000001,
+    "_right": 346.66666666666663,
     "_top": 0,
     "_bottom": 0,
     "_verticalCenter": 0,
@@ -3651,7 +3651,7 @@
     "_isAbsHorizontalCenter": true,
     "_isAbsVerticalCenter": true,
     "_originalWidth": 0,
-    "_originalHeight": 0,
+    "_originalHeight": 90,
     "_id": ""
   },
   {
@@ -3662,6 +3662,9 @@
       "__id__": 1
     },
     "_enabled": true,
+    "back": {
+      "__id__": 2
+    },
     "pilot": {
       "__id__": 7
     },

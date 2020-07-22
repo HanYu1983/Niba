@@ -10,6 +10,9 @@ import MenuButtons from "../../MenuButtons";
 import MenuButton from "../../MenuButton";
 import ViewController from "../../ViewController";
 import ListPageController from "../../ListPageController";
+import UnitStatuInfo from "../../GamePage/UnitStatuInfo";
+import PilotStateInfo from "../../GamePage/PilotStatuInfo";
+import ComponentListItem from "../ComponentStore/ComponentListItem";
 
 const {ccclass, property} = cc._decorator;
 
@@ -27,6 +30,15 @@ export default class PilotSetting extends BasicViewer {
 
     @property(ListPageController)
     robotEquipList:ListPageController = null;
+
+    @property(UnitStatuInfo)
+    robotInfo:UnitStatuInfo = null;
+
+    @property(PilotStateInfo)
+    pilotInfoCurrent:PilotStateInfo = null;
+
+    @property(PilotStateInfo)
+    pilotInfoReplace:PilotStateInfo = null;
 
     robotPageId:number = 0;
 
@@ -75,23 +87,28 @@ export default class PilotSetting extends BasicViewer {
 
     prevFocus(){
         this.titleMenu.onPrevClick();
+        this.updateInfo();
     }
 
     nextFocus(){
         this.titleMenu.onNextClick();
+        this.updateInfo();
     }
 
     upComponentList(){
         this.componentList.list.onPrevClick();
+        this.updateInfo();
     }
 
     downComponentList(){
         this.componentList.list.onNextClick();
+        this.updateInfo();
     }
 
     upRobotList(){
         this.robotList.list.onPrevClick();
         this.setRobotEquipList();
+        this.updateInfo();
     }
 
     downRobotList(){
@@ -101,10 +118,12 @@ export default class PilotSetting extends BasicViewer {
 
     upRobotEquipList(){
         this.robotEquipList.list.onPrevClick();
+        this.updateInfo();
     }
 
     downRobotEquipList(){
         this.robotEquipList.list.onNextClick();
+        this.updateInfo();
     }
 
 
@@ -135,6 +154,7 @@ export default class PilotSetting extends BasicViewer {
             while(this.robotList.list.getFocusId()[0] < focusId) this.robotList.list.onNextClick();
 
             this.setRobotEquipList();
+            this.updateInfo();
         });
     }
 
@@ -147,5 +167,16 @@ export default class PilotSetting extends BasicViewer {
         this.robotEquipList.list.close()
         this.robotEquipList.list.open();
         this.robotEquipList.list.setData([pilot]);
+    }
+
+    updateInfo(){
+        const robot = this.robotList.list.getFocus();
+        this.robotInfo.setUnit(robot);
+
+        const pilotCurrent = this.robotEquipList.list.getFocus();
+        this.pilotInfoCurrent.setPilot(pilotCurrent);
+
+        const pilotReplace = this.componentList.list.getFocus();
+        this.pilotInfoReplace.setPilot(pilotReplace);
     }
 }
