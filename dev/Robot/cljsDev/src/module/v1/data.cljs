@@ -288,22 +288,26 @@
                     (apply +))]
         en))))
 
-(defn getUnitPower [{:keys [gameplayCtx lobbyCtx]} unit]
+(defn getUnitPower [{:keys [gameplayCtx lobbyCtx] :as ctx} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
   (common/assertSpec ::app.lobby.model/model lobbyCtx)
   (common/assertSpec ::type/robot unit)
-  (let [robotKey (get-in unit [:robotState :robotKey])
-        robot (get-in data [:robot robotKey])]
-    (if (nil? robot)
-      (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
-      (let [power (->> (concat (map (fn [k]
-                                      (get-in data [:component (keyword k) :powerCost]))
-                                    (get robot :components))
-                               (map (fn [k]
-                                      (get-in data [:weapon (keyword k) :powerCost]))
-                                    (get robot :weapons)))
-                       (apply - (get robot :power)))]
-        power))))
+  (common/assertSpec
+   number?
+   (let [robotKey (get-in unit [:robotState :robotKey])
+         robot (get-in data [:robot robotKey])]
+     (if (nil? robot)
+       (throw (js/Error. (str "getUnitPower[" robotKey "] not found")))
+       (let [components (-> (getUnitComponents ctx unit) second)
+             weapons (-> (getUnitWeapons ctx unit) second)
+             power (->> (concat (map (fn [info]
+                                       (get-in data [:component (:componentKey info) :powerCost]))
+                                     components)
+                                (map (fn [info]
+                                       (get-in data [:weapon (:weaponKey info) :powerCost]))
+                                     weapons))
+                        (apply - (get robot :power)))]
+         power)))))
 
 (defn getUnitSuitability [{:keys [gameplayCtx lobbyCtx]} unit]
   (common/assertSpec (s/nilable ::type/gameplayCtx) gameplayCtx)
@@ -1230,10 +1234,21 @@
                      (let [stateDetail (-> gameplayCtx :fsm tool.fsm/load)
                            {:keys [units selectedUnits cursor]} stateDetail]
                        {:data (map (fn [idx [key robotKey]]
-                                     {:key key
-                                      :robotState {:robotKey robotKey}
-                                      :selected (if (selectedUnits key) true false)
-                                      :focus (= cursor idx)})
+                                     (let [pilotKey (common/assertSpec
+                                                     (s/nilable keyword?)
+                                                     (->> (-> gameplayCtx :lobbyCtx :robotByPilot)
+                                                          (into [])
+                                                          (filter (fn [[_ robot]]
+                                                                    (= robot key)))
+                                                          ffirst
+                                                          ((fn [key]
+                                                             (-> gameplayCtx :lobbyCtx :pilots key)))))]
+                                       {:key key
+                                        :robotState (merge {:robotKey robotKey}
+                                                           (when pilotKey
+                                                             {:pilotState {:pilotKey pilotKey}}))
+                                        :selected (if (selectedUnits key) true false)
+                                        :focus (= cursor idx)}))
                                    (range)
                                    units)}))})
 

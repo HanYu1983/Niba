@@ -35,12 +35,14 @@
     :cursor 0
     :selectedUnits #{}}
    :initCtx nil}
+  (common/assertSpec (s/map-of keyword? keyword?) units)
   (loop [gameplayCtx gameplayCtx]
     (a/<! (common/paint nil (data/render gameplayCtx) inputCh outputCh))
     (let [evt (a/<! inputCh)
           returnCtx (-> gameplayCtx
                         (data/handleTest evt)
-                        (startUnitsMenuViewSystem/handleStartUnitsMenuView evt)
+                        (startUnitsMenuViewSystem/handleStartUnitsMenuView inputCh outputCh evt)
+                        (a/<!)
                         (#(systemCore/asyncMapReturn handleCore % inputCh outputCh evt))
                         (a/<!))]
       (systemCore/return returnCtx))))
