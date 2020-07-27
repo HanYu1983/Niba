@@ -38438,7 +38438,7 @@ function U3(a, b, c, d, e) {
               }
             }
             function v() {
-              var p = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
+              var p = [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null];
               p[0] = w;
               p[1] = 1;
               return p;
@@ -38461,131 +38461,125 @@ function U3(a, b, c, d, e) {
           return function(r) {
             var v = r[1];
             if (7 === v) {
-              var w = r[7], p = r[2], u = !OL(l7, p);
-              r[7] = p;
-              r[1] = u ? 8 : 9;
+              var w = r[7], p = r[2];
+              r[8] = p;
+              r[1] = m(w) ? 8 : 9;
               return X;
             }
             if (1 === v) {
-              var z = r[8], H = r[9], F = r[10], t = r[11], E = [Sy, WD], y = WD.b(a), O = [a, y], S = pn(E, O), D = yZ(S, b), N = K(D, 0, null), x = K(D, 1, null), P = function() {
+              var u = r[9], z = r[10], H = r[11], F = r[12], t = [Sy, WD], E = WD.b(a), y = [a, E], O = pn(t, y), S = yZ(O, b), D = K(S, 0, null), N = K(S, 1, null), x = function() {
                 return function() {
-                  return function(ob) {
-                    return Uc(HZ(a, b, ob, null));
+                  return function(Pb) {
+                    return Uc(HZ(a, b, Pb, null));
                   };
-                }(D, N, x, z, H, F, t, E, y, O, S, D, N, x, v, h);
-              }(), J = ol(P, x);
-              p = function() {
+                }(S, D, N, u, z, H, F, t, E, y, O, S, D, N, v, h);
+              }(), P = ol(x, N), J = function() {
                 return function() {
-                  return function(ob) {
-                    return G.c(A.c(ob, NE), fv);
+                  return function(Pb) {
+                    return G.c(A.c(Pb, NE), fv);
                   };
-                }(D, N, J, z, H, F, t, E, y, O, S, D, N, x, P, J, v, h);
-              }();
-              u = oH.b(a);
-              var R = hD.b(b);
-              R = Pk.f(Qi, R, new T(null, 2, 5, V, [10, 10], null));
-              var W = hD.b(b);
-              W = Pk.f(Pi, W, new T(null, 2, 5, V, [10, 10], null));
-              u = kY(u, R, W);
-              p = ol(p, u);
-              u = QZ(a, b, J, p);
-              r[8] = p;
-              r[9] = D;
-              r[10] = u;
+                }(S, D, P, u, z, H, F, t, E, y, O, S, D, N, x, P, v, h);
+              }(), R = oH.b(a), W = hD.b(b);
+              W = Pk.f(Qi, W, new T(null, 2, 5, V, [10, 10], null));
+              var Z = hD.b(b);
+              Z = Pk.f(Pi, Z, new T(null, 2, 5, V, [10, 10], null));
+              R = kY(R, W, Z);
+              J = ol(J, R);
+              R = QZ(a, b, P, J);
+              r[9] = P;
+              r[10] = S;
               r[11] = J;
-              r[1] = m(u) ? 2 : 3;
+              r[12] = R;
+              r[1] = m(R) ? 2 : 3;
               return X;
             }
             if (4 === v) {
               return vJ(r, r[2]);
             }
-            if (15 === v) {
-              return u = r[2], p = K(u, 0, null), u = K(u, 1, null), p = Jh.g(p, dE, Bh, uh([dA, Bh])), r[12] = u, r[2] = p, r[1] = 4, X;
-            }
             if (13 === v) {
-              var Z = r[13], da = r[14], C = r[15];
-              w = r[7];
-              z = r[8];
-              H = r[9];
-              var M = r[16], U = r[17], fa = r[18];
-              F = r[10];
-              t = r[11];
-              var Y = r[19], ba = r[2], oa = [MH, rF, Nz], sa = ZY(a, U, w, b), ta = [U, ba, sa], ua = pn(oa, ta), Ga = [MH, rF, Nz], va = [SH, da], Fa = new T(null, 2, 5, V, va, null), wa = ZY(a, b, da, U), Ha = [b, Fa, wa], Ma = pn(Ga, Ha), Ta = [ua, Ma], Ra = new T(null, 2, 5, V, Ta, null), Sa = dZ(St, Ra), Va = [oH];
-              p = [Pk.c(function() {
-                return function() {
-                  return function(ob) {
-                    return z2(a, null, f_(new Ac(null, 2, [Sy, a, WD, WD.b(a)], null), ob));
-                  };
-                }(U, ba, H, t, Sa, da, F, F, fa, z, Ra, C, Y, w, Z, Z, da, C, w, z, H, M, U, fa, F, t, Y, ba, V, oa, sa, ta, ua, Ga, V, va, Fa, wa, Ha, Ma, Ta, Ra, Sa, Va, v, h);
-              }(), new T(null, 2, 5, V, [b, U], null))];
-              p = pn(Va, p);
-              p = iZ(p, d, e);
-              r[16] = Ra;
-              return tJ(r, 14, p);
+              return r[2] = r[2], r[1] = 4, X;
             }
             if (6 === v) {
-              return fa = r[18], p = I(fa), r[2] = p, r[1] = 7, X;
+              return r[2] = new T(null, 1, 5, V, [uD], null), r[1] = 7, X;
             }
             if (3 === v) {
-              return p = c.b ? c.b(a) : c.call(null, a), tJ(r, 16, p);
+              return J = c.b ? c.b(a) : c.call(null, a), tJ(r, 13, J);
             }
             if (12 === v) {
-              return r[2] = new T(null, 1, 5, V, [uD], null), r[1] = 13, X;
+              return R = r[2], J = K(R, 0, null), R = K(R, 1, null), J = Jh.g(J, dE, Bh, uh([dA, Bh])), r[13] = R, r[2] = J, r[1] = 4, X;
             }
             if (2 === v) {
-              var Ab = r[20];
-              Z = r[13];
-              da = r[14];
-              C = r[15];
-              z = r[8];
-              H = r[9];
-              U = r[17];
-              fa = r[18];
-              F = r[10];
-              t = r[11];
-              Y = r[19];
-              var cb = K(F, 0, null), ub = K(F, 1, null), Cb = [Sy, WD], $a = WD.b(a), Fc = [a, $a], Dc = pn(Cb, Fc), Lb = yZ(Dc, ub), hc = K(Lb, 0, null), Pb = K(Lb, 1, null);
-              p = ol(function() {
-                return function(ob) {
-                  return function(Gb) {
-                    return Uc(HZ(a, ob, Gb, null));
+              u = r[9];
+              w = r[7];
+              z = r[10];
+              var da = r[14], C = r[15];
+              H = r[11];
+              var M = r[16], U = r[17];
+              F = r[12];
+              var fa = r[18], Y = K(F, 0, null), ba = K(F, 1, null), oa = [Sy, WD], sa = WD.b(a), ta = [a, sa], ua = pn(oa, ta), Ga = yZ(ua, ba), va = K(Ga, 0, null), Fa = K(Ga, 1, null);
+              J = ol(function() {
+                return function(Pb) {
+                  return function(ob) {
+                    return Uc(HZ(a, Pb, ob, null));
                   };
-                }(ub, H, t, hc, cb, F, F, Pb, z, Lb, Ab, Z, da, C, z, H, U, fa, F, t, Y, cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, v, h);
-              }(), Pb);
-              u = QZ(a, ub, p, new T(null, 1, 5, V, [b], null));
-              R = I(u);
-              r[20] = R;
-              r[13] = p;
-              r[14] = cb;
-              r[15] = u;
-              r[17] = ub;
-              r[18] = Pb;
-              r[19] = Lb;
+                }(ba, u, va, Y, F, Ga, Fa, H, z, F, u, w, z, da, C, H, M, U, F, fa, Y, ba, oa, sa, ta, ua, Ga, va, Fa, v, h);
+              }(), Fa);
+              R = QZ(a, ba, J, new T(null, 1, 5, V, [b], null));
+              var wa = V, Ha = [MH, rF, Nz];
+              r[19] = wa;
+              r[7] = R;
+              r[14] = ba;
+              r[15] = J;
+              r[16] = Y;
+              r[17] = Fa;
+              r[20] = Ha;
+              r[18] = Ga;
               r[1] = m(R) ? 5 : 6;
               return X;
             }
             if (11 === v) {
-              return w = r[7], r[2] = new T(null, 2, 5, V, [SH, w], null), r[1] = 13, X;
+              var Ma = r[21];
+              J = r[2];
+              R = pn([pE, PB], [Ma, !1]);
+              R = W2(a, R, d, e);
+              r[22] = J;
+              return tJ(r, 12, R);
             }
             if (9 === v) {
-              return r[2] = null, r[1] = 10, X;
+              return r[2] = 0, r[1] = 10, X;
             }
             if (5 === v) {
-              return Ab = r[20], r[2] = Ab, r[1] = 7, X;
-            }
-            if (14 === v) {
-              return M = r[16], p = r[2], u = pn([pE, PB], [M, !1]), u = W2(a, u, d, e), r[21] = p, tJ(r, 15, u);
-            }
-            if (16 === v) {
-              return r[2] = r[2], r[1] = 4, X;
+              return w = r[7], R = K(w, 0, null), J = K(w, 1, null), R = new T(null, 2, 5, V, [SH, R], null), r[23] = J, r[2] = R, r[1] = 7, X;
             }
             if (10 === v) {
-              return C = r[15], r[22] = r[2], r[1] = m(C) ? 11 : 12, X;
+              wa = r[19];
+              u = r[9];
+              w = r[7];
+              z = r[10];
+              da = r[14];
+              p = r[8];
+              C = r[15];
+              H = r[11];
+              M = r[16];
+              U = r[17];
+              Ha = r[20];
+              Ma = r[21];
+              F = r[12];
+              fa = r[18];
+              var Ta = r[2], Ra = [da, p, Ta], Sa = pn(Ha, Ra), Va = [MH, rF, Nz], Ab = [SH, M], cb = new T(null, 2, 5, V, Ab, null), ub = ZY(a, b, M, da), Cb = [b, cb, ub], $a = pn(Va, Cb), Fc = [Sa, $a], Dc = new T(null, 2, 5, wa, Fc, null), Lb = dZ(St, Dc), hc = [oH];
+              J = [Pk.c(function() {
+                return function() {
+                  return function(Pb) {
+                    return z2(a, null, f_(new Ac(null, 2, [Sy, a, WD, WD.b(a)], null), Pb));
+                  };
+                }(da, u, Lb, M, F, fa, U, H, Dc, w, z, F, C, wa, u, w, z, da, p, C, H, M, U, Ha, Ma, F, fa, Ta, Ra, Sa, Va, V, Ab, cb, ub, Cb, $a, Fc, Dc, Lb, hc, v, h);
+              }(), new T(null, 2, 5, V, [b, da], null))];
+              J = pn(hc, J);
+              J = iZ(J, d, e);
+              r[21] = Dc;
+              return tJ(r, 11, J);
             }
-            if (8 === v) {
-              throw Error("[do_goal.cljs] targetUnitBestWeapon must not nil");
-            }
-            return null;
+            return 8 === v ? (w = r[7], da = r[14], R = K(w, 0, null), J = K(w, 1, null), R = ZY(a, da, R, b), r[24] = J, r[2] = R, r[1] = 10, X) : null;
           };
         }(k), k);
       }(), f = function() {
@@ -38684,7 +38678,7 @@ N3.P(null, Vt, function(a, b, c, d, e) {
               return v = h[10], v = hD.b(c), v = VZ(b, v), h[10] = v, h[1] = m(v) ? 15 : 16, X;
             }
             if (6 === r) {
-              return u = h[11], v = h[7], z = ZZ(v, u), v = LZ(v, u, Ak(z)), h[2] = v, h[1] = 8, X;
+              return v = h[7], u = h[11], z = ZZ(v, u), v = LZ(v, u, Ak(z)), h[2] = v, h[1] = 8, X;
             }
             if (17 === r) {
               return h[2] = h[2], h[1] = 14, X;
@@ -38778,16 +38772,16 @@ N3.P(null, Vt, function(a, b, c, d, e) {
               return v = hD.b(c), v = rZ(b, v), v = G.c(v, Eu), v = dZ(ki, v), h[1] = m(v) ? 12 : 13, X;
             }
             if (5 === r) {
-              u = h[11];
               v = h[7];
+              u = h[11];
               v = h[2];
               u = AM(sw, sw, null);
               z = oH.b(v);
               var H = QG.b(c);
               z = lY(z, H);
               u = dZ(u, z);
-              h[11] = u;
               h[7] = v;
+              h[11] = u;
               h[1] = m(u) ? 6 : 7;
               return X;
             }
@@ -39012,8 +39006,8 @@ N3.P(null, jz, function(a, b, c, d, e) {
             }
             if (12 === E) {
               y = t[11];
-              D = t[12];
               var P = t[13];
+              D = t[12];
               y = t[2];
               D = AM(sw, sw, null);
               N = oH.b(y);
@@ -39029,11 +39023,12 @@ N3.P(null, jz, function(a, b, c, d, e) {
               return y = oH.b(b), y = mY(y, F), t[2] = Uc(y), t[1] = 4, X;
             }
             if (11 === E) {
-              O = t[9];
               var R = t[14];
+              O = t[9];
+              var W = t[15];
               P = t[13];
               S = t[10];
-              var W = t[15], Z = t[2], da = YZ(b, c, W), C = Ak(da), M = LZ(b, c, C), U = oH.b(M), fa = QG.b(da), Y = lY(U, fa), ba = dZ(sw, Y);
+              var Z = t[2], da = YZ(b, c, R), C = Ak(da), M = LZ(b, c, C), U = oH.b(M), fa = QG.b(da), Y = lY(U, fa), ba = dZ(sw, Y);
               y = U3(M, ba, function() {
                 return function(sa, ta, ua, Ga, va, Fa, wa, Ha, Ma, Ta, Ra, Sa, Va, Ab, cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, mc) {
                   return function(pb) {
@@ -39102,7 +39097,7 @@ N3.P(null, jz, function(a, b, c, d, e) {
                     }(Sb, sa, ta, ua, Ga, va, Fa, wa, Ha, Ma, Ta, Ra, Sa, Va, Ab, cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, mc));
                     return Sb;
                   };
-                }(S, O, W, R, Z, da, M, ba, O, R, P, S, W, Z, da, C, M, U, fa, Y, ba, E, u, z, H, F);
+                }(S, O, R, W, Z, da, M, ba, R, O, W, P, S, Z, da, C, M, U, fa, Y, ba, E, u, z, H, F);
               }(), d, e);
               t[13] = ba;
               return tJ(t, 12, y);
@@ -39117,10 +39112,10 @@ N3.P(null, jz, function(a, b, c, d, e) {
               return y = t[11], t[2] = y, t[1] = 15, X;
             }
             if (10 === E) {
-              O = t[9];
               R = t[14];
-              S = t[10];
+              O = t[9];
               W = t[15];
+              S = t[10];
               y = t[2];
               D = bY.c ? bY.c(O, y) : bY.call(null, O, y);
               N = [MH, xB];
@@ -39132,8 +39127,8 @@ N3.P(null, jz, function(a, b, c, d, e) {
               oa = Pk.c(Ck(c_, S), D);
               N = pn(N, [J, oa]);
               N = hZ(b, N, d, e);
-              t[14] = D;
-              t[15] = y;
+              t[14] = y;
+              t[15] = D;
               return tJ(t, 11, N);
             }
             return 8 === E ? (y = t[7], t[2] = y, t[1] = 10, X) : null;
@@ -39343,9 +39338,9 @@ function Y3(a, b, c, d) {
               return v = h[7], h[1] = Uc(null == v) ? 9 : 10, X;
             }
             if (17 === r) {
-              var p = h[8], u = h[9], z = h[10], H = h[11];
+              var p = h[8];
               v = h[7];
-              var F = h[12], t = h[13], E = h[14], y = h[2], O = A.c(y, my), S = A.c(y, Kz), D = K(O, 0, null), N = K(O, 1, null), x = K(S, 0, null), P = K(S, 1, null), J = hD.b(t), R = Jh.f(v, sF, J);
+              var u = h[9], z = h[10], H = h[11], F = h[12], t = h[13], E = h[14], y = h[2], O = A.c(y, my), S = A.c(y, Kz), D = K(O, 0, null), N = K(O, 1, null), x = K(S, 0, null), P = K(S, 1, null), J = hD.b(F), R = Jh.f(v, sF, J);
               w = function() {
                 return function(M, U, fa, Y, ba, oa, sa, ta, ua, Ga, va, Fa, wa, Ha, Ma, Ta, Ra, Sa) {
                   return function(Va) {
@@ -39355,56 +39350,56 @@ function Y3(a, b, c, d) {
                       ub = Ab < ub ? Ab : ub;
                       return 0 > ub ? 0 : ub;
                     }(), function() {
-                      var ub = oa - Ra;
+                      var ub = Y - Ta;
                       ub = cb < ub ? cb : ub;
                       return 0 > ub ? 0 : ub;
                     }()], null);
                   };
-                }(H, t, O, F, E, P, S, u, O, t, u, S, y, x, p, p, N, D, R, H, p, u, z, H, v, F, t, E, y, O, S, D, N, x, P, J, R, r, f);
+                }(E, E, p, P, O, H, p, S, y, u, O, F, F, x, u, N, S, D, z, R, p, v, u, z, H, F, t, E, y, O, S, D, N, x, P, J, R, r, f);
               }();
-              var W = new T(null, 2, 5, V, [-Math.floor(D / 2), -Math.floor(N / 2)], null), Z = hD.b(t);
+              var W = new T(null, 2, 5, V, [-Math.floor(D / 2), -Math.floor(N / 2)], null), Z = hD.b(F);
               W = Pk.f(Pi, W, Z);
               w = w.b ? w.b(W) : w.call(null, W);
               w = Jh.f(R, CG, w);
               W = B2(w);
               W = lZ(W, c, d);
-              h[10] = w;
+              h[13] = w;
               return tJ(h, 18, W);
             }
             if (3 === r) {
-              return u = h[9], v = h[7], w = Cg(u), t = I(w), p = Gg(w), w = B2(v), w = lZ(w, c, d), h[8] = p, h[13] = t, tJ(h, 5, w);
+              return p = h[8], v = h[7], w = Cg(p), F = I(w), u = Gg(w), w = B2(v), w = lZ(w, c, d), h[9] = u, h[12] = F, tJ(h, 5, w);
             }
             if (12 === r) {
               return h[2] = !0, h[1] = 14, X;
             }
             if (2 === r) {
-              H = h[11];
+              E = h[14];
               var da = h[2], C = X3(da, b);
               w = function() {
                 return function() {
                   return function(M) {
                     return G.c(A.c(M, NE), b);
                   };
-                }(C, H, da, C, r, f);
+                }(C, E, da, C, r, f);
               }();
               W = oH.b(C);
               W = nY(W);
               w = ol(w, W);
               W = Cg(w);
-              E = I(W);
-              F = Gg(W);
+              H = I(W);
+              z = Gg(W);
               v = C;
-              u = w;
-              h[9] = u;
-              h[11] = w;
+              p = w;
+              h[8] = p;
               h[7] = v;
-              h[12] = F;
-              h[14] = E;
+              h[10] = z;
+              h[11] = H;
+              h[14] = w;
               h[2] = null;
               h[1] = 3;
               return X;
             }
-            return 19 === r ? (p = h[8], v = h[2], u = p, h[9] = u, h[7] = v, h[2] = null, h[1] = 3, X) : 11 === r ? (h[1] = m(h[2]) ? 15 : 16, X) : 9 === r ? (v = h[7], w = jc === v.o, h[1] = m(v.i & 64 || w) ? 12 : 13, X) : 5 === r ? (t = h[13], h[15] = h[2], h[1] = m(t) ? 6 : 7, X) : 14 === r ? (h[2] = h[2], h[1] = 11, X) : 16 === r ? (v = h[7], h[2] = v, h[1] = 17, X) : 10 === r ? (h[2] = !1, h[1] = 11, X) : 18 === r ? (z = h[10], t = h[13], w = h[2], W = W3(z, t, c, d), h[16] = w, tJ(h, 19, 
+            return 19 === r ? (u = h[9], v = h[2], p = u, h[8] = p, h[7] = v, h[2] = null, h[1] = 3, X) : 11 === r ? (h[1] = m(h[2]) ? 15 : 16, X) : 9 === r ? (v = h[7], w = jc === v.o, h[1] = m(v.i & 64 || w) ? 12 : 13, X) : 5 === r ? (F = h[12], h[15] = h[2], h[1] = m(F) ? 6 : 7, X) : 14 === r ? (h[2] = h[2], h[1] = 11, X) : 16 === r ? (v = h[7], h[2] = v, h[1] = 17, X) : 10 === r ? (h[2] = !1, h[1] = 11, X) : 18 === r ? (F = h[12], t = h[13], w = h[2], W = W3(t, F, c, d), h[16] = w, tJ(h, 19, 
             W)) : 8 === r ? (h[2] = h[2], h[1] = 4, X) : null;
           };
         }(g), g);
@@ -39875,13 +39870,13 @@ function b4(a, b, c) {
                           if (1 === U) {
                             var fa = da;
                             U = C;
-                            M[7] = U;
-                            M[8] = fa;
+                            M[7] = fa;
+                            M[8] = U;
                             M[2] = null;
                             M[1] = 2;
                             return X;
                           }
-                          return 2 === U ? (fa = M[8], U = B2(fa), U = lZ(U, b, c), tJ(M, 4, U)) : 3 === U ? vJ(M, M[2]) : 4 === U ? (U = M[7], fa = M[2], U = hh(U), U = G.c(U, 0), M[9] = fa, M[1] = U ? 5 : 6, X) : 5 === U ? (fa = M[8], M[2] = fa, M[1] = 7, X) : 6 === U ? (U = M[7], fa = M[8], U = I(U), U = $3(fa, U, b, c), tJ(M, 8, U)) : 7 === U ? (M[2] = M[2], M[1] = 3, X) : 8 === U ? (U = M[7], fa = dZ(gB, M[2]), U = Eg(U), M[7] = U, M[8] = fa, M[2] = null, M[1] = 2, X) : null;
+                          return 2 === U ? (fa = M[7], U = B2(fa), U = lZ(U, b, c), tJ(M, 4, U)) : 3 === U ? vJ(M, M[2]) : 4 === U ? (U = M[8], fa = M[2], U = hh(U), U = G.c(U, 0), M[9] = fa, M[1] = U ? 5 : 6, X) : 5 === U ? (fa = M[7], M[2] = fa, M[1] = 7, X) : 6 === U ? (fa = M[7], U = M[8], U = I(U), U = $3(fa, U, b, c), tJ(M, 8, U)) : 7 === U ? (M[2] = M[2], M[1] = 3, X) : 8 === U ? (U = M[8], fa = dZ(gB, M[2]), U = Eg(U), M[7] = fa, M[8] = U, M[2] = null, M[1] = 2, X) : null;
                         };
                       }(t, E, y, O, S, D, N, x, P, J, R), t, E, y, O, S, D, N, x, P, J, R);
                     }(), Z = function() {
@@ -40024,8 +40019,8 @@ function t8(a, b, c) {
               r = WD.b(a);
               var w = [oH], p = bC.b(r);
               f[7] = p;
-              f[8] = r;
               f[9] = w;
+              f[8] = r;
               f[1] = m(p) ? 3 : 4;
               return X;
             }
@@ -40263,8 +40258,9 @@ lU.P(null, pu, function(a, b, c, d, e) {
               return h[2] = !1, h[1] = 5, X;
             }
             if (15 === r) {
-              var w = h[8], p = h[9], u = h[10];
+              var w = h[8], p = h[9];
               v = h[7];
+              var u = h[10];
               v = pn([Hw], [p]);
               v = wY(u, w, v);
               var z = Uc(null == v);
@@ -40284,7 +40280,7 @@ lU.P(null, pu, function(a, b, c, d, e) {
                   return function(hc) {
                     return Uc(mY(oH.b(Lb), hc));
                   };
-                }(F, y, D, w, p, E, S, H, O, N, H, w, p, F, t, E, y, O, S, D, N, r, f);
+                }(F, E, w, p, D, t, H, S, y, N, H, w, p, F, t, E, y, O, S, D, N, r, f);
               }(), P = function() {
                 return function(cb, ub, Cb, $a, Fc, Dc) {
                   return function(Lb) {
@@ -40299,13 +40295,13 @@ lU.P(null, pu, function(a, b, c, d, e) {
                       return 0 > ob ? 0 : ob;
                     }()], null);
                   };
-                }(F, y, D, w, p, E, S, H, O, N, H, w, p, F, t, E, y, O, S, D, N, x, r, f);
+                }(F, E, w, p, D, t, H, S, y, N, H, w, p, F, t, E, y, O, S, D, N, x, r, f);
               }(), J = function() {
                 return function() {
                   return function(cb) {
                     return tl.c(Math.floor, cb);
                   };
-                }(F, y, D, w, p, E, S, H, O, N, H, w, p, F, t, E, y, O, S, D, N, x, P, r, f);
+                }(F, E, w, p, D, t, H, S, y, N, H, w, p, F, t, E, y, O, S, D, N, x, P, r, f);
               }(), R = Pk.c(J, N), W = Pk.c(P, R), Z = vo(W), da = ol(x, Z);
               v = nd(function() {
                 return function(cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, mc, pb, Sb, $b, Mb, Xb, Kc, xc, Tb, Wc, de, sd, Vb, nc, Td, De, ne, we, ud) {
@@ -40316,12 +40312,12 @@ lU.P(null, pu, function(a, b, c, d, e) {
                       };
                     }(cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, mc, pb, Sb, $b, Mb, Xb, Kc, xc, Tb, Wc, de, sd, Vb, nc, Td, De, ne, we, ud));
                   };
-                }(F, y, D, w, p, E, S, H, O, da, H, w, p, F, t, E, y, O, S, D, N, x, P, J, R, W, Z, da, r, f);
-              }(), S, da);
+                }(F, E, w, p, D, t, H, S, y, da, H, w, p, F, t, E, y, O, S, D, N, x, P, J, R, W, Z, da, r, f);
+              }(), H, da);
               v = dZ(gB, v);
               z = B2(v);
               z = lZ(z, d, e);
-              h[13] = v;
+              h[16] = v;
               return tJ(h, 26, z);
             }
             if (22 === r) {
@@ -40337,14 +40333,14 @@ lU.P(null, pu, function(a, b, c, d, e) {
               return z = h[19], v = h[2], z = rD.b(v), z = y6(z, d, e), h[19] = v, tJ(h, 29, z);
             }
             if (25 === r) {
-              w = h[8];
               var C = h[21];
+              H = h[11];
+              w = h[8];
               p = h[9];
+              t = h[13];
               E = h[14];
               y = h[15];
               u = h[10];
-              O = h[16];
-              S = h[17];
               D = h[18];
               var M = h[2], U = A.c(M, Ms), fa = A.c(M, ar);
               v = Pk.f(function() {
@@ -40359,7 +40355,7 @@ lU.P(null, pu, function(a, b, c, d, e) {
                     }(ne, we, ud, Pc, cb, ub, Cb, $a, Fc, Dc, Lb, hc, Pb, ob, Gb, mc, pb, Sb, $b, Mb, Xb, Kc, xc, Tb, Wc, de, sd, Vb, nc, Td), Pk.f(Qi, ud, De)) : new T(null, 2, 5, V, [0, 0], null);
                     return tl.f(Pi, De, ne);
                   };
-                }(U, y, D, w, p, C, E, M, S, fa, O, u, w, C, p, E, y, u, O, S, D, M, U, fa, r, f);
+                }(U, E, M, w, p, D, C, t, H, fa, y, u, C, H, w, p, t, E, y, u, D, M, U, fa, r, f);
               }(), u, U);
               h[21] = C + 1;
               h[10] = v;
@@ -40380,40 +40376,40 @@ lU.P(null, pu, function(a, b, c, d, e) {
               return C = h[21], h[1] = m(3 < C) ? 14 : 15, X;
             }
             if (2 === r) {
+              H = h[11];
+              var ba = h[23];
               w = h[8];
               p = h[9];
+              t = h[13];
               E = h[14];
               y = h[15];
-              O = h[16];
-              var ba = h[23];
-              S = h[17];
               Y = h[22];
               var oa = h[2], sa = r9(oa), ta = Kz.b(sa), ua = K(ta, 0, null), Ga = K(ta, 1, null), va = function() {
                 return function(cb, ub, Cb) {
                   return function() {
                     return aq(Cb);
                   };
-                }(sa, ta, ua, Ga, w, p, E, y, O, ba, S, Y, oa, sa, ta, ua, Ga, r, f);
+                }(sa, ta, ua, Ga, H, ba, w, p, t, E, y, Y, oa, sa, ta, ua, Ga, r, f);
               }(), Fa = hl(va);
               v = Pk.f(dm, Fa, hl(function() {
                 return function(cb, ub, Cb, $a) {
                   return function() {
                     return aq($a);
                   };
-                }(sa, ta, ua, Ga, w, p, E, y, O, ba, S, Y, oa, sa, ta, ua, Ga, va, Fa, r, f);
+                }(sa, ta, ua, Ga, H, ba, w, p, t, E, y, Y, oa, sa, ta, ua, Ga, va, Fa, r, f);
               }()));
               v = Qk.c(5, v);
               z = new T(null, 1, 5, V, [new T(null, 2, 5, V, [15, 15], null)], null);
               var wa = hh(z), Ha = pn([Hw], [z]);
               Ha = wY(v, wa, Ha);
               var Ma = Uc(null == Ha);
+              h[11] = sa;
+              h[23] = v;
               h[8] = wa;
               h[9] = z;
-              h[14] = ua;
-              h[15] = Ga;
-              h[16] = ta;
-              h[23] = v;
-              h[17] = sa;
+              h[13] = ua;
+              h[14] = Ga;
+              h[15] = ta;
               h[22] = Ha;
               h[1] = Ma ? 3 : 4;
               return X;
@@ -40426,13 +40422,13 @@ lU.P(null, pu, function(a, b, c, d, e) {
             }
             if (11 === r) {
               H = h[11];
+              ba = h[23];
               w = h[8];
               p = h[9];
               F = h[12];
+              t = h[13];
               E = h[14];
               y = h[15];
-              O = h[16];
-              ba = h[23];
               S = h[17];
               D = h[18];
               var Ta = h[2], Ra = A.c(Ta, Ms), Sa = A.c(Ta, ar);
@@ -40442,17 +40438,17 @@ lU.P(null, pu, function(a, b, c, d, e) {
                     var Gb = kh(hc, ob);
                     Gb = null != Gb && (Gb.i & 64 || jc === Gb.o) ? fk(In, Gb) : Gb;
                     Gb = A.c(Gb, hF);
-                    ob = kh(Fc, ob);
+                    ob = kh($a, ob);
                     ob = Pk.f(Qi, ob, Gb);
                     return tl.f(Pi, Pb, ob);
                   };
-                }(Ra, y, Ta, w, p, E, S, Sa, O, ba, H, w, p, F, E, y, O, ba, S, D, Ta, Ra, Sa, r, f);
+                }(Ra, E, w, p, Ta, t, H, Sa, y, ba, H, ba, w, p, F, t, E, y, S, D, Ta, Ra, Sa, r, f);
               }(), ba, Ra);
               C = 0;
-              h[11] = Sa;
               h[21] = C;
               h[12] = Ra;
               h[10] = u;
+              h[17] = Sa;
               h[18] = Ta;
               h[2] = null;
               h[1] = 12;
@@ -40468,7 +40464,7 @@ lU.P(null, pu, function(a, b, c, d, e) {
               return u = h[10], h[2] = u, h[1] = 16, X;
             }
             if (26 === r) {
-              t = h[13];
+              O = h[16];
               var Va = h[2], Ab = xJ(1);
               v = VI(function() {
                 return function(cb, ub, Cb, $a, Fc, Dc, Lb, hc) {
@@ -40541,7 +40537,7 @@ lU.P(null, pu, function(a, b, c, d, e) {
                             xc[1] = 2;
                             return X;
                           }
-                          return 2 === Tb ? (sd = xc[9], Wc = xc[8], Wc = Cg(Wc), de = I(Wc), Wc = Gg(Wc), xc[9] = de, xc[10] = Wc, xc[1] = m(de) ? 4 : 5, X) : 3 === Tb ? (de = dZ(gB, xc[2]), vJ(xc, de)) : 4 === Tb ? (de = xc[7], sd = xc[9], de = Q7(de, sd, d, e), tJ(xc, 7, de)) : 5 === Tb ? (de = xc[7], xc[2] = de, xc[1] = 6, X) : 6 === Tb ? (xc[2] = xc[2], xc[1] = 3, X) : 7 === Tb ? (de = xc[7], sd = xc[9], Wc = xc[10], de = LZ(de, sd, Ak(xc[2])), xc[7] = de, xc[8] = Wc, xc[2] = null, xc[1] = 2, 
+                          return 2 === Tb ? (sd = xc[9], Wc = xc[8], Wc = Cg(Wc), de = I(Wc), Wc = Gg(Wc), xc[9] = de, xc[10] = Wc, xc[1] = m(de) ? 4 : 5, X) : 3 === Tb ? (de = dZ(gB, xc[2]), vJ(xc, de)) : 4 === Tb ? (sd = xc[9], de = xc[7], de = Q7(de, sd, d, e), tJ(xc, 7, de)) : 5 === Tb ? (de = xc[7], xc[2] = de, xc[1] = 6, X) : 6 === Tb ? (xc[2] = xc[2], xc[1] = 3, X) : 7 === Tb ? (sd = xc[9], de = xc[7], Wc = xc[10], de = LZ(de, sd, Ak(xc[2])), xc[7] = de, xc[8] = Wc, xc[2] = null, xc[1] = 2, 
                           X) : null;
                         };
                       }(cb, ub, Cb, $a, Fc, Dc, Lb, hc), cb, ub, Cb, $a, Fc, Dc, Lb, hc);
@@ -40552,7 +40548,7 @@ lU.P(null, pu, function(a, b, c, d, e) {
                     }();
                     return sJ(ob);
                   };
-                }(t, Va, Ab, t, Va, Ab, r, f);
+                }(O, Va, Ab, O, Va, Ab, r, f);
               }());
               h[24] = v;
               return tJ(h, 27, Ab);
@@ -40790,19 +40786,19 @@ mU.P(null, pu, function(a, b, c) {
               return J[2] = J[2], J[1] = 5, X;
             }
             if (6 === R) {
-              return W = J[9], R = I(W), J[8] = R, J[1] = m(R) ? 8 : 9, X;
+              return W = J[8], R = I(W), J[9] = R, J[1] = m(R) ? 8 : 9, X;
             }
             if (3 === R) {
-              return R = new T(null, 4, 5, V, [x, D, N, P], null), W = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dselect units\x3d\x3d\x3d\x3d\x3d\x3d"])), J[10] = W, J[9] = R, J[2] = null, J[1] = 6, X;
+              return R = new T(null, 4, 5, V, [x, D, N, P], null), W = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dselect units\x3d\x3d\x3d\x3d\x3d\x3d"])), J[8] = R, J[10] = W, J[2] = null, J[1] = 6, X;
             }
             if (12 === R) {
-              return W = J[9], R = J[2], W = Eg(W), J[11] = R, J[9] = W, J[2] = null, J[1] = 6, X;
+              return W = J[8], R = J[2], W = Eg(W), J[8] = W, J[11] = R, J[2] = null, J[1] = 6, X;
             }
             if (2 === R) {
               return R = y || !0, J[12] = J[2], J[1] = m(R) ? 3 : 4, X;
             }
             if (11 === R) {
-              var Z = J[8];
+              var Z = J[9];
               R = J[2];
               W = ip(uh(["press", Z]));
               Z = new T(null, 2, 5, V, ["KEY_DOWN", Z], null);
@@ -40938,25 +40934,25 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (86 === M) {
               var Ta = C[12], Ra = new T(null, 1, 5, V, [P], null), Sa = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dopen and close unit menu\x3d\x3d\x3d\x3d\x3d\x3d"])), Va = Ra;
-              C[12] = Ra;
               C[13] = Va;
               C[14] = Sa;
+              C[12] = Ra;
               var Ab = U = C;
               Ab[2] = null;
               Ab[1] = 89;
               return X;
             }
             if (20 === M) {
-              var cb = C[15], ub = C[16], Cb = I(cb);
-              C[16] = Cb;
+              var cb = C[15], ub = C[16], Cb = I(ub);
+              C[15] = Cb;
               U = C;
               U[1] = m(Cb) ? 22 : 23;
               return X;
             }
             if (72 === M) {
               var $a = C[17], Fc = C[2], Dc = ip(uh(["press", $a])), Lb = new T(null, 2, 5, V, ["KEY_DOWN", $a], null);
-              C[18] = Dc;
-              C[19] = Fc;
+              C[18] = Fc;
+              C[19] = Dc;
               U = C;
               return uJ(U, 73, c, Lb);
             }
@@ -41070,8 +41066,8 @@ mU.P(null, pu, function(a, b, c) {
             if (95 === M) {
               Va = C[13];
               var Kd = C[2], Xc = Eg(Va);
-              C[33] = Kd;
               C[13] = Xc;
+              C[33] = Kd;
               var La = U = C;
               La[2] = null;
               La[1] = 89;
@@ -41303,8 +41299,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (6 === M) {
-              var Re = C[56], Ef = C[57], df = I(Re);
-              C[57] = df;
+              var Re = C[56], Ef = C[57], df = I(Ef);
+              C[56] = df;
               U = C;
               U[1] = m(df) ? 8 : 9;
               return X;
@@ -41336,8 +41332,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (25 === M) {
-              ub = C[16];
-              var Id = C[2], ig = ip(uh(["press", ub])), Lg = new T(null, 2, 5, V, ["KEY_DOWN", ub], null);
+              cb = C[15];
+              var Id = C[2], ig = ip(uh(["press", cb])), Lg = new T(null, 2, 5, V, ["KEY_DOWN", cb], null);
               C[63] = ig;
               C[64] = Id;
               U = C;
@@ -41351,9 +41347,9 @@ mU.P(null, pu, function(a, b, c) {
             if (17 === M) {
               pb = C[23];
               var Ge = new T(null, 5, 5, V, [S, S, S, S, P], null), xg = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dtest gundam from ground to sky\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              cb = Ge;
+              ub = Ge;
               C[23] = Ge;
-              C[15] = cb;
+              C[16] = ub;
               C[65] = xg;
               var Se = U = C;
               Se[2] = null;
@@ -41363,19 +41359,19 @@ mU.P(null, pu, function(a, b, c) {
             if (3 === M) {
               Bc = C[35];
               var jg = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dcreate unit\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              Re = Bh;
-              C[66] = jg;
-              C[56] = Re;
+              Ef = Bh;
               C[35] = Bh;
+              C[57] = Ef;
+              C[66] = jg;
               var Te = U = C;
               Te[2] = null;
               Te[1] = 6;
               return X;
             }
             if (12 === M) {
-              Re = C[56];
-              var Fh = C[2], Wh = Eg(Re);
-              C[56] = Wh;
+              Ef = C[57];
+              var Fh = C[2], Wh = Eg(Ef);
+              C[57] = Wh;
               C[67] = Fh;
               var yg = U = C;
               yg[2] = null;
@@ -41431,8 +41427,8 @@ mU.P(null, pu, function(a, b, c) {
             if (76 === M) {
               var Mc = new T(null, 1, 5, V, [N], null), Xh = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dmove cursor back\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Td = Mc;
-              C[28] = Td;
               C[71] = Xh;
+              C[28] = Td;
               var rk = U = C;
               rk[2] = null;
               rk[1] = 79;
@@ -41460,8 +41456,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (11 === M) {
-              Ef = C[57];
-              var Jj = C[2], lg = ip(uh(["press", Ef])), Zh = new T(null, 2, 5, V, ["KEY_DOWN", Ef], null);
+              Re = C[56];
+              var Jj = C[2], lg = ip(uh(["press", Re])), Zh = new T(null, 2, 5, V, ["KEY_DOWN", Re], null);
               C[74] = Jj;
               C[75] = lg;
               U = C;
@@ -41514,10 +41510,10 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (26 === M) {
-              cb = C[15];
-              var qp = C[2], Qn = Eg(cb);
-              C[15] = Qn;
+              ub = C[16];
+              var qp = C[2], Qn = Eg(ub);
               C[78] = qp;
+              C[16] = Qn;
               var ct = U = C;
               ct[2] = null;
               ct[1] = 20;
@@ -41535,8 +41531,9 @@ mU.P(null, pu, function(a, b, c) {
               return tJ(U, 84, Li);
             }
             if (79 === M) {
+              var Rn = C[79];
               Td = C[28];
-              var Rn = C[79], Wk = I(Td);
+              var Wk = I(Td);
               C[79] = Wk;
               U = C;
               U[1] = m(Wk) ? 81 : 82;
@@ -41577,8 +41574,8 @@ mU.P(null, pu, function(a, b, c) {
             if (73 === M) {
               Sf = C[59];
               var kr = C[2], lr = Eg(Sf);
-              C[59] = lr;
               C[82] = kr;
+              C[59] = lr;
               var mr = U = C;
               mr[2] = null;
               mr[1] = 67;
@@ -41622,8 +41619,8 @@ mU.P(null, pu, function(a, b, c) {
               ba = C[7];
               var nr = new T(null, 2, 5, V, [S, P], null), xp = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dopen and close system menu\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Vb = nr;
-              C[84] = xp;
               C[7] = nr;
+              C[84] = xp;
               C[27] = Vb;
               var yp = U = C;
               yp[2] = null;
@@ -41648,8 +41645,8 @@ mU.P(null, pu, function(a, b, c) {
             if (42 === M) {
               var or = new T(null, 5, 5, V, [J, N, N, N, N], null), Fm = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dmove cursor back\x3d\x3d\x3d\x3d\x3d\x3d"]));
               hg = or;
-              C[61] = hg;
               C[85] = Fm;
+              C[61] = hg;
               var Gm = U = C;
               Gm[2] = null;
               Gm[1] = 45;
@@ -41664,8 +41661,8 @@ mU.P(null, pu, function(a, b, c) {
             if (37 === M) {
               Vd = C[44];
               var Pl = C[2], Ap = ip(uh(["press", Vd])), Hm = new T(null, 2, 5, V, ["KEY_DOWN", Vd], null);
-              C[86] = Ap;
-              C[87] = Pl;
+              C[86] = Pl;
+              C[87] = Ap;
               U = C;
               return uJ(U, 38, c, Hm);
             }
@@ -41764,25 +41761,25 @@ mU.P(null, pu, function(a, b, c) {
           return function(C) {
             var M = C[1];
             if (65 === M) {
-              var U = C[7], fa = C[8], Y = I(fa);
-              C[7] = Y;
+              var U = C[7], fa = C[8], Y = I(U);
+              C[8] = Y;
               var ba = C;
               ba[1] = m(Y) ? 67 : 68;
               return X;
             }
             if (70 === M) {
-              U = C[7];
-              var oa = C[2], sa = ip(uh(["press", U])), ta = new T(null, 2, 5, V, ["KEY_DOWN", U], null);
-              C[9] = oa;
-              C[10] = sa;
+              fa = C[8];
+              var oa = C[2], sa = ip(uh(["press", fa])), ta = new T(null, 2, 5, V, ["KEY_DOWN", fa], null);
+              C[9] = sa;
+              C[10] = oa;
               ba = C;
               return uJ(ba, 71, c, ta);
             }
             if (62 === M) {
               var ua = new T(null, 2, 5, V, [N, N], null), Ga = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dback\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              fa = ua;
+              U = ua;
+              C[7] = U;
               C[11] = Ga;
-              C[8] = fa;
               var va = ba = C;
               va[2] = null;
               va[1] = 65;
@@ -41827,7 +41824,7 @@ mU.P(null, pu, function(a, b, c) {
                     }
                     return sc;
                   };
-                }(ub, cb, cb, ub, Cb, V, M, E, y, O, S, D, N, x, P, J, R, W, Z, da);
+                }(cb, ub, cb, ub, Cb, V, M, E, y, O, S, D, N, x, P, J, R, W, Z, da);
               }()], null);
               C[19] = Cb;
               ba = C;
@@ -41882,11 +41879,11 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (39 === M) {
-              cb = C[17];
+              ub = C[18];
               var sd = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dbullet count\x3d\x3d\x3d\x3d\x3d\x3d"])), Vb = Bh;
               C[26] = sd;
-              C[17] = Bh;
               C[27] = Vb;
+              C[18] = Bh;
               var nc = ba = C;
               nc[2] = null;
               nc[1] = 42;
@@ -41905,8 +41902,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (54 === M) {
-              Ta = C[14];
               Lb = C[20];
+              Ta = C[14];
               var we = I(Lb);
               C[14] = we;
               ba = C;
@@ -42029,8 +42026,8 @@ mU.P(null, pu, function(a, b, c) {
               return tJ(ba, 47, oe);
             }
             if (6 === M) {
-              var Gd = C[38], Zc = C[39], pe = I(Zc);
-              C[38] = pe;
+              var Gd = C[38], Zc = C[39], pe = I(Gd);
+              C[39] = pe;
               ba = C;
               ba[1] = m(pe) ? 8 : 9;
               return X;
@@ -42050,8 +42047,8 @@ mU.P(null, pu, function(a, b, c) {
             if (51 === M) {
               var Le = new T(null, 8, 5, V, [P, D, S, P, S, S, P, P], null), Me = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dopen menu and attack use bullet weapon\x3d\x3d\x3d\x3d\x3d\x3d"]));
               Lb = Le;
-              C[41] = Me;
               C[20] = Lb;
+              C[41] = Me;
               var vf = ba = C;
               vf[2] = null;
               vf[1] = 54;
@@ -42092,20 +42089,20 @@ mU.P(null, pu, function(a, b, c) {
             if (3 === M) {
               Yc = C[31];
               var Wd = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dtest transform\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              Zc = Bh;
-              C[31] = Bh;
+              Gd = Bh;
               C[44] = Wd;
-              C[39] = Zc;
+              C[31] = Bh;
+              C[38] = Gd;
               var Lc = ba = C;
               Lc[2] = null;
               Lc[1] = 6;
               return X;
             }
             if (12 === M) {
-              Zc = C[39];
-              var me = C[2], Fe = Eg(Zc);
+              Gd = C[38];
+              var me = C[2], Fe = Eg(Gd);
+              C[38] = Fe;
               C[45] = me;
-              C[39] = Fe;
               var xf = ba = C;
               xf[2] = null;
               xf[1] = 6;
@@ -42140,8 +42137,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (35 === M) {
               var Rf = C[53], Df = C[2], Kg = ip(uh(["press", Rf])), Hd = new T(null, 2, 5, V, ["KEY_DOWN", Rf], null);
-              C[54] = Df;
-              C[55] = Kg;
+              C[54] = Kg;
+              C[55] = Df;
               ba = C;
               return uJ(ba, 36, c, Hd);
             }
@@ -42164,8 +42161,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (11 === M) {
-              Gd = C[38];
-              var Ef = C[2], df = ip(uh(["press", Gd])), Ff = new T(null, 2, 5, V, ["KEY_DOWN", Gd], null);
+              Zc = C[39];
+              var Ef = C[2], df = ip(uh(["press", Zc])), Ff = new T(null, 2, 5, V, ["KEY_DOWN", Zc], null);
               C[56] = Ef;
               C[57] = df;
               ba = C;
@@ -42179,10 +42176,10 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (5 === M) {
               var Sf = C[2];
-              ub = Kk(0);
+              cb = Kk(0);
               var ag = y || !1;
               C[58] = Sf;
-              C[18] = ub;
+              C[17] = cb;
               ba = C;
               ba[1] = m(ag) ? 39 : 40;
               return X;
@@ -42218,8 +42215,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (30 === M) {
-              pb = C[22];
               Rf = C[53];
+              pb = C[22];
               var ig = I(pb);
               C[53] = ig;
               ba = C;
@@ -42259,10 +42256,10 @@ mU.P(null, pu, function(a, b, c) {
               return tJ(ba, 70, Te);
             }
             if (71 === M) {
-              fa = C[8];
-              var Fh = C[2], Wh = Eg(fa);
+              U = C[7];
+              var Fh = C[2], Wh = Eg(U);
               C[62] = Fh;
-              C[8] = Wh;
+              C[7] = Wh;
               var yg = ba = C;
               yg[2] = null;
               yg[1] = 65;
@@ -42323,7 +42320,7 @@ mU.P(null, pu, function(a, b, c) {
                     Lk($c, wl(Mc, new T(null, 3, 5, V, [1, 1, Qx], null)));
                     return sc;
                   };
-                }(ub, cb, cb, ub, Mg, V, M, E, y, O, S, D, N, x, P, J, R, W, Z, da);
+                }(cb, ub, cb, ub, Mg, V, M, E, y, O, S, D, N, x, P, J, R, W, Z, da);
               }()], null);
               C[64] = Mg;
               ba = C;
@@ -42439,8 +42436,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (58 === M) {
               var wa = new T(null, 8, 5, V, [P, P, S, P, J, J, J, N], null), Ha = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dmove\x3d\x3d\x3d\x3d\x3d\x3d"])), Ma = wa;
-              C[9] = Ha;
-              C[10] = Ma;
+              C[9] = Ma;
+              C[10] = Ha;
               var Ta = U = C;
               Ta[2] = null;
               Ta[1] = 61;
@@ -42491,8 +42488,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (46 === M) {
               var hc = C[14], Pb = C[2], ob = ip(uh(["press", hc])), Gb = new T(null, 2, 5, V, ["KEY_DOWN", hc], null);
-              C[15] = ob;
-              C[16] = Pb;
+              C[15] = Pb;
+              C[16] = ob;
               U = C;
               return uJ(U, 47, c, Gb);
             }
@@ -42529,8 +42526,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (48 === M) {
               var Wc = new T(null, 13, 5, V, [P, D, x, D, N, N, S, S, D, D, x, x, J], null), de = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dmenu\x3d\x3d\x3d\x3d\x3d\x3d"])), sd = Wc;
-              C[20] = sd;
-              C[21] = de;
+              C[20] = de;
+              C[21] = sd;
               var Vb = U = C;
               Vb[2] = null;
               Vb[1] = 51;
@@ -42556,8 +42553,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (31 === M) {
-              var we = C[23], ud = C[24], Pc = I(ud);
-              C[23] = Pc;
+              var we = C[23], ud = C[24], Pc = I(we);
+              C[24] = Pc;
               U = C;
               U[1] = m(Pc) ? 33 : 34;
               return X;
@@ -42577,8 +42574,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (56 === M) {
               var Ed = C[26], pc = C[2], Ec = ip(uh(["press", Ed])), ee = new T(null, 2, 5, V, ["KEY_DOWN", Ed], null);
-              C[27] = pc;
-              C[28] = Ec;
+              C[27] = Ec;
+              C[28] = pc;
               U = C;
               return uJ(U, 57, c, ee);
             }
@@ -42613,10 +42610,10 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (36 === M) {
-              we = C[23];
-              var Bc = C[2], dd = ip(uh(["press", we])), zc = new T(null, 2, 5, V, ["KEY_DOWN", we], null);
-              C[31] = dd;
-              C[32] = Bc;
+              ud = C[24];
+              var Bc = C[2], dd = ip(uh(["press", ud])), zc = new T(null, 2, 5, V, ["KEY_DOWN", ud], null);
+              C[31] = Bc;
+              C[32] = dd;
               U = C;
               return uJ(U, 37, c, zc);
             }
@@ -42635,9 +42632,8 @@ mU.P(null, pu, function(a, b, c) {
               return tJ(U, 46, gc);
             }
             if (61 === M) {
-              var rc = C[34];
-              Ma = C[10];
-              var Nb = I(Ma);
+              Ma = C[9];
+              var rc = C[34], Nb = I(Ma);
               C[34] = Nb;
               U = C;
               U[1] = m(Nb) ? 63 : 64;
@@ -42664,8 +42660,8 @@ mU.P(null, pu, function(a, b, c) {
             }
             if (28 === M) {
               var pe = new T(null, 4, 5, V, [S, D, N, x], null), Vd = ip(uh(["\x3d\x3d\x3d\x3d\x3d\x3dmove cursor\x3d\x3d\x3d\x3d\x3d\x3d"]));
-              ud = pe;
-              C[24] = ud;
+              we = pe;
+              C[23] = we;
               C[37] = Vd;
               var Md = U = C;
               Md[2] = null;
@@ -42679,8 +42675,8 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (51 === M) {
+              sd = C[21];
               Ed = C[26];
-              sd = C[20];
               var Le = I(sd);
               C[26] = Le;
               U = C;
@@ -42720,8 +42716,8 @@ mU.P(null, pu, function(a, b, c) {
             if (12 === M) {
               Gd = C[36];
               var gg = C[2], Wd = Eg(Gd);
-              C[36] = Wd;
               C[41] = gg;
+              C[36] = Wd;
               var Lc = U = C;
               Lc[2] = null;
               Lc[1] = 6;
@@ -42737,15 +42733,15 @@ mU.P(null, pu, function(a, b, c) {
             if (66 === M) {
               rc = C[34];
               var Fe = C[2], xf = ip(uh(["press", rc])), nf = new T(null, 2, 5, V, ["KEY_DOWN", rc], null);
-              C[43] = Fe;
-              C[44] = xf;
+              C[43] = xf;
+              C[44] = Fe;
               U = C;
               return uJ(U, 67, c, nf);
             }
             if (23 === M) {
               var yf = C[45], Of = C[2], of = ip(uh(["press", yf])), Cf = new T(null, 2, 5, V, ["KEY_DOWN", yf], null);
-              C[46] = of;
-              C[47] = Of;
+              C[46] = Of;
+              C[47] = of;
               U = C;
               return uJ(U, 24, c, Cf);
             }
@@ -42779,10 +42775,10 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (57 === M) {
-              sd = C[20];
+              sd = C[21];
               var Rc = C[2], Qe = Eg(sd);
+              C[21] = Qe;
               C[52] = Rc;
-              C[20] = Qe;
               var Re = U = C;
               Re[2] = null;
               Re[1] = 51;
@@ -42801,8 +42797,8 @@ mU.P(null, pu, function(a, b, c) {
             if (11 === M) {
               oe = C[35];
               var pf = C[2], Sf = ip(uh(["press", oe])), ag = new T(null, 2, 5, V, ["KEY_DOWN", oe], null);
-              C[54] = pf;
-              C[55] = Sf;
+              C[54] = Sf;
+              C[55] = pf;
               U = C;
               return uJ(U, 12, c, ag);
             }
@@ -42908,18 +42904,18 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (67 === M) {
-              Ma = C[10];
+              Ma = C[9];
               var Gh = C[2], rh = Eg(Ma);
+              C[9] = rh;
               C[61] = Gh;
-              C[10] = rh;
               var kg = U = C;
               kg[2] = null;
               kg[1] = 61;
               return X;
             }
             if (71 === M) {
-              pb = C[17];
               qe = C[49];
+              pb = C[17];
               var Mg = I(pb);
               C[49] = Mg;
               U = C;
@@ -42933,10 +42929,10 @@ mU.P(null, pu, function(a, b, c) {
               return X;
             }
             if (37 === M) {
-              ud = C[24];
-              var sc = C[2], If = Eg(ud);
+              we = C[23];
+              var sc = C[2], If = Eg(we);
+              C[23] = If;
               C[62] = sc;
-              C[24] = If;
               var Mc = U = C;
               Mc[2] = null;
               Mc[1] = 31;
@@ -43140,7 +43136,7 @@ function h4(a, b) {
               return n = k[7], n = G.c("loadGameplay", n), k[1] = n ? 18 : 19, X;
             }
             if (21 === n) {
-              return n = k[2], f = WD.b(n), f = $V(f), k[8] = n, k[10] = f, k[2] = null, k[1] = 2, X;
+              return n = k[2], f = WD.b(n), f = $V(f), k[10] = f, k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (31 === n) {
               return k[1] = 33, X;
@@ -43155,7 +43151,7 @@ function h4(a, b) {
               return n = k[11], f = k[2], k[8] = n, k[12] = f, k[2] = null, k[1] = 2, X;
             }
             if (22 === n) {
-              return n = k[8], f = k[9], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 25, n);
+              return f = k[9], n = k[8], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 25, n);
             }
             if (29 === n) {
               return n = k[2], k[8] = n, k[2] = null, k[1] = 2, X;
@@ -43167,13 +43163,13 @@ function h4(a, b) {
               return k[2] = k[2], k[1] = 24, X;
             }
             if (25 === n) {
-              return n = k[2], f = WD.b(n), f = $V(f), k[13] = f, k[8] = n, k[2] = null, k[1] = 2, X;
+              return n = k[2], f = WD.b(n), f = $V(f), k[8] = n, k[13] = f, k[2] = null, k[1] = 2, X;
             }
             if (34 === n) {
               return k[2] = null, k[1] = 35, X;
             }
             if (17 === n) {
-              return n = k[8], f = k[2], k[8] = n, k[14] = f, k[2] = null, k[1] = 2, X;
+              return n = k[8], f = k[2], k[14] = f, k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (3 === n) {
               return vJ(k, k[2]);
@@ -43215,16 +43211,16 @@ function h4(a, b) {
               return n = k[8], k[2] = n, k[1] = 32, X;
             }
             if (10 === n) {
-              n = k[8];
               f = k[9];
+              n = k[8];
               h = K(f, 0, null);
               f = K(f, 1, null);
               var r = localStorage.removeItem("lobby"), v = localStorage.removeItem("gameplay");
               n = Jh.f(n, WD, ZV);
               h = new T(null, 2, 5, V, ["ok", new T(null, 1, 5, V, [h], null)], null);
-              k[20] = f;
-              k[21] = v;
-              k[22] = r;
+              k[20] = r;
+              k[21] = f;
+              k[22] = v;
               k[11] = n;
               return uJ(k, 13, b, h);
             }

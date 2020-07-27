@@ -59,15 +59,15 @@
                               [_ targetUnitWeapons] (data/getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
                               targetUnitValidWeapons (filter #(not (data/invalidWeapon? gameplayCtx targetUnit % nil)) targetUnitWeapons)
                               targetUnitBestWeaponUnit (data/getBestWeapon gameplayCtx targetUnit targetUnitValidWeapons [unit])
-                              targetUnitBestWeapon (or (first targetUnitBestWeaponUnit) (first targetUnitWeapons))
-                              _ (when (not (s/valid? ::type/weaponState targetUnitBestWeapon))
-                                  (throw (js/Error. (str "[do_goal.cljs] targetUnitBestWeapon must not nil"))))
-                              targetUnitBestAction (if targetUnitBestWeaponUnit
-                                                     [:attack targetUnitBestWeapon]
-                                                     [:guard])
                               battleMenu [{:unit targetUnit
-                                           :action targetUnitBestAction
-                                           :hitRate (data/getUnitHitRate gameplayCtx targetUnit targetUnitBestWeapon unit)}
+                                           :action (if targetUnitBestWeaponUnit
+                                                     (let [[bestWeapon _] targetUnitBestWeaponUnit]
+                                                       [:attack bestWeapon])
+                                                     [:guard])
+                                           :hitRate (if targetUnitBestWeaponUnit
+                                                      (let [[bestWeapon _] targetUnitBestWeaponUnit]
+                                                        (data/getUnitHitRate gameplayCtx targetUnit bestWeapon unit))
+                                                      0)}
                                           {:unit unit
                                            :action [:attack weapon]
                                            :hitRate (data/getUnitHitRate gameplayCtx unit weapon targetUnit)}]
