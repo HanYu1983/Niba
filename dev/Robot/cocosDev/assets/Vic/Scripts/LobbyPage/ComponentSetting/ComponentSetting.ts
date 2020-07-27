@@ -10,6 +10,7 @@ import MenuButtons from "../../MenuButtons";
 import MenuButton from "../../MenuButton";
 import ViewController from "../../ViewController";
 import ListPageController from "../../ListPageController";
+import RobotListItem from "../RobotStore/RobotListItem";
 
 const {ccclass, property} = cc._decorator;
 
@@ -32,18 +33,21 @@ export default class ComponentSetting extends BasicViewer {
 
     init(){
         this.componentList.list.updateItem = (btn:MenuButton, data:any) => {
-            cc.log(data);
+            // cc.log(data);
             btn.setLabel(data.title);
+            (btn as RobotListItem).money.string = data.powerCost;
         };
 
         this.robotList.list.updateItem = (btn:MenuButton, data:any) => {
-            cc.log(data);
+            // cc.log(data);
             btn.setLabel(data.robotState.title);
+            (btn as RobotListItem).money.string = data.robotState.power;
         };
 
         this.robotEquipList.list.updateItem = (btn:MenuButton, data:any) => {
-            cc.log(data);
+            // cc.log(data);
             btn.setLabel(data.title);
+            (btn as RobotListItem).money.string = data.powerCost;
         };
 
         this.titleMenu.updateItem = (btn:MenuButton, data:any) => {
@@ -113,7 +117,7 @@ export default class ComponentSetting extends BasicViewer {
             let items = data.map((data)=>{
                 return data[1];
             });
-            items.unshift({title:"拆除"})
+            items.unshift({title:"拆除", powerCost:""})
             this.componentList.list.open();
             this.componentList.list.setData(items);
         });
@@ -136,7 +140,7 @@ export default class ComponentSetting extends BasicViewer {
     setRobotEquipList(){
         let robot = this.robotList.list.getFocus();
         let items = robot.robotState.components.slice();
-        items.push({title:"新增"});
+        items.push({title:"新增", powerCost:""});
         this.robotEquipList.list.close()
         this.robotEquipList.list.open();
         this.robotEquipList.list.setData(items);
