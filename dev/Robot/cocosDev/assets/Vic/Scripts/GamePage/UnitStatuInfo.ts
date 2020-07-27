@@ -44,7 +44,7 @@ export default class UnitStatuInfo extends BasicViewer {
                 this.unitImage.spriteFrame = image;
             }
 
-            this.unitName.string = unit.robotState.robotKey;
+            this.unitName.string = unit.robotState.title;
 
             const hp:number = unit.robotState.hp;
             const en:number = unit.robotState.en;
