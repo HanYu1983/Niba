@@ -61,27 +61,33 @@ export default class LandUnits extends cc.Component {
         this.clearUnits();
         for (const element of units) {
             const unitId = element.key;
+            const pos = element.position;
+            let unitNode: cc.Node = this._pool.acquire();
+            unitNode.setParent(this.node);
+
+            let gridPos = ViewController.instance.view.getGridPos(pos);
+            unitNode.x = gridPos[0];
+            unitNode.y = gridPos[1];
+            unitNode.active = true;
+            
+            let unit: Unit = unitNode.getComponent(Unit);
+            unit.unitId = unitId;
 
             if (element.itemState != undefined){
-                cc.log("item!")
-                cc.log(element)
+                let itemKey = element.key;
+
+                // 暫時的，目前key還不確定
+                if( itemKey == "_item_13" ){
+                    itemKey = "land_box";
+                }
+                unit.setUnitImage(itemKey);
+                unit.setColor(cc.Color.WHITE);
             }else{
                 const unitName = element.robotState.robotKey;
-                const isPlayer = (element["playerKey"] == "player");
+                const isPlayer = (element.playerKey == "player");
                 const isDone = element.robotState.tags.done != undefined;
                 const isSky = element.robotState.tags.sky != undefined;
-                const pos = element["position"];
-
-                let unitNode: cc.Node = this._pool.acquire();
-                unitNode.setParent(this.node);
-
-                let gridPos = ViewController.instance.view.getGridPos(pos);
-                unitNode.x = gridPos[0];
-                unitNode.y = gridPos[1];
-                unitNode.active = true;
-
-                let unit: Unit = unitNode.getComponent(Unit);
-                unit.unitId = unitId;
+                
                 if (isSky) unit.unit.y += 6;
 
                 unit.setUnitImage(unitName);
