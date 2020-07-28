@@ -179,7 +179,7 @@ export default class LandUnits extends cc.Component {
             let actions = [];
             moveTo.forEach(element => {
                 let gridPos = ViewController.instance.view.getGridPos(element);
-                let action = cc.moveTo(.1, gridPos[0], gridPos[1]);
+                let action = cc.moveTo(.05, gridPos[0], gridPos[1]);
                 //action.easing(cc.easeSineOut());
                 actions.push(action);
             });
