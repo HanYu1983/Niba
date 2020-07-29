@@ -1242,7 +1242,7 @@
                                                                     (= robot key)))
                                                           ffirst
                                                           ((fn [key]
-                                                             (-> gameplayCtx :lobbyCtx :pilots key)))))]
+                                                             ((-> gameplayCtx :lobbyCtx :pilots) key)))))]
                                        {:key key
                                         :robotState (merge {:robotKey robotKey}
                                                            (when pilotKey
