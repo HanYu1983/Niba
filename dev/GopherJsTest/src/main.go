@@ -5,6 +5,10 @@ import (
 )
 
 func main() {
+	app.Test11()
+}
+
+func main2() {
 	app.Test1()
 	app.Test2()
 	app.Test3()

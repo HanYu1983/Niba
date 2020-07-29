@@ -276,3 +276,72 @@ func Test10() {
 
 	input <- Event{OnStartApp, nil}
 }
+
+var (
+	planck  = js.Global.Get("planck")
+	world   = planck.Get("World")
+	console = js.Global.Get("console")
+)
+
+const (
+	createDynamicBody = "createDynamicBody"
+	vec2              = "Vec2"
+	log               = "log"
+)
+
+type Body struct {
+	*js.Object
+}
+
+type World struct {
+	*js.Object
+}
+
+type EntitySystem struct {
+	Entities []int
+	Body     map[int]Body
+	SeqId    int
+}
+
+type Gameplay struct {
+	World        World
+	EntitySystem EntitySystem
+}
+
+func CreateCar(gameplay *Gameplay) int {
+	id := gameplay.EntitySystem.SeqId + 1
+	gameplay.EntitySystem.Entities = append(gameplay.EntitySystem.Entities, id)
+	gameplay.EntitySystem.Body[id] = Body{gameplay.World.Object.Call(createDynamicBody, map[string]interface{}{"position": planck.Call(vec2, 0, 0)})}
+	gameplay.EntitySystem.SeqId++
+	return id
+}
+
+func Update(gameplay *Gameplay) {
+	for _, entityId := range gameplay.EntitySystem.Entities {
+		body, hasBody := gameplay.EntitySystem.Body[entityId]
+		if hasBody {
+
+		}
+		var _ = body
+	}
+	gameplay.World.Object.Call("update")
+}
+
+func Test11() {
+	gameplayCh := make(chan Gameplay)
+	world := world.New(map[string]interface{}{"gravity": planck.Call(vec2, 0, 0)})
+	gameplay := Gameplay{World{world}, EntitySystem{[]int{}, map[int]Body{}, 0}}
+
+	go func(gameplay Gameplay, output chan<- Gameplay) {
+		CreateCar(&gameplay)
+		Update(&gameplay)
+		output <- gameplay
+	}(gameplay, gameplayCh)
+
+	go func(input <-chan Gameplay) {
+		select {
+		case gameplay := <-input:
+			var _ = gameplay
+		}
+	}(gameplayCh)
+}
