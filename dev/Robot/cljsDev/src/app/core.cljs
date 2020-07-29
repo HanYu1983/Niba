@@ -12,9 +12,9 @@
             [module.v1.common]
             [app.lobby.core]))
 
-(s/check-asserts true)
-(set! module.v1.common/assert? true)
-(set! tool.core/assert? true)
+(s/check-asserts false)
+(set! module.v1.common/assert? false)
+(set! tool.core/assert? false)
 
 (def defaultModel {:lobbyCtx (app.lobby.model/load)})
 

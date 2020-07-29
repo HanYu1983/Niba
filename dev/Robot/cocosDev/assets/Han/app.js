@@ -43039,7 +43039,7 @@ NJ(NL(eE, null, Bh, new Ac(null, 1, [Sv, 4], null), eE));
 RT.P(null, new T(null, 2, 5, V, [hx, nH], null), function(a) {
   return 0 === av.c(a, 0) && 0 === xu.c(a, 0) ? ip(uh(["Success!"])) : ip(uh(["FAIL"]));
 });
-b7 = c7 = CM = !0;
+b7 = c7 = CM = !1;
 var g4 = new Ac(null, 1, [WD, function() {
   if (BM) {
     if (m(se(new zg(function() {
@@ -43139,7 +43139,7 @@ function h4(a, b) {
               return n = k[7], n = G.c("loadGameplay", n), k[1] = n ? 18 : 19, X;
             }
             if (21 === n) {
-              return n = k[2], f = WD.b(n), f = $V(f), k[10] = f, k[8] = n, k[2] = null, k[1] = 2, X;
+              return n = k[2], f = WD.b(n), f = $V(f), k[8] = n, k[10] = f, k[2] = null, k[1] = 2, X;
             }
             if (31 === n) {
               return k[1] = 33, X;
@@ -43151,7 +43151,7 @@ function h4(a, b) {
               return n = k[8], k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (13 === n) {
-              return n = k[11], f = k[2], k[12] = f, k[8] = n, k[2] = null, k[1] = 2, X;
+              return n = k[11], f = k[2], k[8] = n, k[12] = f, k[2] = null, k[1] = 2, X;
             }
             if (22 === n) {
               return n = k[8], f = k[9], n = lU.N ? lU.N(nU, n, f, a, b) : lU.call(null, nU, n, f, a, b), tJ(k, 25, n);
@@ -43199,7 +43199,7 @@ function h4(a, b) {
               return h = k[15], n = k[8], f = k[2], h = pn([Mr], [h]), n = lo.g(uh([n, h])), k[16] = f, k[8] = n, k[2] = null, k[1] = 2, X;
             }
             if (5 === n) {
-              return f = k[9], n = K(f, 0, null), f = K(f, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[17] = f, k[18] = n, tJ(k, 8, h);
+              return f = k[9], n = K(f, 0, null), f = K(f, 1, null), h = kU.b ? kU.b(nU) : kU.call(null, nU), k[17] = n, k[18] = f, tJ(k, 8, h);
             }
             if (14 === n) {
               return f = k[9], n = K(f, 0, null), f = K(f, 1, null), n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, ni(localStorage.gameplay)], null)], null), k[19] = f, uJ(k, 17, b, n);
@@ -43221,13 +43221,13 @@ function h4(a, b) {
               var r = localStorage.removeItem("lobby"), v = localStorage.removeItem("gameplay");
               n = Jh.f(n, WD, ZV);
               h = new T(null, 2, 5, V, ["ok", new T(null, 1, 5, V, [h], null)], null);
-              k[20] = r;
-              k[11] = n;
+              k[20] = f;
               k[21] = v;
-              k[22] = f;
+              k[22] = r;
+              k[11] = n;
               return uJ(k, 13, b, h);
             }
-            return 18 === n ? (n = k[8], n = p7.C ? p7.C(nU, n, a, b) : p7.call(null, nU, n, a, b), tJ(k, 21, n)) : 8 === n ? (n = k[18], f = k[2], n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, f], null)], null), k[15] = f, uJ(k, 9, b, n)) : null;
+            return 18 === n ? (n = k[8], n = p7.C ? p7.C(nU, n, a, b) : p7.call(null, nU, n, a, b), tJ(k, 21, n)) : 8 === n ? (n = k[17], f = k[2], n = new T(null, 2, 5, V, ["ok", new T(null, 2, 5, V, [n, f], null)], null), k[15] = f, uJ(k, 9, b, n)) : null;
           };
         }(d), d);
       }(), g = function() {
