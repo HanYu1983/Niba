@@ -34,7 +34,7 @@
               65 :left
               68 :right
               13 :enter
-              27 :cancel
+              222 :cancel
               38 :rup
               40 :rdown
               37 :rleft
