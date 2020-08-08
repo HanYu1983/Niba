@@ -4,6 +4,10 @@ import (
 	"app"
 )
 
-func main() {
+func init() {
 	app.Main()
+}
+
+func main() {
+
 }

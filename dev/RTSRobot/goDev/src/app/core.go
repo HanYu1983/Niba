@@ -60,6 +60,11 @@ func Main() {
 		return acc
 	}, nil)
 
+	find := planck.ReduceFixtures(gameplay.World, FindID("0"), nil)
+	_console.Log("find", find)
+
+	_console.Log(gameplay.State)
+
 	gameplayCh := make(chan Gameplay)
 	go func(gameplay Gameplay, output chan<- Gameplay) {
 

@@ -39,7 +39,7 @@ func CreatePlayer(gameplay Gameplay) (Gameplay, error) {
 	gameplay.State.EntitySystem.IDSeq++
 	gameplay.State.EntitySystem.Entities = append(gameplay.State.EntitySystem.Entities, id)
 	body := gameplay.World.Call("createDynamicBody", map[string]interface{}{
-		"position": _planck.Vec2(10, 0),
+		"position": _planck.Vec2(100, 0),
 		"userData": id,
 	})
 	body.Call("createFixture",
@@ -56,6 +56,19 @@ func CreatePlayer(gameplay Gameplay) (Gameplay, error) {
 		},
 	)
 	return gameplay, nil
+}
+
+// FindID is
+func FindID(id string) planck.FixtureReducer {
+	return func(ctx interface{}, body planck.Body, fixture planck.Fixture) interface{} {
+		if ctx != nil {
+			return ctx
+		}
+		if body.Call("getUserData").String() == id {
+			return body
+		}
+		return nil
+	}
 }
 
 var (
