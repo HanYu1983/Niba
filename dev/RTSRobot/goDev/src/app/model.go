@@ -16,8 +16,9 @@ func GetCameraPoint(viewport planck.Vec2, camera planck.Vec3, worldPoint planck.
 
 // EntitySystem is
 type EntitySystem struct {
-	Entities []string
-	IDSeq    int
+	Entities        []string
+	IDSeq           int
+	PlayerComponent map[string]interface{}
 }
 
 // State is
@@ -55,20 +56,89 @@ func CreatePlayer(gameplay Gameplay) (Gameplay, error) {
 			"density": 1,
 		},
 	)
+	gameplay.State.EntitySystem.PlayerComponent[id] = true
 	return gameplay, nil
 }
 
 // FindID is
 func FindID(id string) planck.FixtureReducer {
-	return func(ctx interface{}, body planck.Body, fixture planck.Fixture) interface{} {
+	return func(ctx interface{}, body planck.Body, fixture planck.Fixture) (interface{}, error) {
 		if ctx != nil {
-			return ctx
+			return ctx, nil
 		}
 		if body.Call("getUserData").String() == id {
-			return body
+			return body, nil
 		}
-		return nil
+		return nil, nil
 	}
+}
+
+// Event is
+type Event interface{}
+
+// Reducer is
+type Reducer func(Gameplay, Event) (Gameplay, error)
+
+// CompReducer is
+func CompReducer(fns ...Reducer) Reducer {
+	return func(gameplay Gameplay, evt Event) (Gameplay, error) {
+		for _, fn := range fns {
+			gameplay, err := fn(gameplay, evt)
+			if err != nil {
+				return gameplay, err
+			}
+		}
+		return gameplay, nil
+	}
+}
+
+// FixtureReducer is
+type FixtureReducer func(gameplay Gameplay, body planck.Body, fixture planck.Fixture, evt Event) (Gameplay, error)
+
+// CompFixtureReducer is
+func CompFixtureReducer(fns ...FixtureReducer) Reducer {
+	return func(gameplay Gameplay, evt Event) (Gameplay, error) {
+		ret, err := planck.ReduceFixtures(gameplay.World, func(ctx interface{}, body planck.Body, fixture planck.Fixture) (interface{}, error) {
+			for _, fn := range fns {
+				ctx, err := fn(ctx.(Gameplay), body, fixture, evt)
+				if err != nil {
+					return ctx, err
+				}
+			}
+			return ctx, nil
+		}, gameplay)
+		if err != nil {
+			return gameplay, err
+		}
+		return ret.(Gameplay), nil
+	}
+}
+
+// KeyEvent is
+type KeyEvent struct {
+	Code int
+}
+
+// PlayerReducer is
+func PlayerReducer(gameplay Gameplay, body planck.Body, fixture planck.Fixture, evt Event) (Gameplay, error) {
+	switch evt.(type) {
+	case KeyEvent:
+	default:
+		return gameplay, nil
+	}
+
+	id := body.Call("getUserData").String()
+	_, hasPlayer := gameplay.State.EntitySystem.PlayerComponent[id]
+	if hasPlayer == false {
+		return gameplay, nil
+	}
+
+	e := evt.(KeyEvent)
+	switch e.Code {
+	case 32:
+
+	}
+	return gameplay, nil
 }
 
 var (
@@ -76,8 +146,16 @@ var (
 	DefaultGameplay = Gameplay{
 		planck.World{Object: _planck.Get("World").New(map[string]interface{}{
 			"gravity": _planck.Vec2(0, 0),
-			"mess":    0.0,
 		})},
-		State{EntitySystem{[]string{}, 0}, _planck.Vec3(0, 0, 1), _planck.Vec2(640, 400)},
+		State{
+			EntitySystem{
+				[]string{},
+				0,
+				map[string]interface{}{},
+			},
+			_planck.Vec3(0, 0, 1), _planck.Vec2(640, 400),
+		},
 	}
+	// DefaultReducer is
+	DefaultReducer = CompReducer(CompFixtureReducer(PlayerReducer))
 )

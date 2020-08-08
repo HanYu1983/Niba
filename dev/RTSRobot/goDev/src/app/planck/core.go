@@ -36,14 +36,17 @@ func (p Planck) Vec2(x, y float64) Vec2 {
 }
 
 // FixtureReducer is
-type FixtureReducer func(ctx interface{}, body Body, fixture Fixture) interface{}
+type FixtureReducer func(ctx interface{}, body Body, fixture Fixture) (interface{}, error)
 
 // ReduceFixtures is
-func ReduceFixtures(world World, reducer FixtureReducer, ctx interface{}) interface{} {
+func ReduceFixtures(world World, reducer FixtureReducer, ctx interface{}) (interface{}, error) {
 	for body := world.Call("getBodyList"); body != nil; body = body.Call("getNext") {
 		for fixture := body.Call("getFixtureList"); fixture != nil; fixture = fixture.Call("getNext") {
-			ctx = reducer(ctx, Body{body}, Fixture{fixture})
+			ctx, err := reducer(ctx, Body{body}, Fixture{fixture})
+			if err != nil {
+				return ctx, err
+			}
 		}
 	}
-	return ctx
+	return ctx, nil
 }

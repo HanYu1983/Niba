@@ -38,7 +38,7 @@ func Main() {
 		panic(err)
 	}
 
-	planck.ReduceFixtures(gameplay.World, func(acc interface{}, body planck.Body, fixture planck.Fixture) interface{} {
+	planck.ReduceFixtures(gameplay.World, func(acc interface{}, body planck.Body, fixture planck.Fixture) (interface{}, error) {
 		shape := fixture.Call("getShape")
 		shapeType := shape.Call("getType").String()
 		switch shapeType {
@@ -57,24 +57,39 @@ func Main() {
 			_console.Log(ps)
 		default:
 		}
-		return acc
+		return acc, nil
 	}, nil)
 
-	find := planck.ReduceFixtures(gameplay.World, FindID("0"), nil)
+	find, _ := planck.ReduceFixtures(gameplay.World, FindID("0"), nil)
 	_console.Log("find", find)
 
 	_console.Log(gameplay.State)
 
+	eventCh := make(chan Event)
 	gameplayCh := make(chan Gameplay)
-	go func(gameplay Gameplay, output chan<- Gameplay) {
-
-		output <- gameplay
-	}(gameplay, gameplayCh)
-
-	go func(input <-chan Gameplay) {
-		select {
-		case gameplay := <-input:
-			var _ = gameplay
+	go func(gameplay Gameplay, input <-chan Event, output chan<- Gameplay) {
+		defer close(output)
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println(err)
+				return
+			}
+		}()
+		for evt := range input {
+			gameplay, err = DefaultReducer(gameplay, evt)
+			if err != nil {
+				panic(err)
+			}
+			output <- gameplay
 		}
-	}(gameplayCh)
+	}(gameplay, eventCh, gameplayCh)
+
+	go func(input <-chan Gameplay, output chan<- Event) {
+		for gameplay := range input {
+			fmt.Println(gameplay.State)
+		}
+		fmt.Println("end")
+	}(gameplayCh, eventCh)
+
+	eventCh <- 0
 }
