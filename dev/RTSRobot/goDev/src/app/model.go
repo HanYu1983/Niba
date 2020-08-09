@@ -8,7 +8,7 @@ import (
 // GetCameraPoint is
 func GetCameraPoint(viewport planck.Vec2, camera planck.Vec3, worldPoint planck.Vec2) planck.Vec2 {
 	p := planck.Sub(worldPoint, planck.Vec2(camera))
-	distFactor := 1.0 / planck.Z(camera)
+	distFactor := 1.0 / camera.Z()
 	p = planck.Mul(p, distFactor)
 	p = planck.Add(p, planck.Mul(viewport, 1/2.0))
 	return p
@@ -21,11 +21,18 @@ type EntitySystem struct {
 	PlayerComponent map[string]interface{}
 }
 
+// FixtureView is
+type FixtureView struct {
+	Type    string
+	Verties []planck.Vec2
+}
+
 // State is
 type State struct {
 	EntitySystem EntitySystem
 	Camera       planck.Vec3
 	Viewport     planck.Vec2
+	Fixtures     []FixtureView
 }
 
 // Gameplay is
@@ -39,8 +46,8 @@ func CreatePlayer(gameplay Gameplay) (Gameplay, error) {
 	id := strconv.Itoa(gameplay.State.EntitySystem.IDSeq)
 	gameplay.State.EntitySystem.IDSeq++
 	gameplay.State.EntitySystem.Entities = append(gameplay.State.EntitySystem.Entities, id)
-	body := gameplay.World.Call("createDynamicBody", map[string]interface{}{
-		"position": _planck.Vec2(100, 0),
+	body := gameplay.World.Call("createBody", map[string]interface{}{
+		"position": _planck.Vec2(0, 0),
 		"userData": id,
 	})
 	body.Call("createFixture",
@@ -82,8 +89,9 @@ type Reducer func(Gameplay, Event) (Gameplay, error)
 // CompReducer is
 func CompReducer(fns ...Reducer) Reducer {
 	return func(gameplay Gameplay, evt Event) (Gameplay, error) {
+		var err error
 		for _, fn := range fns {
-			gameplay, err := fn(gameplay, evt)
+			gameplay, err = fn(gameplay, evt)
 			if err != nil {
 				return gameplay, err
 			}
@@ -99,8 +107,9 @@ type FixtureReducer func(gameplay Gameplay, body planck.Body, fixture planck.Fix
 func CompFixtureReducer(fns ...FixtureReducer) Reducer {
 	return func(gameplay Gameplay, evt Event) (Gameplay, error) {
 		ret, err := planck.ReduceFixtures(gameplay.World, func(ctx interface{}, body planck.Body, fixture planck.Fixture) (interface{}, error) {
+			var err error
 			for _, fn := range fns {
-				ctx, err := fn(ctx.(Gameplay), body, fixture, evt)
+				ctx, err = fn(ctx.(Gameplay), body, fixture, evt)
 				if err != nil {
 					return ctx, err
 				}
@@ -116,7 +125,24 @@ func CompFixtureReducer(fns ...FixtureReducer) Reducer {
 
 // KeyEvent is
 type KeyEvent struct {
-	Code int
+	Code string
+}
+
+// CameraReducer is
+func CameraReducer(gameplay Gameplay, evt Event) (Gameplay, error) {
+	switch evt.(type) {
+	case KeyEvent:
+	default:
+		return gameplay, nil
+	}
+	e := evt.(KeyEvent)
+	switch e.Code {
+	case "ArrowUp":
+		gameplay.State.Camera.Set("z", gameplay.State.Camera.Z()-0.1)
+	case "ArrowDown":
+		gameplay.State.Camera.Set("z", gameplay.State.Camera.Z()+0.1)
+	}
+	return gameplay, nil
 }
 
 // PlayerReducer is
@@ -131,12 +157,6 @@ func PlayerReducer(gameplay Gameplay, body planck.Body, fixture planck.Fixture, 
 	_, hasPlayer := gameplay.State.EntitySystem.PlayerComponent[id]
 	if hasPlayer == false {
 		return gameplay, nil
-	}
-
-	e := evt.(KeyEvent)
-	switch e.Code {
-	case 32:
-
 	}
 	return gameplay, nil
 }
@@ -153,9 +173,14 @@ var (
 				0,
 				map[string]interface{}{},
 			},
-			_planck.Vec3(0, 0, 1), _planck.Vec2(640, 400),
+			_planck.Vec3(0, 0, 0.1),
+			_planck.Vec2(640, 480),
+			[]FixtureView{},
 		},
 	}
 	// DefaultReducer is
-	DefaultReducer = CompReducer(CompFixtureReducer(PlayerReducer))
+	DefaultReducer = CompReducer(
+		CameraReducer,
+		CompFixtureReducer(PlayerReducer),
+	)
 )

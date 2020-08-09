@@ -7,7 +7,23 @@ import (
 type Vec2 struct{ *js.Object }
 type Vec3 struct{ *js.Object }
 
-func Z(v Vec3) float64 {
+func (v Vec2) X() float64 {
+	return v.Get("x").Float()
+}
+
+func (v Vec2) Y() float64 {
+	return v.Get("y").Float()
+}
+
+func (v Vec3) X() float64 {
+	return Vec2{v.Object}.X()
+}
+
+func (v Vec3) Y() float64 {
+	return Vec2{v.Object}.Y()
+}
+
+func (v Vec3) Z() float64 {
 	return v.Get("z").Float()
 }
 
@@ -40,9 +56,10 @@ type FixtureReducer func(ctx interface{}, body Body, fixture Fixture) (interface
 
 // ReduceFixtures is
 func ReduceFixtures(world World, reducer FixtureReducer, ctx interface{}) (interface{}, error) {
+	var err error
 	for body := world.Call("getBodyList"); body != nil; body = body.Call("getNext") {
 		for fixture := body.Call("getFixtureList"); fixture != nil; fixture = fixture.Call("getNext") {
-			ctx, err := reducer(ctx, Body{body}, Fixture{fixture})
+			ctx, err = reducer(ctx, Body{body}, Fixture{fixture})
 			if err != nil {
 				return ctx, err
 			}
