@@ -17,13 +17,13 @@
 (defn main []
   (let [gameplay app.gameplay.model/gameplay
         gameplay (app.gameplay.model/create-player gameplay
+                                                   {:position (pl/Vec2. 1 1)}
                                                    {:id (str (gensym))
-                                                    :player true
-                                                    :position (pl/Vec2. 1 1)})
+                                                    :player? true})
         gameplay (app.gameplay.model/create-enemy gameplay
-                                                  {:id (str (gensym))}
                                                   {:position (pl/Vec2. 100 100)
-                                                   :angle 1})
+                                                   :angle 1}
+                                                  {:id (str (gensym))})
         _ (-> (:world gameplay)
               (.createBody (js-obj "position" (pl/Vec2 0 100)
                                    "angle" 0.1))
@@ -74,7 +74,8 @@
 
         update-fn (partial comp-reduce [app.gameplay.system.core/camera-control
                                         (partial app.gameplay.system.core/comp-body-control 
-                                                 [app.gameplay.system.body.core/player-control])
+                                                 [app.gameplay.system.body.core/player-control
+                                                  app.gameplay.system.body.core/timeout-control])
                                         app.gameplay.system.core/select-box-control
                                         app.gameplay.system.core/step-world])
 

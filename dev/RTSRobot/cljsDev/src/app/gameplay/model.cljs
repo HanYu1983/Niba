@@ -11,8 +11,10 @@
 (s/def ::viewport #(instance? pl/Vec2 %))
 (s/def ::id string?)
 (s/def ::selected? boolean?)
+(s/def ::timeout number?)
+(s/def ::player? boolean?)
 (s/def ::entity (s/keys :req-un [::id]
-                        :req-opt [::selected?]))
+                        :req-opt [::selected? ::timeout ::player?]))
 (s/def ::entities (s/map-of ::id ::entity))
 (s/def ::select-box (s/tuple (s/tuple int? int?) (s/tuple int? int?)))
 (s/def ::gameplay (s/keys :req-un [::world ::life ::score ::end? ::camera ::viewport ::entities]
@@ -28,11 +30,17 @@
                 :entities {}
                 :select-box nil}))
 
-(defn create-player [gameplay entity]
+(defn destroy-body [gameplay body]
+  (let [id (.getUserData body)
+        _ (.destroyBody (:world gameplay) body)
+        gameplay (update gameplay :entities #(dissoc % id))]
+    gameplay))
+
+(defn create-player [gameplay bodyDef entity]
   (s/assert ::gameplay gameplay)
   (s/assert ::entity entity)
   (let [body (-> gameplay :world
-                 (.createDynamicBody (js-obj "position" (pl/Vec2 0 0)
+                 (.createDynamicBody (js-obj "position" (or (:position bodyDef) (pl/Vec2 0 0))
                                              "userData" (:id entity))))
         _ (doto body
              ; 加上density才會計算轉動
@@ -42,7 +50,7 @@
                             (js-obj "density" 1)))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
-(defn create-enemy [gameplay entity {:keys [position angle]}]
+(defn create-enemy [gameplay {:keys [position angle]} entity]
   (s/assert ::gameplay gameplay)
   (s/assert ::entity entity)
   (s/assert (s/nilable #(instance? pl/Vec2 %)) position)
@@ -53,6 +61,23 @@
                                              "userData" (:id entity))))
         _ (doto body
             (.createFixture (pl/Box 10 10) (js-obj "density" 0.1)))]
+    (update gameplay :entities #(assoc % (:id entity) entity))))
+
+(defn create-bullet [gameplay {:keys [position angle]} playerBody entity]
+  (s/assert ::gameplay gameplay)
+  (s/assert ::entity entity)
+  (s/assert (s/nilable #(instance? pl/Vec2 %)) position)
+  (s/assert (s/nilable number?) angle)
+  (let [body (-> gameplay :world
+                 (.createDynamicBody (js-obj "position" (or position (pl/Vec2 0 0))
+                                             "angle" (or angle 0)
+                                             "userData" (:id entity))))
+        _ (doto body
+            (.createFixture (pl/Box 1 1) (js-obj "density" 0.1))
+            (.applyLinearImpulse (.getWorldVector playerBody (pl/Vec2 1000 0))
+                                 (.getWorldPoint body (pl/Vec2 0 5))
+                                 true)
+            (.applyAngularImpulse 100 true))]
     (update gameplay :entities #(assoc % (:id entity) entity))))
 
 (defn reduce-bodies [f ctx]

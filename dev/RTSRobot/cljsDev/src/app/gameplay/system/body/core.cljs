@@ -1,65 +1,104 @@
 (ns app.gameplay.system.body.core
-  (:require ["planck-js" :as pl]))
+  (:require ["planck-js" :as pl]
+            [clojure.spec.alpha :as s])
+  (:require [app.gameplay.model]))
+
+(defn timeout-control [gameplay body [cmd args]]
+  (let [id (.getUserData body)
+        entity (get-in gameplay [:entities id])
+        {:keys [timeout]} entity]
+    (cond
+      (not timeout)
+      gameplay
+
+      (not (= :tick cmd))
+      gameplay
+
+      :else
+      (let [gameplay (s/assert
+                      ::app.gameplay.model/gameplay
+                      (if (<= timeout 0)
+                        (let [gameplay (app.gameplay.model/destroy-body gameplay body)]
+                          gameplay)
+
+                        (let [entity (update entity :timeout #(- % args))
+                              gameplay (update gameplay :entities #(assoc % id entity))]
+                          gameplay)))]
+        gameplay))))
 
 (defn player-control [gameplay body [cmd args]]
-  (condp = cmd
-    :keyPressed
-    (let [id (.getUserData body)
-          entity (get-in gameplay [:entities id])
-          player? (:player entity)]
-      (if player?
-        (let [key args]
-          (condp = key
-            32
-            (let [bulletEntity {:id (str (gensym))
-                                :bullet true
-                                :timeout 3000}
-                  bulletBody (-> gameplay :world
-                                 (.createDynamicBody (js-obj "position" (.getWorldPoint body (pl/Vec2 5 0))
-                                                             "angle" (.getAngle body)
-                                                             "userData" (:id bulletEntity))))
+  (let [id (.getUserData body)
+        entity (get-in gameplay [:entities id])
+        {:keys [player?]} entity]
+    (cond
+      (not player?)
+      gameplay
 
-                  _ (doto bulletBody
-                      (.createFixture (pl/Box 1 1) (js-obj "density" 0.1))
-                      (.applyLinearImpulse (.getWorldVector body (pl/Vec2 1000 0))
-                                           (.getWorldPoint bulletBody (pl/Vec2 0 5))
-                                           true)
-                      (.applyAngularImpulse 100 true))
-                  gameplay (update gameplay :entities #(assoc % (:id bulletEntity) bulletEntity))]
+      (= :keyIsDown cmd)
+      (cond
+        (= 87 args)
+        (do
+          #_(let [tx (.getTransform body)
+                  pos (.-p tx)
+                  rot (.-q tx)
+                  _ (.set tx (pl/Vec2.add pos (pl/Rot.mul rot (pl/Vec2 0.5 0))) (.getAngle rot))]
               gameplay)
-            gameplay))
-        gameplay))
+          (.setLinearVelocity body (pl/Rot.mul (pl/Rot. (.getAngle body)) (pl/Vec2 10 0)))
+          gameplay)
 
-    :keyIsDown
-    (let [id (.getUserData body)
-          entity (get-in gameplay [:entities id])
-          player? (:player entity)]
-      (if player?
-        (let [key args]
-          (condp = key
-            87
-            (do
-              (.applyLinearImpulse body
-                                   (.getWorldVector body (pl/Vec2 5 0))
-                                   (.getWorldPoint body (pl/Vec2))
-                                   true)
-              gameplay)
-            83
-            (do
-              (.applyLinearImpulse body
-                                   (.getWorldVector body (pl/Vec2 -5 0))
-                                   (.getWorldPoint body (pl/Vec2))
-                                   true)
-              gameplay)
-            68
-            (let [force 1]
-              (.applyAngularImpulse body force true)
-              gameplay)
-            65
-            (let [force -1]
-              (.applyAngularImpulse body force true)
-              gameplay)
-            gameplay))
-        gameplay))
+        (= 83 args)
+        (do
+          (.setLinearVelocity body (pl/Rot.mul (pl/Rot. (.getAngle body)) (pl/Vec2 -10 0)))
+          gameplay)
 
-    gameplay))
+        (= 68 args)
+        (let [force 1]
+          (.setAngularVelocity body force)
+          gameplay)
+
+
+        (= 65 args)
+        (let [force -1]
+          (.setAngularVelocity body force)
+          gameplay)
+
+        :else
+        gameplay)
+
+      (= :keyReleased cmd)
+      (cond
+        (= 32 args)
+        (let [gameplay (app.gameplay.model/create-bullet gameplay
+                                                         {:position (.getWorldPoint body (pl/Vec2 5 0))
+                                                          :angle (.getAngle body)}
+                                                         body
+                                                         {:id (str (gensym))
+                                                          :timeout 3})]
+          gameplay)
+
+        (= 87 args)
+        (do
+          (.setLinearVelocity body (pl/Vec2 0 0))
+          gameplay)
+
+        (= 83 args)
+        (do
+          (.setLinearVelocity body (pl/Vec2 0 0))
+          gameplay)
+
+        (= 68 args)
+        (let [force 0]
+          (.setAngularVelocity body force)
+          gameplay)
+
+
+        (= 65 args)
+        (let [force 0]
+          (.setAngularVelocity body force)
+          gameplay)
+
+        :else
+        gameplay)
+
+      :else
+      gameplay)))
