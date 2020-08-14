@@ -7,6 +7,7 @@
 
 import View from "./View";
 import GamePage from "./gamePage/GamePage";
+import Card from "./Card";
 
 const {ccclass, property} = cc._decorator;
 
@@ -18,6 +19,8 @@ export default class Controller extends cc.Component {
 
     start(){
         let gamePage:GamePage = this.view.openPageById(0) as GamePage;
-        gamePage.table.createCard("dodge");
+        let card:cc.Node = gamePage.table.createCard("dodge");
+        card.x = card.y = 200;
+        card.getComponent(Card).showCard(true);
     }
 }
