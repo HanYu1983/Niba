@@ -1,0 +1,25 @@
+<html>
+
+<body>
+    <div id="canvas"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/planck-js/0.2.7/planck.min.js"></script>
+    <script>
+        View = {
+            AskOneHandCard: function(player, cardStack, cb){
+                console.log(cardStack)
+                cb(null)
+            },
+            Render: function(gameplay){
+                console.log(gameplay)
+            }
+        }
+    </script>
+    <script src="..js"></script>
+
+    <script>
+        Model.Start()
+    </script>
+</body>
+
+</html>
