@@ -24,7 +24,7 @@ func StartGameplay() {
 func init() {
 	js.Global.Set("Model", map[string]interface{}{
 		"StartGameplay": func() {
-			// JS呼叫的要用goroutine包裝
+			// JS呼叫的要用goroutine包裝, 不然chan和time.Sleep等blocking的都不能用
 			go StartGameplay()
 		},
 	})
