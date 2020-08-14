@@ -3,21 +3,31 @@ package main
 import (
 	"app"
 	"fmt"
+
+	"github.com/gopherjs/gopherjs/js"
 )
 
-func init() {
+func StartGameplay() {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
 		}
 	}()
+	fmt.Println("start")
 	gameplay := app.DefaultGamePlay
-	var _ = gameplay
-	_, err := app.AskOneCard(gameplay, gameplay.Players["A"], gameplay.Desktop.CardStacks[app.CardStackEquip])
+	gameplay, err := app.Start(gameplay)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("OK")
+}
+
+func init() {
+	js.Global.Set("Model", map[string]interface{}{
+		"StartGameplay": func() {
+			// JS呼叫的要用goroutine包裝
+			go StartGameplay()
+		},
+	})
 }
 
 func main() {

@@ -329,7 +329,12 @@ type CmdUseCard struct {
 	Card Card
 }
 
+func Render(gameplay Gameplay) {
+	js.Global.Get("View").Call("Render", gameplay)
+}
+
 func Start(gameplay Gameplay) (Gameplay, error) {
+	Render(gameplay)
 	for {
 		time.Sleep(1 * time.Second)
 		activePlayer := NextPlayer(gameplay, gameplay.Players["A"])
@@ -393,4 +398,5 @@ func Start(gameplay Gameplay) (Gameplay, error) {
 			return gameplay, fmt.Errorf("%v not found", cmd)
 		}
 	}
+
 }
