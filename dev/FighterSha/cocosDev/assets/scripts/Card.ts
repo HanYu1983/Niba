@@ -17,6 +17,9 @@ export default class Card extends BasicViewer {
     @property(cc.Sprite)
     image:cc.Sprite = null;
 
+    @property(cc.Node)
+    cover:cc.Node = null;
+
     private cardId:string = "attack";
 
     setCard(id:string){
@@ -25,6 +28,6 @@ export default class Card extends BasicViewer {
     }
 
     showCard(show:boolean){
-        
+        this.cover.active = !show;
     }
 }
