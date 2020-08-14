@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gopherjs/gopherjs/js"
 )
@@ -19,16 +20,16 @@ type CardType struct {
 	ID string
 }
 
-type CardID struct {
+type CardPrototypeID struct {
 	CardType CardType
 	ID       string
 }
 
 type Card struct {
-	ID     string
-	CardID CardID
-	Face   Face
-	Player string
+	ID              string
+	CardPrototypeID CardPrototypeID
+	Face            Face
+	Player          string
 }
 
 type CardStack struct {
@@ -66,9 +67,9 @@ var (
 
 type Player struct {
 	ID      string
-	Life    int
-	Money   int
+	CardID  string
 	GroupID string
+	Order   int
 }
 
 type PlayerBasicCom struct {
@@ -105,8 +106,6 @@ var (
 			"A": PlayerBasicCom{},
 		},
 	}
-
-	A = "A"
 )
 
 // AskOneCard 等待玩家選一張卡
@@ -157,7 +156,7 @@ func AskOnePlayer(gameplay Gameplay, player Player, players map[string]Player) (
 
 // Attack 使出殺, 對方用閃反應
 func Attack(gameplay Gameplay, player Player, target Player, card Card) (Gameplay, error) {
-	if card.CardID.CardType != CardTypeAttack {
+	if card.CardPrototypeID.CardType != CardTypeAttack {
 		return gameplay, fmt.Errorf("you must use Attack")
 	}
 	playerCom := gameplay.PlayerBasicComs[player.ID]
@@ -180,12 +179,12 @@ func Attack(gameplay Gameplay, player Player, target Player, card Card) (Gamepla
 	if err != nil {
 		return gameplay, err
 	}
-	if dodgeCard.CardID.CardType != CardTypeDodge {
+	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
 		return gameplay, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound Card
 	if dodgeCard == NotFound {
-		target.Life--
+		//target.Life--
 		gameplay.Players[target.ID] = target
 	} else {
 		// move dodge card to gravyard
@@ -204,7 +203,7 @@ func Attack(gameplay Gameplay, player Player, target Player, card Card) (Gamepla
 
 // StealMoney 使出劫, 對方用閃反應
 func StealMoney(gameplay Gameplay, player Player, target Player, card Card) (Gameplay, error) {
-	if card.CardID.CardType != CardTypeStealMoney {
+	if card.CardPrototypeID.CardType != CardTypeStealMoney {
 		return gameplay, fmt.Errorf("you must use StealMoney")
 	}
 	playerCom := gameplay.PlayerBasicComs[player.ID]
@@ -227,16 +226,16 @@ func StealMoney(gameplay Gameplay, player Player, target Player, card Card) (Gam
 	if err != nil {
 		return gameplay, err
 	}
-	if dodgeCard.CardID.CardType != CardTypeDodge {
+	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
 		return gameplay, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound Card
 	if dodgeCard == NotFound {
-		if target.Money > 0 {
+		/*if target.Money > 0 {
 			target.Money--
 		} else {
 			target.Life--
-		}
+		}*/
 		gameplay.Players[target.ID] = target
 	} else {
 		// move dodge card to gravyard
@@ -254,7 +253,7 @@ func StealMoney(gameplay Gameplay, player Player, target Player, card Card) (Gam
 
 // Steal 使出盜, 對方用閃反應
 func Steal(gameplay Gameplay, player Player, target Player, card Card) (Gameplay, error) {
-	if card.CardID.CardType != CardTypeSteal {
+	if card.CardPrototypeID.CardType != CardTypeSteal {
 		return gameplay, fmt.Errorf("you must use Steal")
 	}
 	playerCom := gameplay.PlayerBasicComs[player.ID]
@@ -277,7 +276,7 @@ func Steal(gameplay Gameplay, player Player, target Player, card Card) (Gameplay
 	if err != nil {
 		return gameplay, err
 	}
-	if dodgeCard.CardID.CardType != CardTypeDodge {
+	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
 		return gameplay, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound Card
@@ -297,7 +296,7 @@ func Steal(gameplay Gameplay, player Player, target Player, card Card) (Gameplay
 			gameplay.Desktop.CardStacks[target.ID+CardStackEquip] = targetEquip
 			gameplay.Desktop.CardStacks[player.ID] = hand
 		} else {
-			target.Life--
+			//target.Life--
 		}
 		gameplay.Players[target.ID] = target
 	} else {
@@ -314,56 +313,84 @@ func Steal(gameplay Gameplay, player Player, target Player, card Card) (Gameplay
 	return gameplay, nil
 }
 
-func PlayerTurn(gameplay Gameplay, player Player) (Gameplay, error) {
-	//draw two card
-	// clear times
-	gameplay.PlayerBasicComs[player.ID] = PlayerBasicCom{}
-	hand := gameplay.Desktop.CardStacks[player.ID]
+func NextPlayer(gameplay Gameplay, player Player) Player {
+	return player
+}
 
-Menu:
+func DrawCard(gameplay Gameplay, player Player, cnt int) (Gameplay, error) {
+	return gameplay, nil
+}
+
+func AskCommand(gameplay Gameplay, player Player) (interface{}, error) {
+	return nil, nil
+}
+
+type CmdUseCard struct {
+	Card Card
+}
+
+func Start(gameplay Gameplay) (Gameplay, error) {
 	for {
-		for {
-			card, err := AskOneCard(gameplay, player, hand)
-			if err != nil {
-				return gameplay, err
-			}
+		time.Sleep(1 * time.Second)
+		activePlayer := NextPlayer(gameplay, gameplay.Players["A"])
+		// 清空狀態
+		gameplay.PlayerBasicComs[activePlayer.ID] = PlayerBasicCom{}
 
+		// 抽2
+		gameplay, err := DrawCard(gameplay, activePlayer, 2)
+		if err != nil {
+			return gameplay, err
+		}
+
+		// 等玩家指令
+		cmd, err := AskCommand(gameplay, activePlayer)
+		if err != nil {
+			return gameplay, err
+		}
+
+		switch cmd.(type) {
+		case CmdUseCard:
+			// 使用一張卡
+			card := cmd.(CmdUseCard).Card
 			switch {
-			case card.CardID.CardType == CardTypeAttack:
-				target, err := AskOnePlayer(gameplay, player, gameplay.Players)
+			case card.CardPrototypeID.CardType == CardTypeAttack:
+				// 殺
+				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
 				if err != nil {
 					return gameplay, err
 				}
-				gameplay, err = Attack(gameplay, player, target, card)
+				gameplay, err = Attack(gameplay, activePlayer, target, card)
 				if err != nil {
 					return gameplay, err
 				}
-			case card.CardID.CardType == CardTypeSteal:
-				target, err := AskOnePlayer(gameplay, player, gameplay.Players)
+
+			case card.CardPrototypeID.CardType == CardTypeSteal:
+				// 盜
+				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
 				if err != nil {
 					return gameplay, err
 				}
-				gameplay, err = Steal(gameplay, player, target, card)
+				gameplay, err = Steal(gameplay, activePlayer, target, card)
 				if err != nil {
 					return gameplay, err
 				}
-			case card.CardID.CardType == CardTypeStealMoney:
-				target, err := AskOnePlayer(gameplay, player, gameplay.Players)
+
+			case card.CardPrototypeID.CardType == CardTypeStealMoney:
+				// 劫
+				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
 				if err != nil {
 					return gameplay, err
 				}
-				gameplay, err = StealMoney(gameplay, player, target, card)
+				gameplay, err = StealMoney(gameplay, activePlayer, target, card)
 				if err != nil {
 					return gameplay, err
 				}
+			default:
+				return gameplay, fmt.Errorf("%v not found", card)
 			}
 
-			var NotFound Card
-			if card == NotFound {
-				break Menu
-			}
+		default:
+			return gameplay, fmt.Errorf("%v not found", cmd)
 		}
 	}
-
-	return gameplay, nil
 }
