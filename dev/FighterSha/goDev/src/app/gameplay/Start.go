@@ -8,12 +8,16 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 )
 
-func NextPlayer(gameplay Gameplay, player Player) Player {
+func NextPlayer(gameplayCtx Gameplay, player Player) Player {
 	return player
 }
 
-func DrawCard(gameplay Gameplay, player Player, cnt int) (Gameplay, error) {
-	return gameplay, nil
+func DrawCard(gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
+	return gameplayCtx, nil
+}
+
+func Equip(gameplayCtx Gameplay, player Player, card Card) (Gameplay, error) {
+	return gameplayCtx, nil
 }
 
 func AskCommand(gameplayCtx Gameplay, player Player) (interface{}, error) {
@@ -49,29 +53,29 @@ type CmdUseCard struct {
 	Card desktop.Card
 }
 
-func Render(gameplay Gameplay) {
-	js.Global.Get("View").Call("Render", gameplay)
+func Render(gameplayCtx Gameplay) {
+	js.Global.Get("View").Call("Render", gameplayCtx)
 }
 
 // Start is
-func Start(gameplay Gameplay) (Gameplay, error) {
-	Render(gameplay)
+func Start(gameplayCtx Gameplay) (Gameplay, error) {
+	Render(gameplayCtx)
 	for {
 		time.Sleep(1 * time.Second)
-		activePlayer := NextPlayer(gameplay, gameplay.Players["A"])
+		activePlayer := NextPlayer(gameplayCtx, gameplayCtx.Players["A"])
 		// 清空狀態
-		gameplay.PlayerBasicComs[activePlayer.ID] = PlayerBasicCom{}
+		gameplayCtx.PlayerBasicComs[activePlayer.ID] = PlayerBasicCom{}
 
 		// 抽2
-		gameplay, err := DrawCard(gameplay, activePlayer, 2)
+		gameplayCtx, err := DrawCard(gameplayCtx, activePlayer, 2)
 		if err != nil {
-			return gameplay, err
+			return gameplayCtx, err
 		}
 
 		// 等玩家指令
-		cmd, err := AskCommand(gameplay, activePlayer)
+		cmd, err := AskCommand(gameplayCtx, activePlayer)
 		if err != nil {
-			return gameplay, err
+			return gameplayCtx, err
 		}
 
 		if cmd == nil {
@@ -83,45 +87,52 @@ func Start(gameplay Gameplay) (Gameplay, error) {
 		case CmdUseCard:
 			// 使用一張卡
 			card := cmdDetail.Card
-			switch {
-			case card.CardPrototypeID.CardType == CardTypeAttack:
+			switch card.CardPrototypeID.CardType {
+			case CardTypeAttack:
 				// 殺
-				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
+				target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
 				}
-				gameplay, err = Attack(gameplay, activePlayer, target, card)
+				gameplayCtx, err = Attack(gameplayCtx, activePlayer, target, card)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
 				}
 
-			case card.CardPrototypeID.CardType == CardTypeSteal:
+			case CardTypeSteal:
 				// 盜
-				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
+				target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
 				}
-				gameplay, err = Steal(gameplay, activePlayer, target, card)
+				gameplayCtx, err = Steal(gameplayCtx, activePlayer, target, card)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
 				}
 
-			case card.CardPrototypeID.CardType == CardTypeStealMoney:
+			case CardTypeStealMoney:
 				// 劫
-				target, err := AskOnePlayer(gameplay, activePlayer, gameplay.Players)
+				target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
 				}
-				gameplay, err = StealMoney(gameplay, activePlayer, target, card)
+				gameplayCtx, err = StealMoney(gameplayCtx, activePlayer, target, card)
 				if err != nil {
-					return gameplay, err
+					return gameplayCtx, err
+				}
+
+			case CardTypeArm, CardTypeArmor, CardTypeAccessory:
+				// 裝備
+				gameplayCtx, err := Equip(gameplayCtx, activePlayer, card)
+				if err != nil {
+					return gameplayCtx, err
 				}
 			default:
-				return gameplay, fmt.Errorf("%v not found", card)
+				return gameplayCtx, fmt.Errorf("%v not found", card)
 			}
 
 		default:
-			return gameplay, fmt.Errorf("%v not found", cmd)
+			return gameplayCtx, fmt.Errorf("%v not found", cmd)
 		}
 	}
 

@@ -9,6 +9,9 @@ var (
 	CardTypeDodge      = desktop.CardType{"Dodge"}
 	CardTypeStealMoney = desktop.CardType{"StealMoney"}
 	CardTypeSteal      = desktop.CardType{"Steal"}
+	CardTypeArm        = desktop.CardType{"CardTypeArm"}
+	CardTypeArmor      = desktop.CardType{"CardTypeArmor"}
+	CardTypeAccessory  = desktop.CardType{"CardTypeAccessory"}
 )
 
 type Player struct {
