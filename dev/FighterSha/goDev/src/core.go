@@ -9,6 +9,9 @@ import (
 
 func StartGameplay() {
 	defer func() {
+		fmt.Println("end")
+	}()
+	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
 		}

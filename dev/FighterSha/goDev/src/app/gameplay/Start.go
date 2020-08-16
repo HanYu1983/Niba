@@ -16,8 +16,33 @@ func DrawCard(gameplay Gameplay, player Player, cnt int) (Gameplay, error) {
 	return gameplay, nil
 }
 
-func AskCommand(gameplay Gameplay, player Player) (interface{}, error) {
-	return nil, nil
+func AskCommand(gameplayCtx Gameplay, player Player) (interface{}, error) {
+	wait := make(chan interface{})
+	go func() {
+		js.Global.Get("View").Call("AskCommand", player, map[string]interface{}{
+			"CmdUseCard": func(cardID *js.Object) {
+				go func() {
+					targetCS := gameplayCtx.Desktop.CardStacks[player.ID]
+					for _, _card := range targetCS.Cards {
+						if _card.ID == cardID.String() {
+							wait <- CmdUseCard{_card}
+							return
+						}
+					}
+					wait <- fmt.Errorf("%v not found", cardID.String())
+				}()
+			},
+			"Cancel": func() {
+				// return default of type
+				close(wait)
+			},
+		})
+	}()
+	cmd := <-wait
+	if err, ok := cmd.(error); ok {
+		return nil, err
+	}
+	return cmd, nil
 }
 
 type CmdUseCard struct {
@@ -49,10 +74,15 @@ func Start(gameplay Gameplay) (Gameplay, error) {
 			return gameplay, err
 		}
 
-		switch cmd.(type) {
+		if cmd == nil {
+			// cancel
+			continue
+		}
+
+		switch cmdDetail := cmd.(type) {
 		case CmdUseCard:
 			// 使用一張卡
-			card := cmd.(CmdUseCard).Card
+			card := cmdDetail.Card
 			switch {
 			case card.CardPrototypeID.CardType == CardTypeAttack:
 				// 殺
