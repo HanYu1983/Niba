@@ -1,7 +1,7 @@
 package main
 
 import (
-	"app"
+	"app/gameplay"
 	"fmt"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -14,8 +14,8 @@ func StartGameplay() {
 		}
 	}()
 	fmt.Println("start")
-	gameplay := app.DefaultGamePlay
-	gameplay, err := app.Start(gameplay)
+	gameplayCtx := gameplay.DefaultGamePlay
+	gameplayCtx, err := gameplay.Start(gameplayCtx)
 	if err != nil {
 		panic(err)
 	}
