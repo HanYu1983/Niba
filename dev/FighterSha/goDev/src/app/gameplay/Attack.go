@@ -6,48 +6,58 @@ import (
 )
 
 // Attack 使出殺, 對方用閃反應
-func Attack(gameplay Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	if card.CardPrototypeID.CardType != CardTypeAttack {
-		return gameplay, fmt.Errorf("you must use Attack")
+		return gameplayCtx, fmt.Errorf("you must use Attack")
 	}
-	playerCom := gameplay.PlayerBasicComs[player.ID]
+	playerCom := gameplayCtx.PlayerBasicComs[player.ID]
 	if playerCom.AttackTimes >= 1 {
-		return gameplay, fmt.Errorf("you reach attack limit")
+		return gameplayCtx, fmt.Errorf("you reach attack limit")
 	}
 	// move attack card to gravyard
-	gravyard := gameplay.Desktop.CardStacks[CardStackGravyard]
-	hand := gameplay.Desktop.CardStacks[player.ID]
+	gravyard := gameplayCtx.Desktop.CardStacks[CardStackGravyard]
+	hand := gameplayCtx.Desktop.CardStacks[player.ID]
 	hand, gravyard, err := desktop.MoveCard(hand, gravyard, card, 0)
 	if err != nil {
-		return gameplay, err
+		return gameplayCtx, err
 	}
-	gameplay.Desktop.CardStacks[CardStackGravyard] = gravyard
-	gameplay.Desktop.CardStacks[player.ID] = hand
+	originCard := card
+	card.Face = desktop.FaceUp
+	gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originCard: card})
+	cardStacks := desktop.Assoc(gameplayCtx.Desktop.CardStacks, CardStackGravyard, gravyard)
+	cardStacks = desktop.Assoc(cardStacks, player.ID, hand)
+	gameplayCtx.Desktop.CardStacks = cardStacks
 
 	// ask target player for dodge
-	targetHand := gameplay.Desktop.CardStacks[target.ID]
-	dodgeCard, err := AskOneCard(gameplay, target, targetHand)
+	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
+	dodgeCard, err := AskOneCard(gameplayCtx, target, targetHand)
 	if err != nil {
-		return gameplay, err
+		return gameplayCtx, err
 	}
 	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
-		return gameplay, fmt.Errorf("you must select dodge card")
+		return gameplayCtx, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound desktop.Card
 	if dodgeCard == NotFound {
-		//target.Life--
-		gameplay.Players[target.ID] = target
+		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+		characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
+		characterCom.Life--
+		gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom
 	} else {
 		// move dodge card to gravyard
 		targetHand, gravyard, err = desktop.MoveCard(targetHand, gravyard, dodgeCard, 0)
 		if err != nil {
-			return gameplay, err
+			return gameplayCtx, err
 		}
-		gameplay.Desktop.CardStacks[CardStackGravyard] = gravyard
-		gameplay.Desktop.CardStacks[target.ID] = targetHand
+		originDodgeCard := dodgeCard
+		dodgeCard.Face = desktop.FaceUp
+		gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originDodgeCard: dodgeCard})
+		cardStacks = desktop.Assoc(gameplayCtx.Desktop.CardStacks, CardStackGravyard, gravyard)
+		cardStacks = desktop.Assoc(cardStacks, target.ID, targetHand)
+		gameplayCtx.Desktop.CardStacks = cardStacks
 	}
 
 	playerCom.AttackTimes++
-	gameplay.PlayerBasicComs[player.ID] = playerCom
-	return gameplay, nil
+	gameplayCtx.PlayerBasicComs[player.ID] = playerCom
+	return gameplayCtx, nil
 }

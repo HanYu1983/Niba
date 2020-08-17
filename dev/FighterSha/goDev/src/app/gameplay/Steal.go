@@ -6,63 +6,65 @@ import (
 )
 
 // Steal 使出盜, 對方用閃反應
-func Steal(gameplay Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func Steal(gameplayCtx Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	if card.CardPrototypeID.CardType != CardTypeSteal {
-		return gameplay, fmt.Errorf("you must use Steal")
+		return gameplayCtx, fmt.Errorf("you must use Steal")
 	}
-	playerCom := gameplay.PlayerBasicComs[player.ID]
+	playerCom := gameplayCtx.PlayerBasicComs[player.ID]
 	if playerCom.StealTimes >= 1 {
-		return gameplay, fmt.Errorf("you reach Steal limit")
+		return gameplayCtx, fmt.Errorf("you reach Steal limit")
 	}
 	// move attack card to gravyard
-	gravyard := gameplay.Desktop.CardStacks[CardStackGravyard]
-	hand := gameplay.Desktop.CardStacks[player.ID]
+	gravyard := gameplayCtx.Desktop.CardStacks[CardStackGravyard]
+	hand := gameplayCtx.Desktop.CardStacks[player.ID]
 	hand, gravyard, err := desktop.MoveCard(hand, gravyard, card, 0)
 	if err != nil {
-		return gameplay, err
+		return gameplayCtx, err
 	}
-	gameplay.Desktop.CardStacks[CardStackGravyard] = gravyard
-	gameplay.Desktop.CardStacks[player.ID] = hand
+	gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
+	gameplayCtx.Desktop.CardStacks[player.ID] = hand
 
 	// ask target player for dodge
-	targetHand := gameplay.Desktop.CardStacks[target.ID]
-	dodgeCard, err := AskOneCard(gameplay, target, targetHand)
+	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
+	dodgeCard, err := AskOneCard(gameplayCtx, target, targetHand)
 	if err != nil {
-		return gameplay, err
+		return gameplayCtx, err
 	}
 	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
-		return gameplay, fmt.Errorf("you must select dodge card")
+		return gameplayCtx, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound desktop.Card
 	if dodgeCard == NotFound {
 		// steal one equip card
 		// or attack one life
-		targetEquip := gameplay.Desktop.CardStacks[target.ID+CardStackEquip]
+		targetEquip := gameplayCtx.Desktop.CardStacks[target.ID+CardStackEquip]
 		if len(targetEquip.Cards) > 0 {
-			equipCard, err := AskOneCard(gameplay, player, targetEquip)
+			equipCard, err := AskOneCard(gameplayCtx, player, targetEquip)
 			if err != nil {
-				return gameplay, err
+				return gameplayCtx, err
 			}
 			targetEquip, hand, err := desktop.MoveCard(targetEquip, hand, equipCard, 0)
 			if err != nil {
-				return gameplay, err
+				return gameplayCtx, err
 			}
-			gameplay.Desktop.CardStacks[target.ID+CardStackEquip] = targetEquip
-			gameplay.Desktop.CardStacks[player.ID] = hand
+			gameplayCtx.Desktop.CardStacks[target.ID+CardStackEquip] = targetEquip
+			gameplayCtx.Desktop.CardStacks[player.ID] = hand
 		} else {
-			//target.Life--
+			targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+			characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
+			characterCom.Life--
+			gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom
 		}
-		gameplay.Players[target.ID] = target
 	} else {
 		// move dodge card to gravyard
 		targetHand, gravyard, err = desktop.MoveCard(targetHand, gravyard, dodgeCard, 0)
 		if err != nil {
-			return gameplay, err
+			return gameplayCtx, err
 		}
-		gameplay.Desktop.CardStacks[CardStackGravyard] = gravyard
-		gameplay.Desktop.CardStacks[target.ID] = targetHand
+		gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
+		gameplayCtx.Desktop.CardStacks[target.ID] = targetHand
 	}
 	playerCom.StealTimes++
-	gameplay.PlayerBasicComs[player.ID] = playerCom
-	return gameplay, nil
+	gameplayCtx.PlayerBasicComs[player.ID] = playerCom
+	return gameplayCtx, nil
 }
