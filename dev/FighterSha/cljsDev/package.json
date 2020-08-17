@@ -1,0 +1,14 @@
+{
+  "name": "cljsDev",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "shadow-cljs watch app",
+    "build": "shadow-cljs release release",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "shadow-cljs": "2.10.21"
+  },
+  "dependencies": {}
+}
