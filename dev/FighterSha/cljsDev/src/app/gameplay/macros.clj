@@ -7,8 +7,18 @@
             typed-args)
      (clojure.core.async/go
        (clojure.spec.alpha/assert
-        ~ret-type
+         ~ret-type
         (try
           ~@body
           (catch js/Error ~'err
             ~err-body))))))
+
+(defmacro async-> [ctx & expr]
+  `(let ~(into [] (mapcat (fn [[f & args]]
+                            `([~ctx ~'err]
+                              (clojure.core.async/<! (~f ~ctx ~@args))
+                              
+                              ~'_ 
+                              (when ~'err (throw ~'err))))
+                          expr))
+     ~ctx))
