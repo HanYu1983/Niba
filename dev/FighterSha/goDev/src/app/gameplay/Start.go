@@ -54,6 +54,9 @@ type CmdUseCard struct {
 	Card desktop.Card
 }
 
+type CmdExit struct{}
+type CmdEndTurn struct{}
+
 func Render(gameplayCtx Gameplay) {
 	js.Global.Get("View").Call("Render", gameplayCtx)
 }
@@ -64,16 +67,18 @@ func Alert(msg string) {
 
 // Start is
 func Start(gameplayCtx Gameplay) (Gameplay, error) {
+	var err error
 	Render(gameplayCtx)
-
+	activePlayer := gameplayCtx.Players["A"]
+Turn:
 	for {
 		time.Sleep(1 * time.Second)
-		activePlayer := NextPlayer(gameplayCtx, gameplayCtx.Players["A"])
+
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs[activePlayer.ID] = PlayerBasicCom{}
 
 		// 抽2
-		gameplayCtx, err := DrawCard(gameplayCtx, activePlayer, 2)
+		gameplayCtx, err = DrawCard(gameplayCtx, activePlayer, 2)
 		if err != nil {
 			return gameplayCtx, err
 		}
@@ -81,17 +86,20 @@ func Start(gameplayCtx Gameplay) (Gameplay, error) {
 		for {
 			time.Sleep(1 * time.Second)
 			// 準備回復點
+			// golang不是函數式語言, slice和map都無法deep copy,
+			// 所以必須手動
 			memonto, err := json.Marshal(gameplayCtx)
 			if err != nil {
 				return gameplayCtx, err
 			}
-			// 只要有錯就回到上一個回復點
+			// 只要panic就回到上一個回復點
 			defer func(memonto []byte) {
 				if err := recover(); err != nil {
 					err2 := json.Unmarshal(memonto, &gameplayCtx)
 					if err2 != nil {
 						panic(err2)
 					}
+					Render(gameplayCtx)
 					switch e := err.(type) {
 					case error:
 						Alert(e.Error())
@@ -159,13 +167,25 @@ func Start(gameplayCtx Gameplay) (Gameplay, error) {
 					if err != nil {
 						panic(err)
 					}
+
 				default:
 					panic(fmt.Errorf("%v not found", card))
 				}
+
+			case CmdExit:
+				break Turn
+
+			case CmdEndTurn:
+				break
 
 			default:
 				panic(fmt.Errorf("%v not found", cmd))
 			}
 		}
+
+		// 下個玩家
+		activePlayer := NextPlayer(gameplayCtx, activePlayer)
 	}
+
+	return gameplayCtx, nil
 }
