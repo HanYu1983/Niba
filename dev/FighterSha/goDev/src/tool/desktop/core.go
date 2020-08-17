@@ -34,23 +34,3 @@ type CardStack struct {
 type Desktop struct {
 	CardStacks map[string]CardStack
 }
-
-func Assoc(css map[string]CardStack, key string, cs CardStack) map[string]CardStack {
-	var ret map[string]CardStack
-	for k, v := range css {
-		ret[k] = v
-	}
-	ret[key] = cs
-	return ret
-}
-
-func Merge(css map[string]CardStack, append map[string]CardStack) map[string]CardStack {
-	var ret map[string]CardStack
-	for k, v := range css {
-		ret[k] = v
-	}
-	for k, v := range append {
-		ret[k] = v
-	}
-	return ret
-}

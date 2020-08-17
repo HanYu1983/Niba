@@ -24,9 +24,8 @@ func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Car
 	originCard := card
 	card.Face = desktop.FaceUp
 	gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originCard: card})
-	cardStacks := desktop.Assoc(gameplayCtx.Desktop.CardStacks, CardStackGravyard, gravyard)
-	cardStacks = desktop.Assoc(cardStacks, player.ID, hand)
-	gameplayCtx.Desktop.CardStacks = cardStacks
+	gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
+	gameplayCtx.Desktop.CardStacks[player.ID] = hand
 
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
@@ -41,7 +40,7 @@ func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Car
 	if dodgeCard == NotFound {
 		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
 		characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
-		characterCom.Life--
+		characterCom.Life++
 		gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom
 	} else {
 		// move dodge card to gravyard
@@ -52,9 +51,8 @@ func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Car
 		originDodgeCard := dodgeCard
 		dodgeCard.Face = desktop.FaceUp
 		gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originDodgeCard: dodgeCard})
-		cardStacks = desktop.Assoc(gameplayCtx.Desktop.CardStacks, CardStackGravyard, gravyard)
-		cardStacks = desktop.Assoc(cardStacks, target.ID, targetHand)
-		gameplayCtx.Desktop.CardStacks = cardStacks
+		gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
+		gameplayCtx.Desktop.CardStacks[target.ID] = targetHand
 	}
 
 	playerCom.AttackTimes++
