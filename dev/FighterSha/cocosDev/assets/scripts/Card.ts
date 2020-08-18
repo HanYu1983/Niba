@@ -21,13 +21,28 @@ export default class Card extends BasicViewer {
     cover:cc.Node = null;
 
     private cardId:string = "attack";
+    private cardKey:string = "";
 
-    setCard(id:string){
+    setCard(id:string, key:string){
         this.cardId = id;
         this.image.spriteFrame = ImagesAssets.Instance.getImageByKey(this.cardId);
+
+        this.cardKey = key;
     }
 
     showCard(show:boolean){
         this.cover.active = !show;
+    }
+
+    toggleCard(){
+        this.showCard(!this.isShow());
+    }
+
+    isShow(){
+        return !this.cover.active;
+    }
+
+    isCard(key:string){
+        return this.cardKey == key;
     }
 }

@@ -19,8 +19,27 @@ export default class Controller extends cc.Component {
 
     start(){
         let gamePage:GamePage = this.view.openPageById(0) as GamePage;
-        let card:cc.Node = gamePage.table.createCard("dodge");
-        card.x = card.y = 200;
-        card.getComponent(Card).showCard(true);
+        cc.tween(this.node).call(()=>{
+            let cards:Array<any> = [];
+            cards.push({id:"attack", key:"1"});
+            cards.push({id:"dodge", key:"2"});
+            cards.push({id:"make", key:"3"});
+            cards.push({id:"money", key:"4"});
+            gamePage.playerDetail.cards.createCards(cards);
+        // }).delay(1).call(()=>{
+        //     gamePage.playerDetail.cards.toggleCard("3", true);
+        // }).delay(1).call(()=>{
+        //     gamePage.playerDetail.cards.toggleCard("2");
+        //     gamePage.playerDetail.cards.toggleCard("3", false);
+        //     gamePage.playerDetail.cards.toggleCard("4");
+        }).delay(2).call(()=>{
+            gamePage.playerDetail.cards.removeCard("2");
+            gamePage.playerDetail.cards.listCard();
+        }).delay(2).call(()=>{
+            let cards:Array<any> = [];
+            cards.push({id:"make", key:"5"});
+            cards.push({id:"money", key:"6"});
+            gamePage.playerDetail.cards.createCards(cards);
+        }).start();
     }
 }

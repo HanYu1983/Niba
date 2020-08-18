@@ -5,17 +5,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicViewer from "../lib/BasicViewer";
-import Table from "./Table";
-import PlayerDetail from "./PlayerDetail";
+import Cards from "./Cards";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GamePage extends BasicViewer {
-    @property(Table)
-    table:Table = null;
+export default class PlayerDetail extends cc.Component {
 
-    @property(PlayerDetail)
-    playerDetail:PlayerDetail = null;
+    @property(Cards)
+    cards:Cards = null;
 }
