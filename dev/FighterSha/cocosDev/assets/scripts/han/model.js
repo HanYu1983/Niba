@@ -27346,18 +27346,7 @@ $packages["tool/desktop"] = (function() {
 		this.Face = Face_;
 		this.Player = Player_;
 	});
-	CardStack = $pkg.CardStack = $newType(0, $kindStruct, "desktop.CardStack", true, "tool/desktop", true, function(ID_, Cards_, Player_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.ID = "";
-			this.Cards = sliceType$1.nil;
-			this.Player = "";
-			return;
-		}
-		this.ID = ID_;
-		this.Cards = Cards_;
-		this.Player = Player_;
-	});
+	CardStack = $pkg.CardStack = $newType(12, $kindSlice, "desktop.CardStack", true, "tool/desktop", true, null);
 	Desktop = $pkg.Desktop = $newType(0, $kindStruct, "desktop.Desktop", true, "tool/desktop", true, function(CardStacks_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -27370,10 +27359,10 @@ $packages["tool/desktop"] = (function() {
 	sliceType$1 = $sliceType(Card);
 	mapType = $mapType($String, CardStack);
 	MoveCard = function(s1, s2, card, index) {
-		var _findID, _i, _r, _ref, c, card, findID, index, s1, s2, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _findID = $f._findID; _i = $f._i; _r = $f._r; _ref = $f._ref; c = $f.c; card = $f.card; findID = $f.findID; index = $f.index; s1 = $f.s1; s2 = $f.s2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _findID, _i, _r, _ref, c, card, findID, index, s1, s2, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _findID = $f._findID; _i = $f._i; _r = $f._r; _ref = $f._ref; c = $f.c; card = $f.card; findID = $f.findID; index = $f.index; s1 = $f.s1; s2 = $f.s2; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		findID = -1;
-		_ref = s1.Cards;
+		_ref = s1;
 		_i = 0;
 		while (true) {
 			if (!(_i < _ref.$length)) { break; }
@@ -27391,15 +27380,15 @@ $packages["tool/desktop"] = (function() {
 			_r = fmt.Errorf("card not found", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [s1, s2, _r];
 		/* } */ case 2:
-		s1.Cards = $appendSlice($subslice(s1.Cards, 0, findID), $subslice(s1.Cards, (findID + 1 >> 0)));
-		s2.Cards = $appendSlice($append($subslice(s2.Cards, 0, index), card), $subslice(s2.Cards, (index + 1 >> 0)));
+		s1 = $appendSlice($subslice(s1, 0, findID), (x = $subslice(s1, (findID + 1 >> 0)), $subslice(new sliceType$1(x.$array), x.$offset, x.$offset + x.$length)));
+		s2 = $appendSlice($append($subslice(s2, 0, index), card), (x$1 = $subslice(s2, index), $subslice(new sliceType$1(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length)));
 		$s = -1; return [s1, s2, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MoveCard }; } $f._findID = _findID; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.c = c; $f.card = card; $f.findID = findID; $f.index = index; $f.s1 = s1; $f.s2 = s2; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MoveCard }; } $f._findID = _findID; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.c = c; $f.card = card; $f.findID = findID; $f.index = index; $f.s1 = s1; $f.s2 = s2; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.MoveCard = MoveCard;
 	Replace = function(cardStack, info) {
-		var _entry, _i, _i$1, _keys, _ref, _ref$1, card, cardStack, idx, info, next, origin, ret, x;
-		ret = $clone(cardStack, CardStack);
+		var _entry, _i, _i$1, _keys, _ref, _ref$1, card, cardStack, idx, info, next, origin, ret;
+		ret = cardStack;
 		_ref = info;
 		_i = 0;
 		_keys = $keys(_ref);
@@ -27412,14 +27401,14 @@ $packages["tool/desktop"] = (function() {
 			}
 			origin = $clone(_entry.k, Card);
 			next = $clone(_entry.v, Card);
-			_ref$1 = cardStack.Cards;
+			_ref$1 = cardStack;
 			_i$1 = 0;
 			while (true) {
 				if (!(_i$1 < _ref$1.$length)) { break; }
 				idx = _i$1;
 				card = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), Card);
 				if ($equal(card, origin, Card)) {
-					Card.copy((x = ret.Cards, ((idx < 0 || idx >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + idx])), next);
+					Card.copy(((idx < 0 || idx >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + idx]), next);
 				}
 				_i$1++;
 			}
@@ -27432,12 +27421,13 @@ $packages["tool/desktop"] = (function() {
 	CardType.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	CardPrototypeID.init("", [{prop: "CardType", name: "CardType", embedded: false, exported: true, typ: CardType, tag: ""}, {prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	Card.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "CardPrototypeID", name: "CardPrototypeID", embedded: false, exported: true, typ: CardPrototypeID, tag: ""}, {prop: "Face", name: "Face", embedded: false, exported: true, typ: Face, tag: ""}, {prop: "Player", name: "Player", embedded: false, exported: true, typ: $String, tag: ""}]);
-	CardStack.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cards", name: "Cards", embedded: false, exported: true, typ: sliceType$1, tag: ""}, {prop: "Player", name: "Player", embedded: false, exported: true, typ: $String, tag: ""}]);
+	CardStack.init(Card);
 	Desktop.init("", [{prop: "CardStacks", name: "CardStacks", embedded: false, exported: true, typ: mapType, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.FaceDown = new Face.ptr("FaceDown");
 		$pkg.FaceUp = new Face.ptr("FaceUp");
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -27445,7 +27435,7 @@ $packages["tool/desktop"] = (function() {
 	return $pkg;
 })();
 $packages["app/gameplay"] = (function() {
-	var $pkg = {}, $init, json, fmt, js, time, desktop, CmdUseCard, CmdExit, CmdEndTurn, Player, PlayerBasicCom, CharacterCardCom, Gameplay, sliceType, ptrType, funcType, mapType, sliceType$1, funcType$1, mapType$1, mapType$2, mapType$3, AskOneCard, AskOnePlayer, Attack, NextPlayer, DrawCard, Equip, AskCommand, Render, Alert, Start, Steal, StealMoney, GetCharacterCard;
+	var $pkg = {}, $init, json, fmt, js, time, desktop, CmdUseCard, CmdExit, CmdEndTurn, Player, PlayerBasicCom, CharacterCardCom, Gameplay, ptrType, funcType, mapType, sliceType, funcType$1, mapType$1, mapType$2, mapType$3, AskOneCard, AskOnePlayer, Attack, NextPlayer, DrawCard, Equip, AskCommand, Render, Alert, Start, Steal, StealMoney, GetCharacterCard;
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
@@ -27519,11 +27509,10 @@ $packages["app/gameplay"] = (function() {
 		this.PlayerBasicComs = PlayerBasicComs_;
 		this.CharacterCardCom = CharacterCardCom_;
 	});
-	sliceType = $sliceType(desktop.Card);
 	ptrType = $ptrType(js.Object);
 	funcType = $funcType([ptrType], [], false);
 	mapType = $mapType($String, Player);
-	sliceType$1 = $sliceType($emptyInterface);
+	sliceType = $sliceType($emptyInterface);
 	funcType$1 = $funcType([], [], false);
 	mapType$1 = $mapType($String, $emptyInterface);
 	mapType$2 = $mapType($String, PlayerBasicCom);
@@ -27556,7 +27545,7 @@ $packages["app/gameplay"] = (function() {
 		if ($interfaceIsEqual(cardID, $ifaceNil)) {
 			$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), $ifaceNil];
 		}
-		_ref = targetCS[0].Cards;
+		_ref = targetCS[0];
 		_i = 0;
 		while (true) {
 			if (!(_i < _ref.$length)) { break; }
@@ -27614,33 +27603,33 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeAttack, desktop.CardType))) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeAttack, desktop.CardType))) { */ case 1:
-			_r = fmt.Errorf("you must use Attack", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("you must use Attack", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r];
 		/* } */ case 2:
 		playerCom = $clone((_entry = gameplayCtx.PlayerBasicComs[$String.keyFor(player.ID)], _entry !== undefined ? _entry.v : new PlayerBasicCom.ptr(0, 0, 0)), PlayerBasicCom);
 		/* */ if (playerCom.AttackTimes >= 1) { $s = 4; continue; }
 		/* */ $s = 5; continue;
 		/* if (playerCom.AttackTimes >= 1) { */ case 4:
-			_r$1 = fmt.Errorf("you reach attack limit", new sliceType$1([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = fmt.Errorf("you reach attack limit", new sliceType([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$1];
 		/* } */ case 5:
-		gravyard = $clone((_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("_CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		hand = $clone((_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$2 = desktop.MoveCard($clone(hand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		gravyard = (_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : desktop.CardStack.nil);
+		hand = (_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : desktop.CardStack.nil);
+		_r$2 = desktop.MoveCard(hand, gravyard, $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_tuple = _r$2;
-		hand = $clone(_tuple[0], desktop.CardStack);
-		gravyard = $clone(_tuple[1], desktop.CardStack);
+		hand = _tuple[0];
+		gravyard = _tuple[1];
 		err = _tuple[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [gameplayCtx, err];
 		}
 		originCard = $clone(card, desktop.Card);
 		desktop.Face.copy(card.Face, desktop.FaceUp);
-		desktop.CardStack.copy(gravyard, desktop.Replace($clone(gravyard, desktop.CardStack), $makeMap(desktop.Card.keyFor, [{ k: $clone(originCard, desktop.Card), v: $clone(card, desktop.Card) }])));
-		_key = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(gravyard, desktop.CardStack) };
-		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(hand, desktop.CardStack) };
-		targetHand = $clone((_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), $clone(targetHand, desktop.CardStack)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		gravyard = desktop.Replace(gravyard, $makeMap(desktop.Card.keyFor, [{ k: $clone(originCard, desktop.Card), v: $clone(card, desktop.Card) }]));
+		_key = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: gravyard };
+		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: hand };
+		targetHand = (_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : desktop.CardStack.nil);
+		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), targetHand); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$1 = _r$3;
 		dodgeCard = $clone(_tuple$1[0], desktop.Card);
 		err = _tuple$1[1];
@@ -27650,7 +27639,7 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { $s = 9; continue; }
 		/* */ $s = 10; continue;
 		/* if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { */ case 9:
-			_r$4 = fmt.Errorf("you must select dodge card", new sliceType$1([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4 = fmt.Errorf("you must select dodge card", new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$4];
 		/* } */ case 10:
 		NotFound = new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), "");
@@ -27669,19 +27658,19 @@ $packages["app/gameplay"] = (function() {
 			_key$2 = targetCharacterCard.ID; (gameplayCtx.CharacterCardCom || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: $clone(characterCom, CharacterCardCom) };
 			$s = 14; continue;
 		/* } else { */ case 13:
-			_r$6 = desktop.MoveCard($clone(targetHand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(dodgeCard, desktop.Card), 0); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6 = desktop.MoveCard(targetHand, gravyard, $clone(dodgeCard, desktop.Card), 0); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 			_tuple$3 = _r$6;
-			desktop.CardStack.copy(targetHand, _tuple$3[0]);
-			desktop.CardStack.copy(gravyard, _tuple$3[1]);
+			targetHand = _tuple$3[0];
+			gravyard = _tuple$3[1];
 			err = _tuple$3[2];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				$s = -1; return [gameplayCtx, err];
 			}
 			originDodgeCard = $clone(dodgeCard, desktop.Card);
 			desktop.Face.copy(dodgeCard.Face, desktop.FaceUp);
-			desktop.CardStack.copy(gravyard, desktop.Replace($clone(gravyard, desktop.CardStack), $makeMap(desktop.Card.keyFor, [{ k: $clone(originDodgeCard, desktop.Card), v: $clone(dodgeCard, desktop.Card) }])));
-			_key$3 = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: $clone(gravyard, desktop.CardStack) };
-			_key$4 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: $clone(targetHand, desktop.CardStack) };
+			gravyard = desktop.Replace(gravyard, $makeMap(desktop.Card.keyFor, [{ k: $clone(originDodgeCard, desktop.Card), v: $clone(dodgeCard, desktop.Card) }]));
+			_key$3 = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: gravyard };
+			_key$4 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: targetHand };
 		/* } */ case 14:
 		playerCom.AttackTimes = playerCom.AttackTimes + (1) >> 0;
 		_key$5 = player.ID; (gameplayCtx.PlayerBasicComs || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: $clone(playerCom, PlayerBasicCom) };
@@ -27717,8 +27706,8 @@ $packages["app/gameplay"] = (function() {
 				$go((function(gameplayCtx, player, wait) { return function $b() {
 					var _card, _entry, _i, _r, _ref, targetCS, x, $s, $r;
 					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _card = $f._card; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; targetCS = $f.targetCS; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-					targetCS = $clone((_entry = gameplayCtx[0].Desktop.CardStacks[$String.keyFor(player[0].ID)], _entry !== undefined ? _entry.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-					_ref = targetCS.Cards;
+					targetCS = (_entry = gameplayCtx[0].Desktop.CardStacks[$String.keyFor(player[0].ID)], _entry !== undefined ? _entry.v : desktop.CardStack.nil);
+					_ref = targetCS;
 					_i = 0;
 					/* while (true) { */ case 1:
 						/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
@@ -27731,7 +27720,7 @@ $packages["app/gameplay"] = (function() {
 						/* } */ case 4:
 						_i++;
 					/* } */ $s = 1; continue; case 2:
-					_r = fmt.Errorf("%v not found", new sliceType$1([new $String($internalize(cardID, $String))])); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+					_r = fmt.Errorf("%v not found", new sliceType([new $String($internalize(cardID, $String))])); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 					$r = $send(wait[0], _r); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					$s = -1; return;
 					/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._card = _card; $f._entry = _entry; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.targetCS = targetCS; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
@@ -27760,7 +27749,7 @@ $packages["app/gameplay"] = (function() {
 	Alert = function(msg) {
 		var _r, msg, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; msg = $f.msg; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = fmt.Println(new sliceType$1([new $String(msg)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Println(new sliceType([new $String(msg)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Alert }; } $f._r = _r; $f.msg = msg; $f.$s = $s; $f.$r = $r; return $f;
@@ -27908,7 +27897,7 @@ $packages["app/gameplay"] = (function() {
 							}
 							$s = 22; continue;
 						/* } else { */ case 21:
-							_r$8 = fmt.Errorf("%v not found", new sliceType$1([new card.constructor.elem(card)])); /* */ $s = 29; case 29: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+							_r$8 = fmt.Errorf("card.CardPrototypeID.CardType %v not found", new sliceType([new card.constructor.elem(card)])); /* */ $s = 29; case 29: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 							$panic(_r$8);
 						/* } */ case 22:
 					case 16:
@@ -27923,7 +27912,7 @@ $packages["app/gameplay"] = (function() {
 					$s = 15; continue;
 				/* } else { */ case 14:
 					cmdDetail$3 = _ref;
-					_r$9 = fmt.Errorf("%v not found", new sliceType$1([cmd])); /* */ $s = 30; case 30: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+					_r$9 = fmt.Errorf("%v not found", new sliceType([cmd])); /* */ $s = 30; case 30: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 					$panic(_r$9);
 				/* } } */ case 15:
 			/* } */ $s = 4; continue; case 5:
@@ -27939,30 +27928,30 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeSteal, desktop.CardType))) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeSteal, desktop.CardType))) { */ case 1:
-			_r = fmt.Errorf("you must use Steal", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("you must use Steal", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r];
 		/* } */ case 2:
 		playerCom = $clone((_entry = gameplayCtx.PlayerBasicComs[$String.keyFor(player.ID)], _entry !== undefined ? _entry.v : new PlayerBasicCom.ptr(0, 0, 0)), PlayerBasicCom);
 		/* */ if (playerCom.StealTimes >= 1) { $s = 4; continue; }
 		/* */ $s = 5; continue;
 		/* if (playerCom.StealTimes >= 1) { */ case 4:
-			_r$1 = fmt.Errorf("you reach Steal limit", new sliceType$1([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = fmt.Errorf("you reach Steal limit", new sliceType([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$1];
 		/* } */ case 5:
-		gravyard = $clone((_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("_CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		hand = $clone((_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$2 = desktop.MoveCard($clone(hand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		gravyard = (_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : desktop.CardStack.nil);
+		hand = (_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : desktop.CardStack.nil);
+		_r$2 = desktop.MoveCard(hand, gravyard, $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_tuple = _r$2;
-		hand = $clone(_tuple[0], desktop.CardStack);
-		gravyard = $clone(_tuple[1], desktop.CardStack);
+		hand = _tuple[0];
+		gravyard = _tuple[1];
 		err = _tuple[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [gameplayCtx, err];
 		}
-		_key = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(gravyard, desktop.CardStack) };
-		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(hand, desktop.CardStack) };
-		targetHand = $clone((_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), $clone(targetHand, desktop.CardStack)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_key = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: gravyard };
+		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: hand };
+		targetHand = (_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : desktop.CardStack.nil);
+		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), targetHand); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$1 = _r$3;
 		dodgeCard = $clone(_tuple$1[0], desktop.Card);
 		err = _tuple$1[1];
@@ -27972,34 +27961,34 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { $s = 9; continue; }
 		/* */ $s = 10; continue;
 		/* if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { */ case 9:
-			_r$4 = fmt.Errorf("you must select dodge card", new sliceType$1([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4 = fmt.Errorf("you must select dodge card", new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$4];
 		/* } */ case 10:
 		NotFound = new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), "");
 		/* */ if ($equal(dodgeCard, NotFound, desktop.Card)) { $s = 12; continue; }
 		/* */ $s = 13; continue;
 		/* if ($equal(dodgeCard, NotFound, desktop.Card)) { */ case 12:
-			targetEquip = $clone((_entry$4 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID + "_CardStackEquip")], _entry$4 !== undefined ? _entry$4.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-			/* */ if (targetEquip.Cards.$length > 0) { $s = 15; continue; }
+			targetEquip = (_entry$4 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID + "_CardStackEquip")], _entry$4 !== undefined ? _entry$4.v : desktop.CardStack.nil);
+			/* */ if (targetEquip.$length > 0) { $s = 15; continue; }
 			/* */ $s = 16; continue;
-			/* if (targetEquip.Cards.$length > 0) { */ case 15:
-				_r$5 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone(targetEquip, desktop.CardStack)); /* */ $s = 18; case 18: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			/* if (targetEquip.$length > 0) { */ case 15:
+				_r$5 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(player, Player), targetEquip); /* */ $s = 18; case 18: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 				_tuple$2 = _r$5;
 				equipCard = $clone(_tuple$2[0], desktop.Card);
 				err$1 = _tuple$2[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [gameplayCtx, err$1];
 				}
-				_r$6 = desktop.MoveCard($clone(targetEquip, desktop.CardStack), $clone(hand, desktop.CardStack), $clone(equipCard, desktop.Card), 0); /* */ $s = 19; case 19: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_r$6 = desktop.MoveCard(targetEquip, hand, $clone(equipCard, desktop.Card), 0); /* */ $s = 19; case 19: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				_tuple$3 = _r$6;
-				targetEquip$1 = $clone(_tuple$3[0], desktop.CardStack);
-				hand$1 = $clone(_tuple$3[1], desktop.CardStack);
+				targetEquip$1 = _tuple$3[0];
+				hand$1 = _tuple$3[1];
 				err$1 = _tuple$3[2];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [gameplayCtx, err$1];
 				}
-				_key$2 = target.ID + "_CardStackEquip"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: $clone(targetEquip$1, desktop.CardStack) };
-				_key$3 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: $clone(hand$1, desktop.CardStack) };
+				_key$2 = target.ID + "_CardStackEquip"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: targetEquip$1 };
+				_key$3 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: hand$1 };
 				$s = 17; continue;
 			/* } else { */ case 16:
 				_r$7 = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(target, Player)); /* */ $s = 20; case 20: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
@@ -28015,16 +28004,16 @@ $packages["app/gameplay"] = (function() {
 			/* } */ case 17:
 			$s = 14; continue;
 		/* } else { */ case 13:
-			_r$8 = desktop.MoveCard($clone(targetHand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(dodgeCard, desktop.Card), 0); /* */ $s = 21; case 21: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+			_r$8 = desktop.MoveCard(targetHand, gravyard, $clone(dodgeCard, desktop.Card), 0); /* */ $s = 21; case 21: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 			_tuple$5 = _r$8;
-			desktop.CardStack.copy(targetHand, _tuple$5[0]);
-			desktop.CardStack.copy(gravyard, _tuple$5[1]);
+			targetHand = _tuple$5[0];
+			gravyard = _tuple$5[1];
 			err = _tuple$5[2];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				$s = -1; return [gameplayCtx, err];
 			}
-			_key$5 = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: $clone(gravyard, desktop.CardStack) };
-			_key$6 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$6)] = { k: _key$6, v: $clone(targetHand, desktop.CardStack) };
+			_key$5 = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: gravyard };
+			_key$6 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$6)] = { k: _key$6, v: targetHand };
 		/* } */ case 14:
 		playerCom.StealTimes = playerCom.StealTimes + (1) >> 0;
 		_key$7 = player.ID; (gameplayCtx.PlayerBasicComs || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$7)] = { k: _key$7, v: $clone(playerCom, PlayerBasicCom) };
@@ -28038,30 +28027,30 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeStealMoney, desktop.CardType))) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (!($equal(card.CardPrototypeID.CardType, $pkg.CardTypeStealMoney, desktop.CardType))) { */ case 1:
-			_r = fmt.Errorf("you must use StealMoney", new sliceType$1([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("you must use StealMoney", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r];
 		/* } */ case 2:
 		playerCom = $clone((_entry = gameplayCtx.PlayerBasicComs[$String.keyFor(player.ID)], _entry !== undefined ? _entry.v : new PlayerBasicCom.ptr(0, 0, 0)), PlayerBasicCom);
 		/* */ if (playerCom.StealMoneyTimes >= 1) { $s = 4; continue; }
 		/* */ $s = 5; continue;
 		/* if (playerCom.StealMoneyTimes >= 1) { */ case 4:
-			_r$1 = fmt.Errorf("you reach StealMoney limit", new sliceType$1([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = fmt.Errorf("you reach StealMoney limit", new sliceType([])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$1];
 		/* } */ case 5:
-		gravyard = $clone((_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("_CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		hand = $clone((_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$2 = desktop.MoveCard($clone(hand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		gravyard = (_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("CardStackGravyard")], _entry$1 !== undefined ? _entry$1.v : desktop.CardStack.nil);
+		hand = (_entry$2 = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID)], _entry$2 !== undefined ? _entry$2.v : desktop.CardStack.nil);
+		_r$2 = desktop.MoveCard(hand, gravyard, $clone(card, desktop.Card), 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_tuple = _r$2;
-		hand = $clone(_tuple[0], desktop.CardStack);
-		gravyard = $clone(_tuple[1], desktop.CardStack);
+		hand = _tuple[0];
+		gravyard = _tuple[1];
 		err = _tuple[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [gameplayCtx, err];
 		}
-		_key = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(gravyard, desktop.CardStack) };
-		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(hand, desktop.CardStack) };
-		targetHand = $clone((_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), $clone(targetHand, desktop.CardStack)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_key = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: gravyard };
+		_key$1 = player.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: hand };
+		targetHand = (_entry$3 = gameplayCtx.Desktop.CardStacks[$String.keyFor(target.ID)], _entry$3 !== undefined ? _entry$3.v : desktop.CardStack.nil);
+		_r$3 = AskOneCard($clone(gameplayCtx, Gameplay), $clone(target, Player), targetHand); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$1 = _r$3;
 		dodgeCard = $clone(_tuple$1[0], desktop.Card);
 		err = _tuple$1[1];
@@ -28071,7 +28060,7 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { $s = 9; continue; }
 		/* */ $s = 10; continue;
 		/* if (!($equal(dodgeCard.CardPrototypeID.CardType, $pkg.CardTypeDodge, desktop.CardType))) { */ case 9:
-			_r$4 = fmt.Errorf("you must select dodge card", new sliceType$1([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_r$4 = fmt.Errorf("you must select dodge card", new sliceType([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			$s = -1; return [gameplayCtx, _r$4];
 		/* } */ case 10:
 		NotFound = new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), "");
@@ -28094,16 +28083,16 @@ $packages["app/gameplay"] = (function() {
 			_key$2 = targetCharacterCard.ID; (gameplayCtx.CharacterCardCom || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: $clone(characterCom, CharacterCardCom) };
 			$s = 14; continue;
 		/* } else { */ case 13:
-			_r$6 = desktop.MoveCard($clone(targetHand, desktop.CardStack), $clone(gravyard, desktop.CardStack), $clone(dodgeCard, desktop.Card), 0); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+			_r$6 = desktop.MoveCard(targetHand, gravyard, $clone(dodgeCard, desktop.Card), 0); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 			_tuple$3 = _r$6;
-			desktop.CardStack.copy(targetHand, _tuple$3[0]);
-			desktop.CardStack.copy(gravyard, _tuple$3[1]);
+			targetHand = _tuple$3[0];
+			gravyard = _tuple$3[1];
 			err = _tuple$3[2];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				$s = -1; return [gameplayCtx, err];
 			}
-			_key$3 = "_CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: $clone(gravyard, desktop.CardStack) };
-			_key$4 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: $clone(targetHand, desktop.CardStack) };
+			_key$3 = "CardStackGravyard"; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: gravyard };
+			_key$4 = target.ID; (gameplayCtx.Desktop.CardStacks || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: targetHand };
 		/* } */ case 14:
 		playerCom.StealMoneyTimes = playerCom.StealMoneyTimes + (1) >> 0;
 		_key$5 = player.ID; (gameplayCtx.PlayerBasicComs || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$5)] = { k: _key$5, v: $clone(playerCom, PlayerBasicCom) };
@@ -28112,17 +28101,17 @@ $packages["app/gameplay"] = (function() {
 	};
 	$pkg.StealMoney = StealMoney;
 	GetCharacterCard = function(gameplayCtx, player) {
-		var _entry, _r, cs, gameplayCtx, player, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; cs = $f.cs; gameplayCtx = $f.gameplayCtx; player = $f.player; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		cs = $clone((_entry = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID + "_CardStackCharacter")], _entry !== undefined ? _entry.v : new desktop.CardStack.ptr("", sliceType.nil, "")), desktop.CardStack);
-		/* */ if (cs.Cards.$length === 0) { $s = 1; continue; }
+		var _entry, _r, cs, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; cs = $f.cs; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		cs = (_entry = gameplayCtx.Desktop.CardStacks[$String.keyFor(player.ID + "_CardStackCharacter")], _entry !== undefined ? _entry.v : desktop.CardStack.nil);
+		/* */ if (cs.$length === 0) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if (cs.Cards.$length === 0) { */ case 1:
-			_r = fmt.Errorf("player %v character card not found", new sliceType$1([new $String(player.ID)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		/* if (cs.$length === 0) { */ case 1:
+			_r = fmt.Errorf("player %v character card not found", new sliceType([new $String(player.ID)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), _r];
 		/* } */ case 2:
-		$s = -1; return [(x = cs.Cards, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: GetCharacterCard }; } $f._entry = _entry; $f._r = _r; $f.cs = cs; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [(0 >= cs.$length ? ($throwRuntimeError("index out of range"), undefined) : cs.$array[cs.$offset + 0]), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GetCharacterCard }; } $f._entry = _entry; $f._r = _r; $f.cs = cs; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.GetCharacterCard = GetCharacterCard;
 	CmdUseCard.init("", [{prop: "Card", name: "Card", embedded: false, exported: true, typ: desktop.Card, tag: ""}]);
@@ -28147,7 +28136,7 @@ $packages["app/gameplay"] = (function() {
 		$pkg.CardTypeArm = new desktop.CardType.ptr("CardTypeArm");
 		$pkg.CardTypeArmor = new desktop.CardType.ptr("CardTypeArmor");
 		$pkg.CardTypeAccessory = new desktop.CardType.ptr("CardTypeAccessory");
-		$pkg.DefaultGamePlay = new Gameplay.ptr(new desktop.Desktop.ptr($makeMap($String.keyFor, [{ k: "_CardStackHome", v: new desktop.CardStack.ptr("", sliceType.nil, "") }, { k: "_CardStackGravyard", v: new desktop.CardStack.ptr("", sliceType.nil, "") }])), $makeMap($String.keyFor, []), $makeMap($String.keyFor, []), $makeMap($String.keyFor, []));
+		$pkg.DefaultGamePlay = new Gameplay.ptr(new desktop.Desktop.ptr($makeMap($String.keyFor, [{ k: "CardStackHome", v: new desktop.CardStack([]) }, { k: "CardStackGravyard", v: new desktop.CardStack([]) }, { k: "A", v: new desktop.CardStack([new desktop.Card.ptr("abc", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeAttack, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), "A")]) }])), $makeMap($String.keyFor, [{ k: "A", v: new Player.ptr("A", "A", 0) }]), $makeMap($String.keyFor, []), $makeMap($String.keyFor, []));
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -28181,6 +28170,7 @@ $packages["main"] = (function() {
 			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 1:
 				_r = fmt.Println(new sliceType([err])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				_r;
+				$panic(err);
 			/* } */ case 2:
 			$s = -1; return;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f.err = err; $f.$s = $s; $f.$r = $r; return $f;

@@ -22,7 +22,7 @@ func AskOneCard(gameplay Gameplay, player Player, targetCS desktop.CardStack) (d
 	if cardID == nil {
 		return desktop.Card{}, nil
 	}
-	for _, _card := range targetCS.Cards {
+	for _, _card := range targetCS {
 		if _card.ID == cardID.(string) {
 			return _card, nil
 		}

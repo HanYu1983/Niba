@@ -25,6 +25,11 @@ export default class Controller extends cc.Component {
             console.log(player, answer)
             answer.CmdUseCard("override")
         }
+        // 畫場景
+        window.View.Render = (gameplay)=>{
+            console.log("render")
+            console.log(gameplay)
+        }
         // 和Model溝通
         console.log(window.Model)
         // 開始遊戲時呼叫

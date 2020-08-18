@@ -25,11 +25,7 @@ type Card struct {
 	Player          string
 }
 
-type CardStack struct {
-	ID     string
-	Cards  []Card
-	Player string
-}
+type CardStack []Card
 
 type Desktop struct {
 	CardStacks map[string]CardStack

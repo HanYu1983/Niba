@@ -28,7 +28,7 @@ func AskCommand(gameplayCtx Gameplay, player Player) (interface{}, error) {
 			"CmdUseCard": func(cardID *js.Object) {
 				go func() {
 					targetCS := gameplayCtx.Desktop.CardStacks[player.ID]
-					for _, _card := range targetCS.Cards {
+					for _, _card := range targetCS {
 						if _card.ID == cardID.String() {
 							wait <- CmdUseCard{_card}
 							return
@@ -108,6 +108,7 @@ Turn:
 					default:
 						panic(err)
 					}
+					// panic(err)
 				}
 			}(memonto)
 
@@ -169,7 +170,7 @@ Turn:
 					}
 
 				default:
-					panic(fmt.Errorf("%v not found", card))
+					panic(fmt.Errorf("card.CardPrototypeID.CardType %v not found", card))
 				}
 
 			case CmdExit:

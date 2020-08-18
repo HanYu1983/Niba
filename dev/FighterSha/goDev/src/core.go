@@ -14,6 +14,7 @@ func StartGameplay() {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
+			panic(err)
 		}
 	}()
 	fmt.Println("start")
