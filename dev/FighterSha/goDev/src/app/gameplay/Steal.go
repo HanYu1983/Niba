@@ -51,6 +51,9 @@ func Steal(gameplayCtx Gameplay, player Player, target Player, card desktop.Card
 			gameplayCtx.Desktop.CardStacks[player.ID] = hand
 		} else {
 			targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+			if err != nil {
+				return gameplayCtx, err
+			}
 			characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
 			characterCom.Life--
 			gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom

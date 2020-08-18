@@ -18,6 +18,18 @@ export default class Controller extends cc.Component {
     view:View;
 
     start(){
+        // 覆寫方法
+        window.View.AskCommand = (player, answer)=>{
+            // 哪一個玩家要回答
+            // 用answer物件來回答
+            console.log(player, answer)
+            answer.CmdUseCard("override")
+        }
+        // 和Model溝通
+        console.log(window.Model)
+        // 開始遊戲時呼叫
+        window.Model.StartGameplay()
+
         let gamePage:GamePage = this.view.openPageById(0) as GamePage;
         cc.tween(this.node).call(()=>{
             let cards:Array<any> = [];

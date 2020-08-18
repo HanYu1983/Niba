@@ -39,6 +39,9 @@ func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Car
 	var NotFound desktop.Card
 	if dodgeCard == NotFound {
 		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+		if err != nil {
+			return gameplayCtx, err
+		}
 		characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
 		characterCom.Life++
 		gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom

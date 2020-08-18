@@ -17,7 +17,7 @@ func DrawCard(gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
 	return gameplayCtx, nil
 }
 
-func Equip(gameplayCtx Gameplay, player Player, card Card) (Gameplay, error) {
+func Equip(gameplayCtx Gameplay, player Player, card desktop.Card) (Gameplay, error) {
 	return gameplayCtx, nil
 }
 
@@ -163,7 +163,7 @@ Turn:
 
 				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
 					// 裝備
-					gameplayCtx, err := Equip(gameplayCtx, activePlayer, card)
+					gameplayCtx, err = Equip(gameplayCtx, activePlayer, card)
 					if err != nil {
 						panic(err)
 					}
@@ -184,7 +184,7 @@ Turn:
 		}
 
 		// 下個玩家
-		activePlayer := NextPlayer(gameplayCtx, activePlayer)
+		activePlayer = NextPlayer(gameplayCtx, activePlayer)
 	}
 
 	return gameplayCtx, nil
