@@ -19,7 +19,7 @@ func StartGameplay() {
 	}()
 	fmt.Println("start")
 	gameplayCtx := gameplay.DefaultGamePlay
-	gameplayCtx, err := gameplay.Start(gameplayCtx)
+	err := gameplay.Start(&gameplayCtx)
 	if err != nil {
 		panic(err)
 	}

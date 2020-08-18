@@ -2,7 +2,7 @@ package gameplay
 
 import "github.com/gopherjs/gopherjs/js"
 
-func AskOnePlayer(gameplay Gameplay, player Player, players map[string]Player) (Player, error) {
+func AskOnePlayer(gameplay *Gameplay, player Player, players map[string]Player) (Player, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOnePlayer", player, players, func(id *js.Object) {

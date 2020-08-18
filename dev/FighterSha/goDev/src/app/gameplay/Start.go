@@ -9,19 +9,19 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 )
 
-func NextPlayer(gameplayCtx Gameplay, player Player) Player {
+func NextPlayer(gameplayCtx *Gameplay, player Player) Player {
 	return player
 }
 
-func DrawCard(gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
-	return gameplayCtx, nil
+func DrawCard(gameplayCtx *Gameplay, player Player, cnt int) error {
+	return nil
 }
 
-func Equip(gameplayCtx Gameplay, player Player, card desktop.Card) (Gameplay, error) {
-	return gameplayCtx, nil
+func Equip(gameplayCtx *Gameplay, player Player, card desktop.Card) error {
+	return nil
 }
 
-func AskCommand(gameplayCtx Gameplay, player Player) (interface{}, error) {
+func AskCommand(gameplayCtx *Gameplay, player Player) (interface{}, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskCommand", player, map[string]interface{}{
@@ -57,32 +57,37 @@ type CmdUseCard struct {
 type CmdExit struct{}
 type CmdEndTurn struct{}
 
-func Render(gameplayCtx Gameplay) {
-	js.Global.Get("View").Call("Render", gameplayCtx)
+func Render(gameplayCtx *Gameplay) {
+	js.Global.Get("View").Call("Render", *gameplayCtx)
 }
 
-func Alert(msg string) {
-	fmt.Println(msg)
+func Alert(msg interface{}) {
+	switch t := msg.(type) {
+	case error:
+		fmt.Println(t.Error())
+	case string:
+		fmt.Println(t)
+	default:
+		panic(msg)
+	}
 }
 
 // Start is
-func Start(gameplayCtx Gameplay) (Gameplay, error) {
+func Start(gameplayCtx *Gameplay) error {
 	var err error
 	Render(gameplayCtx)
 	activePlayer := gameplayCtx.Players["A"]
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
-
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs[activePlayer.ID] = PlayerBasicCom{}
-
 		// 抽2
-		gameplayCtx, err = DrawCard(gameplayCtx, activePlayer, 2)
+		err = DrawCard(gameplayCtx, activePlayer, 2)
 		if err != nil {
-			return gameplayCtx, err
+			return err
 		}
-
+	Menu:
 		for {
 			time.Sleep(1 * time.Second)
 			// 準備回復點
@@ -90,32 +95,24 @@ Turn:
 			// 所以必須手動
 			memonto, err := json.Marshal(gameplayCtx)
 			if err != nil {
-				return gameplayCtx, err
+				return err
 			}
-			// 只要panic就回到上一個回復點
-			defer func(memonto []byte) {
-				if err := recover(); err != nil {
-					err2 := json.Unmarshal(memonto, &gameplayCtx)
+			resetMemonto := func(memonto []byte) func(*Gameplay) {
+				return func(gameplay *Gameplay) {
+					err2 := json.Unmarshal(memonto, gameplay)
 					if err2 != nil {
 						panic(err2)
 					}
 					Render(gameplayCtx)
-					switch e := err.(type) {
-					case error:
-						Alert(e.Error())
-					case string:
-						Alert(e)
-					default:
-						panic(err)
-					}
-					// panic(err)
 				}
 			}(memonto)
 
 			// 等玩家指令
 			cmd, err := AskCommand(gameplayCtx, activePlayer)
 			if err != nil {
-				panic(err)
+				Alert(err)
+				resetMemonto(gameplayCtx)
+				continue
 			}
 
 			// 跳過回合
@@ -133,41 +130,25 @@ Turn:
 					// 殺
 					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 					if err != nil {
-						panic(err)
+						Alert(err)
+						resetMemonto(gameplayCtx)
+						break
 					}
-					gameplayCtx, err = Attack(gameplayCtx, activePlayer, target, card)
+					err = Attack(gameplayCtx, activePlayer, target, card)
 					if err != nil {
-						panic(err)
+						Alert(err)
+						resetMemonto(gameplayCtx)
+						break
 					}
 
 				case CardTypeSteal:
 					// 盜
-					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
-					if err != nil {
-						panic(err)
-					}
-					gameplayCtx, err = Steal(gameplayCtx, activePlayer, target, card)
-					if err != nil {
-						panic(err)
-					}
 
 				case CardTypeStealMoney:
 					// 劫
-					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
-					if err != nil {
-						panic(err)
-					}
-					gameplayCtx, err = StealMoney(gameplayCtx, activePlayer, target, card)
-					if err != nil {
-						panic(err)
-					}
 
 				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
 					// 裝備
-					gameplayCtx, err = Equip(gameplayCtx, activePlayer, card)
-					if err != nil {
-						panic(err)
-					}
 
 				default:
 					panic(fmt.Errorf("card.CardPrototypeID.CardType %v not found", card))
@@ -177,7 +158,7 @@ Turn:
 				break Turn
 
 			case CmdEndTurn:
-				break
+				break Menu
 
 			default:
 				panic(fmt.Errorf("%v not found", cmd))
@@ -188,5 +169,5 @@ Turn:
 		activePlayer = NextPlayer(gameplayCtx, activePlayer)
 	}
 
-	return gameplayCtx, nil
+	return nil
 }
