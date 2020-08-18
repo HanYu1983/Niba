@@ -5,20 +5,12 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import Cards from "./Cards";
+import DefaultState from "../lib/DefaultState";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class PlayerDetail extends cc.Component {
+export default class StatePlayCard extends DefaultState {
 
-    @property(Cards)
-    cards:Cards = null;
-
-    @property(cc.Label)
-    currentAsk:cc.Label = null;
-
-    setAsk(ask:string){
-        this.currentAsk.string = ask;
-    }
+    
 }

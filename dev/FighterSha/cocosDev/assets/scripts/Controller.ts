@@ -35,6 +35,8 @@ export default class Controller extends cc.Component {
         // 開始遊戲時呼叫
         window.Model.StartGameplay()
 
+        cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
+
         let gamePage:GamePage = this.view.openPageById(0) as GamePage;
         cc.tween(this.node).call(()=>{
             let cards:Array<any> = [];
@@ -58,5 +60,20 @@ export default class Controller extends cc.Component {
             cards.push({id:"money", key:"6"});
             gamePage.playerDetail.cards.createCards(cards);
         }).start();
+    }
+
+    onKeyUp(evt: cc.Event.EventKeyboard){
+        let currentPage = this.view.getCurrentPage();
+        if(currentPage){
+            switch(evt.keyCode){
+                case cc.macro.KEY.w: currentPage.onUpClick(currentPage);break;
+                case cc.macro.KEY.a: currentPage.onLeftClick(currentPage);break;
+                case cc.macro.KEY.s: currentPage.onDownClick(currentPage);break;
+                case cc.macro.KEY.d: currentPage.onRightClick(currentPage);break;
+                case cc.macro.KEY.enter: currentPage.onEnterClick(currentPage);break;
+                case cc.macro.KEY.escape: currentPage.onEscClick(currentPage);break;
+            }
+        }
+        
     }
 }

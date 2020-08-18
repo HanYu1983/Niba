@@ -5,21 +5,29 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicViewer from "./lib/BasicViewer";
+import BasicStateViewer from "./lib/BasicStateViewer";
+import BasicStateViewer from "./lib/BasicStateViewer";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class View extends cc.Component {
 
-    @property(BasicViewer)
-    pages:BasicViewer[] = [];
+    @property(BasicStateViewer)
+    pages:BasicStateViewer[] = [];
+
+    private currentPage:BasicStateViewer = null;
 
     openPageById(id:number){
         this.closeAllPages();
         this.pages[id].open();
         this.pages[id].node.x = this.pages[id].node.y = 0;
+        this.currentPage = this.pages[id];
         return this.pages[id];
+    }
+
+    getCurrentPage(){
+        return this.currentPage;
     }
 
     closeAllPages(){
