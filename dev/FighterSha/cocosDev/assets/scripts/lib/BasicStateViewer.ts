@@ -5,32 +5,16 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import Table from "./Table";
-import PlayerDetail from "./PlayerDetail";
-import StateController from "../lib/StateController";
-import StatePlayCard from "./StatePlayCard";
-import BasicStateViewer from "../lib/BasicStateViewer";
+import BasicViewer from "./BasicViewer";
+import IState from "./IState";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class GamePage extends BasicStateViewer {
-    @property(Table)
-    table:Table = null;
-
-    @property(PlayerDetail)
-    playerDetail:PlayerDetail = null;
-
-    start(){
-        
-    }
-
-    changeToPlayCard(){
-        this.getComponent(StateController).changeState(new StatePlayCard(), this);
-    }
+export default class BasicStateViewer extends BasicViewer implements IState {
 
     onUpClick(owner?:any){
-        cc.log("up");
+
     }
     onDownClick(owner?:any){
 
