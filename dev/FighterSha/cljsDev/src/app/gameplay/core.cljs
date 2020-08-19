@@ -6,39 +6,28 @@
             [app.gameplay.spec])
   (:require-macros [app.gameplay.macros :as m]))
 
-(defn move-card2 [from to card]
-  (s/assert ::app.gameplay.spec/card-stack from)
-  (s/assert ::app.gameplay.spec/card-stack to)
-  (s/assert ::app.gameplay.spec/card card)
-  (a/go
-    (s/assert
-     (s/tuple ::app.gameplay.spec/card-stack ::app.gameplay.spec/card-stack ::app.gameplay.spec/error)
-     (try
-       (when (not (some #{card} (:cards from)))
-         (js/Error. "card not found"))
-       [(assoc from :cards (remove #{card} (:cards from)))
-        (assoc to :cards (cons card (:cards to)))
-        nil]
-       (catch js/Error err
-         [from to err])))))
 
-(m/defasync
-  move-card (s/tuple ::app.gameplay.spec/card-stack ::app.gameplay.spec/card-stack ::app.gameplay.spec/error)
-  {from ::app.gameplay.spec/card-stack
-   to ::app.gameplay.spec/card-stack
-   card ::app.gameplay.spec/card}
-  [from to err]
-  (when (not (some #{card} (:cards from)))
-    (js/Error. "card not found"))
-  [(assoc from :cards (remove #{card} (:cards from)))
-   (assoc to :cards (cons card (:cards to)))
-   nil])
+(defn render [gameplayCtx]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (js/View.Render (clj->js gameplayCtx)))
+
+(defn render-player-trun-start [gameplayCtx player]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/player player)
+  (let [wait (a/chan)]
+    (a/go
+      (js/View.RenderPlayerTurnStart (clj->js gameplayCtx)
+                                     (clj->js player)
+                                     (fn []
+                                       (a/go
+                                         (a/close! wait)))))
+    wait))
 
 (m/defasync
   attack (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
-  {gameplayCtx ::app.gameplay.spec/gameplay
+  [gameplayCtx ::app.gameplay.spec/gameplay
    player ::app.gameplay.spec/player
-   card ::app.gameplay.spec/card}
+   card ::app.gameplay.spec/card]
   [gameplayCtx err]
   [(let [player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
          player-hand (s/assert
@@ -59,18 +48,7 @@
      gameplayCtx)
    nil])
 
-(defn render [gameplayCtx]
-  (js/View.Render (clj->js gameplayCtx)))
 
-(defn render-player-trun-start [gameplayCtx player]
-  (let [wait (a/chan)]
-    (a/go
-      (js/View.RenderPlayerTurnStart (clj->js gameplayCtx) 
-                                     (clj->js player)
-                                     (fn []
-                                       (a/go
-                                         (a/close! wait)))))
-    wait))
 
 
 
@@ -112,8 +90,8 @@
 
 (m/defasync
   menu (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
-  {gameplayCtx ::app.gameplay.spec/gameplay
-   player ::app.gameplay.spec/player}
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   player ::app.gameplay.spec/player]
   [gameplayCtx err]
   (loop [gameplayCtx gameplayCtx]
     (a/<! (a/timeout 1000))
@@ -132,7 +110,7 @@
                          ; 結束回合
                          :gameplay-cmd-end-turn
                          [gameplayCtx true nil]
-                                         
+
                          ; 使用一張卡
                          :gameplay-cmd-use-card
                          (let [[_ card] cmd]
@@ -157,19 +135,63 @@
      player)))
 
 (m/defasync
+  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   from ::app.gameplay.spec/card-stack-id
+   to ::app.gameplay.spec/card-stack-id
+   cards ::app.gameplay.spec/card-stack]
+  [gameplayCtx err]
+  (let [gameplayCtx (update-in gameplayCtx [:card-stacks from]
+                               (fn [origin]
+                                 (remove (into #{} cards) origin)))
+        gameplayCtx (update-in gameplayCtx [:card-stacks to]
+                               (fn [origin]
+                                 (concat origin cards)))]
+    [gameplayCtx nil]))
+
+(m/defasync
+  draw-card (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   player ::app.gameplay.spec/player
+   n number?]
+  [gameplayCtx err]
+  (let [cards (s/assert
+               ::app.gameplay.spec/card-stack
+               (->> gameplayCtx :card-stacks :home
+                    (take n)))
+        player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+        [gameplayCtx err] (a/<! (move-card gameplayCtx :home player-hand-id cards))
+        gameplayCtx (update-in gameplayCtx [:card-stacks player-hand-id]
+                               (fn [origin]
+                                 (replace (zipmap cards (map #(assoc % :player-id (:player-id player)) cards))
+                                          origin)))]
+    [gameplayCtx err]))
+
+(m/defasync
   start (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
-  {gameplayCtx ::app.gameplay.spec/gameplay}
+  [gameplayCtx ::app.gameplay.spec/gameplay]
   [gameplayCtx err]
   (loop [gameplayCtx gameplayCtx
          active-player (-> gameplayCtx :players :0)]
     (a/<! (a/timeout 1000))
     (a/<! (render-player-trun-start gameplayCtx active-player))
-    (let [[gameplayCtx err] (try
+    (let [[gameplayCtx err] (a/<! (draw-card gameplayCtx active-player 2))
+          _ (when err (throw err))
+
+          [gameplayCtx err] (try
                               (let [[gameplayCtx err] (a/<! (menu gameplayCtx active-player))
                                     _ (when err (throw err))]
                                 [gameplayCtx nil])
                               (catch js/Error err
-                                [gameplayCtx err]))]
-      (if err
-        [gameplayCtx err]
-        (recur gameplayCtx (a/<! (next-player gameplayCtx active-player)))))))
+                                [gameplayCtx err]))
+          _ (when err (throw err))]
+      (recur gameplayCtx (a/<! (next-player gameplayCtx active-player))))))
+
+
+#_(println (macroexpand '(m/defasync
+                           draw-card (s/tuple ::app.gameplay.spec/card-stack ::app.gameplay.spec/error)
+                           [gameplayCtx ::app.gameplay.spec/gameplay
+                            player ::app.gameplay.spec/player
+                            n number?]
+                           [gameplayCtx err]
+                           [gameplayCtx nil])))
