@@ -6,11 +6,14 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import DefaultState from "../lib/DefaultState";
+import GamePage from "./GamePage";
 
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class StatePlayCard extends DefaultState {
 
-    
+    onEnterState(){
+        (this.owner as GamePage).playerDetail.setAsk("aaabbb");
+    }
 }

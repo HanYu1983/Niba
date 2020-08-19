@@ -7,33 +7,33 @@ export default class StateController extends cc.Component {
 
     current: IState = null;
 
-    changeState(state: IState, owner:any) {
-        if(this.current) this.current.onReleaseState(owner);
+    changeState(state: IState) {
+        if(this.current) this.current.onReleaseState();
         this.current = state;
-        this.current.onEnterState(owner);
+        this.current.onEnterState();
     }
 
-    onUpClick(owner: any) {
-        this.current.onUpClick(owner);
+    onUpClick() {
+        this.current.onUpClick();
     }
 
-    onDownClick(owner: any) {
-        this.current.onDownClick(owner);
+    onDownClick() {
+        this.current.onDownClick();
     }
 
-    onLeftClick(owner: any) {
-        this.current.onLeftClick(owner);
+    onLeftClick() {
+        this.current.onLeftClick();
     }
 
-    onRightClick(owner: any) {
-        this.current.onRightClick(owner);
+    onRightClick() {
+        this.current.onRightClick();
     }
 
-    onEnterClick(owner: any) {
-        this.current.onEnterClick(owner);
+    onEnterClick() {
+        this.current.onEnterClick();
     }
 
-    onEscClick(owner: any) {
-        this.current.onEscClick(owner);
+    onEscClick() {
+        this.current.onEscClick();
     }
 }

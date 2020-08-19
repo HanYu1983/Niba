@@ -5,28 +5,32 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class DefaultState implements IState {
 
-    onUpClick(owner: any) {
+    constructor(public owner){
+        this.owner = owner;
+    }
+
+    onUpClick() {
         throw new Error("Method not implemented.");
     }    
-    onDownClick(owner: any) {
+    onDownClick() {
         throw new Error("Method not implemented.");
     }
-    onLeftClick(owner: any) {
+    onLeftClick() {
         throw new Error("Method not implemented.");
     }
-    onRightClick(owner: any) {
+    onRightClick() {
         throw new Error("Method not implemented.");
     }
-    onEnterClick(owner: any) {
+    onEnterClick() {
         throw new Error("Method not implemented.");
     }
-    onEscClick(owner: any) {
+    onEscClick() {
         throw new Error("Method not implemented.");
     }
-    onEnterState(onwer?:any){
+    onEnterState(){
         throw new Error("Method not implemented.");
     }
-    onReleaseState(onwer?:any){
+    onReleaseState(){
         throw new Error("Method not implemented.");
     }
 }

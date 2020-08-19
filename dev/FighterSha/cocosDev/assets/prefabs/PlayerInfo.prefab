@@ -71,7 +71,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        0,
+        204.375,
         0,
         0,
         0,
@@ -164,7 +164,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Back<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 2
@@ -301,7 +301,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Character<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 6
@@ -536,7 +536,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Image<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 11
@@ -633,7 +633,7 @@
     "_contentSize": {
       "__type__": "cc.Size",
       "width": 100,
-      "height": 113.36
+      "height": 56.44333333333336
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -709,7 +709,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        31.57,
+        37.07,
         0,
         0,
         0,
@@ -764,7 +764,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -775,7 +775,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "d6kMQjjqVPDYmS4y2lp83h",
+    "fileId": "a0kCvL+8lI+ZgP0alliEhW",
     "sync": false
   },
   {
@@ -818,7 +818,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        20.57,
+        26.07,
         0,
         0,
         0,
@@ -873,7 +873,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -884,7 +884,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "78niZ+6a5FDpAVKyRXJHKR",
+    "fileId": "efPqbyIwpEIaJqK8h0LZ89",
     "sync": false
   },
   {
@@ -927,7 +927,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        9.57,
+        15.07,
         0,
         0,
         0,
@@ -982,7 +982,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -993,7 +993,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "61PIMZYElL4Kzw6/P2YckE",
+    "fileId": "bdS82vyQ9HWY1h0ikDZ48U",
     "sync": false
   },
   {
@@ -1036,7 +1036,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -1.4299999999999997,
+        4.07,
         0,
         0,
         0,
@@ -1091,7 +1091,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -1102,7 +1102,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "61BR6xu1RFgZLCFFkuqNZE",
+    "fileId": "93hA9bM9JHIoT2X2VkOuM9",
     "sync": false
   },
   {
@@ -1145,7 +1145,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -12.43,
+        -6.93,
         0,
         0,
         0,
@@ -1200,7 +1200,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -1211,7 +1211,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "b25k8Z/jVEXZAaf2cQsset",
+    "fileId": "48wtSE6/1DgJId9zx/Kso7",
     "sync": false
   },
   {
@@ -1254,7 +1254,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -23.43,
+        -17.93,
         0,
         0,
         0,
@@ -1309,7 +1309,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -1320,7 +1320,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "55mIxq0AZDmIaysMG/2nDg",
+    "fileId": "ddb01EBVlH94cx5uckQc/e",
     "sync": false
   },
   {
@@ -1363,7 +1363,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -34.43,
+        -28.93,
         0,
         0,
         0,
@@ -1418,7 +1418,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -1429,7 +1429,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "faTzonJkpFVr2/XSWIPsSH",
+    "fileId": "f20fRfU+NJ2p3OMjkIjwWy",
     "sync": false
   },
   {
@@ -1472,7 +1472,7 @@
       "ctor": "Float64Array",
       "array": [
         0,
-        -45.43,
+        -39.93,
         0,
         0,
         0,
@@ -1527,7 +1527,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -1538,7 +1538,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "c5yWGkwjlBwLL0QSArOQtb",
+    "fileId": "e3IW1ypmtN1bCxlO/Fl6w4",
     "sync": false
   },
   {
@@ -1551,11 +1551,11 @@
     "_enabled": true,
     "_fontFamily": "Arial",
     "_isSystemFontUsed": true,
-    "_N$string": "使用【劫】時，如果對方沒有金錢而變爲【殺】的時候。則【殺】變爲【暗殺】（造成1點傷害。不能被【閃】）。【劫】的效果變爲取得2金。",
+    "_N$string": "使用【劫】時，如果對方沒有金錢而變爲【殺】的時候。則【殺】變爲【暗殺】（造成1點傷害。不能被【閃】）。【劫】的效果變爲取得2金。\n",
     "_N$horizontalAlign": 0,
     "_N$fontSize": 11,
     "_N$font": null,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_N$maxWidth": 100,
     "_N$lineHeight": 11,
     "_N$imageAtlas": null,
@@ -1575,8 +1575,8 @@
     "_alignFlags": 45,
     "_left": 0,
     "_right": 0,
-    "_top": -3.5549999999999997,
-    "_bottom": -3.5549999999999997,
+    "_top": 24.90333333333332,
+    "_bottom": 24.90333333333332,
     "_verticalCenter": 0,
     "_horizontalCenter": 0,
     "_isAbsLeft": true,
@@ -1805,7 +1805,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Image<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 46
@@ -2033,7 +2033,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2044,7 +2044,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "bcJx7EQ1ZGBI0z64RL3zCJ",
+    "fileId": "f1xYB/Ex1FR5EuJyrCMNoO",
     "sync": false
   },
   {
@@ -2142,7 +2142,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2153,7 +2153,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "f58J+MrUVDa4S73FE/zwx8",
+    "fileId": "b2I+rZUi1O64qsCmNsBm6A",
     "sync": false
   },
   {
@@ -2251,7 +2251,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2262,7 +2262,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "306meU3hpLXJWVGInpVbna",
+    "fileId": "12JR+3bb9BNI30U2GKwOeb",
     "sync": false
   },
   {
@@ -2360,7 +2360,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2371,7 +2371,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "7fvpadkRpId5fzka+hnC/d",
+    "fileId": "b0IyVk2JtAGprPbIzOcyp3",
     "sync": false
   },
   {
@@ -2469,7 +2469,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2480,7 +2480,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "42rxwKw9xFsYrbYHhau6Py",
+    "fileId": "b7YxCwiUpOMYgg+S7NbmAM",
     "sync": false
   },
   {
@@ -2578,7 +2578,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2589,7 +2589,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "0eI2t3bH1EE68EE009/WHw",
+    "fileId": "a7Zr5EtcZCapB1GLSmhrso",
     "sync": false
   },
   {
@@ -2687,7 +2687,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2698,7 +2698,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "b52M08WaBCJ4XNP0l1GBUH",
+    "fileId": "51D37QivBCuKDd+G/MOKOH",
     "sync": false
   },
   {
@@ -2796,7 +2796,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -2807,7 +2807,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "41gqi4xEdJjJwvSkRlJf06",
+    "fileId": "d09sPdotFEIJU/GyckFBKm",
     "sync": false
   },
   {
@@ -2824,7 +2824,7 @@
     "_N$horizontalAlign": 0,
     "_N$fontSize": 11,
     "_N$font": null,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_N$maxWidth": 100,
     "_N$lineHeight": 11,
     "_N$imageAtlas": null,
@@ -3074,7 +3074,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Image<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 81
@@ -3302,7 +3302,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3313,7 +3313,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "e2vHGdgtRBgqPDLJv3grV5",
+    "fileId": "53SPLy94BL3ZzIrPv/wkD/",
     "sync": false
   },
   {
@@ -3411,7 +3411,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3422,7 +3422,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "70pWsgYTlHqbHvpiWJ6gVz",
+    "fileId": "90rNzzC/JEP6UxAoIpKCbb",
     "sync": false
   },
   {
@@ -3520,7 +3520,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3531,7 +3531,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "ac2N0XxFFFF7vHjNgneco2",
+    "fileId": "f7ATGCtd1LU5R17dyRa/NG",
     "sync": false
   },
   {
@@ -3629,7 +3629,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3640,7 +3640,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "6fFIB0DNlB1oLGUR3Eko9l",
+    "fileId": "b5BwdZHS1DqqkFSLb02vVV",
     "sync": false
   },
   {
@@ -3738,7 +3738,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3749,7 +3749,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "73vCLSGGhMBaJD9pyvoolX",
+    "fileId": "58OnrLr9RJ7Yh+sy5jD09r",
     "sync": false
   },
   {
@@ -3847,7 +3847,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3858,7 +3858,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "2aOjuPT1BF5ZXJEAY2r5Qo",
+    "fileId": "51uN/ZHUpFaqXa7TnCgCFR",
     "sync": false
   },
   {
@@ -3956,7 +3956,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -3967,7 +3967,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "e6uDCMjcFBz7w2V0f23tVo",
+    "fileId": "61KVfadgNMEIW6F9QpG7BQ",
     "sync": false
   },
   {
@@ -4065,7 +4065,7 @@
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
     "_N$overflow": 0,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_id": ""
   },
   {
@@ -4076,7 +4076,7 @@
     "asset": {
       "__uuid__": "5947c808-92c6-4e24-af98-e8738099ba89"
     },
-    "fileId": "9ahbbz2epKeqxEiA9Jii0W",
+    "fileId": "08ynvT1YRGKrIZJ97BxRhi",
     "sync": false
   },
   {
@@ -4093,7 +4093,7 @@
     "_N$horizontalAlign": 0,
     "_N$fontSize": 11,
     "_N$font": null,
-    "_N$cacheMode": 1,
+    "_N$cacheMode": 0,
     "_N$maxWidth": 100,
     "_N$lineHeight": 11,
     "_N$imageAtlas": null,
@@ -4364,7 +4364,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 116
@@ -4378,7 +4378,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -4501,7 +4501,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 120
@@ -4515,7 +4515,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -4638,7 +4638,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 124
@@ -4652,7 +4652,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -4775,7 +4775,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 128
@@ -4789,7 +4789,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -4912,7 +4912,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 132
@@ -4926,7 +4926,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5049,7 +5049,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "HP<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 136
@@ -5063,7 +5063,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "76d88a1f-3b14-4174-b09f-4b2feaaa7f37"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5186,7 +5186,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 140
@@ -5200,7 +5200,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5323,7 +5323,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 144
@@ -5337,7 +5337,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5460,7 +5460,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 148
@@ -5474,7 +5474,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5597,7 +5597,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 152
@@ -5611,7 +5611,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5734,7 +5734,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 156
@@ -5748,7 +5748,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -5871,7 +5871,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Money<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 160
@@ -5885,7 +5885,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "0d5d8a04-016f-4d44-9e58-b964b8572cb7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6008,7 +6008,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 164
@@ -6022,7 +6022,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6145,7 +6145,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 168
@@ -6159,7 +6159,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6282,7 +6282,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 172
@@ -6296,7 +6296,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6419,7 +6419,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 176
@@ -6433,7 +6433,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6556,7 +6556,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 180
@@ -6570,7 +6570,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -6693,7 +6693,7 @@
   },
   {
     "__type__": "cc.Sprite",
-    "_name": "",
+    "_name": "Card<Sprite>",
     "_objFlags": 0,
     "node": {
       "__id__": 184
@@ -6707,7 +6707,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "8cdb44ac-a3f6-449f-b354-7cd48cf84061"
+      "__uuid__": "818b15d9-b7ab-460e-a82b-ef44706e73f7"
     },
     "_type": 0,
     "_sizeMode": 0,

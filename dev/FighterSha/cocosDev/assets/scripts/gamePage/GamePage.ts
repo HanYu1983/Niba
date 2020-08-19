@@ -10,6 +10,7 @@ import PlayerDetail from "./PlayerDetail";
 import StateController from "../lib/StateController";
 import StatePlayCard from "./StatePlayCard";
 import BasicStateViewer from "../lib/BasicStateViewer";
+import DefaultState from "../lib/DefaultState";
 
 const {ccclass, property} = cc._decorator;
 
@@ -26,25 +27,25 @@ export default class GamePage extends BasicStateViewer {
     }
 
     changeToPlayCard(){
-        this.getComponent(StateController).changeState(new StatePlayCard(), this);
+        this.getComponent(StateController).changeState(new StatePlayCard(this));
     }
 
-    onUpClick(owner?:any){
-        cc.log("up");
+    onUpClick(){
+        this.getComponent(StateController).onUpClick();
     }
-    onDownClick(owner?:any){
-
+    onDownClick(){
+        this.getComponent(StateController).onDownClick();
     }
-    onLeftClick(owner?:any){
-
+    onLeftClick(){
+        this.getComponent(StateController).onLeftClick();
     }
-    onRightClick(owner?:any){
-
+    onRightClick(){
+        this.getComponent(StateController).onRightClick();
     }
-    onEnterClick(owner?:any){
-
+    onEnterClick(){
+        this.getComponent(StateController).onEnterClick();
     }
-    onEscClick(owner?:any){
-        
+    onEscClick(){
+        this.getComponent(StateController).onEscClick();
     }
 }
