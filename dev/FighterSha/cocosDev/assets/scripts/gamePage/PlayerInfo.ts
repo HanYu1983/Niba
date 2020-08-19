@@ -8,21 +8,51 @@
 const {ccclass, property} = cc._decorator;
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class PlayerInfo extends cc.Component {
 
-    @property(cc.Label)
-    label: cc.Label = null;
+    @property(cc.Sprite)
+    jobImage:cc.Sprite = null;
 
-    @property
-    text: string = 'hello';
+    @property(cc.Node)
+    hpIcons:cc.Node[] = [];
 
-    // LIFE-CYCLE CALLBACKS:
+    @property(cc.Node)
+    moneyIcons:cc.Node[] = [];
 
-    // onLoad () {}
+    @property(cc.Node)
+    cardIcons:cc.Node[] = [];
 
-    start () {
+    setJob(job:string){
 
     }
 
-    // update (dt) {}
+    setHP(count:number){
+        this.showIcon(this.hpIcons, count);
+    }
+
+    setMoney(count:number){
+        this.showIcon(this.moneyIcons, count);
+    }
+
+    setCardCount(count:number){
+        this.showIcon(this.cardIcons, count);
+    }
+
+    showIcon(icons:cc.Node[], count:number){
+        for(let i = 0; i < icons.length; ++i){
+            icons[i].opacity = i < count ? 255 : 30;
+        }
+    }
+
+    equipWeapon(equip:boolean = false){
+
+    }
+
+    equipArmor(equip:boolean = false){
+
+    }
+
+    equipRing(equip:boolean = false){
+        
+    }
 }
