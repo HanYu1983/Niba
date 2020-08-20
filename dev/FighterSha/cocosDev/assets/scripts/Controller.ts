@@ -59,10 +59,10 @@ export default class Controller extends cc.Component {
         let gamePage:GamePage = this.view.openPageById(0) as GamePage;
         cc.tween(this.node).call(()=>{
             let cards:Array<any> = [];
-            cards.push({id:"attack", key:"1"});
-            cards.push({id:"dodge", key:"2"});
-            cards.push({id:"craft", key:"3"});
-            cards.push({id:"money", key:"4"});
+            cards.push({id:"act_attack", key:"1"});
+            cards.push({id:"act_dodge", key:"2"});
+            cards.push({id:"act_craft", key:"3"});
+            cards.push({id:"act_money", key:"4"});
             gamePage.playerDetail.cards.createCards(cards);
             gamePage.playerDetail.myInfo.setHP(3);
         }).delay(1).call(()=>{
@@ -78,8 +78,8 @@ export default class Controller extends cc.Component {
             gamePage.playerDetail.cards.listCard();
         }).delay(2).call(()=>{
             let cards:Array<any> = [];
-            cards.push({id:"craft", key:"5"});
-            cards.push({id:"money", key:"6"});
+            cards.push({id:"act_craft", key:"5"});
+            cards.push({id:"act_money", key:"6"});
             gamePage.playerDetail.cards.createCards(cards);
         }).start();
     }
