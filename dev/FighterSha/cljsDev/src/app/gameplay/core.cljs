@@ -24,6 +24,22 @@
                                          (a/close! wait)))))
     wait))
 
+(defn render-card-move [gameplayCtx from to cards]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/card-stack-id from)
+  (s/assert ::app.gameplay.spec/card-stack-id to)
+  (s/assert ::app.gameplay.spec/card-stack cards)
+  (let [wait (a/chan)]
+    (a/go
+      (js/View.RenderCardMove (clj->js gameplayCtx)
+                              (clj->js from)
+                              (clj->js to)
+                              (clj->js cards)
+                              (fn []
+                                (a/go
+                                  (a/close! wait)))))
+    wait))
+
 (m/defasync
   attack (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
   [gameplayCtx ::app.gameplay.spec/gameplay
@@ -88,6 +104,45 @@
                                       (a/close! wait))))))
     wait))
 
+(defn next-player [gameplayCtx player]
+  (a/go
+    (s/assert
+     ::app.gameplay.spec/player
+     player)))
+
+(m/defasync
+  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   from ::app.gameplay.spec/card-stack-id
+   to ::app.gameplay.spec/card-stack-id
+   cards ::app.gameplay.spec/card-stack]
+  [gameplayCtx err]
+  (let [gameplayCtx (update-in gameplayCtx [:card-stacks from]
+                               (fn [origin]
+                                 (remove (into #{} cards) origin)))
+        gameplayCtx (update-in gameplayCtx [:card-stacks to]
+                               (fn [origin]
+                                 (concat origin cards)))
+        _ (a/<! (render-card-move gameplayCtx from to cards))]
+    [gameplayCtx nil]))
+
+(m/defasync
+  draw-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   player ::app.gameplay.spec/player
+   n number?]
+  [gameplayCtx err]
+  (let [cards (s/assert
+               ::app.gameplay.spec/card-stack
+               (->> gameplayCtx :card-stacks :home
+                    (take n)))
+        player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+        [gameplayCtx err] (a/<! (move-card gameplayCtx :home player-hand-id cards))
+        gameplayCtx (update-in gameplayCtx [:card-stacks player-hand-id]
+                               (fn [origin]
+                                 (replace (zipmap cards (map #(assoc % :player-id (:player-id player)) cards))
+                                          origin)))]
+    [gameplayCtx err]))
 
 (m/defasync
   menu (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
@@ -114,8 +169,10 @@
 
                          ; 使用一張卡
                          :gameplay-cmd-use-card
-                         (let [[_ card] cmd]
-                           [gameplayCtx false nil])
+                         (let [[_ card] cmd
+                               player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard [card]))]
+                           [gameplayCtx false err])
 
                          (throw (js/Error. (str "cmd not define " cmd-conform))))]
 
@@ -124,50 +181,11 @@
                (js/console.warn err)
                ; can not recur here
                [gameplayCtx false err])))
-          _ (when err 
+          _ (when err
               (js/console.warn err))]
       (if end-turn?
         [gameplayCtx nil]
         (recur gameplayCtx)))))
-
-(defn next-player [gameplayCtx player]
-  (a/go
-    (s/assert
-     ::app.gameplay.spec/player
-     player)))
-
-(m/defasync
-  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
-  [gameplayCtx ::app.gameplay.spec/gameplay
-   from ::app.gameplay.spec/card-stack-id
-   to ::app.gameplay.spec/card-stack-id
-   cards ::app.gameplay.spec/card-stack]
-  [gameplayCtx err]
-  (let [gameplayCtx (update-in gameplayCtx [:card-stacks from]
-                               (fn [origin]
-                                 (remove (into #{} cards) origin)))
-        gameplayCtx (update-in gameplayCtx [:card-stacks to]
-                               (fn [origin]
-                                 (concat origin cards)))]
-    [gameplayCtx nil]))
-
-(m/defasync
-  draw-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
-  [gameplayCtx ::app.gameplay.spec/gameplay
-   player ::app.gameplay.spec/player
-   n number?]
-  [gameplayCtx err]
-  (let [cards (s/assert
-               ::app.gameplay.spec/card-stack
-               (->> gameplayCtx :card-stacks :home
-                    (take n)))
-        player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
-        [gameplayCtx err] (a/<! (move-card gameplayCtx :home player-hand-id cards))
-        gameplayCtx (update-in gameplayCtx [:card-stacks player-hand-id]
-                               (fn [origin]
-                                 (replace (zipmap cards (map #(assoc % :player-id (:player-id player)) cards))
-                                          origin)))]
-    [gameplayCtx err]))
 
 (m/defasync
   start (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
@@ -175,17 +193,11 @@
   [gameplayCtx err]
   (loop [gameplayCtx gameplayCtx
          active-player (-> gameplayCtx :players :0)]
-    (a/<! (a/timeout 1000))
-    (a/<! (render-player-trun-start gameplayCtx active-player))
-    (let [[gameplayCtx err] (try
-                              (let [[gameplayCtx err] (a/<! (draw-card gameplayCtx active-player 2))
-                                    _ (when err (throw err))
-
-                                    [gameplayCtx err] (a/<! (menu gameplayCtx active-player))
-                                    _ (when err (throw err))]
-                                [gameplayCtx nil])
-                              (catch js/Error err
-                                [gameplayCtx err]))
+    (let [_ (a/<! (a/timeout 1000))
+          _ (a/<! (render-player-trun-start gameplayCtx active-player))
+          [gameplayCtx err] (a/<! (draw-card gameplayCtx active-player 2))
+          _ (when err (throw err))
+          [gameplayCtx err] (a/<! (menu gameplayCtx active-player))
           _ (when err (throw err))]
       (recur gameplayCtx (a/<! (next-player gameplayCtx active-player))))))
 

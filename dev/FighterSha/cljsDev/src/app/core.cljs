@@ -17,13 +17,17 @@
                 ::app.gameplay.spec/player
                 {:player-id :0})
 
-        card (s/assert
-              ::app.gameplay.spec/card
-              {:card-id :abc :card-proto-id :0 :card-state {} :card-face :down :player-id :0})
+        cards (s/assert
+               ::app.gameplay.spec/card-stack
+               (->> (range 60)
+                    (map (comp keyword str))
+                    (map (fn [id] 
+                           {:card-id id :card-proto-id :0 :card-state {} :card-face :down}))))
 
         gameplayCtx (s/assert
                      ::app.gameplay.spec/gameplay
-                     {:card-stacks {:0-hand [card]
+                     {:card-stacks {:0-hand []
+                                    :home cards
                                     :gravyard []}
                       :players {:0 player}})
 

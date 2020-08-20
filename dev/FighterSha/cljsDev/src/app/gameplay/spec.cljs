@@ -6,7 +6,8 @@
 (s/def ::card-stack-id keyword?)
 
 (s/def ::card-face #{:down :up})
-(s/def ::card (s/keys :req-un [::card-id ::app.data.spec/card-proto-id ::card-state ::card-face ::player-id]))
+(s/def ::card (s/keys :req-un [::card-id ::app.data.spec/card-proto-id ::card-state ::card-face]
+                      :req-opt [::player-id]))
 
 (s/def ::player (s/keys :req-un [::player-id]))
 (s/def ::players (s/map-of ::player-id ::player))
