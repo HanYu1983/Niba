@@ -2,7 +2,8 @@
 (ns app.gameplay.core
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a])
-  (:require [app.data.spec]
+  (:require [app.spec]
+            [app.data.spec]
             [app.gameplay.spec])
   (:require-macros [app.gameplay.macros :as m]))
 
@@ -23,8 +24,24 @@
                                          (a/close! wait)))))
     wait))
 
+(defn render-card-move [gameplayCtx from to cards]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/card-stack-id from)
+  (s/assert ::app.gameplay.spec/card-stack-id to)
+  (s/assert ::app.gameplay.spec/card-stack cards)
+  (let [wait (a/chan)]
+    (a/go
+      (js/View.RenderCardMove (clj->js gameplayCtx)
+                              (clj->js from)
+                              (clj->js to)
+                              (clj->js cards)
+                              (fn []
+                                (a/go
+                                  (a/close! wait)))))
+    wait))
+
 (m/defasync
-  attack (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  attack (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
   [gameplayCtx ::app.gameplay.spec/gameplay
    player ::app.gameplay.spec/player
    card ::app.gameplay.spec/card]
@@ -72,7 +89,7 @@
                                                        (filter #(= (:card-id %) (keyword card-id)))
                                                        first))
                                             cmd (s/assert
-                                                 (s/tuple ::gameplay-cmd ::app.gameplay.spec/error)
+                                                 (s/tuple ::gameplay-cmd ::app.spec/error)
                                                  (if (nil? card)
                                                    [[:gameplay-cmd-use-card nil] (js/Error. (str card-id " not found"))]
                                                    [[:gameplay-cmd-use-card card] nil]))
@@ -81,52 +98,11 @@
                                   "CmdEndTurn"
                                   (fn []
                                     (a/go
-                                     (a/>! wait
-                                           (s/assert
-                                            (s/tuple ::gameplay-cmd ::app.gameplay.spec/error)
-                                            [:gameplay-cmd-end-turn nil])))))))
+                                      (a/>! wait (s/assert
+                                                  (s/tuple ::gameplay-cmd ::app.spec/error)
+                                                  [:gameplay-cmd-end-turn nil]))
+                                      (a/close! wait))))))
     wait))
-
-
-(m/defasync
-  menu (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
-  [gameplayCtx ::app.gameplay.spec/gameplay
-   player ::app.gameplay.spec/player]
-  [gameplayCtx err]
-  (loop [gameplayCtx gameplayCtx]
-    (a/<! (a/timeout 1000))
-    (let [[gameplayCtx end-turn? err]
-          (s/assert
-           (s/tuple ::app.gameplay.spec/gameplay boolean? ::app.gameplay.spec/error)
-           (try
-             (let [_ (render gameplayCtx)
-                   [cmd err] (a/<! (ask-command gameplayCtx player))
-                   _ (when err (throw err))
-
-                   [cmd-conform] (s/conform ::gameplay-cmd cmd)
-                   _ (println "cmd " cmd-conform)
-
-                   ret (condp = cmd-conform
-                         ; 結束回合
-                         :gameplay-cmd-end-turn
-                         [gameplayCtx true nil]
-
-                         ; 使用一張卡
-                         :gameplay-cmd-use-card
-                         (let [[_ card] cmd]
-                           [gameplayCtx false nil])
-
-                         (throw (js/Error. (str "cmd not define " cmd-conform))))]
-
-               ret)
-             (catch js/Error err
-               (js/console.warn err)
-               ; can not recur here
-               [gameplayCtx false err])))
-          _ (when err (throw err))]
-      (if end-turn?
-        [gameplayCtx nil]
-        (recur gameplayCtx)))))
 
 (defn next-player [gameplayCtx player]
   (a/go
@@ -135,7 +111,7 @@
      player)))
 
 (m/defasync
-  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
   [gameplayCtx ::app.gameplay.spec/gameplay
    from ::app.gameplay.spec/card-stack-id
    to ::app.gameplay.spec/card-stack-id
@@ -146,11 +122,12 @@
                                  (remove (into #{} cards) origin)))
         gameplayCtx (update-in gameplayCtx [:card-stacks to]
                                (fn [origin]
-                                 (concat origin cards)))]
+                                 (concat origin cards)))
+        _ (a/<! (render-card-move gameplayCtx from to cards))]
     [gameplayCtx nil]))
 
 (m/defasync
-  draw-card (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  draw-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
   [gameplayCtx ::app.gameplay.spec/gameplay
    player ::app.gameplay.spec/player
    n number?]
@@ -168,28 +145,65 @@
     [gameplayCtx err]))
 
 (m/defasync
-  start (s/tuple ::app.gameplay.spec/gameplay ::app.gameplay.spec/error)
+  menu (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   player ::app.gameplay.spec/player]
+  [gameplayCtx err]
+  (loop [gameplayCtx gameplayCtx]
+    (a/<! (a/timeout 1000))
+    (let [[gameplayCtx end-turn? err]
+          (s/assert
+           (s/tuple ::app.gameplay.spec/gameplay boolean? ::app.spec/error)
+           (try
+             (let [_ (render gameplayCtx)
+                   [cmd err] (a/<! (ask-command gameplayCtx player))
+                   _ (when err (throw err))
+
+                   [cmd-conform] (s/conform ::gameplay-cmd cmd)
+                   _ (println "cmd " cmd-conform)
+
+                   ret (condp = cmd-conform
+                         ; 結束回合
+                         :gameplay-cmd-end-turn
+                         [gameplayCtx true nil]
+
+                         ; 使用一張卡
+                         :gameplay-cmd-use-card
+                         (let [[_ card] cmd
+                               player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard [card]))]
+                           [gameplayCtx false err])
+
+                         (throw (js/Error. (str "cmd not define " cmd-conform))))]
+
+               ret)
+             (catch js/Error err
+               (js/console.warn err)
+               ; can not recur here
+               [gameplayCtx false err])))
+          _ (when err
+              (js/console.warn err))]
+      (if end-turn?
+        [gameplayCtx nil]
+        (recur gameplayCtx)))))
+
+(m/defasync
+  start (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
   [gameplayCtx ::app.gameplay.spec/gameplay]
   [gameplayCtx err]
   (loop [gameplayCtx gameplayCtx
          active-player (-> gameplayCtx :players :0)]
-    (a/<! (a/timeout 1000))
-    (a/<! (render-player-trun-start gameplayCtx active-player))
-    (let [[gameplayCtx err] (a/<! (draw-card gameplayCtx active-player 2))
+    (let [_ (a/<! (a/timeout 1000))
+          _ (a/<! (render-player-trun-start gameplayCtx active-player))
+          [gameplayCtx err] (a/<! (draw-card gameplayCtx active-player 2))
           _ (when err (throw err))
-
-          [gameplayCtx err] (try
-                              (let [[gameplayCtx err] (a/<! (menu gameplayCtx active-player))
-                                    _ (when err (throw err))]
-                                [gameplayCtx nil])
-                              (catch js/Error err
-                                [gameplayCtx err]))
+          [gameplayCtx err] (a/<! (menu gameplayCtx active-player))
           _ (when err (throw err))]
       (recur gameplayCtx (a/<! (next-player gameplayCtx active-player))))))
 
 
 #_(println (macroexpand '(m/defasync
-                           draw-card (s/tuple ::app.gameplay.spec/card-stack ::app.gameplay.spec/error)
+                           draw-card (s/tuple ::app.gameplay.spec/card-stack ::app.spec/error)
                            [gameplayCtx ::app.gameplay.spec/gameplay
                             player ::app.gameplay.spec/player
                             n number?]

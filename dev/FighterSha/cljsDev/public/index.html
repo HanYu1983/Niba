@@ -14,8 +14,7 @@
             },
             AskCommand: function (player, answer) {
                 console.log(player, answer)
-                //answer.CmdUseCard("abc")
-                answer.CmdEndTurn()
+                answer.CmdUseCard("0")
             },
             AskOnePlayer: function (player, players, cb) {
                 console.log(player, players)
@@ -24,8 +23,12 @@
             Render: function (gameplay) {
                 console.log(gameplay)
             },
-            RenderPlayerTurnStart: function(gameplay, player, cb){
+            RenderPlayerTurnStart: function (gameplay, player, cb) {
                 console.log(player)
+                cb()
+            },
+            RenderCardMove: function (gameplay, from, to, cards, cb) {
+                console.log(from, to, cards)
                 cb()
             }
         }
