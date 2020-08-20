@@ -5,7 +5,6 @@
             [app.gameplay.spec]
             [app.spec]))
 
-
 (defn main []
   (let [_ (s/check-asserts true)
         input (a/chan)

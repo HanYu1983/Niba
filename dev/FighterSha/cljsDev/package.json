@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "shadow-cljs watch app",
+    "alpha": "shadow-cljs release alpha",
     "build": "shadow-cljs release release",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

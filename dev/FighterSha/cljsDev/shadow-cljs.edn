@@ -16,6 +16,13 @@
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app.core]
                                 :depends-on #{:shared}}}}
+
+          :alpha {:target :browser
+                  :output-dir "../cocosDev/assets/scripts/han"
+                  :modules {:app {:entries [app.core]}}
+                  :compiler-options {:optimizations nil
+                                     :source-map true
+                                     :pretty-print true}}
           :release {:target :browser
-                    :output-dir "../cocosDev/assets/Han"
+                    :output-dir "../cocosDev/assets/scripts/han"
                     :modules {:app {:entries [app.core]}}}}}

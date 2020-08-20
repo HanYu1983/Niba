@@ -18,18 +18,32 @@ export default class Controller extends cc.Component {
     view:View = null;
 
     start(){
-        // 覆寫方法
-        window.View.AskCommand = (player, answer)=>{
-            // 哪一個玩家要回答
-            // 用answer物件來回答
-            console.log(player, answer)
-            answer.CmdUseCard("override")
+        window.View = {
+            AskOneHandCard: function (player, cardStack, cb) {
+                console.log(cardStack)
+                cb(null)
+            },
+            AskCommand: function (player, answer) {
+                console.log(player, answer)
+                answer.CmdUseCard("0")
+            },
+            AskOnePlayer: function (player, players, cb) {
+                console.log(player, players)
+                cb("A")
+            },
+            Render: function (gameplay) {
+                console.log(gameplay)
+            },
+            RenderPlayerTurnStart: function (gameplay, player, cb) {
+                console.log(player)
+                cb()
+            },
+            RenderCardMove: function (gameplay, from, to, cards, cb) {
+                console.log(from, to, cards)
+                cb()
+            }
         }
-        // 畫場景
-        window.View.Render = (gameplay)=>{
-            console.log("render")
-            console.log(gameplay)
-        }
+
         // 和Model溝通
         console.log(window.Model)
         // 開始遊戲時呼叫
