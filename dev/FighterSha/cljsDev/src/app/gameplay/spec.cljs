@@ -15,4 +15,3 @@
 (s/def ::card-stacks (s/map-of ::card-stack-id ::card-stack))
 
 (s/def ::gameplay (s/keys :req-un [::card-stacks ::players]))
-(s/def ::error (s/nilable #(instance? js/Error %)))
