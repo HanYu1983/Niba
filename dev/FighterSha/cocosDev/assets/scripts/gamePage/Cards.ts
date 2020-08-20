@@ -41,7 +41,35 @@ export default class Cards extends cc.Component {
         this.listCard();
     }
 
-    getCard(key:string){
+    getCount(){
+        return this.cards.length;
+    }
+
+    focusCardByKey(key:string){
+        let card = this.getCardByKey(key);
+        if(card){
+            card.getComponent(Card).focusCard(true);
+        }
+    }
+
+    focusCardByIndex(index:number){
+        if ( index < this.cards.length ){
+            this.cards[index].getComponent(Card).focusCard(true);
+        }
+    }
+
+    focusOnlyOneCard(index:number){
+        this.clearFocus();
+        this.focusCardByIndex(index);
+    }
+
+    clearFocus(){
+        this.cards.forEach(card=>{
+            card.getComponent(Card).focusCard(false);
+        });
+    }
+
+    getCardByKey(key:string){
         let returnCard = null;
         this.cards.forEach(card=>{
             if(card.getComponent(Card).isCard(key)){
@@ -52,7 +80,14 @@ export default class Cards extends cc.Component {
         return returnCard;
     }
 
-    removeCard(key:string){
+    getCardByIndex(index:number){
+        if ( index < this.cards.length ){
+            return this.cards[index];
+        }
+        return null;
+    }
+
+    removeCardByKey(key:string){
         for(let i = this.cards.length - 1; i > 0; --i){
             let card = this.cards[i];
             if(card.getComponent(Card).isCard(key)){
@@ -64,9 +99,13 @@ export default class Cards extends cc.Component {
         }
     }
 
+    removeCardByIndex(index:number){
+        let card = this.getCardByIndex(index);
+        if(card) this.removeCardByKey(card.getComponent(Card).getCardKey());
+    }
+
     toggleCard(key:string, force:boolean = null){
-        let card = this.getCard(key);
-        cc.log(card);
+        let card = this.getCardByKey(key);
         if(card){
             if(force){
                 card.getComponent(Card).showCard(force);

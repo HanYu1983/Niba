@@ -20,6 +20,9 @@ export default class Card extends BasicViewer {
     @property(cc.Node)
     cover:cc.Node = null;
 
+    @property(cc.Node)
+    focus:cc.Node = null;
+
     private cardId:string = "attack";
     private cardKey:string = "";
 
@@ -28,6 +31,14 @@ export default class Card extends BasicViewer {
         this.image.spriteFrame = ImagesAssets.Instance.getImageByKey(this.cardId);
 
         this.cardKey = key;
+    }
+
+    getCardKey(){
+        return this.cardKey;
+    }
+
+    focusCard(focus:boolean){
+        this.focus.active = focus;
     }
 
     showCard(show:boolean){

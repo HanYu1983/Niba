@@ -1,6 +1,6 @@
 {
   "ver": "2.3.4",
-  "uuid": "e4a4c0d8-b5ff-40fe-89d9-98cb101f1a0d",
+  "uuid": "0917c83e-4325-4a92-82ce-1abe5a7ffb50",
   "type": "sprite",
   "wrapMode": "clamp",
   "filterMode": "bilinear",
@@ -11,10 +11,10 @@
   "height": 150,
   "platformSettings": {},
   "subMetas": {
-    "weapon": {
+    "equip_armor": {
       "ver": "1.0.4",
-      "uuid": "e108ba28-6769-47f7-ac45-e0f8fb1f0c23",
-      "rawTextureUuid": "e4a4c0d8-b5ff-40fe-89d9-98cb101f1a0d",
+      "uuid": "485dc07b-bfd0-4d18-8487-befeee0caffe",
+      "rawTextureUuid": "0917c83e-4325-4a92-82ce-1abe5a7ffb50",
       "trimType": "auto",
       "trimThreshold": 1,
       "rotated": false,
