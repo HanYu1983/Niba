@@ -23,7 +23,7 @@ export default class PlayerInfo extends cc.Component {
     cardIcons:cc.Node[] = [];
 
     setJob(job:string){
-
+        
     }
 
     setHP(count:number){

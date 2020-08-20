@@ -64,6 +64,7 @@ export default class Controller extends cc.Component {
             cards.push({id:"act_craft", key:"3"});
             cards.push({id:"act_money", key:"4"});
             gamePage.playerDetail.cards.createCards(cards);
+            gamePage.changeToPlayCard();
             gamePage.playerDetail.myInfo.setHP(3);
         }).delay(1).call(()=>{
             gamePage.playerDetail.cards.toggleCard("3", true);
@@ -74,7 +75,7 @@ export default class Controller extends cc.Component {
             gamePage.playerDetail.cards.toggleCard("4");
             gamePage.playerDetail.myInfo.setCardCount(2);
         }).delay(2).call(()=>{
-            gamePage.playerDetail.cards.removeCard("2");
+            gamePage.playerDetail.cards.removeCardByKey("2");
             gamePage.playerDetail.cards.listCard();
         }).delay(2).call(()=>{
             let cards:Array<any> = [];
