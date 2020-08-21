@@ -8,29 +8,9 @@
 import View from "./View";
 import GamePage from "./gamePage/GamePage";
 import Card from "./Card";
+import {Player, CardStack, AskCommandAnswer, Gameplay} from "./han/gameplay.types"
 
 const {ccclass, property} = cc._decorator;
-
-type Card = {
-    "card-id": string,
-    "card-proto-id": string,
-    "card-state": string,
-    "card-face": string,
-    "player-id"?: string,
-}
-type CardStack = Card[]
-
-type Player = {
-    "player-id": string,
-}
-type Gameplay = {
-    "card-stacks": {[key:string]: CardStack}
-    "players":  {[key:string]: Player}
-}
-type AskCommandAnswer = {
-    CmdUseCard: (string)=>void,
-    CmdEndTurn: ()=>void,
-}
 
 @ccclass
 export default class Controller extends cc.Component {
