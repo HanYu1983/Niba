@@ -27,6 +27,10 @@ type Gameplay = {
     "card-stacks": {[key:string]: CardStack}
     "players":  {[key:string]: Player}
 }
+type AskCommandAnswer = {
+    CmdUseCard: (string)=>void,
+    CmdEndTurn: ()=>void,
+}
 
 @ccclass
 export default class Controller extends cc.Component {
@@ -36,26 +40,26 @@ export default class Controller extends cc.Component {
 
     start(){
         window.View = {
-            AskOneHandCard: function (player, cardStack, cb) {
+            AskOneHandCard: function (player: Player, cardStack: CardStack, cb: (ret: string | null)=>void) {
                 console.log(cardStack)
                 cb(null)
             },
-            AskCommand: function (player, answer) {
+            AskCommand: function (player: Player, answer: AskCommandAnswer) {
                 console.log(player, answer)
                 answer.CmdUseCard("0")
             },
-            AskOnePlayer: function (player, players, cb) {
+            AskOnePlayer: function (player, players, cb: (ret: string | null)=>void) {
                 console.log(player, players)
                 cb("A")
             },
             Render: function (gameplay:Gameplay) {
                 console.log(gameplay)
             },
-            RenderPlayerTurnStart: function (gameplay, player, cb) {
+            RenderPlayerTurnStart: function (gameplay:Gameplay, player: Player, cb: ()=>void) {
                 console.log(player)
                 cb()
             },
-            RenderCardMove: function (gameplay, from, to, cards, cb) {
+            RenderCardMove: function (gameplay:Gameplay, from:string, to:string, cards: CardStack, cb: ()=>void) {
                 console.log(from, to, cards)
                 cb()
             }
