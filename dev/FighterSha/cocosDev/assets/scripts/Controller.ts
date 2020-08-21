@@ -29,7 +29,7 @@ export default class Controller extends cc.Component {
                 console.log(player, answer)
                 answer.CmdUseCard("0")
             },
-            AskOnePlayer: function (player, players, cb: (ret: string | null)=>void) {
+            AskOnePlayer: function (player: Player, players: Player[], cb: (ret: string | null)=>void) {
                 console.log(player, players)
                 cb("A")
             },
