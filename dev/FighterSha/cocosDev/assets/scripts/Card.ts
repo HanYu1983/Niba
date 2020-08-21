@@ -23,7 +23,10 @@ export default class Card extends BasicViewer {
     @property(cc.Node)
     focus:cc.Node = null;
 
+    // 卡片類型id
     private cardId:string = "attack";
+
+    // 卡片的唯一id
     private cardKey:string = "";
 
     setCard(id:string, key:string){

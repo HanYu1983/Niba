@@ -26,7 +26,17 @@ export default class GamePage extends BasicStateViewer {
     }
 
     sync(data: any) {
-        cc.log("游戲頁面同步:", data);
+        const hand:any[] = data["card-stacks"]["0-hand"];
+        const gravyard:any[] = data["card-stacks"].gravyard;
+        const home:any[] = data["card-stacks"].home;
+        const players:any = data.players;
+
+        this.playerDetail.cards.createCards(hand);
+
+        // cc.log(hand);
+        // cc.log(gravyard);
+        // cc.log(home);
+        // cc.log(players);
     }
 
     changeToPlayCard(){

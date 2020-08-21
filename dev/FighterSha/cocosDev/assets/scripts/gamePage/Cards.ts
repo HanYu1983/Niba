@@ -21,11 +21,11 @@ export default class Cards extends cc.Component {
         this.cardPool = this.node.getComponent(Pool);
     }
 
-    createCard(id:string, key:string){
+    createCard(id:string, key:string, x, y){
         let card:cc.Node = this.cardPool.acquire();
         card.active = true;
-        card.x = 1200;
-        card.y = 0;
+        card.x = x;
+        card.y = y;
         card.setParent(this.node);
         card.getComponent(Card).setCard(id, key);
         this.cards.push(card);
@@ -33,12 +33,25 @@ export default class Cards extends cc.Component {
     }
 
     createCards(cards:Array<any>){
+        this.clearCards();
         for(let i = 0; i < cards.length; ++i){
-            const id = cards[i].id;
-            const key = cards[i].key;
-            this.createCard(id, key);
+            cc.log(cards[i]);
+            const card = cards[i];
+            const show = card["card-face"];
+            const id = card["card-proto-id"];
+            const key = card["card-id"];
+            const state = card["card-state"];
+            const playerId = card["player-id"];
+            const targetX = i*110+80;
+            this.createCard("act_attack", key, targetX, 0);
         }
-        this.listCard();
+    }
+
+    clearCards(){
+        for(let i = this.cards.length - 1; i > 0; --i){
+            this.removeCardByIndex(i);
+        }
+        this.cards = [];
     }
 
     getCount(){
@@ -91,9 +104,7 @@ export default class Cards extends cc.Component {
         for(let i = this.cards.length - 1; i > 0; --i){
             let card = this.cards[i];
             if(card.getComponent(Card).isCard(key)){
-                card.active = false;
-                this.cards.splice(i, 1);
-                this.cardPool.release(card);
+                this.removeCardByIndex(i);
                 break;
             }
         }
@@ -101,7 +112,9 @@ export default class Cards extends cc.Component {
 
     removeCardByIndex(index:number){
         let card = this.getCardByIndex(index);
-        if(card) this.removeCardByKey(card.getComponent(Card).getCardKey());
+        card.active = false;
+        this.cards.splice(index, 1);
+        this.cardPool.release(card);
     }
 
     toggleCard(key:string, force:boolean = null){
