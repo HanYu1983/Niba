@@ -19,6 +19,7 @@ export default class Controller extends cc.Component {
     view:View = null;
 
     start(){
+        const self = this;
         window.View = {
             AskOneHandCard: function (player: Player, cardStack: CardStack, cb: (ret: string | null)=>void) {
                 console.log(cardStack)
@@ -34,6 +35,7 @@ export default class Controller extends cc.Component {
             },
             Render: function (gameplay:Gameplay) {
                 console.log(gameplay)
+                self.view.getCurrentPage().sync(gameplay);
             },
             RenderPlayerTurnStart: function (gameplay:Gameplay, player: Player, cb: ()=>void) {
                 console.log(player)
@@ -50,7 +52,8 @@ export default class Controller extends cc.Component {
         // 開始遊戲時呼叫
         window.Model.StartGameplay()
 
-        this.debug();
+        this.view.openPageById(0);
+        // this.debug();
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }
