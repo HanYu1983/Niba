@@ -11,6 +11,23 @@ import Card from "./Card";
 
 const {ccclass, property} = cc._decorator;
 
+type Card = {
+    "card-id": string,
+    "card-proto-id": string,
+    "card-state": string,
+    "card-face": string,
+    "player-id"?: string,
+}
+type CardStack = Card[]
+
+type Player = {
+    "player-id": string,
+}
+type Gameplay = {
+    "card-stacks": {[key:string]: CardStack}
+    "players":  {[key:string]: Player}
+}
+
 @ccclass
 export default class Controller extends cc.Component {
 
@@ -31,7 +48,7 @@ export default class Controller extends cc.Component {
                 console.log(player, players)
                 cb("A")
             },
-            Render: function (gameplay) {
+            Render: function (gameplay:Gameplay) {
                 console.log(gameplay)
             },
             RenderPlayerTurnStart: function (gameplay, player, cb) {
