@@ -5,8 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import BasicStateViewer from "./lib/BasicStateViewer";
-import BasicStateViewer from "./lib/BasicStateViewer";
+import BasicStateViewer from "./BasicStateViewer";
 
 const {ccclass, property} = cc._decorator;
 

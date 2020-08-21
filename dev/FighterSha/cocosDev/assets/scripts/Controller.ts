@@ -32,14 +32,15 @@ export default class Controller extends cc.Component {
                 cb("A")
             },
             Render: function (gameplay) {
-                console.log(gameplay)
+                console.log("同步資料", gameplay)
+                this.view.getCurrentPage().sync(gameplay);
             },
             RenderPlayerTurnStart: function (gameplay, player, cb) {
-                console.log(player)
+                console.log("玩家回合開始", player)
                 cb()
             },
             RenderCardMove: function (gameplay, from, to, cards, cb) {
-                console.log(from, to, cards)
+                console.log("移動卡牌動畫由", from, "到", to, "卡片資料", cards)
                 cb()
             }
         }
@@ -49,7 +50,7 @@ export default class Controller extends cc.Component {
         // 開始遊戲時呼叫
         window.Model.StartGameplay()
 
-        this.debug();
+        // this.debug();
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }

@@ -9,8 +9,7 @@ import Table from "./Table";
 import PlayerDetail from "./PlayerDetail";
 import StateController from "../lib/StateController";
 import StatePlayCard from "./StatePlayCard";
-import BasicStateViewer from "../lib/BasicStateViewer";
-import DefaultState from "../lib/DefaultState";
+import BasicStateViewer from "../BasicStateViewer";
 
 const {ccclass, property} = cc._decorator;
 
@@ -24,6 +23,10 @@ export default class GamePage extends BasicStateViewer {
 
     start(){
         
+    }
+
+    sync(data: any) {
+        cc.log("游戲頁面同步:", data);
     }
 
     changeToPlayCard(){
