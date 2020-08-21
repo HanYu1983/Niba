@@ -8,6 +8,7 @@
 import View from "./View";
 import GamePage from "./gamePage/GamePage";
 import Card from "./Card";
+import {Player, CardStack, AskCommandAnswer, Gameplay} from "./han/gameplay.types"
 
 const {ccclass, property} = cc._decorator;
 
@@ -18,32 +19,28 @@ export default class Controller extends cc.Component {
     view:View = null;
 
     start(){
-
-        const self = this;
-
         window.View = {
-            AskOneHandCard: function (player, cardStack, cb) {
+            AskOneHandCard: function (player: Player, cardStack: CardStack, cb: (ret: string | null)=>void) {
                 console.log(cardStack)
                 cb(null)
             },
-            AskCommand: function (player, answer) {
+            AskCommand: function (player: Player, answer: AskCommandAnswer) {
                 console.log(player, answer)
                 answer.CmdUseCard("0")
             },
-            AskOnePlayer: function (player, players, cb) {
+            AskOnePlayer: function (player, players, cb: (ret: string | null)=>void) {
                 console.log(player, players)
                 cb("A")
             },
-            Render: function (gameplay) {
-                console.log("同步資料", gameplay)
-                self.view.getCurrentPage().sync(gameplay);
+            Render: function (gameplay:Gameplay) {
+                console.log(gameplay)
             },
-            RenderPlayerTurnStart: function (gameplay, player, cb) {
-                console.log("玩家回合開始", player)
+            RenderPlayerTurnStart: function (gameplay:Gameplay, player: Player, cb: ()=>void) {
+                console.log(player)
                 cb()
             },
-            RenderCardMove: function (gameplay, from, to, cards, cb) {
-                console.log("移動卡牌動畫由", from, "到", to, "卡片資料", cards)
+            RenderCardMove: function (gameplay:Gameplay, from:string, to:string, cards: CardStack, cb: ()=>void) {
+                console.log(from, to, cards)
                 cb()
             }
         }
@@ -52,9 +49,8 @@ export default class Controller extends cc.Component {
         console.log(window.Model)
         // 開始遊戲時呼叫
         window.Model.StartGameplay()
-        let gamePage:GamePage = this.view.openPageById(0) as GamePage;
 
-        // this.debug();
+        this.debug();
 
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyUp, this);
     }
