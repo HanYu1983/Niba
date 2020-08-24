@@ -46,7 +46,7 @@
    player ::app.gameplay.spec/player
    card ::app.gameplay.spec/card]
   [gameplayCtx err]
-  [(let [player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+  [(let [player-hand-id (app.gameplay.spec/card-stack-id-hand player)
          player-hand (s/assert
                       ::app.gameplay.spec/card-stack
                       (-> gameplayCtx :card-stacks player-hand-id))
@@ -82,7 +82,7 @@
                           (js-obj "CmdUseCard"
                                   (fn [card-id]
                                     (a/go
-                                      (let [player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
+                                      (let [player-hand-id (app.gameplay.spec/card-stack-id-hand player)
                                             card (s/assert
                                                   (s/nilable ::app.gameplay.spec/card)
                                                   (->> gameplayCtx :card-stacks player-hand-id
@@ -170,9 +170,25 @@
                          ; 使用一張卡
                          :gameplay-cmd-use-card
                          (let [[_ card] cmd
-                               player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
-                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard [card]))]
-                           [gameplayCtx false err])
+                               player-hand-id (app.gameplay.spec/card-stack-id-hand player)
+                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard [card]))
+                               _ (when err (throw err))
+
+                               [card-conform] (s/conform ::app.data.spec/card-state (:card-state card))
+                               [gameplayCtx err] (cond
+                                                   (= :attack-card card-conform)
+                                                   [gameplayCtx nil]
+
+                                                   (= :steal-card card-conform)
+                                                   [gameplayCtx nil]
+
+                                                   (= :steal-money-card card-conform)
+                                                   [gameplayCtx nil]
+
+                                                   :else
+                                                   (throw (js/Error. (str card-conform " not found"))))
+                               _ (when err (throw err))]
+                           [gameplayCtx false nil])
 
                          (throw (js/Error. (str "cmd not define " cmd-conform))))]
 

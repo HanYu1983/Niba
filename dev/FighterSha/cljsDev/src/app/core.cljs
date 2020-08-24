@@ -21,7 +21,7 @@
                (->> (range 60)
                     (map (comp keyword str))
                     (map (fn [id] 
-                           {:card-id id :card-proto-id :0 :card-state {} :card-face :down}))))
+                           {:card-id id :card-state :attack-card :card-face :down}))))
 
         gameplayCtx (s/assert
                      ::app.gameplay.spec/gameplay
