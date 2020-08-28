@@ -3,6 +3,7 @@
             [clojure.core.async :as a])
   (:require [app.gameplay.core]
             [app.gameplay.spec]
+            [app.data.spec]
             [app.spec]))
 
 (defn main []
@@ -11,7 +12,12 @@
         _ (set! js/Model (js-obj "StartGameplay"
                                  (fn []
                                    (a/go
-                                     (a/>! input :StartGameplay)))))
+                                     (a/>! input :StartGameplay)))
+
+                                 "GetCardType"
+                                 (fn [card-state]
+                                   (let [[conform] (s/conform ::app.data.spec/card-state (js->clj card-state :keywordize-keys true))]
+                                     (clj->js conform)))))
         player (s/assert
                 ::app.gameplay.spec/player
                 {:player-id :0})

@@ -40,34 +40,6 @@
                                   (a/close! wait)))))
     wait))
 
-(m/defasync
-  attack (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
-  [gameplayCtx ::app.gameplay.spec/gameplay
-   player ::app.gameplay.spec/player
-   card ::app.gameplay.spec/card]
-  [gameplayCtx err]
-  [(let [player-hand-id (app.gameplay.spec/card-stack-id-hand player)
-         player-hand (s/assert
-                      ::app.gameplay.spec/card-stack
-                      (-> gameplayCtx :card-stacks player-hand-id))
-         gravyard (s/assert
-                   ::app.gameplay.spec/card-stack
-                   (-> gameplayCtx :card-stacks :gravyard))
-         _ (when (not (some #{card} player-hand))
-             (throw (js/Error. (str card " not found in " player-hand))))
-         player-hand (remove #{card} player-hand)
-         card (assoc card :card-face :up)
-         gravyard (cons card gravyard)
-         gameplayCtx (update gameplayCtx :card-stacks (fn [cs]
-                                                        (assoc cs
-                                                               player-hand-id player-hand
-                                                               :gravyard gravyard)))]
-     gameplayCtx)
-   nil])
-
-
-
-
 
 (s/def ::gameplay-cmd-end-turn #{:gameplay-cmd-end-turn})
 (s/def ::gameplay-cmd-use-card (s/tuple #{:gameplay-cmd-use-card}
@@ -103,6 +75,10 @@
                                                   [:gameplay-cmd-end-turn nil]))
                                       (a/close! wait))))))
     wait))
+
+(defn ask-player [gameplayCtx player players])
+
+(defn ask-one-card [gameplayCtx player card-stack-id valid-fn])
 
 (defn next-player [gameplayCtx player]
   (a/go
@@ -143,6 +119,53 @@
                                  (replace (zipmap cards (map #(assoc % :player-id (:player-id player)) cards))
                                           origin)))]
     [gameplayCtx err]))
+
+(m/defasync
+  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   from ::app.gameplay.spec/player
+   to ::app.gameplay.spec/card
+   next-fn fn?
+   card ::app.gameplay.spec/card]
+  [gameplayCtx err]
+  (let [_ (when (not (some #{card} (get-in gameplayCtx [:card-stacks from])))
+            (throw (js/Error. (str card " not found in " from))))
+        gameplayCtx (update-in gameplayCtx [:card-stacks from] (fn [origin]
+                                                                 (remove #{card} origin)))
+        gameplayCtx (update-in gameplayCtx [:card-stacks to] (fn [origin]
+                                                               (cons (next-fn card) origin)))]
+    [gameplayCtx nil]))
+
+(m/defasync
+  attack (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
+  [gameplayCtx ::app.gameplay.spec/gameplay
+   player ::app.gameplay.spec/player
+   card ::app.gameplay.spec/card]
+  [gameplayCtx err]
+  [(let [; 丟到卡池
+         player-hand-id (app.gameplay.spec/card-stack-id-hand player)
+         [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard #(assoc % :card-face :up) card))
+         _ (when err (throw err))
+
+         ; 指定一個玩家
+         players (->> gameplayCtx :players vals (filter #(not= % player)))
+         target-player (a/<! (ask-player gameplayCtx player players))
+         target-player-hand-id (app.gameplay.spec/card-stack-id-hand target-player)
+         
+         ; 那個玩家出一張閃
+         target-player-card (a/<! (ask-one-card gameplayCtx target-player target-player-hand-id (constantly true)))
+         [gameplayCtx err] (s/assert
+                            ::app.gameplay.spec/gameplay
+                            (if (not target-player-card)
+                              ; 殺中目標
+                              (let [_ true]
+                                [gameplayCtx nil])
+                              ; 被閃過
+                              (a/<! (move-card gameplayCtx target-player-hand-id :gravyard #(assoc % :card-face :up) target-player-card))))
+         _ (when err (throw err))]
+     gameplayCtx)
+   nil])
+
 
 (m/defasync
   menu (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
