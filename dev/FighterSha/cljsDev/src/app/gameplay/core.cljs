@@ -91,14 +91,17 @@
   [gameplayCtx ::app.gameplay.spec/gameplay
    from ::app.gameplay.spec/card-stack-id
    to ::app.gameplay.spec/card-stack-id
+   next-fn fn?
    cards ::app.gameplay.spec/card-stack]
   [gameplayCtx err]
-  (let [gameplayCtx (update-in gameplayCtx [:card-stacks from]
+  (let [_ (when (not (every? (->> gameplayCtx :card-stacks from (into #{})) cards))
+            (throw (js/Error. (str cards " not found in " from))))
+        gameplayCtx (update-in gameplayCtx [:card-stacks from]
                                (fn [origin]
                                  (remove (into #{} cards) origin)))
         gameplayCtx (update-in gameplayCtx [:card-stacks to]
                                (fn [origin]
-                                 (concat origin cards)))
+                                 (concat origin (map next-fn cards))))
         _ (a/<! (render-card-move gameplayCtx from to cards))]
     [gameplayCtx nil]))
 
@@ -112,29 +115,10 @@
                ::app.gameplay.spec/card-stack
                (->> gameplayCtx :card-stacks :home
                     (take n)))
-        player-hand-id (keyword (str (clj->js (:player-id player)) "-hand"))
-        [gameplayCtx err] (a/<! (move-card gameplayCtx :home player-hand-id cards))
-        gameplayCtx (update-in gameplayCtx [:card-stacks player-hand-id]
-                               (fn [origin]
-                                 (replace (zipmap cards (map #(assoc % :player-id (:player-id player)) cards))
-                                          origin)))]
+        player-hand-id (app.gameplay.spec/card-stack-id-hand player)
+        [gameplayCtx err] (a/<! (move-card gameplayCtx :home player-hand-id #(assoc % :player-id (:player-id player)) cards))
+        _ (when err (throw err))]
     [gameplayCtx err]))
-
-(m/defasync
-  move-card (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
-  [gameplayCtx ::app.gameplay.spec/gameplay
-   from ::app.gameplay.spec/player
-   to ::app.gameplay.spec/card
-   next-fn fn?
-   card ::app.gameplay.spec/card]
-  [gameplayCtx err]
-  (let [_ (when (not (some #{card} (get-in gameplayCtx [:card-stacks from])))
-            (throw (js/Error. (str card " not found in " from))))
-        gameplayCtx (update-in gameplayCtx [:card-stacks from] (fn [origin]
-                                                                 (remove #{card} origin)))
-        gameplayCtx (update-in gameplayCtx [:card-stacks to] (fn [origin]
-                                                               (cons (next-fn card) origin)))]
-    [gameplayCtx nil]))
 
 (m/defasync
   attack (s/tuple ::app.gameplay.spec/gameplay ::app.spec/error)
@@ -144,7 +128,7 @@
   [gameplayCtx err]
   [(let [; 丟到卡池
          player-hand-id (app.gameplay.spec/card-stack-id-hand player)
-         [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard #(assoc % :card-face :up) card))
+         [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard #(assoc % :card-face :up) [card]))
          _ (when err (throw err))
 
          ; 指定一個玩家
@@ -158,10 +142,13 @@
                             ::app.gameplay.spec/gameplay
                             (if (not target-player-card)
                               ; 殺中目標
-                              (let [_ true]
+                              (let [character-card-id (app.gameplay.spec/card-stack-id-character target-player)
+                                    gameplayCtx (update-in gameplayCtx
+                                                           [:card-stacks character-card-id 0 :card-state]
+                                                           #(update (s/assert ::app.data.spec/character-card %) :life dec))]
                                 [gameplayCtx nil])
                               ; 被閃過
-                              (a/<! (move-card gameplayCtx target-player-hand-id :gravyard #(assoc % :card-face :up) target-player-card))))
+                              (a/<! (move-card gameplayCtx target-player-hand-id :gravyard #(assoc % :card-face :up) [target-player-card]))))
          _ (when err (throw err))]
      gameplayCtx)
    nil])
@@ -194,7 +181,7 @@
                          :gameplay-cmd-use-card
                          (let [[_ card] cmd
                                player-hand-id (app.gameplay.spec/card-stack-id-hand player)
-                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard [card]))
+                               [gameplayCtx err] (a/<! (move-card gameplayCtx player-hand-id :gravyard #(assoc % :card-face :up) [card]))
                                _ (when err (throw err))
 
                                [card-conform] (s/conform ::app.data.spec/card-state (:card-state card))

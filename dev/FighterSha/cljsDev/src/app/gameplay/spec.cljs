@@ -31,3 +31,9 @@
   (s/assert
    ::card-stack-id
    (keyword (str (clj->js (:player-id player)) "-equip"))))
+
+(defn card-stack-id-character [player]
+  (s/assert ::player player)
+  (s/assert
+   ::card-stack-id
+   (keyword (str (clj->js (:player-id player)) "-character"))))
