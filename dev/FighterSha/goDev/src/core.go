@@ -19,11 +19,10 @@ func startGameplay() {
 	}()
 	fmt.Println("start")
 	gameplayCtx := gameplay.DefaultGamePlay
-	nextGameplayCtx, err := gameplay.Start(gameplayCtx)
+	gameplayCtx, err := gameplay.Start(gameplayCtx)
 	if err != nil {
 		panic(err)
 	}
-	gameplayCtx = nextGameplayCtx
 }
 
 func init() {

@@ -13,8 +13,8 @@ func NextPlayer(gameplayCtx Gameplay, player Player) Player {
 	return player
 }
 
-func DrawCard(gameplayCtx Gameplay, player Player, cnt int) error {
-	return nil
+func DrawCard(gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
+	return gameplayCtx, nil
 }
 
 func Equip(gameplayCtx Gameplay, player Player, card desktop.Card) error {
@@ -72,7 +72,8 @@ func Alert(msg interface{}) {
 	}
 }
 
-func Start(gameplayCtx Gameplay) (Gameplay, error) {
+func Start(origin Gameplay) (Gameplay, error) {
+	gameplayCtx := origin
 	Render(gameplayCtx)
 	activePlayer := gameplayCtx.Players["A"]
 Turn:
@@ -82,9 +83,9 @@ Turn:
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
 
 		// 抽2
-		err := DrawCard(gameplayCtx, activePlayer, 2)
+		gameplayCtx, err := DrawCard(gameplayCtx, activePlayer, 2)
 		if err != nil {
-			return gameplayCtx, err
+			return origin, err
 		}
 	Menu:
 		for {
@@ -114,12 +115,11 @@ Turn:
 						Alert(err)
 						break
 					}
-					nextGameplayCtx, err := Attack(gameplayCtx, activePlayer, target, card)
+					gameplayCtx, err := Attack(gameplayCtx, activePlayer, target, card)
 					if err != nil {
 						Alert(err)
 						break
 					}
-					gameplayCtx = nextGameplayCtx
 
 				case CardTypeSteal:
 					// 盜
@@ -131,7 +131,7 @@ Turn:
 					// 裝備
 
 				default:
-					return gameplayCtx, fmt.Errorf("card.CardPrototypeID.CardType %v not found", card)
+					return origin, fmt.Errorf("card.CardPrototypeID.CardType %v not found", card)
 				}
 
 			case CmdExit:
@@ -141,7 +141,7 @@ Turn:
 				break Menu
 
 			default:
-				return gameplayCtx, fmt.Errorf("%v not found", cmd)
+				return origin, fmt.Errorf("%v not found", cmd)
 			}
 		}
 
