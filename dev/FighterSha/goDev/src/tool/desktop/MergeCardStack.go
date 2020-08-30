@@ -4,6 +4,7 @@
 
 package desktop
 
+// MergeCardStack is
 func MergeCardStack(a map[string]CardStack, b map[string]CardStack) map[string]CardStack {
 	ret := map[string]CardStack{}
 	for k, v := range a {

@@ -4,6 +4,7 @@
 
 package desktop
 
+// ReplaceCard is
 func ReplaceCard(items []Card, info map[Card]Card) []Card {
 	ret := make([]Card, len(items))
 	copy(ret, items)

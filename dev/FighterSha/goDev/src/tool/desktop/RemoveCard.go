@@ -6,6 +6,7 @@ package desktop
 
 import "fmt"
 
+// RemoveCard is
 func RemoveCard(s1 []Card, card Card) ([]Card, error) {
 	findID := -1
 	for _findID, c := range s1 {

@@ -4,6 +4,7 @@
 
 package gameplay
 
+// AssocStringPlayerBasicCom is
 func AssocStringPlayerBasicCom(a map[string]PlayerBasicCom, k string, v PlayerBasicCom) map[string]PlayerBasicCom {
 	ret := map[string]PlayerBasicCom{}
 	for k, v := range a {

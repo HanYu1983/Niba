@@ -4,6 +4,7 @@
 
 package gameplay
 
+// MergePlayerBasicCom is
 func MergePlayerBasicCom(a map[string]PlayerBasicCom, b map[string]PlayerBasicCom) map[string]PlayerBasicCom {
 	ret := map[string]PlayerBasicCom{}
 	for k, v := range a {

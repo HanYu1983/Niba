@@ -4,6 +4,7 @@
 
 package gameplay
 
+// MergeCharacterCardCom is
 func MergeCharacterCardCom(a map[string]CharacterCardCom, b map[string]CharacterCardCom) map[string]CharacterCardCom {
 	ret := map[string]CharacterCardCom{}
 	for k, v := range a {

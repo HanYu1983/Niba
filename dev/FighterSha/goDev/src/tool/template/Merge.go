@@ -1,5 +1,6 @@
 package template
 
+// MergeValue is
 func MergeValue(a map[Key]Value, b map[Key]Value) map[Key]Value {
 	ret := map[Key]Value{}
 	for k, v := range a {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 )
 
+// RemoveItem is
 func RemoveItem(s1 []Item, card Item) ([]Item, error) {
 	findID := -1
 	for _findID, c := range s1 {

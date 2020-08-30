@@ -1,5 +1,6 @@
 package template
 
+// ReplaceItem is
 func ReplaceItem(items []Item, info map[Item]Item) []Item {
 	ret := make([]Item, len(items))
 	copy(ret, items)

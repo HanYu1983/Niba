@@ -1,5 +1,6 @@
 package template
 
+// AssocKeyValue is
 func AssocKeyValue(a map[Key]Value, k Key, v Value) map[Key]Value {
 	ret := map[Key]Value{}
 	for k, v := range a {
