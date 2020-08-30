@@ -73,7 +73,6 @@ func Alert(msg interface{}) {
 }
 
 func Start(gameplayCtx Gameplay) (Gameplay, error) {
-	var err error
 	Render(gameplayCtx)
 	activePlayer := gameplayCtx.Players["A"]
 Turn:
@@ -83,7 +82,7 @@ Turn:
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
 
 		// 抽2
-		err = DrawCard(gameplayCtx, activePlayer, 2)
+		err := DrawCard(gameplayCtx, activePlayer, 2)
 		if err != nil {
 			return gameplayCtx, err
 		}
@@ -103,7 +102,6 @@ Turn:
 				// cancel
 				continue
 			}
-
 			switch cmdDetail := cmd.(type) {
 			case CmdUseCard:
 				// 使用一張卡
@@ -116,11 +114,12 @@ Turn:
 						Alert(err)
 						break
 					}
-					gameplayCtx, err = Attack(gameplayCtx, activePlayer, target, card)
+					nextGameplayCtx, err := Attack(gameplayCtx, activePlayer, target, card)
 					if err != nil {
 						Alert(err)
 						break
 					}
+					gameplayCtx = nextGameplayCtx
 
 				case CardTypeSteal:
 					// 盜
