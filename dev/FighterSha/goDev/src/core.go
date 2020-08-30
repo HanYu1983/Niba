@@ -7,7 +7,7 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 )
 
-func StartGameplay() {
+func startGameplay() {
 	defer func() {
 		fmt.Println("end")
 	}()
@@ -19,7 +19,7 @@ func StartGameplay() {
 	}()
 	fmt.Println("start")
 	gameplayCtx := gameplay.DefaultGamePlay
-	err := gameplay.Start(&gameplayCtx)
+	err := gameplay.Start(gameplayCtx)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +29,7 @@ func init() {
 	js.Global.Set("Model", map[string]interface{}{
 		"StartGameplay": func() {
 			// JS呼叫的要用goroutine包裝, 不然chan和time.Sleep等blocking的都不能用
-			go StartGameplay()
+			go startGameplay()
 		},
 	})
 }

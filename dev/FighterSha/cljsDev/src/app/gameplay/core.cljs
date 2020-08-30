@@ -76,11 +76,30 @@
                                       (a/close! wait))))))
     wait))
 
-(defn ask-player [gameplayCtx player players])
+(defn ask-player [gameplayCtx player players]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/player player)
+  (s/assert (s/* ::app.gameplay.spec/player) players)
+  (let [wait (a/han)]
+    (a/go
+      (a/>! wait (s/assert (s/nilable ::app.gameplay.spec/player) player))
+      (a/close! wait))
+    wait))
 
-(defn ask-one-card [gameplayCtx player card-stack-id valid-fn])
+(defn ask-one-card [gameplayCtx player card-stack-id valid-fn]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/player player)
+  (s/assert ::app.gameplay.spec/card-stack-id card-stack-id)
+  (s/assert fn? valid-fn)
+  (let [wait (a/han)]
+    (a/go
+      (a/>! wait (s/assert (s/nilable ::app.gameplay.spec/card) nil))
+      (a/close! wait))
+    wait))
 
 (defn next-player [gameplayCtx player]
+  (s/assert ::app.gameplay.spec/gameplay gameplayCtx)
+  (s/assert ::app.gameplay.spec/player player)
   (a/go
     (s/assert
      ::app.gameplay.spec/player
@@ -134,13 +153,17 @@
          ; 指定一個玩家
          players (->> gameplayCtx :players vals (filter #(not= % player)))
          target-player (a/<! (ask-player gameplayCtx player players))
+         
+         ; 沒有指定玩家, 取消攻擊
+         _ (when (nil? target-player)
+             (throw (js/Error. "cancel attack")))
          target-player-hand-id (app.gameplay.spec/card-stack-id-hand target-player)
          
          ; 那個玩家出一張閃
          target-player-card (a/<! (ask-one-card gameplayCtx target-player target-player-hand-id (constantly true)))
          [gameplayCtx err] (s/assert
                             ::app.gameplay.spec/gameplay
-                            (if (not target-player-card)
+                            (if (nil? target-player-card)
                               ; 殺中目標
                               (let [character-card-id (app.gameplay.spec/card-stack-id-character target-player)
                                     gameplayCtx (update-in gameplayCtx

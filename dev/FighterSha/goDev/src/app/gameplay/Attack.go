@@ -6,7 +6,7 @@ import (
 )
 
 // Attack 使出殺, 對方用閃反應
-func Attack(gameplayCtx *Gameplay, player Player, target Player, card desktop.Card) error {
+func Attack2(gameplayCtx *Gameplay, player Player, target Player, card desktop.Card) error {
 	if card.CardPrototypeID.CardType != CardTypeAttack {
 		return fmt.Errorf("you must use Attack")
 	}
@@ -64,7 +64,7 @@ func Attack(gameplayCtx *Gameplay, player Player, target Player, card desktop.Ca
 }
 
 // Attack 使出殺, 對方用閃反應
-func Attack2(gameplayCtx Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func Attack(gameplayCtx Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	if card.CardPrototypeID.CardType != CardTypeAttack {
 		return gameplayCtx, fmt.Errorf("you must use Attack")
 	}
@@ -75,15 +75,17 @@ func Attack2(gameplayCtx Gameplay, player Player, target Player, card desktop.Ca
 	// move attack card to gravyard
 	gravyard := gameplayCtx.Desktop.CardStacks[CardStackGravyard]
 	hand := gameplayCtx.Desktop.CardStacks[player.ID]
-	hand, gravyard, err := desktop.MoveCard(hand, gravyard, card, 0)
+	hand, err := desktop.RemoveCard(hand, card)
+	// face up
+	card.Face = desktop.FaceUp
+	gravyard = append(gravyard, card)
 	if err != nil {
 		return gameplayCtx, err
 	}
-	originCard := card
-	card.Face = desktop.FaceUp
-	gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originCard: card})
-	gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
-	gameplayCtx.Desktop.CardStacks[player.ID] = hand
+	gameplayCtx.Desktop.CardStacks = desktop.MergeCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
+		CardStackGravyard: gravyard,
+		player.ID:         hand,
+	})
 
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
@@ -102,21 +104,27 @@ func Attack2(gameplayCtx Gameplay, player Player, target Player, card desktop.Ca
 		}
 		characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
 		characterCom.Life++
-		gameplayCtx.CharacterCardCom[targetCharacterCard.ID] = characterCom
+		gameplayCtx.CharacterCardCom = MergeCharacterCardCom(gameplayCtx.CharacterCardCom, map[string]CharacterCardCom{
+			targetCharacterCard.ID: characterCom,
+		})
 	} else {
 		// move dodge card to gravyard
-		targetHand, gravyard, err = desktop.MoveCard(targetHand, gravyard, dodgeCard, 0)
+		targetHand, err := desktop.RemoveCard(targetHand, dodgeCard)
+		// face up
+		dodgeCard.Face = desktop.FaceUp
+		gravyard = append(gravyard, dodgeCard)
 		if err != nil {
 			return gameplayCtx, err
 		}
-		originDodgeCard := dodgeCard
-		dodgeCard.Face = desktop.FaceUp
-		gravyard = desktop.Replace(gravyard, map[desktop.Card]desktop.Card{originDodgeCard: dodgeCard})
-		gameplayCtx.Desktop.CardStacks[CardStackGravyard] = gravyard
-		gameplayCtx.Desktop.CardStacks[target.ID] = targetHand
+		gameplayCtx.Desktop.CardStacks = desktop.MergeCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
+			CardStackGravyard: gravyard,
+			target.ID:         targetHand,
+		})
 	}
 
 	playerCom.AttackTimes++
-	gameplayCtx.PlayerBasicComs[player.ID] = playerCom
+	gameplayCtx.PlayerBasicComs = MergePlayerBasicCom(gameplayCtx.PlayerBasicComs, map[string]PlayerBasicCom{
+		player.ID: playerCom,
+	})
 	return gameplayCtx, nil
 }

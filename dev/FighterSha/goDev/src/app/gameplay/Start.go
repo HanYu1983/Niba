@@ -9,19 +9,19 @@ import (
 	"github.com/gopherjs/gopherjs/js"
 )
 
-func NextPlayer(gameplayCtx *Gameplay, player Player) Player {
+func NextPlayer(gameplayCtx Gameplay, player Player) Player {
 	return player
 }
 
-func DrawCard(gameplayCtx *Gameplay, player Player, cnt int) error {
+func DrawCard(gameplayCtx Gameplay, player Player, cnt int) error {
 	return nil
 }
 
-func Equip(gameplayCtx *Gameplay, player Player, card desktop.Card) error {
+func Equip(gameplayCtx Gameplay, player Player, card desktop.Card) error {
 	return nil
 }
 
-func AskCommand(gameplayCtx *Gameplay, player Player) (interface{}, error) {
+func AskCommand(gameplayCtx Gameplay, player Player) (interface{}, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskCommand", player, map[string]interface{}{
@@ -57,8 +57,8 @@ type CmdUseCard struct {
 type CmdExit struct{}
 type CmdEndTurn struct{}
 
-func Render(gameplayCtx *Gameplay) {
-	js.Global.Get("View").Call("Render", *gameplayCtx)
+func Render(gameplayCtx Gameplay) {
+	js.Global.Get("View").Call("Render", gameplayCtx)
 }
 
 func Alert(msg interface{}) {
@@ -72,8 +72,89 @@ func Alert(msg interface{}) {
 	}
 }
 
+func Start(gameplayCtx Gameplay) (Gameplay, error) {
+	var err error
+	Render(gameplayCtx)
+	activePlayer := gameplayCtx.Players["A"]
+Turn:
+	for {
+		time.Sleep(1 * time.Second)
+		// 清空狀態
+		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
+
+		// 抽2
+		err = DrawCard(gameplayCtx, activePlayer, 2)
+		if err != nil {
+			return gameplayCtx, err
+		}
+	Menu:
+		for {
+			time.Sleep(1 * time.Second)
+
+			// 等玩家指令
+			cmd, err := AskCommand(gameplayCtx, activePlayer)
+			if err != nil {
+				Alert(err)
+				continue
+			}
+
+			// 跳過回合
+			if cmd == nil {
+				// cancel
+				continue
+			}
+
+			switch cmdDetail := cmd.(type) {
+			case CmdUseCard:
+				// 使用一張卡
+				card := cmdDetail.Card
+				switch card.CardPrototypeID.CardType {
+				case CardTypeAttack:
+					// 殺
+					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					if err != nil {
+						Alert(err)
+						break
+					}
+					gameplayCtx, err = Attack(gameplayCtx, activePlayer, target, card)
+					if err != nil {
+						Alert(err)
+						break
+					}
+
+				case CardTypeSteal:
+					// 盜
+
+				case CardTypeStealMoney:
+					// 劫
+
+				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
+					// 裝備
+
+				default:
+					return gameplayCtx, fmt.Errorf("card.CardPrototypeID.CardType %v not found", card)
+				}
+
+			case CmdExit:
+				break Turn
+
+			case CmdEndTurn:
+				break Menu
+
+			default:
+				return gameplayCtx, fmt.Errorf("%v not found", cmd)
+			}
+		}
+
+		// 下個玩家
+		activePlayer = NextPlayer(gameplayCtx, activePlayer)
+	}
+
+	return gameplayCtx, nil
+}
+
 // Start is
-func Start(gameplayCtx *Gameplay) error {
+func Start2(gameplayCtx *Gameplay) error {
 	var err error
 	Render(gameplayCtx)
 	activePlayer := gameplayCtx.Players["A"]
