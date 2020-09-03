@@ -4,6 +4,27 @@
 
 package desktop
 
+import "fmt"
+
+// CardList is
+type CardList []Card
+
+// RemoveCard is
+func RemoveCard(s1 []Card, card Card) ([]Card, error) {
+	findID := -1
+	for _findID, c := range s1 {
+		if c == card {
+			findID = _findID
+			break
+		}
+	}
+	if findID == -1 {
+		return s1, fmt.Errorf("item not found")
+	}
+	s1 = append(s1[0:findID], s1[findID+1:]...)
+	return s1, nil
+}
+
 // ReplaceCard is
 func ReplaceCard(items []Card, info map[Card]Card) []Card {
 	ret := make([]Card, len(items))

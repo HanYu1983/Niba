@@ -4,6 +4,21 @@
 
 package gameplay
 
+// StringPlayerBasicComMap is
+type StringPlayerBasicComMap map[string]PlayerBasicCom
+
+// MergeStringPlayerBasicCom is
+func MergeStringPlayerBasicCom(a map[string]PlayerBasicCom, b map[string]PlayerBasicCom) map[string]PlayerBasicCom {
+	ret := map[string]PlayerBasicCom{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	for k, v := range b {
+		ret[k] = v
+	}
+	return ret
+}
+
 // AssocStringPlayerBasicCom is
 func AssocStringPlayerBasicCom(a map[string]PlayerBasicCom, k string, v PlayerBasicCom) map[string]PlayerBasicCom {
 	ret := map[string]PlayerBasicCom{}

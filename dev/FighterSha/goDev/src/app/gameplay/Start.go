@@ -1,7 +1,6 @@
 package gameplay
 
 import (
-	"encoding/json"
 	"fmt"
 	"time"
 	"tool/desktop"
@@ -115,7 +114,7 @@ Turn:
 						Alert(err)
 						break
 					}
-					gameplayCtx, err := Attack(gameplayCtx, activePlayer, target, card)
+					gameplayCtx, err = Attack(gameplayCtx, activePlayer, target, card)
 					if err != nil {
 						Alert(err)
 						break
@@ -152,6 +151,7 @@ Turn:
 	return gameplayCtx, nil
 }
 
+/*
 // Start is
 func Start2(gameplayCtx *Gameplay) error {
 	var err error
@@ -251,3 +251,4 @@ Turn:
 
 	return nil
 }
+*/
