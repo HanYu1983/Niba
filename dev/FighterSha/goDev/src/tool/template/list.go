@@ -4,9 +4,6 @@ import (
 	"fmt"
 )
 
-// ItemList is
-type ItemList []Item
-
 // RemoveItem is
 func RemoveItem(s1 []Item, card Item) ([]Item, error) {
 	findID := -1

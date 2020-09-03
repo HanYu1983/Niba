@@ -4,9 +4,6 @@
 
 package desktop
 
-// StringCardStackMap is
-type StringCardStackMap map[string]CardStack
-
 // MergeStringCardStack is
 func MergeStringCardStack(a map[string]CardStack, b map[string]CardStack) map[string]CardStack {
 	ret := map[string]CardStack{}

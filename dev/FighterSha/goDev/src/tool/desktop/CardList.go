@@ -6,9 +6,6 @@ package desktop
 
 import "fmt"
 
-// CardList is
-type CardList []Card
-
 // RemoveCard is
 func RemoveCard(s1 []Card, card Card) ([]Card, error) {
 	findID := -1

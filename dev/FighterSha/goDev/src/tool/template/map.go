@@ -1,8 +1,5 @@
 package template
 
-// KeyValueMap is
-type KeyValueMap map[Key]Value
-
 // MergeKeyValue is
 func MergeKeyValue(a map[Key]Value, b map[Key]Value) map[Key]Value {
 	ret := map[Key]Value{}

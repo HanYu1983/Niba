@@ -4,9 +4,6 @@
 
 package gameplay
 
-// StringCharacterCardComMap is
-type StringCharacterCardComMap map[string]CharacterCardCom
-
 // MergeStringCharacterCardCom is
 func MergeStringCharacterCardCom(a map[string]CharacterCardCom, b map[string]CharacterCardCom) map[string]CharacterCardCom {
 	ret := map[string]CharacterCardCom{}
