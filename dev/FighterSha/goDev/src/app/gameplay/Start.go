@@ -122,10 +122,28 @@ Turn:
 
 				case CardTypeSteal:
 					// 盜
-
+					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					if err != nil {
+						Alert(err)
+						break
+					}
+					gameplayCtx, err = Steal(gameplayCtx, activePlayer, target, card)
+					if err != nil {
+						Alert(err)
+						break
+					}
 				case CardTypeStealMoney:
 					// 劫
-
+					target, err := AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					if err != nil {
+						Alert(err)
+						break
+					}
+					gameplayCtx, err = StealMoney(gameplayCtx, activePlayer, target, card)
+					if err != nil {
+						Alert(err)
+						break
+					}
 				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
 					// 裝備
 
