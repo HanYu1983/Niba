@@ -6,7 +6,7 @@ import (
 )
 
 // Steal 使出盜, 對方用閃反應
-func Steal(origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func Steal(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	gameplayCtx := origin
 	if card.CardPrototypeID.CardType != CardTypeSteal {
 		return gameplayCtx, fmt.Errorf("you must use Steal")
@@ -15,13 +15,13 @@ func Steal(origin Gameplay, player Player, target Player, card desktop.Card) (Ga
 	if playerCom.StealTimes >= 1 {
 		return gameplayCtx, fmt.Errorf("you reach Steal limit")
 	}
-	gameplayCtx, err := BasicFlow(gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
+	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
 		gameplayCtx := origin
 		// steal one equip card
 		// or attack one life
 		targetEquip := gameplayCtx.Desktop.CardStacks[target.ID+CardStackEquip]
 		if len(targetEquip) > 0 {
-			equipCard, err := AskOneCard(gameplayCtx, player, targetEquip)
+			equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip)
 			if err != nil {
 				return origin, err
 			}

@@ -9,7 +9,7 @@ import (
 type GameplayReducer func(Gameplay) (Gameplay, error)
 
 // BasicFlow is
-func BasicFlow(origin Gameplay, player Player, target Player, card desktop.Card, onHit GameplayReducer) (Gameplay, error) {
+func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card, onHit GameplayReducer) (Gameplay, error) {
 	gameplayCtx := origin
 	if card.CardPrototypeID.CardType != CardTypeAttack {
 		return origin, fmt.Errorf("you must use Attack")
@@ -35,12 +35,9 @@ func BasicFlow(origin Gameplay, player Player, target Player, card desktop.Card,
 
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
-	dodgeCard, err := AskOneCard(gameplayCtx, target, targetHand)
+	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand)
 	if err != nil {
 		return origin, err
-	}
-	if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
-		return origin, fmt.Errorf("you must select dodge card")
 	}
 	var NotFound desktop.Card
 	if dodgeCard == NotFound {
@@ -49,6 +46,9 @@ func BasicFlow(origin Gameplay, player Player, target Player, card desktop.Card,
 			return origin, err
 		}
 	} else {
+		if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
+			return origin, fmt.Errorf("you must select dodge card")
+		}
 		// move dodge card to gravyard
 		targetHand, err := desktop.RemoveCard(targetHand, dodgeCard)
 		if err != nil {

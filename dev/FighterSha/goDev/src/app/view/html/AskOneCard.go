@@ -1,18 +1,19 @@
-package gameplay
+package html
 
 import (
+	"app/gameplay"
 	"tool/desktop"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 // AskOneCard 等待玩家選一張卡
-func AskOneCard(gameplay Gameplay, player Player, targetCS desktop.CardStack) (desktop.Card, error) {
+func (view HTMLView) AskOneCard(gameplay gameplay.Gameplay, player gameplay.Player, targetCS desktop.CardStack) (desktop.Card, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOneHandCard", player, targetCS, func(cardID *js.Object) {
 			if cardID == nil || cardID == js.Undefined {
-				wait <- nil
+				close(wait)
 			} else {
 				wait <- cardID.String()
 			}

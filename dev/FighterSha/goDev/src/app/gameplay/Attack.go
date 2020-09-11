@@ -6,7 +6,7 @@ import (
 )
 
 // Attack 使出殺, 對方用閃反應
-func Attack(origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func Attack(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	gameplayCtx := origin
 	if card.CardPrototypeID.CardType != CardTypeAttack {
 		return origin, fmt.Errorf("you must use Attack")
@@ -15,7 +15,7 @@ func Attack(origin Gameplay, player Player, target Player, card desktop.Card) (G
 	if playerCom.AttackTimes >= 1 {
 		return origin, fmt.Errorf("you reach attack limit")
 	}
-	gameplayCtx, err := BasicFlow(gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
+	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
 		gameplayCtx := origin
 		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
 		if err != nil {

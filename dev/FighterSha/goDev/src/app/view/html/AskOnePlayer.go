@@ -1,13 +1,18 @@
-package gameplay
+package html
 
-import "github.com/gopherjs/gopherjs/js"
+import (
+	"app/gameplay"
 
-func AskOnePlayer(gameplay Gameplay, player Player, players map[string]Player) (Player, error) {
+	"github.com/gopherjs/gopherjs/js"
+)
+
+// AskOnePlayer is
+func (view HTMLView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.Player, players map[string]gameplay.Player) (gameplay.Player, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOnePlayer", player, players, func(id *js.Object) {
 			if id == nil || id == js.Undefined {
-				wait <- nil
+				close(wait)
 			} else {
 				wait <- id.String()
 			}
@@ -15,11 +20,11 @@ func AskOnePlayer(gameplay Gameplay, player Player, players map[string]Player) (
 	}()
 	id := <-wait
 	if id == nil {
-		return Player{}, nil
+		return gameplay.Player{}, nil
 	}
 	ret, isFind := players[id.(string)]
 	if isFind == false {
-		return Player{}, nil
+		return gameplay.Player{}, nil
 	}
 	return ret, nil
 }

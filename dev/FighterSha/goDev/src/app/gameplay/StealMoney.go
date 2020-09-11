@@ -6,7 +6,7 @@ import (
 )
 
 // StealMoney 使出劫, 對方用閃反應
-func StealMoney(origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
+func StealMoney(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card) (Gameplay, error) {
 	gameplayCtx := origin
 	if card.CardPrototypeID.CardType != CardTypeStealMoney {
 		return gameplayCtx, fmt.Errorf("you must use StealMoney")
@@ -15,7 +15,7 @@ func StealMoney(origin Gameplay, player Player, target Player, card desktop.Card
 	if playerCom.StealMoneyTimes >= 1 {
 		return gameplayCtx, fmt.Errorf("you reach StealMoney limit")
 	}
-	gameplayCtx, err := BasicFlow(gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
+	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
 		gameplayCtx := origin
 		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
 		if err != nil {

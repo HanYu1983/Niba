@@ -5,6 +5,15 @@ import (
 	"tool/desktop"
 )
 
+// IView is
+type IView interface {
+	AskCommand(Gameplay, Player) (interface{}, error)
+	AskOneCard(Gameplay, Player, desktop.CardStack) (desktop.Card, error)
+	AskOnePlayer(Gameplay, Player, map[string]Player) (Player, error)
+	Alert(msg interface{})
+	Render(gameplayCtx Gameplay)
+}
+
 var (
 	CardTypeAttack     = desktop.CardType{"Attack"}
 	CardTypeDodge      = desktop.CardType{"Dodge"}
@@ -68,6 +77,16 @@ var (
 							CardType: CardTypeAttack,
 						},
 						Face:   desktop.FaceDown,
+						Player: "A",
+					},
+				},
+				"A" + CardStackCharacter: desktop.CardStack{
+					desktop.Card{
+						ID: "abc",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeCharacter,
+						},
+						Face:   desktop.FaceUp,
 						Player: "A",
 					},
 				},
