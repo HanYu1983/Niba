@@ -4,6 +4,24 @@
 
 package desktop
 
+// KesStringCardStack is
+func KesStringCardStack(dict map[string]CardStack) []string {
+	ret := make([]string, 0, len(dict))
+	for k := range dict {
+		ret = append(ret, k)
+	}
+	return ret
+}
+
+// ValsStringCardStack is
+func ValsStringCardStack(dict map[string]CardStack) []CardStack {
+	ret := make([]CardStack, 0, len(dict))
+	for _, v := range dict {
+		ret = append(ret, v)
+	}
+	return ret
+}
+
 // MergeStringCardStack is
 func MergeStringCardStack(a map[string]CardStack, b map[string]CardStack) map[string]CardStack {
 	ret := map[string]CardStack{}

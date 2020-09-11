@@ -7,38 +7,45 @@ import (
 	"tool/desktop"
 )
 
-func NextPlayer(ctx IView, gameplayCtx Gameplay, player Player) Player {
-	ctx.Alert(fmt.Sprintf("NextPlayer: %+v", player))
-	return player
-}
-
-func DrawCard(ctx IView, gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
-	ctx.Alert(fmt.Sprintf("DrawCard: %+v", player))
-	return gameplayCtx, nil
-}
-
 func Equip(ctx IView, gameplayCtx Gameplay, player Player, card desktop.Card) error {
 	ctx.Alert(fmt.Sprintf("Equip: %+v %+v", player, card))
 	return nil
 }
 
-func Start(ctx IView, origin Gameplay) (Gameplay, error) {
-	gameplayCtx := origin
+func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
+	ctx.Alert("Game End")
 	ctx.Render(gameplayCtx)
-	activePlayer := gameplayCtx.Players["A"]
+	return gameplayCtx, nil
+}
 
-	ctx.Alert(fmt.Sprintf("Start Play ActivePlayer: %+v", activePlayer))
+func Start(ctx IView, origin Gameplay) (Gameplay, error) {
+	var err error
+	gameplayCtx := origin
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
+		activePlayer := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
+		ctx.Render(gameplayCtx)
+
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
 
 		// 抽2
-		gameplayCtx, err := DrawCard(ctx, gameplayCtx, activePlayer, 2)
+		gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
 		if err != nil {
 			return origin, err
 		}
+
+		outOfCard := len(gameplayCtx.Desktop.CardStacks[CardStackHome]) == 0
+		if outOfCard {
+			fmt.Printf("牌庫抽完了, 遊戲結束\n")
+			gameplayCtx, err = End(ctx, gameplayCtx)
+			if err != nil {
+				return origin, err
+			}
+			return gameplayCtx, nil
+		}
+
 	Menu:
 		for {
 			time.Sleep(1 * time.Second)
@@ -101,7 +108,7 @@ Turn:
 					// 裝備
 
 				default:
-					return origin, fmt.Errorf("card.CardPrototypeID.CardType %v not found", card)
+					fmt.Printf("不能使用這類型的卡%v\n", card)
 				}
 
 			case view.CmdExit:
@@ -116,7 +123,10 @@ Turn:
 		}
 
 		// 下個玩家
-		activePlayer = NextPlayer(ctx, gameplayCtx, activePlayer)
+		gameplayCtx, err = NextPlayer(ctx, gameplayCtx, activePlayer)
+		if err != nil {
+			return origin, err
+		}
 	}
 
 	return gameplayCtx, nil

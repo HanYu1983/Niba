@@ -4,6 +4,24 @@
 
 package gameplay
 
+// KesStringCharacterCardCom is
+func KesStringCharacterCardCom(dict map[string]CharacterCardCom) []string {
+	ret := make([]string, 0, len(dict))
+	for k := range dict {
+		ret = append(ret, k)
+	}
+	return ret
+}
+
+// ValsStringCharacterCardCom is
+func ValsStringCharacterCardCom(dict map[string]CharacterCardCom) []CharacterCardCom {
+	ret := make([]CharacterCardCom, 0, len(dict))
+	for _, v := range dict {
+		ret = append(ret, v)
+	}
+	return ret
+}
+
 // MergeStringCharacterCardCom is
 func MergeStringCharacterCardCom(a map[string]CharacterCardCom, b map[string]CharacterCardCom) map[string]CharacterCardCom {
 	ret := map[string]CharacterCardCom{}

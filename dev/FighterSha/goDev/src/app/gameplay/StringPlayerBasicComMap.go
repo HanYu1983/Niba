@@ -4,6 +4,24 @@
 
 package gameplay
 
+// KesStringPlayerBasicCom is
+func KesStringPlayerBasicCom(dict map[string]PlayerBasicCom) []string {
+	ret := make([]string, 0, len(dict))
+	for k := range dict {
+		ret = append(ret, k)
+	}
+	return ret
+}
+
+// ValsStringPlayerBasicCom is
+func ValsStringPlayerBasicCom(dict map[string]PlayerBasicCom) []PlayerBasicCom {
+	ret := make([]PlayerBasicCom, 0, len(dict))
+	for _, v := range dict {
+		ret = append(ret, v)
+	}
+	return ret
+}
+
 // MergeStringPlayerBasicCom is
 func MergeStringPlayerBasicCom(a map[string]PlayerBasicCom, b map[string]PlayerBasicCom) map[string]PlayerBasicCom {
 	ret := map[string]PlayerBasicCom{}

@@ -45,6 +45,7 @@ type CharacterCardCom struct {
 type Gameplay struct {
 	Desktop          desktop.Desktop
 	Players          map[string]Player
+	ActivePlayerID   string
 	PlayerBasicComs  map[string]PlayerBasicCom
 	CharacterCardCom map[string]CharacterCardCom
 }
@@ -76,6 +77,7 @@ func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error)
 
 var (
 	PlayerA         = Player{"A", "A", 0}
+	PlayerB         = Player{"B", "B", 1}
 	DefaultGamePlay = Gameplay{
 		desktop.Desktop{
 			map[string]desktop.CardStack{
@@ -94,11 +96,25 @@ var (
 						},
 						Face: desktop.FaceDown,
 					},
+					desktop.Card{
+						ID: "3",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeSteal,
+						},
+						Face: desktop.FaceDown,
+					},
+					desktop.Card{
+						ID: "4",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeStealMoney,
+						},
+						Face: desktop.FaceDown,
+					},
 				},
 				CardStackGravyard: desktop.CardStack{},
 				CardStackIDHand(PlayerA): desktop.CardStack{
 					desktop.Card{
-						ID: "3",
+						ID: "5",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeAttack,
 						},
@@ -106,7 +122,7 @@ var (
 						Player: PlayerA.ID,
 					},
 					desktop.Card{
-						ID: "4",
+						ID: "6",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeDodge,
 						},
@@ -116,7 +132,7 @@ var (
 				},
 				CardStackIDCharacter(PlayerA): desktop.CardStack{
 					desktop.Card{
-						ID: "5",
+						ID: "7",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeCharacter,
 						},
@@ -124,11 +140,14 @@ var (
 						Player: PlayerA.ID,
 					},
 				},
+				CardStackIDHand(PlayerB): desktop.CardStack{},
 			},
 		},
 		map[string]Player{
 			PlayerA.ID: PlayerA,
+			PlayerB.ID: PlayerB,
 		},
+		PlayerA.ID,
 		map[string]PlayerBasicCom{},
 		map[string]CharacterCardCom{},
 	}
