@@ -8,7 +8,7 @@ import (
 // IView is
 type IView interface {
 	AskCommand(Gameplay, Player) (interface{}, error)
-	AskOneCard(Gameplay, Player, desktop.CardStack) (desktop.Card, error)
+	AskOneCard(Gameplay, Player, desktop.CardStack, func(desktop.Card) bool) (desktop.Card, error)
 	AskOnePlayer(Gameplay, Player, map[string]Player) (Player, error)
 	Alert(msg interface{})
 	Render(gameplayCtx Gameplay)

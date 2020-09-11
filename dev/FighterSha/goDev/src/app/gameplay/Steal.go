@@ -21,7 +21,9 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 		// or attack one life
 		targetEquip := gameplayCtx.Desktop.CardStacks[target.ID+CardStackEquip]
 		if len(targetEquip) > 0 {
-			equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip)
+			equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip, func(card desktop.Card) bool {
+				return card.CardPrototypeID.CardType == CardTypeArm
+			})
 			if err != nil {
 				return origin, err
 			}

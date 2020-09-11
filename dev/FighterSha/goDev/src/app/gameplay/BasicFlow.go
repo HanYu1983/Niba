@@ -33,22 +33,23 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card de
 		player.ID:         hand,
 	})
 
+	ctx.Alert(fmt.Sprintf("Ask Player For Dodge: %+v", target))
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[target.ID]
-	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand)
+	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand, func(card desktop.Card) bool {
+		return card.CardPrototypeID.CardType == CardTypeDodge
+	})
 	if err != nil {
 		return origin, err
 	}
 	var NotFound desktop.Card
 	if dodgeCard == NotFound {
+		ctx.Alert(fmt.Sprintf("Hit Player: %+v", target))
 		gameplayCtx, err = onHit(gameplayCtx)
 		if err != nil {
 			return origin, err
 		}
 	} else {
-		if dodgeCard.CardPrototypeID.CardType != CardTypeDodge {
-			return origin, fmt.Errorf("you must select dodge card")
-		}
 		// move dodge card to gravyard
 		targetHand, err := desktop.RemoveCard(targetHand, dodgeCard)
 		if err != nil {

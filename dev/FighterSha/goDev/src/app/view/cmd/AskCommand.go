@@ -6,6 +6,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"tool/desktop"
 )
 
 // AskCommand is
@@ -22,16 +23,19 @@ func (v CmdView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Playe
 		case "query":
 			v.Render(gameplayCtx)
 		case "useCard":
-			fmt.Print("useCard->")
-			scanner.Scan()
-			cardID := scanner.Text()
-			targetCS := gameplayCtx.Desktop.CardStacks[player.ID]
-			for _, _card := range targetCS {
-				if _card.ID == cardID {
-					return view.CmdUseCard{Card: _card}, nil
+			card, err := v.AskOneCard(gameplayCtx, player, gameplayCtx.Desktop.CardStacks[player.ID], func(card desktop.Card) bool {
+				return true
+			})
+			if err != nil {
+				fmt.Println(err.Error())
+			} else {
+				var cancel = desktop.Card{}
+				if card == cancel {
+					fmt.Println("cancel useCard")
+					break
 				}
+				return view.CmdUseCard{Card: card}, nil
 			}
-			fmt.Printf("card not found %v\n", cardID)
 		case "endTurn":
 			return view.CmdEndTurn{}, nil
 		case "exit":

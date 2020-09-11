@@ -7,15 +7,18 @@ import (
 	"tool/desktop"
 )
 
-func NextPlayer(gameplayCtx Gameplay, player Player) Player {
+func NextPlayer(ctx IView, gameplayCtx Gameplay, player Player) Player {
+	ctx.Alert(fmt.Sprintf("NextPlayer: %+v", player))
 	return player
 }
 
-func DrawCard(gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
+func DrawCard(ctx IView, gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
+	ctx.Alert(fmt.Sprintf("DrawCard: %+v", player))
 	return gameplayCtx, nil
 }
 
-func Equip(gameplayCtx Gameplay, player Player, card desktop.Card) error {
+func Equip(ctx IView, gameplayCtx Gameplay, player Player, card desktop.Card) error {
+	ctx.Alert(fmt.Sprintf("Equip: %+v %+v", player, card))
 	return nil
 }
 
@@ -23,6 +26,8 @@ func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 	gameplayCtx := origin
 	ctx.Render(gameplayCtx)
 	activePlayer := gameplayCtx.Players["A"]
+
+	ctx.Alert(fmt.Sprintf("Start Play ActivePlayer: %+v", activePlayer))
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
@@ -30,7 +35,7 @@ Turn:
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
 
 		// 抽2
-		gameplayCtx, err := DrawCard(gameplayCtx, activePlayer, 2)
+		gameplayCtx, err := DrawCard(ctx, gameplayCtx, activePlayer, 2)
 		if err != nil {
 			return origin, err
 		}
@@ -111,7 +116,7 @@ Turn:
 		}
 
 		// 下個玩家
-		activePlayer = NextPlayer(gameplayCtx, activePlayer)
+		activePlayer = NextPlayer(ctx, gameplayCtx, activePlayer)
 	}
 
 	return gameplayCtx, nil
