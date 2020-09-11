@@ -50,14 +50,24 @@ type Gameplay struct {
 }
 
 const (
-	CardStackHome      = "CardStackHome"
-	CardStackGravyard  = "CardStackGravyard"
-	CardStackEquip     = "_CardStackEquip"
-	CardStackCharacter = "_CardStackCharacter"
+	CardStackHome     = "CardStackHome"
+	CardStackGravyard = "CardStackGravyard"
 )
 
+func CardStackIDHand(player Player) string {
+	return player.ID + "_CardStackHand"
+}
+
+func CardStackIDCharacter(player Player) string {
+	return player.ID + "_CardStackCharacter"
+}
+
+func CardStackIDEquip(player Player) string {
+	return player.ID + "_CardStackEquip"
+}
+
 func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error) {
-	cs := gameplayCtx.Desktop.CardStacks[player.ID+CardStackCharacter]
+	cs := gameplayCtx.Desktop.CardStacks[CardStackIDCharacter(player)]
 	if len(cs) == 0 {
 		return desktop.Card{}, fmt.Errorf("player %v character card not found", player.ID)
 	}
@@ -65,35 +75,59 @@ func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error)
 }
 
 var (
+	PlayerA         = Player{"A", "A", 0}
 	DefaultGamePlay = Gameplay{
 		desktop.Desktop{
 			map[string]desktop.CardStack{
-				CardStackHome:     desktop.CardStack{},
-				CardStackGravyard: desktop.CardStack{},
-				"A": desktop.CardStack{
+				CardStackHome: desktop.CardStack{
 					desktop.Card{
-						ID: "abc",
+						ID: "1",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeDodge,
+						},
+						Face: desktop.FaceDown,
+					},
+					desktop.Card{
+						ID: "2",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeDodge,
+						},
+						Face: desktop.FaceDown,
+					},
+				},
+				CardStackGravyard: desktop.CardStack{},
+				CardStackIDHand(PlayerA): desktop.CardStack{
+					desktop.Card{
+						ID: "3",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeAttack,
 						},
 						Face:   desktop.FaceDown,
-						Player: "A",
+						Player: PlayerA.ID,
+					},
+					desktop.Card{
+						ID: "4",
+						CardPrototypeID: desktop.CardPrototypeID{
+							CardType: CardTypeDodge,
+						},
+						Face:   desktop.FaceDown,
+						Player: PlayerA.ID,
 					},
 				},
-				"A" + CardStackCharacter: desktop.CardStack{
+				CardStackIDCharacter(PlayerA): desktop.CardStack{
 					desktop.Card{
-						ID: "abc",
+						ID: "5",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeCharacter,
 						},
 						Face:   desktop.FaceUp,
-						Player: "A",
+						Player: PlayerA.ID,
 					},
 				},
 			},
 		},
 		map[string]Player{
-			"A": Player{"A", "A", 0},
+			PlayerA.ID: PlayerA,
 		},
 		map[string]PlayerBasicCom{},
 		map[string]CharacterCardCom{},

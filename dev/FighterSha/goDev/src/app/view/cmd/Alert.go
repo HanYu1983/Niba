@@ -2,6 +2,7 @@ package cmd
 
 import "fmt"
 
+// Alert is
 func (v CmdView) Alert(msg interface{}) {
 	switch t := msg.(type) {
 	case error:

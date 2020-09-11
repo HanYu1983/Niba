@@ -23,7 +23,7 @@ func (v CmdView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Playe
 		case "query":
 			v.Render(gameplayCtx)
 		case "useCard":
-			card, err := v.AskOneCard(gameplayCtx, player, gameplayCtx.Desktop.CardStacks[player.ID], func(card desktop.Card) bool {
+			card, err := v.AskOneCard(gameplayCtx, player, gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(player)], func(card desktop.Card) bool {
 				return true
 			})
 			if err != nil {

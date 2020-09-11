@@ -15,7 +15,7 @@ func (v HTMLView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Play
 		js.Global.Get("View").Call("AskCommand", player, map[string]interface{}{
 			"CmdUseCard": func(cardID *js.Object) {
 				go func() {
-					targetCS := gameplayCtx.Desktop.CardStacks[player.ID]
+					targetCS := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(player)]
 					for _, _card := range targetCS {
 						if _card.ID == cardID.String() {
 							wait <- view.CmdUseCard{Card: _card}

@@ -19,7 +19,7 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 		gameplayCtx := origin
 		// steal one equip card
 		// or attack one life
-		targetEquip := gameplayCtx.Desktop.CardStacks[target.ID+CardStackEquip]
+		targetEquip := gameplayCtx.Desktop.CardStacks[CardStackIDEquip(target)]
 		if len(targetEquip) > 0 {
 			equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip, func(card desktop.Card) bool {
 				return card.CardPrototypeID.CardType == CardTypeArm
@@ -31,11 +31,11 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 			if err != nil {
 				return origin, err
 			}
-			hand := gameplayCtx.Desktop.CardStacks[player.ID]
+			hand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(player)]
 			hand = append(hand, equipCard)
 			gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
-				target.ID + CardStackEquip: targetEquip,
-				player.ID:                  hand,
+				CardStackIDEquip(target): targetEquip,
+				CardStackIDHand(player):  hand,
 			})
 		} else {
 			targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
@@ -56,7 +56,7 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 	playerCom = gameplayCtx.PlayerBasicComs[player.ID]
 	playerCom.StealTimes++
 	gameplayCtx.PlayerBasicComs = MergeStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, map[string]PlayerBasicCom{
-		player.ID: playerCom,
+		CardStackIDHand(player): playerCom,
 	})
 	return gameplayCtx, nil
 }
