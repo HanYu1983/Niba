@@ -8,7 +8,7 @@ import (
 )
 
 // StartApp is
-func (view CmdView) StartApp() {
+func StartApp() {
 	defer func() {
 		fmt.Println("FighterSha End")
 	}()
@@ -18,6 +18,7 @@ func (view CmdView) StartApp() {
 			fmt.Println(err)
 		}
 	}()
+	view := CmdView{}
 
 	fmt.Println("FighterSha Start")
 	scanner := bufio.NewScanner(os.Stdin)

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"app"
+	"app/view/cmd"
 )
 
 func init() {
-	app.View.StartApp()
+	cmd.StartApp()
 }
 
 func main() {

@@ -8,7 +8,8 @@ import (
 )
 
 // StartApp is
-func (view HTMLView) StartApp() {
+func StartApp() {
+	view := HTMLView{}
 	gameplayCtx := gameplay.DefaultGamePlay
 
 	js.Global.Set("Model", map[string]interface{}{
