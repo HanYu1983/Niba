@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"tool/desktop"
 )
 
@@ -12,22 +13,26 @@ import (
 func (view CmdView) AskOneCard(gameplayCtx gameplay.Gameplay, player gameplay.Player, targetCS desktop.CardStack, validFn func(desktop.Card) bool) (desktop.Card, error) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
-		fmt.Print("AskOneCard->")
+		fmt.Println("==Cards==")
+		for i, card := range targetCS {
+			fmt.Printf("%v) %+v\n", i, card)
+		}
+		fmt.Println("AskOneCard->")
 		scanner.Scan()
-		cardID := scanner.Text()
-		if cardID == "exit" {
-			break
+		idxStr := scanner.Text()
+		if idxStr == "exit" {
+			return desktop.Card{}, nil
 		}
-		for _, _card := range targetCS {
-			if _card.ID == cardID {
-				if validFn(_card) == false {
-					fmt.Printf("card invalid %v\n", cardID)
-					break
-				}
-				return _card, nil
-			}
+		idx, err := strconv.Atoi(idxStr)
+		if err != nil {
+			fmt.Println("Please enter integer")
+			continue
 		}
-		fmt.Printf("card not found %v\n", cardID)
+		pickCard := targetCS[idx]
+		if validFn(pickCard) == false {
+			fmt.Printf("card invalid %+v\n", pickCard)
+			continue
+		}
+		return pickCard, nil
 	}
-	return desktop.Card{}, nil
 }

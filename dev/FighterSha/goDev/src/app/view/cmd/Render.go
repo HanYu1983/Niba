@@ -8,7 +8,8 @@ import (
 // Render is
 func (v CmdView) Render(gameplayCtx gameplay.Gameplay) {
 	fmt.Println("==== Gameplay ====")
-	fmt.Printf("ActivePlayer: %v\n", gameplayCtx.ActivePlayerID)
+	activePlayer := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
+	fmt.Printf("ActivePlayer: %+v\n", activePlayer)
 
 	fmt.Println("== CardStacks ==")
 	for key, cs := range gameplayCtx.Desktop.CardStacks {
@@ -16,7 +17,7 @@ func (v CmdView) Render(gameplayCtx gameplay.Gameplay) {
 	}
 
 	fmt.Println("== Hand ==")
-	hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(gameplay.PlayerA)]
+	hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(activePlayer)]
 	for idx, card := range hand {
 		fmt.Printf("%d): %+v\n", idx, card)
 	}

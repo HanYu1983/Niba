@@ -11,13 +11,6 @@ type GameplayReducer func(Gameplay) (Gameplay, error)
 // BasicFlow is
 func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card, onHit GameplayReducer) (Gameplay, error) {
 	gameplayCtx := origin
-	if card.CardPrototypeID.CardType != CardTypeAttack {
-		return origin, fmt.Errorf("you must use Attack")
-	}
-	playerCom := gameplayCtx.PlayerBasicComs[player.ID]
-	if playerCom.AttackTimes >= 1 {
-		return origin, fmt.Errorf("you reach attack limit")
-	}
 	// move attack card to gravyard
 	gravyard := gameplayCtx.Desktop.CardStacks[CardStackGravyard]
 	hand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(player)]
@@ -64,10 +57,5 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card de
 			CardStackIDHand(target): targetHand,
 		})
 	}
-
-	playerCom.AttackTimes++
-	gameplayCtx.PlayerBasicComs = MergeStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, map[string]PlayerBasicCom{
-		player.ID: playerCom,
-	})
 	return gameplayCtx, nil
 }

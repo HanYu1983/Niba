@@ -4,6 +4,17 @@ import (
 	"fmt"
 )
 
+// FilterItem is
+func FilterItem(s1 []Item, f func(Item) bool) []Item {
+	ret := []Item{}
+	for _, v := range s1 {
+		if f(v) {
+			ret = append(ret, v)
+		}
+	}
+	return ret
+}
+
 // RemoveItem is
 func RemoveItem(s1 []Item, card Item) ([]Item, error) {
 	findID := -1

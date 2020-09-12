@@ -85,14 +85,14 @@ var (
 					desktop.Card{
 						ID: "1",
 						CardPrototypeID: desktop.CardPrototypeID{
-							CardType: CardTypeDodge,
+							CardType: CardTypeAccessory,
 						},
 						Face: desktop.FaceDown,
 					},
 					desktop.Card{
 						ID: "2",
 						CardPrototypeID: desktop.CardPrototypeID{
-							CardType: CardTypeDodge,
+							CardType: CardTypeArm,
 						},
 						Face: desktop.FaceDown,
 					},
@@ -110,9 +110,6 @@ var (
 						},
 						Face: desktop.FaceDown,
 					},
-				},
-				CardStackGravyard: desktop.CardStack{},
-				CardStackIDHand(PlayerA): desktop.CardStack{
 					desktop.Card{
 						ID: "5",
 						CardPrototypeID: desktop.CardPrototypeID{
@@ -130,9 +127,11 @@ var (
 						Player: PlayerA.ID,
 					},
 				},
+				CardStackGravyard:        desktop.CardStack{},
+				CardStackIDHand(PlayerA): desktop.CardStack{},
 				CardStackIDCharacter(PlayerA): desktop.CardStack{
 					desktop.Card{
-						ID: "7",
+						ID: "character1",
 						CardPrototypeID: desktop.CardPrototypeID{
 							CardType: CardTypeCharacter,
 						},

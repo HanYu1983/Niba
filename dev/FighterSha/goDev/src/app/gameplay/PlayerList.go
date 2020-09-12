@@ -2,13 +2,13 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package desktop
+package gameplay
 
 import "fmt"
 
-// FilterCard is
-func FilterCard(s1 []Card, f func(Card) bool) []Card {
-	ret := []Card{}
+// FilterPlayer is
+func FilterPlayer(s1 []Player, f func(Player) bool) []Player {
+	ret := []Player{}
 	for _, v := range s1 {
 		if f(v) {
 			ret = append(ret, v)
@@ -17,8 +17,8 @@ func FilterCard(s1 []Card, f func(Card) bool) []Card {
 	return ret
 }
 
-// RemoveCard is
-func RemoveCard(s1 []Card, card Card) ([]Card, error) {
+// RemovePlayer is
+func RemovePlayer(s1 []Player, card Player) ([]Player, error) {
 	findID := -1
 	for _findID, c := range s1 {
 		if c == card {
@@ -33,9 +33,9 @@ func RemoveCard(s1 []Card, card Card) ([]Card, error) {
 	return s1, nil
 }
 
-// ReplaceCard is
-func ReplaceCard(items []Card, info map[Card]Card) []Card {
-	ret := make([]Card, len(items))
+// ReplacePlayer is
+func ReplacePlayer(items []Player, info map[Player]Player) []Player {
+	ret := make([]Player, len(items))
 	copy(ret, items)
 	for origin, next := range info {
 		for idx, card := range items {

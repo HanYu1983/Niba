@@ -4,13 +4,7 @@ import (
 	"app/view"
 	"fmt"
 	"time"
-	"tool/desktop"
 )
-
-func Equip(ctx IView, gameplayCtx Gameplay, player Player, card desktop.Card) error {
-	ctx.Alert(fmt.Sprintf("Equip: %+v %+v", player, card))
-	return nil
-}
 
 func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
 	ctx.Alert("Game End")
@@ -20,12 +14,12 @@ func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
 
 func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 	var err error
+	var playerNotFound Player
 	gameplayCtx := origin
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
 		activePlayer := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
-		ctx.Render(gameplayCtx)
 
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
@@ -35,6 +29,7 @@ Turn:
 		if err != nil {
 			return origin, err
 		}
+		ctx.Render(gameplayCtx)
 
 		outOfCard := len(gameplayCtx.Desktop.CardStacks[CardStackHome]) == 0
 		if outOfCard {
@@ -74,6 +69,10 @@ Turn:
 						ctx.Alert(err)
 						break
 					}
+					if target == playerNotFound {
+						ctx.Alert("user cancel action")
+						break
+					}
 					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target, card)
 					if err != nil {
 						ctx.Alert(err)
@@ -85,6 +84,10 @@ Turn:
 					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 					if err != nil {
 						ctx.Alert(err)
+						break
+					}
+					if target == playerNotFound {
+						ctx.Alert("user cancel action")
 						break
 					}
 					gameplayCtx, err = Steal(ctx, gameplayCtx, activePlayer, target, card)
@@ -99,6 +102,10 @@ Turn:
 						ctx.Alert(err)
 						break
 					}
+					if target == playerNotFound {
+						ctx.Alert("user cancel action")
+						break
+					}
 					gameplayCtx, err = StealMoney(ctx, gameplayCtx, activePlayer, target, card)
 					if err != nil {
 						ctx.Alert(err)
@@ -106,7 +113,11 @@ Turn:
 					}
 				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
 					// 裝備
-
+					gameplayCtx, err = Equip(ctx, gameplayCtx, activePlayer, card)
+					if err != nil {
+						ctx.Alert(err)
+						break
+					}
 				default:
 					fmt.Printf("不能使用這類型的卡%v\n", card)
 				}

@@ -1,4 +1,5 @@
 genny -in tool/template/map.go -out app/gameplay/StringPlayerMap.go -pkg gameplay gen "Key=string Value=Player"
+genny -in tool/template/list.go -out app/gameplay/PlayerList.go -pkg gameplay gen "Item=Player"
 genny -in tool/template/map.go -out app/gameplay/StringPlayerBasicComMap.go -pkg gameplay gen "Key=string Value=PlayerBasicCom"
 genny -in tool/template/map.go -out app/gameplay/StringCharacterCardComMap.go -pkg gameplay gen "Key=string Value=CharacterCardCom"
 genny -in tool/template/map.go -out tool/desktop/StringCardStackMap.go -pkg desktop gen "Key=string Value=CardStack"
