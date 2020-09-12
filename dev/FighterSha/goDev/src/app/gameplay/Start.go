@@ -13,6 +13,45 @@ func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
 	return gameplayCtx, nil
 }
 
+// 任何卡都能當殺的能力
+func HasAbilityAttackWithAnyCard(gameplayCtx Gameplay, player Player) bool {
+	// 如果是戰士, 有裝備武器
+	if false && HasEquip(gameplayCtx, player, CardTypeArm) {
+		return true
+	}
+	return false
+}
+
+func HasAbilityHealing(gameplayCtx Gameplay, player Player) bool {
+	// 如果是戰士, 有裝備防具
+	if false && HasEquip(gameplayCtx, player, CardTypeArmor) {
+		return true
+	}
+	return false
+}
+
+func HasAbilityBreakArmor(gameplayCtx Gameplay, player Player) bool {
+	// 如果是戰士, 有裝備配件
+	if false && HasEquip(gameplayCtx, player, CardTypeAccessory) {
+		return true
+	}
+	return false
+}
+
+func HasAbilityEvadeWithAnyCard(gameplayCtx Gameplay, player Player) bool {
+	if false && HasEquip(gameplayCtx, player, CardTypeArmor) {
+		return true
+	}
+	return false
+}
+
+func HasAbilityAttackHealing(gameplayCtx Gameplay, player Player) bool {
+	if false && HasEquip(gameplayCtx, player, CardTypeAccessory) {
+		return true
+	}
+	return false
+}
+
 func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 	var err error
 	var playerNotFound Player
@@ -24,6 +63,16 @@ Turn:
 
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
+
+		if HasAbilityHealing(gameplayCtx, activePlayer) {
+			gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(com CharacterCardCom) CharacterCardCom {
+				com.Life++
+				return com
+			})
+			if err != nil {
+				return origin, err
+			}
+		}
 
 		// 抽2
 		gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
@@ -62,6 +111,32 @@ Turn:
 			case view.CmdUseCard:
 				// 使用一張卡
 				card := cmdDetail.Card
+				// 如果是戰士, 有裝備武器
+				if HasAbilityAttackWithAnyCard(gameplayCtx, activePlayer) {
+					switch card.CardPrototypeID.CardType {
+					case CardTypeAttack:
+					default:
+						// 沒有使用殺, 是否要當成殺
+						if false {
+							// 殺
+							target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+							if err != nil {
+								ctx.Alert(err)
+								break
+							}
+							if target == playerNotFound {
+								ctx.Alert("user cancel action")
+								break
+							}
+							gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target, card)
+							if err != nil {
+								ctx.Alert(err)
+								break
+							}
+						}
+						continue
+					}
+				}
 				switch card.CardPrototypeID.CardType {
 				case CardTypeAttack:
 					// 殺

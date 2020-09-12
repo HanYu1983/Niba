@@ -16,6 +16,7 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 		return gameplayCtx, fmt.Errorf("you reach Steal limit")
 	}
 	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
+		var err error
 		gameplayCtx := origin
 		// steal one equip card
 		// or attack one life
@@ -38,15 +39,13 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player, card deskto
 				CardStackIDHand(player):  hand,
 			})
 		} else {
-			targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+			gameplayCtx, err = UpdateCharacterCom(gameplayCtx, target, func(characterCom CharacterCardCom) CharacterCardCom {
+				characterCom.Life--
+				return characterCom
+			})
 			if err != nil {
 				return origin, err
 			}
-			characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
-			characterCom.Life--
-			gameplayCtx.CharacterCardCom = MergeStringCharacterCardCom(gameplayCtx.CharacterCardCom, map[string]CharacterCardCom{
-				targetCharacterCard.ID: characterCom,
-			})
 		}
 		return gameplayCtx, nil
 	})

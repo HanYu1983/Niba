@@ -17,19 +17,17 @@ func StealMoney(ctx IView, origin Gameplay, player Player, target Player, card d
 	}
 	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, card, func(origin Gameplay) (Gameplay, error) {
 		gameplayCtx := origin
-		targetCharacterCard, err := GetCharacterCard(gameplayCtx, target)
+		gameplayCtx, err := UpdateCharacterCom(gameplayCtx, target, func(characterCom CharacterCardCom) CharacterCardCom {
+			if characterCom.Money > 0 {
+				characterCom.Money--
+			} else {
+				characterCom.Life--
+			}
+			return characterCom
+		})
 		if err != nil {
 			return origin, err
 		}
-		characterCom := gameplayCtx.CharacterCardCom[targetCharacterCard.ID]
-		if characterCom.Money > 0 {
-			characterCom.Money--
-		} else {
-			characterCom.Life--
-		}
-		gameplayCtx.CharacterCardCom = MergeStringCharacterCardCom(gameplayCtx.CharacterCardCom, map[string]CharacterCardCom{
-			targetCharacterCard.ID: characterCom,
-		})
 		return gameplayCtx, nil
 	})
 	if err != nil {

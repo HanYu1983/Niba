@@ -6,7 +6,7 @@ import (
 )
 
 // HasEquip is
-func HasEquip(ctx IView, gameplayCtx Gameplay, player Player, equipType desktop.CardType) bool {
+func HasEquip(gameplayCtx Gameplay, player Player, equipType desktop.CardType) bool {
 	return len(desktop.FilterCard(gameplayCtx.Desktop.CardStacks[CardStackIDEquip(player)], func(c desktop.Card) bool {
 		return c.CardPrototypeID.CardType == equipType
 	})) > 0
@@ -23,7 +23,7 @@ func Equip(ctx IView, origin Gameplay, player Player, card desktop.Card) (Gamepl
 		return origin, fmt.Errorf("You Must Use Equip Card %+v", card)
 	}
 
-	if HasEquip(ctx, gameplayCtx, player, card.CardPrototypeID.CardType) {
+	if HasEquip(gameplayCtx, player, card.CardPrototypeID.CardType) {
 		return origin, fmt.Errorf("Already Equip %+v", card)
 	}
 

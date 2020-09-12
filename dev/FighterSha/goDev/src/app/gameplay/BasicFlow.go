@@ -30,6 +30,9 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card de
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(target)]
 	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand, func(card desktop.Card) bool {
+		if HasAbilityEvadeWithAnyCard(gameplayCtx, player) {
+			return true
+		}
 		return card.CardPrototypeID.CardType == CardTypeDodge
 	})
 	if err != nil {
