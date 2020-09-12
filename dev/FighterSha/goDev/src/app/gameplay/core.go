@@ -15,16 +15,33 @@ type IView interface {
 }
 
 var (
-	CardTypeAttack     = desktop.CardType{"Attack"}
-	CardTypeDodge      = desktop.CardType{"Dodge"}
-	CardTypeStealMoney = desktop.CardType{"StealMoney"}
-	CardTypeSteal      = desktop.CardType{"Steal"}
-	CardTypeArm        = desktop.CardType{"CardTypeArm"}
-	CardTypeArmor      = desktop.CardType{"CardTypeArmor"}
-	CardTypeAccessory  = desktop.CardType{"CardTypeAccessory"}
-	CardTypeCharacter  = desktop.CardType{"CardTypeCharacter"}
+	// CardTypeAttack 殺
+	CardTypeAttack = desktop.CardType{ID: "Attack"}
+	// CardTypeDodge 閃
+	CardTypeDodge = desktop.CardType{ID: "Dodge"}
+	// CardTypeStealMoney 劫
+	CardTypeStealMoney = desktop.CardType{ID: "StealMoney"}
+	// CardTypeSteal 盜
+	CardTypeSteal = desktop.CardType{ID: "Steal"}
+	// CardTypeArm 武器
+	CardTypeArm = desktop.CardType{ID: "CardTypeArm"}
+	// CardTypeArmor 防具
+	CardTypeArmor = desktop.CardType{ID: "CardTypeArmor"}
+	// CardTypeAccessory 配件
+	CardTypeAccessory = desktop.CardType{ID: "CardTypeAccessory"}
+	// CardTypeCharacter 角色
+	CardTypeCharacter = desktop.CardType{ID: "CardTypeCharacter"}
+	// CardTypeJob 打工
+	CardTypeJob = desktop.CardType{ID: "CardTypeJob"}
+	// CardTypeMake is 製造
+	CardTypeMake = desktop.CardType{ID: "CardTypeMake"}
+	// CardTypeGrind is 研磨
+	CardTypeGrind = desktop.CardType{ID: "CardTypeGrind"}
+	// CardTypeBarrier is 壁壘
+	CardTypeBarrier = desktop.CardType{ID: "CardTypeBarrier"}
 )
 
+// Player is
 type Player struct {
 	ID      string
 	GroupID string
@@ -73,6 +90,17 @@ func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error)
 		return desktop.Card{}, fmt.Errorf("player %v character card not found", player.ID)
 	}
 	return cs[0], nil
+}
+
+func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom) CharacterCardCom) (Gameplay, error) {
+	gameplayCtx := origin
+	characterCard, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		return origin, err
+	}
+	characterCom := f(gameplayCtx.CharacterCardCom[characterCard.ID])
+	gameplayCtx.CharacterCardCom = AssocStringCharacterCardCom(gameplayCtx.CharacterCardCom, characterCard.ID, characterCom)
+	return gameplayCtx, nil
 }
 
 var (

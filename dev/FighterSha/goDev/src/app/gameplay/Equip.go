@@ -18,7 +18,7 @@ func Equip(ctx IView, origin Gameplay, player Player, card desktop.Card) (Gamepl
 	gameplayCtx := origin
 
 	switch card.CardPrototypeID.CardType {
-	case CardTypeAccessory, CardTypeArm, CardTypeArmor:
+	case CardTypeAccessory, CardTypeArm, CardTypeArmor, CardTypeGrind, CardTypeBarrier:
 	default:
 		return origin, fmt.Errorf("You Must Use Equip Card %+v", card)
 	}

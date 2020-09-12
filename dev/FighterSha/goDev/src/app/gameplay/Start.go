@@ -4,6 +4,7 @@ import (
 	"app/view"
 	"fmt"
 	"time"
+	"tool/desktop"
 )
 
 func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
@@ -111,17 +112,54 @@ Turn:
 						ctx.Alert(err)
 						break
 					}
-				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
+				case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
 					// 裝備
 					gameplayCtx, err = Equip(ctx, gameplayCtx, activePlayer, card)
 					if err != nil {
 						ctx.Alert(err)
 						break
 					}
+				case CardTypeJob:
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
+						characterCom.Money += 2
+						return characterCom
+					})
+					if err != nil {
+						return origin, err
+					}
+				case CardTypeMake:
+					gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
+					if err != nil {
+						return origin, err
+					}
 				default:
-					fmt.Printf("不能使用這類型的卡%v\n", card)
+					ctx.Alert(fmt.Sprintf("不能使用這類型的卡%v\n", card))
 				}
+			case view.CmdSellCard:
+				card := cmdDetail.Card
+				switch card.CardPrototypeID.CardType {
+				case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
+					nextHand, err := desktop.RemoveCard(gameplayCtx.Desktop.CardStacks[CardStackIDHand(activePlayer)], card)
+					if err != nil {
+						return origin, err
+					}
+					card.Face = desktop.FaceUp
+					nextGravyard := append(gameplayCtx.Desktop.CardStacks[CardStackGravyard], card)
+					gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
+						CardStackIDHand(activePlayer): nextHand,
+						CardStackGravyard:             nextGravyard,
+					})
 
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
+						characterCom.Money++
+						return characterCom
+					})
+					if err != nil {
+						return origin, err
+					}
+				default:
+					ctx.Alert(fmt.Sprintf("不能賣掉這類型的卡%v\n", card))
+				}
 			case view.CmdExit:
 				break Turn
 
