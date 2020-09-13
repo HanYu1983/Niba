@@ -2,6 +2,7 @@ package html
 
 import (
 	"app/gameplay"
+	"app/gameplay/ai"
 	"app/view"
 	"fmt"
 
@@ -10,6 +11,9 @@ import (
 
 // AskCommand is
 func (v HTMLView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Player) (interface{}, error) {
+	if player.GroupID != gameplay.GroupIDPlayer {
+		return ai.AskCommand(gameplayCtx, player)
+	}
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskCommand", player, map[string]interface{}{

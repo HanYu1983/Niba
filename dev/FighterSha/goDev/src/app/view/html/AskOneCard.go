@@ -2,13 +2,17 @@ package html
 
 import (
 	"app/gameplay"
+	"app/gameplay/ai"
 	"tool/desktop"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 // AskOneCard 等待玩家選一張卡
-func (view HTMLView) AskOneCard(gameplay gameplay.Gameplay, player gameplay.Player, targetCS desktop.CardStack, validFn func(desktop.Card) bool) (desktop.Card, error) {
+func (view HTMLView) AskOneCard(gameplayCtx gameplay.Gameplay, player gameplay.Player, targetCS desktop.CardStack, validFn func(desktop.Card) bool) (desktop.Card, error) {
+	if player.GroupID != gameplay.GroupIDPlayer {
+		return ai.AskOneCard(gameplayCtx, player, targetCS, validFn)
+	}
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOneHandCard", player, targetCS, func(cardID *js.Object) {

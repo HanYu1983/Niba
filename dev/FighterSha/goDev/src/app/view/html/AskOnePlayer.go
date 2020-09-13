@@ -2,12 +2,16 @@ package html
 
 import (
 	"app/gameplay"
+	"app/gameplay/ai"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 // AskOnePlayer is
 func (view HTMLView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.Player, players []gameplay.Player) (gameplay.Player, error) {
+	if player.GroupID != gameplay.GroupIDPlayer {
+		return ai.AskOnePlayer(gameplayCtx, player, players)
+	}
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOnePlayer", player, players, func(id *js.Object) {
