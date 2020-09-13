@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"app/gameplay"
+	"app/gameplay/ai"
 	"app/view"
 	"bufio"
 	"fmt"
@@ -11,6 +12,9 @@ import (
 
 // AskCommand is
 func (v CmdView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Player) (interface{}, error) {
+	if player.GroupID != gameplay.GroupIDPlayer {
+		return ai.AskCommand(gameplayCtx, player)
+	}
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("AskCommand->")

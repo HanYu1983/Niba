@@ -16,16 +16,9 @@ Turn:
 			return origin, fmt.Errorf("Active Player not found, gameplay init error")
 		}
 
-		if activePlayer.GroupID == GroupIDPlayer {
-			gameplayCtx, err = PlayerTurn(ctx, gameplayCtx, activePlayer)
-			if err != nil {
-				return origin, err
-			}
-		} else {
-			gameplayCtx, err = EnemyTurn(ctx, gameplayCtx, activePlayer)
-			if err != nil {
-				return origin, err
-			}
+		gameplayCtx, err = PlayerTurn(ctx, gameplayCtx, activePlayer)
+		if err != nil {
+			return origin, err
 		}
 
 		if gameplayCtx.EndState.Completed {

@@ -49,7 +49,7 @@ Menu:
 			ctx.Alert(err)
 			continue
 		}
-
+		ctx.Alert(cmd)
 		// 跳過回合
 		if cmd == nil {
 			// cancel

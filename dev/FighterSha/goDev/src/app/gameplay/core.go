@@ -112,6 +112,18 @@ func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error)
 	return cs[0], nil
 }
 
+func GetCharacterCardCom(gameplayCtx Gameplay, player Player) (CharacterCardCom, error) {
+	characterCard, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		return CharacterCardCom{}, err
+	}
+	characterCom, isExist := gameplayCtx.CharacterCardComs[characterCard.ID]
+	if isExist == false {
+		characterCom = InitCharacterCardCom(characterCard)
+	}
+	return characterCom, nil
+}
+
 func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom) (CharacterCardCom, error)) (Gameplay, error) {
 	gameplayCtx := origin
 	characterCard, err := GetCharacterCard(gameplayCtx, player)
@@ -281,7 +293,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 	desktop.ShuffleCard(home)
 	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackHome, home)
 
-	playerA := Player{"A", GroupIDPlayer, 0}
+	playerA := Player{"A", GroupIDAI1, 0}
 	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerA.ID, playerA)
 
 	characterA := desktop.Card{
@@ -295,7 +307,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 	}
 	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter(playerA), desktop.CardStack{characterA})
 
-	playerB := Player{"B", GroupIDAI1, 0}
+	playerB := Player{"B", GroupIDAI2, 0}
 	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerB.ID, playerB)
 
 	characterB := desktop.Card{

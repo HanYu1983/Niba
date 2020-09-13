@@ -10,6 +10,6 @@ func (v CmdView) Alert(msg interface{}) {
 	case string:
 		fmt.Println(t)
 	default:
-		panic(msg)
+		fmt.Printf("%+v\n", msg)
 	}
 }
