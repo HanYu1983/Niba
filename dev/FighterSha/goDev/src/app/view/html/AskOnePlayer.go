@@ -7,7 +7,7 @@ import (
 )
 
 // AskOnePlayer is
-func (view HTMLView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.Player, players map[string]gameplay.Player) (gameplay.Player, error) {
+func (view HTMLView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.Player, players []gameplay.Player) (gameplay.Player, error) {
 	wait := make(chan interface{})
 	go func() {
 		js.Global.Get("View").Call("AskOnePlayer", player, players, func(id *js.Object) {
@@ -22,9 +22,10 @@ func (view HTMLView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay
 	if id == nil {
 		return gameplay.Player{}, nil
 	}
-	ret, isFind := players[id.(string)]
-	if isFind == false {
-		return gameplay.Player{}, nil
+	for _, _plyr := range players {
+		if _plyr.ID == id {
+			return _plyr, nil
+		}
 	}
-	return ret, nil
+	return gameplay.Player{}, nil
 }

@@ -9,7 +9,7 @@ import (
 type IView interface {
 	AskCommand(Gameplay, Player) (interface{}, error)
 	AskOneCard(Gameplay, Player, desktop.CardStack, func(desktop.Card) bool) (desktop.Card, error)
-	AskOnePlayer(Gameplay, Player, map[string]Player) (Player, error)
+	AskOnePlayer(Gameplay, Player, []Player) (Player, error)
 	AskOption(Gameplay, Player, string, []string) (string, error)
 	Alert(msg interface{})
 	Render(gameplayCtx Gameplay)

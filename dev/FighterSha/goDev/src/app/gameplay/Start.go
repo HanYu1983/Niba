@@ -155,7 +155,10 @@ Turn:
 			case view.CmdBuyItem:
 				switch cmdDetail.ItemID {
 				case view.ItemIDPower:
-					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 					if err != nil {
 						return origin, err
 					}
@@ -235,8 +238,11 @@ Turn:
 					default:
 						var answer string
 						if answer, err = ctx.AskOption(gameplayCtx, activePlayer, "沒有使用殺, 是否要當成殺", []string{"Yes", "No"}); answer == "Yes" {
+							otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+								return p.ID != activePlayer.ID
+							})
 							// 殺
-							target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+							target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 							if err != nil {
 								return origin, err
 							}
@@ -265,8 +271,11 @@ Turn:
 				}
 				switch card.CardPrototypeID.CardType {
 				case CardTypeAttack:
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
 					// 殺
-					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 					if err != nil {
 						return origin, err
 					}
@@ -290,8 +299,11 @@ Turn:
 					}
 
 				case CardTypeSteal:
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
 					// 盜
-					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 					if err != nil {
 						return origin, err
 					}
@@ -314,8 +326,11 @@ Turn:
 						break
 					}
 				case CardTypeStealMoney:
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
 					// 劫
-					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 					if err != nil {
 						return origin, err
 					}
