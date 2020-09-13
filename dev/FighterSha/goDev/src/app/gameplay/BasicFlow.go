@@ -63,5 +63,14 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 		}
 		ctx.Alert(fmt.Sprintf("Player Dodged: %+v", target))
 	}
+
+	targetCharacter, err := GetCharacterCardCom(gameplayCtx, target)
+	if err != nil {
+		return origin, err
+	}
+	if targetCharacter.Life == 0 {
+		gameplayCtx.EndState.Completed = true
+		gameplayCtx.EndState.Reason = "玩家被攻擊而死"
+	}
 	return gameplayCtx, nil
 }

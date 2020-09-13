@@ -42,6 +42,9 @@ func PlayerTurn(ctx IView, origin Gameplay, activePlayer Player) (Gameplay, erro
 Menu:
 	for {
 		time.Sleep(1 * time.Second)
+		if gameplayCtx.EndState.Completed {
+			return gameplayCtx, nil
+		}
 
 		// 等玩家指令
 		cmd, err := ctx.AskCommand(gameplayCtx, activePlayer)
@@ -49,7 +52,7 @@ Menu:
 			ctx.Alert(err)
 			continue
 		}
-		ctx.Alert(cmd)
+		ctx.Alert(fmt.Sprintf("choose cmd: %+v", cmd))
 		// 跳過回合
 		if cmd == nil {
 			// cancel

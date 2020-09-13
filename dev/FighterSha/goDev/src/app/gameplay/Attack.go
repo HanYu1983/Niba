@@ -42,5 +42,6 @@ func Attack(ctx IView, origin Gameplay, player Player, target Player) (Gameplay,
 	gameplayCtx.PlayerBasicComs = MergeStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, map[string]PlayerBasicCom{
 		player.ID: playerCom,
 	})
+
 	return gameplayCtx, nil
 }

@@ -57,10 +57,16 @@ func CmdWeight(gameplayCtx gameplay.Gameplay, player gameplay.Player, cmd interf
 			return detail, 50
 		}
 	case view.CmdSellCard:
-		if len(hand) >= 7 {
-			detail.Card = hand[0]
-			return detail, 100
+		if len(hand) >= 5 {
+			for _, card := range hand {
+				switch card.CardPrototypeID.CardType {
+				case gameplay.CardTypeArm, gameplay.CardTypeArmor, gameplay.CardTypeAccessory, gameplay.CardTypeBarrier, gameplay.CardTypeGrind:
+					detail.Card = card
+					return detail, 100
+				}
+			}
 		}
+		return detail, 0
 	case view.CmdEndTurn:
 		if len(hand) == 0 {
 			return detail, 100

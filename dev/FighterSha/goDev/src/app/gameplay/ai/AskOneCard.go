@@ -10,5 +10,11 @@ func AskOneCard(gameplayCtx gameplay.Gameplay, player gameplay.Player, targetCS 
 	if len(targetCS) == 0 {
 		return desktop.Card{}, nil
 	}
+	hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(player)]
+	for _, card := range hand {
+		if validFn(card) {
+			return card, nil
+		}
+	}
 	return desktop.Card{}, nil
 }

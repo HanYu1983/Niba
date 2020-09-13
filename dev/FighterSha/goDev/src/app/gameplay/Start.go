@@ -11,6 +11,7 @@ func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
+
 		activePlayer, isActivePlayerExist := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
 		if isActivePlayerExist == false {
 			return origin, fmt.Errorf("Active Player not found, gameplay init error")
