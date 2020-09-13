@@ -42,6 +42,12 @@ var (
 	CardTypeBarrier = desktop.CardType{ID: "CardTypeBarrier"}
 )
 
+const (
+	GroupIDPlayer = "player"
+	GroupIDAI1    = "ai1"
+	GroupIDAI2    = "ai2"
+)
+
 // Player is
 type Player struct {
 	ID      string
@@ -67,12 +73,18 @@ type CharacterCardCom struct {
 	Money int
 }
 
+type EndState struct {
+	Completed bool
+	Reason    string
+}
+
 type Gameplay struct {
 	Desktop           desktop.Desktop
 	Players           map[string]Player
 	ActivePlayerID    string
 	PlayerBasicComs   map[string]PlayerBasicCom
 	CharacterCardComs map[string]CharacterCardCom
+	EndState          EndState
 }
 
 const (
@@ -269,7 +281,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 	desktop.ShuffleCard(home)
 	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackHome, home)
 
-	playerA := Player{"A", "player", 0}
+	playerA := Player{"A", GroupIDPlayer, 0}
 	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerA.ID, playerA)
 
 	characterA := desktop.Card{
@@ -283,7 +295,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 	}
 	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter(playerA), desktop.CardStack{characterA})
 
-	playerB := Player{"B", "ai", 0}
+	playerB := Player{"B", GroupIDAI1, 0}
 	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerB.ID, playerB)
 
 	characterB := desktop.Card{
@@ -366,5 +378,6 @@ var (
 		PlayerA.ID,
 		map[string]PlayerBasicCom{},
 		map[string]CharacterCardCom{},
+		EndState{},
 	}
 )
