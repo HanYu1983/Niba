@@ -10,6 +10,7 @@ type IView interface {
 	AskCommand(Gameplay, Player) (interface{}, error)
 	AskOneCard(Gameplay, Player, desktop.CardStack, func(desktop.Card) bool) (desktop.Card, error)
 	AskOnePlayer(Gameplay, Player, map[string]Player) (Player, error)
+	AskOption(Gameplay, Player, string, []string) (string, error)
 	Alert(msg interface{})
 	Render(gameplayCtx Gameplay)
 }
@@ -99,7 +100,7 @@ func GetCharacterCard(gameplayCtx Gameplay, player Player) (desktop.Card, error)
 	return cs[0], nil
 }
 
-func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom) CharacterCardCom) (Gameplay, error) {
+func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom) (CharacterCardCom, error)) (Gameplay, error) {
 	gameplayCtx := origin
 	characterCard, err := GetCharacterCard(gameplayCtx, player)
 	if err != nil {
@@ -109,7 +110,10 @@ func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom)
 	if isExist == false {
 		characterCom = InitCharacterCardCom(characterCard)
 	}
-	characterCom = f(characterCom)
+	characterCom, err = f(characterCom)
+	if err != nil {
+		return origin, err
+	}
 	gameplayCtx.CharacterCardCom = AssocStringCharacterCardCom(gameplayCtx.CharacterCardCom, characterCard.ID, characterCom)
 	return gameplayCtx, nil
 }
@@ -141,7 +145,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 	home := desktop.CardStack{}
 
 	// 殺
-	for i := 0; i < 50; i++ {
+	for i := 0; i < 5; i++ {
 		card := desktop.Card{
 			ID: fmt.Sprintf("CardTypeAttack_%v", i),
 			CardPrototypeID: desktop.CardPrototypeID{
@@ -152,7 +156,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 		home = append(home, card)
 	}
 
-	for i := 0; i < 30; i++ {
+	for i := 0; i < 5; i++ {
 		card := desktop.Card{
 			ID: fmt.Sprintf("CardTypeDodge_%v", i),
 			CardPrototypeID: desktop.CardPrototypeID{
@@ -163,7 +167,7 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 		home = append(home, card)
 	}
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		card := desktop.Card{
 			ID: fmt.Sprintf("CardTypeStealMoney_%v", i),
 			CardPrototypeID: desktop.CardPrototypeID{
@@ -223,6 +227,39 @@ func PrepareGameplay(origin Gameplay) (Gameplay, error) {
 			ID: fmt.Sprintf("CardTypeBarrier_%v", i),
 			CardPrototypeID: desktop.CardPrototypeID{
 				CardType: CardTypeBarrier,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeArm%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeArm,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeArmor%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeArmor,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeAccessory%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeAccessory,
 			},
 			Face: desktop.FaceDown,
 		}

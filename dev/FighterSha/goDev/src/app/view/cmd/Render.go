@@ -16,6 +16,14 @@ func (v CmdView) Render(gameplayCtx gameplay.Gameplay) {
 		fmt.Printf("%+v: %d\n", key, len(cs))
 	}
 
+	fmt.Println("== Players ==")
+	for key, player := range gameplayCtx.Players {
+		gameplay.UpdateCharacterCom(gameplayCtx, player, func(com gameplay.CharacterCardCom) (gameplay.CharacterCardCom, error) {
+			fmt.Printf("%+v: %+v\n", key, com)
+			return com, nil
+		})
+	}
+
 	fmt.Println("== Hand ==")
 	hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(activePlayer)]
 	for idx, card := range hand {

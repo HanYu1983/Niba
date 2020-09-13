@@ -22,7 +22,7 @@ func (view CmdView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.
 		for i, otherPlayer := range otherPlayers {
 			fmt.Printf("%v) %+v\n", i, otherPlayer)
 		}
-		fmt.Println("AskOnePlayer->")
+		fmt.Print("AskOnePlayer->")
 		scanner.Scan()
 		idxStr := scanner.Text()
 		if idxStr == "exit" {
@@ -31,6 +31,10 @@ func (view CmdView) AskOnePlayer(gameplayCtx gameplay.Gameplay, player gameplay.
 		idx, err := strconv.Atoi(idxStr)
 		if err != nil {
 			fmt.Println("Please enter integer")
+			continue
+		}
+		if idx >= len(otherPlayers) {
+			fmt.Println("Please enter valid integer")
 			continue
 		}
 		return otherPlayers[idx], nil

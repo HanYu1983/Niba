@@ -36,6 +36,22 @@ func (v CmdView) AskCommand(gameplayCtx gameplay.Gameplay, player gameplay.Playe
 				}
 				return view.CmdUseCard{Card: card}, nil
 			}
+		case "buyItem":
+			var cancel string
+			answer, err := v.AskOption(gameplayCtx, player, "買什麼藥?", []string{
+				view.ItemIDPower,
+				view.ItemIDPotion,
+				view.ItemIDDodge,
+				view.ItemIDInt,
+			})
+			if err != nil {
+				fmt.Println(err.Error())
+				continue
+			}
+			if answer == cancel {
+				continue
+			}
+			return view.CmdBuyItem{ItemID: answer}, nil
 		case "endTurn":
 			return view.CmdEndTurn{}, nil
 		case "exit":

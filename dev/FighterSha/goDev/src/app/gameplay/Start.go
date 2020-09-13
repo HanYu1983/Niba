@@ -95,6 +95,7 @@ func HasAbilityAttackHealing(gameplayCtx Gameplay, player Player) bool {
 func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 	var err error
 	var playerNotFound Player
+	moneyNotEnough := fmt.Errorf("Money not enougth")
 	gameplayCtx := origin
 Turn:
 	for {
@@ -108,9 +109,9 @@ Turn:
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
 
 		if HasAbilityHealing(gameplayCtx, activePlayer) {
-			gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(com CharacterCardCom) CharacterCardCom {
+			gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(com CharacterCardCom) (CharacterCardCom, error) {
 				com.Life++
-				return com
+				return com, nil
 			})
 			if err != nil {
 				return origin, err
@@ -136,7 +137,7 @@ Turn:
 
 	Menu:
 		for {
-			time.Sleep(1 * time.Second)
+			// time.Sleep(1 * time.Second)
 
 			// 等玩家指令
 			cmd, err := ctx.AskCommand(gameplayCtx, activePlayer)
@@ -151,33 +152,115 @@ Turn:
 				continue
 			}
 			switch cmdDetail := cmd.(type) {
+			case view.CmdBuyItem:
+				switch cmdDetail.ItemID {
+				case view.ItemIDPower:
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
+					if err != nil {
+						return origin, err
+					}
+					if target == playerNotFound {
+						ctx.Alert("user cancel action")
+						break
+					}
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err == moneyNotEnough {
+						ctx.Alert(err.Error())
+						break
+					}
+					if err != nil {
+						return origin, err
+					}
+					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
+					if err != nil {
+						ctx.Alert(err)
+						break
+					}
+				case view.ItemIDPotion:
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err == moneyNotEnough {
+						ctx.Alert(err.Error())
+						break
+					}
+					if err != nil {
+						return origin, err
+					}
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						characterCom.Life++
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
+					}
+				case view.ItemIDInt:
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err == moneyNotEnough {
+						ctx.Alert(err.Error())
+						break
+					}
+					if err != nil {
+						return origin, err
+					}
+					gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 1)
+					if err != nil {
+						return origin, err
+					}
+				default:
+					return origin, fmt.Errorf("can not handle item here: %+v", cmdDetail)
+				}
 			case view.CmdUseCard:
 				// 使用一張卡
 				card := cmdDetail.Card
-				// 如果是戰士, 有裝備武器
 				if HasAbilityAttackWithAnyCard(gameplayCtx, activePlayer) {
 					switch card.CardPrototypeID.CardType {
 					case CardTypeAttack:
 					default:
-						// 沒有使用殺, 是否要當成殺
-						if false {
+						var answer string
+						if answer, err = ctx.AskOption(gameplayCtx, activePlayer, "沒有使用殺, 是否要當成殺", []string{"Yes", "No"}); answer == "Yes" {
 							// 殺
 							target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 							if err != nil {
-								ctx.Alert(err)
-								break
+								return origin, err
 							}
 							if target == playerNotFound {
 								ctx.Alert("user cancel action")
 								break
 							}
-							gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target, card)
+							gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+								card.Face = desktop.FaceUp
+								return card
+							}, card)
+							if err != nil {
+								return origin, err
+							}
+							gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
 							if err != nil {
 								ctx.Alert(err)
-								break
+								break Menu
 							}
+							continue
 						}
-						continue
+						if err != nil {
+							return origin, err
+						}
 					}
 				}
 				switch card.CardPrototypeID.CardType {
@@ -185,14 +268,22 @@ Turn:
 					// 殺
 					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 					if err != nil {
-						ctx.Alert(err)
-						break
+						return origin, err
 					}
 					if target == playerNotFound {
 						ctx.Alert("user cancel action")
 						break
 					}
-					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target, card)
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
 					if err != nil {
 						ctx.Alert(err)
 						break
@@ -202,14 +293,22 @@ Turn:
 					// 盜
 					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 					if err != nil {
-						ctx.Alert(err)
-						break
+						return origin, err
 					}
 					if target == playerNotFound {
 						ctx.Alert("user cancel action")
 						break
 					}
-					gameplayCtx, err = Steal(ctx, gameplayCtx, activePlayer, target, card)
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = Steal(ctx, gameplayCtx, activePlayer, target)
 					if err != nil {
 						ctx.Alert(err)
 						break
@@ -218,14 +317,22 @@ Turn:
 					// 劫
 					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, gameplayCtx.Players)
 					if err != nil {
-						ctx.Alert(err)
-						break
+						return origin, err
 					}
 					if target == playerNotFound {
 						ctx.Alert("user cancel action")
 						break
 					}
-					gameplayCtx, err = StealMoney(ctx, gameplayCtx, activePlayer, target, card)
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = StealMoney(ctx, gameplayCtx, activePlayer, target)
 					if err != nil {
 						ctx.Alert(err)
 						break
@@ -246,9 +353,9 @@ Turn:
 						return origin, err
 					}
 
-					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
 						characterCom.Money += 2
-						return characterCom
+						return characterCom, nil
 					})
 					if err != nil {
 						return origin, err
@@ -281,9 +388,9 @@ Turn:
 						return origin, err
 					}
 
-					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
 						characterCom.Money++
-						return characterCom
+						return characterCom, nil
 					})
 					if err != nil {
 						return origin, err
