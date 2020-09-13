@@ -1,11 +1,14 @@
 package main
 
 import (
-	"app/view/cmd"
+	"app/view/html"
+	"fmt"
 )
 
 func init() {
-	cmd.StartApp()
+	fmt.Println("App Start")
+	//cmd.StartApp()
+	html.StartApp()
 }
 
 func main() {

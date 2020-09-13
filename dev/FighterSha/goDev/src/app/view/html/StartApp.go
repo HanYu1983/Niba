@@ -10,7 +10,7 @@ import (
 // StartApp is
 func StartApp() {
 	view := HTMLView{}
-	gameplayCtx := gameplay.DefaultGamePlay
+	gameplayCtx := gameplay.Gameplay{}
 
 	js.Global.Set("Model", map[string]interface{}{
 		"StartGameplay": func() {

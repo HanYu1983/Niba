@@ -68,11 +68,11 @@ type CharacterCardCom struct {
 }
 
 type Gameplay struct {
-	Desktop          desktop.Desktop
-	Players          map[string]Player
-	ActivePlayerID   string
-	PlayerBasicComs  map[string]PlayerBasicCom
-	CharacterCardCom map[string]CharacterCardCom
+	Desktop           desktop.Desktop
+	Players           map[string]Player
+	ActivePlayerID    string
+	PlayerBasicComs   map[string]PlayerBasicCom
+	CharacterCardComs map[string]CharacterCardCom
 }
 
 const (
@@ -106,7 +106,7 @@ func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom)
 	if err != nil {
 		return origin, err
 	}
-	characterCom, isExist := gameplayCtx.CharacterCardCom[characterCard.ID]
+	characterCom, isExist := gameplayCtx.CharacterCardComs[characterCard.ID]
 	if isExist == false {
 		characterCom = InitCharacterCardCom(characterCard)
 	}
@@ -114,7 +114,7 @@ func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom)
 	if err != nil {
 		return origin, err
 	}
-	gameplayCtx.CharacterCardCom = AssocStringCharacterCardCom(gameplayCtx.CharacterCardCom, characterCard.ID, characterCom)
+	gameplayCtx.CharacterCardComs = AssocStringCharacterCardCom(gameplayCtx.CharacterCardComs, characterCard.ID, characterCom)
 	return gameplayCtx, nil
 }
 

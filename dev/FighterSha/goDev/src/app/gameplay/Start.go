@@ -137,7 +137,7 @@ Turn:
 
 	Menu:
 		for {
-			// time.Sleep(1 * time.Second)
+			time.Sleep(1 * time.Second)
 
 			// 等玩家指令
 			cmd, err := ctx.AskCommand(gameplayCtx, activePlayer)
