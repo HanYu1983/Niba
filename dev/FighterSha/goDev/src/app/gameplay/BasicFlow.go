@@ -11,20 +11,15 @@ type GameplayReducer func(Gameplay) (Gameplay, error)
 // BasicFlow is
 func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card desktop.Card, onHit GameplayReducer) (Gameplay, error) {
 	gameplayCtx := origin
-	// move attack card to gravyard
-	gravyard := gameplayCtx.Desktop.CardStacks[CardStackGravyard]
-	hand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(player)]
-	hand, err := desktop.RemoveCard(hand, card)
+
+	gameplayCtx, card, err := MoveCard(ctx, gameplayCtx, CardStackIDHand(player), CardStackGravyard, func(card desktop.Card) desktop.Card {
+		card.Face = desktop.FaceUp
+		return card
+	}, card)
+
 	if err != nil {
 		return origin, err
 	}
-	// face up
-	card.Face = desktop.FaceUp
-	gravyard = append(gravyard, card)
-	gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
-		CardStackGravyard:       gravyard,
-		CardStackIDHand(player): hand,
-	})
 
 	ctx.Alert(fmt.Sprintf("Ask Player For Dodge: %+v", target))
 	// ask target player for dodge
@@ -47,18 +42,14 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, card de
 		}
 	} else {
 		ctx.Alert(fmt.Sprintf("Player Dodged: %+v", target))
-		// move dodge card to gravyard
-		targetHand, err := desktop.RemoveCard(targetHand, dodgeCard)
+		gameplayCtx, dodgeCard, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(target), CardStackGravyard, func(card desktop.Card) desktop.Card {
+			card.Face = desktop.FaceUp
+			return card
+		}, dodgeCard)
+
 		if err != nil {
 			return origin, err
 		}
-		// face up
-		dodgeCard.Face = desktop.FaceUp
-		gravyard = append(gravyard, dodgeCard)
-		gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
-			CardStackGravyard:       gravyard,
-			CardStackIDHand(target): targetHand,
-		})
 	}
 	return gameplayCtx, nil
 }

@@ -23,7 +23,7 @@ func StartApp() {
 	fmt.Println("FighterSha Start")
 	scanner := bufio.NewScanner(os.Stdin)
 
-	gameplayCtx := gameplay.DefaultGamePlay
+	gameplayCtx := gameplay.Gameplay{}
 	var err error
 WaitCmd:
 	for {
@@ -35,6 +35,10 @@ WaitCmd:
 
 		switch text {
 		case "startGameplay":
+			gameplayCtx, err = gameplay.PrepareGameplay(gameplayCtx)
+			if err != nil {
+				panic(err)
+			}
 			gameplayCtx, err = gameplay.Start(gameplay.IView(view), gameplayCtx)
 			if err != nil {
 				panic(err)

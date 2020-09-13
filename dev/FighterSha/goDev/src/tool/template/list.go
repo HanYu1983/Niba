@@ -2,7 +2,20 @@ package template
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
 )
+
+// ShuffleItem is
+func ShuffleItem(arr []Item) {
+	t := time.Now()
+	rand.Seed(int64(t.Nanosecond()))
+
+	for i := len(arr) - 1; i > 0; i-- {
+		j := rand.Intn(i)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
 
 // FilterItem is
 func FilterItem(s1 []Item, f func(Item) bool) []Item {

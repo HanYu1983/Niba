@@ -13,43 +13,83 @@ func End(ctx IView, gameplayCtx Gameplay) (Gameplay, error) {
 	return gameplayCtx, nil
 }
 
-// 任何卡都能當殺的能力
+// HasAbilityAttackWithAnyCard 任何卡都能當殺的能力
 func HasAbilityAttackWithAnyCard(gameplayCtx Gameplay, player Player) bool {
 	// 如果是戰士, 有裝備武器
-	if false && HasEquip(gameplayCtx, player, CardTypeArm) {
-		return true
+	card, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
 	}
-	return false
+	if card.CardPrototypeID.ID != CharacterIDWarrior {
+		return false
+	}
+	if HasEquip(gameplayCtx, player, CardTypeArm) == false {
+		return false
+	}
+	return true
 }
 
 func HasAbilityHealing(gameplayCtx Gameplay, player Player) bool {
 	// 如果是戰士, 有裝備防具
-	if false && HasEquip(gameplayCtx, player, CardTypeArmor) {
-		return true
+	card, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
 	}
-	return false
+	if card.CardPrototypeID.ID != CharacterIDWarrior {
+		return false
+	}
+	if HasEquip(gameplayCtx, player, CardTypeArmor) == false {
+		return false
+	}
+	return true
 }
 
 func HasAbilityBreakArmor(gameplayCtx Gameplay, player Player) bool {
 	// 如果是戰士, 有裝備配件
-	if false && HasEquip(gameplayCtx, player, CardTypeAccessory) {
-		return true
+	card, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
 	}
-	return false
+	if card.CardPrototypeID.ID != CharacterIDWarrior {
+		return false
+	}
+	if HasEquip(gameplayCtx, player, CardTypeAccessory) == false {
+		return false
+	}
+	return true
 }
 
 func HasAbilityEvadeWithAnyCard(gameplayCtx Gameplay, player Player) bool {
-	if false && HasEquip(gameplayCtx, player, CardTypeArmor) {
-		return true
+	card, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
 	}
-	return false
+	if card.CardPrototypeID.ID != CharacterIDThief {
+		return false
+	}
+	if HasEquip(gameplayCtx, player, CardTypeArmor) == false {
+		return false
+	}
+	return true
 }
 
 func HasAbilityAttackHealing(gameplayCtx Gameplay, player Player) bool {
-	if false && HasEquip(gameplayCtx, player, CardTypeAccessory) {
-		return true
+	card, err := GetCharacterCard(gameplayCtx, player)
+	if err != nil {
+		fmt.Println(err.Error())
+		return false
 	}
-	return false
+	if card.CardPrototypeID.ID != CharacterIDThief {
+		return false
+	}
+	if HasEquip(gameplayCtx, player, CardTypeAccessory) == false {
+		return false
+	}
+	return true
 }
 
 func Start(ctx IView, origin Gameplay) (Gameplay, error) {
@@ -59,7 +99,10 @@ func Start(ctx IView, origin Gameplay) (Gameplay, error) {
 Turn:
 	for {
 		time.Sleep(1 * time.Second)
-		activePlayer := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
+		activePlayer, isActivePlayerExist := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
+		if isActivePlayerExist == false {
+			return origin, fmt.Errorf("Active Player not found, gameplay init error")
+		}
 
 		// 清空狀態
 		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, PlayerBasicCom{})
@@ -195,6 +238,14 @@ Turn:
 						break
 					}
 				case CardTypeJob:
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
 					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
 						characterCom.Money += 2
 						return characterCom
@@ -203,6 +254,14 @@ Turn:
 						return origin, err
 					}
 				case CardTypeMake:
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
 					gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
 					if err != nil {
 						return origin, err
@@ -214,16 +273,13 @@ Turn:
 				card := cmdDetail.Card
 				switch card.CardPrototypeID.CardType {
 				case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
-					nextHand, err := desktop.RemoveCard(gameplayCtx.Desktop.CardStacks[CardStackIDHand(activePlayer)], card)
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
 					if err != nil {
 						return origin, err
 					}
-					card.Face = desktop.FaceUp
-					nextGravyard := append(gameplayCtx.Desktop.CardStacks[CardStackGravyard], card)
-					gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
-						CardStackIDHand(activePlayer): nextHand,
-						CardStackGravyard:             nextGravyard,
-					})
 
 					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) CharacterCardCom {
 						characterCom.Money++

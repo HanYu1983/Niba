@@ -4,7 +4,22 @@
 
 package desktop
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// ShuffleCard is
+func ShuffleCard(arr []Card) {
+	t := time.Now()
+	rand.Seed(int64(t.Nanosecond()))
+
+	for i := len(arr) - 1; i > 0; i-- {
+		j := rand.Intn(i)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
 
 // FilterCard is
 func FilterCard(s1 []Card, f func(Card) bool) []Card {

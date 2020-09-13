@@ -4,7 +4,22 @@
 
 package gameplay
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+// ShufflePlayer is
+func ShufflePlayer(arr []Player) {
+	t := time.Now()
+	rand.Seed(int64(t.Nanosecond()))
+
+	for i := len(arr) - 1; i > 0; i-- {
+		j := rand.Intn(i)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+}
 
 // FilterPlayer is
 func FilterPlayer(s1 []Player, f func(Player) bool) []Player {

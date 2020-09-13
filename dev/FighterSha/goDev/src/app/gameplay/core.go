@@ -54,6 +54,13 @@ type PlayerBasicCom struct {
 	StealMoneyTimes int
 }
 
+const (
+	CharacterIDWarrior      = "戰士"
+	CharacterIDThief        = "小偷"
+	CharacterNameMage       = "法師"
+	CharacterNameBlacksmith = "鐵匠"
+)
+
 type CharacterCardCom struct {
 	Life  int
 	Money int
@@ -98,8 +105,161 @@ func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom)
 	if err != nil {
 		return origin, err
 	}
-	characterCom := f(gameplayCtx.CharacterCardCom[characterCard.ID])
+	characterCom, isExist := gameplayCtx.CharacterCardCom[characterCard.ID]
+	if isExist == false {
+		characterCom = InitCharacterCardCom(characterCard)
+	}
+	characterCom = f(characterCom)
 	gameplayCtx.CharacterCardCom = AssocStringCharacterCardCom(gameplayCtx.CharacterCardCom, characterCard.ID, characterCom)
+	return gameplayCtx, nil
+}
+
+func InitCharacterCardCom(card desktop.Card) CharacterCardCom {
+	return CharacterCardCom{Life: 3, Money: 3}
+}
+
+func MoveCard(ctx IView, origin Gameplay, from string, to string, mapCard func(desktop.Card) desktop.Card, card desktop.Card) (Gameplay, desktop.Card, error) {
+	gameplayCtx := origin
+	toCS := gameplayCtx.Desktop.CardStacks[to]
+	fromCS := gameplayCtx.Desktop.CardStacks[from]
+	fromCS, err := desktop.RemoveCard(fromCS, card)
+	if err != nil {
+		return origin, card, err
+	}
+	card = mapCard(card)
+	toCS = append(toCS, card)
+	gameplayCtx.Desktop.CardStacks = desktop.MergeStringCardStack(gameplayCtx.Desktop.CardStacks, map[string]desktop.CardStack{
+		to:   toCS,
+		from: fromCS,
+	})
+	return gameplayCtx, card, nil
+}
+
+func PrepareGameplay(origin Gameplay) (Gameplay, error) {
+	gameplayCtx := origin
+
+	home := desktop.CardStack{}
+
+	// 殺
+	for i := 0; i < 50; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeAttack_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeAttack,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 30; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeDodge_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeDodge,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 10; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeStealMoney_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeStealMoney,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeSteal_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeSteal,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeJob_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeJob,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeMake_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeMake,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeGrind_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeGrind,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	for i := 0; i < 5; i++ {
+		card := desktop.Card{
+			ID: fmt.Sprintf("CardTypeBarrier_%v", i),
+			CardPrototypeID: desktop.CardPrototypeID{
+				CardType: CardTypeBarrier,
+			},
+			Face: desktop.FaceDown,
+		}
+		home = append(home, card)
+	}
+
+	desktop.ShuffleCard(home)
+	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackHome, home)
+
+	playerA := Player{"A", "player", 0}
+	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerA.ID, playerA)
+
+	characterA := desktop.Card{
+		ID: "characterA",
+		CardPrototypeID: desktop.CardPrototypeID{
+			ID:       CharacterIDWarrior,
+			CardType: CardTypeCharacter,
+		},
+		Face:   desktop.FaceDown,
+		Player: playerA.ID,
+	}
+	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter(playerA), desktop.CardStack{characterA})
+
+	playerB := Player{"B", "ai", 0}
+	gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerB.ID, playerB)
+
+	characterB := desktop.Card{
+		ID: "characterB",
+		CardPrototypeID: desktop.CardPrototypeID{
+			ID:       CharacterIDThief,
+			CardType: CardTypeCharacter,
+		},
+		Face: desktop.FaceDown,
+	}
+	gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter(playerB), desktop.CardStack{characterB})
+
+	gameplayCtx.ActivePlayerID = playerA.ID
 	return gameplayCtx, nil
 }
 
@@ -155,19 +315,11 @@ var (
 						Player: PlayerA.ID,
 					},
 				},
-				CardStackGravyard:        desktop.CardStack{},
-				CardStackIDHand(PlayerA): desktop.CardStack{},
-				CardStackIDCharacter(PlayerA): desktop.CardStack{
-					desktop.Card{
-						ID: "character1",
-						CardPrototypeID: desktop.CardPrototypeID{
-							CardType: CardTypeCharacter,
-						},
-						Face:   desktop.FaceUp,
-						Player: PlayerA.ID,
-					},
-				},
-				CardStackIDHand(PlayerB): desktop.CardStack{},
+				CardStackGravyard:             desktop.CardStack{},
+				CardStackIDHand(PlayerA):      desktop.CardStack{},
+				CardStackIDCharacter(PlayerA): desktop.CardStack{},
+				CardStackIDHand(PlayerB):      desktop.CardStack{},
+				CardStackIDCharacter(PlayerB): desktop.CardStack{},
 			},
 		},
 		map[string]Player{
