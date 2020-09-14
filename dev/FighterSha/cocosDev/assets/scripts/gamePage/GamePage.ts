@@ -10,6 +10,7 @@ import PlayerDetail from "./PlayerDetail";
 import StateController from "../lib/StateController";
 import StatePlayCard from "./StatePlayCard";
 import BasicStateViewer from "../BasicStateViewer";
+import { Gameplay } from "../han/gameplay.types";
 
 const {ccclass, property} = cc._decorator;
 
@@ -26,12 +27,15 @@ export default class GamePage extends BasicStateViewer {
     }
 
     sync(data: any) {
-        const hand:any[] = data["card-stacks"]["0-hand"];
-        const gravyard:any[] = data["card-stacks"].gravyard;
-        const home:any[] = data["card-stacks"].home;
-        const players:any = data.players;
+        const gp:Gameplay = data as Gameplay;
+        cc.log(gp);
+        
+        // const hand:any[] = data["card-stacks"]["0-hand"];
+        // const gravyard:any[] = data["card-stacks"].gravyard;
+        // const home:any[] = data["card-stacks"].home;
+        // const players:any = data.players;
 
-        this.playerDetail.cards.createCards(hand);
+        // this.playerDetail.cards.createCards(hand);
 
         // cc.log(hand);
         // cc.log(gravyard);
