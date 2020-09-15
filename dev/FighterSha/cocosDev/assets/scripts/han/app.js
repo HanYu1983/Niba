@@ -21194,7 +21194,7 @@ $packages["app/view"] = (function() {
 	return $pkg;
 })();
 $packages["app/gameplay"] = (function() {
-	var $pkg = {}, $init, view, fmt, rand, sort, time, desktop, SortByPlayerOrder, Player, PlayerBasicCom, CharacterCardCom, Gameplay, sliceType, sliceType$1, sliceType$2, sliceType$3, mapType, mapType$1, mapType$2, Attack, BasicFlow, DrawCard, HasEquip, Equip, NextPlayer, End, HasAbilityAttackWithAnyCard, HasAbilityHealing, HasAbilityBreakArmor, HasAbilityEvadeWithAnyCard, HasAbilityAttackHealing, Start, Steal, StealMoney, AssocStringCharacterCardCom, MergeStringPlayerBasicCom, AssocStringPlayerBasicCom, ValsStringPlayer, AssocStringPlayer, CardStackIDHand, CardStackIDCharacter, CardStackIDEquip, GetCharacterCard, UpdateCharacterCom, InitCharacterCardCom, MoveCard, PrepareGameplay;
+	var $pkg = {}, $init, view, fmt, rand, sort, time, desktop, SortByPlayerOrder, Player, PlayerBasicCom, CharacterCardCom, EndState, Gameplay, sliceType, sliceType$1, sliceType$2, sliceType$3, mapType, mapType$1, mapType$2, Attack, BasicFlow, DrawCard, End, HasEquip, Equip, NextPlayer, FilterPlayer, PlayerTurn, Start, Steal, StealMoney, AssocStringCharacterCardCom, MergeStringPlayerBasicCom, AssocStringPlayerBasicCom, ValsStringPlayer, AssocStringPlayer, CardStackIDHand, CardStackIDCharacter, CardStackIDEquip, GetCharacterCard, GetCharacterCardCom, UpdateCharacterCom, HasAbilityAttackWithAnyCard, HasAbilityHealing, HasAbilityBreakArmor, HasAbilityEvadeWithAnyCard, HasAbilityAttackHealing, InitCharacterCardCom, MoveCard, PrepareGameplay;
 	view = $packages["app/view"];
 	fmt = $packages["fmt"];
 	rand = $packages["math/rand"];
@@ -21236,7 +21236,17 @@ $packages["app/gameplay"] = (function() {
 		this.Life = Life_;
 		this.Money = Money_;
 	});
-	Gameplay = $pkg.Gameplay = $newType(0, $kindStruct, "gameplay.Gameplay", true, "app/gameplay", true, function(Desktop_, Players_, ActivePlayerID_, PlayerBasicComs_, CharacterCardComs_) {
+	EndState = $pkg.EndState = $newType(0, $kindStruct, "gameplay.EndState", true, "app/gameplay", true, function(Completed_, Reason_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Completed = false;
+			this.Reason = "";
+			return;
+		}
+		this.Completed = Completed_;
+		this.Reason = Reason_;
+	});
+	Gameplay = $pkg.Gameplay = $newType(0, $kindStruct, "gameplay.Gameplay", true, "app/gameplay", true, function(Desktop_, Players_, ActivePlayerID_, PlayerBasicComs_, CharacterCardComs_, EndState_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Desktop = new desktop.Desktop.ptr(false);
@@ -21244,6 +21254,7 @@ $packages["app/gameplay"] = (function() {
 			this.ActivePlayerID = "";
 			this.PlayerBasicComs = false;
 			this.CharacterCardComs = false;
+			this.EndState = new EndState.ptr(false, "");
 			return;
 		}
 		this.Desktop = Desktop_;
@@ -21251,6 +21262,7 @@ $packages["app/gameplay"] = (function() {
 		this.ActivePlayerID = ActivePlayerID_;
 		this.PlayerBasicComs = PlayerBasicComs_;
 		this.CharacterCardComs = CharacterCardComs_;
+		this.EndState = EndState_;
 	});
 	sliceType = $sliceType($emptyInterface);
 	sliceType$1 = $sliceType($String);
@@ -21325,8 +21337,8 @@ $packages["app/gameplay"] = (function() {
 	};
 	$pkg.Attack = Attack;
 	BasicFlow = function(ctx, origin, player, target, onHit) {
-		var NotFound, _entry, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, answer, ctx, dodgeCard, err, gameplayCtx, moneyNotEnougth, onHit, origin, player, target, targetHand, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; NotFound = $f.NotFound; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; answer = $f.answer; ctx = $f.ctx; dodgeCard = $f.dodgeCard; err = $f.err; gameplayCtx = $f.gameplayCtx; moneyNotEnougth = $f.moneyNotEnougth; onHit = $f.onHit; origin = $f.origin; player = $f.player; target = $f.target; targetHand = $f.targetHand; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var NotFound, _entry, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, answer, ctx, dodgeCard, err, gameplayCtx, moneyNotEnougth, onHit, origin, player, target, targetCharacter, targetHand, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; NotFound = $f.NotFound; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; answer = $f.answer; ctx = $f.ctx; dodgeCard = $f.dodgeCard; err = $f.err; gameplayCtx = $f.gameplayCtx; moneyNotEnougth = $f.moneyNotEnougth; onHit = $f.onHit; origin = $f.origin; player = $f.player; target = $f.target; targetCharacter = $f.targetCharacter; targetHand = $f.targetHand; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		gameplayCtx = [gameplayCtx];
 		moneyNotEnougth = [moneyNotEnougth];
 		player = [player];
@@ -21419,8 +21431,19 @@ $packages["app/gameplay"] = (function() {
 			_r$10 = fmt.Sprintf("Player Dodged: %+v", new sliceType([new target.constructor.elem(target)])); /* */ $s = 24; case 24: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 			$r = ctx.Alert(new $String(_r$10)); /* */ $s = 25; case 25: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* } */ case 6:
+		_r$11 = GetCharacterCardCom($clone(gameplayCtx[0], Gameplay), $clone(target, Player)); /* */ $s = 26; case 26: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+		_tuple$5 = _r$11;
+		targetCharacter = $clone(_tuple$5[0], CharacterCardCom);
+		err = _tuple$5[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		if (targetCharacter.Life === 0) {
+			gameplayCtx[0].EndState.Completed = true;
+			gameplayCtx[0].EndState.Reason = "\xE7\x8E\xA9\xE5\xAE\xB6\xE8\xA2\xAB\xE6\x94\xBB\xE6\x93\x8A\xE8\x80\x8C\xE6\xAD\xBB";
+		}
 		$s = -1; return [gameplayCtx[0], $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: BasicFlow }; } $f.NotFound = NotFound; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.answer = answer; $f.ctx = ctx; $f.dodgeCard = dodgeCard; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.moneyNotEnougth = moneyNotEnougth; $f.onHit = onHit; $f.origin = origin; $f.player = player; $f.target = target; $f.targetHand = targetHand; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: BasicFlow }; } $f.NotFound = NotFound; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.answer = answer; $f.ctx = ctx; $f.dodgeCard = dodgeCard; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.moneyNotEnougth = moneyNotEnougth; $f.onHit = onHit; $f.origin = origin; $f.player = player; $f.target = target; $f.targetCharacter = targetCharacter; $f.targetHand = targetHand; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.BasicFlow = BasicFlow;
 	DrawCard = function(ctx, gameplayCtx, player, cnt) {
@@ -21448,6 +21471,15 @@ $packages["app/gameplay"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: DrawCard }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.cards = cards; $f.cnt = cnt; $f.ctx = ctx; $f.gameplayCtx = gameplayCtx; $f.idx = idx; $f.nextHand = nextHand; $f.nextHomeCS = nextHomeCS; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.DrawCard = DrawCard;
+	End = function(ctx, gameplayCtx) {
+		var ctx, gameplayCtx, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ctx = $f.ctx; gameplayCtx = $f.gameplayCtx; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = ctx.Alert(new $String("Game End")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ctx.Alert(new $String(gameplayCtx.EndState.Reason)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [gameplayCtx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: End }; } $f.ctx = ctx; $f.gameplayCtx = gameplayCtx; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.End = End;
 	HasEquip = function(gameplayCtx, player, equipType) {
 		var _entry, _r, equipType, gameplayCtx, player, x, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; equipType = $f.equipType; gameplayCtx = $f.gameplayCtx; player = $f.player; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -21554,670 +21586,591 @@ $packages["app/gameplay"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: NextPlayer }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.ctx = ctx; $f.curr = curr; $f.find = find; $f.gameplayCtx = gameplayCtx; $f.idx = idx; $f.origin = origin; $f.player = player; $f.players = players; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NextPlayer = NextPlayer;
-	End = function(ctx, gameplayCtx) {
-		var ctx, gameplayCtx, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ctx = $f.ctx; gameplayCtx = $f.gameplayCtx; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = ctx.Alert(new $String("Game End")); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = ctx.Render($clone(gameplayCtx, Gameplay)); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [gameplayCtx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: End }; } $f.ctx = ctx; $f.gameplayCtx = gameplayCtx; $f.$s = $s; $f.$r = $r; return $f;
+	FilterPlayer = function(s1, f) {
+		var _i, _r, _ref, f, ret, s1, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; f = $f.f; ret = $f.ret; s1 = $f.s1; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ret = new sliceType$3([]);
+		_ref = s1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			v = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), Player);
+			_r = f($clone(v, Player)); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (_r) { */ case 3:
+				ret = $append(ret, v);
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return ret;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: FilterPlayer }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.f = f; $f.ret = ret; $f.s1 = s1; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.End = End;
-	HasAbilityAttackWithAnyCard = function(gameplayCtx, player) {
-		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		card = $clone(_tuple[0], desktop.Card);
-		err = _tuple[1];
-		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$s = -1; return false;
-		/* } */ case 3:
-		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
-			$s = -1; return false;
-		}
-		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArm, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (_r$3 === false) { */ case 6:
-			$s = -1; return false;
-		/* } */ case 7:
-		$s = -1; return true;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityAttackWithAnyCard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.HasAbilityAttackWithAnyCard = HasAbilityAttackWithAnyCard;
-	HasAbilityHealing = function(gameplayCtx, player) {
-		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		card = $clone(_tuple[0], desktop.Card);
-		err = _tuple[1];
-		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$s = -1; return false;
-		/* } */ case 3:
-		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
-			$s = -1; return false;
-		}
-		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArmor, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (_r$3 === false) { */ case 6:
-			$s = -1; return false;
-		/* } */ case 7:
-		$s = -1; return true;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityHealing }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.HasAbilityHealing = HasAbilityHealing;
-	HasAbilityBreakArmor = function(gameplayCtx, player) {
-		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		card = $clone(_tuple[0], desktop.Card);
-		err = _tuple[1];
-		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$s = -1; return false;
-		/* } */ case 3:
-		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
-			$s = -1; return false;
-		}
-		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeAccessory, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (_r$3 === false) { */ case 6:
-			$s = -1; return false;
-		/* } */ case 7:
-		$s = -1; return true;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityBreakArmor }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.HasAbilityBreakArmor = HasAbilityBreakArmor;
-	HasAbilityEvadeWithAnyCard = function(gameplayCtx, player) {
-		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		card = $clone(_tuple[0], desktop.Card);
-		err = _tuple[1];
-		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$s = -1; return false;
-		/* } */ case 3:
-		if (!(card.CardPrototypeID.ID === "\xE5\xB0\x8F\xE5\x81\xB7")) {
-			$s = -1; return false;
-		}
-		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArmor, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (_r$3 === false) { */ case 6:
-			$s = -1; return false;
-		/* } */ case 7:
-		$s = -1; return true;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityEvadeWithAnyCard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.HasAbilityEvadeWithAnyCard = HasAbilityEvadeWithAnyCard;
-	HasAbilityAttackHealing = function(gameplayCtx, player) {
-		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		card = $clone(_tuple[0], desktop.Card);
-		err = _tuple[1];
-		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$s = -1; return false;
-		/* } */ case 3:
-		if (!(card.CardPrototypeID.ID === "\xE5\xB0\x8F\xE5\x81\xB7")) {
-			$s = -1; return false;
-		}
-		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeAccessory, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		/* */ if (_r$3 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (_r$3 === false) { */ case 6:
-			$s = -1; return false;
-		/* } */ case 7:
-		$s = -1; return true;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityAttackHealing }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.HasAbilityAttackHealing = HasAbilityAttackHealing;
-	Start = function(ctx, origin) {
-		var _1, _2, _3, _4, _entry, _entry$1, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$2, _r$20, _r$21, _r$22, _r$23, _r$24, _r$25, _r$26, _r$27, _r$28, _r$29, _r$3, _r$30, _r$31, _r$32, _r$33, _r$34, _r$35, _r$36, _r$37, _r$38, _r$39, _r$4, _r$40, _r$41, _r$42, _r$43, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _tuple, _tuple$1, _tuple$10, _tuple$11, _tuple$12, _tuple$13, _tuple$14, _tuple$15, _tuple$16, _tuple$17, _tuple$18, _tuple$19, _tuple$2, _tuple$20, _tuple$21, _tuple$22, _tuple$23, _tuple$24, _tuple$25, _tuple$26, _tuple$27, _tuple$28, _tuple$29, _tuple$3, _tuple$30, _tuple$31, _tuple$32, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, activePlayer, answer, card, card$1, cmd, cmdDetail, cmdDetail$1, cmdDetail$2, cmdDetail$3, cmdDetail$4, cmdDetail$5, ctx, err, err$1, err$2, err$3, err$4, err$5, err$6, gameplayCtx, isActivePlayerExist, moneyNotEnough, origin, outOfCard, playerNotFound, target, target$1, target$2, target$3, target$4, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$2 = $f._r$2; _r$20 = $f._r$20; _r$21 = $f._r$21; _r$22 = $f._r$22; _r$23 = $f._r$23; _r$24 = $f._r$24; _r$25 = $f._r$25; _r$26 = $f._r$26; _r$27 = $f._r$27; _r$28 = $f._r$28; _r$29 = $f._r$29; _r$3 = $f._r$3; _r$30 = $f._r$30; _r$31 = $f._r$31; _r$32 = $f._r$32; _r$33 = $f._r$33; _r$34 = $f._r$34; _r$35 = $f._r$35; _r$36 = $f._r$36; _r$37 = $f._r$37; _r$38 = $f._r$38; _r$39 = $f._r$39; _r$4 = $f._r$4; _r$40 = $f._r$40; _r$41 = $f._r$41; _r$42 = $f._r$42; _r$43 = $f._r$43; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$12 = $f._tuple$12; _tuple$13 = $f._tuple$13; _tuple$14 = $f._tuple$14; _tuple$15 = $f._tuple$15; _tuple$16 = $f._tuple$16; _tuple$17 = $f._tuple$17; _tuple$18 = $f._tuple$18; _tuple$19 = $f._tuple$19; _tuple$2 = $f._tuple$2; _tuple$20 = $f._tuple$20; _tuple$21 = $f._tuple$21; _tuple$22 = $f._tuple$22; _tuple$23 = $f._tuple$23; _tuple$24 = $f._tuple$24; _tuple$25 = $f._tuple$25; _tuple$26 = $f._tuple$26; _tuple$27 = $f._tuple$27; _tuple$28 = $f._tuple$28; _tuple$29 = $f._tuple$29; _tuple$3 = $f._tuple$3; _tuple$30 = $f._tuple$30; _tuple$31 = $f._tuple$31; _tuple$32 = $f._tuple$32; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; activePlayer = $f.activePlayer; answer = $f.answer; card = $f.card; card$1 = $f.card$1; cmd = $f.cmd; cmdDetail = $f.cmdDetail; cmdDetail$1 = $f.cmdDetail$1; cmdDetail$2 = $f.cmdDetail$2; cmdDetail$3 = $f.cmdDetail$3; cmdDetail$4 = $f.cmdDetail$4; cmdDetail$5 = $f.cmdDetail$5; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; err$4 = $f.err$4; err$5 = $f.err$5; err$6 = $f.err$6; gameplayCtx = $f.gameplayCtx; isActivePlayerExist = $f.isActivePlayerExist; moneyNotEnough = $f.moneyNotEnough; origin = $f.origin; outOfCard = $f.outOfCard; playerNotFound = $f.playerNotFound; target = $f.target; target$1 = $f.target$1; target$2 = $f.target$2; target$3 = $f.target$3; target$4 = $f.target$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	$pkg.FilterPlayer = FilterPlayer;
+	PlayerTurn = function(ctx, origin, activePlayer) {
+		var _1, _2, _3, _4, _entry, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$2, _r$20, _r$21, _r$22, _r$23, _r$24, _r$25, _r$26, _r$27, _r$28, _r$29, _r$3, _r$30, _r$31, _r$32, _r$33, _r$34, _r$35, _r$36, _r$37, _r$38, _r$39, _r$4, _r$40, _r$41, _r$42, _r$43, _r$44, _r$45, _r$46, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _tuple, _tuple$1, _tuple$10, _tuple$11, _tuple$12, _tuple$13, _tuple$14, _tuple$15, _tuple$16, _tuple$17, _tuple$18, _tuple$19, _tuple$2, _tuple$20, _tuple$21, _tuple$22, _tuple$23, _tuple$24, _tuple$25, _tuple$26, _tuple$27, _tuple$28, _tuple$29, _tuple$3, _tuple$30, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, activePlayer, answer, card, card$1, cmd, cmdDetail, cmdDetail$1, cmdDetail$2, cmdDetail$3, cmdDetail$4, cmdDetail$5, ctx, err, err$1, err$2, err$3, err$4, err$5, err$6, gameplayCtx, moneyNotEnough, origin, otherPlayers, otherPlayers$1, otherPlayers$2, otherPlayers$3, otherPlayers$4, outOfCard, playerNotFound, target, target$1, target$2, target$3, target$4, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$2 = $f._r$2; _r$20 = $f._r$20; _r$21 = $f._r$21; _r$22 = $f._r$22; _r$23 = $f._r$23; _r$24 = $f._r$24; _r$25 = $f._r$25; _r$26 = $f._r$26; _r$27 = $f._r$27; _r$28 = $f._r$28; _r$29 = $f._r$29; _r$3 = $f._r$3; _r$30 = $f._r$30; _r$31 = $f._r$31; _r$32 = $f._r$32; _r$33 = $f._r$33; _r$34 = $f._r$34; _r$35 = $f._r$35; _r$36 = $f._r$36; _r$37 = $f._r$37; _r$38 = $f._r$38; _r$39 = $f._r$39; _r$4 = $f._r$4; _r$40 = $f._r$40; _r$41 = $f._r$41; _r$42 = $f._r$42; _r$43 = $f._r$43; _r$44 = $f._r$44; _r$45 = $f._r$45; _r$46 = $f._r$46; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$12 = $f._tuple$12; _tuple$13 = $f._tuple$13; _tuple$14 = $f._tuple$14; _tuple$15 = $f._tuple$15; _tuple$16 = $f._tuple$16; _tuple$17 = $f._tuple$17; _tuple$18 = $f._tuple$18; _tuple$19 = $f._tuple$19; _tuple$2 = $f._tuple$2; _tuple$20 = $f._tuple$20; _tuple$21 = $f._tuple$21; _tuple$22 = $f._tuple$22; _tuple$23 = $f._tuple$23; _tuple$24 = $f._tuple$24; _tuple$25 = $f._tuple$25; _tuple$26 = $f._tuple$26; _tuple$27 = $f._tuple$27; _tuple$28 = $f._tuple$28; _tuple$29 = $f._tuple$29; _tuple$3 = $f._tuple$3; _tuple$30 = $f._tuple$30; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; activePlayer = $f.activePlayer; answer = $f.answer; card = $f.card; card$1 = $f.card$1; cmd = $f.cmd; cmdDetail = $f.cmdDetail; cmdDetail$1 = $f.cmdDetail$1; cmdDetail$2 = $f.cmdDetail$2; cmdDetail$3 = $f.cmdDetail$3; cmdDetail$4 = $f.cmdDetail$4; cmdDetail$5 = $f.cmdDetail$5; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; err$4 = $f.err$4; err$5 = $f.err$5; err$6 = $f.err$6; gameplayCtx = $f.gameplayCtx; moneyNotEnough = $f.moneyNotEnough; origin = $f.origin; otherPlayers = $f.otherPlayers; otherPlayers$1 = $f.otherPlayers$1; otherPlayers$2 = $f.otherPlayers$2; otherPlayers$3 = $f.otherPlayers$3; otherPlayers$4 = $f.otherPlayers$4; outOfCard = $f.outOfCard; playerNotFound = $f.playerNotFound; target = $f.target; target$1 = $f.target$1; target$2 = $f.target$2; target$3 = $f.target$3; target$4 = $f.target$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		activePlayer = [activePlayer];
 		moneyNotEnough = [moneyNotEnough];
 		err = $ifaceNil;
 		playerNotFound = new Player.ptr("", "", 0);
-		_r = fmt.Errorf("Money not enougth", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Errorf("Money is not enougth", new sliceType([])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		moneyNotEnough[0] = _r;
 		gameplayCtx = $clone(origin, Gameplay);
-		/* while (true) { */ case 2:
-			$r = time.Sleep(new time.Duration(0, 1000000000)); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer[0].ID, new PlayerBasicCom.ptr(0, 0, 0));
+		_r$1 = HasAbilityHealing($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player)); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		/* */ if (_r$1) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (_r$1) { */ case 2:
+			_r$2 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(com) {
+				var com;
+				com.Life = com.Life + (1) >> 0;
+				return [com, $ifaceNil];
+			}; })(activePlayer, moneyNotEnough)); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple = _r$2;
+			Gameplay.copy(gameplayCtx, _tuple[0]);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+		/* } */ case 3:
+		_r$3 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), 2); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$1 = _r$3;
+		Gameplay.copy(gameplayCtx, _tuple$1[0]);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		$r = ctx.Render($clone(gameplayCtx, Gameplay)); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		outOfCard = (_entry = gameplayCtx.Desktop.CardStacks[$String.keyFor("CardStackHome")], _entry !== undefined ? _entry.v : desktop.CardStack.nil).$length === 0;
+		if (outOfCard) {
+			gameplayCtx.EndState.Completed = true;
+			gameplayCtx.EndState.Reason = "\xE7\x89\x8C\xE5\xBA\xAB\xE6\x8A\xBD\xE5\xAE\x8C\xE4\xBA\x86, \xE9\x81\x8A\xE6\x88\xB2\xE7\xB5\x90\xE6\x9D\x9F";
+			$s = -1; return [gameplayCtx, $ifaceNil];
+		}
+		/* while (true) { */ case 8:
+			$r = time.Sleep(new time.Duration(0, 1000000000)); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			if (gameplayCtx.EndState.Completed) {
+				$s = -1; return [gameplayCtx, $ifaceNil];
+			}
+			_r$4 = ctx.AskCommand($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player)); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_tuple$2 = _r$4;
+			cmd = _tuple$2[0];
+			err$1 = _tuple$2[1];
+			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 12; continue; }
+			/* */ $s = 13; continue;
+			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 12:
+				$r = ctx.Alert(err$1); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* continue; */ $s = 8; continue;
+			/* } */ case 13:
+			_r$5 = fmt.Sprintf("choose cmd: %+v", new sliceType([cmd])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			$r = ctx.Alert(new $String(_r$5)); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* */ if ($interfaceIsEqual(cmd, $ifaceNil)) { $s = 17; continue; }
+			/* */ $s = 18; continue;
+			/* if ($interfaceIsEqual(cmd, $ifaceNil)) { */ case 17:
+				/* continue; */ $s = 8; continue;
+			/* } */ case 18:
+			_ref = cmd;
+			/* */ if ($assertType(_ref, view.CmdBuyItem, true)[1]) { $s = 19; continue; }
+			/* */ if ($assertType(_ref, view.CmdUseCard, true)[1]) { $s = 20; continue; }
+			/* */ if ($assertType(_ref, view.CmdSellCard, true)[1]) { $s = 21; continue; }
+			/* */ if ($assertType(_ref, view.CmdExit, true)[1]) { $s = 22; continue; }
+			/* */ if ($assertType(_ref, view.CmdEndTurn, true)[1]) { $s = 23; continue; }
+			/* */ $s = 24; continue;
+			/* if ($assertType(_ref, view.CmdBuyItem, true)[1]) { */ case 19:
+				cmdDetail = $clone(_ref.$val, view.CmdBuyItem);
+					_1 = cmdDetail.ItemID;
+					/* */ if (_1 === ("\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5")) { $s = 27; continue; }
+					/* */ if (_1 === ("\xE5\x9B\x9E\xE5\xBE\xA9\xE8\x97\xA5")) { $s = 28; continue; }
+					/* */ if (_1 === ("\xE6\x99\xBA\xE6\x85\xA7\xE8\x97\xA5")) { $s = 29; continue; }
+					/* */ $s = 30; continue;
+					/* if (_1 === ("\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5")) { */ case 27:
+						_r$6 = FilterPlayer(ValsStringPlayer(gameplayCtx.Players), (function(activePlayer, moneyNotEnough) { return function(p) {
+							var p;
+							return !(p.ID === activePlayer[0].ID);
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 32; case 32: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+						otherPlayers = _r$6;
+						_r$7 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), otherPlayers); /* */ $s = 33; case 33: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+						_tuple$3 = _r$7;
+						target = $clone(_tuple$3[0], Player);
+						err$2 = _tuple$3[1];
+						if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+							$s = -1; return [origin, err$2];
+						}
+						/* */ if ($equal(target, playerNotFound, Player)) { $s = 34; continue; }
+						/* */ $s = 35; continue;
+						/* if ($equal(target, playerNotFound, Player)) { */ case 34:
+							$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 36; case 36: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 26; continue;
+						/* } */ case 35:
+						_r$8 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							if (characterCom.Money < 2) {
+								return [characterCom, moneyNotEnough[0]];
+							}
+							characterCom.Money = characterCom.Money - (2) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 37; case 37: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+						_tuple$4 = _r$8;
+						Gameplay.copy(gameplayCtx, _tuple$4[0]);
+						err$2 = _tuple$4[1];
+						/* */ if ($interfaceIsEqual(err$2, moneyNotEnough[0])) { $s = 38; continue; }
+						/* */ $s = 39; continue;
+						/* if ($interfaceIsEqual(err$2, moneyNotEnough[0])) { */ case 38:
+							_r$9 = err$2.Error(); /* */ $s = 40; case 40: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+							$r = ctx.Alert(new $String(_r$9)); /* */ $s = 41; case 41: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 26; continue;
+						/* } */ case 39:
+						if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+							$s = -1; return [origin, err$2];
+						}
+						_r$10 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(target, Player)); /* */ $s = 42; case 42: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+						_tuple$5 = _r$10;
+						Gameplay.copy(gameplayCtx, _tuple$5[0]);
+						err$2 = _tuple$5[1];
+						/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 43; continue; }
+						/* */ $s = 44; continue;
+						/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 43:
+							$r = ctx.Alert(err$2); /* */ $s = 45; case 45: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 26; continue;
+						/* } */ case 44:
+						$s = 31; continue;
+					/* } else if (_1 === ("\xE5\x9B\x9E\xE5\xBE\xA9\xE8\x97\xA5")) { */ case 28:
+						_r$11 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							if (characterCom.Money < 2) {
+								return [characterCom, moneyNotEnough[0]];
+							}
+							characterCom.Money = characterCom.Money - (2) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 46; case 46: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+						_tuple$6 = _r$11;
+						Gameplay.copy(gameplayCtx, _tuple$6[0]);
+						err$1 = _tuple$6[1];
+						/* */ if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { $s = 47; continue; }
+						/* */ $s = 48; continue;
+						/* if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { */ case 47:
+							_r$12 = err$1.Error(); /* */ $s = 49; case 49: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+							$r = ctx.Alert(new $String(_r$12)); /* */ $s = 50; case 50: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 26; continue;
+						/* } */ case 48:
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						_r$13 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							characterCom.Life = characterCom.Life + (1) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 51; case 51: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+						_tuple$7 = _r$13;
+						Gameplay.copy(gameplayCtx, _tuple$7[0]);
+						err$1 = _tuple$7[1];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						$s = 31; continue;
+					/* } else if (_1 === ("\xE6\x99\xBA\xE6\x85\xA7\xE8\x97\xA5")) { */ case 29:
+						_r$14 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							if (characterCom.Money < 2) {
+								return [characterCom, moneyNotEnough[0]];
+							}
+							characterCom.Money = characterCom.Money - (2) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 52; case 52: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+						_tuple$8 = _r$14;
+						Gameplay.copy(gameplayCtx, _tuple$8[0]);
+						err$1 = _tuple$8[1];
+						/* */ if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { $s = 53; continue; }
+						/* */ $s = 54; continue;
+						/* if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { */ case 53:
+							_r$15 = err$1.Error(); /* */ $s = 55; case 55: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+							$r = ctx.Alert(new $String(_r$15)); /* */ $s = 56; case 56: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 26; continue;
+						/* } */ case 54:
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						_r$16 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), 1); /* */ $s = 57; case 57: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+						_tuple$9 = _r$16;
+						Gameplay.copy(gameplayCtx, _tuple$9[0]);
+						err$1 = _tuple$9[1];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						$s = 31; continue;
+					/* } else { */ case 30:
+						_r$17 = fmt.Errorf("can not handle item here: %+v", new sliceType([new cmdDetail.constructor.elem(cmdDetail)])); /* */ $s = 58; case 58: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+						$s = -1; return [origin, _r$17];
+					/* } */ case 31:
+				case 26:
+				$s = 25; continue;
+			/* } else if ($assertType(_ref, view.CmdUseCard, true)[1]) { */ case 20:
+				cmdDetail$1 = $clone(_ref.$val, view.CmdUseCard);
+				card = $clone(cmdDetail$1.Card, desktop.Card);
+				_r$18 = HasAbilityAttackWithAnyCard($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player)); /* */ $s = 61; case 61: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+				/* */ if (_r$18) { $s = 59; continue; }
+				/* */ $s = 60; continue;
+				/* if (_r$18) { */ case 59:
+						_2 = $clone(card.CardPrototypeID.CardType, desktop.CardType);
+						/* */ if ($equal(_2, ($pkg.CardTypeAttack), desktop.CardType)) { $s = 63; continue; }
+						/* */ $s = 64; continue;
+						/* if ($equal(_2, ($pkg.CardTypeAttack), desktop.CardType)) { */ case 63:
+							$s = 65; continue;
+						/* } else { */ case 64:
+							answer = "";
+							_r$19 = ctx.AskOption($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), "\xE6\xB2\x92\xE6\x9C\x89\xE4\xBD\xBF\xE7\x94\xA8\xE6\xAE\xBA, \xE6\x98\xAF\xE5\x90\xA6\xE8\xA6\x81\xE7\x95\xB6\xE6\x88\x90\xE6\xAE\xBA", new sliceType$1(["Yes", "No"])); /* */ $s = 66; case 66: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
+							_tuple$10 = _r$19;
+							answer = _tuple$10[0];
+							err$1 = _tuple$10[1];
+							/* */ if (answer === "Yes") { $s = 67; continue; }
+							/* */ $s = 68; continue;
+							/* if (answer === "Yes") { */ case 67:
+								_r$20 = FilterPlayer(ValsStringPlayer(gameplayCtx.Players), (function(activePlayer, moneyNotEnough) { return function(p) {
+									var p;
+									return !(p.ID === activePlayer[0].ID);
+								}; })(activePlayer, moneyNotEnough)); /* */ $s = 69; case 69: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
+								otherPlayers$1 = _r$20;
+								_r$21 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), otherPlayers$1); /* */ $s = 70; case 70: if($c) { $c = false; _r$21 = _r$21.$blk(); } if (_r$21 && _r$21.$blk !== undefined) { break s; }
+								_tuple$11 = _r$21;
+								target$1 = $clone(_tuple$11[0], Player);
+								err$3 = _tuple$11[1];
+								if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+									$s = -1; return [origin, err$3];
+								}
+								/* */ if ($equal(target$1, playerNotFound, Player)) { $s = 71; continue; }
+								/* */ $s = 72; continue;
+								/* if ($equal(target$1, playerNotFound, Player)) { */ case 71:
+									$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 73; case 73: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+									/* break; */ $s = 62; continue;
+								/* } */ case 72:
+								_r$22 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+									var card$1;
+									desktop.Face.copy(card$1.Face, desktop.FaceUp);
+									return card$1;
+								}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 74; case 74: if($c) { $c = false; _r$22 = _r$22.$blk(); } if (_r$22 && _r$22.$blk !== undefined) { break s; }
+								_tuple$12 = _r$22;
+								Gameplay.copy(gameplayCtx, _tuple$12[0]);
+								desktop.Card.copy(card, _tuple$12[1]);
+								err$3 = _tuple$12[2];
+								if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+									$s = -1; return [origin, err$3];
+								}
+								_r$23 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(target$1, Player)); /* */ $s = 75; case 75: if($c) { $c = false; _r$23 = _r$23.$blk(); } if (_r$23 && _r$23.$blk !== undefined) { break s; }
+								_tuple$13 = _r$23;
+								Gameplay.copy(gameplayCtx, _tuple$13[0]);
+								err$3 = _tuple$13[1];
+								/* */ if (!($interfaceIsEqual(err$3, $ifaceNil))) { $s = 76; continue; }
+								/* */ $s = 77; continue;
+								/* if (!($interfaceIsEqual(err$3, $ifaceNil))) { */ case 76:
+									$r = ctx.Alert(err$3); /* */ $s = 78; case 78: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+									/* break Menu; */ $s = 9; continue s;
+								/* } */ case 77:
+								/* continue; */ $s = 8; continue;
+							/* } */ case 68:
+							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+								$s = -1; return [origin, err$1];
+							}
+						/* } */ case 65:
+					case 62:
+				/* } */ case 60:
+					_3 = $clone(card.CardPrototypeID.CardType, desktop.CardType);
+					/* */ if ($equal(_3, ($pkg.CardTypeAttack), desktop.CardType)) { $s = 80; continue; }
+					/* */ if ($equal(_3, ($pkg.CardTypeSteal), desktop.CardType)) { $s = 81; continue; }
+					/* */ if ($equal(_3, ($pkg.CardTypeStealMoney), desktop.CardType)) { $s = 82; continue; }
+					/* */ if ($equal(_3, ($pkg.CardTypeArm), desktop.CardType) || $equal(_3, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_3, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_3, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_3, ($pkg.CardTypeBarrier), desktop.CardType)) { $s = 83; continue; }
+					/* */ if ($equal(_3, ($pkg.CardTypeJob), desktop.CardType)) { $s = 84; continue; }
+					/* */ if ($equal(_3, ($pkg.CardTypeMake), desktop.CardType)) { $s = 85; continue; }
+					/* */ $s = 86; continue;
+					/* if ($equal(_3, ($pkg.CardTypeAttack), desktop.CardType)) { */ case 80:
+						_r$24 = FilterPlayer(ValsStringPlayer(gameplayCtx.Players), (function(activePlayer, moneyNotEnough) { return function(p) {
+							var p;
+							return !(p.ID === activePlayer[0].ID);
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 88; case 88: if($c) { $c = false; _r$24 = _r$24.$blk(); } if (_r$24 && _r$24.$blk !== undefined) { break s; }
+						otherPlayers$2 = _r$24;
+						_r$25 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), otherPlayers$2); /* */ $s = 89; case 89: if($c) { $c = false; _r$25 = _r$25.$blk(); } if (_r$25 && _r$25.$blk !== undefined) { break s; }
+						_tuple$14 = _r$25;
+						target$2 = $clone(_tuple$14[0], Player);
+						err$4 = _tuple$14[1];
+						if (!($interfaceIsEqual(err$4, $ifaceNil))) {
+							$s = -1; return [origin, err$4];
+						}
+						/* */ if ($equal(target$2, playerNotFound, Player)) { $s = 90; continue; }
+						/* */ $s = 91; continue;
+						/* if ($equal(target$2, playerNotFound, Player)) { */ case 90:
+							$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 92; case 92: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 91:
+						_r$26 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+							var card$1;
+							desktop.Face.copy(card$1.Face, desktop.FaceUp);
+							return card$1;
+						}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 93; case 93: if($c) { $c = false; _r$26 = _r$26.$blk(); } if (_r$26 && _r$26.$blk !== undefined) { break s; }
+						_tuple$15 = _r$26;
+						Gameplay.copy(gameplayCtx, _tuple$15[0]);
+						desktop.Card.copy(card, _tuple$15[1]);
+						err$4 = _tuple$15[2];
+						if (!($interfaceIsEqual(err$4, $ifaceNil))) {
+							$s = -1; return [origin, err$4];
+						}
+						_r$27 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(target$2, Player)); /* */ $s = 94; case 94: if($c) { $c = false; _r$27 = _r$27.$blk(); } if (_r$27 && _r$27.$blk !== undefined) { break s; }
+						_tuple$16 = _r$27;
+						Gameplay.copy(gameplayCtx, _tuple$16[0]);
+						err$4 = _tuple$16[1];
+						/* */ if (!($interfaceIsEqual(err$4, $ifaceNil))) { $s = 95; continue; }
+						/* */ $s = 96; continue;
+						/* if (!($interfaceIsEqual(err$4, $ifaceNil))) { */ case 95:
+							$r = ctx.Alert(err$4); /* */ $s = 97; case 97: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 96:
+						$s = 87; continue;
+					/* } else if ($equal(_3, ($pkg.CardTypeSteal), desktop.CardType)) { */ case 81:
+						_r$28 = FilterPlayer(ValsStringPlayer(gameplayCtx.Players), (function(activePlayer, moneyNotEnough) { return function(p) {
+							var p;
+							return !(p.ID === activePlayer[0].ID);
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 98; case 98: if($c) { $c = false; _r$28 = _r$28.$blk(); } if (_r$28 && _r$28.$blk !== undefined) { break s; }
+						otherPlayers$3 = _r$28;
+						_r$29 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), otherPlayers$3); /* */ $s = 99; case 99: if($c) { $c = false; _r$29 = _r$29.$blk(); } if (_r$29 && _r$29.$blk !== undefined) { break s; }
+						_tuple$17 = _r$29;
+						target$3 = $clone(_tuple$17[0], Player);
+						err$5 = _tuple$17[1];
+						if (!($interfaceIsEqual(err$5, $ifaceNil))) {
+							$s = -1; return [origin, err$5];
+						}
+						/* */ if ($equal(target$3, playerNotFound, Player)) { $s = 100; continue; }
+						/* */ $s = 101; continue;
+						/* if ($equal(target$3, playerNotFound, Player)) { */ case 100:
+							$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 102; case 102: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 101:
+						_r$30 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+							var card$1;
+							desktop.Face.copy(card$1.Face, desktop.FaceUp);
+							return card$1;
+						}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 103; case 103: if($c) { $c = false; _r$30 = _r$30.$blk(); } if (_r$30 && _r$30.$blk !== undefined) { break s; }
+						_tuple$18 = _r$30;
+						Gameplay.copy(gameplayCtx, _tuple$18[0]);
+						desktop.Card.copy(card, _tuple$18[1]);
+						err$5 = _tuple$18[2];
+						if (!($interfaceIsEqual(err$5, $ifaceNil))) {
+							$s = -1; return [origin, err$5];
+						}
+						_r$31 = Steal(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(target$3, Player)); /* */ $s = 104; case 104: if($c) { $c = false; _r$31 = _r$31.$blk(); } if (_r$31 && _r$31.$blk !== undefined) { break s; }
+						_tuple$19 = _r$31;
+						Gameplay.copy(gameplayCtx, _tuple$19[0]);
+						err$5 = _tuple$19[1];
+						/* */ if (!($interfaceIsEqual(err$5, $ifaceNil))) { $s = 105; continue; }
+						/* */ $s = 106; continue;
+						/* if (!($interfaceIsEqual(err$5, $ifaceNil))) { */ case 105:
+							$r = ctx.Alert(err$5); /* */ $s = 107; case 107: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 106:
+						$s = 87; continue;
+					/* } else if ($equal(_3, ($pkg.CardTypeStealMoney), desktop.CardType)) { */ case 82:
+						_r$32 = FilterPlayer(ValsStringPlayer(gameplayCtx.Players), (function(activePlayer, moneyNotEnough) { return function(p) {
+							var p;
+							return !(p.ID === activePlayer[0].ID);
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 108; case 108: if($c) { $c = false; _r$32 = _r$32.$blk(); } if (_r$32 && _r$32.$blk !== undefined) { break s; }
+						otherPlayers$4 = _r$32;
+						_r$33 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), otherPlayers$4); /* */ $s = 109; case 109: if($c) { $c = false; _r$33 = _r$33.$blk(); } if (_r$33 && _r$33.$blk !== undefined) { break s; }
+						_tuple$20 = _r$33;
+						target$4 = $clone(_tuple$20[0], Player);
+						err$6 = _tuple$20[1];
+						if (!($interfaceIsEqual(err$6, $ifaceNil))) {
+							$s = -1; return [origin, err$6];
+						}
+						/* */ if ($equal(target$4, playerNotFound, Player)) { $s = 110; continue; }
+						/* */ $s = 111; continue;
+						/* if ($equal(target$4, playerNotFound, Player)) { */ case 110:
+							$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 112; case 112: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 111:
+						_r$34 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+							var card$1;
+							desktop.Face.copy(card$1.Face, desktop.FaceUp);
+							return card$1;
+						}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 113; case 113: if($c) { $c = false; _r$34 = _r$34.$blk(); } if (_r$34 && _r$34.$blk !== undefined) { break s; }
+						_tuple$21 = _r$34;
+						Gameplay.copy(gameplayCtx, _tuple$21[0]);
+						desktop.Card.copy(card, _tuple$21[1]);
+						err$6 = _tuple$21[2];
+						if (!($interfaceIsEqual(err$6, $ifaceNil))) {
+							$s = -1; return [origin, err$6];
+						}
+						_r$35 = StealMoney(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(target$4, Player)); /* */ $s = 114; case 114: if($c) { $c = false; _r$35 = _r$35.$blk(); } if (_r$35 && _r$35.$blk !== undefined) { break s; }
+						_tuple$22 = _r$35;
+						Gameplay.copy(gameplayCtx, _tuple$22[0]);
+						err$6 = _tuple$22[1];
+						/* */ if (!($interfaceIsEqual(err$6, $ifaceNil))) { $s = 115; continue; }
+						/* */ $s = 116; continue;
+						/* if (!($interfaceIsEqual(err$6, $ifaceNil))) { */ case 115:
+							$r = ctx.Alert(err$6); /* */ $s = 117; case 117: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 116:
+						$s = 87; continue;
+					/* } else if ($equal(_3, ($pkg.CardTypeArm), desktop.CardType) || $equal(_3, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_3, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_3, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_3, ($pkg.CardTypeBarrier), desktop.CardType)) { */ case 83:
+						_r$36 = Equip(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), $clone(card, desktop.Card)); /* */ $s = 118; case 118: if($c) { $c = false; _r$36 = _r$36.$blk(); } if (_r$36 && _r$36.$blk !== undefined) { break s; }
+						_tuple$23 = _r$36;
+						Gameplay.copy(gameplayCtx, _tuple$23[0]);
+						err$1 = _tuple$23[1];
+						/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 119; continue; }
+						/* */ $s = 120; continue;
+						/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 119:
+							$r = ctx.Alert(err$1); /* */ $s = 121; case 121: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* break; */ $s = 79; continue;
+						/* } */ case 120:
+						$s = 87; continue;
+					/* } else if ($equal(_3, ($pkg.CardTypeJob), desktop.CardType)) { */ case 84:
+						_r$37 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+							var card$1;
+							desktop.Face.copy(card$1.Face, desktop.FaceUp);
+							return card$1;
+						}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 122; case 122: if($c) { $c = false; _r$37 = _r$37.$blk(); } if (_r$37 && _r$37.$blk !== undefined) { break s; }
+						_tuple$24 = _r$37;
+						Gameplay.copy(gameplayCtx, _tuple$24[0]);
+						desktop.Card.copy(card, _tuple$24[1]);
+						err$1 = _tuple$24[2];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						_r$38 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							characterCom.Money = characterCom.Money + (2) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 123; case 123: if($c) { $c = false; _r$38 = _r$38.$blk(); } if (_r$38 && _r$38.$blk !== undefined) { break s; }
+						_tuple$25 = _r$38;
+						Gameplay.copy(gameplayCtx, _tuple$25[0]);
+						err$1 = _tuple$25[1];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						$s = 87; continue;
+					/* } else if ($equal(_3, ($pkg.CardTypeMake), desktop.CardType)) { */ case 85:
+						_r$39 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$1) {
+							var card$1;
+							desktop.Face.copy(card$1.Face, desktop.FaceUp);
+							return card$1;
+						}; })(activePlayer, moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 124; case 124: if($c) { $c = false; _r$39 = _r$39.$blk(); } if (_r$39 && _r$39.$blk !== undefined) { break s; }
+						_tuple$26 = _r$39;
+						Gameplay.copy(gameplayCtx, _tuple$26[0]);
+						desktop.Card.copy(card, _tuple$26[1]);
+						err$1 = _tuple$26[2];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						_r$40 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), 2); /* */ $s = 125; case 125: if($c) { $c = false; _r$40 = _r$40.$blk(); } if (_r$40 && _r$40.$blk !== undefined) { break s; }
+						_tuple$27 = _r$40;
+						Gameplay.copy(gameplayCtx, _tuple$27[0]);
+						err$1 = _tuple$27[1];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						$s = 87; continue;
+					/* } else { */ case 86:
+						_r$41 = fmt.Sprintf("\xE4\xB8\x8D\xE8\x83\xBD\xE4\xBD\xBF\xE7\x94\xA8\xE9\x80\x99\xE9\xA1\x9E\xE5\x9E\x8B\xE7\x9A\x84\xE5\x8D\xA1%v\n", new sliceType([new card.constructor.elem(card)])); /* */ $s = 126; case 126: if($c) { $c = false; _r$41 = _r$41.$blk(); } if (_r$41 && _r$41.$blk !== undefined) { break s; }
+						$r = ctx.Alert(new $String(_r$41)); /* */ $s = 127; case 127: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 87:
+				case 79:
+				$s = 25; continue;
+			/* } else if ($assertType(_ref, view.CmdSellCard, true)[1]) { */ case 21:
+				cmdDetail$2 = $clone(_ref.$val, view.CmdSellCard);
+				card$1 = $clone(cmdDetail$2.Card, desktop.Card);
+					_4 = $clone(card$1.CardPrototypeID.CardType, desktop.CardType);
+					/* */ if ($equal(_4, ($pkg.CardTypeArm), desktop.CardType) || $equal(_4, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_4, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_4, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_4, ($pkg.CardTypeBarrier), desktop.CardType)) { $s = 129; continue; }
+					/* */ $s = 130; continue;
+					/* if ($equal(_4, ($pkg.CardTypeArm), desktop.CardType) || $equal(_4, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_4, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_4, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_4, ($pkg.CardTypeBarrier), desktop.CardType)) { */ case 129:
+						_r$42 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer[0], Player)), "CardStackGravyard", (function(activePlayer, moneyNotEnough) { return function(card$2) {
+							var card$2;
+							desktop.Face.copy(card$2.Face, desktop.FaceUp);
+							return card$2;
+						}; })(activePlayer, moneyNotEnough), $clone(card$1, desktop.Card)); /* */ $s = 132; case 132: if($c) { $c = false; _r$42 = _r$42.$blk(); } if (_r$42 && _r$42.$blk !== undefined) { break s; }
+						_tuple$28 = _r$42;
+						Gameplay.copy(gameplayCtx, _tuple$28[0]);
+						desktop.Card.copy(card$1, _tuple$28[1]);
+						err$1 = _tuple$28[2];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						_r$43 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player), (function(activePlayer, moneyNotEnough) { return function(characterCom) {
+							var characterCom;
+							characterCom.Money = characterCom.Money + (1) >> 0;
+							return [characterCom, $ifaceNil];
+						}; })(activePlayer, moneyNotEnough)); /* */ $s = 133; case 133: if($c) { $c = false; _r$43 = _r$43.$blk(); } if (_r$43 && _r$43.$blk !== undefined) { break s; }
+						_tuple$29 = _r$43;
+						Gameplay.copy(gameplayCtx, _tuple$29[0]);
+						err$1 = _tuple$29[1];
+						if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+							$s = -1; return [origin, err$1];
+						}
+						$s = 131; continue;
+					/* } else { */ case 130:
+						_r$44 = fmt.Sprintf("\xE4\xB8\x8D\xE8\x83\xBD\xE8\xB3\xA3\xE6\x8E\x89\xE9\x80\x99\xE9\xA1\x9E\xE5\x9E\x8B\xE7\x9A\x84\xE5\x8D\xA1%v\n", new sliceType([new card$1.constructor.elem(card$1)])); /* */ $s = 134; case 134: if($c) { $c = false; _r$44 = _r$44.$blk(); } if (_r$44 && _r$44.$blk !== undefined) { break s; }
+						$r = ctx.Alert(new $String(_r$44)); /* */ $s = 135; case 135: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 131:
+				case 128:
+				$s = 25; continue;
+			/* } else if ($assertType(_ref, view.CmdExit, true)[1]) { */ case 22:
+				cmdDetail$3 = $clone(_ref.$val, view.CmdExit);
+				gameplayCtx.EndState.Completed = true;
+				gameplayCtx.EndState.Reason = "User Exit";
+				$s = -1; return [gameplayCtx, $ifaceNil];
+			/* } else if ($assertType(_ref, view.CmdEndTurn, true)[1]) { */ case 23:
+				cmdDetail$4 = $clone(_ref.$val, view.CmdEndTurn);
+				/* break Menu; */ $s = 9; continue s;
+				$s = 25; continue;
+			/* } else { */ case 24:
+				cmdDetail$5 = _ref;
+				_r$45 = fmt.Errorf("%v not found", new sliceType([cmd])); /* */ $s = 136; case 136: if($c) { $c = false; _r$45 = _r$45.$blk(); } if (_r$45 && _r$45.$blk !== undefined) { break s; }
+				$s = -1; return [origin, _r$45];
+			/* } */ case 25:
+		/* } */ $s = 8; continue; case 9:
+		_r$46 = NextPlayer(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer[0], Player)); /* */ $s = 137; case 137: if($c) { $c = false; _r$46 = _r$46.$blk(); } if (_r$46 && _r$46.$blk !== undefined) { break s; }
+		_tuple$30 = _r$46;
+		Gameplay.copy(gameplayCtx, _tuple$30[0]);
+		err = _tuple$30[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		$s = -1; return [gameplayCtx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: PlayerTurn }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$2 = _r$2; $f._r$20 = _r$20; $f._r$21 = _r$21; $f._r$22 = _r$22; $f._r$23 = _r$23; $f._r$24 = _r$24; $f._r$25 = _r$25; $f._r$26 = _r$26; $f._r$27 = _r$27; $f._r$28 = _r$28; $f._r$29 = _r$29; $f._r$3 = _r$3; $f._r$30 = _r$30; $f._r$31 = _r$31; $f._r$32 = _r$32; $f._r$33 = _r$33; $f._r$34 = _r$34; $f._r$35 = _r$35; $f._r$36 = _r$36; $f._r$37 = _r$37; $f._r$38 = _r$38; $f._r$39 = _r$39; $f._r$4 = _r$4; $f._r$40 = _r$40; $f._r$41 = _r$41; $f._r$42 = _r$42; $f._r$43 = _r$43; $f._r$44 = _r$44; $f._r$45 = _r$45; $f._r$46 = _r$46; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$17 = _tuple$17; $f._tuple$18 = _tuple$18; $f._tuple$19 = _tuple$19; $f._tuple$2 = _tuple$2; $f._tuple$20 = _tuple$20; $f._tuple$21 = _tuple$21; $f._tuple$22 = _tuple$22; $f._tuple$23 = _tuple$23; $f._tuple$24 = _tuple$24; $f._tuple$25 = _tuple$25; $f._tuple$26 = _tuple$26; $f._tuple$27 = _tuple$27; $f._tuple$28 = _tuple$28; $f._tuple$29 = _tuple$29; $f._tuple$3 = _tuple$3; $f._tuple$30 = _tuple$30; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.activePlayer = activePlayer; $f.answer = answer; $f.card = card; $f.card$1 = card$1; $f.cmd = cmd; $f.cmdDetail = cmdDetail; $f.cmdDetail$1 = cmdDetail$1; $f.cmdDetail$2 = cmdDetail$2; $f.cmdDetail$3 = cmdDetail$3; $f.cmdDetail$4 = cmdDetail$4; $f.cmdDetail$5 = cmdDetail$5; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.err$4 = err$4; $f.err$5 = err$5; $f.err$6 = err$6; $f.gameplayCtx = gameplayCtx; $f.moneyNotEnough = moneyNotEnough; $f.origin = origin; $f.otherPlayers = otherPlayers; $f.otherPlayers$1 = otherPlayers$1; $f.otherPlayers$2 = otherPlayers$2; $f.otherPlayers$3 = otherPlayers$3; $f.otherPlayers$4 = otherPlayers$4; $f.outOfCard = outOfCard; $f.playerNotFound = playerNotFound; $f.target = target; $f.target$1 = target$1; $f.target$2 = target$2; $f.target$3 = target$3; $f.target$4 = target$4; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.PlayerTurn = PlayerTurn;
+	Start = function(ctx, origin) {
+		var _entry, _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, activePlayer, ctx, err, gameplayCtx, isActivePlayerExist, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; activePlayer = $f.activePlayer; ctx = $f.ctx; err = $f.err; gameplayCtx = $f.gameplayCtx; isActivePlayerExist = $f.isActivePlayerExist; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		gameplayCtx = $clone(origin, Gameplay);
+		/* while (true) { */ case 1:
+			$r = time.Sleep(new time.Duration(0, 1000000000)); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_tuple = (_entry = gameplayCtx.Players[$String.keyFor(gameplayCtx.ActivePlayerID)], _entry !== undefined ? [_entry.v, true] : [new Player.ptr("", "", 0), false]);
 			activePlayer = $clone(_tuple[0], Player);
 			isActivePlayerExist = _tuple[1];
-			/* */ if (isActivePlayerExist === false) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (isActivePlayerExist === false) { */ case 5:
-				_r$1 = fmt.Errorf("Active Player not found, gameplay init error", new sliceType([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				$s = -1; return [origin, _r$1];
-			/* } */ case 6:
-			gameplayCtx.PlayerBasicComs = AssocStringPlayerBasicCom(gameplayCtx.PlayerBasicComs, activePlayer.ID, new PlayerBasicCom.ptr(0, 0, 0));
-			_r$2 = HasAbilityHealing($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player)); /* */ $s = 10; case 10: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			/* */ if (_r$2) { $s = 8; continue; }
-			/* */ $s = 9; continue;
-			/* if (_r$2) { */ case 8:
-				_r$3 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(com) {
-					var com;
-					com.Life = com.Life + (1) >> 0;
-					return [com, $ifaceNil];
-				}; })(moneyNotEnough)); /* */ $s = 11; case 11: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_tuple$1 = _r$3;
-				Gameplay.copy(gameplayCtx, _tuple$1[0]);
-				err = _tuple$1[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [origin, err];
-				}
-			/* } */ case 9:
-			_r$4 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), 2); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_tuple$2 = _r$4;
-			Gameplay.copy(gameplayCtx, _tuple$2[0]);
-			err = _tuple$2[1];
+			/* */ if (isActivePlayerExist === false) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (isActivePlayerExist === false) { */ case 4:
+				_r = fmt.Errorf("Active Player not found, gameplay init error", new sliceType([])); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$s = -1; return [origin, _r];
+			/* } */ case 5:
+			_r$1 = PlayerTurn(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player)); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$1 = _r$1;
+			Gameplay.copy(gameplayCtx, _tuple$1[0]);
+			err = _tuple$1[1];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				$s = -1; return [origin, err];
 			}
-			$r = ctx.Render($clone(gameplayCtx, Gameplay)); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			outOfCard = (_entry$1 = gameplayCtx.Desktop.CardStacks[$String.keyFor("CardStackHome")], _entry$1 !== undefined ? _entry$1.v : desktop.CardStack.nil).$length === 0;
-			/* */ if (outOfCard) { $s = 14; continue; }
-			/* */ $s = 15; continue;
-			/* if (outOfCard) { */ case 14:
-				_r$5 = fmt.Printf("\xE7\x89\x8C\xE5\xBA\xAB\xE6\x8A\xBD\xE5\xAE\x8C\xE4\xBA\x86, \xE9\x81\x8A\xE6\x88\xB2\xE7\xB5\x90\xE6\x9D\x9F\n", new sliceType([])); /* */ $s = 16; case 16: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-				_r$5;
-				_r$6 = End(ctx, $clone(gameplayCtx, Gameplay)); /* */ $s = 17; case 17: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-				_tuple$3 = _r$6;
-				Gameplay.copy(gameplayCtx, _tuple$3[0]);
-				err = _tuple$3[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [origin, err];
-				}
-				$s = -1; return [gameplayCtx, $ifaceNil];
-			/* } */ case 15:
-			/* while (true) { */ case 18:
-				$r = time.Sleep(new time.Duration(0, 1000000000)); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-				_r$7 = ctx.AskCommand($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player)); /* */ $s = 21; case 21: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				_tuple$4 = _r$7;
-				cmd = _tuple$4[0];
-				err$1 = _tuple$4[1];
-				/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 22; continue; }
-				/* */ $s = 23; continue;
-				/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 22:
-					$r = ctx.Alert(err$1); /* */ $s = 24; case 24: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					/* continue; */ $s = 18; continue;
-				/* } */ case 23:
-				/* */ if ($interfaceIsEqual(cmd, $ifaceNil)) { $s = 25; continue; }
-				/* */ $s = 26; continue;
-				/* if ($interfaceIsEqual(cmd, $ifaceNil)) { */ case 25:
-					/* continue; */ $s = 18; continue;
-				/* } */ case 26:
-				_ref = cmd;
-				/* */ if ($assertType(_ref, view.CmdBuyItem, true)[1]) { $s = 27; continue; }
-				/* */ if ($assertType(_ref, view.CmdUseCard, true)[1]) { $s = 28; continue; }
-				/* */ if ($assertType(_ref, view.CmdSellCard, true)[1]) { $s = 29; continue; }
-				/* */ if ($assertType(_ref, view.CmdExit, true)[1]) { $s = 30; continue; }
-				/* */ if ($assertType(_ref, view.CmdEndTurn, true)[1]) { $s = 31; continue; }
-				/* */ $s = 32; continue;
-				/* if ($assertType(_ref, view.CmdBuyItem, true)[1]) { */ case 27:
-					cmdDetail = $clone(_ref.$val, view.CmdBuyItem);
-						_1 = cmdDetail.ItemID;
-						/* */ if (_1 === ("\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5")) { $s = 35; continue; }
-						/* */ if (_1 === ("\xE5\x9B\x9E\xE5\xBE\xA9\xE8\x97\xA5")) { $s = 36; continue; }
-						/* */ if (_1 === ("\xE6\x99\xBA\xE6\x85\xA7\xE8\x97\xA5")) { $s = 37; continue; }
-						/* */ $s = 38; continue;
-						/* if (_1 === ("\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5")) { */ case 35:
-							_r$8 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), gameplayCtx.Players); /* */ $s = 40; case 40: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-							_tuple$5 = _r$8;
-							target = $clone(_tuple$5[0], Player);
-							err$2 = _tuple$5[1];
-							if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-								$s = -1; return [origin, err$2];
-							}
-							/* */ if ($equal(target, playerNotFound, Player)) { $s = 41; continue; }
-							/* */ $s = 42; continue;
-							/* if ($equal(target, playerNotFound, Player)) { */ case 41:
-								$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 43; case 43: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 34; continue;
-							/* } */ case 42:
-							_r$9 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								if (characterCom.Money < 2) {
-									return [characterCom, moneyNotEnough[0]];
-								}
-								characterCom.Money = characterCom.Money - (2) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 44; case 44: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-							_tuple$6 = _r$9;
-							Gameplay.copy(gameplayCtx, _tuple$6[0]);
-							err$2 = _tuple$6[1];
-							/* */ if ($interfaceIsEqual(err$2, moneyNotEnough[0])) { $s = 45; continue; }
-							/* */ $s = 46; continue;
-							/* if ($interfaceIsEqual(err$2, moneyNotEnough[0])) { */ case 45:
-								_r$10 = err$2.Error(); /* */ $s = 47; case 47: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-								$r = ctx.Alert(new $String(_r$10)); /* */ $s = 48; case 48: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 34; continue;
-							/* } */ case 46:
-							if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-								$s = -1; return [origin, err$2];
-							}
-							_r$11 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(target, Player)); /* */ $s = 49; case 49: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-							_tuple$7 = _r$11;
-							Gameplay.copy(gameplayCtx, _tuple$7[0]);
-							err$2 = _tuple$7[1];
-							/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 50; continue; }
-							/* */ $s = 51; continue;
-							/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 50:
-								$r = ctx.Alert(err$2); /* */ $s = 52; case 52: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 34; continue;
-							/* } */ case 51:
-							$s = 39; continue;
-						/* } else if (_1 === ("\xE5\x9B\x9E\xE5\xBE\xA9\xE8\x97\xA5")) { */ case 36:
-							_r$12 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								if (characterCom.Money < 2) {
-									return [characterCom, moneyNotEnough[0]];
-								}
-								characterCom.Money = characterCom.Money - (2) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 53; case 53: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-							_tuple$8 = _r$12;
-							Gameplay.copy(gameplayCtx, _tuple$8[0]);
-							err$1 = _tuple$8[1];
-							/* */ if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { $s = 54; continue; }
-							/* */ $s = 55; continue;
-							/* if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { */ case 54:
-								_r$13 = err$1.Error(); /* */ $s = 56; case 56: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-								$r = ctx.Alert(new $String(_r$13)); /* */ $s = 57; case 57: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 34; continue;
-							/* } */ case 55:
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							_r$14 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								characterCom.Life = characterCom.Life + (1) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 58; case 58: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-							_tuple$9 = _r$14;
-							Gameplay.copy(gameplayCtx, _tuple$9[0]);
-							err$1 = _tuple$9[1];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							$s = 39; continue;
-						/* } else if (_1 === ("\xE6\x99\xBA\xE6\x85\xA7\xE8\x97\xA5")) { */ case 37:
-							_r$15 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								if (characterCom.Money < 2) {
-									return [characterCom, moneyNotEnough[0]];
-								}
-								characterCom.Money = characterCom.Money - (2) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 59; case 59: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
-							_tuple$10 = _r$15;
-							Gameplay.copy(gameplayCtx, _tuple$10[0]);
-							err$1 = _tuple$10[1];
-							/* */ if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { $s = 60; continue; }
-							/* */ $s = 61; continue;
-							/* if ($interfaceIsEqual(err$1, moneyNotEnough[0])) { */ case 60:
-								_r$16 = err$1.Error(); /* */ $s = 62; case 62: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
-								$r = ctx.Alert(new $String(_r$16)); /* */ $s = 63; case 63: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 34; continue;
-							/* } */ case 61:
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							_r$17 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), 1); /* */ $s = 64; case 64: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
-							_tuple$11 = _r$17;
-							Gameplay.copy(gameplayCtx, _tuple$11[0]);
-							err$1 = _tuple$11[1];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							$s = 39; continue;
-						/* } else { */ case 38:
-							_r$18 = fmt.Errorf("can not handle item here: %+v", new sliceType([new cmdDetail.constructor.elem(cmdDetail)])); /* */ $s = 65; case 65: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
-							$s = -1; return [origin, _r$18];
-						/* } */ case 39:
-					case 34:
-					$s = 33; continue;
-				/* } else if ($assertType(_ref, view.CmdUseCard, true)[1]) { */ case 28:
-					cmdDetail$1 = $clone(_ref.$val, view.CmdUseCard);
-					card = $clone(cmdDetail$1.Card, desktop.Card);
-					_r$19 = HasAbilityAttackWithAnyCard($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player)); /* */ $s = 68; case 68: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
-					/* */ if (_r$19) { $s = 66; continue; }
-					/* */ $s = 67; continue;
-					/* if (_r$19) { */ case 66:
-							_2 = $clone(card.CardPrototypeID.CardType, desktop.CardType);
-							/* */ if ($equal(_2, ($pkg.CardTypeAttack), desktop.CardType)) { $s = 70; continue; }
-							/* */ $s = 71; continue;
-							/* if ($equal(_2, ($pkg.CardTypeAttack), desktop.CardType)) { */ case 70:
-								$s = 72; continue;
-							/* } else { */ case 71:
-								answer = "";
-								_r$20 = ctx.AskOption($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), "\xE6\xB2\x92\xE6\x9C\x89\xE4\xBD\xBF\xE7\x94\xA8\xE6\xAE\xBA, \xE6\x98\xAF\xE5\x90\xA6\xE8\xA6\x81\xE7\x95\xB6\xE6\x88\x90\xE6\xAE\xBA", new sliceType$1(["Yes", "No"])); /* */ $s = 73; case 73: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
-								_tuple$12 = _r$20;
-								answer = _tuple$12[0];
-								err$1 = _tuple$12[1];
-								/* */ if (answer === "Yes") { $s = 74; continue; }
-								/* */ $s = 75; continue;
-								/* if (answer === "Yes") { */ case 74:
-									_r$21 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), gameplayCtx.Players); /* */ $s = 76; case 76: if($c) { $c = false; _r$21 = _r$21.$blk(); } if (_r$21 && _r$21.$blk !== undefined) { break s; }
-									_tuple$13 = _r$21;
-									target$1 = $clone(_tuple$13[0], Player);
-									err$3 = _tuple$13[1];
-									if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-										$s = -1; return [origin, err$3];
-									}
-									/* */ if ($equal(target$1, playerNotFound, Player)) { $s = 77; continue; }
-									/* */ $s = 78; continue;
-									/* if ($equal(target$1, playerNotFound, Player)) { */ case 77:
-										$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 79; case 79: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-										/* break; */ $s = 69; continue;
-									/* } */ case 78:
-									_r$22 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-										var card$1;
-										desktop.Face.copy(card$1.Face, desktop.FaceUp);
-										return card$1;
-									}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 80; case 80: if($c) { $c = false; _r$22 = _r$22.$blk(); } if (_r$22 && _r$22.$blk !== undefined) { break s; }
-									_tuple$14 = _r$22;
-									Gameplay.copy(gameplayCtx, _tuple$14[0]);
-									desktop.Card.copy(card, _tuple$14[1]);
-									err$3 = _tuple$14[2];
-									if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-										$s = -1; return [origin, err$3];
-									}
-									_r$23 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(target$1, Player)); /* */ $s = 81; case 81: if($c) { $c = false; _r$23 = _r$23.$blk(); } if (_r$23 && _r$23.$blk !== undefined) { break s; }
-									_tuple$15 = _r$23;
-									Gameplay.copy(gameplayCtx, _tuple$15[0]);
-									err$3 = _tuple$15[1];
-									/* */ if (!($interfaceIsEqual(err$3, $ifaceNil))) { $s = 82; continue; }
-									/* */ $s = 83; continue;
-									/* if (!($interfaceIsEqual(err$3, $ifaceNil))) { */ case 82:
-										$r = ctx.Alert(err$3); /* */ $s = 84; case 84: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-										/* break Menu; */ $s = 19; continue s;
-									/* } */ case 83:
-									/* continue; */ $s = 18; continue;
-								/* } */ case 75:
-								if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-									$s = -1; return [origin, err$1];
-								}
-							/* } */ case 72:
-						case 69:
-					/* } */ case 67:
-						_3 = $clone(card.CardPrototypeID.CardType, desktop.CardType);
-						/* */ if ($equal(_3, ($pkg.CardTypeAttack), desktop.CardType)) { $s = 86; continue; }
-						/* */ if ($equal(_3, ($pkg.CardTypeSteal), desktop.CardType)) { $s = 87; continue; }
-						/* */ if ($equal(_3, ($pkg.CardTypeStealMoney), desktop.CardType)) { $s = 88; continue; }
-						/* */ if ($equal(_3, ($pkg.CardTypeArm), desktop.CardType) || $equal(_3, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_3, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_3, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_3, ($pkg.CardTypeBarrier), desktop.CardType)) { $s = 89; continue; }
-						/* */ if ($equal(_3, ($pkg.CardTypeJob), desktop.CardType)) { $s = 90; continue; }
-						/* */ if ($equal(_3, ($pkg.CardTypeMake), desktop.CardType)) { $s = 91; continue; }
-						/* */ $s = 92; continue;
-						/* if ($equal(_3, ($pkg.CardTypeAttack), desktop.CardType)) { */ case 86:
-							_r$24 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), gameplayCtx.Players); /* */ $s = 94; case 94: if($c) { $c = false; _r$24 = _r$24.$blk(); } if (_r$24 && _r$24.$blk !== undefined) { break s; }
-							_tuple$16 = _r$24;
-							target$2 = $clone(_tuple$16[0], Player);
-							err$4 = _tuple$16[1];
-							if (!($interfaceIsEqual(err$4, $ifaceNil))) {
-								$s = -1; return [origin, err$4];
-							}
-							/* */ if ($equal(target$2, playerNotFound, Player)) { $s = 95; continue; }
-							/* */ $s = 96; continue;
-							/* if ($equal(target$2, playerNotFound, Player)) { */ case 95:
-								$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 97; case 97: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 96:
-							_r$25 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-								var card$1;
-								desktop.Face.copy(card$1.Face, desktop.FaceUp);
-								return card$1;
-							}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 98; case 98: if($c) { $c = false; _r$25 = _r$25.$blk(); } if (_r$25 && _r$25.$blk !== undefined) { break s; }
-							_tuple$17 = _r$25;
-							Gameplay.copy(gameplayCtx, _tuple$17[0]);
-							desktop.Card.copy(card, _tuple$17[1]);
-							err$4 = _tuple$17[2];
-							if (!($interfaceIsEqual(err$4, $ifaceNil))) {
-								$s = -1; return [origin, err$4];
-							}
-							_r$26 = Attack(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(target$2, Player)); /* */ $s = 99; case 99: if($c) { $c = false; _r$26 = _r$26.$blk(); } if (_r$26 && _r$26.$blk !== undefined) { break s; }
-							_tuple$18 = _r$26;
-							Gameplay.copy(gameplayCtx, _tuple$18[0]);
-							err$4 = _tuple$18[1];
-							/* */ if (!($interfaceIsEqual(err$4, $ifaceNil))) { $s = 100; continue; }
-							/* */ $s = 101; continue;
-							/* if (!($interfaceIsEqual(err$4, $ifaceNil))) { */ case 100:
-								$r = ctx.Alert(err$4); /* */ $s = 102; case 102: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 101:
-							$s = 93; continue;
-						/* } else if ($equal(_3, ($pkg.CardTypeSteal), desktop.CardType)) { */ case 87:
-							_r$27 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), gameplayCtx.Players); /* */ $s = 103; case 103: if($c) { $c = false; _r$27 = _r$27.$blk(); } if (_r$27 && _r$27.$blk !== undefined) { break s; }
-							_tuple$19 = _r$27;
-							target$3 = $clone(_tuple$19[0], Player);
-							err$5 = _tuple$19[1];
-							if (!($interfaceIsEqual(err$5, $ifaceNil))) {
-								$s = -1; return [origin, err$5];
-							}
-							/* */ if ($equal(target$3, playerNotFound, Player)) { $s = 104; continue; }
-							/* */ $s = 105; continue;
-							/* if ($equal(target$3, playerNotFound, Player)) { */ case 104:
-								$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 106; case 106: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 105:
-							_r$28 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-								var card$1;
-								desktop.Face.copy(card$1.Face, desktop.FaceUp);
-								return card$1;
-							}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 107; case 107: if($c) { $c = false; _r$28 = _r$28.$blk(); } if (_r$28 && _r$28.$blk !== undefined) { break s; }
-							_tuple$20 = _r$28;
-							Gameplay.copy(gameplayCtx, _tuple$20[0]);
-							desktop.Card.copy(card, _tuple$20[1]);
-							err$5 = _tuple$20[2];
-							if (!($interfaceIsEqual(err$5, $ifaceNil))) {
-								$s = -1; return [origin, err$5];
-							}
-							_r$29 = Steal(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(target$3, Player)); /* */ $s = 108; case 108: if($c) { $c = false; _r$29 = _r$29.$blk(); } if (_r$29 && _r$29.$blk !== undefined) { break s; }
-							_tuple$21 = _r$29;
-							Gameplay.copy(gameplayCtx, _tuple$21[0]);
-							err$5 = _tuple$21[1];
-							/* */ if (!($interfaceIsEqual(err$5, $ifaceNil))) { $s = 109; continue; }
-							/* */ $s = 110; continue;
-							/* if (!($interfaceIsEqual(err$5, $ifaceNil))) { */ case 109:
-								$r = ctx.Alert(err$5); /* */ $s = 111; case 111: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 110:
-							$s = 93; continue;
-						/* } else if ($equal(_3, ($pkg.CardTypeStealMoney), desktop.CardType)) { */ case 88:
-							_r$30 = ctx.AskOnePlayer($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), gameplayCtx.Players); /* */ $s = 112; case 112: if($c) { $c = false; _r$30 = _r$30.$blk(); } if (_r$30 && _r$30.$blk !== undefined) { break s; }
-							_tuple$22 = _r$30;
-							target$4 = $clone(_tuple$22[0], Player);
-							err$6 = _tuple$22[1];
-							if (!($interfaceIsEqual(err$6, $ifaceNil))) {
-								$s = -1; return [origin, err$6];
-							}
-							/* */ if ($equal(target$4, playerNotFound, Player)) { $s = 113; continue; }
-							/* */ $s = 114; continue;
-							/* if ($equal(target$4, playerNotFound, Player)) { */ case 113:
-								$r = ctx.Alert(new $String("user cancel action")); /* */ $s = 115; case 115: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 114:
-							_r$31 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-								var card$1;
-								desktop.Face.copy(card$1.Face, desktop.FaceUp);
-								return card$1;
-							}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 116; case 116: if($c) { $c = false; _r$31 = _r$31.$blk(); } if (_r$31 && _r$31.$blk !== undefined) { break s; }
-							_tuple$23 = _r$31;
-							Gameplay.copy(gameplayCtx, _tuple$23[0]);
-							desktop.Card.copy(card, _tuple$23[1]);
-							err$6 = _tuple$23[2];
-							if (!($interfaceIsEqual(err$6, $ifaceNil))) {
-								$s = -1; return [origin, err$6];
-							}
-							_r$32 = StealMoney(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(target$4, Player)); /* */ $s = 117; case 117: if($c) { $c = false; _r$32 = _r$32.$blk(); } if (_r$32 && _r$32.$blk !== undefined) { break s; }
-							_tuple$24 = _r$32;
-							Gameplay.copy(gameplayCtx, _tuple$24[0]);
-							err$6 = _tuple$24[1];
-							/* */ if (!($interfaceIsEqual(err$6, $ifaceNil))) { $s = 118; continue; }
-							/* */ $s = 119; continue;
-							/* if (!($interfaceIsEqual(err$6, $ifaceNil))) { */ case 118:
-								$r = ctx.Alert(err$6); /* */ $s = 120; case 120: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 119:
-							$s = 93; continue;
-						/* } else if ($equal(_3, ($pkg.CardTypeArm), desktop.CardType) || $equal(_3, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_3, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_3, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_3, ($pkg.CardTypeBarrier), desktop.CardType)) { */ case 89:
-							_r$33 = Equip(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), $clone(card, desktop.Card)); /* */ $s = 121; case 121: if($c) { $c = false; _r$33 = _r$33.$blk(); } if (_r$33 && _r$33.$blk !== undefined) { break s; }
-							_tuple$25 = _r$33;
-							Gameplay.copy(gameplayCtx, _tuple$25[0]);
-							err$1 = _tuple$25[1];
-							/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 122; continue; }
-							/* */ $s = 123; continue;
-							/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 122:
-								$r = ctx.Alert(err$1); /* */ $s = 124; case 124: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-								/* break; */ $s = 85; continue;
-							/* } */ case 123:
-							$s = 93; continue;
-						/* } else if ($equal(_3, ($pkg.CardTypeJob), desktop.CardType)) { */ case 90:
-							_r$34 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-								var card$1;
-								desktop.Face.copy(card$1.Face, desktop.FaceUp);
-								return card$1;
-							}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 125; case 125: if($c) { $c = false; _r$34 = _r$34.$blk(); } if (_r$34 && _r$34.$blk !== undefined) { break s; }
-							_tuple$26 = _r$34;
-							Gameplay.copy(gameplayCtx, _tuple$26[0]);
-							desktop.Card.copy(card, _tuple$26[1]);
-							err$1 = _tuple$26[2];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							_r$35 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								characterCom.Money = characterCom.Money + (2) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 126; case 126: if($c) { $c = false; _r$35 = _r$35.$blk(); } if (_r$35 && _r$35.$blk !== undefined) { break s; }
-							_tuple$27 = _r$35;
-							Gameplay.copy(gameplayCtx, _tuple$27[0]);
-							err$1 = _tuple$27[1];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							$s = 93; continue;
-						/* } else if ($equal(_3, ($pkg.CardTypeMake), desktop.CardType)) { */ case 91:
-							_r$36 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$1) {
-								var card$1;
-								desktop.Face.copy(card$1.Face, desktop.FaceUp);
-								return card$1;
-							}; })(moneyNotEnough), $clone(card, desktop.Card)); /* */ $s = 127; case 127: if($c) { $c = false; _r$36 = _r$36.$blk(); } if (_r$36 && _r$36.$blk !== undefined) { break s; }
-							_tuple$28 = _r$36;
-							Gameplay.copy(gameplayCtx, _tuple$28[0]);
-							desktop.Card.copy(card, _tuple$28[1]);
-							err$1 = _tuple$28[2];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							_r$37 = DrawCard(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), 2); /* */ $s = 128; case 128: if($c) { $c = false; _r$37 = _r$37.$blk(); } if (_r$37 && _r$37.$blk !== undefined) { break s; }
-							_tuple$29 = _r$37;
-							Gameplay.copy(gameplayCtx, _tuple$29[0]);
-							err$1 = _tuple$29[1];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							$s = 93; continue;
-						/* } else { */ case 92:
-							_r$38 = fmt.Sprintf("\xE4\xB8\x8D\xE8\x83\xBD\xE4\xBD\xBF\xE7\x94\xA8\xE9\x80\x99\xE9\xA1\x9E\xE5\x9E\x8B\xE7\x9A\x84\xE5\x8D\xA1%v\n", new sliceType([new card.constructor.elem(card)])); /* */ $s = 129; case 129: if($c) { $c = false; _r$38 = _r$38.$blk(); } if (_r$38 && _r$38.$blk !== undefined) { break s; }
-							$r = ctx.Alert(new $String(_r$38)); /* */ $s = 130; case 130: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-						/* } */ case 93:
-					case 85:
-					$s = 33; continue;
-				/* } else if ($assertType(_ref, view.CmdSellCard, true)[1]) { */ case 29:
-					cmdDetail$2 = $clone(_ref.$val, view.CmdSellCard);
-					card$1 = $clone(cmdDetail$2.Card, desktop.Card);
-						_4 = $clone(card$1.CardPrototypeID.CardType, desktop.CardType);
-						/* */ if ($equal(_4, ($pkg.CardTypeArm), desktop.CardType) || $equal(_4, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_4, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_4, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_4, ($pkg.CardTypeBarrier), desktop.CardType)) { $s = 132; continue; }
-						/* */ $s = 133; continue;
-						/* if ($equal(_4, ($pkg.CardTypeArm), desktop.CardType) || $equal(_4, ($pkg.CardTypeArmor), desktop.CardType) || $equal(_4, ($pkg.CardTypeAccessory), desktop.CardType) || $equal(_4, ($pkg.CardTypeGrind), desktop.CardType) || $equal(_4, ($pkg.CardTypeBarrier), desktop.CardType)) { */ case 132:
-							_r$39 = MoveCard(ctx, $clone(gameplayCtx, Gameplay), CardStackIDHand($clone(activePlayer, Player)), "CardStackGravyard", (function(moneyNotEnough) { return function(card$2) {
-								var card$2;
-								desktop.Face.copy(card$2.Face, desktop.FaceUp);
-								return card$2;
-							}; })(moneyNotEnough), $clone(card$1, desktop.Card)); /* */ $s = 135; case 135: if($c) { $c = false; _r$39 = _r$39.$blk(); } if (_r$39 && _r$39.$blk !== undefined) { break s; }
-							_tuple$30 = _r$39;
-							Gameplay.copy(gameplayCtx, _tuple$30[0]);
-							desktop.Card.copy(card$1, _tuple$30[1]);
-							err$1 = _tuple$30[2];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							_r$40 = UpdateCharacterCom($clone(gameplayCtx, Gameplay), $clone(activePlayer, Player), (function(moneyNotEnough) { return function(characterCom) {
-								var characterCom;
-								characterCom.Money = characterCom.Money + (1) >> 0;
-								return [characterCom, $ifaceNil];
-							}; })(moneyNotEnough)); /* */ $s = 136; case 136: if($c) { $c = false; _r$40 = _r$40.$blk(); } if (_r$40 && _r$40.$blk !== undefined) { break s; }
-							_tuple$31 = _r$40;
-							Gameplay.copy(gameplayCtx, _tuple$31[0]);
-							err$1 = _tuple$31[1];
-							if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-								$s = -1; return [origin, err$1];
-							}
-							$s = 134; continue;
-						/* } else { */ case 133:
-							_r$41 = fmt.Sprintf("\xE4\xB8\x8D\xE8\x83\xBD\xE8\xB3\xA3\xE6\x8E\x89\xE9\x80\x99\xE9\xA1\x9E\xE5\x9E\x8B\xE7\x9A\x84\xE5\x8D\xA1%v\n", new sliceType([new card$1.constructor.elem(card$1)])); /* */ $s = 137; case 137: if($c) { $c = false; _r$41 = _r$41.$blk(); } if (_r$41 && _r$41.$blk !== undefined) { break s; }
-							$r = ctx.Alert(new $String(_r$41)); /* */ $s = 138; case 138: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-						/* } */ case 134:
-					case 131:
-					$s = 33; continue;
-				/* } else if ($assertType(_ref, view.CmdExit, true)[1]) { */ case 30:
-					cmdDetail$3 = $clone(_ref.$val, view.CmdExit);
-					/* break Turn; */ $s = 3; continue s;
-					$s = 33; continue;
-				/* } else if ($assertType(_ref, view.CmdEndTurn, true)[1]) { */ case 31:
-					cmdDetail$4 = $clone(_ref.$val, view.CmdEndTurn);
-					/* break Menu; */ $s = 19; continue s;
-					$s = 33; continue;
-				/* } else { */ case 32:
-					cmdDetail$5 = _ref;
-					_r$42 = fmt.Errorf("%v not found", new sliceType([cmd])); /* */ $s = 139; case 139: if($c) { $c = false; _r$42 = _r$42.$blk(); } if (_r$42 && _r$42.$blk !== undefined) { break s; }
-					$s = -1; return [origin, _r$42];
-				/* } */ case 33:
-			/* } */ $s = 18; continue; case 19:
-			_r$43 = NextPlayer(ctx, $clone(gameplayCtx, Gameplay), $clone(activePlayer, Player)); /* */ $s = 140; case 140: if($c) { $c = false; _r$43 = _r$43.$blk(); } if (_r$43 && _r$43.$blk !== undefined) { break s; }
-			_tuple$32 = _r$43;
-			Gameplay.copy(gameplayCtx, _tuple$32[0]);
-			err = _tuple$32[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
+			if (gameplayCtx.EndState.Completed) {
+				/* break Turn; */ $s = 2; continue s;
 			}
-		/* } */ $s = 2; continue; case 3:
+		/* } */ $s = 1; continue; case 2:
+		_r$2 = End(ctx, $clone(gameplayCtx, Gameplay)); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		Gameplay.copy(gameplayCtx, _tuple$2[0]);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
 		$s = -1; return [gameplayCtx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Start }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$2 = _r$2; $f._r$20 = _r$20; $f._r$21 = _r$21; $f._r$22 = _r$22; $f._r$23 = _r$23; $f._r$24 = _r$24; $f._r$25 = _r$25; $f._r$26 = _r$26; $f._r$27 = _r$27; $f._r$28 = _r$28; $f._r$29 = _r$29; $f._r$3 = _r$3; $f._r$30 = _r$30; $f._r$31 = _r$31; $f._r$32 = _r$32; $f._r$33 = _r$33; $f._r$34 = _r$34; $f._r$35 = _r$35; $f._r$36 = _r$36; $f._r$37 = _r$37; $f._r$38 = _r$38; $f._r$39 = _r$39; $f._r$4 = _r$4; $f._r$40 = _r$40; $f._r$41 = _r$41; $f._r$42 = _r$42; $f._r$43 = _r$43; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$17 = _tuple$17; $f._tuple$18 = _tuple$18; $f._tuple$19 = _tuple$19; $f._tuple$2 = _tuple$2; $f._tuple$20 = _tuple$20; $f._tuple$21 = _tuple$21; $f._tuple$22 = _tuple$22; $f._tuple$23 = _tuple$23; $f._tuple$24 = _tuple$24; $f._tuple$25 = _tuple$25; $f._tuple$26 = _tuple$26; $f._tuple$27 = _tuple$27; $f._tuple$28 = _tuple$28; $f._tuple$29 = _tuple$29; $f._tuple$3 = _tuple$3; $f._tuple$30 = _tuple$30; $f._tuple$31 = _tuple$31; $f._tuple$32 = _tuple$32; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.activePlayer = activePlayer; $f.answer = answer; $f.card = card; $f.card$1 = card$1; $f.cmd = cmd; $f.cmdDetail = cmdDetail; $f.cmdDetail$1 = cmdDetail$1; $f.cmdDetail$2 = cmdDetail$2; $f.cmdDetail$3 = cmdDetail$3; $f.cmdDetail$4 = cmdDetail$4; $f.cmdDetail$5 = cmdDetail$5; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.err$4 = err$4; $f.err$5 = err$5; $f.err$6 = err$6; $f.gameplayCtx = gameplayCtx; $f.isActivePlayerExist = isActivePlayerExist; $f.moneyNotEnough = moneyNotEnough; $f.origin = origin; $f.outOfCard = outOfCard; $f.playerNotFound = playerNotFound; $f.target = target; $f.target$1 = target$1; $f.target$2 = target$2; $f.target$3 = target$3; $f.target$4 = target$4; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Start }; } $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.activePlayer = activePlayer; $f.ctx = ctx; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.isActivePlayerExist = isActivePlayerExist; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Start = Start;
 	Steal = function(ctx, origin, player, target) {
@@ -22506,6 +22459,26 @@ $packages["app/gameplay"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: GetCharacterCard }; } $f._entry = _entry; $f._r = _r; $f.cs = cs; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.GetCharacterCard = GetCharacterCard;
+	GetCharacterCardCom = function(gameplayCtx, player) {
+		var _entry, _r, _tuple, _tuple$1, characterCard, characterCom, err, gameplayCtx, isExist, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; characterCard = $f.characterCard; characterCom = $f.characterCom; err = $f.err; gameplayCtx = $f.gameplayCtx; isExist = $f.isExist; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		characterCard = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new CharacterCardCom.ptr(0, 0), err];
+		}
+		_tuple$1 = (_entry = gameplayCtx.CharacterCardComs[$String.keyFor(characterCard.ID)], _entry !== undefined ? [_entry.v, true] : [new CharacterCardCom.ptr(0, 0), false]);
+		characterCom = $clone(_tuple$1[0], CharacterCardCom);
+		isExist = _tuple$1[1];
+		if (isExist === false) {
+			CharacterCardCom.copy(characterCom, InitCharacterCardCom($clone(characterCard, desktop.Card)));
+		}
+		$s = -1; return [characterCom, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GetCharacterCardCom }; } $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.characterCard = characterCard; $f.characterCom = characterCom; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.isExist = isExist; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.GetCharacterCardCom = GetCharacterCardCom;
 	UpdateCharacterCom = function(origin, player, f) {
 		var _entry, _r, _r$1, _tuple, _tuple$1, _tuple$2, characterCard, characterCom, err, f, gameplayCtx, isExist, origin, player, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; characterCard = $f.characterCard; characterCom = $f.characterCom; err = $f.err; f = $f.f; gameplayCtx = $f.gameplayCtx; isExist = $f.isExist; origin = $f.origin; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -22535,6 +22508,146 @@ $packages["app/gameplay"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: UpdateCharacterCom }; } $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.characterCard = characterCard; $f.characterCom = characterCom; $f.err = err; $f.f = f; $f.gameplayCtx = gameplayCtx; $f.isExist = isExist; $f.origin = origin; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.UpdateCharacterCom = UpdateCharacterCom;
+	HasAbilityAttackWithAnyCard = function(gameplayCtx, player) {
+		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		card = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return false;
+		/* } */ case 3:
+		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
+			$s = -1; return false;
+		}
+		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArm, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$3 === false) { */ case 6:
+			$s = -1; return false;
+		/* } */ case 7:
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityAttackWithAnyCard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.HasAbilityAttackWithAnyCard = HasAbilityAttackWithAnyCard;
+	HasAbilityHealing = function(gameplayCtx, player) {
+		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		card = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return false;
+		/* } */ case 3:
+		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
+			$s = -1; return false;
+		}
+		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArmor, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$3 === false) { */ case 6:
+			$s = -1; return false;
+		/* } */ case 7:
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityHealing }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.HasAbilityHealing = HasAbilityHealing;
+	HasAbilityBreakArmor = function(gameplayCtx, player) {
+		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		card = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return false;
+		/* } */ case 3:
+		if (!(card.CardPrototypeID.ID === "\xE6\x88\xB0\xE5\xA3\xAB")) {
+			$s = -1; return false;
+		}
+		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeAccessory, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$3 === false) { */ case 6:
+			$s = -1; return false;
+		/* } */ case 7:
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityBreakArmor }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.HasAbilityBreakArmor = HasAbilityBreakArmor;
+	HasAbilityEvadeWithAnyCard = function(gameplayCtx, player) {
+		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		card = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return false;
+		/* } */ case 3:
+		if (!(card.CardPrototypeID.ID === "\xE5\xB0\x8F\xE5\x81\xB7")) {
+			$s = -1; return false;
+		}
+		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeArmor, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$3 === false) { */ case 6:
+			$s = -1; return false;
+		/* } */ case 7:
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityEvadeWithAnyCard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.HasAbilityEvadeWithAnyCard = HasAbilityEvadeWithAnyCard;
+	HasAbilityAttackHealing = function(gameplayCtx, player) {
+		var _r, _r$1, _r$2, _r$3, _tuple, card, err, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; card = $f.card; err = $f.err; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = GetCharacterCard($clone(gameplayCtx, Gameplay), $clone(player, Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		card = $clone(_tuple[0], desktop.Card);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Println(new sliceType([new $String(_r$1)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return false;
+		/* } */ case 3:
+		if (!(card.CardPrototypeID.ID === "\xE5\xB0\x8F\xE5\x81\xB7")) {
+			$s = -1; return false;
+		}
+		_r$3 = HasEquip($clone(gameplayCtx, Gameplay), $clone(player, Player), $clone($pkg.CardTypeAccessory, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		/* */ if (_r$3 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (_r$3 === false) { */ case 6:
+			$s = -1; return false;
+		/* } */ case 7:
+		$s = -1; return true;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HasAbilityAttackHealing }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f.card = card; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.HasAbilityAttackHealing = HasAbilityAttackHealing;
 	InitCharacterCardCom = function(card) {
 		var card;
 		return new CharacterCardCom.ptr(3, 3);
@@ -22656,11 +22769,11 @@ $packages["app/gameplay"] = (function() {
 		/* } */ $s = 31; continue; case 32:
 		$r = desktop.ShuffleCard($subslice(new sliceType$2(home.$array), home.$offset, home.$offset + home.$length)); /* */ $s = 34; case 34: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, "CardStackHome", home);
-		playerA = new Player.ptr("A", "player", 0);
+		playerA = new Player.ptr("A", "ai1", 0);
 		gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerA.ID, $clone(playerA, Player));
 		characterA = new desktop.Card.ptr("characterA", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeCharacter, desktop.CardType), "\xE6\x88\xB0\xE5\xA3\xAB"), $clone(desktop.FaceDown, desktop.Face), playerA.ID);
 		gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter($clone(playerA, Player)), new desktop.CardStack([$clone(characterA, desktop.Card)]));
-		playerB = new Player.ptr("B", "ai", 0);
+		playerB = new Player.ptr("B", "ai2", 0);
 		gameplayCtx.Players = AssocStringPlayer(gameplayCtx.Players, playerB.ID, $clone(playerB, Player));
 		characterB = new desktop.Card.ptr("characterB", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeCharacter, desktop.CardType), "\xE5\xB0\x8F\xE5\x81\xB7"), $clone(desktop.FaceDown, desktop.Face), "");
 		gameplayCtx.Desktop.CardStacks = desktop.AssocStringCardStack(gameplayCtx.Desktop.CardStacks, CardStackIDCharacter($clone(playerB, Player)), new desktop.CardStack([$clone(characterB, desktop.Card)]));
@@ -22674,7 +22787,8 @@ $packages["app/gameplay"] = (function() {
 	Player.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "GroupID", name: "GroupID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Order", name: "Order", embedded: false, exported: true, typ: $Int, tag: ""}]);
 	PlayerBasicCom.init("", [{prop: "AttackTimes", name: "AttackTimes", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "StealTimes", name: "StealTimes", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "StealMoneyTimes", name: "StealMoneyTimes", embedded: false, exported: true, typ: $Int, tag: ""}]);
 	CharacterCardCom.init("", [{prop: "Life", name: "Life", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}]);
-	Gameplay.init("", [{prop: "Desktop", name: "Desktop", embedded: false, exported: true, typ: desktop.Desktop, tag: ""}, {prop: "Players", name: "Players", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "ActivePlayerID", name: "ActivePlayerID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerBasicComs", name: "PlayerBasicComs", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CharacterCardComs", name: "CharacterCardComs", embedded: false, exported: true, typ: mapType$2, tag: ""}]);
+	EndState.init("", [{prop: "Completed", name: "Completed", embedded: false, exported: true, typ: $Bool, tag: ""}, {prop: "Reason", name: "Reason", embedded: false, exported: true, typ: $String, tag: ""}]);
+	Gameplay.init("", [{prop: "Desktop", name: "Desktop", embedded: false, exported: true, typ: desktop.Desktop, tag: ""}, {prop: "Players", name: "Players", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "ActivePlayerID", name: "ActivePlayerID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerBasicComs", name: "PlayerBasicComs", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CharacterCardComs", name: "CharacterCardComs", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "EndState", name: "EndState", embedded: false, exported: true, typ: EndState, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -22698,15 +22812,217 @@ $packages["app/gameplay"] = (function() {
 		$pkg.CardTypeBarrier = new desktop.CardType.ptr("CardTypeBarrier");
 		$pkg.PlayerA = new Player.ptr("A", "A", 0);
 		$pkg.PlayerB = new Player.ptr("B", "B", 1);
-		$pkg.DefaultGamePlay = new Gameplay.ptr(new desktop.Desktop.ptr($makeMap($String.keyFor, [{ k: "CardStackHome", v: new desktop.CardStack([new desktop.Card.ptr("1", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeAccessory, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("2", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeArm, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("3", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeSteal, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("4", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeStealMoney, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("5", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeAttack, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), $pkg.PlayerA.ID), new desktop.Card.ptr("6", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeDodge, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), $pkg.PlayerA.ID)]) }, { k: "CardStackGravyard", v: new desktop.CardStack([]) }, { k: CardStackIDHand($clone($pkg.PlayerA, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDCharacter($clone($pkg.PlayerA, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDHand($clone($pkg.PlayerB, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDCharacter($clone($pkg.PlayerB, Player)), v: new desktop.CardStack([]) }])), $makeMap($String.keyFor, [{ k: $pkg.PlayerA.ID, v: $clone($pkg.PlayerA, Player) }, { k: $pkg.PlayerB.ID, v: $clone($pkg.PlayerB, Player) }]), $pkg.PlayerA.ID, $makeMap($String.keyFor, []), $makeMap($String.keyFor, []));
+		$pkg.DefaultGamePlay = new Gameplay.ptr(new desktop.Desktop.ptr($makeMap($String.keyFor, [{ k: "CardStackHome", v: new desktop.CardStack([new desktop.Card.ptr("1", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeAccessory, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("2", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeArm, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("3", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeSteal, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("4", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeStealMoney, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), ""), new desktop.Card.ptr("5", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeAttack, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), $pkg.PlayerA.ID), new desktop.Card.ptr("6", new desktop.CardPrototypeID.ptr($clone($pkg.CardTypeDodge, desktop.CardType), ""), $clone(desktop.FaceDown, desktop.Face), $pkg.PlayerA.ID)]) }, { k: "CardStackGravyard", v: new desktop.CardStack([]) }, { k: CardStackIDHand($clone($pkg.PlayerA, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDCharacter($clone($pkg.PlayerA, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDHand($clone($pkg.PlayerB, Player)), v: new desktop.CardStack([]) }, { k: CardStackIDCharacter($clone($pkg.PlayerB, Player)), v: new desktop.CardStack([]) }])), $makeMap($String.keyFor, [{ k: $pkg.PlayerA.ID, v: $clone($pkg.PlayerA, Player) }, { k: $pkg.PlayerB.ID, v: $clone($pkg.PlayerB, Player) }]), $pkg.PlayerA.ID, $makeMap($String.keyFor, []), $makeMap($String.keyFor, []), new EndState.ptr(false, ""));
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/gameplay/ai"] = (function() {
+	var $pkg = {}, $init, gameplay, view, fmt, desktop, sliceType, sliceType$1, AskCommand, AskOneCard, AskOnePlayer, AskOption, CardWeight, CmdWeight;
+	gameplay = $packages["app/gameplay"];
+	view = $packages["app/view"];
+	fmt = $packages["fmt"];
+	desktop = $packages["tool/desktop"];
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($Int);
+	AskCommand = function(gameplayCtx, player) {
+		var _i, _r, _ref, _tuple, cmd, cmd$1, cmds, gameplayCtx, i, maxI, maxW, player, w, x, x$1, x$2, x$3, x$4, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; cmd = $f.cmd; cmd$1 = $f.cmd$1; cmds = $f.cmds; gameplayCtx = $f.gameplayCtx; i = $f.i; maxI = $f.maxI; maxW = $f.maxW; player = $f.player; w = $f.w; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		cmds = new sliceType([(x = new view.CmdUseCard.ptr(new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), "")), new x.constructor.elem(x)), (x$1 = new view.CmdBuyItem.ptr(""), new x$1.constructor.elem(x$1)), (x$2 = new view.CmdSellCard.ptr(new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), "")), new x$2.constructor.elem(x$2)), (x$3 = new view.CmdEndTurn.ptr(), new x$3.constructor.elem(x$3))]);
+		maxW = 0;
+		maxI = 0;
+		_ref = cmds;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			cmd = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = CmdWeight($clone(gameplayCtx, gameplay.Gameplay), $clone(player, gameplay.Player), cmd); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			cmd$1 = _tuple[0];
+			w = _tuple[1];
+			if (maxW < w) {
+				maxW = w;
+				maxI = i;
+			}
+			((i < 0 || i >= cmds.$length) ? ($throwRuntimeError("index out of range"), undefined) : cmds.$array[cmds.$offset + i] = cmd$1);
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		if (maxW === 0) {
+			$s = -1; return [(x$4 = new view.CmdEndTurn.ptr(), new x$4.constructor.elem(x$4)), $ifaceNil];
+		}
+		$s = -1; return [((maxI < 0 || maxI >= cmds.$length) ? ($throwRuntimeError("index out of range"), undefined) : cmds.$array[cmds.$offset + maxI]), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AskCommand }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.cmd = cmd; $f.cmd$1 = cmd$1; $f.cmds = cmds; $f.gameplayCtx = gameplayCtx; $f.i = i; $f.maxI = maxI; $f.maxW = maxW; $f.player = player; $f.w = w; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AskCommand = AskCommand;
+	AskOneCard = function(gameplayCtx, player, targetCS, validFn) {
+		var _entry, _i, _r, _ref, card, gameplayCtx, hand, player, targetCS, validFn, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; card = $f.card; gameplayCtx = $f.gameplayCtx; hand = $f.hand; player = $f.player; targetCS = $f.targetCS; validFn = $f.validFn; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		if (targetCS.$length === 0) {
+			$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), $ifaceNil];
+		}
+		hand = (_entry = gameplayCtx.Desktop.CardStacks[$String.keyFor(gameplay.CardStackIDHand($clone(player, gameplay.Player)))], _entry !== undefined ? _entry.v : desktop.CardStack.nil);
+		_ref = hand;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			card = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), desktop.Card);
+			_r = validFn($clone(card, desktop.Card)); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (_r) { */ case 3:
+				$s = -1; return [card, $ifaceNil];
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AskOneCard }; } $f._entry = _entry; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.card = card; $f.gameplayCtx = gameplayCtx; $f.hand = hand; $f.player = player; $f.targetCS = targetCS; $f.validFn = validFn; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AskOneCard = AskOneCard;
+	AskOnePlayer = function(gameplayCtx, player, players) {
+		var gameplayCtx, player, players;
+		if (players.$length === 0) {
+			return [new gameplay.Player.ptr("", "", 0), $ifaceNil];
+		}
+		return [(0 >= players.$length ? ($throwRuntimeError("index out of range"), undefined) : players.$array[players.$offset + 0]), $ifaceNil];
+	};
+	$pkg.AskOnePlayer = AskOnePlayer;
+	AskOption = function(gameplayCtx, player, title, options) {
+		var gameplayCtx, options, player, title;
+		if (options.$length === 0) {
+			return ["", $ifaceNil];
+		}
+		return ["", $ifaceNil];
+	};
+	$pkg.AskOption = AskOption;
+	CardWeight = function(gameplayCtx, player, card) {
+		var _1, _r, card, gameplayCtx, player, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; card = $f.card; gameplayCtx = $f.gameplayCtx; player = $f.player; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_1 = $clone(card.CardPrototypeID.CardType, desktop.CardType);
+			/* */ if ($equal(_1, (gameplay.CardTypeAttack), desktop.CardType)) { $s = 2; continue; }
+			/* */ if ($equal(_1, (gameplay.CardTypeArm), desktop.CardType) || $equal(_1, (gameplay.CardTypeArmor), desktop.CardType) || $equal(_1, (gameplay.CardTypeAccessory), desktop.CardType) || $equal(_1, (gameplay.CardTypeBarrier), desktop.CardType) || $equal(_1, (gameplay.CardTypeGrind), desktop.CardType)) { $s = 3; continue; }
+			/* */ if ($equal(_1, (gameplay.CardTypeMake), desktop.CardType) || $equal(_1, (gameplay.CardTypeJob), desktop.CardType)) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if ($equal(_1, (gameplay.CardTypeAttack), desktop.CardType)) { */ case 2:
+				$s = -1; return 90;
+			/* } else if ($equal(_1, (gameplay.CardTypeArm), desktop.CardType) || $equal(_1, (gameplay.CardTypeArmor), desktop.CardType) || $equal(_1, (gameplay.CardTypeAccessory), desktop.CardType) || $equal(_1, (gameplay.CardTypeBarrier), desktop.CardType) || $equal(_1, (gameplay.CardTypeGrind), desktop.CardType)) { */ case 3:
+				_r = gameplay.HasEquip($clone(gameplayCtx, gameplay.Gameplay), $clone(player, gameplay.Player), $clone(card.CardPrototypeID.CardType, desktop.CardType)); /* */ $s = 8; case 8: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				/* */ if (_r === false) { $s = 6; continue; }
+				/* */ $s = 7; continue;
+				/* if (_r === false) { */ case 6:
+					$s = -1; return 100;
+				/* } */ case 7:
+				$s = -1; return 0;
+			/* } else if ($equal(_1, (gameplay.CardTypeMake), desktop.CardType) || $equal(_1, (gameplay.CardTypeJob), desktop.CardType)) { */ case 4:
+				$s = -1; return 50;
+			/* } */ case 5:
+		case 1:
+		$s = -1; return 0;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: CardWeight }; } $f._1 = _1; $f._r = _r; $f.card = card; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.CardWeight = CardWeight;
+	CmdWeight = function(gameplayCtx, player, cmd) {
+		var _1, _entry, _i, _i$1, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _ref$2, _tuple, card, card$1, cardWs, character, cmd, detail, detail$1, detail$2, detail$3, err, gameplayCtx, hand, i, maxI, maxW, player, w, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _tuple = $f._tuple; card = $f.card; card$1 = $f.card$1; cardWs = $f.cardWs; character = $f.character; cmd = $f.cmd; detail = $f.detail; detail$1 = $f.detail$1; detail$2 = $f.detail$2; detail$3 = $f.detail$3; err = $f.err; gameplayCtx = $f.gameplayCtx; hand = $f.hand; i = $f.i; maxI = $f.maxI; maxW = $f.maxW; player = $f.player; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		hand = (_entry = gameplayCtx.Desktop.CardStacks[$String.keyFor(gameplay.CardStackIDHand($clone(player, gameplay.Player)))], _entry !== undefined ? _entry.v : desktop.CardStack.nil);
+		_r = gameplay.GetCharacterCardCom($clone(gameplayCtx, gameplay.Gameplay), $clone(player, gameplay.Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		character = $clone(_tuple[0], gameplay.CharacterCardCom);
+		err = _tuple[1];
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+			_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$2 = fmt.Printf(_r$1, new sliceType([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2;
+			$s = -1; return [cmd, 0];
+		/* } */ case 3:
+		_ref = cmd;
+		/* */ if ($assertType(_ref, view.CmdUseCard, true)[1]) { $s = 6; continue; }
+		/* */ if ($assertType(_ref, view.CmdBuyItem, true)[1]) { $s = 7; continue; }
+		/* */ if ($assertType(_ref, view.CmdSellCard, true)[1]) { $s = 8; continue; }
+		/* */ if ($assertType(_ref, view.CmdEndTurn, true)[1]) { $s = 9; continue; }
+		/* */ $s = 10; continue;
+		/* if ($assertType(_ref, view.CmdUseCard, true)[1]) { */ case 6:
+			detail = $clone(_ref.$val, view.CmdUseCard);
+			if (hand.$length === 0) {
+				$s = -1; return [new detail.constructor.elem(detail), 0];
+			}
+			cardWs = new sliceType$1([]);
+			maxW = 0;
+			maxI = 0;
+			_ref$1 = hand;
+			_i = 0;
+			/* while (true) { */ case 11:
+				/* if (!(_i < _ref$1.$length)) { break; } */ if(!(_i < _ref$1.$length)) { $s = 12; continue; }
+				i = _i;
+				card = $clone(((_i < 0 || _i >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i]), desktop.Card);
+				_r$3 = CardWeight($clone(gameplayCtx, gameplay.Gameplay), $clone(player, gameplay.Player), $clone(card, desktop.Card)); /* */ $s = 13; case 13: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				w = _r$3;
+				cardWs = $append(cardWs, w);
+				if (maxW < w) {
+					maxW = w;
+					maxI = i;
+				}
+				_i++;
+			/* } */ $s = 11; continue; case 12:
+			desktop.Card.copy(detail.Card, ((maxI < 0 || maxI >= hand.$length) ? ($throwRuntimeError("index out of range"), undefined) : hand.$array[hand.$offset + maxI]));
+			$s = -1; return [new detail.constructor.elem(detail), maxW];
+		/* } else if ($assertType(_ref, view.CmdBuyItem, true)[1]) { */ case 7:
+			detail$1 = $clone(_ref.$val, view.CmdBuyItem);
+			if (character.Money >= 4) {
+				detail$1.ItemID = "\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5";
+				$s = -1; return [new detail$1.constructor.elem(detail$1), 100];
+			}
+			if (character.Money >= 2) {
+				detail$1.ItemID = "\xE5\x8A\x9B\xE9\x87\x8F\xE8\x97\xA5";
+				$s = -1; return [new detail$1.constructor.elem(detail$1), 50];
+			}
+			$s = 10; continue;
+		/* } else if ($assertType(_ref, view.CmdSellCard, true)[1]) { */ case 8:
+			detail$2 = $clone(_ref.$val, view.CmdSellCard);
+			if (hand.$length >= 5) {
+				_ref$2 = hand;
+				_i$1 = 0;
+				while (true) {
+					if (!(_i$1 < _ref$2.$length)) { break; }
+					card$1 = $clone(((_i$1 < 0 || _i$1 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$1]), desktop.Card);
+					_1 = $clone(card$1.CardPrototypeID.CardType, desktop.CardType);
+					if ($equal(_1, (gameplay.CardTypeArm), desktop.CardType) || $equal(_1, (gameplay.CardTypeArmor), desktop.CardType) || $equal(_1, (gameplay.CardTypeAccessory), desktop.CardType) || $equal(_1, (gameplay.CardTypeBarrier), desktop.CardType) || $equal(_1, (gameplay.CardTypeGrind), desktop.CardType)) {
+						desktop.Card.copy(detail$2.Card, card$1);
+						$s = -1; return [new detail$2.constructor.elem(detail$2), 100];
+					}
+					_i$1++;
+				}
+			}
+			$s = -1; return [new detail$2.constructor.elem(detail$2), 0];
+		/* } else if ($assertType(_ref, view.CmdEndTurn, true)[1]) { */ case 9:
+			detail$3 = $clone(_ref.$val, view.CmdEndTurn);
+			if (hand.$length === 0) {
+				$s = -1; return [new detail$3.constructor.elem(detail$3), 100];
+			}
+		/* } */ case 10:
+		$s = -1; return [cmd, 0];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: CmdWeight }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._tuple = _tuple; $f.card = card; $f.card$1 = card$1; $f.cardWs = cardWs; $f.character = character; $f.cmd = cmd; $f.detail = detail; $f.detail$1 = detail$1; $f.detail$2 = detail$2; $f.detail$3 = detail$3; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.hand = hand; $f.i = i; $f.maxI = maxI; $f.maxW = maxW; $f.player = player; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.CmdWeight = CmdWeight;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = gameplay.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = view.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = desktop.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
 	return $pkg;
 })();
 $packages["app/view/html"] = (function() {
-	var $pkg = {}, $init, gameplay, view, fmt, js, desktop, HTMLView, sliceType, ptrType, funcType, funcType$1, mapType, mapType$1, funcType$2, sliceType$1, StartApp;
+	var $pkg = {}, $init, gameplay, ai, view, fmt, js, desktop, HTMLView, sliceType, ptrType, funcType, funcType$1, mapType, sliceType$1, funcType$2, sliceType$2, StartApp;
 	gameplay = $packages["app/gameplay"];
+	ai = $packages["app/gameplay/ai"];
 	view = $packages["app/view"];
 	fmt = $packages["fmt"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
@@ -22722,9 +23038,9 @@ $packages["app/view/html"] = (function() {
 	funcType = $funcType([ptrType], [], false);
 	funcType$1 = $funcType([], [], false);
 	mapType = $mapType($String, $emptyInterface);
-	mapType$1 = $mapType($String, gameplay.Player);
+	sliceType$1 = $sliceType(gameplay.Player);
 	funcType$2 = $funcType([desktop.Card], [$Bool], false);
-	sliceType$1 = $sliceType($String);
+	sliceType$2 = $sliceType($String);
 	HTMLView.ptr.prototype.Alert = function(msg) {
 		var _r, _r$1, _r$2, _ref, msg, t, t$1, t$2, v, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; msg = $f.msg; t = $f.t; t$1 = $f.t$1; t$2 = $f.t$2; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -22753,19 +23069,25 @@ $packages["app/view/html"] = (function() {
 	};
 	HTMLView.prototype.Alert = function(msg) { return this.$val.Alert(msg); };
 	HTMLView.ptr.prototype.AskCommand = function(gameplayCtx, player) {
-		var _r, _tuple, cmd, err, gameplayCtx, ok, player, v, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; cmd = $f.cmd; err = $f.err; gameplayCtx = $f.gameplayCtx; ok = $f.ok; player = $f.player; v = $f.v; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _tuple, cmd, err, gameplayCtx, ok, player, v, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; cmd = $f.cmd; err = $f.err; gameplayCtx = $f.gameplayCtx; ok = $f.ok; player = $f.player; v = $f.v; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		gameplayCtx = [gameplayCtx];
 		player = [player];
 		wait = [wait];
 		v = this;
+		/* */ if (!(player[0].GroupID === "player")) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(player[0].GroupID === "player")) { */ case 1:
+			_r = ai.AskCommand($clone(gameplayCtx[0], gameplay.Gameplay), $clone(player[0], gameplay.Player)); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return _r;
+		/* } */ case 2:
 		wait[0] = new $Chan($emptyInterface, 0);
 		$go((function(gameplayCtx, player, wait) { return function() {
 			$global.View.AskCommand($externalize(player[0], gameplay.Player), $externalize($makeMap($String.keyFor, [{ k: "CmdUseCard", v: new funcType((function(gameplayCtx, player, wait) { return function(cardID) {
 				var cardID;
 				$go((function(gameplayCtx, player, wait) { return function $b() {
-					var _card, _entry, _i, _r, _ref, targetCS, x, $s, $r;
-					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _card = $f._card; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; targetCS = $f.targetCS; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+					var _card, _entry, _i, _r$1, _ref, targetCS, x, $s, $r;
+					/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _card = $f._card; _entry = $f._entry; _i = $f._i; _r$1 = $f._r$1; _ref = $f._ref; targetCS = $f.targetCS; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 					targetCS = (_entry = gameplayCtx[0].Desktop.CardStacks[$String.keyFor(gameplay.CardStackIDHand($clone(player[0], gameplay.Player)))], _entry !== undefined ? _entry.v : desktop.CardStack.nil);
 					_ref = targetCS;
 					_i = 0;
@@ -22780,17 +23102,17 @@ $packages["app/view/html"] = (function() {
 						/* } */ case 4:
 						_i++;
 					/* } */ $s = 1; continue; case 2:
-					_r = fmt.Errorf("%v not found", new sliceType([new $String($internalize(cardID, $String))])); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-					$r = $send(wait[0], _r); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					_r$1 = fmt.Errorf("%v not found", new sliceType([new $String($internalize(cardID, $String))])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					$r = $send(wait[0], _r$1); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					$s = -1; return;
-					/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._card = _card; $f._entry = _entry; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.targetCS = targetCS; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+					/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._card = _card; $f._entry = _entry; $f._i = _i; $f._r$1 = _r$1; $f._ref = _ref; $f.targetCS = targetCS; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 				}; })(gameplayCtx, player, wait), []);
 			}; })(gameplayCtx, player, wait)) }, { k: "Cancel", v: new funcType$1((function(gameplayCtx, player, wait) { return function() {
 				$close(wait[0]);
 			}; })(gameplayCtx, player, wait)) }]), mapType));
 		}; })(gameplayCtx, player, wait), []);
-		_r = $recv(wait[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		cmd = _r[0];
+		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		cmd = _r$1[0];
 		_tuple = $assertType(cmd, $error, true);
 		err = _tuple[0];
 		ok = _tuple[1];
@@ -22798,16 +23120,22 @@ $packages["app/view/html"] = (function() {
 			$s = -1; return [$ifaceNil, err];
 		}
 		$s = -1; return [cmd, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskCommand }; } $f._r = _r; $f._tuple = _tuple; $f.cmd = cmd; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.ok = ok; $f.player = player; $f.v = v; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskCommand }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.cmd = cmd; $f.err = err; $f.gameplayCtx = gameplayCtx; $f.ok = ok; $f.player = player; $f.v = v; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	HTMLView.prototype.AskCommand = function(gameplayCtx, player) { return this.$val.AskCommand(gameplayCtx, player); };
-	HTMLView.ptr.prototype.AskOneCard = function(gameplay$1, player, targetCS, validFn) {
-		var _card, _i, _r, _ref, cardID, gameplay$1, player, targetCS, validFn, view$1, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _card = $f._card; _i = $f._i; _r = $f._r; _ref = $f._ref; cardID = $f.cardID; gameplay$1 = $f.gameplay$1; player = $f.player; targetCS = $f.targetCS; validFn = $f.validFn; view$1 = $f.view$1; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	HTMLView.ptr.prototype.AskOneCard = function(gameplayCtx, player, targetCS, validFn) {
+		var _card, _i, _r, _r$1, _ref, cardID, gameplayCtx, player, targetCS, validFn, view$1, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _card = $f._card; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; cardID = $f.cardID; gameplayCtx = $f.gameplayCtx; player = $f.player; targetCS = $f.targetCS; validFn = $f.validFn; view$1 = $f.view$1; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		player = [player];
 		targetCS = [targetCS];
 		wait = [wait];
 		view$1 = this;
+		/* */ if (!(player[0].GroupID === "player")) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (!(player[0].GroupID === "player")) { */ case 1:
+			_r = ai.AskOneCard($clone(gameplayCtx, gameplay.Gameplay), $clone(player[0], gameplay.Player), targetCS[0], validFn); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return _r;
+		/* } */ case 2:
 		wait[0] = new $Chan($emptyInterface, 0);
 		$go((function(player, targetCS, wait) { return function() {
 			$global.View.AskOneHandCard($externalize(player[0], gameplay.Player), $externalize(targetCS[0], desktop.CardStack), $externalize((function(player, targetCS, wait) { return function $b(cardID) {
@@ -22825,8 +23153,8 @@ $packages["app/view/html"] = (function() {
 				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.cardID = cardID; $f.$s = $s; $f.$r = $r; return $f;
 			}; })(player, targetCS, wait), funcType));
 		}; })(player, targetCS, wait), []);
-		_r = $recv(wait[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		cardID = _r[0];
+		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		cardID = _r$1[0];
 		if ($interfaceIsEqual(cardID, $ifaceNil)) {
 			$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), $ifaceNil];
 		}
@@ -22841,19 +23169,22 @@ $packages["app/view/html"] = (function() {
 			_i++;
 		}
 		$s = -1; return [new desktop.Card.ptr("", new desktop.CardPrototypeID.ptr(new desktop.CardType.ptr(""), ""), new desktop.Face.ptr(""), ""), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskOneCard }; } $f._card = _card; $f._i = _i; $f._r = _r; $f._ref = _ref; $f.cardID = cardID; $f.gameplay$1 = gameplay$1; $f.player = player; $f.targetCS = targetCS; $f.validFn = validFn; $f.view$1 = view$1; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskOneCard }; } $f._card = _card; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.cardID = cardID; $f.gameplayCtx = gameplayCtx; $f.player = player; $f.targetCS = targetCS; $f.validFn = validFn; $f.view$1 = view$1; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	HTMLView.prototype.AskOneCard = function(gameplay$1, player, targetCS, validFn) { return this.$val.AskOneCard(gameplay$1, player, targetCS, validFn); };
+	HTMLView.prototype.AskOneCard = function(gameplayCtx, player, targetCS, validFn) { return this.$val.AskOneCard(gameplayCtx, player, targetCS, validFn); };
 	HTMLView.ptr.prototype.AskOnePlayer = function(gameplayCtx, player, players) {
-		var _entry, _r, _tuple, gameplayCtx, id, isFind, player, players, ret, view$1, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; gameplayCtx = $f.gameplayCtx; id = $f.id; isFind = $f.isFind; player = $f.player; players = $f.players; ret = $f.ret; view$1 = $f.view$1; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _i, _plyr, _r, _ref, gameplayCtx, id, player, players, view$1, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _plyr = $f._plyr; _r = $f._r; _ref = $f._ref; gameplayCtx = $f.gameplayCtx; id = $f.id; player = $f.player; players = $f.players; view$1 = $f.view$1; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		player = [player];
 		players = [players];
 		wait = [wait];
 		view$1 = this;
+		if (!(player[0].GroupID === "player")) {
+			$s = -1; return ai.AskOnePlayer($clone(gameplayCtx, gameplay.Gameplay), $clone(player[0], gameplay.Player), players[0]);
+		}
 		wait[0] = new $Chan($emptyInterface, 0);
 		$go((function(player, players, wait) { return function() {
-			$global.View.AskOnePlayer($externalize(player[0], gameplay.Player), $externalize(players[0], mapType$1), $externalize((function(player, players, wait) { return function $b(id) {
+			$global.View.AskOnePlayer($externalize(player[0], gameplay.Player), $externalize(players[0], sliceType$1), $externalize((function(player, players, wait) { return function $b(id) {
 				var id, $s, $r;
 				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; id = $f.id; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 				/* */ if (id === null || id === undefined) { $s = 1; continue; }
@@ -22873,19 +23204,26 @@ $packages["app/view/html"] = (function() {
 		if ($interfaceIsEqual(id, $ifaceNil)) {
 			$s = -1; return [new gameplay.Player.ptr("", "", 0), $ifaceNil];
 		}
-		_tuple = (_entry = players[0][$String.keyFor($assertType(id, $String))], _entry !== undefined ? [_entry.v, true] : [new gameplay.Player.ptr("", "", 0), false]);
-		ret = $clone(_tuple[0], gameplay.Player);
-		isFind = _tuple[1];
-		if (isFind === false) {
-			$s = -1; return [new gameplay.Player.ptr("", "", 0), $ifaceNil];
+		_ref = players[0];
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			_plyr = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), gameplay.Player);
+			if ($interfaceIsEqual(new $String(_plyr.ID), id)) {
+				$s = -1; return [_plyr, $ifaceNil];
+			}
+			_i++;
 		}
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskOnePlayer }; } $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.gameplayCtx = gameplayCtx; $f.id = id; $f.isFind = isFind; $f.player = player; $f.players = players; $f.ret = ret; $f.view$1 = view$1; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [new gameplay.Player.ptr("", "", 0), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HTMLView.ptr.prototype.AskOnePlayer }; } $f._i = _i; $f._plyr = _plyr; $f._r = _r; $f._ref = _ref; $f.gameplayCtx = gameplayCtx; $f.id = id; $f.player = player; $f.players = players; $f.view$1 = view$1; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	HTMLView.prototype.AskOnePlayer = function(gameplayCtx, player, players) { return this.$val.AskOnePlayer(gameplayCtx, player, players); };
 	HTMLView.ptr.prototype.AskOption = function(gameplayCtx, player, title, options) {
 		var gameplayCtx, options, player, title, v;
 		v = this;
+		if (!(player.GroupID === "player")) {
+			return ai.AskOption($clone(gameplayCtx, gameplay.Gameplay), $clone(player, gameplay.Player), title, options);
+		}
 		return ["", $ifaceNil];
 	};
 	HTMLView.prototype.AskOption = function(gameplayCtx, player, title, options) { return this.$val.AskOption(gameplayCtx, player, title, options); };
@@ -22898,7 +23236,7 @@ $packages["app/view/html"] = (function() {
 	StartApp = function() {
 		var gameplayCtx, view$1;
 		view$1 = new HTMLView.ptr();
-		gameplayCtx = new gameplay.Gameplay.ptr(new desktop.Desktop.ptr(false), false, "", false, false);
+		gameplayCtx = new gameplay.Gameplay.ptr(new desktop.Desktop.ptr(false), false, "", false, false, new gameplay.EndState.ptr(false, ""));
 		$global.Model = $externalize($makeMap($String.keyFor, [{ k: "StartGameplay", v: new funcType$1((function() {
 			$go((function $b() {
 				var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, err, nextGameplayCtx, $s, $r;
@@ -22934,16 +23272,17 @@ $packages["app/view/html"] = (function() {
 		})) }]), mapType);
 	};
 	$pkg.StartApp = StartApp;
-	HTMLView.methods = [{prop: "Alert", name: "Alert", pkg: "", typ: $funcType([$emptyInterface], [], false)}, {prop: "AskCommand", name: "AskCommand", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player], [$emptyInterface, $error], false)}, {prop: "AskOneCard", name: "AskOneCard", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, desktop.CardStack, funcType$2], [desktop.Card, $error], false)}, {prop: "AskOnePlayer", name: "AskOnePlayer", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, mapType$1], [gameplay.Player, $error], false)}, {prop: "AskOption", name: "AskOption", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, $String, sliceType$1], [$String, $error], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([gameplay.Gameplay], [], false)}];
+	HTMLView.methods = [{prop: "Alert", name: "Alert", pkg: "", typ: $funcType([$emptyInterface], [], false)}, {prop: "AskCommand", name: "AskCommand", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player], [$emptyInterface, $error], false)}, {prop: "AskOneCard", name: "AskOneCard", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, desktop.CardStack, funcType$2], [desktop.Card, $error], false)}, {prop: "AskOnePlayer", name: "AskOnePlayer", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, sliceType$1], [gameplay.Player, $error], false)}, {prop: "AskOption", name: "AskOption", pkg: "", typ: $funcType([gameplay.Gameplay, gameplay.Player, $String, sliceType$2], [$String, $error], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([gameplay.Gameplay], [], false)}];
 	HTMLView.init("", []);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = gameplay.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = view.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = js.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = desktop.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = ai.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = view.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = desktop.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
