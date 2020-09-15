@@ -4,7 +4,8 @@
 
  :dependencies
  [[org.clojure/test.check "0.10.0"]
-  [org.clojure/core.async "0.6.532"]]
+  [org.clojure/core.async "0.6.532"]
+  [tailrecursion/cljs-priority-map "1.2.1"]]
 
  :dev-http {8080 "public/"}
  ; "app" is the build-id, in running "shadow-cljs compile app"
