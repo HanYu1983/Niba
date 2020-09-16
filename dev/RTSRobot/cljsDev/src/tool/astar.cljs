@@ -13,7 +13,7 @@
 
 ; 從以下網址修改的
 ; https://github.com/arttuka/astar
-(defn shortest-path-tree [graph h start goal]
+(defn shortest-path-tree [graph h goal start]
   (loop [visited {}
          queue (tailrecursion.priority-map/priority-map-keyfn first start [0 0 nil])]
     (if (seq queue)
@@ -21,12 +21,10 @@
             info {:previous previous
                   :current-score current-score
                   :total-score total-score}
-            [isFind isInterrupt] (goal info current)
-            visited (assoc visited current (merge info {:tail isFind}))]
-        (if isFind
-          (if isInterrupt
-            visited
-            (recur visited (pop queue)))
+            [isFind isInterrupt] (goal current info)
+            visited (assoc visited current (merge info {:goal isFind}))]
+        (if (and isFind isInterrupt)
+          visited
           (recur visited (reduce (fn [queue [node cost]]
                                    (let [score (+ current-score cost)]
                                      (if (and (not (contains? visited node))
@@ -38,13 +36,29 @@
                                  (graph current info)))))
       visited)))
 
+(defn make-reducer [f ctx]
+  (let [atomCtx (atom ctx)]
+    (fn [& args]
+      (reset! atomCtx (f args @atomCtx)))))
+
+(defn test1 []
+  (let [tree (shortest-path-tree (fn [[x _]] [[[(dec x) 0] 1] [[(inc x) 0] 1]])
+                                 (fn [x] 1)
+                                 (fn [n] (if (= n [5 0])
+                                           [true true]
+                                           [false false]))
+                                 [0 0])
+        _ (println tree)
+        path (build-path tree [5 0])
+        _ (println path)]))
+
 
 (s/def ::status #{"success" "noPath" "timeout"})
 (s/def ::path coll?)
 (s/def ::cost number?)
 (s/def ::result (s/keys :req-un [::status ::path ::cost]))
 
-(defn search [{:keys [start isEnd neighbor distance heuristic]}]
+(defn- search [{:keys [start isEnd neighbor distance heuristic]}]
   (s/assert any? start)
   (s/assert fn? isEnd)
   (s/assert fn? neighbor)
@@ -59,7 +73,7 @@
                                   :heuristic heuristic}))]
      (js->clj results :keywordize-keys true))))
 
-(defn test1 []
+(defn- test2 []
   (let [results (search {:start [0 0]
                          :isEnd (fn [n] (= n [5 0]))
                          :neighbor (fn [[x _]] [[(dec x) 0] [(inc x) 0]])

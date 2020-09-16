@@ -1,10 +1,6 @@
 (ns app2.core
-  (:require [tool.rbush]
-            [tool.astar]
-            [tool.sat]
-            [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s])
+  (:require [app2.gameplay.core]))
 
 (s/check-asserts true)
-(tool.rbush/test1)
-(tool.astar/test1)
-(tool.sat/test1)
+(app2.gameplay.core/main)
