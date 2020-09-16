@@ -27,7 +27,9 @@
                           (.pipe (rx-op/map (fn [] [:tick (/ 1 fps)])))))
 
         update-fn (partial comp-reduce [app2.gameplay.model/camera-control
-                                        app2.gameplay.model/player-control])
+                                        app2.gameplay.model/player-control
+                                        (partial app2.gameplay.model/entities-reduce
+                                                 [app2.gameplay.model/brain-control])])
 
         model-signal (-> (rx/merge tick-signal
                                    input-signal)

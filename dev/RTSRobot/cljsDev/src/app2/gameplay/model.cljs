@@ -2,12 +2,15 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.matrix :as m])
   (:require [tool.rbush]
-            [tool.math]))
+            [tool.math]
+            [tool.goal]))
 
 
 (s/def ::position ::tool.math/vec2)
 (s/def ::radius number?)
-(s/def ::entity (s/keys :req-un [::id ::position ::radius]))
+(s/def ::brain ::tool.goal/goal)
+(s/def ::entity (s/keys :req-un [::id ::position ::radius]
+                        :req-opt [::brain]))
 (s/def ::entities (s/map-of string? ::entity))
 
 
@@ -64,6 +67,21 @@
 
         gameplay))
     gameplay))
+
+(defn entities-reduce [fns gameplay [cmd args]]
+  (update-in gameplay [:state :entities] (fn [entities]
+                                           (->> (vals entities)
+                                                (map (fn [entity]
+                                                       (reduce (fn [entity f]
+                                                                 (f entity gameplay [cmd args]))
+                                                               entity
+                                                               fns)))
+                                                (zipmap (keys entities))))))
+
+(defn brain-control [entity gameplay [cmd args]]
+  (if (:brain entity)
+    entity
+    entity))
 
 (defn player-control [gameplay [cmd args]]
   (condp = cmd
