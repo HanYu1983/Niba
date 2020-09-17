@@ -13,7 +13,6 @@ const {ccclass, property} = cc._decorator;
 @ccclass
 export default class Card extends BasicViewer {
 
-
     @property(cc.Sprite)
     image:cc.Sprite = null;
 
@@ -58,5 +57,12 @@ export default class Card extends BasicViewer {
 
     isCard(key:string){
         return this.cardKey == key;
+    }
+
+    public static backIdToFrontId(backId:string){
+        switch(backId){
+            case "CardTypeBarrier": return "act_attack";
+        }
+        return "act_attack";
     }
 }
