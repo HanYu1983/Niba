@@ -5,10 +5,15 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
+import Cards from "./Cards";
+
 const {ccclass, property} = cc._decorator;
 
 @ccclass
 export default class PlayerInfo extends cc.Component {
+
+    @property(cc.Label)
+    lblName:cc.Label = null;
 
     @property(cc.Sprite)
     jobImage:cc.Sprite = null;
@@ -21,6 +26,9 @@ export default class PlayerInfo extends cc.Component {
 
     @property(cc.Node)
     cardIcons:cc.Node[] = [];
+
+    @property(Cards)
+    cards:Cards = null;
 
     setJob(job:string){
         
