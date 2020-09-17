@@ -26,26 +26,37 @@
                                            (s/assert number? (compareMinY a b)))))]
      rbush)))
 
-(defn update! [rbush old-entites now-entites]
+(s/def ::entity (s/keys :req-un [::id]))
+
+(defn update! [rbush dirty? old-entites now-entites]
   (s/assert ::rbush rbush)
-  (s/assert (s/map-of any? any?) old-entites)
-  (s/assert (s/map-of any? any?) now-entites)
+  (s/assert fn? dirty?)
+  (s/assert (s/map-of any? ::entity) old-entites)
+  (s/assert (s/map-of any? ::entity) now-entites)
   (let [remove-fn (fn [a b]
-                    (= a b))
+                    (= (:id a) (:id b)))
         old-ids (->> (keys old-entites) (into #{}))
         now-ids (->> (keys now-entites) (into #{}))
+        ;_ (println "===" old-ids now-ids)
+        
         removed-ids (clojure.set/difference old-ids now-ids)
+       ; _ (println "removed-ids" removed-ids)
         _ (doseq [id removed-ids]
+       ;     (println "remove")
             (.remove rbush (old-entites id) remove-fn))
 
         new-ids (clojure.set/difference now-ids old-ids)
-        _ (.load rbush (-> (map #(now-entites %) new-ids) to-array))
+        ; _ (println "new-ids" new-ids)
+        _ (when (> (count new-ids) 0)
+        ;    (println "add")
+            (.load rbush (-> (map #(now-entites %) new-ids) to-array)))
 
         hold-ids (clojure.set/intersection old-ids now-ids)
         _ (doseq [id hold-ids]
             (let [old (old-entites id)
                   now (now-entites id)]
-              (when (not= old now)
+              (when (dirty? old now)
+         ;       (println "update")
                 (.remove rbush old remove-fn)
                 (.insert rbush now))))]))
 
@@ -77,19 +88,19 @@
         entities {}
         next-entities (merge entities {:a {:x 0 :y 0 :radius 10}
                                        :b {:x 50 :y 50 :radius 10}})
-        _ (update! rbush entities next-entities)
+        _ (update! rbush #(not= %1 %2) entities next-entities)
         _ (println (search rbush [0 0 50 50]))
         _ (println "all" (all rbush))
 
         entities next-entities
         next-entities (dissoc entities :a)
-        _ (update! rbush entities next-entities)
+        _ (update! rbush #(not= %1 %2)  entities next-entities)
         _ (println (search rbush [0 0 50 50]))
         _ (println "all" (all rbush))
 
         entities next-entities
         next-entities (update-in entities [:b :x] #(+ % 50))
-        _ (update! rbush entities next-entities)
+        _ (update! rbush #(not= %1 %2) entities next-entities)
         _ (println (search rbush [0 0 50 50]))
         _ (println "all" (all rbush))
         
