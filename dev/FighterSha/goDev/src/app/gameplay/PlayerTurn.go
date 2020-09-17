@@ -36,6 +36,7 @@ func PlayerTurn(ctx IView, origin Gameplay, activePlayer Player) (Gameplay, erro
 	if outOfCard {
 		gameplayCtx.EndState.Completed = true
 		gameplayCtx.EndState.Reason = "牌庫抽完了, 遊戲結束"
+		ctx.Render(gameplayCtx)
 		return gameplayCtx, nil
 	}
 
@@ -92,6 +93,7 @@ Menu:
 					ctx.Alert(err)
 					break
 				}
+				ctx.Render(gameplayCtx)
 			case view.ItemIDPotion:
 				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
 					if characterCom.Money < 2 {
@@ -114,6 +116,7 @@ Menu:
 				if err != nil {
 					return origin, err
 				}
+				ctx.Render(gameplayCtx)
 			case view.ItemIDInt:
 				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
 					if characterCom.Money < 2 {
@@ -133,6 +136,7 @@ Menu:
 				if err != nil {
 					return origin, err
 				}
+				ctx.Render(gameplayCtx)
 			default:
 				return origin, fmt.Errorf("can not handle item here: %+v", cmdDetail)
 			}
@@ -169,6 +173,7 @@ Menu:
 							ctx.Alert(err)
 							break Menu
 						}
+						ctx.Render(gameplayCtx)
 						continue
 					}
 					if err != nil {
@@ -204,7 +209,7 @@ Menu:
 					ctx.Alert(err)
 					break
 				}
-
+				ctx.Render(gameplayCtx)
 			case CardTypeSteal:
 				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
 					return p.ID != activePlayer.ID
@@ -232,6 +237,7 @@ Menu:
 					ctx.Alert(err)
 					break
 				}
+				ctx.Render(gameplayCtx)
 			case CardTypeStealMoney:
 				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
 					return p.ID != activePlayer.ID
@@ -259,6 +265,7 @@ Menu:
 					ctx.Alert(err)
 					break
 				}
+				ctx.Render(gameplayCtx)
 			case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
 				// 裝備
 				gameplayCtx, err = Equip(ctx, gameplayCtx, activePlayer, card)
@@ -266,6 +273,7 @@ Menu:
 					ctx.Alert(err)
 					break
 				}
+				ctx.Render(gameplayCtx)
 			case CardTypeJob:
 				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
 					card.Face = desktop.FaceUp
@@ -282,6 +290,7 @@ Menu:
 				if err != nil {
 					return origin, err
 				}
+				ctx.Render(gameplayCtx)
 			case CardTypeMake:
 				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
 					card.Face = desktop.FaceUp
@@ -295,6 +304,7 @@ Menu:
 				if err != nil {
 					return origin, err
 				}
+				ctx.Render(gameplayCtx)
 			default:
 				ctx.Alert(fmt.Sprintf("不能使用這類型的卡%v\n", card))
 			}
@@ -317,6 +327,7 @@ Menu:
 				if err != nil {
 					return origin, err
 				}
+				ctx.Render(gameplayCtx)
 			default:
 				ctx.Alert(fmt.Sprintf("不能賣掉這類型的卡%v\n", card))
 			}

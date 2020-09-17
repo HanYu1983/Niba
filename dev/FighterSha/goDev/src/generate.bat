@@ -8,3 +8,6 @@ genny -in tool/template/list.go -out tool/desktop/CardList.go -pkg desktop gen "
 genny -in app/view/cmd/template/AskOneItem.go -out app/view/cmd/AskOneDesktopCard.go -pkg "cmd" gen "Item=desktop.Card"
 genny -in app/view/cmd/template/AskOneItem.go -out app/view/cmd/AskOneGameplayPlayer.go -pkg "cmd" gen "Item=gameplay.Player"
 genny -in app/view/cmd/template/AskOneItem.go -out app/view/cmd/AskOneString.go -pkg "cmd" gen "Item=string"
+
+genny -in tool/template/map.go -out app/view/p5/StringCardViewMap.go -pkg p5 gen "Key=string Value=CardView"
+genny -in tool/template/list.go -out app/view/p5/CardViewList.go -pkg p5 gen "Item=CardView"

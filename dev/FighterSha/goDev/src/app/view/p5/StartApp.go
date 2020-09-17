@@ -18,8 +18,12 @@ func StartApp() {
 	}()
 
 	view := P5View{
+		Page:       PageStart,
 		EventChan:  make(chan interface{}),
 		AlertPopup: make(chan string, 10),
+		GameplayView: GameplayView{
+			map[string]CardView{},
+		},
 	}
 	view.InstallCanvas()
 
@@ -31,6 +35,7 @@ func StartApp() {
 		case StartGameplayEvent:
 			// JS呼叫的要用goroutine包裝, 不然chan和time.Sleep等blocking的都不能用
 			go func() {
+				view.Page = PageGameplay
 				nextGameplayCtx, err := gameplay.PrepareGameplay(gameplayCtx)
 				if err != nil {
 					fmt.Println(err.Error())
