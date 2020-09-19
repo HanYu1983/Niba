@@ -9,5 +9,5 @@ func AskOption(gameplayCtx gameplay.Gameplay, player gameplay.Player, title stri
 	if len(options) == 0 {
 		return "", nil
 	}
-	return "", nil
+	return options[0], nil
 }

@@ -21,7 +21,7 @@ const (
 	CanvasHeight = 480
 	CardWidth    = 30
 	CardHeight   = 50
-	PlayerWidth  = 100
+	PlayerWidth  = 200
 	PlayerHeight = 100
 	MsgWidth     = 200
 	MsgHeight    = 100
@@ -79,7 +79,7 @@ func (v *P5View) RenderCardView(p *js.Object, cardView CardView, tx float32, ty 
 	}
 }
 
-func (v *P5View) RenderPlayer(p *js.Object, player gameplay.Player, tx float32, ty float32) {
+func (v *P5View) RenderPlayer(p *js.Object, gameplayCtx gameplay.Gameplay, player gameplay.Player, tx float32, ty float32) {
 	p.Call("push")
 	defer p.Call("pop")
 
@@ -100,16 +100,21 @@ func (v *P5View) RenderPlayer(p *js.Object, player gameplay.Player, tx float32, 
 	p.Call("rect", tx, ty, PlayerWidth, PlayerHeight)
 
 	p.Call("strokeWeight", 1)
-	p.Call("fill", 255)
-	p.Call("stroke", 255)
+	p.Call("fill", 0)
+	p.Call("stroke", 0)
 	p.Call("text", "ID:"+player.ID, tx+5, ty+20)
+	/*
+		hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(player)]
+		for i, card := range hand {
+			p.Call("text", fmt.Sprintf("%v)%+v", card.ID, card.CardPrototypeID.CardType), tx+5, ty+30+float32(i*10))
+		}
+	*/
 	for i := 0; i < characterCom.Life; i++ {
-		p.Call("image", v.Assets.ImgHeart, tx+float32(i*24), ty+40)
+		p.Call("image", v.Assets.ImgHeart, tx+float32(i*24), ty+50)
 	}
 	for i := 0; i < characterCom.Money; i++ {
-		p.Call("image", v.Assets.ImgMoney, tx+float32(i*24), ty+60)
+		p.Call("image", v.Assets.ImgMoney, tx+float32(i*24), ty+70)
 	}
-
 }
 
 func (v *P5View) InstallCanvas() {
@@ -157,11 +162,12 @@ func (v *P5View) InstallCanvas() {
 				return
 			}
 
-			//p.Call("text", fmt.Sprintf("%+v", v.Gameplay), 0, 20)
-
 			cards := map[string]CardView{}
 			for cskey, cs := range v.Gameplay.Desktop.CardStacks {
 				for _, c := range cs {
+					if _, isExist := cards[c.ID]; isExist {
+						panic("duplicated!!" + c.ID)
+					}
 					cards[c.ID] = CardView{
 						Card:        c,
 						CardStackID: cskey,
@@ -231,7 +237,7 @@ func (v *P5View) InstallCanvas() {
 			for i, player := range gameplay.ValsStringPlayer(v.Gameplay.Players) {
 				tx := float32(offsetX + i*PlayerWidth)
 				ty := float32(offsetY)
-				v.RenderPlayer(p, player, tx, ty)
+				v.RenderPlayer(p, v.Gameplay, player, tx, ty)
 			}
 
 			if msg != nil {

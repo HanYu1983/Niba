@@ -22,6 +22,7 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player) (Gameplay, 
 			var cancel desktop.Card
 			ctx.Alert("請選擇要盜走的裝備")
 			gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+				var err error
 				gameplayCtx := origin
 				equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip, func(card desktop.Card) bool {
 					switch card.CardPrototypeID.CardType {

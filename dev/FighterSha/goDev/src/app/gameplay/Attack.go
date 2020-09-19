@@ -12,8 +12,9 @@ func Attack(ctx IView, origin Gameplay, player Player, target Player) (Gameplay,
 		return origin, fmt.Errorf("you reach attack limit")
 	}
 	gameplayCtx, err := BasicFlow(ctx, gameplayCtx, player, target, func(origin Gameplay) (Gameplay, error) {
+		var err error
 		gameplayCtx := origin
-		gameplayCtx, err := UpdateCharacterCom(gameplayCtx, target, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+		gameplayCtx, err = UpdateCharacterCom(gameplayCtx, target, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
 			characterCom.Life--
 			return characterCom, nil
 		})

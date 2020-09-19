@@ -11,7 +11,6 @@ type GameplayReducer func(Gameplay) (Gameplay, error)
 // BasicFlow is
 func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit GameplayReducer) (Gameplay, error) {
 	gameplayCtx := origin
-	ctx.Alert(fmt.Sprintf("%v出一張閃", target.ID))
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(target)]
 	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand, func(card desktop.Card) bool {
@@ -27,8 +26,13 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 	if dodgeCard == NotFound {
 		// 是否買敏捷藥
 		var answer string
-		moneyNotEnougth := fmt.Errorf("Money is not enough")
-		if answer, err = ctx.AskOption(gameplayCtx, target, "是否買敏捷藥", []string{"Yes", "No"}); answer == "Yes" {
+		answer, err = ctx.AskOption(gameplayCtx, target, "是否買敏捷藥", []string{"Yes", "No"})
+		if err != nil {
+			return origin, err
+		}
+		if answer == "Yes" {
+			moneyNotEnougth := fmt.Errorf("Money is not enough")
+
 			gameplayCtx, err = UpdateCharacterCom(gameplayCtx, target, func(origin CharacterCardCom) (CharacterCardCom, error) {
 				com := origin
 				if com.Money < 2 {
@@ -37,23 +41,24 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 				com.Money -= 2
 				return com, nil
 			})
-			if err == moneyNotEnougth {
-				ctx.Alert(moneyNotEnougth.Error())
 
-			} else if err != nil {
-				return origin, err
+			if err != nil {
+				if err == moneyNotEnougth {
+					ctx.Alert(moneyNotEnougth)
+				} else {
+					return origin, err
+				}
 			} else {
 				ctx.Alert(fmt.Sprintf("%v閃過", target.ID))
 				return gameplayCtx, nil
 			}
 		}
-
-		ctx.Alert(fmt.Sprintf("%v被殺", target.ID))
 		gameplayCtx, err = onHit(gameplayCtx)
 		if err != nil {
 			return origin, err
 		}
 	} else {
+		ctx.Alert(fmt.Sprintf("%v出一張閃", target.ID))
 		gameplayCtx, dodgeCard, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(target), CardStackGravyard, func(card desktop.Card) desktop.Card {
 			card.Face = desktop.FaceUp
 			return card
@@ -62,6 +67,7 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 			return origin, err
 		}
 		ctx.Alert(fmt.Sprintf("%v閃過", target.ID))
+		return gameplayCtx, nil
 	}
 
 	targetCharacter, err := GetCharacterCardCom(gameplayCtx, target)

@@ -7,6 +7,28 @@ import (
 
 // Render is
 func (v CmdView) Render(gameplayCtx gameplay.Gameplay) {
+	/*
+		fmt.Println("==== Gameplay ====")
+		for csKey, cs := range gameplayCtx.Desktop.CardStacks {
+			if csKey == gameplay.CardStackHome {
+				continue
+			}
+			for _, card := range cs {
+				fmt.Printf("%v): %+v\n", csKey, card.ID)
+			}
+		}
+		fmt.Println("==== Gameplay ====")
+	*/
+	dupCheck := map[string]bool{}
+	for csKey, cs := range gameplayCtx.Desktop.CardStacks {
+		for _, c := range cs {
+			if _, isExist := dupCheck[c.ID]; isExist {
+				panic("duplicated!!" + c.ID + ")" + csKey)
+			}
+			dupCheck[c.ID] = true
+		}
+	}
+
 	fmt.Println("==== Gameplay ====")
 	activePlayer := gameplayCtx.Players[gameplayCtx.ActivePlayerID]
 	fmt.Printf("ActivePlayer: %+v\n", activePlayer)

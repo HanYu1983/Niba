@@ -34,18 +34,20 @@ func FilterPlayer(s1 []Player, f func(Player) bool) []Player {
 
 // RemovePlayer is
 func RemovePlayer(s1 []Player, card Player) ([]Player, error) {
-	findID := -1
-	for _findID, c := range s1 {
-		if c == card {
-			findID = _findID
-			break
-		}
+	if len(s1) == 0 {
+		return s1, nil
 	}
-	if findID == -1 {
+	ret := []Player{}
+	for _, c := range s1 {
+		if c == card {
+			continue
+		}
+		ret = append(ret, c)
+	}
+	if len(s1) == len(ret) {
 		return s1, fmt.Errorf("item not found")
 	}
-	s1 = append(s1[0:findID], s1[findID+1:]...)
-	return s1, nil
+	return ret, nil
 }
 
 // ReplacePlayer is
