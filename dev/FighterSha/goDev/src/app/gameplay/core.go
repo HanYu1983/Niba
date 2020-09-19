@@ -142,6 +142,21 @@ func UpdateCharacterCom(origin Gameplay, player Player, f func(CharacterCardCom)
 	return gameplayCtx, nil
 }
 
+func GetEnemyPlayer(gameplayCtx Gameplay, player Player) []Player {
+	plys := ValsStringPlayer(gameplayCtx.Players)
+	return FilterPlayer(plys, func(other Player) bool {
+		return player.GroupID != other.GroupID
+	})
+}
+
+func SwapGameplay(gameplayCtx Gameplay, swap func(Gameplay) (Gameplay, error)) (Gameplay, error) {
+	nextGameplay, err := swap(gameplayCtx)
+	if err != nil {
+		return gameplayCtx, err
+	}
+	return nextGameplay, nil
+}
+
 // HasAbilityAttackWithAnyCard 任何卡都能當殺的能力
 func HasAbilityAttackWithAnyCard(gameplayCtx Gameplay, player Player) bool {
 	// 如果是戰士, 有裝備武器

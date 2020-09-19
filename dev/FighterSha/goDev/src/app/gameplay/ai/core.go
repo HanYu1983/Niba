@@ -11,6 +11,32 @@ func CardWeight(gameplayCtx gameplay.Gameplay, player gameplay.Player, card desk
 	switch card.CardPrototypeID.CardType {
 	case gameplay.CardTypeAttack:
 		return 90
+	case gameplay.CardTypeStealMoney:
+		targets := gameplay.GetEnemyPlayer(gameplayCtx, player)
+		if len(targets) == 0 {
+			fmt.Printf("targets len must not 0")
+			return 0
+		}
+		character, err := gameplay.GetCharacterCardCom(gameplayCtx, targets[0])
+		if err != nil {
+			fmt.Println(err.Error())
+			return 0
+		}
+		if character.Money == 0 {
+			return 80
+		}
+		return 100
+	case gameplay.CardTypeSteal:
+		targets := gameplay.GetEnemyPlayer(gameplayCtx, player)
+		if len(targets) == 0 {
+			fmt.Printf("targets len must not 0")
+			return 0
+		}
+		cs := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDEquip(targets[0])]
+		if len(cs) == 0 {
+			return 0
+		}
+		return 100
 	case gameplay.CardTypeArm, gameplay.CardTypeArmor, gameplay.CardTypeAccessory, gameplay.CardTypeBarrier, gameplay.CardTypeGrind:
 		if gameplay.HasEquip(gameplayCtx, player, card.CardPrototypeID.CardType) == false {
 			return 100

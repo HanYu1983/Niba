@@ -1,6 +1,9 @@
 package p5
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func (v *P5View) Alert(msg interface{}) {
 	var m string
@@ -12,5 +15,7 @@ func (v *P5View) Alert(msg interface{}) {
 	default:
 		m = fmt.Sprintf("%+v\n", msg)
 	}
+	fmt.Println(m)
 	v.AlertPopup <- m
+	time.Sleep(1 * time.Second)
 }

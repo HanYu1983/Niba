@@ -43,6 +43,7 @@ func PlayerTurn(ctx IView, origin Gameplay, activePlayer Player) (Gameplay, erro
 Menu:
 	for {
 		time.Sleep(1 * time.Second)
+		ctx.Render(gameplayCtx)
 		if gameplayCtx.EndState.Completed {
 			return gameplayCtx, nil
 		}
@@ -53,7 +54,7 @@ Menu:
 			ctx.Alert(err)
 			continue
 		}
-		ctx.Alert(fmt.Sprintf("choose cmd: %+v", cmd))
+		ctx.Alert(fmt.Sprintf("%v選了指令%+v", activePlayer.ID, cmd))
 		// 跳過回合
 		if cmd == nil {
 			// cancel
@@ -63,78 +64,92 @@ Menu:
 		case view.CmdBuyItem:
 			switch cmdDetail.ItemID {
 			case view.ItemIDPower:
-				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
-					return p.ID != activePlayer.ID
-				})
-				target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
-				if err != nil {
-					return origin, err
-				}
-				if target == playerNotFound {
-					ctx.Alert("user cancel action")
-					break
-				}
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					if characterCom.Money < 2 {
-						return characterCom, moneyNotEnough
+				ctx.Alert(fmt.Sprintf("%v使用力量藥", activePlayer.ID))
+
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
+					if err != nil {
+						return origin, err
 					}
-					characterCom.Money -= 2
-					return characterCom, nil
+					if target == playerNotFound {
+						return origin, fmt.Errorf("%v取消", target.ID)
+					}
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
+					}
+					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
 				})
-				if err == moneyNotEnough {
+				if err != nil {
 					ctx.Alert(err.Error())
-					break
-				}
-				if err != nil {
-					return origin, err
-				}
-				gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
-				if err != nil {
-					ctx.Alert(err)
-					break
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case view.ItemIDPotion:
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					if characterCom.Money < 2 {
-						return characterCom, moneyNotEnough
+				ctx.Alert(fmt.Sprintf("%v使用恢復藥", activePlayer.ID))
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
 					}
-					characterCom.Money -= 2
-					return characterCom, nil
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						characterCom.Life++
+						return characterCom, nil
+					})
+					return gameplayCtx, nil
 				})
-				if err == moneyNotEnough {
+				if err != nil {
 					ctx.Alert(err.Error())
-					break
-				}
-				if err != nil {
-					return origin, err
-				}
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					characterCom.Life++
-					return characterCom, nil
-				})
-				if err != nil {
-					return origin, err
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case view.ItemIDInt:
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					if characterCom.Money < 2 {
-						return characterCom, moneyNotEnough
+				ctx.Alert(fmt.Sprintf("%v使用智慧藥", activePlayer.ID))
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						if characterCom.Money < 2 {
+							return characterCom, moneyNotEnough
+						}
+						characterCom.Money -= 2
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
 					}
-					characterCom.Money -= 2
-					return characterCom, nil
+					gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 1)
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
 				})
-				if err == moneyNotEnough {
+				if err != nil {
 					ctx.Alert(err.Error())
-					break
-				}
-				if err != nil {
-					return origin, err
-				}
-				gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 1)
-				if err != nil {
-					return origin, err
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			default:
@@ -149,121 +164,156 @@ Menu:
 				default:
 					var answer string
 					if answer, err = ctx.AskOption(gameplayCtx, activePlayer, "沒有使用殺, 是否要當成殺", []string{"Yes", "No"}); answer == "Yes" {
-						otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
-							return p.ID != activePlayer.ID
+						gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+							gameplayCtx := origin
+							otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+								return p.ID != activePlayer.ID
+							})
+							// 殺
+							target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
+							if err != nil {
+								return origin, err
+							}
+							if target == playerNotFound {
+								return origin, fmt.Errorf("user cancel action")
+							}
+							gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+								card.Face = desktop.FaceUp
+								return card
+							}, card)
+							if err != nil {
+								return origin, err
+							}
+							gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
+							if err != nil {
+								return origin, err
+							}
+							return gameplayCtx, nil
 						})
-						// 殺
-						target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 						if err != nil {
-							return origin, err
-						}
-						if target == playerNotFound {
-							ctx.Alert("user cancel action")
-							break
-						}
-						gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-							card.Face = desktop.FaceUp
-							return card
-						}, card)
-						if err != nil {
-							return origin, err
-						}
-						gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
-						if err != nil {
-							ctx.Alert(err)
+							ctx.Alert(err.Error())
+							err = nil
 							break Menu
 						}
 						ctx.Render(gameplayCtx)
 						continue
 					}
 					if err != nil {
-						return origin, err
+						return origin, nil
 					}
 				}
 			}
 			switch card.CardPrototypeID.CardType {
 			case CardTypeAttack:
-				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
-					return p.ID != activePlayer.ID
+				ctx.Alert(fmt.Sprintf("%v使出殺", activePlayer.ID))
+
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
+					// 殺
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
+					if err != nil {
+						return origin, err
+					}
+					if target == playerNotFound {
+						return origin, fmt.Errorf("user cancel action")
+					}
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
 				})
-				// 殺
-				target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 				if err != nil {
-					return origin, err
-				}
-				if target == playerNotFound {
-					ctx.Alert("user cancel action")
-					break
-				}
-
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
-
-				gameplayCtx, err = Attack(ctx, gameplayCtx, activePlayer, target)
-				if err != nil {
-					ctx.Alert(err)
-					break
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case CardTypeSteal:
-				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
-					return p.ID != activePlayer.ID
+				ctx.Alert(fmt.Sprintf("%v使出盜", activePlayer.ID))
+
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
+					// 盜
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
+					if err != nil {
+						return origin, err
+					}
+					if target == playerNotFound {
+						return origin, fmt.Errorf("user cancel action")
+					}
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = Steal(ctx, gameplayCtx, activePlayer, target)
+					if err != nil {
+						return origin, err
+					}
+
+					return gameplayCtx, nil
 				})
-				// 盜
-				target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 				if err != nil {
-					return origin, err
-				}
-				if target == playerNotFound {
-					ctx.Alert("user cancel action")
-					break
-				}
-
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
-
-				gameplayCtx, err = Steal(ctx, gameplayCtx, activePlayer, target)
-				if err != nil {
-					ctx.Alert(err)
-					break
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case CardTypeStealMoney:
-				otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
-					return p.ID != activePlayer.ID
+				ctx.Alert(fmt.Sprintf("%v使出劫", activePlayer.ID))
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					otherPlayers := FilterPlayer(ValsStringPlayer(gameplayCtx.Players), func(p Player) bool {
+						return p.ID != activePlayer.ID
+					})
+					// 盜
+					target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
+					if err != nil {
+						return origin, err
+					}
+					if target == playerNotFound {
+						return origin, fmt.Errorf("user cancel action")
+					}
+
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
+
+					gameplayCtx, err = StealMoney(ctx, gameplayCtx, activePlayer, target)
+					if err != nil {
+						return origin, err
+					}
+
+					return gameplayCtx, nil
 				})
-				// 劫
-				target, err := ctx.AskOnePlayer(gameplayCtx, activePlayer, otherPlayers)
 				if err != nil {
-					return origin, err
-				}
-				if target == playerNotFound {
-					ctx.Alert("user cancel action")
-					break
-				}
-
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
-
-				gameplayCtx, err = StealMoney(ctx, gameplayCtx, activePlayer, target)
-				if err != nil {
-					ctx.Alert(err)
-					break
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
@@ -271,61 +321,88 @@ Menu:
 				gameplayCtx, err = Equip(ctx, gameplayCtx, activePlayer, card)
 				if err != nil {
 					ctx.Alert(err)
-					break
 				}
 				ctx.Render(gameplayCtx)
 			case CardTypeJob:
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
 
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					characterCom.Money += 2
-					return characterCom, nil
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						characterCom.Money += 2
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
 				})
 				if err != nil {
-					return origin, err
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			case CardTypeMake:
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
 
-				gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
+					gameplayCtx, err = DrawCard(ctx, gameplayCtx, activePlayer, 2)
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
+				})
 				if err != nil {
-					return origin, err
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			default:
 				ctx.Alert(fmt.Sprintf("不能使用這類型的卡%v\n", card))
 			}
+			ctx.Render(gameplayCtx)
 		case view.CmdSellCard:
 			card := cmdDetail.Card
 			switch card.CardPrototypeID.CardType {
 			case CardTypeArm, CardTypeArmor, CardTypeAccessory, CardTypeGrind, CardTypeBarrier:
-				gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
-					card.Face = desktop.FaceUp
-					return card
-				}, card)
-				if err != nil {
-					return origin, err
-				}
+				gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+					gameplayCtx := origin
+					gameplayCtx, card, err = MoveCard(ctx, gameplayCtx, CardStackIDHand(activePlayer), CardStackGravyard, func(card desktop.Card) desktop.Card {
+						card.Face = desktop.FaceUp
+						return card
+					}, card)
+					if err != nil {
+						return origin, err
+					}
 
-				gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
-					characterCom.Money++
-					return characterCom, nil
+					gameplayCtx, err = UpdateCharacterCom(gameplayCtx, activePlayer, func(characterCom CharacterCardCom) (CharacterCardCom, error) {
+						characterCom.Money++
+						return characterCom, nil
+					})
+					if err != nil {
+						return origin, err
+					}
+					return gameplayCtx, nil
 				})
 				if err != nil {
-					return origin, err
+					ctx.Alert(err.Error())
+					err = nil
+					break Menu
 				}
 				ctx.Render(gameplayCtx)
 			default:
@@ -349,6 +426,7 @@ Menu:
 	if err != nil {
 		return origin, err
 	}
+	ctx.Render(gameplayCtx)
 
 	return gameplayCtx, nil
 }

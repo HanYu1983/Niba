@@ -14,8 +14,6 @@ func (a SortByPlayerOrder) Less(i, j int) bool { return a[i].Order < a[j].Order 
 
 // NextPlayer is
 func NextPlayer(ctx IView, origin Gameplay, player Player) (Gameplay, error) {
-	ctx.Alert(fmt.Sprintf("NextPlayer: %+v", player))
-
 	gameplayCtx := origin
 	players := ValsStringPlayer(gameplayCtx.Players)
 	if len(players) == 0 {
@@ -36,5 +34,6 @@ func NextPlayer(ctx IView, origin Gameplay, player Player) (Gameplay, error) {
 	}
 
 	gameplayCtx.ActivePlayerID = find.ID
+	ctx.Alert(fmt.Sprintf("換下個玩家%v", find.ID))
 	return gameplayCtx, nil
 }

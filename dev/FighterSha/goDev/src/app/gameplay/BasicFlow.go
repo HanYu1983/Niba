@@ -11,7 +11,7 @@ type GameplayReducer func(Gameplay) (Gameplay, error)
 // BasicFlow is
 func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit GameplayReducer) (Gameplay, error) {
 	gameplayCtx := origin
-	ctx.Alert(fmt.Sprintf("Ask Player For Dodge: %+v", target))
+	ctx.Alert(fmt.Sprintf("%v出一張閃", target.ID))
 	// ask target player for dodge
 	targetHand := gameplayCtx.Desktop.CardStacks[CardStackIDHand(target)]
 	dodgeCard, err := ctx.AskOneCard(gameplayCtx, target, targetHand, func(card desktop.Card) bool {
@@ -43,12 +43,12 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 			} else if err != nil {
 				return origin, err
 			} else {
-				ctx.Alert(fmt.Sprintf("Player Dodged: %+v", target))
+				ctx.Alert(fmt.Sprintf("%v閃過", target.ID))
 				return gameplayCtx, nil
 			}
 		}
 
-		ctx.Alert(fmt.Sprintf("Hit Player: %+v", target))
+		ctx.Alert(fmt.Sprintf("%v被殺", target.ID))
 		gameplayCtx, err = onHit(gameplayCtx)
 		if err != nil {
 			return origin, err
@@ -61,7 +61,7 @@ func BasicFlow(ctx IView, origin Gameplay, player Player, target Player, onHit G
 		if err != nil {
 			return origin, err
 		}
-		ctx.Alert(fmt.Sprintf("Player Dodged: %+v", target))
+		ctx.Alert(fmt.Sprintf("%v閃過", target.ID))
 	}
 
 	targetCharacter, err := GetCharacterCardCom(gameplayCtx, target)

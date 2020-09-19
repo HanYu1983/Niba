@@ -7,7 +7,7 @@ import (
 
 // DrawCard is
 func DrawCard(ctx IView, gameplayCtx Gameplay, player Player, cnt int) (Gameplay, error) {
-	ctx.Alert(fmt.Sprintf("DrawCard: %+v", player))
+	ctx.Alert(fmt.Sprintf("%v抽牌", player.ID))
 	if cnt > len(gameplayCtx.Desktop.CardStacks[CardStackHome]) {
 		cnt = len(gameplayCtx.Desktop.CardStacks[CardStackHome])
 	}

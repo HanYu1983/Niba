@@ -14,7 +14,7 @@ func HasEquip(gameplayCtx Gameplay, player Player, equipType desktop.CardType) b
 
 // Equip is
 func Equip(ctx IView, origin Gameplay, player Player, card desktop.Card) (Gameplay, error) {
-	ctx.Alert(fmt.Sprintf("Equip: %+v %+v", player, card))
+	ctx.Alert(fmt.Sprintf("%v裝備%v", player.ID, card.CardPrototypeID.CardType))
 	gameplayCtx := origin
 
 	switch card.CardPrototypeID.CardType {
