@@ -21,7 +21,7 @@ const (
 	CanvasHeight = 480
 	CardWidth    = 30
 	CardHeight   = 50
-	PlayerWidth  = 200
+	PlayerWidth  = 150
 	PlayerHeight = 100
 	MsgWidth     = 200
 	MsgHeight    = 100
