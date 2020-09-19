@@ -83,6 +83,11 @@ func (v *P5View) RenderPlayer(p *js.Object, gameplayCtx gameplay.Gameplay, playe
 	p.Call("push")
 	defer p.Call("pop")
 
+	characterCard, err := gameplay.GetCharacterCard(v.Gameplay, player)
+	if err != nil {
+		p.Call("text", err.Error(), CanvasWidth>>1, CanvasHeight>>1)
+	}
+
 	characterCom, err := gameplay.GetCharacterCardCom(v.Gameplay, player)
 	if err != nil {
 		p.Call("text", err.Error(), CanvasWidth>>1, CanvasHeight>>1)
@@ -103,6 +108,7 @@ func (v *P5View) RenderPlayer(p *js.Object, gameplayCtx gameplay.Gameplay, playe
 	p.Call("fill", 0)
 	p.Call("stroke", 0)
 	p.Call("text", "ID:"+player.ID, tx+5, ty+20)
+	p.Call("text", "Character:"+characterCard.CardPrototypeID.ID, tx+5, ty+30)
 	/*
 		hand := gameplayCtx.Desktop.CardStacks[gameplay.CardStackIDHand(player)]
 		for i, card := range hand {
