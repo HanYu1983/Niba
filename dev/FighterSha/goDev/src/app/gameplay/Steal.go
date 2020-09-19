@@ -21,24 +21,31 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player) (Gameplay, 
 		if len(targetEquip) > 0 {
 			var cancel desktop.Card
 			ctx.Alert("請選擇要盜走的裝備")
-			equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip, func(card desktop.Card) bool {
-				switch card.CardPrototypeID.CardType {
-				case CardTypeArm, CardTypeArmor, CardTypeAccessory:
-					return true
-				default:
-					return false
+			gameplayCtx, err = SwapGameplay(gameplayCtx, func(origin Gameplay) (Gameplay, error) {
+				gameplayCtx := origin
+				equipCard, err := ctx.AskOneCard(gameplayCtx, player, targetEquip, func(card desktop.Card) bool {
+					switch card.CardPrototypeID.CardType {
+					case CardTypeArm, CardTypeArmor, CardTypeAccessory:
+						return true
+					default:
+						return false
+					}
+				})
+				if err != nil {
+					return origin, err
 				}
+				if equipCard == cancel {
+					return origin, fmt.Errorf("user cancel")
+				}
+				gameplayCtx, equipCard, err = MoveCard(ctx, gameplayCtx, CardStackIDEquip(target), CardStackIDHand(player), func(card desktop.Card) desktop.Card {
+					card.Player = player.ID
+					return card
+				}, equipCard)
+				if err != nil {
+					return origin, err
+				}
+				return gameplayCtx, nil
 			})
-			if err != nil {
-				return origin, err
-			}
-			if equipCard == cancel {
-				return origin, fmt.Errorf("user cancel")
-			}
-			gameplayCtx, equipCard, err = MoveCard(ctx, gameplayCtx, CardStackIDEquip(target), CardStackIDHand(player), func(card desktop.Card) desktop.Card {
-				card.Player = player.ID
-				return card
-			}, equipCard)
 			if err != nil {
 				return origin, err
 			}
