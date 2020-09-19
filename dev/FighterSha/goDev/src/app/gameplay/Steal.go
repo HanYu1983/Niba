@@ -40,6 +40,7 @@ func Steal(ctx IView, origin Gameplay, player Player, target Player) (Gameplay, 
 				}
 				gameplayCtx, equipCard, err = MoveCard(ctx, gameplayCtx, CardStackIDEquip(target), CardStackIDHand(player), func(card desktop.Card) desktop.Card {
 					card.Player = player.ID
+					card.Face = desktop.FaceDown
 					return card
 				}, equipCard)
 				if err != nil {
