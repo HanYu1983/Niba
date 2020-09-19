@@ -1,4 +1,5 @@
 # modify gopath
+1. src\getLib.at
 1. src\dev.bat
 1. src\build.bat
 
@@ -25,3 +26,4 @@ or
 # run app
     cd src
     .\dev.bat
+    open browser http://localhost:8080

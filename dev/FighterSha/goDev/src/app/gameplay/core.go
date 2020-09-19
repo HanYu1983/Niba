@@ -242,16 +242,9 @@ func InitCharacterCardCom(card desktop.Card) CharacterCardCom {
 
 func MoveCard(ctx IView, origin Gameplay, from string, to string, mapCard func(desktop.Card) desktop.Card, card desktop.Card) (Gameplay, desktop.Card, error) {
 	gameplayCtx := origin
-	fmt.Println("0000001111111111" + from + "," + to)
-	ctx.Render(gameplayCtx)
-
 	toCS := gameplayCtx.Desktop.CardStacks[to]
 	fromCS := gameplayCtx.Desktop.CardStacks[from]
-	fmt.Println(fromCS)
 	fromCS, err := desktop.RemoveCard(fromCS, card)
-	fmt.Println(fromCS)
-	fmt.Println("1111111111111111")
-	ctx.Render(gameplayCtx)
 	if err != nil {
 		return origin, card, err
 	}
@@ -261,8 +254,6 @@ func MoveCard(ctx IView, origin Gameplay, from string, to string, mapCard func(d
 		to:   toCS,
 		from: fromCS,
 	})
-	fmt.Println("222222222222222")
-	ctx.Render(gameplayCtx)
 	return gameplayCtx, card, nil
 }
 
