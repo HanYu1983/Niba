@@ -16,27 +16,33 @@
 
 (defn main []
   (let [gameplay app2.gameplay.model/gameplay
+        gameplay-event (-> gameplay :js :outputSubject)
 
-        atom-gameplay (atom gameplay)
-        input-signal (rx/Subject.)
-        _ (app2.gameplay.view/view atom-gameplay input-signal)
-
-
-        tick-signal (let [fps 60]
+        view-event (rx/Subject.)
+        tick-signal (let [fps 1]
                       (-> (rx/interval (/ 1000 fps))
                           (.pipe (rx-op/map (fn [] [:tick (/ 1 fps)])))))
 
         update-fn (partial comp-reduce [app2.gameplay.model/camera-control
-                                        app2.gameplay.model/player-control
+                                        app2.gameplay.model/system-control
+                                        app2.gameplay.model/expire-control
                                         (partial app2.gameplay.model/entities-reduce
-                                                 [app2.gameplay.model/brain-control])])
+                                                 [app2.gameplay.model/brain-control
+                                                  app2.gameplay.model/player-control
+                                                  app2.gameplay.model/timer-control
+                                                  app2.gameplay.model/expire-evt-control
+                                                  app2.gameplay.model/velocity-control])])
 
-        model-signal (-> (rx/merge tick-signal
-                                   input-signal)
-                         (.pipe (rx-op/scan update-fn gameplay)
-                                (rx-op/tap (fn [gameplay]
-                                             (s/assert ::app2.gameplay.model/gameplay gameplay)))))
+        model-signal (rx/Subject.)
+        
+        ; 用subscribe把事件流轉發到另一個subject, 不然在#1的處理後每個事件會被多發一次, 不知為何
+        _ (-> (rx/merge tick-signal
+                        view-event
+                        gameplay-event)
+              (.pipe (rx-op/scan update-fn gameplay))
+              (.subscribe model-signal))
 
+        ; #1
         _ (-> model-signal
               (.pipe (rx-op/map (fn [gameplay]
                                   (get-in gameplay [:state :entities])))
@@ -54,6 +60,11 @@
                                                         #(not= (:position %1) (:position %2))
                                                         old now)]))))
 
+        atom-gameplay (atom gameplay)
+
         _ (.subscribe model-signal
                       (fn [gameplay]
-                        (reset! atom-gameplay gameplay)))]))
+                        (s/assert ::app2.gameplay.model/gameplay gameplay)
+                        (reset! atom-gameplay gameplay)))
+
+        _ (app2.gameplay.view/view atom-gameplay view-event)]))

@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "a-star": "^0.2.0",
+    "keycode": "^2.2.0",
     "p5": "^1.0.0",
     "planck-js": "^0.3.19",
     "rbush": "^3.0.1",

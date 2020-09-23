@@ -1,10 +1,17 @@
 (ns tool.math
   (:require [clojure.spec.alpha :as s]
             [clojure.core.matrix :as m]
-            [clojure.core.matrix.operators :as mo]))
+            [clojure.core.matrix.operators :as mo]
+            ["sat" :as sat]))
 
 (s/def ::vec2 (s/tuple number? number?))
 (s/def ::vec3 (s/tuple number? number? number?))
+
+(defn sat-vector-map [v map-f]
+  (s/assert ::vec2 v)
+  (let [sat-v (sat/Vector. (get v 0) (get v 1))
+        _ (map-f sat-v)]
+    [(.-x sat-v) (.-y sat-v)]))
 
 (defn world-camera-factor [camera]
   (s/assert ::vec3 camera)

@@ -2,39 +2,36 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.matrix :as m]
             ["p5" :as p5])
-  (:require [tool.math]))
+  (:require [tool.math]
+            [tool.keycode]))
 
 
 (defn view [atom-gameplay input-signal]
   (p5. (fn [p]
+         (js/console.log p)
          (set! (.-keyPressed p)
                (fn []
-                 ;(println ".-keyPressed" (.-key p) (.-keyCode p))
-                 (.next input-signal [:keyPressed (.-keyCode p)])))
+                 (.next input-signal [:keyPressed (tool.keycode/keycode (.-keyCode p))])))
 
          (set! (.-keyReleased p)
                (fn []
-                 ;(println ".-keyReleased" (.-key p) (.-keyCode p))
-                 (.next input-signal [:keyReleased (.-keyCode p)])))
+                 (.next input-signal [:keyReleased (tool.keycode/keycode (.-keyCode p))])))
 
          (set! (.-mousePressed p)
                (fn []
-                 ;(println ".-mousePressed" (.-mouseButton p))
                  (.next input-signal [:mousePressed [(.-mouseX p) (.-mouseY p) (.-mouseButton p)]])))
 
          (set! (.-mouseReleased p)
                (fn []
-                 ;(println ".-mouseReleased" (.-mouseButton p))
                  (.next input-signal [:mouseReleased [(.-mouseX p) (.-mouseY p) (.-mouseButton p)]])))
 
          (set! (.-mouseMoved p)
                (fn []
-                 ;(println ".-mouseMoved")
-                 (.next input-signal [:mouseMoved])))
+                 #_(.next input-signal [:mouseMoved])))
 
          (set! (.-mouseDragged p)
                (fn []
-                 (.next input-signal [:mouseDragged [(.-mouseX p) (.-mouseY p)]])))
+                 #_(.next input-signal [:mouseDragged [(.-mouseX p) (.-mouseY p)]])))
 
          (set! (.-setup p)
                (let [_ 0]
@@ -43,16 +40,11 @@
 
          (set! (.-draw p)
                (fn []
-                 (doseq [key [(.-UP_ARROW p)
-                              (.-LEFT_ARROW p)
-                              (.-DOWN_ARROW p)
-                              (.-RIGHT_ARROW p)
-                              32
-                              187
-                              189
-                              87 68 83 65]
+                 (doseq [key (map #(tool.keycode/keycode %) ["up" "down" "left" "right"
+                                                             "w" "d" "a" "s" "=" "-"
+                                                             "space"])
                          :when (.keyIsDown p key)]
-                   (.next input-signal [:keyIsDown key]))
+                   (.next input-signal [:keyIsDown (tool.keycode/keycode key)]))
 
 
                  (when-let [gameplay @atom-gameplay]
@@ -61,12 +53,13 @@
                      (.fill p 100)
                      (.stroke p 255)
                      (doseq [[id entity] (get-in gameplay [:state :entities])]
-                       (let [[x y] (tool.math/get-camera-point viewport camera (:position entity))
-                             radius (* (:radius entity) (tool.math/world-camera-factor camera))]
-                         (.ellipse p
-                                   x
-                                   y
-                                   radius
-                                   radius)
-                         (.text p id x y))))))))
-         "canvas"))
+                       (let [_ (when (every? #(% entity) [:position :radius])
+                                 (let [[x y] (tool.math/get-camera-point viewport camera (:position entity))
+                                       radius (* (:radius entity) (tool.math/world-camera-factor camera))
+                                       _ (.ellipse p x y radius radius)
+                                       _ (.text p id x y)
+                                       _ (when (:robot-state entity)
+                                           (let [{heading :heading} (:robot-state entity)
+                                                 head (m/add [x y] (m/mul [50 50] heading))]
+                                             (.line p x y (get head 0) (get head 1))))]))])))))))
+       "canvas"))

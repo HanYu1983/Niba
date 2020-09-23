@@ -15,7 +15,6 @@
   (condp = cmd
     :keyIsDown
     (let [key args]
-      (println args)
       (condp = key
         37
         (update gameplay :camera #(pl/Vec3.add % (pl/Vec3. -1 0 0)))
