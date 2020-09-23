@@ -107,12 +107,13 @@
   (update-in entity [:brain :goal] (fn [goal]
                                      (tool.goal/push-goal goal [:loop
                                                                 [:loop
-                                                                 [:move-to [5 0]]
-                                                                 [:move-to [5 5]]
-                                                                 [:move-to [0 5]]
+                                                                 [:move-to [50 0]]
+                                                                 [:move-to [50 50]]
+                                                                 [:move-to [0 50]]
                                                                  [:move-to [0 0]]
-                                                                 [:return]]
-                                                                [:attack-and-return (gensym)]]))))
+                                                                 ;[:return]
+                                                                 ]
+                                                                [:search (gensym)]]))))
 
 (defmethod exe-goal :move-to [[_ pos :as curr-goal] entity gameplay [cmd args]]
   (let [reach? (-> (m/distance (:position entity) pos)
@@ -129,7 +130,7 @@
       (let [offset (s/assert
                     ::tool.math/vec2
                     (-> (m/sub pos (:position entity))
-                        (m/div 1)))
+                        (m/div 9)))
             entity (update entity :position (fn [pos]
                                               (m/add offset pos)))]
         entity))))
@@ -158,7 +159,6 @@
          (= :tick cmd))
     (let [goal (-> entity :brain :goal)
           curr-goal (tool.goal/get-goal goal)
-          _ (println curr-goal)
           entity (exe-goal curr-goal entity gameplay [cmd args])]
       entity)
 

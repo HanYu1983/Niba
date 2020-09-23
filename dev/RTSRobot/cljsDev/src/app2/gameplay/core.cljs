@@ -19,10 +19,12 @@
         gameplay-event (-> gameplay :js :outputSubject)
 
         view-event (rx/Subject.)
-        tick-signal (let [fps 1]
-                      (-> (rx/interval (/ 1000 fps))
-                          (.pipe (rx-op/map (fn [] [:tick (/ 1 fps)])))))
 
+        tick-signal (-> view-event
+                        (.pipe (rx-op/timeInterval)
+                               (rx-op/map (fn [obj]
+                                            [(first (.-value obj)) (/ (.-interval obj) 1000)]))))
+        
         update-fn (partial comp-reduce [app2.gameplay.model/camera-control
                                         app2.gameplay.model/system-control
                                         app2.gameplay.model/expire-control
@@ -34,7 +36,7 @@
                                                   app2.gameplay.model/velocity-control])])
 
         model-signal (rx/Subject.)
-        
+
         ; 用subscribe把事件流轉發到另一個subject, 不然在#1的處理後每個事件會被多發一次, 不知為何
         _ (-> (rx/merge tick-signal
                         view-event

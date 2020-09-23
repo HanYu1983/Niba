@@ -40,11 +40,14 @@
 
          (set! (.-draw p)
                (fn []
+                 (.next input-signal [:tick])
                  (doseq [key (map #(tool.keycode/keycode %) ["up" "down" "left" "right"
                                                              "w" "d" "a" "s" "=" "-"
                                                              "space"])
                          :when (.keyIsDown p key)]
                    (.next input-signal [:keyIsDown (tool.keycode/keycode key)]))
+                 
+                 
 
 
                  (when-let [gameplay @atom-gameplay]
