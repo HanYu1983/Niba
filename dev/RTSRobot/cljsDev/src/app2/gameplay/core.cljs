@@ -2,22 +2,31 @@
   (:require [clojure.spec.alpha :as s]
             ["rxjs" :as rx]
             ["rxjs/operators" :as rx-op])
-  (:require [tool.rbush]
-            [tool.math]
-            [app2.gameplay.model]
+  (:require [app2.gameplay.model]
             [app2.gameplay.view]
-            [app2.gameplay.control.core]
             [app2.gameplay.control.player :refer [fire-control player-control]]
             [app2.gameplay.control.camera :refer [camera-control]]
             [app2.gameplay.control.brain :refer [brain-control]]
             [app2.gameplay.control.position :refer [velocity-control last-position-control]]
-            [app2.gameplay.control.time :refer [expire-control expire-evt-control timer-control]]))
+            [app2.gameplay.control.time :refer [expire-control expire-evt-control timer-control]]
+            [tool.rbush]
+            [tool.math]))
 
 (defn comp-reduce [fns ctx args]
   (reduce (fn [ctx f]
             (f ctx args))
           ctx
           fns))
+
+(defn entities-reduce [fns gameplay [cmd args]]
+  (update-in gameplay [:state :entities] (fn [entities]
+                                           (->> (vals entities)
+                                                (map (fn [entity]
+                                                       (reduce (fn [entity f]
+                                                                 (f entity gameplay [cmd args]))
+                                                               entity
+                                                               fns)))
+                                                (zipmap (keys entities))))))
 
 (defn main []
   (let [gameplay app2.gameplay.model/gameplay
@@ -37,7 +46,7 @@
         update-fn (partial comp-reduce [camera-control
                                         fire-control
                                         expire-control
-                                        (partial app2.gameplay.control.core/entities-reduce
+                                        (partial entities-reduce
                                                  [timer-control
                                                   expire-evt-control
                                                   player-control
