@@ -36,6 +36,7 @@
          (set! (.-setup p)
                (let [_ 0]
                  (fn []
+                   (.frameRate p 12)
                    (.createCanvas p 800 640))))
 
          (set! (.-draw p)

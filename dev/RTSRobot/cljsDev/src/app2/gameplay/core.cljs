@@ -1,12 +1,17 @@
 (ns app2.gameplay.core
   (:require [clojure.spec.alpha :as s]
-            [clojure.core.matrix :as m]
             ["rxjs" :as rx]
             ["rxjs/operators" :as rx-op])
   (:require [tool.rbush]
             [tool.math]
             [app2.gameplay.model]
-            [app2.gameplay.view]))
+            [app2.gameplay.view]
+            [app2.gameplay.control.core]
+            [app2.gameplay.control.player :refer [fire-control player-control]]
+            [app2.gameplay.control.camera :refer [camera-control]]
+            [app2.gameplay.control.brain :refer [brain-control]]
+            [app2.gameplay.control.position :refer [velocity-control last-position-control]]
+            [app2.gameplay.control.time :refer [expire-control expire-evt-control timer-control]]))
 
 (defn comp-reduce [fns ctx args]
   (reduce (fn [ctx f]
@@ -29,15 +34,16 @@
                                 (fn [obj]
                                   [(first (.-value obj)) (/ (.-interval obj) 1000)]))))
         
-        update-fn (partial comp-reduce [app2.gameplay.model/camera-control
-                                        app2.gameplay.model/system-control
-                                        app2.gameplay.model/expire-control
-                                        (partial app2.gameplay.model/entities-reduce
-                                                 [app2.gameplay.model/brain-control
-                                                  app2.gameplay.model/player-control
-                                                  app2.gameplay.model/timer-control
-                                                  app2.gameplay.model/expire-evt-control
-                                                  app2.gameplay.model/velocity-control])])
+        update-fn (partial comp-reduce [camera-control
+                                        fire-control
+                                        expire-control
+                                        (partial app2.gameplay.control.core/entities-reduce
+                                                 [timer-control
+                                                  expire-evt-control
+                                                  player-control
+                                                  velocity-control
+                                                  brain-control
+                                                  last-position-control])])
 
         model-signal (rx/Subject.)
 
