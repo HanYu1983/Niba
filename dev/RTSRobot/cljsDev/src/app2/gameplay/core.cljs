@@ -2,13 +2,15 @@
   (:require [clojure.spec.alpha :as s]
             ["rxjs" :as rx]
             ["rxjs/operators" :as rx-op])
-  (:require [app2.gameplay.model]
+  (:require [app2.gameplay.spec]
+            [app2.gameplay.model]
             [app2.gameplay.view]
             [app2.gameplay.control.player :refer [fire-control player-control]]
             [app2.gameplay.control.camera :refer [camera-control]]
             [app2.gameplay.control.brain :refer [brain-control]]
             [app2.gameplay.control.position :refer [velocity-control last-position-control]]
             [app2.gameplay.control.time :refer [expire-control expire-evt-control timer-control]]
+            [app2.gameplay.control.collision :refer [collision-control]]
             [tool.rbush]
             [tool.math]))
 
@@ -52,6 +54,7 @@
                                                   player-control
                                                   velocity-control
                                                   brain-control
+                                                  collision-control
                                                   last-position-control])])
 
         model-signal (rx/Subject.)
@@ -60,7 +63,9 @@
         _ (-> (rx/merge tick-signal
                         view-event
                         gameplay-event)
-              (.pipe (rx-op/scan update-fn gameplay))
+              (.pipe (rx-op/scan update-fn gameplay)
+                     (rx-op/tap (fn [gameplay]
+                                  (s/assert ::app2.gameplay.spec/gameplay gameplay))))
               (.subscribe model-signal))
 
         ; #1
@@ -85,7 +90,7 @@
 
         _ (.subscribe model-signal
                       (fn [gameplay]
-                        (s/assert ::app2.gameplay.model/gameplay gameplay)
+                        (s/assert ::app2.gameplay.spec/gameplay gameplay)
                         (reset! atom-gameplay gameplay)))
 
         _ (app2.gameplay.view/view atom-gameplay view-event)]))

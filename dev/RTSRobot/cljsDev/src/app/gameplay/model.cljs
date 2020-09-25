@@ -14,11 +14,11 @@
 (s/def ::timeout number?)
 (s/def ::player? boolean?)
 (s/def ::entity (s/keys :req-un [::id]
-                        :req-opt [::selected? ::timeout ::player?]))
+                        :opt-un [::selected? ::timeout ::player?]))
 (s/def ::entities (s/map-of ::id ::entity))
 (s/def ::select-box (s/tuple (s/tuple int? int?) (s/tuple int? int?)))
 (s/def ::gameplay (s/keys :req-un [::world ::life ::score ::end? ::camera ::viewport ::entities]
-                          :req-opt [::select-box]))
+                          :opt-un [::select-box]))
 (def gameplay (s/assert
                ::gameplay
                {:world (pl/World. (js-obj "gravity" (pl/Vec2 0 0)))

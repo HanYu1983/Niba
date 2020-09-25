@@ -5,6 +5,7 @@
  :dependencies
  [[org.clojure/test.check "0.10.0"]
   [org.clojure/core.async "0.6.532"]
+  [org.clojure/core.match "1.0.0"]
   [tailrecursion/cljs-priority-map "1.2.1"]
   [net.mikera/core.matrix "0.62.0"]]
 

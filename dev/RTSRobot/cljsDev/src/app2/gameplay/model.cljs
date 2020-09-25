@@ -2,57 +2,34 @@
   (:require [clojure.spec.alpha :as s]
             ["rxjs" :as rx]
             [cljs.reader])
-  (:require [tool.rbush]
+  (:require [app2.gameplay.spec]
+            [tool.rbush]
             [tool.math]
             [tool.goal]))
 
-(s/def ::position ::tool.math/vec2)
-(s/def ::last-position ::tool.math/vec2)
-(s/def ::velocity ::tool.math/vec2)
-(s/def ::radius number?)
-(s/def ::timer number?)
-(s/def ::expire-time number?)
-(s/def ::collision-state (s/keys :req-un []))
-(s/def ::memory (s/map-of any? any?))
-(s/def ::brain (s/keys :req-opt [::tool.goal/goal ::memory]))
-(s/def ::entity (s/keys :req-un [::id]
-                        :req-opt [::position
-                                  ::last-position
-                                  ::velocity
-                                  ::radius
-                                  ::brain
-                                  ::robot-state
-                                  ::collision-state
-                                  ::timer
-                                  ::expire-time]))
-(s/def ::entities (s/map-of string? ::entity))
-
-
-(s/def ::viewport ::tool.math/vec2)
-(s/def ::camera ::tool.math/vec3)
-(s/def ::state (s/keys :req-un [::entities ::viewport ::camera]))
-
-(s/def ::js (s/keys :req-un [::tool.rbush/rbush]))
-(s/def ::gameplay (s/keys :req-un [::state ::js]))
-
-
 (def gameplay (s/assert
-               ::gameplay
+               ::app2.gameplay.spec/gameplay
                {:state {:entities {"player" {:id "player"
                                              :position [0 0]
-                                             :radius 10
+                                             :collision-state {:shape [:circle 10]}
                                              :player-state {}
-                                             :robot-state {:heading [1 0]}}
+                                             :robot-state {:heading [1 0]}
+                                             :weapon-state {:weapons [{:id (gensym "weapon")
+                                                                       :weapon-proto-id :sword
+                                                                       :bullet-count 0}
+                                                                      {:id (gensym "weapon")
+                                                                       :weapon-proto-id :gun
+                                                                       :bullet-count 0}]}}
                                    "ai" {:id "ai"
                                          :position [0 0]
                                          :last-position [0 0]
-                                         :radius 5
+                                         :collision-state {:shape [:polygon (cons [0 0] (tool.math/circle-to-polygon 30 0 3.14 3))]}
                                          :robot-state {:heading [1 0]}
                                          :brain {:goal [:stack
                                                         [:think]]
                                                  :memory {}}}}
                         :viewport [800 640]
-                        :camera [0 0 0.2]}
+                        :camera [0 0 1]}
                 :js {:outputSubject (rx/Subject.)
                      :rbush (tool.rbush/create {:compareMinX (fn [a b]
                                                                (- (- (get-in a [:position 0]) (:radius a))

@@ -3,9 +3,8 @@
             [clojure.walk]
             [clojure.zip])
   (:require [app2.gameplay.core]
-            [tool.goal]))
+            [tool.goal]
+            [tool.sat]))
 
 (s/check-asserts true)
-;(tool.goal/test-it)
-
 (app2.gameplay.core/main)

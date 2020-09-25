@@ -13,13 +13,27 @@
         _ (map-f sat-v)]
     [(.-x sat-v) (.-y sat-v)]))
 
+(defn circle-to-polygon [radius start end cnt]
+  (s/assert number? radius)
+  (s/assert number? start)
+  (s/assert number? end)
+  (s/assert int? cnt)
+  (s/assert
+   (s/* ::vec2)
+   (let [first-v (sat-vector-map [0 radius] #(.rotate % (- start)))
+         radian (/ (- start end) cnt)
+         vs (take (inc cnt) (iterate (fn [v]
+                                       (sat-vector-map v #(.rotate % (- radian))))
+                                     first-v))]
+     vs)))
+
 (defn world-camera-factor [camera]
   (s/assert ::vec3 camera)
-  (/ 1 (m/mget camera 2)))
+  (/ 1 (get camera 2)))
 
 (defn camera-world-factor [camera]
   (s/assert ::vec3 camera)
-  (m/mget camera 2))
+  (get camera 2))
 
 (defn get-camera-point [viewport camera world-point]
   (s/assert ::vec2 viewport)

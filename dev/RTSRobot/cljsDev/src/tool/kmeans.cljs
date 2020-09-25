@@ -5,7 +5,7 @@
 (s/def ::error (s/nilable number?))
 (s/def ::size int?)
 (s/def ::centroids (s/* (s/keys :req-un [::centroid ::error ::size])))
-(s/def ::option (s/keys :req-opt [::initialization ::maxIterations ::tolerance ::withIterations ::distanceFunction ::seed]))
+(s/def ::option (s/keys :opt-un [::initialization ::maxIterations ::tolerance ::withIterations ::distanceFunction ::seed]))
 (s/def ::answer (s/keys :req-un [::clusters ::centroids ::converged ::iterations]))
 
 ; https://mljs.github.io/kmeans/

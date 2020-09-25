@@ -4,7 +4,7 @@
 
 (s/def ::k int?)
 (s/def ::distance fn?)
-(s/def ::options (s/keys :req-opt [::k ::distance]))
+(s/def ::options (s/keys :opt-un [::k ::distance]))
 
 (defn train [dataset predictions options]
   {:pre [(s/valid? ::options options)]}
