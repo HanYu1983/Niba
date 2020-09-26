@@ -5,7 +5,8 @@
             [clojure.walk :as w])
   (:require [tool.goal]
             [tool.math]
-            [tool.rbush]))
+            [tool.rbush]
+            [app2.gameplay.spec]))
 
 (defmulti exe-goal (fn [goal]
                      (first goal)))
@@ -13,9 +14,6 @@
 (defmethod exe-goal :think [[_ goal-args] entity gameplay [cmd args]]
   (update-in entity [:brain :goal] (fn [goal]
                                      (tool.goal/push-goal goal [:loop
-                                                                [:search :searched-entity]
-                                                                [:push [:searched-entity 0]]
-                                                                [:move-to-memory]
                                                                 [:loop
                                                                  [:move-to [50 0]]
                                                                  [:move-to-entity "player"]
@@ -85,7 +83,7 @@
                              next-parent-goal (tool.goal/next-goal parent-goal)]
                          (w/prewalk-replace {parent-goal next-parent-goal} goal)))
         player (s/assert
-                (s/nilable ::entity)
+                (s/nilable ::app2.gameplay.spec/entity)
                 (get-in gameplay [:state :entities player-id]))
         entity (if (nil? player)
                  (update-in entity [:brain :goal] next-goal-fn)
@@ -129,3 +127,25 @@
 
     :else
     entity))
+
+(defn spawn-enemy [gameplay [cmd args]]
+  (cond
+    (= :spawn cmd)
+    (let [enemy (s/assert
+                 ::app2.gameplay.spec/entity
+                 {:id (str (gensym "ai"))
+                  :hp 3
+                  :position [(rand-int 300) (rand-int 300)]
+                  :last-position [0 0]
+                  :collision-state {:shape [:circle 30]
+                                    :collision-group :enemy}
+                  :timer 0
+                  :expire-time 60
+                  :robot-state {:heading [1 0]}
+                  :brain {:goal [:stack
+                                 [:think]]
+                          :memory {}}})]
+      (update-in gameplay [:state :entities] #(assoc % (:id enemy) enemy)))
+    
+    :else
+    gameplay))

@@ -7,10 +7,10 @@
             [app2.gameplay.view]
             [app2.gameplay.control.player :refer [fire-control player-control]]
             [app2.gameplay.control.camera :refer [camera-control]]
-            [app2.gameplay.control.brain :refer [brain-control]]
+            [app2.gameplay.control.brain :refer [brain-control spawn-enemy]]
             [app2.gameplay.control.position :refer [velocity-control last-position-control]]
             [app2.gameplay.control.time :refer [expire-control expire-evt-control timer-control]]
-            [app2.gameplay.control.collision :refer [collision-control]]
+            [app2.gameplay.control.collision :refer [collision-control collide-reaction-control]]
             [tool.rbush]
             [tool.math]))
 
@@ -45,9 +45,23 @@
                                 (fn [obj]
                                   [(first (.-value obj)) (/ (.-interval obj) 1000)]))))
         
+        tick-for-spawn (-> tick-signal
+                           (.pipe (rx-op/scan (fn [ctx [_ elapsed]]
+                                                (+ ctx elapsed))
+                                              0)
+                                  (rx-op/map (fn [ctx]
+                                               (mod ctx 5)))
+                                  (rx-op/bufferCount 2 1)
+                                  (rx-op/filter (fn [[t1 t2]]
+                                                  (> t1 t2)))
+                                  (rx-op/map (fn []
+                                               [:spawn]))))
+        
         update-fn (partial comp-reduce [camera-control
                                         fire-control
                                         expire-control
+                                        collide-reaction-control
+                                        spawn-enemy
                                         (partial entities-reduce
                                                  [timer-control
                                                   expire-evt-control
@@ -61,6 +75,7 @@
 
         ; 用subscribe把事件流轉發到另一個subject, 不然在#1的處理後每個事件會被多發一次, 不知為何
         _ (-> (rx/merge tick-signal
+                        tick-for-spawn
                         view-event
                         gameplay-event)
               (.pipe (rx-op/scan update-fn gameplay)

@@ -5,6 +5,8 @@
             [tool.rbush]
             [app2.weapon.spec]))
 
+(s/def ::hp number?)
+(s/def ::tags set?)
 (s/def ::position ::tool.math/vec2)
 (s/def ::last-position ::tool.math/vec2)
 (s/def ::velocity ::tool.math/vec2)
@@ -14,14 +16,18 @@
                      :arc (s/tuple #{:arc} number? number? number?)
                      :circle (s/tuple #{:circle} number?)
                      :polygon (s/tuple #{:polygon} (s/coll-of ::tool.math/vec2))))
-(s/def ::collision-state (s/keys :req-un [::shape]))
+
+(s/def ::collision-group any?)
+(s/def ::collision-state (s/keys :req-un [::shape ::collision-group]))
 (s/def ::memory (s/map-of any? any?))
 (s/def ::brain (s/keys :opt-un [::tool.goal/goal ::memory]))
 (s/def ::weapon (s/merge ::app2.weapon.spec/weapon (s/keys :req-un [])))
 (s/def ::weapons (s/coll-of ::app2.weapon.spec/weapon))
 (s/def ::weapon-state (s/keys :req-un [::weapons]))
 (s/def ::entity (s/keys :req-un [::id]
-                        :opt-un [::position
+                        :opt-un [::hp
+                                 ::tags
+                                 ::position
                                  ::last-position
                                  ::velocity
                                  ::brain
