@@ -20,10 +20,10 @@
   (s/assert int? cnt)
   (s/assert
    (s/* ::vec2)
-   (let [first-v (sat-vector-map [0 radius] #(.rotate % (- start)))
+   (let [first-v (sat-vector-map [0 radius] #(.rotate % start))
          radian (/ (- start end) cnt)
          vs (take (inc cnt) (iterate (fn [v]
-                                       (sat-vector-map v #(.rotate % (- radian))))
+                                       (sat-vector-map v #(.rotate % radian)))
                                      first-v))]
      vs)))
 

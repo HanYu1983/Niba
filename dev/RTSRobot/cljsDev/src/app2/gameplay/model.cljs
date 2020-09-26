@@ -25,7 +25,7 @@
                                          :hp 3
                                          :position [0 0]
                                          :last-position [0 0]
-                                         :collision-state {:shape [:polygon (cons [0 0] (tool.math/circle-to-polygon 30 0 3.14 3))]
+                                         :collision-state {:shape [:circle 30]
                                                            :collision-group :enemy}
                                          :robot-state {:heading [1 0]}
                                          :brain {:goal [:stack

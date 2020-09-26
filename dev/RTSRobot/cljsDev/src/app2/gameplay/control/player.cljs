@@ -11,18 +11,18 @@
     (let []
       (cond
         (= [:keyIsDown "w"] evt)
-        (update-in entity [:position] #(m/add % (-> entity :robot-state :heading (m/mmul 5))))
+        (update-in entity [:position] #(m/add % (-> entity :robot-state :heading (m/mmul 1))))
 
         (= [:keyIsDown "s"] evt)
-        (update-in entity [:position] #(m/add % (-> entity :robot-state :heading (m/mmul -5))))
+        (update-in entity [:position] #(m/add % (-> entity :robot-state :heading (m/mmul -1))))
 
         (= [:keyIsDown "a"] evt)
         (update-in entity [:robot-state :heading] #(tool.math/sat-vector-map % (fn [sat-v]
-                                                                                 (.rotate sat-v -0.5))))
+                                                                                 (.rotate sat-v -0.1))))
 
         (= [:keyIsDown "d"] evt)
         (update-in entity [:robot-state :heading] #(tool.math/sat-vector-map % (fn [sat-v]
-                                                                                 (.rotate sat-v 0.5))))
+                                                                                 (.rotate sat-v 0.1))))
 
         (= [:keyPressed ","] evt)
         (let [weapon (get-in entity [:weapon-state :weapons 0])
@@ -79,7 +79,7 @@
                                                                     range (m/to-radians 90)
                                                                     bullet {:id (str (gensym "bullet"))
                                                                             :position (:position entity)
-                                                                            :collision-state {:shape [:polygon (cons [0 0] (tool.math/circle-to-polygon 30 angle (+ angle range) 3))]
+                                                                            :collision-state {:shape [:polygon (cons [0 0] (tool.math/circle-to-polygon 30 (- angle (/ range 2)) (+ angle (/ range 2)) 3))]
                                                                                               :collision-group :player-bullet}
                                                                             :timer 0
                                                                             :expire-time 2
