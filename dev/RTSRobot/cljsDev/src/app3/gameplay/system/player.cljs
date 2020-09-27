@@ -1,7 +1,7 @@
 (ns app3.gameplay.system.player
   (:require [app3.gameplay.system.basic]))
 
-(defn player-system! [atom-gameplay atom-state body [cmd args]]
+(defn player-system! [atom-state body [cmd args]]
   (cond
     (and (:player-state @atom-state)
          body

@@ -91,14 +91,10 @@
               (.subscribe (fn [entities]
                             (reset! atom-bodies entities))))
 
-        _ (-> app3.gameplay.emitter/on-gameplay
-              (.pipe (rx-op/switchMap (fn [atom-gameplay]
-                                        (-> app3.gameplay.emitter/emitter
-                                            (.pipe (rx-op/map (fn [evt]
-                                                                [atom-gameplay evt])))))))
-              (.subscribe (fn [[atom-gameplay evt]]
+        _ (-> app3.gameplay.emitter/emitter
+              (.subscribe (fn [evt]
                             (let [entities (vals @atom-entities)
                                   _ (doseq [atom-entity entities]
                                       (let [body (@atom-bodies (:id @atom-entity))
                                             _ (doseq [do-f dos-f]
-                                                (do-f atom-gameplay atom-entity body evt))]))]))))]))
+                                                (do-f atom-entity body evt))]))]))))]))
