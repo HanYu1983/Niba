@@ -34,7 +34,7 @@
         _ (-> app3.gameplay.emitter/on-world
               (.subscribe (fn [world]
                             (let [body (.createBody world body-def-js)
-                                  _ (js/console.log body)
+                                 ; _ (js/console.log body)
                                   fixture-defs (:fixtures-def body-def)
                                   _ (doseq [fixture-def fixture-defs]
                                       (let [shape-def (:shape-def fixture-def)
@@ -72,8 +72,8 @@
                             (let [_ (.on world "begin-contact"
                                          (fn [e]
                                            (let [entities @atom-entities
-                                                 a-id (-> e .getFixtureA .getUserData)
-                                                 b-id (-> e .getFixtureB .getUserData)
+                                                 a-id (-> e .getFixtureA .getBody .getUserData)
+                                                 b-id (-> e .getFixtureB .getBody .getUserData)
                                                  _ (when (not (entities a-id))
                                                      (throw (js/Error. "not found")))
                                                  _ (when (not (entities b-id))
@@ -97,8 +97,8 @@
                                             (.pipe (rx-op/map (fn [evt]
                                                                 [atom-gameplay evt])))))))
               (.subscribe (fn [[atom-gameplay evt]]
-                            (let [players (vals @atom-entities)
-                                  _ (doseq [entity players]
-                                      (let [body (@atom-bodies (:id @entity))
+                            (let [entities (vals @atom-entities)
+                                  _ (doseq [atom-entity entities]
+                                      (let [body (@atom-bodies (:id @atom-entity))
                                             _ (doseq [do-f dos-f]
-                                                (do-f atom-gameplay entity body evt))]))]))))]))
+                                                (do-f atom-gameplay atom-entity body evt))]))]))))]))

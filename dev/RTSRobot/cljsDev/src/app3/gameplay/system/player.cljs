@@ -7,7 +7,4 @@
          body
          (= [:keyPressed "j"] [cmd args]))
     (let [_ (swap! atom-state identity)
-          _ (app3.gameplay.system.basic/destroy-entity atom-state)])
-
-    :else
-    nil))
+          _ (app3.gameplay.system.basic/destroy-entity atom-state)])))

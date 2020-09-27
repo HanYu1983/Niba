@@ -27,10 +27,10 @@
                      (.pipe (rx-op/scan (fn [ctx [cmd entity]]
                                           (cond
                                             (= :create cmd)
-                                            (assoc ctx (:id entity) entity)
+                                            (assoc ctx (:id @entity) entity)
 
                                             (= :destroy cmd)
-                                            (dissoc ctx (:id entity))
+                                            (dissoc ctx (:id @entity))
 
                                             :else
                                             ctx))
