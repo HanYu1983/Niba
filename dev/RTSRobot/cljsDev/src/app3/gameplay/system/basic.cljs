@@ -1,7 +1,8 @@
 (ns app3.gameplay.system.basic
   (:require [clojure.spec.alpha :as s]
             [clojure.core.match :refer [match]]
-            ["planck-js" :as pl])
+            ["planck-js" :as pl]
+            ["rxjs/operators" :as rx-op])
   (:require [app3.gameplay.emitter]
             [app3.gameplay.tool]
             [app3.gameplay.spec]
@@ -90,10 +91,14 @@
               (.subscribe (fn [entities]
                             (reset! atom-bodies entities))))
 
-        _ (-> app3.gameplay.emitter/emitter
-              (.subscribe (fn [evt]
+        _ (-> app3.gameplay.emitter/on-gameplay
+              (.pipe (rx-op/switchMap (fn [atom-gameplay]
+                                        (-> app3.gameplay.emitter/emitter
+                                            (.pipe (rx-op/map (fn [evt]
+                                                                [atom-gameplay evt])))))))
+              (.subscribe (fn [[atom-gameplay evt]]
                             (let [players (vals @atom-entities)
                                   _ (doseq [entity players]
                                       (let [body (@atom-bodies (:id @entity))
                                             _ (doseq [do-f dos-f]
-                                                (do-f entity body evt))]))]))))]))
+                                                (do-f atom-gameplay entity body evt))]))]))))]))

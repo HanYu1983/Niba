@@ -7,6 +7,7 @@
             [app3.gameplay.system.basic :refer [create-world create-entity collide-system  entity-system]]
             [app3.gameplay.system.collide :refer [collide-reaction-system!]]
             [app3.gameplay.system.player :refer [player-system!]]
+            [app3.gameplay.system.camera :refer [camera-control!]]
             [app3.gameplay.system.view :refer [view-system]]
             [tool.p5]
             [tool.planck]
@@ -54,6 +55,7 @@
 
                                   _ (collide-system)
                                   _ (collide-reaction-system!)
+                                  _ (camera-control!)
                                   _ (entity-system player-system!)]))))]))
 
 (defn assert-system []

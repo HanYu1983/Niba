@@ -3,11 +3,13 @@
             ["rxjs/operators" :as rx-op])
   (:require [app3.gameplay.tool]))
 
-(def emitter (rx/Subject.))
+(def on-gameplay (rx/of (atom {:camera [0 0 1]})))
 (def on-world (rx/ReplaySubject.))
 (def on-entity (rx/ReplaySubject.))
 (def on-entity-destroy (rx/ReplaySubject.))
 (def on-collide (rx/Subject.))
+(def emitter (rx/Subject.))
+
 (def on-tick (-> emitter
                  (.pipe (rx-op/filter
                          (fn [[t]]
@@ -35,7 +37,7 @@
                                         {}))))
 
 (def on-bodies (-> on-world
-                   (.pipe (rx-op/concatMap (fn [world]
+                   (.pipe (rx-op/switchMap (fn [world]
                                              (-> on-entities
                                                  (.pipe (rx-op/map (fn []
                                                                      world))))))
