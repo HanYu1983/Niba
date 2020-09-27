@@ -3,27 +3,6 @@
             [clojure.spec.alpha :as s]
             [clojure.set]))
 
-(defn update-basic! [on-create on-remove on-update old-entites now-entites]
-  (s/assert fn? on-create)
-  (s/assert fn? on-remove)
-  (s/assert fn? on-update)
-  (s/assert (s/map-of any? ::entity) old-entites)
-  (s/assert (s/map-of any? ::entity) now-entites)
-  (let [old-ids (->> (keys old-entites) (into #{}))
-        now-ids (->> (keys now-entites) (into #{}))
-
-        removed-ids (clojure.set/difference old-ids now-ids)
-        _ (when (> (count removed-ids) 0)
-            (on-remove removed-ids))
-
-        new-ids (clojure.set/difference now-ids old-ids)
-        _ (when (> (count new-ids) 0)
-            (on-create new-ids))
-
-        hold-ids (clojure.set/intersection old-ids now-ids)
-        _ (when (> (count hold-ids) 0)
-            (on-update hold-ids))]))
-
 (s/def ::vec2 (s/tuple number? number?))
 
 (s/def ::world #(instance? pl/World %))
@@ -39,7 +18,7 @@
 (s/def ::restitution number?)
 (s/def ::shape-def (s/or :rect (s/tuple #{:rect} ::vec2 ::vec2)
                          :arc (s/tuple #{:arc} number? number? number?)
-                         :circle (s/tuple #{:circle} number?)
+                         :circle (s/tuple #{:circle} ::vec2 number?)
                          :polygon (s/tuple #{:polygon} (s/coll-of ::vec2))))
 (s/def ::userData any?)
 (s/def ::fixture-def (s/keys :opt-un [::density
@@ -65,7 +44,7 @@
 (s/def ::linearDamping number?)
 (s/def ::linearVelocity ::vec2)
 (s/def ::position ::vec2)
-(s/def ::type string?)
+(s/def ::type #{:dynamic :kinematic :static})
 (s/def ::fixtures-def (s/coll-of ::fixture-def))
 (s/def ::body-def (s/keys :opt-un [::active
                                    ::allowSleep
@@ -95,7 +74,7 @@
   (let [ctx (loop [body (.getBodyList planck)
                    ctx ctx]
               (if body
-                (recur (.getNext body) (f ctx body))
+                (recur (.getNext body) (f ctx (s/assert ::body body)))
                 ctx))]
     ctx))
 
@@ -140,7 +119,29 @@
   (s/assert number? t)
   (.step planck t))
 
-(defn update! [planck old-entites now-entites]
+
+#_(defn update-basic! [on-create on-remove on-update old-entites now-entites]
+  (s/assert fn? on-create)
+  (s/assert fn? on-remove)
+  (s/assert fn? on-update)
+  (s/assert (s/map-of any? ::entity) old-entites)
+  (s/assert (s/map-of any? ::entity) now-entites)
+  (let [old-ids (->> (keys old-entites) (into #{}))
+        now-ids (->> (keys now-entites) (into #{}))
+
+        removed-ids (clojure.set/difference old-ids now-ids)
+        _ (when (> (count removed-ids) 0)
+            (on-remove removed-ids))
+
+        new-ids (clojure.set/difference now-ids old-ids)
+        _ (when (> (count new-ids) 0)
+            (on-create new-ids))
+
+        hold-ids (clojure.set/intersection old-ids now-ids)
+        _ (when (> (count hold-ids) 0)
+            (on-update hold-ids))]))
+
+#_(defn update! [planck old-entites now-entites]
   (s/assert ::world planck)
   (s/assert (s/map-of any? ::entity) old-entites)
   (s/assert (s/map-of any? ::entity) now-entites)
