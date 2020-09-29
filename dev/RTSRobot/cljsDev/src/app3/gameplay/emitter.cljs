@@ -73,7 +73,7 @@
 
                                           :else
                                           camera))
-                                      [0 0 1]))))
+                                      [0 0 0.1]))))
 
 ; dragging
 (let [mouse-pressed-signal (-> emitter (.pipe (rx-op/filter (fn [[type _]] (= type :mousePressed)))))

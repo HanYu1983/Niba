@@ -22,7 +22,7 @@
                             (.step world t))))]
     world))
 
-(defn create-entity [state]
+(defn create-entity [state f]
   (s/assert ::app3.gameplay.spec/entity state)
   (let [atom-state (atom state)
         body-def (:body-def state)
@@ -34,7 +34,6 @@
         _ (-> app3.gameplay.emitter/on-world
               (.subscribe (fn [world]
                             (let [body (.createBody world body-def-js)
-                                 ; _ (js/console.log body)
                                   fixture-defs (:fixtures-def body-def)
                                   _ (doseq [fixture-def fixture-defs]
                                       (let [shape-def (:shape-def fixture-def)
@@ -48,8 +47,10 @@
                                                 [:polygon vers]
                                                 (.createFixture body
                                                                 (pl/Polygon (to-array (map (fn [[x y]] (pl/Vec2 x y)) vers)))
-                                                                fixture-def-js))]))]
-                              (.next app3.gameplay.emitter/on-entity atom-state)))))]
+                                                                fixture-def-js))]))
+                                  _ (.next app3.gameplay.emitter/on-entity atom-state)
+                                  _ (when f
+                                      (f atom-state body))]))))]
     atom-state))
 
 (defn destroy-entity [atom-state]
@@ -95,6 +96,5 @@
               (.subscribe (fn [evt]
                             (let [entities (vals @atom-entities)
                                   _ (doseq [atom-entity entities]
-                                      (let [body (@atom-bodies (:id @atom-entity))
-                                            _ (doseq [do-f dos-f]
-                                                (do-f atom-entity body evt))]))]))))]))
+                                      (let [_ (doseq [do-f dos-f]
+                                                (do-f atom-entity @atom-entities @atom-bodies evt))]))]))))]))
