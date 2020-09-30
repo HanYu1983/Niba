@@ -4,6 +4,11 @@
             [clojure.core.matrix :as m])
   (:require [app3.gameplay.tool]))
 
+(def category-player-bullet 2r10)
+(def category-enemy 2r100)
+(def mask-player-bullet category-enemy)
+(def mask-enemy category-player-bullet)
+
 (def on-world (rx/ReplaySubject.))
 (def on-entity (rx/ReplaySubject.))
 (def on-entity-destroy (rx/ReplaySubject.))

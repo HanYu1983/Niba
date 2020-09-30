@@ -1,6 +1,7 @@
 (ns app3.gameplay.system.player
   (:require ["planck-js" :as pl])
-  (:require [app3.gameplay.system.basic :refer [create-world create-entity collide-system  entity-system]]))
+  (:require [app3.gameplay.system.basic :refer [create-world create-entity collide-system  entity-system]]
+            [app3.gameplay.emitter]))
 
 (defn player-system! [atom-entity entities bodies [cmd args]]
   (cond
@@ -30,15 +31,17 @@
               (= [:keyPressed "space"] [cmd args])
               (let [entity-id (str (gensym "bullet"))
                     pos (.getWorldPoint body (pl/Vec2 0 -5))
-                    _ (create-entity {:id entity-id
-                                      :body-def {:userData entity-id
-                                                 :position [(.-x pos) (.-y pos)]
-                                                 :angle (.getAngle body)
-                                                 :type :dynamic
-                                                 :fixtures-def [{:shape-def [:circle [0 0] 1]
-                                                                 :density 1}]}}
-                                     (fn [_ bullet-body]
-                                       (let [_ (.applyLinearImpulse bullet-body
-                                                                    (.getWorldVector body (pl/Vec2 0 -100))
-                                                                    (.getWorldPoint body (pl/Vec2 0 0))
-                                                                    true)])))]))])))
+                    _ (.subscribe (create-entity {:id entity-id
+                                                  :body-def {:userData entity-id
+                                                             :position [(.-x pos) (.-y pos)]
+                                                             :angle (.getAngle body)
+                                                             :type :dynamic
+                                                             :fixtures-def [{:shape-def [:circle [0 0] 1]
+                                                                             :filterCategoryBits app3.gameplay.emitter/category-player-bullet
+                                                                             :filterMaskBits app3.gameplay.emitter/mask-player-bullet
+                                                                             :density 1}]}})
+                                  (fn [[_ bullet-body]]
+                                    (let [_ (.applyLinearImpulse bullet-body
+                                                                 (.getWorldVector body (pl/Vec2 0 -100))
+                                                                 (.getWorldPoint body (pl/Vec2 0 0))
+                                                                 true)])))]))])))

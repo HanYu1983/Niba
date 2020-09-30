@@ -28,32 +28,35 @@
   (let [_ (-> app3.gameplay.emitter/on-trigger-load
               (.subscribe (fn []
                             (let [_ (create-world {:gravity [0 0]})
-                                  _ (create-entity {:id "player"
-                                                    :player-state {}
-                                                    :body-def {:userData "player"
-                                                               :position [0 0]
-                                                               :type :dynamic
-                                                               :fixtures-def [{:shape-def [:polygon [[-1 0] [0 -4] [1 0]]]
-                                                                               :density 1}]}}
-                                                   nil)
-                                  _ (create-entity {:id "ai"
-                                                    :body-def {:userData "ai"
-                                                               :position [0 0]
-                                                               :type :dynamic
-                                                               :fixtures-def [{:shape-def [:polygon (cons [0 0] (tool.math/circle-to-polygon 5 0 3.14 4))]
-                                                                               :density 1}
-                                                                              {:shape-def [:circle [3 0] 3]
-                                                                               :density 1}
-                                                                              {:shape-def [:circle [0 3] 3]
-                                                                               :density 1}]}}
-                                                   nil)
+                                  _ (.subscribe (create-entity {:id "player"
+                                                                :player-state {}
+                                                                :body-def {:userData "player"
+                                                                           :position [0 0]
+                                                                           :type :dynamic
+                                                                           :fixtures-def [{:shape-def [:polygon [[-1 0] [0 -4] [1 0]]]
+                                                                                           :density 1}]}}))
+                                  _ (.subscribe (create-entity {:id "ai"
+                                                                :body-def {:userData "ai"
+                                                                           :position [0 0]
+                                                                           :type :dynamic
+                                                                           :fixtures-def [{:shape-def [:polygon (cons [0 0] (tool.math/circle-to-polygon 5 0 3.14 4))]
+                                                                                           :filterCategoryBits app3.gameplay.emitter/category-enemy
+                                                                                           :filterMaskBits app3.gameplay.emitter/mask-enemy
+                                                                                           :density 1}
+                                                                                          {:shape-def [:circle [3 0] 3]
+                                                                                           :filterCategoryBits app3.gameplay.emitter/category-enemy
+                                                                                           :filterMaskBits app3.gameplay.emitter/mask-enemy
+                                                                                           :density 1}
+                                                                                          {:shape-def [:circle [0 3] 3]
+                                                                                           :filterCategoryBits app3.gameplay.emitter/category-enemy
+                                                                                           :filterMaskBits app3.gameplay.emitter/mask-enemy
+                                                                                           :density 1}]}}))
                                   
-                                  _ (create-entity {:id "wall"
-                                                    :body-def {:userData "wall"
-                                                               :position [0 0]
-                                                               :type :static
-                                                               :fixtures-def [{:shape-def [:polygon [[0 30] [800 30] [800 60] [0 60]]]}]}}
-                                                   nil)
+                                  _ (.subscribe (create-entity {:id "wall"
+                                                                :body-def {:userData "wall"
+                                                                           :position [0 0]
+                                                                           :type :static
+                                                                           :fixtures-def [{:shape-def [:polygon [[0 30] [800 30] [800 60] [0 60]]]}]}}))
 
                                   _ (collide-system)
                                   _ (collide-reaction-system!)
@@ -70,7 +73,7 @@
               (.subscribe (fn [obj]
                             (s/assert ::app3.gameplay.spec/entity @obj))))
         _ (-> app3.gameplay.emitter/on-collide
-              (.subscribe (fn [[a b]]
+              (.subscribe (fn [[[a] [b]]]
                             (s/assert ::app3.gameplay.spec/entity @a)
                             (s/assert ::app3.gameplay.spec/entity @b))))
         _ (-> app3.gameplay.emitter/on-tick

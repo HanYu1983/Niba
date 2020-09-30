@@ -1,5 +1,6 @@
 (ns app3.gameplay.system.basic
   (:require [clojure.spec.alpha :as s]
+            [clojure.core.async :as a]
             [clojure.core.match :refer [match]]
             ["planck-js" :as pl]
             ["rxjs/operators" :as rx-op])
@@ -22,7 +23,7 @@
                             (.step world t))))]
     world))
 
-(defn create-entity [state f]
+(defn create-entity [state]
   (s/assert ::app3.gameplay.spec/entity state)
   (let [atom-state (atom state)
         body-def (:body-def state)
@@ -31,27 +32,26 @@
             (set! (.-position body-def-js) (tool.planck/pl-vector (:position body-def))))
         _ (when (:linearVelocity body-def)
             (set! (.-linearVelocity body-def-js) (tool.planck/pl-vector (:linearVelocity body-def))))
-        _ (-> app3.gameplay.emitter/on-world
-              (.subscribe (fn [world]
-                            (let [body (.createBody world body-def-js)
-                                  fixture-defs (:fixtures-def body-def)
-                                  _ (doseq [fixture-def fixture-defs]
-                                      (let [shape-def (:shape-def fixture-def)
-                                            fixture-def-js (clj->js (dissoc fixture-def :shape-def))
-                                            _ (match shape-def
-                                                [:circle [x y] radius]
-                                                (.createFixture body
-                                                                (pl/Circle (pl/Vec2 x y) radius)
-                                                                fixture-def-js)
+        obs (-> app3.gameplay.emitter/on-world
+                (.pipe (rx-op/map (fn [world]
+                                    (let [body (.createBody world body-def-js)
+                                          fixture-defs (:fixtures-def body-def)
+                                          _ (doseq [fixture-def fixture-defs]
+                                              (let [shape-def (:shape-def fixture-def)
+                                                    fixture-def-js (clj->js (dissoc fixture-def :shape-def))
+                                                    _ (match shape-def
+                                                        [:circle [x y] radius]
+                                                        (.createFixture body
+                                                                        (pl/Circle (pl/Vec2 x y) radius)
+                                                                        fixture-def-js)
 
-                                                [:polygon vers]
-                                                (.createFixture body
-                                                                (pl/Polygon (to-array (map (fn [[x y]] (pl/Vec2 x y)) vers)))
-                                                                fixture-def-js))]))
-                                  _ (.next app3.gameplay.emitter/on-entity atom-state)
-                                  _ (when f
-                                      (f atom-state body))]))))]
-    atom-state))
+                                                        [:polygon vers]
+                                                        (.createFixture body
+                                                                        (pl/Polygon (to-array (map (fn [[x y]] (pl/Vec2 x y)) vers)))
+                                                                        fixture-def-js))]))
+                                          _ (a/go (.next app3.gameplay.emitter/on-entity atom-state))]
+                                      [atom-state body])))))]
+    obs))
 
 (defn destroy-entity [atom-state]
   (let [_ (-> app3.gameplay.emitter/on-world
@@ -60,7 +60,7 @@
                                   body (bodies (:id @atom-state))
                                   _ (when body
                                       (.destroyBody world body))]
-                              (.next app3.gameplay.emitter/on-entity-destroy atom-state)))))]))
+                              (a/go (.next app3.gameplay.emitter/on-entity-destroy atom-state))))))]))
 
 
 (defn collide-system []
@@ -70,16 +70,19 @@
                             (reset! atom-entities entities))))
         _ (-> app3.gameplay.emitter/on-world
               (.subscribe (fn [world]
-                            (let [_ (.on world "begin-contact"
+                            (let [_ (.on world "pre-solve"
                                          (fn [e]
                                            (let [entities @atom-entities
-                                                 a-id (-> e .getFixtureA .getBody .getUserData)
-                                                 b-id (-> e .getFixtureB .getBody .getUserData)
-                                                 _ (when (not (entities a-id))
-                                                     (throw (js/Error. "not found")))
-                                                 _ (when (not (entities b-id))
-                                                     (throw (js/Error. "not found")))]
-                                             (.next app3.gameplay.emitter/on-collide [(entities a-id) (entities b-id)]))))]))))]))
+                                                 fixtureA (.getFixtureA e)
+                                                 fixtureB (.getFixtureB e)
+                                                 bodyA (.getBody fixtureA)
+                                                 bodyB (.getBody fixtureB)
+                                                 a-id (.getUserData bodyA)
+                                                 b-id (.getUserData bodyB)
+                                                 entityA (entities a-id)
+                                                 entityB (entities b-id)
+                                                 _ (when (and entityA entityB)
+                                                     (a/go (.next app3.gameplay.emitter/on-collide [[entityA bodyA fixtureA] [entityB bodyB fixtureB]])))])))]))))]))
 
 (defn entity-system [& dos-f]
   (let [atom-entities (atom {})
