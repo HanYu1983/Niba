@@ -22,36 +22,8 @@
 ; lazy-seq
 ; https://stackoverflow.com/questions/44095400/how-to-understand-clojures-lazy-seq
 (defn nkline [cnt kline]
-  #_(let [group (take cnt kline)
-          [date open _ _ _ _] (last group)
-
-          high
-          (apply
-           max
-           (map
-            (fn [[_ _ high _ _ _]] high)
-            group))
-
-          low
-          (apply
-           min
-           (map
-            (fn [[_ _ _ low _ _]] low)
-            group))
-
-          [_ _ _ _ close _] (first group)
-
-          volume
-          (apply
-           +
-           (map
-            (fn [[_ _ _ _ _ volume]] volume)
-            group))]
-      (when-not (zero? (count group))
-        (cons [date open high low close volume] (lazy-seq (nkline cnt (drop cnt kline))))))
-
   (s/assert pos-int? cnt)
-  (s/assert ::multi-kline kline)
+  (s/assert seqable? kline)
   (s/assert
    seqable?
    (let [group (take cnt kline)]
@@ -59,9 +31,9 @@
        (let [[date open _ _ _ _] (last group)
              high (apply max (tool.stock.tool/high group))
              low (apply min (tool.stock.tool/low group))
-             close (tool.stock.tool/close group)
+             close (tool.stock.tool/close (first group))
              volume (apply + (tool.stock.tool/volume group))]
-         (lazy-seq (cons [date open high low close volume] (kline cnt (drop cnt kline)))))))))
+         (lazy-seq (cons [date open high low close volume] (nkline cnt (drop cnt kline)))))))))
 
 (defn sma-seq
   "移動平均線"

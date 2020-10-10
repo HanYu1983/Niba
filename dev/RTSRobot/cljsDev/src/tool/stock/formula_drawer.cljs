@@ -15,40 +15,127 @@
 (s/def ::ema (s/cat :type #{:ema}
                     :args (s/* pos-int?)))
 
+(s/def ::bbi (s/tuple #{:bbi} pos-int? pos-int? pos-int? pos-int?))
+(s/def ::ebbi (s/tuple #{:ebbi} pos-int? pos-int? pos-int? pos-int?))
+(s/def ::yu-car (s/tuple #{:yu-car} pos-int? number? number?))
+(s/def ::yu-macd (s/tuple #{:yu-macd} pos-int? pos-int? pos-int?))
+(s/def ::yu-clock (s/tuple #{:yu-clock} pos-int? pos-int?))
+(s/def ::yu-sd (s/tuple #{:yu-sd} int? pos-int?))
 (s/def ::formula-drawer-data (s/or :kline ::kline
                                    :clock ::clock
                                    :volume ::volume
                                    :ma ::ma
-                                   :ema ::ema))
+                                   :ema ::ema
+                                   :bbi ::bbi
+                                   :ebbi ::ebbi
+                                   :yu-car ::yu-car
+                                   :yu-macd ::yu-macd
+                                   :yu-clock ::yu-clock
+                                   :yu-sd ::yu-sd))
 
 (defn data->drawer [kline data]
   (s/assert ::tool.stock.spec/multi-kline kline)
+  (s/assert ::formula-drawer-data data)
   (s/assert
    ::tool.stock.drawer/drawers
-   (when (s/valid? ::formula-drawer-data data)
-     (let [[t data] (s/conform ::formula-drawer-data data)]
-       (condp = t
-         :ma
-         (let [args (:args data)
-               vs (stl/close kline)
-               _ (println vs)]
-           (map (fn [n]
-                  {:type :line :line (reverse (stf/sma-seq n (reverse vs))) :color "#FF00FF"})
-                args))
+   (let [[t data] (s/conform ::formula-drawer-data data)
+         gridColor "#555"
+         c4 "#FF00FF"
+         c3 "#0000FF"
+         c2 "#00FFFF"
+         c1 "#FFFF00"]
+     (condp = t
+       :ma
+       (let [args (:args data)
+             vs (stl/close kline)
+             _ (println vs)]
+         (map (fn [n]
+                {:type :line :line (reverse (stf/sma-seq n (reverse vs))) :color "#FF00FF"})
+              args))
 
-         :volume
-         [{:type :line :line (stl/volume kline) :color "red"}
-          {:type :grid :line (stl/volume kline) :color "#555" :hideY true}]
+       :ema
+       (let [args (:args data)
+             vs (stl/close kline)
+             _ (println vs)]
+         (map (fn [n]
+                {:type :line :line (reverse (stf/ema-seq n (reverse vs))) :color "#FF00FF"})
+              args))
+
+       :bbi
+       (let [[_ n m o p] data
+             vs (stl/close kline)]
+         [{:type :line :line (stf/BBI n m o p vs) :color c2}])
+
+       :ebbi
+       (let [[_ n m o p] data
+             vs (stl/close kline)]
+         [{:type :line :line (stf/EBBI n m o p vs) :color c2}])
+
+       :yu-car
+       (let [[_ n m o] data
+             [_ ranges] (reverse (stf/yu-car n m o (reverse kline)))
+             _ (stf/average (stl/mid kline))]
+         [{:type :line :line (map + (stl/mid kline) (reverse ranges)) :color c1 :offset -1}
+          {:type :line :line (map - (stl/mid kline) (reverse ranges)) :color c1 :offset -1}])
+
+       :yu-macd
+       (let [[_ n m o] data
+             vs (stl/close kline)
+             ema (reverse (stf/ema-seq n (reverse vs)))
+             ebbi (stf/EBBI m (* m 2) (* m 4) (* m 8) vs)
+             dif (map - ema ebbi)]
+         [{:type :line :line dif :color c1}
+          {:type :line :line (reverse (stf/sma-seq o (reverse dif))) :color c2}
+          {:type :grid :line dif :centerY 0 :color gridColor}
+          {:type :line :line (repeat (count kline) 0) :color "white"}])
+
+       :yu-clock
+       (let [[_ n m] data
+             vs (stf/sma-seq m (stf/yu-clock n (reverse kline)))]
+         [{:type :line :line (reverse vs) :color c1}
+          {:type :grid :line (reverse vs) :centerY 0 :color gridColor}
+          {:type :line :line (repeat (count kline) 0) :color "white"}])
+
+       :yu-sd
+       (let [[_ n m] data
+             group (take m (drop n kline))
+             vs (stl/open group)
+             ; 每天和隔天的價差
+             offsets (stf/offset-seq (reverse vs))
+             ; 價差的平均數
+             offsets-avg (stf/average offsets)
+             ; 價差的標準差
+             sd (stf/StandardDeviation offsets-avg offsets)
+             sd2 (* sd 2)
+             
+             predict (-> (take n kline)
+                         (stl/open))]
+         [{:type :line :line (cons 0 (reverse predict)) :color "white" :offset -1}
+          {:type :line :line (concat (repeat (inc n) 0) (reverse offsets)) :color "white" :offset -1}
+          {:type :line :line (repeat (count kline) 0) :color "white"}
+          {:type :line :line (repeat (count kline) offsets-avg) :color "white"}
+          {:type :line :line (repeat (count kline) (+ (+ sd) offsets-avg)) :color c1}
+          {:type :line :line (repeat (count kline) (+ (- sd) offsets-avg)) :color c1}
+          {:type :line :line (repeat (count kline) (+ (+ sd2) offsets-avg)) :color c2}
+          {:type :line :line (repeat (count kline) (+ (- sd2) offsets-avg)) :color c2}
+
+          #_{:type :line :line (map (partial + offsets-avg) vs) :color c2 :offset -1}
+          #_{:type :line :line (map (partial + (+ sd2) offsets-avg) vs) :color c2 :offset -1}
+          #_{:type :line :line (map (partial + (- sd2) offsets-avg) vs) :color c2 :offset -1}])
+
+       :volume
+       [{:type :line :line (stl/volume kline) :color "red"}
+        {:type :grid :line (stl/volume kline) :color "#555" :hideY true}]
 
 
-         :clock
-         (let [{cs :sma z :z v-z :v-z} (stf/clock 10 kline)]
-           [{:type :clock :cz z :vz v-z}])
+       :clock
+       (let [{cs :sma z :z v-z :v-z} (stf/clock 10 kline)]
+         [{:type :clock :cz z :vz v-z :color "white"}])
 
 
-         :kline
-         [{:type :grid :kline kline :color "#555"}
-          {:type :kline :kline kline}])))))
+       :kline
+       [{:type :grid :kline kline :color "#555"}
+        {:type :kline :kline kline}]))))
 
 (defn jsobj->drawer-info [type sub kline]
   (s/assert #{:volume nil} type)

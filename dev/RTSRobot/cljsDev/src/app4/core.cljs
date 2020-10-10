@@ -12,17 +12,23 @@
 (defn main []
   (let [kline (s/assert
                ::tool.stock.spec/kline
-               (take 10 (repeat ["" 0 0 0 0 0])))
-        drawer (fd/data->drawer kline [:ma 2 4])
-        _ (println drawer)
+               (->> (repeatedly (fn []
+                                  ["" (rand-int 5) (rand-int 10) (rand-int 0) (rand-int 5) (rand-int 10)]))
+                    (tool.stock.formula/nkline 3)
+                    (take 40)))
 
-        drawer (fd/data->drawer kline :kline)
-        _ (println drawer)
+        drawers `(~@(fd/data->drawer kline :kline)
+                  ~@(fd/data->drawer kline [:yu-sd 5 20])
+                  ;~@(fd/data->drawer kline :clock)
+                  )
+        _ (println drawers)
 
-        drawer (fd/data->drawer kline :volume)
-        _ (println drawer)
-
-        drawer (fd/data->drawer kline :clock)
-        _ (println drawer)]))
+        canvas (js/document.getElementById "canvas")
+        _ (js/console.log canvas)
+        canvas-w (.-width canvas)
+        canvas-h (.-height canvas)
+        _ (println canvas-w canvas-h)
+        cavnas-ctx (-> canvas (.getContext "2d"))
+        _ (tool.stock.drawer/draw {:drawers drawers} canvas-w canvas-h cavnas-ctx)]))
 
 (main)
