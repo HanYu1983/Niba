@@ -1,17 +1,17 @@
 (ns tool.stock.drawer
   (:require [clojure.spec.alpha :as s])
   (:require [tool.stock.tool :as stl]
-            [tool.stock.sepc]))
+            [tool.stock.spec]))
 
 (s/def ::type #{:grid :line :kline :clock})
 (s/def ::line (s/coll-of number? :kine seqable?))
 (s/def ::color string?)
-(s/def ::hideY number?)
+(s/def ::hideY boolean?)
 (s/def ::centerY number?)
 (s/def ::style #{:dot})
 (s/def ::drawer (s/keys :req-un [::type]
-                        :opt-un [::line ::tool.stock.sepc/kline ::color ::style ::hideY ::centerY]))
-(s/def ::drawers (s/* ::drawer))
+                        :opt-un [::line ::tool.stock.spec/kline ::color ::style ::hideY ::centerY]))
+(s/def ::drawers (s/coll-of ::drawer :kind seqable?))
 (s/def ::draw-data (s/keys :opt-un [::drawers]))
 
 (defmulti max-v (fn [{t :type}] t))
@@ -54,17 +54,17 @@
 
 (defmethod max-v :grid [{line :line kline :kline}]
   (s/assert ::line line)
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (apply max (or line (stl/high kline))))
 
 (defmethod min-v :grid [{line :line kline :kline}]
   (s/assert ::line line)
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (apply min (or line (stl/low kline))))
   
 (defmethod length :grid [{line :line kline :kline}]
   (s/assert ::line line)
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (count (or line kline)))
   
 (defmethod draw-it :grid [{line :line kline :kline color :color hideY :hideY centerY :centerY} base ctx]
@@ -159,15 +159,15 @@
 ; k line
       
 (defmethod max-v :kline [{kline :kline}]
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (apply max (stl/high kline)))
 
 (defmethod min-v :kline [{kline :kline}]
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (apply min (stl/low kline)))
   
 (defmethod length :kline [{kline :kline}]
-  (s/assert ::tool.stock.sepc/kline kline)
+  (s/assert ::tool.stock.spec/kline kline)
   (count kline))
 
 (defmethod draw-it :kline [{kline :kline info :info} base ctx]

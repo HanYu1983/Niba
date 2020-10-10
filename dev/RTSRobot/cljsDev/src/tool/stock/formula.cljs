@@ -9,10 +9,9 @@
 (defn average [vs]
   (s/assert ::values vs)
   (s/assert
-   ::values
-   (->
-    (apply + vs)
-    (/ (count vs)))))
+   number?
+   (-> (apply + vs)
+       (/ (count vs)))))
 
 (defn offset-seq [vs]
   (s/assert ::values vs)
@@ -73,11 +72,10 @@
    seqable?
    (when (>= (count vs) n)
      (let [fv (average (take n vs))]
-       (reductions
-        (fn [ma v]
-          (+ (* ma (/ (dec n) n)) (/ v n)))
-        fv
-        (drop n vs))))))
+       (reductions (fn [ma v]
+                     (+ (* ma (/ (dec n) n)) (/ v n)))
+                   fv
+                   (drop n vs))))))
 
 (defn ema-seq
   "指數移動平均線"
@@ -115,10 +113,12 @@
   (s/assert ::values vs)
   (s/assert
    number?
-   (->> (apply + (map #(.pow js/Math (- % avg) 2)
-                      vs))
-        (* (/ 1 (dec (count vs))))
-        (.sqrt js/Math))))
+   (if (zero? (dec (count vs)))
+     0
+     (->> (apply + (map #(.pow js/Math (- % avg) 2)
+                        vs))
+          (* (/ 1 (dec (count vs))))
+          (.sqrt js/Math)))))
 
 (defn z-score [avg sd vs]
   (s/assert number? avg)
