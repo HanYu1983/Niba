@@ -12,7 +12,7 @@
 (defn main []
   (let [kline (s/assert
                ::tool.stock.spec/kline
-               (repeat 10 ["" 0 0 0 0 0]))
+               (take 10 (repeat ["" 0 0 0 0 0])))
         drawer (fd/data->drawer kline [:ma 2 4])
         _ (println drawer)
 
