@@ -22,6 +22,8 @@
                           :app2 {:entries [app2.core]
                                  :depends-on #{:shared}}
                           :app3 {:entries [app3.core]
+                                 :depends-on #{:shared}}
+                          :app4 {:entries [app4.core]
                                  :depends-on #{:shared}}}}
           :release {:target :browser
                     :output-dir "../cocosDev/assets/Han"
