@@ -74,7 +74,9 @@
          c4 "#FF00FF"
          c3 "#0000FF"
          c2 "#00FFFF"
-         c1 "#FFFF00"]
+         c1 "#FFFF00"
+         colors (->> (range)
+                     (mapcat (constantly [c1 c2 c3 c4])))]
      (condp = t
        :yu-car
        (let [[_ n m o] data
@@ -112,7 +114,6 @@
              ; 價差的標準差
              sd (stf/StandardDeviation offsets-avg offsets)
              sd2 (* sd 2)
-
              predict (-> (take n kline)
                          (stl/open))]
          [{:type :line :line (cons 0 (reverse predict)) :color "white" :offset -1}
@@ -122,11 +123,7 @@
           {:type :line :line (repeat (count kline) (+ (+ sd) offsets-avg)) :color c1}
           {:type :line :line (repeat (count kline) (+ (- sd) offsets-avg)) :color c1}
           {:type :line :line (repeat (count kline) (+ (+ sd2) offsets-avg)) :color c2}
-          {:type :line :line (repeat (count kline) (+ (- sd2) offsets-avg)) :color c2}
-
-          #_{:type :line :line (map (partial + offsets-avg) vs) :color c2 :offset -1}
-          #_{:type :line :line (map (partial + (+ sd2) offsets-avg) vs) :color c2 :offset -1}
-          #_{:type :line :line (map (partial + (- sd2) offsets-avg) vs) :color c2 :offset -1}])
+          {:type :line :line (repeat (count kline) (+ (- sd2) offsets-avg)) :color c2}])
 
        :yu-kd
        (let [[_ n] data
@@ -147,19 +144,19 @@
 
        :ma
        (let [args (:args data)
-             vs (stl/close kline)
-             _ (println vs)]
-         (map (fn [n]
-                {:type :line :line (reverse (stf/sma-seq n (reverse vs))) :color "#FF00FF"})
-              args))
+             vs (stl/close kline)]
+         (map (fn [n color]
+                {:type :line :line (reverse (stf/sma-seq n (reverse vs))) :color color})
+              args
+              colors))
 
        :ema
        (let [args (:args data)
-             vs (stl/close kline)
-             _ (println vs)]
-         (map (fn [n]
-                {:type :line :line (reverse (stf/ema-seq n (reverse vs))) :color "#FF00FF"})
-              args))
+             vs (stl/close kline)]
+         (map (fn [n color]
+                {:type :line :line (reverse (stf/ema-seq n (reverse vs))) :color color})
+              args
+              colors))
 
        :bbi
        (let [[_ n m o p] data
@@ -191,8 +188,7 @@
 
        :chaikin
        (let [[_ n m o] data
-             vs
-             (stf/Chaikin n m kline)]
+             vs (stf/Chaikin n m kline)]
          [{:type :line :line vs :color c1}
           {:type :line :line (reverse (stf/sma-seq o (reverse vs))) :color c2}
           {:type :grid :line vs :centerY 0 :color gridColor}
@@ -200,17 +196,13 @@
 
        :cv
        (let [[_ n m] data
-             rema
-             (->>
-              (map
-               -
-               (stf/maxN-seq n #(apply max %) (stl/high kline))
-               (stf/maxN-seq n #(apply min %) (stl/low kline)))
-              reverse
-              (stf/ema-seq 1)
-              reverse)
-             vs
-             (stf/volatility-seq m rema)]
+             rema (->> (map -
+                            (stf/maxN-seq n #(apply max %) (stl/high kline))
+                            (stf/maxN-seq n #(apply min %) (stl/low kline)))
+                       reverse
+                       (stf/ema-seq 1)
+                       reverse)
+             vs (stf/volatility-seq m rema)]
          [{:type :line :line vs :color c1}
           {:type :grid :line vs :centerY 0 :color gridColor}
           {:type :line :line (repeat (count kline) 0) :color "white"}])
@@ -258,18 +250,26 @@
        (let [[_ n m] data
              atr (stf/tr-seq (reverse kline))
              dm (stf/dm-seq (reverse kline))
-             dip (map (fn [v v2] (if (pos? v) (/ v v2) 0)) dm atr)
-             did (map (fn [v v2] (if (neg? v) (/ (.abs js/Math v) v2) 0)) dm atr)
+             dip (map (fn [v v2]
+                        (if (pos? v)
+                          (/ v v2)
+                          0))
+                      dm
+                      atr)
+             did (map (fn [v v2]
+                        (if (neg? v)
+                          (/ (.abs js/Math v) v2)
+                          0))
+                      dm
+                      atr)
              adip (stf/sma-seq n dip)
              adid (stf/sma-seq n did)
-             dx
-             (map
-              (fn [v1 v2]
-                (if (zero? (+ v1 v2))
-                  0
-                  (/ (.abs js/Math (- v1 v2)) (+ v1 v2))))
-              adip
-              adid)]
+             dx (map (fn [v1 v2]
+                       (if (zero? (+ v1 v2))
+                         0
+                         (/ (.abs js/Math (- v1 v2)) (+ v1 v2))))
+                     adip
+                     adid)]
          [{:type :line :line (reverse adip) :color "red"}
           {:type :line :line (reverse adid) :color "green"}
           {:type :line :line (reverse (stf/sma-seq m dx)) :color c1}

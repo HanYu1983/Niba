@@ -26,7 +26,8 @@
                     (take 40)))
 
         drawers `(~@(fd/data->drawer kline :kline)
-                  ~@(fd/data->drawer kline [:uos 5 5 5 5])
+                  ~@(fd/data->drawer kline [:sar 5])
+                  ~@(fd/data->drawer kline [:ema 5 10 15 20 25])
                   ;~@(fd/data->drawer kline :clock)
                   )
         ;_ (println drawers)
