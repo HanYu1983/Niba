@@ -1,5 +1,7 @@
 (ns app4.core
-  (:require [clojure.spec.alpha :as s])
+  (:require [clojure.spec.alpha :as s]
+            ; https://clojure.github.io/test.check/cheatsheet.html
+            [clojure.test.check.generators :as g])
   (:require [tool.stock.spec]
             [tool.stock.drawer]
             [tool.stock.tool]
@@ -10,10 +12,16 @@
 
 
 (defn main []
-  (let [kline (s/assert
+  (let [rand-kline (g/let [d (g/return "")
+                           v1 g/nat
+                           v2 (g/choose 5 20)
+                           v3 (g/choose 0 10)
+                           v4 (g/choose 0 10)
+                           v5 g/nat]
+                     [d v1 v2 v3 v4 v5])
+        kline (s/assert
                ::tool.stock.spec/kline
-               (->> (repeatedly (fn []
-                                  ["" (rand-int 5) (rand-int 10) (rand-int 0) (rand-int 5) (rand-int 10)]))
+               (->> (repeatedly #(g/generate rand-kline))
                     (tool.stock.formula/nkline 3)
                     (take 40)))
 
@@ -21,7 +29,7 @@
                   ~@(fd/data->drawer kline [:uos 5 5 5 5])
                   ;~@(fd/data->drawer kline :clock)
                   )
-        _ (println drawers)
+        ;_ (println drawers)
 
         canvas (js/document.getElementById "canvas")
         _ (js/console.log canvas)
