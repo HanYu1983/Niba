@@ -8,7 +8,7 @@ public class MoneyCar : MonoBehaviour
 
     public string AddMoney(int money)
     {
-        if (Moneys.Count >= 5) return ShowMoney();
+        if (Moneys.Count >= 6) return ShowMoney();
         if (Moneys.Count == 0 && money == 0)
         {
             return ShowMoney();

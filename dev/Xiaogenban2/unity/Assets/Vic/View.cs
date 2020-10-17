@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.Events;
+using System.Linq;
 
 public class View : MonoBehaviour {
 
@@ -167,6 +168,44 @@ public class View : MonoBehaviour {
                     GetMainPage().ClearMoney();
                     ClosePopPage();
                 });
+            },
+            delegate ()
+            {
+                ClosePopPage();
+            });
+    }
+
+    public void OnMainPageItemEditTimeClick(int id)
+    {
+        Item item = Model.GetItemCacheById(id);
+
+        DateTime time = new System.DateTime(item.Time).ToLocalTime();
+        string timestr = time.Year + "/" + time.Month + "/" + time.Day;
+        string toTimeStr = "";
+        string currentTimeStr = GetMainPage().CurrentMoney().ToString();
+        if (currentTimeStr.Length >= 6)
+        {
+            int toYear = Int32.Parse(currentTimeStr.Substring(0, 2));
+            int toMonth = Int32.Parse(currentTimeStr.Substring(2, 2));
+            int toDay = Int32.Parse(currentTimeStr.Substring(4, 2));
+            toTimeStr = "20" + toYear + "/" + toMonth + "/" + toDay;
+        }
+        else
+        {
+            toTimeStr = timestr;
+        }
+        
+        Debug.Log(toTimeStr);
+
+        OpenPopPage("日期\n" + timestr + "\n => \n" + toTimeStr,
+            delegate ()
+            {
+                //Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
+                //{
+                //    GetMainPage().RefreshList(false);
+                //    GetMainPage().ClearMoney();
+                //    ClosePopPage();
+                //});
             },
             delegate ()
             {
