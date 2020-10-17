@@ -9,6 +9,7 @@ public interface IModel
     void AddEarn(int money, string memo, string time, UnityAction<object, List<Item>> callback);
     void ChangeItemMoney(int id, int money, UnityAction<object, List<Item>> callback);
     void ChangeItemMemo(int id, string memo, UnityAction<object, List<Item>> callback);
+    void ChangeItem(int id, Item item, UnityAction<object, List<Item>> callback);
     void DeleteItem(int id, UnityAction<object, List<Item>> callback);
     List<Item> GetItemListCache();
     Item GetItemCacheById(int id);

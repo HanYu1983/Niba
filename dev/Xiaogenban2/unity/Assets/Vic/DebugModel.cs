@@ -210,6 +210,11 @@ public class DebugModel : MonoBehaviour, IModel
         return items;
     }
 
+    public void ChangeItem(int id, Item item, UnityAction<object, List<Item>> callback)
+    {
+
+    }
+
     public bool IsCloudSaveDirty()
     {
         return true;

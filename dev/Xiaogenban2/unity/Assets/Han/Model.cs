@@ -115,6 +115,11 @@ public class Model : MonoBehaviour, IModel{
         OnDataChange();
     }
 
+    void OnEarnChange(Earn earn)
+    {
+        OnDataChange();
+    }
+
     #region save worker
 
     private Memonto isDirty;
@@ -213,6 +218,37 @@ public class Model : MonoBehaviour, IModel{
             OnAddEarn(earn);
         }
         catch(Exception e)
+        {
+            InvokeErrorAction(e);
+        }
+    }
+
+    public static long String2DateTime(int year, int month, int day)
+    {
+        string dateTimeString = $"{year}-${month}-${day}";
+        var dateTime = DateTime.Parse(dateTimeString).ToUniversalTime();
+        return dateTime.Ticks;
+    }
+
+    public void ChangeItem(int id, Item item, UnityAction<object, List<Item>> callback)
+    {
+        try
+        {
+            if (earns.ContainsKey(id) == false)
+            {
+                throw new Exception(id + " not found");
+            }
+            var earn = earns[id];
+            earn.memo = item.Memo;
+            earn.money = item.Money;
+            earn.createUTC = item.Time;
+
+            earns[id] = earn;
+            lastInputEarn = earn;
+            callback(null, GenItemList());
+            OnEarnChange(earn);
+        }
+        catch (Exception e)
         {
             InvokeErrorAction(e);
         }
