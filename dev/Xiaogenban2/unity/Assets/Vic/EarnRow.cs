@@ -18,14 +18,14 @@ public class EarnRow : MonoBehaviour
     public void ScrollCellIndex(int idx)
     {
         if (idx < 0) return;
-        List<Item> list = View.Model.GetItemListCache();
+        List<Item> list = View.ModelInst.GetItemListCache();
         if (idx >= list.Count)
         {
             return;
         }
 
         int itemId = list[idx].Id;
-        Item item = View.Model.GetItemCacheById(itemId);
+        Item item = View.ModelInst.GetItemCacheById(itemId);
         money.text = item.Money.ToString();
         memo.text = item.Memo.ToString();
         

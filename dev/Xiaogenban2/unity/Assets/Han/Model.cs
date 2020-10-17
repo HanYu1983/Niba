@@ -225,9 +225,8 @@ public class Model : MonoBehaviour, IModel{
 
     public static long String2DateTime(int year, int month, int day)
     {
-        string dateTimeString = $"{year}-${month}-${day}";
-        var dateTime = DateTime.Parse(dateTimeString).ToUniversalTime();
-        return dateTime.Ticks;
+        DateTime d = new DateTime(year, month, day);
+        return d.Ticks;
     }
 
     public void ChangeItem(int id, Item item, UnityAction<object, List<Item>> callback)

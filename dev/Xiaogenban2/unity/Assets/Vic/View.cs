@@ -10,9 +10,9 @@ public class View : MonoBehaviour {
     public GameObject[] pages;
 
     public MonoBehaviour model;
-    public static IModel Model;
+    public static IModel ModelInst;
     public static View Instance;
-
+    
     public bool EnableFeature()
     {
         return GetMainPage().EnableFeature();
@@ -34,13 +34,13 @@ public class View : MonoBehaviour {
     
     public void OnDataPageConfirmClick()
     {
-        bool isValid = Model.IsValidID(GetDataPage().InputID);
+        bool isValid = ModelInst.IsValidID(GetDataPage().InputID);
         if (isValid)
         {
             OpenPopPage("確定要取回資料嗎?本地的資料會丟失哦!",
             delegate () {
                 OpenLoadingPage("取回資料中，請稍等…");
-                Model.GetUserData(GetDataPage().InputID, delegate (bool success)
+                ModelInst.GetUserData(GetDataPage().InputID, delegate (bool success)
                 {
                     if (success)
                     {
@@ -158,11 +158,11 @@ public class View : MonoBehaviour {
 
     public void OnMainPageItemEditClick(int id)
     {
-        Item item = Model.GetItemCacheById(id);
+        Item item = ModelInst.GetItemCacheById(id);
         OpenPopPage("是否確定修改" + item.Money + " => " + GetMainPage().CurrentMoney(),
             delegate ()
             {
-                Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
+                ModelInst.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
                 {
                     GetMainPage().RefreshList(false);
                     GetMainPage().ClearMoney();
@@ -177,35 +177,46 @@ public class View : MonoBehaviour {
 
     public void OnMainPageItemEditTimeClick(int id)
     {
-        Item item = Model.GetItemCacheById(id);
+        Item item = ModelInst.GetItemCacheById(id);
 
         DateTime time = new System.DateTime(item.Time).ToLocalTime();
         string timestr = time.Year + "/" + time.Month + "/" + time.Day;
-        string toTimeStr = "";
+       
+        int toYear = 0;
+        int toMonth = 0;
+        int toDay = 0;
         string currentTimeStr = GetMainPage().CurrentMoney().ToString();
         if (currentTimeStr.Length >= 6)
         {
-            int toYear = Int32.Parse(currentTimeStr.Substring(0, 2));
-            int toMonth = Int32.Parse(currentTimeStr.Substring(2, 2));
-            int toDay = Int32.Parse(currentTimeStr.Substring(4, 2));
-            toTimeStr = "20" + toYear + "/" + toMonth + "/" + toDay;
+            toYear = Int32.Parse("20" + currentTimeStr.Substring(0, 2));
+            toMonth = Int32.Parse(currentTimeStr.Substring(2, 2));
+            toDay = Int32.Parse(currentTimeStr.Substring(4, 2));
         }
         else
         {
-            toTimeStr = timestr;
+            toYear = time.Year;
+            toMonth = time.Month;
+            toDay = time.Day;
         }
-        
-        Debug.Log(toTimeStr);
+        string toTimeStr = toYear + "/" + toMonth + "/" + toDay;
 
         OpenPopPage("日期\n" + timestr + "\n => \n" + toTimeStr,
             delegate ()
             {
-                //Model.ChangeItemMoney(id, GetMainPage().CurrentMoney(), delegate (object error, List<Item> list)
-                //{
-                //    GetMainPage().RefreshList(false);
-                //    GetMainPage().ClearMoney();
-                //    ClosePopPage();
-                //});
+                try
+                {
+                    item.Time = Model.String2DateTime(toYear, toMonth, toDay);
+                }
+                catch (Exception e)
+                {
+                    // no change
+                }
+                ModelInst.ChangeItem(id, item, delegate (object error, List<Item> list)
+                {
+                    GetMainPage().RefreshList(false);
+                    GetMainPage().ClearMoney();
+                    ClosePopPage();
+                });
             },
             delegate ()
             {
@@ -215,11 +226,11 @@ public class View : MonoBehaviour {
 
     public void OnMainPageItemDeleteClick(int id)
     {
-        Item item = Model.GetItemCacheById(id);
+        Item item = ModelInst.GetItemCacheById(id);
         OpenPopPage("是否確定刪除" + item.Money + "這個項目？",
             delegate ()
             {
-                Model.DeleteItem(id, delegate (object error, List<Item> list)
+                ModelInst.DeleteItem(id, delegate (object error, List<Item> list)
                 {
                     GetMainPage().RefreshList(true);
                     ClosePopPage();
@@ -266,7 +277,7 @@ public class View : MonoBehaviour {
         delegate ()
         {
             
-            Model.AddEarn(Math.Abs((int)result[1]), result[3].ToString(), "", delegate (object error, List<Item> list)
+            ModelInst.AddEarn(Math.Abs((int)result[1]), result[3].ToString(), "", delegate (object error, List<Item> list)
             {
                 CloseCalculatePage();
                 ClosePopPage();
@@ -318,8 +329,8 @@ public class View : MonoBehaviour {
         int id = GetMemoPage().Id;
         string content = GetMemoPage().GetContent();
 
-        List<MemoItem> memos = Model.GetMemoList();
-        Model.ChangeItemMemo(id, Model.MemoListToString(memos), delegate (object error, List<Item> list)
+        List<MemoItem> memos = ModelInst.GetMemoList();
+        ModelInst.ChangeItemMemo(id, ModelInst.MemoListToString(memos), delegate (object error, List<Item> list)
         {
             GetMainPage().RefreshList(false);
             CloseMemoPage();
@@ -363,7 +374,7 @@ public class View : MonoBehaviour {
 
     public void OnMemoPageDeleteTagClick()
     {
-        List<MemoItem> listMemo = Model.GetMemoList();
+        List<MemoItem> listMemo = ModelInst.GetMemoList();
         if(listMemo.Count > 0)
         {
             OpenPopPage("確定要刪除嗎?",
@@ -382,8 +393,8 @@ public class View : MonoBehaviour {
 
     public void OnSearchPageConfirm()
     {
-        List<MemoItem> memos = Model.GetMemoList();
-        string searchString = Model.MemoListToString(memos);
+        List<MemoItem> memos = ModelInst.GetMemoList();
+        string searchString = ModelInst.MemoListToString(memos);
         GetMainPage().filterMemo = searchString;
         if (searchString != "")
         {
@@ -486,15 +497,15 @@ public class View : MonoBehaviour {
         {
             throw new Exception("xxxx");
         }
-        Model = (IModel)model;
+        ModelInst = (IModel)model;
         foreach (GameObject page in pages)
         {
-            page.GetComponent<IPage>().Model = Model;
+            page.GetComponent<IPage>().Model = ModelInst;
             page.GetComponent<IPage>().View = this;
             page.GetComponent<IPage>().Init();
         }
 
-        Model.SetErrorAction(delegate (string error)
+        ModelInst.SetErrorAction(delegate (string error)
         {
             OpenPopPage(error,
                 delegate () {
@@ -505,7 +516,7 @@ public class View : MonoBehaviour {
                     ClosePopPage();
                 });
         });
-        Model.Load(delegate (bool success)
+        ModelInst.Load(delegate (bool success)
         {
             if (success)
             {
