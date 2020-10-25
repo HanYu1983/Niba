@@ -2,14 +2,15 @@
   (:require [cljs.test :refer-macros [run-tests]]
             [clojure.spec.alpha :as s])
   (:require [app2.core-test]
-            [app2.cursor.core]))
+            [app2.component.cursor-test]
+            [app2.phase.core-test]))
 
 (s/check-asserts true)
 
 (defn main []
-  (println "XXX")
   (enable-console-print!)
-  (run-tests
-   'app2.core-test))
+  (run-tests 'app2.core-test
+             'app2.component.cursor-test
+             'app2.phase.core-test))
 
 (main)

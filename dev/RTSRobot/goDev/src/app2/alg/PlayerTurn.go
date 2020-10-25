@@ -4,20 +4,24 @@ import (
 	"app2/data"
 )
 
-func PlayerTurn(origin data.Gameplay) (data.Gameplay, error) {
+func PlayerTurn(origin data.Gameplay, inputCh <-chan interface{}) (data.Gameplay, error) {
+	var err error
 	gameplay := origin
 	for {
-		cmd, err := AskCommand(gameplay)
+		cmd := <-inputCh
+		gameplay, err = HandleCursor(gameplay, cmd)
 		if err != nil {
-			Alert(err)
-			continue
+			return origin, err
+		}
+		gameplay, err = HandleCamera(gameplay, cmd)
+		if err != nil {
+			return origin, err
 		}
 		switch detail := cmd.(type) {
 		case data.CommandKeyDown:
 			switch detail.KeyCode {
-			case "w":
 			default:
-				gameplay, err = UnitMenu(gameplay, "")
+				gameplay, err = UnitMenuPhase(gameplay, "", inputCh)
 				if err != nil {
 					Alert(err)
 					continue

@@ -12,6 +12,7 @@ import (
 //go:generate genny -in tool/template/map.go -out app2/data/MapStringRobot.go -pkg data gen "Key=string Value=Robot"
 //go:generate genny -in tool/template/map.go -out app2/data/MapStringPilot.go -pkg data gen "Key=string Value=Pilot"
 //go:generate genny -in tool/template/map.go -out app2/data/MapStringItem.go -pkg data gen "Key=string Value=Item"
+//go:generate genny -in tool/template/map.go -out app2/data/MapStringTag.go -pkg data gen "Key=string Value=Tag"
 
 func init() {
 	app.Main()

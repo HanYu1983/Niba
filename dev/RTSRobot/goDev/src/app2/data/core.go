@@ -37,15 +37,34 @@ type Lobby struct {
 	PilotIDByRobotID  map[string]string
 }
 
+const (
+	PlayerIDPlayer = "PlayerIDPlayer"
+)
+
+type Player struct {
+	ID      string
+	GroupID string
+}
+
+type Tag struct {
+	MoveCount int
+	Sky       bool
+}
+
 type Gameplay struct {
-	SeqID     int
-	Units     []string
-	Positions map[string]Position
-	Robots    map[string]Robot
-	Items     map[string]Item
-	Pilots    map[string]Pilot
-	Done      interface{}
-	Lobby     Lobby
+	Players        map[string]Player
+	ActivePlayerID string
+	Camera         Position
+	Cursor         Position
+	SeqID          int
+	Units          []string
+	Positions      map[string]Position
+	Robots         map[string]Robot
+	Tags           map[string]Tag
+	Items          map[string]Item
+	Pilots         map[string]Pilot
+	Done           interface{}
+	Lobby          Lobby
 }
 
 type CommandKeyDown struct {
@@ -57,4 +76,22 @@ type Menu struct {
 	Cursor      [2]int
 	WeaponID    int
 	TransformID int
+}
+
+const (
+	MenuOptionMove      = "MenuOptionMove"
+	MenuOptionSkyGround = "MenuOptionSkyGround"
+)
+
+type BattleActionAttack struct {
+	WeaponID string
+	HitRate  float32
+}
+
+type BattleActionGuard struct{}
+type BattleActionEvade struct{}
+
+type BattleMenu struct {
+	Robots       [2]Robot
+	BattleAction [2]interface{}
 }

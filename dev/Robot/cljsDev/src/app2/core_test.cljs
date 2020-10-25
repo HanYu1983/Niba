@@ -4,7 +4,7 @@
             [clojure.spec.alpha :as s])
   (:require-macros [app2.macros :refer [defasync defasync2]]))
 
-(use-fixtures :each
+#_(use-fixtures :each
   {:before
    #(async done
            (println "before")
@@ -15,7 +15,7 @@
            (done))})
 
 
-(defasync player-turn [gameplayCtx any?, inputCh any?] [gameplayCtx err] any?
+#_(defasync player-turn [gameplayCtx any?, inputCh any?] [gameplayCtx err] any?
   (loop [gameplayCtx gameplayCtx]
     (let [f (a/<! inputCh)]
       (cond
@@ -30,7 +30,7 @@
         (recur gameplayCtx)))))
 
 
-(deftest test-player-turn []
+#_(deftest test-player-turn []
   (testing "test playert run"
     (async done
            (let [atom-gameplayCtx (atom nil)
@@ -45,14 +45,14 @@
              (done)))))
 
 
-(deftest test-async-awesome
+#_(deftest test-async-awesome
   (testing "the API is awesome"
     (let []
       (async done
              (a/go
                (done))))))
 
-(defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
+#_(defmethod cljs.test/report [:cljs.test/default :end-run-tests] [m]
   (if (cljs.test/successful? m)
     (println "Success!")
     (println "FAIL")))
