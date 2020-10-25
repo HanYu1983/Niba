@@ -5,6 +5,8 @@
  :dependencies
  [[org.clojure/test.check "0.10.0"]
   [org.clojure/core.async "0.6.532"]
+  [org.clojure/core.match "1.0.0"]
+  [net.mikera/core.matrix "0.62.0"]
   [tailrecursion/cljs-priority-map "1.2.1"]]
 
  :dev-http {8080 "public/"}
@@ -15,7 +17,7 @@
 
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
-                          :app {:entries [app.core]
+                          :app {:entries [app2.core]
                                 :depends-on #{:shared}}
                           :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
