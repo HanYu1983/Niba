@@ -5,70 +5,107 @@
             [clojure.core.match :refer [match]]
             [clojure.set]
             [app2.gameplay-spec]
-            [app2.component.cursor :refer [handle-cursor-component]])
-  (:require-macros [app2.macros :refer [async->]]
+            [app2.component.cursor :refer [handle-cursor-component]]
+            [tool.indexed :refer [sync-indexed]])
+  (:require-macros [app2.macros :refer [async-> defasync]]
                    [app2.phase.core :refer [simple-impl]]))
 
 
-(defn make-indexed [units key-fn value-fn origin]
-  (let [next origin
-        now-entities (zipmap (map key-fn units)
-                             (map value-fn units))
+(def sync-indexed-position (partial sync-indexed
+                                    (fn [[_ v]]
+                                      (:position v))
+                                    second
+                                    (fn [ctx id]
+                                      (dissoc ctx id))
+                                    (fn [ctx id entity]
+                                      (assoc ctx id entity))
+                                    (fn [ctx id entity]
+                                      (assoc ctx id entity))))
 
-        old-ids (->> (keys origin) (into #{}))
-        now-ids (->> (map key-fn units) (into #{}))
+(def atom-indexed-position-unit (atom {}))
 
-        removed-ids (clojure.set/difference old-ids now-ids)
-        next (reduce #(dissoc %1 %2) next removed-ids)
-
-        new-ids (clojure.set/difference now-ids old-ids)
-        next (reduce #(assoc %1 %2 (now-entities %2)) next new-ids)
-
-        hold-ids (clojure.set/intersection old-ids now-ids)
-        next (reduce #(assoc %1 %2 (now-entities %2)) next hold-ids)]
-    next))
-
-(def atom-indexed-position-unit (atom (sorted-map-by (fn [[x _] [x2 _]]
-                                                       (> x x2)))))
-(defn unit-by-position [ctx pos]
-  (let [_ (swap! atom-indexed-position-unit (partial make-indexed
-                                                     (:units ctx)
-                                                     (fn [[_ v]]
-                                                       (:position v))
-                                                     second))
-        unit (@atom-indexed-position-unit pos)]
-    unit))
-
-(defn unit-by-range-x [ctx x1 x2]
-  (let [_ (swap! atom-indexed-position-unit (partial make-indexed
-                                                     (:units ctx)
-                                                     (fn [[_ v]]
-                                                       (:position v))
-                                                     second))
-        units (subseq @atom-indexed-position-unit >= [x1 0] < [x2 0])]
-    units))
-
-(defn player-turn [ctx input-ch]
+(defn handle-debug [ctx evt]
   (a/go
-    (try
-      (loop [ctx ctx]
-        (let [evt (a/<! input-ch)
-              _ (when (nil? evt)
-                  (throw (js/Error. "close")))
-              ctx (async-> ctx
-                           (handle-cursor-component evt))
-              ctx (if (fn? evt)
-                    (evt ctx)
-                    ctx)]
-          (recur ctx)))
-      (catch js/Error err
-        [ctx err]))))
+    (cond
+      (fn? evt)
+      [(evt ctx) nil]
+
+      (nil? evt)
+      [ctx (js/Error. "chan closed")]
+
+      :else
+      [ctx nil])))
+
+
+(defasync handle-unit-menu [ctx any?, evt any?] [ctx err] any?
+  [ctx nil])
+
+(defasync menu-step [ctx any?, input-ch any?] [ctx err] any?
+  (loop [ctx ctx]
+    (let [evt (a/<! input-ch)
+          ctx (async-> ctx
+                       (handle-debug evt)
+                       (handle-unit-menu evt))
+          [ctx cancel? err] (cond
+                              (= [:on-click "esc"] evt)
+                              [ctx true nil]
+
+                              :else
+                              [ctx false nil])
+          _ (when err (throw err))]
+      (if cancel?
+        [ctx nil]
+        (recur ctx)))))
+
+(defasync unit-menu [ctx any?, unit any?, input-ch any?] [ctx err] any?
+  (loop [ctx ctx]
+    (let [menu {}
+          ctx (assoc ctx
+                     :unit-menu menu
+                     :unit-menu-unit unit)
+          [ctx err] (a/<! (menu-step ctx input-ch))
+          _ (when err (throw err))]
+      [(dissoc ctx :unit-menu :unit-menu-unit) nil])))
+
+(defasync system-menu [ctx any?, input-ch any?] [ctx false err] any?
+  (loop [ctx ctx]
+    (let [menu {}
+          ctx (assoc ctx :system-menu menu)
+          [ctx err] (a/<! (menu-step ctx input-ch))
+          _ (when err (throw err))]
+      [(dissoc ctx :system-menu) false nil])))
+
+(defasync player-turn [ctx any?, input-ch any?] [ctx err] any?
+  (loop [ctx ctx]
+    (let [evt (a/<! input-ch)
+          ctx (async-> ctx
+                       (handle-debug evt)
+                       (handle-cursor-component evt))
+          [ctx end? err] (cond
+                           (= [:on-click "space"] evt)
+                           (let [units (:units ctx)
+                                 cursor (:cursor ctx)
+                                 indexed-position-units (sync-indexed-position units @atom-indexed-position-unit)
+                                 _ (reset! atom-indexed-position-unit indexed-position-units)
+                                 unitAtCursor (indexed-position-units cursor)
+                                 [ctx end? err] (if unitAtCursor
+                                                  (let [[ctx err] (a/<! (unit-menu ctx unitAtCursor input-ch))]
+                                                    [ctx false err])
+                                                  (a/<! (system-menu ctx input-ch)))
+                                 _ (when err (throw err))]
+                             [ctx end? nil])
+                           :else
+                           [ctx nil])
+          _ (when err (throw err))]
+      (if end?
+        [ctx nil]
+        (recur ctx)))))
 
 #_(defn player-turn [ctx input-ch]
-  (a/go
-    (try
-      (simple-impl (handle-cursor-component evt))
-      (catch js/Error err
-        [ctx err]))))
+    (a/go
+      (try
+        (simple-impl (handle-cursor-component evt))
+        (catch js/Error err
+          [ctx err]))))
 
 
