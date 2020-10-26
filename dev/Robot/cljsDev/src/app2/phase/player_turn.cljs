@@ -6,8 +6,9 @@
             [clojure.set]
             [app2.gameplay-spec]
             [app2.component.cursor :refer [handle-cursor-component]]
-            [tool.indexed :refer [sync-indexed]])
-  (:require-macros [app2.macros :refer [async-> defasync]]
+            [tool.indexed :refer [sync-indexed]]
+            [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]])
+  (:require-macros [app2.macros :refer [async-> defasync defnx]]
                    [app2.phase.core :refer [simple-impl]]))
 
 
@@ -37,18 +38,52 @@
       [ctx nil])))
 
 
-(defasync handle-unit-menu [ctx any?, evt any?] [ctx err] any?
-  [ctx nil])
+(defasync handle-unit-menu [ctx any?, menu-key keyword?, evt any?] [ctx err] any?
+  (cond
+    (= [:on-click "w"] evt)
+    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
+                                              (mapCursor1 origin dec)))
+     nil]
 
-(defasync menu-step [ctx any?, input-ch any?] [ctx err] any?
+    (= [:on-click "s"] evt)
+    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
+                                              (mapCursor1 origin inc)))
+     nil]
+
+    (= [:on-click "a"] evt)
+    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
+                                              (mapCursor2 origin nil dec)))
+     nil]
+    
+    (= [:on-click "d"] evt)
+    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
+                                              (mapCursor2 origin nil inc)))
+     nil]
+
+    :else
+    [ctx nil]))
+
+(defasync menu-step [ctx any?, menu-key keyword?, input-ch any?] [ctx err] any?
   (loop [ctx ctx]
     (let [evt (a/<! input-ch)
           ctx (async-> ctx
                        (handle-debug evt)
-                       (handle-unit-menu evt))
+                       (handle-unit-menu menu-key evt))
+
           [ctx cancel? err] (cond
                               (= [:on-click "esc"] evt)
                               [ctx true nil]
+
+                              (= [:on-click "space"] evt)
+                              (let [cursor1 (-> ctx :unit-menu getCursor1)
+                                    selection (s/assert #{"move"} (-> ctx :unit-menu getSelect))
+                                    _ (cond
+                                        (= "move" selection)
+                                        ctx
+
+                                        :else
+                                        ctx)]
+                                [ctx false nil])
 
                               :else
                               [ctx false nil])
@@ -57,23 +92,30 @@
         [ctx nil]
         (recur ctx)))))
 
+(defnx create-unit-menu-component [ctx any?, unit any?, target-robot any?] [nil err] (s/tuple (s/nilable ::app2.gameplay-spec/menu-component) any?)
+  (let [menu [["move"] ["cancel"]]
+        data {:unit unit}]
+    [{:menu-cursor (tool.menuCursor/model menu)
+      :menu-cursor-data data}
+     nil]))
+
+
 (defasync unit-menu [ctx any?, unit any?, input-ch any?] [ctx err] any?
   (loop [ctx ctx]
-    (let [menu {}
-          ctx (assoc ctx
-                     :unit-menu menu
-                     :unit-menu-unit unit)
-          [ctx err] (a/<! (menu-step ctx input-ch))
+    (let [[menu-component err] (create-unit-menu-component ctx unit nil)
+          _ (when err (throw err))
+          ctx (assoc ctx :unit-menu-component menu-component)
+          [ctx err] (a/<! (menu-step ctx :unit-menu-component input-ch))
           _ (when err (throw err))]
-      [(dissoc ctx :unit-menu :unit-menu-unit) nil])))
+      [(dissoc ctx :unit-menu-component) nil])))
 
 (defasync system-menu [ctx any?, input-ch any?] [ctx false err] any?
   (loop [ctx ctx]
     (let [menu {}
-          ctx (assoc ctx :system-menu menu)
-          [ctx err] (a/<! (menu-step ctx input-ch))
+          ctx (assoc ctx :system-menu-component menu)
+          [ctx err] (a/<! (menu-step ctx :system-menu-component input-ch))
           _ (when err (throw err))]
-      [(dissoc ctx :system-menu) false nil])))
+      [(dissoc ctx :system-menu-component) false nil])))
 
 (defasync player-turn [ctx any?, input-ch any?] [ctx err] any?
   (loop [ctx ctx]
