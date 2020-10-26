@@ -21,7 +21,11 @@
 
         (= [:on-click "d"] evt)
         [(update ctx :cursor #(m/add % [1 0])) nil]
-        
+
+        (and (:units ctx)
+             (= [:on-click "q"] evt))
+        [ctx nil]
+
         :else
         [ctx nil])
       (catch js/Error e
