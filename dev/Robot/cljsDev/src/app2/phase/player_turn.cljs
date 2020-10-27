@@ -80,15 +80,17 @@
                        (handle-debug evt)
                        (handle-unit-menu menu-key evt))
 
-          [ctx cancel? selection err] (cond
-                                        (= [:on-click "esc"] evt)
-                                        [ctx true nil nil]
+          [ctx cancel? selection err] (s/assert
+                                       (s/tuple any? boolean? (s/nilable string?) any?)
+                                       (cond
+                                         (= [:on-click "esc"] evt)
+                                         [ctx true nil nil]
 
-                                        (= [:on-click "space"] evt)
-                                        [ctx true (-> ctx menu-key :menu-cursor getSelect) nil]
+                                         (= [:on-click "space"] evt)
+                                         [ctx true (-> ctx menu-key :menu-cursor getSelect) nil]
 
-                                        :else
-                                        [ctx false nil nil])
+                                         :else
+                                         [ctx false nil nil]))
           _ (when err (throw err))]
       (if (or cancel? selection)
         [ctx selection nil]
@@ -103,28 +105,55 @@
 
 
 (defasync unit-menu [ctx any?, unit any?, input-ch any?] [ctx err] any?
-  (loop [ctx ctx]
-    (let [[menu-component err] (create-unit-menu-component ctx unit nil)
-          _ (when err (throw err))
-          ctx (assoc ctx :unit-menu-component menu-component)
-          [ctx selection err] (a/<! (menu-step ctx :unit-menu-component input-ch))
-          _ (when err (throw err))]
-      [(dissoc ctx :unit-menu-component) nil])))
+  (let [[menu-component err] (create-unit-menu-component ctx unit nil)
+        _ (when err (throw err))
+        ctx (assoc ctx :unit-menu-component menu-component)]
+    (loop [ctx ctx]
+      (let [[ctx selection err] (a/<! (menu-step ctx :unit-menu-component input-ch))
+            _ (when err (throw err))
+            [ctx done? err] (if selection
+                              (let [cursor1 (-> ctx :unit-menu-component :menu-cursor getCursor1)
+                                    {:keys [weapon-idx transform-idx]} (-> ctx :units :menu-cursor-data)
+                                    [ctx done? err] (s/assert
+                                                     (s/tuple any? boolean? any?)
+                                                     (cond
+                                                       (= weapon-idx cursor1)
+                                                       [ctx false nil]
+
+                                                       (= transform-idx cursor1)
+                                                       [ctx false nil]
+
+                                                       :else
+                                                       [ctx false nil]))
+                                    _ (when err (throw err))]
+                                [ctx done? nil])
+                              [ctx true nil])
+            _ (when err (throw err))]
+        (if done?
+          [(dissoc ctx :unit-menu-component) nil]
+          (recur ctx))))))
 
 (defasync system-menu [ctx any?, input-ch any?] [ctx false err] (s/tuple any? boolean? any?)
-  (loop [ctx ctx]
-    (let [menu {}
-          ctx (assoc ctx :system-menu-component menu)
-          [ctx selection err] (a/<! (menu-step ctx :system-menu-component input-ch))
-          _ (when err (throw err))
-          [ctx end-turn? err] (cond
-                                (= "endTurn" selection)
-                                [ctx true nil]
+  (let [[menu-component err] [{} nil]
+        _ (when err (throw err))
+        ctx (assoc ctx :system-menu-component menu-component)]
+    (loop [ctx ctx]
+      (let [[ctx selection err] (a/<! (menu-step ctx :system-menu-component input-ch))
+            _ (when err (throw err))
+            [ctx done? end-turn? err] (s/assert
+                                       (s/tuple any? boolean? boolean? any?)
+                                       (if selection
+                                         (cond
+                                           (= "endTurn" selection)
+                                           [ctx false true nil]
 
-                                :else
-                                [ctx false nil])
-          _ (when err (throw err))]
-      [(dissoc ctx :system-menu-component) end-turn? nil])))
+                                           :else
+                                           [ctx false false nil])
+                                         [ctx true false nil]))
+            _ (when err (throw err))]
+        (if (or done? end-turn?)
+          [(dissoc ctx :system-menu-component) end-turn? nil]
+          (recur ctx))))))
 
 (defasync player-turn [ctx any?, input-ch any?] [ctx err] any?
   (a/<! (animate-player-turn-start ctx))
@@ -133,23 +162,28 @@
           ctx (async-> ctx
                        (handle-debug evt)
                        (handle-cursor-component evt))
-          [ctx end? err] (cond
-                           (= [:on-click "space"] evt)
-                           (let [units (:units ctx)
-                                 cursor (:cursor ctx)
-                                 indexed-position-units (sync-indexed-position units @atom-indexed-position-unit)
-                                 _ (reset! atom-indexed-position-unit indexed-position-units)
-                                 unitAtCursor (indexed-position-units cursor)
-                                 [ctx end? err] (if unitAtCursor
-                                                  (let [[ctx err] (a/<! (unit-menu ctx unitAtCursor input-ch))]
-                                                    [ctx false err])
-                                                  (a/<! (system-menu ctx input-ch)))
-                                 _ (when err (throw err))]
-                             [ctx end? nil])
-                           :else
-                           [ctx nil])
+          [ctx end-turn? err] (s/assert
+                               (s/tuple any? boolean? any?)
+                               (cond
+                                 (= [:on-click "space"] evt)
+                                 (let [units (:units ctx)
+                                       cursor (:cursor ctx)
+                                       indexed-position-units (sync-indexed-position units @atom-indexed-position-unit)
+                                       _ (reset! atom-indexed-position-unit indexed-position-units)
+                                       unitAtCursor (indexed-position-units cursor)
+                                       [ctx end-turn? err] (s/assert
+                                                            (s/tuple any? boolean? any?)
+                                                            (if unitAtCursor
+                                                              (let [[ctx err] (a/<! (unit-menu ctx unitAtCursor input-ch))]
+                                                                [ctx false err])
+                                                              (a/<! (system-menu ctx input-ch))))
+                                       _ (when err (throw err))]
+                                   [ctx end-turn? nil])
+
+                                 :else
+                                 [ctx false nil]))
           _ (when err (throw err))]
-      (if end?
+      (if end-turn?
         [ctx nil]
         (recur ctx)))))
 
@@ -170,25 +204,27 @@
     (let [ctx (update ctx :active-player-key (constantly :player))
           [ctx err] (a/<! (player-turn ctx input-ch))
           _ (when err (throw err))
-          [ctx end? err] (if (:result ctx)
-                           [ctx true nil]
-                           (a/<! (async-reduce (fn [[ctx end? err] player]
-                                                 (a/go
-                                                   (try
-                                                     (if (or end? err)
-                                                       [ctx end? err]
-                                                       (let [ctx (update ctx :active-player-key (constantly (:key player)))
-                                                             [ctx err] (a/<! (enemy-trun ctx player input-ch))
-                                                             _ (when err (throw err))
-                                                             [ctx end? err] (if (:result ctx)
-                                                                              [ctx true nil]
-                                                                              [ctx false nil])]
-                                                         [ctx end? err]))
-                                                     (catch js/Error err
-                                                       [ctx false err]))))
-                                               [ctx false nil]
-                                               (->> (:players ctx)
-                                                    (filter #(not= :player (:key %)))))))
+          [ctx end? err] (s/assert
+                          (s/tuple any? boolean? any?)
+                          (if (:result ctx)
+                            [ctx true nil]
+                            (a/<! (async-reduce (fn [[ctx end? err] player]
+                                                  (a/go
+                                                    (try
+                                                      (if (or end? err)
+                                                        [ctx end? err]
+                                                        (let [ctx (update ctx :active-player-key (constantly (:key player)))
+                                                              [ctx err] (a/<! (enemy-trun ctx player input-ch))
+                                                              _ (when err (throw err))
+                                                              [ctx end? err] (if (:result ctx)
+                                                                               [ctx true nil]
+                                                                               [ctx false nil])]
+                                                          [ctx end? err]))
+                                                      (catch js/Error err
+                                                        [ctx false err]))))
+                                                [ctx false nil]
+                                                (->> (:players ctx)
+                                                     (filter #(not= :player (:key %))))))))
           _ (when err (throw err))]
       (if end?
         [ctx nil]

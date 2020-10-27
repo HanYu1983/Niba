@@ -25,7 +25,9 @@
                                                       inputCh))
                            _ (println "test-player-turn:" err)
                            _ (is (or (nil? err)
-                                     (= "chan closed" (.-message err))))]))
+                                     (= "chan closed" (.-message err))))
+                           ;_ (when err (throw err))
+                           ]))
                  _ (a/go
                      (println "移動遊標")
                      (a/>! inputCh [:on-click "s"])
