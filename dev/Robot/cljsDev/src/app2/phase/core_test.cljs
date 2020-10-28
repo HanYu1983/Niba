@@ -5,7 +5,7 @@
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
             [app2.gameplay-spec]
-            [app2.phase.player-turn :refer [player-turn gameplay-loop]]
+            [app2.phase.core :refer [player-turn gameplay-loop]]
             [tool.menuCursor :refer [getSelect]]))
 
 (def atom-gameplay (atom nil))
