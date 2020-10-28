@@ -5,6 +5,7 @@
 ; "跑test時要設為真"
 (def *test true)
 
+; https://clojure.org/reference/transducers
 (def xf-filter-evt (comp (map (fn [[cmd args :as evt]]
                                 (cond
                                   (= "KEY_DOWN" cmd)
