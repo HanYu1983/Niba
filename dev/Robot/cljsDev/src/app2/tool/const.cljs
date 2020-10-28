@@ -1,8 +1,17 @@
 (ns app2.tool.const
-  (:require [tool.indexed :refer [sync-indexed]]))
+  (:require [tool.indexed :refer [sync-indexed]]
+            [tool.keycode :refer [keycode]]))
 
 ; "跑test時要設為真"
 (def *test true)
+
+(def xf-filter-evt (comp (map (fn [[cmd args :as evt]]
+                                (cond
+                                  (= "KEY_DOWN" cmd)
+                                  [:on-click (keycode args)]
+
+                                  :else
+                                  evt)))))
 
 ; get unit by position
 (def sync-indexed-position (partial sync-indexed

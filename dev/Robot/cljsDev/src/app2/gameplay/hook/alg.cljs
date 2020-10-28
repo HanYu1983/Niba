@@ -1,4 +1,4 @@
-(ns app2.gameplay.hook.core
+(ns app2.gameplay.hook.alg
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [app2.tool.gameplay-spec :as gameplay-spec]
@@ -6,12 +6,6 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 ; hook
-(defn animate-player-turn-start [ctx]
-  (go
-    (if *test
-      (println "animate-player-turn-start:" (:active-player-key ctx))
-      (println "animate-player-turn-start:" (:active-player-key ctx)))))
-
 (defnx create-unit-menu-component [ctx any?, unit any?, target-robot any?] [nil err] (s/tuple (s/nilable ::gameplay-spec/menu-component) any?)
   (let [menu [["move"] ["cancel"]]
         data {:unit unit}]
