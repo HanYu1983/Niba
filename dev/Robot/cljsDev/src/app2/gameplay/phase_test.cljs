@@ -20,8 +20,24 @@
                  _ (a/go
                      (let [[ctx err] (a/<! (player-turn {:cursor [0 0]
                                                          :mapsize [10 10]
-                                                         :units {"entity1" {:key "wow"
-                                                                            :position [0 0]}}}
+                                                         :players [{:key :player
+                                                                    :faction 0}
+                                                                   {:key :ai1
+                                                                    :faction 1}
+                                                                   {:key :ai2
+                                                                    :faction 1}]
+                                                         :units {:a {:key :a
+                                                                     :position [0 0]
+                                                                     :playerKey :player
+                                                                     :robotState {:robotKey :gundam 
+                                                                                  :pilotState nil
+                                                                                  :weapons {} 
+                                                                                  :components {}
+                                                                                  :tags {} 
+                                                                                  :hp 0 
+                                                                                  :en 0}}}
+                                                         :numberOfTurn 0
+                                                         :money 0}
                                                       inputCh))
                            _ (println "test-player-turn:" err)
                            _ (is (or (nil? err)
@@ -110,10 +126,16 @@
                  _ (a/go
                      (let [[ctx err] (a/<! (gameplay-loop {:cursor [0 0]
                                                            :mapsize [10 10]
-                                                           :players [{:key :player}
-                                                                     {:key :ai1}
-                                                                     {:key :ai2}]
-                                                           :active-player-key :player}
+                                                           :players [{:key :player
+                                                                      :faction 0}
+                                                                     {:key :ai1
+                                                                      :faction 1}
+                                                                     {:key :ai2
+                                                                      :faction 1}]
+                                                           :active-player-key :player
+                                                           :units {}
+                                                           :numberOfTurn 0
+                                                           :money 0}
                                                           inputCh))
                            _ (println "test-gameplay-loop:" err)
                            _ (is (or (nil? err)

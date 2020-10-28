@@ -15,7 +15,7 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 ; phase
-(defasync unit-menu [ctx any?, unit any?, input-ch any?] [ctx err] any?
+(defasync unit-menu [ctx ::gameplay-spec/gameplayCtx, unit ::gameplay-spec/unit, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (let [[menu-component err] (create-unit-menu-component ctx unit nil)
         _ (when err (throw err))
         ctx (assoc ctx :unit-menu-component menu-component)]
@@ -44,7 +44,7 @@
           [(dissoc ctx :unit-menu-component) nil]
           (recur ctx))))))
 
-(defasync system-menu [ctx any?, input-ch any?] [ctx false err] (s/tuple any? boolean? any?)
+(defasync system-menu [ctx ::gameplay-spec/gameplayCtx, input-ch any?] [ctx false err] (s/tuple ::gameplay-spec/gameplayCtx boolean? any?)
   (let [[menu-component err] (create-system-menu-component ctx)
         _ (when err (throw err))
         ctx (assoc ctx :system-menu-component menu-component)]
@@ -66,7 +66,7 @@
           [(dissoc ctx :system-menu-component) end-turn? nil]
           (recur ctx))))))
 
-(defasync player-turn [ctx any?, input-ch any?] [ctx err] any?
+(defasync player-turn [ctx ::gameplay-spec/gameplayCtx, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (<! (animate-player-turn-start ctx))
   (loop [ctx ctx]
     (let [evt (<! input-ch)
@@ -98,7 +98,7 @@
         [ctx nil]
         (recur ctx)))))
 
-(defasync enemy-trun [ctx any?, player any?, input-ch any?] [ctx err] any?
+(defasync enemy-trun [ctx ::gameplay-spec/gameplayCtx, player ::gameplay-spec/player, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (<! (animate-player-turn-start ctx))
   (if *test
     (loop [ctx ctx]
@@ -109,14 +109,14 @@
           (recur ctx))))
     [ctx nil]))
 
-(defasync gameplay-loop [ctx (s/keys :req-un [::players ::active-player-key]), input-ch any?] [ctx err] any?
+(defasync gameplay-loop [ctx ::gameplay-spec/gameplayCtx, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (loop [ctx ctx]
     (let [ctx (update ctx :active-player-key (constantly :player))
           [ctx err] (<! (player-turn ctx input-ch))
           _ (when err (throw err))
           [ctx end? err] (s/assert
                           (s/tuple any? boolean? any?)
-                          (if (:result ctx)
+                          (if (:done ctx)
                             [ctx true nil]
                             (<! (async-reduce (fn [[ctx end? err] player]
                                                 (go
@@ -126,7 +126,7 @@
                                                       (let [ctx (update ctx :active-player-key (constantly (:key player)))
                                                             [ctx err] (<! (enemy-trun ctx player input-ch))
                                                             _ (when err (throw err))
-                                                            [ctx end? err] (if (:result ctx)
+                                                            [ctx end? err] (if (:done ctx)
                                                                              [ctx true nil]
                                                                              [ctx false nil])]
                                                         [ctx end? err]))
