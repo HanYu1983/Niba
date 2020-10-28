@@ -9,9 +9,9 @@
             [tool.menuCursor :refer [getSelect]]))
 
 (def atom-gameplay (atom nil))
-(def fetch (fn [gameplay]
-             (reset! atom-gameplay gameplay)
-             gameplay))
+(def fetch [(fn [gameplay]
+              (reset! atom-gameplay gameplay)
+              gameplay)])
 
 (deftest test-player-turn []
   (testing ""
@@ -56,9 +56,9 @@
                      (is ((comp not nil?) (:system-menu-component @atom-gameplay)))
 
                      (println "設定系統菜單內容")
-                     (a/>! inputCh (fn [ctx]
-                                     (update-in ctx [:system-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["move"] ["weapon1" "weapon2"]])
-                                                                                          :menu-cursor-data {}}))))
+                     (a/>! inputCh [(fn [ctx]
+                                      (update-in ctx [:system-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["move"] ["weapon1" "weapon2"]])
+                                                                                           :menu-cursor-data {}})))])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= [["move"] ["weapon1" "weapon2"]] (get-in @atom-gameplay [:system-menu-component :menu-cursor :menu])))
 
@@ -77,7 +77,7 @@
                      (is (= "weapon2" (-> @atom-gameplay :system-menu-component :menu-cursor getSelect)))
 
                      (println "關閉系統菜單")
-                     (a/>! inputCh [:on-click "esc"])
+                     (a/>! inputCh [:on-click "'"])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (nil? (:system-menu-component @atom-gameplay)))
 
@@ -90,9 +90,9 @@
                      (is ((comp not nil?) (:unit-menu-component @atom-gameplay)))
 
                      (println "設定單位菜單內容")
-                     (a/>! inputCh (fn [ctx]
-                                     (update-in ctx [:unit-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["move"] ["weapon1" "weapon2"]])
-                                                                                        :menu-cursor-data {}}))))
+                     (a/>! inputCh [(fn [ctx]
+                                      (update-in ctx [:unit-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["move"] ["weapon1" "weapon2"]])
+                                                                                         :menu-cursor-data {}})))])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= [["move"] ["weapon1" "weapon2"]] (get-in @atom-gameplay [:unit-menu-component :menu-cursor :menu])))
 
@@ -111,7 +111,7 @@
                      (is (= "weapon2" (-> @atom-gameplay :unit-menu-component :menu-cursor getSelect)))
 
                      (println "關閉單位菜單")
-                     (a/>! inputCh [:on-click "esc"])
+                     (a/>! inputCh [:on-click "'"])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (nil? (:unit-menu-component @atom-gameplay)))
 
@@ -151,9 +151,9 @@
                      (is ((comp not nil?) (:system-menu-component @atom-gameplay)))
 
                      (println "設定系統菜單內容")
-                     (a/>! inputCh (fn [ctx]
-                                     (update-in ctx [:system-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["endTurn"]])
-                                                                                          :menu-cursor-data {}}))))
+                     (a/>! inputCh [(fn [ctx]
+                                      (update-in ctx [:system-menu-component] (constantly {:menu-cursor (tool.menuCursor/model [["endTurn"]])
+                                                                                           :menu-cursor-data {}})))])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= [["endTurn"]] (get-in @atom-gameplay [:system-menu-component :menu-cursor :menu])))
 
@@ -163,12 +163,12 @@
                      (is (= :ai1 (-> @atom-gameplay :active-player-key)))
 
                      (println "強制退出, 現在必須是ai2")
-                     (a/>! inputCh :return)
+                     (a/>! inputCh [:return])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= :ai2 (-> @atom-gameplay :active-player-key)))
 
                      (println "強制退出, 現在必須是player")
-                     (a/>! inputCh :return)
+                     (a/>! inputCh [:return])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= :player (-> @atom-gameplay :active-player-key)))
 

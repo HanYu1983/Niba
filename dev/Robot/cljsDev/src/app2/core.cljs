@@ -8,7 +8,7 @@
   (let [input-ch (chan 1 xf-filter-evt)
         _ (go
             (>! input-ch ["KEY_DOWN" 87])
-            (>! input-ch ["xx" 0]))
+            (>! input-ch ["KEY_DOWN" 40]))
         _ (go
             (println (<! input-ch))
             (println (<! input-ch)))]))

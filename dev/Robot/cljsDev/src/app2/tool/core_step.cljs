@@ -17,7 +17,7 @@
           [ctx cancel? selection err] (s/assert
                                        (s/tuple any? boolean? (s/nilable string?) any?)
                                        (cond
-                                         (= [:on-click "esc"] evt)
+                                         (= [:on-click "'"] evt)
                                          [ctx true nil nil]
 
                                          (= [:on-click "space"] evt)

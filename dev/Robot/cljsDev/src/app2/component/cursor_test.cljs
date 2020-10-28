@@ -6,21 +6,21 @@
 (deftest test-cursor-component-move-cursor []
   (testing "test-cursor-component-move-cursor"
     (async done
-           (a/go (let [gameplay {:cursor [0 0]
-                                 :mapsize [10 10]}
+           (a/go (let [gameplay {:cursor [10 10]
+                                 :mapsize [20 20]}
                        [gameplay err] (a/<! (handle-cursor-component gameplay [:on-click "w"]))
                        _ (is (nil? err))
-                       _ (is (= [0 -1] (:cursor gameplay)))
+                       _ (is (= [10 9] (:cursor gameplay)))
 
                        [gameplay err] (a/<! (handle-cursor-component gameplay [:on-click "s"]))
                        _ (is (nil? err))
-                       _ (is (= [0 0] (:cursor gameplay)))
+                       _ (is (= [10 10] (:cursor gameplay)))
 
                        [gameplay err] (a/<! (handle-cursor-component gameplay [:on-click "a"]))
                        _ (is (nil? err))
-                       _ (is (= [-1 0] (:cursor gameplay)))
+                       _ (is (= [9 10] (:cursor gameplay)))
 
                        [gameplay err] (a/<! (handle-cursor-component gameplay [:on-click "d"]))
                        _ (is (nil? err))
-                       _ (is (= [0 0] (:cursor gameplay)))]
+                       _ (is (= [10 10] (:cursor gameplay)))]
                    (done))))))
