@@ -19,6 +19,8 @@
                 :modules {:shared {:entries [hook]}
                           :app {:entries [app2.core]
                                 :depends-on #{:shared}}
+                          :test {:entries [app2.test]
+                                 :depends-on #{:shared}}
                           :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
           :alpha {:target :browser

@@ -7,8 +7,7 @@
             [tool.indexed :refer [sync-indexed]]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
             [tool.async :refer [async-reduce]])
-  (:require-macros [app2.macros :refer [async-> defasync defnx]]
-                   [app2.phase.core :refer [simple-impl]]))
+  (:require-macros [app2.macros :refer [async-> defasync defnx]]))
 
 ; "跑test時要設為真"
 (def *test true)
@@ -75,6 +74,9 @@
     (if *test
       (println "animate-player-turn-start:" (:active-player-key ctx))
       (println "animate-player-turn-start:" (:active-player-key ctx)))))
+
+
+(declare animate-player-turn-start)
 
 (defnx create-unit-menu-component [ctx any?, unit any?, target-robot any?] [nil err] (s/tuple (s/nilable ::gameplay-spec/menu-component) any?)
   (let [menu [["move"] ["cancel"]]
