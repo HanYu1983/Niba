@@ -1,11 +1,11 @@
-(ns app2.phase.core-test
+(ns app2.gameplay.phase-test
   (:require [cljs.test :refer-macros [deftest is testing async]]
             [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
             [app2.tool.gameplay-spec]
-            [app2.phase.core :refer [player-turn gameplay-loop]]
+            [app2.gameplay.phase :refer [player-turn gameplay-loop]]
             [tool.menuCursor :refer [getSelect]]))
 
 (def atom-gameplay (atom nil))

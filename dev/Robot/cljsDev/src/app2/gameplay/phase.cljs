@@ -1,11 +1,11 @@
-(ns app2.phase.core
+(ns app2.gameplay.phase
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]            
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.menu :refer [handle-menu-component]]
-            [app2.phase.hook.core :refer [animate-player-turn-start create-system-menu-component create-unit-menu-component]]
+            [app2.gameplay.hook.core :refer [animate-player-turn-start create-system-menu-component create-unit-menu-component]]
             [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]]
             [app2.tool.core-step :refer [menu-step]]
             [app2.tool.gameplay-spec :as gameplay-spec]
