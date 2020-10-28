@@ -1,4 +1,4 @@
-(ns app2.macros)
+(ns app2.tool.macros)
 
 (defmacro defasync [name vars-typed err-body ret-type & body]
   (let [vars (->> (partition 2 vars-typed) (mapv first))

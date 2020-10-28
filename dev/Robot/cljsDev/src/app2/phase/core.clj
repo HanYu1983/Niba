@@ -5,7 +5,7 @@
      (let [~'evt (clojure.core.async/<! ~'input-ch)
            ~'_ (when (nil? ~'evt)
                  (throw (js/Error. "close")))
-           ~'ctx (app2.macros/async-> ~'ctx ~@body)
+           ~'ctx (app2.tool.macros/async-> ~'ctx ~@body)
            ~'ctx (if (fn? ~'evt)
                    (~'evt ~'ctx)
                    ~'ctx)]

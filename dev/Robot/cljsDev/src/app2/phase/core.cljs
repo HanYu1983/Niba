@@ -1,120 +1,17 @@
 (ns app2.phase.core
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
-            [clojure.set]
-            [app2.gameplay-spec :as gameplay-spec]
+            [clojure.set]            
             [app2.component.cursor :refer [handle-cursor-component]]
-            [tool.indexed :refer [sync-indexed]]
+            [app2.component.debug :refer [handle-debug]]
+            [app2.component.menu :refer [handle-menu-component]]
+            [app2.phase.hook.core :refer [animate-player-turn-start create-system-menu-component create-unit-menu-component]]
+            [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]]
+            [app2.tool.core-step :refer [menu-step]]
+            [app2.tool.gameplay-spec :as gameplay-spec]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
             [tool.async :refer [async-reduce]])
-  (:require-macros [app2.macros :refer [async-> defasync defnx]]))
-
-; "跑test時要設為真"
-(def *test true)
-
-; get unit by position
-(def sync-indexed-position (partial sync-indexed
-                                    (fn [[_ v]]
-                                      (:position v))
-                                    second
-                                    (fn [ctx id]
-                                      (dissoc ctx id))
-                                    (fn [ctx id entity]
-                                      (assoc ctx id entity))
-                                    (fn [ctx id entity]
-                                      (assoc ctx id entity))))
-
-(def atom-indexed-position-unit (atom {}))
-
-; handler
-(defn handle-debug [ctx evt]
-  (go
-    (cond
-      (fn? evt)
-      [(evt ctx) nil]
-
-      (nil? evt)
-      [ctx (js/Error. "chan closed")]
-
-      (= :return evt)
-      [ctx (js/Error. "return")]
-
-      :else
-      [ctx nil])))
-
-(defasync handle-menu-component [ctx any?, menu-key keyword?, evt any?] [ctx err] any?
-  (s/assert ::gameplay-spec/menu-component (get-in ctx [menu-key]))
-  (cond
-    (= [:on-click "w"] evt)
-    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
-                                              (mapCursor1 origin dec)))
-     nil]
-
-    (= [:on-click "s"] evt)
-    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
-                                              (mapCursor1 origin inc)))
-     nil]
-
-    (= [:on-click "a"] evt)
-    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
-                                              (mapCursor2 origin nil dec)))
-     nil]
-
-    (= [:on-click "d"] evt)
-    [(update-in ctx [menu-key :menu-cursor] (fn [origin]
-                                              (mapCursor2 origin nil inc)))
-     nil]
-
-    :else
-    [ctx nil]))
-
-; hook
-(defn animate-player-turn-start [ctx]
-  (go
-    (if *test
-      (println "animate-player-turn-start:" (:active-player-key ctx))
-      (println "animate-player-turn-start:" (:active-player-key ctx)))))
-
-
-(declare animate-player-turn-start)
-
-(defnx create-unit-menu-component [ctx any?, unit any?, target-robot any?] [nil err] (s/tuple (s/nilable ::gameplay-spec/menu-component) any?)
-  (let [menu [["move"] ["cancel"]]
-        data {:unit unit}]
-    [{:menu-cursor (tool.menuCursor/model menu)
-      :menu-cursor-data data}
-     nil]))
-
-(defnx create-system-menu-component [ctx any?] [nil err] (s/tuple (s/nilable ::gameplay-spec/menu-component) any?)
-  (let [menu [["endTurn"]]
-        data {}]
-    [{:menu-cursor (tool.menuCursor/model menu)
-      :menu-cursor-data data}
-     nil]))
-
-; helper
-(defasync menu-step [ctx any?, menu-key keyword?, input-ch any?] [ctx nil err] (s/tuple any? (s/nilable string?) any?)
-  (loop [ctx ctx]
-    (let [evt (<! input-ch)
-          ctx (async-> ctx
-                       (handle-debug evt)
-                       (handle-menu-component menu-key evt))
-
-          [ctx cancel? selection err] (s/assert
-                                       (s/tuple any? boolean? (s/nilable string?) any?)
-                                       (cond
-                                         (= [:on-click "esc"] evt)
-                                         [ctx true nil nil]
-
-                                         (= [:on-click "space"] evt)
-                                         [ctx true (-> ctx menu-key :menu-cursor getSelect) nil]
-
-                                         :else
-                                         [ctx false nil nil]))
-          _ (when err (throw err))]
-      (if (or cancel? selection)
-        [ctx selection nil]
-        (recur ctx)))))
+  (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 ; phase
 (defasync unit-menu [ctx any?, unit any?, input-ch any?] [ctx err] any?

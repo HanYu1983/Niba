@@ -1,4 +1,4 @@
-(ns app2.gameplay-spec
+(ns app2.tool.gameplay-spec
   (:require [clojure.spec.alpha :as s]
             [tool.menuCursor]))
 

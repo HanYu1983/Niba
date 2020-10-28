@@ -4,7 +4,7 @@
             [clojure.core.async :as a]
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
-            [app2.gameplay-spec]
+            [app2.tool.gameplay-spec]
             [app2.phase.core :refer [player-turn gameplay-loop]]
             [tool.menuCursor :refer [getSelect]]))
 
