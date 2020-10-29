@@ -1,4 +1,4 @@
-(ns app2.data.core
+(ns app2.data.data
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
             ["./data.js" :as dataJson]

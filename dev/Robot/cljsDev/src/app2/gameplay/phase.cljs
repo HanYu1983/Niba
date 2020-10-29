@@ -7,7 +7,7 @@
             [app2.component.move-range :refer [handle-move-range-component]]
             [app2.gameplay.tool.step :refer [menu-step]]
             [app2.gameplay.hook.animation :refer [animate-player-turn-start]]
-            [app2.gameplay.hook.alg :refer [create-system-menu-component create-unit-menu-component]]
+            [app2.gameplay.hook.core :refer [create-system-menu-component create-unit-menu-component]]
             [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]]
             [app2.tool.gameplay-spec :as gameplay-spec]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
