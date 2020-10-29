@@ -3,32 +3,12 @@
             [tool.menuCursor]))
 
 
-
-(s/def ::vec2 (s/tuple int? int?))
-(s/def ::cursor ::vec2)
-(s/def ::mapsize ::vec2)
-(s/def ::camera ::vec2)
-
-
-
-(s/def ::cursor-component (s/keys :req-un [::cursor ::mapsize]
-                                  :opt-un [::camera ::units]))
-
-(s/def ::menu-cursor ::tool.menuCursor/model)
-(s/def ::menu-cursor-data (s/keys :opt-un [::unit ::weapon-idx ::transform-idx]))
-(s/def ::menu-component (s/keys :req-un [::menu-cursor ::menu-cursor-data]))
-
-(s/def ::unit-menu-component ::menu-component)
-(s/def ::system-menu-component ::menu-component)
-
-
 (s/def ::key keyword?)
 (s/def ::hp number?)
 (s/def ::en number?)
 (s/def ::curage int?)
 (s/def ::player (s/keys :req-un [::key ::faction]))
 (s/def ::players (s/coll-of ::player))
-
 
 (s/def ::bulletCount int?)
 (s/def ::weaponLevel int?)

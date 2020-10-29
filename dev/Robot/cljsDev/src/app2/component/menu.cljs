@@ -2,11 +2,12 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]])
-  (:require [app2.tool.gameplay-spec :as gameplay-spec])
+  (:require [app2.tool.gameplay-spec :as gameplay-spec]
+            [app2.tool.view-spec :as view-spec])
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 (defasync handle-menu-component [ctx any?, menu-key keyword?, evt any?] [ctx err] any?
-  (s/assert ::gameplay-spec/menu-component (get-in ctx [menu-key]))
+  (s/assert ::view-spec/menu-component (get-in ctx [menu-key]))
   (cond
     (= [:on-click "w"] evt)
     [(update-in ctx [menu-key :menu-cursor] (fn [origin]

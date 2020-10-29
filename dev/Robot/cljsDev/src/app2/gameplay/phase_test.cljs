@@ -37,7 +37,8 @@
                                                                                   :hp 0 
                                                                                   :en 0}}}
                                                          :numberOfTurn 0
-                                                         :money 0}
+                                                         :money 0
+                                                         :moveRange []}
                                                       inputCh))
                            _ (println "test-player-turn:" err)
                            _ (is (or (nil? err)
@@ -135,7 +136,8 @@
                                                            :active-player-key :player
                                                            :units {}
                                                            :numberOfTurn 0
-                                                           :money 0}
+                                                           :money 0
+                                                           :moveRange []}
                                                           inputCh))
                            _ (println "test-gameplay-loop:" err)
                            _ (is (or (nil? err)
@@ -171,6 +173,81 @@
                      (a/>! inputCh [:return])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= :player (-> @atom-gameplay :active-player-key)))
+
+                     (a/close! inputCh)
+                     (done))]))))
+
+
+(deftest test-player-turn-2 []
+  (testing ""
+    (async done
+           (let [inputCh (a/chan)
+                 _ (a/go
+                     (let [[ctx err] (a/<! (player-turn {:cursor [0 0]
+                                                         :mapsize [10 10]
+                                                         :players [{:key :player
+                                                                    :faction 0}
+                                                                   {:key :ai1
+                                                                    :faction 1}
+                                                                   {:key :ai2
+                                                                    :faction 1}]
+                                                         :units {:a {:key :a
+                                                                     :position [5 0]
+                                                                     :playerKey :player
+                                                                     :robotState {:robotKey :gundam
+                                                                                  :pilotState nil
+                                                                                  :weapons {}
+                                                                                  :components {}
+                                                                                  :tags {}
+                                                                                  :hp 0
+                                                                                  :en 0}}
+                                                                 :b {:key :b
+                                                                     :position [10 0]
+                                                                     :playerKey :player
+                                                                     :robotState {:robotKey :gundam
+                                                                                  :pilotState nil
+                                                                                  :weapons {}
+                                                                                  :components {}
+                                                                                  :tags {}
+                                                                                  :hp 0
+                                                                                  :en 0}}}
+                                                         :numberOfTurn 0
+                                                         :money 0
+                                                         :moveRange []}
+                                                        inputCh))
+                           _ (println "test-player-turn-2:" err)
+                           _ (is (or (nil? err)
+                                     (= "chan closed" (.-message err))))
+                           ;_ (when err (throw err))
+                           ]))
+                 _ (a/go
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [0 0] (:cursor @atom-gameplay)))
+
+                     (println "遊標快移到單位")
+                     (a/>! inputCh [:on-click "q"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [10 0] (:cursor @atom-gameplay)))
+
+                     (println "遊標快移到下個單位")
+                     (a/>! inputCh [:on-click "q"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [5 0] (:cursor @atom-gameplay)))
+
+                     (println "遊標快移到第一個單位")
+                     (a/>! inputCh [:on-click "q"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [10 0] (:cursor @atom-gameplay)))
+
+                     (println "遊標倒著快移到下個單位")
+                     (a/>! inputCh [:on-click "e"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [5 0] (:cursor @atom-gameplay)))
+
+                     (println "遊標倒著快移到下個單位")
+                     (a/>! inputCh [:on-click "e"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [10 0] (:cursor @atom-gameplay)))
 
                      (a/close! inputCh)
                      (done))]))))

@@ -1,10 +1,11 @@
 (ns app2.gameplay.phase
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
-            [clojure.set]            
+            [clojure.set]
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.menu :refer [handle-menu-component]]
+            [app2.component.move-range :refer [handle-move-range-component]]
             [app2.gameplay.hook.animation :refer [animate-player-turn-start]]
             [app2.gameplay.hook.alg :refer [create-system-menu-component create-unit-menu-component]]
             [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]]
@@ -72,7 +73,8 @@
     (let [evt (<! input-ch)
           ctx (async-> ctx
                        (handle-debug evt)
-                       (handle-cursor-component evt))
+                       (handle-cursor-component evt)
+                       (handle-move-range-component true evt))
           [ctx end-turn? err] (s/assert
                                (s/tuple any? boolean? any?)
                                (cond
