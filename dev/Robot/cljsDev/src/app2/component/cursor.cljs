@@ -3,7 +3,7 @@
             [clojure.core.async :refer [go]]
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
-            [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]])
+            [app2.tool.const :refer [*test search-position]])
   (:require [app2.tool.gameplay-spec :as gameplay-spec]
             [app2.tool.view-spec :as view-spec]))
 
@@ -39,10 +39,7 @@
                             (= "q" args)
                             reverse))
 
-                indexed-position-units (sync-indexed-position units @atom-indexed-position-unit)
-                _ (reset! atom-indexed-position-unit indexed-position-units)
-
-                unitAtCursor (indexed-position-units cursor)
+                unitAtCursor (search-position units cursor)
                ; 如果遊標指在己方未行動的機體上
                 isSelfUnitAtCursor (and unitAtCursor
                                         (= (-> unitAtCursor :playerKey) :player)
