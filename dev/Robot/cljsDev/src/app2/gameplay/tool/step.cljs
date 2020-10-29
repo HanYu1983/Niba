@@ -1,4 +1,4 @@
-(ns app2.tool.core-step
+(ns app2.gameplay.tool.step
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]

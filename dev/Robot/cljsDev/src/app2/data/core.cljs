@@ -1,4 +1,4 @@
-(ns app2.tool.data
+(ns app2.data.core
   (:require [clojure.spec.alpha :as s]
             [clojure.set]
             ["./data.js" :as dataJson]
@@ -1014,7 +1014,7 @@
                          [pos (getTerrainKey gameplayCtx pos)]))
                   (filter (fn [[pos terrainKey]]
                             (and (= terrainKey targetTerrainKey)
-                                 (not (tool.units/getByPosition units pos)))))
+                                 (not (search-position units pos)))))
                   (map first)
                   (sort-by (fn [pos]
                              (estimateCost fromPos pos)))
