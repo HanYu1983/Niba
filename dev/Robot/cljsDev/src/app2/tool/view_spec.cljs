@@ -27,5 +27,5 @@
 (s/def ::menu-cursor ::tool.menuCursor/model)
 (s/def ::menu-cursor-data (s/keys :opt-un [::unit ::weapon-idx ::transform-idx]))
 (s/def ::menu-component (s/keys :req-un [::menu-cursor ::menu-cursor-data]))
-(s/def ::unit-menu-component ::menu-component)
-(s/def ::system-menu-component ::menu-component)
+#_(s/def ::unit-menu-component ::menu-component)
+#_(s/def ::system-menu-component ::menu-component)
