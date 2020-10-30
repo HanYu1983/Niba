@@ -34,7 +34,7 @@
                      :moveRange []
                      :cursor [0 0]
                      :camera [0 0]
-                     :mapsize [10 10]
+                     :mapsize [20 20]
                      :viewsize [10 10]
                      :units {}
                      :players [{:key :player
@@ -317,6 +317,13 @@
                      (a/>! inputCh [:on-click "d"])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= [] (:moveRange @atom-gameplay)))
+
+                     (println "移動camera")
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [0 0] (:camera @atom-gameplay)))
+                     (a/>! inputCh [:on-click "right"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [1 0] (:camera @atom-gameplay)))
 
                      (a/close! inputCh)
                      (done))]))))

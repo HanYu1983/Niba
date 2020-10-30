@@ -2,9 +2,11 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]
+            [app2.component.camera :refer [handle-camera-component]]
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.move-range :refer [handle-move-range-component]]
+            
             [app2.gameplay.tool.step :refer [menu-step]]
             [app2.gameplay.hook.animation :refer [animate-player-turn-start]]
             [app2.gameplay.hook.core :refer [create-system-menu-component create-unit-menu-component]]
@@ -20,7 +22,7 @@
         _ (when err (throw err))
         ctx (assoc ctx :unit-menu-component menu-component)]
     (loop [ctx ctx]
-      (let [[ctx selection err] (<! (menu-step ctx :unit-menu-component input-ch))
+      (let [[ctx selection err] (<! (menu-step ctx :unit-menu-component unit input-ch))
             _ (when err (throw err))
             [ctx done? err] (if selection
                               (let [cursor1 (-> ctx :unit-menu-component :menu-cursor getCursor1)
@@ -49,7 +51,7 @@
         _ (when err (throw err))
         ctx (assoc ctx :system-menu-component menu-component)]
     (loop [ctx ctx]
-      (let [[ctx selection err] (<! (menu-step ctx :system-menu-component input-ch))
+      (let [[ctx selection err] (<! (menu-step ctx :system-menu-component nil input-ch))
             _ (when err (throw err))
             [ctx done? end-turn? err] (s/assert
                                        (s/tuple any? boolean? boolean? any?)
@@ -73,7 +75,8 @@
           ctx (async-> ctx
                        (handle-debug evt)
                        (handle-cursor-component evt)
-                       (handle-move-range-component true evt))
+                       (handle-move-range-component true evt)
+                       (handle-camera-component evt))
           [ctx end-turn? err] (s/assert
                                (s/tuple any? boolean? any?)
                                (cond

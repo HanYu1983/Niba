@@ -22,6 +22,8 @@
 
 (s/def ::cursor-component (s/keys :req-un [::cursor ::mapsize]
                                   :opt-un [::camera ::units]))
+(s/def ::camera-component (s/keys :req-un [::camera ::mapsize ::viewsize]))
+
 (s/def ::menu-cursor ::tool.menuCursor/model)
 (s/def ::menu-cursor-data (s/keys :opt-un [::unit ::weapon-idx ::transform-idx]))
 (s/def ::menu-component (s/keys :req-un [::menu-cursor ::menu-cursor-data]))
