@@ -9,3 +9,4 @@
 1. 在tool資料夾中的cljs都只能是獨立的
 1. 只有命名為core可以引用兄弟層中非tool資料夾的cljs
 1. core只能被父層引用
+1. main > core > 子層core > other name > tool
