@@ -8,7 +8,7 @@
             [app2.gameplay.tool.step :refer [menu-step]]
             [app2.gameplay.hook.animation :refer [animate-player-turn-start]]
             [app2.gameplay.hook.core :refer [create-system-menu-component create-unit-menu-component]]
-            [app2.tool.const :refer [*test sync-indexed-position atom-indexed-position-unit]]
+            [app2.tool.const :refer [*test search-position]]
             [app2.tool.gameplay-spec :as gameplay-spec]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
             [tool.async :refer [async-reduce]])
@@ -80,9 +80,7 @@
                                  (= [:on-click "space"] evt)
                                  (let [units (:units ctx)
                                        cursor (:cursor ctx)
-                                       indexed-position-units (sync-indexed-position units @atom-indexed-position-unit)
-                                       _ (reset! atom-indexed-position-unit indexed-position-units)
-                                       unitAtCursor (indexed-position-units cursor)
+                                       unitAtCursor (search-position units cursor)
                                        [ctx end-turn? err] (s/assert
                                                             (s/tuple any? boolean? any?)
                                                             (if unitAtCursor

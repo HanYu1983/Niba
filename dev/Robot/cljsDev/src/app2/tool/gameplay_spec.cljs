@@ -4,6 +4,8 @@
 
 
 (s/def ::key keyword?)
+(s/def ::vec2 (s/tuple int? int?))
+(s/def ::position ::vec2)
 (s/def ::hp number?)
 (s/def ::en number?)
 (s/def ::curage int?)

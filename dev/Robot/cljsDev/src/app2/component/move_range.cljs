@@ -1,8 +1,9 @@
 (ns app2.component.move-range
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :as a]
-            [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
-            [app2.tool.const :refer [*test search-position]])
+            [app2.data.data :refer [getUnitMovePathTree]]
+            [app2.tool.const :refer [*test search-position]]
+            [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]])
   (:require [app2.tool.gameplay-spec :as gameplay-spec]
             [app2.tool.view-spec :as view-spec])
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
@@ -17,7 +18,7 @@
             unitAtCursor (search-position units cursor)
             robot? (s/valid? ::gameplay-spec/robot unitAtCursor)
             moveRange (if robot?
-                        (let [shortestPathTree []
+                        (let [shortestPathTree (getUnitMovePathTree ctx unitAtCursor)
                               moveRange (map first shortestPathTree)]
                           moveRange)
                         [])

@@ -2,8 +2,6 @@
   (:require [cljs.test :refer-macros [deftest is testing async]]
             [tool.indexed :refer [make-indexed sync-indexed]]))
 
-
- 
 (deftest test-1 []
   (testing "test-1"
     (async done (let [units {"a" {:position [0 1]}
@@ -11,7 +9,8 @@
                              "c" {:position [1 1]}
                              "d" {:position [1 2]}}
                       indexed (make-indexed (fn [[_ v]]
-                                              (get-in v [:position 1])))
+                                              (get-in v [:position 1]))
+                                            first)
                       indexed (reduce #(conj %1 %2) indexed units)
 
                       _ (is (= [["a" {:position [0 1]}]
@@ -41,7 +40,9 @@
 
                       units {"a" {:position [0 1]}
                              "d" {:position [1 2]}}
-                      indexed (sync-fn units indexed)
+                      indexed (sync-fn units
+                                       first
+                                       indexed)
                       _ (is (= [["a" {:position [0 1]}] ["d" {:position [1 2]}]]
                                (into [] indexed)))
 
@@ -49,7 +50,9 @@
                              "b" {:position [3 3]}
                              "c" {:position [2 1]}
                              "d" {:position [1 4]}}
-                      indexed (sync-fn units indexed)
+                      indexed (sync-fn units
+                                       first
+                                       indexed)
                       _ (is (= [["c" {:position [2 1]}] ["b" {:position [3 3]}] ["d" {:position [1 4]}] ["a" {:position [2 5]}]]
                                (into [] indexed)))]
                   (done)))))
@@ -71,6 +74,8 @@
                              "b" {:position [0 3]}
                              "c" {:position [1 1]}
                              "d" {:position [1 2]}}
-                      indexed (sync-fn units indexed)
+                      indexed (sync-fn units
+                                       :key
+                                       indexed)
                       _ (println indexed)]
                   (done)))))

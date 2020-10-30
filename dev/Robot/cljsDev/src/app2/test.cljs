@@ -8,8 +8,8 @@
 (defn main []
   (s/check-asserts true)
   (enable-console-print!)
-  (run-tests 'app2.component.cursor-test
-             'app2.gameplay.phase-test
-             'tool.indexed-test))
+  (run-tests 'tool.indexed-test
+             'app2.component.cursor-test
+             'app2.gameplay.phase-test))
 
 (main)

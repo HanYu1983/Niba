@@ -4,6 +4,7 @@
             [clojure.core.async :as a]
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
+            [tool.map]
             [app2.tool.gameplay-spec]
             [app2.gameplay.phase :refer [player-turn gameplay-loop]]
             [tool.menuCursor :refer [getSelect]]))
@@ -13,33 +14,69 @@
               (reset! atom-gameplay gameplay)
               gameplay)])
 
+(def basic-gameplay {:map (tool.map/generateMap {:seed 0
+                                                 :x 0
+                                                 :y 0
+                                                 :w 10
+                                                 :h 10}
+                                                {:deepsea 0.6
+                                                 :sea 0.6
+                                                 :sand 0.1
+                                                 :grass 1
+                                                 :hill 1
+                                                 :city 0.3
+                                                 :tree 0.4
+                                                 :award 0.01
+                                                 :power 1
+                                                 :offset 0})
+                     :numberOfTurn 0
+                     :money 0
+                     :moveRange []
+                     :cursor [0 0]
+                     :camera [0 0]
+                     :mapsize [10 10]
+                     :viewsize [10 10]
+                     :units {}
+                     :players [{:key :player
+                                :faction 0}
+                               {:key :ai1
+                                :faction 1}
+                               {:key :ai2
+                                :faction 1}]
+                     :lobbyCtx {:robots {}
+                                :pilots {}
+                                :robotByPilot {}
+                                :money 100000
+                                :weapons {}
+                                :robotByWeapon {}
+                                :weaponLevelByKey {}
+                                :components {}
+                                :robotByComponent {}
+                                :pilotStateByPilot {}}})
+
 (deftest test-player-turn []
   (testing ""
     (async done
            (let [inputCh (a/chan)
                  _ (a/go
-                     (let [[ctx err] (a/<! (player-turn {:cursor [0 0]
-                                                         :mapsize [10 10]
-                                                         :players [{:key :player
-                                                                    :faction 0}
-                                                                   {:key :ai1
-                                                                    :faction 1}
-                                                                   {:key :ai2
-                                                                    :faction 1}]
-                                                         :units {:a {:key :a
-                                                                     :position [0 0]
-                                                                     :playerKey :player
-                                                                     :robotState {:robotKey :gundam 
-                                                                                  :pilotState nil
-                                                                                  :weapons {} 
-                                                                                  :components {}
-                                                                                  :tags {} 
-                                                                                  :hp 0 
-                                                                                  :en 0}}}
-                                                         :numberOfTurn 0
-                                                         :money 0
-                                                         :moveRange []}
-                                                      inputCh))
+                     (let [[ctx err] (a/<! (player-turn (merge basic-gameplay
+                                                               {:players [{:key :player
+                                                                           :faction 0}
+                                                                          {:key :ai1
+                                                                           :faction 1}
+                                                                          {:key :ai2
+                                                                           :faction 1}]
+                                                                :units {:a {:key :a
+                                                                            :position [0 0]
+                                                                            :playerKey :player
+                                                                            :robotState {:robotKey :gundam
+                                                                                         :pilotState nil
+                                                                                         :weapons {}
+                                                                                         :components {}
+                                                                                         :tags {}
+                                                                                         :hp 0
+                                                                                         :en 0}}}})
+                                                        inputCh))
                            _ (println "test-player-turn:" err)
                            _ (is (or (nil? err)
                                      (= "chan closed" (.-message err))))
@@ -125,19 +162,14 @@
     (async done
            (let [inputCh (a/chan)
                  _ (a/go
-                     (let [[ctx err] (a/<! (gameplay-loop {:cursor [0 0]
-                                                           :mapsize [10 10]
-                                                           :players [{:key :player
-                                                                      :faction 0}
-                                                                     {:key :ai1
-                                                                      :faction 1}
-                                                                     {:key :ai2
-                                                                      :faction 1}]
-                                                           :active-player-key :player
-                                                           :units {}
-                                                           :numberOfTurn 0
-                                                           :money 0
-                                                           :moveRange []}
+                     (let [[ctx err] (a/<! (gameplay-loop (merge basic-gameplay
+                                                                 {:players [{:key :player
+                                                                             :faction 0}
+                                                                            {:key :ai1
+                                                                             :faction 1}
+                                                                            {:key :ai2
+                                                                             :faction 1}]
+                                                                  :active-player-key :player})
                                                           inputCh))
                            _ (println "test-gameplay-loop:" err)
                            _ (is (or (nil? err)
@@ -183,37 +215,33 @@
     (async done
            (let [inputCh (a/chan)
                  _ (a/go
-                     (let [[ctx err] (a/<! (player-turn {:cursor [0 0]
-                                                         :mapsize [10 10]
-                                                         :players [{:key :player
-                                                                    :faction 0}
-                                                                   {:key :ai1
-                                                                    :faction 1}
-                                                                   {:key :ai2
-                                                                    :faction 1}]
-                                                         :units {:a {:key :a
-                                                                     :position [5 0]
-                                                                     :playerKey :player
-                                                                     :robotState {:robotKey :gundam
-                                                                                  :pilotState nil
-                                                                                  :weapons {}
-                                                                                  :components {}
-                                                                                  :tags {}
-                                                                                  :hp 0
-                                                                                  :en 0}}
-                                                                 :b {:key :b
-                                                                     :position [10 0]
-                                                                     :playerKey :player
-                                                                     :robotState {:robotKey :gundam
-                                                                                  :pilotState nil
-                                                                                  :weapons {}
-                                                                                  :components {}
-                                                                                  :tags {}
-                                                                                  :hp 0
-                                                                                  :en 0}}}
-                                                         :numberOfTurn 0
-                                                         :money 0
-                                                         :moveRange []}
+                     (let [[ctx err] (a/<! (player-turn (merge basic-gameplay
+                                                               {:players [{:key :player
+                                                                           :faction 0}
+                                                                          {:key :ai1
+                                                                           :faction 1}
+                                                                          {:key :ai2
+                                                                           :faction 1}]
+                                                                :units {:a {:key :a
+                                                                            :position [5 0]
+                                                                            :playerKey :player
+                                                                            :robotState {:robotKey :gundam
+                                                                                         :pilotState nil
+                                                                                         :weapons {}
+                                                                                         :components {}
+                                                                                         :tags {}
+                                                                                         :hp 0
+                                                                                         :en 0}}
+                                                                        :b {:key :b
+                                                                            :position [10 0]
+                                                                            :playerKey :player
+                                                                            :robotState {:robotKey :gundam
+                                                                                         :pilotState nil
+                                                                                         :weapons {}
+                                                                                         :components {}
+                                                                                         :tags {}
+                                                                                         :hp 0
+                                                                                         :en 0}}}})
                                                         inputCh))
                            _ (println "test-player-turn-2:" err)
                            _ (is (or (nil? err)
@@ -248,6 +276,47 @@
                      (a/>! inputCh [:on-click "e"])
                      (a/>! inputCh fetch) (a/<! (a/timeout 0))
                      (is (= [10 0] (:cursor @atom-gameplay)))
+
+                     (a/close! inputCh)
+                     (done))]))))
+
+
+
+(deftest test-player-turn-3 []
+  (testing ""
+    (async done
+           (let [inputCh (a/chan)
+                 _ (a/go
+                     (let [[ctx err] (a/<! (player-turn (merge basic-gameplay
+                                                               {:units {:a {:key :a
+                                                                            :position [1 0]
+                                                                            :playerKey :player
+                                                                            :robotState {:robotKey :gundam
+                                                                                         :pilotState nil
+                                                                                         :weapons {}
+                                                                                         :components {}
+                                                                                         :tags {}
+                                                                                         :hp 0
+                                                                                         :en 0}}}})
+                                                        inputCh))
+                           _ (println "test-player-turn-3:" err)
+                           _ (is (or (nil? err)
+                                     (= "chan closed" (.-message err))))
+                           ;_ (when err (throw err))
+                           ]))
+                 _ (a/go
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [] (:moveRange @atom-gameplay)))
+
+                     (println "移到單位上必須有moveRange")
+                     (a/>! inputCh [:on-click "d"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (pos? (count (:moveRange @atom-gameplay))))
+
+                     (println "移出單位時moveRange為空")
+                     (a/>! inputCh [:on-click "d"])
+                     (a/>! inputCh fetch) (a/<! (a/timeout 0))
+                     (is (= [] (:moveRange @atom-gameplay)))
 
                      (a/close! inputCh)
                      (done))]))))
