@@ -1,4 +1,4 @@
-(ns app2.gameplay.hook.animation
+(ns app2.gameplay.phase.hook.animation
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [app2.tool.gameplay-spec :as gameplay-spec]

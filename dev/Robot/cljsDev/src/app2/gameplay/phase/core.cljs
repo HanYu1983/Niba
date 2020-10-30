@@ -1,4 +1,4 @@
-(ns app2.gameplay.phase
+(ns app2.gameplay.phase.core
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]
@@ -6,10 +6,9 @@
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.move-range :refer [handle-move-range-component]]
-            
-            [app2.gameplay.tool.step :refer [menu-step]]
-            [app2.gameplay.hook.animation :refer [animate-player-turn-start]]
-            [app2.gameplay.hook.core :refer [create-system-menu-component create-unit-menu-component]]
+            [app2.gameplay.phase.step.core :refer [menu-step]]
+            [app2.gameplay.phase.hook.core :refer [create-system-menu-component create-unit-menu-component]]
+            [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start]]
             [app2.tool.const :refer [*test search-position]]
             [app2.tool.gameplay-spec :as gameplay-spec]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
