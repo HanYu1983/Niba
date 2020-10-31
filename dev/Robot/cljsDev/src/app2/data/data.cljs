@@ -1162,3 +1162,69 @@
    (let [camera (or targetCamera camera)]
      (-> unit
          (update :position (partial world2local camera))))))
+
+(defn render [gameplayCtx]
+  (s/assert ::view-spec/view gameplayCtx)
+  {:money (:money gameplayCtx)
+   :map (let [{:keys [camera map viewsize]} gameplayCtx]
+          (tool.map/subMap camera viewsize map))
+   :cursor (let [{:keys [camera cursor]} gameplayCtx]
+             (world2local camera cursor))
+   :moveRange (let [{:keys [camera moveRange]} gameplayCtx]
+                (map #(world2local camera %) moveRange))
+   :units (let [{:keys [camera]} gameplayCtx]
+            (->> (getUnitsByRegion gameplayCtx nil nil)
+                 (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                            (mapUnitToLocal gameplayCtx camera)))))
+   :attackRange (let [{:keys [camera attackRange]} gameplayCtx]
+                  (map #(world2local camera %) attackRange))
+   :checkHitRate (let [{:keys [camera checkHitRate]} gameplayCtx]
+                   (->> checkHitRate
+                        (map (fn [info]
+                               (-> info
+                                   (update :unit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                       (mapUnitToLocal gameplayCtx camera)))
+                                   (update :targetUnit #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                             (mapUnitToLocal gameplayCtx camera))))))))
+   :cellState (let [{:keys [units cursor]} gameplayCtx
+                    unitAtCursor (-> units
+                                     (search-position cursor))
+                    terrain (getTerrain gameplayCtx cursor)]
+                {:unit (when (and unitAtCursor (s/valid? ::gameplay-spec/robot unitAtCursor))
+                         (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unitAtCursor)
+                              (mapUnitToLocal gameplayCtx nil)))
+                 :terrain terrain})
+   :systemMenu (when (:system-menu-component gameplayCtx)
+                 (let [{:keys [menu-cursor menu-cursor-data]} (-> gameplayCtx :system-menu-component)]
+                   {:menuCursor menu-cursor
+                    :data menu-cursor-data}))
+   :unitMenu (when (:unit-menu-component gameplayCtx)
+               (let [{:keys [menu-cursor menu-cursor-data]} (-> gameplayCtx :unit-menu-component)
+                     {:keys [unit]} menu-cursor-data]
+                 {:menuCursor menu-cursor
+                  :data (update menu-cursor-data :weapons (fn [weapons]
+                                                            (map (partial getWeaponInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit) weapons)))}))
+   :battleMenu (when (:battle-menu-component gameplayCtx)
+                 (let [battle-menu (:battle-menu-component gameplayCtx)]
+                   {:preview (battleMenu/mapUnits battle-menu #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                    (mapUnitToLocal gameplayCtx nil)))}))
+   :startUnitsMenu (when (:startUnitsMenuView gameplayCtx)
+                     (let [{:keys [units selectedUnits cursor]} (:startUnitsMenuView gameplayCtx)]
+                       {:data (map (fn [idx [key robotKey]]
+                                     (let [pilotKey (s/assert
+                                                     (s/nilable keyword?)
+                                                     (->> (-> gameplayCtx :lobbyCtx :robotByPilot)
+                                                          (into [])
+                                                          (filter (fn [[_ robot]]
+                                                                    (= robot key)))
+                                                          ffirst
+                                                          ((fn [key]
+                                                             ((-> gameplayCtx :lobbyCtx :pilots) key)))))]
+                                       {:key key
+                                        :robotState (merge {:robotKey robotKey}
+                                                           (when pilotKey
+                                                             {:pilotState {:pilotKey pilotKey}}))
+                                        :selected (if (selectedUnits key) true false)
+                                        :focus (= cursor idx)}))
+                                   (range)
+                                   units)}))})

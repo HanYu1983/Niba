@@ -18,7 +18,7 @@
         (= :on-click cmd)
         (let [handleWeaponView (fn [ctx]
                                  (let [{:keys [menu-cursor menu-cursor-data]} (-> ctx :unit-menu-component)
-                                       battle-menu (:battle-menu ctx)
+                                       battle-menu (:battle-menu-component ctx)
                                        {:keys [weapons weapon-idx]} menu-cursor-data
                                        cursor1 (getCursor1 menu-cursor)
                                        cursor2 (getCursor2 menu-cursor)
@@ -32,14 +32,14 @@
                                                          playerTurn?
                                                          (setRightActionFromReaction ctx getUnitHitRate thinkReaction)))
                                                      battle-menu)
-                                       ctx (assoc ctx :battle-menu battle-menu)]
+                                       ctx (assoc ctx :battle-menu-component battle-menu)]
                                    ctx))]
           (cond
             ; 處理敵人回合的選單移動
             (and (not playerTurn?)
                  (#{"w" "s"} args))
             (let [{:keys [menu-cursor menu-cursor-data]} (-> ctx :unit-menu-component)
-                  battle-menu (:battle-menu ctx)
+                  battle-menu (:battle-menu-component ctx)
                   cursor1 (getCursor1 menu-cursor)
                   {:keys [weapon-idx]} menu-cursor-data
                   select (getSelect menu-cursor)
@@ -52,9 +52,9 @@
                   battle-menu (cond-> (update-in battle-menu [1 :hitRate] (constantly hitRate))
                                 (#{"evade" "guard"} select)
                                 (update-in [0 :action] (constantly [(keyword select)])))
-                  _ (s/assert ::view-spec/battle-menu battle-menu)
+                  _ (s/assert ::view-spec/battle-menu-component battle-menu)
                   ; 套用
-                  ctx (assoc ctx :battle-menu battle-menu)
+                  ctx (assoc ctx :battle-menu-component battle-menu)
                   ; 上下移動時也會選到武器
                   ctx (if (= cursor1 weapon-idx)
                         (handleWeaponView ctx)

@@ -21,8 +21,8 @@
 (s/def ::cellStateView (s/keys :req-un [::units ::cursor]))
 
 
-(s/def ::cursor-component (s/keys :req-un [::cursor ::mapsize]
-                                  :opt-un [::camera ::units]))
+(s/def ::cursor-component (s/keys :req-un [::cursor ::mapsize ::camera]
+                                  :opt-un [::units]))
 (s/def ::camera-component (s/keys :req-un [::camera ::mapsize ::viewsize]))
 
 (s/def ::menu-cursor ::tool.menuCursor/model)
@@ -30,10 +30,10 @@
 (s/def ::menu-component (s/keys :req-un [::menu-cursor ::menu-cursor-data]))
 (s/def ::unit-menu-component ::menu-component)
 (s/def ::system-menu-component ::menu-component)
+(s/def ::battle-menu-component ::battleMenu/defaultModel)
 
-(s/def ::battle-menu ::battleMenu/defaultModel)
-(s/def ::battle-menu-component (s/keys :req-un [::battle-menu]))
+(s/def ::startUnitsMenuView (s/keys :req-un [::units ::selectedUnits ::cursor]))
 
 
-(s/def ::view (s/keys :req-un [::cursor-component ::camera-component]
-                      :opt-un [::unit-menu-component ::system-menu-component ::battle-menu-component]))
+(s/def ::view (s/keys :req-un [::cursor-component ::camera-component ::mapView ::moveRangeView ::unitsView ::attackRangeView ::checkHitRateView ::cellStateView]
+                      :opt-un [::unit-menu-component ::system-menu-component ::battle-menu-component ::startUnitsMenuView]))
