@@ -10,3 +10,9 @@
     (if *test
       (println "animate-player-turn-start:" (:active-player-key ctx))
       (println "animate-player-turn-start:" (:active-player-key ctx)))))
+
+(defn alert [msg]
+  (go
+    (if *test
+      (println "alert:" msg)
+      (println "alert:" msg))))

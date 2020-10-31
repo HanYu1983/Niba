@@ -2,20 +2,26 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]
+            [app2.data.data :refer [invalidWeapon? getWeaponType unitOnTransform updateUnit]]
             [app2.component.camera :refer [handle-camera-component]]
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.move-range :refer [handle-move-range-component]]
             [app2.gameplay.phase.step.core :refer [menu-step]]
             [app2.gameplay.phase.hook.core :refer [create-system-menu-component create-unit-menu-component]]
-            [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start]]
+            [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start alert]]
             [app2.tool.const :refer [*test search-position]]
             [app2.tool.gameplay-spec :as gameplay-spec]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
             [tool.async :refer [async-reduce]])
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
-; phase
+
+(defasync unit-select-single-target [ctx ::gameplay-spec/gameplayCtx, args (s/keys :req-un [::gameplay-spec/robot ::gameplay-spec/weapon]), input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
+  [ctx nil])
+
+(declare fixUnitSkyGround)
+
 (defasync unit-menu [ctx ::gameplay-spec/gameplayCtx, unit ::gameplay-spec/unit, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (let [[menu-component err] (create-unit-menu-component ctx unit nil)
         _ (when err (throw err))
@@ -25,15 +31,49 @@
             _ (when err (throw err))
             [ctx done? err] (if selection
                               (let [cursor1 (-> ctx :unit-menu-component :menu-cursor getCursor1)
-                                    {:keys [weapon-idx transform-idx]} (-> ctx :units :menu-cursor-data)
+                                    cursor2 (-> ctx :unit-menu-component :menu-cursor getCursor2)
+                                    {:keys [transform-idx weapon-idx weapons]} (-> ctx :unit-menu-component :menu-cursor-data)
                                     [ctx done? err] (s/assert
                                                      (s/tuple any? boolean? any?)
                                                      (cond
                                                        (= weapon-idx cursor1)
-                                                       [ctx false nil]
+                                                       (let [weapon (s/assert
+                                                                     ::gameplay-spec/weaponState
+                                                                     (nth weapons cursor2))
+                                                             invalidWeaponMsg (invalidWeapon? ctx unit weapon nil)
+                                                             weaponType (getWeaponType {:ctx ctx :lobbyCtx (:lobbyCtx ctx)} unit weapon)]
+                                                         (cond
+                                                           invalidWeaponMsg
+                                                           (do
+                                                             (<! (alert {:message invalidWeaponMsg}))
+                                                             [ctx false nil])
+
+                                                           (= "single" weaponType)
+                                                           (let [[ctx isEnd] (<! (unit-select-single-target ctx {:unit unit :weapon weapon} input-ch))]
+                                                             (if isEnd
+                                                               [ctx isEnd nil]
+                                                               [ctx false nil]))
+
+                                                           (= "line" weaponType)
+                                                           (let [[ctx isEnd] [ctx false]]
+                                                             (if isEnd
+                                                               [ctx isEnd nil]
+                                                               [ctx false nil]))
+
+                                                           :else
+                                                           [ctx false nil]))
 
                                                        (= transform-idx cursor1)
-                                                       [ctx false nil]
+                                                       (let [; 變形
+                                                             transformedUnit (unitOnTransform ctx unit (get-in unit [:robotState :robotKey]) selection)
+                                                             ; 先畫變形
+                                                             ctx (updateUnit ctx unit (constantly transformedUnit))
+                                                             unit transformedUnit
+                                                             ; 調整到空中或地面並播放動畫
+                                                             transformedUnit (<! (fixUnitSkyGround ctx unit input-ch))
+                                                             ; 再畫結果
+                                                             ctx (updateUnit ctx unit (constantly transformedUnit))]
+                                                         [ctx false nil])
 
                                                        :else
                                                        [ctx false nil]))

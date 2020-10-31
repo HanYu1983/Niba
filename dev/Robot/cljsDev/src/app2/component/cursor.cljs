@@ -3,8 +3,8 @@
             [clojure.core.async :refer [go]]
             [clojure.core.matrix :as m]
             [clojure.core.match :refer [match]]
-            [app2.tool.const :refer [*test search-position]])
-  (:require [app2.tool.gameplay-spec :as gameplay-spec]
+            [app2.tool.const :refer [*test search-position]]
+            [app2.tool.gameplay-spec :as gameplay-spec]
             [app2.tool.view-spec :as view-spec]))
 
 

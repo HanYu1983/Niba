@@ -1,6 +1,7 @@
 (ns app2.tool.view-spec
   (:require [clojure.spec.alpha :as s]
-            [tool.menuCursor]))
+            [tool.menuCursor]
+            [app2.tool.battleMenu :as battleMenu]))
 
 (s/def ::vec2 (s/tuple int? int?))
 (s/def ::positions (s/coll-of ::vec2))
@@ -25,7 +26,14 @@
 (s/def ::camera-component (s/keys :req-un [::camera ::mapsize ::viewsize]))
 
 (s/def ::menu-cursor ::tool.menuCursor/model)
-(s/def ::menu-cursor-data (s/keys :opt-un [::unit ::weapon-idx ::transform-idx]))
+(s/def ::menu-cursor-data (s/keys :opt-un [::unit ::weapon-idx ::transform-idx ::weapons]))
 (s/def ::menu-component (s/keys :req-un [::menu-cursor ::menu-cursor-data]))
-#_(s/def ::unit-menu-component ::menu-component)
-#_(s/def ::system-menu-component ::menu-component)
+(s/def ::unit-menu-component ::menu-component)
+(s/def ::system-menu-component ::menu-component)
+
+(s/def ::battle-menu ::battleMenu/defaultModel)
+(s/def ::battle-menu-component (s/keys :req-un [::battle-menu]))
+
+
+(s/def ::view (s/keys :req-un [::cursor-component ::camera-component]
+                      :opt-un [::unit-menu-component ::system-menu-component ::battle-menu-component]))
