@@ -1,25 +1,46 @@
 package alg
 
-import "app2/data"
+import (
+	"app2/data"
+	"app2/lib"
+)
 
-func SelectMenuStep(menu data.Menu, inputCh <-chan interface{}) (data.Menu, string, bool, error) {
-	RenderMenu(menu)
+func SelectMenuStep(origin data.Gameplay, inputCh <-chan interface{}) (data.Gameplay, string, bool, error) {
+	gameplay := origin
+	gameplay.Menu.Active = true
 WaitCommand:
 	for {
 		cmd := <-inputCh
 		switch detail := cmd.(type) {
 		case data.CommandKeyDown:
 			switch detail.KeyCode {
-			case "w":
-				menu.Cursor[0]++
-			case "space":
+			case data.KeyCodeUp:
+				gameplay.Menu.Cursor1--
+			case data.KeyCodeDown:
+				gameplay.Menu.Cursor1++
+			case data.KeyCodeLeft:
+				gameplay.Menu.Cursor2 = lib.ReplaceIndex(
+					gameplay.Menu.Cursor2,
+					map[int]int{
+						gameplay.Menu.Cursor1: gameplay.Menu.Cursor2[gameplay.Menu.Cursor1] - 1,
+					},
+				)
+			case data.KeyCodeRight:
+				gameplay.Menu.Cursor2 = lib.ReplaceIndex(
+					gameplay.Menu.Cursor2,
+					map[int]int{
+						gameplay.Menu.Cursor1: gameplay.Menu.Cursor2[gameplay.Menu.Cursor1] + 1,
+					},
+				)
+			case data.KeyCodeSpace:
 				break WaitCommand
-			case "esc":
-				return menu, "", true, nil
+			case data.KeyCodeEsc:
+				return origin, "", true, nil
 			default:
 
 			}
 		}
 	}
-	return menu, menu.Options[menu.Cursor[0]][menu.Cursor[1]], false, nil
+	gameplay.Menu.Active = false
+	return gameplay, gameplay.Menu.Options[gameplay.Menu.Cursor1][gameplay.Menu.Cursor2[gameplay.Menu.Cursor1]], false, nil
 }

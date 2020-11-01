@@ -2,7 +2,7 @@ package alg
 
 import "app2/data"
 
-func SelectPositionStep(origin data.Gameplay, robotID string, inputCh <-chan interface{}) (data.Gameplay, data.Position, bool, error) {
+func SelectPositionStep(origin data.Gameplay, robotID string, moveRange []data.Position, inputCh <-chan interface{}) (data.Gameplay, data.Position, bool, error) {
 	var err error
 	gameplay := origin
 WaitSpace:
@@ -19,9 +19,9 @@ WaitSpace:
 		switch detail := evt.(type) {
 		case data.CommandKeyDown:
 			switch detail.KeyCode {
-			case "esc":
+			case data.KeyCodeEsc:
 				return origin, data.Position{}, true, nil
-			case "space":
+			case data.KeyCodeSpace:
 				break WaitSpace
 			}
 		}

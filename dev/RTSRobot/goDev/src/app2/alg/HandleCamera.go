@@ -7,13 +7,13 @@ func HandleCamera(origin data.Gameplay, evt interface{}) (data.Gameplay, error) 
 	switch detail := evt.(type) {
 	case data.CommandKeyDown:
 		switch detail.KeyCode {
-		case "ArrowUp":
+		case data.KeyCodeArrowUp:
 			gameplay.Camera[1]--
-		case "ArrowDown":
+		case data.KeyCodeArrowDown:
 			gameplay.Camera[1]++
-		case "ArrowLeft":
+		case data.KeyCodeArrowLeft:
 			gameplay.Camera[0]--
-		case "ArrowRight":
+		case data.KeyCodeArrowRight:
 			gameplay.Camera[0]++
 		}
 	}

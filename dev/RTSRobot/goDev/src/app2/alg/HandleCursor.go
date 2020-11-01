@@ -7,13 +7,13 @@ func HandleCursor(origin data.Gameplay, evt interface{}) (data.Gameplay, error) 
 	switch detail := evt.(type) {
 	case data.CommandKeyDown:
 		switch detail.KeyCode {
-		case "w":
+		case data.KeyCodeUp:
 			gameplay.Cursor[1]--
-		case "s":
+		case data.KeyCodeDown:
 			gameplay.Cursor[1]++
-		case "a":
+		case data.KeyCodeLeft:
 			gameplay.Cursor[0]--
-		case "d":
+		case data.KeyCodeRight:
 			gameplay.Cursor[0]++
 		}
 	}

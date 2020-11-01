@@ -19,6 +19,7 @@ type Robot struct {
 	PilotID            string
 	WeaponsByTransform WeaponsByTransform
 	Transform          string
+	PlayerID           string
 }
 
 type Item struct {
@@ -51,31 +52,18 @@ type Tag struct {
 	Sky       bool
 }
 
-type Gameplay struct {
-	Players        map[string]Player
-	ActivePlayerID string
-	Camera         Position
-	Cursor         Position
-	SeqID          int
-	Units          []string
-	Positions      map[string]Position
-	Robots         map[string]Robot
-	Tags           map[string]Tag
-	Items          map[string]Item
-	Pilots         map[string]Pilot
-	Done           interface{}
-	Lobby          Lobby
-}
-
 type CommandKeyDown struct {
 	KeyCode string
 }
 
 type Menu struct {
+	Active      bool
 	Options     [][]string
-	Cursor      [2]int
+	Cursor1     int
+	Cursor2     []int
 	WeaponID    int
 	TransformID int
+	UnitID      string
 }
 
 const (
@@ -85,13 +73,45 @@ const (
 
 type BattleActionAttack struct {
 	WeaponID string
-	HitRate  float32
 }
 
 type BattleActionGuard struct{}
 type BattleActionEvade struct{}
 
+type BattleMenuState struct {
+	Active         bool
+	AttackAction   interface{}
+	DeffenceAction interface{}
+}
+
+type GameplayTag struct {
+}
+
+type Gameplay struct {
+	Players         map[string]Player
+	ActivePlayerID  string
+	Camera          Position
+	Cursor          Position
+	SeqID           int
+	Units           []string
+	Positions       map[string]Position
+	Robots          map[string]Robot
+	Tags            map[string]Tag
+	Items           map[string]Item
+	Pilots          map[string]Pilot
+	Menu            Menu
+	BattleMenuState BattleMenuState
+	Done            interface{}
+	Lobby           Lobby
+}
+
+type BattleInfo struct {
+	HitRate float32
+}
+
 type BattleMenu struct {
+	Active       bool
 	Robots       [2]Robot
 	BattleAction [2]interface{}
+	BattleInfo   [2]BattleInfo
 }

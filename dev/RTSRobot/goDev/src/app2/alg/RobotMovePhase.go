@@ -11,7 +11,11 @@ func RobotMovePhase(origin data.Gameplay, robotID string, inputCh <-chan interfa
 	if tag.MoveCount >= 1 {
 		return origin, false, fmt.Errorf("can not move")
 	}
-	gameplay, cursor, cancel, err := SelectPositionStep(gameplay, robotID, inputCh)
+	moveRange, err := GetRobotMoveRange(gameplay, robotID)
+	if err != nil {
+		return origin, false, err
+	}
+	gameplay, cursor, cancel, err := SelectPositionStep(gameplay, robotID, moveRange, inputCh)
 	if err != nil {
 		return origin, false, err
 	}
