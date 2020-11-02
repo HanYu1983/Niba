@@ -706,15 +706,15 @@
         (* (count nearbyHostile) 1)))))
 
 
-(defn getMenuData [gameplayCtx unit playerTurn? targetUnit]
+(defn getMenuData [gameplayCtx unit targetUnit]
   (s/assert ::gameplay-spec/robot unit)
-  (s/assert boolean? playerTurn?)
   (s/assert (s/nilable ::gameplay-spec/robot) targetUnit)
   (s/assert
-   (s/tuple ::view-spec/menu ::view-spec/menuCursorData)
+   (s/tuple (s/coll-of (s/coll-of any?)) ::view-spec/menu-cursor-data)
    (if (not (isBelongToPlayer gameplayCtx unit))
      [[["cancel"]] {}]
-     (let [isBattleMenu (:unitBattleMenu gameplayCtx)
+     (let [playerTurn? (-> gameplayCtx :active-player-key (= :player))
+           isBattleMenu (:battle-menu-component gameplayCtx)
            weapons (s/assert
                     (s/* ::gameplay-spec/weaponState)
                     (->> (getUnitWeapons {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)

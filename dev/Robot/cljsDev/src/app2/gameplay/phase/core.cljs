@@ -32,11 +32,11 @@
             [ctx done? err] (if selection
                               (let [cursor1 (-> ctx :unit-menu-component :menu-cursor getCursor1)
                                     cursor2 (-> ctx :unit-menu-component :menu-cursor getCursor2)
-                                    {:keys [transform-idx weapon-idx weapons]} (-> ctx :unit-menu-component :menu-cursor-data)
+                                    {:keys [transform-idx weaponIdx weapons]} (-> ctx :unit-menu-component :menu-cursor-data)
                                     [ctx done? err] (s/assert
                                                      (s/tuple any? boolean? any?)
                                                      (cond
-                                                       (= weapon-idx cursor1)
+                                                       (= weaponIdx cursor1)
                                                        (let [weapon (s/assert
                                                                      ::gameplay-spec/weaponState
                                                                      (nth weapons cursor2))

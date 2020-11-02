@@ -7,7 +7,8 @@
   (testing "test-cursor-component-move-cursor"
     (async done
            (a/go (let [gameplay {:cursor [10 10]
-                                 :mapsize [20 20]}
+                                 :mapsize [20 20]
+                                 :camera [0 0]}
                        [gameplay err] (a/<! (handle-cursor-component gameplay [:on-click "w"]))
                        _ (is (nil? err))
                        _ (is (= [10 9] (:cursor gameplay)))

@@ -7,7 +7,7 @@
             [app2.tool.battleMenu :refer [setLeftAction setRightActionFromReaction]]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect]]))
 
-(defn handle-battle-menu [ctx unit playerTurn? [cmd args]]
+(defn handle-battle-menu [ctx unit [cmd args]]
   (go
     (try
       (s/assert ::view-spec/cursor-component ctx)
@@ -16,14 +16,15 @@
       (s/assert ::gameplay-spec/robot unit)
       (cond
         (= :on-click cmd)
-        (let [handleWeaponView (fn [ctx]
+        (let [playerTurn? (-> ctx :active-player-key (= :player))
+              handleWeaponView (fn [ctx]
                                  (let [{:keys [menu-cursor menu-cursor-data]} (-> ctx :unit-menu-component)
                                        battle-menu (:battle-menu-component ctx)
-                                       {:keys [weapons weapon-idx]} menu-cursor-data
+                                       {:keys [weapons weaponIdx]} menu-cursor-data
                                        cursor1 (getCursor1 menu-cursor)
                                        cursor2 (getCursor2 menu-cursor)
                                        ; 選到武器時, 更新面板
-                                       battle-menu (if (= cursor1 weapon-idx)
+                                       battle-menu (if (= cursor1 weaponIdx)
                                                      (let [weapon (nth weapons cursor2)]
                                                        (cond-> battle-menu
                                                          true
@@ -41,7 +42,7 @@
             (let [{:keys [menu-cursor menu-cursor-data]} (-> ctx :unit-menu-component)
                   battle-menu (:battle-menu-component ctx)
                   cursor1 (getCursor1 menu-cursor)
-                  {:keys [weapon-idx]} menu-cursor-data
+                  {:keys [weaponIdx]} menu-cursor-data
                   select (getSelect menu-cursor)
                   {rightUnit :unit [_ rightWeapon] :action} (get battle-menu 1)
                   ; 如果選到evade
@@ -56,7 +57,7 @@
                   ; 套用
                   ctx (assoc ctx :battle-menu-component battle-menu)
                   ; 上下移動時也會選到武器
-                  ctx (if (= cursor1 weapon-idx)
+                  ctx (if (= cursor1 weaponIdx)
                         (handleWeaponView ctx)
                         ctx)]
               [ctx nil])
