@@ -8,7 +8,7 @@
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]])
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
-(defasync menu-step [ctx any?, menu-key keyword?, unit any? input-ch any?] [ctx nil err] (s/tuple any? (s/nilable string?) any?)
+(defasync menu-step [ctx any?, menu-key keyword?, unit any? input-ch any?] [ctx nil err] (s/tuple any? (s/nilable (s/or :i number? :s string? :k keyword?)) any?)
   (loop [ctx ctx]
     (let [evt (<! input-ch)
           ctx (async-> ctx
@@ -17,7 +17,7 @@
                        (handle-attack-range-component menu-key unit evt))
 
           [ctx cancel? selection err] (s/assert
-                                       (s/tuple any? boolean? (s/nilable string?) any?)
+                                       (s/tuple any? boolean? (s/nilable (s/or :i number? :s string? :k keyword?)) any?)
                                        (cond
                                          (= [:on-click "'"] evt)
                                          [ctx true nil nil]

@@ -17,8 +17,8 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 
-(defasync unit-select-single-target [ctx ::gameplay-spec/gameplayCtx, args (s/keys :req-un [::gameplay-spec/robot ::gameplay-spec/weapon]), input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
-  [ctx nil])
+(defasync unit-select-single-target [ctx ::gameplay-spec/gameplayCtx, args (s/keys :req-un [::gameplay-spec/unit ::gameplay-spec/weapon]), input-ch any?] [ctx false err] (s/tuple ::gameplay-spec/gameplayCtx boolean? any?)
+  [ctx false nil])
 
 (declare fixUnitSkyGround)
 
@@ -49,15 +49,15 @@
                                                              [ctx false nil])
 
                                                            (= "single" weaponType)
-                                                           (let [[ctx isEnd] (<! (unit-select-single-target ctx {:unit unit :weapon weapon} input-ch))]
-                                                             (if isEnd
-                                                               [ctx isEnd nil]
+                                                           (let [[ctx isEnd err] (<! (unit-select-single-target ctx {:unit unit :weapon weapon} input-ch))]
+                                                             (if (or isEnd err)
+                                                               [ctx isEnd err]
                                                                [ctx false nil]))
 
                                                            (= "line" weaponType)
-                                                           (let [[ctx isEnd] [ctx false]]
-                                                             (if isEnd
-                                                               [ctx isEnd nil]
+                                                           (let [[ctx isEnd err] [ctx false nil]]
+                                                             (if (or isEnd err)
+                                                               [ctx isEnd err]
                                                                [ctx false nil]))
 
                                                            :else
