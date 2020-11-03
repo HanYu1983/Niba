@@ -16,3 +16,9 @@
     (if *test
       (println "alert:" msg)
       (println "alert:" msg))))
+
+(defn animate-targeting-aim [ctx args]
+  (go
+    (if *test
+      (println "animate-targeting-aim:")
+      (println "animate-targeting-aim:"))))
