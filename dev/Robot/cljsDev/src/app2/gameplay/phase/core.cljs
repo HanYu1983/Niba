@@ -7,24 +7,46 @@
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.move-range :refer [handle-move-range-component]]
+            [app2.component.attack-range :refer [handle-attack-range-component]]
+            [app2.component.battle-menu :refer [handle-battle-menu]]
             [app2.gameplay.phase.step.core :refer [menu-step select-position-step]]
             [app2.gameplay.phase.hook.core :refer [create-system-menu-component create-unit-menu-component]]
             [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start alert animate-targeting-aim]]
             [app2.tool.const :refer [*test search-position]]
             [app2.tool.gameplay-spec :as gameplay-spec]
+            [app2.tool.view-spec :as view-spec]
             [app2.tool.battleMenu :as battleMenu]
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect mapCursor1 mapCursor2]]
             [tool.async :refer [async-reduce]])
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 
-(defasync unit-battle-menu-phase [ctx any?, args any?, input-ch any?] [ctx nil] any?
-  [ctx nil])
+(defasync unit-battle-menu-phase [ctx any?, args (s/keys :req-un [::view-spec/battle-menu-component]), input-ch any?] [ctx nil] any?
+  (let [{:keys [battle-menu-component]} args
+        [{left :unit leftAction :action} {right :unit}] battle-menu-component
+        ; 先打開battle menu才能正確的產生battle的unit menu
+        ctx (assoc ctx :battle-menu-component battle-menu-component)
+        ; 建立unit menu
+        [menu-component err] (create-unit-menu-component ctx left right)
+        _ (when err (throw err))
+        ctx (assoc ctx :unit-menu-component menu-component)]
+    (loop [ctx ctx]
+      (let [evt (<! input-ch)
+            ctx (async-> ctx
+                         (handle-debug evt)
+                         (handle-cursor-component evt)
+                         (handle-move-range-component true evt)
+                         (handle-camera-component evt)
+                         (handle-attack-range-component evt :unit-menu-component left)
+                         (handle-battle-menu evt left))]
+        (if false
+          [(dissoc ctx :battle-menu-component) nil]
+          (recur ctx))))))
 
 (defasync unit-select-single-target [ctx ::gameplay-spec/gameplayCtx, args (s/keys :req-un [::gameplay-spec/unit ::gameplay-spec/weapon]), input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
   (loop [ctx ctx]
     (let [{:keys [unit weapon]} args
-          [ctx _ cursor err] (<! (select-position-step ctx input-ch))
+          [ctx cursor err] (<! (select-position-step ctx input-ch))
           _ (when err (throw err))
           unitAtCursor (search-position (:units ctx) cursor)
           [ctx done? err] (if unitAtCursor
@@ -52,11 +74,10 @@
                                 (let [_ (<! (animate-targeting-aim nil {:units (map #(->> (getUnitInfo {:ctx ctx :lobbyCtx (:lobbyCtx ctx)} %)
                                                                                           (mapUnitToLocal ctx nil)) [unit unitAtCursor])}))
                                       [ctx isEnd err] (<! (unit-battle-menu-phase ctx
-                                                                                  {:battleMenu (-> battleMenu/defaultModel
-                                                                                                   (battleMenu/setUnits unit unitAtCursor)
-                                                                                                   (battleMenu/setLeftAction [:attack weapon] ctx getUnitHitRate)
-                                                                                                   (battleMenu/setRightActionFromReaction ctx getUnitHitRate thinkReaction))
-                                                                                   :playerTurn? true}
+                                                                                  {:battle-menu-component (-> battleMenu/defaultModel
+                                                                                                              (battleMenu/setUnits unit unitAtCursor)
+                                                                                                              (battleMenu/setLeftAction [:attack weapon] ctx getUnitHitRate)
+                                                                                                              (battleMenu/setRightActionFromReaction ctx getUnitHitRate thinkReaction))}
                                                                                   input-ch))
                                       _ (when err (throw err))]
                                   (if isEnd
@@ -224,6 +245,7 @@
                                                       [ctx false err]))))
                                               [ctx false nil]
                                               (->> (:players ctx)
+                                                   vals
                                                    (filter #(not= :player (:key %))))))))
           _ (when err (throw err))]
       (if end?

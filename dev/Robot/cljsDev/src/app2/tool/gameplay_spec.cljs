@@ -10,7 +10,7 @@
 (s/def ::en number?)
 (s/def ::curage int?)
 (s/def ::player (s/keys :req-un [::key ::faction]))
-(s/def ::players (s/coll-of ::player))
+(s/def ::players (s/map-of keyword? ::player))
 
 (s/def ::bulletCount int?)
 (s/def ::weaponLevel int?)

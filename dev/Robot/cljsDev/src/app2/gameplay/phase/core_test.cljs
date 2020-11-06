@@ -39,12 +39,12 @@
                      :mapsize [20 20]
                      :viewsize [10 10]
                      :units {}
-                     :players [{:key :player
-                                :faction 0}
-                               {:key :ai1
-                                :faction 1}
-                               {:key :ai2
-                                :faction 1}]
+                     :players {:player {:key :player
+                                        :faction 0}
+                               :ai1 {:key :ai1
+                                     :faction 1}
+                               :ai2 {:key :ai2
+                                     :faction 1}}
                      :lobbyCtx {:robots {}
                                 :pilots {}
                                 :robotByPilot {}
@@ -61,13 +61,7 @@
          (let [inputCh (chan)
                _ (go
                    (let [[ctx err] (<! (player-turn (merge basic-gameplay
-                                                             {:players [{:key :player
-                                                                         :faction 0}
-                                                                        {:key :ai1
-                                                                         :faction 1}
-                                                                        {:key :ai2
-                                                                         :faction 1}]
-                                                              :units {:a {:key :a
+                                                             {:units {:a {:key :a
                                                                           :position [0 0]
                                                                           :playerKey :player
                                                                           :robotState {:robotKey :gundam
@@ -162,13 +156,7 @@
          (let [inputCh (chan)
                _ (go
                    (let [[ctx err] (<! (gameplay-loop (merge basic-gameplay
-                                                               {:players [{:key :player
-                                                                           :faction 0}
-                                                                          {:key :ai1
-                                                                           :faction 1}
-                                                                          {:key :ai2
-                                                                           :faction 1}]
-                                                                :active-player-key :player})
+                                                               {:active-player-key :player})
                                                         inputCh))
                          _ (println "test-2:" err)
                          _ (is (or (nil? err)
@@ -213,13 +201,7 @@
          (let [inputCh (chan)
                _ (go
                    (let [[ctx err] (<! (player-turn (merge basic-gameplay
-                                                             {:players [{:key :player
-                                                                         :faction 0}
-                                                                        {:key :ai1
-                                                                         :faction 1}
-                                                                        {:key :ai2
-                                                                         :faction 1}]
-                                                              :units {:a {:key :a
+                                                             {:units {:a {:key :a
                                                                           :position [5 0]
                                                                           :playerKey :player
                                                                           :robotState {:robotKey :gundam
@@ -366,14 +348,25 @@
                  (testing "cursor必須為0"
                    (is (= 0 (-> @atom-gameplay :unit-menu-component :menu-cursor :cursor))))
                  (testing "weaponIdx為1"
-                   (is (= 1 (-> @atom-gameplay :unit-menu-component :menu-cursor-data :weaponIdx))))
-                 (println @atom-gameplay))
+                   (is (= 1 (-> @atom-gameplay :unit-menu-component :menu-cursor-data :weaponIdx)))))
 
                (testing "選擇武器"
                  (>! inputCh [:on-click "s"])
                  (>! inputCh fetch) (<! (timeout 0))
                  (testing "cursor必須為1"
                    (is (= 1 (-> @atom-gameplay :unit-menu-component :menu-cursor :cursor))))
+                 (testing "攻擊範圍必須包含(0, 1)"
+                   (let [attackRange (into #{} (:attackRange @atom-gameplay))]
+                     (is (attackRange [1 0]))))
+                 ; 按下武器
                  (>! inputCh [:on-click "space"])
-                 (>! inputCh fetch) (<! (timeout 0)))))
+                 ; 右移一格
+                 (>! inputCh [:on-click "d"])
+                 ; 點敵人
+                 (>! inputCh [:on-click "space"])
+                 (>! inputCh fetch) (<! (timeout 0))
+                 (testing "必須打開battle menu"
+                   (is (:battle-menu-component @atom-gameplay)))
+
+                 (js/console.log (clj->js @atom-gameplay)))))
            (done))))
