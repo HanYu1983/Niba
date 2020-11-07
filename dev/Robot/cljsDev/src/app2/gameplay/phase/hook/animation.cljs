@@ -22,3 +22,9 @@
     (if *test
       (println "animate-targeting-aim:")
       (println "animate-targeting-aim:"))))
+
+(defn animate-battle [ctx args]
+  (go
+    (if *test
+      (println "animate-battle:")
+      (println "animate-battle:"))))

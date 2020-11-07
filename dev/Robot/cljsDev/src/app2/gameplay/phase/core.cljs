@@ -2,16 +2,17 @@
   (:require [clojure.spec.alpha :as s]
             [clojure.core.async :refer [go <!]]
             [clojure.set]
-            [app2.data.data :refer [invalidWeapon? getWeaponType unitOnTransform updateUnit getUnitWeaponRange isFriendlyUnit getUnitInfo mapUnitToLocal getUnitHitRate thinkReaction]]
+            [app2.data.data :as data :refer [invalidWeapon? getWeaponType unitOnTransform updateUnit getUnitWeaponRange isFriendlyUnit getUnitInfo mapUnitToLocal getUnitHitRate thinkReaction]]
             [app2.component.camera :refer [handle-camera-component]]
             [app2.component.cursor :refer [handle-cursor-component]]
             [app2.component.debug :refer [handle-debug]]
             [app2.component.move-range :refer [handle-move-range-component]]
             [app2.component.attack-range :refer [handle-attack-range-component]]
             [app2.component.battle-menu :refer [handle-battle-menu]]
+            [app2.component.menu :refer [handle-menu-component]]
             [app2.gameplay.phase.step.core :refer [menu-step select-position-step]]
             [app2.gameplay.phase.hook.core :refer [create-system-menu-component create-unit-menu-component]]
-            [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start alert animate-targeting-aim]]
+            [app2.gameplay.phase.hook.animation :refer [animate-player-turn-start alert animate-targeting-aim animate-battle]]
             [app2.tool.const :refer [*test search-position]]
             [app2.tool.gameplay-spec :as gameplay-spec]
             [app2.tool.view-spec :as view-spec]
@@ -21,7 +22,8 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 
-(defasync unit-battle-menu-phase [ctx any?, args (s/keys :req-un [::view-spec/battle-menu-component]), input-ch any?] [ctx nil] any?
+(defasync unit-battle-menu-phase [ctx any?, args (s/keys :req-un [::view-spec/battle-menu-component]), input-ch any?] [ctx false err] any?
+  (println "unit-battle-menu-phase")
   (let [{:keys [battle-menu-component]} args
         [{left :unit leftAction :action} {right :unit}] battle-menu-component
         ; 先打開battle menu才能正確的產生battle的unit menu
@@ -37,13 +39,104 @@
                          (handle-cursor-component evt)
                          (handle-move-range-component true evt)
                          (handle-camera-component evt)
-                         (handle-attack-range-component evt :unit-menu-component left)
-                         (handle-battle-menu evt left))]
+                         (handle-attack-range-component :unit-menu-component left evt)
+                         (handle-menu-component :unit-menu-component evt)
+                         (handle-battle-menu left evt))
+            ctx (cond
+                  (= "space" args)
+                  (let [{:keys [battle-menu-component unit-menu-component]} ctx
+                        [{left :unit} {right :unit}] battle-menu-component
+                        {:keys [menu-cursor menu-cursor-data]} unit-menu-component
+                        {:keys [weaponIdx weapons]} menu-cursor-data
+                        playerTurn? (= :player (-> ctx :active-player-key))
+                        fixRight? (not playerTurn?)
+                        cursor1 (getCursor1 menu-cursor)
+                        select (getSelect menu-cursor)
+                        handleBattle (fn [ctx leftAction rightAction]
+                                       (go
+                                         (s/assert
+                                          ::gameplay-spec/gameplayCtx
+                                          (let [result (s/assert
+                                                        ::data/actionResult
+                                                        (if fixRight?
+                                                          (->> (data/calcActionResult ctx right rightAction left leftAction)
+                                                               reverse
+                                                               (into []))
+                                                          (data/calcActionResult ctx left leftAction right rightAction)))
+                                                [leftAfter rightAfter] (data/applyActionResult ctx left leftAction right rightAction result)
+                                                _ (<! (animate-battle nil {:units (map #(->> (data/getUnitInfo {:gameplayCtx ctx :lobbyCtx (:lobbyCtx ctx)} %)
+                                                                                             (data/mapUnitToLocal ctx nil)) (cond-> [left right]
+                                                                                                                              fixRight? reverse))
+                                                                           :unitsAfter (map #(->> (data/getUnitInfo {:gameplayCtx ctx :lobbyCtx (:lobbyCtx ctx)} %)
+                                                                                                  (data/mapUnitToLocal ctx nil)) (cond-> [leftAfter rightAfter]
+                                                                                                                                   fixRight? reverse))
+                                                                           :results (cond-> result fixRight? reverse)}))
+                                                ctx (-> ctx
+                                                        (data/updateUnit left (constantly leftAfter))
+                                                        (data/updateUnit right (constantly rightAfter)))
+                                         ; 進攻方死亡
+                                                ctx (s/assert
+                                                     ::gameplay-spec/gameplayCtx
+                                                     (if (data/isUnitDead? ctx leftAfter)
+                                                       (let [ctx (<! (data/onGameplayUnitDead ctx leftAfter input-ch))]
+                                                         ctx)
+                                                       ctx))
+                                         ; 防守方死亡
+                                                ctx (s/assert
+                                                     ::gameplay-spec/gameplayCtx
+                                                     (if (data/isUnitDead? ctx rightAfter)
+                                                       (let [ctx (<! (data/onGameplayUnitDead ctx rightAfter input-ch))]
+                                                         ctx)
+                                                       ctx))
+                                                ctx (dissoc ctx :attackRange :checkHitRate)]
+                                            ctx))))]
+                    (cond
+                      (= cursor1 weaponIdx)
+                      (let [cursor2 (tool.menuCursor/getCursor2 menu-cursor)
+                            weapon (s/assert
+                             ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
+                                    ::gameplay-spec/weaponState
+                                    (nth weapons cursor2))
+                            attackRange (data/getUnitWeaponRange ctx left weapon)
+                            isTargetInRange (some #(= (:position right) %) attackRange)
+                            invalidWeaponMsg (data/invalidWeapon? ctx left weapon right)]
+                        (cond
+                          invalidWeaponMsg
+                          (do
+                            (<! (alert nil {:message invalidWeaponMsg}))
+                            ctx)
+
+                          (not isTargetInRange)
+                          (do
+                            (<! (alert nil {:message (str "不在範圍內")}))
+                            ctx)
+
+                          :else
+                          (let [leftAction (get-in battle-menu-component [0 :action])
+                                rightAction (get-in battle-menu-component [1 :action])
+                                ctx (<! (handleBattle ctx leftAction rightAction))]
+                            [ctx true])))
+
+                      (#{"guard" "evade"} select)
+                      (let [leftAction [(keyword select)]
+                            rightAction (get-in battle-menu-component [1 :action])
+                            ctx (<! (handleBattle ctx leftAction rightAction))]
+                        [ctx true])
+
+                      (= "cancel" select)
+                      [ctx false]
+
+                      :else
+                      ctx))
+
+                  :else
+                  ctx)]
         (if false
-          [(dissoc ctx :battle-menu-component) nil]
+          [(dissoc ctx :battle-menu-component) true nil]
           (recur ctx))))))
 
 (defasync unit-select-single-target [ctx ::gameplay-spec/gameplayCtx, args (s/keys :req-un [::gameplay-spec/unit ::gameplay-spec/weapon]), input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
+  (println "unit-select-single-target")
   (loop [ctx ctx]
     (let [{:keys [unit weapon]} args
           [ctx cursor err] (<! (select-position-step ctx input-ch))
@@ -79,6 +172,7 @@
                                                                                                               (battleMenu/setLeftAction [:attack weapon] ctx getUnitHitRate)
                                                                                                               (battleMenu/setRightActionFromReaction ctx getUnitHitRate thinkReaction))}
                                                                                   input-ch))
+                                      _ (println "can not reach here:" err)
                                       _ (when err (throw err))]
                                   (if isEnd
                                     [ctx isEnd nil]
@@ -93,6 +187,7 @@
 (declare fixUnitSkyGround)
 
 (defasync unit-menu [ctx ::gameplay-spec/gameplayCtx, unit ::gameplay-spec/unit, input-ch any?] [ctx err] (s/tuple ::gameplay-spec/gameplayCtx any?)
+  (println "unit-menu")
   (let [[menu-component err] (create-unit-menu-component ctx unit nil)
         _ (when err (throw err))
         ctx (assoc ctx :unit-menu-component menu-component)]

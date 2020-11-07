@@ -8,15 +8,17 @@
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect]]))
 
 (defn handle-battle-menu [ctx unit [cmd args]]
+  (println "handle-battle-menu")
   (go
     (try
       (s/assert ::view-spec/cursor-component ctx)
-      (s/assert ::view-spec/battle-menu-component ctx)
+      (s/assert ::view-spec/battle-menu-component (:battle-menu-component ctx))
       (s/assert ::view-spec/unit-menu-component (:unit-menu-component ctx))
       (s/assert ::gameplay-spec/robot unit)
       (cond
         (= :on-click cmd)
         (let [playerTurn? (-> ctx :active-player-key (= :player))
+              _ (println "playerTurn?:" playerTurn?)
               handleWeaponView (fn [ctx]
                                  (let [{:keys [menu-cursor menu-cursor-data]} (-> ctx :unit-menu-component)
                                        battle-menu (:battle-menu-component ctx)

@@ -7,6 +7,7 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 (defasync handle-menu-component [ctx any?, menu-key keyword?, evt any?] [ctx err] any?
+  (println "handle-menu-component")
   (s/assert ::view-spec/menu-component (get-in ctx [menu-key]))
   (cond
     (= [:on-click "w"] evt)

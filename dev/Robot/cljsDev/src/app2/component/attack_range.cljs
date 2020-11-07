@@ -24,6 +24,7 @@
       [])))
 
 (defn handle-attack-range-component [ctx menu-key unit [cmd args]]
+  (println "handle-attack-range-component")
   (go
     (try
       (cond

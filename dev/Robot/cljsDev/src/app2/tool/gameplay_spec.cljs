@@ -72,5 +72,5 @@
 (s/def ::cause #{:giveUp :pass})
 (s/def ::done (s/keys :req-un [::cause]))
 (s/def ::active-player-key ::key)
-(s/def ::gameplayCtx (s/keys :req-un [::units ::numberOfTurn ::money ::players]
-                             :req-opt [::done ::active-player-key]))
+(s/def ::gameplayCtx (s/keys :req-un [::units ::numberOfTurn ::money ::players ::active-player-key]
+                             :req-opt [::done]))

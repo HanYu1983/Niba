@@ -45,6 +45,7 @@
                                      :faction 1}
                                :ai2 {:key :ai2
                                      :faction 1}}
+                     :active-player-key :player
                      :lobbyCtx {:robots {}
                                 :pilots {}
                                 :robotByPilot {}
@@ -338,10 +339,11 @@
                          _ (println "test-5:" err)
                          _ (is (or (nil? err)
                                    (= "chan closed" (.-message err))))
-                         _ (when err (throw err))]))]
+                         ;_ (when err (throw err))
+                         ]))]
            (go
              (testing "進入battle menu"
-               
+
                (testing "一開始單位菜單必須存在"
                  (>! inputCh fetch) (<! (timeout 0))
                  (is ((comp not nil?) (:unit-menu-component @atom-gameplay)))
@@ -367,6 +369,17 @@
                  (>! inputCh fetch) (<! (timeout 0))
                  (testing "必須打開battle menu"
                    (is (:battle-menu-component @atom-gameplay)))
+                 (testing "單位菜單必須有2個選項(weapon,cancel)"
+                   (is (= 2 (count (-> @atom-gameplay :unit-menu-component :menu-cursor :menu))))))
 
-                 (js/console.log (clj->js @atom-gameplay)))))
-           (done))))
+               (testing "移到cancel"
+                 (>! inputCh [:on-click "s"])
+                 (>! inputCh fetch) (<! (timeout 0))
+                 (is (= "cancel" (-> @atom-gameplay :unit-menu-component :menu-cursor getSelect))))
+
+               (>! inputCh [:on-click "space"])
+               (>! inputCh fetch) (<! (timeout 0))
+
+               (js/console.log (clj->js @atom-gameplay)))
+             (close! inputCh)
+             (done)))))

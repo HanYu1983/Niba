@@ -9,6 +9,7 @@
 
 
 (defn handle-cursor-component [gameplayCtx [cmd args]]
+  (println "handle-cursor-component")
   (go
     (try
       (s/assert ::app2.tool.view-spec/cursor-component gameplayCtx)

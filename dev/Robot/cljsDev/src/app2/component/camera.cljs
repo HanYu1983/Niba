@@ -9,6 +9,7 @@
 
 
 (defn handle-camera-component [gameplayCtx [cmd args]]
+  (println "handle-camera-component")
   (go
     (try
       (s/assert ::app2.tool.view-spec/camera-component gameplayCtx)

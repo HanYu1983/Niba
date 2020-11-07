@@ -3,6 +3,7 @@
             [clojure.core.async :refer [go]]))
 
 (defn handle-debug [ctx [cmd args :as evt]]
+  (println "handle-debug")
   (go
     (cond
       (fn? cmd)
