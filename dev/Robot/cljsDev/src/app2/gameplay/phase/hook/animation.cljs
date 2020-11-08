@@ -28,3 +28,9 @@
     (if *test
       (println "animate-battle:")
       (println "animate-battle:"))))
+
+(defn animate-unit-dead [ctx args]
+  (go
+    (if *test
+      (println "animate-unit-dead:")
+      (println "animate-unit-dead:"))))

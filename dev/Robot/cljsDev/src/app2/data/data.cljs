@@ -1,6 +1,8 @@
 (ns app2.data.data
   (:require [clojure.spec.alpha :as s]
+            [clojure.core.async :refer [go <! go-loop]]
             [clojure.set]
+            [cljs.reader]
             ["./data.js" :as dataJson]
             [app2.tool.battleMenu :as battleMenu]
             [app2.tool.const :refer [search-region search-position]]
@@ -1228,3 +1230,224 @@
                                         :focus (= cursor idx)}))
                                    (range)
                                    units)}))})
+
+
+(defn onGameplayUnitGetItemAward [gameplayCtx unit item]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (s/assert ::gameplay-spec/item item)
+  (s/assert
+   ::gameplay-spec/gameplayCtx
+   gameplayCtx))
+
+(defn onUnitMove [gameplayCtx unit pos]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (s/assert ::gameplay-spec/position pos)
+  (s/assert
+   ::gameplay-spec/robot
+   (let [vel (->> (map - (:position unit) pos)
+                  (repeat 2)
+                  (apply map *)
+                  (apply +))]
+     (-> unit
+         (merge {:position pos})
+         (update-in [:robotState :tags :moveCount] #(if % (inc %) 1))
+         (update-in [:robotState :tags] #(conj % [:velocity vel]))))))
+
+(defn onUnitDone [gameplayCtx unit]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (s/assert
+   ::gameplay-spec/robot
+   (-> unit
+       (update-in [:robotState :tags] #(conj % [:done true])))))
+
+(defn onUnitTurnEnd [gameplayCtx unit]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (s/assert
+   ::gameplay-spec/robot
+   (-> unit
+       (update-in [:robotState :tags] #(dissoc % :done :moveCount)))))
+
+
+(defn onGameplayUnitDead [gameplayCtx targetUnit]
+  (go
+    (let [; 移除死亡機體
+          gameplayCtx (update gameplayCtx :units (fn [units]
+                                                   (dissoc units (:key targetUnit))))
+          #__ #_(<! (animate-unit-dead nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} targetUnit)
+                                                       (mapUnitToLocal gameplayCtx nil))}))
+          ; 增加它方全體氣力
+          gameplayCtx (update gameplayCtx :units
+                              (partial reduce-kv (fn [units k unit]
+                                                   (let [unit (if (not= (:playerKey unit) (:playerKey targetUnit))
+                                                                (update-in unit [:robotState :pilotState]
+                                                                           (fn [pilotState]
+                                                                             (when pilotState
+                                                                               (update pilotState :curage inc))))
+                                                                unit)]
+                                                     (assoc units k unit)))
+                                       {}))
+          money 1000
+          gameplayCtx (if (not= :player (:playerKey targetUnit))
+                        (do
+                          #_(<! (alert nil {:message (str "earn " money)}))
+                          (update gameplayCtx :money #(+ % money)))
+                        gameplayCtx)]
+      gameplayCtx)))
+
+(defn isUnitDead? [gameplayCtx unit]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (s/assert
+   boolean?
+   (<= (get-in unit [:robotState :hp]) 0)))
+
+(defn fixUnitSkyGround [gameplayCtx unit]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (s/assert ::gameplay-spec/robot unit)
+  (go
+    (s/assert
+     ::gameplay-spec/robot
+     (let [[ground naval air _] (getUnitSuitability {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+           _ naval
+           sky? (-> unit :robotState :tags :sky)
+           unit (cond
+                  ; 如果在空中卻不能飛, 降到地面
+                  (and sky? (zero? air))
+                  (do
+                    #_(<! (common/unitGroundAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                                 (mapUnitToLocal gameplayCtx nil))}))
+                    (update-in unit [:robotState :tags] #(dissoc % :sky)))
+
+                  ; 如果在地面卻沒有地面能力又有空中能力的話, 飛到空中
+                  (and (not sky?) (zero? ground) (> air 0))
+                  (do
+                    #_(<! (common/unitSkyAnim nil {:unit (->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                              (mapUnitToLocal gameplayCtx nil))}))
+                    (update-in unit [:robotState :tags] #(conj % [:sky true])))
+
+                  :else
+                  unit)]
+       unit))))
+
+
+(defn onEnemyTurnStart [gameplayCtx enemy]
+  (go
+    #_(if (= :player enemy)
+        (<! (common/playerTurnStart nil nil inputCh outputCh))
+        (<! (common/enemyTurnStart nil enemy inputCh outputCh)))
+    (s/assert
+     ::gameplay-spec/gameplayCtx
+     (let [unitList (s/assert
+                     (s/coll-of ::gameplay-spec/robot)
+                     (->> (vals (:units gameplayCtx))
+                          (filter #(= enemy (:playerKey %)))))
+           nextUnitList (s/assert
+                         (s/coll-of ::gameplay-spec/robot)
+                         (<! (go-loop [[unit & rest] unitList
+                                       after []]
+                               (if unit
+                                 (let [nextUnit unit
+                                       ; award
+                                       award? (s/assert
+                                               boolean?
+                                               (-> (getTerrainKey gameplayCtx (:position unit))
+                                                   (= :award)))
+                                       nextUnit (s/assert
+                                                 ::gameplay-spec/robot
+                                                 (if award?
+                                                   (let [; move cursor
+                                                         {:keys [viewsize mapsize]} gameplayCtx
+                                                         [vw vh] viewsize
+                                                         [mw mh] mapsize
+                                                         gameplayCtx (assoc gameplayCtx :cursor (:position unit))
+                                                         gameplayCtx (assoc gameplayCtx :camera (->> (:position unit)
+                                                                                                     (map + [(- (js/Math.floor (/ vw 2))) (- (js/Math.floor (/ vh 2)))])
+                                                                                                     ((fn [[x y]]
+                                                                                                        [(max 0 (min x (- mw vw)))
+                                                                                                         (max 0 (min y (- mh vh)))]))))
+                                                         #__ #_(<! (common/paint nil (render gameplayCtx) inputCh outputCh))
+
+                                                           ; award animation
+                                                         maxHp (getUnitMaxHp {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                         maxEn (getUnitMaxEn {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} unit)
+                                                         nextUnit (-> nextUnit
+                                                                      (update-in [:robotState :hp] #(min (+ % (* maxHp 0.2)) maxHp))
+                                                                      (update-in [:robotState :en] #(min (+ % (* maxEn 0.2)) maxEn)))
+                                                         #__ #_(<! (common/unitGetAwardAnim nil (map #(->> (getUnitInfo {:gameplayCtx gameplayCtx :lobbyCtx (:lobbyCtx gameplayCtx)} %)
+                                                                                                           (mapUnitToLocal gameplayCtx nil)) [unit nextUnit]) inputCh outputCh))]
+                                                     nextUnit)
+                                                   nextUnit))
+                                         ; remove velocity
+                                       nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :velocity))
+                                       nextUnit (update-in nextUnit [:robotState :tags] #(dissoc % :attackWeapon))]
+                                   (recur rest (conj after nextUnit)))
+                                 after))))
+           gameplayCtx (s/assert
+                        ::gameplay-spec/gameplayCtx
+                        (->> (zipmap unitList nextUnitList)
+                             (reduce (fn [gameplayCtx [old next]]
+                                       (updateUnit gameplayCtx old (constantly next)))
+                                     gameplayCtx)))]
+       gameplayCtx))))
+
+(defn onEnemyTurnEnd [gameplayCtx enemy]
+  (go
+    (s/assert
+     ::gameplay-spec/gameplayCtx
+     (let [unitList (s/assert
+                     (s/coll-of ::gameplay-spec/robot)
+                     (->> (vals (:units gameplayCtx))
+                          (filter #(= enemy (:playerKey %)))))
+           nextUnitList (s/assert
+                         (s/coll-of ::gameplay-spec/robot)
+                         (<! (go-loop [[unit & rest] unitList
+                                       after []]
+                               (if unit
+                                 (let [nextUnit unit
+                                       nextUnit (onUnitTurnEnd gameplayCtx nextUnit)]
+                                   (recur rest (conj after nextUnit)))
+                                 after))))
+           gameplayCtx (s/assert
+                        ::gameplay-spec/gameplayCtx
+                        (->> (zipmap unitList nextUnitList)
+                             (reduce (fn [gameplayCtx [old next]]
+                                       (updateUnit gameplayCtx old (constantly next)))
+                                     gameplayCtx)))]
+       gameplayCtx))))
+
+(defn onPlayerTurnStart [gameplayCtx]
+  (onEnemyTurnStart gameplayCtx :player))
+
+(defn onPlayerTurnEnd [gameplayCtx]
+  (onEnemyTurnEnd gameplayCtx :player))
+
+(def gameplayCtx {:map [[]]
+                  :camera [0 0]
+                  :cursor [0 0]
+                  :viewsize [20 20]
+                  :mapsize [20 20]
+                  :units {}
+                  :moveRange []
+                  :players {:player {:faction 0 :playerState nil}
+                            :ai1 {:faction 1 :playerState nil}}
+                  :numberOfTurn 0
+                  :money 0})
+
+(defn save! [gameplayCtx]
+  (s/assert ::gameplay-spec/gameplayCtx gameplayCtx)
+  (let [_ (.setItem js/localStorage "gameplay" (str gameplayCtx))]))
+
+(defn load! [gameplayCtx]
+  (s/assert
+   ::gameplay-spec/gameplayCtx
+   (let [gameplayMemonto (cljs.reader/read-string (.-gameplay js/localStorage))
+         gameplayCtx (s/assert
+                      ::gameplay-spec/gameplayCtx
+                      (if gameplayMemonto
+                        gameplayMemonto
+                        gameplayCtx))]
+     gameplayCtx)))

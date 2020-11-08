@@ -9,7 +9,7 @@
   (:require-macros [app2.tool.macros :refer [async-> defasync defnx]]))
 
 (defasync handle-move-range-component [ctx any?, update? boolean?, [cmd args] any?] [ctx err] any?
-  (println "handle-move-range-component")
+  ;(println "handle-move-range-component")
   (s/assert ::view-spec/moveRangeView ctx)
   (cond
     (= :on-click cmd)

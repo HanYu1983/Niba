@@ -8,7 +8,7 @@
             [tool.menuCursor :refer [getCursor1 getCursor2 getSelect]]))
 
 (defn handle-battle-menu [ctx unit [cmd args]]
-  (println "handle-battle-menu")
+  ;(println "handle-battle-menu")
   (go
     (try
       (s/assert ::view-spec/cursor-component ctx)

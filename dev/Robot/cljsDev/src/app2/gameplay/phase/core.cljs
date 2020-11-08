@@ -74,18 +74,20 @@
                                                 ctx (-> ctx
                                                         (data/updateUnit left (constantly leftAfter))
                                                         (data/updateUnit right (constantly rightAfter)))
-                                         ; 進攻方死亡
+
+                                                ; 進攻方死亡
                                                 ctx (s/assert
                                                      ::gameplay-spec/gameplayCtx
                                                      (if (data/isUnitDead? ctx leftAfter)
-                                                       (let [ctx (<! (data/onGameplayUnitDead ctx leftAfter input-ch))]
+                                                       (let [ctx (<! (data/onGameplayUnitDead ctx leftAfter))]
                                                          ctx)
                                                        ctx))
-                                         ; 防守方死亡
+
+                                                ; 防守方死亡
                                                 ctx (s/assert
                                                      ::gameplay-spec/gameplayCtx
                                                      (if (data/isUnitDead? ctx rightAfter)
-                                                       (let [ctx (<! (data/onGameplayUnitDead ctx rightAfter input-ch))]
+                                                       (let [ctx (<! (data/onGameplayUnitDead ctx rightAfter))]
                                                          ctx)
                                                        ctx))
                                                 ctx (dissoc ctx :attackRange :checkHitRate)]
@@ -94,7 +96,7 @@
                       (= cursor1 weaponIdx)
                       (let [cursor2 (tool.menuCursor/getCursor2 menu-cursor)
                             weapon (s/assert
-                             ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
+                                    ; 先假設weapons的size一定大於零, 若沒有武器可用, 應該不能出現武器選單
                                     ::gameplay-spec/weaponState
                                     (nth weapons cursor2))
                             attackRange (data/getUnitWeaponRange ctx left weapon)
@@ -103,12 +105,12 @@
                         (cond
                           invalidWeaponMsg
                           (do
-                            (<! (alert nil {:message invalidWeaponMsg}))
+                            (<! (alert {:message invalidWeaponMsg}))
                             ctx)
 
                           (not isTargetInRange)
                           (do
-                            (<! (alert nil {:message (str "不在範圍內")}))
+                            (<! (alert {:message (str "不在範圍內")}))
                             ctx)
 
                           :else
