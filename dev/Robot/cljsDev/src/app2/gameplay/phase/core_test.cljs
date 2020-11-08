@@ -379,6 +379,8 @@
 
                (>! inputCh [:on-click "space"])
                (>! inputCh fetch) (<! (timeout 0))
+               (testing "按下cancel後必須取消battle menu"
+                 (is (nil? (:battle-menu-component @atom-gameplay))))
 
                (js/console.log (clj->js @atom-gameplay)))
              (close! inputCh)
