@@ -1,9 +1,11 @@
 package app3
 
 import (
-	"sync"
+	"fmt"
+	"strconv"
 )
 
+/*
 type Player struct {
 	ID string
 }
@@ -159,90 +161,299 @@ func GameLoop(origin Gameplay) (Gameplay, error) {
 	}
 	return ctx, nil
 }
+*/
 
-type FunctionDrawCard struct {
-}
+const (
+	StepBefore = iota
+	StepBody
+	StepAfter
+)
 
-type FunctionCancal struct {
-}
+const (
+	PhaseDrawCard = "PhaseDrawCard"
+	PhaseSet      = "PhaseSet"
+)
 
-type FunctionSetUnit struct {
-	CardID   string
-	PlayerID string
+type Require struct {
+	Amount  int
+	Options []string
 }
 
 type Cost struct {
-	Names        []string
-	CardID       map[string]string
-	PlayerID     map[string]string
-	CardIDList   map[string][]string
-	PlayerIDList map[string][]string
-	ColorID      map[string]string
-	ColorIDList  map[string][]string
+	Requires  []Require
+	UseFor    string
+	Selection []string
 }
+
+type Description struct {
+	Text string
+	Args []string
+}
+
+type Declare struct {
+	Description Description
+	Costs       []Cost
+}
+
+const (
+	UseForPutGravyard = "UseForPutGravyard"
+	UseForSet         = "UseForSet"
+	UseForTap         = "UseForTap"
+)
+
+const (
+	DescriptionTextCancelStepBefore       = "DescriptionTextCancelStepBefore"
+	DescriptionTextCancelStepAfter        = "DescriptionTextCancelStepAfter"
+	DescriptionTextCancelStepBody         = "DescriptionTextCancelStepBody"
+	DescriptionTextCancelStepModifyEffect = "DescriptionTextCancelStepModifyEffect"
+	DescriptionNextPhase                  = "DescriptionNextPhase"
+	DescriptionDrawCard                   = "從{0}抽{1}張卡到{2}"
+	DescriptionSetCard                    = "出場"
+)
 
 type FunctionTriggerAbility struct {
-	CardID string
-	Cost   Cost
+	CardID  string
+	Declare Declare
 }
 
-func QueryFunction(origin Gameplay, playerID string) ([]interface{}, error) {
+type Player struct {
+	ID string
+}
+
+type Card struct {
+	ID   string
+	Face string
+	Tap  bool
+}
+
+type Token struct {
+}
+
+type EntityStack []string
+
+type Desktop struct {
+	Entities    []string
+	EntityStack map[string]EntityStack
+	Cards       map[string]Card
+	Tokens      map[string]Token
+}
+
+type Gameplay struct {
+	ActivePlayerID string
+	Players        []Player
+	Phase          string
+	Step           int
+	WatingCancal   map[string]bool
+	EffectStack    []Description
+	Desktop        Desktop
+}
+
+const (
+	Home     = "Home"
+	Gravyard = "Gravyard"
+)
+
+func EntityStackIDPlayerHand(playerID string, where string) string {
+	return "EntityStackID_Hand_" + playerID + "_" + where
+}
+
+func QueryFunction(origin Gameplay, playerID string) ([]Declare, error) {
+	// 有作用中的效果
+	// 判斷有沒有能力可以改變效果
+	if len(origin.EffectStack) > 0 {
+		topEffect := origin.EffectStack[len(origin.EffectStack)-1]
+		switch topEffect.Text {
+		case DescriptionDrawCard:
+		case DescriptionNextPhase:
+			// check ability for change effect
+			return []Declare{Declare{Description: Description{}}}, nil
+		}
+	}
+	// 規定效果前的自由時間
 	if origin.Step == StepBefore {
-		return []interface{}{FunctionCancal{}}, nil
+		return []Declare{Declare{Description: Description{Text: DescriptionTextCancelStepBefore}}}, nil
 	}
+	// 規定效果後的自由時間
 	if origin.Step == StepAfter {
-		return []interface{}{FunctionCancal{}}, nil
+		return []Declare{Declare{Description: Description{}}}, nil
 	}
+	// 規定效果
 	if origin.Phase == PhaseDrawCard {
-		return []interface{}{FunctionDrawCard{}}, nil
+		if origin.ActivePlayerID != playerID {
+			return []Declare{}, nil
+		}
+		return []Declare{Declare{Description: Description{Text: DescriptionDrawCard, Args: []string{"", "3", ""}}}}, nil
 	}
 	if origin.ActivePlayerID == playerID {
-		return []interface{}{
-			FunctionTriggerAbility{
-				CardID: "",
-				Cost: Cost{
-					Names: []string{"target", "throwCard"},
-					CardID: map[string]string{
-						"target": "",
-					},
-					PlayerID: map[string]string{
-						"throwCard": "",
+		return []Declare{
+			Declare{
+				Description: Description{
+					Text: DescriptionSetCard,
+					Args: []string{"cardID"},
+				},
+				Costs: []Cost{
+					Cost{
+						Requires: []Require{
+							Require{
+								Amount:  3,
+								Options: []string{""},
+							},
+						},
+						Selection: nil,
+						UseFor:    UseForTap,
 					},
 				},
 			},
 		}, nil
 	}
-	var cost Cost
-	var waitingValue string
-	for _, name := range cost.Names {
-		if val, has := cost.CardID[name]; has {
-			if val == waitingValue {
-
-			}
-		}
-		if val, has := cost.PlayerID[name]; has {
-			if val == waitingValue {
-
-			}
-		}
-	}
-	return []interface{}{}, nil
+	return []Declare{}, nil
 }
 
-func ApplyFunction(origin Gameplay, playerID string, function interface{}) (Gameplay, error) {
-	switch function.(type) {
-	case FunctionCancal:
-		origin.WatingCancal[playerID] = true
+func QueryNextPhase(origin Gameplay) (string, error) {
+	return "", nil
+}
+
+func ApplyFunction(origin Gameplay, playerID string, declare Declare) (Gameplay, error) {
+	ctx := origin
+HandleBody:
+	switch {
+	// 如果有修改效果, 要將WatingCancal清空, 再重問一次修改
+
+	case declare.Description.Text == DescriptionTextCancelStepModifyEffect:
+		if len(ctx.EffectStack) == 0 {
+			return origin, fmt.Errorf("no effect")
+		}
+		// 判斷是不是所有玩家都放棄
+		ctx.WatingCancal[playerID] = true
 		canNextStep := true
-		for _, cancal := range origin.WatingCancal {
+		for _, cancal := range ctx.WatingCancal {
 			if cancal == false {
 				canNextStep = false
 				break
 			}
 		}
+		// 如果所有玩家都放棄, 執行效果
 		if canNextStep {
-			origin.Step++
+			// clear state
+			ctx.WatingCancal = map[string]bool{}
+			// 執行效果
+			topEffect := origin.EffectStack[len(origin.EffectStack)-1]
+			switch topEffect.Text {
+			case DescriptionNextPhase:
+				nextPhase := topEffect.Args[0]
+				ctx.Phase = nextPhase
+				ctx.EffectStack = ctx.EffectStack[0 : len(origin.EffectStack)-1]
+				break HandleBody
+			case DescriptionDrawCard:
+				from := declare.Description.Args[0]
+				num, err := strconv.Atoi(declare.Description.Args[1])
+				if err != nil {
+					return origin, err
+				}
+				to := declare.Description.Args[2]
+				var _, _, _ = from, num, to
+				ctx.EffectStack = ctx.EffectStack[0 : len(origin.EffectStack)-1]
+				break HandleBody
+			case DescriptionSetCard:
+
+			}
 		}
+	case declare.Description.Text == DescriptionTextCancelStepBefore:
+		if ctx.Step != StepBefore {
+			return origin, fmt.Errorf("must in StepBefore")
+		}
+		// 判斷是不是所有玩家都放棄
+		ctx.WatingCancal[playerID] = true
+		canNextStep := true
+		for _, cancal := range ctx.WatingCancal {
+			if cancal == false {
+				canNextStep = false
+				break
+			}
+		}
+		// 如果所有玩家都放棄, 跳到下一步
+		if canNextStep {
+			// clear state
+			ctx.WatingCancal = map[string]bool{}
+			ctx.Step = StepBody
+		}
+	case declare.Description.Text == DescriptionTextCancelStepBody:
+		// 跳過規定效果
+		if ctx.Step != StepBody {
+			return origin, fmt.Errorf("must in StepBody")
+		}
+		if ctx.ActivePlayerID != playerID {
+			return origin, fmt.Errorf("you are not active player")
+		}
+		ctx.WatingCancal = map[string]bool{}
+		ctx.Step = StepAfter
+	case declare.Description.Text == DescriptionTextCancelStepAfter:
+		if ctx.Step != StepAfter {
+			return origin, fmt.Errorf("must in StepAfter")
+		}
+		// 規定效果前後的自由時間
+		// 判斷是不是所有玩家都放棄宣告
+		ctx.WatingCancal[playerID] = true
+		canNextStep := true
+		for _, cancal := range ctx.WatingCancal {
+			if cancal == false {
+				canNextStep = false
+				break
+			}
+		}
+		// 如果所有玩家都放棄, 下一個階段
+		if canNextStep {
+			ctx.WatingCancal = map[string]bool{}
+			ctx.Step = StepBefore
+
+			nextPhase, err := QueryNextPhase(ctx)
+			if err != nil {
+				return origin, err
+			}
+			ctx.EffectStack = append(ctx.EffectStack, Description{
+				Text: DescriptionNextPhase,
+				Args: []string{nextPhase},
+			})
+		}
+	default:
+		hasCost := len(declare.Costs) > 0
+		if hasCost {
+			ctxForPrepareCost := ctx
+			for _, cost := range declare.Costs {
+				var cnt int
+				for _, require := range cost.Requires {
+					cnt += require.Amount
+				}
+				isAllPicked := len(cost.Selection) == cnt
+				if isAllPicked == false {
+					return origin, fmt.Errorf("not enouth")
+				}
+				switch cost.UseFor {
+				case UseForPutGravyard:
+					// 丟到墳場
+					for _, entityID := range cost.Selection {
+						var _ = entityID
+					}
+				case UseForTap:
+					// 横置
+					for _, entityID := range cost.Selection {
+						var _ = entityID
+						card, is := ctxForPrepareCost.Desktop.Cards[entityID]
+						if is == false {
+							return origin, fmt.Errorf("you must select a card")
+						}
+						if card.Tap {
+							return origin, fmt.Errorf("already tap")
+						}
+						card.Tap = true
+						// apply to ctx
+					}
+				}
+			}
+			// 套用cost
+			ctx = ctxForPrepareCost
+		}
+		ctx.EffectStack = append(ctx.EffectStack, declare.Description)
 	}
-	return origin, nil
+	return ctx, nil
 }
