@@ -3,6 +3,7 @@ package app3
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 /*
@@ -191,6 +192,7 @@ type Description struct {
 }
 
 type Declare struct {
+	CardID      string
 	Description Description
 	Costs       []Cost
 }
@@ -208,7 +210,10 @@ const (
 	DescriptionTextCancelStepModifyEffect = "DescriptionTextCancelStepModifyEffect"
 	DescriptionNextPhase                  = "DescriptionNextPhase"
 	DescriptionDrawCard                   = "從{0}抽{1}張卡到{2}"
-	DescriptionSetCard                    = "出場"
+	DescriptionSetCard                    = "從{0}選{1}張{2}出場到{3}"
+	DescriptionSetG                       = "從{0}選{1}張{2}放G"
+	DescriptionSetUnit                    = "從{0}選1張{2}放到{3}中的{4}"
+	DescriptionSetCharacter               = "從{0}選1張{2}放到{3}中的{4}"
 )
 
 type FunctionTriggerAbility struct {
@@ -220,13 +225,35 @@ type Player struct {
 	ID string
 }
 
+const (
+	CardTypeUnit      = "CardTypeUnit"
+	CardTypeG         = "CardTypeG"
+	CardTypeCharacter = "CardTypeCharacter"
+	CardTypeOperation = "CardTypeOperation"
+)
+
+type ProtoCard struct {
+	ID       string
+	Color    string
+	Sign     string
+	CardType string
+}
+
+var (
+	protoCards = map[string]ProtoCard{}
+)
+
 type Card struct {
-	ID   string
-	Face string
-	Tap  bool
+	ID          string
+	ProtoCardID string
+	Face        string
+	Tap         bool
 }
 
 type Token struct {
+}
+
+type Unit struct {
 }
 
 type EntityStack []string
@@ -235,6 +262,7 @@ type Desktop struct {
 	Entities    []string
 	EntityStack map[string]EntityStack
 	Cards       map[string]Card
+	Units       map[string]Unit
 	Tokens      map[string]Token
 }
 
@@ -251,11 +279,17 @@ type Gameplay struct {
 const (
 	Home     = "Home"
 	Gravyard = "Gravyard"
+	Hand     = "Hand"
+	SetZone  = "SetZone"
 )
 
-func EntityStackIDPlayerHand(playerID string, where string) string {
+func EntityStackID(playerID string, where string) string {
 	return "EntityStackID_Hand_" + playerID + "_" + where
 }
+
+const (
+	Pending = ""
+)
 
 func QueryFunction(origin Gameplay, playerID string) ([]Declare, error) {
 	// 有作用中的效果
@@ -266,8 +300,8 @@ func QueryFunction(origin Gameplay, playerID string) ([]Declare, error) {
 		case DescriptionDrawCard:
 		case DescriptionNextPhase:
 			// check ability for change effect
-			return []Declare{Declare{Description: Description{}}}, nil
 		}
+		return []Declare{Declare{Description: Description{Text: DescriptionTextCancelStepModifyEffect}}}, nil
 	}
 	// 規定效果前的自由時間
 	if origin.Step == StepBefore {
@@ -284,6 +318,96 @@ func QueryFunction(origin Gameplay, playerID string) ([]Declare, error) {
 		}
 		return []Declare{Declare{Description: Description{Text: DescriptionDrawCard, Args: []string{"", "3", ""}}}}, nil
 	}
+	if origin.Phase == PhaseSet {
+		if origin.ActivePlayerID != playerID {
+			return []Declare{}, nil
+		}
+		playerDeclares := []Declare{}
+		playerHand := EntityStackID(playerID, Hand)
+
+		// G
+		{
+			gIDs := []string{}
+			for _, entityID := range origin.Desktop.EntityStack[playerHand] {
+				_, isCard := origin.Desktop.Cards[entityID]
+				if isCard == false {
+					continue
+				}
+				gIDs = append(gIDs, entityID)
+			}
+			playerDeclares = append(playerDeclares, Declare{
+				Description: Description{
+					Text: DescriptionSetG,
+					Args: []string{strings.Join(gIDs, ","), "1", Pending},
+				},
+			})
+		}
+
+		// 角色卡
+		{
+			gIDs := []string{}
+			for _, entityID := range origin.Desktop.EntityStack[playerHand] {
+				card, isCard := origin.Desktop.Cards[entityID]
+				if isCard == false {
+					continue
+				}
+				protoCard, hasProto := protoCards[card.ProtoCardID]
+				if hasProto == false {
+					return nil, fmt.Errorf("proto not found")
+				}
+				if protoCard.CardType != CardTypeCharacter {
+					continue
+				}
+				gIDs = append(gIDs, entityID)
+			}
+
+			unitIDs := []string{}
+			// 可選的搭乘單位
+			options := append(origin.Desktop.EntityStack[EntityStackID(playerID, SetZone)], []string{}...)
+			for _, optionID := range options {
+				// 可搭乘的機體
+				_, isUnit := origin.Desktop.Units[optionID]
+				if isUnit == false {
+					continue
+				}
+				unitIDs = append(unitIDs, optionID)
+			}
+
+			playerDeclares = append(playerDeclares, Declare{
+				Description: Description{
+					Text: DescriptionSetCharacter,
+					Args: []string{strings.Join(gIDs, ","), strings.Join(unitIDs, ","), Pending},
+				},
+			})
+		}
+
+		// 機體卡
+		{
+			gIDs := []string{}
+			for _, entityID := range origin.Desktop.EntityStack[playerHand] {
+				card, isCard := origin.Desktop.Cards[entityID]
+				if isCard == false {
+					continue
+				}
+				protoCard, hasProto := protoCards[card.ProtoCardID]
+				if hasProto == false {
+					return nil, fmt.Errorf("proto not found")
+				}
+				if protoCard.CardType != CardTypeUnit {
+					continue
+				}
+				gIDs = append(gIDs, entityID)
+			}
+			playerDeclares = append(playerDeclares, Declare{
+				Description: Description{
+					Text: DescriptionSetUnit,
+					Args: []string{strings.Join(gIDs, ","), EntityStackID(playerID, Hand), Pending},
+				},
+			})
+		}
+		return playerDeclares, nil
+	}
+
 	if origin.ActivePlayerID == playerID {
 		return []Declare{
 			Declare{
@@ -304,6 +428,18 @@ func QueryFunction(origin Gameplay, playerID string) ([]Declare, error) {
 					},
 				},
 			},
+			Declare{
+				Description: Description{
+					Text: DescriptionSetG,
+					Args: []string{""},
+				},
+			},
+			Declare{
+				Description: Description{
+					Text: DescriptionSetG,
+					Args: []string{""},
+				},
+			},
 		}, nil
 	}
 	return []Declare{}, nil
@@ -318,7 +454,6 @@ func ApplyFunction(origin Gameplay, playerID string, declare Declare) (Gameplay,
 HandleBody:
 	switch {
 	// 如果有修改效果, 要將WatingCancal清空, 再重問一次修改
-
 	case declare.Description.Text == DescriptionTextCancelStepModifyEffect:
 		if len(ctx.EffectStack) == 0 {
 			return origin, fmt.Errorf("no effect")
@@ -355,7 +490,13 @@ HandleBody:
 				ctx.EffectStack = ctx.EffectStack[0 : len(origin.EffectStack)-1]
 				break HandleBody
 			case DescriptionSetCard:
-
+			case DescriptionSetCharacter:
+				characterID := declare.Description.Args[0]
+				unitID := declare.Description.Args[1]
+				var _, _ = characterID, unitID
+			case DescriptionSetG:
+				cardID := declare.Description.Args[0]
+				var _ = cardID
 			}
 		}
 	case declare.Description.Text == DescriptionTextCancelStepBefore:

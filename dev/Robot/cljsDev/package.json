@@ -11,6 +11,7 @@
     "shadow-cljs": "2.8.40"
   },
   "dependencies": {
+    "async": "^3.2.0",
     "keycode": "^2.2.0",
     "ml-kmeans": "^5.0.0",
     "ml-knn": "^3.0.0"

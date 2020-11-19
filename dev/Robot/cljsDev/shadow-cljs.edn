@@ -17,9 +17,9 @@
 
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
-                          :app {:entries [app2.core]
+                          :app {:entries [app3.core]
                                 :depends-on #{:shared}}
-                          :test {:entries [app2.test]
+                          :test {:entries [app3.test]
                                  :depends-on #{:shared}}
                           :testquadtree {:entries [tool.testquadtree]
                                          :depends-on #{:shared}}}}
