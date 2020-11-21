@@ -1,6 +1,8 @@
 (ns app3.gameplay.core
   (:require [clojure.spec.alpha :as s]
-            ["async" :as async]))
+            ["async" :as async]
+            [clojure.core.async :refer [go <! >!]]
+            [app3.tool.const :refer [*test *test-ch]]))
 
 (s/def ::card (s/keys :req-un []))
 (s/def ::cost (s/or :pick-one-of (s/tuple #{"從{0}選{1}張丟到{2}"} (s/* ::card) int? string?)
@@ -85,7 +87,10 @@
 
 
 (defn listen-event [cb]
-  (cb nil [:on-click "esc"]))
+  (if *test
+    (go
+      (cb nil (<! *test-ch)))
+    (cb nil [:on-click "esc"])))
 
 (defn handle-cursor [ctx evt cb]
   (cb nil ctx))
@@ -157,7 +162,7 @@
         _ (.push queue (array [:tick 3]))])
 
 
-(async/autoInject (js-obj "get_data" (fn [cb]
+#_(async/autoInject (js-obj "get_data" (fn [cb]
                                        (cb nil ["data" "wow"]))
                           "make_folder" (fn [cb]
                                           (cb nil "folder"))
