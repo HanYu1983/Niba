@@ -42,4 +42,6 @@ public interface IModel
     bool IsPendingDirty();
     // 取得工作狀態
     SaveWorkerState GetSaveWorkerState();
+    // 手動同步
+    void ManuallySave();
 }

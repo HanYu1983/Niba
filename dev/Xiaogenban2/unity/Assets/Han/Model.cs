@@ -122,6 +122,11 @@ public class Model : MonoBehaviour, IModel{
 
     #region save worker
 
+    public void ManuallySave()
+    {
+        RequestSave(GetMemonto());
+    }
+
     private Memonto isDirty;
     private bool saveWorkDone;
     public bool IsPendingDirty(){

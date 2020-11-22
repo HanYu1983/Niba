@@ -228,4 +228,8 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return SaveWorkerState.Pending;
     }
+    public void ManuallySave()
+    {
+
+    }
 }
