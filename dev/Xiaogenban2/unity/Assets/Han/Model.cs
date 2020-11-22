@@ -124,6 +124,9 @@ public class Model : MonoBehaviour, IModel{
 
     private Memonto isDirty;
     private bool saveWorkDone;
+    public bool IsPendingDirty(){
+        return isDirty.Equals(Memonto.empty) == false;
+    }
 
     private void RequestSave(Memonto memonto)
     {
@@ -148,27 +151,39 @@ public class Model : MonoBehaviour, IModel{
         yield return new WaitUntil(() => isDone);
     }
 
+    private SaveWorkerState saveState;
+    public SaveWorkerState GetSaveWorkerState(){
+        return saveState;
+    }
+
     private IEnumerator SaveWorker()
     {
+        saveState = SaveWorkerState.Starting;
         yield return null;
         while (saveWorkDone == false)
         {
+            saveState = SaveWorkerState.Checking;
             yield return new WaitForSeconds(1);
             if (isDirty.Equals(Memonto.empty))
             {
                 continue;
             }
+            saveState = SaveWorkerState.Saving;
             var temp = isDirty;
             isDirty = Memonto.empty;
             yield return SaveDisk(temp);
             yield return InvokeSaveToCloud();
+            saveState = SaveWorkerState.Saved;
         }
+        saveState = SaveWorkerState.Checking;
         if (isDirty.Equals(Memonto.empty))
         {
             yield break;
         }
+        saveState = SaveWorkerState.Saving;
         yield return SaveDisk(isDirty);
         yield return InvokeSaveToCloud();
+        saveState = SaveWorkerState.Saved;
     }
     #endregion
 

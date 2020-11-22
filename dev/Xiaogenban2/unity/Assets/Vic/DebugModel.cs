@@ -219,4 +219,13 @@ public class DebugModel : MonoBehaviour, IModel
     {
         return true;
     }
+
+    public bool IsPendingDirty()
+    {
+        return false;
+    }
+    public SaveWorkerState GetSaveWorkerState()
+    {
+        return SaveWorkerState.Pending;
+    }
 }
