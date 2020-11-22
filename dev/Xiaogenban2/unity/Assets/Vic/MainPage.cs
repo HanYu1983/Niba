@@ -11,6 +11,8 @@ public class MainPage : Page, IHasMoneyCar
     public Text ShowType;
     public Text ShowCountType;
     public Text Money;
+    public Text State;
+    public Image StateColor;
     public LoopVerticalScrollRect ItemScroller;
     public ChartGraph Chart;
     public int MaxRow = 10;
@@ -66,6 +68,41 @@ public class MainPage : Page, IHasMoneyCar
         ShowType.text = timeTypes[currentTimeType];
         RefreshList(true);
         ItemListToTop();
+    }
+
+    public void SetSaveState(bool isPending, SaveWorkerState state)
+    {
+        if (isPending)
+        {
+            StateColor.color = Color.red;
+            this.State.text = "等待儲存";
+        }
+        else
+        {
+            StateColor.color = Color.green;
+            switch (state)
+            {
+                case SaveWorkerState.Saved:
+                    this.State.text = "儲存完畢";
+                    break;
+                case SaveWorkerState.Starting:
+                    this.State.text = "初使化";
+                    break;
+                case SaveWorkerState.Checking:
+                    this.State.text = "小跟班";
+                    break;
+                case SaveWorkerState.Pending:
+                    this.State.text = "等待中";
+                    break;
+                case SaveWorkerState.Saving:
+                    this.State.text = "儲存中";
+                    StateColor.color = Color.yellow;
+                    break;
+                default:
+                    break;
+            }
+        }
+        
     }
 
     public void Buy()

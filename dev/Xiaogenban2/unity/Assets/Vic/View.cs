@@ -252,6 +252,12 @@ public class View : MonoBehaviour {
         GetMainPage().OpenCompareChart();
     }
 
+    public void OnMainPageSaveClick()
+    {
+        //先不要用，可能會出錯
+        //ModelInst.ManuallySave();
+    }
+
     public void OpenCalculatePage()
     {
         GetCalculatePage().Open();
@@ -529,4 +535,9 @@ public class View : MonoBehaviour {
         
         InitPages();
 	}
+
+    private void Update()
+    {
+        GetMainPage().SetSaveState(ModelInst.IsPendingDirty(), ModelInst.GetSaveWorkerState());
+    }
 }
