@@ -31,10 +31,9 @@ export class Board extends BasicViewer {
                 _grid.getComponent(GridBorder)?.showFocus(false);
             }, this);
 
-            grid.on(Node.EventType.MOUSE_DOWN, function(evt:EventMouse){
-                let _grid:Node = evt.currentTarget;
-                log(_grid.name);
-            });
+            if (arg && arg.hasOwnProperty("callback")){
+                grid.on(Node.EventType.MOUSE_DOWN, arg.callback);
+            }
         });
     }
 
