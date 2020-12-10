@@ -1,10 +1,5 @@
 package tool
 
-/*
- package tool
- 提供的常用库，有一些常用的方法，方便使用
-*/
-
 const (
 	// King 帥
 	King = iota
@@ -49,8 +44,16 @@ type Chess struct {
 
 type ChessBoard [10][9]Chess
 
+type Position [2]int
+
+const (
+	PlayerA = iota
+	PlayerB
+)
+
 type Gameplay struct {
-	Board ChessBoard
+	Board        ChessBoard
+	ActivePlayer int
 }
 
 var (

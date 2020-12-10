@@ -7,7 +7,8 @@ import (
 )
 
 //goDev/src/go generate
-//go:generate genny -in tool/template/map.go -out app2/data/MapStringWeapon.go -pkg data gen "Key=string Value=Weapon"
+//go:generate genny -in tool/template/list.go -out app/tool/ChessList.go -pkg tool gen "Item=Chess"
+//go:generate genny -in tool/template/list.go -out app/tool/PositionList.go -pkg tool gen "Item=Position"
 
 func init() {
 	js.Global.Get("console").Call("log", "gojs")
