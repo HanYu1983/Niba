@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, EventMouse, log } from 'cc';
+import { _decorator, Component, Node, EventMouse, log, Button, Label } from 'cc';
 import { BasicViewer } from '../lib/BasicViewer';
 import { IGame } from './GamePage/IGame';
 const { ccclass, property } = _decorator;
@@ -16,12 +16,20 @@ export class GamePage extends BasicViewer {
     @property(BasicViewer)
     public games:BasicViewer[] = [];
 
+    @property(Button)
+    public btnPrevStep:Button = null;
+
+    @property(Label)
+    public lblStatus:Label = null;
+
     private _currentGame:IGame = null;
 
     open(arg?:any){
         super.open(arg);
 
         this._currentGame = this.games[0] as IGame;
+        this._currentGame.btnBackStep = this.btnPrevStep;
+        this._currentGame.lblStatus = this.lblStatus;
         this._currentGame.onGameStart();
     }
 

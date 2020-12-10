@@ -16,11 +16,11 @@ export class Sensor extends BasicViewer {
     @property(Node)
     public gridBorderPrefab:Node = null;
 
-    private _gridBorders:Node[] = [];
+    private gridBorders:Node[] = [];
 
     addListener(arg?:any){
         super.addListener(arg);
-        this._gridBorders.forEach(grid=>{
+        this.gridBorders.forEach(grid=>{
             grid.on(Node.EventType.MOUSE_ENTER, function (evt:EventMouse) {
                 let _grid:Node = evt.currentTarget;
                 _grid.getComponent(GridBorder)?.showFocus(true);
@@ -39,10 +39,11 @@ export class Sensor extends BasicViewer {
 
     removeListener(arg?:any){
         super.removeListener(arg);
-        this._gridBorders.forEach(grid=>{
+        this.gridBorders.forEach(grid=>{
             grid.off(Node.EventType.MOUSE_ENTER);
             grid.off(Node.EventType.MOUSE_LEAVE);
             grid.off(Node.EventType.MOUSE_DOWN);
+            grid.getComponent(GridBorder)?.showFocus(false);
         });
     }
 
@@ -56,7 +57,7 @@ export class Sensor extends BasicViewer {
             gridBorderNode.active = true;
             gridBorderNode.setParent(this.node);
 
-            this._gridBorders.push(gridBorderNode);
+            this.gridBorders.push(gridBorderNode);
         }
 
         super.open(arg);
