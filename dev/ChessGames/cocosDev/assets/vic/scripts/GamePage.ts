@@ -7,53 +7,29 @@
 
 import { _decorator, Component, Node, EventMouse, log } from 'cc';
 import { BasicViewer } from '../lib/BasicViewer';
-import { Board } from './GamePage/Board';
+import { IGame } from './GamePage/IGame';
 const { ccclass, property } = _decorator;
 
 @ccclass('GamePage')
 export class GamePage extends BasicViewer {
 
-    @property(Board)
-    public board:Board = null;
+    @property(BasicViewer)
+    public games:BasicViewer[] = [];
+
+    private _currentGame:IGame = null;
 
     open(arg?:any){
         super.open(arg);
 
-        this.board.open();
-        this.board.removeListener();
-
-        this.onPlayerTurnStart();
+        this._currentGame = this.games[0] as IGame;
+        this._currentGame.onGameStart();
     }
 
     close(arg?:any){
         super.close(arg);
 
-        this.board.close();
-    }
-
-    onPlayerTurnStart(){
-        this.board.removeListener();
-
-        this.board.addListener({callback:(evt:EventMouse)=>{
-            let _grid:Node = evt.currentTarget;
-            log("玩家點選第一次", _grid.name);
-
-            this.onPlayerTurnClickOnce();
-        }});
-    }
-
-    onPlayerTurnClickOnce(){
-        this.board.removeListener();
-
-        this.board.addListener({callback:(evt:EventMouse)=>{
-            let _grid:Node = evt.currentTarget;
-            log("玩家點選第二次", _grid.name);
-
-            this.onPlayerTurnClickSecond();
-        }})
-    }
-
-    onPlayerTurnClickSecond(){
-        this.board.removeListener();
+        if(this._currentGame){
+            this._currentGame.onGameEnd();
+        }
     }
 }

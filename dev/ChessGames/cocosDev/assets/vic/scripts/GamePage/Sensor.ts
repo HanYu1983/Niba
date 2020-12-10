@@ -10,8 +10,8 @@ import { BasicViewer } from '../../lib/BasicViewer';
 import { GridBorder } from './GridBorder';
 const { ccclass, property } = _decorator;
 
-@ccclass('Board')
-export class Board extends BasicViewer {
+@ccclass('Sensor')
+export class Sensor extends BasicViewer {
 
     @property(Node)
     public gridBorderPrefab:Node = null;

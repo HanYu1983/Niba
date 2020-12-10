@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "ca574529-6d93-4e12-8596-09a714fe79d7",
+  "uuid": "f49c6ff7-b5af-4d09-b742-b3ba005c26b9",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/GamePage/Board.js",
+    "moduleId": "project:///assets/vic/scripts/GamePage/ChineseXiangQi.js",
     "importerSettings": 7
   }
 }

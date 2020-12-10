@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "129f78a6-5380-4e4e-b0e8-958a192beef6",
+  "uuid": "6eeae614-fb80-4fa6-aab4-a9c4f47be654",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/GameType.js",
+    "moduleId": "project:///assets/vic/scripts/GamePage/IGame.js",
     "importerSettings": 7
   }
 }
