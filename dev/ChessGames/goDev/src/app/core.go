@@ -1,10 +1,8 @@
 package app
 
-import (
-	"app/gameplay"
-	"app/tool"
-)
+import "app/gameplay"
 
 func Main() {
-	gameplay.StartGame(tool.Gameplay{})
+	gameplay.InstallQueryModel()
+	InstallModel()
 }

@@ -12,7 +12,7 @@ var (
 
 func InstallQueryModel() {
 	js.Global.Set("QueryModel", map[string]interface{}{
-		"queryMoveRange": func(_x *js.Object, _y *js.Object, _callback *js.Object) {
+		"QueryMoveRange": func(_x *js.Object, _y *js.Object, _callback *js.Object) {
 			go func() {
 				x, y := _x.Int(), _y.Int()
 				moveRange, err := QueryMoveRange(queryModel, tool.Position{x, y})
@@ -23,13 +23,12 @@ func InstallQueryModel() {
 				_callback.Invoke(nil, moveRange)
 			}()
 		},
+		"Query": func(_callback *js.Object) {
+			_callback.Invoke(queryModel)
+		},
 	})
 }
 
 func SetQueryModel(ctx tool.Gameplay) {
 	queryModel = ctx
-}
-
-func init() {
-	InstallQueryModel()
 }
