@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"app/tool"
+	"fmt"
 
 	"github.com/gopherjs/gopherjs/js"
 )
@@ -19,15 +20,17 @@ func AskCommand(gameplayCtx tool.Gameplay, player int) (interface{}, error) {
 				go func() {
 					fx, fy, tx, ty := _fx.Int(), _fy.Int(), _tx.Int(), _ty.Int()
 					wait <- CmdMoveChess{tool.Position{fx, fy}, tool.Position{tx, ty}}
+					close(wait)
 				}()
 			},
-			"Cancel": func() {
+			"CmdCancel": func() {
 				// return default of type
 				close(wait)
 			},
 		})
 	}()
 	cmd := <-wait
+	fmt.Printf("cmd: %v\n", cmd)
 	if err, ok := cmd.(error); ok {
 		return nil, err
 	}

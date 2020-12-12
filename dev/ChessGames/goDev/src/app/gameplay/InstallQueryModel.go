@@ -12,19 +12,16 @@ var (
 
 func InstallQueryModel() {
 	js.Global.Set("QueryModel", map[string]interface{}{
-		"QueryMoveRange": func(_x *js.Object, _y *js.Object, _callback *js.Object) {
-			go func() {
-				x, y := _x.Int(), _y.Int()
-				moveRange, err := QueryMoveRange(queryModel, tool.Position{x, y})
-				if err != nil {
-					_callback.Invoke(err)
-					return
-				}
-				_callback.Invoke(nil, moveRange)
-			}()
+		"QueryMoveRange": func(_x *js.Object, _y *js.Object) interface{} {
+			x, y := _x.Int(), _y.Int()
+			moveRange, err := QueryMoveRange(queryModel, tool.Position{x, y})
+			if err != nil {
+				return []interface{}{err.Error(), nil}
+			}
+			return []interface{}{nil, moveRange}
 		},
-		"Query": func(_callback *js.Object) {
-			_callback.Invoke(queryModel)
+		"Query": func(_callback *js.Object) interface{} {
+			return queryModel
 		},
 	})
 }

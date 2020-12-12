@@ -13,5 +13,5 @@ func QueryMoveRange(origin tool.Gameplay, pos tool.Position) ([]tool.Position, e
 	switch selectedChess.ID.Word {
 	case tool.King:
 	}
-	return []tool.Position{}, nil
+	return []tool.Position{{1, 1}}, nil
 }

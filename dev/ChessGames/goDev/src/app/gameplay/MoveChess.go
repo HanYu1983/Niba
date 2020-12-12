@@ -19,10 +19,13 @@ func MoveChess(origin tool.Gameplay, from tool.Position, to tool.Position) (tool
 		return origin, fmt.Errorf("invalid position")
 	}
 	selectedChess := ctx.Board[from[1]][from[0]]
-	occuptyChess := ctx.Board[to[1]][to[0]]
-	var _ = occuptyChess
+	occupyChess := ctx.Board[to[1]][to[0]]
+	isSameColor := selectedChess.ID.Color == occupyChess.ID.Color
+	if isSameColor {
+		return origin, fmt.Errorf("can not eat same color")
+	}
 	ctx.Board[from[1]][from[0]] = tool.NoChess
 	ctx.Board[to[1]][to[0]] = selectedChess
-	view.MoveChess(selectedChess, from, to)
+	view.MoveChess(ctx, selectedChess, from, to)
 	return ctx, nil
 }
