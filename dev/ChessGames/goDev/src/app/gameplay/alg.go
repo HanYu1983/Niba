@@ -83,3 +83,7 @@ func QueryMoveRange(origin tool.Gameplay, pos tool.Position) ([]tool.Position, e
 	})
 	return moves, nil
 }
+
+func IsWin(origin tool.Gameplay) bool {
+	return false
+}

@@ -27,6 +27,9 @@ func StartGame(origin tool.Gameplay) (tool.Gameplay, error) {
 		default:
 			return origin, fmt.Errorf("no cmd")
 		}
+		if IsWin(ctx) {
+			break
+		}
 	}
 	return ctx, nil
 }
