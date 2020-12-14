@@ -17,6 +17,8 @@ import * as ModelType from "../../han/types"
 @ccclass('Controller')
 export class Controller extends Component {
 
+    static inst:Controller;
+
     @property(View)
     public view: View = null;
     public app: ModelType.App = window.App
@@ -24,7 +26,7 @@ export class Controller extends Component {
     public modelView: ModelType.View = window.View = {
         AskCommand: (player: number, answer: ModelType.AskCommandAnswer) => {
             console.log("AskCommand")
-            answer.CmdMoveChess(0, 0, 1, 1)
+            // answer.CmdMoveChess(0, 0, 1, 1)
         },
         MoveChess: (gameplay: ModelType.Gameplay, chess: ModelType.Chess, from: ModelType.Position, to: ModelType.Position, done: () => void) => {
             console.log("MoveChess", gameplay)
@@ -33,15 +35,16 @@ export class Controller extends Component {
     }
 
     start() {
-        // Your initialization goes here.
-        this.app.StartGame()
-        console.log(this.model.Query())
-        console.log(this.model.QueryMoveRange(1, 1))
-        console.log(this.model.Query().Board[0][1].ID.Word)
+        Controller.inst = this;
+
         this.view.openByIndex(0);
     }
 
     onMainPageChineseXiangQiClick() {
+        this.app.StartGame()
+        // console.log(this.model.Query())
+        // console.log(this.model.QueryMoveRange(1, 1))
+        // console.log(this.model.Query().Board[0][1].ID.Word)
         this.view.openByIndex(1, GameType.ChineseXiangQi);
     }
 

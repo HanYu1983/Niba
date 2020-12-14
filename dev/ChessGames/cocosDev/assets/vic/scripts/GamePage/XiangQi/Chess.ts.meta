@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "6b58d677-c49c-4585-984a-02371381f3b3",
+  "uuid": "76b26e36-3438-4975-a5a6-817efa9860e5",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/GamePage/Command.js",
+    "moduleId": "project:///assets/vic/scripts/GamePage/XiangQi/Chess.js",
     "importerSettings": 7
   }
 }
