@@ -13,17 +13,21 @@ func StartGame(origin tool.Gameplay) (tool.Gameplay, error) {
 		SetQueryModel(ctx)
 		cmd, err = AskCommand(ctx, ctx.ActivePlayer)
 		if err != nil {
-			return origin, err
+			Alert(err.Error())
+			continue
 		}
 		if cmd == nil {
 			break
 		}
 		switch detail := cmd.(type) {
 		case CmdMoveChess:
-			ctx, err = MoveChess(ctx, detail.from, detail.to)
+			var nextCtx tool.Gameplay
+			nextCtx, err = MoveChess(ctx, detail.from, detail.to)
 			if err != nil {
-				return origin, err
+				Alert(err.Error())
+				continue
 			}
+			ctx = nextCtx
 		default:
 			return origin, fmt.Errorf("no cmd")
 		}

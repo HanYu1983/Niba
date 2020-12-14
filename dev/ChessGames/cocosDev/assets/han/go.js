@@ -20730,7 +20730,7 @@ $packages["app/view"] = (function() {
 	return $pkg;
 })();
 $packages["app/gameplay"] = (function() {
-	var $pkg = {}, $init, tool, view, fmt, js, CmdMoveChess, arrayType, arrayType$1, ptrType, funcType, funcType$1, mapType, sliceType, funcType$2, funcType$3, sliceType$1, arrayType$2, queryModel, AskCommand, InstallQueryModel, SetQueryModel, MoveChess, StartGame, QueryMoveRange;
+	var $pkg = {}, $init, tool, view, fmt, js, CmdMoveChess, arrayType, arrayType$1, sliceType, arrayType$2, ptrType, funcType, funcType$1, mapType, sliceType$1, funcType$2, funcType$3, queryModel, Alert, AskCommand, InstallQueryModel, SetQueryModel, MoveChess, StartGame, QueryMoveRange, IsWin;
 	tool = $packages["app/tool"];
 	view = $packages["app/view"];
 	fmt = $packages["fmt"];
@@ -20747,15 +20747,20 @@ $packages["app/gameplay"] = (function() {
 	});
 	arrayType = $arrayType(tool.Chess, 9);
 	arrayType$1 = $arrayType(arrayType, 10);
+	sliceType = $sliceType(tool.Position);
+	arrayType$2 = $arrayType($Int, 2);
 	ptrType = $ptrType(js.Object);
 	funcType = $funcType([ptrType, ptrType, ptrType, ptrType], [], false);
 	funcType$1 = $funcType([], [], false);
 	mapType = $mapType($String, $emptyInterface);
-	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($emptyInterface);
 	funcType$2 = $funcType([ptrType, ptrType], [$emptyInterface], false);
 	funcType$3 = $funcType([ptrType], [$emptyInterface], false);
-	sliceType$1 = $sliceType(tool.Position);
-	arrayType$2 = $arrayType($Int, 2);
+	Alert = function(msg) {
+		var msg;
+		$global.View.Alert($externalize(msg, $String));
+	};
+	$pkg.Alert = Alert;
 	AskCommand = function(gameplayCtx, player) {
 		var _r, _r$1, _tuple, cmd, err, gameplayCtx, ok, player, wait, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; cmd = $f.cmd; err = $f.err; gameplayCtx = $f.gameplayCtx; ok = $f.ok; player = $f.player; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -20787,7 +20792,7 @@ $packages["app/gameplay"] = (function() {
 		}; })(player, wait), []);
 		_r = $recv(wait[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		cmd = _r[0];
-		_r$1 = fmt.Printf("cmd: %v\n", new sliceType([cmd])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = fmt.Printf("cmd: %v\n", new sliceType$1([cmd])); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_r$1;
 		_tuple = $assertType(cmd, $error, true);
 		err = _tuple[0];
@@ -20815,9 +20820,9 @@ $packages["app/gameplay"] = (function() {
 			/* */ $s = 3; continue;
 			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
 				_r$1 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				$s = -1; return new sliceType([new $String(_r$1), $ifaceNil]);
+				$s = -1; return new sliceType$1([new $String(_r$1), $ifaceNil]);
 			/* } */ case 3:
-			$s = -1; return new sliceType([$ifaceNil, moveRange]);
+			$s = -1; return new sliceType$1([$ifaceNil, moveRange]);
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._r$1 = _r$1; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._x = _x; $f._y = _y; $f.err = err; $f.moveRange = moveRange; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 		})) }, { k: "Query", v: new funcType$3((function(_callback) {
 			var _callback;
@@ -20850,7 +20855,7 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (validPos === false) { $s = 3; continue; }
 		/* */ $s = 4; continue;
 		/* if (validPos === false) { */ case 3:
-			_r$2 = fmt.Errorf("invalid position", new sliceType([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2 = fmt.Errorf("invalid position", new sliceType$1([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 			$s = -1; return [origin, _r$2];
 		/* } */ case 4:
 		selectedChess = $clone((x = (x$1 = ctx.Board, x$2 = from[1], ((x$2 < 0 || x$2 >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[x$2])), x$3 = from[0], ((x$3 < 0 || x$3 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[x$3])), tool.Chess);
@@ -20859,7 +20864,7 @@ $packages["app/gameplay"] = (function() {
 		/* */ if (isSameColor) { $s = 6; continue; }
 		/* */ $s = 7; continue;
 		/* if (isSameColor) { */ case 6:
-			_r$3 = fmt.Errorf("can not eat same color", new sliceType([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3 = fmt.Errorf("can not eat same color", new sliceType$1([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			$s = -1; return [origin, _r$3];
 		/* } */ case 7:
 		tool.Chess.copy((x$8 = (x$9 = ctx.Board, x$10 = from[1], ((x$10 < 0 || x$10 >= x$9.length) ? ($throwRuntimeError("index out of range"), undefined) : x$9[x$10])), x$11 = from[0], ((x$11 < 0 || x$11 >= x$8.length) ? ($throwRuntimeError("index out of range"), undefined) : x$8[x$11])), tool.NoChess);
@@ -20870,8 +20875,8 @@ $packages["app/gameplay"] = (function() {
 	};
 	$pkg.MoveChess = MoveChess;
 	StartGame = function(origin) {
-		var _r, _r$1, _r$2, _ref, _tuple, _tuple$1, cmd, ctx, detail, detail$1, err, origin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; detail$1 = $f.detail$1; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, cmd, ctx, detail, detail$1, err, nextCtx, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; detail$1 = $f.detail$1; err = $f.err; nextCtx = $f.nextCtx; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		cmd = $ifaceNil;
 		ctx = $clone(origin, tool.Gameplay);
@@ -20881,52 +20886,200 @@ $packages["app/gameplay"] = (function() {
 			_tuple = _r;
 			cmd = _tuple[0];
 			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
+			/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 4:
+				_r$1 = err.Error(); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				$r = Alert(_r$1); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* continue; */ $s = 1; continue;
+			/* } */ case 5:
 			if ($interfaceIsEqual(cmd, $ifaceNil)) {
 				/* break; */ $s = 2; continue;
 			}
 			_ref = cmd;
-			/* */ if ($assertType(_ref, CmdMoveChess, true)[1]) { $s = 4; continue; }
-			/* */ $s = 5; continue;
-			/* if ($assertType(_ref, CmdMoveChess, true)[1]) { */ case 4:
+			/* */ if ($assertType(_ref, CmdMoveChess, true)[1]) { $s = 8; continue; }
+			/* */ $s = 9; continue;
+			/* if ($assertType(_ref, CmdMoveChess, true)[1]) { */ case 8:
 				detail = $clone(_ref.$val, CmdMoveChess);
-				_r$1 = MoveChess($clone(ctx, tool.Gameplay), $clone(detail.from, tool.Position), $clone(detail.to, tool.Position)); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				_tuple$1 = _r$1;
-				tool.Gameplay.copy(ctx, _tuple$1[0]);
+				nextCtx = new tool.Gameplay.ptr(arrayType$1.zero(), 0);
+				_r$2 = MoveChess($clone(ctx, tool.Gameplay), $clone(detail.from, tool.Position), $clone(detail.to, tool.Position)); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_tuple$1 = _r$2;
+				tool.Gameplay.copy(nextCtx, _tuple$1[0]);
 				err = _tuple$1[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [origin, err];
-				}
-				$s = 6; continue;
-			/* } else { */ case 5:
+				/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 12; continue; }
+				/* */ $s = 13; continue;
+				/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 12:
+					_r$3 = err.Error(); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					$r = Alert(_r$3); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* continue; */ $s = 1; continue;
+				/* } */ case 13:
+				tool.Gameplay.copy(ctx, nextCtx);
+				$s = 10; continue;
+			/* } else { */ case 9:
 				detail$1 = _ref;
-				_r$2 = fmt.Errorf("no cmd", new sliceType([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				$s = -1; return [origin, _r$2];
-			/* } */ case 6:
+				_r$4 = fmt.Errorf("no cmd", new sliceType$1([])); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				$s = -1; return [origin, _r$4];
+			/* } */ case 10:
+			if (IsWin($clone(ctx, tool.Gameplay))) {
+				/* break; */ $s = 2; continue;
+			}
 		/* } */ $s = 1; continue; case 2:
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: StartGame }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.detail$1 = detail$1; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: StartGame }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.detail$1 = detail$1; $f.err = err; $f.nextCtx = nextCtx; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.StartGame = StartGame;
 	QueryMoveRange = function(origin, pos) {
-		var _1, _r, origin, pos, selectedChess, x, x$1, x$2, x$3, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; origin = $f.origin; pos = $f.pos; selectedChess = $f.selectedChess; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		selectedChess = $clone((x = (x$1 = origin.Board, x$2 = pos[1], ((x$2 < 0 || x$2 >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[x$2])), x$3 = pos[0], ((x$3 < 0 || x$3 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[x$3])), tool.Chess);
-		/* */ if ($equal(selectedChess, tool.NoChess, tool.Chess)) { $s = 1; continue; }
+		var _1, _i, _i$1, _i$2, _i$3, _i$4, _r, _r$1, _r$2, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _tmp, _tmp$1, cx, cy, i, i$1, i$2, i$3, i$4, move, move$1, move$2, move$3, move$4, moves, origin, pos, selectedChess, x, x$1, x$2, x$3, x$4, x$5, y, y$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; cx = $f.cx; cy = $f.cy; i = $f.i; i$1 = $f.i$1; i$2 = $f.i$2; i$3 = $f.i$3; i$4 = $f.i$4; move = $f.move; move$1 = $f.move$1; move$2 = $f.move$2; move$3 = $f.move$3; move$4 = $f.move$4; moves = $f.moves; origin = $f.origin; pos = $f.pos; selectedChess = $f.selectedChess; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; y = $f.y; y$1 = $f.y$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		origin = [origin];
+		selectedChess = [selectedChess];
+		selectedChess[0] = $clone((x = (x$1 = origin[0].Board, x$2 = pos[1], ((x$2 < 0 || x$2 >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[x$2])), x$3 = pos[0], ((x$3 < 0 || x$3 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[x$3])), tool.Chess);
+		/* */ if ($equal(selectedChess[0], tool.NoChess, tool.Chess)) { $s = 1; continue; }
 		/* */ $s = 2; continue;
-		/* if ($equal(selectedChess, tool.NoChess, tool.Chess)) { */ case 1:
-			_r = fmt.Errorf("no chess in %v", new sliceType([new tool.Position(pos)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return [sliceType$1.nil, _r];
+		/* if ($equal(selectedChess[0], tool.NoChess, tool.Chess)) { */ case 1:
+			_r = fmt.Errorf("no chess in %v", new sliceType$1([new tool.Position(pos)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [sliceType.nil, _r];
 		/* } */ case 2:
-		_1 = selectedChess.ID.Word;
-		if (_1 === (1)) {
-		}
-		$s = -1; return [new sliceType$1([$toNativeArray($kindInt, [1, 1])]), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMoveRange }; } $f._1 = _1; $f._r = _r; $f.origin = origin; $f.pos = pos; $f.selectedChess = selectedChess; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.$s = $s; $f.$r = $r; return $f;
+		moves = new sliceType([]);
+		_tmp = pos[0];
+		_tmp$1 = pos[1];
+		cx = _tmp;
+		cy = _tmp$1;
+			_1 = selectedChess[0].ID.Word;
+			/* */ if (_1 === (1)) { $s = 5; continue; }
+			/* */ if (_1 === (2)) { $s = 6; continue; }
+			/* */ if (_1 === (3)) { $s = 7; continue; }
+			/* */ if (_1 === (4)) { $s = 8; continue; }
+			/* */ if (_1 === (5)) { $s = 9; continue; }
+			/* */ if (_1 === (6)) { $s = 10; continue; }
+			/* */ if (_1 === (7)) { $s = 11; continue; }
+			/* */ $s = 12; continue;
+			/* if (_1 === (1)) { */ case 5:
+				moves = $appendSlice(moves, $pkg.Plus);
+				_ref = moves;
+				_i = 0;
+				while (true) {
+					if (!(_i < _ref.$length)) { break; }
+					i = _i;
+					move = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), tool.Position);
+					((i < 0 || i >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i])[0] = (move[0] + cx >> 0);
+					((i < 0 || i >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i])[1] = (move[1] + cy >> 0);
+					_i++;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (2)) { */ case 6:
+				moves = $appendSlice(moves, $pkg.Cross);
+				_ref$1 = moves;
+				_i$1 = 0;
+				while (true) {
+					if (!(_i$1 < _ref$1.$length)) { break; }
+					i$1 = _i$1;
+					move$1 = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), tool.Position);
+					((i$1 < 0 || i$1 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$1])[0] = (move$1[0] + cx >> 0);
+					((i$1 < 0 || i$1 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$1])[1] = (move$1[1] + cy >> 0);
+					_i$1++;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (3)) { */ case 7:
+				moves = $appendSlice(moves, $pkg.Cross2);
+				_ref$2 = moves;
+				_i$2 = 0;
+				while (true) {
+					if (!(_i$2 < _ref$2.$length)) { break; }
+					i$2 = _i$2;
+					move$2 = $clone(((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]), tool.Position);
+					((i$2 < 0 || i$2 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$2])[0] = (move$2[0] + cx >> 0);
+					((i$2 < 0 || i$2 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$2])[1] = (move$2[1] + cy >> 0);
+					_i$2++;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (4)) { */ case 8:
+				moves = $appendSlice(moves, $pkg.L);
+				_ref$3 = moves;
+				_i$3 = 0;
+				while (true) {
+					if (!(_i$3 < _ref$3.$length)) { break; }
+					i$3 = _i$3;
+					move$3 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), tool.Position);
+					((i$3 < 0 || i$3 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$3])[0] = (move$3[0] + cx >> 0);
+					((i$3 < 0 || i$3 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$3])[1] = (move$3[1] + cy >> 0);
+					_i$3++;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (5)) { */ case 9:
+				x$4 = 0;
+				while (true) {
+					if (!(x$4 < 9)) { break; }
+					moves = $append(moves, $toNativeArray($kindInt, [x$4, cy]));
+					x$4 = x$4 + (1) >> 0;
+				}
+				y = 0;
+				while (true) {
+					if (!(y < 10)) { break; }
+					moves = $append(moves, $toNativeArray($kindInt, [cx, y]));
+					y = y + (1) >> 0;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (6)) { */ case 10:
+				x$5 = 0;
+				while (true) {
+					if (!(x$5 < 9)) { break; }
+					moves = $append(moves, $toNativeArray($kindInt, [x$5, cy]));
+					x$5 = x$5 + (1) >> 0;
+				}
+				y$1 = 0;
+				while (true) {
+					if (!(y$1 < 10)) { break; }
+					moves = $append(moves, $toNativeArray($kindInt, [cx, y$1]));
+					y$1 = y$1 + (1) >> 0;
+				}
+				$s = 13; continue;
+			/* } else if (_1 === (7)) { */ case 11:
+				moves = $appendSlice(moves, $pkg.Plus);
+				_ref$4 = moves;
+				_i$4 = 0;
+				while (true) {
+					if (!(_i$4 < _ref$4.$length)) { break; }
+					i$4 = _i$4;
+					move$4 = $clone(((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]), tool.Position);
+					((i$4 < 0 || i$4 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$4])[0] = (move$4[0] + cx >> 0);
+					((i$4 < 0 || i$4 >= moves.$length) ? ($throwRuntimeError("index out of range"), undefined) : moves.$array[moves.$offset + i$4])[1] = (move$4[1] + cy >> 0);
+					_i$4++;
+				}
+				$s = 13; continue;
+			/* } else { */ case 12:
+				_r$1 = fmt.Errorf("no this type: %v", new sliceType$1([new selectedChess[0].constructor.elem(selectedChess[0])])); /* */ $s = 14; case 14: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				$s = -1; return [sliceType.nil, _r$1];
+			/* } */ case 13:
+		case 4:
+		_r$2 = tool.FilterPosition(moves, (function(origin, selectedChess) { return function(pos$1) {
+			var _tmp$2, _tmp$3, occupy, pos$1, x$10, x$6, x$7, x$8, x$9, y$2;
+			_tmp$2 = pos$1[0];
+			_tmp$3 = pos$1[1];
+			x$6 = _tmp$2;
+			y$2 = _tmp$3;
+			if (x$6 < 0 || x$6 >= 9) {
+				return false;
+			}
+			if (y$2 < 0 || y$2 >= 10) {
+				return false;
+			}
+			occupy = $clone((x$7 = (x$8 = origin[0].Board, x$9 = pos$1[1], ((x$9 < 0 || x$9 >= x$8.length) ? ($throwRuntimeError("index out of range"), undefined) : x$8[x$9])), x$10 = pos$1[0], ((x$10 < 0 || x$10 >= x$7.length) ? ($throwRuntimeError("index out of range"), undefined) : x$7[x$10])), tool.Chess);
+			if (!($equal(occupy, tool.NoChess, tool.Chess)) && (occupy.ID.Color === selectedChess[0].ID.Color)) {
+				return false;
+			}
+			return true;
+		}; })(origin, selectedChess)); /* */ $s = 15; case 15: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		moves = _r$2;
+		$s = -1; return [moves, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMoveRange }; } $f._1 = _1; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f.cx = cx; $f.cy = cy; $f.i = i; $f.i$1 = i$1; $f.i$2 = i$2; $f.i$3 = i$3; $f.i$4 = i$4; $f.move = move; $f.move$1 = move$1; $f.move$2 = move$2; $f.move$3 = move$3; $f.move$4 = move$4; $f.moves = moves; $f.origin = origin; $f.pos = pos; $f.selectedChess = selectedChess; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.y = y; $f.y$1 = y$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryMoveRange = QueryMoveRange;
+	IsWin = function(origin) {
+		var origin;
+		return false;
+	};
+	$pkg.IsWin = IsWin;
 	CmdMoveChess.init("app/gameplay", [{prop: "from", name: "from", embedded: false, exported: false, typ: tool.Position, tag: ""}, {prop: "to", name: "to", embedded: false, exported: false, typ: tool.Position, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -20936,6 +21089,10 @@ $packages["app/gameplay"] = (function() {
 		$r = fmt.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = js.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		queryModel = new tool.Gameplay.ptr(arrayType$1.zero(), 0);
+		$pkg.Plus = new sliceType([$toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [1, 0]), $toNativeArray($kindInt, [0, -1]), $toNativeArray($kindInt, [-1, 0])]);
+		$pkg.L = new sliceType([$toNativeArray($kindInt, [1, 2]), $toNativeArray($kindInt, [2, 1]), $toNativeArray($kindInt, [1, -2]), $toNativeArray($kindInt, [2, -1]), $toNativeArray($kindInt, [-2, -1]), $toNativeArray($kindInt, [-1, -2]), $toNativeArray($kindInt, [-2, 1]), $toNativeArray($kindInt, [-1, 2])]);
+		$pkg.Cross = new sliceType([$toNativeArray($kindInt, [1, 1]), $toNativeArray($kindInt, [1, -1]), $toNativeArray($kindInt, [-1, -1]), $toNativeArray($kindInt, [-1, 1])]);
+		$pkg.Cross2 = new sliceType([$toNativeArray($kindInt, [2, 2]), $toNativeArray($kindInt, [2, -2]), $toNativeArray($kindInt, [-2, -2]), $toNativeArray($kindInt, [-2, 2])]);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
