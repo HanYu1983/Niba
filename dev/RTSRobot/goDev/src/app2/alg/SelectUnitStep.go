@@ -4,11 +4,11 @@ import (
 	"app2/data"
 )
 
-func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID string) error, inputCh <-chan interface{}) (data.Gameplay, string, bool, error) {
+func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID string) error) (data.Gameplay, string, bool, error) {
 	var err error
 	gameplay := origin
 	for {
-		evt := <-inputCh
+		evt := view.AskCommand()
 		gameplay, err = HandleCursor(gameplay, evt)
 		if err != nil {
 			return origin, "", false, err
@@ -29,7 +29,7 @@ func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID str
 						if err == nil {
 							return gameplay, unitID, false, nil
 						}
-						Alert(err.Error())
+						view.Alert(err.Error())
 					}
 				}
 			}

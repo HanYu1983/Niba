@@ -53,7 +53,11 @@ type Tag struct {
 }
 
 type CommandKeyDown struct {
-	KeyCode string
+	KeyCode int
+}
+
+type CommandKeyUp struct {
+	KeyCode int
 }
 
 type Menu struct {
@@ -99,7 +103,7 @@ type Gameplay struct {
 	Tags            map[string]Tag
 	Items           map[string]Item
 	Pilots          map[string]Pilot
-	Menu            Menu
+	MenuStack       []Menu
 	BattleMenuState BattleMenuState
 	Done            interface{}
 	Lobby           Lobby
@@ -114,4 +118,16 @@ type BattleMenu struct {
 	Robots       [2]Robot
 	BattleAction [2]interface{}
 	BattleInfo   [2]BattleInfo
+}
+
+const (
+	PageStart = iota
+	PageGameplay
+	PageLobby
+)
+
+type App struct {
+	Page     int
+	Gameplay Gameplay
+	Lobby    Lobby
 }

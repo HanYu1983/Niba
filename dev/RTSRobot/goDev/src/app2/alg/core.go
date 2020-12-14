@@ -1,6 +1,9 @@
 package alg
 
-import "app2/data"
+import (
+	"app2/data"
+	"app2/lib"
+)
 
 func CreateRobotMenu(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 	gameplay := origin
@@ -13,7 +16,7 @@ func CreateRobotMenu(origin data.Gameplay, unitID string) (data.Gameplay, error)
 		menu.WeaponID = 1
 		menu.TransformID = 2
 	}
-	gameplay.Menu = menu
+	gameplay.MenuStack = append(gameplay.MenuStack, menu)
 	return gameplay, nil
 }
 
@@ -29,7 +32,7 @@ var (
 	UnitByPosition = map[data.Position]string{}
 )
 
-func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) (string, error) {
+func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) string {
 	// remove
 	for unitPos, unitID := range UnitByPosition {
 		if _, has := posComs[unitID]; has == false {
@@ -45,8 +48,19 @@ func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) (
 		}
 	}
 	if unitID, has := UnitByPosition[pos]; has {
-		return unitID, nil
+		return unitID
 	}
 
-	return "", nil
+	return ""
+}
+
+var (
+	view = lib.View
+)
+
+func Render(ctx data.Gameplay) {
+	view.Render(data.App{
+		Page:     data.PageGameplay,
+		Gameplay: ctx,
+	})
 }
