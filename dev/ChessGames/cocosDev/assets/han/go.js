@@ -20730,7 +20730,7 @@ $packages["app/view"] = (function() {
 	return $pkg;
 })();
 $packages["app/gameplay"] = (function() {
-	var $pkg = {}, $init, tool, view, fmt, js, CmdMoveChess, arrayType, arrayType$1, sliceType, arrayType$2, ptrType, funcType, funcType$1, mapType, sliceType$1, funcType$2, funcType$3, queryModel, AskCommand, InstallQueryModel, SetQueryModel, MoveChess, StartGame, QueryMoveRange, IsWin;
+	var $pkg = {}, $init, tool, view, fmt, js, CmdMoveChess, arrayType, arrayType$1, sliceType, arrayType$2, ptrType, funcType, funcType$1, mapType, sliceType$1, funcType$2, funcType$3, queryModel, Alert, AskCommand, InstallQueryModel, SetQueryModel, MoveChess, StartGame, QueryMoveRange, IsWin;
 	tool = $packages["app/tool"];
 	view = $packages["app/view"];
 	fmt = $packages["fmt"];
@@ -20756,6 +20756,11 @@ $packages["app/gameplay"] = (function() {
 	sliceType$1 = $sliceType($emptyInterface);
 	funcType$2 = $funcType([ptrType, ptrType], [$emptyInterface], false);
 	funcType$3 = $funcType([ptrType], [$emptyInterface], false);
+	Alert = function(msg) {
+		var msg;
+		$global.View.Alert($externalize(msg, $String));
+	};
+	$pkg.Alert = Alert;
 	AskCommand = function(gameplayCtx, player) {
 		var _r, _r$1, _tuple, cmd, err, gameplayCtx, ok, player, wait, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; cmd = $f.cmd; err = $f.err; gameplayCtx = $f.gameplayCtx; ok = $f.ok; player = $f.player; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -20870,8 +20875,8 @@ $packages["app/gameplay"] = (function() {
 	};
 	$pkg.MoveChess = MoveChess;
 	StartGame = function(origin) {
-		var _r, _r$1, _r$2, _ref, _tuple, _tuple$1, cmd, ctx, detail, detail$1, err, origin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; detail$1 = $f.detail$1; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, cmd, ctx, detail, detail$1, err, nextCtx, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; detail$1 = $f.detail$1; err = $f.err; nextCtx = $f.nextCtx; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		cmd = $ifaceNil;
 		ctx = $clone(origin, tool.Gameplay);
@@ -20881,36 +20886,46 @@ $packages["app/gameplay"] = (function() {
 			_tuple = _r;
 			cmd = _tuple[0];
 			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
+			/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 4:
+				_r$1 = err.Error(); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				$r = Alert(_r$1); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				/* continue; */ $s = 1; continue;
+			/* } */ case 5:
 			if ($interfaceIsEqual(cmd, $ifaceNil)) {
 				/* break; */ $s = 2; continue;
 			}
 			_ref = cmd;
-			/* */ if ($assertType(_ref, CmdMoveChess, true)[1]) { $s = 4; continue; }
-			/* */ $s = 5; continue;
-			/* if ($assertType(_ref, CmdMoveChess, true)[1]) { */ case 4:
+			/* */ if ($assertType(_ref, CmdMoveChess, true)[1]) { $s = 8; continue; }
+			/* */ $s = 9; continue;
+			/* if ($assertType(_ref, CmdMoveChess, true)[1]) { */ case 8:
 				detail = $clone(_ref.$val, CmdMoveChess);
-				_r$1 = MoveChess($clone(ctx, tool.Gameplay), $clone(detail.from, tool.Position), $clone(detail.to, tool.Position)); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				_tuple$1 = _r$1;
-				tool.Gameplay.copy(ctx, _tuple$1[0]);
+				nextCtx = new tool.Gameplay.ptr(arrayType$1.zero(), 0);
+				_r$2 = MoveChess($clone(ctx, tool.Gameplay), $clone(detail.from, tool.Position), $clone(detail.to, tool.Position)); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_tuple$1 = _r$2;
+				tool.Gameplay.copy(nextCtx, _tuple$1[0]);
 				err = _tuple$1[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [origin, err];
-				}
-				$s = 6; continue;
-			/* } else { */ case 5:
+				/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 12; continue; }
+				/* */ $s = 13; continue;
+				/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 12:
+					_r$3 = err.Error(); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					$r = Alert(_r$3); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* continue; */ $s = 1; continue;
+				/* } */ case 13:
+				tool.Gameplay.copy(ctx, nextCtx);
+				$s = 10; continue;
+			/* } else { */ case 9:
 				detail$1 = _ref;
-				_r$2 = fmt.Errorf("no cmd", new sliceType$1([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				$s = -1; return [origin, _r$2];
-			/* } */ case 6:
+				_r$4 = fmt.Errorf("no cmd", new sliceType$1([])); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				$s = -1; return [origin, _r$4];
+			/* } */ case 10:
 			if (IsWin($clone(ctx, tool.Gameplay))) {
 				/* break; */ $s = 2; continue;
 			}
 		/* } */ $s = 1; continue; case 2:
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: StartGame }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.detail$1 = detail$1; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: StartGame }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.detail$1 = detail$1; $f.err = err; $f.nextCtx = nextCtx; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.StartGame = StartGame;
 	QueryMoveRange = function(origin, pos) {
