@@ -31,6 +31,13 @@ export class Chesses extends Component {
             this.chesss[chessNode.name] = chessNode;
         }
     }
+
+    clearChesses(){
+        for (let key in this.chesss) {
+            let chess = this.chesss[key];
+            chess.getComponent(Chess)?.setImage("");
+        }
+    }
     
     setChess(x:number, y:number, color:number, id:number){
         const name = x + "_" + y;

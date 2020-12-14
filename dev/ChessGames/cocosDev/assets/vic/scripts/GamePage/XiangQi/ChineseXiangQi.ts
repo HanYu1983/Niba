@@ -40,6 +40,8 @@ export class ChineseXiangQi extends BasicGameViewer {
 
 
     private refreshBoard(boardData:any){
+        this.chesses.clearChesses();
+        
         let activePlayer = boardData.ActivePlayer;
         let board = boardData.Board;
         for(let y = 0; y < board.length; ++y){

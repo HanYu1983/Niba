@@ -28,10 +28,11 @@ export class Controller extends Component {
     public modelView: ModelType.View = window.View = {
         AskCommand: (player: number, answer: ModelType.AskCommandAnswer) => {
             console.log("AskCommand")
-            // answer.CmdMoveChess(0, 0, 1, 1)
-
+            
             let game:GamePage = this.view.getViewerByIndex(1) as GamePage;
             game.updateGame(this.model.Query());
+
+            answer.CmdMoveChess(0, 0, 1, 1)
         },
         MoveChess: (gameplay: ModelType.Gameplay, chess: ModelType.Chess, from: ModelType.Position, to: ModelType.Position, done: () => void) => {
             console.log("MoveChess", gameplay)
@@ -51,7 +52,6 @@ export class Controller extends Component {
         // console.log(this.model.Query())
         // console.log(this.model.QueryMoveRange(1, 1))
         // console.log(this.model.Query().Board[0][1].ID.Word)
-        
     }
 
     // update (deltaTime: number) {
