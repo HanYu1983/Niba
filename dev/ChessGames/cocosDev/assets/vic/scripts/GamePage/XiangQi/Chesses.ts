@@ -60,11 +60,11 @@ export class Chesses extends Component {
                 }
                 break;
                 case 4:{
-                    imageName += "che";
+                    imageName += "ma";
                 }
                 break;
                 case 5:{
-                    imageName += "ma";
+                    imageName += "che";
                 }
                 break;
                 case 6:{

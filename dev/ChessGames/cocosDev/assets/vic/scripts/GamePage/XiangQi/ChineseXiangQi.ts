@@ -27,13 +27,14 @@ export class ChineseXiangQi extends BasicGameViewer {
         this.sensor.removeListener();
 
         this.chesses.initChesses();
-        
-        this.onPlayerTurnStart();
+
     }
     onGameEnd(arg?:any):void{
         
     }
-    
+    onPlayerTurn(arg?:any):void{
+        this.onPlayerTurnStart();
+    }
     onUpdate(arg?:any):void{
         this.refreshBoard(arg);
     }
@@ -41,7 +42,7 @@ export class ChineseXiangQi extends BasicGameViewer {
 
     private refreshBoard(boardData:any){
         this.chesses.clearChesses();
-        
+
         let activePlayer = boardData.ActivePlayer;
         let board = boardData.Board;
         for(let y = 0; y < board.length; ++y){
@@ -89,10 +90,14 @@ export class ChineseXiangQi extends BasicGameViewer {
 
     private onPlayerTurnClickSecond(){
         this.setStatus("完成移動");
-        log(this.sendData);
-
+        
         this.sensor.removeListener();
-
         this.addBtnBackStepListener((btn:any)=>{this.onPlayerTurnClickOnce();});
+
+        const from:Node = this.sendData[0];
+        const to:Node = this.sendData[1];
+        let fromPos = from.name.split("_");
+        let toPos = to.name.split("_");
+        this.answer([fromPos[0], fromPos[1], toPos[0], toPos[1]]);
     }
 }

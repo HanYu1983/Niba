@@ -41,7 +41,15 @@ export class GamePage extends BasicViewer {
         }
     }
 
-    updateGame(data:any){
-        this._currentGame.onUpdate(data);
+    getGame():IGame{
+        return this._currentGame;
     }
+
+    // updateGame(data:any){
+    //     this._currentGame.onUpdate(data);
+    // }
+
+    // setGameAnswer(func:(data:any)=>void){
+    //     this._currentGame.setAnswer(func);
+    // }
 }

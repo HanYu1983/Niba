@@ -15,6 +15,8 @@ export class BasicGameViewer extends Component implements IGame {
     lblStatus:Label = null;
 
     protected sendData:Array<any> = [];
+    
+    private _answer:(data:any)=>void;
 
     onGameStart(arg?:any):void{
 
@@ -22,8 +24,14 @@ export class BasicGameViewer extends Component implements IGame {
     onGameEnd(arg?:any):void{
 
     }
+    onPlayerTurn(arg?:any):void{
+        
+    }
     onUpdate(arg?:any):void{
 
+    }
+    setAnswer(func:(data:any)=>void):void{
+        this._answer = func;
     }
 
     protected removeBtnBackStepListener(){
@@ -36,5 +44,10 @@ export class BasicGameViewer extends Component implements IGame {
     }
     protected setStatus(status:string){
         this.lblStatus.string = status;
+    }
+    protected answer(data:any):void{
+        if(this._answer){
+            this._answer(data);
+        }
     }
 }

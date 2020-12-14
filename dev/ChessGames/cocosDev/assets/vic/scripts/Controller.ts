@@ -30,9 +30,11 @@ export class Controller extends Component {
             console.log("AskCommand")
             
             let game:GamePage = this.view.getViewerByIndex(1) as GamePage;
-            game.updateGame(this.model.Query());
-
-            answer.CmdMoveChess(0, 0, 1, 1)
+            game.getGame().onUpdate(this.model.Query());
+            game.getGame().onPlayerTurn();
+            game.getGame().setAnswer((data:any)=>{
+                answer.CmdMoveChess(data[0], data[1], data[2], data[3]);
+            });
         },
         MoveChess: (gameplay: ModelType.Gameplay, chess: ModelType.Chess, from: ModelType.Position, to: ModelType.Position, done: () => void) => {
             console.log("MoveChess", gameplay)
@@ -42,7 +44,6 @@ export class Controller extends Component {
 
     start() {
         Controller.inst = this;
-
         this.view.openByIndex(0);
     }
 
@@ -54,7 +55,4 @@ export class Controller extends Component {
         // console.log(this.model.Query().Board[0][1].ID.Word)
     }
 
-    // update (deltaTime: number) {
-    //     // Your update function goes here.
-    // }
 }
