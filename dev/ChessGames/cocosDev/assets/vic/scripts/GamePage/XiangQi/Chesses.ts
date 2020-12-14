@@ -45,31 +45,27 @@ export class Chesses extends Component {
                 }
                 break;
                 case 2:{
-
+                    imageName += "shi";
                 }
                 break;
                 case 3:{
-
+                    imageName += "xiang";
                 }
                 break;
                 case 4:{
-
+                    imageName += "che";
                 }
                 break;
                 case 5:{
-
+                    imageName += "ma";
                 }
                 break;
                 case 6:{
-
+                    imageName += "pao";
                 }
                 break;
                 case 7:{
-
-                }
-                break;
-                case 8:{
-
+                    imageName += "bing";
                 }
                 break;
             }

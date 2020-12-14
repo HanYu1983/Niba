@@ -28,9 +28,8 @@ export class ChineseXiangQi extends BasicGameViewer {
 
         this.chesses.initChesses();
         
-        
         this.onUpdate();
-        // this.onPlayerTurnStart();
+        this.onPlayerTurnStart();
     }
     onGameEnd(arg?:any):void{
         

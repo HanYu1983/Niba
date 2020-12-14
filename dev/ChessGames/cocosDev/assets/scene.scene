@@ -2027,10 +2027,10 @@
     "_dstBlendFactor": 4,
     "_color": {
       "__type__": "cc.Color",
-      "r": 255,
+      "r": 0,
       "g": 255,
-      "b": 255,
-      "a": 255
+      "b": 20,
+      "a": 170
     },
     "_spriteFrame": {
       "__uuid__": "7d8f9b89-4fd1-4c9f-a3ab-38ec7cded7ca@f9941"
@@ -2871,7 +2871,25 @@
     "__prefab": null,
     "images": [
       {
+        "__uuid__": "e6124d80-b6f8-4407-bf7f-a31b94a418f4@f9941"
+      },
+      {
+        "__uuid__": "a00d97ac-be58-47b3-86d1-a8ba14afe2dd@f9941"
+      },
+      {
         "__uuid__": "933f81e6-2a1e-4486-b787-919fd1f92bd6@f9941"
+      },
+      {
+        "__uuid__": "bdb7cf64-0435-4a82-b7a9-22adcbb63a6e@f9941"
+      },
+      {
+        "__uuid__": "8aec9c91-d699-4c16-b4d9-a9c76787d835@f9941"
+      },
+      {
+        "__uuid__": "0f40c49e-44f5-4145-b628-dc889faaa948@f9941"
+      },
+      {
+        "__uuid__": "483bacf0-5f8c-42ea-abc5-f65bb77099d2@f9941"
       }
     ],
     "_id": "33XfhrJy1OzbEavvd6wd+j"
