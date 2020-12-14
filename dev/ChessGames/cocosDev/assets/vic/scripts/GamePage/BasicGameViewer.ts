@@ -25,7 +25,7 @@ export class BasicGameViewer extends Component implements IGame {
 
     }
     onPlayerTurn(arg?:any):void{
-        
+
     }
     onUpdate(arg?:any):void{
 
@@ -49,5 +49,11 @@ export class BasicGameViewer extends Component implements IGame {
         if(this._answer){
             this._answer(data);
         }
+    }
+    protected getXYByName(node:Node):number[]{
+        let pos = node.name.split("_").map((value, index, array)=>{
+            return +value;
+        });
+        return pos;
     }
 }

@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node, instantiate, log, Color } from 'cc';
+import * as ModelType from "../../../../han/types"
 import { Controller } from '../../Controller';
 import { Chess } from './Chess';
 const { ccclass, property } = _decorator;
@@ -27,7 +28,7 @@ export class Chesses extends Component {
             chessNode.name = x + "_" + y;
             chessNode.active = true;
             chessNode.setParent(this.node);
-            chessNode.getComponent(Chess)?.setImage("");
+            chessNode.getComponent(Chess)?.noChess();
             this.chesss[chessNode.name] = chessNode;
         }
     }
@@ -35,15 +36,33 @@ export class Chesses extends Component {
     clearChesses(){
         for (let key in this.chesss) {
             let chess = this.chesss[key];
-            chess.getComponent(Chess)?.setImage("");
+            chess.getComponent(Chess)?.noChess();
         }
     }
-    
-    setChess(x:number, y:number, color:number, id:number){
+
+    clearMovable(){
+        for (let key in this.chesss) {
+            let chess = this.chesss[key];
+            chess.getComponent(Chess)?.showMovable(false);
+        }
+    }
+
+    setMovable(x:number, y:number){
         const name = x + "_" + y;
         let chess = this.chesss[name];
-        if(id == -1){
-            chess.getComponent(Chess)?.setImage("");
+        chess.getComponent(Chess).showMovable(true);
+    }
+    
+    setChess(x:number, y:number, data:ModelType.Chess){
+        const name = x + "_" + y;
+        let chess = this.chesss[name];
+
+        const id = data.ID.Word;
+        const color = data.ID.Color;
+        const face = data.Face;
+        
+        if(face == 0){
+            chess.getComponent(Chess).noChess();
         }else{
             let imageName = "chess_";
             switch(id){
@@ -79,9 +98,9 @@ export class Chesses extends Component {
             
             const image = Controller.inst.view.getImage(0, imageName);
             if(image){
-                chess.getComponent(Chess)?.setImage(image);
+                chess.getComponent(Chess)?.setChessImageAndColor(image, color == 1 ? Color.BLUE : Color.RED);
             }
-            chess.getComponent(Chess)?.setColor( color == 1 ? Color.BLUE : Color.RED);
         }
     }
+
 }

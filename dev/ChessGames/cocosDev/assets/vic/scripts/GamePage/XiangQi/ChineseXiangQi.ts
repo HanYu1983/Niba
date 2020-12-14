@@ -39,20 +39,14 @@ export class ChineseXiangQi extends BasicGameViewer {
         this.refreshBoard(arg);
     }
 
-
-    private refreshBoard(boardData:any){
+    private refreshBoard(boardData:Gameplay){
         this.chesses.clearChesses();
-
+        
         let activePlayer = boardData.ActivePlayer;
         let board = boardData.Board;
         for(let y = 0; y < board.length; ++y){
             for(let x = 0; x < board[y].length; ++x){
-                const chessData = board[y][x];
-                if(chessData.Face){
-                    this.chesses.setChess(x, y, chessData.ID.Color, chessData.ID.Word);
-                }else{
-                    this.chesses.setChess(x, y, 0, -1);
-                }
+                this.chesses.setChess(x, y, board[y][x]);
             }
         }
     }
@@ -62,42 +56,56 @@ export class ChineseXiangQi extends BasicGameViewer {
         this.removeBtnBackStepListener();
         
         this.sendData = [];
-        this.sensor.removeListener();
+        this.sensor.addListener();
 
-        this.sensor.addListener({callback:(evt:EventMouse)=>{
-            let _grid:Node = evt.currentTarget;
-            log("玩家點選第一次", _grid.name);
+        this.sensor.onEnter = (grid:Node)=>{
+            this.chesses.clearMovable();
 
-            this.sendData.push(_grid);
+            let pos = this.getXYByName(grid);
+            let moveRange = Controller.inst.model.QueryMoveRange(pos[0], pos[1]);
+            if(moveRange[0]){
+
+            }else{
+                moveRange[1].forEach((element) => {
+                    this.chesses.setMovable(element[0], element[1]);
+                });
+            }
+        };
+        this.sensor.onLeave = null;
+        this.sensor.onClick = (grid:Node)=>{
+            log("玩家點選第一次", grid.name);
+
+            this.sendData.push(grid);
             this.onPlayerTurnClickOnce();
-        }});
+        };
     }
 
     private onPlayerTurnClickOnce(){
         this.setStatus("請點選要移動到哪裏");
 
-        this.sensor.removeListener();
+        this.sensor.addListener();
         this.addBtnBackStepListener((btn:any)=>{this.onPlayerTurnStart();});
 
-        this.sensor.addListener({callback:(evt:EventMouse)=>{
-            let _grid:Node = evt.currentTarget;
-            log("玩家點選第二次", _grid.name);
+        this.sensor.onEnter = null;
+        this.sensor.onLeave = null;
+        this.sensor.onClick = (grid:Node)=>{
+            log("玩家點選第二次", grid.name);
 
-            this.sendData.push(_grid);
+            this.sendData.push(grid);
             this.onPlayerTurnClickSecond();
-        }})
+        };
     }
 
     private onPlayerTurnClickSecond(){
         this.setStatus("完成移動");
         
+        this.sensor.onEnter = null;
+        this.sensor.onLeave = null;
         this.sensor.removeListener();
         this.addBtnBackStepListener((btn:any)=>{this.onPlayerTurnClickOnce();});
 
-        const from:Node = this.sendData[0];
-        const to:Node = this.sendData[1];
-        let fromPos = from.name.split("_");
-        let toPos = to.name.split("_");
-        this.answer([fromPos[0], fromPos[1], toPos[0], toPos[1]]);
+        let from = this.getXYByName(this.sendData[0]);
+        let to = this.getXYByName(this.sendData[1]);
+        this.answer([from[0], from[1], to[0], to[1]]);
     }
 }

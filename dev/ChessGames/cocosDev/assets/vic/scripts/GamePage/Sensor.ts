@@ -18,22 +18,34 @@ export class Sensor extends BasicViewer {
 
     private gridBorders:Node[] = [];
 
+    onEnter:(node:Node)=>void|null = null;
+    onLeave:(node:Node)=>void|null = null;
+    onClick:(node:Node)=>void|null = null;
+
     addListener(arg?:any){
         super.addListener(arg);
         this.gridBorders.forEach(grid=>{
-            grid.on(Node.EventType.MOUSE_ENTER, function (evt:EventMouse) {
+            grid.on(Node.EventType.MOUSE_ENTER, (evt:EventMouse)=>{
                 let _grid:Node = evt.currentTarget;
                 _grid.getComponent(GridBorder)?.showFocus(true);
+
+                if(this.onEnter) this.onEnter(_grid);
             }, this);
             
-            grid.on(Node.EventType.MOUSE_LEAVE, function (evt:EventMouse) {
+            grid.on(Node.EventType.MOUSE_LEAVE, (evt:EventMouse)=>{
                 let _grid:Node = evt.currentTarget;
                 _grid.getComponent(GridBorder)?.showFocus(false);
+
+                if(this.onLeave) this.onLeave(_grid);
             }, this);
 
-            if (arg && arg.hasOwnProperty("callback")){
-                grid.on(Node.EventType.MOUSE_DOWN, arg.callback);
-            }
+            grid.on(Node.EventType.MOUSE_DOWN, (evt:EventMouse)=>{
+                let _grid:Node = evt.currentTarget;
+                if(this.onClick) this.onClick(_grid);
+            }, this);
+            // if (arg && arg.hasOwnProperty("callback")){
+            //     grid.on(Node.EventType.MOUSE_DOWN, arg.callback);
+            // }
         });
     }
 

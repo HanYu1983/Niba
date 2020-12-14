@@ -13,7 +13,6 @@ import { _decorator, Component, Node } from 'cc';
 import { View } from '../lib/View';
 const { ccclass, property } = _decorator;
 import * as ModelType from "../../han/types"
-import { IGame } from './GamePage/IGame';
 import { GamePage } from './GamePage';
 
 @ccclass('Controller')

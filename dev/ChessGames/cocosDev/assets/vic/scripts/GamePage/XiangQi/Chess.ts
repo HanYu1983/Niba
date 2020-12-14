@@ -12,13 +12,22 @@ const { ccclass, property } = _decorator;
 export class Chess extends Component {
 
     @property(Sprite)
-    image:Sprite = null;
+    chess:Sprite = null;
 
-    setImage(spt:SpriteFrame){
-        this.image.spriteFrame = spt;
+    @property(Sprite)
+    moveable:Sprite = null;
+
+    setChessImageAndColor(spt:SpriteFrame, color:Color){
+        this.chess.node.active = true;
+        this.chess.spriteFrame = spt;
+        this.chess.color = color;
     }
 
-    setColor(color:Color){
-        this.image.color = color;
+    noChess(){
+        this.chess.node.active = false;
+    }
+
+    showMovable(show:boolean){
+        this.moveable.node.active = show;
     }
 }
