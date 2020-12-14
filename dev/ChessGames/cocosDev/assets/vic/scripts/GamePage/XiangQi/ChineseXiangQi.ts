@@ -28,7 +28,6 @@ export class ChineseXiangQi extends BasicGameViewer {
 
         this.chesses.initChesses();
         
-        this.onUpdate();
         this.onPlayerTurnStart();
     }
     onGameEnd(arg?:any):void{
@@ -36,12 +35,11 @@ export class ChineseXiangQi extends BasicGameViewer {
     }
     
     onUpdate(arg?:any):void{
-        this.refreshBoard();
+        this.refreshBoard(arg);
     }
 
 
-    private refreshBoard(){
-        let boardData:Gameplay = Controller.inst.model.Query();
+    private refreshBoard(boardData:any){
         let activePlayer = boardData.ActivePlayer;
         let board = boardData.Board;
         for(let y = 0; y < board.length; ++y){

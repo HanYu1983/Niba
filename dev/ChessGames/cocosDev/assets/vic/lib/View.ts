@@ -33,12 +33,17 @@ export class View extends Component {
     }
     
     openByIndex(id:number, arg?:any):IBasicViewer|null{
-        if(id < this.viewers.length){
+        let viewer = this.getViewerByIndex(id);
+        if(viewer){
             this.closeAllViewers();
-
-            let viewer:IBasicViewer = this.viewers[id];
             viewer.open(arg);
-            return viewer;
+        }
+        return viewer;
+    }
+
+    getViewerByIndex(id:number):IBasicViewer|null{
+        if(id < this.viewers.length){
+            return this.viewers[id];
         }
         return null;
     }

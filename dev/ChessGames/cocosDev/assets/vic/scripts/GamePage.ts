@@ -40,4 +40,8 @@ export class GamePage extends BasicViewer {
             this._currentGame.onGameEnd();
         }
     }
+
+    updateGame(data:any){
+        this._currentGame.onUpdate(data);
+    }
 }

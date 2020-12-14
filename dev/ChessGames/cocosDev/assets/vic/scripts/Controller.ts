@@ -13,6 +13,8 @@ import { _decorator, Component, Node } from 'cc';
 import { View } from '../lib/View';
 const { ccclass, property } = _decorator;
 import * as ModelType from "../../han/types"
+import { IGame } from './GamePage/IGame';
+import { GamePage } from './GamePage';
 
 @ccclass('Controller')
 export class Controller extends Component {
@@ -27,6 +29,9 @@ export class Controller extends Component {
         AskCommand: (player: number, answer: ModelType.AskCommandAnswer) => {
             console.log("AskCommand")
             // answer.CmdMoveChess(0, 0, 1, 1)
+
+            let game:GamePage = this.view.getViewerByIndex(1) as GamePage;
+            game.updateGame(this.model.Query());
         },
         MoveChess: (gameplay: ModelType.Gameplay, chess: ModelType.Chess, from: ModelType.Position, to: ModelType.Position, done: () => void) => {
             console.log("MoveChess", gameplay)
@@ -41,11 +46,12 @@ export class Controller extends Component {
     }
 
     onMainPageChineseXiangQiClick() {
+        this.view.openByIndex(1, GameType.ChineseXiangQi);
         this.app.StartGame()
         // console.log(this.model.Query())
         // console.log(this.model.QueryMoveRange(1, 1))
         // console.log(this.model.Query().Board[0][1].ID.Word)
-        this.view.openByIndex(1, GameType.ChineseXiangQi);
+        
     }
 
     // update (deltaTime: number) {
