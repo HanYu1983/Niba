@@ -23,7 +23,6 @@ func BattlePhase(origin data.Gameplay, robotID string, action interface{}, targe
 	battleMenu.Robots[1] = targetRobot
 	battleMenu.BattleAction[0] = action
 	battleMenu.BattleInfo[0].HitRate = 1
-
 	if targetRobot.PlayerID == data.PlayerIDPlayer {
 
 	} else {
@@ -37,7 +36,6 @@ func BattlePhase(origin data.Gameplay, robotID string, action interface{}, targe
 			return origin, fmt.Errorf("must be BattleActionAttack")
 		}
 	}
-
 	return gameplay, nil
 }
 
@@ -46,8 +44,8 @@ func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 	if len(gameplay.MenuStack) == 0 {
 		return origin, fmt.Errorf("must have menu")
 	}
-	topMenu := gameplay.MenuStack[len(gameplay.MenuStack)-1]
 	if robot, is := gameplay.Robots[unitID]; is {
+		// append menu
 		gameplay, err := CreateRobotMenu(gameplay, robot.ID)
 		if err != nil {
 			return origin, err
@@ -61,16 +59,15 @@ func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 			if cancel {
 				break WaitMenu
 			}
+			topMenu := gameplay.MenuStack[len(gameplay.MenuStack)-1]
 			switch topMenu.Cursor1 {
 			case topMenu.WeaponID:
 				weaponID := selection
 				var _ = weaponID
 				var targetID string
-
 				gameplay, targetID, cancel, err = SelectUnitStep(gameplay, unitID, func(targetID string) error {
 					return nil
 				})
-
 				if err != nil {
 					return origin, err
 				}
@@ -78,7 +75,6 @@ func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 					continue
 				}
 				var _ = targetID
-
 			case topMenu.TransformID:
 				transformID := selection
 				nextRobot := gameplay.Robots[unitID]
@@ -99,18 +95,23 @@ func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 				}
 			}
 		}
+		// pop menu
+		gameplay.MenuStack = gameplay.MenuStack[:len(gameplay.MenuStack)-1]
 		return gameplay, nil
 	}
 	if item, is := gameplay.Items[unitID]; is {
-		menu, err := CreateItemMenu(gameplay, item.ID)
+		// append menu
+		gameplay, err := CreateItemMenu(gameplay, item.ID)
 		if err != nil {
 			return origin, err
 		}
-		menu, selection, _, err := SelectMenuStep(menu)
+		gameplay, selection, _, err := SelectMenuStep(gameplay)
 		if err != nil {
 			return origin, err
 		}
 		var _ = selection
+		// pop menu
+		gameplay.MenuStack = gameplay.MenuStack[:len(gameplay.MenuStack)-1]
 		return gameplay, nil
 	}
 	return origin, nil
