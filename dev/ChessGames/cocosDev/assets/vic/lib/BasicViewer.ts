@@ -7,12 +7,14 @@
 
 import { _decorator, Component, Node } from 'cc';
 import { IBasicViewer } from './IBasicViewer';
+import { View } from './View';
 const { ccclass, property } = _decorator;
 
 @ccclass('BasicViewer')
 export class BasicViewer extends Component implements IBasicViewer {
     
-    public id:string = "";
+    id:string = "";
+    view:View = null;
 
     private _isOpen:boolean = false;
     private _isInit:boolean = false;
@@ -44,8 +46,5 @@ export class BasicViewer extends Component implements IBasicViewer {
     start () {
         this.init();
     }
-
-    // update (deltaTime: number) {
-    //     // Your update function goes here.
-    // }
+    
 }
