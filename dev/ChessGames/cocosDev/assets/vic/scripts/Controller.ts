@@ -26,6 +26,9 @@ export class Controller extends Component {
     public app: ModelType.App = window.App
     public model: ModelType.QueryModel = window.QueryModel
     public modelView: ModelType.View = window.View = {
+        Alert:(msg:string)=>{
+            alert(msg)
+        },
         AskCommand: (player: number, answer: ModelType.AskCommandAnswer) => {
             console.log("AskCommand")
             

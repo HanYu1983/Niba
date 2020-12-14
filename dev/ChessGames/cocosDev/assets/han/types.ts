@@ -68,6 +68,7 @@ export type AskCommandAnswer = {
 }
 
 export type View = {
+    Alert: (msg: string)=>void,
     AskCommand: (player: number, answer: AskCommandAnswer) => void
     MoveChess: (gameplay: Gameplay, chess: Chess, from: Position, to: Position, done: () => void) => void
 }

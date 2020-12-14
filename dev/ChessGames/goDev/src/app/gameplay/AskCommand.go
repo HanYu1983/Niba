@@ -12,6 +12,10 @@ type CmdMoveChess struct {
 	to   tool.Position
 }
 
+func Alert(msg string) {
+	js.Global.Get("View").Call("Alert", msg)
+}
+
 func AskCommand(gameplayCtx tool.Gameplay, player int) (interface{}, error) {
 	wait := make(chan interface{})
 	go func() {
