@@ -2,12 +2,12 @@ package alg
 
 import "app2/data"
 
-func SelectPositionStep(origin data.Gameplay, robotID string, moveRange []data.Position, inputCh <-chan interface{}) (data.Gameplay, data.Position, bool, error) {
+func SelectPositionStep(origin data.Gameplay, robotID string, moveRange []data.Position) (data.Gameplay, data.Position, bool, error) {
 	var err error
 	gameplay := origin
 WaitSpace:
 	for {
-		evt := <-inputCh
+		evt := view.AskCommand()
 		gameplay, err = HandleCursor(gameplay, evt)
 		if err != nil {
 			return origin, data.Position{}, false, err

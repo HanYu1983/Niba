@@ -41,8 +41,12 @@ func BattlePhase(origin data.Gameplay, robotID string, action interface{}, targe
 	return gameplay, nil
 }
 
-func UnitMenuPhase(origin data.Gameplay, unitID string, inputCh <-chan interface{}) (data.Gameplay, error) {
+func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 	gameplay := origin
+	if len(gameplay.MenuStack) == 0 {
+		return origin, fmt.Errorf("must have menu")
+	}
+	topMenu := gameplay.MenuStack[len(gameplay.MenuStack)-1]
 	if robot, is := gameplay.Robots[unitID]; is {
 		gameplay, err := CreateRobotMenu(gameplay, robot.ID)
 		if err != nil {
@@ -50,22 +54,22 @@ func UnitMenuPhase(origin data.Gameplay, unitID string, inputCh <-chan interface
 		}
 	WaitMenu:
 		for {
-			gameplay, selection, cancel, err := SelectMenuStep(gameplay, inputCh)
+			gameplay, selection, cancel, err := SelectMenuStep(gameplay)
 			if err != nil {
 				return origin, err
 			}
 			if cancel {
 				break WaitMenu
 			}
-			switch gameplay.Menu.Cursor1 {
-			case gameplay.Menu.WeaponID:
+			switch topMenu.Cursor1 {
+			case topMenu.WeaponID:
 				weaponID := selection
 				var _ = weaponID
 				var targetID string
 
 				gameplay, targetID, cancel, err = SelectUnitStep(gameplay, unitID, func(targetID string) error {
 					return nil
-				}, inputCh)
+				})
 
 				if err != nil {
 					return origin, err
@@ -75,7 +79,7 @@ func UnitMenuPhase(origin data.Gameplay, unitID string, inputCh <-chan interface
 				}
 				var _ = targetID
 
-			case gameplay.Menu.TransformID:
+			case topMenu.TransformID:
 				transformID := selection
 				nextRobot := gameplay.Robots[unitID]
 				nextRobot.Transform = transformID
@@ -83,9 +87,9 @@ func UnitMenuPhase(origin data.Gameplay, unitID string, inputCh <-chan interface
 			default:
 				switch selection {
 				case data.MenuOptionMove:
-					gameplay, _, err = RobotMovePhase(gameplay, unitID, inputCh)
+					gameplay, _, err = RobotMovePhase(gameplay, unitID)
 					if err != nil {
-						Alert(err)
+						view.Alert(err)
 						continue
 					}
 				case data.MenuOptionSkyGround:
@@ -102,7 +106,7 @@ func UnitMenuPhase(origin data.Gameplay, unitID string, inputCh <-chan interface
 		if err != nil {
 			return origin, err
 		}
-		menu, selection, _, err := SelectMenuStep(menu, inputCh)
+		menu, selection, _, err := SelectMenuStep(menu)
 		if err != nil {
 			return origin, err
 		}

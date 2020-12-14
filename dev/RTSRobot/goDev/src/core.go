@@ -1,8 +1,6 @@
 package main
 
-import (
-	"app"
-)
+import "app2"
 
 //goDev/src/go generate
 //go:generate genny -in tool/template/map.go -out app2/data/MapStringWeapon.go -pkg data gen "Key=string Value=Weapon"
@@ -16,7 +14,7 @@ import (
 //go:generate genny -in tool/template/list.go -out app2/lib/ListInt.go -pkg lib gen "Item=int"
 
 func init() {
-	app.Main()
+	app2.Main()
 }
 
 func main() {

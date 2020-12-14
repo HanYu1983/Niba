@@ -4,11 +4,12 @@ import (
 	"app2/data"
 )
 
-func PlayerTurn(origin data.Gameplay, inputCh <-chan interface{}) (data.Gameplay, error) {
+func PlayerTurn(origin data.Gameplay) (data.Gameplay, error) {
 	var err error
 	gameplay := origin
 	for {
-		cmd := <-inputCh
+		Render(gameplay)
+		cmd := view.AskCommand()
 		gameplay, err = HandleCursor(gameplay, cmd)
 		if err != nil {
 			return origin, err
@@ -21,9 +22,16 @@ func PlayerTurn(origin data.Gameplay, inputCh <-chan interface{}) (data.Gameplay
 		case data.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
-				gameplay, err = UnitMenuPhase(gameplay, "", inputCh)
+				cursor := gameplay.Cursor
+				var notFound string
+				unitAtCursor := SearchUnitByPosition(gameplay.Positions, cursor)
+				if unitAtCursor == notFound {
+					gameplay, err = SystemMenu(gameplay)
+				} else {
+					gameplay, err = UnitMenuPhase(gameplay, unitAtCursor)
+				}
 				if err != nil {
-					Alert(err)
+					view.Alert(err)
 					continue
 				}
 			}

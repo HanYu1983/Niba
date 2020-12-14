@@ -2,12 +2,13 @@ package alg
 
 import "app2/data"
 
-func GameLoop(origin data.Gameplay, inputCh <-chan interface{}) (data.Gameplay, error) {
+func GameLoop(origin data.Gameplay) (data.Gameplay, error) {
 	var err error
 	gameplayCtx := origin
 	for {
+		Render(gameplayCtx)
 		gameplayCtx.ActivePlayerID = data.PlayerIDPlayer
-		gameplayCtx, err = PlayerTurn(gameplayCtx, inputCh)
+		gameplayCtx, err = PlayerTurn(gameplayCtx)
 		if err != nil {
 			return origin, err
 		}
