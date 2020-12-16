@@ -65,7 +65,7 @@ export default class InputSensor extends cc.Component {
             case cc.macro.KEY.enter:
                 this.node.emit(InputSensor.ENTER);
                 break;
-            case cc.macro.KEY.escape:
+            case cc.macro.KEY.quote:
                 this.node.emit(InputSensor.ESCAPE);
                 break;
         }
