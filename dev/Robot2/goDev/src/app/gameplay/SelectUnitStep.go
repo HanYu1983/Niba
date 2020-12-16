@@ -1,4 +1,4 @@
-package alg
+package gameplay
 
 import (
 	"app/data"

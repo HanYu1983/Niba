@@ -1,8 +1,8 @@
 package app
 
 import (
-	"app/alg"
 	"app/data"
+	"app/gameplay"
 	"app/lib"
 )
 
@@ -19,7 +19,7 @@ func Main() {
 			switch detail.KeyCode {
 			case data.KeyCodeSpace:
 				var ctx data.Gameplay
-				alg.GameLoop(ctx)
+				gameplay.GameLoop(ctx)
 			}
 		}
 	}
