@@ -6,6 +6,7 @@ func LobbyPagePhase(origin ui_data.UI) (ui_data.UI, error) {
 	var err error
 	ctx := origin
 	ctx.LobbyPage.Active = true
+Menu:
 	for {
 		focusMenu := ctx.LobbyPage.Menus[ctx.LobbyPage.FocusMenu]
 		var selection string
@@ -15,7 +16,7 @@ func LobbyPagePhase(origin ui_data.UI) (ui_data.UI, error) {
 			return origin, err
 		}
 		if cancel {
-			continue
+			break Menu
 		}
 		switch selection {
 		case ui_data.MenuOptionStartGameplay:

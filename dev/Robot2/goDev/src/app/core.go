@@ -11,5 +11,5 @@ var (
 
 func Main() {
 	view.Install()
-	StartUI(ui_data.DefaultUI)
+	StartPagePhase(ui_data.DefaultUI)
 }
