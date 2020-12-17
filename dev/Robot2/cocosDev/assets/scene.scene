@@ -665,7 +665,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Menu",
+    "_name": "UnitMenu",
     "_objFlags": 0,
     "_parent": {
       "__id__": 8
