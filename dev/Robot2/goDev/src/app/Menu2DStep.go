@@ -1,7 +1,6 @@
 package app
 
 import (
-	"app/tool/data"
 	"app/tool/ui_data"
 )
 
@@ -16,19 +15,19 @@ AskCommand:
 			return origin, "", false, err
 		}
 		switch detail := cmd.(type) {
-		case data.CommandKeyDown:
+		case ui_data.CommandKeyDown:
 			switch detail.KeyCode {
-			case data.KeyCodeArrowUp, data.KeyCodeArrowLeft:
+			case ui_data.KeyCodeArrowUp, ui_data.KeyCodeArrowLeft:
 				menu := ctx.Menu2Ds[id]
 				menu.Cursor1--
 				ctx.Menu2Ds = ui_data.AssocIntMenu2D(ctx.Menu2Ds, id, menu)
-			case data.KeyCodeArrowDown, data.KeyCodeArrowRight:
+			case ui_data.KeyCodeArrowDown, ui_data.KeyCodeArrowRight:
 				menu := ctx.Menu2Ds[id]
 				menu.Cursor1++
 				ctx.Menu2Ds = ui_data.AssocIntMenu2D(ctx.Menu2Ds, id, menu)
-			case data.KeyCodeSpace:
+			case ui_data.KeyCodeSpace:
 				break AskCommand
-			case data.KeyCodeEsc:
+			case ui_data.KeyCodeEsc:
 				return origin, "", true, nil
 			}
 		}

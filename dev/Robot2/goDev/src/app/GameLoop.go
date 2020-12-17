@@ -71,7 +71,7 @@ func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 			return origin, err
 		}
 		switch detail := cmd.(type) {
-		case data.CommandKeyDown:
+		case ui_data.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
 				cursor := model.QueryCursorInMap()

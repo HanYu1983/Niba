@@ -1,7 +1,6 @@
 package p5
 
 import (
-	"app/tool/data"
 	"app/tool/ui_data"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -27,12 +26,12 @@ func Install() error {
 
 		_p5.Set("keyPressed", func(e *js.Object) {
 			keyCode := e.Get("keyCode").Int()
-			eventQueue <- data.CommandKeyDown{KeyCode: keyCode}
+			eventQueue <- ui_data.CommandKeyDown{KeyCode: keyCode}
 		})
 
 		_p5.Set("keyReleased", func(e *js.Object) {
 			keyCode := e.Get("keyCode").Int()
-			eventQueue <- data.CommandKeyUp{KeyCode: keyCode}
+			eventQueue <- ui_data.CommandKeyUp{KeyCode: keyCode}
 		})
 
 		_p5.Set("setup", func() {
