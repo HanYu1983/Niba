@@ -2,20 +2,15 @@ package lobby
 
 import (
 	"app/data"
-	"app/lib"
-	"app/ui"
+	"app/tool/def"
 )
 
 var (
-	view = lib.View
+	view = def.View
 )
 
 func Render(ctx data.Lobby) {
-	view.Render(ui.UI{
-		LobbyPage: ui.LobbyPage{
-			Active: true,
-		},
-	})
+
 }
 
 func StartLobby(origin data.Lobby) (data.Lobby, error) {

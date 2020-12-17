@@ -1,4 +1,4 @@
-package lib
+package viewer
 
 import (
 	"app/data"
@@ -12,7 +12,3 @@ type Viwer interface {
 	Render(ui ui_data.UI)
 	RenderRobotMove(gameplay data.Gameplay, robotID string, from data.Position, to data.Position)
 }
-
-var (
-	View Viwer = ViewP5{}
-)

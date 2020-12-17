@@ -1,12 +1,12 @@
 package app
 
 import (
-	"app/lib"
+	"app/tool/def"
 	"app/tool/ui_data"
 )
 
 var (
-	view = lib.View
+	view = def.View
 )
 
 func Main() {
