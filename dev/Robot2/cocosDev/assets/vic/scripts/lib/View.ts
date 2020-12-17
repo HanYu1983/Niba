@@ -9,6 +9,7 @@ import { _decorator, Component, Node, ImageAsset } from 'cc';
 import { BasicViewer } from './BasicViewer';
 import { IBasicViewer } from './IBasicViewer';
 import ImageAssets from './ImageAssets';
+import { Pool } from './Pool';
 const { ccclass, property } = _decorator;
 
 @ccclass('View')
@@ -30,6 +31,7 @@ export class View extends Component {
         if (assetId < this.imageAssets.length){
             return this.imageAssets[assetId].getImageByKey(imageName);
         }
+        return null;
     }
     
     openByIndex(id:number, arg?:any):IBasicViewer|null{

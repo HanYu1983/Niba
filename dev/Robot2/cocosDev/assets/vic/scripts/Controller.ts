@@ -17,7 +17,9 @@ export class Controller extends Component {
     view:View = null;
 
     start () {
-        let game = this.view.openByIndex(0);
-        (game as GamePage).startGame();
+        let game:GamePage = this.view.openByIndex(0) as GamePage;
+        game.startGame();
+
+        game.showUnitMenu([['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 0, 0, 0], 0]);
     }
 }
