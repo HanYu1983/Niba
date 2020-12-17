@@ -1,18 +1,15 @@
-package ui
+package ui_data
 
 import (
-	"app/data"
-	"app/lib"
+	"app/tool/data"
 )
 
 type Menu1D struct {
-	Active  bool
 	Options []string
 	Cursor  int
 }
 
 type Menu2D struct {
-	Active  bool
 	Options [][]string
 	Cursor1 int
 	Cursor2 []int
@@ -32,9 +29,8 @@ type BattleMenuSlot struct {
 }
 
 type BattleMenu struct {
-	Active bool
-	Left   BattleMenuSlot
-	Right  BattleMenuSlot
+	Left  BattleMenuSlot
+	Right BattleMenuSlot
 }
 
 type GameplayPage struct {
@@ -50,13 +46,15 @@ type GameplayPage struct {
 }
 
 type LobbyPage struct {
-	Active   bool
-	MainMenu Menu1D
+	Active    bool
+	Menus     []int
+	FocusMenu int
 }
 
 type StartPage struct {
-	Active   bool
-	MainMenu Menu1D
+	Active    bool
+	Menus     []int
+	FocusMenu int
 }
 
 const (
@@ -69,21 +67,42 @@ type UI struct {
 	StartPage    StartPage
 	LobbyPage    LobbyPage
 	GameplayPage GameplayPage
+	Menus1Ds     map[int]Menu1D
 }
+
+const (
+	MenuOptionNewGame       = "MenuOptionNewGame"
+	MenuOptionLoadGame      = "MenuOptionLoadGame"
+	MenuOptionPrepare       = "MenuOptionPrepare"
+	MenuOptionStartGameplay = "MenuOptionStartGameplay"
+)
+
+const (
+	Menu1DStartMenu = iota
+	Menu1DLobbyMenu
+)
 
 var (
 	DefaultUI = UI{
 		StartPage: StartPage{
-			MainMenu: Menu1D{
-				Options: []string{
-					"new game", "load game",
-				},
+			Menus: []int{
+				Menu1DStartMenu,
 			},
 		},
 		LobbyPage: LobbyPage{
-			MainMenu: Menu1D{
+			Menus: []int{
+				Menu1DLobbyMenu,
+			},
+		},
+		Menus1Ds: map[int]Menu1D{
+			Menu1DStartMenu: {
 				Options: []string{
-					"buy robot", "buy weapon",
+					MenuOptionNewGame, MenuOptionLoadGame,
+				},
+			},
+			Menu1DLobbyMenu: {
+				Options: []string{
+					MenuOptionPrepare, MenuOptionStartGameplay,
 				},
 			},
 		},
@@ -97,14 +116,12 @@ var (
 				"",
 			},
 			UnitMenu: Menu2D{
-				Active: true,
 				Options: [][]string{
 					{"move"},
 					{"weapon1", "weapon2"},
 				},
 			},
 			BattleMenu: BattleMenu{
-				Active: true,
 				Left: BattleMenuSlot{
 					RobotID:      "",
 					BattleAction: BattleActionAttack,
@@ -123,11 +140,3 @@ var (
 		},
 	}
 )
-
-var (
-	view = lib.View
-)
-
-func StartUI(origin UI) {
-
-}

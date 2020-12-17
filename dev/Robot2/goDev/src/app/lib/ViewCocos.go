@@ -2,7 +2,7 @@ package lib
 
 import (
 	"app/data"
-	"app/ui"
+	"app/tool/ui_data"
 )
 
 type ViewCocos struct{}
@@ -15,7 +15,7 @@ func (p ViewCocos) Install() error {
 	return nil
 }
 
-func (p ViewCocos) Render(app ui.UI) {
+func (p ViewCocos) Render(app ui_data.UI) {
 }
 
 func (p ViewCocos) Alert(msg interface{}) {

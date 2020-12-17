@@ -2,17 +2,17 @@ package p5
 
 import (
 	"app/data"
-	"app/ui"
+	"app/tool/ui_data"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 var (
 	eventQueue = make(chan interface{})
-	app        ui.UI
+	app        ui_data.UI
 )
 
-func Render(_app ui.UI) {
+func Render(_app ui_data.UI) {
 	js.Global.Get("console").Call("log", _app)
 	app = _app
 }

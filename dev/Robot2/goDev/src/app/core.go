@@ -1,9 +1,8 @@
 package app
 
 import (
-	"app/data"
-	"app/gameplay"
 	"app/lib"
+	"app/tool/ui_data"
 )
 
 var (
@@ -12,15 +11,5 @@ var (
 
 func Main() {
 	view.Install()
-	for {
-		cmd := view.AskCommand()
-		switch detail := cmd.(type) {
-		case data.CommandKeyDown:
-			switch detail.KeyCode {
-			case data.KeyCodeSpace:
-				var ctx data.Gameplay
-				gameplay.GameLoop(ctx)
-			}
-		}
-	}
+	StartUI(ui_data.DefaultUI)
 }
