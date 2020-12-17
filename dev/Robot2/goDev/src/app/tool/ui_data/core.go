@@ -67,7 +67,8 @@ type UI struct {
 	StartPage    StartPage
 	LobbyPage    LobbyPage
 	GameplayPage GameplayPage
-	Menus1Ds     map[int]Menu1D
+	Menu1Ds      map[int]Menu1D
+	Menu2Ds      map[int]Menu2D
 }
 
 const (
@@ -80,6 +81,7 @@ const (
 const (
 	Menu1DStartMenu = iota
 	Menu1DLobbyMenu
+	Menu2DUnitMenu
 )
 
 var (
@@ -94,7 +96,7 @@ var (
 				Menu1DLobbyMenu,
 			},
 		},
-		Menus1Ds: map[int]Menu1D{
+		Menu1Ds: map[int]Menu1D{
 			Menu1DStartMenu: {
 				Options: []string{
 					MenuOptionNewGame, MenuOptionLoadGame,
@@ -105,6 +107,9 @@ var (
 					MenuOptionPrepare, MenuOptionStartGameplay,
 				},
 			},
+		},
+		Menu2Ds: map[int]Menu2D{
+			Menu2DUnitMenu: {},
 		},
 		GameplayPage: GameplayPage{
 			Active: true,
