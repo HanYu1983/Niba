@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, CCInteger } from 'cc';
 import { GamePage } from './gamePage/GamePage';
 import { View } from './lib/View';
 const { ccclass, property } = _decorator;
@@ -16,10 +16,10 @@ export class Controller extends Component {
     @property(View)
     view:View = null;
 
-    start () {
-        let game:GamePage = this.view.openByIndex(0) as GamePage;
-        game.startGame();
+    @property(CCInteger)
+    startPage:number = 0;
 
-        game.showUnitMenu([['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 0, 0, 0], 3]);
+    start () {
+        this.view.openByIndex(this.startPage);
     }
 }

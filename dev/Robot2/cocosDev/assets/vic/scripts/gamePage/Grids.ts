@@ -6,24 +6,31 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node, instantiate } from 'cc';
+import { Instant } from '../lib/instanceViewer/Instant';
 import { Grid } from './Grid';
 const { ccclass, property } = _decorator;
 
 @ccclass('Grids')
-export class Grids extends Component {
+export class Grids extends Instant {
 
     @property(Node)
     prefab:Node = null;
 
-    initGrids(){
-        for(let i = 0; i < 400; ++i){
-            let node = instantiate(this.prefab);
-            node.parent = this.node;
-            node.active = true;
-        }
+    private grids:Node[] = [];
+
+    clear():void{
+        super.clear();
+        this.grids.forEach(grid=>{
+            this.pool.release(this.prefab, grid);
+        });
     }
 
-    updateGrids(map:any){
-        
+    build(data:any):void{
+        super.build(data);
+        for(let i = 0; i < 400; ++i){
+            let node:Node = this.pool.aquire(this.prefab, this.node);
+            node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
+            this.grids.push(node);
+        }
     }
 }

@@ -18,20 +18,10 @@ export class View extends Component {
     @property(BasicViewer)
     viewers:IBasicViewer[] = [];
 
-    @property(ImageAssets)
-    imageAssets:ImageAssets[] = [];
-
     start(){
         this.viewers.forEach(element => {
             element.view = this;
         });
-    }
-
-    getImage(assetId:number, imageName:string){
-        if (assetId < this.imageAssets.length){
-            return this.imageAssets[assetId].getImageByKey(imageName);
-        }
-        return null;
     }
     
     openByIndex(id:number, arg?:any):IBasicViewer|null{
