@@ -1,7 +1,8 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool"
+	"app/tool/data"
 	"fmt"
 )
 
@@ -23,14 +24,14 @@ WaitCommand:
 			case data.KeyCodeDown:
 				topMenu.Cursor1++
 			case data.KeyCodeLeft:
-				topMenu.Cursor2 = lib.ReplaceIndex(
+				topMenu.Cursor2 = tool.ReplaceIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] - 1,
 					},
 				)
 			case data.KeyCodeRight:
-				topMenu.Cursor2 = lib.ReplaceIndex(
+				topMenu.Cursor2 = tool.ReplaceIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] + 1,

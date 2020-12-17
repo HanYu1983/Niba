@@ -1,6 +1,6 @@
 package gameplay
 
-import "app/data"
+import "app/tool/data"
 
 func GameLoop(origin data.Gameplay) (data.Gameplay, error) {
 	var err error

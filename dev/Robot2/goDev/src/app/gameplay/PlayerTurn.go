@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool/data"
 )
 
 func PlayerTurn(origin data.Gameplay) (data.Gameplay, error) {

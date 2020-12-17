@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool/data"
 )
 
 func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID string) error) (data.Gameplay, string, bool, error) {

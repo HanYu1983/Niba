@@ -1,7 +1,7 @@
 package app
 
 import (
-	"app/data"
+	"app/tool/data"
 	"app/tool/ui_data"
 )
 

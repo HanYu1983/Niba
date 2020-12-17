@@ -1,6 +1,6 @@
 package gameplay
 
-import "app/data"
+import "app/tool/data"
 
 func SelectPositionStep(origin data.Gameplay, robotID string, moveRange []data.Position) (data.Gameplay, data.Position, bool, error) {
 	var err error

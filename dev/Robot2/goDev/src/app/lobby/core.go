@@ -1,7 +1,7 @@
 package lobby
 
 import (
-	"app/data"
+	"app/tool/data"
 	"app/tool/def"
 )
 

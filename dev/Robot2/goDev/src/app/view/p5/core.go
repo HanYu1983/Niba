@@ -1,7 +1,7 @@
 package p5
 
 import (
-	"app/data"
+	"app/tool/data"
 	"app/tool/ui_data"
 
 	"github.com/gopherjs/gopherjs/js"

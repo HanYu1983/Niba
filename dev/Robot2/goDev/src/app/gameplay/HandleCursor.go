@@ -1,6 +1,6 @@
 package gameplay
 
-import "app/data"
+import "app/tool/data"
 
 func HandleCursor(origin data.Gameplay, evt interface{}) (data.Gameplay, error) {
 	gameplay := origin
