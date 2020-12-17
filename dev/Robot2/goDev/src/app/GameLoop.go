@@ -88,8 +88,7 @@ func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 				}
 				if err != nil {
 					model.Reset()
-					view.Alert(err)
-					continue
+					return origin, err
 				}
 			}
 		default:
