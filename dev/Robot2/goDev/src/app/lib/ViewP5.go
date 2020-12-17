@@ -2,6 +2,7 @@ package lib
 
 import (
 	"app/data"
+	"app/ui"
 	"app/view/p5"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -18,8 +19,8 @@ func (p ViewP5) Install() error {
 	return p5.Install()
 }
 
-func (p ViewP5) Render(app data.App) {
-	p5.Render(app)
+func (p ViewP5) Render(ui ui.UI) {
+	p5.Render(ui)
 }
 
 func (p ViewP5) Alert(msg interface{}) {

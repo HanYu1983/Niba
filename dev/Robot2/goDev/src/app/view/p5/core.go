@@ -2,16 +2,17 @@ package p5
 
 import (
 	"app/data"
+	"app/ui"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 var (
 	eventQueue = make(chan interface{})
-	app        data.App
+	app        ui.UI
 )
 
-func Render(_app data.App) {
+func Render(_app ui.UI) {
 	js.Global.Get("console").Call("log", _app)
 	app = _app
 }
@@ -41,7 +42,6 @@ func Install() error {
 		_p5.Set("draw", func() {
 			_p5.Call("background", 0)
 			_p5.Call("fill", 100)
-			_p5.Call("text", app.Page, 20, 20)
 		})
 	}, "canvas")
 	return nil

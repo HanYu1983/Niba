@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/data"
 	"app/lib"
+	"app/ui"
 )
 
 func CreateRobotMenu(origin data.Gameplay, unitID string) (data.Gameplay, error) {
@@ -59,8 +60,13 @@ var (
 )
 
 func Render(ctx data.Gameplay) {
-	view.Render(data.App{
-		Page:     data.PageGameplay,
-		Gameplay: ctx,
+	view.Render(ui.UI{
+		GameplayPage: ui.GameplayPage{
+			Active:    true,
+			Units:     ctx.Units,
+			Robots:    ctx.Robots,
+			Items:     ctx.Items,
+			Positions: ctx.Positions,
+		},
 	})
 }

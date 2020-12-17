@@ -3,6 +3,7 @@ package lobby
 import (
 	"app/data"
 	"app/lib"
+	"app/ui"
 )
 
 var (
@@ -10,9 +11,10 @@ var (
 )
 
 func Render(ctx data.Lobby) {
-	view.Render(data.App{
-		Page:  data.PageLobby,
-		Lobby: ctx,
+	view.Render(ui.UI{
+		LobbyPage: ui.LobbyPage{
+			Active: true,
+		},
 	})
 }
 
@@ -23,5 +25,5 @@ func StartLobby(origin data.Lobby) (data.Lobby, error) {
 		var _ = cmd
 		break
 	}
-	return ctx
+	return ctx, nil
 }
