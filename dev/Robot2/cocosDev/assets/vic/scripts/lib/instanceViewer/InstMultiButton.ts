@@ -29,10 +29,10 @@ export class InstMultiButton extends InstButton {
         this.multis = [];
     }
 
-    doBuild(data:any, all:any):void{
-        super.doBuild(data, all);
-        this.setMultiCount(data[3]);
-        this.setCurrentAt(data[4]);
+    doBuild(content:any, data:any):void{
+        super.doBuild(content, data);
+        this.setMultiCount(content[3]);
+        this.setCurrentAt(content[4]);
     }
 
     private setMultiCount(count:number){

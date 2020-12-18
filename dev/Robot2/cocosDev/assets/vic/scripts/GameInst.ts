@@ -13,18 +13,18 @@ const { ccclass, property } = _decorator;
 @ccclass('GameInst')
 export class GameInst extends Instant {
 
-    @property(Pool2)
-    menuPool:Pool2 = null;
+    // @property(Pool2)
+    // menuPool:Pool2 = null;
 
-    private menus:Node[] = [];
+    // private menus:Node[] = [];
 
-    clear():void{
-        super.clear();
+    // clear():void{
+    //     super.clear();
 
-        this.menus.forEach(menu=>{
-            this.menuPool.release(menu);
-        });
-    }
+    //     this.menus.forEach(menu=>{
+    //         this.menuPool.release(menu);
+    //     });
+    // }
     
     protected getMenu(data:any, key:string):any{
         if(data.Menu1Ds[key]){
@@ -39,17 +39,17 @@ export class GameInst extends Instant {
         // return null;
     }
 
-    protected doBuild(data:any, all:any):void{
-        super.doBuild(data, all);
+    // protected doBuild(data:any, all:any):void{
+    //     super.doBuild(data, all);
 
-        for(let i = 0; i < data.Menus.length; ++i){
-            const menuData = this.getMenu(all, data.Menus[i]);
-            console.log(menuData);
+    //     for(let i = 0; i < data.Menus.length; ++i){
+    //         const menuData = this.getMenu(all, data.Menus[i]);
+    //         console.log(menuData);
             
-            let menu = this.menuPool.aquire(this.node);
-            menu.getComponent(Instant)?.build(menuData);
+    //         let menu = this.menuPool.aquire(this.node);
+    //         menu.getComponent(Instant)?.build(menuData);
 
-            this.menus.push(menu);
-        }
-    }
+    //         this.menus.push(menu);
+    //     }
+    // }
 }

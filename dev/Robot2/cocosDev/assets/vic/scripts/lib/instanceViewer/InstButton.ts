@@ -31,10 +31,10 @@ export class InstButton extends Instant {
         super.clear();
     }
 
-    doBuild(data:any, all:any):void{
-        this.setLabel(data[0]);
-        this.setFocus(data[1]);
-        this.setEnabled(data[2]);
+    doBuild(content:any, data:any):void{
+        this.setLabel(content[0]);
+        this.setFocus(content[1]);
+        this.setEnabled(content[2]);
     }
 
     private setFocus(focus:boolean){

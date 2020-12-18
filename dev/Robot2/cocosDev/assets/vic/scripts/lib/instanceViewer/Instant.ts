@@ -30,10 +30,10 @@ export class Instant extends Component implements IInstant {
         if(content){
             this.node.active = true;
             this.doBuild(content, data);
-            this.childs.forEach(item=>item.getComponent(Instant)?.build(content));
+            this.childs.forEach(item=>item.getComponent(Instant)?.build(data));
         }
     }
-    protected doBuild(data:any, all:any):void{
+    protected doBuild(content:any, data:any):void{
 
     }
     protected checkData(data:any):any{

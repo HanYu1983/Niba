@@ -13,12 +13,13 @@ const { ccclass, property } = _decorator;
 @ccclass('MainPage')
 export class MainPage extends GameInst {
 
-    // @property(Instant)
-    // startMenu:Instant = null;
+    @property(Instant)
+    menu:Instant = null;
 
-    // clear():void{
-    //     this.startMenu.clear();
-    // }
+    clear():void{
+        super.clear();
+        this.menu.clear();
+    }
 
     protected checkData(data:any):any{
         if (data.StartPage.Active){
@@ -27,15 +28,10 @@ export class MainPage extends GameInst {
         return null;
     }
 
-    protected doBuild(data:any, all:any):void{
-        super.doBuild(data, all);
-        // console.log("start page");
+    protected doBuild(content:any, data:any):void{
+        super.doBuild(content, data);
 
-        // let menuData = this.getMenu(all, data.Menus[0]);
-        // this.startMenu.build(menuData);
-
-        // console.log(data);
-
-        // this.getMenu()
+        let menuData = this.getMenu(data, content.Menus[0]);
+        this.menu.build(menuData);
     }
 }
