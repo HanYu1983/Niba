@@ -50,7 +50,8 @@ func Main() {
 			return 1
 		},
 	)
-	js.Global.Get("console").Call("log", tree)
+	path := astar.BuildPath(tree[4])
+	js.Global.Get("console").Call("log", tree, path)
 
 	view.Install()
 	StartPagePhase(ui_data.DefaultUI)

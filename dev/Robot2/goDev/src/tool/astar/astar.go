@@ -1,7 +1,10 @@
 package astar
 
 // 修改自github.com/beefsack/go-astar
-import "container/heap"
+import (
+	"container/heap"
+	"reflect"
+)
 
 type Node struct {
 	Pather interface{}
@@ -26,6 +29,14 @@ func (nm NodeMap) get(p interface{}) *Node {
 	return n
 }
 
+func ReverseSlice(s interface{}) {
+	size := reflect.ValueOf(s).Len()
+	swap := reflect.Swapper(s)
+	for i, j := 0, size-1; i < j; i, j = i+1, j-1 {
+		swap(i, j)
+	}
+}
+
 func BuildPath(current *Node) (path []interface{}) {
 	p := []interface{}{}
 	curr := current
@@ -33,6 +44,7 @@ func BuildPath(current *Node) (path []interface{}) {
 		p = append(p, curr.Pather)
 		curr = curr.parent
 	}
+	ReverseSlice(p)
 	return p
 }
 
