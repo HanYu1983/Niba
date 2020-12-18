@@ -74,7 +74,11 @@ func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 		case ui_data.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
-				cursor := model.QueryCursorInMap()
+				cursor, err := model.QueryCursorInMap()
+				if err != nil {
+					model.Reset()
+					return origin, err
+				}
 				var notFound string
 				unitID, err := model.QueryUnitByPosition(cursor)
 				if err != nil {

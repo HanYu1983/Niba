@@ -11,13 +11,13 @@ type IModel interface {
 	Push()
 	Pop()
 	Reset()
-	BuyRobot(id string)
-	BuyPilot(id string)
+	BuyRobot(id string) error
+	BuyPilot(id string) error
 	QueryActivePlayer() string
-	NextPlayer()
+	NextPlayer() error
 	HandlePlayerTurnEvent(interface{}) error
 	IsDone() bool
-	QueryCursorInMap() data.Position
+	QueryCursorInMap() (data.Position, error)
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
 	QueryUnitByPosition(data.Position) (string, error)
 	QueryGameplayRobots() map[string]data.Robot
@@ -26,7 +26,7 @@ type IModel interface {
 
 var (
 	view  viewer.IViwer = def.View
-	model IModel        = nil
+	model IModel        = &DefaultModel{}
 )
 
 func Main() {

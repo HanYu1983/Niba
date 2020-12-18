@@ -26,6 +26,9 @@ type CommandKeyUp struct {
 	KeyCode int
 }
 
+type CommandFlush struct {
+}
+
 type Menu1D struct {
 	Options []string
 	Cursor  int

@@ -7,9 +7,9 @@ import (
 func Menu1DStep(origin ui_data.UI, id int) (ui_data.UI, string, bool, error) {
 	var err error
 	ctx := origin
-	view.Render(origin)
 AskCommand:
 	for {
+		view.Render(ctx)
 		cmd := view.AskCommand()
 		if err != nil {
 			return origin, "", false, err
