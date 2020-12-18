@@ -1,11 +1,11 @@
 package viewer
 
 import (
-	"app/data"
+	"app/tool/data"
 	"app/tool/ui_data"
 )
 
-type Viwer interface {
+type IViwer interface {
 	Install() error
 	AskCommand() interface{}
 	Alert(msg interface{})

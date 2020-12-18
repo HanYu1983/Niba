@@ -1,7 +1,8 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool/data"
+	"app/tool/def"
 )
 
 func CreateRobotMenu(origin data.Gameplay, unitID string) (data.Gameplay, error) {
@@ -56,3 +57,7 @@ func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) s
 func Render(ctx data.Gameplay) {
 
 }
+
+var (
+	view = def.View
+)

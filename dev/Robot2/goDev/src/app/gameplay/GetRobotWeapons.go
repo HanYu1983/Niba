@@ -1,6 +1,6 @@
 package gameplay
 
-import "app/data"
+import "app/tool/data"
 
 func GetRobotWeapons(origin data.Gameplay, robot data.Robot) (data.Weapons, error) {
 	if weapons, has := robot.WeaponsByTransform[robot.Transform]; has {

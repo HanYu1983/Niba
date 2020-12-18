@@ -52,14 +52,6 @@ type Tag struct {
 	Sky       bool
 }
 
-type CommandKeyDown struct {
-	KeyCode int
-}
-
-type CommandKeyUp struct {
-	KeyCode int
-}
-
 type Menu struct {
 	Active      bool
 	Options     [][]string

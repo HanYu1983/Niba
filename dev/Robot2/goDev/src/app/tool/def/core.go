@@ -3,5 +3,5 @@ package def
 import "app/tool/viewer"
 
 var (
-	View viewer.Viwer = viewer.P5{}
+	View viewer.IViwer = viewer.P5{}
 )

@@ -1,7 +1,9 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool"
+	"app/tool/data"
+	"app/tool/ui_data"
 	"fmt"
 )
 
@@ -16,29 +18,29 @@ WaitCommand:
 	for {
 		cmd := view.AskCommand()
 		switch detail := cmd.(type) {
-		case data.CommandKeyDown:
+		case ui_data.CommandKeyDown:
 			switch detail.KeyCode {
-			case data.KeyCodeUp:
+			case ui_data.KeyCodeUp:
 				topMenu.Cursor1--
-			case data.KeyCodeDown:
+			case ui_data.KeyCodeDown:
 				topMenu.Cursor1++
-			case data.KeyCodeLeft:
-				topMenu.Cursor2 = lib.ReplaceIndex(
+			case ui_data.KeyCodeLeft:
+				topMenu.Cursor2 = tool.ReplaceIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] - 1,
 					},
 				)
-			case data.KeyCodeRight:
-				topMenu.Cursor2 = lib.ReplaceIndex(
+			case ui_data.KeyCodeRight:
+				topMenu.Cursor2 = tool.ReplaceIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] + 1,
 					},
 				)
-			case data.KeyCodeSpace:
+			case ui_data.KeyCodeSpace:
 				break WaitCommand
-			case data.KeyCodeEsc:
+			case ui_data.KeyCodeEsc:
 				return origin, "", true, nil
 			default:
 

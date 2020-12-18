@@ -4,6 +4,28 @@ import (
 	"app/tool/data"
 )
 
+const (
+	KeyCodeUp    = 87
+	KeyCodeDown  = 83
+	KeyCodeLeft  = 65
+	KeyCodeRight = 68
+	KeyCodeSpace = 32
+	// '
+	KeyCodeEsc        = 222
+	KeyCodeArrowUp    = 38
+	KeyCodeArrowDown  = 40
+	KeyCodeArrowLeft  = 37
+	KeyCodeArrowRight = 39
+)
+
+type CommandKeyDown struct {
+	KeyCode int
+}
+
+type CommandKeyUp struct {
+	KeyCode int
+}
+
 type Menu1D struct {
 	Options []string
 	Cursor  int
@@ -67,7 +89,8 @@ type UI struct {
 	StartPage    StartPage
 	LobbyPage    LobbyPage
 	GameplayPage GameplayPage
-	Menus1Ds     map[int]Menu1D
+	Menu1Ds      map[int]Menu1D
+	Menu2Ds      map[int]Menu2D
 }
 
 const (
@@ -80,6 +103,7 @@ const (
 const (
 	Menu1DStartMenu = iota
 	Menu1DLobbyMenu
+	Menu2DUnitMenu
 )
 
 var (
@@ -94,7 +118,7 @@ var (
 				Menu1DLobbyMenu,
 			},
 		},
-		Menus1Ds: map[int]Menu1D{
+		Menu1Ds: map[int]Menu1D{
 			Menu1DStartMenu: {
 				Options: []string{
 					MenuOptionNewGame, MenuOptionLoadGame,
@@ -105,6 +129,9 @@ var (
 					MenuOptionPrepare, MenuOptionStartGameplay,
 				},
 			},
+		},
+		Menu2Ds: map[int]Menu2D{
+			Menu2DUnitMenu: {},
 		},
 		GameplayPage: GameplayPage{
 			Active: true,

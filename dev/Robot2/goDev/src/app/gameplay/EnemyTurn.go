@@ -1,6 +1,6 @@
 package gameplay
 
-import "app/data"
+import "app/tool/data"
 
 func EnemyTurn(origin data.Gameplay, playerID string) (data.Gameplay, error) {
 	gameplay := origin

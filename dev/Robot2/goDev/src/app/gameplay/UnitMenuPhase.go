@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/data"
+	"app/tool/data"
 	"fmt"
 )
 
