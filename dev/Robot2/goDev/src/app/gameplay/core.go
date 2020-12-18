@@ -54,8 +54,52 @@ func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) s
 	return ""
 }
 
-func Render(ctx data.Gameplay) {
+var (
+	UnitByRegion = map[data.Position][]string{}
+)
 
+func proj(pos data.Position) data.Position {
+	pos[0] = pos[0] / 5
+	pos[1] = pos[1] / 5
+	return pos
+}
+
+func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 data.Position) []string {
+	// remove
+	for unitPos, unitID := range UnitByPosition {
+		unitPos = proj(unitPos)
+		if _, has := posComs[unitID]; has == false {
+			nextUnitByRegion := []string{}
+			for _, id := range UnitByRegion[unitPos] {
+				if id == unitID {
+					continue
+				}
+				nextUnitByRegion = append(nextUnitByRegion, id)
+			}
+			UnitByRegion[unitPos] = nextUnitByRegion
+		}
+	}
+	for unitID, unitPos := range posComs {
+		unitPos = proj(unitPos)
+		if _, has := UnitByPosition[unitPos]; has == false {
+			// add
+			UnitByRegion[unitPos] = append(UnitByRegion[unitPos], unitID)
+		} else {
+			// update
+		}
+	}
+
+	p1 = proj(p1)
+	p2 = proj(p2)
+	ret := []string{}
+	for x := p1[0]; x <= p2[0]; x++ {
+		for y := p1[1]; y <= p2[1]; y++ {
+			if unitIDs, has := UnitByRegion[data.Position{x, y}]; has {
+				ret = append(ret, unitIDs...)
+			}
+		}
+	}
+	return ret
 }
 
 var (
