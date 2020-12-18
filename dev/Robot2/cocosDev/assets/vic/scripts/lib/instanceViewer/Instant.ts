@@ -27,11 +27,11 @@ export class Instant extends Component implements IInstant {
         const content = this.checkData(data);
 
         if(content){
-            this.doBuild(content);
+            this.doBuild(content, data);
             this.childs.forEach(item=>item.getComponent(Instant)?.build(content));
         }
     }
-    protected doBuild(data:any):void{
+    protected doBuild(data:any, all:any):void{
 
     }
     protected checkData(data:any):any{

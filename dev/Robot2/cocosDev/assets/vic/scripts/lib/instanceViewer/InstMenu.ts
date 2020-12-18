@@ -60,7 +60,7 @@ export class InstMenu extends Instant {
         this.tempButton = [];
     }
 
-    doBuild(data:any):void{
+    doBuild(data:any, all:any):void{
         this.setButtons(data[0], data[1], data[2]);
     }
 

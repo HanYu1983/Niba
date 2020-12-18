@@ -29,8 +29,8 @@ export class InstMultiButton extends InstButton {
         this.multis = [];
     }
 
-    doBuild(data:any):void{
-        super.doBuild(data);
+    doBuild(data:any, all:any):void{
+        super.doBuild(data, all);
         this.setMultiCount(data[3]);
         this.setCurrentAt(data[4]);
     }
