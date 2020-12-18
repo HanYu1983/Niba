@@ -5,6 +5,9 @@ import (
 	"app/tool/def"
 	"app/tool/ui_data"
 	"app/tool/viewer"
+	"tool/astar"
+
+	"github.com/gopherjs/gopherjs/js"
 )
 
 type IModel interface {
@@ -30,6 +33,25 @@ var (
 )
 
 func Main() {
+	tree, _ := astar.ShortedPathTree(
+		1,
+		func(curr *astar.Node) (bool, bool) {
+			v := curr.Pather.(int)
+			return v == 5, true
+		},
+		func(curr *astar.Node) []interface{} {
+			v := curr.Pather.(int)
+			return []interface{}{v + 1}
+		},
+		func(curr *astar.Node, neighbor interface{}) float64 {
+			return 1
+		},
+		func(curr *astar.Node) float64 {
+			return 1
+		},
+	)
+	js.Global.Get("console").Call("log", tree)
+
 	view.Install()
 	StartPagePhase(ui_data.DefaultUI)
 }
