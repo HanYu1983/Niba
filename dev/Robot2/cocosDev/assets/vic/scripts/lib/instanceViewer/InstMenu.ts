@@ -59,9 +59,9 @@ export class InstMenu extends Instant {
         })
         this.tempButton = [];
     }
-    build(data:any):void{
-        super.build(data);
-        this.setButtons(data[0], data[1], data[2])
+
+    doBuild(data:any):void{
+        this.setButtons(data[0], data[1], data[2]);
     }
 
     private setButtons(btns:any[], multiId:number[], focus:number){
@@ -76,6 +76,7 @@ export class InstMenu extends Instant {
             btn.position.set(btn.position.x, i * -(this.buttonHeight + 1), btn.position.z);
             const label = isArray ? item[multiId] : item;
             const isFocus = (focus == i) ? true : false;
+            
             if(isArray){
                 btn.getComponent(InstMultiButton).build([label, isFocus, 1, item.length, multiId]);
                 this.tempMultiMutton.push(btn);

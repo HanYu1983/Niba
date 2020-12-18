@@ -25,8 +25,11 @@ export class Grids extends Instant {
         });
     }
 
-    build(data:any):void{
-        super.build(data);
+    protected checkData(data:any):any{
+        return data.content["map"];
+    }
+
+    doBuild(data:any):void{
         for(let i = 0; i < 400; ++i){
             let node:Node = this.pool.aquire(this.prefab, this.node);
             node.getComponent(Grid).setType(Math.floor(Math.random() * 8));

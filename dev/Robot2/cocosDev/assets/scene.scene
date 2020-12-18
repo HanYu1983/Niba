@@ -277,7 +277,7 @@
         "__id__": 29
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 79
@@ -813,6 +813,7 @@
     "pool": {
       "__id__": 26
     },
+    "childs": [],
     "prefab": {
       "__id__": 11
     },
@@ -1341,6 +1342,7 @@
     "_enabled": true,
     "__prefab": null,
     "pool": null,
+    "childs": [],
     "color": {
       "__id__": 34
     },
@@ -1817,6 +1819,7 @@
     "_enabled": true,
     "__prefab": null,
     "pool": null,
+    "childs": [],
     "color": {
       "__id__": 51
     },
@@ -2192,6 +2195,7 @@
     "pool": {
       "__id__": 26
     },
+    "childs": [],
     "color": {
       "__id__": 51
     },
@@ -2279,7 +2283,7 @@
     "_id": "c7dCdSOolGbJrDmkz0uvTi"
   },
   {
-    "__type__": "863acojiwlDUIe6uvrV5K5P",
+    "__type__": "1d9e13/S/1GNLiUiIeZoJvh",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -2290,6 +2294,7 @@
     "pool": {
       "__id__": 26
     },
+    "childs": [],
     "prefab": {
       "__id__": 30
     },
@@ -2297,7 +2302,7 @@
       "__id__": 46
     },
     "buttonHeight": 30,
-    "_id": "477ZnSbWZN760wjaXLEKqe"
+    "_id": "eeWiT4VyRP56L8KR8rnIrW"
   },
   {
     "__type__": "cc.UITransform",
@@ -2365,12 +2370,15 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "grids": {
-      "__id__": 25
-    },
-    "unitMenu": {
-      "__id__": 29
-    },
+    "pool": null,
+    "childs": [
+      {
+        "__id__": 10
+      },
+      {
+        "__id__": 29
+      }
+    ],
     "_id": "02b+YKTNdNIqgTWhkOeyHm"
   },
   {
@@ -2385,7 +2393,7 @@
         "__id__": 84
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 91
@@ -2648,6 +2656,8 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "pool": null,
+    "childs": [],
     "_id": "93AU/XllxKdbVqrpivVktY"
   },
   {
@@ -2742,7 +2752,7 @@
     "fileId": "45QGHg46RBH71CyrdKNRBX"
   },
   {
-    "__type__": "7278eO/ZmVEhqehbiegNOLF",
+    "__type__": "266adMRlSZB1Yq3pDyDKS7e",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -2750,15 +2760,17 @@
     },
     "_enabled": true,
     "__prefab": null,
-    "viewers": [
-      {
-        "__id__": 94
-      },
-      {
-        "__id__": 82
-      }
-    ],
-    "_id": "02H4jWpWNBpaWmN7Ko0ZHj"
+    "pool": {
+      "__id__": 26
+    },
+    "childs": [],
+    "mainPagePrefab": {
+      "__id__": 83
+    },
+    "gamePagePrefab": {
+      "__id__": 8
+    },
+    "_id": "f2HUOg5WhKZrma6ko77zf5"
   },
   {
     "__type__": "cc.Node",
@@ -2883,7 +2895,6 @@
     "view": {
       "__id__": 101
     },
-    "startPage": 1,
     "_id": "113U446dVF5qFfyHt4VZdM"
   },
   {

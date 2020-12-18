@@ -31,8 +31,7 @@ export class InstButton extends Instant {
         super.clear();
     }
 
-    build(data:any):void{
-        super.build(data);
+    doBuild(data:any):void{
         this.setLabel(data[0]);
         this.setFocus(data[1]);
         this.setEnabled(data[2]);

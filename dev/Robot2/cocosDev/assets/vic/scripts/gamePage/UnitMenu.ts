@@ -6,22 +6,13 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node } from 'cc';
+import { InstMenu } from '../lib/instanceViewer/InstMenu';
 const { ccclass, property } = _decorator;
 
-@ccclass('Typescript')
-export class Typescript extends Component {
-    /* class member could be defined like this */
-    // dummy = '';
+@ccclass('UnitMenu')
+export class UnitMenu extends InstMenu {
 
-    /* use `property` decorator if your want the member to be serializable */
-    // @property
-    // serializableDummy = 0;
-
-    start () {
-        // Your initialization goes here.
+    protected checkData(data:any):any{
+        return data.content["unitMenu"];
     }
-
-    // update (deltaTime: number) {
-    //     // Your update function goes here.
-    // }
 }

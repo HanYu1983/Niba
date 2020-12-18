@@ -29,15 +29,13 @@ export class InstMultiButton extends InstButton {
         this.multis = [];
     }
 
-    build(data:any):void{
-        super.build(data);
-
+    doBuild(data:any):void{
+        super.doBuild(data);
         this.setMultiCount(data[3]);
         this.setCurrentAt(data[4]);
     }
 
     private setMultiCount(count:number){
-
         for(let i = 0; i < count; ++i){
             let multi:Node = this.pool.aquire(this.multiPrefab, this.icons);
             multi.name = 'multi_' + i;

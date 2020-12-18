@@ -15,11 +15,26 @@ export class Instant extends Component implements IInstant {
 
     @property(Pool)
     pool:Pool = null;
+
+    @property(Node)
+    childs:Instant[] = [];
     
     clear():void{
-
+        this.childs.forEach(item=>item.clear);
     }
     build(data:any):void{
         this.clear();
+        const content = this.checkData(data);
+
+        if(content){
+            this.doBuild(content);
+            this.childs.forEach(item=>item.getComponent(Instant)?.build(content));
+        }
+    }
+    protected doBuild(data:any):void{
+
+    }
+    protected checkData(data:any):any{
+        return data;
     }
 }
