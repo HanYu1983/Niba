@@ -20,7 +20,7 @@ export class Instant extends Component implements IInstant {
     childs:Instant[] = [];
     
     clear():void{
-        this.childs.forEach(item=>item.clear);
+        this.childs.forEach(item=>item.getComponent(Instant)?.clear());
     }
     build(data:any):void{
         this.clear();
