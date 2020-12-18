@@ -20,6 +20,7 @@ export class Instant extends Component implements IInstant {
     childs:Instant[] = [];
     
     clear():void{
+        this.node.active = false;
         this.childs.forEach(item=>item.getComponent(Instant)?.clear());
     }
     build(data:any):void{
@@ -27,6 +28,7 @@ export class Instant extends Component implements IInstant {
         const content = this.checkData(data);
 
         if(content){
+            this.node.active = true;
             this.doBuild(content, data);
             this.childs.forEach(item=>item.getComponent(Instant)?.build(content));
         }

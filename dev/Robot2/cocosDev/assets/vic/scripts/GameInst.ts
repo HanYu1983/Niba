@@ -43,7 +43,8 @@ export class GameInst extends Instant {
         super.doBuild(data, all);
 
         for(let i = 0; i < data.Menus.length; ++i){
-            const menuData = this.getMenu(all, i + "");
+            const menuData = this.getMenu(all, data.Menus[i]);
+            console.log(menuData);
             
             let menu = this.menuPool.aquire(this.node);
             menu.getComponent(Instant)?.build(menuData);
