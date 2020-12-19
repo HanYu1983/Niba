@@ -1,6 +1,7 @@
 package app
 
 import (
+	"app/tool/data"
 	"app/tool/def"
 	"app/tool/uidata"
 	"app/tool/viewer"
@@ -12,7 +13,7 @@ import (
 
 var (
 	view  viewer.IViwer = def.View
-	model IModel        = &DefaultModel{}
+	model IModel        = &DefaultModel{App: data.DefaultApp}
 )
 
 func Main() {

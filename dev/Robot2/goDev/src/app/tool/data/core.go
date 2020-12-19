@@ -45,7 +45,6 @@ type Item struct {
 type Position [2]int
 
 type Lobby struct {
-	SeqID             string
 	Robots            map[string]Robot
 	Pilots            map[string]Pilot
 	Weapons           map[string]Weapon
@@ -127,17 +126,18 @@ type BattleMenu struct {
 	BattleInfo   [2]BattleInfo
 }
 
-const (
-	PageStart = iota
-	PageGameplay
-	PageLobby
-)
-
 type App struct {
-	Page     int
+	SeqID    int
+	Money    int
 	Gameplay Gameplay
 	Lobby    Lobby
 }
+
+var (
+	DefaultApp = App{
+		Money: 100000,
+	}
+)
 
 type Data struct {
 	Robot map[string]RobotProto
