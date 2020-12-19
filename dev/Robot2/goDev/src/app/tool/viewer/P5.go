@@ -23,7 +23,7 @@ func (p P5) Render(ui ui_data.UI) {
 	p5.Render(ui)
 }
 
-func (p P5) Alert(msg interface{}) {
+func (p P5) Alert(msg string) {
 	js.Global.Get("alert").Invoke(msg)
 }
 

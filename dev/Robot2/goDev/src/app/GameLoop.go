@@ -23,9 +23,12 @@ func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
 		}
 	WaitMenu:
 		for {
-			ctx, _, cancel, err := Menu2DStep(ctx, ui_data.Menu2DUnitMenu)
+			ctx, _, cancel, tab, err := Menu2DStep(ctx, ui_data.PageGameplay, ui_data.Menu2DUnitMenu)
 			if err != nil {
 				return origin, err
+			}
+			if tab {
+				continue
 			}
 			if cancel {
 				break WaitMenu
@@ -42,7 +45,7 @@ func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		ctx, selection, _, err := Menu2DStep(ctx, ui_data.Menu2DUnitMenu)
+		ctx, selection, _, _, err := Menu2DStep(ctx, ui_data.PageGameplay, ui_data.Menu2DUnitMenu)
 		if err != nil {
 			return origin, err
 		}

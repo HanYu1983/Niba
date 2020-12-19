@@ -52,7 +52,7 @@ func (p Cocos) Render(app ui_data.UI) {
 	view.Call("Render", app)
 }
 
-func (p Cocos) Alert(msg interface{}) {
+func (p Cocos) Alert(msg string) {
 	view := js.Global.Get("View")
 	if view == js.Undefined {
 		fmt.Println("view not ready")

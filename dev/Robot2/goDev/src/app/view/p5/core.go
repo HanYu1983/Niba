@@ -25,13 +25,17 @@ func Install() error {
 		_p5 := p
 
 		_p5.Set("keyPressed", func(e *js.Object) {
-			keyCode := e.Get("keyCode").Int()
-			eventQueue <- ui_data.CommandKeyDown{KeyCode: keyCode}
+			go func() {
+				keyCode := e.Get("keyCode").Int()
+				eventQueue <- ui_data.CommandKeyDown{KeyCode: keyCode}
+			}()
 		})
 
 		_p5.Set("keyReleased", func(e *js.Object) {
-			keyCode := e.Get("keyCode").Int()
-			eventQueue <- ui_data.CommandKeyUp{KeyCode: keyCode}
+			go func() {
+				keyCode := e.Get("keyCode").Int()
+				eventQueue <- ui_data.CommandKeyUp{KeyCode: keyCode}
+			}()
 		})
 
 		_p5.Set("setup", func() {

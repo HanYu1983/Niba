@@ -5,6 +5,7 @@ import (
 	"app/tool/def"
 	"app/tool/ui_data"
 	"app/tool/viewer"
+	"fmt"
 	"tool/astar"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -53,6 +54,18 @@ func Main() {
 	path := astar.BuildPath(tree[4])
 	js.Global.Get("console").Call("log", tree, path)
 
+	defer func() {
+		if x := recover(); x != nil {
+			switch detail := x.(type) {
+			case string:
+				view.Alert(detail)
+			case error:
+				view.Alert(detail.Error())
+			}
+			fmt.Printf("error: %v\n", x)
+		}
+	}()
 	view.Install()
 	StartPagePhase(ui_data.DefaultUI)
+	fmt.Println("model done")
 }

@@ -5,15 +5,19 @@ import "app/tool/ui_data"
 func LobbyPagePhase(origin ui_data.UI) (ui_data.UI, error) {
 	var err error
 	ctx := origin
-	ctx.LobbyPage.Active = true
+	ctx.Actives = ui_data.AssocIntBool(ctx.Actives, ui_data.PageLobby, true)
 Menu:
 	for {
-		focusMenu := ctx.LobbyPage.Menus[ctx.LobbyPage.FocusMenu]
+		focus := ctx.Focus[ui_data.PageLobby]
+		menu := ctx.Menus[ui_data.PageLobby][focus]
 		var selection string
-		var cancel bool
-		ctx, selection, cancel, err = Menu1DStep(ctx, focusMenu)
+		var cancel, tab bool
+		ctx, selection, cancel, tab, err = Menu1DStep(ctx, ui_data.PageLobby, menu)
 		if err != nil {
 			return origin, err
+		}
+		if tab {
+			continue
 		}
 		if cancel {
 			break Menu
@@ -23,6 +27,6 @@ Menu:
 			break
 		}
 	}
-	ctx.LobbyPage.Active = false
+	ctx.Actives = ui_data.AssocIntBool(ctx.Actives, ui_data.PageLobby, false)
 	return ctx, nil
 }

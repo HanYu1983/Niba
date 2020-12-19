@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+type ListInt []int
+
 // ShuffleInt is
 func ShuffleInt(arr []int) {
 	t := time.Now()

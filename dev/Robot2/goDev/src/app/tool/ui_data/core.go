@@ -5,17 +5,17 @@ import (
 )
 
 const (
-	KeyCodeUp    = 87
-	KeyCodeDown  = 83
-	KeyCodeLeft  = 65
-	KeyCodeRight = 68
-	KeyCodeSpace = 32
-	// '
-	KeyCodeEsc        = 222
+	KeyCodeUp         = 87
+	KeyCodeDown       = 83
+	KeyCodeLeft       = 65
+	KeyCodeRight      = 68
+	KeyCodeSpace      = 32
+	KeyCodeEsc        = 222 // '
 	KeyCodeArrowUp    = 38
 	KeyCodeArrowDown  = 40
 	KeyCodeArrowLeft  = 37
 	KeyCodeArrowRight = 39
+	KeyCodeTab        = 186 // ;
 )
 
 type CommandKeyDown struct {
@@ -70,30 +70,21 @@ type GameplayPage struct {
 	Positions  map[string]data.Position
 }
 
-type LobbyPage struct {
-	Active    bool
-	Menus     []int
-	FocusMenu int
-}
-
-type StartPage struct {
-	Active    bool
-	Menus     []int
-	FocusMenu int
-}
-
 const (
 	PageStart = iota
 	PageGameplay
 	PageLobby
 )
 
+type ListInt []int
+
 type UI struct {
-	StartPage    StartPage
-	LobbyPage    LobbyPage
-	GameplayPage GameplayPage
-	Menu1Ds      map[int]Menu1D
-	Menu2Ds      map[int]Menu2D
+	Actives       map[int]bool
+	Menus         map[int]ListInt
+	Focus         map[int]int
+	Menu1Ds       map[int]Menu1D
+	Menu2Ds       map[int]Menu2D
+	GameplayPages map[int]GameplayPage
 }
 
 const (
@@ -111,15 +102,17 @@ const (
 
 var (
 	DefaultUI = UI{
-		StartPage: StartPage{
-			Menus: []int{
-				Menu1DStartMenu,
+		Menus: map[int]ListInt{
+			PageStart: []int{
+				Menu1DStartMenu, Menu1DLobbyMenu,
 			},
-		},
-		LobbyPage: LobbyPage{
-			Menus: []int{
+			PageLobby: []int{
 				Menu1DLobbyMenu,
 			},
+		},
+		Focus: map[int]int{
+			PageStart: 0,
+			PageLobby: 0,
 		},
 		Menu1Ds: map[int]Menu1D{
 			Menu1DStartMenu: {
@@ -136,37 +129,39 @@ var (
 		Menu2Ds: map[int]Menu2D{
 			Menu2DUnitMenu: {},
 		},
-		GameplayPage: GameplayPage{
-			Active: true,
-			Map: [][]int{
-				{0, 1, 2, 3, 4},
-			},
-			Cursor: data.Position{1, 1},
-			Units: []string{
-				"",
-			},
-			UnitMenu: Menu2D{
-				Options: [][]string{
-					{"move"},
-					{"weapon1", "weapon2"},
+		GameplayPages: map[int]GameplayPage{
+			PageGameplay: GameplayPage{
+				Active: true,
+				Map: [][]int{
+					{0, 1, 2, 3, 4},
 				},
-			},
-			BattleMenu: BattleMenu{
-				Left: BattleMenuSlot{
-					RobotID:      "",
-					BattleAction: BattleActionAttack,
-					Weapon:       data.Weapon{},
-					HitRate:      0.0,
+				Cursor: data.Position{1, 1},
+				Units: []string{
+					"",
 				},
-				Right: BattleMenuSlot{
-					RobotID:      "",
-					BattleAction: BattleActionAttack,
-					Weapon:       data.Weapon{},
-					HitRate:      0.0,
+				UnitMenu: Menu2D{
+					Options: [][]string{
+						{"move"},
+						{"weapon1", "weapon2"},
+					},
 				},
+				BattleMenu: BattleMenu{
+					Left: BattleMenuSlot{
+						RobotID:      "",
+						BattleAction: BattleActionAttack,
+						Weapon:       data.Weapon{},
+						HitRate:      0.0,
+					},
+					Right: BattleMenuSlot{
+						RobotID:      "",
+						BattleAction: BattleActionAttack,
+						Weapon:       data.Weapon{},
+						HitRate:      0.0,
+					},
+				},
+				Robots: map[string]data.Robot{},
+				Items:  map[string]data.Item{},
 			},
-			Robots: map[string]data.Robot{},
-			Items:  map[string]data.Item{},
 		},
 	}
 )
