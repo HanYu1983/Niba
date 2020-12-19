@@ -2,6 +2,7 @@ package app
 
 import (
 	"app/tool/data"
+	"fmt"
 )
 
 type DefaultModel struct {
@@ -20,9 +21,11 @@ func (v *DefaultModel) Reset() {
 	v.ctx = top
 }
 func (v *DefaultModel) BuyRobot(id string) error {
+	fmt.Printf("BuyRobot(%v)\n", id)
 	return nil
 }
 func (v *DefaultModel) BuyPilot(id string) error {
+	fmt.Printf("BuyPilot(%v)\n", id)
 	return nil
 }
 func (v *DefaultModel) QueryActivePlayer() string {
@@ -36,6 +39,18 @@ func (v *DefaultModel) HandlePlayerTurnEvent(interface{}) error {
 }
 func (v *DefaultModel) IsDone() bool {
 	return false
+}
+func (v *DefaultModel) QueryRobotCanBuy() (map[string]data.RobotProto, error) {
+	return map[string]data.RobotProto{
+		"robot a": {ID: "robot a"},
+		"robot b": {ID: "robot b"},
+	}, nil
+}
+func (v *DefaultModel) QueryPilotCanBuy() (map[string]data.PilotProto, error) {
+	return map[string]data.PilotProto{
+		"pilot a": {ID: "pilot a"},
+		"pilot b": {ID: "pilot b"},
+	}, nil
 }
 func (v *DefaultModel) QueryCursorInMap() (data.Position, error) {
 	return data.Position{}, nil

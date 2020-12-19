@@ -13,6 +13,18 @@ type Weapon struct {
 type Weapons = map[string]Weapon
 type WeaponsByTransform = map[string]Weapons
 
+type RobotProto struct {
+	ID   string
+	Name string
+	Cost int
+}
+
+type PilotProto struct {
+	ID   string
+	Name string
+	Cost int
+}
+
 type Robot struct {
 	ID                 string
 	ProtoID            string

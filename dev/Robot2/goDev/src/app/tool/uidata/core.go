@@ -98,20 +98,26 @@ type UI struct {
 	Menu1Ds       map[int]Menu1D
 	Menu2Ds       map[int]Menu2D
 	GameplayPages map[int]GameplayPage
+	CanBuyRobots  map[string]data.RobotProto
+	CanBuyPilots  map[string]data.PilotProto
 }
 
 //
 const (
 	MenuOptionNewGame       = "MenuOptionNewGame"
 	MenuOptionLoadGame      = "MenuOptionLoadGame"
-	MenuOptionPrepare       = "MenuOptionPrepare"
 	MenuOptionStartGameplay = "MenuOptionStartGameplay"
+
+	MenuOptionBuyRobot = "MenuOptionBuyRobot"
+	MenuOptionBuyPilot = "MenuOptionBuyPilot"
 )
 
 //
 const (
 	Menu1DStartMenu = iota
 	Menu1DLobbyMenu
+	Menu1DBuyRobotMenu
+	Menu1DBuyPilotMenu
 	Menu2DUnitMenu
 )
 
@@ -123,7 +129,7 @@ var (
 				Menu1DStartMenu,
 			},
 			PageLobby: []int{
-				Menu1DLobbyMenu,
+				Menu1DLobbyMenu, Menu1DBuyRobotMenu, Menu1DBuyPilotMenu,
 			},
 		},
 		Focus: map[int]int{
@@ -138,9 +144,10 @@ var (
 			},
 			Menu1DLobbyMenu: {
 				Options: []string{
-					MenuOptionPrepare, MenuOptionStartGameplay,
+					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionStartGameplay,
 				},
 			},
+			Menu1DBuyRobotMenu: {},
 		},
 		Menu2Ds: map[int]Menu2D{
 			Menu2DUnitMenu: {},

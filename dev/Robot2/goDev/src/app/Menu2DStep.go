@@ -2,11 +2,16 @@ package app
 
 import (
 	"app/tool/uidata"
+	"fmt"
 )
 
 func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
+	fmt.Println("Menu2DStep")
 	var err error
 	ctx := origin
+	if _, has := ctx.Menu2Ds[menuID]; has == false {
+		return origin, "", false, false, fmt.Errorf("not found menu2D: %v", menuID)
+	}
 AskCommand:
 	for {
 		view.Render(ctx)

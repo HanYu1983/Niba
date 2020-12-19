@@ -2,14 +2,20 @@ package app
 
 import (
 	"app/tool/uidata"
+	"fmt"
 )
 
 func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
+	fmt.Println("Menu1DStep")
 	var err error
 	ctx := origin
+	if _, has := ctx.Menu1Ds[menuID]; has == false {
+		return origin, "", false, false, fmt.Errorf("not found menu1D: %v", menuID)
+	}
 AskCommand:
 	for {
 		view.Render(ctx)
+		fmt.Println("Menu1DStep:AskCommand")
 		cmd := view.AskCommand()
 		if err != nil {
 			return origin, "", false, false, err
