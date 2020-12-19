@@ -83,8 +83,8 @@ type GameplayPage struct {
 //
 const (
 	PageStart = iota
-	PageGameplay
 	PageLobby
+	PageGameplay
 )
 
 // ListInt is
@@ -120,7 +120,7 @@ var (
 	DefaultUI = UI{
 		Menus: map[int]ListInt{
 			PageStart: []int{
-				Menu1DStartMenu, Menu1DLobbyMenu,
+				Menu1DStartMenu,
 			},
 			PageLobby: []int{
 				Menu1DLobbyMenu,

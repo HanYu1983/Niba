@@ -56,13 +56,15 @@ func Main() {
 
 	defer func() {
 		if x := recover(); x != nil {
+			fmt.Printf("error: %v\n", x)
 			switch detail := x.(type) {
 			case string:
 				view.Alert(detail)
 			case error:
 				view.Alert(detail.Error())
+			default:
+				view.Alert(fmt.Sprintf("%v", x))
 			}
-			fmt.Printf("error: %v\n", x)
 		}
 	}()
 	view.Install()

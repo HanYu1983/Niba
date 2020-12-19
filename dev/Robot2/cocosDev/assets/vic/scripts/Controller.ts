@@ -22,7 +22,7 @@ export class Controller extends Component {
             this.view.build(ui);
         },
         Alert: (msg: string) => {
-
+            alert(msg)
         },
     }
     model: ModelType.Model = window.Model
