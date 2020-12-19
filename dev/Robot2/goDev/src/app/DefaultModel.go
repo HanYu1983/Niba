@@ -2,6 +2,7 @@ package app
 
 import (
 	"app/tool/data"
+	"app/tool/uidata"
 	"fmt"
 	"strconv"
 )
@@ -89,4 +90,9 @@ func (v *DefaultModel) QueryGameplayRobots() map[string]data.Robot {
 }
 func (v *DefaultModel) QueryGameplayItems() map[string]data.Item {
 	return nil
+}
+func (v *DefaultModel) QueryGameInfo() uidata.GameInfo {
+	return uidata.GameInfo{
+		Money: v.App.Money,
+	}
 }

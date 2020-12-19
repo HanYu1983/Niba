@@ -90,6 +90,10 @@ const (
 // ListInt is
 type ListInt []int
 
+type GameInfo struct {
+	Money int
+}
+
 // UI is
 type UI struct {
 	Actives       map[int]bool
@@ -100,6 +104,7 @@ type UI struct {
 	GameplayPages map[int]GameplayPage
 	CanBuyRobots  map[string]data.RobotProto
 	CanBuyPilots  map[string]data.PilotProto
+	GameInfo      GameInfo
 }
 
 //

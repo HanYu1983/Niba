@@ -16,6 +16,11 @@ var (
 	model IModel        = &DefaultModel{App: data.DefaultApp}
 )
 
+func Render(ui uidata.UI) {
+	ui.GameInfo = model.QueryGameInfo()
+	view.Render(ui)
+}
+
 func Main() {
 	tree, _ := astar.ShortedPathTree(
 		1,

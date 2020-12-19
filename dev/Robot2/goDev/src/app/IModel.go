@@ -1,6 +1,9 @@
 package app
 
-import "app/tool/data"
+import (
+	"app/tool/data"
+	"app/tool/uidata"
+)
 
 type IModel interface {
 	Push()
@@ -19,4 +22,5 @@ type IModel interface {
 	QueryUnitByPosition(data.Position) (string, error)
 	QueryGameplayRobots() map[string]data.Robot
 	QueryGameplayItems() map[string]data.Item
+	QueryGameInfo() uidata.GameInfo
 }
