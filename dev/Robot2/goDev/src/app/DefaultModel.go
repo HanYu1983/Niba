@@ -22,7 +22,7 @@ func (v *DefaultModel) Reset() {
 	v.App = top
 }
 func (v *DefaultModel) BuyRobot(protoID string) error {
-	fmt.Printf("BuyRobot(%v)\n", id)
+	fmt.Printf("BuyRobot(%v)\n", protoID)
 	item, has := data.GameData.Robot[protoID]
 	if has == false {
 		return fmt.Errorf("%v not found", protoID)
