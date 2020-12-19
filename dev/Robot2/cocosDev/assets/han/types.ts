@@ -20,5 +20,7 @@ export enum Page {
 export enum MenuID {
     Menu1DStartMenu,
     Menu1DLobbyMenu,
+	Menu1DBuyRobotMenu,
+	Menu1DBuyPilotMenu,
     Menu2DUnitMenu,
 }
