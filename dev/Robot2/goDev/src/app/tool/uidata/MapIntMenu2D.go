@@ -2,10 +2,10 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package ui_data
+package uidata
 
-// KesIntListInt is
-func KesIntListInt(dict map[int]ListInt) []int {
+// KesIntMenu2D is
+func KesIntMenu2D(dict map[int]Menu2D) []int {
 	ret := make([]int, 0, len(dict))
 	for k := range dict {
 		ret = append(ret, k)
@@ -13,18 +13,18 @@ func KesIntListInt(dict map[int]ListInt) []int {
 	return ret
 }
 
-// ValsIntListInt is
-func ValsIntListInt(dict map[int]ListInt) []ListInt {
-	ret := make([]ListInt, 0, len(dict))
+// ValsIntMenu2D is
+func ValsIntMenu2D(dict map[int]Menu2D) []Menu2D {
+	ret := make([]Menu2D, 0, len(dict))
 	for _, v := range dict {
 		ret = append(ret, v)
 	}
 	return ret
 }
 
-// MergeIntListInt is
-func MergeIntListInt(a map[int]ListInt, b map[int]ListInt) map[int]ListInt {
-	ret := map[int]ListInt{}
+// MergeIntMenu2D is
+func MergeIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
+	ret := map[int]Menu2D{}
 	for k, v := range a {
 		ret[k] = v
 	}
@@ -34,9 +34,9 @@ func MergeIntListInt(a map[int]ListInt, b map[int]ListInt) map[int]ListInt {
 	return ret
 }
 
-// AssocIntListInt is
-func AssocIntListInt(a map[int]ListInt, k int, v ListInt) map[int]ListInt {
-	ret := map[int]ListInt{}
+// AssocIntMenu2D is
+func AssocIntMenu2D(a map[int]Menu2D, k int, v Menu2D) map[int]Menu2D {
+	ret := map[int]Menu2D{}
 	for k, v := range a {
 		ret[k] = v
 	}

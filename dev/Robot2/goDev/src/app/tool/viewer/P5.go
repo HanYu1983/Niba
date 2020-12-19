@@ -2,7 +2,7 @@ package viewer
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 	"app/view/p5"
 
 	"github.com/gopherjs/gopherjs/js"
@@ -19,7 +19,7 @@ func (p P5) Install() error {
 	return p5.Install()
 }
 
-func (p P5) Render(ui ui_data.UI) {
+func (p P5) Render(ui uidata.UI) {
 	p5.Render(ui)
 }
 

@@ -1,10 +1,10 @@
 package app
 
 import (
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
-func Menu1DStep(origin ui_data.UI, pageID int, menuID int) (ui_data.UI, string, bool, bool, error) {
+func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
 	var err error
 	ctx := origin
 AskCommand:
@@ -20,21 +20,21 @@ AskCommand:
 			return origin, "", false, false, err
 		}
 		switch detail := cmd.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case ui_data.KeyCodeArrowUp, ui_data.KeyCodeArrowLeft:
+			case uidata.KeyCodeArrowUp, uidata.KeyCodeArrowLeft:
 				menu := ctx.Menu1Ds[menuID]
 				menu.Cursor--
-				ctx.Menu1Ds = ui_data.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-			case ui_data.KeyCodeArrowDown, ui_data.KeyCodeArrowRight:
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+			case uidata.KeyCodeArrowDown, uidata.KeyCodeArrowRight:
 				menu := ctx.Menu1Ds[menuID]
 				menu.Cursor++
-				ctx.Menu1Ds = ui_data.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-			case ui_data.KeyCodeTab:
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+			case uidata.KeyCodeTab:
 				return ctx, "", false, true, nil
-			case ui_data.KeyCodeSpace:
+			case uidata.KeyCodeSpace:
 				break AskCommand
-			case ui_data.KeyCodeEsc:
+			case uidata.KeyCodeEsc:
 				return origin, "", true, false, nil
 			}
 		}

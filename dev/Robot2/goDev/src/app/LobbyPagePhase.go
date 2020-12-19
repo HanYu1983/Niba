@@ -1,18 +1,18 @@
 package app
 
-import "app/tool/ui_data"
+import "app/tool/uidata"
 
-func LobbyPagePhase(origin ui_data.UI) (ui_data.UI, error) {
+func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	ctx.Actives = ui_data.AssocIntBool(ctx.Actives, ui_data.PageLobby, true)
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
 Menu:
 	for {
-		focus := ctx.Focus[ui_data.PageLobby]
-		menu := ctx.Menus[ui_data.PageLobby][focus]
+		focus := ctx.Focus[uidata.PageLobby]
+		menu := ctx.Menus[uidata.PageLobby][focus]
 		var selection string
 		var cancel, tab bool
-		ctx, selection, cancel, tab, err = Menu1DStep(ctx, ui_data.PageLobby, menu)
+		ctx, selection, cancel, tab, err = Menu1DStep(ctx, uidata.PageLobby, menu)
 		if err != nil {
 			return origin, err
 		}
@@ -23,10 +23,10 @@ Menu:
 			break Menu
 		}
 		switch selection {
-		case ui_data.MenuOptionStartGameplay:
+		case uidata.MenuOptionStartGameplay:
 			break
 		}
 	}
-	ctx.Actives = ui_data.AssocIntBool(ctx.Actives, ui_data.PageLobby, false)
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
 	return ctx, nil
 }

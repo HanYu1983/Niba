@@ -2,21 +2,21 @@ package gameplay
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
 func HandleCamera(origin data.Gameplay, evt interface{}) (data.Gameplay, error) {
 	gameplay := origin
 	switch detail := evt.(type) {
-	case ui_data.CommandKeyDown:
+	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
-		case ui_data.KeyCodeArrowUp:
+		case uidata.KeyCodeArrowUp:
 			gameplay.Camera[1]--
-		case ui_data.KeyCodeArrowDown:
+		case uidata.KeyCodeArrowDown:
 			gameplay.Camera[1]++
-		case ui_data.KeyCodeArrowLeft:
+		case uidata.KeyCodeArrowLeft:
 			gameplay.Camera[0]--
-		case ui_data.KeyCodeArrowRight:
+		case uidata.KeyCodeArrowRight:
 			gameplay.Camera[0]++
 		}
 	}

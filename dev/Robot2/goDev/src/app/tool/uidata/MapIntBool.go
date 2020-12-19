@@ -2,10 +2,10 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package ui_data
+package uidata
 
-// KesIntMenu2D is
-func KesIntMenu2D(dict map[int]Menu2D) []int {
+// KesIntBool is
+func KesIntBool(dict map[int]bool) []int {
 	ret := make([]int, 0, len(dict))
 	for k := range dict {
 		ret = append(ret, k)
@@ -13,18 +13,18 @@ func KesIntMenu2D(dict map[int]Menu2D) []int {
 	return ret
 }
 
-// ValsIntMenu2D is
-func ValsIntMenu2D(dict map[int]Menu2D) []Menu2D {
-	ret := make([]Menu2D, 0, len(dict))
+// ValsIntBool is
+func ValsIntBool(dict map[int]bool) []bool {
+	ret := make([]bool, 0, len(dict))
 	for _, v := range dict {
 		ret = append(ret, v)
 	}
 	return ret
 }
 
-// MergeIntMenu2D is
-func MergeIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
-	ret := map[int]Menu2D{}
+// MergeIntBool is
+func MergeIntBool(a map[int]bool, b map[int]bool) map[int]bool {
+	ret := map[int]bool{}
 	for k, v := range a {
 		ret[k] = v
 	}
@@ -34,9 +34,9 @@ func MergeIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
 	return ret
 }
 
-// AssocIntMenu2D is
-func AssocIntMenu2D(a map[int]Menu2D, k int, v Menu2D) map[int]Menu2D {
-	ret := map[int]Menu2D{}
+// AssocIntBool is
+func AssocIntBool(a map[int]bool, k int, v bool) map[int]bool {
+	ret := map[int]bool{}
 	for k, v := range a {
 		ret[k] = v
 	}

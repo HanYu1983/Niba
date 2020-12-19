@@ -1,10 +1,10 @@
 package app
 
 import (
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
-func HandleFocus(origin ui_data.UI, pageID int, cmd interface{}) (ui_data.UI, error) {
+func HandleFocus(origin uidata.UI, pageID int, cmd interface{}) (uidata.UI, error) {
 	ctx := origin
 	if _, has := ctx.Focus[pageID]; has == false {
 		return origin, nil
@@ -13,12 +13,12 @@ func HandleFocus(origin ui_data.UI, pageID int, cmd interface{}) (ui_data.UI, er
 		return origin, nil
 	}
 	switch detail := cmd.(type) {
-	case ui_data.CommandKeyDown:
+	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
-		case ui_data.KeyCodeTab:
+		case uidata.KeyCodeTab:
 			focus := ctx.Focus[pageID]
 			focus = (focus + 1) % len(ctx.Menus[pageID])
-			ctx.Focus = ui_data.AssocIntInt(ctx.Focus, pageID, focus)
+			ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 		}
 	}
 	return ctx, nil

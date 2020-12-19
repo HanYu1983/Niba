@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
 func PlayerTurn(origin data.Gameplay) (data.Gameplay, error) {
@@ -20,7 +20,7 @@ func PlayerTurn(origin data.Gameplay) (data.Gameplay, error) {
 			return origin, err
 		}
 		switch detail := cmd.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
 				cursor := gameplay.Cursor

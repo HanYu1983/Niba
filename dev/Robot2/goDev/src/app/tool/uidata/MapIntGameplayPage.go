@@ -2,7 +2,7 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package ui_data
+package uidata
 
 // KesIntGameplayPage is
 func KesIntGameplayPage(dict map[int]GameplayPage) []int {

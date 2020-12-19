@@ -2,10 +2,10 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package ui_data
+package uidata
 
-// KesIntInt is
-func KesIntInt(dict map[int]int) []int {
+// KesIntListInt is
+func KesIntListInt(dict map[int]ListInt) []int {
 	ret := make([]int, 0, len(dict))
 	for k := range dict {
 		ret = append(ret, k)
@@ -13,18 +13,18 @@ func KesIntInt(dict map[int]int) []int {
 	return ret
 }
 
-// ValsIntInt is
-func ValsIntInt(dict map[int]int) []int {
-	ret := make([]int, 0, len(dict))
+// ValsIntListInt is
+func ValsIntListInt(dict map[int]ListInt) []ListInt {
+	ret := make([]ListInt, 0, len(dict))
 	for _, v := range dict {
 		ret = append(ret, v)
 	}
 	return ret
 }
 
-// MergeIntInt is
-func MergeIntInt(a map[int]int, b map[int]int) map[int]int {
-	ret := map[int]int{}
+// MergeIntListInt is
+func MergeIntListInt(a map[int]ListInt, b map[int]ListInt) map[int]ListInt {
+	ret := map[int]ListInt{}
 	for k, v := range a {
 		ret[k] = v
 	}
@@ -34,9 +34,9 @@ func MergeIntInt(a map[int]int, b map[int]int) map[int]int {
 	return ret
 }
 
-// AssocIntInt is
-func AssocIntInt(a map[int]int, k int, v int) map[int]int {
-	ret := map[int]int{}
+// AssocIntListInt is
+func AssocIntListInt(a map[int]ListInt, k int, v ListInt) map[int]ListInt {
+	ret := map[int]ListInt{}
 	for k, v := range a {
 		ret[k] = v
 	}

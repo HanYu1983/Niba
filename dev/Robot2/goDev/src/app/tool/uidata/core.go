@@ -1,9 +1,10 @@
-package ui_data
+package uidata
 
 import (
 	"app/tool/data"
 )
 
+// is
 const (
 	KeyCodeUp         = 87
 	KeyCodeDown       = 83
@@ -18,34 +19,41 @@ const (
 	KeyCodeTab        = 186 // ;
 )
 
+// CommandKeyDown is
 type CommandKeyDown struct {
 	KeyCode int
 }
 
+// CommandKeyUp is
 type CommandKeyUp struct {
 	KeyCode int
 }
 
+// CommandFlush is
 type CommandFlush struct {
 }
 
+// Menu1D is
 type Menu1D struct {
 	Options []string
 	Cursor  int
 }
 
+// Menu2D is
 type Menu2D struct {
 	Options [][]string
 	Cursor1 int
 	Cursor2 []int
 }
 
+//
 const (
 	BattleActionAttack = iota
 	BattleActionGuard
 	BattleActionEvade
 )
 
+// BattleMenuSlot is
 type BattleMenuSlot struct {
 	RobotID      string
 	BattleAction int
@@ -53,11 +61,13 @@ type BattleMenuSlot struct {
 	HitRate      float32
 }
 
+// BattleMenu is
 type BattleMenu struct {
 	Left  BattleMenuSlot
 	Right BattleMenuSlot
 }
 
+// GameplayPage is
 type GameplayPage struct {
 	Active     bool
 	Map        [][]int
@@ -70,14 +80,17 @@ type GameplayPage struct {
 	Positions  map[string]data.Position
 }
 
+//
 const (
 	PageStart = iota
 	PageGameplay
 	PageLobby
 )
 
+// ListInt is
 type ListInt []int
 
+// UI is
 type UI struct {
 	Actives       map[int]bool
 	Menus         map[int]ListInt
@@ -87,6 +100,7 @@ type UI struct {
 	GameplayPages map[int]GameplayPage
 }
 
+//
 const (
 	MenuOptionNewGame       = "MenuOptionNewGame"
 	MenuOptionLoadGame      = "MenuOptionLoadGame"
@@ -94,12 +108,14 @@ const (
 	MenuOptionStartGameplay = "MenuOptionStartGameplay"
 )
 
+//
 const (
 	Menu1DStartMenu = iota
 	Menu1DLobbyMenu
 	Menu2DUnitMenu
 )
 
+//
 var (
 	DefaultUI = UI{
 		Menus: map[int]ListInt{

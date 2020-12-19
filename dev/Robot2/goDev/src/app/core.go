@@ -3,7 +3,7 @@ package app
 import (
 	"app/tool/data"
 	"app/tool/def"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 	"app/tool/viewer"
 	"fmt"
 	"tool/astar"
@@ -66,6 +66,6 @@ func Main() {
 		}
 	}()
 	view.Install()
-	StartPagePhase(ui_data.DefaultUI)
+	StartPagePhase(uidata.DefaultUI)
 	fmt.Println("model done")
 }
