@@ -1,1 +1,1 @@
-SHADOW_ENV.load({}, ["cljs.test.js","shadow.js.js","module$node_modules$process$browser.js","module$node_modules$async$dist$async.js","tool.indexed.js","module$node_modules$keycode$index.js","tool.keycode.js","app3.tool.const.js","app3.gameplay.core.js","module$tool$generateMap.js","tailrecursion.priority_map.js","tool.astar.js","tool.map.js","app3.gameplay.core_test.js","app3.test.js","shadow.module.test.append.js"]);
+SHADOW_ENV.load({}, ["app4.test.js","shadow.module.test.append.js"]);
