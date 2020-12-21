@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
 func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID string) error) (data.Gameplay, string, bool, error) {
@@ -19,11 +19,11 @@ func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID str
 			return origin, "", false, err
 		}
 		switch detail := evt.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case ui_data.KeyCodeEsc:
+			case uidata.KeyCodeEsc:
 				return origin, "", true, nil
-			case ui_data.KeyCodeSpace:
+			case uidata.KeyCodeSpace:
 				for unitID, pos := range gameplay.Positions {
 					if pos == gameplay.Cursor {
 						err := validFn(unitID)

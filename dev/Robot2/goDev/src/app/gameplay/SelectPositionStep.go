@@ -2,7 +2,7 @@ package gameplay
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
 func SelectPositionStep(origin data.Gameplay, robotID string, moveRange []data.Position) (data.Gameplay, data.Position, bool, error) {
@@ -20,11 +20,11 @@ WaitSpace:
 			return origin, data.Position{}, false, err
 		}
 		switch detail := evt.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case ui_data.KeyCodeEsc:
+			case uidata.KeyCodeEsc:
 				return origin, data.Position{}, true, nil
-			case ui_data.KeyCodeSpace:
+			case uidata.KeyCodeSpace:
 				break WaitSpace
 			}
 		}

@@ -1,32 +1,37 @@
 package app
 
-import "app/tool/ui_data"
+import (
+	"app/tool/uidata"
+	"fmt"
+)
 
-func StartPagePhase(origin ui_data.UI) (ui_data.UI, error) {
+func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
+	fmt.Println("StartPagePhase")
 	var err error
 	ctx := origin
-	ctx.StartPage.Active = true
-Menu:
-	for {
-		focusMenu := ctx.StartPage.Menus[ctx.StartPage.FocusMenu]
-		var selection string
-		var cancel bool
-		ctx, selection, cancel, err = Menu1DStep(ctx, focusMenu)
-		if err != nil {
-			return origin, err
-		}
-		if cancel {
-			break Menu
-		}
-		switch selection {
-		case ui_data.MenuOptionNewGame:
-			ctx.StartPage.Active = false
-			ctx, err = LobbyPagePhase(ctx)
-			if err != nil {
-				return origin, err
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
+	ctx, err = BasicPagePhase(
+		ctx,
+		uidata.PageStart,
+		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
+			ctx := origin
+			switch selection {
+			case uidata.MenuOptionNewGame:
+				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
+				ctx, err = LobbyPagePhase(ctx)
+				if err != nil {
+					return origin, false, err
+				}
 			}
-		}
+			return ctx, false, nil
+		},
+		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
+			return origin, false, nil
+		},
+	)
+	if err != nil {
+		return origin, err
 	}
-	ctx.StartPage.Active = false
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
 	return ctx, nil
 }

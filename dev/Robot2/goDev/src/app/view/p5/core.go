@@ -1,17 +1,17 @@
 package p5
 
 import (
-	"app/tool/ui_data"
+	"app/tool/uidata"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
 var (
 	eventQueue = make(chan interface{})
-	app        ui_data.UI
+	app        uidata.UI
 )
 
-func Render(_app ui_data.UI) {
+func Render(_app uidata.UI) {
 	js.Global.Get("console").Call("log", _app)
 	app = _app
 }
@@ -25,13 +25,17 @@ func Install() error {
 		_p5 := p
 
 		_p5.Set("keyPressed", func(e *js.Object) {
-			keyCode := e.Get("keyCode").Int()
-			eventQueue <- ui_data.CommandKeyDown{KeyCode: keyCode}
+			go func() {
+				keyCode := e.Get("keyCode").Int()
+				eventQueue <- uidata.CommandKeyDown{KeyCode: keyCode}
+			}()
 		})
 
 		_p5.Set("keyReleased", func(e *js.Object) {
-			keyCode := e.Get("keyCode").Int()
-			eventQueue <- ui_data.CommandKeyUp{KeyCode: keyCode}
+			go func() {
+				keyCode := e.Get("keyCode").Int()
+				eventQueue <- uidata.CommandKeyUp{KeyCode: keyCode}
+			}()
 		})
 
 		_p5.Set("setup", func() {

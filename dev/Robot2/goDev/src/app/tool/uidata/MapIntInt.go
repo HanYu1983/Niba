@@ -2,10 +2,10 @@
 // Any changes will be lost if this file is regenerated.
 // see https://github.com/cheekybits/genny
 
-package ui_data
+package uidata
 
-// KesIntMenu2D is
-func KesIntMenu2D(dict map[int]Menu2D) []int {
+// KesIntInt is
+func KesIntInt(dict map[int]int) []int {
 	ret := make([]int, 0, len(dict))
 	for k := range dict {
 		ret = append(ret, k)
@@ -13,18 +13,18 @@ func KesIntMenu2D(dict map[int]Menu2D) []int {
 	return ret
 }
 
-// ValsIntMenu2D is
-func ValsIntMenu2D(dict map[int]Menu2D) []Menu2D {
-	ret := make([]Menu2D, 0, len(dict))
+// ValsIntInt is
+func ValsIntInt(dict map[int]int) []int {
+	ret := make([]int, 0, len(dict))
 	for _, v := range dict {
 		ret = append(ret, v)
 	}
 	return ret
 }
 
-// MergeIntMenu2D is
-func MergeIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
-	ret := map[int]Menu2D{}
+// MergeIntInt is
+func MergeIntInt(a map[int]int, b map[int]int) map[int]int {
+	ret := map[int]int{}
 	for k, v := range a {
 		ret[k] = v
 	}
@@ -34,9 +34,9 @@ func MergeIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
 	return ret
 }
 
-// AssocIntMenu2D is
-func AssocIntMenu2D(a map[int]Menu2D, k int, v Menu2D) map[int]Menu2D {
-	ret := map[int]Menu2D{}
+// AssocIntInt is
+func AssocIntInt(a map[int]int, k int, v int) map[int]int {
+	ret := map[int]int{}
 	for k, v := range a {
 		ret[k] = v
 	}

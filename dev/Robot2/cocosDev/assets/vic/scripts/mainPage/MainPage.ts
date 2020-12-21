@@ -8,6 +8,7 @@
 import { _decorator, Component, Node } from 'cc';
 import { GameInst } from '../GameInst';
 import { Instant } from '../lib/instanceViewer/Instant';
+import * as ModelType from '../../../han/types'
 const { ccclass, property } = _decorator;
 
 @ccclass('MainPage')
@@ -22,8 +23,13 @@ export class MainPage extends GameInst {
     }
 
     protected checkData(data:any):any{
-        if (data.StartPage.Active){
-            return data.StartPage;
+        const content = {
+            Active: data.Actives[ModelType.Page.Start],
+            Menus: data.Menus[ModelType.Page.Start],
+            Focus: data.Focus[ModelType.Page.Start],
+        }
+        if (content.Active) {
+            return content;
         }
         return null;
     }

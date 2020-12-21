@@ -3,34 +3,23 @@ package app
 import (
 	"app/tool/data"
 	"app/tool/def"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 	"app/tool/viewer"
+	"fmt"
 	"tool/astar"
 
 	"github.com/gopherjs/gopherjs/js"
 )
 
-type IModel interface {
-	Push()
-	Pop()
-	Reset()
-	BuyRobot(id string) error
-	BuyPilot(id string) error
-	QueryActivePlayer() string
-	NextPlayer() error
-	HandlePlayerTurnEvent(interface{}) error
-	IsDone() bool
-	QueryCursorInMap() (data.Position, error)
-	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
-	QueryUnitByPosition(data.Position) (string, error)
-	QueryGameplayRobots() map[string]data.Robot
-	QueryGameplayItems() map[string]data.Item
-}
-
 var (
 	view  viewer.IViwer = def.View
-	model IModel        = &DefaultModel{}
+	model IModel        = &DefaultModel{App: data.DefaultApp}
 )
+
+func Render(ui uidata.UI) {
+	ui.GameInfo = model.QueryGameInfo()
+	view.Render(ui)
+}
 
 func Main() {
 	tree, _ := astar.ShortedPathTree(
@@ -53,6 +42,20 @@ func Main() {
 	path := astar.BuildPath(tree[4])
 	js.Global.Get("console").Call("log", tree, path)
 
+	defer func() {
+		if x := recover(); x != nil {
+			fmt.Printf("error: %v\n", x)
+			switch detail := x.(type) {
+			case string:
+				view.Alert(detail)
+			case error:
+				view.Alert(detail.Error())
+			default:
+				view.Alert(fmt.Sprintf("%v", x))
+			}
+		}
+	}()
 	view.Install()
-	StartPagePhase(ui_data.DefaultUI)
+	StartPagePhase(uidata.DefaultUI)
+	fmt.Println("model done")
 }

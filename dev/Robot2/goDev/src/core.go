@@ -11,9 +11,15 @@ import "app"
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringPilot.go -pkg data gen "Key=string Value=Pilot"
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringItem.go -pkg data gen "Key=string Value=Item"
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringTag.go -pkg data gen "Key=string Value=Tag"
+//go:generate genny -in tool/template/map.go -out app/tool/data/MapStringRobotProto.go -pkg data gen "Key=string Value=RobotProto"
+//go:generate genny -in tool/template/map.go -out app/tool/data/MapStringPilotProto.go -pkg data gen "Key=string Value=PilotProto"
 //go:generate genny -in tool/template/list.go -out app/tool/ListInt.go -pkg tool gen "Item=int"
-//go:generate genny -in tool/template/map.go -out app/tool/ui_data/MapIntMenu1D.go -pkg ui_data gen "Key=int Value=Menu1D"
-//go:generate genny -in tool/template/map.go -out app/tool/ui_data/MapIntMenu2D.go -pkg ui_data gen "Key=int Value=Menu2D"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntMenu1D.go -pkg uidata gen "Key=int Value=Menu1D"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntMenu2D.go -pkg uidata gen "Key=int Value=Menu2D"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntBool.go -pkg uidata gen "Key=int Value=bool"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntListInt.go -pkg uidata gen "Key=int Value=ListInt"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntInt.go -pkg uidata gen "Key=int Value=int"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntGameplayPage.go -pkg uidata gen "Key=int Value=GameplayPage"
 
 func init() {
 	app.Main()

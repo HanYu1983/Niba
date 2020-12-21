@@ -1,28 +1,68 @@
 package app
 
-import "app/tool/ui_data"
+import (
+	"app/tool/data"
+	"app/tool/uidata"
+	"fmt"
+)
 
-func LobbyPagePhase(origin ui_data.UI) (ui_data.UI, error) {
+func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
+	fmt.Println("LobbyPagePhase")
 	var err error
 	ctx := origin
-	ctx.LobbyPage.Active = true
-Menu:
-	for {
-		focusMenu := ctx.LobbyPage.Menus[ctx.LobbyPage.FocusMenu]
-		var selection string
-		var cancel bool
-		ctx, selection, cancel, err = Menu1DStep(ctx, focusMenu)
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
+	{
+		canBuy, err := model.QueryRobotCanBuy()
 		if err != nil {
 			return origin, err
 		}
-		if cancel {
-			break Menu
-		}
-		switch selection {
-		case ui_data.MenuOptionStartGameplay:
-			break
-		}
+		ctx.CanBuyRobots = canBuy
+		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyRobotMenu, uidata.Menu1D{
+			Options: data.KesStringRobotProto(canBuy),
+		})
 	}
-	ctx.LobbyPage.Active = false
+	{
+		canBuy, err := model.QueryPilotCanBuy()
+		if err != nil {
+			return origin, err
+		}
+		ctx.CanBuyPilots = canBuy
+		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyPilotMenu, uidata.Menu1D{
+			Options: data.KesStringPilotProto(canBuy),
+		})
+	}
+	ctx, err = BasicPagePhase(
+		ctx,
+		uidata.PageLobby,
+		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
+			ctx := origin
+			menuID := ctx.Menus[uidata.PageLobby][focus]
+			switch menuID {
+			case uidata.Menu1DBuyRobotMenu:
+				err = model.BuyRobot(selection)
+				if err != nil {
+					view.Alert(err.Error())
+				}
+			case uidata.Menu1DBuyPilotMenu:
+				err = model.BuyPilot(selection)
+				if err != nil {
+					view.Alert(err.Error())
+				}
+			case uidata.Menu1DLobbyMenu:
+				switch selection {
+				case uidata.MenuOptionStartGameplay:
+					return ctx, true, nil
+				}
+			}
+			return ctx, false, nil
+		},
+		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
+			return origin, false, nil
+		},
+	)
+	if err != nil {
+		return ctx, err
+	}
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
 	return ctx, nil
 }

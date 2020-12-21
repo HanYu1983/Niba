@@ -1,5 +1,10 @@
 package data
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 type Pilot struct {
 	ID      string
 	ProtoID string
@@ -12,6 +17,16 @@ type Weapon struct {
 
 type Weapons = map[string]Weapon
 type WeaponsByTransform = map[string]Weapons
+
+type RobotProto struct {
+	Title string
+	Cost  int
+}
+
+type PilotProto struct {
+	Title string
+	Cost  int
+}
 
 type Robot struct {
 	ID                 string
@@ -30,7 +45,6 @@ type Item struct {
 type Position [2]int
 
 type Lobby struct {
-	SeqID             string
 	Robots            map[string]Robot
 	Pilots            map[string]Pilot
 	Weapons           map[string]Weapon
@@ -112,14 +126,33 @@ type BattleMenu struct {
 	BattleInfo   [2]BattleInfo
 }
 
-const (
-	PageStart = iota
-	PageGameplay
-	PageLobby
-)
-
 type App struct {
-	Page     int
+	SeqID    int
+	Money    int
 	Gameplay Gameplay
 	Lobby    Lobby
+}
+
+var (
+	DefaultApp = App{
+		Money: 100000,
+	}
+)
+
+type Data struct {
+	Robot map[string]RobotProto
+	Pilot map[string]PilotProto
+}
+
+var (
+	GameData Data
+)
+
+func init() {
+	err := json.Unmarshal([]byte(dataJsonString), &GameData)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Printf("%+v\n", GameData)
 }

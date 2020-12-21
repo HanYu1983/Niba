@@ -1,37 +1,50 @@
 package app
 
 import (
-	"app/tool/ui_data"
+	"app/tool/uidata"
+	"fmt"
 )
 
-func Menu1DStep(origin ui_data.UI, id int) (ui_data.UI, string, bool, error) {
+func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
+	fmt.Println("Menu1DStep")
 	var err error
 	ctx := origin
+	if _, has := ctx.Menu1Ds[menuID]; has == false {
+		return origin, "", false, false, fmt.Errorf("not found menu1D: %v", menuID)
+	}
 AskCommand:
 	for {
-		view.Render(ctx)
+		Render(ctx)
+		fmt.Println("Menu1DStep:AskCommand")
 		cmd := view.AskCommand()
 		if err != nil {
-			return origin, "", false, err
+			return origin, "", false, false, err
+		}
+		// fmt.Printf("%+v\n", cmd)
+		ctx, err = HandleFocus(ctx, pageID, cmd)
+		if err != nil {
+			return origin, "", false, false, err
 		}
 		switch detail := cmd.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case ui_data.KeyCodeArrowUp, ui_data.KeyCodeArrowLeft:
-				menu := ctx.Menu1Ds[id]
+			case uidata.KeyCodeArrowUp, uidata.KeyCodeArrowLeft:
+				menu := ctx.Menu1Ds[menuID]
 				menu.Cursor--
-				ctx.Menu1Ds = ui_data.AssocIntMenu1D(ctx.Menu1Ds, id, menu)
-			case ui_data.KeyCodeArrowDown, ui_data.KeyCodeArrowRight:
-				menu := ctx.Menu1Ds[id]
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+			case uidata.KeyCodeArrowDown, uidata.KeyCodeArrowRight:
+				menu := ctx.Menu1Ds[menuID]
 				menu.Cursor++
-				ctx.Menu1Ds = ui_data.AssocIntMenu1D(ctx.Menu1Ds, id, menu)
-			case ui_data.KeyCodeSpace:
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+			case uidata.KeyCodeTab:
+				return ctx, "", false, true, nil
+			case uidata.KeyCodeSpace:
 				break AskCommand
-			case ui_data.KeyCodeEsc:
-				return origin, "", true, nil
+			case uidata.KeyCodeEsc:
+				return origin, "", true, false, nil
 			}
 		}
 	}
-	menu := ctx.Menu1Ds[id]
-	return ctx, menu.Options[menu.Cursor], false, nil
+	menu := ctx.Menu1Ds[menuID]
+	return ctx, menu.Options[menu.Cursor], false, false, nil
 }

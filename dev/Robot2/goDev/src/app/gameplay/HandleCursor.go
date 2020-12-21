@@ -2,21 +2,21 @@ package gameplay
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
 func HandleCursor(origin data.Gameplay, evt interface{}) (data.Gameplay, error) {
 	gameplay := origin
 	switch detail := evt.(type) {
-	case ui_data.CommandKeyDown:
+	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
-		case ui_data.KeyCodeUp:
+		case uidata.KeyCodeUp:
 			gameplay.Cursor[1]--
-		case ui_data.KeyCodeDown:
+		case uidata.KeyCodeDown:
 			gameplay.Cursor[1]++
-		case ui_data.KeyCodeLeft:
+		case uidata.KeyCodeLeft:
 			gameplay.Cursor[0]--
-		case ui_data.KeyCodeRight:
+		case uidata.KeyCodeRight:
 			gameplay.Cursor[0]++
 		}
 	}

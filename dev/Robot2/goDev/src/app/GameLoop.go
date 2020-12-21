@@ -2,18 +2,18 @@ package app
 
 import (
 	"app/tool/data"
-	"app/tool/ui_data"
+	"app/tool/uidata"
 )
 
-func CreateRobotMenu(origin ui_data.UI, unitID string) (ui_data.UI, error) {
+func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 	return origin, nil
 }
 
-func CreateItemMenu(origin ui_data.UI, unitID string) (ui_data.UI, error) {
+func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 	return origin, nil
 }
 
-func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
+func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 	ctx := origin
 	if robot, is := model.QueryGameplayRobots()[unitID]; is {
 		// append menu
@@ -23,14 +23,17 @@ func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
 		}
 	WaitMenu:
 		for {
-			ctx, _, cancel, err := Menu2DStep(ctx, ui_data.Menu2DUnitMenu)
+			ctx, _, cancel, tab, err := Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, err
+			}
+			if tab {
+				continue
 			}
 			if cancel {
 				break WaitMenu
 			}
-			topMenu := ctx.Menu2Ds[ui_data.Menu2DUnitMenu]
+			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 			var _ = topMenu
 		}
 		// pop menu
@@ -42,7 +45,7 @@ func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		ctx, selection, _, err := Menu2DStep(ctx, ui_data.Menu2DUnitMenu)
+		ctx, selection, _, _, err := Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 		if err != nil {
 			return origin, err
 		}
@@ -53,11 +56,11 @@ func UnitMenuPhase(origin ui_data.UI, unitID string) (ui_data.UI, error) {
 	return origin, nil
 }
 
-func SystemMenuPhase(origin ui_data.UI) (ui_data.UI, error) {
+func SystemMenuPhase(origin uidata.UI) (uidata.UI, error) {
 	return origin, nil
 }
 
-func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
+func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	model.Push()
 	defer model.Pop()
 	var err error
@@ -71,7 +74,7 @@ func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 			return origin, err
 		}
 		switch detail := cmd.(type) {
-		case ui_data.CommandKeyDown:
+		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
 				cursor, err := model.QueryCursorInMap()
@@ -104,13 +107,13 @@ func PlayerTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 	}
 	return ctx, nil
 }
-func EnemyTurnPhase(origin ui_data.UI) (ui_data.UI, error) {
+func EnemyTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	model.Push()
 	defer model.Pop()
 	return origin, nil
 }
 
-func TurnPhase(origin ui_data.UI) (ui_data.UI, error) {
+func TurnPhase(origin uidata.UI) (uidata.UI, error) {
 	switch model.QueryActivePlayer() {
 	case data.PlayerIDPlayer:
 		return PlayerTurnPhase(origin)
@@ -119,7 +122,7 @@ func TurnPhase(origin ui_data.UI) (ui_data.UI, error) {
 	}
 }
 
-func GameLoop(origin ui_data.UI) (ui_data.UI, error) {
+func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	model.Push()
 	defer model.Pop()
 	var err error
