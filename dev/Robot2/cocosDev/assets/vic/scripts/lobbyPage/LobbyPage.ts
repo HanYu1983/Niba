@@ -8,20 +8,13 @@
 import { _decorator, Component, Node } from 'cc';
 import { GameInst } from '../GameInst';
 import * as ModelType from '../../../han/types'
+import { Instant } from '../lib/instanceViewer/Instant';
 const { ccclass, property } = _decorator;
 
 @ccclass('LobbyPage')
 export class LobbyPage extends GameInst {
 
-    protected checkData(data: any): any {
-        const content = {
-            Active: data.Actives[ModelType.Page.Lobby],
-            Menus: data.Menus[ModelType.Page.Lobby],
-            Focus: data.Focus[ModelType.Page.Lobby],
-        }
-        if (content.Active) {
-            return content;
-        }
-        return null;
+    protected doCheckPage():ModelType.Page{
+        return ModelType.Page.Lobby;
     }
 }

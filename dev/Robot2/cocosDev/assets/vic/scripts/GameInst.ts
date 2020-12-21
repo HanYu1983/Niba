@@ -7,7 +7,7 @@
 
 import { _decorator, Component, Node } from 'cc';
 import { Instant } from './lib/instanceViewer/Instant';
-import { Pool2 } from './lib/Pool2';
+import * as ModelType from '../../han/types'
 const { ccclass, property } = _decorator;
 
 @ccclass('GameInst')
@@ -25,7 +25,31 @@ export class GameInst extends Instant {
     //         this.menuPool.release(menu);
     //     });
     // }
-    
+
+    @property(Instant)
+    menus:Instant[] = [];
+
+    clear():void{
+        super.clear();
+        this.menus.forEach(menu=>menu.clear());
+    }
+
+    protected checkData(data:any):any{
+        const content = {
+            Active: data.Actives[this.doCheckPage()],
+            Menus: data.Menus[this.doCheckPage()],
+            Focus: data.Focus[this.doCheckPage()],
+        }
+        if (content.Active) {
+            return content;
+        }
+        return null;
+    }
+
+    protected doCheckPage():ModelType.Page{
+        return ModelType.Page.Start;
+    }
+
     protected getMenu(data:any, key:string):any{
         if(data.Menu1Ds[key]){
             const menu = data.Menu1Ds[key];
@@ -37,6 +61,16 @@ export class GameInst extends Instant {
         // if(data.Menu1Ds[key]) return [0,data.Menu1Ds[key]];
         // if(data.Menu2Ds[key]) return [1,data.Menu2Ds[key]];
         // return null;
+    }
+
+    protected doBuild(content:any, data:any):void{
+        super.doBuild(content, data);
+        
+        for(let i = 0; i < this.menus.length; ++i){
+            let menu = this.menus[i];
+            let menuData = this.getMenu(data, content.Menus[i]);
+            menu.build(menuData);
+        }
     }
 
     // protected doBuild(data:any, all:any):void{
