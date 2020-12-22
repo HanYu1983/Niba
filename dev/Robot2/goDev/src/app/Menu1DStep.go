@@ -1,6 +1,7 @@
 package app
 
 import (
+	"app/tool"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -20,7 +21,7 @@ AskCommand:
 		if err != nil {
 			return origin, "", false, false, err
 		}
-		// fmt.Printf("%+v\n", cmd)
+		fmt.Printf("%+v\n", cmd)
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {
 			return origin, "", false, false, err
@@ -28,17 +29,34 @@ AskCommand:
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case uidata.KeyCodeArrowUp, uidata.KeyCodeArrowLeft:
+			case uidata.KeyCodeUp:
 				menu := ctx.Menu1Ds[menuID]
-				menu.Cursor--
+				menu.Cursor = tool.Max(menu.Cursor-1, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-			case uidata.KeyCodeArrowDown, uidata.KeyCodeArrowRight:
+			case uidata.KeyCodeDown:
 				menu := ctx.Menu1Ds[menuID]
-				menu.Cursor++
+				menu.Cursor = tool.Min(menu.Cursor+1, menu.Limit-1)
+				if menu.Cursor+menu.Offset >= len(menu.Options) {
+					menu.Cursor = (len(menu.Options) % menu.Limit) - 1
+				}
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-			case uidata.KeyCodeTab:
+			case uidata.KeyCodeLeft:
+				menu := ctx.Menu1Ds[menuID]
+				menu.Offset = tool.Max(menu.Offset-menu.Limit, 0)
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+			case uidata.KeyCodeRight:
+				menu := ctx.Menu1Ds[menuID]
+				offset := menu.Offset + menu.Limit
+				if offset < len(menu.Options) {
+					if offset+menu.Cursor >= len(menu.Options) {
+						menu.Cursor = (len(menu.Options) % menu.Limit) - 1
+					}
+					menu.Offset = offset
+					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				}
+			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
-			case uidata.KeyCodeSpace:
+			case uidata.KeyCodeEnter:
 				break AskCommand
 			case uidata.KeyCodeEsc:
 				return origin, "", true, false, nil
@@ -46,5 +64,5 @@ AskCommand:
 		}
 	}
 	menu := ctx.Menu1Ds[menuID]
-	return ctx, menu.Options[menu.Cursor], false, false, nil
+	return ctx, menu.Options[menu.Cursor+menu.Offset], false, false, nil
 }

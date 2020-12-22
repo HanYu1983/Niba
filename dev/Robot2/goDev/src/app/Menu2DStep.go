@@ -26,17 +26,17 @@ AskCommand:
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case uidata.KeyCodeArrowUp, uidata.KeyCodeArrowLeft:
+			case uidata.KeyCodeUp, uidata.KeyCodeLeft:
 				menu := ctx.Menu2Ds[menuID]
 				menu.Cursor1--
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
-			case uidata.KeyCodeArrowDown, uidata.KeyCodeArrowRight:
+			case uidata.KeyCodeDown, uidata.KeyCodeRight:
 				menu := ctx.Menu2Ds[menuID]
 				menu.Cursor1++
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
-			case uidata.KeyCodeTab:
+			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
-			case uidata.KeyCodeSpace:
+			case uidata.KeyCodeEnter:
 				break AskCommand
 			case uidata.KeyCodeEsc:
 				return origin, "", true, false, nil

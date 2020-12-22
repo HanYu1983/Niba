@@ -38,7 +38,7 @@ WaitCommand:
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] + 1,
 					},
 				)
-			case uidata.KeyCodeSpace:
+			case uidata.KeyCodeEnter:
 				break WaitCommand
 			case uidata.KeyCodeEsc:
 				return origin, "", true, nil

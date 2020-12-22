@@ -26,7 +26,7 @@ func (v *DefaultModel) BuyRobot(protoID string) error {
 	fmt.Printf("BuyRobot(%v)\n", protoID)
 	item, has := data.GameData.Robot[protoID]
 	if has == false {
-		return fmt.Errorf("%v not found", protoID)
+		return fmt.Errorf("BuyRobot [%v] not found", protoID)
 	}
 	if v.App.Money < item.Cost {
 		return fmt.Errorf("money is not enough. (%v/ %v)", item.Cost, v.App.Money)
@@ -44,7 +44,7 @@ func (v *DefaultModel) BuyPilot(protoID string) error {
 	fmt.Printf("BuyPilot(%v)\n", protoID)
 	item, has := data.GameData.Pilot[protoID]
 	if has == false {
-		return fmt.Errorf("%v not found", protoID)
+		return fmt.Errorf("BuyPilot [%v] not found", protoID)
 	}
 	if v.App.Money < item.Cost {
 		return fmt.Errorf("money is not enough. (%v/ %v)", item.Cost, v.App.Money)

@@ -2,6 +2,7 @@ package p5
 
 import (
 	"app/tool/uidata"
+	"fmt"
 
 	"github.com/gopherjs/gopherjs/js"
 )
@@ -12,7 +13,8 @@ var (
 )
 
 func Render(_app uidata.UI) {
-	js.Global.Get("console").Call("log", _app)
+	//js.Global.Get("console").Call("log", _app)
+	fmt.Printf("%+v", _app)
 	app = _app
 }
 

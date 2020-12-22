@@ -19,6 +19,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 		ctx.CanBuyRobots = canBuy
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyRobotMenu, uidata.Menu1D{
 			Options: data.KesStringRobotProto(canBuy),
+			Limit:   10,
 		})
 	}
 	{
@@ -29,6 +30,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 		ctx.CanBuyPilots = canBuy
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyPilotMenu, uidata.Menu1D{
 			Options: data.KesStringPilotProto(canBuy),
+			Limit:   10,
 		})
 	}
 	ctx, err = BasicPagePhase(

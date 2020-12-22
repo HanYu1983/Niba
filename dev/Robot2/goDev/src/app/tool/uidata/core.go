@@ -10,12 +10,16 @@ const (
 	KeyCodeDown       = 83
 	KeyCodeLeft       = 65
 	KeyCodeRight      = 68
-	KeyCodeSpace      = 32
-	KeyCodeEsc        = 222 // '
+	KeyCodeEnter      = 13
+	KeyCodeCancel     = 222
+	KeyCodeL          = 81
+	KeyCodeR          = 69
 	KeyCodeArrowUp    = 38
 	KeyCodeArrowDown  = 40
 	KeyCodeArrowLeft  = 37
 	KeyCodeArrowRight = 39
+	KeyCodeEsc        = 222 // '
+	KeyCodeSpace      = 32
 	KeyCodeTab        = 186 // ;
 )
 
@@ -37,6 +41,8 @@ type CommandFlush struct {
 type Menu1D struct {
 	Options []string
 	Cursor  int
+	Offset  int
+	Limit   int
 }
 
 // Menu2D is
@@ -146,13 +152,20 @@ var (
 				Options: []string{
 					MenuOptionNewGame, MenuOptionLoadGame,
 				},
+				Limit: 10,
 			},
 			Menu1DLobbyMenu: {
 				Options: []string{
 					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionStartGameplay,
 				},
+				Limit: 10,
 			},
-			Menu1DBuyRobotMenu: {},
+			Menu1DBuyRobotMenu: {
+				Limit: 10,
+			},
+			Menu1DBuyPilotMenu: {
+				Limit: 10,
+			},
 		},
 		Menu2Ds: map[int]Menu2D{
 			Menu2DUnitMenu: {},

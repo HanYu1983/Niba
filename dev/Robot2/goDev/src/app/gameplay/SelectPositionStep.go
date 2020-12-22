@@ -24,7 +24,7 @@ WaitSpace:
 			switch detail.KeyCode {
 			case uidata.KeyCodeEsc:
 				return origin, data.Position{}, true, nil
-			case uidata.KeyCodeSpace:
+			case uidata.KeyCodeEnter:
 				break WaitSpace
 			}
 		}

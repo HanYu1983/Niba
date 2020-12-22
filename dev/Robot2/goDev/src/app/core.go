@@ -1,6 +1,7 @@
 package app
 
 import (
+	"app/tool"
 	"app/tool/data"
 	"app/tool/def"
 	"app/tool/uidata"
@@ -16,9 +17,19 @@ var (
 	model IModel        = &DefaultModel{App: data.DefaultApp}
 )
 
-func Render(ui uidata.UI) {
-	ui.GameInfo = model.QueryGameInfo()
-	view.Render(ui)
+const (
+	size = 10
+)
+
+func Render(ctx uidata.UI) {
+	for id, menu := range ctx.Menu1Ds {
+		options := menu.Options
+		left, right := tool.Max(0, menu.Offset), tool.Min(menu.Offset+menu.Limit, len(options))
+		menu.Options = options[left:right]
+		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, id, menu)
+	}
+	ctx.GameInfo = model.QueryGameInfo()
+	view.Render(ctx)
 }
 
 func Main() {
@@ -53,6 +64,7 @@ func Main() {
 			default:
 				view.Alert(fmt.Sprintf("%v", x))
 			}
+			panic(x)
 		}
 	}()
 	view.Install()

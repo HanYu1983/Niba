@@ -23,7 +23,7 @@ func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID str
 			switch detail.KeyCode {
 			case uidata.KeyCodeEsc:
 				return origin, "", true, nil
-			case uidata.KeyCodeSpace:
+			case uidata.KeyCodeEnter:
 				for unitID, pos := range gameplay.Positions {
 					if pos == gameplay.Cursor {
 						err := validFn(unitID)
