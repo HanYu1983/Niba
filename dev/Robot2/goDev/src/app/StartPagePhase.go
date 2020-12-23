@@ -13,6 +13,9 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	ctx, err = BasicPagePhase(
 		ctx,
 		uidata.PageStart,
+		func(origin uidata.UI) (uidata.UI, error) {
+			return origin, nil
+		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin
 			switch selection {
@@ -20,13 +23,13 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
 				ctx, err = LobbyPagePhase(ctx)
 				if err != nil {
-					return origin, false, err
+					return origin, cancel, err
 				}
 			}
-			return ctx, false, nil
+			return ctx, cancel, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
-			return origin, false, nil
+			return origin, cancel, nil
 		},
 	)
 	if err != nil {

@@ -2,7 +2,6 @@ package app
 
 import (
 	"app/tool/data"
-	"app/tool/uidata"
 )
 
 type IModel interface {
@@ -17,10 +16,12 @@ type IModel interface {
 	IsDone() bool
 	QueryRobotCanBuy() (map[string]data.RobotProto, error)
 	QueryPilotCanBuy() (map[string]data.PilotProto, error)
+	QueryRobots() map[string]data.Robot
+	QueryPilots() map[string]data.Pilot
 	QueryCursorInMap() (data.Position, error)
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
 	QueryUnitByPosition(data.Position) (string, error)
 	QueryGameplayRobots() map[string]data.Robot
 	QueryGameplayItems() map[string]data.Item
-	QueryGameInfo() uidata.GameInfo
+	QueryMoney() int
 }

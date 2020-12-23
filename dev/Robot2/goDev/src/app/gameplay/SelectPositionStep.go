@@ -22,7 +22,7 @@ WaitSpace:
 		switch detail := evt.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case uidata.KeyCodeEsc:
+			case uidata.KeyCodeCancel:
 				return origin, data.Position{}, true, nil
 			case uidata.KeyCodeEnter:
 				break WaitSpace

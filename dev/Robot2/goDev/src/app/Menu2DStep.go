@@ -19,6 +19,9 @@ AskCommand:
 		if err != nil {
 			return origin, "", false, false, err
 		}
+		if cmd == nil {
+			return origin, "", true, false, nil
+		}
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {
 			return origin, "", false, false, err
@@ -38,7 +41,7 @@ AskCommand:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:
 				break AskCommand
-			case uidata.KeyCodeEsc:
+			case uidata.KeyCodeCancel:
 				return origin, "", true, false, nil
 			}
 		}

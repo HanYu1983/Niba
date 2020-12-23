@@ -18,10 +18,10 @@ AskCommand:
 		Render(ctx)
 		fmt.Println("Menu1DStep:AskCommand")
 		cmd := view.AskCommand()
-		if err != nil {
-			return origin, "", false, false, err
+		fmt.Printf("Menu1DStep:%+v\n", cmd)
+		if cmd == nil {
+			return origin, "", true, false, nil
 		}
-		fmt.Printf("%+v\n", cmd)
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {
 			return origin, "", false, false, err
@@ -58,7 +58,7 @@ AskCommand:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:
 				break AskCommand
-			case uidata.KeyCodeEsc:
+			case uidata.KeyCodeCancel:
 				return origin, "", true, false, nil
 			}
 		}

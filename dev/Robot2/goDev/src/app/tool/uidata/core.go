@@ -11,14 +11,13 @@ const (
 	KeyCodeLeft       = 65
 	KeyCodeRight      = 68
 	KeyCodeEnter      = 13
-	KeyCodeCancel     = 222
+	KeyCodeCancel     = 222 // '
 	KeyCodeL          = 81
 	KeyCodeR          = 69
 	KeyCodeArrowUp    = 38
 	KeyCodeArrowDown  = 40
 	KeyCodeArrowLeft  = 37
 	KeyCodeArrowRight = 39
-	KeyCodeEsc        = 222 // '
 	KeyCodeSpace      = 32
 	KeyCodeTab        = 186 // ;
 )
@@ -43,6 +42,9 @@ type Menu1D struct {
 	Cursor  int
 	Offset  int
 	Limit   int
+	Info    struct {
+		Options []string
+	}
 }
 
 // Menu2D is
@@ -50,6 +52,7 @@ type Menu2D struct {
 	Options [][]string
 	Cursor1 int
 	Cursor2 []int
+	Info    struct{}
 }
 
 //
@@ -61,10 +64,12 @@ const (
 
 // BattleMenuSlot is
 type BattleMenuSlot struct {
-	RobotID      string
+	Robot        data.Robot
 	BattleAction int
 	Weapon       data.Weapon
-	HitRate      float32
+	Info         struct {
+		HitRate float32
+	}
 }
 
 // BattleMenu is
@@ -90,15 +95,14 @@ type GameplayPage struct {
 const (
 	PageStart = iota
 	PageLobby
+	PageBuyRobot
+	PageBuyPilot
+	PageBuyComponent
 	PageGameplay
 )
 
 // ListInt is
 type ListInt []int
-
-type GameInfo struct {
-	Money int
-}
 
 // UI is
 type UI struct {
@@ -108,9 +112,13 @@ type UI struct {
 	Menu1Ds       map[int]Menu1D
 	Menu2Ds       map[int]Menu2D
 	GameplayPages map[int]GameplayPage
-	CanBuyRobots  map[string]data.RobotProto
-	CanBuyPilots  map[string]data.PilotProto
-	GameInfo      GameInfo
+	Info          struct {
+		Money        int
+		CanBuyRobots map[string]data.RobotProto
+		CanBuyPilots map[string]data.PilotProto
+		Robots       map[string]data.Robot
+		Pilots       map[string]data.Pilot
+	}
 }
 
 //
@@ -121,14 +129,20 @@ const (
 
 	MenuOptionBuyRobot = "MenuOptionBuyRobot"
 	MenuOptionBuyPilot = "MenuOptionBuyPilot"
+
+	MenuOptionCreateNew = "MenuOptionCreateNew"
 )
 
 //
 const (
 	Menu1DStartMenu = iota
 	Menu1DLobbyMenu
+	Menu1DRobotListMenu
+	Menu1DPilotListMenu
+	Menu1DComponentListMenu
 	Menu1DBuyRobotMenu
 	Menu1DBuyPilotMenu
+	Menu1DBuyComponentMenu
 	Menu2DUnitMenu
 )
 
@@ -140,13 +154,19 @@ var (
 				Menu1DStartMenu,
 			},
 			PageLobby: []int{
-				Menu1DLobbyMenu, Menu1DBuyRobotMenu, Menu1DBuyPilotMenu,
+				Menu1DLobbyMenu,
+			},
+			PageBuyRobot: []int{
+				Menu1DRobotListMenu, Menu1DBuyRobotMenu,
+			},
+			PageBuyPilot: []int{
+				Menu1DPilotListMenu, Menu1DBuyPilotMenu,
+			},
+			PageBuyComponent: []int{
+				Menu1DComponentListMenu, Menu1DBuyComponentMenu,
 			},
 		},
-		Focus: map[int]int{
-			PageStart: 0,
-			PageLobby: 0,
-		},
+		Focus: map[int]int{},
 		Menu1Ds: map[int]Menu1D{
 			Menu1DStartMenu: {
 				Options: []string{
@@ -158,12 +178,6 @@ var (
 				Options: []string{
 					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionStartGameplay,
 				},
-				Limit: 10,
-			},
-			Menu1DBuyRobotMenu: {
-				Limit: 10,
-			},
-			Menu1DBuyPilotMenu: {
 				Limit: 10,
 			},
 		},
@@ -188,16 +202,10 @@ var (
 				},
 				BattleMenu: BattleMenu{
 					Left: BattleMenuSlot{
-						RobotID:      "",
 						BattleAction: BattleActionAttack,
-						Weapon:       data.Weapon{},
-						HitRate:      0.0,
 					},
 					Right: BattleMenuSlot{
-						RobotID:      "",
 						BattleAction: BattleActionAttack,
-						Weapon:       data.Weapon{},
-						HitRate:      0.0,
 					},
 				},
 				Robots: map[string]data.Robot{},

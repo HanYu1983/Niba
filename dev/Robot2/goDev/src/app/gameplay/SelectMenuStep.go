@@ -40,7 +40,7 @@ WaitCommand:
 				)
 			case uidata.KeyCodeEnter:
 				break WaitCommand
-			case uidata.KeyCodeEsc:
+			case uidata.KeyCodeCancel:
 				return origin, "", true, nil
 			default:
 

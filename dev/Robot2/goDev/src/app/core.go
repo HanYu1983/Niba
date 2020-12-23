@@ -25,10 +25,14 @@ func Render(ctx uidata.UI) {
 	for id, menu := range ctx.Menu1Ds {
 		options := menu.Options
 		left, right := tool.Max(0, menu.Offset), tool.Min(menu.Offset+menu.Limit, len(options))
-		menu.Options = options[left:right]
+		menu.Info.Options = options[left:right]
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, id, menu)
 	}
-	ctx.GameInfo = model.QueryGameInfo()
+	ctx.Info.Money = model.QueryMoney()
+	ctx.Info.Robots = model.QueryRobots()
+	ctx.Info.Pilots = model.QueryPilots()
+	ctx.Info.CanBuyRobots, _ = model.QueryRobotCanBuy()
+	ctx.Info.CanBuyPilots, _ = model.QueryPilotCanBuy()
 	view.Render(ctx)
 }
 

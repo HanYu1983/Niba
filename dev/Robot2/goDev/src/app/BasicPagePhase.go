@@ -8,6 +8,7 @@ import (
 func BasicPagePhase(
 	origin uidata.UI,
 	pageID int,
+	onUpdate func(uidata.UI) (uidata.UI, error),
 	onClickMenu1D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 	onClickMenu2D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 ) (uidata.UI, error) {
@@ -16,6 +17,12 @@ func BasicPagePhase(
 	ctx := origin
 Menu:
 	for {
+		fmt.Println("BasicPagePhase: Loop")
+		Render(ctx)
+		ctx, err = onUpdate(ctx)
+		if err != nil {
+			return origin, err
+		}
 		focus := ctx.Focus[pageID]
 		menuID := ctx.Menus[pageID][focus]
 		if _, is := ctx.Menu1Ds[menuID]; is {
@@ -27,9 +34,6 @@ Menu:
 			}
 			if tab {
 				continue
-			}
-			if cancel {
-				break Menu
 			}
 			ctx, cancel, err = onClickMenu1D(ctx, focus, selection, cancel, tab)
 			if err != nil {
@@ -48,9 +52,6 @@ Menu:
 			if tab {
 				continue
 			}
-			if cancel {
-				break Menu
-			}
 			ctx, cancel, err = onClickMenu2D(ctx, focus, selection, cancel, tab)
 			if err != nil {
 				return origin, err
@@ -58,7 +59,10 @@ Menu:
 			if cancel {
 				break Menu
 			}
+		} else {
+			return origin, fmt.Errorf("component not found: %v", menuID)
 		}
 	}
+	fmt.Println("BasicPagePhase: End")
 	return ctx, nil
 }

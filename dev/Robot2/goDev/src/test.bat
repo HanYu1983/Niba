@@ -1,2 +1,2 @@
-SET GOPATH=D:\Documents\git\Niba\dev\RTSRobot\goDev\
-go test app3
+SET GOPATH=D:\Documents\git\Niba\dev\Robot2\goDev\
+go test app

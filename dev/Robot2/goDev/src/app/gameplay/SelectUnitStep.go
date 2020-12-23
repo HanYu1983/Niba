@@ -21,7 +21,7 @@ func SelectUnitStep(origin data.Gameplay, unitID string, validFn func(unitID str
 		switch detail := evt.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case uidata.KeyCodeEsc:
+			case uidata.KeyCodeCancel:
 				return origin, "", true, nil
 			case uidata.KeyCodeEnter:
 				for unitID, pos := range gameplay.Positions {

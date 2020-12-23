@@ -2,7 +2,6 @@ package app
 
 import (
 	"app/tool/data"
-	"app/tool/uidata"
 	"fmt"
 	"strconv"
 )
@@ -91,8 +90,12 @@ func (v *DefaultModel) QueryGameplayRobots() map[string]data.Robot {
 func (v *DefaultModel) QueryGameplayItems() map[string]data.Item {
 	return nil
 }
-func (v *DefaultModel) QueryGameInfo() uidata.GameInfo {
-	return uidata.GameInfo{
-		Money: v.App.Money,
-	}
+func (v *DefaultModel) QueryMoney() int {
+	return v.App.Money
+}
+func (v *DefaultModel) QueryRobots() map[string]data.Robot {
+	return nil
+}
+func (v *DefaultModel) QueryPilots() map[string]data.Pilot {
+	return nil
 }
