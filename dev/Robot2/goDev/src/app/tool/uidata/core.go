@@ -138,6 +138,7 @@ const (
 	MenuOptionBuyPilot = "MenuOptionBuyPilot"
 
 	MenuOptionCreateNew = "MenuOptionCreateNew"
+	MenuOptionSell      = "MenuOptionSell"
 )
 
 //
@@ -150,6 +151,7 @@ const (
 	Menu1DBuyRobotMenu
 	Menu1DBuyPilotMenu
 	Menu1DBuyComponentMenu
+	Menu1DBuyOrSellOrElseMenu
 	Menu2DUnitMenu
 )
 
@@ -164,13 +166,13 @@ var (
 				Menu1DLobbyMenu,
 			},
 			PageBuyRobot: []int{
-				Menu1DRobotListMenu, Menu1DBuyRobotMenu,
+				Menu1DRobotListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyRobotMenu,
 			},
 			PageBuyPilot: []int{
-				Menu1DPilotListMenu, Menu1DBuyPilotMenu,
+				Menu1DPilotListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyPilotMenu,
 			},
 			PageBuyComponent: []int{
-				Menu1DComponentListMenu, Menu1DBuyComponentMenu,
+				Menu1DComponentListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyComponentMenu,
 			},
 		},
 		Focus: map[int]int{},
@@ -184,6 +186,12 @@ var (
 			Menu1DLobbyMenu: {
 				Options: []string{
 					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionStartGameplay,
+				},
+				Limit: 10,
+			},
+			Menu1DBuyOrSellOrElseMenu: {
+				Options: []string{
+					MenuOptionCreateNew, MenuOptionSell,
 				},
 				Limit: 10,
 			},

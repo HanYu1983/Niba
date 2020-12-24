@@ -21,7 +21,6 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				{
 					robots := model.QueryRobots()
 					titles := data.KesStringRobot(robots)
-					titles = append([]string{uidata.MenuOptionCreateNew}, titles...)
 					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DRobotListMenu, uidata.Menu1D{
 						Options: titles,
 						Limit:   10,
@@ -41,7 +40,6 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				{
 					vs := model.QueryPilots()
 					titles := data.KesStringPilot(vs)
-					titles = append([]string{uidata.MenuOptionCreateNew}, titles...)
 					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DPilotListMenu, uidata.Menu1D{
 						Options: titles,
 						Limit:   10,
@@ -64,16 +62,24 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			ctx := origin
 			menuID := ctx.Menus[pageID][focus]
 			switch menuID {
-			case uidata.Menu1DRobotListMenu, uidata.Menu1DPilotListMenu:
+			case uidata.Menu1DBuyOrSellOrElseMenu:
 				if cancel {
-					return ctx, cancel, nil
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]-1)
+					return ctx, false, nil
 				}
 				switch selection {
 				case uidata.MenuOptionCreateNew:
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
+				case uidata.MenuOptionSell:
+					fmt.Println("Sell")
 				default:
 					// ignore
 				}
+			case uidata.Menu1DRobotListMenu, uidata.Menu1DPilotListMenu:
+				if cancel {
+					return ctx, cancel, nil
+				}
+				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
 			case uidata.Menu1DBuyRobotMenu:
 				if cancel {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]-1)

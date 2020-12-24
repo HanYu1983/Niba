@@ -57,6 +57,13 @@ AskCommand:
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:
+				menu := ctx.Menu1Ds[menuID]
+				if len(menu.Options) == 0 {
+					focus := ctx.Focus[pageID]
+					focus = (focus + 1) % len(ctx.Menus[pageID])
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					return ctx, "", false, true, nil
+				}
 				break AskCommand
 			case uidata.KeyCodeCancel:
 				return origin, "", true, false, nil
@@ -64,5 +71,9 @@ AskCommand:
 		}
 	}
 	menu := ctx.Menu1Ds[menuID]
-	return ctx, menu.Options[menu.Cursor+menu.Offset], false, false, nil
+	idx := menu.Cursor + menu.Offset
+	if idx >= len(menu.Options) {
+		return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
+	}
+	return ctx, menu.Options[idx], false, false, nil
 }

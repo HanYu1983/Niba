@@ -73,8 +73,8 @@ func TestBasic(t *testing.T) {
 	}
 	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
-	if uiSnapshot.Menus[uidata.PageBuyRobot][uiSnapshot.Focus[uidata.PageBuyRobot]] != uidata.Menu1DBuyRobotMenu {
-		t.Error("PageBuyRobot focus一開始在Menu1DBuyRobotMenu")
+	if uiSnapshot.Menus[uidata.PageBuyRobot][uiSnapshot.Focus[uidata.PageBuyRobot]] != uidata.Menu1DBuyOrSellOrElseMenu {
+		t.Error("PageBuyRobot focus一開始在Menu1DBuyOrSellOrElseMenu")
 	}
 	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeCancel}
 	time.Sleep(time.Second)
