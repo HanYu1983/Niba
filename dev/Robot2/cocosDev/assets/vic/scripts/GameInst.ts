@@ -52,7 +52,7 @@ export class GameInst extends Instant {
 
     protected getMenu(data:any, key:string):any{
         if(data.Menu1Ds[key]){
-            const menu = data.Menu1Ds[key];
+            const menu = data.Menu1Ds[key].Info;
             return [
                 menu.Options, Array.from(menu.Options, x => 0), menu.Cursor
             ]
