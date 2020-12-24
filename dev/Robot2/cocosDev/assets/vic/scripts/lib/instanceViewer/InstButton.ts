@@ -37,6 +37,10 @@ export class InstButton extends Instant {
         this.setEnabled(content[2]);
     }
 
+    protected setLabel(data:any){
+        this.label.string = data;
+    }
+
     private setFocus(focus:boolean){
         let c = this.enabled ? this.normalColor : this.disableColor;
         this.color.color = focus ? this.focusColor : c;
@@ -46,7 +50,5 @@ export class InstButton extends Instant {
         this.enabled = enabled;
     }
 
-    private setLabel(label:string){
-        this.label.string = label;
-    }
+    
 }

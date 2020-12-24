@@ -61,6 +61,7 @@ export class InstMenu extends Instant {
     }
 
     doBuild(content:any, data:any):void{
+        super.doBuild(content, data);
         this.setButtons(content[0], content[1], content[2]);
     }
 

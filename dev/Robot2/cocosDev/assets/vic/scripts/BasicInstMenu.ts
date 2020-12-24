@@ -6,26 +6,21 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node } from 'cc';
-import { Instant } from './lib/instanceViewer/Instant';
+import { InstMenu } from './lib/instanceViewer/InstMenu';
 import * as ModelType from '../../han/types'
+import { Drawer } from './Drawer';
 const { ccclass, property } = _decorator;
 
-@ccclass('GameInst')
-export class GameInst extends Instant {
+@ccclass('BasicInstMenu')
+export class BasicInstMenu extends InstMenu {
+
+    @property(Number)
+    pageId:ModelType.Page = 0;
+
+    @property(Number)
+    menuIndex:number = 0;
 
     protected checkData(data:any):any{
-        const content = {
-            Active: data.Actives[this.doCheckPage()],
-            Menus: data.Menus[this.doCheckPage()],
-            Focus: data.Focus[this.doCheckPage()],
-        }
-        if (content.Active) {
-            return content;
-        }
-        return null;
-    }
-
-    protected doCheckPage():ModelType.Page{
-        return ModelType.Page.Start;
+        return Drawer.getMenuByPage(data, this.pageId, this.menuIndex);
     }
 }

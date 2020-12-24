@@ -7,32 +7,34 @@
 
 import { _decorator, Component, Node } from 'cc';
 import { Instant } from './lib/instanceViewer/Instant';
+import * as ModelType from '../../han/types';
 const { ccclass, property } = _decorator;
 
 @ccclass('Drawer')
 export class Drawer extends Instant {
 
-    // @property(Node)
-    // mainPagePrefab:Node = null;
+    static getRobot(id:string, data:any):any{
+        return data.Info.Robots[id];
+    }
 
-    // @property(Node)
-    // gamePagePrefab:Node = null;
+    static getPilot(id:string, data:any):any{
+        return data.Info.Pilots[id];
+    }
 
-    // private currentPage:Node = null;
-    
-    // clear():void{
-    //     super.clear();
-    // }
-    // doBuild(data:any, all:any):void{
-
-    //     switch(data.page){
-    //         case 0:
-    //             this.currentPage = this.pool.aquire(this.mainPagePrefab, this.node);
-    //             break;
-    //         case 1:
-    //             this.currentPage = this.pool.aquire(this.gamePagePrefab, this.node);
-    //             break;
-    //     }
-    //     this.currentPage.getComponent(Instant)?.build(data);
-    // }
+    static getMenuByPage(data:any, page:ModelType.Page, menuIndex:number = 0){
+        const content = {
+            Active: data.Actives[page],
+            Menus: data.Menus[page],
+            Focus: data.Focus[page],
+        }
+        if (content.Active) {
+            if(data.Menu1Ds[content.Menus[menuIndex]]){
+                const menu = data.Menu1Ds[content.Menus[menuIndex]].Info;
+                return [
+                    menu.Options, Array.from(menu.Options, x => 0), menu.Cursor
+                ]
+            }
+        }
+        return null;
+    }
 }
