@@ -16,7 +16,7 @@ export class GameInfo extends Instant {
     lblMoney:Label = null;
 
     protected checkData(data:any):any{
-        if(data.GameInfo) return data.GameInfo;
+        if(data.Info) return data.Info;
         return null;
     }
 
