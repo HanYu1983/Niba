@@ -13,14 +13,21 @@ export type Model = {
 
 export enum Page {
     Start, 
-    Lobby, 
-    Gameplay,
+    Lobby,
+	BuyRobot,
+	BuyPilot,
+	BuyComponent,
+	Gameplay,
 }
 
 export enum MenuID {
     Menu1DStartMenu,
     Menu1DLobbyMenu,
+	Menu1DRobotListMenu,
+	Menu1DPilotListMenu,
+	Menu1DComponentListMenu,
 	Menu1DBuyRobotMenu,
 	Menu1DBuyPilotMenu,
-    Menu2DUnitMenu,
+	Menu1DBuyComponentMenu,
+	Menu2DUnitMenu,
 }

@@ -44,6 +44,9 @@ type Menu1D struct {
 	Limit   int
 	Info    struct {
 		Options []string
+		Cursor  int
+		Offset  int
+		Limit   int
 	}
 }
 
@@ -52,7 +55,11 @@ type Menu2D struct {
 	Options [][]string
 	Cursor1 int
 	Cursor2 []int
-	Info    struct{}
+	Info    struct {
+		Options [][]string
+		Cursor1 int
+		Cursor2 []int
+	}
 }
 
 //
