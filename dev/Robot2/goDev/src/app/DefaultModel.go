@@ -94,8 +94,8 @@ func (v *DefaultModel) QueryMoney() int {
 	return v.App.Money
 }
 func (v *DefaultModel) QueryRobots() map[string]data.Robot {
-	return nil
+	return v.App.Lobby.Robots
 }
 func (v *DefaultModel) QueryPilots() map[string]data.Pilot {
-	return nil
+	return v.App.Lobby.Pilots
 }

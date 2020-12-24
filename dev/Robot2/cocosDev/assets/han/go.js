@@ -29409,13 +29409,13 @@ $packages["app"] = (function() {
 	DefaultModel.ptr.prototype.QueryRobots = function() {
 		var v;
 		v = this;
-		return false;
+		return v.App.Lobby.Robots;
 	};
 	DefaultModel.prototype.QueryRobots = function() { return this.$val.QueryRobots(); };
 	DefaultModel.ptr.prototype.QueryPilots = function() {
 		var v;
 		v = this;
-		return false;
+		return v.App.Lobby.Pilots;
 	};
 	DefaultModel.prototype.QueryPilots = function() { return this.$val.QueryPilots(); };
 	HandleFocus = function(origin, pageID, cmd) {
@@ -29490,7 +29490,7 @@ $packages["app"] = (function() {
 					vs = _r$3;
 					titles$1 = data.KesStringPilot(vs);
 					titles$1 = $appendSlice(new sliceType(["MenuOptionCreateNew"]), titles$1);
-					ctx$1.Menu1Ds = uidata.AssocIntMenu1D(ctx$1.Menu1Ds, 2, new uidata.Menu1D.ptr(titles$1, 0, 0, 10, new structType.ptr(sliceType.nil, 0, 0, 0)));
+					ctx$1.Menu1Ds = uidata.AssocIntMenu1D(ctx$1.Menu1Ds, 3, new uidata.Menu1D.ptr(titles$1, 0, 0, 10, new structType.ptr(sliceType.nil, 0, 0, 0)));
 					_r$4 = model.QueryPilotCanBuy(); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 					_tuple$2 = _r$4;
 					canBuy$1 = _tuple$2[0];

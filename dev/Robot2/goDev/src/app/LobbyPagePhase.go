@@ -42,7 +42,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					vs := model.QueryPilots()
 					titles := data.KesStringPilot(vs)
 					titles = append([]string{uidata.MenuOptionCreateNew}, titles...)
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DRobotListMenu, uidata.Menu1D{
+					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DPilotListMenu, uidata.Menu1D{
 						Options: titles,
 						Limit:   10,
 					})
