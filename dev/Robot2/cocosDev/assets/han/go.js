@@ -29419,7 +29419,7 @@ $packages["app"] = (function() {
 	};
 	DefaultModel.prototype.QueryPilots = function() { return this.$val.QueryPilots(); };
 	HandleFocus = function(origin, pageID, cmd) {
-		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _r, _r$1, _ref, _tuple, _tuple$1, cmd, ctx, detail, focus, focus$1, has, has$1, origin, pageID;
+		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _r, _r$1, _ref, _tuple, _tuple$1, cmd, ctx, detail, focus, focus$1, has, has$1, origin, pageID;
 		ctx = $clone(origin, uidata.UI);
 		_tuple = (_entry = ctx.Focus[$Int.keyFor(pageID)], _entry !== undefined ? [_entry.v, true] : [0, false]);
 		has = _tuple[1];
@@ -29437,14 +29437,14 @@ $packages["app"] = (function() {
 			_1 = detail.KeyCode;
 			if (_1 === (81)) {
 				focus = (_entry$2 = ctx.Focus[$Int.keyFor(pageID)], _entry$2 !== undefined ? _entry$2.v : 0);
-				focus = (_r = ((focus - 1 >> 0)) % (_entry$3 = ctx.Menus[$Int.keyFor(pageID)], _entry$3 !== undefined ? _entry$3.v : uidata.ListInt.nil).$length, _r === _r ? _r : $throwRuntimeError("integer divide by zero"));
+				focus = focus - 1 >> 0;
 				if (focus < 0) {
-					focus = focus + ($keys(ctx.Menus).length) >> 0;
+					focus = (_r = ((focus + (_entry$3 = ctx.Menus[$Int.keyFor(pageID)], _entry$3 !== undefined ? _entry$3.v : uidata.ListInt.nil).$length >> 0)) % (_entry$4 = ctx.Menus[$Int.keyFor(pageID)], _entry$4 !== undefined ? _entry$4.v : uidata.ListInt.nil).$length, _r === _r ? _r : $throwRuntimeError("integer divide by zero"));
 				}
 				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus);
 			} else if (_1 === (69)) {
-				focus$1 = (_entry$4 = ctx.Focus[$Int.keyFor(pageID)], _entry$4 !== undefined ? _entry$4.v : 0);
-				focus$1 = (_r$1 = ((focus$1 + 1 >> 0)) % (_entry$5 = ctx.Menus[$Int.keyFor(pageID)], _entry$5 !== undefined ? _entry$5.v : uidata.ListInt.nil).$length, _r$1 === _r$1 ? _r$1 : $throwRuntimeError("integer divide by zero"));
+				focus$1 = (_entry$5 = ctx.Focus[$Int.keyFor(pageID)], _entry$5 !== undefined ? _entry$5.v : 0);
+				focus$1 = (_r$1 = ((focus$1 + 1 >> 0)) % (_entry$6 = ctx.Menus[$Int.keyFor(pageID)], _entry$6 !== undefined ? _entry$6.v : uidata.ListInt.nil).$length, _r$1 === _r$1 ? _r$1 : $throwRuntimeError("integer divide by zero"));
 				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus$1);
 			}
 		}
@@ -29684,7 +29684,7 @@ $packages["app"] = (function() {
 			_r$4 = fmt.Printf("Menu1DStep:%+v\n", new sliceType$3([cmd])); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			_r$4;
 			if ($interfaceIsEqual(cmd, $ifaceNil)) {
-				$s = -1; return [origin, "", true, false, $ifaceNil];
+				$s = -1; return [ctx, "", true, false, $ifaceNil];
 			}
 			_tuple$1 = HandleFocus($clone(ctx, uidata.UI), pageID, cmd);
 			uidata.UI.copy(ctx, _tuple$1[0]);

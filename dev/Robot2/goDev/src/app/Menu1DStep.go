@@ -20,7 +20,7 @@ AskCommand:
 		cmd := view.AskCommand()
 		fmt.Printf("Menu1DStep:%+v\n", cmd)
 		if cmd == nil {
-			return origin, "", true, false, nil
+			return ctx, "", true, false, nil
 		}
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {

@@ -17,9 +17,9 @@ func HandleFocus(origin uidata.UI, pageID int, cmd interface{}) (uidata.UI, erro
 		switch detail.KeyCode {
 		case uidata.KeyCodeL:
 			focus := ctx.Focus[pageID]
-			focus = (focus - 1) % len(ctx.Menus[pageID])
+			focus = focus - 1
 			if focus < 0 {
-				focus += len(ctx.Menus)
+				focus = (focus + len(ctx.Menus[pageID])) % len(ctx.Menus[pageID])
 			}
 			ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 		case uidata.KeyCodeR:
