@@ -32,6 +32,16 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					if err != nil {
 						return origin, cancel, err
 					}
+				case uidata.MenuOptionBuyWeapon:
+					ctx, err = BuyPhase(ctx, uidata.PageBuyWeapon)
+					if err != nil {
+						return origin, cancel, err
+					}
+				case uidata.MenuOptionBuyComponent:
+					ctx, err = BuyPhase(ctx, uidata.PageBuyComponent)
+					if err != nil {
+						return origin, cancel, err
+					}
 				case uidata.MenuOptionStartGameplay:
 					return ctx, cancel, nil
 				}
