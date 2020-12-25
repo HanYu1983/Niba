@@ -135,8 +135,10 @@ const (
 	MenuOptionLoadGame      = "MenuOptionLoadGame"
 	MenuOptionStartGameplay = "MenuOptionStartGameplay"
 
-	MenuOptionBuyRobot = "MenuOptionBuyRobot"
-	MenuOptionBuyPilot = "MenuOptionBuyPilot"
+	MenuOptionBuyRobot     = "MenuOptionBuyRobot"
+	MenuOptionBuyPilot     = "MenuOptionBuyPilot"
+	MenuOptionBuyWeapon    = "MenuOptionBuyWeapon"
+	MenuOptionBuyComponent = "MenuOptionBuyComponent"
 
 	MenuOptionCreateNew = "MenuOptionCreateNew"
 	MenuOptionSell      = "MenuOptionSell"
@@ -191,7 +193,7 @@ var (
 			},
 			Menu1DLobbyMenu: {
 				Options: []string{
-					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionStartGameplay,
+					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionBuyWeapon, MenuOptionBuyComponent, MenuOptionStartGameplay,
 				},
 				Limit: 10,
 			},
