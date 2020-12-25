@@ -34,3 +34,4 @@ export enum MenuID {
 	Menu1DBuyComponentMenu,
 	Menu1DBuyOrSellOrElseMenu,
 	Menu2DUnitMenu,
+}
