@@ -121,11 +121,15 @@ type UI struct {
 	Menu2Ds       map[int]Menu2D
 	GameplayPages map[int]GameplayPage
 	Info          struct {
-		Money        int
-		CanBuyRobots map[string]data.RobotProto
-		CanBuyPilots map[string]data.PilotProto
-		Robots       map[string]data.Robot
-		Pilots       map[string]data.Pilot
+		Money            int
+		CanBuyRobots     map[string]data.RobotProto
+		CanBuyPilots     map[string]data.PilotProto
+		CanBuyWeapons    map[string]data.WeaponProto
+		CanBuyComponents map[string]data.ComponentProto
+		Robots           map[string]data.Robot
+		Pilots           map[string]data.Pilot
+		Weapons          map[string]data.Weapon
+		Components       map[string]data.Component
 	}
 }
 
