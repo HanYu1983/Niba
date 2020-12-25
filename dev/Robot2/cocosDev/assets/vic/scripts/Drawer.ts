@@ -13,6 +13,22 @@ const { ccclass, property } = _decorator;
 @ccclass('Drawer')
 export class Drawer extends Instant {
 
+    static getBuyRobot(id:string, data:any):any{
+        return data.Info.CanBuyRobots[id];
+    }
+
+    static getBuyPilot(id:string, data:any):any{
+        return data.Info.CanBuyPilots[id];
+    }
+
+    static getBuyWeapon(id:string, data:any):any{
+        return data.Info.CanBuyWeapons[id];
+    }
+
+    static getBuyComponent(id:string, data:any):any{
+        return data.Info.CanBuyComponents[id];
+    }
+
     static getRobot(id:string, data:any):any{
         return data.Info.Robots[id];
     }
