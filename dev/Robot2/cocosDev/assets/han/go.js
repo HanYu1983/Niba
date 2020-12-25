@@ -27984,9 +27984,148 @@ $packages["encoding/json"] = (function() {
 	return $pkg;
 })();
 $packages["app/tool/data"] = (function() {
-	var $pkg = {}, $init, json, fmt, Pilot, Weapon, Component, RobotProto, PilotProto, WeaponProto, ComponentProto, Robot, Item, Position, Lobby, Player, Tag, Menu, BattleMenuState, Gameplay, App, Data, arrayType, sliceType, sliceType$1, mapType, sliceType$14, sliceType$15, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, sliceType$16, sliceType$17, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, mapType$13, KesStringComponent, AssocStringComponent, KesStringComponentProto, KesStringPilot, AssocStringPilot, KesStringPilotProto, KesStringRobot, AssocStringRobot, KesStringRobotProto, KesStringWeapon, AssocStringWeapon, KesStringWeaponProto, init;
+	var $pkg = {}, $init, json, fmt, RobotProto, PilotProto, WeaponProto, ComponentProto, Position, Robot, Item, Pilot, Weapon, Component, Lobby, Player, Tag, Menu, BattleMenuState, Gameplay, App, Data, arrayType, sliceType, sliceType$1, mapType, sliceType$14, sliceType$15, arrayType$1, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, sliceType$16, sliceType$17, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, mapType$13, KesStringComponent, AssocStringComponent, KesStringComponentProto, KesStringPilot, AssocStringPilot, KesStringPilotProto, KesStringRobot, AssocStringRobot, KesStringRobotProto, KesStringWeapon, AssocStringWeapon, KesStringWeaponProto, init;
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
+	RobotProto = $pkg.RobotProto = $newType(0, $kindStruct, "data.RobotProto", true, "app/tool/data", true, function(Title_, Cost_, Power_, Weapons_, Components_, Suitability_, Transform_, UnlockExp_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Title = "";
+			this.Cost = 0;
+			this.Power = 0;
+			this.Weapons = sliceType.nil;
+			this.Components = sliceType.nil;
+			this.Suitability = arrayType$1.zero();
+			this.Transform = sliceType.nil;
+			this.UnlockExp = 0;
+			return;
+		}
+		this.Title = Title_;
+		this.Cost = Cost_;
+		this.Power = Power_;
+		this.Weapons = Weapons_;
+		this.Components = Components_;
+		this.Suitability = Suitability_;
+		this.Transform = Transform_;
+		this.UnlockExp = UnlockExp_;
+	});
+	PilotProto = $pkg.PilotProto = $newType(0, $kindStruct, "data.PilotProto", true, "app/tool/data", true, function(Title_, Cost_, Melee_, Range_, Evade_, Guard_, ExpMelee_, ExpRange_, ExpEvade_, ExpGuard_, Exp_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Title = "";
+			this.Cost = 0;
+			this.Melee = 0;
+			this.Range = 0;
+			this.Evade = 0;
+			this.Guard = 0;
+			this.ExpMelee = 0;
+			this.ExpRange = 0;
+			this.ExpEvade = 0;
+			this.ExpGuard = 0;
+			this.Exp = 0;
+			return;
+		}
+		this.Title = Title_;
+		this.Cost = Cost_;
+		this.Melee = Melee_;
+		this.Range = Range_;
+		this.Evade = Evade_;
+		this.Guard = Guard_;
+		this.ExpMelee = ExpMelee_;
+		this.ExpRange = ExpRange_;
+		this.ExpEvade = ExpEvade_;
+		this.ExpGuard = ExpGuard_;
+		this.Exp = Exp_;
+	});
+	WeaponProto = $pkg.WeaponProto = $newType(0, $kindStruct, "data.WeaponProto", true, "app/tool/data", true, function(Title_, Cost_, Range_, EnergyCost_, MaxBulletCount_, Suitablility_, Ability_, EnergyType_, Type_, Accuracy_, Damage_, Curage_, PowerCost_, UnlockExp_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Title = "";
+			this.Cost = 0;
+			this.Range = arrayType.zero();
+			this.EnergyCost = 0;
+			this.MaxBulletCount = 0;
+			this.Suitablility = arrayType$1.zero();
+			this.Ability = sliceType.nil;
+			this.EnergyType = "";
+			this.Type = "";
+			this.Accuracy = 0;
+			this.Damage = 0;
+			this.Curage = 0;
+			this.PowerCost = 0;
+			this.UnlockExp = 0;
+			return;
+		}
+		this.Title = Title_;
+		this.Cost = Cost_;
+		this.Range = Range_;
+		this.EnergyCost = EnergyCost_;
+		this.MaxBulletCount = MaxBulletCount_;
+		this.Suitablility = Suitablility_;
+		this.Ability = Ability_;
+		this.EnergyType = EnergyType_;
+		this.Type = Type_;
+		this.Accuracy = Accuracy_;
+		this.Damage = Damage_;
+		this.Curage = Curage_;
+		this.PowerCost = PowerCost_;
+		this.UnlockExp = UnlockExp_;
+	});
+	ComponentProto = $pkg.ComponentProto = $newType(0, $kindStruct, "data.ComponentProto", true, "app/tool/data", true, function(Title_, Cost_, Desc_, Value_, PowerCost_, Action_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Title = "";
+			this.Cost = 0;
+			this.Desc = "";
+			this.Value = sliceType.nil;
+			this.PowerCost = 0;
+			this.Action = "";
+			return;
+		}
+		this.Title = Title_;
+		this.Cost = Cost_;
+		this.Desc = Desc_;
+		this.Value = Value_;
+		this.PowerCost = PowerCost_;
+		this.Action = Action_;
+	});
+	Position = $pkg.Position = $newType(8, $kindArray, "data.Position", true, "app/tool/data", true, null);
+	Robot = $pkg.Robot = $newType(0, $kindStruct, "data.Robot", true, "app/tool/data", true, function(ID_, ProtoID_, PilotID_, WeaponsByTransform_, Transform_, PlayerID_, HP_, EN_, MaxHP_, MaxEN_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.ID = "";
+			this.ProtoID = "";
+			this.PilotID = "";
+			this.WeaponsByTransform = false;
+			this.Transform = "";
+			this.PlayerID = "";
+			this.HP = 0;
+			this.EN = 0;
+			this.MaxHP = 0;
+			this.MaxEN = 0;
+			return;
+		}
+		this.ID = ID_;
+		this.ProtoID = ProtoID_;
+		this.PilotID = PilotID_;
+		this.WeaponsByTransform = WeaponsByTransform_;
+		this.Transform = Transform_;
+		this.PlayerID = PlayerID_;
+		this.HP = HP_;
+		this.EN = EN_;
+		this.MaxHP = MaxHP_;
+		this.MaxEN = MaxEN_;
+	});
+	Item = $pkg.Item = $newType(0, $kindStruct, "data.Item", true, "app/tool/data", true, function(ID_, ProtoID_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.ID = "";
+			this.ProtoID = "";
+			return;
+		}
+		this.ID = ID_;
+		this.ProtoID = ProtoID_;
+	});
 	Pilot = $pkg.Pilot = $newType(0, $kindStruct, "data.Pilot", true, "app/tool/data", true, function(ID_, ProtoID_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -28017,75 +28156,6 @@ $packages["app/tool/data"] = (function() {
 		this.ID = ID_;
 		this.ProtoID = ProtoID_;
 	});
-	RobotProto = $pkg.RobotProto = $newType(0, $kindStruct, "data.RobotProto", true, "app/tool/data", true, function(Title_, Cost_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.Title = "";
-			this.Cost = 0;
-			return;
-		}
-		this.Title = Title_;
-		this.Cost = Cost_;
-	});
-	PilotProto = $pkg.PilotProto = $newType(0, $kindStruct, "data.PilotProto", true, "app/tool/data", true, function(Title_, Cost_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.Title = "";
-			this.Cost = 0;
-			return;
-		}
-		this.Title = Title_;
-		this.Cost = Cost_;
-	});
-	WeaponProto = $pkg.WeaponProto = $newType(0, $kindStruct, "data.WeaponProto", true, "app/tool/data", true, function(Title_, Cost_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.Title = "";
-			this.Cost = 0;
-			return;
-		}
-		this.Title = Title_;
-		this.Cost = Cost_;
-	});
-	ComponentProto = $pkg.ComponentProto = $newType(0, $kindStruct, "data.ComponentProto", true, "app/tool/data", true, function(Title_, Cost_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.Title = "";
-			this.Cost = 0;
-			return;
-		}
-		this.Title = Title_;
-		this.Cost = Cost_;
-	});
-	Robot = $pkg.Robot = $newType(0, $kindStruct, "data.Robot", true, "app/tool/data", true, function(ID_, ProtoID_, PilotID_, WeaponsByTransform_, Transform_, PlayerID_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.ID = "";
-			this.ProtoID = "";
-			this.PilotID = "";
-			this.WeaponsByTransform = false;
-			this.Transform = "";
-			this.PlayerID = "";
-			return;
-		}
-		this.ID = ID_;
-		this.ProtoID = ProtoID_;
-		this.PilotID = PilotID_;
-		this.WeaponsByTransform = WeaponsByTransform_;
-		this.Transform = Transform_;
-		this.PlayerID = PlayerID_;
-	});
-	Item = $pkg.Item = $newType(0, $kindStruct, "data.Item", true, "app/tool/data", true, function(ID_, ProtoID_) {
-		this.$val = this;
-		if (arguments.length === 0) {
-			this.ID = "";
-			this.ProtoID = "";
-			return;
-		}
-		this.ID = ID_;
-		this.ProtoID = ProtoID_;
-	});
-	Position = $pkg.Position = $newType(8, $kindArray, "data.Position", true, "app/tool/data", true, null);
 	Lobby = $pkg.Lobby = $newType(0, $kindStruct, "data.Lobby", true, "app/tool/data", true, function(Robots_, Pilots_, Weapons_, Components_, RobotIDByWeaponID_, RobotIDByComponentID_, PilotIDByRobotID_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -28228,6 +28298,7 @@ $packages["app/tool/data"] = (function() {
 	mapType = $mapType($String, Weapon);
 	sliceType$14 = $sliceType($Uint8);
 	sliceType$15 = $sliceType($emptyInterface);
+	arrayType$1 = $arrayType($Float32, 4);
 	mapType$1 = $mapType($String, mapType);
 	mapType$2 = $mapType($String, Robot);
 	mapType$3 = $mapType($String, Pilot);
@@ -28509,16 +28580,16 @@ $packages["app/tool/data"] = (function() {
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: init }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.err = err; $f.$s = $s; $f.$r = $r; return $f;
 	};
+	RobotProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: "js:\"title\" json:\"title\""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Power", name: "Power", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Suitability", name: "Suitability", embedded: false, exported: true, typ: arrayType$1, tag: ""}, {prop: "Transform", name: "Transform", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "UnlockExp", name: "UnlockExp", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	PilotProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Melee", name: "Melee", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Range", name: "Range", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Evade", name: "Evade", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Guard", name: "Guard", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "ExpMelee", name: "ExpMelee", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "ExpRange", name: "ExpRange", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "ExpEvade", name: "ExpEvade", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "ExpGuard", name: "ExpGuard", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Exp", name: "Exp", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	WeaponProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Range", name: "Range", embedded: false, exported: true, typ: arrayType, tag: ""}, {prop: "EnergyCost", name: "EnergyCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "MaxBulletCount", name: "MaxBulletCount", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Suitablility", name: "Suitablility", embedded: false, exported: true, typ: arrayType$1, tag: ""}, {prop: "Ability", name: "Ability", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "EnergyType", name: "EnergyType", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Type", name: "Type", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Accuracy", name: "Accuracy", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Damage", name: "Damage", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Curage", name: "Curage", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "PowerCost", name: "PowerCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "UnlockExp", name: "UnlockExp", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	ComponentProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Desc", name: "Desc", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Value", name: "Value", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "PowerCost", name: "PowerCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Action", name: "Action", embedded: false, exported: true, typ: $String, tag: ""}]);
+	Position.init($Int, 2);
+	Robot.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PilotID", name: "PilotID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "WeaponsByTransform", name: "WeaponsByTransform", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "Transform", name: "Transform", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerID", name: "PlayerID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "HP", name: "HP", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "EN", name: "EN", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "MaxHP", name: "MaxHP", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "MaxEN", name: "MaxEN", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	Item.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	Pilot.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	Weapon.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	Component.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}]);
-	RobotProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}]);
-	PilotProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}]);
-	WeaponProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}]);
-	ComponentProto.init("", [{prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}]);
-	Robot.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PilotID", name: "PilotID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "WeaponsByTransform", name: "WeaponsByTransform", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "Transform", name: "Transform", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerID", name: "PlayerID", embedded: false, exported: true, typ: $String, tag: ""}]);
-	Item.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "ProtoID", name: "ProtoID", embedded: false, exported: true, typ: $String, tag: ""}]);
-	Position.init($Int, 2);
 	Lobby.init("", [{prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$5, tag: ""}]);
 	Player.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "GroupID", name: "GroupID", embedded: false, exported: true, typ: $String, tag: ""}]);
 	Tag.init("", [{prop: "MoveCount", name: "MoveCount", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Sky", name: "Sky", embedded: false, exported: true, typ: $Bool, tag: ""}]);
@@ -28598,7 +28669,7 @@ $packages["app/tool/uidata"] = (function() {
 	BattleMenuSlot = $pkg.BattleMenuSlot = $newType(0, $kindStruct, "uidata.BattleMenuSlot", true, "app/tool/uidata", true, function(Robot_, BattleAction_, Weapon_, Info_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Robot = new data.Robot.ptr("", "", "", false, "", "");
+			this.Robot = new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0);
 			this.BattleAction = 0;
 			this.Weapon = new data.Weapon.ptr("", "");
 			this.Info = new structType$3.ptr(0);
@@ -28612,8 +28683,8 @@ $packages["app/tool/uidata"] = (function() {
 	BattleMenu = $pkg.BattleMenu = $newType(0, $kindStruct, "uidata.BattleMenu", true, "app/tool/uidata", true, function(Left_, Right_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Left = new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0));
-			this.Right = new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0));
+			this.Left = new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0));
+			this.Right = new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0));
 			return;
 		}
 		this.Left = Left_;
@@ -28627,7 +28698,7 @@ $packages["app/tool/uidata"] = (function() {
 			this.Cursor = arrayType.zero();
 			this.Units = sliceType$1.nil;
 			this.UnitMenu = new Menu2D.ptr(sliceType$2.nil, 0, sliceType.nil, new structType$2.ptr(sliceType$2.nil, 0, sliceType.nil));
-			this.BattleMenu = new BattleMenu.ptr(new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)), new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)));
+			this.BattleMenu = new BattleMenu.ptr(new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)), new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)));
 			this.Robots = false;
 			this.Items = false;
 			this.Positions = false;
@@ -28653,7 +28724,7 @@ $packages["app/tool/uidata"] = (function() {
 			this.Menu1Ds = false;
 			this.Menu2Ds = false;
 			this.GameplayPages = false;
-			this.Info = new structType.ptr(0, false, false, false, false, false, false, false, false);
+			this.Info = new structType.ptr(0, false, false, false, false, false, false, false, false, new data.Data.ptr(false, false, false, false));
 			return;
 		}
 		this.Actives = Actives_;
@@ -28672,7 +28743,7 @@ $packages["app/tool/uidata"] = (function() {
 	mapType$5 = $mapType($String, data.Pilot);
 	mapType$6 = $mapType($String, data.Weapon);
 	mapType$7 = $mapType($String, data.Component);
-	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}]);
+	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "JSON", name: "JSON", embedded: false, exported: true, typ: data.Data, tag: ""}]);
 	sliceType = $sliceType($Int);
 	sliceType$1 = $sliceType($String);
 	structType$1 = $structType("", [{prop: "Options", name: "Options", embedded: false, exported: true, typ: sliceType$1, tag: ""}, {prop: "Cursor", name: "Cursor", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Offset", name: "Offset", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Limit", name: "Limit", embedded: false, exported: true, typ: $Int, tag: ""}]);
@@ -28791,7 +28862,7 @@ $packages["app/tool/uidata"] = (function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = data.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.DefaultUI = new UI.ptr(false, $makeMap($Int.keyFor, [{ k: 0, v: (x = new sliceType([0]), $subslice(new ListInt(x.$array), x.$offset, x.$offset + x.$length)) }, { k: 1, v: (x$1 = new sliceType([1]), $subslice(new ListInt(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length)) }, { k: 2, v: (x$2 = new sliceType([2, 10, 6]), $subslice(new ListInt(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length)) }, { k: 3, v: (x$3 = new sliceType([3, 10, 7]), $subslice(new ListInt(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length)) }, { k: 4, v: (x$4 = new sliceType([4, 10, 8]), $subslice(new ListInt(x$4.$array), x$4.$offset, x$4.$offset + x$4.$length)) }, { k: 5, v: (x$5 = new sliceType([5, 10, 9]), $subslice(new ListInt(x$5.$array), x$5.$offset, x$5.$offset + x$5.$length)) }]), $makeMap($Int.keyFor, []), $makeMap($Int.keyFor, [{ k: 0, v: new Menu1D.ptr(new sliceType$1(["MenuOptionNewGame", "MenuOptionLoadGame"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }, { k: 1, v: new Menu1D.ptr(new sliceType$1(["MenuOptionBuyRobot", "MenuOptionBuyPilot", "MenuOptionBuyWeapon", "MenuOptionBuyComponent", "MenuOptionStartGameplay"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }, { k: 10, v: new Menu1D.ptr(new sliceType$1(["MenuOptionCreateNew", "MenuOptionSell"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }]), $makeMap($Int.keyFor, [{ k: 11, v: new Menu2D.ptr(sliceType$2.nil, 0, sliceType.nil, new structType$2.ptr(sliceType$2.nil, 0, sliceType.nil)) }]), $makeMap($Int.keyFor, [{ k: 6, v: new GameplayPage.ptr(true, new sliceType$3([new sliceType([0, 1, 2, 3, 4])]), $toNativeArray($kindInt, [1, 1]), new sliceType$1([""]), new Menu2D.ptr(new sliceType$2([new sliceType$1(["move"]), new sliceType$1(["weapon1", "weapon2"])]), 0, sliceType.nil, new structType$2.ptr(sliceType$2.nil, 0, sliceType.nil)), new BattleMenu.ptr(new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)), new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", ""), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0))), $makeMap($String.keyFor, []), $makeMap($String.keyFor, []), false) }]), new structType.ptr(0, false, false, false, false, false, false, false, false));
+		$pkg.DefaultUI = new UI.ptr(false, $makeMap($Int.keyFor, [{ k: 0, v: (x = new sliceType([0]), $subslice(new ListInt(x.$array), x.$offset, x.$offset + x.$length)) }, { k: 1, v: (x$1 = new sliceType([1]), $subslice(new ListInt(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length)) }, { k: 2, v: (x$2 = new sliceType([2, 10, 6]), $subslice(new ListInt(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length)) }, { k: 3, v: (x$3 = new sliceType([3, 10, 7]), $subslice(new ListInt(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length)) }, { k: 4, v: (x$4 = new sliceType([4, 10, 8]), $subslice(new ListInt(x$4.$array), x$4.$offset, x$4.$offset + x$4.$length)) }, { k: 5, v: (x$5 = new sliceType([5, 10, 9]), $subslice(new ListInt(x$5.$array), x$5.$offset, x$5.$offset + x$5.$length)) }]), $makeMap($Int.keyFor, []), $makeMap($Int.keyFor, [{ k: 0, v: new Menu1D.ptr(new sliceType$1(["MenuOptionNewGame", "MenuOptionLoadGame"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }, { k: 1, v: new Menu1D.ptr(new sliceType$1(["MenuOptionBuyRobot", "MenuOptionBuyPilot", "MenuOptionBuyWeapon", "MenuOptionBuyComponent", "MenuOptionStartGameplay"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }, { k: 10, v: new Menu1D.ptr(new sliceType$1(["MenuOptionCreateNew", "MenuOptionSell"]), 0, 0, 10, new structType$1.ptr(sliceType$1.nil, 0, 0, 0)) }]), $makeMap($Int.keyFor, [{ k: 11, v: new Menu2D.ptr(sliceType$2.nil, 0, sliceType.nil, new structType$2.ptr(sliceType$2.nil, 0, sliceType.nil)) }]), $makeMap($Int.keyFor, [{ k: 6, v: new GameplayPage.ptr(true, new sliceType$3([new sliceType([0, 1, 2, 3, 4])]), $toNativeArray($kindInt, [1, 1]), new sliceType$1([""]), new Menu2D.ptr(new sliceType$2([new sliceType$1(["move"]), new sliceType$1(["weapon1", "weapon2"])]), 0, sliceType.nil, new structType$2.ptr(sliceType$2.nil, 0, sliceType.nil)), new BattleMenu.ptr(new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0)), new BattleMenuSlot.ptr(new data.Robot.ptr("", "", "", false, "", "", 0, 0, 0, 0), 0, new data.Weapon.ptr("", ""), new structType$3.ptr(0))), $makeMap($String.keyFor, []), $makeMap($String.keyFor, []), false) }]), new structType.ptr(0, false, false, false, false, false, false, false, false, new data.Data.ptr(false, false, false, false)));
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -29286,7 +29357,7 @@ $packages["tool/astar"] = (function() {
 	return $pkg;
 })();
 $packages["app"] = (function() {
-	var $pkg = {}, $init, tool, data, def, uidata, viewer, fmt, js, strconv, astar, DefaultModel, arrayType, sliceType, sliceType$1, sliceType$2, sliceType$3, structType, sliceType$4, sliceType$5, structType$1, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, ptrType, mapType$8, ptrType$1, view, model, BasicPagePhase, BuyPhase, HandleFocus, LobbyPagePhase, Menu1DStep, Menu2DStep, StartPagePhase, Render, Main;
+	var $pkg = {}, $init, tool, data, def, uidata, viewer, fmt, js, strconv, astar, DefaultModel, arrayType, sliceType, sliceType$1, sliceType$2, sliceType$3, structType, sliceType$4, sliceType$5, structType$1, arrayType$1, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, ptrType, mapType$8, ptrType$1, view, model, BasicPagePhase, BuyPhase, HandleFocus, LobbyPagePhase, Menu1DStep, Menu2DStep, StartPagePhase, Render, Main;
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
 	def = $packages["app/tool/def"];
@@ -29315,6 +29386,7 @@ $packages["app"] = (function() {
 	sliceType$4 = $sliceType(sliceType);
 	sliceType$5 = $sliceType($Int);
 	structType$1 = $structType("", [{prop: "Options", name: "Options", embedded: false, exported: true, typ: sliceType$4, tag: ""}, {prop: "Cursor1", name: "Cursor1", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Cursor2", name: "Cursor2", embedded: false, exported: true, typ: sliceType$5, tag: ""}]);
+	arrayType$1 = $arrayType($Float32, 4);
 	mapType = $mapType($String, data.RobotProto);
 	mapType$1 = $mapType($String, data.PilotProto);
 	mapType$2 = $mapType($String, data.WeaponProto);
@@ -29654,7 +29726,7 @@ $packages["app"] = (function() {
 		v = this;
 		_r = fmt.Printf("BuyRobot(%v)\n", new sliceType$3([new $String(protoID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		_tuple = (_entry = data.GameData.Robot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.RobotProto.ptr("", 0), false]);
+		_tuple = (_entry = data.GameData.Robot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.RobotProto.ptr("", 0, 0, sliceType.nil, sliceType.nil, arrayType$1.zero(), sliceType.nil, 0), false]);
 		item = $clone(_tuple[0], data.RobotProto);
 		has = _tuple[1];
 		/* */ if (has === false) { $s = 2; continue; }
@@ -29672,7 +29744,7 @@ $packages["app"] = (function() {
 		v.App.Money = v.App.Money - (item.Cost) >> 0;
 		ID = strconv.Itoa(v.App.SeqID);
 		v.App.SeqID = v.App.SeqID + (1) >> 0;
-		v.App.Lobby.Robots = data.AssocStringRobot(v.App.Lobby.Robots, ID, new data.Robot.ptr(ID, protoID, "", false, "", ""));
+		v.App.Lobby.Robots = data.AssocStringRobot(v.App.Lobby.Robots, ID, new data.Robot.ptr(ID, protoID, "", false, "", "", 0, 0, 0, 0));
 		$s = -1; return $ifaceNil;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: DefaultModel.ptr.prototype.BuyRobot }; } $f.ID = ID; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f.has = has; $f.item = item; $f.protoID = protoID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -29683,7 +29755,7 @@ $packages["app"] = (function() {
 		v = this;
 		_r = fmt.Printf("BuyPilot(%v)\n", new sliceType$3([new $String(protoID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		_tuple = (_entry = data.GameData.Pilot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.PilotProto.ptr("", 0), false]);
+		_tuple = (_entry = data.GameData.Pilot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.PilotProto.ptr("", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
 		item = $clone(_tuple[0], data.PilotProto);
 		has = _tuple[1];
 		/* */ if (has === false) { $s = 2; continue; }
@@ -29712,7 +29784,7 @@ $packages["app"] = (function() {
 		v = this;
 		_r = fmt.Printf("BuyWeapon(%v)\n", new sliceType$3([new $String(protoID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		_tuple = (_entry = data.GameData.Weapon[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.WeaponProto.ptr("", 0), false]);
+		_tuple = (_entry = data.GameData.Weapon[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.WeaponProto.ptr("", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0, 0), false]);
 		item = $clone(_tuple[0], data.WeaponProto);
 		has = _tuple[1];
 		/* */ if (has === false) { $s = 2; continue; }
@@ -29741,7 +29813,7 @@ $packages["app"] = (function() {
 		v = this;
 		_r = fmt.Printf("BuyPilot(%v)\n", new sliceType$3([new $String(protoID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		_tuple = (_entry = data.GameData.Component[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.ComponentProto.ptr("", 0), false]);
+		_tuple = (_entry = data.GameData.Component[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.ComponentProto.ptr("", 0, "", sliceType.nil, 0, ""), false]);
 		item = $clone(_tuple[0], data.ComponentProto);
 		has = _tuple[1];
 		/* */ if (has === false) { $s = 2; continue; }
@@ -30258,6 +30330,7 @@ $packages["app"] = (function() {
 		_r$8 = model.QueryComponentCanBuy(); /* */ $s = 9; case 9: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 		_tuple$3 = _r$8;
 		ctx.Info.CanBuyComponents = _tuple$3[0];
+		data.Data.copy(ctx.Info.JSON, data.GameData);
 		$r = view.Render($clone(ctx, uidata.UI)); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Render }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.id = id; $f.id$1 = id$1; $f.left = left; $f.menu = menu; $f.menu$1 = menu$1; $f.options = options; $f.right = right; $f.$s = $s; $f.$r = $r; return $f;

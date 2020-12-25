@@ -130,6 +130,7 @@ type UI struct {
 		Pilots           map[string]data.Pilot
 		Weapons          map[string]data.Weapon
 		Components       map[string]data.Component
+		JSON             data.Data
 	}
 }
 
