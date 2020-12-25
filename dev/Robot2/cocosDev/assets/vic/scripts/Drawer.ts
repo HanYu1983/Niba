@@ -21,6 +21,14 @@ export class Drawer extends Instant {
         return data.Info.Pilots[id];
     }
 
+    static getWeapon(id:string, data:any):any{
+        return data.Info.Weapons[id];
+    }
+
+    static getComponent(id:string, data:any):any{
+        return data.Info.Components[id];
+    }
+
     static getMenuByPage(data:any, page:ModelType.Page, menuIndex:number = 0){
         const content = {
             Active: data.Actives[page],

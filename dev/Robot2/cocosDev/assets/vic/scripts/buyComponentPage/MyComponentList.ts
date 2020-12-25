@@ -14,11 +14,10 @@ const { ccclass } = _decorator;
 export class MyComponentList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        // const pilots = content[0];
-        // content[0] = pilots.map((id)=>{
-        //     return Drawer.getPilot(id, data).ProtoID;
-        // });
-        // super.doBuild(content, data);
+        const components = content[0];
+        content[0] = components.map((id)=>{
+            return Drawer.getComponent(id, data).ProtoID;
+        });
         super.doBuild(content, data);
     }
 }

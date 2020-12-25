@@ -14,10 +14,10 @@ const { ccclass } = _decorator;
 export class MyWeaponList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        // const pilots = content[0];
-        // content[0] = pilots.map((id)=>{
-        //     return Drawer.getPilot(id, data).ProtoID;
-        // });
+        const weapons = content[0];
+        content[0] = weapons.map((id)=>{
+            return Drawer.getWeapon(id, data).ProtoID;
+        });
         super.doBuild(content, data);
     }
 }
