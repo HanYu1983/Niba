@@ -57,6 +57,42 @@ func (v *DefaultModel) BuyPilot(protoID string) error {
 	})
 	return nil
 }
+func (v *DefaultModel) BuyWeapon(protoID string) error {
+	fmt.Printf("BuyWeapon(%v)\n", protoID)
+	item, has := data.GameData.Weapon[protoID]
+	if has == false {
+		return fmt.Errorf("BuyWeapon [%v] not found", protoID)
+	}
+	if v.App.Money < item.Cost {
+		return fmt.Errorf("money is not enough. (%v/ %v)", item.Cost, v.App.Money)
+	}
+	v.App.Money -= item.Cost
+	ID := strconv.Itoa(v.App.SeqID)
+	v.App.SeqID++
+	v.App.Lobby.Weapons = data.AssocStringWeapon(v.App.Lobby.Weapons, ID, data.Weapon{
+		ID:      ID,
+		ProtoID: protoID,
+	})
+	return nil
+}
+func (v *DefaultModel) BuyComponent(protoID string) error {
+	fmt.Printf("BuyPilot(%v)\n", protoID)
+	item, has := data.GameData.Component[protoID]
+	if has == false {
+		return fmt.Errorf("BuyComponent [%v] not found", protoID)
+	}
+	if v.App.Money < item.Cost {
+		return fmt.Errorf("money is not enough. (%v/ %v)", item.Cost, v.App.Money)
+	}
+	v.App.Money -= item.Cost
+	ID := strconv.Itoa(v.App.SeqID)
+	v.App.SeqID++
+	v.App.Lobby.Components = data.AssocStringComponent(v.App.Lobby.Components, ID, data.Component{
+		ID:      ID,
+		ProtoID: protoID,
+	})
+	return nil
+}
 func (v *DefaultModel) QueryActivePlayer() string {
 	return ""
 }
@@ -75,6 +111,13 @@ func (v *DefaultModel) QueryRobotCanBuy() (map[string]data.RobotProto, error) {
 func (v *DefaultModel) QueryPilotCanBuy() (map[string]data.PilotProto, error) {
 	return data.GameData.Pilot, nil
 }
+func (v *DefaultModel) QueryWeaponCanBuy() (map[string]data.WeaponProto, error) {
+	return data.GameData.Weapon, nil
+}
+func (v *DefaultModel) QueryComponentCanBuy() (map[string]data.ComponentProto, error) {
+	return data.GameData.Component, nil
+}
+
 func (v *DefaultModel) QueryCursorInMap() (data.Position, error) {
 	return data.Position{}, nil
 }
@@ -98,4 +141,10 @@ func (v *DefaultModel) QueryRobots() map[string]data.Robot {
 }
 func (v *DefaultModel) QueryPilots() map[string]data.Pilot {
 	return v.App.Lobby.Pilots
+}
+func (v *DefaultModel) QueryComponents() map[string]data.Component {
+	return v.App.Lobby.Components
+}
+func (v *DefaultModel) QueryWeapons() map[string]data.Weapon {
+	return v.App.Lobby.Weapons
 }

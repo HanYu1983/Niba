@@ -15,6 +15,11 @@ type Weapon struct {
 	ProtoID string
 }
 
+type Component struct {
+	ID      string
+	ProtoID string
+}
+
 type Weapons = map[string]Weapon
 type WeaponsByTransform = map[string]Weapons
 
@@ -24,6 +29,16 @@ type RobotProto struct {
 }
 
 type PilotProto struct {
+	Title string
+	Cost  int
+}
+
+type WeaponProto struct {
+	Title string
+	Cost  int
+}
+
+type ComponentProto struct {
 	Title string
 	Cost  int
 }
@@ -45,11 +60,13 @@ type Item struct {
 type Position [2]int
 
 type Lobby struct {
-	Robots            map[string]Robot
-	Pilots            map[string]Pilot
-	Weapons           map[string]Weapon
-	RobotIDByWeaponID map[string]string
-	PilotIDByRobotID  map[string]string
+	Robots               map[string]Robot
+	Pilots               map[string]Pilot
+	Weapons              map[string]Weapon
+	Components           map[string]Component
+	RobotIDByWeaponID    map[string]string
+	RobotIDByComponentID map[string]string
+	PilotIDByRobotID     map[string]string
 }
 
 const (
@@ -140,8 +157,10 @@ var (
 )
 
 type Data struct {
-	Robot map[string]RobotProto
-	Pilot map[string]PilotProto
+	Robot     map[string]RobotProto
+	Pilot     map[string]PilotProto
+	Weapon    map[string]WeaponProto
+	Component map[string]ComponentProto
 }
 
 var (

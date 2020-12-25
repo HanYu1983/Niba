@@ -104,6 +104,7 @@ const (
 	PageLobby
 	PageBuyRobot
 	PageBuyPilot
+	PageBuyWeapon
 	PageBuyComponent
 	PageGameplay
 )
@@ -147,9 +148,11 @@ const (
 	Menu1DLobbyMenu
 	Menu1DRobotListMenu
 	Menu1DPilotListMenu
+	Menu1DWeaponListMenu
 	Menu1DComponentListMenu
 	Menu1DBuyRobotMenu
 	Menu1DBuyPilotMenu
+	Menu1DBuyWeaponMenu
 	Menu1DBuyComponentMenu
 	Menu1DBuyOrSellOrElseMenu
 	Menu2DUnitMenu
@@ -170,6 +173,9 @@ var (
 			},
 			PageBuyPilot: []int{
 				Menu1DPilotListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyPilotMenu,
+			},
+			PageBuyWeapon: []int{
+				Menu1DWeaponListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyWeaponMenu,
 			},
 			PageBuyComponent: []int{
 				Menu1DComponentListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyComponentMenu,
