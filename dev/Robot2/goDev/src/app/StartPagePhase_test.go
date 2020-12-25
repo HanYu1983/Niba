@@ -39,7 +39,7 @@ func init() {
 	view = Mock{}
 }
 
-func TestBasic(t *testing.T) {
+func TestStartPagePhaseBasic(t *testing.T) {
 	wait := make(chan interface{})
 	go func() {
 		_, err := StartPagePhase(uidata.DefaultUI)
@@ -82,7 +82,6 @@ func TestBasic(t *testing.T) {
 		t.Error("按cancel回到Menu1DRobotListMenu")
 	}
 	close(mockEvt)
-	t.Error("done")
 	err := <-wait
 	if err != nil {
 		t.Error(err)
