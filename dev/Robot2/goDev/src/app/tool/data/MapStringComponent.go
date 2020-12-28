@@ -43,3 +43,13 @@ func AssocStringComponent(a map[string]Component, k string, v Component) map[str
 	ret[k] = v
 	return ret
 }
+
+// DissocStringComponent is
+func DissocStringComponent(a map[string]Component, k string) map[string]Component {
+	ret := map[string]Component{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

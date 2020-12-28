@@ -43,3 +43,13 @@ func AssocStringPosition(a map[string]Position, k string, v Position) map[string
 	ret[k] = v
 	return ret
 }
+
+// DissocStringPosition is
+func DissocStringPosition(a map[string]Position, k string) map[string]Position {
+	ret := map[string]Position{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

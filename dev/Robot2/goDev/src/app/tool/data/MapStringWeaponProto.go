@@ -43,3 +43,13 @@ func AssocStringWeaponProto(a map[string]WeaponProto, k string, v WeaponProto) m
 	ret[k] = v
 	return ret
 }
+
+// DissocStringWeaponProto is
+func DissocStringWeaponProto(a map[string]WeaponProto, k string) map[string]WeaponProto {
+	ret := map[string]WeaponProto{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

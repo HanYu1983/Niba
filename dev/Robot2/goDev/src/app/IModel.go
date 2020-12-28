@@ -12,6 +12,12 @@ type IModel interface {
 	BuyPilot(id string) error
 	BuyWeapon(id string) error
 	BuyComponent(id string) error
+	AssocRobotPilot(robotID string, pilotID string) error
+	DissocRobotPilot(robotID string) error
+	AssocWeaponRobot(weaponID string, robotID string) error
+	DissocWeaponRobot(weaponID string) error
+	AssocComponentRobot(componentID string, robotID string) error
+	DissocComponentRobot(componentID string) error
 	QueryActivePlayer() string
 	NextPlayer() error
 	HandlePlayerTurnEvent(interface{}) error
@@ -22,8 +28,11 @@ type IModel interface {
 	QueryComponentCanBuy() (map[string]data.ComponentProto, error)
 	QueryRobots() map[string]data.Robot
 	QueryPilots() map[string]data.Pilot
-	QueryComponents() map[string]data.Component
 	QueryWeapons() map[string]data.Weapon
+	QueryComponents() map[string]data.Component
+	QueryRobotIDByWeaponID() map[string]string
+	QueryRobotIDByComponentID() map[string]string
+	QueryPilotIDByRobotID() map[string]string
 	QueryCursorInMap() (data.Position, error)
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
 	QueryUnitByPosition(data.Position) (string, error)

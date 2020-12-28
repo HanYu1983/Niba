@@ -106,6 +106,9 @@ const (
 	PageBuyPilot
 	PageBuyWeapon
 	PageBuyComponent
+	PageAssocRobotToPilot
+	PageAssocWeaponToRobot
+	PageAssocComponentToRobot
 	PageGameplay
 )
 
@@ -121,16 +124,19 @@ type UI struct {
 	Menu2Ds       map[int]Menu2D
 	GameplayPages map[int]GameplayPage
 	Info          struct {
-		Money            int
-		CanBuyRobots     map[string]data.RobotProto
-		CanBuyPilots     map[string]data.PilotProto
-		CanBuyWeapons    map[string]data.WeaponProto
-		CanBuyComponents map[string]data.ComponentProto
-		Robots           map[string]data.Robot
-		Pilots           map[string]data.Pilot
-		Weapons          map[string]data.Weapon
-		Components       map[string]data.Component
-		JSON             data.Data
+		Money                int
+		CanBuyRobots         map[string]data.RobotProto
+		CanBuyPilots         map[string]data.PilotProto
+		CanBuyWeapons        map[string]data.WeaponProto
+		CanBuyComponents     map[string]data.ComponentProto
+		Robots               map[string]data.Robot
+		Pilots               map[string]data.Pilot
+		Weapons              map[string]data.Weapon
+		Components           map[string]data.Component
+		RobotIDByWeaponID    map[string]string
+		RobotIDByComponentID map[string]string
+		PilotIDByRobotID     map[string]string
+		JSON                 data.Data
 	}
 }
 
@@ -140,13 +146,19 @@ const (
 	MenuOptionLoadGame      = "MenuOptionLoadGame"
 	MenuOptionStartGameplay = "MenuOptionStartGameplay"
 
-	MenuOptionBuyRobot     = "MenuOptionBuyRobot"
-	MenuOptionBuyPilot     = "MenuOptionBuyPilot"
-	MenuOptionBuyWeapon    = "MenuOptionBuyWeapon"
-	MenuOptionBuyComponent = "MenuOptionBuyComponent"
+	MenuOptionBuyRobot            = "MenuOptionBuyRobot"
+	MenuOptionBuyPilot            = "MenuOptionBuyPilot"
+	MenuOptionBuyWeapon           = "MenuOptionBuyWeapon"
+	MenuOptionBuyComponent        = "MenuOptionBuyComponent"
+	MenuOptionAssocRobotPilot     = "MenuOptionAssocRobotPilot"
+	MenuOptionAssocWeaponRobot    = "MenuOptionAssocWeaponRobot"
+	MenuOptionAssocComponentRobot = "MenuOptionAssocComponentRobot"
 
 	MenuOptionCreateNew = "MenuOptionCreateNew"
 	MenuOptionSell      = "MenuOptionSell"
+
+	MenuOptionAssoc  = "MenuOptionAssoc"
+	MenuOptionDissoc = "MenuOptionDissoc"
 )
 
 //
@@ -162,6 +174,10 @@ const (
 	Menu1DBuyWeaponMenu
 	Menu1DBuyComponentMenu
 	Menu1DBuyOrSellOrElseMenu
+	Menu1DRobotPilotListMenu
+	Menu1DWeaponRobotListMenu
+	Menu1DComponentRobotListMenu
+	Menu1DAssocOrDisMenu
 	Menu2DUnitMenu
 )
 
@@ -187,6 +203,15 @@ var (
 			PageBuyComponent: []int{
 				Menu1DComponentListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyComponentMenu,
 			},
+			PageAssocRobotToPilot: []int{
+				Menu1DRobotPilotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
+			},
+			PageAssocWeaponToRobot: []int{
+				Menu1DWeaponRobotListMenu, Menu1DAssocOrDisMenu, Menu1DWeaponListMenu,
+			},
+			PageAssocComponentToRobot: []int{
+				Menu1DComponentRobotListMenu, Menu1DAssocOrDisMenu, Menu1DComponentListMenu,
+			},
 		},
 		Focus: map[int]int{},
 		Menu1Ds: map[int]Menu1D{
@@ -198,13 +223,26 @@ var (
 			},
 			Menu1DLobbyMenu: {
 				Options: []string{
-					MenuOptionBuyRobot, MenuOptionBuyPilot, MenuOptionBuyWeapon, MenuOptionBuyComponent, MenuOptionStartGameplay,
+					MenuOptionBuyRobot,
+					MenuOptionBuyPilot,
+					MenuOptionBuyWeapon,
+					MenuOptionBuyComponent,
+					MenuOptionStartGameplay,
+					MenuOptionAssocRobotPilot,
+					MenuOptionAssocWeaponRobot,
+					MenuOptionAssocComponentRobot,
 				},
 				Limit: 10,
 			},
 			Menu1DBuyOrSellOrElseMenu: {
 				Options: []string{
 					MenuOptionCreateNew, MenuOptionSell,
+				},
+				Limit: 10,
+			},
+			Menu1DAssocOrDisMenu: {
+				Options: []string{
+					MenuOptionAssoc, MenuOptionDissoc,
 				},
 				Limit: 10,
 			},

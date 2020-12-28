@@ -43,3 +43,13 @@ func AssocStringRobotProto(a map[string]RobotProto, k string, v RobotProto) map[
 	ret[k] = v
 	return ret
 }
+
+// DissocStringRobotProto is
+func DissocStringRobotProto(a map[string]RobotProto, k string) map[string]RobotProto {
+	ret := map[string]RobotProto{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

@@ -43,3 +43,13 @@ func AssocStringComponentProto(a map[string]ComponentProto, k string, v Componen
 	ret[k] = v
 	return ret
 }
+
+// DissocStringComponentProto is
+func DissocStringComponentProto(a map[string]ComponentProto, k string) map[string]ComponentProto {
+	ret := map[string]ComponentProto{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

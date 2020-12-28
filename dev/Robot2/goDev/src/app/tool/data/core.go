@@ -6,7 +6,7 @@ import (
 )
 
 type RobotProto struct {
-	Title       string `js:"title" json:"title"`
+	Title       string
 	Cost        int
 	Power       int
 	Weapons     []string
@@ -63,6 +63,7 @@ type Position [2]int
 type Robot struct {
 	ID                 string
 	ProtoID            string
+	Title              string
 	PilotID            string
 	WeaponsByTransform WeaponsByTransform
 	Transform          string
@@ -81,6 +82,7 @@ type Item struct {
 type Pilot struct {
 	ID      string
 	ProtoID string
+	Title   string
 }
 
 type Weapon struct {

@@ -43,3 +43,13 @@ func AssocIntBool(a map[int]bool, k int, v bool) map[int]bool {
 	ret[k] = v
 	return ret
 }
+
+// DissocIntBool is
+func DissocIntBool(a map[int]bool, k int) map[int]bool {
+	ret := map[int]bool{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

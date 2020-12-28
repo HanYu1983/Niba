@@ -42,6 +42,21 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					if err != nil {
 						return origin, cancel, err
 					}
+				case uidata.MenuOptionAssocRobotPilot:
+					ctx, err = AssocPhase(ctx, uidata.PageAssocRobotToPilot)
+					if err != nil {
+						return origin, cancel, err
+					}
+				case uidata.MenuOptionAssocWeaponRobot:
+					ctx, err = AssocPhase(ctx, uidata.PageAssocWeaponToRobot)
+					if err != nil {
+						return origin, cancel, err
+					}
+				case uidata.MenuOptionAssocComponentRobot:
+					ctx, err = AssocPhase(ctx, uidata.PageAssocComponentToRobot)
+					if err != nil {
+						return origin, cancel, err
+					}
 				case uidata.MenuOptionStartGameplay:
 					return ctx, cancel, nil
 				}

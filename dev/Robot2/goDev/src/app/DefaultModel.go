@@ -36,6 +36,7 @@ func (v *DefaultModel) BuyRobot(protoID string) error {
 	v.App.Lobby.Robots = data.AssocStringRobot(v.App.Lobby.Robots, ID, data.Robot{
 		ID:      ID,
 		ProtoID: protoID,
+		Title:   data.GameData.Robot[protoID].Title,
 	})
 	return nil
 }
@@ -54,6 +55,7 @@ func (v *DefaultModel) BuyPilot(protoID string) error {
 	v.App.Lobby.Pilots = data.AssocStringPilot(v.App.Lobby.Pilots, ID, data.Pilot{
 		ID:      ID,
 		ProtoID: protoID,
+		Title:   data.GameData.Pilot[protoID].Title,
 	})
 	return nil
 }
@@ -91,6 +93,31 @@ func (v *DefaultModel) BuyComponent(protoID string) error {
 		ID:      ID,
 		ProtoID: protoID,
 	})
+	return nil
+}
+
+func (v *DefaultModel) AssocRobotPilot(robotID string, pilotID string) error {
+	v.App.Lobby.PilotIDByRobotID = data.AssocStringString(v.App.Lobby.PilotIDByRobotID, robotID, pilotID)
+	return nil
+}
+func (v *DefaultModel) DissocRobotPilot(robotID string) error {
+	v.App.Lobby.PilotIDByRobotID = data.DissocStringString(v.App.Lobby.PilotIDByRobotID, robotID)
+	return nil
+}
+func (v *DefaultModel) AssocWeaponRobot(weaponID string, robotID string) error {
+	v.App.Lobby.RobotIDByWeaponID = data.AssocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID, robotID)
+	return nil
+}
+func (v *DefaultModel) DissocWeaponRobot(weaponID string) error {
+	v.App.Lobby.RobotIDByWeaponID = data.DissocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID)
+	return nil
+}
+func (v *DefaultModel) AssocComponentRobot(componentID string, robotID string) error {
+	v.App.Lobby.RobotIDByComponentID = data.DissocStringString(v.App.Lobby.RobotIDByComponentID, robotID)
+	return nil
+}
+func (v *DefaultModel) DissocComponentRobot(componentID string) error {
+	v.App.Lobby.RobotIDByComponentID = data.DissocStringString(v.App.Lobby.RobotIDByComponentID, componentID)
 	return nil
 }
 func (v *DefaultModel) QueryActivePlayer() string {
@@ -147,4 +174,13 @@ func (v *DefaultModel) QueryComponents() map[string]data.Component {
 }
 func (v *DefaultModel) QueryWeapons() map[string]data.Weapon {
 	return v.App.Lobby.Weapons
+}
+func (v *DefaultModel) QueryRobotIDByWeaponID() map[string]string {
+	return v.App.Lobby.RobotIDByWeaponID
+}
+func (v *DefaultModel) QueryRobotIDByComponentID() map[string]string {
+	return v.App.Lobby.RobotIDByComponentID
+}
+func (v *DefaultModel) QueryPilotIDByRobotID() map[string]string {
+	return v.App.Lobby.PilotIDByRobotID
 }

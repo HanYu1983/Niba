@@ -43,3 +43,13 @@ func AssocStringWeapons(a map[string]Weapons, k string, v Weapons) map[string]We
 	ret[k] = v
 	return ret
 }
+
+// DissocStringWeapons is
+func DissocStringWeapons(a map[string]Weapons, k string) map[string]Weapons {
+	ret := map[string]Weapons{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

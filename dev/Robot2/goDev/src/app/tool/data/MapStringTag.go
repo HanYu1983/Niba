@@ -43,3 +43,13 @@ func AssocStringTag(a map[string]Tag, k string, v Tag) map[string]Tag {
 	ret[k] = v
 	return ret
 }
+
+// DissocStringTag is
+func DissocStringTag(a map[string]Tag, k string) map[string]Tag {
+	ret := map[string]Tag{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

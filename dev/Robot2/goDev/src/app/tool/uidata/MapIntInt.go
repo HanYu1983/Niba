@@ -43,3 +43,13 @@ func AssocIntInt(a map[int]int, k int, v int) map[int]int {
 	ret[k] = v
 	return ret
 }
+
+// DissocIntInt is
+func DissocIntInt(a map[int]int, k int) map[int]int {
+	ret := map[int]int{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

@@ -43,3 +43,13 @@ func AssocIntGameplayPage(a map[int]GameplayPage, k int, v GameplayPage) map[int
 	ret[k] = v
 	return ret
 }
+
+// DissocIntGameplayPage is
+func DissocIntGameplayPage(a map[int]GameplayPage, k int) map[int]GameplayPage {
+	ret := map[int]GameplayPage{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

@@ -39,3 +39,13 @@ func AssocKeyValue(a map[Key]Value, k Key, v Value) map[Key]Value {
 	ret[k] = v
 	return ret
 }
+
+// DissocKeyValue is
+func DissocKeyValue(a map[Key]Value, k Key) map[Key]Value {
+	ret := map[Key]Value{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

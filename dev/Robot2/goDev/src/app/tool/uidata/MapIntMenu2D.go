@@ -43,3 +43,13 @@ func AssocIntMenu2D(a map[int]Menu2D, k int, v Menu2D) map[int]Menu2D {
 	ret[k] = v
 	return ret
 }
+
+// DissocIntMenu2D is
+func DissocIntMenu2D(a map[int]Menu2D, k int) map[int]Menu2D {
+	ret := map[int]Menu2D{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}

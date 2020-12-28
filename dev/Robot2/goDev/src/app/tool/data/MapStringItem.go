@@ -43,3 +43,13 @@ func AssocStringItem(a map[string]Item, k string, v Item) map[string]Item {
 	ret[k] = v
 	return ret
 }
+
+// DissocStringItem is
+func DissocStringItem(a map[string]Item, k string) map[string]Item {
+	ret := map[string]Item{}
+	for k, v := range a {
+		ret[k] = v
+	}
+	delete(ret, k)
+	return ret
+}
