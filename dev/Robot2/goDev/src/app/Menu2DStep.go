@@ -42,7 +42,7 @@ AskCommand:
 			case uidata.KeyCodeEnter:
 				break AskCommand
 			case uidata.KeyCodeCancel:
-				return origin, "", true, false, nil
+				return ctx, "", true, false, nil
 			}
 		}
 	}

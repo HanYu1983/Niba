@@ -29474,20 +29474,21 @@ $packages["app"] = (function() {
 			$s = -1; return [ctx$1, $ifaceNil];
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f._tuple$1 = _tuple$1; $f.ctx$1 = ctx$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(err, leftMapping, pageID), (function(err, leftMapping, pageID) { return function $b(origin$1, focus, selection, cancel, tab) {
-			var _1, _2, _3, _4, _5, _6, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, cancel, ctx$1, focus, leftMenu, leftSelection, menuID, middleMenu, middleSelection, origin$1, rightSelection, selection, tab, x, x$1, x$2, x$3, x$4, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _5 = $f._5; _6 = $f._6; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; leftMenu = $f.leftMenu; leftSelection = $f.leftSelection; menuID = $f.menuID; middleMenu = $f.middleMenu; middleSelection = $f.middleSelection; origin$1 = $f.origin$1; rightSelection = $f.rightSelection; selection = $f.selection; tab = $f.tab; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var _1, _2, _3, _4, _5, _6, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, cancel, ctx$1, focus, leftMenu, leftSelection, menuID, middleMenu, middleSelection, origin$1, rightSelection, selection, tab, x, x$1, x$2, x$3, x$4, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _5 = $f._5; _6 = $f._6; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; leftMenu = $f.leftMenu; leftSelection = $f.leftSelection; menuID = $f.menuID; middleMenu = $f.middleMenu; middleSelection = $f.middleSelection; origin$1 = $f.origin$1; rightSelection = $f.rightSelection; selection = $f.selection; tab = $f.tab; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
 				/* */ if ((_1 === (11)) || (_1 === (12)) || (_1 === (13))) { $s = 2; continue; }
 				/* */ if ((_1 === (3)) || (_1 === (2))) { $s = 3; continue; }
-				/* */ $s = 4; continue;
+				/* */ if (_1 === (14)) { $s = 4; continue; }
+				/* */ $s = 5; continue;
 				/* if ((_1 === (11)) || (_1 === (12)) || (_1 === (13))) { */ case 2:
 					if (cancel) {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
 					}
 					ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], (_entry$1 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$1 !== undefined ? _entry$1.v : 0) + 1 >> 0);
-					$s = 5; continue;
+					$s = 6; continue;
 				/* } else if ((_1 === (3)) || (_1 === (2))) { */ case 3:
 					if (cancel) {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
@@ -29498,86 +29499,89 @@ $packages["app"] = (function() {
 					middleSelection = (x$3 = middleMenu.Options, x$4 = middleMenu.Cursor, ((x$4 < 0 || x$4 >= x$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$3.$array[x$3.$offset + x$4]));
 					rightSelection = selection;
 						_2 = pageID[0];
-						/* */ if (_2 === (6)) { $s = 7; continue; }
-						/* */ if (_2 === (7)) { $s = 8; continue; }
-						/* */ if (_2 === (8)) { $s = 9; continue; }
-						/* */ $s = 10; continue;
-						/* if (_2 === (6)) { */ case 7:
+						/* */ if (_2 === (6)) { $s = 8; continue; }
+						/* */ if (_2 === (7)) { $s = 9; continue; }
+						/* */ if (_2 === (8)) { $s = 10; continue; }
+						/* */ $s = 11; continue;
+						/* if (_2 === (6)) { */ case 8:
 								_3 = middleSelection;
-								/* */ if (_3 === ("MenuOptionAssoc")) { $s = 13; continue; }
-								/* */ if (_3 === ("MenuOptionDissoc")) { $s = 14; continue; }
-								/* */ $s = 15; continue;
-								/* if (_3 === ("MenuOptionAssoc")) { */ case 13:
-									_r$1 = model.AssocRobotPilot(leftSelection, rightSelection); /* */ $s = 17; case 17: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+								/* */ if (_3 === ("MenuOptionAssoc")) { $s = 14; continue; }
+								/* */ if (_3 === ("MenuOptionDissoc")) { $s = 15; continue; }
+								/* */ $s = 16; continue;
+								/* if (_3 === ("MenuOptionAssoc")) { */ case 14:
+									_r$1 = model.AssocRobotPilot(leftSelection, rightSelection); /* */ $s = 18; case 18: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 									_r$1;
-									$s = 16; continue;
-								/* } else if (_3 === ("MenuOptionDissoc")) { */ case 14:
-									_r$2 = model.DissocRobotPilot(leftSelection); /* */ $s = 18; case 18: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+									$s = 17; continue;
+								/* } else if (_3 === ("MenuOptionDissoc")) { */ case 15:
+									_r$2 = model.DissocRobotPilot(leftSelection); /* */ $s = 19; case 19: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 									_r$2;
-									$s = 16; continue;
-								/* } else { */ case 15:
-									_r$3 = fmt.Errorf("you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 19; case 19: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+									$s = 17; continue;
+								/* } else { */ case 16:
+									_r$3 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 20; case 20: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 									$s = -1; return [origin$1, cancel, _r$3];
-								/* } */ case 16:
-							case 12:
-							$s = 11; continue;
-						/* } else if (_2 === (7)) { */ case 8:
+								/* } */ case 17:
+							case 13:
+							$s = 12; continue;
+						/* } else if (_2 === (7)) { */ case 9:
 								_4 = middleSelection;
-								/* */ if (_4 === ("MenuOptionAssoc")) { $s = 21; continue; }
-								/* */ if (_4 === ("MenuOptionDissoc")) { $s = 22; continue; }
-								/* */ $s = 23; continue;
-								/* if (_4 === ("MenuOptionAssoc")) { */ case 21:
-									_r$4 = model.AssocWeaponRobot(leftSelection, rightSelection); /* */ $s = 25; case 25: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+								/* */ if (_4 === ("MenuOptionAssoc")) { $s = 22; continue; }
+								/* */ if (_4 === ("MenuOptionDissoc")) { $s = 23; continue; }
+								/* */ $s = 24; continue;
+								/* if (_4 === ("MenuOptionAssoc")) { */ case 22:
+									_r$4 = model.AssocWeaponRobot(leftSelection, rightSelection); /* */ $s = 26; case 26: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 									_r$4;
-									$s = 24; continue;
-								/* } else if (_4 === ("MenuOptionDissoc")) { */ case 22:
-									_r$5 = model.DissocWeaponRobot(leftSelection); /* */ $s = 26; case 26: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+									$s = 25; continue;
+								/* } else if (_4 === ("MenuOptionDissoc")) { */ case 23:
+									_r$5 = model.DissocWeaponRobot(leftSelection); /* */ $s = 27; case 27: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 									_r$5;
-									$s = 24; continue;
-								/* } else { */ case 23:
-									_r$6 = fmt.Errorf("you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 27; case 27: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+									$s = 25; continue;
+								/* } else { */ case 24:
+									_r$6 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 28; case 28: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 									$s = -1; return [origin$1, cancel, _r$6];
-								/* } */ case 24:
-							case 20:
-							$s = 11; continue;
-						/* } else if (_2 === (8)) { */ case 9:
+								/* } */ case 25:
+							case 21:
+							$s = 12; continue;
+						/* } else if (_2 === (8)) { */ case 10:
 								_5 = middleSelection;
-								/* */ if (_5 === ("MenuOptionAssoc")) { $s = 29; continue; }
-								/* */ if (_5 === ("MenuOptionDissoc")) { $s = 30; continue; }
-								/* */ $s = 31; continue;
-								/* if (_5 === ("MenuOptionAssoc")) { */ case 29:
-									_r$7 = model.AssocComponentRobot(leftSelection, rightSelection); /* */ $s = 33; case 33: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+								/* */ if (_5 === ("MenuOptionAssoc")) { $s = 30; continue; }
+								/* */ if (_5 === ("MenuOptionDissoc")) { $s = 31; continue; }
+								/* */ $s = 32; continue;
+								/* if (_5 === ("MenuOptionAssoc")) { */ case 30:
+									_r$7 = model.AssocComponentRobot(leftSelection, rightSelection); /* */ $s = 34; case 34: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 									_r$7;
-									$s = 32; continue;
-								/* } else if (_5 === ("MenuOptionDissoc")) { */ case 30:
-									_r$8 = model.DissocComponentRobot(leftSelection); /* */ $s = 34; case 34: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+									$s = 33; continue;
+								/* } else if (_5 === ("MenuOptionDissoc")) { */ case 31:
+									_r$8 = model.DissocComponentRobot(leftSelection); /* */ $s = 35; case 35: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 									_r$8;
-									$s = 32; continue;
-								/* } else { */ case 31:
-									_r$9 = fmt.Errorf("you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 35; case 35: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+									$s = 33; continue;
+								/* } else { */ case 32:
+									_r$9 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$3([new $String(middleSelection)])); /* */ $s = 36; case 36: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 									$s = -1; return [origin$1, cancel, _r$9];
-								/* } */ case 32:
-							case 28:
-							$s = 11; continue;
-						/* } else { */ case 10:
-							_r$10 = fmt.Errorf("you must have page: %v", new sliceType$3([new $Int(pageID[0])])); /* */ $s = 36; case 36: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+								/* } */ case 33:
+							case 29:
+							$s = 12; continue;
+						/* } else { */ case 11:
+							_r$10 = fmt.Errorf("AssocPhase: you must have page: %v", new sliceType$3([new $Int(pageID[0])])); /* */ $s = 37; case 37: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 							$s = -1; return [origin$1, cancel, _r$10];
-						/* } */ case 11:
-					case 6:
-					$s = 5; continue;
-				/* } else { */ case 4:
+						/* } */ case 12:
+					case 7:
+					$s = 6; continue;
+				/* } else if (_1 === (14)) { */ case 4:
 					if (cancel) {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
 					}
 					_6 = selection;
 					if (_6 === ("MenuOptionAssoc") || _6 === ("MenuOptionDissoc")) {
 						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], (_entry$5 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$5 !== undefined ? _entry$5.v : 0) + 1 >> 0);
-						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], (_entry$6 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$6 !== undefined ? _entry$6.v : 0) + 1 >> 0);
 					}
-				/* } */ case 5:
+					$s = 6; continue;
+				/* } else { */ case 5:
+					_r$11 = fmt.Errorf("AssocPhase: menu not found %v", new sliceType$3([new $Int(menuID)])); /* */ $s = 38; case 38: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+					$s = -1; return [origin$1, cancel, _r$11];
+				/* } */ case 6:
 			case 1:
 			$s = -1; return [ctx$1, cancel, $ifaceNil];
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._5 = _5; $f._6 = _6; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.leftMenu = leftMenu; $f.leftSelection = leftSelection; $f.menuID = menuID; $f.middleMenu = middleMenu; $f.middleSelection = middleSelection; $f.origin$1 = origin$1; $f.rightSelection = rightSelection; $f.selection = selection; $f.tab = tab; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.$s = $s; $f.$r = $r; return $f;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._5 = _5; $f._6 = _6; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.leftMenu = leftMenu; $f.leftSelection = leftSelection; $f.menuID = menuID; $f.middleMenu = middleMenu; $f.middleSelection = middleSelection; $f.origin$1 = origin$1; $f.rightSelection = rightSelection; $f.selection = selection; $f.tab = tab; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(err, leftMapping, pageID), (function(err, leftMapping, pageID) { return function(origin$1, focus, selection, cancel, tab) {
 			var cancel, focus, origin$1, selection, tab;
 			return [origin$1, cancel, $ifaceNil];
@@ -30366,7 +30370,7 @@ $packages["app"] = (function() {
 					}
 					/* break AskCommand; */ $s = 6; continue s;
 				} else if (_1 === (222)) {
-					$s = -1; return [origin, "", true, false, $ifaceNil];
+					$s = -1; return [ctx, "", true, false, $ifaceNil];
 				}
 			}
 		/* } */ $s = 5; continue; case 6:
@@ -30430,7 +30434,7 @@ $packages["app"] = (function() {
 				} else if (_1 === (13)) {
 					/* break AskCommand; */ $s = 6; continue s;
 				} else if (_1 === (222)) {
-					$s = -1; return [origin, "", true, false, $ifaceNil];
+					$s = -1; return [ctx, "", true, false, $ifaceNil];
 				}
 			}
 		/* } */ $s = 5; continue; case 6:

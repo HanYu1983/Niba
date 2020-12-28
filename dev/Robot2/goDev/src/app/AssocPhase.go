@@ -52,7 +52,7 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					case uidata.MenuOptionDissoc:
 						model.DissocRobotPilot(leftSelection)
 					default:
-						return origin, cancel, fmt.Errorf("you must select option: %v", middleSelection)
+						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
 				case uidata.PageAssocWeaponToRobot:
 					switch middleSelection {
@@ -61,7 +61,7 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					case uidata.MenuOptionDissoc:
 						model.DissocWeaponRobot(leftSelection)
 					default:
-						return origin, cancel, fmt.Errorf("you must select option: %v", middleSelection)
+						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
 				case uidata.PageAssocComponentToRobot:
 					switch middleSelection {
@@ -70,20 +70,21 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					case uidata.MenuOptionDissoc:
 						model.DissocComponentRobot(leftSelection)
 					default:
-						return origin, cancel, fmt.Errorf("you must select option: %v", middleSelection)
+						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
 				default:
-					return origin, cancel, fmt.Errorf("you must have page: %v", pageID)
+					return origin, cancel, fmt.Errorf("AssocPhase: you must have page: %v", pageID)
 				}
-			default:
+			case uidata.Menu1DAssocOrDisMenu:
 				if cancel {
 					return ctx, cancel, nil
 				}
 				switch selection {
 				case uidata.MenuOptionAssoc, uidata.MenuOptionDissoc:
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
 				}
+			default:
+				return origin, cancel, fmt.Errorf("AssocPhase: menu not found %v", menuID)
 			}
 			return ctx, cancel, nil
 		},
