@@ -46,6 +46,9 @@ func Render(ctx uidata.UI) {
 	ctx.Info.CanBuyPilots, _ = model.QueryPilotCanBuy()
 	ctx.Info.CanBuyWeapons, _ = model.QueryWeaponCanBuy()
 	ctx.Info.CanBuyComponents, _ = model.QueryComponentCanBuy()
+	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
+	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
+	ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()
 	ctx.Info.JSON = data.GameData
 	view.Render(ctx)
 }
@@ -86,6 +89,9 @@ func Main() {
 		}
 	}()
 	view.Install()
-	StartPagePhase(uidata.DefaultUI)
+	_, err := StartPagePhase(uidata.DefaultUI)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println("model done")
 }

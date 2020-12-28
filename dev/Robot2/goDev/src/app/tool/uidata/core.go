@@ -227,10 +227,10 @@ var (
 					MenuOptionBuyPilot,
 					MenuOptionBuyWeapon,
 					MenuOptionBuyComponent,
-					MenuOptionStartGameplay,
 					MenuOptionAssocRobotPilot,
 					MenuOptionAssocWeaponRobot,
 					MenuOptionAssocComponentRobot,
+					MenuOptionStartGameplay,
 				},
 				Limit: 10,
 			},
@@ -244,6 +244,39 @@ var (
 				Options: []string{
 					MenuOptionAssoc, MenuOptionDissoc,
 				},
+				Limit: 10,
+			},
+			Menu1DRobotListMenu: {
+				Limit: 10,
+			},
+			Menu1DBuyRobotMenu: {
+				Limit: 10,
+			},
+			Menu1DPilotListMenu: {
+				Limit: 10,
+			},
+			Menu1DBuyPilotMenu: {
+				Limit: 10,
+			},
+			Menu1DWeaponListMenu: {
+				Limit: 10,
+			},
+			Menu1DBuyWeaponMenu: {
+				Limit: 10,
+			},
+			Menu1DComponentListMenu: {
+				Limit: 10,
+			},
+			Menu1DBuyComponentMenu: {
+				Limit: 10,
+			},
+			Menu1DRobotPilotListMenu: {
+				Limit: 10,
+			},
+			Menu1DWeaponRobotListMenu: {
+				Limit: 10,
+			},
+			Menu1DComponentRobotListMenu: {
 				Limit: 10,
 			},
 		},

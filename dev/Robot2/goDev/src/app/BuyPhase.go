@@ -1,7 +1,6 @@
 package app
 
 import (
-	"app/tool/data"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -15,86 +14,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
-			ctx := origin
-			switch {
-			case pageID == uidata.PageBuyRobot:
-				{
-					robots := model.QueryRobots()
-					titles := data.KesStringRobot(robots)
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DRobotListMenu, uidata.Menu1D{
-						Options: titles,
-						Limit:   10,
-					})
-				}
-				{
-					canBuy, err := model.QueryRobotCanBuy()
-					if err != nil {
-						return origin, err
-					}
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyRobotMenu, uidata.Menu1D{
-						Options: data.KesStringRobotProto(canBuy),
-						Limit:   10,
-					})
-				}
-			case pageID == uidata.PageBuyPilot:
-				{
-					vs := model.QueryPilots()
-					titles := data.KesStringPilot(vs)
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DPilotListMenu, uidata.Menu1D{
-						Options: titles,
-						Limit:   10,
-					})
-				}
-				{
-					canBuy, err := model.QueryPilotCanBuy()
-					if err != nil {
-						return origin, err
-					}
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyPilotMenu, uidata.Menu1D{
-						Options: data.KesStringPilotProto(canBuy),
-						Limit:   10,
-					})
-				}
-			case pageID == uidata.PageBuyWeapon:
-				{
-					vs := model.QueryWeapons()
-					titles := data.KesStringWeapon(vs)
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DWeaponListMenu, uidata.Menu1D{
-						Options: titles,
-						Limit:   10,
-					})
-				}
-				{
-					canBuy, err := model.QueryWeaponCanBuy()
-					if err != nil {
-						return origin, err
-					}
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyWeaponMenu, uidata.Menu1D{
-						Options: data.KesStringWeaponProto(canBuy),
-						Limit:   10,
-					})
-				}
-			case pageID == uidata.PageBuyComponent:
-				{
-					vs := model.QueryComponents()
-					titles := data.KesStringComponent(vs)
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DComponentListMenu, uidata.Menu1D{
-						Options: titles,
-						Limit:   10,
-					})
-				}
-				{
-					canBuy, err := model.QueryComponentCanBuy()
-					if err != nil {
-						return origin, err
-					}
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DBuyComponentMenu, uidata.Menu1D{
-						Options: data.KesStringComponentProto(canBuy),
-						Limit:   10,
-					})
-				}
-			}
-			return ctx, nil
+			return PreparePage(origin, pageID)
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin

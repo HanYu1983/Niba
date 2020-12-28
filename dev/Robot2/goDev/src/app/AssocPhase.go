@@ -11,16 +11,19 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
 	leftMapping := map[int]int{
-		uidata.PageAssocRobotToPilot: uidata.Menu1DRobotPilotListMenu,
+		uidata.PageAssocRobotToPilot:     uidata.Menu1DRobotPilotListMenu,
+		uidata.PageAssocWeaponToRobot:    uidata.Menu1DWeaponRobotListMenu,
+		uidata.PageAssocComponentToRobot: uidata.Menu1DComponentRobotListMenu,
 	}
 	ctx, err = BasicPagePhase(
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
 			ctx := origin
-			ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
-			ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
-			ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()
+			ctx, err = PreparePage(ctx, pageID)
+			if err != nil {
+				return origin, err
+			}
 			return ctx, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {

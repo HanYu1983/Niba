@@ -18,6 +18,9 @@ export enum Page {
 	BuyPilot,
 	BuyWeapon,
 	BuyComponent,
+	AssocRobotToPilot,
+	AssocWeaponToRobot,
+	AssocComponentToRobot,
 	Gameplay,
 }
 
@@ -33,5 +36,9 @@ export enum MenuID {
 	Menu1DBuyWeaponMenu,
 	Menu1DBuyComponentMenu,
 	Menu1DBuyOrSellOrElseMenu,
+	Menu1DRobotPilotListMenu,
+	Menu1DWeaponRobotListMenu,
+	Menu1DComponentRobotListMenu,
+	Menu1DAssocOrDisMenu,
 	Menu2DUnitMenu,
 }
