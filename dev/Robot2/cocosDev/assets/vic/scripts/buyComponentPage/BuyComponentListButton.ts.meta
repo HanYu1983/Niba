@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "37ce13ef-d5db-4d6b-8e5b-1e055f1a429f",
+  "uuid": "2071a289-5cb1-483b-bfb9-a987d731fae5",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/buyPilotPage/BuyPilotPage.js",
+    "moduleId": "project:///assets/vic/scripts/buyComponentPage/BuyComponentListButton.js",
     "importerSettings": 7
   }
 }

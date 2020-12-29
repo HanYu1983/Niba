@@ -16,7 +16,7 @@ export class MyPilotList extends BasicInstMenu {
     doBuild(content:any, data:any):void{
         const pilots = content[0];
         content[0] = pilots.map((id)=>{
-            return Drawer.getPilot(id, data).ProtoID;
+            return Drawer.getPilot(id, data).Title;
         });
         super.doBuild(content, data);
     }

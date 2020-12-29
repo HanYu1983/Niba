@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, CCInteger } from 'cc';
+import { _decorator, Component, Node, CCInteger, Enum } from 'cc';
 import { InstMenu } from './lib/instanceViewer/InstMenu';
 import * as ModelType from '../../han/types'
 import { Drawer } from './Drawer';
@@ -14,7 +14,7 @@ const { ccclass, property } = _decorator;
 @ccclass('BasicInstMenu')
 export class BasicInstMenu extends InstMenu {
 
-    @property(CCInteger)
+    @property({type:Enum(ModelType.Page)})
     pageId:ModelType.Page = 0;
 
     @property(CCInteger)

@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "6db58c78-5796-4e04-8beb-ae9f5b00c96e",
+  "uuid": "134ea43b-ffeb-4b7a-8526-dc8c5b916902",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/buyComponentPage/BuyComponentPage.js",
+    "moduleId": "project:///assets/vic/scripts/buyWeaponPage/BuyWeaponListButton.js",
     "importerSettings": 7
   }
 }

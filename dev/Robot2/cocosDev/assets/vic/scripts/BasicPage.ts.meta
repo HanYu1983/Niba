@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "c28a10da-3546-4609-bebd-af9bf1ab22c6",
+  "uuid": "441f5e6f-d7d5-4ada-84f8-4c7a5225397f",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/buyWeaponPage/BuyWeaponPage.js",
+    "moduleId": "project:///assets/vic/scripts/BasicPage.js",
     "importerSettings": 7
   }
 }

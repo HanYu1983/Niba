@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "5191de52-b7bf-4128-8d8d-57345779e52a",
+  "uuid": "71e98a75-2ad1-429d-a602-29628babe64a",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/lobbyPage/LobbyPage.js",
+    "moduleId": "project:///assets/vic/scripts/buyComponentPage/BuyComponentList.js",
     "importerSettings": 7
   }
 }

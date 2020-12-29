@@ -10,15 +10,15 @@ import { BasicInstMenu } from '../BasicInstMenu';
 import { Drawer } from '../Drawer';
 const { ccclass } = _decorator;
 
-@ccclass('BuyRobotList')
-export class BuyRobotList extends BasicInstMenu {
+@ccclass('BuyComponentList')
+export class BuyComponentList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        const robots = content[0];
-        content[0] = robots.map((id)=>{
-            const robot = Drawer.getBuyRobot(id, data);
-            const title = robot.Title;
-            const money = robot.Cost;
+        const components = content[0];
+        content[0] = components.map((id)=>{
+            const component = Drawer.getBuyComponent(id, data);
+            const title = component.Title;
+            const money = component.Cost;
             return title + "_" + money;
         });
         super.doBuild(content, data);

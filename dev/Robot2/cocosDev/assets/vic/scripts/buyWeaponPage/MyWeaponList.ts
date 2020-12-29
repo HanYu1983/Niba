@@ -16,7 +16,7 @@ export class MyWeaponList extends BasicInstMenu {
     doBuild(content:any, data:any):void{
         const weapons = content[0];
         content[0] = weapons.map((id)=>{
-            return Drawer.getWeapon(id, data).ProtoID;
+            return Drawer.getWeapon(id, data).Title;
         });
         super.doBuild(content, data);
     }
