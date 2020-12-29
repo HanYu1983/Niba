@@ -206,10 +206,10 @@ var (
 				Menu1DRobotPilotListMenu, Menu1DAssocOrDisMenu, Menu1DPilotListMenu,
 			},
 			PageAssocWeaponToRobot: []int{
-				Menu1DWeaponRobotListMenu, Menu1DAssocOrDisMenu, Menu1DWeaponListMenu,
+				Menu1DWeaponRobotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
 			},
 			PageAssocComponentToRobot: []int{
-				Menu1DComponentRobotListMenu, Menu1DAssocOrDisMenu, Menu1DComponentListMenu,
+				Menu1DComponentRobotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
 			},
 		},
 		Focus: map[int]int{},
