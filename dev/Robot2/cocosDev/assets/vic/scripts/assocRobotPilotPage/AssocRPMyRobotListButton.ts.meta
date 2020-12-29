@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/assocRobotListPage/AssocMyRobotListButton.js",
+    "moduleId": "project:///assets/vic/scripts/assocRobotPilotPage/AssocRPMyRobotListButton.js",
     "importerSettings": 7
   }
 }
