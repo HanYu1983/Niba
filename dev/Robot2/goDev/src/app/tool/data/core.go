@@ -77,6 +77,7 @@ type Robot struct {
 type Item struct {
 	ID      string
 	ProtoID string
+	Title   string
 }
 
 type Pilot struct {
@@ -88,11 +89,13 @@ type Pilot struct {
 type Weapon struct {
 	ID      string
 	ProtoID string
+	Title   string
 }
 
 type Component struct {
 	ID      string
 	ProtoID string
+	Title   string
 }
 
 type Lobby struct {

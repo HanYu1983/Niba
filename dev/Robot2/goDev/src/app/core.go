@@ -49,7 +49,7 @@ func Render(ctx uidata.UI) {
 	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
 	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
 	ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()
-	ctx.Info.JSON = data.GameData
+	// ctx.Info.JSON = data.GameData
 	view.Render(ctx)
 }
 

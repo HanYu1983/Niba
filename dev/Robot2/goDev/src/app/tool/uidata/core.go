@@ -136,7 +136,6 @@ type UI struct {
 		RobotIDByWeaponID    map[string]string
 		RobotIDByComponentID map[string]string
 		PilotIDByRobotID     map[string]string
-		JSON                 data.Data
 	}
 }
 

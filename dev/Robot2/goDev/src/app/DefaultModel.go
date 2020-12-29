@@ -74,6 +74,7 @@ func (v *DefaultModel) BuyWeapon(protoID string) error {
 	v.App.Lobby.Weapons = data.AssocStringWeapon(v.App.Lobby.Weapons, ID, data.Weapon{
 		ID:      ID,
 		ProtoID: protoID,
+		Title:   data.GameData.Weapon[protoID].Title,
 	})
 	return nil
 }
@@ -92,6 +93,7 @@ func (v *DefaultModel) BuyComponent(protoID string) error {
 	v.App.Lobby.Components = data.AssocStringComponent(v.App.Lobby.Components, ID, data.Component{
 		ID:      ID,
 		ProtoID: protoID,
+		Title:   data.GameData.Component[protoID].Title,
 	})
 	return nil
 }
