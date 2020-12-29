@@ -45,6 +45,10 @@ export class Drawer extends Instant {
         return data.Info.Components[id];
     }
 
+    static getPilotIDByRobotID(robot:string, data:any):any{
+        return data.Info.PilotIDByRobotID[robot];
+    }
+
     static getMenuByPage(data:any, page:ModelType.Page, menuIndex:number = 0){
         const content = {
             Active: data.Actives[page],
