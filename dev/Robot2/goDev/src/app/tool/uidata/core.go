@@ -203,7 +203,7 @@ var (
 				Menu1DComponentListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyComponentMenu,
 			},
 			PageAssocRobotToPilot: []int{
-				Menu1DRobotPilotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
+				Menu1DRobotPilotListMenu, Menu1DAssocOrDisMenu, Menu1DPilotListMenu,
 			},
 			PageAssocWeaponToRobot: []int{
 				Menu1DWeaponRobotListMenu, Menu1DAssocOrDisMenu, Menu1DWeaponListMenu,

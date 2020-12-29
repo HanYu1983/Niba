@@ -30,6 +30,7 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin
 			menuID := ctx.Menus[pageID][focus]
+			fmt.Printf("XXXX: %v %v\n", menuID, selection)
 			switch menuID {
 			case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DWeaponRobotListMenu, uidata.Menu1DComponentRobotListMenu:
 				if cancel {
@@ -39,7 +40,9 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 			case uidata.Menu1DPilotListMenu, uidata.Menu1DRobotListMenu:
 				if cancel {
-					return ctx, cancel, nil
+					focus, _ := tool.Inc(ctx.Focus[pageID], -1, 0, len(ctx.Menus[pageID]))
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					return ctx, false, nil
 				}
 				leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
 				middleMenu := ctx.Menu1Ds[uidata.Menu1DAssocOrDisMenu]
@@ -79,12 +82,27 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				}
 			case uidata.Menu1DAssocOrDisMenu:
 				if cancel {
-					return ctx, cancel, nil
+					focus, _ := tool.Inc(ctx.Focus[pageID], -1, 0, len(ctx.Menus[pageID]))
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					return ctx, false, nil
 				}
 				switch selection {
-				case uidata.MenuOptionAssoc, uidata.MenuOptionDissoc:
+				case uidata.MenuOptionAssoc:
 					focus, _ := tool.Inc(ctx.Focus[pageID], 1, 0, len(ctx.Menus[pageID]))
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+				case uidata.MenuOptionDissoc:
+					leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
+					leftSelection := leftMenu.Options[leftMenu.Cursor]
+					switch pageID {
+					case uidata.PageAssocRobotToPilot:
+						model.DissocRobotPilot(leftSelection)
+					case uidata.PageAssocWeaponToRobot:
+						model.DissocWeaponRobot(leftSelection)
+					case uidata.PageAssocComponentToRobot:
+						model.DissocComponentRobot(leftSelection)
+					default:
+						return origin, cancel, fmt.Errorf("AssocPhase: you must have page: %v", pageID)
+					}
 				}
 			default:
 				return origin, cancel, fmt.Errorf("AssocPhase: menu not found %v", menuID)
