@@ -16,7 +16,7 @@ export class MyRobotList extends BasicInstMenu {
     doBuild(content:any, data:any):void{
         const robots = content[0];
         content[0] = robots.map((id)=>{
-            return Drawer.getRobot(id, data).ProtoID;
+            return Drawer.getRobot(id, data).Title;
         });
         super.doBuild(content, data);
     }

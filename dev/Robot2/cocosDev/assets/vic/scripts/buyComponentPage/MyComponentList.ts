@@ -16,7 +16,7 @@ export class MyComponentList extends BasicInstMenu {
     doBuild(content:any, data:any):void{
         const components = content[0];
         content[0] = components.map((id)=>{
-            return Drawer.getComponent(id, data).ProtoID;
+            return Drawer.getComponent(id, data).Title;
         });
         super.doBuild(content, data);
     }
