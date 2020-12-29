@@ -558,7 +558,7 @@
         "__id__": 16
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 44
@@ -1535,8 +1535,8 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": -321.66666666666663,
-      "y": 264.32000000000005,
+      "x": 0,
+      "y": 0,
       "z": 0
     },
     "_lrot": {
@@ -2058,7 +2058,7 @@
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 1
+      "y": 0.5
     },
     "_id": "eaynaBrslMVaI+J9EQgf7J"
   },
