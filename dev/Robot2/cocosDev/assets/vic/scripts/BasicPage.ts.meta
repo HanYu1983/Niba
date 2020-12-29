@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "0dd9f05e-bed0-4288-af60-0868b3be9f8e",
+  "uuid": "441f5e6f-d7d5-4ada-84f8-4c7a5225397f",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/mainPage/MainPage.js",
+    "moduleId": "project:///assets/vic/scripts/BasicPage.js",
     "importerSettings": 7
   }
 }
