@@ -30494,9 +30494,9 @@ $packages["app"] = (function() {
 		/* } */ $s = 5; continue; case 6:
 		menu$5 = $clone((_entry$8 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$8 !== undefined ? _entry$8.v : new uidata.Menu1D.ptr(sliceType.nil, 0, 0, 0, new structType.ptr(sliceType.nil, 0, 0, 0))), uidata.Menu1D);
 		idx = menu$5.Cursor + menu$5.Offset >> 0;
-		/* */ if (idx >= menu$5.Options.$length) { $s = 11; continue; }
+		/* */ if (idx < 0 || idx >= menu$5.Options.$length) { $s = 11; continue; }
 		/* */ $s = 12; continue;
-		/* if (idx >= menu$5.Options.$length) { */ case 11:
+		/* if (idx < 0 || idx >= menu$5.Options.$length) { */ case 11:
 			_r$8 = fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", new sliceType$3([new $Int(menuID), new $Int(idx), new $Int(menu$5.Options.$length)])); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 			$s = -1; return [ctx, "", false, false, _r$8];
 		/* } */ case 12:

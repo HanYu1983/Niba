@@ -72,7 +72,7 @@ AskCommand:
 	}
 	menu := ctx.Menu1Ds[menuID]
 	idx := menu.Cursor + menu.Offset
-	if idx >= len(menu.Options) {
+	if idx < 0 || idx >= len(menu.Options) {
 		return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
 	}
 	return ctx, menu.Options[idx], false, false, nil
