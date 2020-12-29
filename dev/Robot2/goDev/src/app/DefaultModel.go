@@ -99,26 +99,33 @@ func (v *DefaultModel) BuyComponent(protoID string) error {
 }
 
 func (v *DefaultModel) AssocRobotPilot(robotID string, pilotID string) error {
+	fmt.Printf("AssocRobotPilot(%v, %v)\n", robotID, pilotID)
 	v.App.Lobby.PilotIDByRobotID = data.AssocStringString(v.App.Lobby.PilotIDByRobotID, robotID, pilotID)
+	fmt.Printf("XXXXX(%v)\n", v.App.Lobby.PilotIDByRobotID)
 	return nil
 }
 func (v *DefaultModel) DissocRobotPilot(robotID string) error {
+	fmt.Printf("DissocRobotPilot(%v, %v)\n", robotID)
 	v.App.Lobby.PilotIDByRobotID = data.DissocStringString(v.App.Lobby.PilotIDByRobotID, robotID)
 	return nil
 }
 func (v *DefaultModel) AssocWeaponRobot(weaponID string, robotID string) error {
+	fmt.Printf("AssocWeaponRobot(%v, %v)\n", robotID, weaponID)
 	v.App.Lobby.RobotIDByWeaponID = data.AssocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID, robotID)
 	return nil
 }
 func (v *DefaultModel) DissocWeaponRobot(weaponID string) error {
+	fmt.Printf("DissocWeaponRobot(%v)\n", weaponID)
 	v.App.Lobby.RobotIDByWeaponID = data.DissocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID)
 	return nil
 }
 func (v *DefaultModel) AssocComponentRobot(componentID string, robotID string) error {
-	v.App.Lobby.RobotIDByComponentID = data.DissocStringString(v.App.Lobby.RobotIDByComponentID, robotID)
+	fmt.Printf("AssocComponentRobot(%v, %v)\n", robotID, componentID)
+	v.App.Lobby.RobotIDByComponentID = data.AssocStringString(v.App.Lobby.RobotIDByComponentID, componentID, robotID)
 	return nil
 }
 func (v *DefaultModel) DissocComponentRobot(componentID string) error {
+	fmt.Printf("DissocComponentRobot(%v)\n", componentID)
 	v.App.Lobby.RobotIDByComponentID = data.DissocStringString(v.App.Lobby.RobotIDByComponentID, componentID)
 	return nil
 }
