@@ -3,6 +3,7 @@ package app
 import (
 	"app/tool/uidata"
 	"fmt"
+	"tool"
 )
 
 func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
@@ -34,7 +35,8 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				if cancel {
 					return ctx, cancel, nil
 				}
-				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
+				focus, _ := tool.Inc(ctx.Focus[pageID], 1, 0, len(ctx.Menus[pageID]))
+				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 			case uidata.Menu1DPilotListMenu, uidata.Menu1DRobotListMenu:
 				if cancel {
 					return ctx, cancel, nil
@@ -81,7 +83,8 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				}
 				switch selection {
 				case uidata.MenuOptionAssoc, uidata.MenuOptionDissoc:
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, ctx.Focus[pageID]+1)
+					focus, _ := tool.Inc(ctx.Focus[pageID], 1, 0, len(ctx.Menus[pageID]))
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				}
 			default:
 				return origin, cancel, fmt.Errorf("AssocPhase: menu not found %v", menuID)

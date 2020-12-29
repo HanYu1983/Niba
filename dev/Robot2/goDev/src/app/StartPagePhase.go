@@ -27,7 +27,7 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 				}
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
 			}
-			return ctx, false, nil
+			return ctx, cancel, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			return origin, cancel, nil
