@@ -14,17 +14,17 @@ const { ccclass } = _decorator;
 export class AssocWRMyWeaponList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        // const robots = content[0];
-        // content[0] = robots.map((id)=>{
-        //     const robot = Drawer.getRobot(id, data);
-        //     const pilotId = Drawer.getPilotIDByRobotID(robot.ID, data);
-        //     const pilot = Drawer.getPilot(pilotId, data);
-        //     if(pilot){
-        //         return robot.Title + "_" + pilot.Title;
-        //     }else{
-        //         return robot.Title + "_--";
-        //     }
-        // });
+        const robots = content[0];
+        content[0] = robots.map((id)=>{
+            const weapon = Drawer.getWeapon(id, data);
+            const robotId = Drawer.getRobotIDByWeaponID(weapon.ID, data);
+            const robot = Drawer.getRobot(robotId, data);
+            if(robot){
+                return weapon.Title + "_" + robot.Title;
+            }else{
+                return weapon.Title + "_--";
+            }
+        });
         super.doBuild(content, data);
     }
 }

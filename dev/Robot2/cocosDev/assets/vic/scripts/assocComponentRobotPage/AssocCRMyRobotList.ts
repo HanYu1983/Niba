@@ -10,8 +10,8 @@ import { BasicInstMenu } from '../BasicInstMenu';
 import { Drawer } from '../Drawer';
 const { ccclass } = _decorator;
 
-@ccclass('AssocWRMyRobotList')
-export class AssocWRMyRobotList extends BasicInstMenu {
+@ccclass('AssocCRMyRobotList')
+export class AssocCRMyRobotList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
         const robots = content[0];

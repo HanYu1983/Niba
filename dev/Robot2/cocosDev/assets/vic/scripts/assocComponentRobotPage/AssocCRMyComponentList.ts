@@ -10,13 +10,20 @@ import { BasicInstMenu } from '../BasicInstMenu';
 import { Drawer } from '../Drawer';
 const { ccclass } = _decorator;
 
-@ccclass('AssocWRMyRobotList')
-export class AssocWRMyRobotList extends BasicInstMenu {
+@ccclass('AssocCRMyComponentList')
+export class AssocCRMyComponentList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        const robots = content[0];
-        content[0] = robots.map((id)=>{
-            return Drawer.getRobot(id, data).Title;
+        const components = content[0];
+        content[0] = components.map((id)=>{
+            const component = Drawer.getComponent(id, data);
+            const robotId = Drawer.getRobotIDByComponentID(component.ID, data);
+            const robot = Drawer.getRobot(robotId, data);
+            if(robot){
+                return component.Title + "_" + robot.Title;
+            }else{
+                return component.Title + "_--";
+            }
         });
         super.doBuild(content, data);
     }

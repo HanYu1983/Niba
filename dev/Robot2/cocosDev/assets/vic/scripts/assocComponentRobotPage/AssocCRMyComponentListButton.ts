@@ -10,8 +10,8 @@ import { Drawer } from '../Drawer';
 import { InstButton } from '../lib/instanceViewer/InstButton';
 const { ccclass, property } = _decorator;
 
-@ccclass('AssocWRMyWeaponListButton')
-export class AssocWRMyWeaponListButton extends InstButton {
+@ccclass('AssocCRMyComponentListButton')
+export class AssocCRMyComponentListButton extends InstButton {
     
     @property(Label)
     lblRobot:Label = null;
