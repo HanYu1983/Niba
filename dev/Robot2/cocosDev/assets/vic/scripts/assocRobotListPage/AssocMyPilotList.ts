@@ -14,10 +14,16 @@ const { ccclass } = _decorator;
 export class AssocMyPilotList extends BasicInstMenu {
     
     doBuild(content:any, data:any):void{
-        // const pilots = content[0];
-        // content[0] = pilots.map((id)=>{
-        //     return Drawer.getPilot(id, data).Title;
-        // });
+        const robots = content[0];
+        content[0] = robots.map((id)=>{
+            const robot = Drawer.getRobot(id, data);
+            const pilot = Drawer.getPilotIDByRobotID(robot.ID, data);
+            if(pilot){
+                return robot.Title + "_" + pilot.Title;
+            }else{
+                return robot.Title + "_--";
+            }
+        });
         super.doBuild(content, data);
     }
 }
