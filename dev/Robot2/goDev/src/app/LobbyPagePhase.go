@@ -58,7 +58,10 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 						return origin, cancel, err
 					}
 				case uidata.MenuOptionStartGameplay:
-					return ctx, cancel, nil
+					ctx, err = MultiUnitSelectionPagePhase(ctx)
+					if err != nil {
+						return origin, cancel, err
+					}
 				}
 			}
 			return ctx, cancel, nil

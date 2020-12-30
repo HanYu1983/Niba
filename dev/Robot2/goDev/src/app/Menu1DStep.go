@@ -60,13 +60,24 @@ AskCommand:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
 					focus := ctx.Focus[pageID]
-					focus = (focus + 1) % len(ctx.Menus[pageID])
+					focus, over := tool.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					if over {
+						focus = focus % len(ctx.Menus[pageID])
+					}
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, "", false, true, nil
 				}
 				break AskCommand
 			case uidata.KeyCodeCancel:
 				return ctx, "", true, false, nil
+			case uidata.KeyCodeSubEnter:
+				menu := ctx.Menu1Ds[menuID]
+				idx := menu.Cursor + menu.Offset
+				if idx < 0 || idx >= len(menu.Options) {
+					return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
+				}
+				menu.Selection[menu.Options[idx]] = !menu.Selection[menu.Options[idx]]
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			}
 		}
 	}

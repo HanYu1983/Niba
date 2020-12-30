@@ -105,7 +105,7 @@ func (v *DefaultModel) AssocRobotPilot(robotID string, pilotID string) error {
 	return nil
 }
 func (v *DefaultModel) DissocRobotPilot(robotID string) error {
-	fmt.Printf("DissocRobotPilot(%v, %v)\n", robotID)
+	fmt.Printf("DissocRobotPilot(%v)\n", robotID)
 	v.App.Lobby.PilotIDByRobotID = data.DissocStringString(v.App.Lobby.PilotIDByRobotID, robotID)
 	return nil
 }

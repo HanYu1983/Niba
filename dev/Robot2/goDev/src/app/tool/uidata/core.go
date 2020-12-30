@@ -11,6 +11,7 @@ const (
 	KeyCodeLeft       = 65
 	KeyCodeRight      = 68
 	KeyCodeEnter      = 13
+	KeyCodeSubEnter   = 32
 	KeyCodeCancel     = 222 // '
 	KeyCodeL          = 81
 	KeyCodeR          = 69
@@ -18,7 +19,6 @@ const (
 	KeyCodeArrowDown  = 40
 	KeyCodeArrowLeft  = 37
 	KeyCodeArrowRight = 39
-	KeyCodeSpace      = 32
 	KeyCodeTab        = 186 // ;
 )
 
@@ -38,11 +38,12 @@ type CommandFlush struct {
 
 // Menu1D is
 type Menu1D struct {
-	Options []string
-	Cursor  int
-	Offset  int
-	Limit   int
-	Info    struct {
+	Options   []string
+	Selection map[string]bool
+	Cursor    int
+	Offset    int
+	Limit     int
+	Info      struct {
 		Options []string
 		Cursor  int
 		Offset  int
@@ -109,6 +110,7 @@ const (
 	PageAssocRobotToPilot
 	PageAssocWeaponToRobot
 	PageAssocComponentToRobot
+	PageMultiUnitSelection
 	PageGameplay
 )
 
@@ -177,6 +179,7 @@ const (
 	Menu1DWeaponRobotListMenu
 	Menu1DComponentRobotListMenu
 	Menu1DAssocOrDisMenu
+	Menu1DMultiUnitSelectionMenu
 	Menu2DUnitMenu
 )
 
@@ -210,6 +213,9 @@ var (
 			},
 			PageAssocComponentToRobot: []int{
 				Menu1DComponentRobotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
+			},
+			PageMultiUnitSelection: []int{
+				Menu1DMultiUnitSelectionMenu,
 			},
 		},
 		Focus: map[int]int{},
@@ -276,6 +282,9 @@ var (
 				Limit: 10,
 			},
 			Menu1DComponentRobotListMenu: {
+				Limit: 10,
+			},
+			Menu1DMultiUnitSelectionMenu: {
 				Limit: 10,
 			},
 		},
