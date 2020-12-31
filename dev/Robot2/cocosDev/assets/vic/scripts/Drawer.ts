@@ -61,7 +61,6 @@ export class Drawer extends Instant {
         const content = {
             Active: data.Actives[page],
             Menus: data.Menus[page],
-            Focus: data.Focus[page],
         }
         if (content.Active) {
             if(data.Menu1Ds[content.Menus[menuIndex]]){
@@ -70,6 +69,20 @@ export class Drawer extends Instant {
                     menu.Options, Array.from(menu.Options, x => 0), menu.Cursor
                 ]
             }
+        }
+        return null;
+    }
+
+    static getFocusByPage(data:any, page:ModelType.Page){
+        const content = {
+            Active: data.Actives[page],
+            Menus: data.Menus[page],
+            Focus: data.Focus[page],
+        }
+        if (content.Active) {
+            return [
+                Array.from(content.Menus, x => ""), Array.from(content.Menus, x => 0), content.Focus
+            ]
         }
         return null;
     }

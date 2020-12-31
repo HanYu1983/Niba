@@ -5,12 +5,16 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, instantiate, tween, View, UITransform, CCInteger } from 'cc';
-import { Pool } from '../Pool';
+import { _decorator, Component, Node, instantiate, tween, View, UITransform, CCInteger, Enum } from 'cc';
 import { Instant } from './Instant';
 import { InstButton } from './InstButton';
 import { InstMultiButton } from './InstMultiButton';
 const { ccclass, property } = _decorator;
+
+export enum Type{
+    Horizontal,
+    Vertical
+} 
 
 @ccclass('InstMenu')
 export class InstMenu extends Instant {
@@ -22,7 +26,10 @@ export class InstMenu extends Instant {
     multiPrefab:Node = null;
 
     @property(CCInteger)
-    buttonHeight:number = 30;
+    buttonSize:number = 30;
+
+    @property({type:Enum(Type)})
+    type:Type = Type.Vertical;
 
     private tempMultiMutton:Node[] = [];
     private tempButton:Node[] = [];
@@ -70,11 +77,19 @@ export class InstMenu extends Instant {
         let combine = btns.map((e, i)=>{
             return [e, multiId[i]];
         });
+
+        const gap:number = this.buttonSize + 1;
+        const borderSize:number = combine.length * gap;
         combine.forEach(([item, multiId], i)=>{
             const isArray = Array.isArray(item);
             let btn:Node = isArray ? this.pool.aquire(this.multiPrefab, this.node) : this.pool.aquire(this.prefab, this.node);
-            btn.getComponent(UITransform)?.contentSize.set(btn.getComponent(UITransform)?.contentSize.width, this.buttonHeight);
-            btn.position.set(btn.position.x, i * -(this.buttonHeight + 1), btn.position.z);
+            if(this.type == Type.Horizontal){
+                btn.getComponent(UITransform)?.contentSize.set(this.buttonSize, btn.getComponent(UITransform)?.contentSize.height);
+                btn.position.set(i * gap - borderSize / 2 + this.buttonSize / 2, btn.position.y, btn.position.z);
+            }else{
+                btn.getComponent(UITransform)?.contentSize.set(btn.getComponent(UITransform)?.contentSize.width, this.buttonSize);
+                btn.position.set(btn.position.x, i * -gap + borderSize / 2 - this.buttonSize / 2, btn.position.z);
+            }
             const label = isArray ? item[multiId] : item;
             const isFocus = (focus == i) ? true : false;
             
