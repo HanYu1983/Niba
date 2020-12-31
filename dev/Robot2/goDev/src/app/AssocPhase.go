@@ -46,8 +46,14 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				}
 				leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
 				middleMenu := ctx.Menu1Ds[uidata.Menu1DAssocOrDisMenu]
-				leftSelection := leftMenu.Options[leftMenu.Cursor]
-				middleSelection := middleMenu.Options[middleMenu.Cursor]
+				leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor+leftMenu.Offset)
+				if outOfRange != nil {
+					return ctx, cancel, nil
+				}
+				middleSelection, outOfRange := tool.TryGetString(middleMenu.Options, middleMenu.Cursor+middleMenu.Offset)
+				if outOfRange != nil {
+					return ctx, cancel, nil
+				}
 				rightSelection := selection
 				switch pageID {
 				case uidata.PageAssocRobotToPilot:
@@ -92,7 +98,10 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				case uidata.MenuOptionDissoc:
 					leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
-					leftSelection := leftMenu.Options[leftMenu.Cursor]
+					leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor+leftMenu.Offset)
+					if outOfRange != nil {
+						return ctx, cancel, nil
+					}
 					switch pageID {
 					case uidata.PageAssocRobotToPilot:
 						model.DissocRobotPilot(leftSelection)

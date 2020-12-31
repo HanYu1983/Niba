@@ -31,10 +31,16 @@ AskCommand:
 			switch detail.KeyCode {
 			case uidata.KeyCodeUp, uidata.KeyCodeLeft:
 				menu := ctx.Menu2Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				menu.Cursor1--
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeDown, uidata.KeyCodeRight:
 				menu := ctx.Menu2Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				menu.Cursor1++
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:

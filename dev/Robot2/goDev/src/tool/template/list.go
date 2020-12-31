@@ -60,8 +60,8 @@ func ReplaceItem(items []Item, info map[Item]Item) []Item {
 	return ret
 }
 
-// ReplaceIndex is
-func ReplaceIndex(items []Item, info map[int]Item) []Item {
+// ReplaceItemIndex is
+func ReplaceItemIndex(items []Item, info map[int]Item) []Item {
 	ret := make([]Item, len(items))
 	copy(ret, items)
 	for idx2, next := range info {
@@ -72,4 +72,12 @@ func ReplaceIndex(items []Item, info map[int]Item) []Item {
 		}
 	}
 	return ret
+}
+
+func TryGetItem(items []Item, i int) (Item, error) {
+	if i < 0 || i >= len(items) {
+		ret := map[int]Item{}
+		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
+	}
+	return items[i], nil
 }

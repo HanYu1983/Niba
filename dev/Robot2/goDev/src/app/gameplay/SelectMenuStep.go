@@ -25,14 +25,14 @@ WaitCommand:
 			case uidata.KeyCodeDown:
 				topMenu.Cursor1++
 			case uidata.KeyCodeLeft:
-				topMenu.Cursor2 = tool.ReplaceIndex(
+				topMenu.Cursor2 = tool.ReplaceIntIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] - 1,
 					},
 				)
 			case uidata.KeyCodeRight:
-				topMenu.Cursor2 = tool.ReplaceIndex(
+				topMenu.Cursor2 = tool.ReplaceIntIndex(
 					topMenu.Cursor2,
 					map[int]int{
 						topMenu.Cursor1: topMenu.Cursor2[topMenu.Cursor1] + 1,

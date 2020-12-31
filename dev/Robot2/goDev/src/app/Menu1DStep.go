@@ -31,10 +31,16 @@ AskCommand:
 			switch detail.KeyCode {
 			case uidata.KeyCodeUp:
 				menu := ctx.Menu1Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				menu.Cursor = tool.Max(menu.Cursor-1, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeDown:
 				menu := ctx.Menu1Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				menu.Cursor = tool.Min(menu.Cursor+1, menu.Limit-1)
 				if menu.Cursor+menu.Offset >= len(menu.Options) {
 					menu.Cursor = (len(menu.Options) % menu.Limit) - 1
@@ -42,10 +48,16 @@ AskCommand:
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu1Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				menu.Offset = tool.Max(menu.Offset-menu.Limit, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu1Ds[menuID]
+				if len(menu.Options) == 0 {
+					continue
+				}
 				offset := menu.Offset + menu.Limit
 				if offset < len(menu.Options) {
 					if offset+menu.Cursor >= len(menu.Options) {
