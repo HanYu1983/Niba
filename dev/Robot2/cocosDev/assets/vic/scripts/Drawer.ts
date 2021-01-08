@@ -73,6 +73,20 @@ export class Drawer extends Instant {
         return null;
     }
 
+    static getMenuSelectByPage(data:any, page:ModelType.Page, menuIndex:number, id:number){
+        const content = {
+            Active: data.Actives[page],
+            Menus: data.Menus[page],
+        }
+        if (content.Active) {
+            if(data.Menu1Ds[content.Menus[menuIndex]]){
+                const menu = data.Menu1Ds[content.Menus[menuIndex]];
+                return menu.Selection[id];
+            }
+        }
+        return false;    
+    }
+
     static getFocusByPage(data:any, page:ModelType.Page){
         const content = {
             Active: data.Actives[page],
