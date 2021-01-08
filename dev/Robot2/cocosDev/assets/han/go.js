@@ -30643,12 +30643,19 @@ $packages["app"] = (function() {
 	};
 	$pkg.Menu2DStep = Menu2DStep;
 	MultiUnitSelectionPagePhase = function(origin) {
-		var _arg, _arg$1, _arg$2, _arg$3, _r, _r$1, _r$2, _tuple, ctx, err, origin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _arg$3, _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, ctx, err, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; ctx = $f.ctx; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = fmt.Println(new sliceType$3([new $String("MultiUnitSelectionPagePhase")])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		err = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
+		_r$1 = PreparePage($clone(ctx, uidata.UI), 9); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		uidata.UI.copy(ctx, _tuple[0]);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 9, true);
 		_arg = $clone(ctx, uidata.UI);
 		_arg$1 = (function(origin$1) {
@@ -30670,18 +30677,18 @@ $packages["app"] = (function() {
 			var cancel, focus, origin$1, selection, tab;
 			return [origin$1, cancel, $ifaceNil];
 		});
-		_r$1 = BasicPagePhase(_arg, 9, _arg$1, _arg$2, _arg$3); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple = _r$1;
-		uidata.UI.copy(ctx, _tuple[0]);
-		err = _tuple[1];
+		_r$2 = BasicPagePhase(_arg, 9, _arg$1, _arg$2, _arg$3); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		uidata.UI.copy(ctx, _tuple$1[0]);
+		err = _tuple$1[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [ctx, err];
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 9, false);
-		_r$2 = fmt.Println(new sliceType$3([new $String("MultiUnitSelectionPagePhase: End")])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_r$2;
+		_r$3 = fmt.Println(new sliceType$3([new $String("MultiUnitSelectionPagePhase: End")])); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3;
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: MultiUnitSelectionPagePhase }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MultiUnitSelectionPagePhase }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.MultiUnitSelectionPagePhase = MultiUnitSelectionPagePhase;
 	PrepareMenu = function(origin, menuID) {
@@ -30690,7 +30697,7 @@ $packages["app"] = (function() {
 		ctx = $clone(origin, uidata.UI);
 			_1 = menuID;
 			/* */ if (_1 === (3)) { $s = 2; continue; }
-			/* */ if ((_1 === (11)) || (_1 === (2))) { $s = 3; continue; }
+			/* */ if ((_1 === (11)) || (_1 === (2)) || (_1 === (15))) { $s = 3; continue; }
 			/* */ if ((_1 === (12)) || (_1 === (4))) { $s = 4; continue; }
 			/* */ if ((_1 === (13)) || (_1 === (5))) { $s = 5; continue; }
 			/* */ if (_1 === (6)) { $s = 6; continue; }
@@ -30705,7 +30712,7 @@ $packages["app"] = (function() {
 				menu.Options = _r$1;
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if ((_1 === (11)) || (_1 === (2))) { */ case 3:
+			/* } else if ((_1 === (11)) || (_1 === (2)) || (_1 === (15))) { */ case 3:
 				menu$1 = $clone((_entry$1 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0, new structType.ptr(sliceType.nil, 0, 0, 0))), uidata.Menu1D);
 				_r$2 = model.QueryRobots(); /* */ $s = 14; case 14: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 				_r$3 = data.KesStringRobot(_r$2); /* */ $s = 15; case 15: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }

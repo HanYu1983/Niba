@@ -9,6 +9,10 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 	fmt.Println("MultiUnitSelectionPagePhase")
 	var err error
 	ctx := origin
+	ctx, err = PreparePage(ctx, uidata.PageMultiUnitSelection)
+	if err != nil {
+		return origin, err
+	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, true)
 	ctx, err = BasicPagePhase(
 		ctx,

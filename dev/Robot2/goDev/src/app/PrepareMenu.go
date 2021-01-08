@@ -13,7 +13,7 @@ func PrepareMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		menu := ctx.Menu1Ds[menuID]
 		menu.Options = data.KesStringPilot(model.QueryPilots())
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-	case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DRobotListMenu:
+	case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DRobotListMenu, uidata.Menu1DMultiUnitSelectionMenu:
 		menu := ctx.Menu1Ds[menuID]
 		menu.Options = data.KesStringRobot(model.QueryRobots())
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
