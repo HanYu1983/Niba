@@ -285,7 +285,8 @@ var (
 				Limit: 10,
 			},
 			Menu1DMultiUnitSelectionMenu: {
-				Limit: 10,
+				Limit:     10,
+				Selection: map[string]bool{},
 			},
 		},
 		Menu2Ds: map[int]Menu2D{
