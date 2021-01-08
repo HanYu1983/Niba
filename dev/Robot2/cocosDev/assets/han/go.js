@@ -30554,17 +30554,18 @@ $packages["app"] = (function() {
 						$s = -1; return [ctx, "", true, false, $ifaceNil];
 					/* } else if (_1 === (32)) { */ case 21:
 						menu$5 = $clone((_entry$9 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$9 !== undefined ? _entry$9.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0, new structType.ptr(sliceType.nil, 0, 0, 0))), uidata.Menu1D);
-						idx = menu$5.Cursor + menu$5.Offset >> 0;
-						/* */ if (idx < 0 || idx >= menu$5.Options.$length) { $s = 23; continue; }
+						/* */ if (menu$5.Selection === false) { $s = 23; continue; }
 						/* */ $s = 24; continue;
-						/* if (idx < 0 || idx >= menu$5.Options.$length) { */ case 23:
-							_r$8 = fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", new sliceType$3([new $Int(menuID), new $Int(idx), new $Int(menu$5.Options.$length)])); /* */ $s = 25; case 25: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-							$s = -1; return [ctx, "", false, false, _r$8];
+						/* if (menu$5.Selection === false) { */ case 23:
+							_r$8 = fmt.Printf("please init Selection field. Menu(%v)\n", new sliceType$3([new $Int(menuID)])); /* */ $s = 25; case 25: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+							_r$8;
+							/* continue; */ $s = 5; continue;
 						/* } */ case 24:
-						/* */ if (menu$5.Selection === false) { $s = 26; continue; }
+						idx = menu$5.Cursor + menu$5.Offset >> 0;
+						/* */ if (idx < 0 || idx >= menu$5.Options.$length) { $s = 26; continue; }
 						/* */ $s = 27; continue;
-						/* if (menu$5.Selection === false) { */ case 26:
-							_r$9 = fmt.Errorf("you forgat init Selection field. Menu(%v)", new sliceType$3([new $Int(menuID)])); /* */ $s = 28; case 28: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+						/* if (idx < 0 || idx >= menu$5.Options.$length) { */ case 26:
+							_r$9 = fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", new sliceType$3([new $Int(menuID), new $Int(idx), new $Int(menu$5.Options.$length)])); /* */ $s = 28; case 28: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 							$s = -1; return [ctx, "", false, false, _r$9];
 						/* } */ case 27:
 						_key = (x = menu$5.Options, ((idx < 0 || idx >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + idx])); (menu$5.Selection || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: !(_entry$10 = menu$5.Selection[$String.keyFor((x$1 = menu$5.Options, ((idx < 0 || idx >= x$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + idx])))], _entry$10 !== undefined ? _entry$10.v : false) };

@@ -84,12 +84,13 @@ AskCommand:
 				return ctx, "", true, false, nil
 			case uidata.KeyCodeSubEnter:
 				menu := ctx.Menu1Ds[menuID]
+				if menu.Selection == nil {
+					fmt.Printf("please init Selection field. Menu(%v)\n", menuID)
+					continue
+				}
 				idx := menu.Cursor + menu.Offset
 				if idx < 0 || idx >= len(menu.Options) {
 					return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
-				}
-				if menu.Selection == nil {
-					return ctx, "", false, false, fmt.Errorf("you forgat init Selection field. Menu(%v)", menuID)
 				}
 				menu.Selection[menu.Options[idx]] = !menu.Selection[menu.Options[idx]]
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
