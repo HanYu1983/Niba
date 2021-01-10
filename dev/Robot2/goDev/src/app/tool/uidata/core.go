@@ -88,15 +88,13 @@ type BattleMenu struct {
 
 // GameplayPage is
 type GameplayPage struct {
-	Active     bool
-	Map        [][]int
-	Cursor     data.Position
-	Units      []string
-	UnitMenu   Menu2D
-	BattleMenu BattleMenu
-	Robots     map[string]data.Robot
-	Items      map[string]data.Item
-	Positions  map[string]data.Position
+	Map       [][]int
+	Cursor    data.Position
+	Camera    data.Position
+	Units     []string
+	Robots    map[string]data.Robot
+	Items     map[string]data.Item
+	Positions map[string]data.Position
 }
 
 //
@@ -124,6 +122,7 @@ type UI struct {
 	Focus         map[int]int
 	Menu1Ds       map[int]Menu1D
 	Menu2Ds       map[int]Menu2D
+	BattleMenus   map[int]BattleMenu
 	GameplayPages map[int]GameplayPage
 	Info          struct {
 		Money                int
@@ -181,6 +180,7 @@ const (
 	Menu1DAssocOrDisMenu
 	Menu1DMultiUnitSelectionMenu
 	Menu2DUnitMenu
+	BattleMenuUnitBattleMenu
 )
 
 //
@@ -292,29 +292,24 @@ var (
 		Menu2Ds: map[int]Menu2D{
 			Menu2DUnitMenu: {},
 		},
+		BattleMenus: map[int]BattleMenu{
+			BattleMenuUnitBattleMenu: BattleMenu{
+				Left: BattleMenuSlot{
+					BattleAction: BattleActionAttack,
+				},
+				Right: BattleMenuSlot{
+					BattleAction: BattleActionAttack,
+				},
+			},
+		},
 		GameplayPages: map[int]GameplayPage{
 			PageGameplay: GameplayPage{
-				Active: true,
 				Map: [][]int{
 					{0, 1, 2, 3, 4},
 				},
 				Cursor: data.Position{1, 1},
 				Units: []string{
 					"",
-				},
-				UnitMenu: Menu2D{
-					Options: [][]string{
-						{"move"},
-						{"weapon1", "weapon2"},
-					},
-				},
-				BattleMenu: BattleMenu{
-					Left: BattleMenuSlot{
-						BattleAction: BattleActionAttack,
-					},
-					Right: BattleMenuSlot{
-						BattleAction: BattleActionAttack,
-					},
 				},
 				Robots: map[string]data.Robot{},
 				Items:  map[string]data.Item{},

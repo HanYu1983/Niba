@@ -20,7 +20,6 @@ type IModel interface {
 	DissocComponentRobot(componentID string) error
 	QueryActivePlayer() string
 	NextPlayer() error
-	HandlePlayerTurnEvent(interface{}) error
 	IsDone() bool
 	QueryRobotCanBuy() (map[string]data.RobotProto, error)
 	QueryPilotCanBuy() (map[string]data.PilotProto, error)
@@ -33,7 +32,6 @@ type IModel interface {
 	QueryRobotIDByWeaponID() map[string]string
 	QueryRobotIDByComponentID() map[string]string
 	QueryPilotIDByRobotID() map[string]string
-	QueryCursorInMap() (data.Position, error)
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
 	QueryUnitByPosition(data.Position) (string, error)
 	QueryGameplayRobots() map[string]data.Robot

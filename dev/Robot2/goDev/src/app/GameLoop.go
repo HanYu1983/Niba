@@ -68,7 +68,12 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	for {
 		view.Render(ctx)
 		cmd := view.AskCommand()
-		err = model.HandlePlayerTurnEvent(cmd)
+		ctx, err = HandleCursor(ctx, cmd)
+		if err != nil {
+			model.Reset()
+			return origin, err
+		}
+		ctx, err = HandleCamera(ctx, cmd)
 		if err != nil {
 			model.Reset()
 			return origin, err
@@ -77,17 +82,14 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
 			default:
-				cursor, err := model.QueryCursorInMap()
-				if err != nil {
-					model.Reset()
-					return origin, err
-				}
-				var notFound string
+				gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+				cursor := gameplayPage.Cursor
 				unitID, err := model.QueryUnitByPosition(cursor)
 				if err != nil {
 					model.Reset()
 					return origin, err
 				}
+				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)
 				} else {
