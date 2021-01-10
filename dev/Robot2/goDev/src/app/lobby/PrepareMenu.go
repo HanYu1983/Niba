@@ -1,4 +1,4 @@
-package app
+package lobby
 
 import (
 	"app/tool/data"

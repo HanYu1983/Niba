@@ -1,6 +1,7 @@
-package app
+package lobby
 
 import (
+	"app/common"
 	"app/tool"
 	"app/tool/uidata"
 	"fmt"
@@ -16,7 +17,7 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		uidata.PageAssocWeaponToRobot:    uidata.Menu1DWeaponRobotListMenu,
 		uidata.PageAssocComponentToRobot: uidata.Menu1DComponentRobotListMenu,
 	}
-	ctx, err = BasicPagePhase(
+	ctx, err = common.BasicPagePhase(
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
@@ -30,7 +31,6 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin
 			menuID := ctx.Menus[pageID][focus]
-			fmt.Printf("XXXX: %v %v\n", menuID, selection)
 			switch menuID {
 			case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DWeaponRobotListMenu, uidata.Menu1DComponentRobotListMenu:
 				if cancel {

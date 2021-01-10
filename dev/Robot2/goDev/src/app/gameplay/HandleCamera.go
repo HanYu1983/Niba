@@ -1,24 +1,31 @@
 package gameplay
 
 import (
-	"app/tool/data"
 	"app/tool/uidata"
 )
 
-func HandleCamera(origin data.Gameplay, evt interface{}) (data.Gameplay, error) {
-	gameplay := origin
+func HandleCamera(origin uidata.UI, evt interface{}) (uidata.UI, error) {
+	ctx := origin
 	switch detail := evt.(type) {
 	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
 		case uidata.KeyCodeUp:
-			gameplay.Camera[1]--
+			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+			gameplayPage.Camera[1]--
+			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeDown:
-			gameplay.Camera[1]++
+			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+			gameplayPage.Camera[1]++
+			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeLeft:
-			gameplay.Camera[0]--
+			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+			gameplayPage.Camera[0]--
+			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeRight:
-			gameplay.Camera[0]++
+			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+			gameplayPage.Camera[0]++
+			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
-	return gameplay, nil
+	return ctx, nil
 }

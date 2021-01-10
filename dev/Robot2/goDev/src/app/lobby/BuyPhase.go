@@ -1,6 +1,7 @@
-package app
+package lobby
 
 import (
+	"app/common"
 	"app/tool"
 	"app/tool/uidata"
 	"fmt"
@@ -11,7 +12,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
-	ctx, err = BasicPagePhase(
+	ctx, err = common.BasicPagePhase(
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {

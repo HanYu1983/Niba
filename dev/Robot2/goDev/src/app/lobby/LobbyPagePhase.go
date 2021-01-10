@@ -1,6 +1,7 @@
-package app
+package lobby
 
 import (
+	"app/common"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -10,7 +11,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
-	ctx, err = BasicPagePhase(
+	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageLobby,
 		func(origin uidata.UI) (uidata.UI, error) {

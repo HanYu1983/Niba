@@ -1,6 +1,7 @@
-package app
+package lobby
 
 import (
+	"app/common"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -14,7 +15,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 		return origin, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, true)
-	ctx, err = BasicPagePhase(
+	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageMultiUnitSelection,
 		func(origin uidata.UI) (uidata.UI, error) {

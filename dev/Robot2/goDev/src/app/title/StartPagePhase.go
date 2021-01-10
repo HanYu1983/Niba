@@ -1,6 +1,8 @@
-package app
+package title
 
 import (
+	"app/common"
+	"app/lobby"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -10,7 +12,7 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
-	ctx, err = BasicPagePhase(
+	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageStart,
 		func(origin uidata.UI) (uidata.UI, error) {
@@ -21,7 +23,7 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 			switch selection {
 			case uidata.MenuOptionNewGame:
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
-				ctx, err = LobbyPagePhase(ctx)
+				ctx, err = lobby.LobbyPagePhase(ctx)
 				if err != nil {
 					return origin, cancel, err
 				}
