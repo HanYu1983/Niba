@@ -16,14 +16,15 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 	ctx := origin
 	if robot, is := model.QueryGameplayRobots()[unitID]; is {
-		// append menu
 		ctx, err := CreateRobotMenu(ctx, robot.ID)
 		if err != nil {
 			return origin, err
 		}
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, true)
 	WaitMenu:
 		for {
-			ctx, _, cancel, tab, err := common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			var cancel, tab bool
+			ctx, _, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, err
 			}
@@ -36,8 +37,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 			var _ = topMenu
 		}
-		// pop menu
-		return ctx, nil
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, false)
 	}
 	if item, is := model.QueryGameplayItems()[unitID]; is {
 		// append menu
@@ -45,13 +45,24 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		ctx, selection, _, _, err := common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
-		if err != nil {
-			return origin, err
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
+	WaitItemMenu:
+		for {
+			var cancel, tab bool
+			var selection string
+			ctx, selection, cancel, tab, err = common.Menu1DStep(ctx, uidata.PageGameplay, uidata.Menu1DSystemMenu)
+			if err != nil {
+				return origin, err
+			}
+			if tab {
+				continue
+			}
+			if cancel {
+				break WaitItemMenu
+			}
+			var _ = selection
 		}
-		var _ = selection
-		// pop menu
-		return ctx, nil
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
 	}
 	return origin, nil
 }

@@ -110,6 +110,9 @@ const (
 	PageAssocComponentToRobot
 	PageMultiUnitSelection
 	PageGameplay
+	PageUnitMenu
+	PageSystemMenu
+	PageBattleMenu
 )
 
 // ListInt is
@@ -180,6 +183,7 @@ const (
 	Menu1DAssocOrDisMenu
 	Menu1DMultiUnitSelectionMenu
 	Menu2DUnitMenu
+	Menu1DSystemMenu
 	BattleMenuUnitBattleMenu
 )
 
@@ -216,6 +220,15 @@ var (
 			},
 			PageMultiUnitSelection: []int{
 				Menu1DMultiUnitSelectionMenu,
+			},
+			PageUnitMenu: []int{
+				Menu2DUnitMenu,
+			},
+			PageSystemMenu: []int{
+				Menu1DSystemMenu,
+			},
+			PageBattleMenu: []int{
+				BattleMenuUnitBattleMenu,
 			},
 		},
 		Focus: map[int]int{},
@@ -287,6 +300,9 @@ var (
 			Menu1DMultiUnitSelectionMenu: {
 				Limit:     10,
 				Selection: map[string]bool{},
+			},
+			Menu1DSystemMenu: {
+				Limit: 10,
 			},
 		},
 		Menu2Ds: map[int]Menu2D{
