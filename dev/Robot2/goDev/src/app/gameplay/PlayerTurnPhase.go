@@ -3,9 +3,11 @@ package gameplay
 import (
 	"app/common"
 	"app/tool/uidata"
+	"fmt"
 )
 
 func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
+	fmt.Println("PlayerTurnPhase start")
 	model.Push()
 	defer model.Pop()
 	var err error
@@ -52,5 +54,6 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			break
 		}
 	}
+	fmt.Println("PlayerTurnPhase end")
 	return ctx, nil
 }

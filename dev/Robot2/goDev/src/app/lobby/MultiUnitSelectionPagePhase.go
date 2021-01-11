@@ -2,6 +2,7 @@ package lobby
 
 import (
 	"app/common"
+	"app/gameplay"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -27,7 +28,13 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 			switch menuID {
 			case uidata.Menu1DMultiUnitSelectionMenu:
 				selection := ctx.Menu1Ds[menuID].Selection
+				fmt.Printf("you select %v\n", selection)
 				var _ = selection
+				ctx, err = gameplay.GameLoop(ctx)
+				if err != nil {
+					return origin, cancel, err
+				}
+				return ctx, true, nil
 			}
 			return ctx, cancel, nil
 		},

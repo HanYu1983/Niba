@@ -130,7 +130,7 @@ func (v *DefaultModel) DissocComponentRobot(componentID string) error {
 	return nil
 }
 func (v *DefaultModel) QueryActivePlayer() string {
-	return ""
+	return data.PlayerIDPlayer
 }
 func (v *DefaultModel) NextPlayer() error {
 	return nil

@@ -88,13 +88,15 @@ type BattleMenu struct {
 
 // GameplayPage is
 type GameplayPage struct {
-	Map       [][]int
-	Cursor    data.Position
-	Camera    data.Position
-	Units     []string
-	Robots    map[string]data.Robot
-	Items     map[string]data.Item
-	Positions map[string]data.Position
+	Map         [][]int
+	Cursor      data.Position
+	Camera      data.Position
+	Units       []string
+	Robots      map[string]data.Robot
+	Items       map[string]data.Item
+	Positions   map[string]data.Position
+	MoveRange   []data.Position
+	AttackRange []data.Position
 }
 
 //
@@ -126,6 +128,7 @@ type UI struct {
 	Menu1Ds       map[int]Menu1D
 	Menu2Ds       map[int]Menu2D
 	BattleMenus   map[int]BattleMenu
+	Positions     map[int][]data.Position
 	GameplayPages map[int]GameplayPage
 	Info          struct {
 		Money                int
@@ -190,6 +193,10 @@ const (
 //
 var (
 	DefaultUI = UI{
+		Actives: map[int]bool{
+			PageBattleMenu: true,
+			PageUnitMenu:   true,
+		},
 		Menus: map[int]ListInt{
 			PageStart: []int{
 				Menu1DStartMenu,
@@ -322,13 +329,19 @@ var (
 			PageGameplay: GameplayPage{
 				Map: [][]int{
 					{0, 1, 2, 3, 4},
+					{0, 1, 2, 3, 4},
+					{0, 1, 2, 3, 4},
+					{0, 1, 2, 3, 4},
+					{0, 1, 2, 3, 4},
 				},
 				Cursor: data.Position{1, 1},
 				Units: []string{
-					"",
+					"0",
 				},
-				Robots: map[string]data.Robot{},
-				Items:  map[string]data.Item{},
+				Robots:      map[string]data.Robot{},
+				Items:       map[string]data.Item{},
+				MoveRange:   []data.Position{{0, 0}, {0, 1}},
+				AttackRange: []data.Position{{0, 1}, {1, 1}},
 			},
 		},
 	}
