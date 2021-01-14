@@ -14,8 +14,8 @@ const { ccclass, property } = _decorator;
 @ccclass('BasicInstMenu')
 export class BasicInstMenu extends InstMenu {
 
-    @property({type:Enum(ModelType.Page)})
-    pageId:ModelType.Page = 0;
+    @property({type:Enum(ModelType.Const)})
+    pageId:ModelType.Const = 0;
 
     @property(CCInteger)
     menuIndex:number = 0;

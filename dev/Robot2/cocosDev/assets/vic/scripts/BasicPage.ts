@@ -13,8 +13,8 @@ const { ccclass, property } = _decorator;
 @ccclass('BasicPage')
 export class BasicPage extends Instant {
 
-    @property ({type:Enum(ModelType.Page)})
-    pageId:ModelType.Page = null;
+    @property ({type:Enum(ModelType.Const)})
+    pageId:ModelType.Const = null;
 
     protected checkData(data:any):any{
         const content = {

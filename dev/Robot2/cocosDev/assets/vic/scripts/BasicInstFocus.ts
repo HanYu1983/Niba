@@ -14,10 +14,11 @@ const { ccclass, property } = _decorator;
 @ccclass('BasicInstFocus')
 export class BasicInstFocus extends InstMenu {
 
-    @property({type:Enum(ModelType.Page)})
-    pageId:ModelType.Page = 0;
+    @property({type:Enum(ModelType.Const)})
+    pageId:ModelType.Const = 0;
 
     protected checkData(data:any):any{
+        
         return Drawer.getFocusByPage(data, this.pageId);
     }
 }
