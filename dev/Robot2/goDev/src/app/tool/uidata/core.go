@@ -99,24 +99,6 @@ type GameplayPage struct {
 	AttackRange []data.Position
 }
 
-//
-const (
-	PageStart = iota
-	PageLobby
-	PageBuyRobot
-	PageBuyPilot
-	PageBuyWeapon
-	PageBuyComponent
-	PageAssocRobotToPilot
-	PageAssocWeaponToRobot
-	PageAssocComponentToRobot
-	PageMultiUnitSelection
-	PageGameplay
-	PageUnitMenu
-	PageSystemMenu
-	PageBattleMenu
-)
-
 // ListInt is
 type ListInt []int
 
@@ -169,7 +151,22 @@ const (
 
 //
 const (
-	Menu1DStartMenu = iota
+	PageStart = iota
+	PageLobby
+	PageBuyRobot
+	PageBuyPilot
+	PageBuyWeapon
+	PageBuyComponent
+	PageAssocRobotToPilot
+	PageAssocWeaponToRobot
+	PageAssocComponentToRobot
+	PageMultiUnitSelection
+	PageGameplay
+	PageUnitMenu
+	PageSystemMenu
+	PageBattleMenu
+
+	Menu1DStartMenu
 	Menu1DLobbyMenu
 	Menu1DRobotListMenu
 	Menu1DPilotListMenu
