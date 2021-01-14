@@ -30346,7 +30346,7 @@ $packages["app/lobby"] = (function() {
 		err[0] = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], true);
-		leftMapping[0] = $makeMap($Int.keyFor, [{ k: 6, v: 11 }, { k: 7, v: 12 }, { k: 8, v: 13 }]);
+		leftMapping[0] = $makeMap($Int.keyFor, [{ k: 6, v: 25 }, { k: 7, v: 26 }, { k: 8, v: 27 }]);
 		_r$1 = common.BasicPagePhase($clone(ctx, uidata.UI), pageID[0], (function(err, leftMapping, pageID) { return function $b(origin$1) {
 			var _r$1, _tuple$1, ctx$1, origin$1, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _tuple$1 = $f._tuple$1; ctx$1 = $f.ctx$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -30366,11 +30366,11 @@ $packages["app/lobby"] = (function() {
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
-				/* */ if ((_1 === (11)) || (_1 === (12)) || (_1 === (13))) { $s = 2; continue; }
-				/* */ if ((_1 === (3)) || (_1 === (2))) { $s = 3; continue; }
-				/* */ if (_1 === (14)) { $s = 4; continue; }
+				/* */ if ((_1 === (25)) || (_1 === (26)) || (_1 === (27))) { $s = 2; continue; }
+				/* */ if ((_1 === (17)) || (_1 === (16))) { $s = 3; continue; }
+				/* */ if (_1 === (28)) { $s = 4; continue; }
 				/* */ $s = 5; continue;
-				/* if ((_1 === (11)) || (_1 === (12)) || (_1 === (13))) { */ case 2:
+				/* if ((_1 === (25)) || (_1 === (26)) || (_1 === (27))) { */ case 2:
 					if (cancel) {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
 					}
@@ -30378,7 +30378,7 @@ $packages["app/lobby"] = (function() {
 					focus$1 = _tuple$1[0];
 					ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$1);
 					$s = 6; continue;
-				/* } else if ((_1 === (3)) || (_1 === (2))) { */ case 3:
+				/* } else if ((_1 === (17)) || (_1 === (16))) { */ case 3:
 					if (cancel) {
 						_tuple$2 = tool.Clamp((_entry$3 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$3 !== undefined ? _entry$3.v : 0) - 1 >> 0, 0, (_entry$4 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$4 !== undefined ? _entry$4.v : uidata.ListInt.nil).$length);
 						focus$2 = _tuple$2[0];
@@ -30386,7 +30386,7 @@ $packages["app/lobby"] = (function() {
 						$s = -1; return [ctx$1, false, $ifaceNil];
 					}
 					leftMenu = $clone((_entry$6 = ctx$1.Menu1Ds[$Int.keyFor((_entry$5 = leftMapping[0][$Int.keyFor(pageID[0])], _entry$5 !== undefined ? _entry$5.v : 0))], _entry$6 !== undefined ? _entry$6.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-					middleMenu = $clone((_entry$7 = ctx$1.Menu1Ds[$Int.keyFor(14)], _entry$7 !== undefined ? _entry$7.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+					middleMenu = $clone((_entry$7 = ctx$1.Menu1Ds[$Int.keyFor(28)], _entry$7 !== undefined ? _entry$7.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
 					_r$1 = tool.TryGetString(leftMenu.Options, leftMenu.Cursor + leftMenu.Offset >> 0); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 					_tuple$3 = _r$1;
 					leftSelection = _tuple$3[0];
@@ -30470,7 +30470,7 @@ $packages["app/lobby"] = (function() {
 						/* } */ case 14:
 					case 9:
 					$s = 6; continue;
-				/* } else if (_1 === (14)) { */ case 4:
+				/* } else if (_1 === (28)) { */ case 4:
 					if (cancel) {
 						_tuple$5 = tool.Clamp((_entry$8 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$8 !== undefined ? _entry$8.v : 0) - 1 >> 0, 0, (_entry$9 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$9 !== undefined ? _entry$9.v : uidata.ListInt.nil).$length);
 						focus$3 = _tuple$5[0];
@@ -30567,14 +30567,14 @@ $packages["app/lobby"] = (function() {
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
-				/* */ if (_1 === (10)) { $s = 2; continue; }
-				/* */ if ((_1 === (2)) || (_1 === (3)) || (_1 === (4)) || (_1 === (5))) { $s = 3; continue; }
-				/* */ if (_1 === (6)) { $s = 4; continue; }
-				/* */ if (_1 === (7)) { $s = 5; continue; }
-				/* */ if (_1 === (8)) { $s = 6; continue; }
-				/* */ if (_1 === (9)) { $s = 7; continue; }
+				/* */ if (_1 === (24)) { $s = 2; continue; }
+				/* */ if ((_1 === (16)) || (_1 === (17)) || (_1 === (18)) || (_1 === (19))) { $s = 3; continue; }
+				/* */ if (_1 === (20)) { $s = 4; continue; }
+				/* */ if (_1 === (21)) { $s = 5; continue; }
+				/* */ if (_1 === (22)) { $s = 6; continue; }
+				/* */ if (_1 === (23)) { $s = 7; continue; }
 				/* */ $s = 8; continue;
-				/* if (_1 === (10)) { */ case 2:
+				/* if (_1 === (24)) { */ case 2:
 					if (cancel) {
 						_tuple$1 = tool.Clamp((_entry$1 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$1 !== undefined ? _entry$1.v : 0) - 1 >> 0, 0, (_entry$2 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$2 !== undefined ? _entry$2.v : uidata.ListInt.nil).$length);
 						focus$1 = _tuple$1[0];
@@ -30596,7 +30596,7 @@ $packages["app/lobby"] = (function() {
 						/* } */ case 12:
 					case 9:
 					$s = 8; continue;
-				/* } else if ((_1 === (2)) || (_1 === (3)) || (_1 === (4)) || (_1 === (5))) { */ case 3:
+				/* } else if ((_1 === (16)) || (_1 === (17)) || (_1 === (18)) || (_1 === (19))) { */ case 3:
 					if (cancel) {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
 					}
@@ -30604,7 +30604,7 @@ $packages["app/lobby"] = (function() {
 					focus$3 = _tuple$3[0];
 					ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$3);
 					$s = 8; continue;
-				/* } else if (_1 === (6)) { */ case 4:
+				/* } else if (_1 === (20)) { */ case 4:
 					if (cancel) {
 						_tuple$4 = tool.Clamp((_entry$7 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$7 !== undefined ? _entry$7.v : 0) - 1 >> 0, 0, (_entry$8 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$8 !== undefined ? _entry$8.v : uidata.ListInt.nil).$length);
 						focus$4 = _tuple$4[0];
@@ -30620,7 +30620,7 @@ $packages["app/lobby"] = (function() {
 						$r = view.Alert(_r$3); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* } */ case 16:
 					$s = 8; continue;
-				/* } else if (_1 === (7)) { */ case 5:
+				/* } else if (_1 === (21)) { */ case 5:
 					if (cancel) {
 						_tuple$5 = tool.Clamp((_entry$9 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$9 !== undefined ? _entry$9.v : 0) - 1 >> 0, 0, (_entry$10 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$10 !== undefined ? _entry$10.v : uidata.ListInt.nil).$length);
 						focus$5 = _tuple$5[0];
@@ -30636,7 +30636,7 @@ $packages["app/lobby"] = (function() {
 						$r = view.Alert(_r$5); /* */ $s = 23; case 23: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* } */ case 21:
 					$s = 8; continue;
-				/* } else if (_1 === (8)) { */ case 6:
+				/* } else if (_1 === (22)) { */ case 6:
 					if (cancel) {
 						_tuple$6 = tool.Clamp((_entry$11 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$11 !== undefined ? _entry$11.v : 0) - 1 >> 0, 0, (_entry$12 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$12 !== undefined ? _entry$12.v : uidata.ListInt.nil).$length);
 						focus$6 = _tuple$6[0];
@@ -30652,7 +30652,7 @@ $packages["app/lobby"] = (function() {
 						$r = view.Alert(_r$7); /* */ $s = 28; case 28: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					/* } */ case 26:
 					$s = 8; continue;
-				/* } else if (_1 === (9)) { */ case 7:
+				/* } else if (_1 === (23)) { */ case 7:
 					if (cancel) {
 						_tuple$7 = tool.Clamp((_entry$13 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$13 !== undefined ? _entry$13.v : 0) - 1 >> 0, 0, (_entry$14 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$14 !== undefined ? _entry$14.v : uidata.ListInt.nil).$length);
 						focus$7 = _tuple$7[0];
@@ -30710,9 +30710,9 @@ $packages["app/lobby"] = (function() {
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(1)], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
-				/* */ if (_1 === (1)) { $s = 2; continue; }
+				/* */ if (_1 === (15)) { $s = 2; continue; }
 				/* */ $s = 3; continue;
-				/* if (_1 === (1)) { */ case 2:
+				/* if (_1 === (15)) { */ case 2:
 						_2 = selection;
 						/* */ if (_2 === ("MenuOptionBuyPilot")) { $s = 5; continue; }
 						/* */ if (_2 === ("MenuOptionBuyRobot")) { $s = 6; continue; }
@@ -30846,9 +30846,9 @@ $packages["app/lobby"] = (function() {
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(9)], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
-				/* */ if (_1 === (15)) { $s = 2; continue; }
+				/* */ if (_1 === (29)) { $s = 2; continue; }
 				/* */ $s = 3; continue;
-				/* if (_1 === (15)) { */ case 2:
+				/* if (_1 === (29)) { */ case 2:
 					selection$1 = (_entry$1 = ctx$1.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))).Selection;
 					_r$2 = fmt.Printf("you select %v\n", new sliceType([new mapType(selection$1)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 					_r$2;
@@ -30889,44 +30889,44 @@ $packages["app/lobby"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; canBuy = $f.canBuy; canBuy$1 = $f.canBuy$1; canBuy$2 = $f.canBuy$2; canBuy$3 = $f.canBuy$3; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; menu = $f.menu; menu$1 = $f.menu$1; menu$2 = $f.menu$2; menu$3 = $f.menu$3; menu$4 = $f.menu$4; menu$5 = $f.menu$5; menu$6 = $f.menu$6; menu$7 = $f.menu$7; menuID = $f.menuID; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ctx = $clone(origin, uidata.UI);
 			_1 = menuID;
-			/* */ if (_1 === (3)) { $s = 2; continue; }
-			/* */ if ((_1 === (11)) || (_1 === (2)) || (_1 === (15))) { $s = 3; continue; }
-			/* */ if ((_1 === (12)) || (_1 === (4))) { $s = 4; continue; }
-			/* */ if ((_1 === (13)) || (_1 === (5))) { $s = 5; continue; }
-			/* */ if (_1 === (6)) { $s = 6; continue; }
-			/* */ if (_1 === (7)) { $s = 7; continue; }
-			/* */ if (_1 === (8)) { $s = 8; continue; }
-			/* */ if (_1 === (9)) { $s = 9; continue; }
+			/* */ if (_1 === (17)) { $s = 2; continue; }
+			/* */ if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { $s = 3; continue; }
+			/* */ if ((_1 === (26)) || (_1 === (18))) { $s = 4; continue; }
+			/* */ if ((_1 === (27)) || (_1 === (19))) { $s = 5; continue; }
+			/* */ if (_1 === (20)) { $s = 6; continue; }
+			/* */ if (_1 === (21)) { $s = 7; continue; }
+			/* */ if (_1 === (22)) { $s = 8; continue; }
+			/* */ if (_1 === (23)) { $s = 9; continue; }
 			/* */ $s = 10; continue;
-			/* if (_1 === (3)) { */ case 2:
+			/* if (_1 === (17)) { */ case 2:
 				menu = $clone((_entry = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry !== undefined ? _entry.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
 				_r = model.QueryPilots(); /* */ $s = 12; case 12: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				_r$1 = data.KesStringPilot(_r); /* */ $s = 13; case 13: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 				menu.Options = _r$1;
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if ((_1 === (11)) || (_1 === (2)) || (_1 === (15))) { */ case 3:
+			/* } else if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { */ case 3:
 				menu$1 = $clone((_entry$1 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
 				_r$2 = model.QueryRobots(); /* */ $s = 14; case 14: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 				_r$3 = data.KesStringRobot(_r$2); /* */ $s = 15; case 15: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				menu$1.Options = _r$3;
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$1, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if ((_1 === (12)) || (_1 === (4))) { */ case 4:
+			/* } else if ((_1 === (26)) || (_1 === (18))) { */ case 4:
 				menu$2 = $clone((_entry$2 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
 				_r$4 = model.QueryWeapons(); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 				_r$5 = data.KesStringWeapon(_r$4); /* */ $s = 17; case 17: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 				menu$2.Options = _r$5;
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$2, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if ((_1 === (13)) || (_1 === (5))) { */ case 5:
+			/* } else if ((_1 === (27)) || (_1 === (19))) { */ case 5:
 				menu$3 = $clone((_entry$3 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? _entry$3.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
 				_r$6 = model.QueryComponents(); /* */ $s = 18; case 18: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				_r$7 = data.KesStringComponent(_r$6); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 				menu$3.Options = _r$7;
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$3, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if (_1 === (6)) { */ case 6:
+			/* } else if (_1 === (20)) { */ case 6:
 				_r$8 = model.QueryRobotCanBuy(); /* */ $s = 20; case 20: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 				_tuple = _r$8;
 				canBuy = _tuple[0];
@@ -30938,7 +30938,7 @@ $packages["app/lobby"] = (function() {
 				menu$4.Options = data.KesStringRobotProto(canBuy);
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$4, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if (_1 === (7)) { */ case 7:
+			/* } else if (_1 === (21)) { */ case 7:
 				_r$9 = model.QueryPilotCanBuy(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 				_tuple$1 = _r$9;
 				canBuy$1 = _tuple$1[0];
@@ -30950,7 +30950,7 @@ $packages["app/lobby"] = (function() {
 				menu$5.Options = data.KesStringPilotProto(canBuy$1);
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$5, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if (_1 === (8)) { */ case 8:
+			/* } else if (_1 === (22)) { */ case 8:
 				_r$10 = model.QueryWeaponCanBuy(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 				_tuple$2 = _r$10;
 				canBuy$2 = _tuple$2[0];
@@ -30962,7 +30962,7 @@ $packages["app/lobby"] = (function() {
 				menu$6.Options = data.KesStringWeaponProto(canBuy$2);
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$6, uidata.Menu1D));
 				$s = 11; continue;
-			/* } else if (_1 === (9)) { */ case 9:
+			/* } else if (_1 === (23)) { */ case 9:
 				_r$11 = model.QueryComponentCanBuy(); /* */ $s = 23; case 23: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
 				_tuple$3 = _r$11;
 				canBuy$3 = _tuple$3[0];
