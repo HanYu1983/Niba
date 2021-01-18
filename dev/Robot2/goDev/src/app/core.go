@@ -2,6 +2,7 @@ package app
 
 import (
 	"app/common"
+	"app/gameplay"
 	"app/title"
 	"app/tool/uidata"
 	"fmt"
@@ -51,7 +52,11 @@ func Main() {
 		}
 	}()
 	view.Install()
-	_, err := title.StartPagePhase(uidata.DefaultUI)
+
+	startPhase := gameplay.GameLoop
+	var _ = title.StartPagePhase
+
+	_, err := startPhase(uidata.DefaultUI)
 	if err != nil {
 		panic(err)
 	}

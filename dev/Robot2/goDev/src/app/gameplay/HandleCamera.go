@@ -9,19 +9,19 @@ func HandleCamera(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	switch detail := evt.(type) {
 	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
-		case uidata.KeyCodeUp:
+		case uidata.KeyCodeArrowUp:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 			gameplayPage.Camera[1]--
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-		case uidata.KeyCodeDown:
+		case uidata.KeyCodeArrowDown:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 			gameplayPage.Camera[1]++
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-		case uidata.KeyCodeLeft:
+		case uidata.KeyCodeArrowLeft:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 			gameplayPage.Camera[0]--
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-		case uidata.KeyCodeRight:
+		case uidata.KeyCodeArrowRight:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 			gameplayPage.Camera[0]++
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
