@@ -71,6 +71,7 @@ AskCommand:
 			case uidata.KeyCodeEnter:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
+					fmt.Println("沒有任何Options, 當成切換Focus")
 					focus := ctx.Focus[pageID]
 					focus, over := tool.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
 					if over {

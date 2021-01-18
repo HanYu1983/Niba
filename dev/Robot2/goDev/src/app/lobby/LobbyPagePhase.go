@@ -59,10 +59,12 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 						return origin, cancel, err
 					}
 				case uidata.MenuOptionStartGameplay:
+					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
 					ctx, err = MultiUnitSelectionPagePhase(ctx)
 					if err != nil {
 						return origin, cancel, err
 					}
+					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
 				}
 			}
 			return ctx, cancel, nil

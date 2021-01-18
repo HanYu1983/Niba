@@ -14,6 +14,7 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, true)
 	for {
+		Render(ctx)
 		fmt.Println("wait turn")
 		time.Sleep(time.Second)
 		ctx, err = TurnPhase(ctx)
