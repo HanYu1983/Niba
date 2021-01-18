@@ -30,14 +30,6 @@ export class Grids extends Instant {
     }
 
     doBuild(content:any, data:any):void{
-        console.log(content);
-        
-        // for(let i = 0; i < 400; ++i){
-        //     let node:Node = this.pool.aquire(this.prefab, this.node);
-        //     node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
-        //     this.grids.push(node);
-        // }
-
         for (let i = 0; i < content.length; ++i) {
             for (let j = 0; j < content[i].length; ++j) {
                 let node:Node = this.pool.aquire(this.prefab, this.node);
@@ -47,13 +39,4 @@ export class Grids extends Instant {
         }
     }
 
-    /**
-     * 用這個方法要檢查物件是不是undefined
-     * @param x 
-     * @param y 
-     */
-    // getGridByXY(pos: number[]): Grid {
-    //     let grid = this.grids.get(pos[0] + ":" + pos[1]);
-    //     return grid;
-    // }
 }
