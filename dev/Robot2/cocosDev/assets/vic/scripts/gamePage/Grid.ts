@@ -60,15 +60,6 @@ export class Grid extends Component {
         this.boxImage.node.active = show;
     }
 
-    // resetUV(){
-    //     for(let i = 0; i < this.landImages.length; ++i){
-    //         let uvreset = this.landImages[i].node.getComponent(UVReset);
-    //         if (uvreset) {
-    //             uvreset.fix();
-    //         }
-    //     }
-    // }
-
     setType(type: Number) {
         switch (type) {
             case 0:

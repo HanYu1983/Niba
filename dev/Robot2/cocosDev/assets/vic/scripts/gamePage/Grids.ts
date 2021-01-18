@@ -26,14 +26,34 @@ export class Grids extends Instant {
     }
 
     protected checkData(data:any):any{
-        return data.content["map"];
+        return data.GameplayPages["10"].Map;
     }
 
     doBuild(content:any, data:any):void{
-        for(let i = 0; i < 400; ++i){
-            let node:Node = this.pool.aquire(this.prefab, this.node);
-            node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
-            this.grids.push(node);
+        console.log(content);
+        
+        // for(let i = 0; i < 400; ++i){
+        //     let node:Node = this.pool.aquire(this.prefab, this.node);
+        //     node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
+        //     this.grids.push(node);
+        // }
+
+        for (let i = 0; i < content.length; ++i) {
+            for (let j = 0; j < content[i].length; ++j) {
+                let node:Node = this.pool.aquire(this.prefab, this.node);
+                node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
+                this.grids.push(node);
+            }
         }
     }
+
+    /**
+     * 用這個方法要檢查物件是不是undefined
+     * @param x 
+     * @param y 
+     */
+    // getGridByXY(pos: number[]): Grid {
+    //     let grid = this.grids.get(pos[0] + ":" + pos[1]);
+    //     return grid;
+    // }
 }

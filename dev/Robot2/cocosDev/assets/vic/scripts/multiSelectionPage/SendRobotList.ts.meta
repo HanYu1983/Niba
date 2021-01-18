@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/gameplayPage/SendRobotList.js",
+    "moduleId": "project:///assets/vic/scripts/multiSelectionPage/SendRobotList.js",
     "importerSettings": 7
   }
 }
