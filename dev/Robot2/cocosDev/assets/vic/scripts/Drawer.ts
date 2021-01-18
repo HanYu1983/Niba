@@ -57,7 +57,7 @@ export class Drawer extends Instant {
         return data.Info.RobotIDByComponentID[component];
     }
     
-    static getMenuByPage(data:any, page:ModelType.Page, menuIndex:number = 0){
+    static getMenuByPage(data:any, page:ModelType.Const, menuIndex:number = 0){
         const content = {
             Active: data.Actives[page],
             Menus: data.Menus[page],
@@ -67,13 +67,34 @@ export class Drawer extends Instant {
                 const menu = data.Menu1Ds[content.Menus[menuIndex]].Info;
                 return [
                     menu.Options, Array.from(menu.Options, x => 0), menu.Cursor
-                ]
+                ];
+            }
+            if(data.Menu2Ds[content.Menus[menuIndex]]){
+                const menu = data.Menu2Ds[content.Menus[menuIndex]].Info;
+                return [
+                    menu.Options, Array.from(menu.Options, x => 0), menu.Cursor1
+                ];
             }
         }
         return null;
     }
 
-    static getMenuSelectByPage(data:any, page:ModelType.Page, menuIndex:number, id:number){
+    static getBattleMenuInGame(data:any, menuIndex:number = 0){
+        const content = {
+            Active: data.Actives[ModelType.Const.PageBattleMenu],
+            Menus: data.Menus[ModelType.Const.PageBattleMenu],
+        }
+        if (content.Active) {
+            if(data.BattleMenus[content.Menus[menuIndex]]){
+                const menu = data.BattleMenus[content.Menus[menuIndex]];
+                console.log("battleMenu", menu);
+                return menu;
+            }
+        }
+        return null;
+    }
+
+    static getMenuSelectByPage(data:any, page:ModelType.Const, menuIndex:number, id:number){
         const content = {
             Active: data.Actives[page],
             Menus: data.Menus[page],
@@ -87,7 +108,7 @@ export class Drawer extends Instant {
         return false;    
     }
 
-    static getFocusByPage(data:any, page:ModelType.Page){
+    static getFocusByPage(data:any, page:ModelType.Const){
         const content = {
             Active: data.Actives[page],
             Menus: data.Menus[page],

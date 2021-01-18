@@ -5,15 +5,19 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, tween } from 'cc';
-import { BasicPage } from '../BasicPage';
+import { _decorator, Component, Node } from 'cc';
+import { Drawer } from '../Drawer';
+import { Instant } from '../lib/instanceViewer/Instant';
 const { ccclass, property } = _decorator;
 
-@ccclass('GamePage')
-export class GamePage extends BasicPage {
-   
+@ccclass('BattleMenu')
+export class BattleMenu extends Instant {
+    
     protected doBuild(content:any, data:any):void{
         super.doBuild(content, data);
         console.log(content);
+    }
+    protected checkData(data:any):any{
+        return Drawer.getBattleMenuInGame(data);
     }
 }

@@ -2,7 +2,7 @@
   "ver": "4.0.9",
   "importer": "typescript",
   "imported": true,
-  "uuid": "1e72d856-7caf-473f-8e99-830801ef28d4",
+  "uuid": "b25b92d4-e0bd-48ea-a572-e6644ee91d51",
   "files": [
     ".js",
     "editor.js",
@@ -11,7 +11,7 @@
   "subMetas": {},
   "userData": {
     "importAsPlugin": false,
-    "moduleId": "project:///assets/vic/scripts/gameplayPage/SendRobotListButton.js",
+    "moduleId": "project:///assets/vic/scripts/battleMenuPage/FightInfo.js",
     "importerSettings": 7
   }
 }
