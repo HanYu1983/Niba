@@ -17,9 +17,6 @@ export class BasicPage extends Instant {
     pageId:ModelType.Const = null;
 
     protected checkData(data:any):any{
-        if (this.pageId == ModelType.Const.PageGameplay){
-            return data.GameplayPages["10"];
-        }
         const content = {
             Active: data.Actives[this.pageId],
             Menus: data.Menus[this.pageId],
