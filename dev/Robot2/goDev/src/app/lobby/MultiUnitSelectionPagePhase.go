@@ -27,9 +27,13 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 			menuID := ctx.Menus[uidata.PageMultiUnitSelection][focus]
 			switch menuID {
 			case uidata.Menu1DMultiUnitSelectionMenu:
+				if cancel {
+					return ctx, cancel, nil
+				}
 				selection := ctx.Menu1Ds[menuID].Selection
 				fmt.Printf("you select %v\n", selection)
 				var _ = selection
+				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
 				ctx, err = gameplay.GameLoop(ctx)
 				if err != nil {
 					return origin, cancel, err
