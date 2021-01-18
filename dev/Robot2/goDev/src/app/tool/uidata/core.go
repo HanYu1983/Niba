@@ -88,7 +88,7 @@ type BattleMenu struct {
 
 // GameplayPage is
 type GameplayPage struct {
-	Map         [][]int
+	Map         [20][20]int
 	Cursor      data.Position
 	Camera      data.Position
 	Units       []string
@@ -324,13 +324,6 @@ var (
 		},
 		GameplayPages: map[int]GameplayPage{
 			PageGameplay: GameplayPage{
-				Map: [][]int{
-					{0, 1, 2, 3, 4},
-					{0, 1, 2, 3, 4},
-					{0, 1, 2, 3, 4},
-					{0, 1, 2, 3, 4},
-					{0, 1, 2, 3, 4},
-				},
 				Cursor: data.Position{1, 1},
 				Units: []string{
 					"0",
