@@ -74,7 +74,7 @@ export class InstMenu extends Instant {
 
     private setButtons(btns:any[], multiId:number[], focus:number){
         
-        let combine = btns.map((e, i)=>{
+        const combine = btns.map((e, i)=>{
             return [e, multiId[i]];
         });
 
@@ -82,7 +82,7 @@ export class InstMenu extends Instant {
         const borderSize:number = combine.length * gap;
         combine.forEach(([item, multiId], i)=>{
             const isArray = Array.isArray(item);
-            let btn:Node = isArray ? this.pool.aquire(this.multiPrefab, this.node) : this.pool.aquire(this.prefab, this.node);
+            const btn:Node = isArray ? this.pool.aquire(this.multiPrefab, this.node) : this.pool.aquire(this.prefab, this.node);
             if(this.type == Type.Horizontal){
                 btn.getComponent(UITransform)?.contentSize.set(this.buttonSize, btn.getComponent(UITransform)?.contentSize.height);
                 btn.position.set(i * gap - borderSize / 2 + this.buttonSize / 2, btn.position.y, btn.position.z);
