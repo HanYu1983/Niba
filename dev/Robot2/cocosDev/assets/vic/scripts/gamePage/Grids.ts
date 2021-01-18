@@ -41,7 +41,7 @@ export class Grids extends Instant {
         for (let i = 0; i < content.length; ++i) {
             for (let j = 0; j < content[i].length; ++j) {
                 let node:Node = this.pool.aquire(this.prefab, this.node);
-                node.getComponent(Grid).setType(Math.floor(Math.random() * 8));
+                node.getComponent(Grid).setType(content[j][i]);
                 this.grids.push(node);
             }
         }
