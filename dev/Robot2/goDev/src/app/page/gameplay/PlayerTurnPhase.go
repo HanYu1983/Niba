@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/common"
+	"app/page/common"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -31,11 +31,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			default:
 				gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 				cursor := gameplayPage.Cursor
-				unitID, err := model.QueryUnitByPosition(cursor)
-				if err != nil {
-					model.Reset()
-					return origin, err
-				}
+				unitID := SearchUnitByPosition(gameplayPage.Positions, cursor)
 				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)

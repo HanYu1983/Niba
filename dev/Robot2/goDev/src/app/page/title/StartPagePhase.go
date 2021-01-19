@@ -1,8 +1,8 @@
 package title
 
 import (
-	"app/common"
-	"app/lobby"
+	"app/page/common"
+	"app/page/lobby"
 	"app/tool/uidata"
 	"fmt"
 )
