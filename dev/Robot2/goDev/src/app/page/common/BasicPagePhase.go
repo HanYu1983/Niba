@@ -18,7 +18,6 @@ func BasicPagePhase(
 Menu:
 	for {
 		fmt.Println("BasicPagePhase: Loop")
-		Render(ctx)
 		ctx, err = onUpdate(ctx)
 		if err != nil {
 			return origin, err

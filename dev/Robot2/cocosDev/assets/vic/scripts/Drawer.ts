@@ -64,13 +64,13 @@ export class Drawer extends Instant {
         }
         if (content.Active) {
             if(data.Menu1Ds[content.Menus[menuIndex]]){
-                const menu = data.Menu1Ds[content.Menus[menuIndex]].Info;
+                const menu = data.Menu1Ds[content.Menus[menuIndex]];
                 return [
                     menu.Options, Array.from(menu.Options, x => 0), menu.Cursor
                 ];
             }
             if(data.Menu2Ds[content.Menus[menuIndex]]){
-                const menu = data.Menu2Ds[content.Menus[menuIndex]].Info;
+                const menu = data.Menu2Ds[content.Menus[menuIndex]];
                 return [
                     menu.Options, Array.from(menu.Options, x => 0), menu.Cursor1
                 ];

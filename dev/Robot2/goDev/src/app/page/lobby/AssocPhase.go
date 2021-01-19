@@ -21,11 +21,13 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
+			var err error
 			ctx := origin
-			ctx, err = InjectDataSourceToPage(ctx, pageID)
+			ctx, err = common.ObservePage(ctx, pageID)
 			if err != nil {
 				return origin, err
 			}
+			common.Render(ctx)
 			return ctx, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {

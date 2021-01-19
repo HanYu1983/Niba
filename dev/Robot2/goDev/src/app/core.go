@@ -53,9 +53,9 @@ func Main() {
 	}()
 	view.Install()
 
-	startPhase := gameplay.GameLoop
+	var _ = gameplay.GameLoop
 	var _ = title.StartPagePhase
-
+	startPhase := title.StartPagePhase
 	_, err := startPhase(uidata.DefaultUI)
 	if err != nil {
 		panic(err)

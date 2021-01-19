@@ -41,10 +41,7 @@ AskCommand:
 				if len(menu.Options) == 0 {
 					continue
 				}
-				menu.Cursor = tool.Min(menu.Cursor+1, menu.Limit-1)
-				if menu.Cursor+menu.Offset >= len(menu.Options) {
-					menu.Cursor = (len(menu.Options) % menu.Limit) - 1
-				}
+				menu.Cursor = tool.Min(menu.Cursor+1, len(menu.Options)-1)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu1Ds[menuID]
@@ -60,9 +57,6 @@ AskCommand:
 				}
 				offset := menu.Offset + menu.Limit
 				if offset < len(menu.Options) {
-					if offset+menu.Cursor >= len(menu.Options) {
-						menu.Cursor = (len(menu.Options) % menu.Limit) - 1
-					}
 					menu.Offset = offset
 					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 				}
@@ -89,7 +83,7 @@ AskCommand:
 					fmt.Printf("please init Selection field. Menu(%v)\n", menuID)
 					continue
 				}
-				idx := menu.Cursor + menu.Offset
+				idx := menu.Cursor
 				if idx < 0 || idx >= len(menu.Options) {
 					return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
 				}
@@ -99,7 +93,7 @@ AskCommand:
 		}
 	}
 	menu := ctx.Menu1Ds[menuID]
-	idx := menu.Cursor + menu.Offset
+	idx := menu.Cursor
 	if idx < 0 || idx >= len(menu.Options) {
 		return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
 	}

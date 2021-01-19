@@ -11,7 +11,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 	fmt.Println("MultiUnitSelectionPagePhase")
 	var err error
 	ctx := origin
-	ctx, err = InjectDataSourceToPage(ctx, uidata.PageMultiUnitSelection)
+	ctx, err = common.ObservePage(ctx, uidata.PageMultiUnitSelection)
 	if err != nil {
 		return origin, err
 	}

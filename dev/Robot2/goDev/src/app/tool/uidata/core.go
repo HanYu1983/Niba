@@ -43,12 +43,6 @@ type Menu1D struct {
 	Cursor    int
 	Offset    int
 	Limit     int
-	Info      struct {
-		Options []string
-		Cursor  int
-		Offset  int
-		Limit   int
-	}
 }
 
 // Menu2D is
@@ -56,11 +50,6 @@ type Menu2D struct {
 	Options [][]string
 	Cursor1 int
 	Cursor2 []int
-	Info    struct {
-		Options [][]string
-		Cursor1 int
-		Cursor2 []int
-	}
 }
 
 //
@@ -191,8 +180,8 @@ const (
 var (
 	DefaultUI = UI{
 		Actives: map[int]bool{
-			PageBattleMenu: true,
-			PageUnitMenu:   true,
+			PageBattleMenu: false,
+			PageUnitMenu:   false,
 		},
 		Menus: map[int]ListInt{
 			PageStart: []int{

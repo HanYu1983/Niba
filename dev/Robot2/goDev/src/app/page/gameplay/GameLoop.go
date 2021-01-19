@@ -12,6 +12,11 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	defer model.Pop()
 	var err error
 	ctx := origin
+	ctx, err = InjectDataSource(ctx, nil)
+	if err != nil {
+		model.Reset()
+		return origin, err
+	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, true)
 	for {
 		Render(ctx)
