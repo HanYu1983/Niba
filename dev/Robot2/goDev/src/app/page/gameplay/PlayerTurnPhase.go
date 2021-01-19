@@ -13,7 +13,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	for {
-		common.Render(ctx)
+		view.Render(ctx)
 		cmd := view.AskCommand()
 		ctx, err = HandleCursor(ctx, cmd)
 		if err != nil {
@@ -31,7 +31,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			default:
 				gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 				cursor := gameplayPage.Cursor
-				unitID := SearchUnitByPosition(gameplayPage.Positions, cursor)
+				unitID := common.SearchUnitByPosition(gameplayPage.Positions, cursor)
 				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)

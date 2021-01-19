@@ -15,7 +15,7 @@ func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
-		Render(ctx)
+		view.Render(ctx)
 		fmt.Println("Menu1DStep:AskCommand")
 		cmd := view.AskCommand()
 		fmt.Printf("Menu1DStep:%+v\n", cmd)

@@ -14,7 +14,7 @@ func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
-		Render(ctx)
+		view.Render(ctx)
 		cmd := view.AskCommand()
 		if err != nil {
 			return origin, "", false, false, err

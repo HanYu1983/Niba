@@ -27,7 +27,6 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			if err != nil {
 				return origin, err
 			}
-			common.Render(ctx)
 			return ctx, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {

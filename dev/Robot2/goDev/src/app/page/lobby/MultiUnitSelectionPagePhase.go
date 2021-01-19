@@ -20,7 +20,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 		ctx,
 		uidata.PageMultiUnitSelection,
 		func(origin uidata.UI) (uidata.UI, error) {
-			return origin, nil
+			return common.ObservePage(ctx, uidata.PageMultiUnitSelection)
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin
