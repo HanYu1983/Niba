@@ -29088,6 +29088,7 @@ $packages["app/tool/viewer"] = (function() {
 			_r;
 			$s = -1; return;
 		/* } */ case 2:
+		view.Render($externalize(app, uidata.UI));
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Render }; } $f._r = _r; $f.app = app; $f.p = p; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
