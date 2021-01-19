@@ -23,19 +23,20 @@ export class Grids extends Instant {
         this.grids.forEach(grid=>{
             this.pool.release(this.prefab, grid);
         });
+        this.grids = [];
     }
-
-    // protected checkData(data:any):any{
-    //     return data.GameplayPages["10"].Map;
-    // }
 
     doBuild(content:any, data:any):void{
         for (let i = 0; i < content.length; ++i) {
             for (let j = 0; j < content[i].length; ++j) {
                 let node:Node = this.pool.aquire(this.prefab, this.node);
                 node.getComponent(Grid).setType(content[j][i]);
-                node.getComponent(Grid).landX = i;
-                node.getComponent(Grid).landY = j;
+
+                const pos = this.getGridPos(j, i);
+                let gridPos:Vec3 = node.getPosition();
+                gridPos.x = pos[0];
+                gridPos.y = pos[1];
+                node.setPosition(gridPos);
                 this.grids.push(node);
             }
         }

@@ -22,14 +22,20 @@ export class Instant extends Component implements IInstant {
     outOfWorld:Vec3 = new Vec3(5000,0,0);
     
     clear():void{
-        this.node.active = false;
+
+        // 取代active = false。效能較好
+        this.node.setPosition(this.outOfWorld);
+
         this.childs.forEach(item=>item.getComponent(Instant)?.clear());
     }
     build(data:any):void{
         this.clear();
         const content = this.checkData(data);
         if(content){
-            this.node.active = true;
+
+            // 取代active = true。效能較好
+            this.node.setPosition(Vec3.ZERO);
+            
             this.doBuild(content, data);
             this.childs.forEach(item=>item.getComponent(Instant)?.build(data));
         }

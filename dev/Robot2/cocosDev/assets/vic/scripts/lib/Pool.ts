@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, NodePool, instantiate } from 'cc';
+import { _decorator, Component, Node, NodePool, instantiate, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Pool')
@@ -13,15 +13,28 @@ export class Pool extends Component {
 
     private poolDict:any = {};
 
+    private outOfWorld:Vec3 = new Vec3(50000,0,0);
+
     aquire(prefab:Node, parent:Node){
         const poolId = prefab.uuid.toString();
         if (!this.poolDict.hasOwnProperty(poolId)){
-            this.poolDict[poolId] = new NodePool();
+
+            // 内建的nodepool不知道爲什麽很吃效能，先不用他
+            // this.poolDict[poolId] = new NodePool();
+
+            this.poolDict[poolId] = [];
         }
         let pool = this.poolDict[poolId];
-        let node = pool.size() > 0 ? pool.get() : instantiate(prefab);
-        node.setParent(parent);
-        node.active = true;
+        let node = pool.length > 0 ? pool.pop() : instantiate(prefab);
+
+        // setParent以及active操作的過程也是蠻吃效能的，使用上，同一個pool的物件也不會給到不同的parent，所以只要設定一次就好
+        if(!node.getParent()){
+            node.setParent(parent);
+            node.active = true;
+        }
+
+        // 把物件移到囘遠點，用來代替active = true操作
+        node.setPosition(Vec3.ZERO);
         return node;
     }
 
@@ -30,9 +43,11 @@ export class Pool extends Component {
         const poolId = prefab.uuid.toString();
         if(this.poolDict.hasOwnProperty(poolId)){
             let pool = this.poolDict[poolId];
-            this.node.active = false;
-            node.removeFromParent();
-            pool.put(node);
+            pool.push(node)
+
+            // 把物件移到很遠的地方，用來代替active = false操作
+            node.setPosition(this.outOfWorld);
         }
+
     }
 }
