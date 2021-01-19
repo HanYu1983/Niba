@@ -33,7 +33,7 @@ export class Pool extends Component {
             node.active = true;
         }
 
-        // 把物件移到囘遠點，用來代替active = true操作
+        // 把物件移到原點，用來代替active = true操作
         node.setPosition(Vec3.ZERO);
         return node;
     }

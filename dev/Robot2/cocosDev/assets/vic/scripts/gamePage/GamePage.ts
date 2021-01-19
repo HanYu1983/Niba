@@ -7,33 +7,24 @@
 
 import { _decorator, Component, Node, tween, Sprite, Vec3 } from 'cc';
 import { BasicPage } from '../BasicPage';
-import { Drawer } from '../Drawer';
-import { Grids } from './Grids';
+import { LandMap } from './LandMap';
 const { ccclass, property } = _decorator;
 
 @ccclass('GamePage')
 export class GamePage extends BasicPage {
 
-    @property(Grids)
-    grids:Grids = null;
-
-    @property(Sprite)
-    cursor:Sprite = null;
+    @property(LandMap)
+    map:LandMap = null;
 
     clear(){
-        this.grids.clear();
+        this.map.clear();
     }
    
     protected doBuild(content:any, data:any):void{
         super.doBuild(content, data);
 
-        const gameData = content.GameplayPages
-        this.grids.build(gameData.Map);
-        this.setCursor(gameData.Cursor);
+        const gameData = content.GameplayPages;
+        this.map.build(gameData);
     }
 
-    setCursor(cursor:any){
-        const [x, y] = this.grids.getGridPos(cursor[0], cursor[1]);
-        this.cursor.node.setPosition(new Vec3(x, y, 0));
-    }
 }

@@ -27,26 +27,57 @@ export class Grids extends Instant {
     }
 
     doBuild(content:any, data:any):void{
-        for (let i = 0; i < content.length; ++i) {
-            for (let j = 0; j < content[i].length; ++j) {
-                let node:Node = this.pool.aquire(this.prefab, this.node);
-                node.getComponent(Grid).setType(content[j][i]);
-                node.getComponent(Grid).landX = i;
-                node.getComponent(Grid).landY = j;
-
-                
-                const pos = this.getGridPos(j, i);
-                let gridPos:Vec3 = node.getPosition();
-
-                gridPos.x = pos[0];
-                gridPos.y = pos[1];
-                node.setPosition(gridPos);
-                this.grids.push(node);
+        const map = content.Map;
+        if(map){
+            for (let i = 0; i < map.length; ++i) {
+                for (let j = 0; j < map[i].length; ++j) {
+                    let node:Node = this.pool.aquire(this.prefab, this.node);
+                    node.getComponent(Grid).setType(map[j][i]);
+                    node.getComponent(Grid).landX = i;
+                    node.getComponent(Grid).landY = j;
+                    
+                    const pos = this.getGridPos(j, i);
+                    let gridPos:Vec3 = node.getPosition();
+    
+                    gridPos.x = pos[0];
+                    gridPos.y = pos[1];
+                    node.setPosition(gridPos);
+                    this.grids.push(node);
+                }
             }
+        }
+
+        const atkRange = content.AttackRange;
+        if(atkRange){
+            this.showAttackRange(atkRange);
         }
     }
 
     getGridPos(x:number, y:number):[number, number]{
         return [x * 32 - 304, -y * 32 + 304];
+    }
+
+    getGrid(x:number, y:number):Node|null{
+        let outputGrid = null;
+        for(let i = 0; i < this.grids.length; ++i){
+            const grid = this.grids[i];
+            if(grid.getComponent(Grid).landX == x && grid.getComponent(Grid).landY == y){
+                outputGrid = grid;
+                break;
+            }
+        }
+        return outputGrid;
+    }
+
+    showAttackRange(ranges:any[]){
+        ranges.forEach(range=>{
+            const grid = this.getGrid(range[0], range[1]);
+            console.log(grid);
+            console.log(range);
+            
+            if(grid){
+                grid.getComponent(Grid)?.showWeaponRange(true);
+            }
+        });
     }
 }
