@@ -50,7 +50,7 @@ func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	}
 	left, right := tool.Max(0, menu.Offset), tool.Min(menu.Offset+menu.Limit, len(options))
 	menu.Options = options[left:right]
-	menu.Cursor = tool.Min(tool.Max(0, menu.Cursor), len(menu.Options)-1)
+	menu.Cursor = tool.Max(tool.Min(menu.Cursor, len(menu.Options)-1), 0)
 	ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 	return ctx, nil
 }

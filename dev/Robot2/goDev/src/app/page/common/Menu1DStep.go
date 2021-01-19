@@ -45,21 +45,12 @@ AskCommand:
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu1Ds[menuID]
-				if len(menu.Options) == 0 {
-					continue
-				}
 				menu.Offset = tool.Max(menu.Offset-menu.Limit, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu1Ds[menuID]
-				if len(menu.Options) == 0 {
-					continue
-				}
-				offset := menu.Offset + menu.Limit
-				if offset < len(menu.Options) {
-					menu.Offset = offset
-					ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
-				}
+				menu.Offset = menu.Offset + menu.Limit
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:
