@@ -328,7 +328,18 @@ var (
 				Units: []string{
 					"0",
 				},
-				Robots:      map[string]data.Robot{},
+				Robots: map[string]data.Robot{
+					"0": {
+						WeaponsByTransform: map[string]data.Weapons{
+							"": {
+								"0": {},
+							},
+						},
+					},
+				},
+				Positions: map[string]data.Position{
+					"0": {0, 0},
+				},
 				Items:       map[string]data.Item{},
 				MoveRange:   []data.Position{{0, 0}, {0, 1}},
 				AttackRange: []data.Position{{0, 1}, {1, 1}},
