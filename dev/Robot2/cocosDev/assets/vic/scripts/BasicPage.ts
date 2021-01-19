@@ -21,6 +21,7 @@ export class BasicPage extends Instant {
             Active: data.Actives[this.pageId],
             Menus: data.Menus[this.pageId],
             Focus: data.Focus[this.pageId],
+            GameplayPages:data.GameplayPages[this.pageId]
         }
         if (content.Active) {
             return content;

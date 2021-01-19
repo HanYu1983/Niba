@@ -15,7 +15,7 @@ export class BattleMenu extends Instant {
     
     protected doBuild(content:any, data:any):void{
         super.doBuild(content, data);
-        console.log(content);
+        // console.log(content);
     }
     protected checkData(data:any):any{
         return Drawer.getBattleMenuInGame(data);

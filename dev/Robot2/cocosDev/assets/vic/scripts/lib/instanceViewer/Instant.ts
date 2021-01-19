@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Vec3 } from 'cc';
 import { Pool } from '../Pool';
 import { IInstant } from './IInstant';
 const { ccclass, property } = _decorator;
@@ -18,6 +18,8 @@ export class Instant extends Component implements IInstant {
 
     @property(Node)
     childs:Instant[] = [];
+
+    outOfWorld:Vec3 = new Vec3(5000,0,0);
     
     clear():void{
         this.node.active = false;
@@ -26,7 +28,6 @@ export class Instant extends Component implements IInstant {
     build(data:any):void{
         this.clear();
         const content = this.checkData(data);
-
         if(content){
             this.node.active = true;
             this.doBuild(content, data);

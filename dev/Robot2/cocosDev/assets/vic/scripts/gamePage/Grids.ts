@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, instantiate } from 'cc';
+import { _decorator, Component, Node, instantiate, Vec3 } from 'cc';
 import { Instant } from '../lib/instanceViewer/Instant';
 import { Grid } from './Grid';
 const { ccclass, property } = _decorator;
@@ -25,18 +25,23 @@ export class Grids extends Instant {
         });
     }
 
-    protected checkData(data:any):any{
-        return data.GameplayPages["10"].Map;
-    }
+    // protected checkData(data:any):any{
+    //     return data.GameplayPages["10"].Map;
+    // }
 
     doBuild(content:any, data:any):void{
         for (let i = 0; i < content.length; ++i) {
             for (let j = 0; j < content[i].length; ++j) {
                 let node:Node = this.pool.aquire(this.prefab, this.node);
                 node.getComponent(Grid).setType(content[j][i]);
+                node.getComponent(Grid).landX = i;
+                node.getComponent(Grid).landY = j;
                 this.grids.push(node);
             }
         }
     }
 
+    getGridPos(x:number, y:number):[number, number]{
+        return [x * 32 - 304, -y * 32 + 304];
+    }
 }
