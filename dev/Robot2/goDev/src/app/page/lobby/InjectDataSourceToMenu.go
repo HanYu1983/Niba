@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func PrepareMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
+func InjectDataSourceToMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
 	switch menuID {
 	case uidata.Menu1DPilotListMenu:
@@ -58,7 +58,7 @@ func PrepareMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		menu.Options = data.KesStringComponentProto(canBuy)
 		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 	default:
-		fmt.Printf("PrepareMenu not found %v. ignore.\n", menuID)
+		fmt.Printf("InjectDataSourceToMenu not found %v. ignore.\n", menuID)
 		return ctx, nil
 	}
 	return ctx, nil

@@ -30390,7 +30390,7 @@ $packages["app/page/gameplay"] = (function() {
 	return $pkg;
 })();
 $packages["app/page/lobby"] = (function() {
-	var $pkg = {}, $init, common, gameplay, tool, data, uidata, fmt, sliceType, sliceType$1, structType, mapType, model, view, AssocPhase, BuyPhase, LobbyPagePhase, MultiUnitSelectionPagePhase, PrepareMenu, PreparePage;
+	var $pkg = {}, $init, common, gameplay, tool, data, uidata, fmt, sliceType, sliceType$1, structType, mapType, model, view, AssocPhase, BuyPhase, InjectDataSourceToMenu, InjectDataSourceToPage, LobbyPagePhase, MultiUnitSelectionPagePhase;
 	common = $packages["app/page/common"];
 	gameplay = $packages["app/page/gameplay"];
 	tool = $packages["app/tool"];
@@ -30417,7 +30417,7 @@ $packages["app/page/lobby"] = (function() {
 			var _r$1, _tuple$1, ctx$1, origin$1, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _tuple$1 = $f._tuple$1; ctx$1 = $f.ctx$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			ctx$1 = $clone(origin$1, uidata.UI);
-			_r$1 = PreparePage($clone(ctx$1, uidata.UI), pageID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = InjectDataSourceToPage($clone(ctx$1, uidata.UI), pageID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			_tuple$1 = _r$1;
 			uidata.UI.copy(ctx$1, _tuple$1[0]);
 			err[0] = _tuple$1[1];
@@ -30623,7 +30623,7 @@ $packages["app/page/lobby"] = (function() {
 		_arg$2 = (function(err, pageID) { return function $b(origin$1) {
 			var _r$1, origin$1, $s, $r;
 			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$1 = PreparePage($clone(origin$1, uidata.UI), pageID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = InjectDataSourceToPage($clone(origin$1, uidata.UI), pageID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			$s = -1; return _r$1;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(err, pageID);
@@ -30756,6 +30756,129 @@ $packages["app/page/lobby"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: BuyPhase }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.pageID = pageID; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.BuyPhase = BuyPhase;
+	InjectDataSourceToMenu = function(origin, menuID) {
+		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _r, _r$1, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, canBuy, canBuy$1, canBuy$2, canBuy$3, ctx, err, err$1, err$2, err$3, menu, menu$1, menu$2, menu$3, menu$4, menu$5, menu$6, menu$7, menuID, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; canBuy = $f.canBuy; canBuy$1 = $f.canBuy$1; canBuy$2 = $f.canBuy$2; canBuy$3 = $f.canBuy$3; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; menu = $f.menu; menu$1 = $f.menu$1; menu$2 = $f.menu$2; menu$3 = $f.menu$3; menu$4 = $f.menu$4; menu$5 = $f.menu$5; menu$6 = $f.menu$6; menu$7 = $f.menu$7; menuID = $f.menuID; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, uidata.UI);
+			_1 = menuID;
+			/* */ if (_1 === (17)) { $s = 2; continue; }
+			/* */ if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { $s = 3; continue; }
+			/* */ if ((_1 === (26)) || (_1 === (18))) { $s = 4; continue; }
+			/* */ if ((_1 === (27)) || (_1 === (19))) { $s = 5; continue; }
+			/* */ if (_1 === (20)) { $s = 6; continue; }
+			/* */ if (_1 === (21)) { $s = 7; continue; }
+			/* */ if (_1 === (22)) { $s = 8; continue; }
+			/* */ if (_1 === (23)) { $s = 9; continue; }
+			/* */ $s = 10; continue;
+			/* if (_1 === (17)) { */ case 2:
+				menu = $clone((_entry = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry !== undefined ? _entry.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				_r = model.QueryPilots(); /* */ $s = 12; case 12: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r$1 = data.KesStringPilot(_r); /* */ $s = 13; case 13: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				menu.Options = _r$1;
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { */ case 3:
+				menu$1 = $clone((_entry$1 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				_r$2 = model.QueryRobots(); /* */ $s = 14; case 14: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$3 = data.KesStringRobot(_r$2); /* */ $s = 15; case 15: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				menu$1.Options = _r$3;
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$1, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if ((_1 === (26)) || (_1 === (18))) { */ case 4:
+				menu$2 = $clone((_entry$2 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				_r$4 = model.QueryWeapons(); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_r$5 = data.KesStringWeapon(_r$4); /* */ $s = 17; case 17: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				menu$2.Options = _r$5;
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$2, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if ((_1 === (27)) || (_1 === (19))) { */ case 5:
+				menu$3 = $clone((_entry$3 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? _entry$3.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				_r$6 = model.QueryComponents(); /* */ $s = 18; case 18: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_r$7 = data.KesStringComponent(_r$6); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				menu$3.Options = _r$7;
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$3, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if (_1 === (20)) { */ case 6:
+				_r$8 = model.QueryRobotCanBuy(); /* */ $s = 20; case 20: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+				_tuple = _r$8;
+				canBuy = _tuple[0];
+				err = _tuple[1];
+				if (!($interfaceIsEqual(err, $ifaceNil))) {
+					$s = -1; return [origin, err];
+				}
+				menu$4 = $clone((_entry$4 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$4 !== undefined ? _entry$4.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				menu$4.Options = data.KesStringRobotProto(canBuy);
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$4, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if (_1 === (21)) { */ case 7:
+				_r$9 = model.QueryPilotCanBuy(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+				_tuple$1 = _r$9;
+				canBuy$1 = _tuple$1[0];
+				err$1 = _tuple$1[1];
+				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+					$s = -1; return [origin, err$1];
+				}
+				menu$5 = $clone((_entry$5 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$5 !== undefined ? _entry$5.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				menu$5.Options = data.KesStringPilotProto(canBuy$1);
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$5, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if (_1 === (22)) { */ case 8:
+				_r$10 = model.QueryWeaponCanBuy(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+				_tuple$2 = _r$10;
+				canBuy$2 = _tuple$2[0];
+				err$2 = _tuple$2[1];
+				if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+					$s = -1; return [origin, err$2];
+				}
+				menu$6 = $clone((_entry$6 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$6 !== undefined ? _entry$6.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				menu$6.Options = data.KesStringWeaponProto(canBuy$2);
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$6, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else if (_1 === (23)) { */ case 9:
+				_r$11 = model.QueryComponentCanBuy(); /* */ $s = 23; case 23: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+				_tuple$3 = _r$11;
+				canBuy$3 = _tuple$3[0];
+				err$3 = _tuple$3[1];
+				if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+					$s = -1; return [origin, err$3];
+				}
+				menu$7 = $clone((_entry$7 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$7 !== undefined ? _entry$7.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
+				menu$7.Options = data.KesStringComponentProto(canBuy$3);
+				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$7, uidata.Menu1D));
+				$s = 11; continue;
+			/* } else { */ case 10:
+				_r$12 = fmt.Printf("InjectDataSourceToMenu not found %v. ignore.\n", new sliceType([new $Int(menuID)])); /* */ $s = 24; case 24: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+				_r$12;
+				$s = -1; return [ctx, $ifaceNil];
+			/* } */ case 11:
+		case 1:
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: InjectDataSourceToMenu }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.canBuy = canBuy; $f.canBuy$1 = canBuy$1; $f.canBuy$2 = canBuy$2; $f.canBuy$3 = canBuy$3; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.menu = menu; $f.menu$1 = menu$1; $f.menu$2 = menu$2; $f.menu$3 = menu$3; $f.menu$4 = menu$4; $f.menu$5 = menu$5; $f.menu$6 = menu$6; $f.menu$7 = menu$7; $f.menuID = menuID; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.InjectDataSourceToMenu = InjectDataSourceToMenu;
+	InjectDataSourceToPage = function(origin, pageID) {
+		var _entry, _i, _r, _ref, _tuple, ctx, err, menuID, origin, pageID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; menuID = $f.menuID; origin = $f.origin; pageID = $f.pageID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		_ref = (_entry = ctx.Menus[$Int.keyFor(pageID)], _entry !== undefined ? _entry.v : uidata.ListInt.nil);
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			menuID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = InjectDataSourceToMenu($clone(ctx, uidata.UI), menuID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			uidata.UI.copy(ctx, _tuple[0]);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: InjectDataSourceToPage }; } $f._entry = _entry; $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.menuID = menuID; $f.origin = origin; $f.pageID = pageID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.InjectDataSourceToPage = InjectDataSourceToPage;
 	LobbyPagePhase = function(origin) {
 		var _arg, _arg$1, _arg$2, _arg$3, _r, _r$1, _r$2, _tuple, ctx, err, origin, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -30895,7 +31018,7 @@ $packages["app/page/lobby"] = (function() {
 		_r;
 		err[0] = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
-		_r$1 = PreparePage($clone(ctx, uidata.UI), 9); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = InjectDataSourceToPage($clone(ctx, uidata.UI), 9); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple = _r$1;
 		uidata.UI.copy(ctx, _tuple[0]);
 		err[0] = _tuple[1];
@@ -30956,129 +31079,6 @@ $packages["app/page/lobby"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: MultiUnitSelectionPagePhase }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.MultiUnitSelectionPagePhase = MultiUnitSelectionPagePhase;
-	PrepareMenu = function(origin, menuID) {
-		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _r, _r$1, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, canBuy, canBuy$1, canBuy$2, canBuy$3, ctx, err, err$1, err$2, err$3, menu, menu$1, menu$2, menu$3, menu$4, menu$5, menu$6, menu$7, menuID, origin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; canBuy = $f.canBuy; canBuy$1 = $f.canBuy$1; canBuy$2 = $f.canBuy$2; canBuy$3 = $f.canBuy$3; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; menu = $f.menu; menu$1 = $f.menu$1; menu$2 = $f.menu$2; menu$3 = $f.menu$3; menu$4 = $f.menu$4; menu$5 = $f.menu$5; menu$6 = $f.menu$6; menu$7 = $f.menu$7; menuID = $f.menuID; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ctx = $clone(origin, uidata.UI);
-			_1 = menuID;
-			/* */ if (_1 === (17)) { $s = 2; continue; }
-			/* */ if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { $s = 3; continue; }
-			/* */ if ((_1 === (26)) || (_1 === (18))) { $s = 4; continue; }
-			/* */ if ((_1 === (27)) || (_1 === (19))) { $s = 5; continue; }
-			/* */ if (_1 === (20)) { $s = 6; continue; }
-			/* */ if (_1 === (21)) { $s = 7; continue; }
-			/* */ if (_1 === (22)) { $s = 8; continue; }
-			/* */ if (_1 === (23)) { $s = 9; continue; }
-			/* */ $s = 10; continue;
-			/* if (_1 === (17)) { */ case 2:
-				menu = $clone((_entry = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry !== undefined ? _entry.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				_r = model.QueryPilots(); /* */ $s = 12; case 12: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				_r$1 = data.KesStringPilot(_r); /* */ $s = 13; case 13: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				menu.Options = _r$1;
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if ((_1 === (25)) || (_1 === (16)) || (_1 === (29))) { */ case 3:
-				menu$1 = $clone((_entry$1 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				_r$2 = model.QueryRobots(); /* */ $s = 14; case 14: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_r$3 = data.KesStringRobot(_r$2); /* */ $s = 15; case 15: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				menu$1.Options = _r$3;
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$1, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if ((_1 === (26)) || (_1 === (18))) { */ case 4:
-				menu$2 = $clone((_entry$2 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				_r$4 = model.QueryWeapons(); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				_r$5 = data.KesStringWeapon(_r$4); /* */ $s = 17; case 17: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-				menu$2.Options = _r$5;
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$2, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if ((_1 === (27)) || (_1 === (19))) { */ case 5:
-				menu$3 = $clone((_entry$3 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? _entry$3.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				_r$6 = model.QueryComponents(); /* */ $s = 18; case 18: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-				_r$7 = data.KesStringComponent(_r$6); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				menu$3.Options = _r$7;
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$3, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if (_1 === (20)) { */ case 6:
-				_r$8 = model.QueryRobotCanBuy(); /* */ $s = 20; case 20: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-				_tuple = _r$8;
-				canBuy = _tuple[0];
-				err = _tuple[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [origin, err];
-				}
-				menu$4 = $clone((_entry$4 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$4 !== undefined ? _entry$4.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				menu$4.Options = data.KesStringRobotProto(canBuy);
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$4, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if (_1 === (21)) { */ case 7:
-				_r$9 = model.QueryPilotCanBuy(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-				_tuple$1 = _r$9;
-				canBuy$1 = _tuple$1[0];
-				err$1 = _tuple$1[1];
-				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-					$s = -1; return [origin, err$1];
-				}
-				menu$5 = $clone((_entry$5 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$5 !== undefined ? _entry$5.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				menu$5.Options = data.KesStringPilotProto(canBuy$1);
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$5, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if (_1 === (22)) { */ case 8:
-				_r$10 = model.QueryWeaponCanBuy(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-				_tuple$2 = _r$10;
-				canBuy$2 = _tuple$2[0];
-				err$2 = _tuple$2[1];
-				if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-					$s = -1; return [origin, err$2];
-				}
-				menu$6 = $clone((_entry$6 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$6 !== undefined ? _entry$6.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				menu$6.Options = data.KesStringWeaponProto(canBuy$2);
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$6, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else if (_1 === (23)) { */ case 9:
-				_r$11 = model.QueryComponentCanBuy(); /* */ $s = 23; case 23: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-				_tuple$3 = _r$11;
-				canBuy$3 = _tuple$3[0];
-				err$3 = _tuple$3[1];
-				if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-					$s = -1; return [origin, err$3];
-				}
-				menu$7 = $clone((_entry$7 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$7 !== undefined ? _entry$7.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0, new structType.ptr(sliceType$1.nil, 0, 0, 0))), uidata.Menu1D);
-				menu$7.Options = data.KesStringComponentProto(canBuy$3);
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, $clone(menu$7, uidata.Menu1D));
-				$s = 11; continue;
-			/* } else { */ case 10:
-				_r$12 = fmt.Printf("PrepareMenu not found %v. ignore.\n", new sliceType([new $Int(menuID)])); /* */ $s = 24; case 24: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-				_r$12;
-				$s = -1; return [ctx, $ifaceNil];
-			/* } */ case 11:
-		case 1:
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: PrepareMenu }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.canBuy = canBuy; $f.canBuy$1 = canBuy$1; $f.canBuy$2 = canBuy$2; $f.canBuy$3 = canBuy$3; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.menu = menu; $f.menu$1 = menu$1; $f.menu$2 = menu$2; $f.menu$3 = menu$3; $f.menu$4 = menu$4; $f.menu$5 = menu$5; $f.menu$6 = menu$6; $f.menu$7 = menu$7; $f.menuID = menuID; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.PrepareMenu = PrepareMenu;
-	PreparePage = function(origin, pageID) {
-		var _entry, _i, _r, _ref, _tuple, ctx, err, menuID, origin, pageID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; menuID = $f.menuID; origin = $f.origin; pageID = $f.pageID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		ctx = $clone(origin, uidata.UI);
-		_ref = (_entry = ctx.Menus[$Int.keyFor(pageID)], _entry !== undefined ? _entry.v : uidata.ListInt.nil);
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			menuID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r = PrepareMenu($clone(ctx, uidata.UI), menuID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			uidata.UI.copy(ctx, _tuple[0]);
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: PreparePage }; } $f._entry = _entry; $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.menuID = menuID; $f.origin = origin; $f.pageID = pageID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.PreparePage = PreparePage;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
