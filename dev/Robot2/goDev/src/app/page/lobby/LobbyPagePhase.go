@@ -1,7 +1,7 @@
 package lobby
 
 import (
-	"app/common"
+	"app/page/common"
 	"app/tool/uidata"
 	"fmt"
 )

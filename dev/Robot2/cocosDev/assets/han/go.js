@@ -29143,7 +29143,7 @@ $packages["app/tool/def"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["app/common"] = (function() {
+$packages["app/page/common"] = (function() {
 	var $pkg = {}, $init, tool, data, def, uidata, viewer, fmt, strconv, DefaultModel, arrayType, sliceType, sliceType$1, sliceType$2, sliceType$3, structType, sliceType$4, sliceType$5, structType$1, arrayType$1, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, ptrType, view, model, BasicPagePhase, HandleFocus, Menu1DStep, Menu2DStep, Render;
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
@@ -29152,7 +29152,7 @@ $packages["app/common"] = (function() {
 	viewer = $packages["app/tool/viewer"];
 	fmt = $packages["fmt"];
 	strconv = $packages["strconv"];
-	DefaultModel = $pkg.DefaultModel = $newType(0, $kindStruct, "common.DefaultModel", true, "app/common", true, function(App_, Stack_) {
+	DefaultModel = $pkg.DefaultModel = $newType(0, $kindStruct, "common.DefaultModel", true, "app/page/common", true, function(App_, Stack_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.App = new data.App.ptr(0, 0, new data.Gameplay.ptr(false, "", arrayType.zero(), arrayType.zero(), 0, sliceType.nil, false, false, false, false, false, sliceType$1.nil, new data.BattleMenuState.ptr(false, $ifaceNil, $ifaceNil), $ifaceNil, new data.Lobby.ptr(false, false, false, false, false, false, false)), new data.Lobby.ptr(false, false, false, false, false, false, false));
@@ -29966,9 +29966,9 @@ $packages["app/common"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["app/gameplay"] = (function() {
+$packages["app/page/gameplay"] = (function() {
 	var $pkg = {}, $init, common, data, uidata, fmt, time, sliceType, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, arrayType, arrayType$1, arrayType$2, sliceType$1, sliceType$2, sliceType$3, sliceType$4, structType$1, view, model, unitByPosition, EnemyTurnPhase, GameLoop, HandleCamera, HandleCursor, PlayerTurnPhase, SystemMenuPhase, TurnPhase, CreateRobotMenu, CreateItemMenu, UnitMenuPhase, Render, SearchUnitByPosition;
-	common = $packages["app/common"];
+	common = $packages["app/page/common"];
 	data = $packages["app/tool/data"];
 	uidata = $packages["app/tool/uidata"];
 	fmt = $packages["fmt"];
@@ -30227,7 +30227,7 @@ $packages["app/gameplay"] = (function() {
 	UnitMenuPhase = function(origin, unitID) {
 		var _entry, _entry$1, _entry$2, _r, _r$1, _r$2, _r$3, _r$4, _tmp, _tmp$1, _tmp$2, _tmp$3, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, cancel, cancel$1, ctx, ctx$1, ctx$2, err, err$1, is, is$1, item, origin, robot, selection, tab, tab$1, topMenu, unitID, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; cancel = $f.cancel; cancel$1 = $f.cancel$1; ctx = $f.ctx; ctx$1 = $f.ctx$1; ctx$2 = $f.ctx$2; err = $f.err; err$1 = $f.err$1; is = $f.is; is$1 = $f.is$1; item = $f.item; origin = $f.origin; robot = $f.robot; selection = $f.selection; tab = $f.tab; tab$1 = $f.tab$1; topMenu = $f.topMenu; unitID = $f.unitID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = fmt.Println(new sliceType([new $String("UnitMenuPhase start")])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = fmt.Printf("UnitMenuPhase start %v\n", new sliceType([new $String(unitID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		ctx = $clone(origin, uidata.UI);
 		_r$1 = model.QueryGameplayRobots(); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
@@ -30388,10 +30388,10 @@ $packages["app/gameplay"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["app/lobby"] = (function() {
+$packages["app/page/lobby"] = (function() {
 	var $pkg = {}, $init, common, gameplay, tool, data, uidata, fmt, sliceType, sliceType$1, structType, mapType, model, view, AssocPhase, BuyPhase, LobbyPagePhase, MultiUnitSelectionPagePhase, PrepareMenu, PreparePage;
-	common = $packages["app/common"];
-	gameplay = $packages["app/gameplay"];
+	common = $packages["app/page/common"];
+	gameplay = $packages["app/page/gameplay"];
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
 	uidata = $packages["app/tool/uidata"];
@@ -31094,10 +31094,10 @@ $packages["app/lobby"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["app/title"] = (function() {
+$packages["app/page/title"] = (function() {
 	var $pkg = {}, $init, common, lobby, uidata, fmt, sliceType, StartPagePhase;
-	common = $packages["app/common"];
-	lobby = $packages["app/lobby"];
+	common = $packages["app/page/common"];
+	lobby = $packages["app/page/lobby"];
 	uidata = $packages["app/tool/uidata"];
 	fmt = $packages["fmt"];
 	sliceType = $sliceType($emptyInterface);
@@ -31504,9 +31504,9 @@ $packages["tool/astar"] = (function() {
 })();
 $packages["app"] = (function() {
 	var $pkg = {}, $init, common, gameplay, title, uidata, fmt, js, astar, sliceType, ptrType, view, Main;
-	common = $packages["app/common"];
-	gameplay = $packages["app/gameplay"];
-	title = $packages["app/title"];
+	common = $packages["app/page/common"];
+	gameplay = $packages["app/page/gameplay"];
+	title = $packages["app/page/title"];
 	uidata = $packages["app/tool/uidata"];
 	fmt = $packages["fmt"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];

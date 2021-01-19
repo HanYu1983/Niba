@@ -1,6 +1,6 @@
 package lobby
 
-import "app/common"
+import "app/page/common"
 
 var (
 	model = common.Model

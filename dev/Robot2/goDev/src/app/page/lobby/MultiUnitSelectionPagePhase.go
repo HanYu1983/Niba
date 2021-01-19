@@ -1,8 +1,8 @@
 package lobby
 
 import (
-	"app/common"
-	"app/gameplay"
+	"app/page/common"
+	"app/page/gameplay"
 	"app/tool/uidata"
 	"fmt"
 )

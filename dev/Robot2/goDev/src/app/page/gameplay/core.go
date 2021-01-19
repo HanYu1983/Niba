@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/common"
+	"app/page/common"
 	"app/tool/data"
 	"app/tool/uidata"
 )

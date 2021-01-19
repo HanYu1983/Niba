@@ -1,9 +1,9 @@
 package app
 
 import (
-	"app/common"
-	"app/gameplay"
-	"app/title"
+	"app/page/common"
+	"app/page/gameplay"
+	"app/page/title"
 	"app/tool/uidata"
 	"fmt"
 	"tool/astar"
