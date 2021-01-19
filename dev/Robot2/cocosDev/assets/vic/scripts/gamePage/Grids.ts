@@ -33,8 +33,8 @@ export class Grids extends Instant {
                 for (let j = 0; j < map[i].length; ++j) {
                     let node:Node = this.pool.aquire(this.prefab, this.node);
                     node.getComponent(Grid).setType(map[j][i]);
-                    node.getComponent(Grid).landX = i;
-                    node.getComponent(Grid).landY = j;
+                    node.getComponent(Grid).landX = j;
+                    node.getComponent(Grid).landY = i;
                     
                     const pos = this.getGridPos(j, i);
                     let gridPos:Vec3 = node.getPosition();
@@ -48,9 +48,10 @@ export class Grids extends Instant {
         }
 
         const atkRange = content.AttackRange;
-        if(atkRange){
-            this.showAttackRange(atkRange);
-        }
+        if(atkRange) this.showAttackRange(atkRange);
+
+        const moveRange = content.MoveRange;
+        if(moveRange) this.showMoveRange(moveRange);
     }
 
     getGridPos(x:number, y:number):[number, number]{
@@ -72,11 +73,19 @@ export class Grids extends Instant {
     showAttackRange(ranges:any[]){
         ranges.forEach(range=>{
             const grid = this.getGrid(range[0], range[1]);
-            console.log(grid);
-            console.log(range);
             
             if(grid){
                 grid.getComponent(Grid)?.showWeaponRange(true);
+            }
+        });
+    }
+
+    showMoveRange(ranges:any[]){
+        ranges.forEach(range=>{
+            const grid = this.getGrid(range[0], range[1]);
+            
+            if(grid){
+                grid.getComponent(Grid)?.showMoveRange(true);
             }
         });
     }
