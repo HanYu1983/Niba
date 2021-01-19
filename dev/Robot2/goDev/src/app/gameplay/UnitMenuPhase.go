@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/common"
 	"app/tool/uidata"
+	"fmt"
 )
 
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
@@ -14,6 +15,7 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 }
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
+	fmt.Printf("UnitMenuPhase start %v\n", unitID)
 	ctx := origin
 	if robot, is := model.QueryGameplayRobots()[unitID]; is {
 		ctx, err := CreateRobotMenu(ctx, robot.ID)
