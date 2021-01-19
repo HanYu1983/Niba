@@ -16,7 +16,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		ctx,
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
-			return PreparePage(origin, pageID)
+			return InjectDataSourceToPage(origin, pageID)
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin

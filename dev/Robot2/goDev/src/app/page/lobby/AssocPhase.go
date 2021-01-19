@@ -22,7 +22,7 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		pageID,
 		func(origin uidata.UI) (uidata.UI, error) {
 			ctx := origin
-			ctx, err = PreparePage(ctx, pageID)
+			ctx, err = InjectDataSourceToPage(ctx, pageID)
 			if err != nil {
 				return origin, err
 			}
