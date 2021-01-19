@@ -37,6 +37,7 @@ export class Grids extends Instant {
                 
                 const pos = this.getGridPos(j, i);
                 let gridPos:Vec3 = node.getPosition();
+
                 gridPos.x = pos[0];
                 gridPos.y = pos[1];
                 node.setPosition(gridPos);

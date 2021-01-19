@@ -18,10 +18,6 @@ export class Controller extends Component {
     modelView: ModelType.View = window.View = {
         Render: (ui: ModelType.UI) => {
             console.log("Render", ui)
-
-            console.log(this);
-            
-            console.log(this.view);
             
             this.view.build(ui);
         },
