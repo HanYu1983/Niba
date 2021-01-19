@@ -49,6 +49,7 @@ func (p Cocos) Render(app uidata.UI) {
 		fmt.Println("view not ready")
 		return
 	}
+	view.Call("Render", app)
 }
 
 func (p Cocos) Alert(msg string) {
