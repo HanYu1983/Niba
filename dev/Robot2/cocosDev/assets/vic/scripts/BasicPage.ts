@@ -23,6 +23,7 @@ export class BasicPage extends Instant {
             Focus: data.Focus[this.pageId],
             GameplayPages:data.GameplayPages[this.pageId]
         }
+        
         if (content.Active) {
             return content;
         }

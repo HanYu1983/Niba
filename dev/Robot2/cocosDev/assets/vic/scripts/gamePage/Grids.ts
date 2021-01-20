@@ -32,17 +32,12 @@ export class Grids extends Instant {
             for (let i = 0; i < map.length; ++i) {
                 for (let j = 0; j < map[i].length; ++j) {
                     let node:Node = this.pool.aquire(this.prefab, this.node);
-                    node.getComponent(Grid).setType(map[j][i]);
+                    node.getComponent(Grid)?.setType(map[j][i]);
                     node.getComponent(Grid)?.showNormal();
                     node.getComponent(Grid).landX = j;
                     node.getComponent(Grid).landY = i;
                     
-                    const pos = this.getGridPos(j, i);
-                    let gridPos:Vec3 = node.getPosition();
-    
-                    gridPos.x = pos[0];
-                    gridPos.y = pos[1];
-                    node.setPosition(gridPos);
+                    node.setPosition(this.getGridPos(j, i));
                     this.grids.push(node);
                 }
             }
@@ -55,8 +50,8 @@ export class Grids extends Instant {
         if(moveRange) this.showMoveRange(moveRange);
     }
 
-    getGridPos(x:number, y:number):[number, number]{
-        return [x * 32 - 304, -y * 32 + 304];
+    getGridPos(x:number, y:number):Vec3{
+        return new Vec3(x * 32 - 304, -y * 32 + 304 ,0);
     }
 
     getGrid(x:number, y:number):Node|null{

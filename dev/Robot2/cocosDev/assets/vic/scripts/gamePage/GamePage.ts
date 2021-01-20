@@ -17,6 +17,7 @@ export class GamePage extends BasicPage {
     map:LandMap = null;
 
     clear(){
+        super.clear();
         this.map.clear();
     }
    

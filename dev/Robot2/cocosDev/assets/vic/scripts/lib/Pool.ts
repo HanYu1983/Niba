@@ -28,13 +28,14 @@ export class Pool extends Component {
         let node = pool.length > 0 ? pool.pop() : instantiate(prefab);
 
         // setParent以及active操作的過程也是蠻吃效能的，使用上，同一個pool的物件也不會給到不同的parent，所以只要設定一次就好
-        if(!node.getParent()){
-            node.setParent(parent);
-            node.active = true;
-        }
+        if(!node.getParent()) node.setParent(parent);
+        if(!node.active) node.active = true;
 
         // 把物件移到原點，用來代替active = true操作
         node.setPosition(Vec3.ZERO);
+
+        // console.log("[獲取後-]數量:" + pool.length + ", 獲取:" + prefab.name);
+        
         return node;
     }
 
@@ -47,7 +48,10 @@ export class Pool extends Component {
 
             // 把物件移到很遠的地方，用來代替active = false操作
             node.setPosition(this.outOfWorld);
+
+            // console.log("[-釋放後]數量:" + pool.length + ", 釋放:" + prefab.name);
         }
 
+        
     }
 }
