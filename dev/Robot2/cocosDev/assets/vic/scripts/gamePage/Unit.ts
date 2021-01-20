@@ -18,6 +18,7 @@ export class Unit extends Component {
 
     airPos:Vec3 = new Vec3(0,10,0);
 
+    // example
     // start(){
     //     this.changeUnit("byj");
     //     this.isAir(true);
