@@ -7,9 +7,11 @@
 
 import { _decorator, Component, Node, Sprite, ImageAsset } from 'cc';
 import ImageAssets from '../lib/ImageAssets';
-const { ccclass, property } = _decorator;
+import { ImageChanger } from '../lib/ImageChanger';
+const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('Grid')
+@requireComponent(ImageChanger)
 export class Grid extends Component {
     // @property(Label)
     // typeName: Label = null;
@@ -28,9 +30,6 @@ export class Grid extends Component {
 
     @property(Sprite)
     land:Sprite = null;
-
-    @property(ImageAssets)
-    assetLands:ImageAssets = null;
 
     @property(Sprite)
     boxImage:Sprite = null;
@@ -64,39 +63,39 @@ export class Grid extends Component {
         switch (type) {
             case 0:
                 //"深";
-                this.land.spriteFrame = this.assetLands.getImageByKey("sea");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "sea");
                 break;
             case 1:
                 //"海"
-                this.land.spriteFrame = this.assetLands.getImageByKey("shallowSea");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "shallowSea");
                 break;
             case 2:
                 //"沙";
-                this.land.spriteFrame = this.assetLands.getImageByKey("beach");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "beach");
                 break;
             case 3:
                 //"草";
-                this.land.spriteFrame = this.assetLands.getImageByKey("plain");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "plain");
                 break;
             case 4:
                 //"城";
-                this.land.spriteFrame = this.assetLands.getImageByKey("city");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "city");
                 break;
             case 5:
                 //"山";
-                this.land.spriteFrame = this.assetLands.getImageByKey("hill");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "hill");
                 break;
             case 6:
                 //"林";
-                this.land.spriteFrame = this.assetLands.getImageByKey("forest");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "forest");
                 break;
             case 7:
                 //"補";
-                this.land.spriteFrame = this.assetLands.getImageByKey("award");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "award");
                 break;
             case 8:
                 // "路";
-                this.land.spriteFrame = this.assetLands.getImageByKey("road");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "road");
                 break;
         }
     }
