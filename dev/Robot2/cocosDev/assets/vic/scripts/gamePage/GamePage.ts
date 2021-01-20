@@ -22,7 +22,7 @@ export class GamePage extends BasicPage {
    
     protected doBuild(content:any, data:any):void{
         super.doBuild(content, data);
-
+        
         const gameData = content.GameplayPages;
         this.map.build(gameData);
     }

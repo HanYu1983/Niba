@@ -83,13 +83,7 @@ export class InstMenu extends Instant {
         combine.forEach(([item, multiId], i)=>{
             const isArray = Array.isArray(item);
             const btn:Node = isArray ? this.pool.aquire(this.multiPrefab, this.node) : this.pool.aquire(this.prefab, this.node);
-            if(this.type == Type.Horizontal){
-                btn.getComponent(UITransform)?.contentSize.set(this.buttonSize, btn.getComponent(UITransform)?.contentSize.height);
-                btn.position.set(i * gap - borderSize / 2 + this.buttonSize / 2, btn.position.y, btn.position.z);
-            }else{
-                btn.getComponent(UITransform)?.contentSize.set(btn.getComponent(UITransform)?.contentSize.width, this.buttonSize);
-                btn.position.set(btn.position.x, i * -gap + borderSize / 2 - this.buttonSize / 2, btn.position.z);
-            }
+            
             const label = isArray ? item[multiId] : item;
             const isFocus = (focus == i) ? true : false;
             
@@ -99,6 +93,14 @@ export class InstMenu extends Instant {
             }else{
                 btn.getComponent(InstButton).build([label, isFocus, 1]);
                 this.tempButton.push(btn);
+            }
+
+            if(this.type == Type.Horizontal){
+                btn.getComponent(UITransform)?.contentSize.set(this.buttonSize, btn.getComponent(UITransform)?.contentSize.height);
+                btn.position.set(i * gap - borderSize / 2 + this.buttonSize / 2, btn.position.y, btn.position.z);
+            }else{
+                btn.getComponent(UITransform)?.contentSize.set(btn.getComponent(UITransform)?.contentSize.width, this.buttonSize);
+                btn.position.set(btn.position.x, i * -gap + borderSize / 2 - this.buttonSize / 2, btn.position.z);
             }
         });
     }

@@ -33,6 +33,7 @@ export class Grids extends Instant {
                 for (let j = 0; j < map[i].length; ++j) {
                     let node:Node = this.pool.aquire(this.prefab, this.node);
                     node.getComponent(Grid).setType(map[j][i]);
+                    node.getComponent(Grid)?.showNormal();
                     node.getComponent(Grid).landX = j;
                     node.getComponent(Grid).landY = i;
                     
