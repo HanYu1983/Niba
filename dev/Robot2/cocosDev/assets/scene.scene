@@ -35221,6 +35221,9 @@
     },
     "_enabled": true,
     "__prefab": null,
+    "pool": null,
+    "childs": [],
+    "doActiveWhenBuildClear": false,
     "hpValueBar": {
       "__id__": 1384
     },

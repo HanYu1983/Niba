@@ -15,16 +15,26 @@ export class Controller extends Component {
 
     @property(Drawer)
     view: Drawer = null;
+
     modelView: ModelType.View = window.View = {
         Render: (ui: ModelType.UI) => {
-            console.log("Render", ui)
-            
-            this.view.build(ui);
+
+            // 應該是cocos3.0的bug。調整完ts之後
+            // 回到editor時，他會compile一次ts
+            // 這個時候，他會把本來應該要進入游戲才創建的物件就直接創建在場景上了
+            // 導致我又要手動刪掉
+            // 這邊先暫時用js檢查是不是在chrome的環境，是的話，再render畫面來避免bug
+            var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+            if(isChrome){
+                console.log("Render", ui);
+                this.view.build(ui);
+            }
         },
         Alert: (msg: string) => {
             alert(msg)
         },
     }
+
     model: ModelType.Model = window.Model
 
     start() {
@@ -32,6 +42,7 @@ export class Controller extends Component {
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.model.OnKeyDown, this.model);
         // 畫第一次(Render), 之後是自動呼叫Render
         this.model.Flush()
+
 
         // this.view.build({page:1});
 
