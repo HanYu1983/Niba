@@ -55,7 +55,7 @@ func Main() {
 
 	var _ = gameplay.GameLoop
 	var _ = title.StartPagePhase
-	startPhase := title.StartPagePhase
+	startPhase := gameplay.GameLoop
 	_, err := startPhase(uidata.DefaultUI)
 	if err != nil {
 		panic(err)

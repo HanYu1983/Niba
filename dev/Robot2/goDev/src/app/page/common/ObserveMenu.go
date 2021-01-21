@@ -48,9 +48,13 @@ func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		fmt.Printf("ObserveMenu not found %v. ignore.\n", menuID)
 		return ctx, nil
 	}
-	left, right := tool.Max(0, menu.Offset), tool.Min(menu.Offset+menu.Limit, len(options))
-	menu.Options = options[left:right]
-	menu.Cursor = tool.Max(tool.Min(menu.Cursor, len(menu.Options)-1), 0)
+	menu.Offset = tool.Max(0, tool.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
+	left, right := tool.Max(0, tool.Min(menu.Offset, len(options)-1)), tool.Min(menu.Offset+menu.Limit, len(options))
+	fmt.Printf("len(%v) %v~%v\n", len(options), left, right)
+	if len(options) > 0 {
+		menu.Options = options[left:right]
+	}
+	menu.Cursor = tool.Max(0, tool.Min(len(menu.Options)-1, menu.Cursor))
 	ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 	return ctx, nil
 }

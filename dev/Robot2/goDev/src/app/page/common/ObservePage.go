@@ -29,6 +29,5 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	ctx.Info.PilotIDByRobotID = model.QueryPilotIDByRobotID()
 	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
 	ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()
-	view.Render(ctx)
 	return ctx, nil
 }
