@@ -37,7 +37,7 @@ export class Grids extends Instant {
                     node.getComponent(Grid).landX = j;
                     node.getComponent(Grid).landY = i;
                     
-                    node.setPosition(this.getGridPos(j, i));
+                    node.setPosition(Grids.getGridPos(j, i));
                     this.grids.push(node);
                 }
             }
@@ -50,7 +50,7 @@ export class Grids extends Instant {
         if(moveRange) this.showMoveRange(moveRange);
     }
 
-    getGridPos(x:number, y:number):Vec3{
+    static getGridPos(x:number, y:number):Vec3{
         return new Vec3(x * 32 - 304, -y * 32 + 304 ,0);
     }
 

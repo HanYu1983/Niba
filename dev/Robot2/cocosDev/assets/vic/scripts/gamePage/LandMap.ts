@@ -9,6 +9,7 @@ import { _decorator, Component, Node, Sprite, Vec3, tween } from 'cc';
 import { Instant } from '../lib/instanceViewer/Instant';
 import { EffectGenerator } from './EffectGenerator';
 import { Grids } from './Grids';
+import { Units } from './Units';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -16,6 +17,9 @@ export class LandMap extends Instant {
     
     @property(Grids)
     grids:Grids = null;
+
+    @property(Units)
+    units:Units = null;
 
     @property(Sprite)
     cursor:Sprite = null;
@@ -25,19 +29,21 @@ export class LandMap extends Instant {
 
     clear(){
         this.grids.clear();
+        this.units.clear();
     }
 
     doBuild(content:any, data:any):void{
         this.grids.build(content);
+        this.units.build(content);
         this.setCursor(content.Cursor);
 
         tween(this.node).delay(2).call(()=>{
-            this.effects.build([[0, this.grids.getGridPos(2,3)]]);
+            this.effects.build([[0, Grids.getGridPos(2,3)]]);
         }).start();
     }
 
     setCursor(cursor:any){
-        const cursorPos = this.grids.getGridPos(cursor[0], cursor[1]);
+        const cursorPos = Grids.getGridPos(cursor[0], cursor[1]);
         this.cursor.node.setPosition(cursorPos);
     }
 }
