@@ -7,6 +7,8 @@ import (
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
+	model.Push()
+	defer model.Pop()
 	ctx := origin
 	isCanMove := model.QueryMoveCount(robotID) > 0
 	if isCanMove == false {
@@ -22,6 +24,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		return fmt.Errorf("you must select in move range")
 	})
 	if err != nil {
+		model.Reset()
 		return origin, false, err
 	}
 	if cancel {
@@ -31,6 +34,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	model.RobotMove(robotID, data.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
 	ctx, err = UnitMenuPhase(ctx, robotID)
 	if err != nil {
+		model.Reset()
 		return origin, false, err
 	}
 	return ctx, false, nil

@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"app/page/common"
 	"app/tool/data"
 	"app/tool/uidata"
 )
@@ -12,6 +13,12 @@ func SelectPositionStep(origin uidata.UI, robotID string, isValid func(data.Posi
 	ctx := origin
 WaitSpace:
 	for {
+		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			model.Reset()
+			return origin, data.Position{}, false, err
+		}
+		view.Render(ctx)
 		evt := view.AskCommand()
 		ctx, err = HandleCursor(ctx, evt)
 		if err != nil {

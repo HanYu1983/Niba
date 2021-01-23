@@ -18,6 +18,7 @@ func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string)
 			model.Reset()
 			return origin, "", false, err
 		}
+		view.Render(ctx)
 		evt := view.AskCommand()
 		ctx, err = HandleCursor(ctx, evt)
 		if err != nil {
