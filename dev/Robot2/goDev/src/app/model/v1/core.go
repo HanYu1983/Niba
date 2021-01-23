@@ -57,7 +57,7 @@ func init() {
 
 	DefaultModel.App.Money = 10000
 	DefaultModel.App.Gameplay.Map = temp
-	DefaultModel.App.Gameplay.Units = []string{"0"}
-	DefaultModel.App.Gameplay.Robots = map[string]data.Robot{"0": {}}
-	DefaultModel.App.Gameplay.Positions = map[string]data.Position{"0": {0, 0}}
+	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
+	DefaultModel.App.Gameplay.Robots = map[string]data.Robot{"0": {}, "1": {}}
+	DefaultModel.App.Gameplay.Positions = map[string]data.Position{"0": {0, 0}, "1": {5, 5}}
 }

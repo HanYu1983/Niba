@@ -38,6 +38,7 @@ type IModel interface {
 	IsDone() bool
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string
 	QueryUnitByPosition(data.Position) string
+	QueryMoveRange(string) []data.Position
 	GetGameplayRobots() map[string]data.Robot
 	GetGameplayItems() map[string]data.Item
 	GetGameplayPositions() map[string]data.Position

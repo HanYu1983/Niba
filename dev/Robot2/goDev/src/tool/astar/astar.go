@@ -50,7 +50,7 @@ func BuildPath(current *Node) (path []interface{}) {
 
 func ShortedPathTree(
 	from interface{},
-	isGoal func(curr *Node) (bool, bool),
+	isGoal func(curr *Node) bool,
 	pathNeighbors func(curr *Node) []interface{},
 	pathNeighborCost func(curr *Node, neighbor interface{}) float64,
 	pathEstimatedCost func(curr *Node) float64,
@@ -68,12 +68,9 @@ func ShortedPathTree(
 		current := heap.Pop(nq).(*Node)
 		current.open = false
 		current.closed = true
-		isFind, isDone := isGoal(current)
+		isFind := isGoal(current)
 		if isFind {
-			if isDone {
-				return nm, true
-			}
-			continue
+			return nm, true
 		}
 		for _, neighbor := range pathNeighbors(current) {
 			Cost := current.Cost + pathNeighborCost(current, neighbor)

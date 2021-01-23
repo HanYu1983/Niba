@@ -28,13 +28,30 @@ func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 d
 		}
 	}
 
+	// add
 	for unitID, unitPos := range posComs {
 		unitPos = proj(unitPos)
-		if _, has := unitByPosition[unitPos]; has == false {
+		has := len(tool.FilterString(unitByRegion[unitPos], func(id string) bool {
+			return id == unitID
+		})) > 0
+		if has == false {
 			// add
 			unitByRegion[unitPos] = append(unitByRegion[unitPos], unitID)
-		} else {
-			// update
+		}
+	}
+
+	// update
+	for unitOldPos, units := range unitByRegion {
+		for _, unitID := range units {
+			unitNewPos := proj(posComs[unitID])
+			if unitOldPos != unitNewPos {
+				// remove old
+				unitByRegion[unitOldPos] = tool.FilterString(units, func(id string) bool {
+					return id != unitID
+				})
+				// add to new
+				unitByRegion[unitNewPos] = append(units, unitID)
+			}
 		}
 	}
 

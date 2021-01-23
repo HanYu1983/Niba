@@ -6,9 +6,6 @@ import (
 	"app/page/title"
 	"app/tool/uidata"
 	"fmt"
-	"tool/astar"
-
-	"github.com/gopherjs/gopherjs/js"
 )
 
 var (
@@ -17,25 +14,25 @@ var (
 )
 
 func Main() {
-	tree, _ := astar.ShortedPathTree(
-		1,
-		func(curr *astar.Node) (bool, bool) {
-			v := curr.Pather.(int)
-			return v == 5, true
-		},
-		func(curr *astar.Node) []interface{} {
-			v := curr.Pather.(int)
-			return []interface{}{v + 1}
-		},
-		func(curr *astar.Node, neighbor interface{}) float64 {
-			return 1
-		},
-		func(curr *astar.Node) float64 {
-			return 1
-		},
-	)
-	path := astar.BuildPath(tree[4])
-	js.Global.Get("console").Call("log", tree, path)
+	// tree, _ := astar.ShortedPathTree(
+	// 	1,
+	// 	func(curr *astar.Node) (bool, bool) {
+	// 		v := curr.Pather.(int)
+	// 		return v == 5, true
+	// 	},
+	// 	func(curr *astar.Node) []interface{} {
+	// 		v := curr.Pather.(int)
+	// 		return []interface{}{v + 1}
+	// 	},
+	// 	func(curr *astar.Node, neighbor interface{}) float64 {
+	// 		return 1
+	// 	},
+	// 	func(curr *astar.Node) float64 {
+	// 		return 1
+	// 	},
+	// )
+	// path := astar.BuildPath(tree[4])
+	// js.Global.Get("console").Call("log", tree, path)
 
 	defer func() {
 		if x := recover(); x != nil {

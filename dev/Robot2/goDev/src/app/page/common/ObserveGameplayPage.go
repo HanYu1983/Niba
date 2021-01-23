@@ -35,6 +35,17 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		localPosDict[id] = data.World2Local(view.Camera, pos)
 	}
 	view.Positions = localPosDict
+	// move range
+	var notFound string
+	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
+	if unitAtCursor != notFound {
+		view.MoveRange = model.QueryMoveRange(unitAtCursor)
+		for i, pos := range view.MoveRange {
+			view.MoveRange[i] = data.World2Local(view.Camera, pos)
+		}
+	} else {
+		view.MoveRange = []data.Position{}
+	}
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, view)
 	return ctx, nil
