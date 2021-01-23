@@ -5,13 +5,12 @@ import (
 )
 
 type IModel interface {
-	// basic
+	// stateStack
 	Push()
 	Pop()
 	Reset()
-	// common
-	QueryMoney() int
 	// lobby
+	QueryMoney() int
 	BuyRobot(id string) error
 	BuyPilot(id string) error
 	BuyWeapon(id string) error
@@ -41,6 +40,7 @@ type IModel interface {
 	QueryUnitByPosition(data.Position) string
 	GetGameplayRobots() map[string]data.Robot
 	GetGameplayItems() map[string]data.Item
+	GetGameplayPositions() map[string]data.Position
 	GetMap() [][]int
 	SetCursor(data.Position)
 	GetCursor() data.Position

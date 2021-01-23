@@ -33,10 +33,10 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			default:
+			case uidata.KeyCodeEnter:
 				gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 				cursor := gameplayPage.Cursor
-				unitID := common.SearchUnitByPosition(gameplayPage.Positions, cursor)
+				unitID := model.QueryUnitByPosition(cursor)
 				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)

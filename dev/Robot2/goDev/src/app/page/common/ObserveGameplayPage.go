@@ -28,6 +28,13 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	leftTop := view.Camera
 	rightBottom := data.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
 	view.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
+	// local position
+	localPosDict := map[string]data.Position{}
+	for _, id := range view.Units {
+		pos := model.GetGameplayPositions()[id]
+		localPosDict[id] = data.World2Local(view.Camera, pos)
+	}
+	view.Positions = localPosDict
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, view)
 	return ctx, nil
