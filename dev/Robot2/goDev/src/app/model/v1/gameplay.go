@@ -14,9 +14,6 @@ func (v *model) NextPlayer() error {
 func (v *model) IsDone() bool {
 	return false
 }
-func (v *model) QueryCursorInMap() data.Position {
-	return data.Position{}
-}
 func (v *model) QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string {
 	return SearchUnitByRegion(v.App.Gameplay.Positions, p1, p2)
 }
@@ -79,4 +76,16 @@ func (v *model) GetCursor() data.Position {
 }
 func (v *model) GetMap() [][]int {
 	return v.App.Gameplay.Map
+}
+func (v *model) QueryMoveCount(string) int {
+	return 1
+}
+func (v *model) RobotMove(string, data.Position) error {
+	return nil
+}
+func (v *model) RobotTransform(string, string) error {
+	return nil
+}
+func (v *model) RobotSkyGround(string) error {
+	return nil
 }

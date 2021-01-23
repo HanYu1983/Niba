@@ -1,0 +1,37 @@
+package gameplay
+
+import (
+	"app/tool/data"
+	"app/tool/uidata"
+	"fmt"
+)
+
+func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
+	ctx := origin
+	isCanMove := model.QueryMoveCount(robotID) > 0
+	if isCanMove == false {
+		return origin, false, fmt.Errorf("can not move")
+	}
+	moveRange := model.QueryMoveRange(robotID)
+	ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(target data.Position) error {
+		for _, pos := range moveRange {
+			if pos == target {
+				return nil
+			}
+		}
+		return fmt.Errorf("you must select in move range")
+	})
+	if err != nil {
+		return origin, false, err
+	}
+	if cancel {
+		return origin, true, nil
+	}
+	// view.RenderRobotMove(ctx, robotID, ctx.Positions[robotID], cursor)
+	model.RobotMove(robotID, data.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
+	ctx, err = UnitMenuPhase(ctx, robotID)
+	if err != nil {
+		return origin, false, err
+	}
+	return ctx, false, nil
+}

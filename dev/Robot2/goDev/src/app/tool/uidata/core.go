@@ -80,17 +80,25 @@ const (
 	MapHeight = 20
 )
 
+type RobotMenuInfo struct {
+	WeaponID    int
+	TransformID int
+	Weapons     map[string]data.Weapon
+	Transforms  map[string]data.Robot
+}
+
 // GameplayPage is
 type GameplayPage struct {
-	Map         [MapHeight][MapWidth]int
-	Cursor      data.Position
-	Camera      data.Position
-	Units       []string
-	Robots      map[string]data.Robot
-	Items       map[string]data.Item
-	Positions   map[string]data.Position
-	MoveRange   []data.Position
-	AttackRange []data.Position
+	Map           [MapHeight][MapWidth]int
+	Cursor        data.Position
+	Camera        data.Position
+	Units         []string
+	Robots        map[string]data.Robot
+	Items         map[string]data.Item
+	Positions     map[string]data.Position
+	MoveRange     []data.Position
+	AttackRange   []data.Position
+	RobotMenuInfo RobotMenuInfo
 }
 
 // ListInt is
@@ -104,7 +112,6 @@ type UI struct {
 	Menu1Ds       map[int]Menu1D
 	Menu2Ds       map[int]Menu2D
 	BattleMenus   map[int]BattleMenu
-	Positions     map[int][]data.Position
 	GameplayPages map[int]GameplayPage
 	Info          struct {
 		Money                int
@@ -141,6 +148,9 @@ const (
 
 	MenuOptionAssoc  = "MenuOptionAssoc"
 	MenuOptionDissoc = "MenuOptionDissoc"
+
+	MenuOptionMove      = "MenuOptionMove"
+	MenuOptionSkyGround = "MenuOptionSkyGround"
 )
 
 //

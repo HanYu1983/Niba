@@ -16,6 +16,8 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 	fmt.Printf("UnitMenuPhase start %v\n", unitID)
+	model.Push()
+	defer model.Pop()
 	ctx := origin
 	if robot, is := model.GetGameplayRobots()[unitID]; is {
 		ctx, err := CreateRobotMenu(ctx, robot.ID)
@@ -25,9 +27,16 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, true)
 	WaitMenu:
 		for {
-			var cancel, tab bool
-			ctx, _, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
+				model.Reset()
+				return origin, err
+			}
+			var cancel, tab bool
+			var selection string
+			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			if err != nil {
+				model.Reset()
 				return origin, err
 			}
 			if tab {
@@ -37,7 +46,46 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 				break WaitMenu
 			}
 			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
-			var _ = topMenu
+			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+			switch topMenu.Cursor1 {
+			case gameplayPage.RobotMenuInfo.WeaponID:
+				weaponID := selection
+				var targetID string
+				ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
+					return nil
+				})
+				if err != nil {
+					model.Reset()
+					return origin, err
+				}
+				if cancel {
+					continue
+				}
+				var _ = targetID
+				var _ = weaponID
+			case gameplayPage.RobotMenuInfo.TransformID:
+				transformID := selection
+				err = model.RobotTransform(unitID, transformID)
+				if err != nil {
+					view.Alert(err.Error())
+					continue
+				}
+			default:
+				switch selection {
+				case uidata.MenuOptionMove:
+					ctx, _, err = RobotMovePhase(ctx, unitID)
+					if err != nil {
+						view.Alert(err.Error())
+						continue
+					}
+				case uidata.MenuOptionSkyGround:
+					err = model.RobotSkyGround(unitID)
+					if err != nil {
+						view.Alert(err.Error())
+						continue
+					}
+				}
+			}
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, false)
 	}
@@ -45,6 +93,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 		// append menu
 		ctx, err := CreateItemMenu(ctx, item.ID)
 		if err != nil {
+			model.Reset()
 			return origin, err
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
@@ -54,6 +103,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 			var selection string
 			ctx, selection, cancel, tab, err = common.Menu1DStep(ctx, uidata.PageGameplay, uidata.Menu1DSystemMenu)
 			if err != nil {
+				model.Reset()
 				return origin, err
 			}
 			if tab {

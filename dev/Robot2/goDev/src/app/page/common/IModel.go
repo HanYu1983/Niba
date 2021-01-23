@@ -39,10 +39,14 @@ type IModel interface {
 	QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string
 	QueryUnitByPosition(data.Position) string
 	QueryMoveRange(string) []data.Position
+	QueryMoveCount(string) int
 	GetGameplayRobots() map[string]data.Robot
 	GetGameplayItems() map[string]data.Item
 	GetGameplayPositions() map[string]data.Position
 	GetMap() [][]int
 	SetCursor(data.Position)
 	GetCursor() data.Position
+	RobotMove(string, data.Position) error
+	RobotTransform(string, string) error
+	RobotSkyGround(string) error
 }
