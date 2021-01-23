@@ -21,28 +21,16 @@ func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	case uidata.Menu1DComponentRobotListMenu, uidata.Menu1DComponentListMenu:
 		options = data.KesStringComponent(model.QueryComponents())
 	case uidata.Menu1DBuyRobotMenu:
-		canBuy, err := model.QueryRobotCanBuy()
-		if err != nil {
-			return origin, err
-		}
+		canBuy := model.QueryRobotCanBuy()
 		options = data.KesStringRobotProto(canBuy)
 	case uidata.Menu1DBuyPilotMenu:
-		canBuy, err := model.QueryPilotCanBuy()
-		if err != nil {
-			return origin, err
-		}
+		canBuy := model.QueryPilotCanBuy()
 		options = data.KesStringPilotProto(canBuy)
 	case uidata.Menu1DBuyWeaponMenu:
-		canBuy, err := model.QueryWeaponCanBuy()
-		if err != nil {
-			return origin, err
-		}
+		canBuy := model.QueryWeaponCanBuy()
 		options = data.KesStringWeaponProto(canBuy)
 	case uidata.Menu1DBuyComponentMenu:
-		canBuy, err := model.QueryComponentCanBuy()
-		if err != nil {
-			return origin, err
-		}
+		canBuy := model.QueryComponentCanBuy()
 		options = data.KesStringComponentProto(canBuy)
 	default:
 		fmt.Printf("ObserveMenu not found %v. ignore.\n", menuID)

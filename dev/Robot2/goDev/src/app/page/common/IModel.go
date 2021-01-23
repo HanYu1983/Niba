@@ -5,9 +5,13 @@ import (
 )
 
 type IModel interface {
+	// basic
 	Push()
 	Pop()
 	Reset()
+	// common
+	QueryMoney() int
+	// lobby
 	BuyRobot(id string) error
 	BuyPilot(id string) error
 	BuyWeapon(id string) error
@@ -18,13 +22,10 @@ type IModel interface {
 	DissocWeaponRobot(weaponID string) error
 	AssocComponentRobot(componentID string, robotID string) error
 	DissocComponentRobot(componentID string) error
-	QueryActivePlayer() string
-	NextPlayer() error
-	IsDone() bool
-	QueryRobotCanBuy() (map[string]data.RobotProto, error)
-	QueryPilotCanBuy() (map[string]data.PilotProto, error)
-	QueryWeaponCanBuy() (map[string]data.WeaponProto, error)
-	QueryComponentCanBuy() (map[string]data.ComponentProto, error)
+	QueryRobotCanBuy() map[string]data.RobotProto
+	QueryPilotCanBuy() map[string]data.PilotProto
+	QueryWeaponCanBuy() map[string]data.WeaponProto
+	QueryComponentCanBuy() map[string]data.ComponentProto
 	QueryRobots() map[string]data.Robot
 	QueryPilots() map[string]data.Pilot
 	QueryWeapons() map[string]data.Weapon
@@ -32,9 +33,15 @@ type IModel interface {
 	QueryRobotIDByWeaponID() map[string]string
 	QueryRobotIDByComponentID() map[string]string
 	QueryPilotIDByRobotID() map[string]string
-	QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error)
-	QueryUnitByPosition(data.Position) (string, error)
-	QueryGameplayRobots() map[string]data.Robot
-	QueryGameplayItems() map[string]data.Item
-	QueryMoney() int
+	// gameplay
+	QueryActivePlayer() string
+	NextPlayer() error
+	IsDone() bool
+	QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string
+	QueryUnitByPosition(data.Position) string
+	GetGameplayRobots() map[string]data.Robot
+	GetGameplayItems() map[string]data.Item
+	GetMap() [][]int
+	SetCursor(data.Position)
+	GetCursor() data.Position
 }

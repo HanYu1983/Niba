@@ -98,16 +98,6 @@ type Component struct {
 	Title   string
 }
 
-type Lobby struct {
-	Robots               map[string]Robot
-	Pilots               map[string]Pilot
-	Weapons              map[string]Weapon
-	Components           map[string]Component
-	RobotIDByWeaponID    map[string]string
-	RobotIDByComponentID map[string]string
-	PilotIDByRobotID     map[string]string
-}
-
 const (
 	PlayerIDPlayer = "PlayerIDPlayer"
 )
@@ -132,69 +122,6 @@ type Menu struct {
 	UnitID      string
 }
 
-const (
-	MenuOptionMove      = "MenuOptionMove"
-	MenuOptionSkyGround = "MenuOptionSkyGround"
-)
-
-type BattleActionAttack struct {
-	WeaponID string
-}
-
-type BattleActionGuard struct{}
-type BattleActionEvade struct{}
-
-type BattleMenuState struct {
-	Active         bool
-	AttackAction   interface{}
-	DeffenceAction interface{}
-}
-
-type GameplayTag struct {
-}
-
-type Gameplay struct {
-	Players         map[string]Player
-	ActivePlayerID  string
-	Camera          Position
-	Cursor          Position
-	SeqID           int
-	Units           []string
-	Positions       map[string]Position
-	Robots          map[string]Robot
-	Tags            map[string]Tag
-	Items           map[string]Item
-	Pilots          map[string]Pilot
-	MenuStack       []Menu
-	BattleMenuState BattleMenuState
-	Done            interface{}
-	Lobby           Lobby
-}
-
-type BattleInfo struct {
-	HitRate float32
-}
-
-type BattleMenu struct {
-	Active       bool
-	Robots       [2]Robot
-	BattleAction [2]interface{}
-	BattleInfo   [2]BattleInfo
-}
-
-type App struct {
-	SeqID    int
-	Money    int
-	Gameplay Gameplay
-	Lobby    Lobby
-}
-
-var (
-	DefaultApp = App{
-		Money: 100000,
-	}
-)
-
 type Data struct {
 	Robot     map[string]RobotProto
 	Pilot     map[string]PilotProto
@@ -212,5 +139,13 @@ func init() {
 		fmt.Println(err.Error())
 		return
 	}
-	fmt.Printf("%+v\n", GameData)
+	//fmt.Printf("%+v\n", GameData)
+}
+
+func World2Local(camera Position, pos Position) Position {
+	return Position{pos[0] - camera[0], pos[1] - camera[1]}
+}
+
+func Local2World(camera Position, pos Position) Position {
+	return Position{pos[0] + camera[0], pos[1] + camera[1]}
 }

@@ -1,7 +1,6 @@
 package viewer
 
 import (
-	"app/tool/data"
 	"app/tool/uidata"
 )
 
@@ -10,5 +9,4 @@ type IViwer interface {
 	AskCommand() interface{}
 	Alert(msg string)
 	Render(ui uidata.UI)
-	RenderRobotMove(gameplay data.Gameplay, robotID string, from data.Position, to data.Position)
 }

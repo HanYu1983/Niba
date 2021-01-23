@@ -17,7 +17,7 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 	fmt.Printf("UnitMenuPhase start %v\n", unitID)
 	ctx := origin
-	if robot, is := model.QueryGameplayRobots()[unitID]; is {
+	if robot, is := model.GetGameplayRobots()[unitID]; is {
 		ctx, err := CreateRobotMenu(ctx, robot.ID)
 		if err != nil {
 			return origin, err
@@ -41,7 +41,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, false)
 	}
-	if item, is := model.QueryGameplayItems()[unitID]; is {
+	if item, is := model.GetGameplayItems()[unitID]; is {
 		// append menu
 		ctx, err := CreateItemMenu(ctx, item.ID)
 		if err != nil {

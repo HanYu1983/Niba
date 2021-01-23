@@ -75,9 +75,14 @@ type BattleMenu struct {
 	Right BattleMenuSlot
 }
 
+const (
+	MapWidth  = 20
+	MapHeight = 20
+)
+
 // GameplayPage is
 type GameplayPage struct {
-	Map         [20][20]int
+	Map         [MapHeight][MapWidth]int
 	Cursor      data.Position
 	Camera      data.Position
 	Units       []string

@@ -13,6 +13,11 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	for {
+		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			model.Reset()
+			return origin, err
+		}
 		view.Render(ctx)
 		cmd := view.AskCommand()
 		ctx, err = HandleCursor(ctx, cmd)

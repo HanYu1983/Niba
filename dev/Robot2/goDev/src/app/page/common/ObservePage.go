@@ -11,8 +11,8 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	for ID := range ctx.GameplayPages {
-		ctx, err = ObserveGameplayPage(ctx, ID)
+	if _, has := ctx.GameplayPages[pageID]; has {
+		ctx, err = ObserveGameplayPage(ctx, pageID)
 		if err != nil {
 			return origin, err
 		}
@@ -22,10 +22,10 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	ctx.Info.Pilots = model.QueryPilots()
 	ctx.Info.Weapons = model.QueryWeapons()
 	ctx.Info.Components = model.QueryComponents()
-	ctx.Info.CanBuyRobots, _ = model.QueryRobotCanBuy()
-	ctx.Info.CanBuyPilots, _ = model.QueryPilotCanBuy()
-	ctx.Info.CanBuyWeapons, _ = model.QueryWeaponCanBuy()
-	ctx.Info.CanBuyComponents, _ = model.QueryComponentCanBuy()
+	ctx.Info.CanBuyRobots = model.QueryRobotCanBuy()
+	ctx.Info.CanBuyPilots = model.QueryPilotCanBuy()
+	ctx.Info.CanBuyWeapons = model.QueryWeaponCanBuy()
+	ctx.Info.CanBuyComponents = model.QueryComponentCanBuy()
 	ctx.Info.PilotIDByRobotID = model.QueryPilotIDByRobotID()
 	ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
 	ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()

@@ -1,7 +1,6 @@
 package viewer
 
 import (
-	"app/tool/data"
 	"app/tool/uidata"
 	"app/view/p5"
 
@@ -25,8 +24,4 @@ func (p P5) Render(ui uidata.UI) {
 
 func (p P5) Alert(msg string) {
 	js.Global.Get("alert").Invoke(msg)
-}
-
-func (p P5) RenderRobotMove(gameplay data.Gameplay, robotID string, from data.Position, to data.Position) {
-
 }

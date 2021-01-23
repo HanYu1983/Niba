@@ -8,7 +8,9 @@ import (
 
 var (
 	view  viewer.IViwer = def.View
-	model IModel        = &DefaultModel{App: data.DefaultApp}
+	model IModel        = &DefaultModel{App: App{
+		Money: 10000,
+	}}
 )
 
 var (

@@ -6,9 +6,38 @@ import (
 	"strconv"
 )
 
+type Lobby struct {
+	Robots               map[string]data.Robot
+	Pilots               map[string]data.Pilot
+	Weapons              map[string]data.Weapon
+	Components           map[string]data.Component
+	RobotIDByWeaponID    map[string]string
+	RobotIDByComponentID map[string]string
+	PilotIDByRobotID     map[string]string
+}
+type Gameplay struct {
+	Players        map[string]data.Player
+	ActivePlayerID string
+	Cursor         data.Position
+	Units          []string
+	Positions      map[string]data.Position
+	Robots         map[string]data.Robot
+	Tags           map[string]data.Tag
+	Items          map[string]data.Item
+	Pilots         map[string]data.Pilot
+	Done           interface{}
+}
+
+type App struct {
+	SeqID    int
+	Money    int
+	Gameplay Gameplay
+	Lobby    Lobby
+}
+
 type DefaultModel struct {
-	App   data.App
-	Stack []data.App
+	App   App
+	Stack []App
 }
 
 func (v *DefaultModel) Push() {
@@ -141,32 +170,32 @@ func (v *DefaultModel) HandlePlayerTurnEvent(interface{}) error {
 func (v *DefaultModel) IsDone() bool {
 	return false
 }
-func (v *DefaultModel) QueryRobotCanBuy() (map[string]data.RobotProto, error) {
-	return data.GameData.Robot, nil
+func (v *DefaultModel) QueryRobotCanBuy() map[string]data.RobotProto {
+	return data.GameData.Robot
 }
-func (v *DefaultModel) QueryPilotCanBuy() (map[string]data.PilotProto, error) {
-	return data.GameData.Pilot, nil
+func (v *DefaultModel) QueryPilotCanBuy() map[string]data.PilotProto {
+	return data.GameData.Pilot
 }
-func (v *DefaultModel) QueryWeaponCanBuy() (map[string]data.WeaponProto, error) {
-	return data.GameData.Weapon, nil
+func (v *DefaultModel) QueryWeaponCanBuy() map[string]data.WeaponProto {
+	return data.GameData.Weapon
 }
-func (v *DefaultModel) QueryComponentCanBuy() (map[string]data.ComponentProto, error) {
-	return data.GameData.Component, nil
+func (v *DefaultModel) QueryComponentCanBuy() map[string]data.ComponentProto {
+	return data.GameData.Component
 }
 
-func (v *DefaultModel) QueryCursorInMap() (data.Position, error) {
-	return data.Position{}, nil
+func (v *DefaultModel) QueryCursorInMap() data.Position {
+	return data.Position{}
 }
-func (v *DefaultModel) QueryUnitsByRegion(p1 data.Position, p2 data.Position) ([]string, error) {
-	return nil, nil
-}
-func (v *DefaultModel) QueryUnitByPosition(data.Position) (string, error) {
-	return "", nil
-}
-func (v *DefaultModel) QueryGameplayRobots() map[string]data.Robot {
+func (v *DefaultModel) QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string {
 	return nil
 }
-func (v *DefaultModel) QueryGameplayItems() map[string]data.Item {
+func (v *DefaultModel) QueryUnitByPosition(data.Position) string {
+	return ""
+}
+func (v *DefaultModel) GetGameplayRobots() map[string]data.Robot {
+	return nil
+}
+func (v *DefaultModel) GetGameplayItems() map[string]data.Item {
 	return nil
 }
 func (v *DefaultModel) QueryMoney() int {
@@ -192,4 +221,34 @@ func (v *DefaultModel) QueryRobotIDByComponentID() map[string]string {
 }
 func (v *DefaultModel) QueryPilotIDByRobotID() map[string]string {
 	return v.App.Lobby.PilotIDByRobotID
+}
+
+func (v *DefaultModel) SetCursor(cursor data.Position) {
+	v.App.Gameplay.Cursor = cursor
+}
+
+func (v *DefaultModel) GetCursor() data.Position {
+	return v.App.Gameplay.Cursor
+}
+
+var (
+	defaultMap = [][]int{}
+)
+
+func init() {
+	temp := [][]int{}
+	i := 0
+	for y := 0; y < 30; y++ {
+		row := []int{}
+		for x := 0; x < 30; x++ {
+			row = append(row, i%4)
+			i++
+		}
+		temp = append(temp, row)
+	}
+	defaultMap = temp
+}
+
+func (v *DefaultModel) GetMap() [][]int {
+	return defaultMap
 }
