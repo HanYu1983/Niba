@@ -17,6 +17,12 @@ export enum BattleAction {
 	BattleActionEvade,
 }
 
+export enum RobotMenuFunction {
+	RobotMenuFunctionPending,
+	RobotMenuFunctionWeapon,
+	RobotMenuFunctionTransform,
+}
+
 export enum Const {
 	PageStart,
 	PageLobby,

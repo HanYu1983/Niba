@@ -2,6 +2,8 @@ package v1
 
 import (
 	"app/tool/data"
+	"app/tool/protocol"
+	"app/tool/uidata"
 	"tool/astar"
 )
 
@@ -88,4 +90,14 @@ func (v *model) RobotTransform(string, string) error {
 }
 func (v *model) RobotSkyGround(string) error {
 	return nil
+}
+func (v *model) EnableRobotMenu(string, interface{}) error {
+	v.App.Gameplay.RobotMenu.Active = true
+	v.App.Gameplay.RobotMenu.Options = [][]string{{uidata.MenuOptionMove}, {"0", "1"}, {uidata.MenuOptionUnitDone}}
+	v.App.Gameplay.RobotMenu.RowFunctionMapping = map[int]int{1: protocol.RobotMenuFunctionWeapon}
+	v.App.Gameplay.RobotMenu.Weapons = map[string]data.Weapon{"0": {}, "1": {}}
+	return nil
+}
+func (v *model) GetRobotMenu() protocol.RobotMenu {
+	return v.App.Gameplay.RobotMenu
 }

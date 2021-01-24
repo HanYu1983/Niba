@@ -2,12 +2,18 @@ package gameplay
 
 import (
 	"app/page/common"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
-	return origin, nil
+	ctx := origin
+	err := model.EnableRobotMenu(unitID, nil)
+	if err != nil {
+		return origin, err
+	}
+	return ctx, nil
 }
 
 func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
@@ -32,6 +38,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 				model.Reset()
 				return origin, err
 			}
+			view.Render(ctx)
 			var cancel, tab bool
 			var selection string
 			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
@@ -47,8 +54,8 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 			}
 			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-			switch topMenu.Cursor1 {
-			case gameplayPage.RobotMenuInfo.WeaponID:
+			switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
+			case protocol.RobotMenuFunctionWeapon:
 				weaponID := selection
 				var targetID string
 				ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
@@ -63,7 +70,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 				}
 				var _ = targetID
 				var _ = weaponID
-			case gameplayPage.RobotMenuInfo.TransformID:
+			case protocol.RobotMenuFunctionTransform:
 				transformID := selection
 				err = model.RobotTransform(unitID, transformID)
 				if err != nil {

@@ -46,6 +46,13 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	} else {
 		view.MoveRange = []data.Position{}
 	}
+	// unitMenu
+	unitMenuModel := model.GetRobotMenu()
+	unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+	unitMenu.Options = unitMenuModel.Options
+	view.RobotMenu = unitMenuModel
+	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, unitMenu)
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, view.RobotMenu.Active)
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, view)
 	return ctx, nil

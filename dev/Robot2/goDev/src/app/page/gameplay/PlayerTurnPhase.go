@@ -35,8 +35,14 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			switch detail.KeyCode {
 			case uidata.KeyCodeEnter:
 				gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-				cursor := gameplayPage.Cursor
-				unitID := model.QueryUnitByPosition(cursor)
+				// search unit at cursor
+				var unitID string
+				for currUnitID, pos := range gameplayPage.Positions {
+					if pos == gameplayPage.Cursor {
+						unitID = currUnitID
+						break
+					}
+				}
 				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)

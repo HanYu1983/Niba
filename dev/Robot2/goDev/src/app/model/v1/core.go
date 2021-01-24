@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/tool/data"
+	"app/tool/protocol"
 )
 
 type lobby struct {
@@ -13,6 +14,7 @@ type lobby struct {
 	RobotIDByComponentID map[string]string
 	PilotIDByRobotID     map[string]string
 }
+
 type gameplay struct {
 	Players        map[string]data.Player
 	ActivePlayerID string
@@ -24,6 +26,7 @@ type gameplay struct {
 	Tags           map[string]data.Tag
 	Items          map[string]data.Item
 	Pilots         map[string]data.Pilot
+	RobotMenu      protocol.RobotMenu
 	Done           interface{}
 }
 
