@@ -81,7 +81,7 @@ export class InstMenu extends Instant {
         const gap:number = this.buttonSize + 1;
         const borderSize:number = combine.length * gap;
         combine.forEach(([item, multiId], i)=>{
-            const isArray = Array.isArray(item);
+            const isArray = Array.isArray(item) && item.length > 1;
             const btn:Node = isArray ? this.pool.aquire(this.multiPrefab, this.node) : this.pool.aquire(this.prefab, this.node);
             
             const label = isArray ? item[multiId] : item;
