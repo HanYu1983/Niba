@@ -7,11 +7,11 @@ import (
 	"fmt"
 )
 
-func TurnPhase(origin uidata.UI) (uidata.UI, error) {
+func TurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	model := def.Model
 	switch model.QueryActivePlayer() {
 	case "":
-		return origin, fmt.Errorf("unknown player")
+		return origin, true, fmt.Errorf("unknown player")
 	case data.PlayerIDPlayer:
 		return PlayerTurnPhase(origin)
 	default:

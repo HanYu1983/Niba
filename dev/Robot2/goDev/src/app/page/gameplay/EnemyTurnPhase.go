@@ -6,11 +6,11 @@ import (
 	"fmt"
 )
 
-func EnemyTurnPhase(origin uidata.UI) (uidata.UI, error) {
+func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	fmt.Println("EnemyTurnPhase start")
 	model := def.Model
 	model.Push()
 	defer model.Pop()
 	fmt.Println("EnemyTurnPhase start")
-	return origin, nil
+	return origin, true, nil
 }
