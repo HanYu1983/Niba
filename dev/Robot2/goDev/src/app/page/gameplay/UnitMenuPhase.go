@@ -2,12 +2,14 @@ package gameplay
 
 import (
 	"app/page/common"
+	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
+	model := def.Model
 	ctx := origin
 	err := model.EnableRobotMenu(unitID, nil)
 	if err != nil {
@@ -22,6 +24,8 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 	fmt.Printf("UnitMenuPhase start %v\n", unitID)
+	view := def.View
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	ctx := origin

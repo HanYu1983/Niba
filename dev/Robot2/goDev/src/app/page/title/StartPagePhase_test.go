@@ -1,7 +1,7 @@
 package title
 
 import (
-	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 	"testing"
 	"time"
@@ -31,19 +31,15 @@ func (p Mock) Alert(msg string) {
 
 }
 
-func (p Mock) RenderRobotMove(gameplay data.Gameplay, robotID string, from data.Position, to data.Position) {
-
-}
-
 func init() {
-	view = Mock{}
+	def.View = Mock{}
 }
 
 func TestStartPagePhaseBasic(t *testing.T) {
 	wait := make(chan interface{})
 	go func() {
 		_, err := StartPagePhase(uidata.DefaultUI)
-		// drain event
+		// rain event
 		for range mockEvt {
 		}
 		wait <- err

@@ -3,12 +3,14 @@ package common
 import (
 	"app/tool"
 	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
+	model := def.Model
 	menu := ctx.Menu1Ds[menuID]
 	options := []string{}
 	switch menuID {

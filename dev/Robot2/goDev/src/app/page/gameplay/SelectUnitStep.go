@@ -2,12 +2,15 @@ package gameplay
 
 import (
 	"app/page/common"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string) error) (uidata.UI, string, bool, error) {
 	fmt.Println("SelectUnitStep start")
+	view := def.View
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	var err error

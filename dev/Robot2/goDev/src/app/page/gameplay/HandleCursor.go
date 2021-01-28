@@ -2,11 +2,13 @@ package gameplay
 
 import (
 	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 )
 
 func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	ctx := origin
+	model := def.Model
 	switch detail := evt.(type) {
 	case uidata.CommandKeyDown:
 		switch detail.KeyCode {

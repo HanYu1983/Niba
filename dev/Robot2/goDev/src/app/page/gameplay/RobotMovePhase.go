@@ -2,11 +2,13 @@ package gameplay
 
 import (
 	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	ctx := origin

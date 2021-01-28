@@ -3,12 +3,15 @@ package lobby
 import (
 	"app/page/common"
 	"app/tool"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	fmt.Println("BuyPhase")
+	view := def.View
+	model := def.Model
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)

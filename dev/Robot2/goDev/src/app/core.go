@@ -1,19 +1,15 @@
 package app
 
 import (
-	"app/page/common"
 	"app/page/gameplay"
 	"app/page/title"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
-var (
-	view  = common.View
-	model = common.Model
-)
-
 func Main() {
+	view := def.View
 	// tree, _ := astar.ShortedPathTree(
 	// 	1,
 	// 	func(curr *astar.Node) (bool, bool) {

@@ -3,57 +3,59 @@ package common
 import (
 	"app/tool"
 	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 )
 
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	//var err error
 	ctx := origin
-	view := ctx.GameplayPages[id]
+	model := def.Model
+	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.GetMap()
 	// camera
-	view.Camera[0] = tool.Max(0, tool.Min(len(modelMap[0])-uidata.MapWidth, view.Camera[0]))
-	view.Camera[1] = tool.Max(0, tool.Min(len(modelMap)-uidata.MapHeight, view.Camera[1]))
+	gameplayPage.Camera[0] = tool.Max(0, tool.Min(len(modelMap[0])-uidata.MapWidth, gameplayPage.Camera[0]))
+	gameplayPage.Camera[1] = tool.Max(0, tool.Min(len(modelMap)-uidata.MapHeight, gameplayPage.Camera[1]))
 	// cursor
-	view.Cursor = data.World2Local(view.Camera, model.GetCursor())
-	view.Cursor[0] = tool.Max(0, tool.Min(view.Cursor[0], uidata.MapWidth-1))
-	view.Cursor[1] = tool.Max(0, tool.Min(view.Cursor[1], uidata.MapHeight-1))
+	gameplayPage.Cursor = data.World2Local(gameplayPage.Camera, model.GetCursor())
+	gameplayPage.Cursor[0] = tool.Max(0, tool.Min(gameplayPage.Cursor[0], uidata.MapWidth-1))
+	gameplayPage.Cursor[1] = tool.Max(0, tool.Min(gameplayPage.Cursor[1], uidata.MapHeight-1))
 	// local map
-	for x := 0; x < len(view.Map[0]); x++ {
-		for y := 0; y < len(view.Map); y++ {
-			view.Map[y][x] = modelMap[view.Camera[1]+y][view.Camera[0]+x]
+	for x := 0; x < len(gameplayPage.Map[0]); x++ {
+		for y := 0; y < len(gameplayPage.Map); y++ {
+			gameplayPage.Map[y][x] = modelMap[gameplayPage.Camera[1]+y][gameplayPage.Camera[0]+x]
 		}
 	}
 	// local units
-	leftTop := view.Camera
+	leftTop := gameplayPage.Camera
 	rightBottom := data.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
-	view.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
+	gameplayPage.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
 	// local position
 	localPosDict := map[string]data.Position{}
-	for _, id := range view.Units {
+	for _, id := range gameplayPage.Units {
 		pos := model.GetGameplayPositions()[id]
-		localPosDict[id] = data.World2Local(view.Camera, pos)
+		localPosDict[id] = data.World2Local(gameplayPage.Camera, pos)
 	}
-	view.Positions = localPosDict
+	gameplayPage.Positions = localPosDict
 	// move range
 	var notFound string
 	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
 	if unitAtCursor != notFound {
-		view.MoveRange = model.QueryMoveRange(unitAtCursor)
-		for i, pos := range view.MoveRange {
-			view.MoveRange[i] = data.World2Local(view.Camera, pos)
+		gameplayPage.MoveRange = model.QueryMoveRange(unitAtCursor)
+		for i, pos := range gameplayPage.MoveRange {
+			gameplayPage.MoveRange[i] = data.World2Local(gameplayPage.Camera, pos)
 		}
 	} else {
-		view.MoveRange = []data.Position{}
+		gameplayPage.MoveRange = []data.Position{}
 	}
 	// unitMenu
 	unitMenuModel := model.GetRobotMenu()
 	unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 	unitMenu.Options = unitMenuModel.Options
-	view.RobotMenu = unitMenuModel
+	gameplayPage.RobotMenu = unitMenuModel
 	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, unitMenu)
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, view.RobotMenu.Active)
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, gameplayPage.RobotMenu.Active)
 	// apply
-	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, view)
+	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, gameplayPage)
 	return ctx, nil
 }

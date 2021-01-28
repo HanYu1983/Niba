@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 	"time"
@@ -8,6 +9,8 @@ import (
 
 func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	fmt.Println("GameLoop start")
+	view := def.View
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	var err error

@@ -2,12 +2,15 @@ package gameplay
 
 import (
 	"app/page/common"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
 
 func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	fmt.Println("PlayerTurnPhase start")
+	view := def.View
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	var err error

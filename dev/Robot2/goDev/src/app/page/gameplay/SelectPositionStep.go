@@ -3,10 +3,13 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/data"
+	"app/tool/def"
 	"app/tool/uidata"
 )
 
 func SelectPositionStep(origin uidata.UI, robotID string, isValid func(data.Position) error) (uidata.UI, data.Position, bool, error) {
+	view := def.View
+	model := def.Model
 	model.Push()
 	defer model.Pop()
 	var err error

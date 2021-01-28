@@ -2,6 +2,7 @@ package common
 
 import (
 	"app/tool"
+	"app/tool/def"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -10,6 +11,7 @@ func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	fmt.Println("Menu1DStep")
 	var err error
 	ctx := origin
+	view := def.View
 	if _, has := ctx.Menu1Ds[menuID]; has == false {
 		return origin, "", false, false, fmt.Errorf("not found menu1D: %v", menuID)
 	}
