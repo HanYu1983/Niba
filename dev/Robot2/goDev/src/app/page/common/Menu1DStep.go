@@ -3,6 +3,7 @@ package common
 import (
 	"app/tool"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -22,11 +23,11 @@ AskCommand:
 			return origin, "", false, false, err
 		}
 		view.Render(ctx)
-		fmt.Println("Menu1DStep:AskCommand")
+		fmt.Println("[Menu1DStep]AskCommand")
 		cmd := view.AskCommand()
-		fmt.Printf("Menu1DStep:%+v\n", cmd)
+		fmt.Printf("[Menu1DStep]%+v\n", cmd)
 		if cmd == nil {
-			return ctx, "", true, false, nil
+			return ctx, "", false, false, protocol.ErrTerminate
 		}
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {

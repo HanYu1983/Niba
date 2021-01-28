@@ -23,6 +23,9 @@ WaitSpace:
 		}
 		view.Render(ctx)
 		evt := view.AskCommand()
+		if evt == nil {
+			return origin, protocol.Position{}, false, protocol.ErrTerminate
+		}
 		ctx, err = HandleCursor(ctx, evt)
 		if err != nil {
 			model.Reset()

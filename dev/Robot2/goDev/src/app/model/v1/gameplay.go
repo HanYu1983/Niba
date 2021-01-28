@@ -39,29 +39,24 @@ func (v *model) GetCursor() protocol.Position {
 func (v *model) GetMap() [][]int {
 	return v.App.Gameplay.Map
 }
-func (v *model) QueryMoveCount(string) int {
-	return 1
-}
-
-func isFriendlyUnit(app app, unitID1 string, unitID2 string) (bool, error) {
-	unit1, err := protocol.TryGetStringRobot(app.Gameplay.Robots, unitID1)
-	if err != nil {
-		return false, err
-	}
-	unit2, err := protocol.TryGetStringRobot(app.Gameplay.Robots, unitID2)
-	if err != nil {
-		return false, err
-	}
-	var _, _ = unit1, unit2
-	return false, nil
+func (v *model) QueryMoveCount(robotID string) int {
+	fmt.Printf("[QueryMoveCount]%+v", v.App.Gameplay.Tags[robotID])
+	return v.App.Gameplay.Tags[robotID].MoveCount
 }
 
 func (v *model) RobotMove(robotID string, pos protocol.Position) error {
+	tags := v.App.Gameplay.Tags[robotID]
+	if tags.MoveCount >= 1 {
+		return fmt.Errorf("[RobotMove] already move %v", robotID)
+	}
 	unitAtPos := SearchUnitByPosition(v.App.Gameplay.Positions, pos)
 	var notFound string
 	if unitAtPos != notFound {
 		return fmt.Errorf("[RobotMove] already occupy %v", pos)
 	}
+	v.App.Gameplay.Positions = protocol.AssocStringPosition(v.App.Gameplay.Positions, robotID, pos)
+	tags.MoveCount++
+	v.App.Gameplay.Tags = protocol.AssocStringTag(v.App.Gameplay.Tags, robotID, tags)
 	return nil
 }
 func (v *model) RobotTransform(string, string) error {

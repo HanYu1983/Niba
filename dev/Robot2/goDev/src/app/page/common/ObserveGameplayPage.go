@@ -52,6 +52,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	unitMenuModel := model.GetRobotMenu()
 	unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 	unitMenu.Options = unitMenuModel.Options
+	unitMenu.Cursor2 = make([]int, len(unitMenuModel.Options))
 	gameplayPage.RobotMenu = unitMenuModel
 	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, unitMenu)
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, gameplayPage.RobotMenu.Active)

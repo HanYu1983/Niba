@@ -3,11 +3,12 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
 
-func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
+func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	fmt.Println("PlayerTurnPhase start")
 	view := def.View
 	model := def.Model
@@ -19,23 +20,23 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
 			model.Reset()
-			return origin, false, err
+			return origin, err
 		}
 		view.Render(ctx)
 		cmd := view.AskCommand()
 		if cmd == nil {
 			model.Reset()
-			return origin, true, nil
+			return origin, protocol.ErrTerminate
 		}
 		ctx, err = HandleCursor(ctx, cmd)
 		if err != nil {
 			model.Reset()
-			return origin, false, err
+			return origin, err
 		}
 		ctx, err = HandleCamera(ctx, cmd)
 		if err != nil {
 			model.Reset()
-			return origin, false, err
+			return origin, err
 		}
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
@@ -58,7 +59,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 				}
 				if err != nil {
 					model.Reset()
-					return origin, false, err
+					return origin, err
 				}
 			}
 		default:
@@ -69,5 +70,5 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		}
 	}
 	fmt.Println("PlayerTurnPhase end")
-	return ctx, false, nil
+	return ctx, nil
 }

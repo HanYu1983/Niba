@@ -9,11 +9,12 @@ import (
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
+	fmt.Println("[RobotMovePhase]")
 	model := def.Model
 	model.Push()
 	defer model.Pop()
 	ctx := origin
-	isCanMove := model.QueryMoveCount(robotID) > 0
+	isCanMove := model.QueryMoveCount(robotID) == 0
 	if isCanMove == false {
 		return origin, false, fmt.Errorf("can not move")
 	}
