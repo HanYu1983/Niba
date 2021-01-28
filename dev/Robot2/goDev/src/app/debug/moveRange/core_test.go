@@ -73,6 +73,9 @@ func TestMoveRange(t *testing.T) {
 		wait <- err
 	}()
 	mockEvt <- struct{}{}
+	if pos, has := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (has == false || pos != protocol.Position{0, 0}) {
+		t.Error("(0,0)必須有機體")
+	}
 	if len(uiSnapshot.GameplayPages[uidata.PageGameplay].MoveRange) == 0 {
 		t.Error("(0,0)位置有機體, 必須有移動範圍")
 	}
@@ -96,9 +99,12 @@ func TestMoveRange(t *testing.T) {
 	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
 
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
 	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
-
+	if pos := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (pos != protocol.Position{1, 0}) {
+		t.Error("(1,0)必須有機體")
+	}
 	//fmt.Printf("%+v\n", uiSnapshot)
 	close(mockEvt)
 	err := <-wait

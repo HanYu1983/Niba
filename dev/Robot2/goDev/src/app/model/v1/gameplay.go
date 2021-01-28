@@ -40,7 +40,7 @@ func (v *model) GetMap() [][]int {
 	return v.App.Gameplay.Map
 }
 func (v *model) QueryMoveCount(robotID string) int {
-	fmt.Printf("[QueryMoveCount]%+v", v.App.Gameplay.Tags[robotID])
+	fmt.Printf("[QueryMoveCount]%+v\n", v.App.Gameplay.Tags[robotID])
 	return v.App.Gameplay.Tags[robotID].MoveCount
 }
 

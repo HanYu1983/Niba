@@ -35,7 +35,11 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		return origin, true, nil
 	}
 	// view.RenderRobotMove(ctx, robotID, ctx.Positions[robotID], cursor)
-	model.RobotMove(robotID, tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
+	err = model.RobotMove(robotID, tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
+	if err != nil {
+		model.Reset()
+		return origin, false, err
+	}
 	ctx, err = UnitMenuPhase(ctx, robotID)
 	if err != nil {
 		model.Reset()
