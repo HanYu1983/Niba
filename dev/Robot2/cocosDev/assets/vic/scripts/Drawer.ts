@@ -72,7 +72,7 @@ export class Drawer extends Instant {
             if(data.Menu2Ds[content.Menus[menuIndex]]){
                 const menu = data.Menu2Ds[content.Menus[menuIndex]];
                 return [
-                    menu.Options, Array.from(menu.Options, x => 0), menu.Cursor1
+                    menu.Options, menu.Cursor2, menu.Cursor1
                 ];
             }
         }
