@@ -1,12 +1,11 @@
 package v1
 
 import (
-	"app/tool"
 	"app/tool/protocol"
 )
 
 var (
-	unitByRegion = map[protocol.Position][]string{}
+	unitByRegion = map[protocol.Position]map[string]bool{}
 )
 
 func proj(pos protocol.Position) protocol.Position {
@@ -18,12 +17,9 @@ func proj(pos protocol.Position) protocol.Position {
 func SearchUnitByRegion(posComs map[string]protocol.Position, p1 protocol.Position, p2 protocol.Position) []string {
 	// remove
 	for unitPos, units := range unitByRegion {
-		for _, unitID := range units {
+		for unitID := range units {
 			if _, has := posComs[unitID]; has == false {
-				nextUnitByRegion := tool.FilterString(units, func(id string) bool {
-					return id != unitID
-				})
-				unitByRegion[unitPos] = nextUnitByRegion
+				delete(unitByRegion[unitPos], unitID)
 			}
 		}
 	}
@@ -31,39 +27,47 @@ func SearchUnitByRegion(posComs map[string]protocol.Position, p1 protocol.Positi
 	// add
 	for unitID, unitPos := range posComs {
 		unitPos = proj(unitPos)
-		has := len(tool.FilterString(unitByRegion[unitPos], func(id string) bool {
-			return id == unitID
-		})) > 0
+		has := unitByRegion[unitPos][unitID]
 		if has == false {
+			if unitByRegion[unitPos] == nil {
+				unitByRegion[unitPos] = map[string]bool{}
+			}
 			// add
-			unitByRegion[unitPos] = append(unitByRegion[unitPos], unitID)
+			unitByRegion[unitPos][unitID] = true
 		}
 	}
 
 	// update
 	for unitOldPos, units := range unitByRegion {
-		for _, unitID := range units {
+		for unitID := range units {
 			unitNewPos := proj(posComs[unitID])
 			if unitOldPos != unitNewPos {
 				// remove old
-				unitByRegion[unitOldPos] = tool.FilterString(units, func(id string) bool {
-					return id != unitID
-				})
+				delete(unitByRegion[unitOldPos], unitID)
+				if unitByRegion[unitNewPos] == nil {
+					unitByRegion[unitNewPos] = map[string]bool{}
+				}
 				// add to new
-				unitByRegion[unitNewPos] = append(units, unitID)
+				unitByRegion[unitNewPos][unitID] = true
 			}
 		}
 	}
 
 	p1 = proj(p1)
 	p2 = proj(p2)
-	ret := []string{}
+	total := map[string]bool{}
 	for x := p1[0]; x <= p2[0]; x++ {
 		for y := p1[1]; y <= p2[1]; y++ {
 			if unitIDs, has := unitByRegion[protocol.Position{x, y}]; has {
-				ret = append(ret, unitIDs...)
+				for unitID := range unitIDs {
+					total[unitID] = true
+				}
 			}
 		}
+	}
+	ret := []string{}
+	for unitID := range total {
+		ret = append(ret, unitID)
 	}
 	return ret
 }

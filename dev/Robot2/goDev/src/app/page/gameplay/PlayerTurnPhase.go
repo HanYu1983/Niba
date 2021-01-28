@@ -9,7 +9,7 @@ import (
 )
 
 func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("PlayerTurnPhase start")
+	fmt.Println("[PlayerTurnPhase] start")
 	view := def.View
 	model := def.Model
 	model.Push()
@@ -17,6 +17,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	for {
+		fmt.Println("[PlayerTurnPhase] loop")
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
 			model.Reset()
@@ -54,12 +55,16 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 				var notFound string
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)
+					if err != nil {
+						model.Reset()
+						return origin, err
+					}
 				} else {
-					ctx, err = UnitMenuPhase(ctx, unitID)
-				}
-				if err != nil {
-					model.Reset()
-					return origin, err
+					ctx, _, err = UnitMenuPhase(ctx, unitID)
+					if err != nil {
+						model.Reset()
+						return origin, err
+					}
 				}
 			}
 		default:
@@ -69,6 +74,6 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			break
 		}
 	}
-	fmt.Println("PlayerTurnPhase end")
+	fmt.Println("[PlayerTurnPhase] end")
 	return ctx, nil
 }

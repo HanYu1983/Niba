@@ -4,11 +4,9 @@ import (
 	"app/tool"
 	"app/tool/def"
 	"app/tool/uidata"
-	"fmt"
 )
 
 func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
-	fmt.Printf("[ObserveMenu2D]%v\n", menuID)
 	ctx := origin
 	model := def.Model
 	menu, has := ctx.Menu2Ds[menuID]

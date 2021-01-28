@@ -13,14 +13,21 @@ func SearchUnitByPosition(posComs map[string]protocol.Position, pos protocol.Pos
 			delete(unitByPosition, unitPos)
 		}
 	}
-	// add or update
+	// add
 	for unitID, unitPos := range posComs {
 		if _, has := unitByPosition[unitPos]; has == false {
 			unitByPosition[unitPos] = unitID
-		} else {
-			unitByPosition[unitPos] = unitID
 		}
 	}
+	// update
+	for unitOldPos, unitID := range unitByPosition {
+		unitNewPos := posComs[unitID]
+		if unitOldPos != unitNewPos {
+			delete(unitByPosition, unitOldPos)
+			unitByPosition[unitNewPos] = unitID
+		}
+	}
+
 	if unitID, has := unitByPosition[pos]; has {
 		return unitID
 	}

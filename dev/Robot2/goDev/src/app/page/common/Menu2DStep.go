@@ -58,6 +58,9 @@ AskCommand:
 				if menu.Cursor2 == nil {
 					return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
 				}
+				if len(menu.Options) == 0 {
+					continue
+				}
 				if len(menu.Options[menu.Cursor1]) == 0 {
 					continue
 				}
@@ -67,6 +70,9 @@ AskCommand:
 				menu := ctx.Menu2Ds[menuID]
 				if menu.Cursor2 == nil {
 					return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
+				}
+				if len(menu.Options) == 0 {
+					continue
 				}
 				if len(menu.Options[menu.Cursor1]) == 0 {
 					continue
@@ -86,5 +92,6 @@ AskCommand:
 	if menu.Cursor2 == nil {
 		return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
 	}
+	// @TODO: index out of range
 	return ctx, menu.Options[menu.Cursor1][menu.Cursor2[menu.Cursor1]], false, false, nil
 }
