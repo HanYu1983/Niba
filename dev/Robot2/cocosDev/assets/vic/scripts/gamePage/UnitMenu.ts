@@ -21,11 +21,11 @@ export class UnitMenu extends InstMenu {
     doBuild(content:any, data:any):void{
         const options = content[0];
         const robotMenu = data.GameplayPages["10"].RobotMenu;
-        for(let i = 0; i < options.length; ++i){
-            if(robotMenu.RowFunctionMapping[i] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
-                let weaponIds = options[i];
+        for(let key in robotMenu.RowFunctionMapping){
+            if(robotMenu.RowFunctionMapping[key] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
+                let weaponIds = options[key];
                 weaponIds = weaponIds.map((weaponId: string | number)=>{ return robotMenu.Weapons[weaponId].Title});
-                options[i] = weaponIds;
+                options[key] = weaponIds;
             }
         }
         super.doBuild(content, data);
