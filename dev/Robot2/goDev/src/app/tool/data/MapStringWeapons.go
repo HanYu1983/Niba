@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringWeapons is
 func KesStringWeapons(dict map[string]Weapons) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringWeapons(a map[string]Weapons, k string) map[string]Weapons {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringWeapons(a map[string]Weapons, k string) (Weapons, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringWeapons] key not found: %v", k)
+	}
+	return ret, nil
 }

@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 )
 
 type RobotProto struct {
@@ -112,21 +113,24 @@ type Tag struct {
 	Sky       bool
 }
 
-type Menu struct {
-	Active      bool
-	Options     [][]string
-	Cursor1     int
-	Cursor2     []int
-	WeaponID    int
-	TransformID int
-	UnitID      string
+type TerrainProto struct {
+	Title   string
+	Cost    float32
+	HitRate float32
+	Damage  float32
+}
+
+type TerrainMappingProto struct {
+	Terrain string
 }
 
 type Data struct {
-	Robot     map[string]RobotProto
-	Pilot     map[string]PilotProto
-	Weapon    map[string]WeaponProto
-	Component map[string]ComponentProto
+	Robot          map[string]RobotProto
+	Pilot          map[string]PilotProto
+	Weapon         map[string]WeaponProto
+	Component      map[string]ComponentProto
+	TerrainMapping map[string]TerrainMappingProto
+	Terrain        map[string]TerrainProto
 }
 
 var (
@@ -148,4 +152,19 @@ func World2Local(camera Position, pos Position) Position {
 
 func Local2World(camera Position, pos Position) Position {
 	return Position{pos[0] + camera[0], pos[1] + camera[1]}
+}
+
+func QueryTerrain(gameMap [][]int, cache map[Position]TerrainProto, pos Position) TerrainProto {
+	if terrain, has := cache[pos]; has {
+		return terrain
+	}
+	originTerrainID := gameMap[pos[1]][pos[0]]
+	terrainMapping, has := GameData.TerrainMapping[strconv.Itoa(originTerrainID)]
+	if has == false {
+		fmt.Printf("terrainMapping not found: %v %v\n", originTerrainID, pos)
+		return TerrainProto{}
+	}
+	terrain := GameData.Terrain[terrainMapping.Terrain]
+	cache[pos] = terrain
+	return terrain
 }

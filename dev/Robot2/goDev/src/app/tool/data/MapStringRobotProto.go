@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringRobotProto is
 func KesStringRobotProto(dict map[string]RobotProto) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringRobotProto(a map[string]RobotProto, k string) map[string]RobotP
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringRobotProto(a map[string]RobotProto, k string) (RobotProto, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringRobotProto] key not found: %v", k)
+	}
+	return ret, nil
 }

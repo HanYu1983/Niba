@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringString is
 func KesStringString(dict map[string]string) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringString(a map[string]string, k string) map[string]string {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringString(a map[string]string, k string) (string, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringString] key not found: %v", k)
+	}
+	return ret, nil
 }

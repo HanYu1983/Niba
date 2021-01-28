@@ -4,6 +4,8 @@
 
 package uidata
 
+import "fmt"
+
 // KesIntMenu2D is
 func KesIntMenu2D(dict map[int]Menu2D) []int {
 	ret := make([]int, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocIntMenu2D(a map[int]Menu2D, k int) map[int]Menu2D {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetIntMenu2D(a map[int]Menu2D, k int) (Menu2D, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetIntMenu2D] key not found: %v", k)
+	}
+	return ret, nil
 }

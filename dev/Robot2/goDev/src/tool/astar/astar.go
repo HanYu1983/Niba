@@ -48,11 +48,15 @@ func BuildPath(current *Node) (path []interface{}) {
 	return p
 }
 
+type NeighborsNode struct {
+	Pather interface{}
+	Cost   float64
+}
+
 func ShortedPathTree(
 	from interface{},
 	isGoal func(curr *Node) bool,
-	pathNeighbors func(curr *Node) []interface{},
-	pathNeighborCost func(curr *Node, neighbor interface{}) float64,
+	pathNeighbors func(curr *Node) []NeighborsNode,
 	pathEstimatedCost func(curr *Node) float64,
 ) (tree NodeMap, found bool) {
 	nm := NodeMap{}
@@ -73,8 +77,8 @@ func ShortedPathTree(
 			return nm, true
 		}
 		for _, neighbor := range pathNeighbors(current) {
-			Cost := current.Cost + pathNeighborCost(current, neighbor)
-			neighborNode := nm.get(neighbor)
+			Cost := current.Cost + neighbor.Cost
+			neighborNode := nm.get(neighbor.Pather)
 			if Cost < neighborNode.Cost {
 				if neighborNode.open {
 					heap.Remove(nq, neighborNode.index)

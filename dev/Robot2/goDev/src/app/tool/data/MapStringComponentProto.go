@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringComponentProto is
 func KesStringComponentProto(dict map[string]ComponentProto) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringComponentProto(a map[string]ComponentProto, k string) map[strin
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringComponentProto(a map[string]ComponentProto, k string) (ComponentProto, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringComponentProto] key not found: %v", k)
+	}
+	return ret, nil
 }

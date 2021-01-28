@@ -4,6 +4,8 @@
 
 package uidata
 
+import "fmt"
+
 // KesIntListInt is
 func KesIntListInt(dict map[int]ListInt) []int {
 	ret := make([]int, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocIntListInt(a map[int]ListInt, k int) map[int]ListInt {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetIntListInt(a map[int]ListInt, k int) (ListInt, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetIntListInt] key not found: %v", k)
+	}
+	return ret, nil
 }

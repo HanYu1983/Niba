@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringPosition is
 func KesStringPosition(dict map[string]Position) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringPosition(a map[string]Position, k string) map[string]Position {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringPosition(a map[string]Position, k string) (Position, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringPosition] key not found: %v", k)
+	}
+	return ret, nil
 }

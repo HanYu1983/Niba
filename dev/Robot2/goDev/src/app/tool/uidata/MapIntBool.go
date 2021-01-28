@@ -4,6 +4,8 @@
 
 package uidata
 
+import "fmt"
+
 // KesIntBool is
 func KesIntBool(dict map[int]bool) []int {
 	ret := make([]int, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocIntBool(a map[int]bool, k int) map[int]bool {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetIntBool(a map[int]bool, k int) (bool, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetIntBool] key not found: %v", k)
+	}
+	return ret, nil
 }

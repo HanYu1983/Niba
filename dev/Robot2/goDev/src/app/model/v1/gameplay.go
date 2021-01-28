@@ -4,6 +4,7 @@ import (
 	"app/tool/data"
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
 	"tool/astar"
 )
 
@@ -32,19 +33,26 @@ func (v *model) GetGameplayPositions() map[string]data.Position {
 	return v.App.Gameplay.Positions
 }
 func (v *model) QueryMoveRange(robotID string) []data.Position {
+	terrainCache := map[data.Position]data.TerrainProto{}
 	pos := v.App.Gameplay.Positions[robotID]
+	movePower, err := QueryRobotMovePower(v.App, robotID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return []data.Position{}
+	}
 	tree, _ := astar.ShortedPathTree(
 		pos,
 		func(curr *astar.Node) bool {
 			return false
 		},
-		func(curr *astar.Node) []interface{} {
-			if curr.Cost > 3 {
-				return []interface{}{}
+		func(curr *astar.Node) []astar.NeighborsNode {
+			if int(curr.Cost) > 100 {
+				return []astar.NeighborsNode{}
 			}
 			currPos := curr.Pather.(data.Position)
+			terrain1 := data.QueryTerrain(v.App.Gameplay.Map, terrainCache, currPos)
 			offsets := []data.Position{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
-			ret := []interface{}{}
+			ret := []astar.NeighborsNode{}
 			for _, offset := range offsets {
 				x, y := currPos[0]+offset[0], currPos[1]+offset[1]
 				if x < 0 || x >= len(v.App.Gameplay.Map[0]) {
@@ -53,12 +61,18 @@ func (v *model) QueryMoveRange(robotID string) []data.Position {
 				if y < 0 || y >= len(v.App.Gameplay.Map) {
 					continue
 				}
-				ret = append(ret, data.Position{x, y})
+				nextPos := data.Position{x, y}
+				terrain2 := data.QueryTerrain(v.App.Gameplay.Map, terrainCache, nextPos)
+				nextCost := float64(terrain1.Cost + terrain2.Cost)
+				if int(curr.Cost+nextCost) > movePower {
+					continue
+				}
+				ret = append(ret, astar.NeighborsNode{
+					Pather: nextPos,
+					Cost:   nextCost,
+				})
 			}
 			return ret
-		},
-		func(curr *astar.Node, neighbor interface{}) float64 {
-			return 1
 		},
 		func(curr *astar.Node) float64 {
 			return 1

@@ -52,7 +52,7 @@ func init() {
 	for y := 0; y < 30; y++ {
 		row := []int{}
 		for x := 0; x < 30; x++ {
-			row = append(row, i%4)
+			row = append(row, i%7)
 			i++
 		}
 		temp = append(temp, row)
@@ -61,6 +61,10 @@ func init() {
 	DefaultModel.App.Money = 10000
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
-	DefaultModel.App.Gameplay.Robots = map[string]data.Robot{"0": {}, "1": {}}
+	DefaultModel.App.Gameplay.Robots = map[string]data.Robot{"0": {
+		ProtoID: "gundam",
+	}, "1": {
+		ProtoID: "gundam",
+	}}
 	DefaultModel.App.Gameplay.Positions = map[string]data.Position{"0": {0, 0}, "1": {5, 5}}
 }

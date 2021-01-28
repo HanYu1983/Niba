@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringComponent is
 func KesStringComponent(dict map[string]Component) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringComponent(a map[string]Component, k string) map[string]Componen
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringComponent(a map[string]Component, k string) (Component, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringComponent] key not found: %v", k)
+	}
+	return ret, nil
 }

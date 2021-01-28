@@ -1,5 +1,7 @@
 package template
 
+import "fmt"
+
 // KesKeyValue is
 func KesKeyValue(dict map[Key]Value) []Key {
 	ret := make([]Key, 0, len(dict))
@@ -48,4 +50,12 @@ func DissocKeyValue(a map[Key]Value, k Key) map[Key]Value {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetKeyValue(a map[Key]Value, k Key) (Value, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetKeyValue] key not found: %v", k)
+	}
+	return ret, nil
 }

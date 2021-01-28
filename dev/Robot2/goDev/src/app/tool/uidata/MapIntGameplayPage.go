@@ -4,6 +4,8 @@
 
 package uidata
 
+import "fmt"
+
 // KesIntGameplayPage is
 func KesIntGameplayPage(dict map[int]GameplayPage) []int {
 	ret := make([]int, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocIntGameplayPage(a map[int]GameplayPage, k int) map[int]GameplayPage {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetIntGameplayPage(a map[int]GameplayPage, k int) (GameplayPage, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetIntGameplayPage] key not found: %v", k)
+	}
+	return ret, nil
 }

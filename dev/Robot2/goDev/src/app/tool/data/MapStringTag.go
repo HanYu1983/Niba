@@ -4,6 +4,8 @@
 
 package data
 
+import "fmt"
+
 // KesStringTag is
 func KesStringTag(dict map[string]Tag) []string {
 	ret := make([]string, 0, len(dict))
@@ -52,4 +54,12 @@ func DissocStringTag(a map[string]Tag, k string) map[string]Tag {
 	}
 	delete(ret, k)
 	return ret
+}
+
+func TryGetStringTag(a map[string]Tag, k string) (Tag, error) {
+	ret, has := a[k]
+	if has == false {
+		return ret, fmt.Errorf("[TryGetStringTag] key not found: %v", k)
+	}
+	return ret, nil
 }
