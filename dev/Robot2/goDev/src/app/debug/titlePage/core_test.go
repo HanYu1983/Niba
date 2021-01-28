@@ -1,6 +1,7 @@
-package title
+package titlePage
 
 import (
+	"app/page/title"
 	"app/tool/def"
 	"app/tool/uidata"
 	"testing"
@@ -38,7 +39,7 @@ func init() {
 func TestStartPagePhaseBasic(t *testing.T) {
 	wait := make(chan interface{})
 	go func() {
-		_, err := StartPagePhase(uidata.DefaultUI)
+		_, err := title.StartPagePhase(uidata.DefaultUI)
 		// rain event
 		for range mockEvt {
 		}
