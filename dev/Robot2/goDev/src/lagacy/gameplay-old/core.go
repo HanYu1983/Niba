@@ -8,7 +8,7 @@ import (
 func CreateRobotMenu(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 	gameplay := origin
 	menu := data.Menu{}
-	if origin.ActivePlayerID == data.PlayerIDPlayer {
+	if origin.ActivePlayerID == protocol.PlayerIDPlayer {
 		menu.Options = [][]string{
 			[]string{data.MenuOptionMove},
 			[]string{"weapon1"},
@@ -24,15 +24,15 @@ func CreateItemMenu(origin data.Gameplay, itemID string) (data.Gameplay, error) 
 	return origin, nil
 }
 
-func GetRobotMoveRange(origin data.Gameplay, robotID string) ([]data.Position, error) {
-	return []data.Position{}, nil
+func GetRobotMoveRange(origin data.Gameplay, robotID string) ([]protocol.Position, error) {
+	return []protocol.Position{}, nil
 }
 
 var (
-	UnitByPosition = map[data.Position]string{}
+	UnitByPosition = map[protocol.Position]string{}
 )
 
-func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) string {
+func SearchUnitByPosition(posComs map[string]protocol.Position, pos protocol.Position) string {
 	// remove
 	for unitPos, unitID := range UnitByPosition {
 		if _, has := posComs[unitID]; has == false {
@@ -55,16 +55,16 @@ func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) s
 }
 
 var (
-	UnitByRegion = map[data.Position][]string{}
+	UnitByRegion = map[protocol.Position][]string{}
 )
 
-func proj(pos data.Position) data.Position {
+func proj(pos protocol.Position) protocol.Position {
 	pos[0] = pos[0] / 5
 	pos[1] = pos[1] / 5
 	return pos
 }
 
-func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 data.Position) []string {
+func SearchUnitByRegion(posComs map[string]protocol.Position, p1 protocol.Position, p2 protocol.Position) []string {
 	// remove
 	for unitPos, unitID := range UnitByPosition {
 		unitPos = proj(unitPos)
@@ -94,7 +94,7 @@ func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 d
 	ret := []string{}
 	for x := p1[0]; x <= p2[0]; x++ {
 		for y := p1[1]; y <= p2[1]; y++ {
-			if unitIDs, has := UnitByRegion[data.Position{x, y}]; has {
+			if unitIDs, has := UnitByRegion[protocol.Position{x, y}]; has {
 				ret = append(ret, unitIDs...)
 			}
 		}

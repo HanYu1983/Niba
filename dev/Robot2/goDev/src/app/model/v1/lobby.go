@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/tool/data"
+	"app/tool/protocol"
 	"fmt"
 	"strconv"
 )
@@ -18,7 +19,7 @@ func (v *model) BuyRobot(protoID string) error {
 	v.App.Money -= item.Cost
 	ID := strconv.Itoa(v.App.SeqID)
 	v.App.SeqID++
-	v.App.Lobby.Robots = data.AssocStringRobot(v.App.Lobby.Robots, ID, data.Robot{
+	v.App.Lobby.Robots = protocol.AssocStringRobot(v.App.Lobby.Robots, ID, protocol.Robot{
 		ID:      ID,
 		ProtoID: protoID,
 		Title:   data.GameData.Robot[protoID].Title,
@@ -37,7 +38,7 @@ func (v *model) BuyPilot(protoID string) error {
 	v.App.Money -= item.Cost
 	ID := strconv.Itoa(v.App.SeqID)
 	v.App.SeqID++
-	v.App.Lobby.Pilots = data.AssocStringPilot(v.App.Lobby.Pilots, ID, data.Pilot{
+	v.App.Lobby.Pilots = protocol.AssocStringPilot(v.App.Lobby.Pilots, ID, protocol.Pilot{
 		ID:      ID,
 		ProtoID: protoID,
 		Title:   data.GameData.Pilot[protoID].Title,
@@ -56,7 +57,7 @@ func (v *model) BuyWeapon(protoID string) error {
 	v.App.Money -= item.Cost
 	ID := strconv.Itoa(v.App.SeqID)
 	v.App.SeqID++
-	v.App.Lobby.Weapons = data.AssocStringWeapon(v.App.Lobby.Weapons, ID, data.Weapon{
+	v.App.Lobby.Weapons = protocol.AssocStringWeapon(v.App.Lobby.Weapons, ID, protocol.Weapon{
 		ID:      ID,
 		ProtoID: protoID,
 		Title:   data.GameData.Weapon[protoID].Title,
@@ -75,7 +76,7 @@ func (v *model) BuyComponent(protoID string) error {
 	v.App.Money -= item.Cost
 	ID := strconv.Itoa(v.App.SeqID)
 	v.App.SeqID++
-	v.App.Lobby.Components = data.AssocStringComponent(v.App.Lobby.Components, ID, data.Component{
+	v.App.Lobby.Components = protocol.AssocStringComponent(v.App.Lobby.Components, ID, protocol.Component{
 		ID:      ID,
 		ProtoID: protoID,
 		Title:   data.GameData.Component[protoID].Title,
@@ -129,16 +130,16 @@ func (v *model) QueryComponentCanBuy() map[string]data.ComponentProto {
 func (v *model) QueryMoney() int {
 	return v.App.Money
 }
-func (v *model) QueryRobots() map[string]data.Robot {
+func (v *model) QueryRobots() map[string]protocol.Robot {
 	return v.App.Lobby.Robots
 }
-func (v *model) QueryPilots() map[string]data.Pilot {
+func (v *model) QueryPilots() map[string]protocol.Pilot {
 	return v.App.Lobby.Pilots
 }
-func (v *model) QueryComponents() map[string]data.Component {
+func (v *model) QueryComponents() map[string]protocol.Component {
 	return v.App.Lobby.Components
 }
-func (v *model) QueryWeapons() map[string]data.Weapon {
+func (v *model) QueryWeapons() map[string]protocol.Weapon {
 	return v.App.Lobby.Weapons
 }
 func (v *model) QueryRobotIDByWeaponID() map[string]string {

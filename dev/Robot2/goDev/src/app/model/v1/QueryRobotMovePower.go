@@ -2,11 +2,12 @@ package v1
 
 import (
 	"app/tool/data"
+	"app/tool/protocol"
 )
 
 func QueryRobotMovePower(app app, robotID string) (int, error) {
 	var err error
-	robot, err := data.TryGetStringRobot(app.Gameplay.Robots, robotID)
+	robot, err := protocol.TryGetStringRobot(app.Gameplay.Robots, robotID)
 	if err != nil {
 		return 0, err
 	}

@@ -1,8 +1,8 @@
 package gameplay
 
 import (
-	"app/tool/data"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -12,7 +12,7 @@ func TurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	switch model.QueryActivePlayer() {
 	case "":
 		return origin, true, fmt.Errorf("unknown player")
-	case data.PlayerIDPlayer:
+	case protocol.PlayerIDPlayer:
 		return PlayerTurnPhase(origin)
 	default:
 		return EnemyTurnPhase(origin)

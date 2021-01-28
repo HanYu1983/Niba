@@ -7,7 +7,7 @@ func GameLoop(origin data.Gameplay) (data.Gameplay, error) {
 	gameplayCtx := origin
 	for {
 		Render(gameplayCtx)
-		gameplayCtx.ActivePlayerID = data.PlayerIDPlayer
+		gameplayCtx.ActivePlayerID = protocol.PlayerIDPlayer
 		gameplayCtx, err = PlayerTurn(gameplayCtx)
 		if err != nil {
 			return origin, err
@@ -16,7 +16,7 @@ func GameLoop(origin data.Gameplay) (data.Gameplay, error) {
 			break
 		}
 		for _, enemy := range gameplayCtx.Players {
-			if enemy.ID == data.PlayerIDPlayer {
+			if enemy.ID == protocol.PlayerIDPlayer {
 				continue
 			}
 			gameplayCtx.ActivePlayerID = enemy.ID

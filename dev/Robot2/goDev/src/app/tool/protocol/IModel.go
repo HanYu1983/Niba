@@ -4,6 +4,62 @@ import (
 	"app/tool/data"
 )
 
+type Weapons = map[string]Weapon
+type WeaponsByTransform = map[string]Weapons
+type Position [2]int
+
+type Robot struct {
+	ID                 string
+	ProtoID            string
+	Title              string
+	PilotID            string
+	WeaponsByTransform WeaponsByTransform
+	Transform          string
+	PlayerID           string
+	HP                 int
+	EN                 int
+	MaxHP              int
+	MaxEN              int
+}
+
+type Item struct {
+	ID      string
+	ProtoID string
+	Title   string
+}
+
+type Pilot struct {
+	ID      string
+	ProtoID string
+	Title   string
+}
+
+type Weapon struct {
+	ID      string
+	ProtoID string
+	Title   string
+}
+
+type Component struct {
+	ID      string
+	ProtoID string
+	Title   string
+}
+
+const (
+	PlayerIDPlayer = "PlayerIDPlayer"
+)
+
+type Player struct {
+	ID      string
+	GroupID string
+}
+
+type Tag struct {
+	MoveCount int
+	Sky       bool
+}
+
 const (
 	RobotMenuFunctionPending = iota
 	RobotMenuFunctionWeapon
@@ -14,8 +70,8 @@ type RobotMenu struct {
 	Active             bool
 	Options            [][]string
 	RowFunctionMapping map[int]int
-	Weapons            map[string]data.Weapon
-	Transforms         map[string]data.Robot
+	Weapons            map[string]Weapon
+	Transforms         map[string]Robot
 }
 
 type IModel interface {
@@ -39,10 +95,10 @@ type IModel interface {
 	QueryPilotCanBuy() map[string]data.PilotProto
 	QueryWeaponCanBuy() map[string]data.WeaponProto
 	QueryComponentCanBuy() map[string]data.ComponentProto
-	QueryRobots() map[string]data.Robot
-	QueryPilots() map[string]data.Pilot
-	QueryWeapons() map[string]data.Weapon
-	QueryComponents() map[string]data.Component
+	QueryRobots() map[string]Robot
+	QueryPilots() map[string]Pilot
+	QueryWeapons() map[string]Weapon
+	QueryComponents() map[string]Component
 	QueryRobotIDByWeaponID() map[string]string
 	QueryRobotIDByComponentID() map[string]string
 	QueryPilotIDByRobotID() map[string]string
@@ -50,17 +106,17 @@ type IModel interface {
 	QueryActivePlayer() string
 	NextPlayer() error
 	IsDone() bool
-	QueryUnitsByRegion(p1 data.Position, p2 data.Position) []string
-	QueryUnitByPosition(data.Position) string
-	QueryMoveRange(string) []data.Position
+	QueryUnitsByRegion(p1 Position, p2 Position) []string
+	QueryUnitByPosition(Position) string
+	QueryMoveRange(string) []Position
 	QueryMoveCount(string) int
-	GetGameplayRobots() map[string]data.Robot
-	GetGameplayItems() map[string]data.Item
-	GetGameplayPositions() map[string]data.Position
+	GetGameplayRobots() map[string]Robot
+	GetGameplayItems() map[string]Item
+	GetGameplayPositions() map[string]Position
 	GetMap() [][]int
-	SetCursor(data.Position)
-	GetCursor() data.Position
-	RobotMove(string, data.Position) error
+	SetCursor(Position)
+	GetCursor() Position
+	RobotMove(string, Position) error
 	RobotTransform(string, string) error
 	RobotSkyGround(string) error
 	EnableRobotMenu(string, interface{}) error

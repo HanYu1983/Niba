@@ -3,7 +3,6 @@ package data
 import (
 	"encoding/json"
 	"fmt"
-	"strconv"
 )
 
 type RobotProto struct {
@@ -56,63 +55,6 @@ type ComponentProto struct {
 	PowerCost int
 	Action    string
 }
-
-type Weapons = map[string]Weapon
-type WeaponsByTransform = map[string]Weapons
-type Position [2]int
-
-type Robot struct {
-	ID                 string
-	ProtoID            string
-	Title              string
-	PilotID            string
-	WeaponsByTransform WeaponsByTransform
-	Transform          string
-	PlayerID           string
-	HP                 int
-	EN                 int
-	MaxHP              int
-	MaxEN              int
-}
-
-type Item struct {
-	ID      string
-	ProtoID string
-	Title   string
-}
-
-type Pilot struct {
-	ID      string
-	ProtoID string
-	Title   string
-}
-
-type Weapon struct {
-	ID      string
-	ProtoID string
-	Title   string
-}
-
-type Component struct {
-	ID      string
-	ProtoID string
-	Title   string
-}
-
-const (
-	PlayerIDPlayer = "PlayerIDPlayer"
-)
-
-type Player struct {
-	ID      string
-	GroupID string
-}
-
-type Tag struct {
-	MoveCount int
-	Sky       bool
-}
-
 type TerrainProto struct {
 	Title   string
 	Cost    float32
@@ -144,27 +86,4 @@ func init() {
 		return
 	}
 	//fmt.Printf("%+v\n", GameData)
-}
-
-func World2Local(camera Position, pos Position) Position {
-	return Position{pos[0] - camera[0], pos[1] - camera[1]}
-}
-
-func Local2World(camera Position, pos Position) Position {
-	return Position{pos[0] + camera[0], pos[1] + camera[1]}
-}
-
-func QueryTerrain(gameMap [][]int, cache map[Position]TerrainProto, pos Position) TerrainProto {
-	if terrain, has := cache[pos]; has {
-		return terrain
-	}
-	originTerrainID := gameMap[pos[1]][pos[0]]
-	terrainMapping, has := GameData.TerrainMapping[strconv.Itoa(originTerrainID)]
-	if has == false {
-		fmt.Printf("terrainMapping not found: %v %v\n", originTerrainID, pos)
-		return TerrainProto{}
-	}
-	terrain := GameData.Terrain[terrainMapping.Terrain]
-	cache[pos] = terrain
-	return terrain
 }

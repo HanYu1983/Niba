@@ -1,12 +1,12 @@
 package v1
 
-import "app/tool/data"
+import "app/tool/protocol"
 
 var (
-	unitByPosition = map[data.Position]string{}
+	unitByPosition = map[protocol.Position]string{}
 )
 
-func SearchUnitByPosition(posComs map[string]data.Position, pos data.Position) string {
+func SearchUnitByPosition(posComs map[string]protocol.Position, pos protocol.Position) string {
 	// remove
 	for unitPos, unitID := range unitByPosition {
 		if _, has := posComs[unitID]; has == false {

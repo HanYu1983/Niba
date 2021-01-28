@@ -1,8 +1,9 @@
 package gameplay
 
 import (
-	"app/tool/data"
+	"app/tool"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -17,7 +18,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		return origin, false, fmt.Errorf("can not move")
 	}
 	moveRange := model.QueryMoveRange(robotID)
-	ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(target data.Position) error {
+	ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(target protocol.Position) error {
 		for _, pos := range moveRange {
 			if pos == target {
 				return nil
@@ -33,7 +34,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		return origin, true, nil
 	}
 	// view.RenderRobotMove(ctx, robotID, ctx.Positions[robotID], cursor)
-	model.RobotMove(robotID, data.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
+	model.RobotMove(robotID, tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
 	ctx, err = UnitMenuPhase(ctx, robotID)
 	if err != nil {
 		model.Reset()

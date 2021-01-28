@@ -23,7 +23,7 @@ func BattlePhase(origin data.Gameplay, robotID string, action interface{}, targe
 	battleMenu.Robots[1] = targetRobot
 	battleMenu.BattleAction[0] = action
 	battleMenu.BattleInfo[0].HitRate = 1
-	if targetRobot.PlayerID == data.PlayerIDPlayer {
+	if targetRobot.PlayerID == protocol.PlayerIDPlayer {
 
 	} else {
 		switch action.(type) {
@@ -79,7 +79,7 @@ func UnitMenuPhase(origin data.Gameplay, unitID string) (data.Gameplay, error) {
 				transformID := selection
 				nextRobot := gameplay.Robots[unitID]
 				nextRobot.Transform = transformID
-				gameplay.Robots = data.AssocStringRobot(gameplay.Robots, unitID, nextRobot)
+				gameplay.Robots = protocol.AssocStringRobot(gameplay.Robots, unitID, nextRobot)
 			default:
 				switch selection {
 				case data.MenuOptionMove:

@@ -10,7 +10,7 @@ func CreateRobot(origin data.Gameplay) (data.Gameplay, error) {
 	ID := strconv.Itoa(gameplay.SeqID)
 	gameplay.SeqID++
 	gameplay.Units = append(gameplay.Units, ID)
-	gameplay.Robots = data.AssocStringRobot(gameplay.Robots, ID, data.Robot{ID: ID})
-	gameplay.Positions = data.AssocStringPosition(gameplay.Positions, ID, data.Position{0, 0})
+	gameplay.Robots = protocol.AssocStringRobot(gameplay.Robots, ID, protocol.Robot{ID: ID})
+	gameplay.Positions = data.AssocStringPosition(gameplay.Positions, ID, protocol.Position{0, 0})
 	return gameplay, nil
 }

@@ -4,6 +4,7 @@ import (
 	"app/tool"
 	"app/tool/data"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -15,13 +16,13 @@ func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	options := []string{}
 	switch menuID {
 	case uidata.Menu1DPilotListMenu:
-		options = data.KesStringPilot(model.QueryPilots())
+		options = protocol.KesStringPilot(model.QueryPilots())
 	case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DRobotListMenu, uidata.Menu1DMultiUnitSelectionMenu:
-		options = data.KesStringRobot(model.QueryRobots())
+		options = protocol.KesStringRobot(model.QueryRobots())
 	case uidata.Menu1DWeaponRobotListMenu, uidata.Menu1DWeaponListMenu:
-		options = data.KesStringWeapon(model.QueryWeapons())
+		options = protocol.KesStringWeapon(model.QueryWeapons())
 	case uidata.Menu1DComponentRobotListMenu, uidata.Menu1DComponentListMenu:
-		options = data.KesStringComponent(model.QueryComponents())
+		options = protocol.KesStringComponent(model.QueryComponents())
 	case uidata.Menu1DBuyRobotMenu:
 		canBuy := model.QueryRobotCanBuy()
 		options = data.KesStringRobotProto(canBuy)

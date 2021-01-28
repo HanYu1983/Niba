@@ -1,31 +1,30 @@
 package v1
 
 import (
-	"app/tool/data"
 	"app/tool/protocol"
 )
 
 type lobby struct {
-	Robots               map[string]data.Robot
-	Pilots               map[string]data.Pilot
-	Weapons              map[string]data.Weapon
-	Components           map[string]data.Component
+	Robots               map[string]protocol.Robot
+	Pilots               map[string]protocol.Pilot
+	Weapons              map[string]protocol.Weapon
+	Components           map[string]protocol.Component
 	RobotIDByWeaponID    map[string]string
 	RobotIDByComponentID map[string]string
 	PilotIDByRobotID     map[string]string
 }
 
 type gameplay struct {
-	Players        map[string]data.Player
+	Players        map[string]protocol.Player
 	ActivePlayerID string
 	Map            [][]int
-	Cursor         data.Position
+	Cursor         protocol.Position
 	Units          []string
-	Positions      map[string]data.Position
-	Robots         map[string]data.Robot
-	Tags           map[string]data.Tag
-	Items          map[string]data.Item
-	Pilots         map[string]data.Pilot
+	Positions      map[string]protocol.Position
+	Robots         map[string]protocol.Robot
+	Tags           map[string]protocol.Tag
+	Items          map[string]protocol.Item
+	Pilots         map[string]protocol.Pilot
 	RobotMenu      protocol.RobotMenu
 	Done           interface{}
 }
@@ -61,10 +60,10 @@ func init() {
 	DefaultModel.App.Money = 10000
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
-	DefaultModel.App.Gameplay.Robots = map[string]data.Robot{"0": {
+	DefaultModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
 		ProtoID: "gundam",
 	}, "1": {
 		ProtoID: "gundam",
 	}}
-	DefaultModel.App.Gameplay.Positions = map[string]data.Position{"0": {0, 0}, "1": {5, 5}}
+	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 }

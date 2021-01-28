@@ -2,11 +2,11 @@ package gameplay
 
 import "app/tool/data"
 
-func GetRobotWeapons(origin data.Gameplay, robot data.Robot) (data.Weapons, error) {
+func GetRobotWeapons(origin data.Gameplay, robot protocol.Robot) (protocol.Weapons, error) {
 	if weapons, has := robot.WeaponsByTransform[robot.Transform]; has {
 		return weapons, nil
 	}
-	weapons := data.Weapons{}
+	weapons := protocol.Weapons{}
 	for weaponID, robotID := range origin.Lobby.RobotIDByWeaponID {
 		if robotID != robot.ID {
 			continue

@@ -2,20 +2,20 @@ package v1
 
 import (
 	"app/tool"
-	"app/tool/data"
+	"app/tool/protocol"
 )
 
 var (
-	unitByRegion = map[data.Position][]string{}
+	unitByRegion = map[protocol.Position][]string{}
 )
 
-func proj(pos data.Position) data.Position {
+func proj(pos protocol.Position) protocol.Position {
 	pos[0] = pos[0] / 5
 	pos[1] = pos[1] / 5
 	return pos
 }
 
-func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 data.Position) []string {
+func SearchUnitByRegion(posComs map[string]protocol.Position, p1 protocol.Position, p2 protocol.Position) []string {
 	// remove
 	for unitPos, units := range unitByRegion {
 		for _, unitID := range units {
@@ -60,7 +60,7 @@ func SearchUnitByRegion(posComs map[string]data.Position, p1 data.Position, p2 d
 	ret := []string{}
 	for x := p1[0]; x <= p2[0]; x++ {
 		for y := p1[1]; y <= p2[1]; y++ {
-			if unitIDs, has := unitByRegion[data.Position{x, y}]; has {
+			if unitIDs, has := unitByRegion[protocol.Position{x, y}]; has {
 				ret = append(ret, unitIDs...)
 			}
 		}

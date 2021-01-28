@@ -62,9 +62,9 @@ const (
 
 // BattleMenuSlot is
 type BattleMenuSlot struct {
-	Robot        data.Robot
+	Robot        protocol.Robot
 	BattleAction int
-	Weapon       data.Weapon
+	Weapon       protocol.Weapon
 	Info         struct {
 		HitRate float32
 	}
@@ -84,14 +84,14 @@ const (
 // GameplayPage is
 type GameplayPage struct {
 	Map         [MapHeight][MapWidth]int
-	Cursor      data.Position
-	Camera      data.Position
+	Cursor      protocol.Position
+	Camera      protocol.Position
 	Units       []string
-	Robots      map[string]data.Robot
-	Items       map[string]data.Item
-	Positions   map[string]data.Position
-	MoveRange   []data.Position
-	AttackRange []data.Position
+	Robots      map[string]protocol.Robot
+	Items       map[string]protocol.Item
+	Positions   map[string]protocol.Position
+	MoveRange   []protocol.Position
+	AttackRange []protocol.Position
 	RobotMenu   protocol.RobotMenu
 }
 
@@ -113,10 +113,10 @@ type UI struct {
 		CanBuyPilots         map[string]data.PilotProto
 		CanBuyWeapons        map[string]data.WeaponProto
 		CanBuyComponents     map[string]data.ComponentProto
-		Robots               map[string]data.Robot
-		Pilots               map[string]data.Pilot
-		Weapons              map[string]data.Weapon
-		Components           map[string]data.Component
+		Robots               map[string]protocol.Robot
+		Pilots               map[string]protocol.Pilot
+		Weapons              map[string]protocol.Weapon
+		Components           map[string]protocol.Component
 		RobotIDByWeaponID    map[string]string
 		RobotIDByComponentID map[string]string
 		PilotIDByRobotID     map[string]string
@@ -323,25 +323,25 @@ var (
 		},
 		GameplayPages: map[int]GameplayPage{
 			PageGameplay: GameplayPage{
-				Cursor: data.Position{1, 1},
+				Cursor: protocol.Position{1, 1},
 				Units: []string{
 					"0",
 				},
-				Robots: map[string]data.Robot{
+				Robots: map[string]protocol.Robot{
 					"0": {
-						WeaponsByTransform: map[string]data.Weapons{
+						WeaponsByTransform: map[string]protocol.Weapons{
 							"": {
 								"0": {},
 							},
 						},
 					},
 				},
-				Positions: map[string]data.Position{
+				Positions: map[string]protocol.Position{
 					"0": {0, 0},
 				},
-				Items:       map[string]data.Item{},
-				MoveRange:   []data.Position{{0, 0}, {0, 1}},
-				AttackRange: []data.Position{{0, 1}, {1, 1}},
+				Items:       map[string]protocol.Item{},
+				MoveRange:   []protocol.Position{{0, 0}, {0, 1}},
+				AttackRange: []protocol.Position{{0, 1}, {1, 1}},
 			},
 		},
 	}

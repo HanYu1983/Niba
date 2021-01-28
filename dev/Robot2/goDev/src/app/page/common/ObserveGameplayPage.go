@@ -2,8 +2,8 @@ package common
 
 import (
 	"app/tool"
-	"app/tool/data"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 )
 
@@ -17,7 +17,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	gameplayPage.Camera[0] = tool.Max(0, tool.Min(len(modelMap[0])-uidata.MapWidth, gameplayPage.Camera[0]))
 	gameplayPage.Camera[1] = tool.Max(0, tool.Min(len(modelMap)-uidata.MapHeight, gameplayPage.Camera[1]))
 	// cursor
-	gameplayPage.Cursor = data.World2Local(gameplayPage.Camera, model.GetCursor())
+	gameplayPage.Cursor = tool.World2Local(gameplayPage.Camera, model.GetCursor())
 	gameplayPage.Cursor[0] = tool.Max(0, tool.Min(gameplayPage.Cursor[0], uidata.MapWidth-1))
 	gameplayPage.Cursor[1] = tool.Max(0, tool.Min(gameplayPage.Cursor[1], uidata.MapHeight-1))
 	// local map
@@ -28,13 +28,13 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	// local units
 	leftTop := gameplayPage.Camera
-	rightBottom := data.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
+	rightBottom := protocol.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
 	gameplayPage.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
 	// local position
-	localPosDict := map[string]data.Position{}
+	localPosDict := map[string]protocol.Position{}
 	for _, id := range gameplayPage.Units {
 		pos := model.GetGameplayPositions()[id]
-		localPosDict[id] = data.World2Local(gameplayPage.Camera, pos)
+		localPosDict[id] = tool.World2Local(gameplayPage.Camera, pos)
 	}
 	gameplayPage.Positions = localPosDict
 	// move range
@@ -43,10 +43,10 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	if unitAtCursor != notFound {
 		gameplayPage.MoveRange = model.QueryMoveRange(unitAtCursor)
 		for i, pos := range gameplayPage.MoveRange {
-			gameplayPage.MoveRange[i] = data.World2Local(gameplayPage.Camera, pos)
+			gameplayPage.MoveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
 		}
 	} else {
-		gameplayPage.MoveRange = []data.Position{}
+		gameplayPage.MoveRange = []protocol.Position{}
 	}
 	// unitMenu
 	unitMenuModel := model.GetRobotMenu()

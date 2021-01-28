@@ -3,7 +3,6 @@ package moveRange
 import (
 	v1 "app/model/v1"
 	"app/page/gameplay"
-	"app/tool/data"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -52,12 +51,12 @@ func init() {
 	}
 	mockModel.App.Gameplay.Map = temp
 	mockModel.App.Gameplay.Units = []string{"0", "1"}
-	mockModel.App.Gameplay.Robots = map[string]data.Robot{"0": {
+	mockModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
 		ProtoID: "gundam",
 	}, "1": {
 		ProtoID: "gundam",
 	}}
-	mockModel.App.Gameplay.Positions = map[string]data.Position{"0": {0, 0}, "1": {5, 5}}
+	mockModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 
 	def.View = Mock{}
 	def.Model = protocol.IModel(&mockModel)

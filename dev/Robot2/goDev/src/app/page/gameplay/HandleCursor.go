@@ -1,7 +1,7 @@
 package gameplay
 
 import (
-	"app/tool/data"
+	"app/tool"
 	"app/tool/def"
 	"app/tool/uidata"
 )
@@ -19,7 +19,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]--
 			}
-			model.SetCursor(data.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeDown:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -28,7 +28,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]++
 			}
-			model.SetCursor(data.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeLeft:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -37,7 +37,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]--
 			}
-			model.SetCursor(data.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeRight:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -46,7 +46,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]++
 			}
-			model.SetCursor(data.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
