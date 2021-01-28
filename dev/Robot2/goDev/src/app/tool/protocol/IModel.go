@@ -50,5 +50,6 @@ type IModel interface {
 	RobotTransform(string, string) error
 	RobotSkyGround(string) error
 	EnableRobotMenu(string, interface{}) error
+	DisableRobotMenu() error
 	GetRobotMenu() RobotMenu
 }

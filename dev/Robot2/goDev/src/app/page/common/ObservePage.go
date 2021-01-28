@@ -10,7 +10,11 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	ctx := origin
 	model := def.Model
 	for _, menuID := range ctx.Menus[pageID] {
-		ctx, err = ObserveMenu(ctx, menuID)
+		ctx, err = ObserveMenu1D(ctx, menuID)
+		if err != nil {
+			return origin, err
+		}
+		ctx, err = ObserveMenu2D(ctx, menuID)
 		if err != nil {
 			return origin, err
 		}

@@ -34,7 +34,6 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, true)
 	WaitMenu:
 		for {
 			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
@@ -102,7 +101,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 				}
 			}
 		}
-		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, false)
+		model.DisableRobotMenu()
 	}
 	if item, is := model.GetGameplayItems()[unitID]; is {
 		// append menu

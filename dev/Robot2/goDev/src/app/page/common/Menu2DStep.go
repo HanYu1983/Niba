@@ -18,7 +18,7 @@ func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
-		ctx, err = ObserveMenu(ctx, menuID)
+		ctx, err = ObserveMenu2D(ctx, menuID)
 		if err != nil {
 			return origin, "", false, false, err
 		}

@@ -233,6 +233,9 @@ var (
 			PageBattleMenu: []int{
 				BattleMenuUnitBattleMenu,
 			},
+			PageGameplay: []int{
+				Menu2DUnitMenu,
+			},
 		},
 		Focus: map[int]int{},
 		Menu1Ds: map[int]Menu1D{

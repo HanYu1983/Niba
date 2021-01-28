@@ -72,6 +72,10 @@ func (v *model) EnableRobotMenu(string, interface{}) error {
 	v.App.Gameplay.RobotMenu.Weapons = map[string]protocol.Weapon{"0": {}, "1": {}}
 	return nil
 }
+func (v *model) DisableRobotMenu() error {
+	v.App.Gameplay.RobotMenu.Active = false
+	return nil
+}
 func (v *model) GetRobotMenu() protocol.RobotMenu {
 	return v.App.Gameplay.RobotMenu
 }

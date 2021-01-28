@@ -9,10 +9,13 @@ import (
 	"fmt"
 )
 
-func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
 	model := def.Model
-	menu := ctx.Menu1Ds[menuID]
+	menu, has := ctx.Menu1Ds[menuID]
+	if has == false {
+		return origin, nil
+	}
 	options := []string{}
 	switch menuID {
 	case uidata.Menu1DPilotListMenu:
@@ -35,9 +38,6 @@ func ObserveMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	case uidata.Menu1DBuyComponentMenu:
 		canBuy := model.QueryComponentCanBuy()
 		options = data.KesStringComponentProto(canBuy)
-	default:
-		fmt.Printf("ObserveMenu not found %v. ignore.\n", menuID)
-		return ctx, nil
 	}
 	menu.Offset = tool.Max(0, tool.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
 	left, right := tool.Max(0, tool.Min(menu.Offset, len(options)-1)), tool.Min(menu.Offset+menu.Limit, len(options))
