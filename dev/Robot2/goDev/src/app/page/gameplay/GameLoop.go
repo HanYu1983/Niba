@@ -19,15 +19,10 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	for {
 		view.Render(ctx)
 		time.Sleep(time.Second)
-		var cancel bool
-		ctx, cancel, err = TurnPhase(ctx)
+		ctx, err = TurnPhase(ctx)
 		if err != nil {
 			model.Reset()
 			return origin, err
-		}
-		if cancel {
-			model.Reset()
-			return origin, nil
 		}
 		if model.IsDone() {
 			break

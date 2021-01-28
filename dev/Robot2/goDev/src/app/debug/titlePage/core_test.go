@@ -3,6 +3,7 @@ package titlePage
 import (
 	"app/page/title"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"testing"
 	"time"
@@ -80,7 +81,7 @@ func TestStartPagePhaseBasic(t *testing.T) {
 	}
 	close(mockEvt)
 	err := <-wait
-	if err != nil {
+	if err != nil && err != protocol.ErrTerminate {
 		t.Error(err)
 	}
 }

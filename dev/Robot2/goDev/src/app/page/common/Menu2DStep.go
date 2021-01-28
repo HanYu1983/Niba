@@ -2,6 +2,7 @@ package common
 
 import (
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -16,13 +17,19 @@ func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
+		ctx, err = ObserveMenu(ctx, menuID)
+		if err != nil {
+			return origin, "", false, false, err
+		}
 		view.Render(ctx)
+		fmt.Println("[Menu2DStep]AskCommand")
 		cmd := view.AskCommand()
+		fmt.Printf("[Menu2DStep]%+v\n", cmd)
 		if err != nil {
 			return origin, "", false, false, err
 		}
 		if cmd == nil {
-			return origin, "", true, false, nil
+			return origin, "", false, false, protocol.ErrTerminate
 		}
 		ctx, err = HandleFocus(ctx, pageID, cmd)
 		if err != nil {
@@ -55,5 +62,8 @@ AskCommand:
 		}
 	}
 	menu := ctx.Menu2Ds[menuID]
+	if menu.Cursor2 == nil {
+		return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
+	}
 	return ctx, menu.Options[menu.Cursor1][menu.Cursor2[menu.Cursor1]], false, false, nil
 }

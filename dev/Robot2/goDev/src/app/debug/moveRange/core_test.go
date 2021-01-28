@@ -6,6 +6,7 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
 	"testing"
 	"time"
 )
@@ -31,7 +32,7 @@ func (p Mock) Render(ui uidata.UI) {
 }
 
 func (p Mock) Alert(msg string) {
-
+	fmt.Printf("[Alert]%v\n", msg)
 }
 
 var (
@@ -72,6 +73,9 @@ func TestMoveRange(t *testing.T) {
 		wait <- err
 	}()
 	mockEvt <- struct{}{}
+	if pos, has := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (has == false || pos != protocol.Position{0, 0}) {
+		t.Error("(0,0)必須有機體")
+	}
 	if len(uiSnapshot.GameplayPages[uidata.PageGameplay].MoveRange) == 0 {
 		t.Error("(0,0)位置有機體, 必須有移動範圍")
 	}
@@ -80,10 +84,31 @@ func TestMoveRange(t *testing.T) {
 	if len(uiSnapshot.GameplayPages[uidata.PageGameplay].MoveRange) > 0 {
 		t.Error("向右移動一格, 沒有機體, 必須沒有移動範圍")
 	}
+
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeLeft}
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	time.Sleep(time.Second)
+	unitMenu := uiSnapshot.Menu2Ds[uidata.Menu2DUnitMenu]
+	fmt.Printf("%+v\n", unitMenu)
+	if len(unitMenu.Options) == 0 {
+		t.Error("必須有選單")
+	}
+	if unitMenu.Options[0][0] != uidata.MenuOptionMove {
+		t.Error("第一個必須選項是移動")
+	}
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	time.Sleep(time.Second)
+
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
+	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	time.Sleep(time.Second)
+	if pos := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (pos != protocol.Position{1, 0}) {
+		t.Error("(1,0)必須有機體")
+	}
 	//fmt.Printf("%+v\n", uiSnapshot)
 	close(mockEvt)
 	err := <-wait
-	if err != nil {
+	if err != nil && err != protocol.ErrTerminate {
 		t.Error(err)
 	}
 }

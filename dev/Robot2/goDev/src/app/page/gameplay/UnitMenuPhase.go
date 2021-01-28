@@ -46,6 +46,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 			var cancel, tab bool
 			var selection string
 			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			fmt.Printf("selection: %v %v %v %v\n", selection, cancel, tab, err)
 			if err != nil {
 				model.Reset()
 				return origin, err
@@ -58,6 +59,9 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, error) {
 			}
 			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+
+			fmt.Printf("gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1]: %v\n", gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1])
+
 			switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 			case protocol.RobotMenuFunctionWeapon:
 				weaponID := selection

@@ -13,6 +13,7 @@ import "app"
 //go:generate genny -in tool/template/map.go -out app/tool/protocol/MapStringComponent.go -pkg protocol gen "Key=string Value=Component"
 //go:generate genny -in tool/template/map.go -out app/tool/protocol/MapStringItem.go -pkg protocol gen "Key=string Value=Item"
 //go:generate genny -in tool/template/map.go -out app/tool/protocol/MapStringTag.go -pkg protocol gen "Key=string Value=Tag"
+//go:generate genny -in tool/template/map.go -out app/tool/protocol/MapStringPlayer.go -pkg protocol gen "Key=string Value=Player"
 
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringRobotProto.go -pkg data gen "Key=string Value=RobotProto"
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringPilotProto.go -pkg data gen "Key=string Value=PilotProto"
