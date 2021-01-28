@@ -1,6 +1,7 @@
 package common
 
 import (
+	"app/tool"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -38,19 +39,39 @@ AskCommand:
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
-			case uidata.KeyCodeUp, uidata.KeyCodeLeft:
+			case uidata.KeyCodeUp:
 				menu := ctx.Menu2Ds[menuID]
 				if len(menu.Options) == 0 {
 					continue
 				}
 				menu.Cursor1--
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
-			case uidata.KeyCodeDown, uidata.KeyCodeRight:
+			case uidata.KeyCodeDown:
 				menu := ctx.Menu2Ds[menuID]
 				if len(menu.Options) == 0 {
 					continue
 				}
 				menu.Cursor1++
+				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+			case uidata.KeyCodeLeft:
+				menu := ctx.Menu2Ds[menuID]
+				if menu.Cursor2 == nil {
+					return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
+				}
+				if len(menu.Options[menu.Cursor1]) == 0 {
+					continue
+				}
+				menu.Cursor2[menu.Cursor1] = tool.Max(0, menu.Cursor2[menu.Cursor1]-1)
+				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+			case uidata.KeyCodeRight:
+				menu := ctx.Menu2Ds[menuID]
+				if menu.Cursor2 == nil {
+					return origin, "", false, false, fmt.Errorf("[Menu2DStep] Cursor2 must not nil")
+				}
+				if len(menu.Options[menu.Cursor1]) == 0 {
+					continue
+				}
+				menu.Cursor2[menu.Cursor1] = tool.Min(len(menu.Options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]+1)
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil

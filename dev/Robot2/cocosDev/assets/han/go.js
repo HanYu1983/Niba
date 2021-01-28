@@ -30699,8 +30699,8 @@ $packages["app/page/common"] = (function() {
 	};
 	$pkg.Menu1DStep = Menu1DStep;
 	Menu2DStep = function(origin, pageID, menuID) {
-		var _1, _entry, _entry$1, _entry$2, _entry$3, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _ref, _tuple, _tuple$1, _tuple$2, cmd, ctx, detail, err, has, menu, menu$1, menu$2, menuID, origin, pageID, view, x, x$1, x$2, x$3, x$4, x$5, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; err = $f.err; has = $f.has; menu = $f.menu; menu$1 = $f.menu$1; menu$2 = $f.menu$2; menuID = $f.menuID; origin = $f.origin; pageID = $f.pageID; view = $f.view; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _ref, _tuple, _tuple$1, _tuple$2, cmd, ctx, detail, err, has, menu, menu$1, menu$2, menu$3, menu$4, menuID, origin, pageID, view, x, x$1, x$10, x$11, x$12, x$13, x$14, x$15, x$16, x$17, x$18, x$19, x$2, x$3, x$4, x$5, x$6, x$7, x$8, x$9, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; cmd = $f.cmd; ctx = $f.ctx; detail = $f.detail; err = $f.err; has = $f.has; menu = $f.menu; menu$1 = $f.menu$1; menu$2 = $f.menu$2; menu$3 = $f.menu$3; menu$4 = $f.menu$4; menuID = $f.menuID; origin = $f.origin; pageID = $f.pageID; view = $f.view; x = $f.x; x$1 = $f.x$1; x$10 = $f.x$10; x$11 = $f.x$11; x$12 = $f.x$12; x$13 = $f.x$13; x$14 = $f.x$14; x$15 = $f.x$15; x$16 = $f.x$16; x$17 = $f.x$17; x$18 = $f.x$18; x$19 = $f.x$19; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; x$7 = $f.x$7; x$8 = $f.x$8; x$9 = $f.x$9; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = fmt.Println(new sliceType([new $String("Menu2DStep")])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
 		err = $ifaceNil;
@@ -30742,41 +30742,83 @@ $packages["app/page/common"] = (function() {
 				$s = -1; return [origin, "", false, false, err];
 			}
 			_ref = cmd;
-			if ($assertType(_ref, uidata.CommandKeyDown, true)[1]) {
+			/* */ if ($assertType(_ref, uidata.CommandKeyDown, true)[1]) { $s = 12; continue; }
+			/* */ $s = 13; continue;
+			/* if ($assertType(_ref, uidata.CommandKeyDown, true)[1]) { */ case 12:
 				detail = $clone(_ref.$val, uidata.CommandKeyDown);
-				_1 = detail.KeyCode;
-				if ((_1 === (87)) || (_1 === (65))) {
-					menu = $clone((_entry$1 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
-					if (menu.Options.$length === 0) {
-						/* continue; */ $s = 5; continue;
-					}
-					menu.Cursor1 = menu.Cursor1 - (1) >> 0;
-					ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu, uidata.Menu2D));
-				} else if ((_1 === (83)) || (_1 === (68))) {
-					menu$1 = $clone((_entry$2 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
-					if (menu$1.Options.$length === 0) {
-						/* continue; */ $s = 5; continue;
-					}
-					menu$1.Cursor1 = menu$1.Cursor1 + (1) >> 0;
-					ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu$1, uidata.Menu2D));
-				} else if ((_1 === (69)) || (_1 === (81))) {
-					$s = -1; return [ctx, "", false, true, $ifaceNil];
-				} else if (_1 === (13)) {
-					/* break AskCommand; */ $s = 6; continue s;
-				} else if (_1 === (222)) {
-					$s = -1; return [ctx, "", true, false, $ifaceNil];
-				}
-			}
+					_1 = detail.KeyCode;
+					/* */ if (_1 === (87)) { $s = 15; continue; }
+					/* */ if (_1 === (83)) { $s = 16; continue; }
+					/* */ if (_1 === (65)) { $s = 17; continue; }
+					/* */ if (_1 === (68)) { $s = 18; continue; }
+					/* */ if ((_1 === (69)) || (_1 === (81))) { $s = 19; continue; }
+					/* */ if (_1 === (13)) { $s = 20; continue; }
+					/* */ if (_1 === (222)) { $s = 21; continue; }
+					/* */ $s = 22; continue;
+					/* if (_1 === (87)) { */ case 15:
+						menu = $clone((_entry$1 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
+						if (menu.Options.$length === 0) {
+							/* continue; */ $s = 5; continue;
+						}
+						menu.Cursor1 = menu.Cursor1 - (1) >> 0;
+						ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu, uidata.Menu2D));
+						$s = 22; continue;
+					/* } else if (_1 === (83)) { */ case 16:
+						menu$1 = $clone((_entry$2 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
+						if (menu$1.Options.$length === 0) {
+							/* continue; */ $s = 5; continue;
+						}
+						menu$1.Cursor1 = menu$1.Cursor1 + (1) >> 0;
+						ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu$1, uidata.Menu2D));
+						$s = 22; continue;
+					/* } else if (_1 === (65)) { */ case 17:
+						menu$2 = $clone((_entry$3 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? _entry$3.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
+						/* */ if (menu$2.Cursor2 === sliceType$3.nil) { $s = 23; continue; }
+						/* */ $s = 24; continue;
+						/* if (menu$2.Cursor2 === sliceType$3.nil) { */ case 23:
+							_r$6 = fmt.Errorf("[Menu2DStep] Cursor2 must not nil", new sliceType([])); /* */ $s = 25; case 25: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+							$s = -1; return [origin, "", false, false, _r$6];
+						/* } */ case 24:
+						if ((x = menu$2.Options, x$1 = menu$2.Cursor1, ((x$1 < 0 || x$1 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$1])).$length === 0) {
+							/* continue; */ $s = 5; continue;
+						}
+						(x$4 = menu$2.Cursor2, x$5 = menu$2.Cursor1, ((x$5 < 0 || x$5 >= x$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$4.$array[x$4.$offset + x$5] = tool.Max(0, (x$2 = menu$2.Cursor2, x$3 = menu$2.Cursor1, ((x$3 < 0 || x$3 >= x$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$2.$array[x$2.$offset + x$3])) - 1 >> 0)));
+						ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu$2, uidata.Menu2D));
+						$s = 22; continue;
+					/* } else if (_1 === (68)) { */ case 18:
+						menu$3 = $clone((_entry$4 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$4 !== undefined ? _entry$4.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
+						/* */ if (menu$3.Cursor2 === sliceType$3.nil) { $s = 26; continue; }
+						/* */ $s = 27; continue;
+						/* if (menu$3.Cursor2 === sliceType$3.nil) { */ case 26:
+							_r$7 = fmt.Errorf("[Menu2DStep] Cursor2 must not nil", new sliceType([])); /* */ $s = 28; case 28: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+							$s = -1; return [origin, "", false, false, _r$7];
+						/* } */ case 27:
+						if ((x$6 = menu$3.Options, x$7 = menu$3.Cursor1, ((x$7 < 0 || x$7 >= x$6.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$6.$array[x$6.$offset + x$7])).$length === 0) {
+							/* continue; */ $s = 5; continue;
+						}
+						(x$12 = menu$3.Cursor2, x$13 = menu$3.Cursor1, ((x$13 < 0 || x$13 >= x$12.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$12.$array[x$12.$offset + x$13] = tool.Min((x$8 = menu$3.Options, x$9 = menu$3.Cursor1, ((x$9 < 0 || x$9 >= x$8.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$8.$array[x$8.$offset + x$9])).$length - 1 >> 0, (x$10 = menu$3.Cursor2, x$11 = menu$3.Cursor1, ((x$11 < 0 || x$11 >= x$10.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$10.$array[x$10.$offset + x$11])) + 1 >> 0)));
+						ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, $clone(menu$3, uidata.Menu2D));
+						$s = 22; continue;
+					/* } else if ((_1 === (69)) || (_1 === (81))) { */ case 19:
+						$s = -1; return [ctx, "", false, true, $ifaceNil];
+					/* } else if (_1 === (13)) { */ case 20:
+						/* break AskCommand; */ $s = 6; continue s;
+						$s = 22; continue;
+					/* } else if (_1 === (222)) { */ case 21:
+						$s = -1; return [ctx, "", true, false, $ifaceNil];
+					/* } */ case 22:
+				case 14:
+			/* } */ case 13:
 		/* } */ $s = 5; continue; case 6:
-		menu$2 = $clone((_entry$3 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? _entry$3.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
-		/* */ if (menu$2.Cursor2 === sliceType$3.nil) { $s = 12; continue; }
-		/* */ $s = 13; continue;
-		/* if (menu$2.Cursor2 === sliceType$3.nil) { */ case 12:
-			_r$6 = fmt.Errorf("[Menu2DStep] Cursor2 must not nil", new sliceType([])); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-			$s = -1; return [origin, "", false, false, _r$6];
-		/* } */ case 13:
-		$s = -1; return [ctx, (x = (x$1 = menu$2.Options, x$2 = menu$2.Cursor1, ((x$2 < 0 || x$2 >= x$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + x$2])), x$3 = (x$4 = menu$2.Cursor2, x$5 = menu$2.Cursor1, ((x$5 < 0 || x$5 >= x$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$4.$array[x$4.$offset + x$5])), ((x$3 < 0 || x$3 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$3])), false, false, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Menu2DStep }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.err = err; $f.has = has; $f.menu = menu; $f.menu$1 = menu$1; $f.menu$2 = menu$2; $f.menuID = menuID; $f.origin = origin; $f.pageID = pageID; $f.view = view; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.$s = $s; $f.$r = $r; return $f;
+		menu$4 = $clone((_entry$5 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$5 !== undefined ? _entry$5.v : new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType$3.nil)), uidata.Menu2D);
+		/* */ if (menu$4.Cursor2 === sliceType$3.nil) { $s = 29; continue; }
+		/* */ $s = 30; continue;
+		/* if (menu$4.Cursor2 === sliceType$3.nil) { */ case 29:
+			_r$8 = fmt.Errorf("[Menu2DStep] Cursor2 must not nil", new sliceType([])); /* */ $s = 31; case 31: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+			$s = -1; return [origin, "", false, false, _r$8];
+		/* } */ case 30:
+		$s = -1; return [ctx, (x$14 = (x$15 = menu$4.Options, x$16 = menu$4.Cursor1, ((x$16 < 0 || x$16 >= x$15.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$15.$array[x$15.$offset + x$16])), x$17 = (x$18 = menu$4.Cursor2, x$19 = menu$4.Cursor1, ((x$19 < 0 || x$19 >= x$18.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$18.$array[x$18.$offset + x$19])), ((x$17 < 0 || x$17 >= x$14.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$14.$array[x$14.$offset + x$17])), false, false, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Menu2DStep }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.cmd = cmd; $f.ctx = ctx; $f.detail = detail; $f.err = err; $f.has = has; $f.menu = menu; $f.menu$1 = menu$1; $f.menu$2 = menu$2; $f.menu$3 = menu$3; $f.menu$4 = menu$4; $f.menuID = menuID; $f.origin = origin; $f.pageID = pageID; $f.view = view; $f.x = x; $f.x$1 = x$1; $f.x$10 = x$10; $f.x$11 = x$11; $f.x$12 = x$12; $f.x$13 = x$13; $f.x$14 = x$14; $f.x$15 = x$15; $f.x$16 = x$16; $f.x$17 = x$17; $f.x$18 = x$18; $f.x$19 = x$19; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.x$7 = x$7; $f.x$8 = x$8; $f.x$9 = x$9; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Menu2DStep = Menu2DStep;
 	ObserveGameplayPage = function(origin, id) {
