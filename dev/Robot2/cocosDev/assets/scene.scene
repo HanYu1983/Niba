@@ -1205,6 +1205,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 0,
     "menuIndex": 0,
     "_id": "7b6sSlxLhB4ovecsjQRVNX"
@@ -2121,6 +2122,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 1,
     "menuIndex": 0,
     "_id": "f9Gr9hW7xPR6vFgUWFTrXe"
@@ -4102,6 +4104,7 @@
     },
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "_id": "eeWiT4VyRP56L8KR8rnIrW"
   },
   {
@@ -5039,6 +5042,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 2,
     "_id": "8fR1vRee9ElYtESkEo2r5T"
   },
@@ -6255,6 +6259,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 2,
     "menuIndex": 0,
     "_id": "321lfo4hJAG59vPRLYrruY"
@@ -6837,6 +6842,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 2,
     "menuIndex": 1,
     "_id": "d82Dp341xNrIDgry0r7yjs"
@@ -7579,6 +7585,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 2,
     "menuIndex": 2,
     "_id": "6f1xaQwuFH/IqAzRqFsm/k"
@@ -8622,6 +8629,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 3,
     "_id": "c66LWcKKBA+4kCliUVvJLj"
   },
@@ -9838,6 +9846,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 3,
     "menuIndex": 0,
     "_id": "5cVe3nL/5JdpewZ+0UTZZ0"
@@ -10418,6 +10427,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 3,
     "menuIndex": 1,
     "_id": "b5v9/khzlN57jpAT222HkE"
@@ -11156,6 +11166,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 3,
     "menuIndex": 2,
     "_id": "437d177L9NPIFoHHcKL721"
@@ -12199,6 +12210,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 5,
     "_id": "79uiZanD5AiLf8TLNUlmNG"
   },
@@ -13415,6 +13427,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 5,
     "menuIndex": 0,
     "_id": "3dXabyp6RPWKRCJ2Ehrrhh"
@@ -13995,6 +14008,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 5,
     "menuIndex": 1,
     "_id": "b72KU75NtFl6Z59kSK9n0a"
@@ -14733,6 +14747,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 5,
     "menuIndex": 2,
     "_id": "4bZqMkMwxM6pGFE8fT+qDJ"
@@ -15776,6 +15791,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 4,
     "_id": "b5X0zWukhNbYEMGxA8ofZK"
   },
@@ -16992,6 +17008,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 4,
     "menuIndex": 0,
     "_id": "4bnbwLvyZEY6UXE0Q4y7KP"
@@ -17572,6 +17589,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 4,
     "menuIndex": 1,
     "_id": "097GzkqaNEz4pTH/m1p8oG"
@@ -18310,6 +18328,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 4,
     "menuIndex": 2,
     "_id": "6fyfKGxm5DA4yTUZ0Fj6Yw"
@@ -19353,6 +19372,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 6,
     "_id": "8dS9YpKLJMEaheniSFqQA4"
   },
@@ -20727,6 +20747,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 6,
     "menuIndex": 0,
     "_id": "7bQNNA90JEyJ6SEFclaQa5"
@@ -21307,6 +21328,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 6,
     "menuIndex": 1,
     "_id": "c6rpqsNE1DHbD43nJsBaoq"
@@ -22042,6 +22064,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 6,
     "menuIndex": 2,
     "_id": "75qsWH5klGoaihMvGH0V7Q"
@@ -23085,6 +23108,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 7,
     "_id": "d1DOhJVatCdLn5Dqc5CrQh"
   },
@@ -24459,6 +24483,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 7,
     "menuIndex": 0,
     "_id": "82t5JDOWFEgaOQYRGvGE8o"
@@ -25039,6 +25064,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 7,
     "menuIndex": 1,
     "_id": "1aoX3+Cy5Lf5OCtPJbOguA"
@@ -25774,6 +25800,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 7,
     "menuIndex": 2,
     "_id": "4fFwFGzS9NeJUDd3FilS7M"
@@ -26817,6 +26844,7 @@
     "multiPrefab": null,
     "buttonSize": 320,
     "type": 0,
+    "align": 1,
     "pageId": 8,
     "_id": "5cn8I5wwRH0py9vKQ2Sgq9"
   },
@@ -28191,6 +28219,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 8,
     "menuIndex": 0,
     "_id": "7bC25SmfxFNKUdPg4lQtcT"
@@ -28771,6 +28800,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 8,
     "menuIndex": 1,
     "_id": "8eg2m0OP1OLpMBAlO4R5zi"
@@ -29506,6 +29536,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 8,
     "menuIndex": 2,
     "_id": "6cSwoKLE9GGKEXZRZQFrfI"
@@ -35441,7 +35472,7 @@
     "_lpos": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": 0,
+      "y": 323,
       "z": 0
     },
     "_lrot": {
@@ -37110,6 +37141,7 @@
     },
     "buttonSize": 30,
     "type": 1,
+    "align": 0,
     "_id": "52CI1zL5lLUKo73yqNPwNx"
   },
   {
@@ -37127,7 +37159,7 @@
     "__prefab": {
       "__id__": 1521
     },
-    "_alignFlags": 40,
+    "_alignFlags": 41,
     "_target": null,
     "_left": 0,
     "_right": 0,
@@ -39298,6 +39330,7 @@
     "multiPrefab": null,
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "pageId": 9,
     "menuIndex": 0,
     "_id": "eatLxeTUlIPLKXzaEOgUPM"
@@ -41714,6 +41747,7 @@
     },
     "buttonSize": 30,
     "type": 1,
+    "align": 1,
     "_id": "59Ut2SzkxMxaDNzby98RSq"
   },
   {

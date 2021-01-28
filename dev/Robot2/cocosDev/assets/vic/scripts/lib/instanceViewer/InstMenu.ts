@@ -16,6 +16,12 @@ export enum Type{
     Vertical
 } 
 
+export enum Align{
+    Start,
+    Center,
+    End
+}
+
 @ccclass('InstMenu')
 export class InstMenu extends Instant {
 
@@ -30,6 +36,9 @@ export class InstMenu extends Instant {
 
     @property({type:Enum(Type)})
     type:Type = Type.Vertical;
+
+    @property({type:Enum(Align)})
+    align:Align = Align.Center;
 
     private tempMultiMutton:Node[] = [];
     private tempButton:Node[] = [];
@@ -94,13 +103,20 @@ export class InstMenu extends Instant {
                 btn.getComponent(InstButton).build([label, isFocus, 1]);
                 this.tempButton.push(btn);
             }
-
+            
+            let offset = 0;
+            switch(this.align){
+                case Align.Start: break;
+                case Align.Center: offset = borderSize / 2;
+                case Align.End: break;
+            }
             if(this.type == Type.Horizontal){
+                
                 btn.getComponent(UITransform)?.contentSize.set(this.buttonSize, btn.getComponent(UITransform)?.contentSize.height);
-                btn.position.set(i * gap - borderSize / 2 + this.buttonSize / 2, btn.position.y, btn.position.z);
+                btn.position.set(i * gap - offset + this.buttonSize / 2, btn.position.y, btn.position.z);
             }else{
                 btn.getComponent(UITransform)?.contentSize.set(btn.getComponent(UITransform)?.contentSize.width, this.buttonSize);
-                btn.position.set(btn.position.x, i * -gap + borderSize / 2 - this.buttonSize / 2, btn.position.z);
+                btn.position.set(btn.position.x, i * -gap + offset - this.buttonSize / 2, btn.position.z);
             }
         });
     }
