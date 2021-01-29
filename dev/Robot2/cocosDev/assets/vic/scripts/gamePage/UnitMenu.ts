@@ -9,6 +9,7 @@ import { _decorator, Component, Node } from 'cc';
 import { Drawer } from '../Drawer';
 import { InstMenu } from '../lib/instanceViewer/InstMenu';
 import * as ModelType from './../../../han/types'
+import { Grids } from './Grids';
 const { ccclass, property } = _decorator;
 
 @ccclass('UnitMenu')
@@ -19,15 +20,21 @@ export class UnitMenu extends InstMenu {
     }
 
     doBuild(content:any, data:any):void{
-        const options = content[0];
+        const options = content[0].slice();
         const robotMenu = data.GameplayPages["10"].RobotMenu;
         for(let key in robotMenu.RowFunctionMapping){
             if(robotMenu.RowFunctionMapping[key] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
-                let weaponIds = options[key];
-                weaponIds = weaponIds.map((weaponId: string | number)=>{ return robotMenu.Weapons[weaponId].Title});
-                options[key] = weaponIds;
+                const weaponIds = options[key];
+                let weaponTitles = weaponIds.map((weaponId: string | number)=>{ return robotMenu.Weapons[weaponId].Title});
+                options[key] = weaponTitles;
             }
         }
+        content[0] = options;
         super.doBuild(content, data);
+        
+        const cursor = data.GameplayPages["10"].Cursor;
+        let gridPos = Grids.getGridPos(cursor[0], cursor[1]);
+        gridPos.x += 100;
+        this.node.setPosition(gridPos);
     }
 }
