@@ -29227,16 +29227,14 @@ $packages["app/tool"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTerrain }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._key = _key; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cache = cache; $f.gameMap = gameMap; $f.has = has; $f.has$1 = has$1; $f.originTerrainID = originTerrainID; $f.pos = pos; $f.terrain = terrain; $f.terrain$1 = terrain$1; $f.terrainMapping = terrainMapping; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryTerrain = QueryTerrain;
-	BasicExtentCell = function(w, h, v) {
-		var _entry, _i, _keys, _r, _ref, _tuple, h, key, retPos, tree, v, w, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; h = $f.h; key = $f.key; retPos = $f.retPos; tree = $f.tree; v = $f.v; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		h = [h];
+	BasicExtentCell = function(v) {
+		var _entry, _i, _keys, _r, _ref, _tuple, key, retPos, tree, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; key = $f.key; retPos = $f.retPos; tree = $f.tree; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		v = [v];
-		w = [w];
-		_r = astar.ShortedPathTree(new protocol.Position(arrayType.zero()), (function(h, v, w) { return function(curr) {
+		_r = astar.ShortedPathTree(new protocol.Position(arrayType.zero()), (function(v) { return function(curr) {
 			var curr;
 			return false;
-		}; })(h, v, w), (function(h, v, w) { return function(curr) {
+		}; })(v), (function(v) { return function(curr) {
 			var _i, _ref, _tmp, _tmp$1, curr, currPos, nextCost, nextPos, offset, offsets, ret, x, y;
 			if (((curr.Cost >> 0)) > 100) {
 				return new sliceType$3([]);
@@ -29253,14 +29251,6 @@ $packages["app/tool"] = (function() {
 				_tmp$1 = currPos[1] + offset[1] >> 0;
 				x = _tmp;
 				y = _tmp$1;
-				if (x < 0 || x >= w[0]) {
-					_i++;
-					continue;
-				}
-				if (y < 0 || y >= h[0]) {
-					_i++;
-					continue;
-				}
 				nextPos = $toNativeArray($kindInt, [x, y]);
 				nextCost = 1;
 				if (((curr.Cost + nextCost >> 0)) > v[0]) {
@@ -29271,10 +29261,10 @@ $packages["app/tool"] = (function() {
 				_i++;
 			}
 			return ret;
-		}; })(h, v, w), (function(h, v, w) { return function(curr) {
+		}; })(v), (function(v) { return function(curr) {
 			var curr;
 			return 1;
-		}; })(h, v, w)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		}; })(v)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		tree = _tuple[0];
 		retPos = new sliceType$4([]);
@@ -29293,13 +29283,13 @@ $packages["app/tool"] = (function() {
 			_i++;
 		}
 		$s = -1; return [retPos, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: BasicExtentCell }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.h = h; $f.key = key; $f.retPos = retPos; $f.tree = tree; $f.v = v; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: BasicExtentCell }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.key = key; $f.retPos = retPos; $f.tree = tree; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.BasicExtentCell = BasicExtentCell;
 	QueryMinMaxAttackRange = function(w, h, min, max, offset) {
-		var _i, _r, _r$1, _ref, _tuple, _tuple$1, err, err$1, h, i, max, maxRange, min, minRange, offset, pos, ret, w, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; err$1 = $f.err$1; h = $f.h; i = $f.i; max = $f.max; maxRange = $f.maxRange; min = $f.min; minRange = $f.minRange; offset = $f.offset; pos = $f.pos; ret = $f.ret; w = $f.w; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = BasicExtentCell(w, h, max); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		var _i, _r, _r$1, _ref, _tmp, _tmp$1, _tuple, _tuple$1, err, err$1, h, i, max, maxRange, min, minRange, offset, pos, ret, w, x, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; err$1 = $f.err$1; h = $f.h; i = $f.i; max = $f.max; maxRange = $f.maxRange; min = $f.min; minRange = $f.minRange; offset = $f.offset; pos = $f.pos; ret = $f.ret; w = $f.w; x = $f.x; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = BasicExtentCell(max); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		maxRange = _tuple[0];
 		err = _tuple[1];
@@ -29310,7 +29300,7 @@ $packages["app/tool"] = (function() {
 		/* */ if (min < max) { $s = 2; continue; }
 		/* */ $s = 3; continue;
 		/* if (min < max) { */ case 2:
-			_r$1 = BasicExtentCell(w, h, min); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = BasicExtentCell(min); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			_tuple$1 = _r$1;
 			minRange = _tuple$1[0];
 			err$1 = _tuple$1[1];
@@ -29325,11 +29315,23 @@ $packages["app/tool"] = (function() {
 			if (!(_i < _ref.$length)) { break; }
 			i = _i;
 			pos = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
-			protocol.Position.copy(((i < 0 || i >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + i]), $toNativeArray($kindInt, [pos[0] + offset[0] >> 0, pos[1] + offset[1] >> 0]));
+			_tmp = pos[0] + offset[0] >> 0;
+			_tmp$1 = pos[1] + offset[1] >> 0;
+			x = _tmp;
+			y = _tmp$1;
+			if (x < 0 || x >= w) {
+				_i++;
+				continue;
+			}
+			if (y < 0 || y >= h) {
+				_i++;
+				continue;
+			}
+			protocol.Position.copy(((i < 0 || i >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + i]), $toNativeArray($kindInt, [x, y]));
 			_i++;
 		}
 		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMinMaxAttackRange }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.err$1 = err$1; $f.h = h; $f.i = i; $f.max = max; $f.maxRange = maxRange; $f.min = min; $f.minRange = minRange; $f.offset = offset; $f.pos = pos; $f.ret = ret; $f.w = w; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMinMaxAttackRange }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.err$1 = err$1; $f.h = h; $f.i = i; $f.max = max; $f.maxRange = maxRange; $f.min = min; $f.minRange = minRange; $f.offset = offset; $f.pos = pos; $f.ret = ret; $f.w = w; $f.x = x; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryMinMaxAttackRange = QueryMinMaxAttackRange;
 	$init = function() {

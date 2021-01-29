@@ -58,7 +58,7 @@ func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto
 	return terrain
 }
 
-func BasicExtentCell(w int, h int, v int) ([]protocol.Position, error) {
+func BasicExtentCell(v int) ([]protocol.Position, error) {
 	tree, _ := astar.ShortedPathTree(
 		protocol.Position{},
 		func(curr *astar.Node) bool {
@@ -74,12 +74,6 @@ func BasicExtentCell(w int, h int, v int) ([]protocol.Position, error) {
 			ret := []astar.NeighborsNode{}
 			for _, offset := range offsets {
 				x, y := currPos[0]+offset[0], currPos[1]+offset[1]
-				if x < 0 || x >= w {
-					continue
-				}
-				if y < 0 || y >= h {
-					continue
-				}
 				nextPos := protocol.Position{x, y}
 				nextCost := 1.0
 				if int(curr.Cost+nextCost) > v {
@@ -104,20 +98,27 @@ func BasicExtentCell(w int, h int, v int) ([]protocol.Position, error) {
 }
 
 func QueryMinMaxAttackRange(w int, h int, min int, max int, offset protocol.Position) ([]protocol.Position, error) {
-	maxRange, err := BasicExtentCell(w, h, max)
+	maxRange, err := BasicExtentCell(max)
 	if err != nil {
 		return []protocol.Position{}, err
 	}
 	ret := maxRange
 	if min < max {
-		minRange, err := BasicExtentCell(w, h, min)
+		minRange, err := BasicExtentCell(min)
 		if err != nil {
 			return []protocol.Position{}, err
 		}
 		ret = protocol.DifferencePosition(maxRange, minRange)
 	}
 	for i, pos := range ret {
-		ret[i] = protocol.Position{pos[0] + offset[0], pos[1] + offset[1]}
+		x, y := pos[0]+offset[0], pos[1]+offset[1]
+		if x < 0 || x >= w {
+			continue
+		}
+		if y < 0 || y >= h {
+			continue
+		}
+		ret[i] = protocol.Position{x, y}
 	}
 	return ret, nil
 }
