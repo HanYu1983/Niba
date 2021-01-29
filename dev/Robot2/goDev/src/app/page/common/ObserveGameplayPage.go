@@ -40,15 +40,19 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	// tags
 	gameplayPage.Tags = model.GetGameplayTags()
 	// move range
-	var notFound string
-	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
-	if unitAtCursor != notFound {
-		gameplayPage.MoveRange = model.QueryMoveRange(unitAtCursor)
-		for i, pos := range gameplayPage.MoveRange {
-			gameplayPage.MoveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
-		}
+	if len(gameplayPage.State) > 0 && gameplayPage.State[len(gameplayPage.State)-1] == uidata.GameplayPageStateWaitingMove {
+
 	} else {
-		gameplayPage.MoveRange = []protocol.Position{}
+		var notFound string
+		unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
+		if unitAtCursor != notFound {
+			gameplayPage.MoveRange = model.QueryMoveRange(unitAtCursor)
+			for i, pos := range gameplayPage.MoveRange {
+				gameplayPage.MoveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
+			}
+		} else {
+			gameplayPage.MoveRange = []protocol.Position{}
+		}
 	}
 	// unitMenu
 	unitMenuModel := model.GetRobotMenu()
