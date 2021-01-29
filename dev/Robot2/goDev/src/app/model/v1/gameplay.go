@@ -2,7 +2,6 @@ package v1
 
 import (
 	"app/tool/protocol"
-	"app/tool/uidata"
 	"fmt"
 	"tool/log"
 )
@@ -55,50 +54,10 @@ func (v *model) RobotDone(robotID string) error {
 	return nil
 }
 
-func (v *model) RobotMove(robotID string, pos protocol.Position) error {
-	tags := v.App.Gameplay.Tags[robotID]
-	if tags.MoveCount >= 1 {
-		return fmt.Errorf("[RobotMove] already move %v", robotID)
-	}
-	unitAtPos := SearchUnitByPosition(v.App.Gameplay.Positions, pos)
-	var notFound string
-	if unitAtPos != notFound {
-		return fmt.Errorf("[RobotMove] already occupy %v", pos)
-	}
-	v.App.Gameplay.Positions = protocol.AssocStringPosition(v.App.Gameplay.Positions, robotID, pos)
-	tags.MoveCount++
-	v.App.Gameplay.Tags = protocol.AssocStringTag(v.App.Gameplay.Tags, robotID, tags)
-	log.Log(protocol.LogCategoryInfo, "RobotMove", fmt.Sprintf("robotID(%v) tags(%v)\n", robotID, v.App.Gameplay.Tags[robotID]))
-	return nil
-}
 func (v *model) RobotTransform(string, string) error {
 	return nil
 }
 func (v *model) RobotSkyGround(string) error {
-	return nil
-}
-func (v *model) EnableRobotMenu(robotID string, situation interface{}) error {
-	tags := v.App.Gameplay.Tags[robotID]
-	if tags.IsDone {
-		return fmt.Errorf("[EnableRobotMenu] robot(%v) already done", robotID)
-	}
-	options := [][]string{}
-	rowFunctionMapping := map[int]int{}
-	weapons := map[string]protocol.Weapon{}
-	if tags.MoveCount == 0 {
-		options = append(options, []string{uidata.MenuOptionMove})
-	}
-	if true {
-		rowFunctionMapping[len(options)] = protocol.RobotMenuFunctionWeapon
-		options = append(options, []string{"0", "1"})
-		weapons = map[string]protocol.Weapon{"0": {}, "1": {}}
-	}
-	options = append(options, []string{uidata.MenuOptionUnitDone})
-	v.App.Gameplay.RobotMenu.Active = true
-	v.App.Gameplay.RobotMenu.Options = options
-	v.App.Gameplay.RobotMenu.RowFunctionMapping = rowFunctionMapping
-	v.App.Gameplay.RobotMenu.Weapons = weapons
-	log.Log(protocol.LogCategoryInfo, "EnableRobotMenu", fmt.Sprintf("robotID(%v) options(%v) tags(%v)\n", robotID, options, tags))
 	return nil
 }
 func (v *model) DisableRobotMenu() error {
