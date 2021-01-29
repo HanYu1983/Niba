@@ -9,6 +9,7 @@ import { _decorator, Component, Node } from 'cc';
 import { Drawer } from '../Drawer';
 import { InstMenu } from '../lib/instanceViewer/InstMenu';
 import * as ModelType from './../../../han/types'
+import { Grids } from './Grids';
 const { ccclass, property } = _decorator;
 
 @ccclass('UnitMenu')
@@ -30,5 +31,10 @@ export class UnitMenu extends InstMenu {
         }
         content[0] = options;
         super.doBuild(content, data);
+        
+        const cursor = data.GameplayPages["10"].Cursor;
+        let gridPos = Grids.getGridPos(cursor[0], cursor[1]);
+        gridPos.x += 100;
+        this.node.setPosition(gridPos);
     }
 }

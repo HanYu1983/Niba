@@ -9,6 +9,7 @@ import { _decorator, Component, Node, Label } from 'cc';
 import { Drawer } from '../Drawer';
 import { Instant } from '../lib/instanceViewer/Instant';
 import * as ModelType from './../../../han/types'
+import { Grids } from './Grids';
 const { ccclass, property } = _decorator;
 
 @ccclass('WeaponInfo')
@@ -68,6 +69,13 @@ export class WeaponInfo extends Instant {
                 this.en.string = currentWeapon.EnergyCost;
                 this.suitable.string = currentWeapon.Suitablility.toString();
                 this.curage.string = currentWeapon.Curage;
+
+                const cursor = data.GameplayPages["10"].Cursor;
+                let gridPos = Grids.getGridPos(cursor[0], cursor[1]);
+                gridPos.x += 100;
+                gridPos.y -= 300;
+                
+                this.node.setPosition(gridPos);
             }
         }
     }
