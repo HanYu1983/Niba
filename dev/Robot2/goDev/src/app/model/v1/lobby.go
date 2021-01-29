@@ -8,7 +8,6 @@ import (
 )
 
 func (v *model) BuyRobot(protoID string) error {
-	fmt.Printf("BuyRobot(%v)\n", protoID)
 	item, has := data.GameData.Robot[protoID]
 	if has == false {
 		return fmt.Errorf("BuyRobot [%v] not found", protoID)
@@ -27,7 +26,6 @@ func (v *model) BuyRobot(protoID string) error {
 	return nil
 }
 func (v *model) BuyPilot(protoID string) error {
-	fmt.Printf("BuyPilot(%v)\n", protoID)
 	item, has := data.GameData.Pilot[protoID]
 	if has == false {
 		return fmt.Errorf("BuyPilot [%v] not found", protoID)
@@ -46,7 +44,6 @@ func (v *model) BuyPilot(protoID string) error {
 	return nil
 }
 func (v *model) BuyWeapon(protoID string) error {
-	fmt.Printf("BuyWeapon(%v)\n", protoID)
 	item, has := data.GameData.Weapon[protoID]
 	if has == false {
 		return fmt.Errorf("BuyWeapon [%v] not found", protoID)
@@ -65,7 +62,6 @@ func (v *model) BuyWeapon(protoID string) error {
 	return nil
 }
 func (v *model) BuyComponent(protoID string) error {
-	fmt.Printf("BuyPilot(%v)\n", protoID)
 	item, has := data.GameData.Component[protoID]
 	if has == false {
 		return fmt.Errorf("BuyComponent [%v] not found", protoID)
@@ -85,33 +81,26 @@ func (v *model) BuyComponent(protoID string) error {
 }
 
 func (v *model) AssocRobotPilot(robotID string, pilotID string) error {
-	fmt.Printf("AssocRobotPilot(%v, %v)\n", robotID, pilotID)
 	v.App.Lobby.PilotIDByRobotID = data.AssocStringString(v.App.Lobby.PilotIDByRobotID, robotID, pilotID)
-	fmt.Printf("XXXXX(%v)\n", v.App.Lobby.PilotIDByRobotID)
 	return nil
 }
 func (v *model) DissocRobotPilot(robotID string) error {
-	fmt.Printf("DissocRobotPilot(%v)\n", robotID)
 	v.App.Lobby.PilotIDByRobotID = data.DissocStringString(v.App.Lobby.PilotIDByRobotID, robotID)
 	return nil
 }
 func (v *model) AssocWeaponRobot(weaponID string, robotID string) error {
-	fmt.Printf("AssocWeaponRobot(%v, %v)\n", robotID, weaponID)
 	v.App.Lobby.RobotIDByWeaponID = data.AssocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID, robotID)
 	return nil
 }
 func (v *model) DissocWeaponRobot(weaponID string) error {
-	fmt.Printf("DissocWeaponRobot(%v)\n", weaponID)
 	v.App.Lobby.RobotIDByWeaponID = data.DissocStringString(v.App.Lobby.RobotIDByWeaponID, weaponID)
 	return nil
 }
 func (v *model) AssocComponentRobot(componentID string, robotID string) error {
-	fmt.Printf("AssocComponentRobot(%v, %v)\n", robotID, componentID)
 	v.App.Lobby.RobotIDByComponentID = data.AssocStringString(v.App.Lobby.RobotIDByComponentID, componentID, robotID)
 	return nil
 }
 func (v *model) DissocComponentRobot(componentID string) error {
-	fmt.Printf("DissocComponentRobot(%v)\n", componentID)
 	v.App.Lobby.RobotIDByComponentID = data.DissocStringString(v.App.Lobby.RobotIDByComponentID, componentID)
 	return nil
 }

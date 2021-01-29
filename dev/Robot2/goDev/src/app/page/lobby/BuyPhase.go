@@ -9,7 +9,6 @@ import (
 )
 
 func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
-	fmt.Println("BuyPhase")
 	view := def.View
 	model := def.Model
 	var err error
@@ -104,6 +103,5 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		return ctx, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, false)
-	fmt.Println("BuyPhase: End")
 	return ctx, nil
 }

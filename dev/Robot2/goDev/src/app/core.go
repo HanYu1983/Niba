@@ -4,11 +4,14 @@ import (
 	"app/page/gameplay"
 	"app/page/title"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func Main() {
+	log.Category[protocol.LogCategoryPhase] = false
 	view := def.View
 	// tree, _ := astar.ShortedPathTree(
 	// 	1,

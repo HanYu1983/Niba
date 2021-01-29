@@ -4,11 +4,9 @@ import (
 	"app/page/common"
 	"app/page/lobby"
 	"app/tool/uidata"
-	"fmt"
 )
 
 func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("StartPagePhase")
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)

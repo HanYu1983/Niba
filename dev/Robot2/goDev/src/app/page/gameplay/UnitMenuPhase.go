@@ -6,6 +6,7 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
@@ -23,7 +24,7 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 }
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
-	fmt.Printf("[UnitMenuPhase] start %v\n", unitID)
+	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v)", unitID))
 	view := def.View
 	model := def.Model
 	model.Push()

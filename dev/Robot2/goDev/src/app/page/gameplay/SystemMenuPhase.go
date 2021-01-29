@@ -1,11 +1,13 @@
 package gameplay
 
 import (
+	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
+	"tool/log"
 )
 
 func SystemMenuPhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("UnitMenuPhase start")
+	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "start")
+	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "end")
 	return origin, nil
 }

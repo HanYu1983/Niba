@@ -4,11 +4,9 @@ import (
 	"app/page/common"
 	"app/page/gameplay"
 	"app/tool/uidata"
-	"fmt"
 )
 
 func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("MultiUnitSelectionPagePhase")
 	var err error
 	ctx := origin
 	ctx, err = common.ObservePage(ctx, uidata.PageMultiUnitSelection)
@@ -31,7 +29,6 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 					return ctx, cancel, nil
 				}
 				selection := ctx.Menu1Ds[menuID].Selection
-				fmt.Printf("you select %v\n", selection)
 				var _ = selection
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
 				ctx, err = gameplay.GameLoop(ctx)
@@ -50,6 +47,5 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 		return ctx, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
-	fmt.Println("MultiUnitSelectionPagePhase: End")
 	return ctx, nil
 }

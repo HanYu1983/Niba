@@ -5,6 +5,7 @@ import (
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
+	"tool/log"
 )
 
 func Min(x, y int) int {
@@ -46,7 +47,7 @@ func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto
 	originTerrainID := gameMap[pos[1]][pos[0]]
 	terrainMapping, has := data.GameData.TerrainMapping[strconv.Itoa(originTerrainID)]
 	if has == false {
-		fmt.Printf("terrainMapping not found: %v %v\n", originTerrainID, pos)
+		log.Log(protocol.LogCategoryWarning, "QueryTerrain", fmt.Sprintf("terrainMapping not found: %v %v\n", originTerrainID, pos))
 		return data.TerrainProto{}
 	}
 	terrain := data.GameData.Terrain[terrainMapping.Terrain]

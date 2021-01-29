@@ -9,7 +9,6 @@ import (
 )
 
 func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
-	fmt.Println("AssocPhase")
 	view := def.View
 	model := def.Model
 	var err error

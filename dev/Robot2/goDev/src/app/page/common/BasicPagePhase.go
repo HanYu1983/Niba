@@ -1,8 +1,10 @@
 package common
 
 import (
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func BasicPagePhase(
@@ -12,12 +14,12 @@ func BasicPagePhase(
 	onClickMenu1D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 	onClickMenu2D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 ) (uidata.UI, error) {
-	fmt.Println("BasicPagePhase")
+	log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "start")
 	var err error
 	ctx := origin
 Menu:
 	for {
-		fmt.Println("BasicPagePhase: Loop")
+		log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "onUpdate")
 		ctx, err = onUpdate(ctx)
 		if err != nil {
 			return origin, err
@@ -62,6 +64,6 @@ Menu:
 			return origin, fmt.Errorf("component not found: %v", menuID)
 		}
 	}
-	fmt.Println("BasicPagePhase: End")
+	log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "end")
 	return ctx, nil
 }

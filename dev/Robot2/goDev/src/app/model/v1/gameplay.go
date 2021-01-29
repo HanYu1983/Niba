@@ -4,6 +4,7 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func (v *model) QueryActivePlayer() string {
@@ -43,7 +44,7 @@ func (v *model) GetMap() [][]int {
 	return v.App.Gameplay.Map
 }
 func (v *model) QueryMoveCount(robotID string) int {
-	fmt.Printf("[QueryMoveCount]%+v\n", v.App.Gameplay.Tags[robotID])
+	log.Log(protocol.LogCategoryInfo, "QueryMoveCount", fmt.Sprintf("tags(%+v)\n", v.App.Gameplay.Tags[robotID]))
 	return v.App.Gameplay.Tags[robotID].MoveCount
 }
 
@@ -67,7 +68,7 @@ func (v *model) RobotMove(robotID string, pos protocol.Position) error {
 	v.App.Gameplay.Positions = protocol.AssocStringPosition(v.App.Gameplay.Positions, robotID, pos)
 	tags.MoveCount++
 	v.App.Gameplay.Tags = protocol.AssocStringTag(v.App.Gameplay.Tags, robotID, tags)
-	fmt.Printf("[RobotMove] robotID(%v) tags(%v)\n", robotID, v.App.Gameplay.Tags[robotID])
+	log.Log(protocol.LogCategoryInfo, "RobotMove", fmt.Sprintf("robotID(%v) tags(%v)\n", robotID, v.App.Gameplay.Tags[robotID]))
 	return nil
 }
 func (v *model) RobotTransform(string, string) error {
@@ -97,7 +98,7 @@ func (v *model) EnableRobotMenu(robotID string, situation interface{}) error {
 	v.App.Gameplay.RobotMenu.Options = options
 	v.App.Gameplay.RobotMenu.RowFunctionMapping = rowFunctionMapping
 	v.App.Gameplay.RobotMenu.Weapons = weapons
-	fmt.Printf("[EnableRobotMenu] robotID(%v) options(%v) tags(%v)\n", robotID, options, tags)
+	log.Log(protocol.LogCategoryInfo, "EnableRobotMenu", fmt.Sprintf("robotID(%v) options(%v) tags(%v)\n", robotID, options, tags))
 	return nil
 }
 func (v *model) DisableRobotMenu() error {

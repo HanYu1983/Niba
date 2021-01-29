@@ -2,13 +2,14 @@ package gameplay
 
 import (
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
 	"time"
+	"tool/log"
 )
 
 func GameLoop(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("GameLoop start")
+	log.Log(protocol.LogCategoryPhase, "GameLoop", "start")
 	view := def.View
 	model := def.Model
 	model.Push()
@@ -30,6 +31,6 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 		model.NextPlayer()
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, false)
-	fmt.Println("GameLoop end")
+	log.Log(protocol.LogCategoryPhase, "GameLoop", "end")
 	return ctx, nil
 }

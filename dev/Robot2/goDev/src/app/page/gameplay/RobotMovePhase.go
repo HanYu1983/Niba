@@ -6,10 +6,11 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
-	fmt.Printf("[RobotMovePhase] robotID(%v)\n", robotID)
+	log.Log(protocol.LogCategoryPhase, "RobotMovePhase", fmt.Sprintf("robotID(%v)\n", robotID))
 	model := def.Model
 	model.Push()
 	defer model.Pop()

@@ -3,11 +3,9 @@ package lobby
 import (
 	"app/page/common"
 	"app/tool/uidata"
-	"fmt"
 )
 
 func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("LobbyPagePhase")
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
@@ -77,6 +75,5 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 		return ctx, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
-	fmt.Println("LobbyPagePhase: End")
 	return ctx, nil
 }

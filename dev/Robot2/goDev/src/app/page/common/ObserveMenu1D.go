@@ -6,7 +6,6 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
 )
 
 func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
@@ -41,7 +40,6 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	}
 	menu.Offset = tool.Max(0, tool.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
 	left, right := tool.Max(0, tool.Min(menu.Offset, len(options)-1)), tool.Min(menu.Offset+menu.Limit, len(options))
-	fmt.Printf("len(%v) %v~%v\n", len(options), left, right)
 	if len(options) > 0 {
 		menu.Options = options[left:right]
 	}

@@ -6,6 +6,13 @@ var (
 	ErrTerminate = fmt.Errorf("ErrTerminate")
 )
 
+var (
+	LogCategoryPhase   = "LogCategoryPhase"
+	LogCategoryDetail  = "LogCategoryDetail"
+	LogCategoryInfo    = "LogCategoryInfo"
+	LogCategoryWarning = "LogCategoryWarning"
+)
+
 type Weapons = map[string]Weapon
 type WeaponsByTransform = map[string]Weapons
 type Position [2]int

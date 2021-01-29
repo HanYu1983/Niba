@@ -6,10 +6,11 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
-	fmt.Println("Menu2DStep")
+	log.Log(protocol.LogCategoryPhase, "Menu2DStep", "start")
 	var err error
 	ctx := origin
 	view := def.View
@@ -23,9 +24,9 @@ AskCommand:
 			return origin, "", false, false, err
 		}
 		view.Render(ctx)
-		fmt.Println("[Menu2DStep]AskCommand")
+		log.Log(protocol.LogCategoryPhase, "Menu2DStep", "AskCommand")
 		cmd := view.AskCommand()
-		fmt.Printf("[Menu2DStep]%+v\n", cmd)
+		log.Log(protocol.LogCategoryPhase, "Menu2DStep", fmt.Sprintf("cmd(%+v)\n", cmd))
 		if err != nil {
 			return origin, "", false, false, err
 		}

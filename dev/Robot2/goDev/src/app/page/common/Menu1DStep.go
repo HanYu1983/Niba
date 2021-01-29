@@ -6,10 +6,11 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
-	fmt.Println("Menu1DStep")
+	log.Log(protocol.LogCategoryPhase, "Menu1DStep", "start")
 	var err error
 	ctx := origin
 	view := def.View
@@ -23,9 +24,9 @@ AskCommand:
 			return origin, "", false, false, err
 		}
 		view.Render(ctx)
-		fmt.Println("[Menu1DStep]AskCommand")
+		log.Log(protocol.LogCategoryPhase, "Menu1DStep", "AskCommand")
 		cmd := view.AskCommand()
-		fmt.Printf("[Menu1DStep]%+v\n", cmd)
+		log.Log(protocol.LogCategoryPhase, "Menu1DStep", fmt.Sprintf("cmd(%+v)\n", cmd))
 		if cmd == nil {
 			return ctx, "", false, false, protocol.ErrTerminate
 		}
@@ -63,7 +64,7 @@ AskCommand:
 			case uidata.KeyCodeEnter:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
-					fmt.Println("沒有任何Options, 當成切換Focus")
+					log.Log(protocol.LogCategoryDetail, "Menu1DStep", "沒有任何Options, 當成切換Focus")
 					focus := ctx.Focus[pageID]
 					focus, over := tool.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
 					if over {
@@ -78,7 +79,7 @@ AskCommand:
 			case uidata.KeyCodeSubEnter:
 				menu := ctx.Menu1Ds[menuID]
 				if menu.Selection == nil {
-					fmt.Printf("please init Selection field. Menu(%v)\n", menuID)
+					log.Log(protocol.LogCategoryWarning, "Menu1DStep", fmt.Sprintf("please init Selection field. Menu(%v)\n", menuID))
 					continue
 				}
 				idx := menu.Cursor

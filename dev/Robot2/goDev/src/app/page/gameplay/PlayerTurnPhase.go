@@ -5,11 +5,11 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
+	"tool/log"
 )
 
 func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
-	fmt.Println("[PlayerTurnPhase] start")
+	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "start")
 	view := def.View
 	model := def.Model
 	model.Push()
@@ -17,7 +17,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	for {
-		fmt.Println("[PlayerTurnPhase] loop")
+		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
 			model.Reset()
@@ -74,6 +74,6 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			break
 		}
 	}
-	fmt.Println("[PlayerTurnPhase] end")
+	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "end")
 	return ctx, nil
 }

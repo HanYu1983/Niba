@@ -85,5 +85,4 @@ func init() {
 		fmt.Println(err.Error())
 		return
 	}
-	//fmt.Printf("%+v\n", GameData)
 }

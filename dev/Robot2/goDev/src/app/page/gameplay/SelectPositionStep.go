@@ -5,11 +5,11 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
+	"tool/log"
 )
 
 func SelectPositionStep(origin uidata.UI, robotID string, isValid func(protocol.Position) error) (uidata.UI, protocol.Position, bool, error) {
-	fmt.Println("[SelectPositionStep]")
+	log.Log(protocol.LogCategoryPhase, "SelectPositionStep", "start")
 	view := def.View
 	model := def.Model
 	model.Push()

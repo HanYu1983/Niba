@@ -3,12 +3,13 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
+	"tool/log"
 )
 
 func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string) error) (uidata.UI, string, bool, error) {
-	fmt.Println("SelectUnitStep start")
+	log.Log(protocol.LogCategoryPhase, "SelectUnitStep", "start")
 	view := def.View
 	model := def.Model
 	model.Push()
