@@ -28,14 +28,25 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 	model := def.Model
 	model.Push()
 	defer model.Pop()
+	var err error
 	ctx := origin
+	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+	if err != nil {
+		model.Reset()
+		return origin, false, err
+	}
 	if robot, is := model.GetGameplayRobots()[unitID]; is {
-		ctx, err := CreateRobotMenu(ctx, robot.ID)
-		defer model.DisableRobotMenu()
+		var _ = robot
+		isRobotDone := ctx.GameplayPages[uidata.PageGameplay].Tags[unitID].IsDone
+		if isRobotDone {
+			return origin, false, nil
+		}
+		ctx, err = CreateRobotMenu(ctx, unitID)
 		if err != nil {
 			return origin, false, err
 		}
-	ContinueWhenClickTab:
+		var cancel, tab bool
+		var selection string
 		for {
 			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
@@ -43,8 +54,6 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				return origin, false, err
 			}
 			view.Render(ctx)
-			var cancel, tab bool
-			var selection string
 			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				model.Reset()
@@ -57,68 +66,90 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				model.Reset()
 				return origin, cancel, nil
 			}
-			topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
-			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-			switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
-			case protocol.RobotMenuFunctionWeapon:
-				weaponID := selection
-				var targetID string
-				ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
-					return nil
-				})
+			break
+		}
+		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
+		case protocol.RobotMenuFunctionWeapon:
+			weaponID := selection
+			var targetID string
+			ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
+				return nil
+			})
+			if err != nil {
+				model.Reset()
+				return origin, false, err
+			}
+			if cancel {
+				model.Reset()
+				return origin, cancel, nil
+			}
+			var _ = targetID
+			var _ = weaponID
+		case protocol.RobotMenuFunctionTransform:
+			transformID := selection
+			err = model.RobotTransform(unitID, transformID)
+			if err != nil {
+				view.Alert(err.Error())
+			}
+			ctx, cancel, err = UnitMenuPhase(ctx, unitID)
+			if err != nil {
+				model.Reset()
+				return origin, false, err
+			}
+			if cancel {
+				model.Reset()
+				return origin, cancel, nil
+			}
+		default:
+			switch selection {
+			case uidata.MenuOptionUnitDone:
+				err = model.RobotDone(unitID)
+				if err != nil {
+					model.Reset()
+					return origin, false, err
+				}
+			case uidata.MenuOptionMove:
+				ctx, cancel, err = RobotMovePhase(ctx, unitID)
 				if err != nil {
 					model.Reset()
 					return origin, false, err
 				}
 				if cancel {
 					model.Reset()
-					return origin, cancel, nil
+					return ctx, cancel, nil
 				}
-				var _ = targetID
-				var _ = weaponID
-			case protocol.RobotMenuFunctionTransform:
-				transformID := selection
-				err = model.RobotTransform(unitID, transformID)
+			case uidata.MenuOptionSkyGround:
+				err = model.RobotSkyGround(unitID)
 				if err != nil {
 					view.Alert(err.Error())
-					continue
 				}
-			default:
-				switch selection {
-				case uidata.MenuOptionMove:
-					ctx, cancel, err = RobotMovePhase(ctx, unitID)
-					if err != nil {
-						view.Alert(err.Error())
-						continue
-					}
-					if cancel {
-						model.Reset()
-						return ctx, cancel, nil
-					}
-					break ContinueWhenClickTab
-				case uidata.MenuOptionSkyGround:
-					err = model.RobotSkyGround(unitID)
-					if err != nil {
-						view.Alert(err.Error())
-						continue
-					}
-					break ContinueWhenClickTab
+				ctx, cancel, err = UnitMenuPhase(ctx, unitID)
+				if err != nil {
+					model.Reset()
+					return origin, false, err
+				}
+				if cancel {
+					model.Reset()
+					return ctx, cancel, nil
 				}
 			}
 		}
+		model.DisableRobotMenu()
 	}
 	if item, is := model.GetGameplayItems()[unitID]; is {
+		var _ = item
 		// append menu
-		ctx, err := CreateItemMenu(ctx, item.ID)
+		ctx, err := CreateItemMenu(ctx, unitID)
 		if err != nil {
 			model.Reset()
 			return origin, false, err
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
-	ContinueItemWhenClickTab:
+		var cancel, tab bool
+		var selection string
 		for {
-			var cancel, tab bool
-			var selection string
 			ctx, selection, cancel, tab, err = common.Menu1DStep(ctx, uidata.PageGameplay, uidata.Menu1DSystemMenu)
 			if err != nil {
 				model.Reset()
@@ -131,9 +162,9 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				model.Reset()
 				return ctx, cancel, nil
 			}
-			var _ = selection
-			break ContinueItemWhenClickTab
+			break
 		}
+		var _ = selection
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
 	}
 	return origin, false, nil

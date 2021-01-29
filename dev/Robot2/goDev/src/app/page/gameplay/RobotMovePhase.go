@@ -9,7 +9,7 @@ import (
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
-	fmt.Println("[RobotMovePhase]")
+	fmt.Printf("[RobotMovePhase] robotID(%v)\n", robotID)
 	model := def.Model
 	model.Push()
 	defer model.Pop()

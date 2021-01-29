@@ -43,9 +43,11 @@ type IModel interface {
 	GetGameplayRobots() map[string]Robot
 	GetGameplayItems() map[string]Item
 	GetGameplayPositions() map[string]Position
+	GetGameplayTags() map[string]Tag
 	GetMap() [][]int
 	SetCursor(Position)
 	GetCursor() Position
+	RobotDone(string) error
 	RobotMove(string, Position) error
 	RobotTransform(string, string) error
 	RobotSkyGround(string) error

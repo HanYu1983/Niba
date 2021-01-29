@@ -60,6 +60,7 @@ type Player struct {
 type Tag struct {
 	MoveCount int
 	Sky       bool
+	IsDone    bool
 }
 
 const (

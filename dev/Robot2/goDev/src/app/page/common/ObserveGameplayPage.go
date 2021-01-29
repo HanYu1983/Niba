@@ -37,6 +37,8 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		localPosDict[id] = tool.World2Local(gameplayPage.Camera, pos)
 	}
 	gameplayPage.Positions = localPosDict
+	// tags
+	gameplayPage.Tags = model.GetGameplayTags()
 	// move range
 	var notFound string
 	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())

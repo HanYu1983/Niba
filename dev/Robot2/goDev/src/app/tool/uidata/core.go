@@ -90,6 +90,7 @@ type GameplayPage struct {
 	Robots      map[string]protocol.Robot
 	Items       map[string]protocol.Item
 	Positions   map[string]protocol.Position
+	Tags        map[string]protocol.Tag
 	MoveRange   []protocol.Position
 	AttackRange []protocol.Position
 	RobotMenu   protocol.RobotMenu
