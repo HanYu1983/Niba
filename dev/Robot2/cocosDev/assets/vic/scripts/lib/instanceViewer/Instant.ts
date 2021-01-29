@@ -25,7 +25,7 @@ export class Instant extends Component implements IInstant {
     @property(CCBoolean)
     doActiveWhenBuildClear:boolean = false;
 
-    outOfWorld:Vec3 = new Vec3(5000,0,0);
+    outOfWorld:Vec3 = new Vec3(5000,5000,0);
     cachePos:Vec3 = Vec3.ZERO;
 
     start(){

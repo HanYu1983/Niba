@@ -13,7 +13,7 @@ export class Pool extends Component {
 
     private poolDict:any = {};
 
-    private outOfWorld:Vec3 = new Vec3(50000,0,0);
+    private outOfWorld:Vec3 = new Vec3(5000,5000,0);
 
     aquire(prefab:Node, parent:Node){
         const poolId = prefab.uuid.toString();
