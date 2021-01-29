@@ -50,27 +50,12 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
-
-	// switch detail := evt.(type) {
-	// case uidata.CommandKeyDown:
-	// 	switch detail.KeyCode {
-	// 	case uidata.KeyCodeUp:
-	// 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	// 		gameplayPage.Cursor[1]--
-	// 		ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-	// 	case uidata.KeyCodeDown:
-	// 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	// 		gameplayPage.Cursor[1]++
-	// 		ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-	// 	case uidata.KeyCodeLeft:
-	// 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	// 		gameplayPage.Cursor[0]--
-	// 		ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-	// 	case uidata.KeyCodeRight:
-	// 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	// 		gameplayPage.Cursor[0]++
-	// 		ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-	// 	}
-	// }
+	var notFound string
+	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
+	if unitAtCursor != notFound {
+		model.SetMoveRange(model.QueryMoveRange(unitAtCursor))
+	} else {
+		model.SetMoveRange(nil)
+	}
 	return ctx, nil
 }

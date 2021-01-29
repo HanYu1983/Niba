@@ -42,19 +42,14 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	// tags
 	gameplayPage.Tags = model.GetGameplayTags()
 	// move range
-	if len(gameplayPage.State) > 0 && gameplayPage.State[len(gameplayPage.State)-1] == uidata.GameplayPageStateWaitingMove {
-
-	} else {
-		var notFound string
-		unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
-		if unitAtCursor != notFound {
-			gameplayPage.MoveRange = model.QueryMoveRange(unitAtCursor)
-			for i, pos := range gameplayPage.MoveRange {
-				gameplayPage.MoveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
-			}
-		} else {
-			gameplayPage.MoveRange = []protocol.Position{}
+	moveRange := model.GetMoveRange()
+	if moveRange != nil {
+		for i, pos := range moveRange {
+			moveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
 		}
+		gameplayPage.MoveRange = moveRange
+	} else {
+		gameplayPage.MoveRange = []protocol.Position{}
 	}
 	// unitMenu
 	unitMenuModel := model.GetRobotMenu()
@@ -63,14 +58,17 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		isSelectingWeapon := unitMenuModel.RowFunctionMapping[unitMenu.Cursor1] == protocol.RobotMenuFunctionWeapon
 		log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("isSelectingWeapon(%v)", isSelectingWeapon))
 		if isSelectingWeapon {
-			selectedWeaponID := unitMenu.Options[unitMenu.Cursor1][unitMenu.Cursor2[unitMenu.Cursor1]]
+			selectedWeaponID, err := tool.TryGetString2(unitMenu.Options, unitMenu.Cursor1)(tool.TryGetInt(unitMenu.Cursor2, unitMenu.Cursor1))
+			if err != nil {
+				return origin, err
+			}
 			selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
 			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("robotPos(%v)", robotPos))
 			attackRange, err := tool.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
 			if err != nil {
-				log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", err.Error())
+				return origin, err
 			}
 			gameplayPage.AttackRange = attackRange
 		} else {

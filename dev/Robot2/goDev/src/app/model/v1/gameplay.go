@@ -67,3 +67,9 @@ func (v *model) DisableRobotMenu() error {
 func (v *model) GetRobotMenu() protocol.RobotMenu {
 	return v.App.Gameplay.RobotMenu
 }
+func (v *model) SetMoveRange(moveRnage []protocol.Position) {
+	v.App.Gameplay.MoveRange = moveRnage
+}
+func (v *model) GetMoveRange() []protocol.Position {
+	return v.App.Gameplay.MoveRange
+}

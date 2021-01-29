@@ -86,6 +86,24 @@ func TryGetPosition(items []Position, i int) (Position, error) {
 	return items[i], nil
 }
 
+func TryGetPosition2(items [][]Position, i int) func(j int, err error) (Position, error) {
+	return func(j int, err error) (Position, error) {
+		if err != nil {
+			ret := map[int]Position{}
+			return ret[0], err
+		}
+		if i < 0 || i >= len(items) {
+			ret := map[int]Position{}
+			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+		}
+		if j < 0 || j >= len(items[i]) {
+			ret := map[int]Position{}
+			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+		}
+		return items[i][j], nil
+	}
+}
+
 func DifferencePosition(a []Position, b []Position) []Position {
 	ret := []Position{}
 	for _, v := range a {

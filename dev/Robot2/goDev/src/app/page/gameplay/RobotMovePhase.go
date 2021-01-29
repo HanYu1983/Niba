@@ -20,12 +20,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		return origin, false, fmt.Errorf("can not move")
 	}
 	moveRange := model.QueryMoveRange(robotID)
-
-	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	gameplayPage.State = append(gameplayPage.State, uidata.GameplayPageStateWaitingMove)
-	gameplayPage.MoveRange = moveRange
-	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-
+	model.SetMoveRange(moveRange)
 	for {
 		ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(target protocol.Position) error {
 			for _, pos := range moveRange {
@@ -60,11 +55,6 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		}
 		break
 	}
-
-	gameplayPage = ctx.GameplayPages[uidata.PageGameplay]
-	gameplayPage.State = gameplayPage.State[:len(gameplayPage.State)-1]
-	gameplayPage.MoveRange = []protocol.Position{}
-	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
-
+	model.SetMoveRange(nil)
 	return ctx, false, nil
 }

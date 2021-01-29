@@ -82,6 +82,24 @@ func TryGetItem(items []Item, i int) (Item, error) {
 	return items[i], nil
 }
 
+func TryGetItem2(items [][]Item, i int) func(j int, err error) (Item, error) {
+	return func(j int, err error) (Item, error) {
+		if err != nil {
+			ret := map[int]Item{}
+			return ret[0], err
+		}
+		if i < 0 || i >= len(items) {
+			ret := map[int]Item{}
+			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+		}
+		if j < 0 || j >= len(items[i]) {
+			ret := map[int]Item{}
+			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+		}
+		return items[i][j], nil
+	}
+}
+
 func DifferenceItem(a []Item, b []Item) []Item {
 	ret := []Item{}
 	for _, v := range a {

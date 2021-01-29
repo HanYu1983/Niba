@@ -26,6 +26,7 @@ type gameplay struct {
 	Items          map[string]protocol.Item
 	Pilots         map[string]protocol.Pilot
 	RobotMenu      protocol.RobotMenu
+	MoveRange      []protocol.Position
 	Done           interface{}
 }
 

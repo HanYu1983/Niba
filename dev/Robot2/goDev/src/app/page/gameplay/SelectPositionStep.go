@@ -2,6 +2,7 @@ package gameplay
 
 import (
 	"app/page/common"
+	"app/tool"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -44,7 +45,9 @@ WaitSpace:
 			case uidata.KeyCodeCancel:
 				return origin, protocol.Position{}, true, nil
 			case uidata.KeyCodeEnter:
-				if errMsg := isValid(ctx.GameplayPages[uidata.PageGameplay].Cursor); errMsg != nil {
+				localCursor := ctx.GameplayPages[uidata.PageGameplay].Cursor
+				worldCursor := tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, localCursor)
+				if errMsg := isValid(worldCursor); errMsg != nil {
 					view.Alert(errMsg.Error())
 					continue
 				}

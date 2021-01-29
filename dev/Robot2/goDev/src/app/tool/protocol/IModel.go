@@ -38,6 +38,8 @@ type IModel interface {
 	IsDone() bool
 	QueryUnitsByRegion(p1 Position, p2 Position) []string
 	QueryUnitByPosition(Position) string
+	SetMoveRange([]Position)
+	GetMoveRange() []Position
 	QueryMoveRange(string) []Position
 	QueryMoveCount(string) int
 	GetGameplayRobots() map[string]Robot

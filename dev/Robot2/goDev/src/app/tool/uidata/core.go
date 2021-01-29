@@ -81,11 +81,6 @@ const (
 	MapHeight = 20
 )
 
-const (
-	GameplayPageStatePending = iota
-	GameplayPageStateWaitingMove
-)
-
 // GameplayPage is
 type GameplayPage struct {
 	Map         [MapHeight][MapWidth]int
@@ -99,7 +94,6 @@ type GameplayPage struct {
 	MoveRange   []protocol.Position
 	AttackRange []protocol.Position
 	RobotMenu   protocol.RobotMenu
-	State       []int
 }
 
 // ListInt is

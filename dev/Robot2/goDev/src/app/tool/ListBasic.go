@@ -86,6 +86,24 @@ func TryGetInt(items []int, i int) (int, error) {
 	return items[i], nil
 }
 
+func TryGetInt2(items [][]int, i int) func(j int, err error) (int, error) {
+	return func(j int, err error) (int, error) {
+		if err != nil {
+			ret := map[int]int{}
+			return ret[0], err
+		}
+		if i < 0 || i >= len(items) {
+			ret := map[int]int{}
+			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+		}
+		if j < 0 || j >= len(items[i]) {
+			ret := map[int]int{}
+			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+		}
+		return items[i][j], nil
+	}
+}
+
 func DifferenceInt(a []int, b []int) []int {
 	ret := []int{}
 	for _, v := range a {
@@ -177,6 +195,24 @@ func TryGetString(items []string, i int) (string, error) {
 		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
 	}
 	return items[i], nil
+}
+
+func TryGetString2(items [][]string, i int) func(j int, err error) (string, error) {
+	return func(j int, err error) (string, error) {
+		if err != nil {
+			ret := map[int]string{}
+			return ret[0], err
+		}
+		if i < 0 || i >= len(items) {
+			ret := map[int]string{}
+			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+		}
+		if j < 0 || j >= len(items[i]) {
+			ret := map[int]string{}
+			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+		}
+		return items[i][j], nil
+	}
 }
 
 func DifferenceString(a []string, b []string) []string {
