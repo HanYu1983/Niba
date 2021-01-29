@@ -34,10 +34,10 @@ export class Grids extends Instant {
                     let node:Node = this.pool.aquire(this.prefab, this.node);
                     node.getComponent(Grid)?.setType(map[j][i]);
                     node.getComponent(Grid)?.showNormal();
-                    node.getComponent(Grid).landX = j;
-                    node.getComponent(Grid).landY = i;
+                    node.getComponent(Grid).landX = i;
+                    node.getComponent(Grid).landY = j;
                     
-                    node.setPosition(Grids.getGridPos(j, i));
+                    node.setPosition(Grids.getGridPos(i, j));
                     this.grids.push(node);
                 }
             }
