@@ -66,7 +66,9 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			selectedWeaponID := unitMenu.Options[unitMenu.Cursor1][unitMenu.Cursor2[unitMenu.Cursor1]]
 			selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
 			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
-			attackRange, err := tool.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], protocol.Position{})
+			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
+			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("robotPos(%v)", robotPos))
+			attackRange, err := tool.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
 			if err != nil {
 				log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", err.Error())
 			}

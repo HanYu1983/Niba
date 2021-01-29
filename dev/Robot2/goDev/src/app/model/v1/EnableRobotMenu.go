@@ -31,6 +31,7 @@ func (v *model) EnableRobotMenu(robotID string, situation interface{}) error {
 	}
 	options = append(options, []string{uidata.MenuOptionUnitDone})
 	v.App.Gameplay.RobotMenu.Active = true
+	v.App.Gameplay.RobotMenu.ActiveRobotID = robotID
 	v.App.Gameplay.RobotMenu.Options = options
 	v.App.Gameplay.RobotMenu.RowFunctionMapping = rowFunctionMapping
 	v.App.Gameplay.RobotMenu.Weapons = weapons

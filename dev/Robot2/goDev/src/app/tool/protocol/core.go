@@ -108,6 +108,7 @@ const (
 
 type RobotMenu struct {
 	Active             bool
+	ActiveRobotID      string
 	Options            [][]string
 	RowFunctionMapping map[int]int
 	Weapons            map[string]Weapon

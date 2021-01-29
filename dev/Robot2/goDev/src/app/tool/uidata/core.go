@@ -352,6 +352,7 @@ var (
 				Items:       map[string]protocol.Item{},
 				MoveRange:   []protocol.Position{{0, 0}, {0, 1}},
 				AttackRange: []protocol.Position{{0, 1}, {1, 1}},
+				RobotMenu:   protocol.RobotMenu{},
 			},
 		},
 	}
