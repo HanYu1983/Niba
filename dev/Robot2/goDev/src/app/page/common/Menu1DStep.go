@@ -19,7 +19,7 @@ func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
-		ctx, err = ObserveMenu1D(ctx, menuID)
+		ctx, err = ObservePage(ctx, pageID)
 		if err != nil {
 			return origin, "", false, false, err
 		}

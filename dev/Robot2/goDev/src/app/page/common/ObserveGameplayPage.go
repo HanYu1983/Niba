@@ -5,6 +5,8 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
+	"tool/log"
 )
 
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
@@ -56,6 +58,23 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	// unitMenu
 	unitMenuModel := model.GetRobotMenu()
+	if unitMenuModel.Active {
+		unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+		isSelectingWeapon := unitMenuModel.RowFunctionMapping[unitMenu.Cursor1] == protocol.RobotMenuFunctionWeapon
+		log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("isSelectingWeapon(%v)", isSelectingWeapon))
+		if isSelectingWeapon {
+			selectedWeaponID := unitMenu.Options[unitMenu.Cursor1][unitMenu.Cursor2[unitMenu.Cursor1]]
+			selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
+			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
+			attackRange, err := tool.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], protocol.Position{})
+			if err != nil {
+				log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", err.Error())
+			}
+			gameplayPage.AttackRange = attackRange
+		} else {
+			gameplayPage.AttackRange = []protocol.Position{}
+		}
+	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, gameplayPage)

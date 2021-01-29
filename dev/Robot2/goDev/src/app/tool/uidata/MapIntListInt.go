@@ -63,3 +63,14 @@ func TryGetIntListInt(a map[int]ListInt, k int) (ListInt, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceIntListInt(a map[int]ListInt, b map[int]ListInt) map[int]ListInt {
+	ret := map[int]ListInt{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

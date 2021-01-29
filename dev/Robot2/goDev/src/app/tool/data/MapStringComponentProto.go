@@ -63,3 +63,14 @@ func TryGetStringComponentProto(a map[string]ComponentProto, k string) (Componen
 	}
 	return ret, nil
 }
+
+func DifferenceStringComponentProto(a map[string]ComponentProto, b map[string]ComponentProto) map[string]ComponentProto {
+	ret := map[string]ComponentProto{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

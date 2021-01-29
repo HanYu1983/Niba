@@ -86,6 +86,23 @@ func TryGetInt(items []int, i int) (int, error) {
 	return items[i], nil
 }
 
+func DifferenceInt(a []int, b []int) []int {
+	ret := []int{}
+	for _, v := range a {
+		has := false
+		for _, v2 := range b {
+			if v == v2 {
+				has = true
+				break
+			}
+		}
+		if has == false {
+			ret = append(ret, v)
+		}
+	}
+	return ret
+}
+
 // ShuffleString is
 func ShuffleString(arr []string) {
 	t := time.Now()
@@ -160,4 +177,21 @@ func TryGetString(items []string, i int) (string, error) {
 		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
 	}
 	return items[i], nil
+}
+
+func DifferenceString(a []string, b []string) []string {
+	ret := []string{}
+	for _, v := range a {
+		has := false
+		for _, v2 := range b {
+			if v == v2 {
+				has = true
+				break
+			}
+		}
+		if has == false {
+			ret = append(ret, v)
+		}
+	}
+	return ret
 }

@@ -63,3 +63,14 @@ func TryGetStringPosition(a map[string]Position, k string) (Position, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringPosition(a map[string]Position, b map[string]Position) map[string]Position {
+	ret := map[string]Position{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

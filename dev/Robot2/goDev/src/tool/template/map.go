@@ -59,3 +59,14 @@ func TryGetKeyValue(a map[Key]Value, k Key) (Value, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceKeyValue(a map[Key]Value, b map[Key]Value) map[Key]Value {
+	ret := map[Key]Value{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

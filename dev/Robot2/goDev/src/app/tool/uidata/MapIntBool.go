@@ -63,3 +63,14 @@ func TryGetIntBool(a map[int]bool, k int) (bool, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceIntBool(a map[int]bool, b map[int]bool) map[int]bool {
+	ret := map[int]bool{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

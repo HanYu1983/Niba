@@ -11,7 +11,8 @@ import (
 )
 
 func Main() {
-	log.Category[protocol.LogCategoryPhase] = false
+	log.Category[protocol.LogCategoryPhase] = true
+	log.Category[protocol.LogCategoryDetail] = true
 	view := def.View
 	// tree, _ := astar.ShortedPathTree(
 	// 	1,

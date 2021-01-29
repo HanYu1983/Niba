@@ -51,7 +51,7 @@ func init() {
 	for y := 0; y < 30; y++ {
 		row := []int{}
 		for x := 0; x < 30; x++ {
-			row = append(row, i%7)
+			row = append(row, i%6)
 			i++
 		}
 		temp = append(temp, row)

@@ -22,9 +22,20 @@ func QueryRobotWeapons(app app, robot protocol.Robot) (protocol.Weapons, error) 
 		}
 		instanceID := fmt.Sprintf("weapon_%v", i)
 		weapon := protocol.Weapon{
-			ID:      instanceID,
-			ProtoID: weaponID,
-			Title:   weaponProto.Title,
+			ID:             instanceID,
+			ProtoID:        weaponID,
+			Title:          weaponProto.Title,
+			Range:          weaponProto.Range,
+			EnergyCost:     weaponProto.EnergyCost,
+			MaxBulletCount: weaponProto.MaxBulletCount,
+			Suitablility:   weaponProto.Suitablility,
+			Ability:        weaponProto.Ability,
+			EnergyType:     weaponProto.EnergyType,
+			Type:           weaponProto.Type,
+			Accuracy:       weaponProto.Accuracy,
+			Damage:         weaponProto.Damage,
+			Curage:         weaponProto.Curage,
+			UnlockExp:      weaponProto.UnlockExp,
 		}
 		weapons[weapon.ID] = weapon
 	}

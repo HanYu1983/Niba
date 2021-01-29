@@ -63,3 +63,14 @@ func TryGetStringWeapons(a map[string]Weapons, k string) (Weapons, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringWeapons(a map[string]Weapons, b map[string]Weapons) map[string]Weapons {
+	ret := map[string]Weapons{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

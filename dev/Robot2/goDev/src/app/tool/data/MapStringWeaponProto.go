@@ -63,3 +63,14 @@ func TryGetStringWeaponProto(a map[string]WeaponProto, k string) (WeaponProto, e
 	}
 	return ret, nil
 }
+
+func DifferenceStringWeaponProto(a map[string]WeaponProto, b map[string]WeaponProto) map[string]WeaponProto {
+	ret := map[string]WeaponProto{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

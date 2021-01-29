@@ -63,3 +63,14 @@ func TryGetStringItem(a map[string]Item, k string) (Item, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringItem(a map[string]Item, b map[string]Item) map[string]Item {
+	ret := map[string]Item{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

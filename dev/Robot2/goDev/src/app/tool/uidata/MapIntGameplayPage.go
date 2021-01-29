@@ -63,3 +63,14 @@ func TryGetIntGameplayPage(a map[int]GameplayPage, k int) (GameplayPage, error) 
 	}
 	return ret, nil
 }
+
+func DifferenceIntGameplayPage(a map[int]GameplayPage, b map[int]GameplayPage) map[int]GameplayPage {
+	ret := map[int]GameplayPage{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

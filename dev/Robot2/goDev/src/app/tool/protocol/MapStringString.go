@@ -63,3 +63,14 @@ func TryGetStringString(a map[string]string, k string) (string, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringString(a map[string]string, b map[string]string) map[string]string {
+	ret := map[string]string{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

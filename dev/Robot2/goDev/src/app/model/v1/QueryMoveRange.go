@@ -22,6 +22,7 @@ func (v *model) QueryMoveRange(robotID string) []protocol.Position {
 			return false
 		},
 		func(curr *astar.Node) []astar.NeighborsNode {
+			// prevent infinite loop
 			if int(curr.Cost) > 100 {
 				return []astar.NeighborsNode{}
 			}

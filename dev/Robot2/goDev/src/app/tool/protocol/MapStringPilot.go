@@ -63,3 +63,14 @@ func TryGetStringPilot(a map[string]Pilot, k string) (Pilot, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringPilot(a map[string]Pilot, b map[string]Pilot) map[string]Pilot {
+	ret := map[string]Pilot{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

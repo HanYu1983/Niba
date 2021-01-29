@@ -63,3 +63,14 @@ func TryGetIntMenu2D(a map[int]Menu2D, k int) (Menu2D, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
+	ret := map[int]Menu2D{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

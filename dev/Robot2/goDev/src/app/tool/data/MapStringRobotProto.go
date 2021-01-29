@@ -63,3 +63,14 @@ func TryGetStringRobotProto(a map[string]RobotProto, k string) (RobotProto, erro
 	}
 	return ret, nil
 }
+
+func DifferenceStringRobotProto(a map[string]RobotProto, b map[string]RobotProto) map[string]RobotProto {
+	ret := map[string]RobotProto{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

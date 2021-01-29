@@ -63,3 +63,14 @@ func TryGetStringComponent(a map[string]Component, k string) (Component, error) 
 	}
 	return ret, nil
 }
+
+func DifferenceStringComponent(a map[string]Component, b map[string]Component) map[string]Component {
+	ret := map[string]Component{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}

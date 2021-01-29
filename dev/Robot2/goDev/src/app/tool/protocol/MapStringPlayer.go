@@ -63,3 +63,14 @@ func TryGetStringPlayer(a map[string]Player, k string) (Player, error) {
 	}
 	return ret, nil
 }
+
+func DifferenceStringPlayer(a map[string]Player, b map[string]Player) map[string]Player {
+	ret := map[string]Player{}
+	for k, v := range a {
+		_, has := b[k]
+		if has == false {
+			ret[k] = v
+		}
+	}
+	return ret
+}
