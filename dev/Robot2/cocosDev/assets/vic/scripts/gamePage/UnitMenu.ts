@@ -28,6 +28,7 @@ export class UnitMenu extends InstMenu {
                 options[key] = weaponTitles;
             }
         }
+        content[0] = options;
         super.doBuild(content, data);
     }
 }
