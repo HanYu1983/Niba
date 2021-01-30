@@ -34,6 +34,7 @@ type IModel interface {
 	QueryRobotIDByComponentID() map[string]string
 	QueryPilotIDByRobotID() map[string]string
 	// gameplay
+	RenderGameplay(ctx interface{}, id int) (interface{}, error)
 	QueryActivePlayer() string
 	NextPlayer() error
 	IsDone() bool

@@ -1,6 +1,7 @@
 package app
 
 import (
+	v1 "app/model/v1"
 	"app/page/gameplay"
 	"app/page/title"
 	"app/tool/def"
@@ -14,6 +15,8 @@ func Main() {
 	log.Category[protocol.LogCategoryPhase] = true
 	log.Category[protocol.LogCategoryDetail] = true
 	view := def.View
+	model := &v1.DefaultModel
+	def.Model = model
 	// tree, _ := astar.ShortedPathTree(
 	// 	1,
 	// 	func(curr *astar.Node) (bool, bool) {

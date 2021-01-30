@@ -68,39 +68,3 @@ func init() {
 	}}
 	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 }
-
-func isFriendlyRobot(app app, unitID1 string, unitID2 string) (bool, error) {
-	unit1, err := protocol.TryGetStringRobot(app.Gameplay.Robots, unitID1)
-	if err != nil {
-		return false, err
-	}
-	unit2, err := protocol.TryGetStringRobot(app.Gameplay.Robots, unitID2)
-	if err != nil {
-		return false, err
-	}
-	plyr1, err := protocol.TryGetStringPlayer(app.Gameplay.Players, unit1.PlayerID)
-	if err != nil {
-		return false, err
-	}
-	plyr2, err := protocol.TryGetStringPlayer(app.Gameplay.Players, unit2.PlayerID)
-	if err != nil {
-		return false, err
-	}
-	return plyr1.GroupID == plyr2.GroupID, nil
-}
-
-func isFriendlyCell(app app, unitID string, pos protocol.Position) (bool, error) {
-	unitAtPos := SearchUnitByPosition(app.Gameplay.Positions, pos)
-	var notFound string
-	if unitAtPos == notFound {
-		return true, nil
-	}
-	if robot, is := app.Gameplay.Robots[unitAtPos]; is {
-		return isFriendlyRobot(app, unitID, robot.ID)
-	}
-	if item, is := app.Gameplay.Items[unitAtPos]; is {
-		var _ = item
-		return true, nil
-	}
-	return false, nil
-}

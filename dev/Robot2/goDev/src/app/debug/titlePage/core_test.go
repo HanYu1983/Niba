@@ -1,6 +1,7 @@
 package titlePage
 
 import (
+	v1 "app/model/v1"
 	"app/page/title"
 	"app/tool/def"
 	"app/tool/protocol"
@@ -29,12 +30,21 @@ func (p Mock) Render(ui uidata.UI) {
 	uiSnapshot = ui
 }
 
+func (p Mock) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {
+
+}
+
 func (p Mock) Alert(msg string) {
 
 }
 
+var (
+	mockModel = v1.DefaultModel
+)
+
 func init() {
 	def.View = Mock{}
+	def.Model = protocol.IModel(&mockModel)
 }
 
 func TestStartPagePhaseBasic(t *testing.T) {
