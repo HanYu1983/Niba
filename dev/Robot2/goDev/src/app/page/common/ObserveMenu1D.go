@@ -1,9 +1,9 @@
 package common
 
 import (
-	"app/tool"
 	"app/tool/data"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 )
@@ -38,12 +38,12 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		canBuy := model.QueryComponentCanBuy()
 		options = data.KesStringComponentProto(canBuy)
 	}
-	menu.Offset = tool.Max(0, tool.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
-	left, right := tool.Max(0, tool.Min(menu.Offset, len(options)-1)), tool.Min(menu.Offset+menu.Limit, len(options))
+	menu.Offset = helper.Max(0, helper.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
+	left, right := helper.Max(0, helper.Min(menu.Offset, len(options)-1)), helper.Min(menu.Offset+menu.Limit, len(options))
 	if len(options) > 0 {
 		menu.Options = options[left:right]
 	}
-	menu.Cursor = tool.Max(0, tool.Min(len(menu.Options)-1, menu.Cursor))
+	menu.Cursor = helper.Max(0, helper.Min(len(menu.Options)-1, menu.Cursor))
 	ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 	return ctx, nil
 }

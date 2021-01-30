@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"app/tool"
 	"app/tool/data"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"tool/astar"
 )
@@ -25,7 +25,7 @@ func (v *model) QueryMoveRangeTree(robotID string) (astar.NodeMap, error) {
 				return []astar.NeighborsNode{}
 			}
 			currPos := curr.Pather.(protocol.Position)
-			terrain1 := tool.QueryTerrain(v.App.Gameplay.Map, terrainCache, currPos)
+			terrain1 := helper.QueryTerrain(v.App.Gameplay.Map, terrainCache, currPos)
 			offsets := []protocol.Position{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 			ret := []astar.NeighborsNode{}
 			for _, offset := range offsets {
@@ -37,7 +37,7 @@ func (v *model) QueryMoveRangeTree(robotID string) (astar.NodeMap, error) {
 					continue
 				}
 				nextPos := protocol.Position{x, y}
-				terrain2 := tool.QueryTerrain(v.App.Gameplay.Map, terrainCache, nextPos)
+				terrain2 := helper.QueryTerrain(v.App.Gameplay.Map, terrainCache, nextPos)
 				nextCost := float64(terrain1.Cost + terrain2.Cost)
 				if int(curr.Cost+nextCost) > movePower {
 					continue

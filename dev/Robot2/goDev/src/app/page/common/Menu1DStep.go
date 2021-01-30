@@ -1,8 +1,8 @@
 package common
 
 import (
-	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -42,18 +42,18 @@ AskCommand:
 				if len(menu.Options) == 0 {
 					continue
 				}
-				menu.Cursor = tool.Max(menu.Cursor-1, 0)
+				menu.Cursor = helper.Max(menu.Cursor-1, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeDown:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
 					continue
 				}
-				menu.Cursor = tool.Min(menu.Cursor+1, len(menu.Options)-1)
+				menu.Cursor = helper.Min(menu.Cursor+1, len(menu.Options)-1)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu1Ds[menuID]
-				menu.Offset = tool.Max(menu.Offset-menu.Limit, 0)
+				menu.Offset = helper.Max(menu.Offset-menu.Limit, 0)
 				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu1Ds[menuID]
@@ -66,7 +66,7 @@ AskCommand:
 				if len(menu.Options) == 0 {
 					log.Log(protocol.LogCategoryDetail, "Menu1DStep", "沒有任何Options, 當成切換Focus")
 					focus := ctx.Focus[pageID]
-					focus, over := tool.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					focus, over := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
 					if over {
 						focus = focus % len(ctx.Menus[pageID])
 					}

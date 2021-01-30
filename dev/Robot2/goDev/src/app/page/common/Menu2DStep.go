@@ -1,8 +1,8 @@
 package common
 
 import (
-	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -65,7 +65,7 @@ AskCommand:
 				if len(menu.Options[menu.Cursor1]) == 0 {
 					continue
 				}
-				menu.Cursor2[menu.Cursor1] = tool.Max(0, menu.Cursor2[menu.Cursor1]-1)
+				menu.Cursor2[menu.Cursor1] = helper.Max(0, menu.Cursor2[menu.Cursor1]-1)
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu2Ds[menuID]
@@ -78,7 +78,7 @@ AskCommand:
 				if len(menu.Options[menu.Cursor1]) == 0 {
 					continue
 				}
-				menu.Cursor2[menu.Cursor1] = tool.Min(len(menu.Options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]+1)
+				menu.Cursor2[menu.Cursor1] = helper.Min(len(menu.Options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]+1)
 				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil

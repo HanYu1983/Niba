@@ -1,8 +1,8 @@
 package gameplay
 
 import (
-	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/uidata"
 )
 
@@ -19,7 +19,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]--
 			}
-			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeDown:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -28,7 +28,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]++
 			}
-			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeLeft:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -37,7 +37,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]--
 			}
-			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeRight:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -46,7 +46,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]++
 			}
-			model.SetCursor(tool.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
@@ -57,7 +57,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		moveRange := tool.MoveRangeTree2MoveRange(tree)
+		moveRange := helper.MoveRangeTree2MoveRange(tree)
 		model.SetMoveRange(moveRange)
 	} else {
 		model.SetMoveRange(nil)

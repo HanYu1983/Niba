@@ -3,6 +3,7 @@ package common
 import (
 	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -16,12 +17,12 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.GetMap()
 	// camera
-	gameplayPage.Camera[0] = tool.Max(0, tool.Min(len(modelMap[0])-uidata.MapWidth, gameplayPage.Camera[0]))
-	gameplayPage.Camera[1] = tool.Max(0, tool.Min(len(modelMap)-uidata.MapHeight, gameplayPage.Camera[1]))
+	gameplayPage.Camera[0] = helper.Max(0, helper.Min(len(modelMap[0])-uidata.MapWidth, gameplayPage.Camera[0]))
+	gameplayPage.Camera[1] = helper.Max(0, helper.Min(len(modelMap)-uidata.MapHeight, gameplayPage.Camera[1]))
 	// cursor
-	gameplayPage.Cursor = tool.World2Local(gameplayPage.Camera, model.GetCursor())
-	gameplayPage.Cursor[0] = tool.Max(0, tool.Min(gameplayPage.Cursor[0], uidata.MapWidth-1))
-	gameplayPage.Cursor[1] = tool.Max(0, tool.Min(gameplayPage.Cursor[1], uidata.MapHeight-1))
+	gameplayPage.Cursor = helper.World2Local(gameplayPage.Camera, model.GetCursor())
+	gameplayPage.Cursor[0] = helper.Max(0, helper.Min(gameplayPage.Cursor[0], uidata.MapWidth-1))
+	gameplayPage.Cursor[1] = helper.Max(0, helper.Min(gameplayPage.Cursor[1], uidata.MapHeight-1))
 	// local map
 	for x := 0; x < len(gameplayPage.Map[0]); x++ {
 		for y := 0; y < len(gameplayPage.Map); y++ {
@@ -36,7 +37,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	localPosDict := map[string]protocol.Position{}
 	for _, id := range gameplayPage.Units {
 		pos := model.GetGameplayPositions()[id]
-		localPosDict[id] = tool.World2Local(gameplayPage.Camera, pos)
+		localPosDict[id] = helper.World2Local(gameplayPage.Camera, pos)
 	}
 	gameplayPage.Positions = localPosDict
 	// tags
@@ -45,7 +46,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	moveRange := model.GetMoveRange()
 	if moveRange != nil {
 		for i, pos := range moveRange {
-			moveRange[i] = tool.World2Local(gameplayPage.Camera, pos)
+			moveRange[i] = helper.World2Local(gameplayPage.Camera, pos)
 		}
 		gameplayPage.MoveRange = moveRange
 	} else {
@@ -66,7 +67,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryDetail, "ObserveGameplayPage", fmt.Sprintf("robotPos(%v)", robotPos))
-			attackRange, err := tool.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
+			attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
 			if err != nil {
 				return origin, err
 			}

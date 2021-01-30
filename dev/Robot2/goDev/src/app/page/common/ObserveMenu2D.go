@@ -1,8 +1,8 @@
 package common
 
 import (
-	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/uidata"
 )
 
@@ -29,9 +29,9 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	}
 	menu.Options = options
 	if len(options) > 0 {
-		menu.Cursor1 = tool.Max(0, tool.Min(len(options)-1, menu.Cursor1))
+		menu.Cursor1 = helper.Max(0, helper.Min(len(options)-1, menu.Cursor1))
 		if len(options[menu.Cursor1]) > 0 {
-			menu.Cursor2[menu.Cursor1] = tool.Max(0, tool.Min(len(options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]))
+			menu.Cursor2[menu.Cursor1] = helper.Max(0, helper.Min(len(options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]))
 		}
 	}
 	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)

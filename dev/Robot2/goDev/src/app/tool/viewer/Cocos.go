@@ -1,7 +1,7 @@
 package viewer
 
 import (
-	"app/tool"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -55,7 +55,7 @@ func (p Cocos) Render(app uidata.UI) {
 
 func (p Cocos) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {
 	for i, local := range path {
-		path[i] = tool.World2Local(ui.GameplayPages[uidata.PageGameplay].Camera, local)
+		path[i] = helper.World2Local(ui.GameplayPages[uidata.PageGameplay].Camera, local)
 	}
 	wait := make(chan interface{})
 	view := js.Global.Get("View")

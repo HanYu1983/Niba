@@ -4,6 +4,7 @@ import (
 	"app/page/common"
 	"app/tool"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/uidata"
 	"fmt"
 )
@@ -40,11 +41,11 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				if cancel {
 					return ctx, cancel, nil
 				}
-				focus, _ := tool.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
+				focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
 				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 			case uidata.Menu1DPilotListMenu, uidata.Menu1DRobotListMenu:
 				if cancel {
-					focus, _ := tool.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
+					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
@@ -92,13 +93,13 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				}
 			case uidata.Menu1DAssocOrDisMenu:
 				if cancel {
-					focus, _ := tool.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
+					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				switch selection {
 				case uidata.MenuOptionAssoc:
-					focus, _ := tool.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
+					focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				case uidata.MenuOptionDissoc:
 					leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
