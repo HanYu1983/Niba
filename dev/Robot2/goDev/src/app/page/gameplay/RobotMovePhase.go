@@ -11,6 +11,7 @@ import (
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "RobotMovePhase", fmt.Sprintf("robotID(%v)\n", robotID))
+	view := def.View
 	model := def.Model
 	model.Push()
 	defer model.Pop()
@@ -19,12 +20,17 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	if isCanMove == false {
 		return origin, false, fmt.Errorf("can not move")
 	}
-	moveRange := model.QueryMoveRange(robotID)
+	tree, err := model.QueryMoveRangeTree(robotID)
+	if err != nil {
+		return origin, false, err
+	}
+	moveRange := tool.MoveRangeTree2MoveRange(tree)
 	model.SetMoveRange(moveRange)
 	for {
-		ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(target protocol.Position) error {
+		ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
+			worldCursor := tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, localCursor)
 			for _, pos := range moveRange {
-				if pos == target {
+				if pos == worldCursor {
 					return nil
 				}
 			}
@@ -38,8 +44,10 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 			model.Reset()
 			return origin, cancel, nil
 		}
-		// view.RenderRobotMove(ctx, robotID, ctx.Positions[robotID], cursor)
-		err = model.RobotMove(robotID, tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor))
+		cursorWorld := tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
+		path := tool.MoveRangeTree2Path(tree, cursorWorld)
+		view.RenderRobotMove(ctx, robotID, path)
+		err = model.RobotMove(robotID, cursorWorld)
 		if err != nil {
 			model.Reset()
 			return origin, false, err

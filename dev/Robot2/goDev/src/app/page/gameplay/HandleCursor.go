@@ -53,7 +53,12 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	var notFound string
 	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
 	if unitAtCursor != notFound {
-		model.SetMoveRange(model.QueryMoveRange(unitAtCursor))
+		tree, err := model.QueryMoveRangeTree(unitAtCursor)
+		if err != nil {
+			return origin, err
+		}
+		moveRange := tool.MoveRangeTree2MoveRange(tree)
+		model.SetMoveRange(moveRange)
 	} else {
 		model.SetMoveRange(nil)
 	}

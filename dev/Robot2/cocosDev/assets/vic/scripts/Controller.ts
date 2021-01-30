@@ -30,6 +30,10 @@ export class Controller extends Component {
                 this.view.build(ui);
             }
         },
+        RenderRobotMove: (robotID: string, path: any, cb: ()=>void) => {
+            console.log(`[Controller][RenderRobotMove]`, robotID, path)
+            cb()
+        },
         Alert: (msg: string) => {
             alert(msg)
         },

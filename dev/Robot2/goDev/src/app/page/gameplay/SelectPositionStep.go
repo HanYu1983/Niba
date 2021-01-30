@@ -2,14 +2,13 @@ package gameplay
 
 import (
 	"app/page/common"
-	"app/tool"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"tool/log"
 )
 
-func SelectPositionStep(origin uidata.UI, robotID string, isValid func(protocol.Position) error) (uidata.UI, protocol.Position, bool, error) {
+func SelectPositionStep(origin uidata.UI, robotID string, isValid func(uidata.UI, protocol.Position) error) (uidata.UI, protocol.Position, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "SelectPositionStep", "start")
 	view := def.View
 	model := def.Model
@@ -45,9 +44,7 @@ WaitSpace:
 			case uidata.KeyCodeCancel:
 				return origin, protocol.Position{}, true, nil
 			case uidata.KeyCodeEnter:
-				localCursor := ctx.GameplayPages[uidata.PageGameplay].Cursor
-				worldCursor := tool.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, localCursor)
-				if errMsg := isValid(worldCursor); errMsg != nil {
+				if errMsg := isValid(ctx, ctx.GameplayPages[uidata.PageGameplay].Cursor); errMsg != nil {
 					view.Alert(errMsg.Error())
 					continue
 				}

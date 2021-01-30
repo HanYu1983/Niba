@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"app/tool/data"
+	"tool/astar"
 )
 
 type IModel interface {
@@ -40,7 +41,7 @@ type IModel interface {
 	QueryUnitByPosition(Position) string
 	SetMoveRange([]Position)
 	GetMoveRange() []Position
-	QueryMoveRange(string) []Position
+	QueryMoveRangeTree(string) (astar.NodeMap, error)
 	QueryMoveCount(string) int
 	GetGameplayRobots() map[string]Robot
 	GetGameplayItems() map[string]Item

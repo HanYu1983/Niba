@@ -4,17 +4,15 @@ import (
 	"app/tool"
 	"app/tool/data"
 	"app/tool/protocol"
-	"fmt"
 	"tool/astar"
 )
 
-func (v *model) QueryMoveRange(robotID string) []protocol.Position {
+func (v *model) QueryMoveRangeTree(robotID string) (astar.NodeMap, error) {
 	terrainCache := map[protocol.Position]data.TerrainProto{}
 	pos := v.App.Gameplay.Positions[robotID]
 	movePower, err := QueryRobotMovePower(v.App, robotID)
 	if err != nil {
-		fmt.Println(err.Error())
-		return []protocol.Position{}
+		return nil, err
 	}
 	tree, _ := astar.ShortedPathTree(
 		pos,
@@ -55,9 +53,6 @@ func (v *model) QueryMoveRange(robotID string) []protocol.Position {
 			return 1
 		},
 	)
-	retPos := []protocol.Position{}
-	for key := range tree {
-		retPos = append(retPos, key.(protocol.Position))
-	}
-	return retPos
+
+	return tree, nil
 }

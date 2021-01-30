@@ -34,6 +34,24 @@ func Clamp(v int, min int, max int) (int, bool) {
 	return v, false
 }
 
+// astar
+func MoveRangeTree2MoveRange(tree astar.NodeMap) []protocol.Position {
+	moveRange := []protocol.Position{}
+	for key := range tree {
+		moveRange = append(moveRange, key.(protocol.Position))
+	}
+	return moveRange
+}
+
+func MoveRangeTree2Path(tree astar.NodeMap, from protocol.Position) []protocol.Position {
+	path := astar.BuildPath(tree[from])
+	ret := []protocol.Position{}
+	for _, posObj := range path {
+		ret = append(ret, posObj.(protocol.Position))
+	}
+	return ret
+}
+
 // gameplay
 func World2Local(camera protocol.Position, pos protocol.Position) protocol.Position {
 	return protocol.Position{pos[0] - camera[0], pos[1] - camera[1]}
