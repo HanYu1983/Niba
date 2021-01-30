@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"tool/log"
@@ -28,12 +29,7 @@ WaitSpace:
 		if evt == nil {
 			return origin, protocol.Position{}, false, protocol.ErrTerminate
 		}
-		ctx, err = HandleCursor(ctx, evt)
-		if err != nil {
-			model.Reset()
-			return origin, protocol.Position{}, false, err
-		}
-		ctx, err = HandleCamera(ctx, evt)
+		ctx, err = helper.UIReduce(HandleCursor, HandleCamera)(ctx, evt)
 		if err != nil {
 			model.Reset()
 			return origin, protocol.Position{}, false, err

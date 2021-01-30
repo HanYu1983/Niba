@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"tool/log"
@@ -24,27 +25,17 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			return origin, err
 		}
 		view.Render(ctx)
-		cmd := view.AskCommand()
-		if cmd == nil {
+		evt := view.AskCommand()
+		if evt == nil {
 			model.Reset()
 			return origin, protocol.ErrTerminate
 		}
-		ctx, err = HandleCursor(ctx, cmd)
+		ctx, err = helper.UIReduce(HandleCursor, HandleCamera, HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
 		if err != nil {
 			model.Reset()
 			return origin, err
 		}
-		ctx, err = HandleCamera(ctx, cmd)
-		if err != nil {
-			model.Reset()
-			return origin, err
-		}
-		ctx, err = HandleShowMoveRangeWhenUnitAtCursor(ctx, cmd)
-		if err != nil {
-			model.Reset()
-			return origin, err
-		}
-		switch detail := cmd.(type) {
+		switch detail := evt.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {
 			case uidata.KeyCodeEnter:
