@@ -50,17 +50,5 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
-	var notFound string
-	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
-	if unitAtCursor != notFound {
-		tree, err := model.QueryMoveRangeTree(unitAtCursor)
-		if err != nil {
-			return origin, err
-		}
-		moveRange := helper.MoveRangeTree2MoveRange(tree)
-		model.SetMoveRange(moveRange)
-	} else {
-		model.SetMoveRange(nil)
-	}
 	return ctx, nil
 }

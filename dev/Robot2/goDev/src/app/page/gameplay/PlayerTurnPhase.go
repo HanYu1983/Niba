@@ -39,6 +39,11 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 			model.Reset()
 			return origin, err
 		}
+		ctx, err = HandleShowMoveRangeWhenUnitAtCursor(ctx, cmd)
+		if err != nil {
+			model.Reset()
+			return origin, err
+		}
 		switch detail := cmd.(type) {
 		case uidata.CommandKeyDown:
 			switch detail.KeyCode {

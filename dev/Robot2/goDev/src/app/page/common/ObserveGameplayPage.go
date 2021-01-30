@@ -45,10 +45,11 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	// move range
 	moveRange := model.GetMoveRange()
 	if moveRange != nil {
-		for i, pos := range moveRange {
-			moveRange[i] = helper.World2Local(gameplayPage.Camera, pos)
+		var moveRangeLocal = []protocol.Position{}
+		for _, pos := range moveRange {
+			moveRangeLocal = append(moveRangeLocal, helper.World2Local(gameplayPage.Camera, pos))
 		}
-		gameplayPage.MoveRange = moveRange
+		gameplayPage.MoveRange = moveRangeLocal
 	} else {
 		gameplayPage.MoveRange = []protocol.Position{}
 	}
