@@ -24,7 +24,7 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 }
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
-	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v)", unitID))
+	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v) start", unitID))
 	view := def.View
 	model := def.Model
 	model.Push()
@@ -36,7 +36,8 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		model.Reset()
 		return origin, false, err
 	}
-	if robot, is := model.GetGameplayRobots()[unitID]; is {
+	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+	if robot, is := gameplayPage.Robots[unitID]; is {
 		var _ = robot
 		isRobotDone := ctx.GameplayPages[uidata.PageGameplay].Tags[unitID].IsDone
 		if isRobotDone {
@@ -70,7 +71,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 			break
 		}
 		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
-		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+		gameplayPage = ctx.GameplayPages[uidata.PageGameplay]
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
@@ -146,7 +147,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		}
 		model.DisableRobotMenu()
 	}
-	if item, is := model.GetGameplayItems()[unitID]; is {
+	if item, is := gameplayPage.Items[unitID]; is {
 		var _ = item
 		// append menu
 		ctx, err := CreateItemMenu(ctx, unitID)
@@ -175,5 +176,6 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		var _ = selection
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
 	}
+	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v) end", unitID))
 	return origin, false, nil
 }

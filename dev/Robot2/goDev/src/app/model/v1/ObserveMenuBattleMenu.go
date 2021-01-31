@@ -1,16 +1,14 @@
-package common
+package v1
 
 import (
 	"app/tool"
-	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
 )
 
-func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
+func (model *model) ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
-	model := def.Model
 	menu, has := ctx.BattleMenus[menuID]
 	if has == false {
 		return origin, nil

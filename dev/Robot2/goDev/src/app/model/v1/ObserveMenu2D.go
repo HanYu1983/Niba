@@ -1,14 +1,12 @@
-package common
+package v1
 
 import (
-	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/uidata"
 )
 
-func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
+func (model *model) ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
-	model := def.Model
 	menu, has := ctx.Menu2Ds[menuID]
 	if has == false {
 		return origin, nil

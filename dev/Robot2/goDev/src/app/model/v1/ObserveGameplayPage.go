@@ -9,9 +9,9 @@ import (
 	"tool/log"
 )
 
-func (model *model) ObserveGameplayPage(origin interface{}, id int) (interface{}, error) {
+func (model *model) ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	//var err error
-	ctx := origin.(uidata.UI)
+	ctx := origin
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.App.Gameplay.Map
 	cursor := model.App.Gameplay.Cursor
@@ -39,6 +39,10 @@ func (model *model) ObserveGameplayPage(origin interface{}, id int) (interface{}
 		localPosDict[id] = helper.World2Local(gameplayPage.Camera, pos)
 	}
 	gameplayPage.Positions = localPosDict
+	// robots
+	gameplayPage.Robots = model.App.Gameplay.Robots
+	// items
+	gameplayPage.Items = model.App.Gameplay.Items
 	// tags
 	gameplayPage.Tags = model.App.Gameplay.Tags
 	// move range
