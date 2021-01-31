@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/def"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"tool/log"
@@ -27,12 +28,7 @@ func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string)
 		if evt == nil {
 			return origin, "", false, protocol.ErrTerminate
 		}
-		ctx, err = HandleCursor(ctx, evt)
-		if err != nil {
-			model.Reset()
-			return origin, "", false, err
-		}
-		ctx, err = HandleCamera(ctx, evt)
+		ctx, err = helper.UIReduce(HandleCursor, HandleCamera)(ctx, evt)
 		if err != nil {
 			model.Reset()
 			return origin, "", false, err

@@ -26,6 +26,7 @@ type gameplay struct {
 	Items          map[string]protocol.Item
 	Pilots         map[string]protocol.Pilot
 	RobotMenu      protocol.RobotMenu
+	BattleMenu     protocol.BattleMenu
 	MoveRange      []protocol.Position
 	Done           interface{}
 }
@@ -67,4 +68,12 @@ func init() {
 		ProtoID: "gundam",
 	}}
 	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
+}
+
+func (v *model) DisableBattleMenu() error {
+	v.App.Gameplay.BattleMenu.Active = false
+	return nil
+}
+func (v *model) GetBattleMenu() protocol.BattleMenu {
+	return v.App.Gameplay.BattleMenu
 }

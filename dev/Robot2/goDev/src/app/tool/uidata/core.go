@@ -53,13 +53,6 @@ type Menu2D struct {
 	Cursor2 []int
 }
 
-//
-const (
-	BattleActionAttack = iota
-	BattleActionGuard
-	BattleActionEvade
-)
-
 // BattleMenuSlot is
 type BattleMenuSlot struct {
 	Robot        protocol.Robot
@@ -147,6 +140,10 @@ const (
 	MenuOptionMove      = "MenuOptionMove"
 	MenuOptionSkyGround = "MenuOptionSkyGround"
 	MenuOptionUnitDone  = "MenuOptionUnitDone"
+
+	MenuOptionUnitGuard = "MenuOptionUnitGuard"
+	MenuOptionUnitEvade = "MenuOptionUnitEvade"
+	MenuOptionConfirm   = "MenuOptionConfirm"
 )
 
 //
@@ -235,7 +232,7 @@ var (
 				BattleMenuUnitBattleMenu,
 			},
 			PageGameplay: []int{
-				Menu2DUnitMenu,
+				Menu2DUnitMenu, BattleMenuUnitBattleMenu,
 			},
 		},
 		Focus: map[int]int{},
@@ -318,10 +315,10 @@ var (
 		BattleMenus: map[int]BattleMenu{
 			BattleMenuUnitBattleMenu: BattleMenu{
 				Left: BattleMenuSlot{
-					BattleAction: BattleActionAttack,
+					BattleAction: protocol.BattleMenuActionAttack,
 				},
 				Right: BattleMenuSlot{
-					BattleAction: BattleActionAttack,
+					BattleAction: protocol.BattleMenuActionAttack,
 				},
 			},
 		},

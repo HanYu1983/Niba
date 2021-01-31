@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func (model *model) RenderGameplay(origin interface{}, id int) (interface{}, error) {
+func (model *model) ObserveGameplayPage(origin interface{}, id int) (interface{}, error) {
 	//var err error
 	ctx := origin.(uidata.UI)
 	gameplayPage := ctx.GameplayPages[id]
@@ -52,7 +52,7 @@ func (model *model) RenderGameplay(origin interface{}, id int) (interface{}, err
 	} else {
 		gameplayPage.MoveRange = []protocol.Position{}
 	}
-	// unitMenu
+	// select weapon attack range
 	unitMenuModel := model.App.Gameplay.RobotMenu
 	if unitMenuModel.Active {
 		unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
@@ -76,7 +76,11 @@ func (model *model) RenderGameplay(origin interface{}, id int) (interface{}, err
 			gameplayPage.AttackRange = []protocol.Position{}
 		}
 	}
+	// unit menu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
+	// battle menu
+	battleMenuModel := model.App.Gameplay.BattleMenu
+	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageBattleMenu, battleMenuModel.Active)
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, gameplayPage)
 	return ctx, nil

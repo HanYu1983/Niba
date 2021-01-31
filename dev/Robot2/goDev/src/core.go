@@ -28,6 +28,7 @@ import "app"
 //go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntListInt.go -pkg uidata gen "Key=int Value=ListInt"
 //go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntInt.go -pkg uidata gen "Key=int Value=int"
 //go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntGameplayPage.go -pkg uidata gen "Key=int Value=GameplayPage"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntBattleMenu.go -pkg uidata gen "Key=int Value=BattleMenu"
 
 func init() {
 	app.Main()

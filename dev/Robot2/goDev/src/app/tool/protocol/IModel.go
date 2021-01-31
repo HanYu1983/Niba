@@ -34,7 +34,7 @@ type IModel interface {
 	QueryRobotIDByComponentID() map[string]string
 	QueryPilotIDByRobotID() map[string]string
 	// gameplay
-	RenderGameplay(ctx interface{}, id int) (interface{}, error)
+	ObserveGameplayPage(ctx interface{}, id int) (interface{}, error)
 	QueryActivePlayer() string
 	NextPlayer() error
 	IsDone() bool
@@ -58,4 +58,7 @@ type IModel interface {
 	EnableRobotMenu(string, interface{}) error
 	DisableRobotMenu() error
 	GetRobotMenu() RobotMenu
+	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) error
+	DisableBattleMenu() error
+	GetBattleMenu() BattleMenu
 }

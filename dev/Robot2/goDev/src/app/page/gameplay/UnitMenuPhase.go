@@ -86,8 +86,15 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				model.Reset()
 				return origin, cancel, nil
 			}
-			var _ = targetID
-			var _ = weaponID
+			ctx, cancel, err = BattleMenuPhase(ctx, true, unitID, weaponID, targetID)
+			if err != nil {
+				model.Reset()
+				return origin, false, err
+			}
+			if cancel {
+				model.Reset()
+				return origin, cancel, nil
+			}
 		case protocol.RobotMenuFunctionTransform:
 			transformID := selection
 			err = model.RobotTransform(unitID, transformID)

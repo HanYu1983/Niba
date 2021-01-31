@@ -18,6 +18,10 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 		if err != nil {
 			return origin, err
 		}
+		ctx, err = ObserveBattleMenu(ctx, menuID)
+		if err != nil {
+			return origin, err
+		}
 	}
 	if _, has := ctx.GameplayPages[pageID]; has {
 		ctx, err = ObserveGameplayPage(ctx, pageID)

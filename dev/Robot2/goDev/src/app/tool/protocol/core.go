@@ -1,6 +1,8 @@
 package protocol
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var (
 	ErrTerminate = fmt.Errorf("ErrTerminate")
@@ -113,4 +115,18 @@ type RobotMenu struct {
 	RowFunctionMapping map[int]int
 	Weapons            map[string]Weapon
 	Transforms         map[string]Robot
+}
+
+const (
+	BattleMenuActionPending = iota
+	BattleMenuActionAttack
+	BattleMenuActionGuard
+	BattleMenuActionEvade
+)
+
+type BattleMenu struct {
+	Active        bool
+	AttackRobot   Robot
+	AttackWeapon  Weapon
+	DeffenceRobot Robot
 }
