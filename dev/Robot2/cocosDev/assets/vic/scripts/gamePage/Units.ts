@@ -66,7 +66,7 @@ export class Units extends Instant {
                 const unit:Node = this.pool.aquire(this.prefab, this.node);
                 unit.getComponent(Unit).unitId = unitKey;
                 if(robot){
-                    console.log("robot", robot);
+                    // console.log("robot", robot);
                 }
                 if(pos){
                     unit.setPosition(Grids.getGridPos(pos[0], pos[1]));

@@ -37,9 +37,10 @@ export class LandMap extends Instant {
         this.units.build(content);
         this.setCursor(content.Cursor);
 
-        tween(this.node).delay(2).call(()=>{
-            this.effects.build([[0, Grids.getGridPos(2,3)]]);
-        }).start();
+        // test effect
+        // tween(this.node).delay(2).call(()=>{
+        //     this.effects.build([[0, Grids.getGridPos(2,3)]]);
+        // }).start();
     }
 
     setCursor(cursor:any){
