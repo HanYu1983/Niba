@@ -59,15 +59,28 @@ func init() {
 		temp = append(temp, row)
 	}
 
+	const (
+		playerAI1 = "ai1"
+	)
+
 	DefaultModel.App.Money = 10000
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
+	DefaultModel.App.Gameplay.Players = map[string]protocol.Player{
+		protocol.PlayerIDPlayer: {GroupID: "0"},
+		playerAI1:               {GroupID: "1"},
+	}
 	DefaultModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
-		ProtoID: "gundam",
+		ProtoID:  "gundam",
+		PlayerID: protocol.PlayerIDPlayer,
 	}, "1": {
-		ProtoID: "gundam",
+		ProtoID:  "gundam",
+		PlayerID: protocol.PlayerIDPlayer,
+	}, "2": {
+		ProtoID:  "gundam",
+		PlayerID: playerAI1,
 	}}
-	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
+	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}, "2": {3, 0}}
 }
 
 func (v *model) DisableBattleMenu() error {

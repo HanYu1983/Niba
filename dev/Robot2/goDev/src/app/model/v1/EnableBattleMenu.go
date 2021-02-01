@@ -3,6 +3,7 @@ package v1
 import (
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
 )
 
 func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID string) error {
@@ -68,6 +69,8 @@ func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID 
 		robotMenu.Options = options
 		robotMenu.RowFunctionMapping = rowFunctionMapping
 		robotMenu.Weapons = weapons
+	} else {
+		return fmt.Errorf("unknown situation. robot(%+v) targetRobot(%+v)", robot, targetRobot)
 	}
 
 	v.App.Gameplay.BattleMenu = battleMenu
