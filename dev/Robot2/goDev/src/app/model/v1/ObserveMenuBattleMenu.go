@@ -43,7 +43,7 @@ func (model *model) ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, 
 			case selection == uidata.MenuOptionUnitEvade:
 				battleMenu.Right.BattleAction = protocol.BattleMenuActionEvade
 			default:
-				return origin, fmt.Errorf("未知的行為")
+				return origin, fmt.Errorf("unknown action. unitMenu(%+v)", unitMenu)
 			}
 			ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, uidata.PageBattleMenu, battleMenu)
 		}
