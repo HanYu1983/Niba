@@ -30438,6 +30438,7 @@ $packages["app/model/v1"] = (function() {
 							selectedWeapon = $clone((_entry$4 = unitMenuModel.Weapons[$String.keyFor(selectedWeaponID)], _entry$4 !== undefined ? _entry$4.v : new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0)), protocol.Weapon);
 							protocol.Weapon.copy(battleMenu.Right.Weapon, selectedWeapon);
 							battleMenu.Right.BattleAction = 1;
+							battleMenu.Left.Info.HitRate = 0.5;
 							$s = 13; continue;
 						/* } else if (selection === "MenuOptionUnitGuard") { */ case 10:
 							battleMenu.Right.BattleAction = 2;
@@ -30960,7 +30961,7 @@ $packages["app/model/v1"] = (function() {
 		$pkg.DefaultModel.App.Gameplay.Map = temp;
 		$pkg.DefaultModel.App.Gameplay.Units = new sliceType$2(["0", "1"]);
 		$pkg.DefaultModel.App.Gameplay.Players = $makeMap($String.keyFor, [{ k: "PlayerIDPlayer", v: new protocol.Player.ptr("", "0") }, { k: "ai1", v: new protocol.Player.ptr("", "1") }]);
-		$pkg.DefaultModel.App.Gameplay.Robots = $makeMap($String.keyFor, [{ k: "0", v: new protocol.Robot.ptr("", "gundam", "", "", false, "", "PlayerIDPlayer", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }, { k: "1", v: new protocol.Robot.ptr("", "gundam", "", "", false, "", "PlayerIDPlayer", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }, { k: "2", v: new protocol.Robot.ptr("", "gundam", "", "", false, "", "ai1", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }]);
+		$pkg.DefaultModel.App.Gameplay.Robots = $makeMap($String.keyFor, [{ k: "0", v: new protocol.Robot.ptr("", "gundam", "gundam", "", false, "", "PlayerIDPlayer", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }, { k: "1", v: new protocol.Robot.ptr("", "gundam", "", "", false, "", "PlayerIDPlayer", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }, { k: "2", v: new protocol.Robot.ptr("", "gundam", "playerAI1", "", false, "", "ai1", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0) }]);
 		$pkg.DefaultModel.App.Gameplay.Positions = $makeMap($String.keyFor, [{ k: "0", v: $toNativeArray($kindInt, [0, 0]) }, { k: "1", v: $toNativeArray($kindInt, [5, 5]) }, { k: "2", v: $toNativeArray($kindInt, [3, 0]) }]);
 	};
 	model.ptr.prototype.DisableBattleMenu = function() {

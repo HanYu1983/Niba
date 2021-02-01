@@ -38,6 +38,7 @@ func (model *model) ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, 
 				selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
 				battleMenu.Right.Weapon = selectedWeapon
 				battleMenu.Right.BattleAction = protocol.BattleMenuActionAttack
+				battleMenu.Left.Info.HitRate = 0.5
 			case selection == uidata.MenuOptionUnitGuard:
 				battleMenu.Right.BattleAction = protocol.BattleMenuActionGuard
 			case selection == uidata.MenuOptionUnitEvade:

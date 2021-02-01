@@ -73,12 +73,14 @@ func init() {
 	DefaultModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
 		ProtoID:  "gundam",
 		PlayerID: protocol.PlayerIDPlayer,
+		Title:    "gundam",
 	}, "1": {
 		ProtoID:  "gundam",
 		PlayerID: protocol.PlayerIDPlayer,
 	}, "2": {
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
+		Title:    "playerAI1",
 	}}
 	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}, "2": {3, 0}}
 }
