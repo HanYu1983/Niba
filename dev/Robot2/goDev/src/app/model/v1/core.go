@@ -92,3 +92,44 @@ func (v *model) DisableBattleMenu() error {
 func (v *model) GetBattleMenu() protocol.BattleMenu {
 	return v.App.Gameplay.BattleMenu
 }
+
+func (v *model) Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (protocol.BattleResultSet, error) {
+	robot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, robotID)
+	if err != nil {
+		return protocol.BattleResultSet{}, err
+	}
+	targetRobot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, targetRobotID)
+	if err != nil {
+		return protocol.BattleResultSet{}, err
+	}
+	results := []protocol.BattleResult{}
+	// shoot
+	results = append(results, protocol.BattleResult{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleResult{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      1000,
+	})
+	// counter
+	results = append(results, protocol.BattleResult{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleResult{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      1000,
+	})
+	return protocol.BattleResultSet{Results: results}, nil
+}

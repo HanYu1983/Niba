@@ -59,3 +59,11 @@ export enum Const {
 	Menu1DSystemMenu,
 	BattleMenuUnitBattleMenu,
 }
+
+export enum BattleResultType {
+	BattleResultTypePending,
+	BattleResultTypeWeapon,
+	BattleResultTypeGuard,
+	BattleResultTypeEvade,
+	BattleResultTypeDamage
+}

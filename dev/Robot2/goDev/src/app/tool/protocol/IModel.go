@@ -41,4 +41,5 @@ type IModel interface {
 	DisableRobotMenu() error
 	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) error
 	DisableBattleMenu() error
+	Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (BattleResultSet, error)
 }

@@ -62,7 +62,13 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
-			var _ = weaponID
+			targetRobotAction := protocol.BattleMenuActionAttack
+			result, err := model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, "")
+			if err != nil {
+				model.Reset()
+				return origin, false, err
+			}
+			view.RenderRobotBattle(ctx, result)
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
@@ -92,18 +98,30 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		}
 		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+		var playerAction int
+		var playerWeaponID string
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
-			weaponID := selection
-			var _ = weaponID
+			playerWeaponID = selection
+			playerAction = protocol.BattleMenuActionAttack
 		default:
 			switch selection {
 			case uidata.MenuOptionUnitGuard:
+				playerAction = protocol.BattleMenuActionGuard
 			case uidata.MenuOptionUnitEvade:
+				playerAction = protocol.BattleMenuActionEvade
 			default:
 				return origin, false, fmt.Errorf("未知的選項(%v)", selection)
 			}
 		}
+		targetRobotAction := playerAction
+		targetRobotWeaponID := playerWeaponID
+		result, err := model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
+		if err != nil {
+			model.Reset()
+			return origin, false, err
+		}
+		view.RenderRobotBattle(ctx, result)
 	}
 	model.DisableBattleMenu()
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "end")

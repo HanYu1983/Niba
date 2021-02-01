@@ -39,6 +39,10 @@ export class Controller extends Component {
             const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
             gamePage?.getComponent(GamePage)?.map.units.moveUnit(robotID, path, cb);
         },
+        RenderRobotBattle: (result: any, cb: ()=>void) => {
+            console.log(`[Controller][RenderRobotBattle]`, result)
+            cb()
+        },
         Alert: (msg: string) => {
             alert(msg)
         },

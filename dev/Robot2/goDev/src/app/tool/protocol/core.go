@@ -131,3 +131,22 @@ type BattleMenu struct {
 	AttackWeapon  Weapon
 	DeffenceRobot Robot
 }
+
+const (
+	BattleResultTypePending = iota
+	BattleResultTypeWeapon
+	BattleResultTypeGuard
+	BattleResultTypeEvade
+	BattleResultTypeDamage
+)
+
+type BattleResult struct {
+	Type        int
+	RobotBefore Robot
+	RobotAfter  Robot
+	Damage      int
+}
+
+type BattleResultSet struct {
+	Results []BattleResult
+}
