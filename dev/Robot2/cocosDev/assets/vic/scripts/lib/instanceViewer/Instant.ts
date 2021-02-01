@@ -32,6 +32,9 @@ export class Instant extends Component implements IInstant {
 
         // 把在editor裏設定的位置記下來
         this.cachePos = this.node.getPosition();
+
+        // 先一律不能用active的模式，效能才可以接受，之後如果測試都ok，就把這個參數拿掉
+        this.doActiveWhenBuildClear = false;
     }
     
     clear():void{
