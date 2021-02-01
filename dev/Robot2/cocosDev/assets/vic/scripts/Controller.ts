@@ -35,7 +35,7 @@ export class Controller extends Component {
         },
         RenderRobotMove: (robotID: string, path: any, cb: ()=>void) => {
             console.log(`[Controller][RenderRobotMove]`, robotID, path)
-
+            
             const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
             gamePage?.getComponent(GamePage)?.map.units.moveUnit(robotID, path, cb);
         },
@@ -51,97 +51,5 @@ export class Controller extends Component {
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.model.OnKeyDown, this.model);
         // 畫第一次(Render), 之後是自動呼叫Render
         this.model.Flush()
-
-
-
-        // 這個測不出來
-        let actions:Tween<Node>[] = [];
-        [1].forEach(element => {
-            const t1 = tween().call(()=>{console.log("no print");});
-            actions.push(t1);
-        });
-        console.log(actions);
-        
-        let t = tween(this.node);
-        t.sequence.apply(t, actions).start();
-
-        // 這個可以用
-        tween(this.node).sequence(
-            tween().call(()=>{console.log("success, aaa");}),
-            tween().call(()=>{console.log("success, bbb");})
-        ).start();
-
-        
-        
-
-        // this.view.build({page:1});
-
-        // tween(this.node).call(() => {
-        //     console.log("打開首頁");
-        //     this.view.build({ page: 0, content: {} });
-
-        // }).delay(2).call(() => {
-        //     console.log("打開游戲頁");
-        //     this.view.build({ page: 1, content: { map: [] } });
-
-        // }).delay(2).call(() => {
-        //     console.log("打開unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 0, 0, 0], 0]
-        //         }
-        //     });
-
-        // }).delay(2).call(() => {
-        //     console.log("調整unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 0, 0, 0], 1]
-        //         }
-        //     });
-
-        // }).delay(.5).call(() => {
-        //     console.log("調整unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 1, 0, 0], 1]
-        //         }
-        //     });
-
-        // }).delay(.5).call(() => {
-        //     console.log("調整unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 1, 0, 0], 2]
-        //         }
-        //     });
-        // }).delay(.5).call(() => {
-        //     console.log("調整unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 1, 1, 0], 2]
-        //         }
-        //     });
-        // }).delay(.5).call(() => {
-        //     console.log("調整unit menu");
-        //     this.view.build({
-        //         page: 1,
-        //         content: {
-        //             map: [],
-        //             unitMenu: [['移動', ['武器一', '武器二'], ['道具一', '道具二', '道具三'], '待機'], [0, 1, 2, 0], 2]
-        //         }
-        //     });
-        // }).start();
-
     }
 }

@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, instantiate, tween, Tween } from 'cc';
+import { _decorator, Component, Node, instantiate, tween, Tween, Vec3 } from 'cc';
 import { Instant } from '../lib/instanceViewer/Instant';
 import { Grids } from './Grids';
 import { Unit } from './Unit';
@@ -21,42 +21,21 @@ export class Units extends Instant {
 
     moveUnit(robotID: string, path: any, cb: ()=>void){
         const unit = this.getUnitByID(robotID);
-        console.log(unit);
-        console.log(path);
-        // if (unit) {
-        //     let actions:Tween<Node>[] = [];
-        //     path.forEach(element => {
-        //         // let gridPos = Grids.getGridPos(element[0], element[1]);
-        //         // let action = moveTo(gridPos.x, gridPos.y);
-        //         // //action.easing(cc.easeSineOut());
-        //         // actions.push(action);
-
-        //         const t1 = tween(unit).call(()=>{
-        //             console.log("aaaaa");
-        //         })
-
-        //         actions.push(t1);
-        //     });
-        //     console.log(actions);
-            
-        //     tween(unit).sequence(actions).start();
-        //     // tween(unit).sequence(actions).call(cb).start();
-        // }
-    }
-
-    moveUnitByID(id: string, moveTo: any, callback: () => void) {
-        let unit = this.getUnitByID(id);
         if (unit) {
             let actions = [];
-            moveTo.forEach(element => {
-                let gridPos = ViewController.instance.view.getGridPos(element);
-                let action = cc.moveTo(.05, gridPos[0], gridPos[1]);
-                //action.easing(cc.easeSineOut());
-                actions.push(action);
+            path.forEach(element => {
+                let gridPos = Grids.getGridPos(element[0], element[1]);
+                actions.push(tween().to(.05, {position:gridPos}));
             });
-            actions.push(cc.callFunc(callback));
-            unit.node.runAction(cc.sequence(actions));
+            let t = tween(unit);
+            t.sequence.apply(t, actions).delay(.05).call(cb).start();
         }
+
+        // 不知道爲什麽只要呼叫了tween之後，再callback。畫面就會閃一下
+        // tween(unit).call(cb).start();
+
+        // 這樣直接callback就不會閃
+        // cb();
     }
 
     private getUnitByID(unitId: string):Node{
