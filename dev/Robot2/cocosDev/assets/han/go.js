@@ -30749,10 +30749,11 @@ $packages["app/tool"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1"] = (function() {
-	var $pkg = {}, $init, common, tool, data, helper, protocol, uidata, fmt, strconv, astar, log, lobby, gameplay, app, model, sliceType, sliceType$1, arrayType, sliceType$2, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, arrayType$3, structType, sliceType$7, sliceType$8, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, ptrType, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryRobotMovePower, QueryRobotWeapons, SearchUnitByPosition, proj, SearchUnitByRegion, init;
+	var $pkg = {}, $init, common, tool, data, def, helper, protocol, uidata, fmt, strconv, astar, log, lobby, gameplay, app, model, sliceType, sliceType$1, arrayType, sliceType$2, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, arrayType$3, structType, sliceType$7, sliceType$8, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, ptrType, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryRobotMovePower, QueryRobotWeapons, SearchUnitByPosition, proj, SearchUnitByRegion, init;
 	common = $packages["app/page/common"];
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
+	def = $packages["app/tool/def"];
 	helper = $packages["app/tool/helper"];
 	protocol = $packages["app/tool/protocol"];
 	uidata = $packages["app/tool/uidata"];
@@ -31097,11 +31098,13 @@ $packages["app/model/v1"] = (function() {
 	};
 	model.prototype.EnableRobotMenu = function(robotID, situation) { return this.$val.EnableRobotMenu(robotID, situation); };
 	model.ptr.prototype.EnemyTurnPhase = function(origin) {
-		var _r, _tuple, cancel, ctx, err, model$1, origin, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; cancel = $f.cancel; ctx = $f.ctx; err = $f.err; model$1 = $f.model$1; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _tuple, cancel, ctx, err, model$1, origin, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; cancel = $f.cancel; ctx = $f.ctx; err = $f.err; model$1 = $f.model$1; origin = $f.origin; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		model$1 = this;
 		err = $ifaceNil;
 		cancel = false;
+		view = def.View;
+		$unused(view);
 		ctx = $clone($assertType(origin, uidata.UI), uidata.UI);
 		_r = common.BattleMenuPhase($clone(ctx, uidata.UI), false, "unitID", "weaponID", "targetID"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
@@ -31117,7 +31120,7 @@ $packages["app/model/v1"] = (function() {
 			$s = -1; return [origin, cancel, $ifaceNil];
 		}
 		$s = -1; return [new ctx.constructor.elem(ctx), false, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: model.ptr.prototype.EnemyTurnPhase }; } $f._r = _r; $f._tuple = _tuple; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.model$1 = model$1; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: model.ptr.prototype.EnemyTurnPhase }; } $f._r = _r; $f._tuple = _tuple; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.model$1 = model$1; $f.origin = origin; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	model.prototype.EnemyTurnPhase = function(origin) { return this.$val.EnemyTurnPhase(origin); };
 	model.ptr.prototype.ObserveGameplayPage = function(origin, id) {
@@ -32302,13 +32305,14 @@ $packages["app/model/v1"] = (function() {
 		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = tool.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = data.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = uidata.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = strconv.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = astar.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = log.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = def.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = helper.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = uidata.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = astar.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$pkg.DefaultModel = new model.ptr(new app.ptr(0, 0, new gameplay.ptr(false, "", sliceType$1.nil, arrayType.zero(), sliceType$2.nil, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0), new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0)), sliceType$4.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false)), sliceType$5.nil);
 		unitByPosition = $makeMap(protocol.Position.keyFor, []);
 		unitByRegion = $makeMap(protocol.Position.keyFor, []);
