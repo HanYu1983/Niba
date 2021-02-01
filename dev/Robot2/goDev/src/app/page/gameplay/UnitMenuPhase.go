@@ -93,7 +93,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				model.Reset()
 				return origin, cancel, nil
 			}
-			ctx, cancel, err = BattleMenuPhase(ctx, true, unitID, weaponID, targetID)
+			ctx, cancel, err = common.BattleMenuPhase(ctx, true, unitID, weaponID, targetID)
 			if err != nil {
 				model.Reset()
 				return origin, false, err

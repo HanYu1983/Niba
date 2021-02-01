@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
+func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "start")
 	view := def.View
 	model := def.Model
@@ -22,18 +22,18 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
 			model.Reset()
-			return origin, err
+			return origin, false, err
 		}
 		view.Render(ctx)
 		evt := view.AskCommand()
 		if evt == nil {
 			model.Reset()
-			return origin, protocol.ErrTerminate
+			return origin, false, protocol.ErrTerminate
 		}
 		ctx, err = helper.UIReduce(HandleCursor, HandleCamera, HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
 		if err != nil {
 			model.Reset()
-			return origin, err
+			return origin, false, err
 		}
 		switch detail := evt.(type) {
 		case uidata.CommandKeyDown:
@@ -53,13 +53,13 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 					ctx, err = SystemMenuPhase(ctx)
 					if err != nil {
 						model.Reset()
-						return origin, err
+						return origin, false, err
 					}
 				} else {
 					ctx, _, err = UnitMenuPhase(ctx, unitID)
 					if err != nil {
 						model.Reset()
-						return origin, err
+						return origin, false, err
 					}
 				}
 			}
@@ -71,5 +71,5 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, error) {
 		}
 	}
 	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "end")
-	return ctx, nil
+	return ctx, false, nil
 }

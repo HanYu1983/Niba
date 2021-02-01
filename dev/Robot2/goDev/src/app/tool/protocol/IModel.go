@@ -22,6 +22,7 @@ type IModel interface {
 	DissocComponentRobot(componentID string) error
 	// gameplay
 	ObservePage(ctx interface{}, id int) (interface{}, error)
+	EnemyTurnPhase(origin interface{}) (interface{}, bool, error)
 	QueryActivePlayer() string
 	NextPlayer() error
 	IsDone() bool

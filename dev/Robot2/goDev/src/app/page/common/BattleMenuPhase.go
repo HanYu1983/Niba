@@ -1,7 +1,6 @@
-package gameplay
+package common
 
 import (
-	"app/page/common"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -25,7 +24,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 
 	if isPlayerTurn {
 		// 先準備UI
-		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		ctx, err = ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
 			model.Reset()
 			return origin, false, err
@@ -37,13 +36,13 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		var cancel, tab bool
 		var selection string
 		for {
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+			ctx, err = ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
 				model.Reset()
 				return origin, false, err
 			}
 			view.Render(ctx)
-			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				model.Reset()
 				return origin, false, err
@@ -77,13 +76,13 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		var cancel, tab bool
 		var selection string
 		for {
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+			ctx, err = ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
 				model.Reset()
 				return origin, false, err
 			}
 			view.Render(ctx)
-			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				model.Reset()
 				return origin, false, err

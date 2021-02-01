@@ -5,9 +5,13 @@ import (
 	"app/tool/uidata"
 )
 
-func EnemyTurnPhase(origin uidata.UI) (uidata.UI, error) {
+func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	model := def.Model
 	model.Push()
 	defer model.Pop()
-	return origin, nil
+	var err error
+	var cancel bool
+	var ctx interface{} = origin
+	ctx, cancel, err = model.EnemyTurnPhase(ctx)
+	return ctx.(uidata.UI), cancel, err
 }
