@@ -140,13 +140,13 @@ const (
 	BattleResultTypeDamage
 )
 
-type BattleResult struct {
+type BattleAnimation struct {
 	Type        int
 	RobotBefore Robot
 	RobotAfter  Robot
 	Damage      int
 }
 
-type BattleResultSet struct {
-	Results []BattleResult
+type BattleResult struct {
+	Animations []BattleAnimation
 }

@@ -69,6 +69,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 				return origin, false, err
 			}
 			view.RenderRobotBattle(ctx, result)
+			return ctx, true, nil
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
@@ -122,6 +123,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			return origin, false, err
 		}
 		view.RenderRobotBattle(ctx, result)
+		return ctx, true, nil
 	}
 	model.DisableBattleMenu()
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "end")

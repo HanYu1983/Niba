@@ -11,5 +11,5 @@ type IViwer interface {
 	Alert(msg string)
 	Render(ui uidata.UI)
 	RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position)
-	RenderRobotBattle(ui uidata.UI, result protocol.BattleResultSet)
+	RenderRobotBattle(ui uidata.UI, result protocol.BattleResult)
 }

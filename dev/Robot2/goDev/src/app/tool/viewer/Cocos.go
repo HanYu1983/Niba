@@ -71,7 +71,7 @@ func (p Cocos) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Pos
 	<-wait
 }
 
-func (p Cocos) RenderRobotBattle(ui uidata.UI, result protocol.BattleResultSet) {
+func (p Cocos) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 	// @TODO: world to local
 	wait := make(chan interface{})
 	view := js.Global.Get("View")
