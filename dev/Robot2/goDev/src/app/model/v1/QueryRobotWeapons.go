@@ -6,19 +6,19 @@ import (
 	"fmt"
 )
 
-func QueryRobotWeapons(app app, robot protocol.Robot) (protocol.Weapons, error) {
+func QueryRobotWeapons(app app, robot protocol.Robot) (string, protocol.Weapons, error) {
 	if weapons, has := robot.WeaponsByTransform[robot.Transform]; has {
-		return weapons, nil
+		return "", weapons, nil
 	}
 	weapons := protocol.Weapons{}
 	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
 	if err != nil {
-		return protocol.Weapons{}, err
+		return "", protocol.Weapons{}, err
 	}
 	for i, weaponID := range robotProto.Weapons {
 		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weaponID)
 		if err != nil {
-			return protocol.Weapons{}, err
+			return "", protocol.Weapons{}, err
 		}
 		instanceID := fmt.Sprintf("weapon_%v", i)
 		weapon := protocol.Weapon{
@@ -45,5 +45,5 @@ func QueryRobotWeapons(app app, robot protocol.Robot) (protocol.Weapons, error) 
 		}
 		weapons[weaponID] = app.Lobby.Weapons[weaponID]
 	}
-	return weapons, nil
+	return robot.Transform, weapons, nil
 }

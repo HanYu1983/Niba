@@ -12,7 +12,8 @@ func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID 
 		return err
 	}
 
-	weapon, err := protocol.TryGetStringWeapon(robot.WeaponsByTransform[robot.Transform], weaponID)
+	_, weapons, err := QueryRobotWeapons(v.App, robot)
+	weapon, err := protocol.TryGetStringWeapon(weapons, weaponID)
 	if err != nil {
 		return err
 	}
@@ -22,16 +23,19 @@ func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID 
 		return err
 	}
 
-	v.App.Gameplay.BattleMenu.Active = true
-	v.App.Gameplay.BattleMenu.AttackRobot = robot
-	v.App.Gameplay.BattleMenu.AttackWeapon = weapon
-	v.App.Gameplay.BattleMenu.DeffenceRobot = targetRobot
+	battleMenu := v.App.Gameplay.BattleMenu
+	battleMenu.Active = true
+	battleMenu.AttackRobot = robot
+	battleMenu.AttackWeapon = weapon
+	battleMenu.DeffenceRobot = targetRobot
+
+	robotMenu := v.App.Gameplay.RobotMenu
 
 	if targetRobot.PlayerID == protocol.PlayerIDPlayer {
 		//  敵人打好人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		weapons, err := QueryRobotWeapons(v.App, targetRobot)
+		_, weapons, err := QueryRobotWeapons(v.App, targetRobot)
 		if err != nil {
 			return err
 		}
@@ -42,16 +46,16 @@ func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID 
 		options = append(options, []string{uidata.MenuOptionUnitGuard})
 		options = append(options, []string{uidata.MenuOptionUnitEvade})
 
-		v.App.Gameplay.RobotMenu.Active = true
-		v.App.Gameplay.RobotMenu.ActiveRobotID = targetRobotID
-		v.App.Gameplay.RobotMenu.Options = options
-		v.App.Gameplay.RobotMenu.RowFunctionMapping = rowFunctionMapping
-		v.App.Gameplay.RobotMenu.Weapons = weapons
+		robotMenu.Active = true
+		robotMenu.ActiveRobotID = targetRobotID
+		robotMenu.Options = options
+		robotMenu.RowFunctionMapping = rowFunctionMapping
+		robotMenu.Weapons = weapons
 	} else if robot.PlayerID == protocol.PlayerIDPlayer {
 		// 好人打敵人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		weapons, err := QueryRobotWeapons(v.App, robot)
+		_, weapons, err := QueryRobotWeapons(v.App, robot)
 		if err != nil {
 			return err
 		}
@@ -59,11 +63,14 @@ func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID 
 			rowFunctionMapping[len(options)] = protocol.RobotMenuFunctionWeapon
 			options = append(options, protocol.KesStringWeapon(weapons))
 		}
-		v.App.Gameplay.RobotMenu.Active = true
-		v.App.Gameplay.RobotMenu.ActiveRobotID = robotID
-		v.App.Gameplay.RobotMenu.Options = options
-		v.App.Gameplay.RobotMenu.RowFunctionMapping = rowFunctionMapping
-		v.App.Gameplay.RobotMenu.Weapons = weapons
+		robotMenu.Active = true
+		robotMenu.ActiveRobotID = robotID
+		robotMenu.Options = options
+		robotMenu.RowFunctionMapping = rowFunctionMapping
+		robotMenu.Weapons = weapons
 	}
+
+	v.App.Gameplay.BattleMenu = battleMenu
+	v.App.Gameplay.RobotMenu = robotMenu
 	return nil
 }

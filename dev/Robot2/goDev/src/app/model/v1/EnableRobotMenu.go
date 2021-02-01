@@ -21,7 +21,7 @@ func (v *model) EnableRobotMenu(robotID string, situation interface{}) error {
 	if err != nil {
 		return err
 	}
-	weapons, err := QueryRobotWeapons(v.App, robot)
+	_, weapons, err := QueryRobotWeapons(v.App, robot)
 	if err != nil {
 		return err
 	}

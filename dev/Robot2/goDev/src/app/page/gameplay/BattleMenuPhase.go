@@ -33,6 +33,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		// 再更新UnitMenu的Cursor
 		// @TODO: update selection index for focus weapon
 		// unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+		view.Render(ctx)
 		var cancel, tab bool
 		var selection string
 		for {
