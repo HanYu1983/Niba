@@ -53,7 +53,7 @@ export class Grids extends Instant {
     static getGridPos(x:number, y:number):Vec3{
         return new Vec3(x * 32 - 304, -y * 32 + 304 ,0);
     }
-
+    
     getGrid(x:number, y:number):Node|null{
         let outputGrid = null;
         for(let i = 0; i < this.grids.length; ++i){

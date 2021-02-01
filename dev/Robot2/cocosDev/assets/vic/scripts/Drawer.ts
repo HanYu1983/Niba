@@ -13,6 +13,14 @@ const { ccclass, property } = _decorator;
 @ccclass('Drawer')
 export class Drawer extends Instant {
 
+    getPageByName(name:string){
+        for(let i = 0; i < this.childs.length; ++i){
+            const child = this.childs[i];
+            if(child.name == name) return child;
+        }
+        return null;
+    }
+
     static getBuyRobot(id:string, data:any):any{
         return data.Info.CanBuyRobots[id];
     }

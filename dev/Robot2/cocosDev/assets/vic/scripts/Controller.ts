@@ -5,10 +5,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, tween, systemEvent, SystemEvent } from 'cc';
+import { _decorator, Component, systemEvent, SystemEvent, Tween, tween } from 'cc';
 import { Drawer } from './Drawer';
 const { ccclass, property } = _decorator;
 import * as ModelType from "../../han/types"
+import { Instant } from './lib/instanceViewer/Instant';
+import { LandMap } from './gamePage/LandMap';
+import { GamePage } from './gamePage/GamePage';
 
 @ccclass('Controller')
 export class Controller extends Component {
@@ -32,7 +35,9 @@ export class Controller extends Component {
         },
         RenderRobotMove: (robotID: string, path: any, cb: ()=>void) => {
             console.log(`[Controller][RenderRobotMove]`, robotID, path)
-            cb()
+
+            const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+            gamePage?.getComponent(GamePage)?.map.units.moveUnit(robotID, path, cb);
         },
         Alert: (msg: string) => {
             alert(msg)
@@ -47,6 +52,27 @@ export class Controller extends Component {
         // 畫第一次(Render), 之後是自動呼叫Render
         this.model.Flush()
 
+
+
+        // 這個測不出來
+        let actions:Tween<Node>[] = [];
+        [1].forEach(element => {
+            const t1 = tween().call(()=>{console.log("no print");});
+            actions.push(t1);
+        });
+        console.log(actions);
+        
+        let t = tween(this.node);
+        t.sequence.apply(t, actions).start();
+
+        // 這個可以用
+        tween(this.node).sequence(
+            tween().call(()=>{console.log("success, aaa");}),
+            tween().call(()=>{console.log("success, bbb");})
+        ).start();
+
+        
+        
 
         // this.view.build({page:1});
 
