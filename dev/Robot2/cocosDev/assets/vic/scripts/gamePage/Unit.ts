@@ -18,6 +18,8 @@ export class Unit extends Component {
 
     airPos:Vec3 = new Vec3(0,10,0);
 
+    unitId:string = "";
+
     // example
     // start(){
     //     this.changeUnit("byj");
