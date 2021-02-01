@@ -49,6 +49,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		}
 		var cancel, tab bool
 		var selection string
+	Menu2DStep:
 		for {
 			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
@@ -75,6 +76,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
+			if invalidStr, has := gameplayPage.RobotMenu.InvalidWeapons[weaponID]; has {
+				view.Alert(invalidStr)
+				goto Menu2DStep
+			}
+
 			var targetID string
 			ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
 				return nil

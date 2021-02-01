@@ -86,5 +86,6 @@ func QueryMinMaxAttackRange(w int, h int, min int, max int, offset protocol.Posi
 		}
 		ret[i] = protocol.Position{x, y}
 	}
+	ret = protocol.DifferencePosition(ret, []protocol.Position{{}})
 	return ret, nil
 }

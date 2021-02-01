@@ -114,6 +114,7 @@ type RobotMenu struct {
 	Options            [][]string
 	RowFunctionMapping map[int]int
 	Weapons            map[string]Weapon
+	InvalidWeapons     map[string]string
 	Transforms         map[string]Robot
 }
 
