@@ -18,13 +18,11 @@ func (model *model) ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, 
 		unitMenuModel := model.GetRobotMenu()
 		battleMenuModel := model.GetBattleMenu()
 		if battleMenuModel.Active {
-			battleMenu := ctx.BattleMenus[uidata.BattleMenuUnitBattleMenu]
-			battleMenu.Left.Robot = battleMenuModel.AttackRobot
-			battleMenu.Left.Weapon = battleMenuModel.AttackWeapon
-			battleMenu.Left.BattleAction = protocol.BattleMenuActionAttack
-
-			battleMenu.Right.Robot = battleMenuModel.DeffenceRobot
-			battleMenu.Right.BattleAction = protocol.BattleMenuActionPending
+			menu.Left.Robot = battleMenuModel.AttackRobot
+			menu.Left.Weapon = battleMenuModel.AttackWeapon
+			menu.Left.BattleAction = protocol.BattleMenuActionAttack
+			menu.Right.Robot = battleMenuModel.DeffenceRobot
+			menu.Right.BattleAction = protocol.BattleMenuActionPending
 
 			unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 			isSelectingWeapon := unitMenuModel.RowFunctionMapping[unitMenu.Cursor1] == protocol.RobotMenuFunctionWeapon
@@ -36,17 +34,16 @@ func (model *model) ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, 
 			case isSelectingWeapon:
 				selectedWeaponID := selection
 				selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
-				battleMenu.Right.Weapon = selectedWeapon
-				battleMenu.Right.BattleAction = protocol.BattleMenuActionAttack
-				battleMenu.Left.Info.HitRate = 0.5
+				menu.Right.Weapon = selectedWeapon
+				menu.Right.BattleAction = protocol.BattleMenuActionAttack
+				menu.Left.Info.HitRate = 0.5
 			case selection == uidata.MenuOptionUnitGuard:
-				battleMenu.Right.BattleAction = protocol.BattleMenuActionGuard
+				menu.Right.BattleAction = protocol.BattleMenuActionGuard
 			case selection == uidata.MenuOptionUnitEvade:
-				battleMenu.Right.BattleAction = protocol.BattleMenuActionEvade
+				menu.Right.BattleAction = protocol.BattleMenuActionEvade
 			default:
 				return origin, fmt.Errorf("unknown action. unitMenu(%+v)", unitMenu)
 			}
-			ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, uidata.PageBattleMenu, battleMenu)
 		}
 	}
 	ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, menuID, menu)

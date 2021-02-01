@@ -30393,8 +30393,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	model.prototype.ObserveMenu2D = function(origin, menuID) { return this.$val.ObserveMenu2D(origin, menuID); };
 	model.ptr.prototype.ObserveBattleMenu = function(origin, menuID) {
-		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, battleMenu, battleMenuModel, ctx, err, has, isSelectingWeapon, menu, menuID, model$1, origin, selectedWeapon, selectedWeaponID, selection, unitMenu, unitMenuModel, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; battleMenu = $f.battleMenu; battleMenuModel = $f.battleMenuModel; ctx = $f.ctx; err = $f.err; has = $f.has; isSelectingWeapon = $f.isSelectingWeapon; menu = $f.menu; menuID = $f.menuID; model$1 = $f.model$1; origin = $f.origin; selectedWeapon = $f.selectedWeapon; selectedWeaponID = $f.selectedWeaponID; selection = $f.selection; unitMenu = $f.unitMenu; unitMenuModel = $f.unitMenuModel; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _1, _entry, _entry$1, _entry$2, _entry$3, _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, battleMenuModel, ctx, err, has, isSelectingWeapon, menu, menuID, model$1, origin, selectedWeapon, selectedWeaponID, selection, unitMenu, unitMenuModel, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; battleMenuModel = $f.battleMenuModel; ctx = $f.ctx; err = $f.err; has = $f.has; isSelectingWeapon = $f.isSelectingWeapon; menu = $f.menu; menuID = $f.menuID; model$1 = $f.model$1; origin = $f.origin; selectedWeapon = $f.selectedWeapon; selectedWeaponID = $f.selectedWeaponID; selection = $f.selection; unitMenu = $f.unitMenu; unitMenuModel = $f.unitMenuModel; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		model$1 = this;
 		ctx = $clone(origin, uidata.UI);
 		_tuple = (_entry = ctx.BattleMenus[$Int.keyFor(menuID)], _entry !== undefined ? [_entry.v, true] : [new uidata.BattleMenu.ptr(new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0), 0, new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), new structType.ptr(0)), new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0), 0, new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), new structType.ptr(0))), false]);
@@ -30412,14 +30412,13 @@ $packages["app/model/v1"] = (function() {
 				/* */ if (battleMenuModel.Active) { $s = 4; continue; }
 				/* */ $s = 5; continue;
 				/* if (battleMenuModel.Active) { */ case 4:
-					battleMenu = $clone((_entry$1 = ctx.BattleMenus[$Int.keyFor(32)], _entry$1 !== undefined ? _entry$1.v : new uidata.BattleMenu.ptr(new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0), 0, new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), new structType.ptr(0)), new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType$2.nil, sliceType$2.nil, arrayType$1.zero(), 0), 0, new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), new structType.ptr(0)))), uidata.BattleMenu);
-					protocol.Robot.copy(battleMenu.Left.Robot, battleMenuModel.AttackRobot);
-					protocol.Weapon.copy(battleMenu.Left.Weapon, battleMenuModel.AttackWeapon);
-					battleMenu.Left.BattleAction = 1;
-					protocol.Robot.copy(battleMenu.Right.Robot, battleMenuModel.DeffenceRobot);
-					battleMenu.Right.BattleAction = 0;
-					unitMenu = $clone((_entry$2 = ctx.Menu2Ds[$Int.keyFor(30)], _entry$2 !== undefined ? _entry$2.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType.nil)), uidata.Menu2D);
-					isSelectingWeapon = (_entry$3 = unitMenuModel.RowFunctionMapping[$Int.keyFor(unitMenu.Cursor1)], _entry$3 !== undefined ? _entry$3.v : 0) === 1;
+					protocol.Robot.copy(menu.Left.Robot, battleMenuModel.AttackRobot);
+					protocol.Weapon.copy(menu.Left.Weapon, battleMenuModel.AttackWeapon);
+					menu.Left.BattleAction = 1;
+					protocol.Robot.copy(menu.Right.Robot, battleMenuModel.DeffenceRobot);
+					menu.Right.BattleAction = 0;
+					unitMenu = $clone((_entry$1 = ctx.Menu2Ds[$Int.keyFor(30)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType.nil)), uidata.Menu2D);
+					isSelectingWeapon = (_entry$2 = unitMenuModel.RowFunctionMapping[$Int.keyFor(unitMenu.Cursor1)], _entry$2 !== undefined ? _entry$2.v : 0) === 1;
 					_r = tool.TryGetInt(unitMenu.Cursor2, unitMenu.Cursor1); /* */ $s = 6; case 6: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 					_tuple$2 = _r;
 					_r$1 = tool.TryGetString2(unitMenu.Options, unitMenu.Cursor1)(_tuple$2[0], _tuple$2[1]); /* */ $s = 7; case 7: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
@@ -30435,29 +30434,28 @@ $packages["app/model/v1"] = (function() {
 						/* */ $s = 12; continue;
 						/* if (isSelectingWeapon) { */ case 9:
 							selectedWeaponID = selection;
-							selectedWeapon = $clone((_entry$4 = unitMenuModel.Weapons[$String.keyFor(selectedWeaponID)], _entry$4 !== undefined ? _entry$4.v : new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0)), protocol.Weapon);
-							protocol.Weapon.copy(battleMenu.Right.Weapon, selectedWeapon);
-							battleMenu.Right.BattleAction = 1;
-							battleMenu.Left.Info.HitRate = 0.5;
+							selectedWeapon = $clone((_entry$3 = unitMenuModel.Weapons[$String.keyFor(selectedWeaponID)], _entry$3 !== undefined ? _entry$3.v : new protocol.Weapon.ptr("", "", "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0)), protocol.Weapon);
+							protocol.Weapon.copy(menu.Right.Weapon, selectedWeapon);
+							menu.Right.BattleAction = 1;
+							menu.Left.Info.HitRate = 0.5;
 							$s = 13; continue;
 						/* } else if (selection === "MenuOptionUnitGuard") { */ case 10:
-							battleMenu.Right.BattleAction = 2;
+							menu.Right.BattleAction = 2;
 							$s = 13; continue;
 						/* } else if (selection === "MenuOptionUnitEvade") { */ case 11:
-							battleMenu.Right.BattleAction = 3;
+							menu.Right.BattleAction = 3;
 							$s = 13; continue;
 						/* } else { */ case 12:
 							_r$2 = fmt.Errorf("unknown action. unitMenu(%+v)", new sliceType$6([new unitMenu.constructor.elem(unitMenu)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 							$s = -1; return [origin, _r$2];
 						/* } */ case 13:
 					case 8:
-					ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, 13, $clone(battleMenu, uidata.BattleMenu));
 				/* } */ case 5:
 			/* } */ case 3:
 		case 1:
 		ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, menuID, $clone(menu, uidata.BattleMenu));
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: model.ptr.prototype.ObserveBattleMenu }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.battleMenu = battleMenu; $f.battleMenuModel = battleMenuModel; $f.ctx = ctx; $f.err = err; $f.has = has; $f.isSelectingWeapon = isSelectingWeapon; $f.menu = menu; $f.menuID = menuID; $f.model$1 = model$1; $f.origin = origin; $f.selectedWeapon = selectedWeapon; $f.selectedWeaponID = selectedWeaponID; $f.selection = selection; $f.unitMenu = unitMenu; $f.unitMenuModel = unitMenuModel; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: model.ptr.prototype.ObserveBattleMenu }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.battleMenuModel = battleMenuModel; $f.ctx = ctx; $f.err = err; $f.has = has; $f.isSelectingWeapon = isSelectingWeapon; $f.menu = menu; $f.menuID = menuID; $f.model$1 = model$1; $f.origin = origin; $f.selectedWeapon = selectedWeapon; $f.selectedWeaponID = selectedWeaponID; $f.selection = selection; $f.unitMenu = unitMenu; $f.unitMenuModel = unitMenuModel; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	model.prototype.ObserveBattleMenu = function(origin, menuID) { return this.$val.ObserveBattleMenu(origin, menuID); };
 	model.ptr.prototype.ObservePage = function(origin, pageID) {
