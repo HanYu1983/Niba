@@ -33320,7 +33320,7 @@ $packages["app/page/gameplay"] = (function() {
 								$s = -1; return [origin, false, err];
 							}
 							if (cancel) {
-								$s = -1; return [ctx, cancel, $ifaceNil];
+								$s = -1; return [origin, cancel, $ifaceNil];
 							}
 							$s = 38; continue;
 						/* } else if (_2 === ("MenuOptionSkyGround")) { */ case 37:
@@ -33343,7 +33343,7 @@ $packages["app/page/gameplay"] = (function() {
 								$s = -1; return [origin, false, err];
 							}
 							if (cancel) {
-								$s = -1; return [ctx, cancel, $ifaceNil];
+								$s = -1; return [origin, cancel, $ifaceNil];
 							}
 						/* } */ case 38:
 					case 34:
@@ -33391,7 +33391,7 @@ $packages["app/page/gameplay"] = (function() {
 					/* continue; */ $s = 50; continue;
 				}
 				if (cancel$1) {
-					$s = -1; return [ctx$1, cancel$1, $ifaceNil];
+					$s = -1; return [origin, cancel$1, $ifaceNil];
 				}
 				/* break; */ $s = 51; continue;
 			/* } */ $s = 50; continue; case 51:
