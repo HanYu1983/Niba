@@ -66,7 +66,7 @@ func init() {
 		playerAI1 = "ai1"
 	)
 	DefaultModel.App.Gameplay.AIModel = aiimpl.Model{Title: "Xx"}
-	DefaultModel.App.Money = 10000
+	DefaultModel.App.Money = 100000
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
 	DefaultModel.App.Gameplay.Players = map[string]protocol.Player{

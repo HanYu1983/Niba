@@ -2,74 +2,94 @@ package v1
 
 import (
 	"app/tool/protocol"
-	"fmt"
-	"tool/log"
 )
 
 func (v *model) QueryActivePlayer() string {
-	return protocol.PlayerIDPlayer
+	return QueryActivePlayer(*v)
 }
 func (v *model) NextPlayer() error {
+	m, err := NextPlayer(*v)
+	if err != nil {
+		return err
+	}
+	*v = m
 	return nil
 }
 func (v *model) IsDone() bool {
-	return false
+	return IsDone(*v)
 }
 func (v *model) QueryUnitsByRegion(p1 protocol.Position, p2 protocol.Position) []string {
-	return SearchUnitByRegion(v.App.Gameplay.Positions, p1, p2)
+	return QueryUnitsByRegion(*v, p1, p2)
 }
 func (v *model) QueryUnitByPosition(pos protocol.Position) string {
-	return SearchUnitByPosition(v.App.Gameplay.Positions, pos)
+	return QueryUnitByPosition(*v, pos)
 }
 func (v *model) GetGameplayRobots() map[string]protocol.Robot {
-	return v.App.Gameplay.Robots
+	return GetGameplayRobots(*v)
 }
 func (v *model) GetGameplayItems() map[string]protocol.Item {
-	return v.App.Gameplay.Items
+	return GetGameplayItems(*v)
 }
 func (v *model) GetGameplayPositions() map[string]protocol.Position {
-	return v.App.Gameplay.Positions
+	return GetGameplayPositions(*v)
 }
 func (v *model) GetGameplayTags() map[string]protocol.Tag {
-	return v.App.Gameplay.Tags
+	return GetGameplayTags(*v)
 }
 func (v *model) SetCursor(cursor protocol.Position) {
-	v.App.Gameplay.Cursor = cursor
+	m := SetCursor(*v, cursor)
+	*v = m
 }
 func (v *model) GetCursor() protocol.Position {
-	return v.App.Gameplay.Cursor
+	return GetCursor(*v)
 }
 func (v *model) GetMap() [][]int {
-	return v.App.Gameplay.Map
+	return GetMap(*v)
 }
 func (v *model) QueryMoveCount(robotID string) int {
-	log.Log(protocol.LogCategoryInfo, "QueryMoveCount", fmt.Sprintf("tags(%+v)\n", v.App.Gameplay.Tags[robotID]))
-	return v.App.Gameplay.Tags[robotID].MoveCount
+	return QueryMoveCount(*v, robotID)
 }
 
 func (v *model) RobotDone(robotID string) error {
-	tags := v.App.Gameplay.Tags[robotID]
-	tags.IsDone = true
-	v.App.Gameplay.Tags = protocol.AssocStringTag(v.App.Gameplay.Tags, robotID, tags)
+	m, err := RobotDone(*v, robotID)
+	if err != nil {
+		return err
+	}
+	*v = m
 	return nil
 }
 
-func (v *model) RobotTransform(string, string) error {
+func (v *model) RobotTransform(robotID string, transformID string) error {
+	m, err := RobotTransform(*v, robotID, transformID)
+	if err != nil {
+		return err
+	}
+	*v = m
 	return nil
 }
-func (v *model) RobotSkyGround(string) error {
+func (v *model) RobotSkyGround(robotID string) error {
+	m, err := RobotSkyGround(*v, robotID)
+	if err != nil {
+		return err
+	}
+	*v = m
 	return nil
 }
 func (v *model) DisableRobotMenu() error {
-	v.App.Gameplay.RobotMenu.Active = false
+	m, err := DisableRobotMenu(*v)
+	if err != nil {
+		return err
+	}
+	*v = m
 	return nil
 }
 func (v *model) GetRobotMenu() protocol.RobotMenu {
-	return v.App.Gameplay.RobotMenu
+	return GetRobotMenu(*v)
 }
-func (v *model) SetMoveRange(moveRnage []protocol.Position) {
-	v.App.Gameplay.MoveRange = moveRnage
+func (v *model) SetMoveRange(moveRange []protocol.Position) {
+	m := SetMoveRange(*v, moveRange)
+	*v = m
 }
 func (v *model) GetMoveRange() []protocol.Position {
-	return v.App.Gameplay.MoveRange
+	return GetMoveRange(*v)
 }

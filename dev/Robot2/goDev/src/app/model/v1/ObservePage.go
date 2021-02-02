@@ -27,19 +27,17 @@ func (model *model) ObservePage(origin interface{}, pageID int) (interface{}, er
 			return origin, err
 		}
 	}
-	if pageID == uidata.PageLobby {
-		ctx.Info.Money = model.QueryMoney()
-		ctx.Info.Robots = model.QueryRobots()
-		ctx.Info.Pilots = model.QueryPilots()
-		ctx.Info.Weapons = model.QueryWeapons()
-		ctx.Info.Components = model.QueryComponents()
-		ctx.Info.CanBuyRobots = model.QueryRobotCanBuy()
-		ctx.Info.CanBuyPilots = model.QueryPilotCanBuy()
-		ctx.Info.CanBuyWeapons = model.QueryWeaponCanBuy()
-		ctx.Info.CanBuyComponents = model.QueryComponentCanBuy()
-		ctx.Info.PilotIDByRobotID = model.QueryPilotIDByRobotID()
-		ctx.Info.RobotIDByWeaponID = model.QueryRobotIDByWeaponID()
-		ctx.Info.RobotIDByComponentID = model.QueryRobotIDByComponentID()
-	}
+	ctx.Info.Money = QueryMoney(*model)
+	ctx.Info.Robots = QueryRobots(*model)
+	ctx.Info.Pilots = QueryPilots(*model)
+	ctx.Info.Weapons = QueryWeapons(*model)
+	ctx.Info.Components = QueryComponents(*model)
+	ctx.Info.CanBuyRobots = QueryRobotCanBuy(*model)
+	ctx.Info.CanBuyPilots = QueryPilotCanBuy(*model)
+	ctx.Info.CanBuyWeapons = QueryWeaponCanBuy(*model)
+	ctx.Info.CanBuyComponents = QueryComponentCanBuy(*model)
+	ctx.Info.PilotIDByRobotID = QueryPilotIDByRobotID(*model)
+	ctx.Info.RobotIDByWeaponID = QueryRobotIDByWeaponID(*model)
+	ctx.Info.RobotIDByComponentID = QueryRobotIDByComponentID(*model)
 	return ctx, nil
 }

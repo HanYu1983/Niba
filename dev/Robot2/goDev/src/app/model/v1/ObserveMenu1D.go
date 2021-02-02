@@ -16,24 +16,24 @@ func (model *model) ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, erro
 	options := []string{}
 	switch menuID {
 	case uidata.Menu1DPilotListMenu:
-		options = protocol.KesStringPilot(model.QueryPilots())
+		options = protocol.KesStringPilot(model.App.Lobby.Pilots)
 	case uidata.Menu1DRobotPilotListMenu, uidata.Menu1DRobotListMenu, uidata.Menu1DMultiUnitSelectionMenu:
-		options = protocol.KesStringRobot(model.QueryRobots())
+		options = protocol.KesStringRobot(model.App.Lobby.Robots)
 	case uidata.Menu1DWeaponRobotListMenu, uidata.Menu1DWeaponListMenu:
-		options = protocol.KesStringWeapon(model.QueryWeapons())
+		options = protocol.KesStringWeapon(model.App.Lobby.Weapons)
 	case uidata.Menu1DComponentRobotListMenu, uidata.Menu1DComponentListMenu:
-		options = protocol.KesStringComponent(model.QueryComponents())
+		options = protocol.KesStringComponent(model.App.Lobby.Components)
 	case uidata.Menu1DBuyRobotMenu:
-		canBuy := model.QueryRobotCanBuy()
+		canBuy := QueryRobotCanBuy(*model)
 		options = data.KesStringRobotProto(canBuy)
 	case uidata.Menu1DBuyPilotMenu:
-		canBuy := model.QueryPilotCanBuy()
+		canBuy := QueryPilotCanBuy(*model)
 		options = data.KesStringPilotProto(canBuy)
 	case uidata.Menu1DBuyWeaponMenu:
-		canBuy := model.QueryWeaponCanBuy()
+		canBuy := QueryWeaponCanBuy(*model)
 		options = data.KesStringWeaponProto(canBuy)
 	case uidata.Menu1DBuyComponentMenu:
-		canBuy := model.QueryComponentCanBuy()
+		canBuy := QueryComponentCanBuy(*model)
 		options = data.KesStringComponentProto(canBuy)
 	}
 	menu.Offset = helper.Max(0, helper.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))

@@ -94,6 +94,7 @@ type ListInt []int
 
 // UI is
 type UI struct {
+	Model         protocol.IModel
 	Actives       map[int]bool
 	Menus         map[int]ListInt
 	Focus         map[int]int
