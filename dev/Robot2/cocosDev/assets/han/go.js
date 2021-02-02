@@ -33838,7 +33838,7 @@ $packages["app/page/lobby"] = (function() {
 		uidata.UI.copy(ctx, _tuple[0]);
 		err[0] = _tuple[1];
 		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
-			$s = -1; return [ctx, err[0]];
+			$s = -1; return [origin, err[0]];
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], false);
 		$s = -1; return [ctx, $ifaceNil];

@@ -10,7 +10,6 @@ import (
 
 func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	view := def.View
-
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
@@ -100,7 +99,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		},
 	)
 	if err != nil {
-		return ctx, err
+		return origin, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, false)
 	return ctx, nil
