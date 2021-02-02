@@ -10,7 +10,7 @@ import (
 
 func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	view := def.View
-	model := def.Model
+
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
@@ -58,7 +58,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
-				err = model.BuyRobot(selection)
+				ctx.Model, err = ctx.Model.BuyRobot(selection)
 				if err != nil {
 					view.Alert(err.Error())
 				}
@@ -68,7 +68,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
-				err = model.BuyPilot(selection)
+				ctx.Model, err = ctx.Model.BuyPilot(selection)
 				if err != nil {
 					view.Alert(err.Error())
 				}
@@ -78,7 +78,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
-				err = model.BuyWeapon(selection)
+				ctx.Model, err = ctx.Model.BuyWeapon(selection)
 				if err != nil {
 					view.Alert(err.Error())
 				}
@@ -88,7 +88,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
-				err = model.BuyComponent(selection)
+				ctx.Model, err = ctx.Model.BuyComponent(selection)
 				if err != nil {
 					view.Alert(err.Error())
 				}

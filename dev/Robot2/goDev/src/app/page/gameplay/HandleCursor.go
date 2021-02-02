@@ -1,14 +1,12 @@
 package gameplay
 
 import (
-	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/uidata"
 )
 
 func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	ctx := origin
-	model := def.Model
 	switch detail := evt.(type) {
 	case uidata.CommandKeyDown:
 		switch detail.KeyCode {
@@ -19,7 +17,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]--
 			}
-			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			ctx.Model = ctx.Model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeDown:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -28,7 +26,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[1]++
 			}
-			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			ctx.Model = ctx.Model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeLeft:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -37,7 +35,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]--
 			}
-			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			ctx.Model = ctx.Model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		case uidata.KeyCodeRight:
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -46,7 +44,7 @@ func HandleCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 			} else {
 				gameplayPage.Cursor[0]++
 			}
-			model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
+			ctx.Model = ctx.Model.SetCursor(helper.Local2World(gameplayPage.Camera, gameplayPage.Cursor))
 			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}

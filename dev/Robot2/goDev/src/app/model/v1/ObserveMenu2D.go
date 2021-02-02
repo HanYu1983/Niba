@@ -5,8 +5,9 @@ import (
 	"app/tool/uidata"
 )
 
-func (model *model) ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
+	model := ctx.Model.(model)
 	menu, has := ctx.Menu2Ds[menuID]
 	if has == false {
 		return origin, nil
@@ -14,7 +15,7 @@ func (model *model) ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, erro
 	options := [][]string{}
 	switch menuID {
 	case uidata.Menu2DUnitMenu:
-		unitMenuModel := model.GetRobotMenu()
+		unitMenuModel := GetRobotMenu(model)
 		if unitMenuModel.Active {
 			options = unitMenuModel.Options
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]

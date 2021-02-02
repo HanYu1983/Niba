@@ -15,10 +15,8 @@ func Main() {
 	log.Category[protocol.LogCategoryPhase] = true
 	log.Category[protocol.LogCategoryDetail] = true
 	view := def.View
-	model := &v1.DefaultModel
-	def.Model = model
-	uidata.DefaultUI.Model = model
-
+	ui := uidata.DefaultUI
+	ui.Model = v1.DefaultModel
 	defer func() {
 		if x := recover(); x != nil {
 			fmt.Printf("error: %v\n", x)
@@ -34,11 +32,10 @@ func Main() {
 		}
 	}()
 	view.Install()
-
 	var _ = gameplay.GameLoop
 	var _ = title.StartPagePhase
 	startPhase := gameplay.GameLoop
-	_, err := startPhase(uidata.DefaultUI)
+	_, err := startPhase(ui)
 	if err != nil {
 		panic(err)
 	}

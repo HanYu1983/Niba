@@ -11,9 +11,6 @@ import (
 func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "start")
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, true)
@@ -23,16 +20,18 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 		var cancel bool
 		ctx, cancel, err = TurnPhase(ctx)
 		if err != nil {
-			model.Reset()
 			return origin, err
 		}
 		if cancel {
 			break
 		}
-		if model.IsDone() {
+		if ctx.Model.IsDone() {
 			break
 		}
-		model.NextPlayer()
+		ctx.Model, err = ctx.Model.NextPlayer()
+		if err != nil {
+			return origin, err
+		}
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, false)
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "end")

@@ -12,27 +12,25 @@ import (
 func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "start")
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
 	var err error
 	ctx := origin
+	model := ctx.Model
 	for {
 		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
-			model.Reset()
+
 			return origin, false, err
 		}
 		view.Render(ctx)
 		evt := view.AskCommand()
 		if evt == nil {
-			model.Reset()
+
 			return origin, false, protocol.ErrTerminate
 		}
 		ctx, err = helper.UIReduce(HandleCursor, HandleCamera, HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
 		if err != nil {
-			model.Reset()
+
 			return origin, false, err
 		}
 		switch detail := evt.(type) {
@@ -52,13 +50,13 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)
 					if err != nil {
-						model.Reset()
+
 						return origin, false, err
 					}
 				} else {
 					ctx, _, err = UnitMenuPhase(ctx, unitID)
 					if err != nil {
-						model.Reset()
+
 						return origin, false, err
 					}
 				}

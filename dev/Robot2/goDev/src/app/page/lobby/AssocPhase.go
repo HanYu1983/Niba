@@ -11,7 +11,6 @@ import (
 
 func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	view := def.View
-	model := def.Model
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
@@ -64,27 +63,45 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				case uidata.PageAssocRobotToPilot:
 					switch middleSelection {
 					case uidata.MenuOptionAssoc:
-						model.AssocRobotPilot(leftSelection, rightSelection)
+						ctx.Model, err = ctx.Model.AssocRobotPilot(leftSelection, rightSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					case uidata.MenuOptionDissoc:
-						model.DissocRobotPilot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocRobotPilot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					default:
 						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
 				case uidata.PageAssocWeaponToRobot:
 					switch middleSelection {
 					case uidata.MenuOptionAssoc:
-						model.AssocWeaponRobot(leftSelection, rightSelection)
+						ctx.Model, err = ctx.Model.AssocWeaponRobot(leftSelection, rightSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					case uidata.MenuOptionDissoc:
-						model.DissocWeaponRobot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocWeaponRobot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					default:
 						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
 				case uidata.PageAssocComponentToRobot:
 					switch middleSelection {
 					case uidata.MenuOptionAssoc:
-						model.AssocComponentRobot(leftSelection, rightSelection)
+						ctx.Model, err = ctx.Model.AssocComponentRobot(leftSelection, rightSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					case uidata.MenuOptionDissoc:
-						model.DissocComponentRobot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocComponentRobot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					default:
 						return origin, cancel, fmt.Errorf("AssocPhase: you must select option: %v", middleSelection)
 					}
@@ -109,11 +126,20 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					}
 					switch pageID {
 					case uidata.PageAssocRobotToPilot:
-						model.DissocRobotPilot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocRobotPilot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					case uidata.PageAssocWeaponToRobot:
-						model.DissocWeaponRobot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocWeaponRobot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					case uidata.PageAssocComponentToRobot:
-						model.DissocComponentRobot(leftSelection)
+						ctx.Model, err = ctx.Model.DissocComponentRobot(leftSelection)
+						if err != nil {
+							return ctx, false, err
+						}
 					default:
 						return origin, cancel, fmt.Errorf("AssocPhase: you must have page: %v", pageID)
 					}

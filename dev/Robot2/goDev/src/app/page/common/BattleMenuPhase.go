@@ -11,14 +11,10 @@ import (
 func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "start")
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
 	var err error
 	ctx := origin
-	err = model.EnableBattleMenu(robotID, weaponID, targetRobotID)
+	ctx.Model, err = ctx.Model.EnableBattleMenu(robotID, weaponID, targetRobotID)
 	if err != nil {
-		model.Reset()
 		return origin, false, err
 	}
 
@@ -26,7 +22,6 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		// 先準備UI
 		ctx, err = ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
-			model.Reset()
 			return origin, false, err
 		}
 		// 再更新UnitMenu的Cursor
@@ -38,20 +33,17 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		for {
 			ctx, err = ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
-				model.Reset()
 				return origin, false, err
 			}
 			view.Render(ctx)
 			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
-				model.Reset()
 				return origin, false, err
 			}
 			if tab {
 				continue
 			}
 			if cancel {
-				model.Reset()
 				return origin, cancel, nil
 			}
 			break
@@ -62,13 +54,12 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
 			targetRobotAction := protocol.BattleMenuActionAttack
-			result, err := model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, "")
+			var result protocol.BattleResult
+			ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, "")
 			if err != nil {
-				model.Reset()
 				return origin, false, err
 			}
 			view.RenderRobotBattle(ctx, result)
-			return ctx, true, nil
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
@@ -78,13 +69,11 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		for {
 			ctx, err = ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
-				model.Reset()
 				return origin, false, err
 			}
 			view.Render(ctx)
 			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
-				model.Reset()
 				return origin, false, err
 			}
 			if tab {
@@ -116,15 +105,17 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		}
 		targetRobotAction := playerAction
 		targetRobotWeaponID := playerWeaponID
-		result, err := model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
+		var result protocol.BattleResult
+		ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
 		if err != nil {
-			model.Reset()
 			return origin, false, err
 		}
 		view.RenderRobotBattle(ctx, result)
-		return ctx, true, nil
 	}
-	model.DisableBattleMenu()
+	ctx.Model, err = ctx.Model.DisableBattleMenu()
+	if err != nil {
+		return origin, false, err
+	}
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "end")
-	return ctx, false, nil
+	return ctx, true, nil
 }

@@ -247,3 +247,55 @@ func GetMoveRange(origin model) []protocol.Position {
 	ctx := origin
 	return ctx.App.Gameplay.MoveRange
 }
+
+func DisableBattleMenu(origin model) (model, error) {
+	ctx := origin
+	ctx.App.Gameplay.BattleMenu.Active = false
+	return ctx, nil
+}
+func GetBattleMenu(origin model) protocol.BattleMenu {
+	ctx := origin
+	return ctx.App.Gameplay.BattleMenu
+}
+
+func Battle(origin model, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (model, protocol.BattleResult, error) {
+	ctx := origin
+	robot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
+	targetRobot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, targetRobotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
+	results := []protocol.BattleAnimation{}
+	// shoot
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      1000,
+	})
+	// counter
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      1000,
+	})
+	return ctx, protocol.BattleResult{Animations: results}, nil
+}

@@ -9,9 +9,10 @@ import (
 	"tool/log"
 )
 
-func (model *model) ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
+func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	//var err error
 	ctx := origin
+	model := ctx.Model.(model)
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.App.Gameplay.Map
 	cursor := model.App.Gameplay.Cursor

@@ -12,15 +12,15 @@ import (
 func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string) error) (uidata.UI, string, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "SelectUnitStep", "start")
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
+	
+	
+	
 	var err error
 	ctx := origin
 	for {
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
-			model.Reset()
+			
 			return origin, "", false, err
 		}
 		view.Render(ctx)
@@ -30,7 +30,7 @@ func SelectUnitStep(origin uidata.UI, unitID string, validFn func(unitID string)
 		}
 		ctx, err = helper.UIReduce(HandleCursor, HandleCamera)(ctx, evt)
 		if err != nil {
-			model.Reset()
+			
 			return origin, "", false, err
 		}
 		switch detail := evt.(type) {

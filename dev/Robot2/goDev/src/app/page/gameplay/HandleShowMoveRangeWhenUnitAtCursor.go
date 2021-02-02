@@ -1,14 +1,13 @@
 package gameplay
 
 import (
-	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/uidata"
 )
 
 func HandleShowMoveRangeWhenUnitAtCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	ctx := origin
-	model := def.Model
+	model := ctx.Model
 	var notFound string
 	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
 	if unitAtCursor != notFound {

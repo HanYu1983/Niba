@@ -10,9 +10,9 @@ import (
 )
 
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
-	model := def.Model
+	var err error
 	ctx := origin
-	err := model.EnableRobotMenu(unitID, nil)
+	ctx.Model, err = ctx.Model.EnableRobotMenu(unitID, nil)
 	if err != nil {
 		return origin, err
 	}
@@ -26,14 +26,12 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v) start", unitID))
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
+
 	var err error
 	ctx := origin
 	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 	if err != nil {
-		model.Reset()
+
 		return origin, false, err
 	}
 	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
@@ -53,20 +51,20 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		for {
 			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			view.Render(ctx)
 			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			if tab {
 				continue
 			}
 			if cancel {
-				model.Reset()
+
 				return origin, cancel, nil
 			}
 			break
@@ -86,79 +84,80 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				return nil
 			})
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			if cancel {
-				model.Reset()
+
 				return origin, cancel, nil
 			}
 			ctx, cancel, err = common.BattleMenuPhase(ctx, true, unitID, weaponID, targetID)
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			if cancel {
-				model.Reset()
+
 				return origin, cancel, nil
 			}
 		case protocol.RobotMenuFunctionTransform:
 			transformID := selection
-			err = model.RobotTransform(unitID, transformID)
+			ctx.Model, err = ctx.Model.RobotTransform(unitID, transformID)
 			if err != nil {
 				view.Alert(err.Error())
 			}
 			ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			if cancel {
-				model.Reset()
+
 				return origin, cancel, nil
 			}
 		default:
 			switch selection {
 			case uidata.MenuOptionUnitDone:
-				err = model.RobotDone(unitID)
+				ctx.Model, err = ctx.Model.RobotDone(unitID)
 				if err != nil {
-					model.Reset()
+
 					return origin, false, err
 				}
 			case uidata.MenuOptionMove:
 				ctx, cancel, err = RobotMovePhase(ctx, unitID)
 				if err != nil {
-					model.Reset()
+
 					return origin, false, err
 				}
 				if cancel {
-					model.Reset()
+
 					return ctx, cancel, nil
 				}
 			case uidata.MenuOptionSkyGround:
-				err = model.RobotSkyGround(unitID)
+				ctx.Model, err = ctx.Model.RobotSkyGround(unitID)
 				if err != nil {
 					view.Alert(err.Error())
 				}
 				ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 				if err != nil {
-					model.Reset()
 					return origin, false, err
 				}
 				if cancel {
-					model.Reset()
 					return ctx, cancel, nil
 				}
 			}
 		}
-		model.DisableRobotMenu()
+		ctx.Model, err = ctx.Model.DisableRobotMenu()
+		if err != nil {
+			return origin, false, err
+		}
 	}
 	if item, is := gameplayPage.Items[unitID]; is {
 		var _ = item
 		// append menu
 		ctx, err := CreateItemMenu(ctx, unitID)
 		if err != nil {
-			model.Reset()
+
 			return origin, false, err
 		}
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
@@ -167,14 +166,14 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		for {
 			ctx, selection, cancel, tab, err = common.Menu1DStep(ctx, uidata.PageGameplay, uidata.Menu1DSystemMenu)
 			if err != nil {
-				model.Reset()
+
 				return origin, false, err
 			}
 			if tab {
 				continue
 			}
 			if cancel {
-				model.Reset()
+
 				return ctx, cancel, nil
 			}
 			break

@@ -12,16 +12,14 @@ import (
 func SelectPositionStep(origin uidata.UI, robotID string, isValid func(uidata.UI, protocol.Position) error) (uidata.UI, protocol.Position, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "SelectPositionStep", "start")
 	view := def.View
-	model := def.Model
-	model.Push()
-	defer model.Pop()
+
 	var err error
 	ctx := origin
 WaitSpace:
 	for {
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
-			model.Reset()
+
 			return origin, protocol.Position{}, false, err
 		}
 		view.Render(ctx)
@@ -31,7 +29,7 @@ WaitSpace:
 		}
 		ctx, err = helper.UIReduce(HandleCursor, HandleCamera)(ctx, evt)
 		if err != nil {
-			model.Reset()
+
 			return origin, protocol.Position{}, false, err
 		}
 		switch detail := evt.(type) {

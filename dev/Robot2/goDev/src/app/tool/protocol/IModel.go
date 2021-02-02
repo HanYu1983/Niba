@@ -5,42 +5,38 @@ import (
 )
 
 type IModel interface {
-	// stateStack
-	Push()
-	Pop()
-	Reset()
 	// lobby
-	BuyRobot(id string) error
-	BuyPilot(id string) error
-	BuyWeapon(id string) error
-	BuyComponent(id string) error
-	AssocRobotPilot(robotID string, pilotID string) error
-	DissocRobotPilot(robotID string) error
-	AssocWeaponRobot(weaponID string, robotID string) error
-	DissocWeaponRobot(weaponID string) error
-	AssocComponentRobot(componentID string, robotID string) error
-	DissocComponentRobot(componentID string) error
+	BuyRobot(id string) (IModel, error)
+	BuyPilot(id string) (IModel, error)
+	BuyWeapon(id string) (IModel, error)
+	BuyComponent(id string) (IModel, error)
+	AssocRobotPilot(robotID string, pilotID string) (IModel, error)
+	DissocRobotPilot(robotID string) (IModel, error)
+	AssocWeaponRobot(weaponID string, robotID string) (IModel, error)
+	DissocWeaponRobot(weaponID string) (IModel, error)
+	AssocComponentRobot(componentID string, robotID string) (IModel, error)
+	DissocComponentRobot(componentID string) (IModel, error)
 	// gameplay
 	ObservePage(ctx interface{}, id int) (interface{}, error)
 	EnemyTurnPhase(origin interface{}) (interface{}, bool, error)
 	QueryActivePlayer() string
-	NextPlayer() error
+	NextPlayer() (IModel, error)
 	IsDone() bool
 	QueryUnitsByRegion(p1 Position, p2 Position) []string
 	QueryUnitByPosition(Position) string
-	SetMoveRange([]Position)
+	SetMoveRange([]Position) IModel
 	GetMoveRange() []Position
 	QueryMoveRangeTree(string) (astar.NodeMap, error)
 	QueryMoveCount(string) int
-	SetCursor(Position)
+	SetCursor(Position) IModel
 	GetCursor() Position
-	RobotDone(string) error
-	RobotMove(string, Position) error
-	RobotTransform(string, string) error
-	RobotSkyGround(string) error
-	EnableRobotMenu(string, interface{}) error
-	DisableRobotMenu() error
-	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) error
-	DisableBattleMenu() error
-	Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (BattleResult, error)
+	RobotDone(string) (IModel, error)
+	RobotMove(string, Position) (IModel, error)
+	RobotTransform(string, string) (IModel, error)
+	RobotSkyGround(string) (IModel, error)
+	EnableRobotMenu(string, interface{}) (IModel, error)
+	DisableRobotMenu() (IModel, error)
+	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) (IModel, error)
+	DisableBattleMenu() (IModel, error)
+	Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (IModel, BattleResult, error)
 }

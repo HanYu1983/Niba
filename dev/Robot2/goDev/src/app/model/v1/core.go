@@ -88,51 +88,51 @@ func init() {
 	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}, "2": {3, 0}}
 }
 
-func (v *model) DisableBattleMenu() error {
-	v.App.Gameplay.BattleMenu.Active = false
-	return nil
-}
-func (v *model) GetBattleMenu() protocol.BattleMenu {
-	return v.App.Gameplay.BattleMenu
-}
+// func (v *model) DisableBattleMenu() error {
+// 	v.App.Gameplay.BattleMenu.Active = false
+// 	return nil
+// }
+// func (v *model) GetBattleMenu() protocol.BattleMenu {
+// 	return v.App.Gameplay.BattleMenu
+// }
 
-func (v *model) Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (protocol.BattleResult, error) {
-	robot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return protocol.BattleResult{}, err
-	}
-	targetRobot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, targetRobotID)
-	if err != nil {
-		return protocol.BattleResult{}, err
-	}
-	results := []protocol.BattleAnimation{}
-	// shoot
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeWeapon,
-		RobotBefore: robot,
-		RobotAfter:  robot,
-		Damage:      0,
-	})
-	// damage
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeDamage,
-		RobotBefore: targetRobot,
-		RobotAfter:  targetRobot,
-		Damage:      1000,
-	})
-	// counter
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeWeapon,
-		RobotBefore: targetRobot,
-		RobotAfter:  targetRobot,
-		Damage:      0,
-	})
-	// damage
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeDamage,
-		RobotBefore: robot,
-		RobotAfter:  robot,
-		Damage:      1000,
-	})
-	return protocol.BattleResult{Animations: results}, nil
-}
+// func (v *model) Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (protocol.BattleResult, error) {
+// 	robot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, robotID)
+// 	if err != nil {
+// 		return protocol.BattleResult{}, err
+// 	}
+// 	targetRobot, err := protocol.TryGetStringRobot(v.App.Gameplay.Robots, targetRobotID)
+// 	if err != nil {
+// 		return protocol.BattleResult{}, err
+// 	}
+// 	results := []protocol.BattleAnimation{}
+// 	// shoot
+// 	results = append(results, protocol.BattleAnimation{
+// 		Type:        protocol.BattleResultTypeWeapon,
+// 		RobotBefore: robot,
+// 		RobotAfter:  robot,
+// 		Damage:      0,
+// 	})
+// 	// damage
+// 	results = append(results, protocol.BattleAnimation{
+// 		Type:        protocol.BattleResultTypeDamage,
+// 		RobotBefore: targetRobot,
+// 		RobotAfter:  targetRobot,
+// 		Damage:      1000,
+// 	})
+// 	// counter
+// 	results = append(results, protocol.BattleAnimation{
+// 		Type:        protocol.BattleResultTypeWeapon,
+// 		RobotBefore: targetRobot,
+// 		RobotAfter:  targetRobot,
+// 		Damage:      0,
+// 	})
+// 	// damage
+// 	results = append(results, protocol.BattleAnimation{
+// 		Type:        protocol.BattleResultTypeDamage,
+// 		RobotBefore: robot,
+// 		RobotAfter:  robot,
+// 		Damage:      1000,
+// 	})
+// 	return protocol.BattleResult{Animations: results}, nil
+// }

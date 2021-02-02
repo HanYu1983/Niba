@@ -7,8 +7,9 @@ import (
 	"app/tool/uidata"
 )
 
-func (model *model) ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
+	model := ctx.Model.(model)
 	menu, has := ctx.Menu1Ds[menuID]
 	if has == false {
 		return origin, nil
@@ -24,16 +25,16 @@ func (model *model) ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, erro
 	case uidata.Menu1DComponentRobotListMenu, uidata.Menu1DComponentListMenu:
 		options = protocol.KesStringComponent(model.App.Lobby.Components)
 	case uidata.Menu1DBuyRobotMenu:
-		canBuy := QueryRobotCanBuy(*model)
+		canBuy := QueryRobotCanBuy(model)
 		options = data.KesStringRobotProto(canBuy)
 	case uidata.Menu1DBuyPilotMenu:
-		canBuy := QueryPilotCanBuy(*model)
+		canBuy := QueryPilotCanBuy(model)
 		options = data.KesStringPilotProto(canBuy)
 	case uidata.Menu1DBuyWeaponMenu:
-		canBuy := QueryWeaponCanBuy(*model)
+		canBuy := QueryWeaponCanBuy(model)
 		options = data.KesStringWeaponProto(canBuy)
 	case uidata.Menu1DBuyComponentMenu:
-		canBuy := QueryComponentCanBuy(*model)
+		canBuy := QueryComponentCanBuy(model)
 		options = data.KesStringComponentProto(canBuy)
 	}
 	menu.Offset = helper.Max(0, helper.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
