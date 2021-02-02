@@ -17,7 +17,6 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 	if err != nil {
 		return origin, false, err
 	}
-
 	if isPlayerTurn {
 		// 先準備UI
 		ctx, err = ObservePage(ctx, uidata.PageGameplay)

@@ -4,6 +4,7 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 // func (v *model) EnableBattleMenu(robotID string, weaponID string, targetRobotID string) error {
@@ -159,5 +160,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 
 	v.App.Gameplay.BattleMenu = battleMenu
 	v.App.Gameplay.RobotMenu = robotMenu
-	return origin, nil
+
+	log.Log(protocol.LogCategoryInfo, "EnableBattleMenu", fmt.Sprintf("end. BattleMenu(%v)\n", battleMenu))
+	return v, nil
 }

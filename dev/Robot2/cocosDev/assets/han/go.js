@@ -30964,8 +30964,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.CheckInvalidWeapons = CheckInvalidWeapons;
 	EnableBattleMenu = function(origin, robotID, weaponID, targetRobotID) {
-		var _key, _key$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, battleMenu, err, err$1, err$2, invalidWeapons, invalidWeapons$1, options, options$1, origin, robot, robotID, robotMenu, rowFunctionMapping, rowFunctionMapping$1, targetRobot, targetRobotID, v, weapon, weaponID, weapons, weapons$1, weapons$2, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _key$1 = $f._key$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; battleMenu = $f.battleMenu; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; invalidWeapons = $f.invalidWeapons; invalidWeapons$1 = $f.invalidWeapons$1; options = $f.options; options$1 = $f.options$1; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotMenu = $f.robotMenu; rowFunctionMapping = $f.rowFunctionMapping; rowFunctionMapping$1 = $f.rowFunctionMapping$1; targetRobot = $f.targetRobot; targetRobotID = $f.targetRobotID; v = $f.v; weapon = $f.weapon; weaponID = $f.weaponID; weapons = $f.weapons; weapons$1 = $f.weapons$1; weapons$2 = $f.weapons$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _key, _key$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, battleMenu, err, err$1, err$2, invalidWeapons, invalidWeapons$1, options, options$1, origin, robot, robotID, robotMenu, rowFunctionMapping, rowFunctionMapping$1, targetRobot, targetRobotID, v, weapon, weaponID, weapons, weapons$1, weapons$2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _key = $f._key; _key$1 = $f._key$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; battleMenu = $f.battleMenu; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; invalidWeapons = $f.invalidWeapons; invalidWeapons$1 = $f.invalidWeapons$1; options = $f.options; options$1 = $f.options$1; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotMenu = $f.robotMenu; rowFunctionMapping = $f.rowFunctionMapping; rowFunctionMapping$1 = $f.rowFunctionMapping$1; targetRobot = $f.targetRobot; targetRobotID = $f.targetRobotID; v = $f.v; weapon = $f.weapon; weaponID = $f.weaponID; weapons = $f.weapons; weapons$1 = $f.weapons$1; weapons$2 = $f.weapons$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		v = $clone(origin, model);
 		_r = protocol.TryGetStringRobot(v.App.Gameplay.Robots, robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
@@ -31065,8 +31065,12 @@ $packages["app/model/v1"] = (function() {
 		/* } */ case 8:
 		protocol.BattleMenu.copy(v.App.Gameplay.BattleMenu, battleMenu);
 		protocol.RobotMenu.copy(v.App.Gameplay.RobotMenu, robotMenu);
-		$s = -1; return [origin, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: EnableBattleMenu }; } $f._key = _key; $f._key$1 = _key$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.battleMenu = battleMenu; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.invalidWeapons = invalidWeapons; $f.invalidWeapons$1 = invalidWeapons$1; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotMenu = robotMenu; $f.rowFunctionMapping = rowFunctionMapping; $f.rowFunctionMapping$1 = rowFunctionMapping$1; $f.targetRobot = targetRobot; $f.targetRobotID = targetRobotID; $f.v = v; $f.weapon = weapon; $f.weaponID = weaponID; $f.weapons = weapons; $f.weapons$1 = weapons$1; $f.weapons$2 = weapons$2; $f.$s = $s; $f.$r = $r; return $f;
+		_arg = protocol.LogCategoryInfo;
+		_r$9 = fmt.Sprintf("end. BattleMenu(%v)\n", new sliceType$6([new battleMenu.constructor.elem(battleMenu)])); /* */ $s = 18; case 18: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_arg$1 = _r$9;
+		$r = log.Log(_arg, "EnableBattleMenu", _arg$1); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [v, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: EnableBattleMenu }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._key = _key; $f._key$1 = _key$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.battleMenu = battleMenu; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.invalidWeapons = invalidWeapons; $f.invalidWeapons$1 = invalidWeapons$1; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotMenu = robotMenu; $f.rowFunctionMapping = rowFunctionMapping; $f.rowFunctionMapping$1 = rowFunctionMapping$1; $f.targetRobot = targetRobot; $f.targetRobotID = targetRobotID; $f.v = v; $f.weapon = weapon; $f.weaponID = weaponID; $f.weapons = weapons; $f.weapons$1 = weapons$1; $f.weapons$2 = weapons$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.EnableBattleMenu = EnableBattleMenu;
 	EnableRobotMenu = function(origin, robotID, situation) {
@@ -33189,7 +33193,7 @@ $packages["app/page/gameplay"] = (function() {
 			cancel = _tmp;
 			tab = _tmp$1;
 			selection = "";
-			/* Menu2DStep: */ case 7:
+			/* MENU2D_STEP: */ case 7:
 			/* while (true) { */ case 8:
 				_r$3 = common.ObservePage($clone(ctx, uidata.UI), 10); /* */ $s = 10; case 10: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				_tuple$3 = _r$3;
@@ -33232,13 +33236,14 @@ $packages["app/page/gameplay"] = (function() {
 					/* */ $s = 19; continue;
 					/* if (has) { */ case 18:
 						$r = view.Alert(invalidStr); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-						/* goto Menu2DStep */ $s = 7; continue;
+						/* goto MENU2D_STEP */ $s = 7; continue;
 					/* } */ case 19:
+					/* SELECT_UNIT_STEP: */ case 21:
 					targetID = "";
 					_r$5 = SelectUnitStep($clone(ctx, uidata.UI), unitID, (function(targetID$1) {
 						var targetID$1;
 						return $ifaceNil;
-					})); /* */ $s = 21; case 21: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+					})); /* */ $s = 22; case 22: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 					_tuple$6 = _r$5;
 					uidata.UI.copy(ctx, _tuple$6[0]);
 					targetID = _tuple$6[1];
@@ -33247,10 +33252,12 @@ $packages["app/page/gameplay"] = (function() {
 					if (!($interfaceIsEqual(err, $ifaceNil))) {
 						$s = -1; return [origin, false, err];
 					}
-					if (cancel) {
-						$s = -1; return [origin, cancel, $ifaceNil];
-					}
-					_r$6 = common.BattleMenuPhase($clone(ctx, uidata.UI), true, unitID, weaponID, targetID); /* */ $s = 22; case 22: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+					/* */ if (cancel) { $s = 23; continue; }
+					/* */ $s = 24; continue;
+					/* if (cancel) { */ case 23:
+						/* goto MENU2D_STEP */ $s = 7; continue;
+					/* } */ case 24:
+					_r$6 = common.BattleMenuPhase($clone(ctx, uidata.UI), true, unitID, weaponID, targetID); /* */ $s = 25; case 25: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 					_tuple$7 = _r$6;
 					uidata.UI.copy(ctx, _tuple$7[0]);
 					cancel = _tuple$7[1];
@@ -33258,23 +33265,25 @@ $packages["app/page/gameplay"] = (function() {
 					if (!($interfaceIsEqual(err, $ifaceNil))) {
 						$s = -1; return [origin, false, err];
 					}
-					if (cancel) {
-						$s = -1; return [origin, cancel, $ifaceNil];
-					}
+					/* */ if (cancel) { $s = 26; continue; }
+					/* */ $s = 27; continue;
+					/* if (cancel) { */ case 26:
+						/* goto SELECT_UNIT_STEP */ $s = 21; continue;
+					/* } */ case 27:
 					$s = 17; continue;
 				/* } else if (_1 === (2)) { */ case 15:
 					transformID = selection;
-					_r$7 = ctx.Model.RobotTransform(unitID, transformID); /* */ $s = 23; case 23: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+					_r$7 = ctx.Model.RobotTransform(unitID, transformID); /* */ $s = 28; case 28: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 					_tuple$8 = _r$7;
 					ctx.Model = _tuple$8[0];
 					err = _tuple$8[1];
-					/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 24; continue; }
-					/* */ $s = 25; continue;
-					/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 24:
-						_r$8 = err.Error(); /* */ $s = 26; case 26: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-						$r = view.Alert(_r$8); /* */ $s = 27; case 27: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					/* } */ case 25:
-					_r$9 = UnitMenuPhase($clone(ctx, uidata.UI), unitID); /* */ $s = 28; case 28: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+					/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 29; continue; }
+					/* */ $s = 30; continue;
+					/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 29:
+						_r$8 = err.Error(); /* */ $s = 31; case 31: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+						$r = view.Alert(_r$8); /* */ $s = 32; case 32: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 30:
+					_r$9 = UnitMenuPhase($clone(ctx, uidata.UI), unitID); /* */ $s = 33; case 33: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
 					_tuple$9 = _r$9;
 					uidata.UI.copy(ctx, _tuple$9[0]);
 					cancel = _tuple$9[1];
@@ -33288,21 +33297,21 @@ $packages["app/page/gameplay"] = (function() {
 					$s = 17; continue;
 				/* } else { */ case 16:
 						_2 = selection;
-						/* */ if (_2 === ("MenuOptionUnitDone")) { $s = 30; continue; }
-						/* */ if (_2 === ("MenuOptionMove")) { $s = 31; continue; }
-						/* */ if (_2 === ("MenuOptionSkyGround")) { $s = 32; continue; }
-						/* */ $s = 33; continue;
-						/* if (_2 === ("MenuOptionUnitDone")) { */ case 30:
-							_r$10 = ctx.Model.RobotDone(unitID); /* */ $s = 34; case 34: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+						/* */ if (_2 === ("MenuOptionUnitDone")) { $s = 35; continue; }
+						/* */ if (_2 === ("MenuOptionMove")) { $s = 36; continue; }
+						/* */ if (_2 === ("MenuOptionSkyGround")) { $s = 37; continue; }
+						/* */ $s = 38; continue;
+						/* if (_2 === ("MenuOptionUnitDone")) { */ case 35:
+							_r$10 = ctx.Model.RobotDone(unitID); /* */ $s = 39; case 39: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 							_tuple$10 = _r$10;
 							ctx.Model = _tuple$10[0];
 							err = _tuple$10[1];
 							if (!($interfaceIsEqual(err, $ifaceNil))) {
 								$s = -1; return [origin, false, err];
 							}
-							$s = 33; continue;
-						/* } else if (_2 === ("MenuOptionMove")) { */ case 31:
-							_r$11 = RobotMovePhase($clone(ctx, uidata.UI), unitID); /* */ $s = 35; case 35: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+							$s = 38; continue;
+						/* } else if (_2 === ("MenuOptionMove")) { */ case 36:
+							_r$11 = RobotMovePhase($clone(ctx, uidata.UI), unitID); /* */ $s = 40; case 40: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
 							_tuple$11 = _r$11;
 							uidata.UI.copy(ctx, _tuple$11[0]);
 							cancel = _tuple$11[1];
@@ -33313,19 +33322,19 @@ $packages["app/page/gameplay"] = (function() {
 							if (cancel) {
 								$s = -1; return [ctx, cancel, $ifaceNil];
 							}
-							$s = 33; continue;
-						/* } else if (_2 === ("MenuOptionSkyGround")) { */ case 32:
-							_r$12 = ctx.Model.RobotSkyGround(unitID); /* */ $s = 36; case 36: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+							$s = 38; continue;
+						/* } else if (_2 === ("MenuOptionSkyGround")) { */ case 37:
+							_r$12 = ctx.Model.RobotSkyGround(unitID); /* */ $s = 41; case 41: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
 							_tuple$12 = _r$12;
 							ctx.Model = _tuple$12[0];
 							err = _tuple$12[1];
-							/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 37; continue; }
-							/* */ $s = 38; continue;
-							/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 37:
-								_r$13 = err.Error(); /* */ $s = 39; case 39: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-								$r = view.Alert(_r$13); /* */ $s = 40; case 40: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-							/* } */ case 38:
-							_r$14 = UnitMenuPhase($clone(ctx, uidata.UI), unitID); /* */ $s = 41; case 41: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+							/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 42; continue; }
+							/* */ $s = 43; continue;
+							/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 42:
+								_r$13 = err.Error(); /* */ $s = 44; case 44: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+								$r = view.Alert(_r$13); /* */ $s = 45; case 45: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							/* } */ case 43:
+							_r$14 = UnitMenuPhase($clone(ctx, uidata.UI), unitID); /* */ $s = 46; case 46: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
 							_tuple$13 = _r$14;
 							uidata.UI.copy(ctx, _tuple$13[0]);
 							cancel = _tuple$13[1];
@@ -33336,11 +33345,11 @@ $packages["app/page/gameplay"] = (function() {
 							if (cancel) {
 								$s = -1; return [ctx, cancel, $ifaceNil];
 							}
-						/* } */ case 33:
-					case 29:
+						/* } */ case 38:
+					case 34:
 				/* } */ case 17:
 			case 13:
-			_r$15 = ctx.Model.DisableRobotMenu(); /* */ $s = 42; case 42: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+			_r$15 = ctx.Model.DisableRobotMenu(); /* */ $s = 47; case 47: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
 			_tuple$14 = _r$15;
 			ctx.Model = _tuple$14[0];
 			err = _tuple$14[1];
@@ -33351,9 +33360,9 @@ $packages["app/page/gameplay"] = (function() {
 		_tuple$15 = (_entry$8 = gameplayPage.Items[$String.keyFor(unitID)], _entry$8 !== undefined ? [_entry$8.v, true] : [new protocol.Item.ptr("", "", ""), false]);
 		item = $clone(_tuple$15[0], protocol.Item);
 		is$1 = _tuple$15[1];
-		/* */ if (is$1) { $s = 43; continue; }
-		/* */ $s = 44; continue;
-		/* if (is$1) { */ case 43:
+		/* */ if (is$1) { $s = 48; continue; }
+		/* */ $s = 49; continue;
+		/* if (is$1) { */ case 48:
 			$unused(item);
 			_tuple$16 = CreateItemMenu($clone(ctx, uidata.UI), unitID);
 			ctx$1 = $clone(_tuple$16[0], uidata.UI);
@@ -33367,8 +33376,8 @@ $packages["app/page/gameplay"] = (function() {
 			cancel$1 = _tmp$2;
 			tab$1 = _tmp$3;
 			selection$1 = "";
-			/* while (true) { */ case 45:
-				_r$16 = common.Menu1DStep($clone(ctx$1, uidata.UI), 10, 31); /* */ $s = 47; case 47: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+			/* while (true) { */ case 50:
+				_r$16 = common.Menu1DStep($clone(ctx$1, uidata.UI), 10, 31); /* */ $s = 52; case 52: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
 				_tuple$17 = _r$16;
 				uidata.UI.copy(ctx$1, _tuple$17[0]);
 				selection$1 = _tuple$17[1];
@@ -33379,20 +33388,20 @@ $packages["app/page/gameplay"] = (function() {
 					$s = -1; return [origin, false, err$1];
 				}
 				if (tab$1) {
-					/* continue; */ $s = 45; continue;
+					/* continue; */ $s = 50; continue;
 				}
 				if (cancel$1) {
 					$s = -1; return [ctx$1, cancel$1, $ifaceNil];
 				}
-				/* break; */ $s = 46; continue;
-			/* } */ $s = 45; continue; case 46:
+				/* break; */ $s = 51; continue;
+			/* } */ $s = 50; continue; case 51:
 			$unused(selection$1);
 			ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 12, false);
-		/* } */ case 44:
+		/* } */ case 49:
 		_arg$2 = protocol.LogCategoryPhase;
-		_r$17 = fmt.Sprintf("unitID(%v) end", new sliceType$4([new $String(unitID)])); /* */ $s = 48; case 48: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+		_r$17 = fmt.Sprintf("unitID(%v) end", new sliceType$4([new $String(unitID)])); /* */ $s = 53; case 53: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
 		_arg$3 = _r$17;
-		$r = log.Log(_arg$2, "UnitMenuPhase", _arg$3); /* */ $s = 49; case 49: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.Log(_arg$2, "UnitMenuPhase", _arg$3); /* */ $s = 54; case 54: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return [origin, false, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: UnitMenuPhase }; } $f._1 = _1; $f._2 = _2; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$17 = _tuple$17; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.cancel = cancel; $f.cancel$1 = cancel$1; $f.ctx = ctx; $f.ctx$1 = ctx$1; $f.err = err; $f.err$1 = err$1; $f.gameplayPage = gameplayPage; $f.has = has; $f.invalidStr = invalidStr; $f.is = is; $f.is$1 = is$1; $f.isRobotDone = isRobotDone; $f.item = item; $f.origin = origin; $f.robot = robot; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.tab$1 = tab$1; $f.targetID = targetID; $f.topMenu = topMenu; $f.transformID = transformID; $f.unitID = unitID; $f.view = view; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
 	};
