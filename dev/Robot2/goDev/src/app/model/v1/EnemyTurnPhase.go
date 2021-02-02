@@ -7,6 +7,8 @@ import (
 )
 
 func (model *model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
+	model.Push()
+	defer model.Pop()
 	var err error
 	var cancel bool
 	view := def.View

@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"app/ai/aiimpl"
+	"app/ai/aitypes"
 	"app/tool/protocol"
 )
 
@@ -15,6 +17,7 @@ type lobby struct {
 }
 
 type gameplay struct {
+	AIModel        aitypes.Environment
 	Players        map[string]protocol.Player
 	ActivePlayerID string
 	Map            [][]int
@@ -62,7 +65,7 @@ func init() {
 	const (
 		playerAI1 = "ai1"
 	)
-
+	DefaultModel.App.Gameplay.AIModel = aiimpl.Model{Title: "Xx"}
 	DefaultModel.App.Money = 10000
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}

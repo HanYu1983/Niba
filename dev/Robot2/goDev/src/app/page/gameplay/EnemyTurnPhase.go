@@ -7,8 +7,6 @@ import (
 
 func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	model := def.Model
-	model.Push()
-	defer model.Pop()
 	var err error
 	var cancel bool
 	var ctx interface{} = origin
