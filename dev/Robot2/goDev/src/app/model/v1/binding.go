@@ -5,6 +5,7 @@ import (
 	"tool/astar"
 )
 
+//ILobbyModel
 func (v model) BuyRobot(id string) (protocol.IModel, error) {
 	return BuyRobot(v, id)
 }
@@ -36,7 +37,7 @@ func (v model) DissocComponentRobot(componentID string) (protocol.IModel, error)
 	return DissocComponentRobot(v, componentID)
 }
 
-// gameplay
+// IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui, id)
 }

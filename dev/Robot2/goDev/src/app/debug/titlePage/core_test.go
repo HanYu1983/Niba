@@ -34,23 +34,24 @@ func (p Mock) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Posi
 
 }
 
+func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
+
+}
+
 func (p Mock) Alert(msg string) {
 
 }
 
-var (
-	mockModel = v1.DefaultModel
-)
-
 func init() {
 	def.View = Mock{}
-	def.Model = protocol.IModel(&mockModel)
 }
 
 func TestStartPagePhaseBasic(t *testing.T) {
+	ui := uidata.DefaultUI
+	ui.Model = v1.DefaultModel
 	wait := make(chan interface{})
 	go func() {
-		_, err := title.StartPagePhase(uidata.DefaultUI)
+		_, err := title.StartPagePhase(ui)
 		// rain event
 		for range mockEvt {
 		}

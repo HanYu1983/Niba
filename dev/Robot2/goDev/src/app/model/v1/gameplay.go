@@ -1,91 +1,144 @@
 package v1
 
-// func (v *model) QueryActivePlayer() string {
-// 	return QueryActivePlayer(*v)
-// }
-// func (v *model) NextPlayer() error {
-// 	m, err := NextPlayer(*v)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*v = m
-// 	return nil
-// }
-// func (v *model) IsDone() bool {
-// 	return IsDone(*v)
-// }
-// func (v *model) QueryUnitsByRegion(p1 protocol.Position, p2 protocol.Position) []string {
-// 	return QueryUnitsByRegion(*v, p1, p2)
-// }
-// func (v *model) QueryUnitByPosition(pos protocol.Position) string {
-// 	return QueryUnitByPosition(*v, pos)
-// }
-// func (v *model) GetGameplayRobots() map[string]protocol.Robot {
-// 	return GetGameplayRobots(*v)
-// }
-// func (v *model) GetGameplayItems() map[string]protocol.Item {
-// 	return GetGameplayItems(*v)
-// }
-// func (v *model) GetGameplayPositions() map[string]protocol.Position {
-// 	return GetGameplayPositions(*v)
-// }
-// func (v *model) GetGameplayTags() map[string]protocol.Tag {
-// 	return GetGameplayTags(*v)
-// }
-// func (v *model) SetCursor(cursor protocol.Position) {
-// 	m := SetCursor(*v, cursor)
-// 	*v = m
-// }
-// func (v *model) GetCursor() protocol.Position {
-// 	return GetCursor(*v)
-// }
-// func (v *model) GetMap() [][]int {
-// 	return GetMap(*v)
-// }
-// func (v *model) QueryMoveCount(robotID string) int {
-// 	return QueryMoveCount(*v, robotID)
-// }
+import (
+	"app/tool/protocol"
+	"fmt"
+	"tool/log"
+)
 
-// func (v *model) RobotDone(robotID string) error {
-// 	m, err := RobotDone(*v, robotID)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*v = m
-// 	return nil
-// }
+func QueryActivePlayer(origin model) string {
+	return protocol.PlayerIDPlayer
+}
+func NextPlayer(origin model) (model, error) {
+	return origin, nil
+}
+func IsDone(origin model) bool {
+	return false
+}
+func QueryUnitsByRegion(origin model, p1 protocol.Position, p2 protocol.Position) []string {
+	ctx := origin
+	return SearchUnitByRegion(ctx.App.Gameplay.Positions, p1, p2)
+}
+func QueryUnitByPosition(origin model, pos protocol.Position) string {
+	ctx := origin
+	return SearchUnitByPosition(ctx.App.Gameplay.Positions, pos)
+}
+func GetGameplayRobots(origin model) map[string]protocol.Robot {
+	ctx := origin
+	return ctx.App.Gameplay.Robots
+}
+func GetGameplayItems(origin model) map[string]protocol.Item {
+	ctx := origin
+	return ctx.App.Gameplay.Items
+}
+func GetGameplayPositions(origin model) map[string]protocol.Position {
+	ctx := origin
+	return ctx.App.Gameplay.Positions
+}
+func GetGameplayTags(origin model) map[string]protocol.Tag {
+	ctx := origin
+	return ctx.App.Gameplay.Tags
+}
+func SetCursor(origin model, cursor protocol.Position) model {
+	ctx := origin
+	ctx.App.Gameplay.Cursor = cursor
+	return ctx
+}
+func GetCursor(origin model) protocol.Position {
+	ctx := origin
+	return ctx.App.Gameplay.Cursor
+}
+func GetMap(origin model) [][]int {
+	ctx := origin
+	return ctx.App.Gameplay.Map
+}
+func QueryMoveCount(origin model, robotID string) int {
+	ctx := origin
+	log.Log(protocol.LogCategoryInfo, "QueryMoveCount", fmt.Sprintf("tags(%+v)\n", ctx.App.Gameplay.Tags[robotID]))
+	return ctx.App.Gameplay.Tags[robotID].MoveCount
+}
 
-// func (v *model) RobotTransform(robotID string, transformID string) error {
-// 	m, err := RobotTransform(*v, robotID, transformID)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*v = m
-// 	return nil
-// }
-// func (v *model) RobotSkyGround(robotID string) error {
-// 	m, err := RobotSkyGround(*v, robotID)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*v = m
-// 	return nil
-// }
-// func (v *model) DisableRobotMenu() error {
-// 	m, err := DisableRobotMenu(*v)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	*v = m
-// 	return nil
-// }
-// func (v *model) GetRobotMenu() protocol.RobotMenu {
-// 	return GetRobotMenu(*v)
-// }
-// func (v *model) SetMoveRange(moveRange []protocol.Position) {
-// 	m := SetMoveRange(*v, moveRange)
-// 	*v = m
-// }
-// func (v *model) GetMoveRange() []protocol.Position {
-// 	return GetMoveRange(*v)
-// }
+func RobotDone(origin model, robotID string) (model, error) {
+	ctx := origin
+	tags := ctx.App.Gameplay.Tags[robotID]
+	tags.IsDone = true
+	ctx.App.Gameplay.Tags = protocol.AssocStringTag(ctx.App.Gameplay.Tags, robotID, tags)
+	return ctx, nil
+}
+
+func RobotTransform(origin model, robotID string, transformID string) (model, error) {
+	return origin, nil
+}
+func RobotSkyGround(origin model, robotID string) (model, error) {
+	return origin, nil
+}
+func DisableRobotMenu(origin model) (model, error) {
+	ctx := origin
+	ctx.App.Gameplay.RobotMenu.Active = false
+	return ctx, nil
+}
+func GetRobotMenu(origin model) protocol.RobotMenu {
+	ctx := origin
+	return ctx.App.Gameplay.RobotMenu
+}
+func SetMoveRange(origin model, moveRnage []protocol.Position) model {
+	ctx := origin
+	ctx.App.Gameplay.MoveRange = moveRnage
+	return ctx
+}
+func GetMoveRange(origin model) []protocol.Position {
+	ctx := origin
+	return ctx.App.Gameplay.MoveRange
+}
+
+func DisableBattleMenu(origin model) (model, error) {
+	ctx := origin
+	ctx.App.Gameplay.BattleMenu.Active = false
+	return ctx, nil
+}
+func GetBattleMenu(origin model) protocol.BattleMenu {
+	ctx := origin
+	return ctx.App.Gameplay.BattleMenu
+}
+
+func Battle(origin model, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (model, protocol.BattleResult, error) {
+	ctx := origin
+	robot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
+	targetRobot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, targetRobotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
+	results := []protocol.BattleAnimation{}
+	// shoot
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      1000,
+	})
+	// counter
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeWeapon,
+		RobotBefore: targetRobot,
+		RobotAfter:  targetRobot,
+		Damage:      0,
+	})
+	// damage
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeDamage,
+		RobotBefore: robot,
+		RobotAfter:  robot,
+		Damage:      1000,
+	})
+	return ctx, protocol.BattleResult{Animations: results}, nil
+}

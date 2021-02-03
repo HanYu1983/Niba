@@ -35,6 +35,10 @@ func (p Mock) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Posi
 
 }
 
+func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
+
+}
+
 func (p Mock) Alert(msg string) {
 	fmt.Printf("[Alert]%v\n", msg)
 }
@@ -64,13 +68,14 @@ func init() {
 	mockModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 
 	def.View = Mock{}
-	def.Model = protocol.IModel(&mockModel)
 }
 
 func TestMoveRange(t *testing.T) {
+	ui := uidata.DefaultUI
+	ui.Model = mockModel
 	wait := make(chan interface{})
 	go func() {
-		_, err := gameplay.GameLoop(uidata.DefaultUI)
+		_, err := gameplay.GameLoop(ui)
 		// rain event
 		for range mockEvt {
 		}
