@@ -116,5 +116,5 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		return origin, false, err
 	}
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "end")
-	return ctx, true, nil
+	return ctx, false, nil
 }
