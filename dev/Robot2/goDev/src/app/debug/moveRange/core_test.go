@@ -71,7 +71,7 @@ func init() {
 }
 
 func TestMoveRange(t *testing.T) {
-	ui := uidata.DefaultUI
+	ui := def.DefaultUI
 	ui.Model = mockModel
 	wait := make(chan interface{})
 	go func() {

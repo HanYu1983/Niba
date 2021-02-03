@@ -47,7 +47,7 @@ func init() {
 }
 
 func TestStartPagePhaseBasic(t *testing.T) {
-	ui := uidata.DefaultUI
+	ui := def.DefaultUI
 	ui.Model = v1.DefaultModel
 	wait := make(chan interface{})
 	go func() {

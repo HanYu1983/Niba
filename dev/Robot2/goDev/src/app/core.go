@@ -6,7 +6,6 @@ import (
 	"app/page/title"
 	"app/tool/def"
 	"app/tool/protocol"
-	"app/tool/uidata"
 	"fmt"
 	"tool/log"
 )
@@ -15,7 +14,7 @@ func Main() {
 	log.Category[protocol.LogCategoryPhase] = true
 	log.Category[protocol.LogCategoryDetail] = true
 	view := def.View
-	ui := uidata.DefaultUI
+	ui := def.DefaultUI
 	ui.Model = v1.DefaultModel
 	defer func() {
 		if x := recover(); x != nil {
