@@ -12,11 +12,9 @@ import (
 func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	view := def.View
 	ctx.Model, err = ctx.Model.EnableRobotMenu(unitID, nil)
 	if err != nil {
-		view.Alert(err.Error())
-		return origin, nil
+		return origin, err
 	}
 	return ctx, nil
 }
@@ -39,6 +37,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		var _ = robot
 		isRobotDone := ctx.GameplayPages[uidata.PageGameplay].Tags[unitID].IsDone
 		if isRobotDone {
+			log.Log(protocol.LogCategoryWarning, "UnitMenuPhase", fmt.Sprintf("unitID(%v) already done", unitID))
 			return origin, false, nil
 		}
 		ctx, err = CreateRobotMenu(ctx, unitID)

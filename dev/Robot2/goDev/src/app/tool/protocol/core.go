@@ -11,6 +11,7 @@ var (
 var (
 	LogCategoryPhase   = "LogCategoryPhase"
 	LogCategoryDetail  = "LogCategoryDetail"
+	LogCategoryRender  = "LogCategoryRender"
 	LogCategoryInfo    = "LogCategoryInfo"
 	LogCategoryWarning = "LogCategoryWarning"
 )

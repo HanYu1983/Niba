@@ -62,16 +62,16 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	if unitMenuModel.Active {
 		unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 		isSelectingWeapon := unitMenuModel.RowFunctionMapping[unitMenu.Cursor1] == protocol.RobotMenuFunctionWeapon
-		log.Log(protocol.LogCategoryDetail, "Model.Render", fmt.Sprintf("isSelectingWeapon(%v)", isSelectingWeapon))
+		log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("isSelectingWeapon(%v)", isSelectingWeapon))
 		if isSelectingWeapon {
 			selectedWeaponID, err := tool.TryGetString2(unitMenu.Options, unitMenu.Cursor1)(tool.TryGetInt(unitMenu.Cursor2, unitMenu.Cursor1))
 			if err != nil {
 				return origin, err
 			}
 			selectedWeapon := unitMenuModel.Weapons[selectedWeaponID]
-			log.Log(protocol.LogCategoryDetail, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
+			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
-			log.Log(protocol.LogCategoryDetail, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
+			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
 			attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
 			if err != nil {
 				return origin, err
@@ -80,6 +80,8 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		} else {
 			gameplayPage.AttackRange = []protocol.Position{}
 		}
+	} else {
+		gameplayPage.AttackRange = []protocol.Position{}
 	}
 	// unit menu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)

@@ -64,7 +64,7 @@ AskCommand:
 			case uidata.KeyCodeEnter:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
-					log.Log(protocol.LogCategoryDetail, "Menu1DStep", "沒有任何Options, 當成切換Focus")
+					log.Log(protocol.LogCategoryWarning, "Menu1DStep", "沒有任何Options, 當成切換Focus")
 					focus := ctx.Focus[pageID]
 					focus, over := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
 					if over {
