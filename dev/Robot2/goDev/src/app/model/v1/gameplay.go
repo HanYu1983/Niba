@@ -81,9 +81,9 @@ func GetRobotMenu(origin model) protocol.RobotMenu {
 	ctx := origin
 	return ctx.App.Gameplay.RobotMenu
 }
-func SetMoveRange(origin model, moveRnage []protocol.Position) model {
+func SetMoveRange(origin model, moveRange []protocol.Position) model {
 	ctx := origin
-	ctx.App.Gameplay.MoveRange = moveRnage
+	ctx.App.Gameplay.MoveRange = moveRange
 	return ctx
 }
 func GetMoveRange(origin model) []protocol.Position {

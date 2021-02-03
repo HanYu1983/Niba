@@ -13,24 +13,22 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "start")
 	view := def.View
 	var err error
+	var cancel bool
 	ctx := origin
 	model := ctx.Model
 	for {
 		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
 		if err != nil {
-
 			return origin, false, err
 		}
 		view.Render(ctx)
 		evt := view.AskCommand()
 		if evt == nil {
-
 			return origin, false, protocol.ErrTerminate
 		}
 		ctx, err = helper.UIReduce(HandleCursor, HandleCamera, HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
 		if err != nil {
-
 			return origin, false, err
 		}
 		switch detail := evt.(type) {
@@ -50,14 +48,15 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 				if unitID == notFound {
 					ctx, err = SystemMenuPhase(ctx)
 					if err != nil {
-
 						return origin, false, err
 					}
 				} else {
-					ctx, _, err = UnitMenuPhase(ctx, unitID)
+					ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 					if err != nil {
-
 						return origin, false, err
+					}
+					if cancel {
+						continue
 					}
 				}
 			}

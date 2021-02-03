@@ -10,7 +10,7 @@ import (
 )
 
 func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
-	log.Log(protocol.LogCategoryPhase, "RobotMovePhase", fmt.Sprintf("robotID(%v)\n", robotID))
+	log.Log(protocol.LogCategoryPhase, "RobotMovePhase", fmt.Sprintf("start robotID(%v)\n", robotID))
 	view := def.View
 	ctx := origin
 	isCanMove := ctx.Model.QueryMoveCount(robotID) == 0
@@ -24,7 +24,9 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	moveRange := helper.MoveRangeTree2MoveRange(tree)
 	ctx.Model = ctx.Model.SetMoveRange(moveRange)
 	for {
-		ctx, cursor, cancel, err := SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
+		var cancel bool
+		var cursor protocol.Position
+		ctx, cursor, cancel, err = SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
 			worldCursor := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, localCursor)
 			for _, pos := range moveRange {
 				if pos == worldCursor {
@@ -34,11 +36,9 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 			return fmt.Errorf("you must select in move range")
 		})
 		if err != nil {
-
 			return origin, false, err
 		}
 		if cancel {
-
 			return origin, cancel, nil
 		}
 		cursorWorld := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
@@ -51,15 +51,14 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 		}
 		ctx, cancel, err = UnitMenuPhase(ctx, robotID)
 		if err != nil {
-
 			return origin, false, err
 		}
 		if cancel {
-
 			continue
 		}
 		break
 	}
 	ctx.Model = ctx.Model.SetMoveRange(nil)
+	log.Log(protocol.LogCategoryPhase, "RobotMovePhase", fmt.Sprintf("end robotID(%v)\n", robotID))
 	return ctx, false, nil
 }
