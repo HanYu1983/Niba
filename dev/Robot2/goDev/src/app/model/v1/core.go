@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"app/ai/aitypes"
 	"app/tool/protocol"
 )
 
@@ -16,7 +15,7 @@ type lobby struct {
 }
 
 type gameplay struct {
-	AIModel        aitypes.Environment
+	AIModel        AIModel
 	Players        map[string]protocol.Player
 	ActivePlayerID string
 	Map            [][]int
@@ -43,3 +42,5 @@ type app struct {
 type model struct {
 	App app
 }
+
+type Model model
