@@ -104,8 +104,3 @@ func (v model) DisableBattleMenu() (protocol.IModel, error) {
 func (v model) Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (protocol.IModel, protocol.BattleResult, error) {
 	return Battle(v, robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
 }
-
-// AIEnvironment
-func (v model) QueryRobotsBelongPlayer(player string) (map[string]protocol.Robot, error) {
-	return nil, nil
-}

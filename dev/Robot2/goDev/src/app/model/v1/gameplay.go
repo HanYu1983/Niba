@@ -151,3 +151,18 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 	})
 	return ctx, protocol.BattleResult{Animations: results}, nil
 }
+
+// ai
+func QueryUnitsByPlayer(model model, player protocol.Player) ([]string, error) {
+	_, err := protocol.TryGetStringPlayer(model.App.Gameplay.Players, player.ID)
+	if err != nil {
+		return []string{}, err
+	}
+	ret := []string{}
+	for ID, robot := range model.App.Gameplay.Robots {
+		if robot.PlayerID == player.ID {
+			ret = append(ret, ID)
+		}
+	}
+	return ret, nil
+}

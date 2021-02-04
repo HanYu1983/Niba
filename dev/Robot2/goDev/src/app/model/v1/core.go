@@ -43,5 +43,3 @@ type app struct {
 type model struct {
 	App app
 }
-
-type Model model

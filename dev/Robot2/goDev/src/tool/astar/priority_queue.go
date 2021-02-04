@@ -9,7 +9,7 @@ func (pq priorityQueue) Len() int {
 }
 
 func (pq priorityQueue) Less(i, j int) bool {
-	return pq[i].rank < pq[j].rank
+	return pq[i].Rank < pq[j].Rank
 }
 
 func (pq priorityQueue) Swap(i, j int) {

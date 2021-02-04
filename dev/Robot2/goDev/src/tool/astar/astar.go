@@ -9,7 +9,7 @@ import (
 type Node struct {
 	Pather interface{}
 	Cost   float64
-	rank   float64
+	Rank   float64
 	parent *Node
 	open   bool
 	closed bool
@@ -89,7 +89,7 @@ func ShortedPathTree(
 			if !neighborNode.open && !neighborNode.closed {
 				neighborNode.Cost = Cost
 				neighborNode.open = true
-				neighborNode.rank = Cost + pathEstimatedCost(neighborNode)
+				neighborNode.Rank = Cost + pathEstimatedCost(neighborNode)
 				neighborNode.parent = current
 				heap.Push(nq, neighborNode)
 			}

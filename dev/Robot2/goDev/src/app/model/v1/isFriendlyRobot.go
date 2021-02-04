@@ -2,7 +2,7 @@ package v1
 
 import "app/tool/protocol"
 
-func isFriendlyRobot(model model, unitID1 string, unitID2 string) (bool, error) {
+func IsFriendlyRobot(model model, unitID1 string, unitID2 string) (bool, error) {
 	unit1, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID1)
 	if err != nil {
 		return false, err
