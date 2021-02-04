@@ -29,7 +29,8 @@ func QueryFastestMovePosition(model model, robot protocol.Robot, target protocol
 	tree, _ := astar.ShortedPathTree(
 		originPos,
 		func(curr *astar.Node) bool {
-			return false
+			currPos := curr.Pather.(protocol.Position)
+			return currPos == target
 		},
 		costFn,
 		func(curr *astar.Node) float64 {

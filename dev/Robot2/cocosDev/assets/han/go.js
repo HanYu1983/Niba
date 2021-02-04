@@ -31821,8 +31821,9 @@ $packages["app/model/v1"] = (function() {
 			$s = -1; return [false, arrayType.zero(), false, err];
 		}
 		_r$2 = astar.ShortedPathTree(new protocol.Position(originPos), (function(target) { return function(curr) {
-			var curr;
-			return false;
+			var curr, currPos;
+			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
+			return $equal(currPos, target[0], protocol.Position);
 		}; })(target), costFn, (function(target) { return function(curr) {
 			var _tmp, _tmp$1, curr, currPos, ox, oy;
 			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
