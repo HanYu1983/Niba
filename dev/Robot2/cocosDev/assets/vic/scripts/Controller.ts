@@ -41,7 +41,9 @@ export class Controller extends Component {
         },
         RenderRobotBattle: (result: any, cb: ()=>void) => {
             console.log(`[Controller][RenderRobotBattle]`, result)
-            cb()
+            
+            const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+            gamePage?.getComponent(GamePage)?.map.playBattleAnimation(result, cb);
         },
         RenderTurnStart: (player: any, cb:()=>void)=>{
             console.log(`[Controller][RenderTurnStart]`, player)

@@ -10,6 +10,7 @@ import { Instant } from '../lib/instanceViewer/Instant';
 import { EffectGenerator } from './EffectGenerator';
 import { Grids } from './Grids';
 import { Units } from './Units';
+import * as ModelType from '../../../han/types';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -46,5 +47,63 @@ export class LandMap extends Instant {
     setCursor(cursor:any){
         const cursorPos = Grids.getGridPos(cursor[0], cursor[1]);
         this.cursor.node.setPosition(cursorPos);
+    }
+
+    playBattleAnimation(result:any, cb:()=>void){
+        console.log(result);
+        const anims = result.Animations;
+
+        console.log(anims);
+        
+        let actions = [
+            tween().call(()=>{
+                console.log("play aim animation");
+            }).delay(1)
+        ];
+        
+        anims.forEach(anim => {
+            console.log(anim);
+
+            const type = anim.Type;
+            const robotBefore = anim.RobotBefore;
+            const robotAfter = anim.RobotAfter;
+
+            switch(type){
+                case ModelType.BattleResultType.BattleResultTypePending:
+                    actions.push(tween().call(()=>{
+                        console.log("BattleResultTypePending");
+                        console.log(robotAfter);
+                    }).delay(1));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeWeapon:
+                    actions.push(tween().call(()=>{
+                        console.log("BattleResultTypeWeapon");
+                        console.log(robotAfter);
+                    }).delay(1));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeDamage:
+                    actions.push(tween().call(()=>{
+                        console.log("BattleResultTypeDamage");
+                        console.log(robotAfter);
+                        this.effects.build([[0, Grids.getGridPos(2,3)]]);
+                    }).delay(2));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeEvade:
+                    actions.push(tween().call(()=>{
+                        console.log(robotAfter);
+                        console.log("BattleResultTypeEvade");
+                    }).delay(2));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeGuard:
+                    actions.push(tween().call(()=>{
+                        console.log(robotAfter);
+                        console.log("BattleResultTypeGuard");
+                    }).delay(2));
+                    break;
+            }
+        });
+
+        const t = tween(this.node);
+        t.sequence.apply(t, actions).call(cb).start();
     }
 }

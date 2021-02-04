@@ -28,6 +28,8 @@ export class Units extends Instant {
                 actions.push(tween().to(.05, {position:gridPos}));
             });
             let t = tween(unit);
+
+            // 改用apply的形式才可以帶入動作陣列
             t.sequence.apply(t, actions).delay(.05).call(cb).start();
         }
 
@@ -36,6 +38,13 @@ export class Units extends Instant {
 
         // 這樣直接callback就不會閃
         // cb();
+    }
+
+    damageUnit(unidId:string, hp:number, en:number){
+        const unit = this.getUnitByID(unidId);
+        if(unit){
+            // unit.getComponent(Unit)
+        }
     }
 
     private getUnitByID(unitId: string):Node{
