@@ -95,7 +95,6 @@ export class Drawer extends Instant {
         if (content.Active) {
             if(data.BattleMenus[content.Menus[menuIndex]]){
                 const menu = data.BattleMenus[content.Menus[menuIndex]];
-                // console.log("battleMenu", menu);
                 return menu;
             }
         }
