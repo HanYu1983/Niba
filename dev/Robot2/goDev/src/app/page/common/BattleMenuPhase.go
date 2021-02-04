@@ -1,6 +1,7 @@
 package common
 
 import (
+	"app/tool"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -8,11 +9,38 @@ import (
 	"tool/log"
 )
 
+func AutoCursorAtWeaponID(origin uidata.UI, menu2DID int, weaponID string) (uidata.UI, error) {
+	ctx := origin
+	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
+	unitMenu := ctx.Menu2Ds[menu2DID]
+	weaponFunctionIdx := -1
+	weaponIdx := -1
+	for i, function := range gameplayPage.RobotMenu.RowFunctionMapping {
+		if function == protocol.RobotMenuFunctionWeapon {
+			if i >= len(unitMenu.Options) {
+				return origin, fmt.Errorf("[BattleMenuPhase] function idx(%v) more then Options", i)
+			}
+			weaponFunctionIdx = i
+			weaponIdx = tool.FindStringIndex(unitMenu.Options[i], weaponID)
+		}
+	}
+	if weaponFunctionIdx == -1 {
+		return origin, fmt.Errorf("[BattleMenuPhase] weaponFunctionIdx(%v) not found.", weaponFunctionIdx)
+	}
+	if weaponIdx == -1 {
+		return origin, fmt.Errorf("[BattleMenuPhase] weaponID(%v) not found in Options(%v).", weaponID, unitMenu.Options)
+	}
+	unitMenu.Cursor1 = weaponFunctionIdx
+	unitMenu.Cursor2[unitMenu.Cursor1] = weaponIdx
+	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menu2DID, unitMenu)
+	return ctx, nil
+}
+
 func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "start")
-	view := def.View
 	var err error
 	ctx := origin
+	view := def.View
 	ctx.Model, err = ctx.Model.EnableBattleMenu(robotID, weaponID, targetRobotID)
 	if err != nil {
 		return origin, false, err
@@ -23,9 +51,11 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		if err != nil {
 			return origin, false, err
 		}
-		// 再更新UnitMenu的Cursor
-		// @TODO: update selection index for focus weapon
-		// unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+		// 再更新Menu的Cursor
+		ctx, err = AutoCursorAtWeaponID(ctx, uidata.Menu2DUnitMenu, weaponID)
+		if err != nil {
+			return origin, false, err
+		}
 		view.Render(ctx)
 		var cancel, tab bool
 		var selection string
