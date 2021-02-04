@@ -24,6 +24,7 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	moveRange := helper.MoveRangeTree2MoveRange(tree)
 	ctx.Model = ctx.Model.SetMoveRange(moveRange)
 	for {
+		ctxSnapshot := ctx
 		var cancel bool
 		var cursor protocol.Position
 		ctx, cursor, cancel, err = SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
@@ -42,18 +43,19 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 			return origin, cancel, nil
 		}
 		cursorWorld := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
-		path := helper.MoveRangeTree2Path(tree, cursorWorld)
-		view.RenderRobotMove(ctx, robotID, path)
 		ctx.Model, err = ctx.Model.RobotMove(robotID, cursorWorld)
 		if err != nil {
 			view.Alert(err.Error())
+			ctx = ctxSnapshot
 			continue
 		}
+		view.RenderRobotMove(ctx, robotID, helper.MoveRangeTree2Path(tree, cursorWorld))
 		ctx, cancel, err = UnitMenuPhase(ctx, robotID)
 		if err != nil {
 			return origin, false, err
 		}
 		if cancel {
+			ctx = ctxSnapshot
 			continue
 		}
 		break
