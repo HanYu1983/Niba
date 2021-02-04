@@ -112,6 +112,7 @@ func EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 		if cancel {
 			return origin, cancel, nil
 		}
+		view.Render(ctx)
 	}
 	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end")
 	var _ = view

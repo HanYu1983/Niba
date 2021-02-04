@@ -31379,7 +31379,7 @@ $packages["app/model/v1"] = (function() {
 			/* } */ case 5:
 		case 1:
 		ctx.Model = new model$1.constructor.elem(model$1);
-		$s = -1; return [origin, false, $ifaceNil];
+		$s = -1; return [ctx, false, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: RobotThinking }; } $f._1 = _1; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.goal = goal; $f.isCanMove = isCanMove; $f.model$1 = model$1; $f.noGoal = noGoal; $f.origin = origin; $f.robot = robot; $f.targetPosition = targetPosition; $f.tree = tree; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.RobotThinking = RobotThinking;
@@ -31429,9 +31429,10 @@ $packages["app/model/v1"] = (function() {
 			if (cancel) {
 				$s = -1; return [origin, cancel, $ifaceNil];
 			}
+			$r = view.Render($clone(ctx, uidata.UI)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			_i++;
 		/* } */ $s = 4; continue; case 5:
-		$r = log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end"); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$unused(view);
 		$s = -1; return [new ctx.constructor.elem(ctx), false, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: EnemyTurnPhase }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.activePlayer = activePlayer; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.model$1 = model$1; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
