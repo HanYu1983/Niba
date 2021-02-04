@@ -6,6 +6,7 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 const (
@@ -66,12 +67,16 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 }
 
 func EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
+	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "start")
 	var err error
 	var cancel bool
 	view := def.View
 	ctx := origin.(uidata.UI)
-	activePlayer := ctx.Model.QueryActivePlayer()
-	robots, err := ctx.Model.(IAIEnvironment).QueryRobotsBelongPlayer(activePlayer)
+	activePlayer, err := ctx.Model.QueryActivePlayer()
+	if err != nil {
+		return origin, false, err
+	}
+	robots, err := ctx.Model.(IAIEnvironment).QueryRobotsBelongPlayer(activePlayer.ID)
 	if err != nil {
 		return origin, false, err
 	}
@@ -84,6 +89,7 @@ func EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 			return origin, cancel, nil
 		}
 	}
+	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end")
 	var _ = view
 	return ctx, false, nil
 }

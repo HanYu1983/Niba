@@ -64,6 +64,16 @@ func ReplacePosition(items []Position, info map[Position]Position) []Position {
 	return ret
 }
 
+// FindPositionIndex is
+func FindPositionIndex(items []Position, target Position) int {
+	for idx, item := range items {
+		if item == target {
+			return idx
+		}
+	}
+	return -1
+}
+
 // ReplacePositionIndex is
 func ReplacePositionIndex(items []Position, info map[int]Position) []Position {
 	ret := make([]Position, len(items))
@@ -78,6 +88,7 @@ func ReplacePositionIndex(items []Position, info map[int]Position) []Position {
 	return ret
 }
 
+// TryGetPosition
 func TryGetPosition(items []Position, i int) (Position, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]Position{}
@@ -86,6 +97,7 @@ func TryGetPosition(items []Position, i int) (Position, error) {
 	return items[i], nil
 }
 
+// TryGetPosition2
 func TryGetPosition2(items [][]Position, i int) func(j int, err error) (Position, error) {
 	return func(j int, err error) (Position, error) {
 		if err != nil {
@@ -104,6 +116,7 @@ func TryGetPosition2(items [][]Position, i int) func(j int, err error) (Position
 	}
 }
 
+// DifferencePosition
 func DifferencePosition(a []Position, b []Position) []Position {
 	ret := []Position{}
 	for _, v := range a {

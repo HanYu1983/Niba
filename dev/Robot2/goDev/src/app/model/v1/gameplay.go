@@ -1,16 +1,25 @@
 package v1
 
 import (
+	"app/tool"
 	"app/tool/protocol"
 	"fmt"
 	"tool/log"
 )
 
-func QueryActivePlayer(origin model) string {
-	return protocol.PlayerIDPlayer
+func QueryActivePlayer(origin model) (protocol.Player, error) {
+	return protocol.TryGetStringPlayer(origin.App.Gameplay.Players, origin.App.Gameplay.ActivePlayerID)
 }
 func NextPlayer(origin model) (model, error) {
-	return origin, nil
+	ctx := origin
+	i := tool.FindStringIndex(ctx.App.Gameplay.PlayerOrder, ctx.App.Gameplay.ActivePlayerID)
+	if i == -1 {
+		return origin, fmt.Errorf("[model]activePlayer(%v) not found.", i)
+	}
+	i = (i + 1) % len(origin.App.Gameplay.PlayerOrder)
+	nextPlayer := ctx.App.Gameplay.PlayerOrder[i]
+	ctx.App.Gameplay.ActivePlayerID = nextPlayer
+	return ctx, nil
 }
 func IsDone(origin model) bool {
 	return false

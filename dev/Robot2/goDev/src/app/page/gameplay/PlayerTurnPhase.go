@@ -16,6 +16,7 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	var cancel bool
 	ctx := origin
 	model := ctx.Model
+TURN:
 	for {
 		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
 		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
@@ -46,9 +47,14 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 				}
 				var notFound string
 				if unitID == notFound {
-					ctx, err = SystemMenuPhase(ctx)
+					var selection string
+					ctx, selection, err = SystemMenuPhase(ctx)
 					if err != nil {
 						return origin, false, err
+					}
+					switch selection {
+					case uidata.MenuOptionTurnDone:
+						break TURN
 					}
 				} else {
 					ctx, cancel, err = UnitMenuPhase(ctx, unitID)

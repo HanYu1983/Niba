@@ -44,7 +44,7 @@ func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 	return EnemyTurnPhase(origin)
 }
-func (v model) QueryActivePlayer() string {
+func (v model) QueryActivePlayer() (protocol.Player, error) {
 	return QueryActivePlayer(v)
 }
 func (v model) NextPlayer() (protocol.IModel, error) {

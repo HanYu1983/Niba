@@ -56,6 +56,9 @@ dev/Xiaogenban2/unity/Temp/
 dev/Xiaogenban2/unity/UnityPackageManager/
 dev/Xiaogenban2/unity/Build/
 
+dev/Robot/.clj-kondo/
+dev/Robot2/.clj-kondo/
+
 android/NibaUnity/.*/
 android/NibaUnity/build/
 android/NibaUnity/gradle/

@@ -43,6 +43,10 @@ export class Controller extends Component {
             console.log(`[Controller][RenderRobotBattle]`, result)
             cb()
         },
+        RenderTurnStart: (player: any, cb:()=>void)=>{
+            console.log(`[Controller][RenderTurnStart]`, player)
+            cb()
+        },
         Alert: (msg: string) => {
             alert(msg)
         },

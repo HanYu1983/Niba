@@ -145,6 +145,8 @@ const (
 	MenuOptionUnitGuard = "MenuOptionUnitGuard"
 	MenuOptionUnitEvade = "MenuOptionUnitEvade"
 	MenuOptionConfirm   = "MenuOptionConfirm"
+
+	MenuOptionTurnDone = "MenuOptionTurnDone"
 )
 
 //

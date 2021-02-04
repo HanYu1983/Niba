@@ -16,11 +16,12 @@ type lobby struct {
 
 type gameplay struct {
 	AIModel        AIModel
-	Players        map[string]protocol.Player
 	ActivePlayerID string
+	PlayerOrder    []string
 	Map            [][]int
 	Cursor         protocol.Position
 	Units          []string
+	Players        map[string]protocol.Player
 	Positions      map[string]protocol.Position
 	Robots         map[string]protocol.Robot
 	Tags           map[string]protocol.Tag

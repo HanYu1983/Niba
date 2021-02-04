@@ -27,9 +27,11 @@ func init() {
 	DefaultModel.App.Gameplay.Map = temp
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
 	DefaultModel.App.Gameplay.Players = map[string]protocol.Player{
-		protocol.PlayerIDPlayer: {GroupID: "0"},
-		playerAI1:               {GroupID: "1"},
+		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
+		playerAI1:               {ID: playerAI1, GroupID: "1"},
 	}
+	DefaultModel.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
+	DefaultModel.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
 	DefaultModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
 		ID:       "0",
 		ProtoID:  "gundam",

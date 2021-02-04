@@ -64,6 +64,16 @@ func ReplaceInt(items []int, info map[int]int) []int {
 	return ret
 }
 
+// FindIntIndex is
+func FindIntIndex(items []int, target int) int {
+	for idx, item := range items {
+		if item == target {
+			return idx
+		}
+	}
+	return -1
+}
+
 // ReplaceIntIndex is
 func ReplaceIntIndex(items []int, info map[int]int) []int {
 	ret := make([]int, len(items))
@@ -78,6 +88,7 @@ func ReplaceIntIndex(items []int, info map[int]int) []int {
 	return ret
 }
 
+// TryGetInt
 func TryGetInt(items []int, i int) (int, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]int{}
@@ -86,6 +97,7 @@ func TryGetInt(items []int, i int) (int, error) {
 	return items[i], nil
 }
 
+// TryGetInt2
 func TryGetInt2(items [][]int, i int) func(j int, err error) (int, error) {
 	return func(j int, err error) (int, error) {
 		if err != nil {
@@ -104,6 +116,7 @@ func TryGetInt2(items [][]int, i int) func(j int, err error) (int, error) {
 	}
 }
 
+// DifferenceInt
 func DifferenceInt(a []int, b []int) []int {
 	ret := []int{}
 	for _, v := range a {
@@ -175,6 +188,16 @@ func ReplaceString(items []string, info map[string]string) []string {
 	return ret
 }
 
+// FindStringIndex is
+func FindStringIndex(items []string, target string) int {
+	for idx, item := range items {
+		if item == target {
+			return idx
+		}
+	}
+	return -1
+}
+
 // ReplaceStringIndex is
 func ReplaceStringIndex(items []string, info map[int]string) []string {
 	ret := make([]string, len(items))
@@ -189,6 +212,7 @@ func ReplaceStringIndex(items []string, info map[int]string) []string {
 	return ret
 }
 
+// TryGetString
 func TryGetString(items []string, i int) (string, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]string{}
@@ -197,6 +221,7 @@ func TryGetString(items []string, i int) (string, error) {
 	return items[i], nil
 }
 
+// TryGetString2
 func TryGetString2(items [][]string, i int) func(j int, err error) (string, error) {
 	return func(j int, err error) (string, error) {
 		if err != nil {
@@ -215,6 +240,7 @@ func TryGetString2(items [][]string, i int) func(j int, err error) (string, erro
 	}
 }
 
+// DifferenceString
 func DifferenceString(a []string, b []string) []string {
 	ret := []string{}
 	for _, v := range a {

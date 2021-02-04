@@ -1,13 +1,15 @@
 package protocol
 
-import "tool/astar"
+import (
+	"tool/astar"
+)
 
 type IGameplayModel interface {
 	// flow
 	ObservePage(ctx interface{}, id int) (interface{}, error)
 	EnemyTurnPhase(origin interface{}) (interface{}, bool, error)
 	// gameplay
-	QueryActivePlayer() string
+	QueryActivePlayer() (Player, error)
 	NextPlayer() (IModel, error)
 	IsDone() bool
 	QueryUnitsByRegion(p1 Position, p2 Position) []string

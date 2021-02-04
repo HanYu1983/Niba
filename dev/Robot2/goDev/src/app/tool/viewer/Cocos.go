@@ -87,6 +87,21 @@ func (p Cocos) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 	<-wait
 }
 
+func (p Cocos) RenderTurnStart(ui uidata.UI, player protocol.Player) {
+	wait := make(chan interface{})
+	view := js.Global.Get("View")
+	if view == js.Undefined {
+		fmt.Println("view not ready")
+		return
+	}
+	view.Call("RenderTurnStart", player, func() {
+		go func() {
+			close(wait)
+		}()
+	})
+	<-wait
+}
+
 func (p Cocos) Alert(msg string) {
 	view := js.Global.Get("View")
 	if view == js.Undefined {
