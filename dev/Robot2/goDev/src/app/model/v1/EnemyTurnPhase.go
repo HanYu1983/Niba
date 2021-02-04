@@ -39,7 +39,7 @@ func QueryGoal(model model, robotID string) (Goal, error) {
 	if goal, has := model.App.Gameplay.AIModel.Directive[robotID]; has {
 		return goal, nil
 	}
-	return Goal{Type: GoalTypeMoveToPosition, Position: protocol.Position{10, 10}}, nil
+	return Goal{Type: GoalTypeMoveToPosition, Position: protocol.Position{5, 5}}, nil
 }
 
 func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, error) {
@@ -47,9 +47,8 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	var cancel bool
 	ctx := origin
 	view := def.View
-	model := ctx.Model.(model)
 	var noGoal Goal
-	goal, err := QueryGoal(model, robot.ID)
+	goal, err := QueryGoal(ctx.Model.(model), robot.ID)
 	if err != nil {
 		return origin, false, err
 	}
@@ -58,15 +57,23 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	}
 	switch goal.Type {
 	case GoalTypeMoveToPosition:
-		isCanMove, targetPosition, tree, err := QueryFastestMovePosition(model, robot, goal.Position)
+		isCanMove, targetPosition, tree, err := QueryFastestMovePosition(ctx.Model.(model), robot, goal.Position)
 		if err != nil {
 			return origin, false, err
 		}
 		if isCanMove {
-			model, err = RobotMove(model, robot.ID, targetPosition)
+			ctx.Model, err = ctx.Model.RobotMove(robot.ID, targetPosition)
+			if err != nil {
+				return origin, false, err
+			}
 			view.RenderRobotMove(ctx, robot.ID, helper.MoveRangeTree2Path(tree, targetPosition))
+			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+			if err != nil {
+				return origin, false, err
+			}
+			view.Render(ctx)
 		}
-		model, err = RobotDone(model, robot.ID)
+		ctx.Model, err = ctx.Model.RobotDone(robot.ID)
 		if err != nil {
 			return origin, false, err
 		}
@@ -81,27 +88,30 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	default:
 		return origin, false, fmt.Errorf("[RobotThinking] unknown goal(%v)", goal)
 	}
-	ctx.Model = model
 	return ctx, false, nil
 }
 
-func EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
+func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "start")
 	var err error
 	var cancel bool
 	view := def.View
-	ctx := origin.(uidata.UI)
-	model := ctx.Model.(model)
+	ctx := origin
 	activePlayer, err := ctx.Model.QueryActivePlayer()
 	if err != nil {
 		return origin, false, err
 	}
-	robotIDs, err := QueryUnitsByPlayer(model, activePlayer)
+	robotIDs, err := QueryUnitsByPlayer(ctx.Model.(model), activePlayer)
 	if err != nil {
 		return origin, false, err
 	}
 	for _, robotID := range robotIDs {
-		robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			return origin, false, err
+		}
+		view.Render(ctx)
+		robot, err := protocol.TryGetStringRobot(ctx.Model.(model).App.Gameplay.Robots, robotID)
 		if err != nil {
 			return origin, false, err
 		}
@@ -112,7 +122,6 @@ func EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 		if cancel {
 			return origin, cancel, nil
 		}
-		view.Render(ctx)
 	}
 	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end")
 	var _ = view

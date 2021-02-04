@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/tool/protocol"
+	"app/tool/uidata"
 	"tool/astar"
 )
 
@@ -42,7 +43,7 @@ func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui, id)
 }
 func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
-	return EnemyTurnPhase(origin)
+	return EnemyTurnPhase(origin.(uidata.UI))
 }
 func (v model) QueryActivePlayer() (protocol.Player, error) {
 	return QueryActivePlayer(v)

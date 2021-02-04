@@ -6,15 +6,20 @@ import (
 	"tool/astar"
 )
 
-type ByAstarNodeRank []*astar.Node
+type ByAstarNodeEstimatedCost []*astar.Node
 
-func (a ByAstarNodeRank) Len() int           { return len(a) }
-func (a ByAstarNodeRank) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a ByAstarNodeRank) Less(i, j int) bool { return a[i].Rank < a[j].Rank }
+func (a ByAstarNodeEstimatedCost) Len() int      { return len(a) }
+func (a ByAstarNodeEstimatedCost) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByAstarNodeEstimatedCost) Less(i, j int) bool {
+	return a[i].Rank-a[i].Cost < a[j].Rank-a[j].Cost
+}
 
 func QueryFastestMovePosition(model model, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
 	originPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
+		return false, protocol.Position{}, nil, err
+	}
+	if originPos == target {
 		return false, protocol.Position{}, nil, err
 	}
 	costFn, err := RobotMoveCost(model, robot)
@@ -37,13 +42,16 @@ func QueryFastestMovePosition(model model, robot protocol.Robot, target protocol
 	for _, node := range tree {
 		nodes = append(nodes, node)
 	}
-	sort.Sort(ByAstarNodeRank(nodes))
+	sort.Sort(ByAstarNodeEstimatedCost(nodes))
 	for _, node := range nodes {
 		pos := node.Pather.(protocol.Position)
 		var notFound string
 		unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, pos)
 		if unitAtPos == notFound {
 			return true, pos, tree, nil
+		}
+		if pos == originPos {
+			break
 		}
 	}
 	return false, originPos, nil, nil

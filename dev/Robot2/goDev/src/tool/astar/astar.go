@@ -64,6 +64,7 @@ func ShortedPathTree(
 	heap.Init(nq)
 	fromNode := nm.get(from)
 	fromNode.open = true
+	fromNode.Rank = pathEstimatedCost(fromNode)
 	heap.Push(nq, fromNode)
 	for {
 		if nq.Len() == 0 {

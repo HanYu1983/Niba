@@ -9,7 +9,7 @@ import (
 func RobotMove(origin model, robotID string, pos protocol.Position) (model, error) {
 	v := origin
 	tags := v.App.Gameplay.Tags[robotID]
-	if tags.MoveCount >= 1 {
+	if tags.MoveCount >= 5 {
 		return origin, fmt.Errorf("[RobotMove] already move %v", robotID)
 	}
 	unitAtPos := SearchUnitByPosition(v.App.Gameplay.Positions, pos)
