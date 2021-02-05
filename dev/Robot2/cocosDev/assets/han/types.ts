@@ -11,6 +11,10 @@ export type Model = {
 	Flush: () => void,
 }
 
+export enum PlayerID {
+	PlayerIDPlayer = "PlayerIDPlayer"
+}
+
 export enum BattleAction {
 	BattleActionAttack,
 	BattleActionGuard,
