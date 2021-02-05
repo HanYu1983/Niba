@@ -47,6 +47,13 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	var cancel bool
 	ctx := origin
 	view := def.View
+	isRobotDone, err := IsRobotDone(ctx.Model.(model), robot.ID)
+	if err != nil {
+		return origin, false, err
+	}
+	if isRobotDone {
+		return origin, false, fmt.Errorf("[RobotThinking]robot(%v) already done.", robot.ID)
+	}
 	var noGoal Goal
 	goal, err := QueryGoal(ctx.Model.(model), robot.ID)
 	if err != nil {
@@ -67,16 +74,16 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			view.RenderRobotMove(ctx, robot.ID, helper.MoveRangeTree2Path(tree, targetPosition))
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
-			if err != nil {
-				return origin, false, err
-			}
-			view.Render(ctx)
 		}
 		ctx.Model, err = ctx.Model.RobotDone(robot.ID)
 		if err != nil {
 			return origin, false, err
 		}
+		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			return origin, false, err
+		}
+		view.Render(ctx)
 	case GoalTypeAttackTargetRobot:
 		ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")
 		if err != nil {
@@ -111,6 +118,13 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 			return origin, false, err
 		}
 		view.Render(ctx)
+		isRobotDone, err := IsRobotDone(ctx.Model.(model), robotID)
+		if err != nil {
+			return origin, false, err
+		}
+		if isRobotDone {
+			continue
+		}
 		robot, err := protocol.TryGetStringRobot(ctx.Model.(model).App.Gameplay.Robots, robotID)
 		if err != nil {
 			return origin, false, err

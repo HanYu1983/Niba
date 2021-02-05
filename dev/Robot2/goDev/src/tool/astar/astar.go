@@ -3,6 +3,7 @@ package astar
 // 修改自github.com/beefsack/go-astar
 import (
 	"container/heap"
+	"math"
 	"reflect"
 )
 
@@ -64,7 +65,7 @@ func ShortedPathTree(
 	heap.Init(nq)
 	fromNode := nm.get(from)
 	fromNode.open = true
-	fromNode.Rank = pathEstimatedCost(fromNode)
+	fromNode.Rank = math.MaxFloat64
 	heap.Push(nq, fromNode)
 	for {
 		if nq.Len() == 0 {

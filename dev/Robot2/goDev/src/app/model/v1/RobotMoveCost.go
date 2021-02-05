@@ -4,6 +4,7 @@ import (
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
+	"fmt"
 	"tool/astar"
 )
 
@@ -36,6 +37,18 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 				continue
 			}
 			nextPos := protocol.Position{x, y}
+			var notFound string
+			unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, nextPos)
+			if unitAtPos != notFound {
+				isFriendlyRobot, err := IsFriendlyRobot(model, robot.ID, unitAtPos)
+				if err != nil {
+					fmt.Println(err)
+					continue
+				}
+				if isFriendlyRobot == false {
+					continue
+				}
+			}
 			terrain2 := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
 			nextCost := float64(terrain1.Cost + terrain2.Cost)
 			if int(curr.Cost+nextCost) > movePower {

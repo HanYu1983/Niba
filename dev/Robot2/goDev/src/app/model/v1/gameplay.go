@@ -196,3 +196,7 @@ func QueryUnitsByPlayer(model model, player protocol.Player) ([]string, error) {
 	}
 	return ret, nil
 }
+
+func IsRobotDone(model model, robotID string) (bool, error) {
+	return model.App.Gameplay.Tags[robotID].IsDone, nil
+}
