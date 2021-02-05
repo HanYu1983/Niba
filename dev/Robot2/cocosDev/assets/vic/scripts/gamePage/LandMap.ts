@@ -94,7 +94,9 @@ export class LandMap extends Instant {
                         unitView.getComponent(Animation)?.play("shake");
 
                         const pos = unitView.getComponent(Unit)?.node.position;
-                        this.effects.build([[0, pos]]);
+                        if(pos){
+                            this.effects.createEffect(0, pos);
+                        }
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:

@@ -7,7 +7,9 @@
 
 import { _decorator, Component, Node, tween, Sprite, Vec3 } from 'cc';
 import { BasicPage } from '../BasicPage';
+import { EffectGenerator } from './EffectGenerator';
 import { LandMap } from './LandMap';
+import { TurnChange } from './TurnChange';
 import { UnitInfo } from './UnitInfo';
 const { ccclass, property } = _decorator;
 
@@ -20,10 +22,22 @@ export class GamePage extends BasicPage {
     @property(UnitInfo)
     unitInfo:UnitInfo = null;
 
+    @property(EffectGenerator)
+    frontEffect:EffectGenerator = null;
+
     clear(){
         super.clear();
         this.map.clear();
         this.unitInfo.clear();
+    }
+
+    showTurnChange(info:any, cb:()=>void){
+        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, cb);
+        if(info.ID == "PlayerIDPlayer"){
+            turnChange.getComponent(TurnChange)?.setTitleAndColor("自軍回合開始", 0);
+        }else{
+            turnChange.getComponent(TurnChange)?.setTitleAndColor("敵軍回合開始", 1);
+        }
     }
    
     protected doBuild(content:any, data:any):void{

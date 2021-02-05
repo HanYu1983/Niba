@@ -27,27 +27,35 @@ export class Controller extends Component {
             // 這個時候，他會把本來應該要進入游戲才創建的物件就直接創建在場景上了
             // 導致我又要手動刪掉
             // 這邊先暫時用js檢查是不是在chrome的環境，是的話，再render畫面來避免bug
-            var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-            if(isChrome){
+            // var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+            if(this.isTargetDevice()){
                 console.log("Render", ui);
                 this.view.build(ui);
             }
         },
         RenderRobotMove: (robotID: string, path: any, cb: ()=>void) => {
-            console.log(`[Controller][RenderRobotMove]`, robotID, path)
+            if(this.isTargetDevice()){
+                console.log(`[Controller][RenderRobotMove]`, robotID, path)
             
-            const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
-            gamePage?.getComponent(GamePage)?.map.units.moveUnit(robotID, path, cb);
+                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+                gamePage?.getComponent(GamePage)?.map.units.moveUnit(robotID, path, cb);
+            }
         },
         RenderRobotBattle: (result: any, cb: ()=>void) => {
-            console.log(`[Controller][RenderRobotBattle]`, result)
+            if(this.isTargetDevice()){
+                console.log(`[Controller][RenderRobotBattle]`, result)
             
-            const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
-            gamePage?.getComponent(GamePage)?.map.playBattleAnimation(result, cb);
+                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+                gamePage?.getComponent(GamePage)?.map.playBattleAnimation(result, cb);
+            }
         },
         RenderTurnStart: (player: any, cb:()=>void)=>{
-            console.log(`[Controller][RenderTurnStart]`, player)
-            cb()
+            if(this.isTargetDevice()){
+                console.log(`[Controller][RenderTurnStart]`, player)
+
+                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+                gamePage?.getComponent(GamePage)?.showTurnChange(player, cb);
+            }
         },
         Alert: (msg: string) => {
             alert(msg)
@@ -56,10 +64,15 @@ export class Controller extends Component {
 
     model: ModelType.Model = window.Model
 
+    isTargetDevice(){
+        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        return isChrome;
+    }
+
     start() {
         systemEvent.on(SystemEvent.EventType.KEY_UP, this.model.OnKeyUp, this.model);
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.model.OnKeyDown, this.model);
         // 畫第一次(Render), 之後是自動呼叫Render
-        this.model.Flush()
+        this.model.Flush();
     }
 }
