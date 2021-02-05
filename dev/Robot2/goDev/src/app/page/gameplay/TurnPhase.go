@@ -7,20 +7,36 @@ import (
 	"fmt"
 )
 
-func TurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
+func TurnPhase(origin uidata.UI, player protocol.Player) (uidata.UI, bool, error) {
+	var err error
 	ctx := origin
 	view := def.View
-	player, err := ctx.Model.QueryActivePlayer()
+	var ctxObj interface{}
+	ctxObj, err = ctx.Model.OnPlayerTurnStart(ctx, player)
 	if err != nil {
 		return origin, false, err
 	}
+	ctx = ctxObj.(uidata.UI)
 	view.RenderTurnStart(ctx, player)
+	var cancel bool
 	switch player.ID {
 	case "":
 		return origin, false, fmt.Errorf("unknown player")
 	case protocol.PlayerIDPlayer:
-		return PlayerTurnPhase(origin)
+		ctx, cancel, err = PlayerTurnPhase(ctx)
 	default:
-		return EnemyTurnPhase(origin)
+		ctx, cancel, err = EnemyTurnPhase(ctx)
 	}
+	if err != nil {
+		return origin, false, err
+	}
+	if cancel {
+		return origin, cancel, err
+	}
+	ctxObj, err = ctx.Model.OnPlayerTurnEnd(ctx, player)
+	if err != nil {
+		return origin, false, err
+	}
+	ctx = ctxObj.(uidata.UI)
+	return ctx, false, nil
 }

@@ -39,8 +39,14 @@ func (v model) DissocComponentRobot(componentID string) (protocol.IModel, error)
 }
 
 // IGameplayModel
+func (v model) OnPlayerTurnStart(ui interface{}, player protocol.Player) (interface{}, error) {
+	return OnPlayerTurnStart(ui.(uidata.UI), player)
+}
+func (v model) OnPlayerTurnEnd(ui interface{}, player protocol.Player) (interface{}, error) {
+	return OnPlayerTurnEnd(ui.(uidata.UI), player)
+}
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
-	return ObservePage(ui, id)
+	return ObservePage(ui.(uidata.UI), id)
 }
 func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 	return EnemyTurnPhase(origin.(uidata.UI))

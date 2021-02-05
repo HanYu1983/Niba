@@ -2,9 +2,9 @@ package v1
 
 import "app/tool/uidata"
 
-func ObservePage(origin interface{}, pageID int) (interface{}, error) {
+func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	var err error
-	ctx := origin.(uidata.UI)
+	ctx := origin
 	model := ctx.Model.(model)
 	for _, menuID := range ctx.Menus[pageID] {
 		ctx, err = ObserveMenu1D(ctx, menuID)

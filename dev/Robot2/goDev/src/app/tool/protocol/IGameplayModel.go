@@ -7,8 +7,10 @@ import (
 type IGameplayModel interface {
 	// flow
 	ObservePage(ctx interface{}, id int) (interface{}, error)
-	EnemyTurnPhase(origin interface{}) (interface{}, bool, error)
+	EnemyTurnPhase(ctx interface{}) (interface{}, bool, error)
 	// gameplay
+	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)
+	OnPlayerTurnEnd(ctx interface{}, player Player) (interface{}, error)
 	QueryActivePlayer() (Player, error)
 	NextPlayer() (IModel, error)
 	IsDone() bool

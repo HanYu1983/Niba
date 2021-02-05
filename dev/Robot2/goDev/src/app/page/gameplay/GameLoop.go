@@ -17,8 +17,13 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	for {
 		view.Render(ctx)
 		time.Sleep(time.Second)
+		var activePlayer protocol.Player
+		activePlayer, err = ctx.Model.QueryActivePlayer()
+		if err != nil {
+			return origin, err
+		}
 		var cancel bool
-		ctx, cancel, err = TurnPhase(ctx)
+		ctx, cancel, err = TurnPhase(ctx, activePlayer)
 		if err != nil {
 			return origin, err
 		}
