@@ -62,6 +62,7 @@ export enum Const {
 
 export enum BattleResultType {
 	BattleResultTypePending,
+	BattleResultTypeAim,
 	BattleResultTypeWeapon,
 	BattleResultTypeGuard,
 	BattleResultTypeEvade,

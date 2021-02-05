@@ -135,6 +135,7 @@ type BattleMenu struct {
 
 const (
 	BattleResultTypePending = iota
+	BattleResultTypeAim
 	BattleResultTypeWeapon
 	BattleResultTypeGuard
 	BattleResultTypeEvade
@@ -146,8 +147,27 @@ type BattleAnimation struct {
 	RobotBefore Robot
 	RobotAfter  Robot
 	Damage      int
+	Positions   map[string]Position
+	AimPosition [2]Position
 }
 
 type BattleResult struct {
 	Animations []BattleAnimation
+}
+
+func (result BattleResult) MapPosition(mapF func(pos Position) Position) BattleResult {
+	localAnims := []BattleAnimation{}
+	for _, animation := range result.Animations {
+		locals := map[string]Position{}
+		for robotID, pos := range animation.Positions {
+			locals[robotID] = mapF(pos)
+		}
+		animation.Positions = locals
+		for i, pos := range animation.AimPosition {
+			animation.AimPosition[i] = mapF(pos)
+		}
+		localAnims = append(localAnims, animation)
+	}
+	result.Animations = localAnims
+	return result
 }

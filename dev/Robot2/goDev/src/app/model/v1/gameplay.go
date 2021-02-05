@@ -120,13 +120,29 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
+	robotPos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
+	targetRobotPos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, targetRobotID)
+	if err != nil {
+		return origin, protocol.BattleResult{}, err
+	}
 	results := []protocol.BattleAnimation{}
+	// aim
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeAim,
+		AimPosition: [2]protocol.Position{robotPos, targetRobotPos},
+	})
 	// shoot
 	results = append(results, protocol.BattleAnimation{
 		Type:        protocol.BattleResultTypeWeapon,
 		RobotBefore: robot,
 		RobotAfter:  robot,
 		Damage:      0,
+		Positions: map[string]protocol.Position{
+			robot.ID: robotPos,
+		},
 	})
 	// damage
 	results = append(results, protocol.BattleAnimation{
@@ -134,6 +150,14 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		RobotBefore: targetRobot,
 		RobotAfter:  targetRobot,
 		Damage:      1000,
+		Positions: map[string]protocol.Position{
+			targetRobot.ID: targetRobotPos,
+		},
+	})
+	// aim
+	results = append(results, protocol.BattleAnimation{
+		Type:        protocol.BattleResultTypeAim,
+		AimPosition: [2]protocol.Position{targetRobotPos, robotPos},
 	})
 	// counter
 	results = append(results, protocol.BattleAnimation{
@@ -141,6 +165,9 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		RobotBefore: targetRobot,
 		RobotAfter:  targetRobot,
 		Damage:      0,
+		Positions: map[string]protocol.Position{
+			targetRobot.ID: targetRobotPos,
+		},
 	})
 	// damage
 	results = append(results, protocol.BattleAnimation{
@@ -148,6 +175,9 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		RobotBefore: robot,
 		RobotAfter:  robot,
 		Damage:      1000,
+		Positions: map[string]protocol.Position{
+			robot.ID: robotPos,
+		},
 	})
 	return ctx, protocol.BattleResult{Animations: results}, nil
 }
