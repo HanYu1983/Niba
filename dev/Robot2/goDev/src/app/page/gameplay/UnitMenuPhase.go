@@ -53,6 +53,9 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				return origin, false, err
 			}
 			view.Render(ctx)
+			if ctx.Actives[uidata.PageUnitMenu] == false {
+				return origin, false, fmt.Errorf("這時必須打開PageUnitMenu頁")
+			}
 			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, false, err
@@ -132,6 +135,8 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				if cancel {
 					return origin, cancel, nil
 				}
+			case uidata.MenuOptionConfirm:
+				// do nothing
 			}
 		}
 		ctx.Model, err = ctx.Model.DisableRobotMenu()
