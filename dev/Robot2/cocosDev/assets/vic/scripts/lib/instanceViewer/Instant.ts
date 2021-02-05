@@ -28,10 +28,14 @@ export class Instant extends Component implements IInstant {
     outOfWorld:Vec3 = new Vec3(5000,5000,0);
     cachePos:Vec3 = Vec3.ZERO;
 
+    cacheScale:Vec3 = Vec3.ZERO;
+
     start(){
 
         // 把在editor裏設定的位置記下來
         this.cachePos = this.node.getPosition();
+
+        this.cacheScale = this.node.getScale();
 
         // 先一律不能用active的模式，效能才可以接受，之後如果測試都ok，就把這個參數拿掉
         this.doActiveWhenBuildClear = false;
@@ -44,7 +48,8 @@ export class Instant extends Component implements IInstant {
         }else{
 
             // 移開到畫面外，代替 active = false 的操作
-            this.node.setPosition(this.outOfWorld);
+            // this.node.setPosition(this.outOfWorld);
+            this.node.setScale(Vec3.ZERO);
         }
         this.childs.forEach(item=>item.getComponent(Instant)?.clear());
     }
@@ -59,7 +64,8 @@ export class Instant extends Component implements IInstant {
                 if(!this.node.active) this.node.active = true;
 
                 // 回到editor裏設定的位置
-                this.node.setPosition(this.cachePos);
+                // this.node.setPosition(this.cachePos);
+                this.node.setScale(new Vec3(1,1,1));
             }
             
             this.doBuild(content, data);

@@ -22,6 +22,8 @@ export class BattleMenu extends Instant {
     actionInfos:ActionInfo[] = [];
 
     clear(){
+        super.clear();
+
         this.actionInfos.forEach(info=>{
             info.clear();
         });

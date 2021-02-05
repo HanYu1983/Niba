@@ -34,8 +34,8 @@ export class UnitInfo extends Instant {
         super.clear();
     }
 
-    build(data:any){
-        this.setRobot(data);
+    doBuild(content:any, data:any){
+        this.setRobot(content);
     }
 
     private setRobot(robot:any){
