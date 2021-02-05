@@ -47,7 +47,7 @@ export class Units extends Instant {
         }
     }
 
-    private getUnitByID(unitId: string):Node{
+    getUnitByID(unitId: string):Node{
         for(let i = 0; i < this.units.length; ++i){
             const unit = this.units[i];
             if(unit.getComponent(Unit)?.unitId == unitId) return unit;
@@ -74,8 +74,20 @@ export class Units extends Instant {
                 const item = content.Items[unitKey];
                 const unit:Node = this.pool.aquire(this.prefab, this.node);
                 unit.getComponent(Unit).unitId = unitKey;
+                unit.getComponent(Unit).gridPos.x = pos[0];
+                unit.getComponent(Unit).gridPos.y = pos[1];
                 if(robot){
-                    // console.log("robot", robot);
+                    if(robot.PlayerID == "PlayerIDPlayer"){
+                        unit.getComponent(Unit)?.showColor(0);
+                    }else{
+                        unit.getComponent(Unit)?.showColor(1);
+                    }
+
+                    const unitTag = data.Tags[unitKey];
+                    if(unitTag){
+                        if(unitTag.IsDone) unit.getComponent(Unit)?.showColor(2);
+                        unit.getComponent(Unit)?.isAir(unitTag.Sky);
+                    }
                 }
                 if(pos){
                     unit.setPosition(Grids.getGridPos(pos[0], pos[1]));

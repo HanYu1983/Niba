@@ -5,12 +5,13 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, Sprite, Vec3, tween } from 'cc';
+import { _decorator, Component, Node, Sprite, Vec3, tween, Animation } from 'cc';
 import { Instant } from '../lib/instanceViewer/Instant';
 import { EffectGenerator } from './EffectGenerator';
 import { Grids } from './Grids';
 import { Units } from './Units';
 import * as ModelType from '../../../han/types';
+import { Unit } from './Unit';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -62,7 +63,7 @@ export class LandMap extends Instant {
         ];
         
         anims.forEach(anim => {
-            console.log(anim);
+            // console.log(anim);
 
             const type = anim.Type;
             const robotBefore = anim.RobotBefore;
@@ -78,21 +79,31 @@ export class LandMap extends Instant {
                 case ModelType.BattleResultType.BattleResultTypeWeapon:
                     actions.push(tween().call(()=>{
                         console.log("BattleResultTypeWeapon");
-                        console.log(robotAfter);
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
+                        unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
+
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeDamage:
                     actions.push(tween().call(()=>{
                         console.log("BattleResultTypeDamage");
-                        console.log(robotAfter);
-                        this.effects.build([[0, Grids.getGridPos(2,3)]]);
-                    }).delay(2));
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Animation)?.play("shake");
+
+                        const pos = unitView.getComponent(Unit)?.node.position;
+                        this.effects.build([[0, pos]]);
+                    }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:
                     actions.push(tween().call(()=>{
-                        console.log(robotAfter);
                         console.log("BattleResultTypeEvade");
-                    }).delay(2));
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Animation)?.play("evade");
+                    }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeGuard:
                     actions.push(tween().call(()=>{
