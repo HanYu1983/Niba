@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func QueryRobotWeapons(app app, robot protocol.Robot) (string, protocol.Weapons, error) {
+func QueryRobotWeapons(model model, robot protocol.Robot) (string, protocol.Weapons, error) {
 	if weapons, has := robot.WeaponsByTransform[robot.Transform]; has {
 		return "", weapons, nil
 	}
@@ -39,11 +39,11 @@ func QueryRobotWeapons(app app, robot protocol.Robot) (string, protocol.Weapons,
 		}
 		weapons[weapon.ID] = weapon
 	}
-	for weaponID, robotID := range app.Lobby.RobotIDByWeaponID {
+	for weaponID, robotID := range model.App.Lobby.RobotIDByWeaponID {
 		if robotID != robot.ID {
 			continue
 		}
-		weapons[weaponID] = app.Lobby.Weapons[weaponID]
+		weapons[weaponID] = model.App.Lobby.Weapons[weaponID]
 	}
 	return robot.Transform, weapons, nil
 }

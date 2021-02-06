@@ -1,30 +1,28 @@
 package v1
 
 import (
-	"app/tool/helper"
 	"app/tool/protocol"
-	"app/tool/uidata"
 	"fmt"
 	"tool/log"
 )
 
-func CheckInvalidWeapon(app app, robot protocol.Robot, weapon protocol.Weapon) (string, error) {
-	robotPos, err := protocol.TryGetStringPosition(app.Gameplay.Positions, robot.ID)
+func CheckInvalidWeapon(model model, robot protocol.Robot, weapon protocol.Weapon) (string, error) {
+	robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
 		return "", err
 	}
 	leftTopPos := protocol.Position{robotPos[0] - 10, robotPos[1] - 10}
 	rightBottomPos := protocol.Position{robotPos[0] + 10, robotPos[1] + 10}
-	units := SearchUnitByRegion(app.Gameplay.Positions, leftTopPos, rightBottomPos)
+	units := SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
 	log.Log("CheckInvalidWeapon", "CheckInvalidWeapon", fmt.Sprintf("units(%v)", units))
-	attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, weapon.Range[0], weapon.Range[1], robotPos)
+	attackRange, err := QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
 	if err != nil {
 		return "", err
 	}
 	log.Log("CheckInvalidWeapon", "CheckInvalidWeapon", fmt.Sprintf("attackRange(%v)", attackRange))
 	unitPosList := []protocol.Position{}
 	for _, unitID := range units {
-		unitPosList = append(unitPosList, app.Gameplay.Positions[unitID])
+		unitPosList = append(unitPosList, model.App.Gameplay.Positions[unitID])
 	}
 	unitPosOutSideOfRange := protocol.DifferencePosition(unitPosList, attackRange)
 	log.Log("CheckInvalidWeapon", "CheckInvalidWeapon", fmt.Sprintf("unitPosOutSideOfRange(%v)", unitPosOutSideOfRange))
@@ -36,11 +34,11 @@ func CheckInvalidWeapon(app app, robot protocol.Robot, weapon protocol.Weapon) (
 	return "", nil
 }
 
-func CheckInvalidWeapons(app app, robot protocol.Robot, weapons protocol.Weapons) (map[string]string, error) {
+func CheckInvalidWeapons(model model, robot protocol.Robot, weapons protocol.Weapons) (map[string]string, error) {
 	ret := map[string]string{}
 	var notFound string
 	for weaponID, weapon := range weapons {
-		validStr, err := CheckInvalidWeapon(app, robot, weapon)
+		validStr, err := CheckInvalidWeapon(model, robot, weapon)
 		if err != nil {
 			return ret, err
 		}

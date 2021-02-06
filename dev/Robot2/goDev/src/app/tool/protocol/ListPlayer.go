@@ -133,3 +133,16 @@ func DifferencePlayer(a []Player, b []Player) []Player {
 	}
 	return ret
 }
+
+// IntersectionPlayer
+func IntersectionPlayer(a []Player, b []Player) []Player {
+	ret := []Player{}
+	for _, v := range a {
+		for _, v2 := range b {
+			if v == v2 {
+				ret = append(ret, v)
+			}
+		}
+	}
+	return ret
+}

@@ -61,6 +61,10 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	unitMenuModel := model.App.Gameplay.RobotMenu
 	if unitMenuModel.Active {
 		unitMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
+		activeRobot, err := protocol.TryGetStringRobot(gameplayPage.Robots, unitMenuModel.ActiveRobotID)
+		if err != nil {
+			return origin, err
+		}
 		isSelectingWeapon := unitMenuModel.RowFunctionMapping[unitMenu.Cursor1] == protocol.RobotMenuFunctionWeapon
 		log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("isSelectingWeapon(%v)", isSelectingWeapon))
 		if isSelectingWeapon {
@@ -72,7 +76,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
-			attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, selectedWeapon.Range[0], selectedWeapon.Range[1], robotPos)
+			attackRange, err := QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
 			if err != nil {
 				return origin, err
 			}

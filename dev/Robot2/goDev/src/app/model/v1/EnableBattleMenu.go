@@ -14,7 +14,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		return origin, err
 	}
 
-	_, weapons, err := QueryRobotWeapons(v.App, robot)
+	_, weapons, err := QueryRobotWeapons(v, robot)
 	weapon, err := protocol.TryGetStringWeapon(weapons, weaponID)
 	if err != nil {
 		return origin, err
@@ -37,7 +37,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		//  敵人打好人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		_, weapons, err := QueryRobotWeapons(v.App, targetRobot)
+		_, weapons, err := QueryRobotWeapons(v, targetRobot)
 		if err != nil {
 			return origin, err
 		}
@@ -45,7 +45,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		if len(weapons) > 0 {
 			rowFunctionMapping[len(options)] = protocol.RobotMenuFunctionWeapon
 			options = append(options, protocol.KesStringWeapon(weapons))
-			invalidWeapons, err = CheckInvalidWeapons(v.App, robot, weapons)
+			invalidWeapons, err = CheckInvalidWeapons(v, robot, weapons)
 		}
 		options = append(options, []string{uidata.MenuOptionUnitGuard})
 		options = append(options, []string{uidata.MenuOptionUnitEvade})
@@ -60,7 +60,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		// 好人打敵人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		_, weapons, err := QueryRobotWeapons(v.App, robot)
+		_, weapons, err := QueryRobotWeapons(v, robot)
 		if err != nil {
 			return origin, err
 		}
@@ -68,7 +68,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		if len(weapons) > 0 {
 			rowFunctionMapping[len(options)] = protocol.RobotMenuFunctionWeapon
 			options = append(options, protocol.KesStringWeapon(weapons))
-			invalidWeapons, err = CheckInvalidWeapons(v.App, robot, weapons)
+			invalidWeapons, err = CheckInvalidWeapons(v, robot, weapons)
 		}
 		robotMenu.Active = true
 		robotMenu.ActiveRobotID = robotID

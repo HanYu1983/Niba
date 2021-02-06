@@ -52,5 +52,5 @@ func init() {
 		PlayerID: playerAI1,
 		Title:    "playerAI1",
 	}}
-	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}, "2": {3, 0}, "3": {0, 3}}
+	DefaultModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {10, 10}, "2": {10, 0}, "3": {0, 10}}
 }

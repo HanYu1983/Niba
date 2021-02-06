@@ -23,7 +23,7 @@ func EnableRobotMenu(origin model, robotID string, situation interface{}) (model
 		if tags.MoveCount == 0 {
 			options = append(options, []string{uidata.MenuOptionMove})
 		}
-		_, weapons, err := QueryRobotWeapons(v.App, robot)
+		_, weapons, err := QueryRobotWeapons(v, robot)
 		if err != nil {
 			return origin, err
 		}
@@ -31,7 +31,7 @@ func EnableRobotMenu(origin model, robotID string, situation interface{}) (model
 		if len(weapons) > 0 {
 			rowFunctionMapping[len(options)] = protocol.RobotMenuFunctionWeapon
 			options = append(options, protocol.KesStringWeapon(weapons))
-			invalidWeapons, err = CheckInvalidWeapons(v.App, robot, weapons)
+			invalidWeapons, err = CheckInvalidWeapons(v, robot, weapons)
 		}
 		options = append(options, []string{uidata.MenuOptionUnitDone})
 		v.App.Gameplay.RobotMenu.Active = true

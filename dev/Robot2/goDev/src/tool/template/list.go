@@ -129,3 +129,16 @@ func DifferenceItem(a []Item, b []Item) []Item {
 	}
 	return ret
 }
+
+// IntersectionItem
+func IntersectionItem(a []Item, b []Item) []Item {
+	ret := []Item{}
+	for _, v := range a {
+		for _, v2 := range b {
+			if v == v2 {
+				ret = append(ret, v)
+			}
+		}
+	}
+	return ret
+}

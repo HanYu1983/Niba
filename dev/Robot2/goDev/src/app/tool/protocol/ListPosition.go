@@ -133,3 +133,16 @@ func DifferencePosition(a []Position, b []Position) []Position {
 	}
 	return ret
 }
+
+// IntersectionPosition
+func IntersectionPosition(a []Position, b []Position) []Position {
+	ret := []Position{}
+	for _, v := range a {
+		for _, v2 := range b {
+			if v == v2 {
+				ret = append(ret, v)
+			}
+		}
+	}
+	return ret
+}

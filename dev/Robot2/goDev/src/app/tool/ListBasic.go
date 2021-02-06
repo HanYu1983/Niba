@@ -134,6 +134,19 @@ func DifferenceInt(a []int, b []int) []int {
 	return ret
 }
 
+// IntersectionInt
+func IntersectionInt(a []int, b []int) []int {
+	ret := []int{}
+	for _, v := range a {
+		for _, v2 := range b {
+			if v == v2 {
+				ret = append(ret, v)
+			}
+		}
+	}
+	return ret
+}
+
 // ShuffleString is
 func ShuffleString(arr []string) {
 	t := time.Now()
@@ -253,6 +266,19 @@ func DifferenceString(a []string, b []string) []string {
 		}
 		if has == false {
 			ret = append(ret, v)
+		}
+	}
+	return ret
+}
+
+// IntersectionString
+func IntersectionString(a []string, b []string) []string {
+	ret := []string{}
+	for _, v := range a {
+		for _, v2 := range b {
+			if v == v2 {
+				ret = append(ret, v)
+			}
 		}
 	}
 	return ret

@@ -13,7 +13,7 @@ var (
 )
 
 func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []astar.NeighborsNode, error) {
-	movePower, err := QueryRobotMovePower(model.App, robot.ID)
+	movePower, err := QueryRobotMovePower(model, robot.ID)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil

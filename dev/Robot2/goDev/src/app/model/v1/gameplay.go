@@ -103,6 +103,10 @@ func GetMoveRange(origin model) []protocol.Position {
 func DisableBattleMenu(origin model) (model, error) {
 	ctx := origin
 	ctx.App.Gameplay.BattleMenu.Active = false
+	ctx, err := DisableRobotMenu(ctx)
+	if err != nil {
+		return origin, err
+	}
 	return ctx, nil
 }
 func GetBattleMenu(origin model) protocol.BattleMenu {
