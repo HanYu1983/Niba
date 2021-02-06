@@ -33732,18 +33732,17 @@ $packages["app/page/gameplay"] = (function() {
 	};
 	$pkg.HandleCursor = HandleCursor;
 	HandleShowMoveRangeWhenUnitAtCursor = function(origin, evt) {
-		var _r, _r$1, _r$2, _r$3, _r$4, _tuple, ctx, err, evt, model, moveRange, notFound, origin, tree, unitAtCursor, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; evt = $f.evt; model = $f.model; moveRange = $f.moveRange; notFound = $f.notFound; origin = $f.origin; tree = $f.tree; unitAtCursor = $f.unitAtCursor; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _tuple, ctx, err, evt, moveRange, notFound, origin, tree, unitAtCursor, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; evt = $f.evt; moveRange = $f.moveRange; notFound = $f.notFound; origin = $f.origin; tree = $f.tree; unitAtCursor = $f.unitAtCursor; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ctx = $clone(origin, uidata.UI);
-		model = ctx.Model;
 		notFound = "";
-		_r = model.GetCursor(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r$1 = model.QueryUnitByPosition($clone(_r, protocol.Position)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r = ctx.Model.GetCursor(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r$1 = ctx.Model.QueryUnitByPosition($clone(_r, protocol.Position)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		unitAtCursor = _r$1;
 		/* */ if (!(unitAtCursor === notFound)) { $s = 3; continue; }
 		/* */ $s = 4; continue;
 		/* if (!(unitAtCursor === notFound)) { */ case 3:
-			_r$2 = model.QueryMoveRangeTree(unitAtCursor); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_r$2 = ctx.Model.QueryMoveRangeTree(unitAtCursor); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 			_tuple = _r$2;
 			tree = _tuple[0];
 			err = _tuple[1];
@@ -33751,15 +33750,15 @@ $packages["app/page/gameplay"] = (function() {
 				$s = -1; return [origin, err];
 			}
 			moveRange = helper.MoveRangeTree2MoveRange(tree);
-			_r$3 = model.SetMoveRange(moveRange); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_r$3;
+			_r$3 = ctx.Model.SetMoveRange(moveRange); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			ctx.Model = _r$3;
 			$s = 5; continue;
 		/* } else { */ case 4:
-			_r$4 = model.SetMoveRange(sliceType$1.nil); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_r$4;
+			_r$4 = ctx.Model.SetMoveRange(sliceType$1.nil); /* */ $s = 8; case 8: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			ctx.Model = _r$4;
 		/* } */ case 5:
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: HandleShowMoveRangeWhenUnitAtCursor }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.evt = evt; $f.model = model; $f.moveRange = moveRange; $f.notFound = notFound; $f.origin = origin; $f.tree = tree; $f.unitAtCursor = unitAtCursor; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: HandleShowMoveRangeWhenUnitAtCursor }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.evt = evt; $f.moveRange = moveRange; $f.notFound = notFound; $f.origin = origin; $f.tree = tree; $f.unitAtCursor = unitAtCursor; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.HandleShowMoveRangeWhenUnitAtCursor = HandleShowMoveRangeWhenUnitAtCursor;
 	PlayerTurnPhase = function(origin) {

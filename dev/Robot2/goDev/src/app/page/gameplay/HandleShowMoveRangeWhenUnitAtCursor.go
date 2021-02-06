@@ -7,18 +7,17 @@ import (
 
 func HandleShowMoveRangeWhenUnitAtCursor(origin uidata.UI, evt interface{}) (uidata.UI, error) {
 	ctx := origin
-	model := ctx.Model
 	var notFound string
-	unitAtCursor := model.QueryUnitByPosition(model.GetCursor())
+	unitAtCursor := ctx.Model.QueryUnitByPosition(ctx.Model.GetCursor())
 	if unitAtCursor != notFound {
-		tree, err := model.QueryMoveRangeTree(unitAtCursor)
+		tree, err := ctx.Model.QueryMoveRangeTree(unitAtCursor)
 		if err != nil {
 			return origin, err
 		}
 		moveRange := helper.MoveRangeTree2MoveRange(tree)
-		model.SetMoveRange(moveRange)
+		ctx.Model = ctx.Model.SetMoveRange(moveRange)
 	} else {
-		model.SetMoveRange(nil)
+		ctx.Model = ctx.Model.SetMoveRange(nil)
 	}
 	return ctx, nil
 }
