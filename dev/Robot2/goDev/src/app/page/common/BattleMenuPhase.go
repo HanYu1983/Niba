@@ -88,6 +88,16 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			if err != nil {
 				return origin, false, err
 			}
+			// 關掉battleMenuh後再畫戰鬥動畫
+			ctx.Model, err = ctx.Model.DisableBattleMenu()
+			if err != nil {
+				return origin, false, err
+			}
+			ctx, err = ObservePage(ctx, uidata.PageGameplay)
+			if err != nil {
+				return origin, false, err
+			}
+			view.Render(ctx)
 			view.RenderRobotBattle(ctx, result)
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
@@ -139,6 +149,16 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		if err != nil {
 			return origin, false, err
 		}
+		// 關掉battleMenuh後再畫戰鬥動畫
+		ctx.Model, err = ctx.Model.DisableBattleMenu()
+		if err != nil {
+			return origin, false, err
+		}
+		ctx, err = ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			return origin, false, err
+		}
+		view.Render(ctx)
 		view.RenderRobotBattle(ctx, result)
 	}
 	ctx.Model, err = ctx.Model.DisableBattleMenu()

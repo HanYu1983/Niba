@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/tool/helper"
 	"app/tool/protocol"
 )
 
@@ -9,22 +10,16 @@ var (
 )
 
 func init() {
-	temp := [][]int{}
-	i := 0
-	for y := 0; y < 30; y++ {
-		row := []int{}
-		for x := 0; x < 30; x++ {
-			row = append(row, i%6)
-			i++
-		}
-		temp = append(temp, row)
-	}
 	const (
 		playerAI1 = "ai1"
 	)
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
+	if err != nil {
+		panic(err)
+	}
 	DefaultModel.App.Gameplay.AIModel = AIModel{}
 	DefaultModel.App.Money = 100000
-	DefaultModel.App.Gameplay.Map = temp
+	DefaultModel.App.Gameplay.Map = tempMap
 	DefaultModel.App.Gameplay.Units = []string{"0", "1"}
 	DefaultModel.App.Gameplay.Players = map[string]protocol.Player{
 		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
