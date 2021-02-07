@@ -22,33 +22,35 @@ type Position [2]int
 
 type Robot struct {
 	ID                 string
-	ProtoID            string
-	Title              string
-	PilotID            string
-	WeaponsByTransform WeaponsByTransform
-	Transform          string
 	PlayerID           string
+	ProtoID            string
+	PilotID            string
+	Transform          string
 	HP                 int
 	EN                 int
-	MaxHP              int
-	MaxEN              int
-	Cost               int
-	Power              int
-	Weapons            []string
-	Components         []string
-	Suitability        [4]float32
-	UnlockExp          int
+	WeaponsByTransform WeaponsByTransform
+	Components         map[string]Component
+	// 以下是顯示用, 不能修改
+	Title       string
+	MaxHP       int
+	MaxEN       int
+	Cost        int
+	Power       int
+	Suitability [4]float32
+	UnlockExp   int
 }
 
 type Item struct {
 	ID      string
 	ProtoID string
-	Title   string
+	// 以下是顯示用, 不能修改
+	Title string
 }
 
 type Pilot struct {
-	ID       string
-	ProtoID  string
+	ID      string
+	ProtoID string
+	// 以下是顯示用, 不能修改
 	Title    string
 	Melee    float32
 	Range    float32
@@ -62,8 +64,10 @@ type Pilot struct {
 }
 
 type Weapon struct {
-	ID             string
-	ProtoID        string
+	ID          string
+	ProtoID     string
+	BulletCount int
+	// 以下是顯示用, 不能修改
 	Title          string
 	Range          [2]int
 	EnergyCost     int
@@ -79,8 +83,9 @@ type Weapon struct {
 }
 
 type Component struct {
-	ID        string
-	ProtoID   string
+	ID      string
+	ProtoID string
+	// 以下是顯示用, 不能修改
 	Title     string
 	Desc      string
 	Value     []string

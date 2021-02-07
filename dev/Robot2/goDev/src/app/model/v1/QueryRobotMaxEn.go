@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func QueryRobotMovePower(model model, robotID string) (int, error) {
+func QueryRobotMaxEn(model model, robotID string) (int, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
@@ -21,20 +21,20 @@ func QueryRobotMovePower(model model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Power
+	total := robotProto.Hp
 	for _, component := range components {
+		val := 0
 		switch component.ProtoID {
-		case "engine1", "engine2", "engine3", "engine4", "engine5":
+		case "energy1", "energy2", "energy3", "energy4", "energy5":
 			if len(component.Value) != 1 {
 				return 0, fmt.Errorf("component value's len not right. %v", component)
 			}
-			val, err := strconv.Atoi(component.Value[0])
+			val, err = strconv.Atoi(component.Value[0])
 			if err != nil {
 				return 0, fmt.Errorf("component value not right. (%v)", component)
 			}
-			total += val
 		}
-		total -= component.PowerCost
+		total += val
 	}
-	return total / 5, nil
+	return total, nil
 }

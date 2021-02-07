@@ -148,11 +148,11 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	}
 	switch goal.Type {
 	case GoalTypeSearchAndAttack:
-		transform, weapons, err := QueryRobotWeapons(ctx.Model.(model), robot)
+		weapons, err := QueryRobotWeapons(ctx.Model.(model), robot.ID, robot.Transform)
 		if err != nil {
 			return origin, false, err
 		}
-		potentails, err := QueryPotentialTarget(ctx.Model.(model), robot, transform, weapons)
+		potentails, err := QueryPotentialTarget(ctx.Model.(model), robot, robot.Transform, weapons)
 		if err != nil {
 			return origin, false, err
 		}
