@@ -41,13 +41,12 @@ func QueryRobotWeapons(model model, robotID string, transform string) (protocol.
 		if err != nil {
 			return protocol.Weapons{}, err
 		}
-		instanceID := weapon.ID
 		weaponState := protocol.Weapon{
-			ID:          instanceID,
-			ProtoID:     weaponID,
+			ID:          weapon.ID,
+			ProtoID:     weapon.ProtoID,
 			BulletCount: weaponProto.MaxBulletCount,
 		}
-		weapons[weaponID] = weaponState
+		weapons[weaponState.ID] = weaponState
 	}
 
 	return weapons, nil

@@ -3,6 +3,7 @@ package v1
 import (
 	"app/tool/data"
 	"app/tool/protocol"
+	"math"
 )
 
 func ObserveWeapon(model model, robot protocol.Robot, weapon protocol.Weapon) (protocol.Weapon, error) {
@@ -21,7 +22,7 @@ func ObserveWeapon(model model, robot protocol.Robot, weapon protocol.Weapon) (p
 	weapon.Ability = weaponProto.Ability
 	weapon.EnergyType = weaponProto.EnergyType
 	weapon.Type = weaponProto.Type
-	weapon.Accuracy = weaponProto.Accuracy
+	weapon.Accuracy = math.Floor(weaponProto.Accuracy*100) / 100
 	weapon.Damage = weaponProto.Damage
 	weapon.Curage = weaponProto.Curage
 	weapon.UnlockExp = weaponProto.UnlockExp

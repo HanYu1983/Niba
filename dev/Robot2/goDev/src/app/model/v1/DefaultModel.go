@@ -17,6 +17,20 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	DefaultModel.App.Lobby.Weapons = map[string]protocol.Weapon{
+		"lobbyWeapon_0": {
+			ID:      "lobbyWeapon_0",
+			ProtoID: "beam_mega1",
+		},
+		"lobbyWeapon_1": {
+			ID:      "lobbyWeapon_1",
+			ProtoID: "beam_sniper1",
+		},
+	}
+	DefaultModel.App.Lobby.RobotIDByWeaponID = map[string]string{
+		"lobbyWeapon_0": "0",
+		"lobbyWeapon_1": "0",
+	}
 	DefaultModel.App.Gameplay.AIModel = AIModel{}
 	DefaultModel.App.Money = 100000
 	DefaultModel.App.Gameplay.Map = tempMap

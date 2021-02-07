@@ -12,7 +12,7 @@ type RobotProto struct {
 	Hp          int
 	Weapons     []string
 	Components  []string
-	Suitability [4]float32
+	Suitability [4]float64
 	Transform   []string
 	UnlockExp   int
 }
@@ -20,10 +20,10 @@ type RobotProto struct {
 type PilotProto struct {
 	Title    string
 	Cost     int
-	Melee    float32
-	Range    float32
-	Evade    float32
-	Guard    float32
+	Melee    float64
+	Range    float64
+	Evade    float64
+	Guard    float64
 	ExpMelee int
 	ExpRange int
 	ExpEvade int
@@ -37,11 +37,11 @@ type WeaponProto struct {
 	Range          [2]int
 	EnergyCost     int
 	MaxBulletCount int
-	Suitablility   [4]float32
+	Suitablility   [4]float64
 	Ability        []string
 	EnergyType     string
 	Type           string
-	Accuracy       float32
+	Accuracy       float64
 	Damage         int
 	Curage         int
 	PowerCost      int
@@ -58,9 +58,9 @@ type ComponentProto struct {
 }
 type TerrainProto struct {
 	Title   string
-	Cost    float32
-	HitRate float32
-	Damage  float32
+	Cost    float64
+	HitRate float64
+	Damage  float64
 }
 
 type TerrainMappingProto struct {

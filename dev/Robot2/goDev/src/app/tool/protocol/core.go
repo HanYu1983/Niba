@@ -36,7 +36,7 @@ type Robot struct {
 	MaxEN       int
 	Cost        int
 	Power       int
-	Suitability [4]float32
+	Suitability [4]float64
 	UnlockExp   int
 }
 
@@ -52,10 +52,10 @@ type Pilot struct {
 	ProtoID string
 	// 以下是顯示用, 不能修改
 	Title    string
-	Melee    float32
-	Range    float32
-	Evade    float32
-	Guard    float32
+	Melee    float64
+	Range    float64
+	Evade    float64
+	Guard    float64
 	ExpMelee int
 	ExpRange int
 	ExpEvade int
@@ -72,11 +72,11 @@ type Weapon struct {
 	Range          [2]int
 	EnergyCost     int
 	MaxBulletCount int
-	Suitablility   [4]float32
+	Suitablility   [4]float64
 	Ability        []string
 	EnergyType     string
 	Type           string
-	Accuracy       float32
+	Accuracy       float64
 	Damage         int
 	Curage         int
 	UnlockExp      int
