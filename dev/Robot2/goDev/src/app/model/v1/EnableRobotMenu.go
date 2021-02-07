@@ -23,7 +23,7 @@ func EnableRobotMenu(origin model, robotID string, situation interface{}) (model
 		if tags.MoveCount == 0 {
 			options = append(options, []string{uidata.MenuOptionMove})
 		}
-		_, weapons, err := QueryRobotWeapons(v, robot)
+		weapons, err := QueryRobotWeapons(v, robot.ID, robot.Transform)
 		if err != nil {
 			return origin, err
 		}

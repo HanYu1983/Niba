@@ -14,7 +14,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		return origin, err
 	}
 
-	_, weapons, err := QueryRobotWeapons(v, robot)
+	weapons, err := QueryRobotWeapons(v, robot.ID, robot.Transform)
 	weapon, err := protocol.TryGetStringWeapon(weapons, weaponID)
 	if err != nil {
 		return origin, err
@@ -37,7 +37,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		//  敵人打好人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		_, weapons, err := QueryRobotWeapons(v, targetRobot)
+		weapons, err := QueryRobotWeapons(v, targetRobot.ID, targetRobot.Transform)
 		if err != nil {
 			return origin, err
 		}
@@ -60,7 +60,7 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 		// 好人打敵人
 		options := [][]string{}
 		rowFunctionMapping := map[int]int{}
-		_, weapons, err := QueryRobotWeapons(v, robot)
+		weapons, err := QueryRobotWeapons(v, robot.ID, robot.Transform)
 		if err != nil {
 			return origin, err
 		}
