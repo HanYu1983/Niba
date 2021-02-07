@@ -23,7 +23,7 @@ func QueryRobotMaxHp(model model, robotID string) (int, error) {
 	}
 	total := robotProto.Hp
 	for _, component := range components {
-		val := 0
+		val := 0.0
 		switch component.ProtoID {
 		case "armor1", "armor2", "armor3", "armor4", "armor5",
 			"beam_armor1", "beam_armor2", "beam_armor3", "beam_armor4", "beam_armor5",
@@ -31,12 +31,12 @@ func QueryRobotMaxHp(model model, robotID string) (int, error) {
 			if len(component.Value) != 2 {
 				return 0, fmt.Errorf("component value's len not right. %v", component)
 			}
-			val, err = strconv.Atoi(component.Value[0])
+			val, err = strconv.ParseFloat(component.Value[0], 10)
 			if err != nil {
 				return 0, fmt.Errorf("component value not right. (%v)", component)
 			}
 		}
-		total += val
+		total += int(val)
 	}
 	return total, nil
 }

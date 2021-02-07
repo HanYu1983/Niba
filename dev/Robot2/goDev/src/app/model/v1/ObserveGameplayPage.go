@@ -41,7 +41,15 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	gameplayPage.Positions = localPosDict
 	// robots
-	gameplayPage.Robots = model.App.Gameplay.Robots
+	localRobots := map[string]protocol.Robot{}
+	for ID, robot := range model.App.Gameplay.Robots {
+		robot, err := ObserveRobot(model, robot)
+		if err != nil {
+			return origin, err
+		}
+		localRobots[ID] = robot
+	}
+	gameplayPage.Robots = localRobots
 	// items
 	gameplayPage.Items = model.App.Gameplay.Items
 	// tags

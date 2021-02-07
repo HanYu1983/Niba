@@ -14,33 +14,21 @@ func QueryRobotWeapons(model model, robotID string, transform string) (protocol.
 	if weapons, has := robot.WeaponsByTransform[transform]; has {
 		return weapons, nil
 	}
-	weapons := protocol.Weapons{}
 	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
 	if err != nil {
 		return protocol.Weapons{}, err
 	}
-	for i, weaponID := range robotProto.Weapons {
-		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weaponID)
+	weapons := protocol.Weapons{}
+	for i, weaponProtoID := range robotProto.Weapons {
+		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weaponProtoID)
 		if err != nil {
 			return protocol.Weapons{}, err
 		}
 		instanceID := fmt.Sprintf("weapon_%v", i)
 		weapon := protocol.Weapon{
-			ID:             instanceID,
-			ProtoID:        weaponID,
-			BulletCount:    weaponProto.MaxBulletCount,
-			Title:          weaponProto.Title,
-			Range:          weaponProto.Range,
-			EnergyCost:     weaponProto.EnergyCost,
-			MaxBulletCount: weaponProto.MaxBulletCount,
-			Suitablility:   weaponProto.Suitablility,
-			Ability:        weaponProto.Ability,
-			EnergyType:     weaponProto.EnergyType,
-			Type:           weaponProto.Type,
-			Accuracy:       weaponProto.Accuracy,
-			Damage:         weaponProto.Damage,
-			Curage:         weaponProto.Curage,
-			UnlockExp:      weaponProto.UnlockExp,
+			ID:          instanceID,
+			ProtoID:     weaponProtoID,
+			BulletCount: weaponProto.MaxBulletCount,
 		}
 		weapons[weapon.ID] = weapon
 	}
@@ -55,23 +43,12 @@ func QueryRobotWeapons(model model, robotID string, transform string) (protocol.
 		}
 		instanceID := weapon.ID
 		weaponState := protocol.Weapon{
-			ID:             instanceID,
-			ProtoID:        weaponID,
-			BulletCount:    weaponProto.MaxBulletCount,
-			Title:          weaponProto.Title,
-			Range:          weaponProto.Range,
-			EnergyCost:     weaponProto.EnergyCost,
-			MaxBulletCount: weaponProto.MaxBulletCount,
-			Suitablility:   weaponProto.Suitablility,
-			Ability:        weaponProto.Ability,
-			EnergyType:     weaponProto.EnergyType,
-			Type:           weaponProto.Type,
-			Accuracy:       weaponProto.Accuracy,
-			Damage:         weaponProto.Damage,
-			Curage:         weaponProto.Curage,
-			UnlockExp:      weaponProto.UnlockExp,
+			ID:          instanceID,
+			ProtoID:     weaponID,
+			BulletCount: weaponProto.MaxBulletCount,
 		}
 		weapons[weaponID] = weaponState
 	}
+
 	return weapons, nil
 }

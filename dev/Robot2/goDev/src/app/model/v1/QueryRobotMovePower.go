@@ -28,11 +28,11 @@ func QueryRobotMovePower(model model, robotID string) (int, error) {
 			if len(component.Value) != 1 {
 				return 0, fmt.Errorf("component value's len not right. %v", component)
 			}
-			val, err := strconv.Atoi(component.Value[0])
+			val, err := strconv.ParseFloat(component.Value[0], 10)
 			if err != nil {
 				return 0, fmt.Errorf("component value not right. (%v)", component)
 			}
-			total += val
+			total += int(val)
 		}
 		total -= component.PowerCost
 	}

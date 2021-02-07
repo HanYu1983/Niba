@@ -5,87 +5,239 @@ const (
     "component": {
         "energy1": {
             "title": "能量夾L1",
-            "cost": 300,
+            "cost": 1000,
             "desc": "增加{0}能量.",
             "value": [
-                "40"
+                "25"
             ],
-            "powerCost": 3,
+            "powerCost": 2,
             "action": "equipment"
         },
         "energy2": {
             "title": "能量夾L2",
-            "cost": 400,
+            "cost": 2000,
             "desc": "增加{0}能量.",
             "value": [
-                "80"
-            ],
-            "powerCost": 4,
-            "action": "equipment"
-        },
-        "energy3": {
-            "title": "能量夾L3",
-            "cost": 500,
-            "desc": "增加{0}能量.",
-            "value": [
-                "120"
-            ],
-            "powerCost": 5,
-            "action": "equipment"
-        },
-        "armor1": {
-            "title": "裝甲L1",
-            "cost": 100,
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "100"
-            ],
-            "powerCost": 1,
-            "action": "equipment"
-        },
-        "armor2": {
-            "title": "裝甲L2",
-            "cost": 100,
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "200"
-            ],
-            "powerCost": 1,
-            "action": "equipment"
-        },
-        "armor3": {
-            "title": "裝甲L3",
-            "cost": 200,
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "300"
-            ],
-            "powerCost": 2,
-            "action": "equipment"
-        },
-        "armor4": {
-            "title": "裝甲L4",
-            "cost": 200,
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "400"
-            ],
-            "powerCost": 2,
-            "action": "equipment"
-        },
-        "armor5": {
-            "title": "裝甲L5",
-            "cost": 300,
-            "desc": "增加{0}裝甲.",
-            "value": [
-                "500"
+                "50"
             ],
             "powerCost": 3,
             "action": "equipment"
         },
+        "energy3": {
+            "title": "能量夾L3",
+            "cost": 3000,
+            "desc": "增加{0}能量.",
+            "value": [
+                "75"
+            ],
+            "powerCost": 4,
+            "action": "equipment"
+        },
+        "energy4": {
+            "title": "能量夾L4",
+            "cost": 4000,
+            "desc": "增加{0}能量.",
+            "value": [
+                "100"
+            ],
+            "powerCost": 5,
+            "action": "equipment"
+        },
+        "energy5": {
+            "title": "能量夾L5",
+            "cost": 5000,
+            "desc": "增加{0}能量.",
+            "value": [
+                "125"
+            ],
+            "powerCost": 6,
+            "action": "equipment"
+        },
+        "armor1": {
+            "title": "裝甲L1",
+            "cost": 1000,
+            "desc": "增加{0}耐久. 被實彈傷害-{1}",
+            "value": [
+                "500.0",
+                "100.0"
+            ],
+            "powerCost": 2,
+            "action": "equipment"
+        },
+        "armor2": {
+            "title": "裝甲L2",
+            "cost": 2000,
+            "desc": "增加{0}耐久. 被實彈傷害-{1}",
+            "value": [
+                "1000.0",
+                "200.0"
+            ],
+            "powerCost": 3,
+            "action": "equipment"
+        },
+        "armor3": {
+            "title": "裝甲L3",
+            "cost": 3000,
+            "desc": "增加{0}耐久. 被實彈傷害-{1}",
+            "value": [
+                "1500.0",
+                "300.0"
+            ],
+            "powerCost": 4,
+            "action": "equipment"
+        },
+        "armor4": {
+            "title": "裝甲L4",
+            "cost": 4000,
+            "desc": "增加{0}耐久. 被實彈傷害-{1}",
+            "value": [
+                "2000.0",
+                "400.0"
+            ],
+            "powerCost": 5,
+            "action": "equipment"
+        },
+        "armor5": {
+            "title": "裝甲L5",
+            "cost": 5000,
+            "desc": "增加{0}耐久. 被實彈傷害-{1}",
+            "value": [
+                "2500.0",
+                "500.0"
+            ],
+            "powerCost": 6,
+            "action": "equipment"
+        },
+        "beam_armor1": {
+            "title": "光束裝甲L1",
+            "cost": 1000,
+            "desc": "增加{0}耐久. 被光束傷害-{1}",
+            "value": [
+                "500.0",
+                "100.0"
+            ],
+            "powerCost": 2,
+            "action": "equipment"
+        },
+        "beam_armor2": {
+            "title": "光束裝甲L2",
+            "cost": 2000,
+            "desc": "增加{0}耐久. 被光束傷害-{1}",
+            "value": [
+                "1000.0",
+                "200.0"
+            ],
+            "powerCost": 3,
+            "action": "equipment"
+        },
+        "beam_armor3": {
+            "title": "光束裝甲L3",
+            "cost": 3000,
+            "desc": "增加{0}耐久. 被光束傷害-{1}",
+            "value": [
+                "1500.0",
+                "300.0"
+            ],
+            "powerCost": 4,
+            "action": "equipment"
+        },
+        "beam_armor4": {
+            "title": "光束裝甲L4",
+            "cost": 4000,
+            "desc": "增加{0}耐久. 被光束傷害-{1}",
+            "value": [
+                "2000.0",
+                "400.0"
+            ],
+            "powerCost": 5,
+            "action": "equipment"
+        },
+        "beam_armor5": {
+            "title": "光束裝甲L5",
+            "cost": 5000,
+            "desc": "增加{0}耐久. 被光束傷害-{1}",
+            "value": [
+                "2500.0",
+                "500.0"
+            ],
+            "powerCost": 6,
+            "action": "equipment"
+        },
+        "fire_armor": {
+            "title": "防火裝甲",
+            "cost": 2000,
+            "desc": "增加{0}耐久. 不受火焰武器影響. 被火焰傷害-{1}",
+            "value": [
+                "500.0",
+                "1000.0"
+            ],
+            "powerCost": 2,
+            "action": "equipment"
+        },
+        "lighting_armor": {
+            "title": "防電裝甲",
+            "cost": 2000,
+            "desc": "增加{0}耐久. 不受雷電武器影響. 被雷電傷害-{1}",
+            "value": [
+                "500.0",
+                "1000.0"
+            ],
+            "powerCost": 2,
+            "action": "equipment"
+        },
+        "engine1": {
+            "title": "引擎L1",
+            "cost": 1000,
+            "desc": "增加{0}power",
+            "value": [
+                "5"
+            ],
+            "powerCost": 0,
+            "action": "equipment"
+        },
+        "engine2": {
+            "title": "引擎L2",
+            "cost": 2000,
+            "desc": "增加{0}power",
+            "value": [
+                "10"
+            ],
+            "powerCost": 0,
+            "action": "equipment"
+        },
+        "engine3": {
+            "title": "引擎L3",
+            "cost": 3000,
+            "desc": "增加{0}power",
+            "value": [
+                "15"
+            ],
+            "powerCost": 0,
+            "action": "equipment"
+        },
+        "engine4": {
+            "title": "引擎L4",
+            "cost": 4000,
+            "desc": "增加{0}power",
+            "value": [
+                "20"
+            ],
+            "powerCost": 0,
+            "action": "equipment"
+        },
+        "engine5": {
+            "title": "引擎L5",
+            "cost": 5000,
+            "desc": "增加{0}power",
+            "value": [
+                "25"
+            ],
+            "powerCost": 0,
+            "action": "equipment"
+        },
         "fixPack": {
             "title": "修復包",
-            "cost": 100,
+            "cost": 1000,
             "desc": "回復{0}HP",
             "value": [
                 "3000"
@@ -95,7 +247,7 @@ const (
         },
         "energyPack": {
             "title": "能量包",
-            "cost": 100,
+            "cost": 1000,
             "desc": "回復{0}EN",
             "value": [
                 "80"
@@ -105,52 +257,44 @@ const (
         },
         "bulletPack": {
             "title": "彈夾",
-            "cost": 100,
+            "cost": 1000,
             "desc": "所有彈藥類武器彈數補充{0}",
             "value": [
-                "2"
+                "3"
             ],
             "powerCost": 1,
             "action": "item"
         },
-        "beamCoating": {
-            "title": "光束鍍層",
-            "cost": 500,
-            "desc": "吸收光束{0}",
-            "value": [
-                "2000"
-            ],
-            "powerCost": 5,
-            "action": "equipment"
-        },
         "shield": {
             "title": "盾",
-            "cost": 500,
-            "desc": "機率{0}自動防禦",
+            "cost": 1000,
+            "desc": "機率{0}被實彈傷害-{1}.",
             "value": [
-                "0.5"
+                "0.2",
+                "3000"
             ],
             "powerCost": 5,
             "action": "equipment"
         },
-        "engine": {
-            "title": "引擎",
-            "cost": 200,
-            "desc": "增加{0}power",
+        "beam_shield": {
+            "title": "光束盾",
+            "cost": 1000,
+            "desc": "機率{0}被光束傷害-{1}.",
             "value": [
-                "7"
+                "0.2",
+                "3000"
             ],
-            "powerCost": 2,
+            "powerCost": 5,
             "action": "equipment"
         },
         "psArmor": {
             "title": "ps裝甲",
-            "cost": 500,
-            "desc": "實彈系傷害減少{0}",
+            "cost": 3000,
+            "desc": "被實彈傷害-{1}",
             "value": [
-                "3000"
+                "1000"
             ],
-            "powerCost": 5,
+            "powerCost": 2,
             "action": "equipment"
         },
         "zeroSystem": {
