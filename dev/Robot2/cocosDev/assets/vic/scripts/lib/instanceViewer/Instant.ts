@@ -48,7 +48,8 @@ export class Instant extends Component implements IInstant {
         }else{
 
             // 移開到畫面外，代替 active = false 的操作
-            // this.node.setPosition(this.outOfWorld);
+            // 同時把縮放及位置都設定，確保一定消失于場景上
+            this.node.setPosition(this.outOfWorld);
             this.node.setScale(Vec3.ZERO);
         }
         this.childs.forEach(item=>item.getComponent(Instant)?.clear());
@@ -64,7 +65,8 @@ export class Instant extends Component implements IInstant {
                 if(!this.node.active) this.node.active = true;
 
                 // 回到editor裏設定的位置
-                // this.node.setPosition(this.cachePos);
+                // 同時把縮放及位置都設定
+                this.node.setPosition(this.cachePos);
                 this.node.setScale(new Vec3(1,1,1));
             }
             

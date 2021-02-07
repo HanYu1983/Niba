@@ -33,8 +33,7 @@ export class UnitMenu extends InstMenu {
         super.doBuild(content, data);
         
         const cursor = data.GameplayPages["10"].Cursor;
-        let gridPos = Grids.getGridPos(cursor[0], cursor[1]);
-        gridPos.x += 100;
+        let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 100, 0);
         this.node.setPosition(gridPos);
     }
 }

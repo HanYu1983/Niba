@@ -8,6 +8,7 @@
 import { _decorator, Component, Node } from 'cc';
 import { Instant } from './lib/instanceViewer/Instant';
 import * as ModelType from '../../han/types';
+import { Grids } from './gamePage/Grids';
 const { ccclass, property } = _decorator;
 
 @ccclass('Drawer')
@@ -127,5 +128,14 @@ export class Drawer extends Instant {
             ]
         }
         return null;
+    }
+
+    static getUnitMenuGroupPosition(x:number, y:number, offsetX:number = 0, offsetY:number = 0){
+        let gridPos = Grids.getGridPos(x, y);
+        gridPos.x += offsetX;
+        gridPos.y += offsetY;
+        if(x > 10)  gridPos.x -= 380;
+        if(y > 10)  gridPos.y += 340;
+        return gridPos;
     }
 }
