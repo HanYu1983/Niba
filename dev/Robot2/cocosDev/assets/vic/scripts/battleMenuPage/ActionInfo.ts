@@ -45,11 +45,11 @@ export class ActionInfo extends Instant {
             case ModelType.BattleAction.BattleActionAttack:
                 this.action.string = "攻擊";
                 break;
-            case ModelType.BattleAction.BattleActionEvade:
-                this.action.string = "回避";
-                break;
             case ModelType.BattleAction.BattleActionGuard:
                 this.action.string = "防禦";
+                break;
+            case ModelType.BattleAction.BattleActionEvade:
+                this.action.string = "回避";
                 break;
         }
     }

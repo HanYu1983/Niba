@@ -71,10 +71,7 @@ export class WeaponInfo extends Instant {
                 this.curage.string = currentWeapon.Curage;
 
                 const cursor = data.GameplayPages["10"].Cursor;
-                let gridPos = Grids.getGridPos(cursor[0], cursor[1]);
-                gridPos.x += 100;
-                gridPos.y -= 300;
-                
+                let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 265, 0);
                 this.node.setPosition(gridPos);
             }
         }

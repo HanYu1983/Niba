@@ -71,10 +71,16 @@ export class LandMap extends Instant {
 
             switch(type){
                 case ModelType.BattleResultType.BattleResultTypePending:
-                    actions.push(tween().call(()=>{
-                        console.log("BattleResultTypePending");
-                        console.log(robotAfter);
-                    }).delay(1));
+                    // actions.push(tween().call(()=>{
+                    //     console.log("BattleResultTypePending");
+                    //     console.log(robotAfter);
+                    // }).delay(1));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeAim:
+                    // actions.push(tween().call(()=>{
+                    //     console.log("BattleResultTypePending");
+                    //     console.log(robotAfter);
+                    // }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeWeapon:
                     actions.push(tween().call(()=>{
@@ -83,7 +89,6 @@ export class LandMap extends Instant {
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
                         unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
-
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeDamage:
