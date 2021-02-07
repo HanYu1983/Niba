@@ -10,7 +10,7 @@ import (
 )
 
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
-	//var err error
+	var err error
 	ctx := origin
 	model := ctx.Model.(model)
 	gameplayPage := ctx.GameplayPages[id]
@@ -41,15 +41,10 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	gameplayPage.Positions = localPosDict
 	// robots
-	localRobots := map[string]protocol.Robot{}
-	for ID, robot := range model.App.Gameplay.Robots {
-		robot, err := ObserveRobot(model, robot)
-		if err != nil {
-			return origin, err
-		}
-		localRobots[ID] = robot
+	gameplayPage.Robots, err = ObserveRobots(model, model.App.Gameplay.Robots)
+	if err != nil {
+		return origin, err
 	}
-	gameplayPage.Robots = localRobots
 	// items
 	gameplayPage.Items = model.App.Gameplay.Items
 	// tags

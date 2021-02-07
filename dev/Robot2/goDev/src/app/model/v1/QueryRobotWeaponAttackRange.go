@@ -8,7 +8,11 @@ import (
 
 func QueryRobotWeaponAttackRange(model model, robot protocol.Robot, weapon protocol.Weapon, offset protocol.Position) ([]protocol.Position, error) {
 	var err error
-	attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, weapon.Range[0], weapon.Range[1], protocol.Position{})
+	weaponRange, err := QueryRobotWeaponRange(model, robot, weapon)
+	if err != nil {
+		return nil, err
+	}
+	attackRange, err := helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, weaponRange[0], weaponRange[1], protocol.Position{})
 	if err != nil {
 		return nil, err
 	}

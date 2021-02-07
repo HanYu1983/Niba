@@ -11,7 +11,7 @@ func ObserveWeapon(model model, robot protocol.Robot, weapon protocol.Weapon) (p
 		return protocol.Weapon{}, err
 	}
 	weapon.Title = weaponProto.Title
-	weapon.Range, err = QueryRobotWeaponRange(model, robot.ID, robot.Transform, weapon)
+	weapon.Range, err = QueryRobotWeaponRange(model, robot, weapon)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}

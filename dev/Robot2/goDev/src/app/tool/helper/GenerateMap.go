@@ -65,7 +65,6 @@ func GenerateMap(config GenerateMapConfig, seed int, offset int, very float32, w
 		v := obj.Index(i)
 		ary = append(ary, v.Int())
 	}
-	fmt.Printf("xxxxxxxxxx(%v)\n", ary)
 	ret := [][]int{}
 	for y := 0; y < h; y++ {
 		ret = append(ret, ary[y*w:(y*w)+w])

@@ -14,7 +14,7 @@ func Main() {
 	log.Category[protocol.LogCategoryPhase] = true
 	log.Category[protocol.LogCategoryDetail] = true
 	log.Category[protocol.LogCategoryWarning] = true
-	log.Category[protocol.LogCategoryRender] = false
+	log.Category[protocol.LogCategoryRender] = true
 	view := def.View
 	ui := def.DefaultUI
 	ui.Model = v1.DefaultModel

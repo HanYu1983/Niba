@@ -20,11 +20,9 @@ func ObserveRobot(model model, robot protocol.Robot) (protocol.Robot, error) {
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	for ID, weapon := range weapons {
-		weapons[ID], err = ObserveWeapon(model, robot, weapon)
-		if err != nil {
-			return protocol.Robot{}, err
-		}
+	weapons, err = ObserveWeapons(model, robot, weapons)
+	if err != nil {
+		return protocol.Robot{}, err
 	}
 	robot.MaxHP = maxHP
 	robot.MaxEN = maxEn

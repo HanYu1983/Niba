@@ -15,7 +15,10 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	options := [][]string{}
 	switch menuID {
 	case uidata.Menu2DUnitMenu:
-		unitMenuModel := GetRobotMenu(model)
+		unitMenuModel, err := ObserveRobotMenu(model, GetRobotMenu(model))
+		if err != nil {
+			return origin, err
+		}
 		if unitMenuModel.Active {
 			options = unitMenuModel.Options
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
