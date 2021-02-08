@@ -90,6 +90,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	} else {
 		gameplayPage.AttackRange = []protocol.Position{}
 	}
+
 	// unit menu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
 	// battle menu

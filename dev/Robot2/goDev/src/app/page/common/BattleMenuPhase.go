@@ -77,14 +77,23 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			}
 			break
 		}
+		ctx, err = ObservePage(ctx, uidata.PageGameplay)
+		if err != nil {
+			return origin, false, err
+		}
 		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
-			targetRobotAction := protocol.BattleMenuActionAttack
+			battleMenus, hasBattleMenu := ctx.BattleMenus[uidata.BattleMenuUnitBattleMenu]
+			if hasBattleMenu == false {
+				return origin, false, fmt.Errorf("戰鬥階段時uidata.BattleMenuUnitBattleMenu必須存在")
+			}
+			targetRobotAction := battleMenus.Right.BattleAction
+			targetRobotWeapon := battleMenus.Right.Weapon
 			var result protocol.BattleResult
-			ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, "")
+			ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeapon.ID)
 			if err != nil {
 				return origin, false, err
 			}
