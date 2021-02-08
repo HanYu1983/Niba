@@ -2,10 +2,82 @@ package v1
 
 import (
 	"app/tool"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
 	"tool/log"
 )
+
+func NewModel(origin model, situation interface{}) (model, error) {
+	ctx := origin
+	const (
+		playerAI1 = "ai1"
+	)
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
+	if err != nil {
+		panic(err)
+	}
+	ctx.App.Lobby.Weapons = map[string]protocol.Weapon{
+		"lobbyWeapon_0": {
+			ID:      "lobbyWeapon_0",
+			ProtoID: "beam_mega1",
+		},
+		"lobbyWeapon_1": {
+			ID:      "lobbyWeapon_1",
+			ProtoID: "beam_sniper1",
+		},
+	}
+	ctx.App.Lobby.RobotIDByWeaponID = map[string]string{
+		"lobbyWeapon_0": "0",
+		"lobbyWeapon_1": "0",
+	}
+	ctx.App.Gameplay.AIModel = AIModel{}
+	ctx.App.Money = 100000
+	ctx.App.Gameplay.Map = tempMap
+	ctx.App.Gameplay.Units = []string{"0", "1"}
+	ctx.App.Gameplay.Players = map[string]protocol.Player{
+		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
+		playerAI1:               {ID: playerAI1, GroupID: "1"},
+	}
+	ctx.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
+	ctx.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
+	ctx.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
+		ID:                 "0",
+		ProtoID:            "gundam",
+		PlayerID:           protocol.PlayerIDPlayer,
+		Title:              "gundam",
+		Transform:          "gundam",
+		WeaponsByTransform: map[string]protocol.Weapons{},
+	}, "1": {
+		ID:                 "1",
+		ProtoID:            "gundam",
+		PlayerID:           protocol.PlayerIDPlayer,
+		Transform:          "gundam",
+		WeaponsByTransform: map[string]protocol.Weapons{},
+	}, "2": {
+		ID:                 "2",
+		ProtoID:            "gundam",
+		PlayerID:           playerAI1,
+		Title:              "playerAI1",
+		Transform:          "gundam",
+		WeaponsByTransform: map[string]protocol.Weapons{},
+	}, "3": {
+		ID:                 "3",
+		ProtoID:            "gundam",
+		PlayerID:           playerAI1,
+		Title:              "playerAI1",
+		Transform:          "gundam",
+		WeaponsByTransform: map[string]protocol.Weapons{},
+	}}
+	ctx.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {10, 10}, "2": {10, 0}, "3": {0, 10}}
+	return ctx, nil
+}
+func Save(origin model) error {
+	return nil
+}
+func Load(origin model) (model, error) {
+	return origin, nil
+}
 
 func QueryActivePlayer(origin model) (protocol.Player, error) {
 	return protocol.TryGetStringPlayer(origin.App.Gameplay.Players, origin.App.Gameplay.ActivePlayerID)
@@ -133,12 +205,6 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		return origin, protocol.BattleResult{}, err
 	}
 	results := []protocol.BattleAnimation{}
-	// aim
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeAim,
-		AimPosition: [2]protocol.Position{robotPos, targetRobotPos},
-	})
-	// shoot
 	results = append(results, protocol.BattleAnimation{
 		Type:        protocol.BattleResultTypeWeapon,
 		RobotBefore: robot,

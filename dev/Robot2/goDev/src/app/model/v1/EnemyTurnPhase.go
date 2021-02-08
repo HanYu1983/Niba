@@ -126,6 +126,46 @@ func QueryPotentialTarget(model model, robot protocol.Robot, transform string, w
 	return ret, nil
 }
 
+func MoveRobotAndRender(origin uidata.UI, robot protocol.Robot, targetPosition protocol.Position, path []protocol.Position) (uidata.UI, error) {
+	var err error
+	ctx := origin
+	view := def.View
+	ctx.Model, err = ctx.Model.RobotMove(robot.ID, targetPosition)
+	if err != nil {
+		return origin, err
+	}
+	view.RenderRobotMove(ctx, robot.ID, path)
+	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+	if err != nil {
+		return origin, err
+	}
+	view.Render(ctx)
+	return ctx, nil
+}
+
+func RenderRobotAim(origin uidata.UI, fromRobot string, toRobot string) error {
+	var err error
+	ctx := origin
+	view := def.View
+	fromPos, err := protocol.TryGetStringPosition(ctx.Model.(model).App.Gameplay.Positions, fromRobot)
+	if err != nil {
+		return err
+	}
+	toPos, err := protocol.TryGetStringPosition(ctx.Model.(model).App.Gameplay.Positions, toRobot)
+	if err != nil {
+		return err
+	}
+	view.RenderRobotBattle(ctx, protocol.BattleResult{
+		Animations: []protocol.BattleAnimation{
+			{
+				Type:        protocol.BattleResultTypeAim,
+				AimPosition: [2]protocol.Position{fromPos, toPos},
+			},
+		},
+	})
+	return nil
+}
+
 func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, error) {
 	var err error
 	var cancel bool
@@ -163,17 +203,15 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			if isCanMove {
-				ctx.Model, err = ctx.Model.RobotMove(robot.ID, targetPosition)
+				ctx, err = MoveRobotAndRender(ctx, robot, targetPosition, helper.MoveRangeTree2Path(tree, targetPosition))
 				if err != nil {
 					return origin, false, err
 				}
-				view.RenderRobotMove(ctx, robot.ID, helper.MoveRangeTree2Path(tree, targetPosition))
-				ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
-				if err != nil {
-					return origin, false, err
-				}
-				view.Render(ctx)
 			}
+			// err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
+			// if err != nil {
+			// 	return origin, false, err
+			// }
 			for {
 				ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, potentail.DesireWeapon.ID, potentail.DesireUnitID)
 				if err != nil {

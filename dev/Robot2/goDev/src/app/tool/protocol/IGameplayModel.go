@@ -11,6 +11,9 @@ type IGameplayModel interface {
 	// gameplay
 	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)
 	OnPlayerTurnEnd(ctx interface{}, player Player) (interface{}, error)
+	New(situation interface{}) (IModel, error)
+	Save() error
+	Load() (IModel, error)
 	QueryActivePlayer() (Player, error)
 	NextPlayer() (IModel, error)
 	IsDone() bool
