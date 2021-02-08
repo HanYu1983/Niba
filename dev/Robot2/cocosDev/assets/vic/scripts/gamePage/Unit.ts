@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, Vec3, Vec2, Sprite, tween, Color } from 'cc';
+import { _decorator, Component, Node, Vec3, Vec2, Sprite, tween, Color, Label } from 'cc';
 import { ImageChanger } from '../lib/ImageChanger';
 const { ccclass, property, requireComponent } = _decorator;
 
@@ -15,6 +15,9 @@ export class Unit extends Component {
 
     @property(Node)
     airLand:Node = null;
+
+    @property(Label)
+    lblAction:Label = null;
 
     @property(Sprite)
     HPBar:Sprite = null;
@@ -41,6 +44,7 @@ export class Unit extends Component {
         // this.isAir(true);
 
         this.hideHPEN();
+        this.hideAction();
     }
 
     showColor(side:number){
@@ -53,6 +57,14 @@ export class Unit extends Component {
 
     isAir(air:boolean){
         this.airLand.setPosition(air ? this.airPos : Vec3.ZERO);
+    }
+
+    showAction(action:string){
+        this.lblAction.string = action;
+    }
+
+    hideAction(){
+        this.lblAction.string = "";
     }
     
     hideHPEN(){
