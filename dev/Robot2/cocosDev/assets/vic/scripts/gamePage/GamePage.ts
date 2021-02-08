@@ -39,6 +39,11 @@ export class GamePage extends BasicPage {
             turnChange.getComponent(TurnChange)?.setTitleAndColor("敵軍回合開始", 1);
         }
     }
+
+    showMsg(msg:string){
+        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, ()=>{});
+        turnChange.getComponent(TurnChange)?.setTitleAndColor(msg, 2);
+    }
    
     protected doBuild(content:any, data:any):void{
         super.doBuild(content, data);

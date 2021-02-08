@@ -58,7 +58,10 @@ export class Controller extends Component {
             }
         },
         Alert: (msg: string) => {
-            alert(msg)
+            if(this.isTargetDevice()){
+                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
+                gamePage?.getComponent(GamePage)?.showMsg(msg);
+            }
         },
     }
 
