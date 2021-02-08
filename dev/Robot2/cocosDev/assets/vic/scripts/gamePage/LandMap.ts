@@ -13,6 +13,7 @@ import { Units } from './Units';
 import * as ModelType from '../../../han/types';
 import { Unit } from './Unit';
 import { Drawer } from '../Drawer';
+import { Explode } from './Explode';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -98,12 +99,15 @@ export class LandMap extends Instant {
 
                         const pos = unitView.getComponent(Unit)?.node.position;
                         if(pos){
-                            this.effects.createEffect(0, pos);
+                            const explode = this.effects.createEffect(0, pos);
+                            explode.getComponent(Explode)?.setDamage(anim.Damage);
                         }
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:
                     actions.push(tween().call(()=>{
+                        this.aimNode.node.setScale(Vec3.ZERO);
+
                         console.log("BattleResultTypeEvade");
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
@@ -111,10 +115,27 @@ export class LandMap extends Instant {
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeGuard:
+
                     actions.push(tween().call(()=>{
-                        console.log(robotAfter);
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showAction("防禦");
+                    }).delay(.5));
+
+                    actions.push(tween().call(()=>{
                         console.log("BattleResultTypeGuard");
-                    }).delay(2));
+
+                        this.aimNode.node.setScale(Vec3.ZERO);
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Animation)?.play("shake");
+                        unitView.getComponent(Unit)?.hideAction();
+
+                        const pos = unitView.getComponent(Unit)?.node.position;
+                        if(pos){
+                            const explode = this.effects.createEffect(0, pos);
+                            explode.getComponent(Explode)?.setDamage(anim.Damage);
+                        }
+                    }).delay(1));
                     break;
             }
         });
