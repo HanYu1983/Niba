@@ -12,6 +12,7 @@ import { Grids } from './Grids';
 import { Units } from './Units';
 import * as ModelType from '../../../han/types';
 import { Unit } from './Unit';
+import { Drawer } from '../Drawer';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -26,61 +27,56 @@ export class LandMap extends Instant {
     @property(Sprite)
     cursor:Sprite = null;
 
+    @property(Sprite)
+    aimNode:Sprite = null;
+
     @property(EffectGenerator)
     effects:EffectGenerator = null;
 
     clear(){
+        super.clear();
         this.grids.clear();
         this.units.clear();
+
+        this.aimNode.node.setScale(Vec3.ZERO);
     }
 
     doBuild(content:any, data:any):void{
         this.grids.build(content);
         this.units.build(content);
         this.setCursor(content.Cursor);
-
-        // test effect
-        // tween(this.node).delay(2).call(()=>{
-        //     this.effects.build([[0, Grids.getGridPos(2,3)]]);
-        // }).start();
     }
 
     setCursor(cursor:any){
         const cursorPos = Grids.getGridPos(cursor[0], cursor[1]);
+        this.cursor.node.setScale(Vec3.ONE);
         this.cursor.node.setPosition(cursorPos);
     }
 
     playBattleAnimation(result:any, cb:()=>void){
-        console.log(result);
         const anims = result.Animations;
 
-        console.log(anims);
+        this.cursor.node.setScale(Vec3.ZERO);
         
-        let actions = [
-            tween().call(()=>{
-                console.log("play aim animation");
-            }).delay(1)
-        ];
-        
+        let actions = [];
         anims.forEach(anim => {
-            // console.log(anim);
-
             const type = anim.Type;
             const robotBefore = anim.RobotBefore;
             const robotAfter = anim.RobotAfter;
 
             switch(type){
                 case ModelType.BattleResultType.BattleResultTypePending:
-                    // actions.push(tween().call(()=>{
-                    //     console.log("BattleResultTypePending");
-                    //     console.log(robotAfter);
-                    // }).delay(1));
+                    // 不用處理
                     break;
                 case ModelType.BattleResultType.BattleResultTypeAim:
-                    // actions.push(tween().call(()=>{
-                    //     console.log("BattleResultTypePending");
-                    //     console.log(robotAfter);
-                    // }).delay(1));
+
+                    actions.push(tween().call(()=>{
+                        this.aimNode.node.setScale(Vec3.ONE);
+                        const from = anim.AimPosition[0];
+                        const to = anim.AimPosition[1];
+                        this.aimNode.node.setPosition(Grids.getGridPos(from[0], from[1])); 
+                        tween(this.aimNode.node).to(1, {position:Grids.getGridPos(to[0], to[1])}, {easing:"expoOut"}).start();
+                    }).delay(.5));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeWeapon:
                     actions.push(tween().call(()=>{
@@ -94,6 +90,8 @@ export class LandMap extends Instant {
                 case ModelType.BattleResultType.BattleResultTypeDamage:
                     actions.push(tween().call(()=>{
                         console.log("BattleResultTypeDamage");
+
+                        this.aimNode.node.setScale(Vec3.ZERO);
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Animation)?.play("shake");

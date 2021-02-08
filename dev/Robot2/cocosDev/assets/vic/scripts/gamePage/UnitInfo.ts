@@ -9,19 +9,18 @@ import { _decorator, Component, Node, Label, Sprite } from 'cc';
 import { Instant } from '../lib/instanceViewer/Instant';
 import { ValueBar } from '../lib/ValueBar';
 import *  as ModelType from '../../../han/types';
-const { ccclass, property } = _decorator;
+import { ImageChanger } from '../lib/ImageChanger';
+const { ccclass, property, requireComponent } = _decorator;
+
 
 @ccclass('UnitInfo')
+@requireComponent(ImageChanger)
 export class UnitInfo extends Instant {
-
     @property(Label)
     title:Label = null;
 
     @property(Label)
     exp:Label = null;
-
-    @property(Sprite)
-    robotImage:Sprite = null;
 
     @property(ValueBar)
     hpValueBar:ValueBar = null;
@@ -46,5 +45,7 @@ export class UnitInfo extends Instant {
 
         this.enValueBar.maxValue = robot.MaxEN;
         this.enValueBar.setValue(robot.EN);
+
+        this.node.getComponent(ImageChanger)?.changeImage(0, robot.ProtoID);
     }
 }
