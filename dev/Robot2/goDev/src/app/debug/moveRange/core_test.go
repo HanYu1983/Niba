@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"testing"
 	"time"
+	"tool/log"
 )
 
 var (
@@ -39,12 +40,16 @@ func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 
 }
 
+func (p Mock) RenderTurnStart(ui uidata.UI, player protocol.Player) {
+
+}
+
 func (p Mock) Alert(msg string) {
 	fmt.Printf("[Alert]%v\n", msg)
 }
 
 var (
-	mockModel = v1.DefaultModel
+	mockModel = v1.Model
 )
 
 func init() {
@@ -58,12 +63,27 @@ func init() {
 		}
 		temp = append(temp, row)
 	}
+	const (
+		playerAI1 = "ai1"
+	)
+	mockModel.App.Gameplay.Players = map[string]protocol.Player{
+		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
+		playerAI1:               {ID: playerAI1, GroupID: "1"},
+	}
+	mockModel.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
+	mockModel.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
 	mockModel.App.Gameplay.Map = temp
 	mockModel.App.Gameplay.Units = []string{"0", "1"}
 	mockModel.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
-		ProtoID: "gundam",
+		ID:                 "0",
+		ProtoID:            "gundam",
+		PlayerID:           protocol.PlayerIDPlayer,
+		WeaponsByTransform: map[string]protocol.Weapons{},
 	}, "1": {
-		ProtoID: "gundam",
+		ID:                 "1",
+		ProtoID:            "gundam",
+		PlayerID:           protocol.PlayerIDPlayer,
+		WeaponsByTransform: map[string]protocol.Weapons{},
 	}}
 	mockModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 
@@ -71,6 +91,7 @@ func init() {
 }
 
 func TestMoveRange(t *testing.T) {
+	log.Category[protocol.LogCategoryPhase] = true
 	ui := def.DefaultUI
 	ui.Model = mockModel
 	wait := make(chan interface{})
@@ -103,7 +124,7 @@ func TestMoveRange(t *testing.T) {
 		t.Error("必須有選單")
 	}
 	if unitMenu.Options[0][0] != uidata.MenuOptionMove {
-		t.Error("第一個必須選項是移動")
+		t.Error("第一個選項必須是移動")
 	}
 	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)

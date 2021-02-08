@@ -8,6 +8,7 @@ import (
 	"app/tool/uidata"
 	"testing"
 	"time"
+	"tool/log"
 )
 
 var (
@@ -38,6 +39,10 @@ func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 
 }
 
+func (p Mock) RenderTurnStart(ui uidata.UI, player protocol.Player) {
+
+}
+
 func (p Mock) Alert(msg string) {
 
 }
@@ -47,8 +52,9 @@ func init() {
 }
 
 func TestStartPagePhaseBasic(t *testing.T) {
+	log.Category[protocol.LogCategoryPhase] = true
 	ui := def.DefaultUI
-	ui.Model = v1.DefaultModel
+	ui.Model = v1.Model
 	wait := make(chan interface{})
 	go func() {
 		_, err := title.StartPagePhase(ui)

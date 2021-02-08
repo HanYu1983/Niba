@@ -84,6 +84,10 @@ func QueryActivePlayer(origin model) (protocol.Player, error) {
 }
 func NextPlayer(origin model) (model, error) {
 	ctx := origin
+	var notFound string
+	if ctx.App.Gameplay.ActivePlayerID == notFound {
+		return origin, fmt.Errorf("[model] you must set ActivePlayerID first.")
+	}
 	i := tool.FindStringIndex(ctx.App.Gameplay.PlayerOrder, ctx.App.Gameplay.ActivePlayerID)
 	if i == -1 {
 		return origin, fmt.Errorf("[model]activePlayer(%v) not found.", i)
