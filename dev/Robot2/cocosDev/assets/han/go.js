@@ -32557,6 +32557,7 @@ $packages["app/model/v1"] = (function() {
 									$s = 22; continue;
 								/* } else if (selection === "MenuOptionUnitEvade") { */ case 20:
 									menu.Right.BattleAction = 3;
+									menu.Left.Info.HitRate = hitRate / 2;
 									$s = 22; continue;
 								/* } else { */ case 21:
 									_r$3 = fmt.Errorf("unknown action. unitMenu(%+v)", new sliceType$6([new unitMenu.constructor.elem(unitMenu)])); /* */ $s = 23; case 23: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
@@ -34602,7 +34603,7 @@ $packages["app/page/gameplay"] = (function() {
 	mapType$7 = $mapType($String, protocol.Component);
 	mapType$8 = $mapType($String, $String);
 	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$8, tag: ""}]);
-	arrayType$3 = $arrayType($Float32, 4);
+	arrayType$3 = $arrayType($Float64, 4);
 	sliceType$5 = $sliceType($Int);
 	EnemyTurnPhase = function(origin) {
 		var _r, _tuple, cancel, ctx, err, origin, $s, $r;
@@ -35268,7 +35269,7 @@ $packages["app/page/gameplay"] = (function() {
 			$s = -1; return [origin, false, err];
 		}
 		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$1.nil, sliceType$1.nil, new protocol.RobotMenu.ptr(false, "", sliceType$2.nil, false, false, false, false))), uidata.GameplayPage);
-		_tuple$1 = (_entry$1 = gameplayPage.Robots[$String.keyFor(unitID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Robot.ptr("", "", "", "", false, "", "", 0, 0, 0, 0, 0, 0, sliceType.nil, sliceType.nil, arrayType$3.zero(), 0), false]);
+		_tuple$1 = (_entry$1 = gameplayPage.Robots[$String.keyFor(unitID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, arrayType$3.zero(), 0), false]);
 		robot = $clone(_tuple$1[0], protocol.Robot);
 		is = _tuple$1[1];
 		/* */ if (is) { $s = 4; continue; }

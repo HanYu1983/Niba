@@ -95,6 +95,8 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 				case selection == uidata.MenuOptionUnitEvade:
 					// 重設我方動作
 					menu.Right.BattleAction = protocol.BattleMenuActionEvade
+					// 對方命中率除2
+					menu.Left.Info.HitRate = hitRate / 2
 				default:
 					return origin, fmt.Errorf("unknown action. unitMenu(%+v)", unitMenu)
 				}
