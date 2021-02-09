@@ -5,17 +5,19 @@ import (
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
+	"math/rand"
 	"tool/log"
 )
 
 func NewModel(origin model, situation interface{}) (model, error) {
+	rand.Seed(0)
 	ctx := origin
 	const (
 		playerAI1 = "ai1"
 	)
 	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
 	if err != nil {
-		panic(err)
+		return origin, err
 	}
 	ctx.App.Lobby.Weapons = map[string]protocol.Weapon{
 		"lobbyWeapon_0": {
@@ -41,35 +43,42 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	}
 	ctx.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
 	ctx.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
-	ctx.App.Gameplay.Robots = map[string]protocol.Robot{"0": {
-		ID:                 "0",
-		ProtoID:            "gundam",
-		PlayerID:           protocol.PlayerIDPlayer,
-		Title:              "gundam",
-		Transform:          "gundam",
-		WeaponsByTransform: map[string]protocol.Weapons{},
-	}, "1": {
-		ID:                 "1",
-		ProtoID:            "gundam",
-		PlayerID:           protocol.PlayerIDPlayer,
-		Transform:          "gundam",
-		WeaponsByTransform: map[string]protocol.Weapons{},
-	}, "2": {
-		ID:                 "2",
-		ProtoID:            "gundam",
-		PlayerID:           playerAI1,
-		Title:              "playerAI1",
-		Transform:          "gundam",
-		WeaponsByTransform: map[string]protocol.Weapons{},
-	}, "3": {
-		ID:                 "3",
-		ProtoID:            "gundam",
-		PlayerID:           playerAI1,
-		Title:              "playerAI1",
-		Transform:          "gundam",
-		WeaponsByTransform: map[string]protocol.Weapons{},
-	}}
-	ctx.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {10, 10}, "2": {10, 0}, "3": {0, 10}}
+	ctx.App.Gameplay.Pilots = map[string]protocol.Pilot{
+		"pilotA": {ID: "pilotA"},
+	}
+	ctx, err = NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
+		ID:       "0",
+		ProtoID:  "gundam",
+		PlayerID: protocol.PlayerIDPlayer,
+		PilotID:  "pilotA",
+	})
+	if err != nil {
+		return origin, err
+	}
+	ctx, err = NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
+		ProtoID:  "gundam",
+		PlayerID: protocol.PlayerIDPlayer,
+		PilotID:  "pilotA",
+	})
+	if err != nil {
+		return origin, err
+	}
+	ctx, err = NewRobot(ctx, protocol.Position{10, 0}, protocol.Robot{
+		ProtoID:  "gundam",
+		PlayerID: playerAI1,
+		PilotID:  "pilotA",
+	})
+	if err != nil {
+		return origin, err
+	}
+	ctx, err = NewRobot(ctx, protocol.Position{0, 10}, protocol.Robot{
+		ProtoID:  "gundam",
+		PlayerID: playerAI1,
+		PilotID:  "pilotA",
+	})
+	if err != nil {
+		return origin, err
+	}
 	return ctx, nil
 }
 func Save(origin model) error {
@@ -77,6 +86,47 @@ func Save(origin model) error {
 }
 func Load(origin model) (model, error) {
 	return origin, nil
+}
+func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (model, error) {
+	var err error
+	ctx := origin
+	var notFound string
+	if robot.PlayerID == notFound {
+		return origin, fmt.Errorf("robot(%v) PlayerID not found", robot)
+	}
+	if robot.PilotID == notFound {
+		return origin, fmt.Errorf("robot(%v) PilotID not found", robot)
+	}
+	_, err = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID)
+	if err != nil {
+		return origin, err
+	}
+	if robot.ID == notFound {
+		robot.ID = fmt.Sprintf("NewRobot_%v", ctx.App.SeqID)
+		ctx.App.SeqID++
+	}
+	if robot.Transform == notFound {
+		robot.Transform = robot.ProtoID
+	}
+	if robot.WeaponsByTransform == nil {
+		robot.WeaponsByTransform = map[string]protocol.Weapons{}
+	}
+	// 先將機器人丟到場上
+	ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, robot)
+	ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, position)
+	ctx.App.Gameplay.Units = append(ctx.App.Gameplay.Units, robot.ID)
+	// 再計算機器人的狀態
+	robot.HP, err = QueryRobotMaxHp(ctx, robot.ID)
+	if err != nil {
+		return origin, err
+	}
+	robot.EN, err = QueryRobotMaxEn(ctx, robot.ID)
+	if err != nil {
+		return origin, err
+	}
+	// 算完後再重設
+	ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, robot)
+	return ctx, nil
 }
 
 func QueryActivePlayer(origin model) (protocol.Player, error) {
@@ -188,72 +238,6 @@ func DisableBattleMenu(origin model) (model, error) {
 func GetBattleMenu(origin model) protocol.BattleMenu {
 	ctx := origin
 	return ctx.App.Gameplay.BattleMenu
-}
-
-func Battle(origin model, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (model, protocol.BattleResult, error) {
-	ctx := origin
-	robot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return origin, protocol.BattleResult{}, err
-	}
-	targetRobot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, targetRobotID)
-	if err != nil {
-		return origin, protocol.BattleResult{}, err
-	}
-	robotPos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
-	if err != nil {
-		return origin, protocol.BattleResult{}, err
-	}
-	targetRobotPos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, targetRobotID)
-	if err != nil {
-		return origin, protocol.BattleResult{}, err
-	}
-	results := []protocol.BattleAnimation{}
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeWeapon,
-		RobotBefore: robot,
-		RobotAfter:  robot,
-		Damage:      0,
-		Positions: map[string]protocol.Position{
-			robot.ID: robotPos,
-		},
-	})
-	// damage
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeDamage,
-		RobotBefore: targetRobot,
-		RobotAfter:  targetRobot,
-		Damage:      1000,
-		Positions: map[string]protocol.Position{
-			targetRobot.ID: targetRobotPos,
-		},
-	})
-	// aim
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeAim,
-		AimPosition: [2]protocol.Position{targetRobotPos, robotPos},
-	})
-	// counter
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeWeapon,
-		RobotBefore: targetRobot,
-		RobotAfter:  targetRobot,
-		Damage:      0,
-		Positions: map[string]protocol.Position{
-			targetRobot.ID: targetRobotPos,
-		},
-	})
-	// damage
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeDamage,
-		RobotBefore: robot,
-		RobotAfter:  robot,
-		Damage:      1000,
-		Positions: map[string]protocol.Position{
-			robot.ID: robotPos,
-		},
-	})
-	return ctx, protocol.BattleResult{Animations: results}, nil
 }
 
 // ai

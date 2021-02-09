@@ -56,10 +56,11 @@ type Menu2D struct {
 // BattleMenuSlot is
 type BattleMenuSlot struct {
 	Robot        protocol.Robot
+	Pilot        protocol.Pilot
 	BattleAction int
 	Weapon       protocol.Weapon
 	Info         struct {
-		HitRate float32
+		HitRate float64
 	}
 }
 

@@ -134,8 +134,10 @@ const (
 type BattleMenu struct {
 	Active        bool
 	AttackRobot   Robot
+	AttackPilot   Pilot
 	AttackWeapon  Weapon
 	DeffenceRobot Robot
+	DeffencePilot Pilot
 }
 
 const (

@@ -1,6 +1,7 @@
 package moveRange
 
 import (
+	"app/debug/helper"
 	v1 "app/model/v1"
 	"app/page/gameplay"
 	"app/tool/def"
@@ -13,43 +14,8 @@ import (
 )
 
 var (
-	mockEvt    = make(chan interface{})
-	uiSnapshot uidata.UI
-)
-
-type Mock struct {
-}
-
-func (p Mock) AskCommand() interface{} {
-	return <-mockEvt
-}
-
-func (p Mock) Install() error {
-	return nil
-}
-
-func (p Mock) Render(ui uidata.UI) {
-	uiSnapshot = ui
-}
-
-func (p Mock) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {
-
-}
-
-func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
-
-}
-
-func (p Mock) RenderTurnStart(ui uidata.UI, player protocol.Player) {
-
-}
-
-func (p Mock) Alert(msg string) {
-	fmt.Printf("[Alert]%v\n", msg)
-}
-
-var (
 	mockModel = v1.Model
+	mockView  = helper.CreateMockView()
 )
 
 func init() {
@@ -87,7 +53,7 @@ func init() {
 	}}
 	mockModel.App.Gameplay.Positions = map[string]protocol.Position{"0": {0, 0}, "1": {5, 5}}
 
-	def.View = Mock{}
+	def.View = &mockView
 }
 
 func TestMoveRange(t *testing.T) {
@@ -98,27 +64,27 @@ func TestMoveRange(t *testing.T) {
 	go func() {
 		_, err := gameplay.GameLoop(ui)
 		// rain event
-		for range mockEvt {
+		for range mockView.Evt {
 		}
 		wait <- err
 	}()
-	mockEvt <- struct{}{}
-	if pos, has := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (has == false || pos != protocol.Position{0, 0}) {
+	mockView.Evt <- struct{}{}
+	if pos, has := mockView.UI.GameplayPages[uidata.PageGameplay].Positions["0"]; (has == false || pos != protocol.Position{0, 0}) {
 		t.Error("(0,0)必須有機體")
 	}
-	// if len(uiSnapshot.GameplayPages[uidata.PageGameplay].MoveRange) == 0 {
+	// if len(mockView.UI.GameplayPages[uidata.PageGameplay].MoveRange) == 0 {
 	// 	t.Error("(0,0)位置有機體, 必須有移動範圍")
 	// }
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
 	time.Sleep(time.Second)
-	if len(uiSnapshot.GameplayPages[uidata.PageGameplay].MoveRange) > 0 {
+	if len(mockView.UI.GameplayPages[uidata.PageGameplay].MoveRange) > 0 {
 		t.Error("向右移動一格, 沒有機體, 必須沒有移動範圍")
 	}
 
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeLeft}
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeLeft}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
-	unitMenu := uiSnapshot.Menu2Ds[uidata.Menu2DUnitMenu]
+	unitMenu := mockView.UI.Menu2Ds[uidata.Menu2DUnitMenu]
 	fmt.Printf("%+v\n", unitMenu)
 	if len(unitMenu.Options) == 0 {
 		t.Error("必須有選單")
@@ -126,17 +92,17 @@ func TestMoveRange(t *testing.T) {
 	if unitMenu.Options[0][0] != uidata.MenuOptionMove {
 		t.Error("第一個選項必須是移動")
 	}
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
 
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
-	if pos := uiSnapshot.GameplayPages[uidata.PageGameplay].Positions["0"]; (pos != protocol.Position{1, 0}) {
+	if pos := mockView.UI.GameplayPages[uidata.PageGameplay].Positions["0"]; (pos != protocol.Position{1, 0}) {
 		t.Error("(1,0)必須有機體")
 	}
-	//fmt.Printf("%+v\n", uiSnapshot)
-	close(mockEvt)
+	//fmt.Printf("%+v\n", mockView.UI)
+	close(mockView.Evt)
 	err := <-wait
 	if err != nil && err != protocol.ErrTerminate {
 		t.Error(err)
