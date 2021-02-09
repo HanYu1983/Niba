@@ -1,6 +1,7 @@
 package moveRange
 
 import (
+	"app/debug/helper"
 	v1 "app/model/v1"
 	"app/page/gameplay"
 	"app/tool/def"
@@ -13,43 +14,8 @@ import (
 )
 
 var (
-	mockEvt    = make(chan interface{})
-	uiSnapshot uidata.UI
-)
-
-type Mock struct {
-}
-
-func (p Mock) AskCommand() interface{} {
-	return <-mockEvt
-}
-
-func (p Mock) Install() error {
-	return nil
-}
-
-func (p Mock) Render(ui uidata.UI) {
-	uiSnapshot = ui
-}
-
-func (p Mock) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {
-	fmt.Printf("[RenderRobotMove]%v\n", robotID)
-}
-
-func (p Mock) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
-	fmt.Printf("[RenderRobotBattle]%v\n", result)
-}
-
-func (p Mock) RenderTurnStart(ui uidata.UI, player protocol.Player) {
-	fmt.Printf("[RenderTurnStart]%v\n", player)
-}
-
-func (p Mock) Alert(msg string) {
-	fmt.Printf("[Alert]%v\n", msg)
-}
-
-var (
 	mockModel = v1.Model
+	mockView  = helper.CreateMockView()
 )
 
 const (
@@ -100,7 +66,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	def.View = Mock{}
+
+	def.View = &mockView
 }
 
 func TestCore(t *testing.T) {
@@ -110,22 +77,22 @@ func TestCore(t *testing.T) {
 	wait := make(chan interface{})
 	go func() {
 		_, err := gameplay.GameLoop(ui)
-		for range mockEvt {
+		for range mockView.Evt {
 		}
 		wait <- err
 	}()
-	mockEvt <- struct{}{}
+	mockView.Evt <- struct{}{}
 
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
 	{
-		unitMenu := uiSnapshot.Menu2Ds[uidata.Menu2DUnitMenu]
+		unitMenu := mockView.UI.Menu2Ds[uidata.Menu2DUnitMenu]
 		if len(unitMenu.Options) == 0 {
 			t.Error("必須有選單")
 		}
 	}
 	{
-		robotMenu := uiSnapshot.GameplayPages[uidata.PageGameplay].RobotMenu
+		robotMenu := mockView.UI.GameplayPages[uidata.PageGameplay].RobotMenu
 		if robotMenu.Active == false {
 			t.Error("robotMenu.Active must be true")
 		}
@@ -138,7 +105,7 @@ func TestCore(t *testing.T) {
 		}
 	}
 	{
-		robotB := uiSnapshot.GameplayPages[uidata.PageGameplay].Robots[RobotB]
+		robotB := mockView.UI.GameplayPages[uidata.PageGameplay].Robots[RobotB]
 		if robotB.HP != robotB.MaxHP {
 			t.Error("robotB必須滿血")
 		}
@@ -147,22 +114,22 @@ func TestCore(t *testing.T) {
 		}
 	}
 	fmt.Println("選單中選擇武器")
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeDown}
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeDown}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	fmt.Println("選擇敵機")
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeRight}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	fmt.Println("戰鬥選單按下武器確定")
-	mockEvt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
+	mockView.Evt <- uidata.CommandKeyDown{KeyCode: uidata.KeyCodeEnter}
 	time.Sleep(time.Second)
 	{
-		robotB := uiSnapshot.GameplayPages[uidata.PageGameplay].Robots[RobotB]
+		robotB := mockView.UI.GameplayPages[uidata.PageGameplay].Robots[RobotB]
 		if robotB.HP == robotB.MaxHP {
 			t.Error("robotB必須扣血")
 		}
 	}
-	// fmt.Printf("%+v\n", uiSnapshot)
-	close(mockEvt)
+	// fmt.Printf("%+v\n", mockView.UI)
+	close(mockView.Evt)
 	err := <-wait
 	if err != nil && err != protocol.ErrTerminate {
 		t.Error(err)
