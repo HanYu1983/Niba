@@ -6,36 +6,6 @@ import (
 	"math/rand"
 )
 
-func QueryBattleAction(model model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, protocol.Weapon, error) {
-	weapons, err := QueryRobotWeapons(model, targetRobot.ID, targetRobot.Transform)
-	if err != nil {
-		return protocol.BattleMenuActionPending, protocol.Weapon{}, err
-	}
-	if len(weapons) == 0 {
-		return protocol.BattleMenuActionPending, protocol.Weapon{}, nil
-	}
-	invalidWeapons, err := CheckInvalidWeapons(model, targetRobot, weapons)
-	if err != nil {
-		return protocol.BattleMenuActionPending, protocol.Weapon{}, err
-	}
-	for weaponID, weapon := range weapons {
-		_, isInvalid := invalidWeapons[weaponID]
-		if isInvalid {
-			continue
-		}
-		return protocol.BattleMenuActionAttack, weapon, nil
-	}
-	return protocol.BattleMenuActionEvade, protocol.Weapon{}, nil
-}
-
-func QueryBattleHitRate(model model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (float64, error) {
-	return 1, nil
-}
-
-func QueryBattleDamage(model model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, error) {
-	return 1000, nil
-}
-
 func Battle(origin model, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (model, protocol.BattleResult, error) {
 	ctx := origin
 	robot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID)
