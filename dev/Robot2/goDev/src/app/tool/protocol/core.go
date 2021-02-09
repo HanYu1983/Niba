@@ -178,3 +178,14 @@ func (result BattleResult) MapPosition(mapF func(pos Position) Position) BattleR
 	result.Animations = localAnims
 	return result
 }
+
+func (result BattleResult) MapRobot(mapF func(pos Robot) Robot) BattleResult {
+	localAnims := []BattleAnimation{}
+	for _, animation := range result.Animations {
+		animation.RobotBefore = mapF(animation.RobotBefore)
+		animation.RobotAfter = mapF(animation.RobotAfter)
+		localAnims = append(localAnims, animation)
+	}
+	result.Animations = localAnims
+	return result
+}

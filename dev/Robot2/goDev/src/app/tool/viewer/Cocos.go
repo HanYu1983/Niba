@@ -82,6 +82,13 @@ func (p Cocos) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 	result = result.MapPosition(func(pos protocol.Position) protocol.Position {
 		return helper.World2Local(ui.GameplayPages[uidata.PageGameplay].Camera, pos)
 	})
+	result = result.MapRobot(func(robot protocol.Robot) protocol.Robot {
+		robot, err := ui.Model.ObserveRobot(robot)
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		return robot
+	})
 	view.Call("RenderRobotBattle", result, func() {
 		go func() {
 			close(wait)

@@ -48,6 +48,9 @@ func (v model) OnPlayerTurnEnd(ui interface{}, player protocol.Player) (interfac
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui.(uidata.UI), id)
 }
+func (v model) ObserveRobot(robot protocol.Robot) (protocol.Robot, error) {
+	return ObserveRobot(v, robot)
+}
 func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 	return EnemyTurnPhase(origin.(uidata.UI))
 }

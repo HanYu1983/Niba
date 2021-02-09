@@ -7,6 +7,7 @@ import (
 type IGameplayModel interface {
 	// flow
 	ObservePage(ctx interface{}, id int) (interface{}, error)
+	ObserveRobot(robot Robot) (Robot, error)
 	EnemyTurnPhase(ctx interface{}) (interface{}, bool, error)
 	// gameplay
 	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)

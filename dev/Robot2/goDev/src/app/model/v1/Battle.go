@@ -3,7 +3,9 @@ package v1
 import (
 	"app/tool/helper"
 	"app/tool/protocol"
+	"fmt"
 	"math/rand"
+	"tool/log"
 )
 
 func Battle(origin model, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (model, protocol.BattleResult, error) {
@@ -83,8 +85,7 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 			animationType = protocol.BattleResultTypeGuard
 		}
 		targetRobotAfter := targetRobot
-		targetRobotAfter.HP = helper.Max(0, targetRobot.HP-damage)
-		// damage
+		targetRobotAfter.HP = helper.Max(0, targetRobotAfter.HP-damage)
 		results = append(results, protocol.BattleAnimation{
 			Type:        animationType,
 			RobotBefore: targetRobot,
@@ -94,6 +95,8 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 				targetRobot.ID: targetRobotPos,
 			},
 		})
+		log.Log(protocol.LogCategoryDetail, "Battle", fmt.Sprintf("targetRobot(%+v)", targetRobot))
+		log.Log(protocol.LogCategoryDetail, "Battle", fmt.Sprintf("targetRobotAfter(%+v)", targetRobotAfter))
 		targetRobot = targetRobotAfter
 	} else {
 		// 被閃
@@ -109,12 +112,12 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 	// 再進行防守方
 	switch targetAction {
 	case protocol.BattleMenuActionAttack:
-		// aim
+		// 瞄準
 		results = append(results, protocol.BattleAnimation{
 			Type:        protocol.BattleResultTypeAim,
 			AimPosition: [2]protocol.Position{targetRobotPos, robotPos},
 		})
-		// counter
+		// 消費彈藥
 		results = append(results, protocol.BattleAnimation{
 			Type:        protocol.BattleResultTypeWeapon,
 			RobotBefore: targetRobot,
@@ -139,7 +142,7 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 				return origin, protocol.BattleResult{}, err
 			}
 			robotAfter := robot
-			robotAfter.HP = helper.Max(0, robot.HP-damage)
+			robotAfter.HP = helper.Max(0, robotAfter.HP-damage)
 			// damage
 			results = append(results, protocol.BattleAnimation{
 				Type:        protocol.BattleResultTypeDamage,
@@ -150,6 +153,8 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 					robot.ID: robotPos,
 				},
 			})
+			log.Log(protocol.LogCategoryDetail, "Battle", fmt.Sprintf("robot(%+v)", robot))
+			log.Log(protocol.LogCategoryDetail, "Battle", fmt.Sprintf("robotAfter(%+v)", robotAfter))
 			robot = robotAfter
 		} else {
 			results = append(results, protocol.BattleAnimation{
