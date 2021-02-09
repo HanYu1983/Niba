@@ -44,7 +44,7 @@ export class BattleMenu extends Instant {
         this.actionInfos[0].build(content.Left);
         this.actionInfos[1].build(content.Right);
 
-        const cursor = data.GameplayPages["10"].Cursor;
+        const cursor = data.GameplayPages.PageGameplay.Cursor;
 
         let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 185, -250);
         this.node.setPosition(gridPos);

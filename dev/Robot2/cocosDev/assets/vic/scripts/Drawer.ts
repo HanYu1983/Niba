@@ -66,10 +66,11 @@ export class Drawer extends Instant {
         return data.Info.RobotIDByComponentID[component];
     }
     
-    static getMenuByPage(data:any, page:ModelType.Const, menuIndex:number = 0){
+    static getMenuByPage(data:any, page:number, menuIndex:number = 0){
+        const pageName = Object.values(ModelType.Const)[page];
         const content = {
-            Active: data.Actives[page],
-            Menus: data.Menus[page],
+            Active: data.Actives[pageName],
+            Menus: data.Menus[pageName],
         }
         if (content.Active) {
             if(data.Menu1Ds[content.Menus[menuIndex]]){
@@ -102,10 +103,11 @@ export class Drawer extends Instant {
         return null;
     }
 
-    static getMenuSelectByPage(data:any, page:ModelType.Const, menuIndex:number, id:number){
+    static getMenuSelectByPage(data:any, page:number, menuIndex:number, id:number){
+        const pageName = Object.values(ModelType.Const)[page];
         const content = {
-            Active: data.Actives[page],
-            Menus: data.Menus[page],
+            Active: data.Actives[pageName],
+            Menus: data.Menus[pageName],
         }
         if (content.Active) {
             if(data.Menu1Ds[content.Menus[menuIndex]]){
@@ -116,11 +118,12 @@ export class Drawer extends Instant {
         return false;    
     }
 
-    static getFocusByPage(data:any, page:ModelType.Const){
+    static getFocusByPage(data:any, page:number){
+        const pageName = Object.values(ModelType.Const)[page];
         const content = {
-            Active: data.Actives[page],
-            Menus: data.Menus[page],
-            Focus: data.Focus[page],
+            Active: data.Actives[pageName],
+            Menus: data.Menus[pageName],
+            Focus: data.Focus[pageName],
         }
         if (content.Active) {
             return [

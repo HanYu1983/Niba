@@ -43,7 +43,7 @@ export class WeaponInfo extends Instant {
     curage:Label = null;
 
     protected checkData(data:any):any{
-        return Drawer.getMenuByPage(data, ModelType.Const.PageUnitMenu, 0);
+        return Drawer.getMenuByPage(data, 11, 0);
     }
     
     clear(){
@@ -52,7 +52,7 @@ export class WeaponInfo extends Instant {
 
     doBuild(content:any, data:any){
         const options = content[0].slice();
-        const robotMenu = data.GameplayPages["10"].RobotMenu;
+        const robotMenu = data.GameplayPages.PageGameplay.RobotMenu;
         for(let key in robotMenu.RowFunctionMapping){
             if(robotMenu.RowFunctionMapping[key] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
                 const weaponIds = options[key];
@@ -70,7 +70,7 @@ export class WeaponInfo extends Instant {
                 this.suitable.string = currentWeapon.Suitablility.toString();
                 this.curage.string = currentWeapon.Curage;
 
-                const cursor = data.GameplayPages["10"].Cursor;
+                const cursor = data.GameplayPages.PageGameplay.Cursor;
                 let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 265, 0);
                 this.node.setPosition(gridPos);
             }

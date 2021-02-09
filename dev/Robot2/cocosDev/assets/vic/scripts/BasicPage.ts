@@ -13,15 +13,16 @@ const { ccclass, property } = _decorator;
 @ccclass('BasicPage')
 export class BasicPage extends Instant {
 
-    @property ({type:Enum(ModelType.Const)})
-    pageId:ModelType.Const = null;
+    @property (CCInteger)
+    pageId:number;
 
     protected checkData(data:any):any{
+        const pageName = Object.values(ModelType.Const)[this.pageId];
         const content = {
-            Active: data.Actives[this.pageId],
-            Menus: data.Menus[this.pageId],
-            Focus: data.Focus[this.pageId],
-            GameplayPages:data.GameplayPages[this.pageId]
+            Active: data.Actives[pageName],
+            Menus: data.Menus[pageName],
+            Focus: data.Focus[pageName],
+            GameplayPages:data.GameplayPages[pageName]
         }
         
         if (content.Active) {

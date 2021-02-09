@@ -16,12 +16,12 @@ const { ccclass, property } = _decorator;
 export class UnitMenu extends InstMenu {
 
     protected checkData(data:any):any{
-        return Drawer.getMenuByPage(data, ModelType.Const.PageUnitMenu, 0);
+        return Drawer.getMenuByPage(data, 11, 0);
     }
 
     doBuild(content:any, data:any):void{
         const options = content[0].slice();
-        const robotMenu = data.GameplayPages["10"].RobotMenu;
+        const robotMenu = data.GameplayPages.PageGameplay.RobotMenu;
         for(let key in robotMenu.RowFunctionMapping){
             if(robotMenu.RowFunctionMapping[key] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
                 const weaponIds = options[key];
@@ -32,7 +32,7 @@ export class UnitMenu extends InstMenu {
         content[0] = options;
         super.doBuild(content, data);
         
-        const cursor = data.GameplayPages["10"].Cursor;
+        const cursor = data.GameplayPages.PageGameplay.Cursor;
         let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 100, 0);
         this.node.setPosition(gridPos);
     }
