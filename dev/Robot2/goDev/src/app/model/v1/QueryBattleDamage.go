@@ -6,7 +6,9 @@ import (
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
+	"math"
 	"strconv"
+	"tool/log"
 )
 
 func QueryRobotArmor(model model, robotID string) (int, error) {
@@ -15,15 +17,11 @@ func QueryRobotArmor(model model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
-	if err != nil {
-		return 0, err
-	}
 	components, err := QueryRobotComponents(model, robot.ID)
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Hp
+	total := 0
 	for _, component := range components {
 		val := 0.0
 		switch component.ProtoID {
@@ -47,15 +45,11 @@ func QueryRobotBeamArmor(model model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
-	if err != nil {
-		return 0, err
-	}
 	components, err := QueryRobotComponents(model, robot.ID)
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Hp
+	total := 0
 	for _, component := range components {
 		val := 0.0
 		switch component.ProtoID {
@@ -156,5 +150,7 @@ func QueryBattleDamage(model model, robot protocol.Robot, pilot protocol.Pilot, 
 	}
 	basicDamage := weapon.Damage - targetArmor
 	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotFactor
-	return int(finalDamage), nil
+	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("basicDamage(%v) = weapon.Damage(%v) - targetArmor(%v)", basicDamage, weapon.Damage, targetArmor))
+	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotFactor))
+	return int(math.Max(0, finalDamage)), nil
 }
