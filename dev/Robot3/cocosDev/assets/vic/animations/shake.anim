@@ -1,0 +1,75 @@
+[
+  {
+    "__type__": "cc.AnimationClip",
+    "_name": "shake",
+    "_objFlags": 0,
+    "_native": "",
+    "sample": 60,
+    "speed": 1,
+    "wrapMode": 1,
+    "events": [],
+    "_duration": 0.5,
+    "_keys": [
+      [
+        0,
+        0.16666666666666666,
+        0.26666666666666666,
+        0.36666666666666664,
+        0.5
+      ]
+    ],
+    "_stepness": 0,
+    "_curves": [
+      {
+        "modifiers": [
+          {
+            "__id__": 1
+          },
+          "position"
+        ],
+        "data": {
+          "keys": 0,
+          "values": [
+            {
+              "__type__": "cc.Vec3",
+              "x": 0,
+              "y": 0,
+              "z": 0
+            },
+            {
+              "__type__": "cc.Vec3",
+              "x": 2.451,
+              "y": 2.451,
+              "z": 0
+            },
+            {
+              "__type__": "cc.Vec3",
+              "x": -3.185,
+              "y": -4.936,
+              "z": 0
+            },
+            {
+              "__type__": "cc.Vec3",
+              "x": -3.098,
+              "y": 1.378,
+              "z": 0
+            },
+            {
+              "__type__": "cc.Vec3",
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          ],
+          "easingMethods": {}
+        }
+      }
+    ],
+    "_commonTargets": [],
+    "_hash": 2305224080
+  },
+  {
+    "__type__": "cc.animation.HierarchyPath",
+    "path": "AirLand/Robot"
+  }
+]
