@@ -10,7 +10,7 @@ import (
 func SystemMenuPhase(origin uidata.UI) (uidata.UI, string, error) {
 	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "start")
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageSystemMenu, true)
 	var err error
 	var cancel, tab bool
 	var selection string
@@ -27,7 +27,7 @@ func SystemMenuPhase(origin uidata.UI) (uidata.UI, string, error) {
 		}
 		break
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageSystemMenu, false)
 	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "end")
 	return origin, selection, nil
 }

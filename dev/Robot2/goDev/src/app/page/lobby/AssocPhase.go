@@ -9,12 +9,12 @@ import (
 	"fmt"
 )
 
-func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
+func AssocPhase(origin uidata.UI, pageID string) (uidata.UI, error) {
 	view := def.View
 	var err error
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
-	leftMapping := map[int]int{
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, pageID, true)
+	leftMapping := map[string]string{
 		uidata.PageAssocRobotToPilot:     uidata.Menu1DRobotPilotListMenu,
 		uidata.PageAssocWeaponToRobot:    uidata.Menu1DWeaponRobotListMenu,
 		uidata.PageAssocComponentToRobot: uidata.Menu1DComponentRobotListMenu,
@@ -41,11 +41,11 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					return ctx, cancel, nil
 				}
 				focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
-				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+				ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 			case uidata.Menu1DPilotListMenu, uidata.Menu1DRobotListMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
@@ -111,13 +111,13 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			case uidata.Menu1DAssocOrDisMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				switch selection {
 				case uidata.MenuOptionAssoc:
 					focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 				case uidata.MenuOptionDissoc:
 					leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
 					leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor+leftMenu.Offset)
@@ -156,6 +156,6 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	if err != nil {
 		return ctx, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, pageID, false)
 	return origin, nil
 }

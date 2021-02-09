@@ -5,7 +5,7 @@ import (
 	"app/tool/uidata"
 )
 
-func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveMenu2D(origin uidata.UI, menuID string) (uidata.UI, error) {
 	ctx := origin
 	model := ctx.Model.(model)
 	menu, has := ctx.Menu2Ds[menuID]
@@ -23,7 +23,7 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 			options = unitMenuModel.Options
 			gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 			gameplayPage.RobotMenu = unitMenuModel
-			ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
+			ctx.GameplayPages = uidata.AssocStringGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 		}
 	}
 	if menu.Cursor2 == nil || len(menu.Cursor2) != len(options) {
@@ -36,6 +36,6 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 			menu.Cursor2[menu.Cursor1] = helper.Max(0, helper.Min(len(options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]))
 		}
 	}
-	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+	ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menuID, menu)
 	return ctx, nil
 }

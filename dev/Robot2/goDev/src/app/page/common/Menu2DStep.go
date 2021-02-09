@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
+func Menu2DStep(origin uidata.UI, pageID string, menuID string) (uidata.UI, string, bool, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "Menu2DStep", "start")
 	var err error
 	ctx := origin
@@ -46,14 +46,14 @@ AskCommand:
 					continue
 				}
 				menu.Cursor1--
-				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+				ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeDown:
 				menu := ctx.Menu2Ds[menuID]
 				if len(menu.Options) == 0 {
 					continue
 				}
 				menu.Cursor1++
-				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+				ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu2Ds[menuID]
 				if menu.Cursor2 == nil {
@@ -66,7 +66,7 @@ AskCommand:
 					continue
 				}
 				menu.Cursor2[menu.Cursor1] = helper.Max(0, menu.Cursor2[menu.Cursor1]-1)
-				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+				ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu2Ds[menuID]
 				if menu.Cursor2 == nil {
@@ -79,7 +79,7 @@ AskCommand:
 					continue
 				}
 				menu.Cursor2[menu.Cursor1] = helper.Min(len(menu.Options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]+1)
-				ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+				ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:

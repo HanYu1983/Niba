@@ -13,7 +13,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageMultiUnitSelection, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageMultiUnitSelection,
@@ -30,7 +30,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 				}
 				selection := ctx.Menu1Ds[menuID].Selection
 				var _ = selection
-				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
+				ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
 				ctx, err = gameplay.GameLoop(ctx)
 				if err != nil {
 					return origin, cancel, err
@@ -46,6 +46,6 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 	if err != nil {
 		return ctx, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
 	return ctx, nil
 }

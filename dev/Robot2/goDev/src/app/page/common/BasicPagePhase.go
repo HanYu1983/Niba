@@ -9,7 +9,7 @@ import (
 
 func BasicPagePhase(
 	origin uidata.UI,
-	pageID int,
+	pageID string,
 	onUpdate func(uidata.UI) (uidata.UI, error),
 	onClickMenu1D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 	onClickMenu2D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),

@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
+func ObserveGameplayPage(origin uidata.UI, id string) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	model := ctx.Model.(model)
@@ -92,11 +92,11 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 
 	// unit menu
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
 	// battle menu
 	battleMenuModel := model.App.Gameplay.BattleMenu
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageBattleMenu, battleMenuModel.Active)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageBattleMenu, battleMenuModel.Active)
 	// apply
-	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, gameplayPage)
+	ctx.GameplayPages = uidata.AssocStringGameplayPage(ctx.GameplayPages, id, gameplayPage)
 	return ctx, nil
 }

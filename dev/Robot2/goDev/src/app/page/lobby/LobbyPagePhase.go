@@ -8,7 +8,7 @@ import (
 func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageLobby, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageLobby,
@@ -57,12 +57,12 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 						return origin, cancel, err
 					}
 				case uidata.MenuOptionStartGameplay:
-					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
+					ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageLobby, false)
 					ctx, err = MultiUnitSelectionPagePhase(ctx)
 					if err != nil {
 						return origin, cancel, err
 					}
-					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
+					ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageLobby, true)
 				}
 			}
 			return ctx, cancel, nil
@@ -74,6 +74,6 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 	if err != nil {
 		return ctx, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageLobby, false)
 	return ctx, nil
 }

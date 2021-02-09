@@ -8,11 +8,11 @@ import (
 	"fmt"
 )
 
-func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
+func BuyPhase(origin uidata.UI, pageID string) (uidata.UI, error) {
 	view := def.View
 	var err error
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, pageID, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		pageID,
@@ -33,13 +33,13 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			case uidata.Menu1DBuyOrSellOrElseMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				switch selection {
 				case uidata.MenuOptionCreateNew:
 					focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 				case uidata.MenuOptionSell:
 					fmt.Println("Sell")
 				default:
@@ -50,11 +50,11 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					return ctx, cancel, nil
 				}
 				focus, _ := helper.Clamp(ctx.Focus[pageID]+1, 0, len(ctx.Menus[pageID]))
-				ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+				ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 			case uidata.Menu1DBuyRobotMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				ctx.Model, err = ctx.Model.BuyRobot(selection)
@@ -64,7 +64,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			case uidata.Menu1DBuyPilotMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				ctx.Model, err = ctx.Model.BuyPilot(selection)
@@ -74,7 +74,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			case uidata.Menu1DBuyWeaponMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				ctx.Model, err = ctx.Model.BuyWeapon(selection)
@@ -84,7 +84,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 			case uidata.Menu1DBuyComponentMenu:
 				if cancel {
 					focus, _ := helper.Clamp(ctx.Focus[pageID]-1, 0, len(ctx.Menus[pageID]))
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, false, nil
 				}
 				ctx.Model, err = ctx.Model.BuyComponent(selection)
@@ -101,6 +101,6 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, pageID, false)
 	return ctx, nil
 }

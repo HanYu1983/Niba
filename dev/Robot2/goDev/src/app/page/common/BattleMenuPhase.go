@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func AutoCursorAtWeaponID(origin uidata.UI, menu2DID int, weaponID string) (uidata.UI, error) {
+func AutoCursorAtWeaponID(origin uidata.UI, menu2DID string, weaponID string) (uidata.UI, error) {
 	ctx := origin
 	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 	unitMenu := ctx.Menu2Ds[menu2DID]
@@ -32,7 +32,7 @@ func AutoCursorAtWeaponID(origin uidata.UI, menu2DID int, weaponID string) (uida
 	}
 	unitMenu.Cursor1 = weaponFunctionIdx
 	unitMenu.Cursor2[unitMenu.Cursor1] = weaponIdx
-	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menu2DID, unitMenu)
+	ctx.Menu2Ds = uidata.AssocStringMenu2D(ctx.Menu2Ds, menu2DID, unitMenu)
 	return ctx, nil
 }
 

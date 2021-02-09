@@ -9,7 +9,7 @@ import (
 func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageStart, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageStart,
@@ -20,12 +20,12 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 			ctx := origin
 			switch selection {
 			case uidata.MenuOptionNewGame:
-				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
+				ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageStart, false)
 				ctx, err = lobby.LobbyPagePhase(ctx)
 				if err != nil {
 					return origin, cancel, err
 				}
-				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
+				ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageStart, true)
 			}
 			return ctx, cancel, nil
 		},
@@ -36,6 +36,6 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageStart, false)
 	return ctx, nil
 }

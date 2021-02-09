@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveBattleMenu(origin uidata.UI, menuID string) (uidata.UI, error) {
 	ctx := origin
 	model := ctx.Model.(model)
 	menu, has := ctx.BattleMenus[menuID]
@@ -110,6 +110,6 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 			}
 		}
 	}
-	ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, menuID, menu)
+	ctx.BattleMenus = uidata.AssocStringBattleMenu(ctx.BattleMenus, menuID, menu)
 	return ctx, nil
 }

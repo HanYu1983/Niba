@@ -7,7 +7,7 @@ import (
 	"app/tool/uidata"
 )
 
-func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
+func ObserveMenu1D(origin uidata.UI, menuID string) (uidata.UI, error) {
 	ctx := origin
 	model := ctx.Model.(model)
 	menu, has := ctx.Menu1Ds[menuID]
@@ -45,6 +45,6 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		menu.Options = options[left:right]
 	}
 	menu.Cursor = helper.Max(0, helper.Min(len(menu.Options)-1, menu.Cursor))
-	ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+	ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 	return ctx, nil
 }

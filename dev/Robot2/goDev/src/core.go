@@ -23,13 +23,13 @@ import "app"
 //go:generate genny -in tool/template/map.go -out app/tool/data/MapStringComponentProto.go -pkg data gen "Key=string Value=ComponentProto"
 
 //go:generate genny -in tool/template/list.go -out app/tool/ListBasic.go -pkg tool gen "Item=int,string"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntMenu1D.go -pkg uidata gen "Key=int Value=Menu1D"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntMenu2D.go -pkg uidata gen "Key=int Value=Menu2D"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntBool.go -pkg uidata gen "Key=int Value=bool"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntListInt.go -pkg uidata gen "Key=int Value=ListInt"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntInt.go -pkg uidata gen "Key=int Value=int"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntGameplayPage.go -pkg uidata gen "Key=int Value=GameplayPage"
-//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntBattleMenu.go -pkg uidata gen "Key=int Value=BattleMenu"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringMenu1D.go -pkg uidata gen "Key=string Value=Menu1D"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringMenu2D.go -pkg uidata gen "Key=string Value=Menu2D"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringBool.go -pkg uidata gen "Key=string Value=bool"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringListString.go -pkg uidata gen "Key=string Value=ListString"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringInt.go -pkg uidata gen "Key=string Value=int"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringGameplayPage.go -pkg uidata gen "Key=string Value=GameplayPage"
+//go:generate genny -in tool/template/map.go -out app/tool/uidata/MapStringBattleMenu.go -pkg uidata gen "Key=string Value=BattleMenu"
 
 func init() {
 	app.Main()

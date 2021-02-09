@@ -9,7 +9,7 @@ import (
 	"tool/log"
 )
 
-func Menu1DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bool, bool, error) {
+func Menu1DStep(origin uidata.UI, pageID string, menuID string) (uidata.UI, string, bool, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "Menu1DStep", "start")
 	var err error
 	ctx := origin
@@ -43,22 +43,22 @@ AskCommand:
 					continue
 				}
 				menu.Cursor = helper.Max(menu.Cursor-1, 0)
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeDown:
 				menu := ctx.Menu1Ds[menuID]
 				if len(menu.Options) == 0 {
 					continue
 				}
 				menu.Cursor = helper.Min(menu.Cursor+1, len(menu.Options)-1)
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeLeft:
 				menu := ctx.Menu1Ds[menuID]
 				menu.Offset = helper.Max(menu.Offset-menu.Limit, 0)
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeRight:
 				menu := ctx.Menu1Ds[menuID]
 				menu.Offset = menu.Offset + menu.Limit
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 			case uidata.KeyCodeR, uidata.KeyCodeL:
 				return ctx, "", false, true, nil
 			case uidata.KeyCodeEnter:
@@ -70,7 +70,7 @@ AskCommand:
 					if over {
 						focus = focus % len(ctx.Menus[pageID])
 					}
-					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+					ctx.Focus = uidata.AssocStringInt(ctx.Focus, pageID, focus)
 					return ctx, "", false, true, nil
 				}
 				break AskCommand
@@ -87,7 +87,7 @@ AskCommand:
 					return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
 				}
 				menu.Selection[menu.Options[idx]] = !menu.Selection[menu.Options[idx]]
-				ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, menuID, menu)
+				ctx.Menu1Ds = uidata.AssocStringMenu1D(ctx.Menu1Ds, menuID, menu)
 			}
 		}
 	}

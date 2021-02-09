@@ -151,7 +151,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		if err != nil {
 			return origin, false, err
 		}
-		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
+		ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageSystemMenu, true)
 		var cancel, tab bool
 		var selection string
 		for {
@@ -168,7 +168,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 			break
 		}
 		var _ = selection
-		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
+		ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageSystemMenu, false)
 	}
 	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v) end", unitID))
 	return ctx, false, nil

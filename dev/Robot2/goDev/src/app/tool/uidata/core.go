@@ -92,17 +92,18 @@ type GameplayPage struct {
 
 // ListInt is
 type ListInt []int
+type ListString []string
 
 // UI is
 type UI struct {
 	Model         protocol.IModel
-	Actives       map[int]bool
-	Menus         map[int]ListInt
-	Focus         map[int]int
-	Menu1Ds       map[int]Menu1D
-	Menu2Ds       map[int]Menu2D
-	BattleMenus   map[int]BattleMenu
-	GameplayPages map[int]GameplayPage
+	Actives       map[string]bool
+	Menus         map[string]ListString
+	Focus         map[string]int
+	Menu1Ds       map[string]Menu1D
+	Menu2Ds       map[string]Menu2D
+	BattleMenus   map[string]BattleMenu
+	GameplayPages map[string]GameplayPage
 	Info          struct {
 		Money                int
 		CanBuyRobots         map[string]data.RobotProto
@@ -152,38 +153,38 @@ const (
 
 //
 const (
-	PageStart = iota
-	PageLobby
-	PageBuyRobot
-	PageBuyPilot
-	PageBuyWeapon
-	PageBuyComponent
-	PageAssocRobotToPilot
-	PageAssocWeaponToRobot
-	PageAssocComponentToRobot
-	PageMultiUnitSelection
-	PageGameplay
-	PageUnitMenu
-	PageSystemMenu
-	PageBattleMenu
+	PageStart                 = "PageStart"
+	PageLobby                 = "PageLobby"
+	PageBuyRobot              = "PageBuyRobot"
+	PageBuyPilot              = "PageBuyPilot"
+	PageBuyWeapon             = "PageBuyWeapon"
+	PageBuyComponent          = "PageBuyComponent"
+	PageAssocRobotToPilot     = "PageAssocRobotToPilot"
+	PageAssocWeaponToRobot    = "PageAssocWeaponToRobot"
+	PageAssocComponentToRobot = "PageAssocComponentToRobot"
+	PageMultiUnitSelection    = "PageMultiUnitSelection"
+	PageGameplay              = "PageGameplay"
+	PageUnitMenu              = "PageUnitMenu"
+	PageSystemMenu            = "PageSystemMenu"
+	PageBattleMenu            = "PageBattleMenu"
 
-	Menu1DStartMenu
-	Menu1DLobbyMenu
-	Menu1DRobotListMenu
-	Menu1DPilotListMenu
-	Menu1DWeaponListMenu
-	Menu1DComponentListMenu
-	Menu1DBuyRobotMenu
-	Menu1DBuyPilotMenu
-	Menu1DBuyWeaponMenu
-	Menu1DBuyComponentMenu
-	Menu1DBuyOrSellOrElseMenu
-	Menu1DRobotPilotListMenu
-	Menu1DWeaponRobotListMenu
-	Menu1DComponentRobotListMenu
-	Menu1DAssocOrDisMenu
-	Menu1DMultiUnitSelectionMenu
-	Menu2DUnitMenu
-	Menu1DSystemMenu
-	BattleMenuUnitBattleMenu
+	Menu1DStartMenu              = "Menu1DStartMenu"
+	Menu1DLobbyMenu              = "Menu1DLobbyMenu"
+	Menu1DRobotListMenu          = "Menu1DRobotListMenu"
+	Menu1DPilotListMenu          = "Menu1DPilotListMenu"
+	Menu1DWeaponListMenu         = "Menu1DWeaponListMenu"
+	Menu1DComponentListMenu      = "Menu1DComponentListMenu"
+	Menu1DBuyRobotMenu           = "Menu1DBuyRobotMenu"
+	Menu1DBuyPilotMenu           = "Menu1DBuyPilotMenu"
+	Menu1DBuyWeaponMenu          = "Menu1DBuyWeaponMenu"
+	Menu1DBuyComponentMenu       = "Menu1DBuyComponentMenu"
+	Menu1DBuyOrSellOrElseMenu    = "Menu1DBuyOrSellOrElseMenu"
+	Menu1DRobotPilotListMenu     = "Menu1DRobotPilotListMenu"
+	Menu1DWeaponRobotListMenu    = "Menu1DWeaponRobotListMenu"
+	Menu1DComponentRobotListMenu = "Menu1DComponentRobotListMenu"
+	Menu1DAssocOrDisMenu         = "Menu1DAssocOrDisMenu"
+	Menu1DMultiUnitSelectionMenu = "Menu1DMultiUnitSelectionMenu"
+	Menu2DUnitMenu               = "Menu2DUnitMenu"
+	Menu1DSystemMenu             = "Menu1DSystemMenu"
+	BattleMenuUnitBattleMenu     = "BattleMenuUnitBattleMenu"
 )

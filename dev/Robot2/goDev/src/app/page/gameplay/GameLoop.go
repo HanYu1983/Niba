@@ -10,7 +10,7 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "start")
 	var err error
 	ctx := origin
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, true)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageGameplay, true)
 	for {
 		var activePlayer protocol.Player
 		activePlayer, err = ctx.Model.QueryActivePlayer()
@@ -33,7 +33,7 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, false)
+	ctx.Actives = uidata.AssocStringBool(ctx.Actives, uidata.PageGameplay, false)
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "end")
 	return ctx, nil
 }

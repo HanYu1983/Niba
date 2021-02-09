@@ -2,7 +2,7 @@ package v1
 
 import "app/tool/uidata"
 
-func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
+func ObservePage(origin uidata.UI, pageID string) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	model := ctx.Model.(model)

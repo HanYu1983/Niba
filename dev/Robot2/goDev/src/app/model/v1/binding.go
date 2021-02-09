@@ -45,7 +45,7 @@ func (v model) OnPlayerTurnStart(ui interface{}, player protocol.Player) (interf
 func (v model) OnPlayerTurnEnd(ui interface{}, player protocol.Player) (interface{}, error) {
 	return OnPlayerTurnEnd(ui.(uidata.UI), player)
 }
-func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
+func (v model) ObservePage(ui interface{}, id string) (interface{}, error) {
 	return ObservePage(ui.(uidata.UI), id)
 }
 func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {

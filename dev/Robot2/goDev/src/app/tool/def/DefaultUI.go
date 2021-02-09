@@ -7,56 +7,56 @@ import (
 
 var (
 	DefaultUI = UI{
-		Actives: map[int]bool{
+		Actives: map[string]bool{
 			PageBattleMenu: false,
 			PageUnitMenu:   false,
 		},
-		Menus: map[int]ListInt{
-			PageStart: []int{
+		Menus: map[string]ListString{
+			PageStart: []string{
 				Menu1DStartMenu,
 			},
-			PageLobby: []int{
+			PageLobby: []string{
 				Menu1DLobbyMenu,
 			},
-			PageBuyRobot: []int{
+			PageBuyRobot: []string{
 				Menu1DRobotListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyRobotMenu,
 			},
-			PageBuyPilot: []int{
+			PageBuyPilot: []string{
 				Menu1DPilotListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyPilotMenu,
 			},
-			PageBuyWeapon: []int{
+			PageBuyWeapon: []string{
 				Menu1DWeaponListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyWeaponMenu,
 			},
-			PageBuyComponent: []int{
+			PageBuyComponent: []string{
 				Menu1DComponentListMenu, Menu1DBuyOrSellOrElseMenu, Menu1DBuyComponentMenu,
 			},
-			PageAssocRobotToPilot: []int{
+			PageAssocRobotToPilot: []string{
 				Menu1DRobotPilotListMenu, Menu1DAssocOrDisMenu, Menu1DPilotListMenu,
 			},
-			PageAssocWeaponToRobot: []int{
+			PageAssocWeaponToRobot: []string{
 				Menu1DWeaponRobotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
 			},
-			PageAssocComponentToRobot: []int{
+			PageAssocComponentToRobot: []string{
 				Menu1DComponentRobotListMenu, Menu1DAssocOrDisMenu, Menu1DRobotListMenu,
 			},
-			PageMultiUnitSelection: []int{
+			PageMultiUnitSelection: []string{
 				Menu1DMultiUnitSelectionMenu,
 			},
-			PageUnitMenu: []int{
+			PageUnitMenu: []string{
 				Menu2DUnitMenu,
 			},
-			PageSystemMenu: []int{
+			PageSystemMenu: []string{
 				Menu1DSystemMenu,
 			},
-			PageBattleMenu: []int{
+			PageBattleMenu: []string{
 				BattleMenuUnitBattleMenu,
 			},
-			PageGameplay: []int{
+			PageGameplay: []string{
 				Menu2DUnitMenu, BattleMenuUnitBattleMenu,
 			},
 		},
-		Focus: map[int]int{},
-		Menu1Ds: map[int]Menu1D{
+		Focus: map[string]int{},
+		Menu1Ds: map[string]Menu1D{
 			Menu1DStartMenu: {
 				Options: []string{
 					MenuOptionNewGame, MenuOptionLoadGame,
@@ -129,10 +129,10 @@ var (
 				Limit: 10,
 			},
 		},
-		Menu2Ds: map[int]Menu2D{
+		Menu2Ds: map[string]Menu2D{
 			Menu2DUnitMenu: {},
 		},
-		BattleMenus: map[int]BattleMenu{
+		BattleMenus: map[string]BattleMenu{
 			BattleMenuUnitBattleMenu: BattleMenu{
 				Left: BattleMenuSlot{
 					BattleAction: protocol.BattleMenuActionAttack,
@@ -142,7 +142,7 @@ var (
 				},
 			},
 		},
-		GameplayPages: map[int]GameplayPage{
+		GameplayPages: map[string]GameplayPage{
 			PageGameplay: GameplayPage{
 				Cursor: protocol.Position{1, 1},
 				Units: []string{
