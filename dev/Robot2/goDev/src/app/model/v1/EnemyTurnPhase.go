@@ -208,10 +208,10 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 					return origin, false, err
 				}
 			}
-			// err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
-			// if err != nil {
-			// 	return origin, false, err
-			// }
+			err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
+			if err != nil {
+				return origin, false, err
+			}
 			for {
 				ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, potentail.DesireWeapon.ID, potentail.DesireUnitID)
 				if err != nil {

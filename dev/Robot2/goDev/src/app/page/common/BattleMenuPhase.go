@@ -81,6 +81,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		if err != nil {
 			return origin, false, err
 		}
+		view.Render(ctx)
 		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
