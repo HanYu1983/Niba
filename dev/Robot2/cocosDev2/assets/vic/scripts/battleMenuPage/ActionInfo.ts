@@ -14,6 +14,9 @@ const { ccclass, property } = _decorator;
 export class ActionInfo extends Instant {
 
     @property(Label)
+    title:Label = null;
+
+    @property(Label)
     damage:Label = null;
 
     @property(Label)
@@ -29,11 +32,12 @@ export class ActionInfo extends Instant {
     doBuild(data:any){
         this.setAction(data.BattleAction);
         this.setInfo(data.Info);
-        this.setPower(data.Weapon)
+        this.setWeapon(data.Weapon)
     }
 
-    private setPower(weapon:any){
+    private setWeapon(weapon:any){
         this.damage.string = weapon.Damage;
+        this.title.string = weapon.Title;
     }
 
     private setInfo(info:any){

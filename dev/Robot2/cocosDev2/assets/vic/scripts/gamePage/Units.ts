@@ -89,6 +89,7 @@ export class Units extends Instant {
                         unit.getComponent(Unit)?.isAir(unitTag.Sky);
                     }
                     unit.getComponent(Unit)?.changeUnit(robot.ProtoID);
+                    unit.getComponent(Unit)?.showHPEN(robot.HP, robot.MaxHP, robot.EN, robot.MaxEN);
                 }
                 if(pos){
                     unit.setPosition(Grids.getGridPos(pos[0], pos[1]));

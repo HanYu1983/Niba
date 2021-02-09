@@ -68,13 +68,13 @@ export class Unit extends Component {
     }
     
     hideHPEN(){
-        this.HPBar.node.scale = new Vec3();
-        this.ENBar.node.scale = new Vec3();
+        this.HPBar.node.setScale(new Vec3());
+        this.ENBar.node.setScale(new Vec3());
     }
 
     showHPEN(hp:number, maxHP:number, en:number, maxEN:number){
-        this.HPBar.node.scale = new Vec3(hp/maxHP, 1, 1);
-        this.ENBar.node.scale = new Vec3(en/maxEN, 1, 1);
+        this.HPBar.node.setScale(hp/maxHP, 1, 1);
+        this.ENBar.node.setScale(en/maxEN, 1, 1);
     }
 
     tweenHPEN(hp:number, maxHP:number, en:number, maxEN:number){
