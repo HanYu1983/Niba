@@ -57,6 +57,8 @@ export class LandMap extends Instant {
     playBattleAnimation(result:any, cb:()=>void){
         const anims = result.Animations;
 
+        console.log(anims);
+        
         this.cursor.node.setScale(Vec3.ZERO);
         
         let actions = [];
@@ -106,12 +108,18 @@ export class LandMap extends Instant {
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:
                     actions.push(tween().call(()=>{
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showAction("回避");
+                    }).delay(.5));
+
+                    actions.push(tween().call(()=>{
                         this.aimNode.node.setScale(Vec3.ZERO);
 
                         console.log("BattleResultTypeEvade");
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Animation)?.play("evade");
+                        unitView.getComponent(Unit)?.hideAction();
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeGuard:
@@ -150,7 +158,7 @@ export class LandMap extends Instant {
             }else{
 
                 // 不知道爲什麽只有一個動作序列的時候，就不能用sequence的方法，改用then才可以
-                t.then(actions[0]).delay(1).call(cb).start();
+                t.then(actions[0]).delay(.5).call(cb).start();
             }
         }
 
