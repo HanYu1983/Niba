@@ -5,6 +5,13 @@ import (
 	"fmt"
 )
 
+const (
+	SuitabilityGround   = 0
+	SuitabilitySea      = 1
+	SuitabilitySky      = 2
+	SuitabilityUniverse = 3
+)
+
 type RobotProto struct {
 	Title       string
 	Cost        int
@@ -37,7 +44,7 @@ type WeaponProto struct {
 	Range          [2]int
 	EnergyCost     int
 	MaxBulletCount int
-	Suitablility   [4]float64
+	Suitability    [4]float64
 	Ability        []string
 	EnergyType     string
 	Type           string
@@ -57,6 +64,7 @@ type ComponentProto struct {
 	Action    string
 }
 type TerrainProto struct {
+	ID      string
 	Title   string
 	Cost    float64
 	HitRate float64

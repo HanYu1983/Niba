@@ -18,8 +18,14 @@ func ObserveWeapon(model model, robot protocol.Robot, weapon protocol.Weapon) (p
 	}
 	weapon.EnergyCost = weaponProto.EnergyCost
 	weapon.MaxBulletCount = weaponProto.MaxBulletCount
-	weapon.Suitablility = weaponProto.Suitablility
-	weapon.Ability = weaponProto.Ability
+	weapon.Suitability, err = QueryRobotWeaponSuitability(model, robot, weapon)
+	if err != nil {
+		return protocol.Weapon{}, err
+	}
+	weapon.Ability, err = QueryRobotWeaponAbility(model, robot, weapon)
+	if err != nil {
+		return protocol.Weapon{}, err
+	}
 	weapon.EnergyType = weaponProto.EnergyType
 	weapon.Type = weaponProto.Type
 	weapon.Accuracy = math.Floor(weaponProto.Accuracy*100) / 100

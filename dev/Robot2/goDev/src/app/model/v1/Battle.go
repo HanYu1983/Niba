@@ -68,6 +68,8 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 	}
 	isHit := rand.Float64() < hitRate
 	if isHit {
+		// 傷害動畫
+		animationType := protocol.BattleResultTypeDamage
 		// 命中
 		damage, err := QueryBattleDamage(ctx, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
 		if err != nil {
@@ -77,12 +79,14 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		isGuardAction := targetAction == protocol.BattleMenuActionGuard
 		if isGuardAction {
 			damage /= 2
+			// 防守動畫
+			animationType = protocol.BattleResultTypeGuard
 		}
 		targetRobotAfter := targetRobot
 		targetRobotAfter.HP = helper.Max(0, targetRobot.HP-damage)
 		// damage
 		results = append(results, protocol.BattleAnimation{
-			Type:        protocol.BattleResultTypeDamage,
+			Type:        animationType,
 			RobotBefore: targetRobot,
 			RobotAfter:  targetRobotAfter,
 			Damage:      damage,

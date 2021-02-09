@@ -190,7 +190,7 @@ async function main(config) {
             .filter(d => d)
             .reduce((acc, d) => {
                 acc[d.id] = d
-                delete d.id
+                //delete d.id
                 return acc
             }, {});
 

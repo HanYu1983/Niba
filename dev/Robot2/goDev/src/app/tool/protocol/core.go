@@ -72,7 +72,7 @@ type Weapon struct {
 	Range          [2]int
 	EnergyCost     int
 	MaxBulletCount int
-	Suitablility   [4]float64
+	Suitability    [4]float64
 	Ability        []string
 	EnergyType     string
 	Type           string

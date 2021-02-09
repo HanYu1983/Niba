@@ -67,7 +67,7 @@ export class WeaponInfo extends Instant {
                 this.type.string = currentWeapon.EnergyType;
                 this.count.string = currentWeapon.MaxBulletCount;
                 this.en.string = currentWeapon.EnergyCost;
-                this.suitable.string = currentWeapon.Suitablility.toString();
+                this.suitable.string = currentWeapon.Suitability.toString();
                 this.curage.string = currentWeapon.Curage;
 
                 const cursor = data.GameplayPages["10"].Cursor;
