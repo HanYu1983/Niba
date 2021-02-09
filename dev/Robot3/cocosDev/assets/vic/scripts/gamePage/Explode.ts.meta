@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "fd4256ae-1e9e-4128-92ec-82b0d187c6ca",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/vic/scripts/gamePage/Explode.js",
+    "importerSettings": 7
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "62e1af19-13e1-4cab-812d-21a0f9d8cd73",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/vic/scripts/gamePage/TurnChange.js",
+    "importerSettings": 7
+  }
+}

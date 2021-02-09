@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "b2b9fe60-8b03-437b-b43f-ed1795fe32dc",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/vic/scripts/assocWeaponRobotPage/AssocWRMyRobotList.js",
+    "importerSettings": 7
+  }
+}

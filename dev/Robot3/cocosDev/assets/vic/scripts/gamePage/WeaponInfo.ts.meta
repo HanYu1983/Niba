@@ -1,0 +1,17 @@
+{
+  "ver": "4.0.9",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "3f5a7765-4b52-4a71-a831-4686256b20a9",
+  "files": [
+    ".js",
+    "editor.js",
+    ".trans"
+  ],
+  "subMetas": {},
+  "userData": {
+    "importAsPlugin": false,
+    "moduleId": "project:///assets/vic/scripts/gamePage/WeaponInfo.js",
+    "importerSettings": 7
+  }
+}
