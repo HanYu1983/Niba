@@ -140,7 +140,19 @@ export class LandMap extends Instant {
             }
         });
 
-        const t = tween(this.node);
-        t.sequence.apply(t, actions).call(cb).start();
+        if(actions.length > 0){
+            const t = tween(this.node);
+
+            if(actions.length > 1){
+
+                // 爲了達成可以用陣列的形式，改用apply
+                t.sequence.apply(t, actions).call(cb).start();
+            }else{
+
+                // 不知道爲什麽只有一個動作序列的時候，就不能用sequence的方法，改用then才可以
+                t.then(actions[0]).call(cb).start();
+            }
+        }
+
     }
 }
