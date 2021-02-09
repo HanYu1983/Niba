@@ -12,6 +12,7 @@ type IGameplayModel interface {
 	// gameplay
 	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)
 	OnPlayerTurnEnd(ctx interface{}, player Player) (interface{}, error)
+	OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error)
 	New(situation interface{}) (IModel, error)
 	Save() error
 	Load() (IModel, error)
@@ -34,5 +35,4 @@ type IGameplayModel interface {
 	DisableRobotMenu() (IModel, error)
 	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) (IModel, error)
 	DisableBattleMenu() (IModel, error)
-	Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (IModel, BattleResult, error)
 }

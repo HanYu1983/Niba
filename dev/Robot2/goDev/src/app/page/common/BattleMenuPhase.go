@@ -93,22 +93,11 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			}
 			targetRobotAction := battleMenus.Right.BattleAction
 			targetRobotWeapon := battleMenus.Right.Weapon
-			var result protocol.BattleResult
-			ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeapon.ID)
+			ctxObj, err := ctx.Model.OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeapon.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			// 關掉battleMenuh後再畫戰鬥動畫
-			ctx.Model, err = ctx.Model.DisableBattleMenu()
-			if err != nil {
-				return origin, false, err
-			}
-			ctx, err = ObservePage(ctx, uidata.PageGameplay)
-			if err != nil {
-				return origin, false, err
-			}
-			view.Render(ctx)
-			view.RenderRobotBattle(ctx, result)
+			ctx = ctxObj.(uidata.UI)
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
@@ -154,22 +143,11 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		}
 		targetRobotAction := playerAction
 		targetRobotWeaponID := playerWeaponID
-		var result protocol.BattleResult
-		ctx.Model, result, err = ctx.Model.Battle(robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
+		ctxObj, err := ctx.Model.OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
 		if err != nil {
 			return origin, false, err
 		}
-		// 關掉battleMenuh後再畫戰鬥動畫
-		ctx.Model, err = ctx.Model.DisableBattleMenu()
-		if err != nil {
-			return origin, false, err
-		}
-		ctx, err = ObservePage(ctx, uidata.PageGameplay)
-		if err != nil {
-			return origin, false, err
-		}
-		view.Render(ctx)
-		view.RenderRobotBattle(ctx, result)
+		ctx = ctxObj.(uidata.UI)
 	}
 	ctx.Model, err = ctx.Model.DisableBattleMenu()
 	if err != nil {

@@ -120,6 +120,6 @@ func (v model) EnableBattleMenu(robotID string, weaponID string, targetRobotID s
 func (v model) DisableBattleMenu() (protocol.IModel, error) {
 	return DisableBattleMenu(v)
 }
-func (v model) Battle(robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (protocol.IModel, protocol.BattleResult, error) {
-	return Battle(v, robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
+func (v model) OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error) {
+	return OnRobotBattle(ctx.(uidata.UI), robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
 }
