@@ -121,7 +121,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 					return origin, false, err
 				}
 				if cancel {
-					return origin, cancel, nil
+					goto MENU2D_STEP
 				}
 			case uidata.MenuOptionSkyGround:
 				ctx.Model, err = ctx.Model.RobotSkyGround(unitID)
@@ -133,7 +133,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 					return origin, false, err
 				}
 				if cancel {
-					return origin, cancel, nil
+					goto MENU2D_STEP
 				}
 			case uidata.MenuOptionConfirm:
 				// do nothing
