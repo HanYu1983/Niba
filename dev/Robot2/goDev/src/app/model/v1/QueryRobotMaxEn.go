@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
@@ -13,15 +12,11 @@ func QueryRobotMaxEn(model model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
-	if err != nil {
-		return 0, err
-	}
 	components, err := QueryRobotComponents(model, robot.ID)
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Hp
+	total := 0
 	for _, component := range components {
 		val := 0.0
 		switch component.ProtoID {

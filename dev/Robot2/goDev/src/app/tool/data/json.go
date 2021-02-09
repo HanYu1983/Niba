@@ -1077,6 +1077,7 @@ const (
             "title": "空蓋特",
             "cost": 62500,
             "power": 125,
+            "hp": 5000,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",
@@ -1106,10 +1107,11 @@ const (
             "title": "地蓋特",
             "cost": 62500,
             "power": 125,
+            "hp": 5000,
             "weapons": [
-                "gaite_drill",
+                "gaite_punch",
                 "gaite_missle",
-                "gaite_powerDrill"
+                "gaite_shan"
             ],
             "components": [
                 "energy1",
@@ -1134,11 +1136,8 @@ const (
             "title": "海蓋特",
             "cost": 62500,
             "power": 125,
-            "weapons": [
-                "gaite_punch",
-                "gaite_missle",
-                "gaite_shan"
-            ],
+            "hp": 5000,
+            "weapons": [],
             "components": [
                 "energy1",
                 "energy2",
@@ -1162,6 +1161,7 @@ const (
             "title": "魔神z",
             "cost": 48400,
             "power": 110,
+            "hp": 6000,
             "weapons": [
                 "moshen_ray",
                 "moshen_punch",
@@ -1189,6 +1189,7 @@ const (
             "title": "z鋼彈",
             "cost": 32400,
             "power": 90,
+            "hp": 3000,
             "weapons": [
                 "beam_sword2",
                 "beam_gun1",
@@ -1216,6 +1217,7 @@ const (
             "title": "z鋼彈飛翼",
             "cost": 32400,
             "power": 90,
+            "hp": 3000,
             "weapons": [
                 "beam_gun1"
             ],
@@ -1241,6 +1243,7 @@ const (
             "title": "鋼彈",
             "cost": 16900,
             "power": 65,
+            "hp": 2500,
             "weapons": [
                 "beam_sword1",
                 "beam_gun1"
@@ -1265,6 +1268,7 @@ const (
             "title": "吉姆",
             "cost": 9216,
             "power": 48,
+            "hp": 2000,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling1"
@@ -1287,6 +1291,7 @@ const (
             "title": "制式格鬥",
             "cost": 14400,
             "power": 60,
+            "hp": 2500,
             "weapons": [
                 "beam_sword2",
                 "beam_gatling1"
@@ -1309,6 +1314,7 @@ const (
             "title": "制式遊擊",
             "cost": 14400,
             "power": 60,
+            "hp": 2500,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling2"
@@ -1331,6 +1337,7 @@ const (
             "title": "制式狙擊",
             "cost": 14400,
             "power": 60,
+            "hp": 2500,
             "weapons": [
                 "beam_sniper1",
                 "beam_gatling1"
@@ -1353,6 +1360,7 @@ const (
             "title": "制式干擾",
             "cost": 14400,
             "power": 60,
+            "hp": 2500,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling1"
@@ -1375,6 +1383,7 @@ const (
             "title": "制式防盾",
             "cost": 14400,
             "power": 60,
+            "hp": 2500,
             "weapons": [
                 "beam_gun1"
             ],
@@ -1397,6 +1406,7 @@ const (
             "title": "零式鋼彈",
             "cost": 78400,
             "power": 140,
+            "hp": 4000,
             "weapons": [
                 "beam_sword1",
                 "beam_sniper4",
@@ -1425,6 +1435,7 @@ const (
             "title": "零式鋼彈飛翼",
             "cost": 78400,
             "power": 140,
+            "hp": 4000,
             "weapons": [
                 "beam_sniper4"
             ],
@@ -1451,6 +1462,7 @@ const (
             "title": "攻擊鋼彈",
             "cost": 36100,
             "power": 95,
+            "hp": 4000,
             "weapons": [
                 "sword1",
                 "sword3",
@@ -1477,11 +1489,9 @@ const (
             "title": "特輕型機甲",
             "cost": 3600,
             "power": 30,
+            "hp": 2000,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
@@ -1496,11 +1506,9 @@ const (
             "title": "輕型機甲",
             "cost": 8100,
             "power": 45,
+            "hp": 2500,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
@@ -1515,11 +1523,9 @@ const (
             "title": "制式機甲",
             "cost": 16900,
             "power": 65,
+            "hp": 3000,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
@@ -1534,11 +1540,9 @@ const (
             "title": "中型機甲",
             "cost": 32400,
             "power": 90,
+            "hp": 3500,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
@@ -1553,11 +1557,9 @@ const (
             "title": "重型機甲",
             "cost": 57600,
             "power": 120,
+            "hp": 4000,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
@@ -1572,11 +1574,9 @@ const (
             "title": "特重型機甲",
             "cost": 96100,
             "power": 155,
+            "hp": 4500,
             "weapons": [],
-            "components": [
-                "energy1",
-                "armor1"
-            ],
+            "components": [],
             "suitability": [
                 1,
                 0.5,
