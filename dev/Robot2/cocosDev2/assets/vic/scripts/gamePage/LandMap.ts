@@ -150,7 +150,7 @@ export class LandMap extends Instant {
             }else{
 
                 // 不知道爲什麽只有一個動作序列的時候，就不能用sequence的方法，改用then才可以
-                t.then(actions[0]).call(cb).start();
+                t.then(actions[0]).delay(1).call(cb).start();
             }
         }
 

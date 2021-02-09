@@ -40,15 +40,15 @@ export class ActionInfo extends Instant {
         this.accuracy.string = Math.floor(info.HitRate * 100) + "%";
     }
 
-    private setAction(actionType?:ModelType.BattleAction){
+    private setAction(actionType?:ModelType.BattleMenuAction){
         switch(actionType){
-            case ModelType.BattleAction.BattleActionAttack:
+            case ModelType.BattleMenuAction.BattleMenuActionAttack:
                 this.action.string = "攻擊";
                 break;
-            case ModelType.BattleAction.BattleActionGuard:
+            case ModelType.BattleMenuAction.BattleMenuActionGuard:
                 this.action.string = "防禦";
                 break;
-            case ModelType.BattleAction.BattleActionEvade:
+            case ModelType.BattleMenuAction.BattleMenuActionEvade:
                 this.action.string = "回避";
                 break;
         }

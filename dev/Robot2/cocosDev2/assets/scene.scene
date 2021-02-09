@@ -31034,7 +31034,7 @@
         "__id__": 1291
       }
     ],
-    "_active": true,
+    "_active": false,
     "_components": [
       {
         "__id__": 1296
@@ -46692,7 +46692,7 @@
     "__prefab": null,
     "pool": null,
     "childs": [],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "title": {
       "__id__": 1794
     },
@@ -49856,7 +49856,7 @@
     "__prefab": null,
     "pool": null,
     "childs": [],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "damage": {
       "__id__": 1958
     },
@@ -53036,7 +53036,7 @@
     "__prefab": null,
     "pool": null,
     "childs": [],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "title": {
       "__id__": 2050
     },
@@ -56200,7 +56200,7 @@
     "__prefab": null,
     "pool": null,
     "childs": [],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "damage": {
       "__id__": 2214
     },
@@ -56405,7 +56405,7 @@
     "__prefab": null,
     "pool": null,
     "childs": [],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "unitInfos": [
       {
         "__id__": 1893
@@ -56461,7 +56461,7 @@
         "__id__": 1753
       }
     ],
-    "doActiveWhenBuildClear": false,
+    "doActiveWhenBuildClear": true,
     "pageId": 13,
     "_id": "05KHVTfkVOToEqG2zaAcJm"
   },

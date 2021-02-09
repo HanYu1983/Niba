@@ -76,6 +76,8 @@ export class Controller extends Component {
         systemEvent.on(SystemEvent.EventType.KEY_UP, this.model.OnKeyUp, this.model);
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.model.OnKeyDown, this.model);
         // 畫第一次(Render), 之後是自動呼叫Render
-        this.model.Flush();
+        if(this.isTargetDevice()){
+            this.model.Flush();
+        }
     }
 }
