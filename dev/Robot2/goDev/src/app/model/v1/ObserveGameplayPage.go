@@ -16,6 +16,8 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.App.Gameplay.Map
 	cursor := model.App.Gameplay.Cursor
+	// player
+	gameplayPage.Players = model.App.Gameplay.Players
 	// camera
 	gameplayPage.Camera[0] = helper.Max(0, helper.Min(len(modelMap[0])-uidata.MapWidth, gameplayPage.Camera[0]))
 	gameplayPage.Camera[1] = helper.Max(0, helper.Min(len(modelMap)-uidata.MapHeight, gameplayPage.Camera[1]))

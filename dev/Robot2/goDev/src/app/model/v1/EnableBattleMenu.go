@@ -62,12 +62,17 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 				options = append(options, []string{uidata.MenuOptionUnitGuard})
 				options = append(options, []string{uidata.MenuOptionUnitEvade})
 			}
+			// invalidWeapons
+			invalidWeapons := map[string]string{}
+			if len(weapons) > 0 {
+				invalidWeapons, err = CheckInvalidWeapons(ctx, robot, weapons)
+			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = targetRobotID
 			robotMenu.Options = options
 			robotMenu.RowFunctionMapping = rowFunctionMapping
 			robotMenu.Weapons = weapons
-			robotMenu.InvalidWeapons = map[string]string{}
+			robotMenu.InvalidWeapons = invalidWeapons
 		} else if robot.PlayerID == protocol.PlayerIDPlayer {
 			// 好人打敵人
 			options := [][]string{}
@@ -91,12 +96,17 @@ func EnableBattleMenu(origin model, robotID string, weaponID string, targetRobot
 			} else {
 				return origin, fmt.Errorf("這時必須有武器可以選")
 			}
+			// invalidWeapons
+			invalidWeapons := map[string]string{}
+			if len(weapons) > 0 {
+				invalidWeapons, err = CheckInvalidWeapons(ctx, robot, weapons)
+			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = robotID
 			robotMenu.Options = options
 			robotMenu.RowFunctionMapping = rowFunctionMapping
 			robotMenu.Weapons = weapons
-			robotMenu.InvalidWeapons = map[string]string{}
+			robotMenu.InvalidWeapons = invalidWeapons
 		} else {
 			return origin, fmt.Errorf("unknown situation. robot(%+v) targetRobot(%+v)", robot, targetRobot)
 		}

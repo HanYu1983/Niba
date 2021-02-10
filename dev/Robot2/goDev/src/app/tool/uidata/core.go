@@ -77,6 +77,7 @@ const (
 
 // GameplayPage is
 type GameplayPage struct {
+	Players     map[string]protocol.Player
 	Map         [MapHeight][MapWidth]int
 	Cursor      protocol.Position
 	Camera      protocol.Position

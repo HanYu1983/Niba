@@ -80,6 +80,25 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		SELECT_UNIT_STEP:
 			var targetID string
 			ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
+				robot, err := protocol.TryGetStringRobot(gameplayPage.Robots, unitID)
+				if err != nil {
+					return err
+				}
+				targetRobot, err := protocol.TryGetStringRobot(gameplayPage.Robots, targetID)
+				if err != nil {
+					return err
+				}
+				plyr1, err := protocol.TryGetStringPlayer(gameplayPage.Players, robot.PlayerID)
+				if err != nil {
+					return err
+				}
+				plyr2, err := protocol.TryGetStringPlayer(gameplayPage.Players, targetRobot.PlayerID)
+				if err != nil {
+					return err
+				}
+				if plyr1.GroupID == plyr2.GroupID {
+					return fmt.Errorf("必須選擇敵人")
+				}
 				return nil
 			})
 			if err != nil {

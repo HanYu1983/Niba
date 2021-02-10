@@ -114,7 +114,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 				return origin, fmt.Errorf("menu.Left.BattleAction must set.(%+v)", menu.Left)
 			}
 			if menu.Right.BattleAction == protocol.BattleMenuActionPending {
-				return origin, fmt.Errorf("menu.Right.BattleAction must set.(%+v)", menu.Right)
+				return origin, fmt.Errorf("menu.Right.BattleAction must set.(%+v). 這個情況也許發生在攻擊自機的時候(理論上不能)", menu.Right)
 			}
 		}
 	}
