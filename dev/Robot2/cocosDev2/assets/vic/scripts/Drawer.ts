@@ -134,8 +134,8 @@ export class Drawer extends Instant {
         let gridPos = Grids.getGridPos(x, y);
         gridPos.x += offsetX;
         gridPos.y += offsetY;
-        if(x > 10)  gridPos.x -= 380;
-        if(y > 10)  gridPos.y += 340;
+        if(x > 9)  gridPos.x -= (x - 9) * 32;
+        if(y > 9)  gridPos.y += (y - 9) * 32;
         return gridPos;
     }
 }

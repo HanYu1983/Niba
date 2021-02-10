@@ -87,6 +87,8 @@ export class Units extends Instant {
                     if(unitTag){
                         if(unitTag.IsDone) unit.getComponent(Unit)?.showColor(2);
                         unit.getComponent(Unit)?.isAir(unitTag.Sky);
+                    }else{
+                        unit.getComponent(Unit)?.isAir(false);
                     }
                     unit.getComponent(Unit)?.changeUnit(robot.ProtoID);
                     unit.getComponent(Unit)?.showHPEN(robot.HP, robot.MaxHP, robot.EN, robot.MaxEN);
