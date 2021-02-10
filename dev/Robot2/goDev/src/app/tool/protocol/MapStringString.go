@@ -74,3 +74,20 @@ func DifferenceStringString(a map[string]string, b map[string]string) map[string
 	}
 	return ret
 }
+
+func MapKVStringString(a map[string]string, mapF func(k string, v string) string) map[string]string {
+	ret := map[string]string{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringString(a map[string]string, filterF func(k string, v string) bool) map[string]string {
+	ret := map[string]string{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

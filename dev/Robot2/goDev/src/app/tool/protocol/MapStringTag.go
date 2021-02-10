@@ -74,3 +74,20 @@ func DifferenceStringTag(a map[string]Tag, b map[string]Tag) map[string]Tag {
 	}
 	return ret
 }
+
+func MapKVStringTag(a map[string]Tag, mapF func(k string, v Tag) Tag) map[string]Tag {
+	ret := map[string]Tag{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringTag(a map[string]Tag, filterF func(k string, v Tag) bool) map[string]Tag {
+	ret := map[string]Tag{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

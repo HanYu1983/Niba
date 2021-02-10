@@ -74,3 +74,20 @@ func DifferenceIntMenu2D(a map[int]Menu2D, b map[int]Menu2D) map[int]Menu2D {
 	}
 	return ret
 }
+
+func MapKVIntMenu2D(a map[int]Menu2D, mapF func(k int, v Menu2D) Menu2D) map[int]Menu2D {
+	ret := map[int]Menu2D{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterIntMenu2D(a map[int]Menu2D, filterF func(k int, v Menu2D) bool) map[int]Menu2D {
+	ret := map[int]Menu2D{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

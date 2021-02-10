@@ -74,3 +74,20 @@ func DifferenceIntInt(a map[int]int, b map[int]int) map[int]int {
 	}
 	return ret
 }
+
+func MapKVIntInt(a map[int]int, mapF func(k int, v int) int) map[int]int {
+	ret := map[int]int{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterIntInt(a map[int]int, filterF func(k int, v int) bool) map[int]int {
+	ret := map[int]int{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

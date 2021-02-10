@@ -70,3 +70,20 @@ func DifferenceKeyValue(a map[Key]Value, b map[Key]Value) map[Key]Value {
 	}
 	return ret
 }
+
+func MapKVKeyValue(a map[Key]Value, mapF func(k Key, v Value) Value) map[Key]Value {
+	ret := map[Key]Value{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterKeyValue(a map[Key]Value, filterF func(k Key, v Value) bool) map[Key]Value {
+	ret := map[Key]Value{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

@@ -156,10 +156,7 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 			_robot := targetRobot
 			_robotPos := targetRobotPos
 			_weapon := targetRobotWeapon
-			_weapons, err := QueryRobotWeapons(ctx, _robot.ID, _robot.Transform)
-			if err != nil {
-				return origin, protocol.BattleResult{}, err
-			}
+			_weapons := targetRobotWeapons
 			weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, _weapon.ProtoID)
 			if err != nil {
 				return origin, protocol.BattleResult{}, err
@@ -229,8 +226,6 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 			})
 		}
 	}
-	robot.WeaponsByTransform = protocol.AssocStringWeapons(robot.WeaponsByTransform, robot.Transform, robotWeapons)
-	targetRobot.WeaponsByTransform = protocol.AssocStringWeapons(targetRobot.WeaponsByTransform, targetRobot.Transform, targetRobotWeapons)
 	ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, robot)
 	ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, targetRobot.ID, targetRobot)
 	ctx.App.Gameplay.Pilots = protocol.AssocStringPilot(ctx.App.Gameplay.Pilots, robotPilot.ID, robotPilot)

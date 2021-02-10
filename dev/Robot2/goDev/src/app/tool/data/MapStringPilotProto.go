@@ -74,3 +74,20 @@ func DifferenceStringPilotProto(a map[string]PilotProto, b map[string]PilotProto
 	}
 	return ret
 }
+
+func MapKVStringPilotProto(a map[string]PilotProto, mapF func(k string, v PilotProto) PilotProto) map[string]PilotProto {
+	ret := map[string]PilotProto{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringPilotProto(a map[string]PilotProto, filterF func(k string, v PilotProto) bool) map[string]PilotProto {
+	ret := map[string]PilotProto{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

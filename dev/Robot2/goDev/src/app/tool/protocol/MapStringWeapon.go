@@ -74,3 +74,20 @@ func DifferenceStringWeapon(a map[string]Weapon, b map[string]Weapon) map[string
 	}
 	return ret
 }
+
+func MapKVStringWeapon(a map[string]Weapon, mapF func(k string, v Weapon) Weapon) map[string]Weapon {
+	ret := map[string]Weapon{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringWeapon(a map[string]Weapon, filterF func(k string, v Weapon) bool) map[string]Weapon {
+	ret := map[string]Weapon{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

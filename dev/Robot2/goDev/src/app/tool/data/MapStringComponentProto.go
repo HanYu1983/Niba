@@ -74,3 +74,20 @@ func DifferenceStringComponentProto(a map[string]ComponentProto, b map[string]Co
 	}
 	return ret
 }
+
+func MapKVStringComponentProto(a map[string]ComponentProto, mapF func(k string, v ComponentProto) ComponentProto) map[string]ComponentProto {
+	ret := map[string]ComponentProto{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringComponentProto(a map[string]ComponentProto, filterF func(k string, v ComponentProto) bool) map[string]ComponentProto {
+	ret := map[string]ComponentProto{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

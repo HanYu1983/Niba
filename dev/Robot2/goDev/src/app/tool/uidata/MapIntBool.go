@@ -74,3 +74,20 @@ func DifferenceIntBool(a map[int]bool, b map[int]bool) map[int]bool {
 	}
 	return ret
 }
+
+func MapKVIntBool(a map[int]bool, mapF func(k int, v bool) bool) map[int]bool {
+	ret := map[int]bool{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterIntBool(a map[int]bool, filterF func(k int, v bool) bool) map[int]bool {
+	ret := map[int]bool{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

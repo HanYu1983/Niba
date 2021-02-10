@@ -74,3 +74,20 @@ func DifferenceStringRobot(a map[string]Robot, b map[string]Robot) map[string]Ro
 	}
 	return ret
 }
+
+func MapKVStringRobot(a map[string]Robot, mapF func(k string, v Robot) Robot) map[string]Robot {
+	ret := map[string]Robot{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringRobot(a map[string]Robot, filterF func(k string, v Robot) bool) map[string]Robot {
+	ret := map[string]Robot{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

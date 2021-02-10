@@ -74,3 +74,20 @@ func DifferenceStringPosition(a map[string]Position, b map[string]Position) map[
 	}
 	return ret
 }
+
+func MapKVStringPosition(a map[string]Position, mapF func(k string, v Position) Position) map[string]Position {
+	ret := map[string]Position{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringPosition(a map[string]Position, filterF func(k string, v Position) bool) map[string]Position {
+	ret := map[string]Position{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

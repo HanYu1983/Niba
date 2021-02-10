@@ -74,3 +74,20 @@ func DifferenceIntBattleMenu(a map[int]BattleMenu, b map[int]BattleMenu) map[int
 	}
 	return ret
 }
+
+func MapKVIntBattleMenu(a map[int]BattleMenu, mapF func(k int, v BattleMenu) BattleMenu) map[int]BattleMenu {
+	ret := map[int]BattleMenu{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterIntBattleMenu(a map[int]BattleMenu, filterF func(k int, v BattleMenu) bool) map[int]BattleMenu {
+	ret := map[int]BattleMenu{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

@@ -74,3 +74,20 @@ func DifferenceIntGameplayPage(a map[int]GameplayPage, b map[int]GameplayPage) m
 	}
 	return ret
 }
+
+func MapKVIntGameplayPage(a map[int]GameplayPage, mapF func(k int, v GameplayPage) GameplayPage) map[int]GameplayPage {
+	ret := map[int]GameplayPage{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterIntGameplayPage(a map[int]GameplayPage, filterF func(k int, v GameplayPage) bool) map[int]GameplayPage {
+	ret := map[int]GameplayPage{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

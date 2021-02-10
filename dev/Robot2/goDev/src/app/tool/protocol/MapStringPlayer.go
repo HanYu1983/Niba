@@ -74,3 +74,20 @@ func DifferenceStringPlayer(a map[string]Player, b map[string]Player) map[string
 	}
 	return ret
 }
+
+func MapKVStringPlayer(a map[string]Player, mapF func(k string, v Player) Player) map[string]Player {
+	ret := map[string]Player{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringPlayer(a map[string]Player, filterF func(k string, v Player) bool) map[string]Player {
+	ret := map[string]Player{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}

@@ -57,6 +57,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			return origin, false, err
 		}
 		view.Render(ctx)
+	PLAYER_MENU2D_STEP:
 		var cancel, tab bool
 		var selection string
 		for {
@@ -87,6 +88,10 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
 		case protocol.RobotMenuFunctionWeapon:
 			weaponID := selection
+			if invalidStr, has := gameplayPage.RobotMenu.InvalidWeapons[weaponID]; has {
+				view.Alert(invalidStr)
+				goto PLAYER_MENU2D_STEP
+			}
 			battleMenus, hasBattleMenu := ctx.BattleMenus[uidata.BattleMenuUnitBattleMenu]
 			if hasBattleMenu == false {
 				return origin, false, fmt.Errorf("戰鬥階段時uidata.BattleMenuUnitBattleMenu必須存在")
@@ -102,6 +107,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
 	} else {
+	ENEMY_MENU2D_STEP:
 		var cancel, tab bool
 		var selection string
 		for {
@@ -140,6 +146,10 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			default:
 				return origin, false, fmt.Errorf("未知的選項(%v)", selection)
 			}
+		}
+		if invalidStr, has := gameplayPage.RobotMenu.InvalidWeapons[playerWeaponID]; has {
+			view.Alert(invalidStr)
+			goto ENEMY_MENU2D_STEP
 		}
 		targetRobotAction := playerAction
 		targetRobotWeaponID := playerWeaponID

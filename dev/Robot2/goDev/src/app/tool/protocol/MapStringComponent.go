@@ -74,3 +74,20 @@ func DifferenceStringComponent(a map[string]Component, b map[string]Component) m
 	}
 	return ret
 }
+
+func MapKVStringComponent(a map[string]Component, mapF func(k string, v Component) Component) map[string]Component {
+	ret := map[string]Component{}
+	for k, v := range a {
+		ret[k] = mapF(k, v)
+	}
+	return ret
+}
+func FilterStringComponent(a map[string]Component, filterF func(k string, v Component) bool) map[string]Component {
+	ret := map[string]Component{}
+	for k, v := range a {
+		if filterF(k, v) {
+			ret[k] = v
+		}
+	}
+	return ret
+}
