@@ -144,10 +144,12 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 					goto MENU2D_STEP
 				}
 			case uidata.MenuOptionSkyGround:
-				ctx.Model, err = ctx.Model.RobotSkyGround(unitID)
+				tag := gameplayPage.Tags[unitID]
+				ctxObj, err := ctx.Model.OnRobotSkyGround(ctx, unitID, !tag.Sky)
 				if err != nil {
-					view.Alert(err.Error())
+					return origin, false, err
 				}
+				ctx = ctxObj.(uidata.UI)
 				ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 				if err != nil {
 					return origin, false, err

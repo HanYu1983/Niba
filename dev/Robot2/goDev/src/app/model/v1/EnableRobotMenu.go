@@ -46,6 +46,19 @@ func EnableRobotMenu(origin model, robotID string, situation interface{}) (model
 				options = append(options, robotProto.Transform)
 			}
 		}
+		// sky ground
+		if tags.MoveCount == 0 {
+			suitabiity, err := QueryRobotSuitablility(v, robot.ID)
+			if err != nil {
+				return origin, err
+			}
+			isSky := v.App.Gameplay.Tags[robot.ID].Sky
+			switch {
+			case isSky == false && suitabiity[data.SuitabilitySky] > 0,
+				isSky && suitabiity[data.SuitabilityGround] > 0:
+				options = append(options, []string{uidata.MenuOptionSkyGround})
+			}
+		}
 		// done
 		options = append(options, []string{uidata.MenuOptionUnitDone})
 		// invalidWeapons

@@ -51,6 +51,9 @@ func (v model) OnEnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
 func (v model) OnRobotTransform(ctx interface{}, robotID string, transform string) (interface{}, error) {
 	return OnRobotTransform(ctx.(uidata.UI), robotID, transform)
 }
+func (v model) OnRobotSkyGround(ctx interface{}, robotID string, sky bool) (interface{}, error) {
+	return OnRobotSkyGround(ctx.(uidata.UI), robotID, sky)
+}
 
 // IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
@@ -106,9 +109,6 @@ func (v model) RobotDone(robotID string) (protocol.IModel, error) {
 }
 func (v model) RobotMove(robotID string, pos protocol.Position) (protocol.IModel, error) {
 	return RobotMove(v, robotID, pos)
-}
-func (v model) RobotSkyGround(robotID string) (protocol.IModel, error) {
-	return RobotSkyGround(v, robotID)
 }
 func (v model) EnableRobotMenu(robotID string, situation interface{}) (protocol.IModel, error) {
 	return EnableRobotMenu(v, robotID, situation)

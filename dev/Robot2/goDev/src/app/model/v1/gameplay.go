@@ -45,6 +45,9 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	ctx.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
 	ctx.App.Gameplay.Pilots = map[string]protocol.Pilot{
 		"pilotA": {ID: "pilotA"},
+		"pilotB": {ID: "pilotB"},
+		"pilotC": {ID: "pilotC"},
+		"pilotD": {ID: "pilotD"},
 	}
 	ctx, err = NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
 		ID:       "0",
@@ -58,7 +61,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	ctx, err = NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
 		ProtoID:  "gundam",
 		PlayerID: protocol.PlayerIDPlayer,
-		PilotID:  "pilotA",
+		PilotID:  "pilotB",
 	})
 	if err != nil {
 		return origin, err
@@ -66,7 +69,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	ctx, err = NewRobot(ctx, protocol.Position{10, 0}, protocol.Robot{
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
-		PilotID:  "pilotA",
+		PilotID:  "pilotC",
 	})
 	if err != nil {
 		return origin, err
@@ -74,7 +77,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	ctx, err = NewRobot(ctx, protocol.Position{0, 10}, protocol.Robot{
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
-		PilotID:  "pilotA",
+		PilotID:  "pilotD",
 	})
 	if err != nil {
 		return origin, err

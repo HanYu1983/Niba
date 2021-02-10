@@ -23,7 +23,6 @@ type IGameplayModel interface {
 	GetCursor() Position
 	RobotDone(string) (IModel, error)
 	RobotMove(string, Position) (IModel, error)
-	RobotSkyGround(string) (IModel, error)
 	EnableRobotMenu(string, interface{}) (IModel, error)
 	DisableRobotMenu() (IModel, error)
 	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) (IModel, error)

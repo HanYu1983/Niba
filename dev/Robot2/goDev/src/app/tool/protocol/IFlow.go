@@ -6,4 +6,5 @@ type IFlow interface {
 	OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error)
 	OnEnemyTurnPhase(ctx interface{}) (interface{}, bool, error)
 	OnRobotTransform(ctx interface{}, robotID string, transform string) (interface{}, error)
+	OnRobotSkyGround(ctx interface{}, robotID string, sky bool) (interface{}, error)
 }
