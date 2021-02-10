@@ -5,14 +5,8 @@ import (
 )
 
 type IGameplayModel interface {
-	// flow
 	ObservePage(ctx interface{}, id int) (interface{}, error)
 	ObserveRobot(robot Robot) (Robot, error)
-	EnemyTurnPhase(ctx interface{}) (interface{}, bool, error)
-	// gameplay
-	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)
-	OnPlayerTurnEnd(ctx interface{}, player Player) (interface{}, error)
-	OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error)
 	New(situation interface{}) (IModel, error)
 	Save() error
 	Load() (IModel, error)
@@ -29,7 +23,6 @@ type IGameplayModel interface {
 	GetCursor() Position
 	RobotDone(string) (IModel, error)
 	RobotMove(string, Position) (IModel, error)
-	RobotTransform(string, string) (IModel, error)
 	RobotSkyGround(string) (IModel, error)
 	EnableRobotMenu(string, interface{}) (IModel, error)
 	DisableRobotMenu() (IModel, error)

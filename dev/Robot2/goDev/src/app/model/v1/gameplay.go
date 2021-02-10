@@ -48,7 +48,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	}
 	ctx, err = NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
 		ID:       "0",
-		ProtoID:  "gundam",
+		ProtoID:  "zgundam",
 		PlayerID: protocol.PlayerIDPlayer,
 		PilotID:  "pilotA",
 	})
@@ -107,6 +107,9 @@ func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (m
 	}
 	if robot.Transform == notFound {
 		robot.Transform = robot.ProtoID
+	}
+	if robot.Transform != robot.ProtoID {
+		return origin, fmt.Errorf("transform(%v) must equals protoID(%v)", robot.Transform, robot.ProtoID)
 	}
 	if robot.WeaponsByTransform == nil {
 		robot.WeaponsByTransform = map[string]protocol.Weapons{}
@@ -199,10 +202,6 @@ func RobotDone(origin model, robotID string) (model, error) {
 	tags.IsDone = true
 	ctx.App.Gameplay.Tags = protocol.AssocStringTag(ctx.App.Gameplay.Tags, robotID, tags)
 	return ctx, nil
-}
-
-func RobotTransform(origin model, robotID string, transformID string) (model, error) {
-	return origin, nil
 }
 func RobotSkyGround(origin model, robotID string) (model, error) {
 	return origin, nil

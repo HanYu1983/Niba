@@ -32,8 +32,10 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	menu.Options = options
 	if len(options) > 0 {
 		menu.Cursor1 = helper.Max(0, helper.Min(len(options)-1, menu.Cursor1))
-		if len(options[menu.Cursor1]) > 0 {
-			menu.Cursor2[menu.Cursor1] = helper.Max(0, helper.Min(len(options[menu.Cursor1])-1, menu.Cursor2[menu.Cursor1]))
+		for i := 0; i < len(options); i++ {
+			if len(options[i]) > 0 {
+				menu.Cursor2[i] = helper.Max(0, helper.Min(len(options[i])-1, menu.Cursor2[i]))
+			}
 		}
 	}
 	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
@@ -49,15 +50,44 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 	results := []protocol.BattleAnimation{}
 	// 先進行攻擊方
 	// 消費彈藥
-	results = append(results, protocol.BattleAnimation{
-		Type:        protocol.BattleResultTypeWeapon,
-		RobotBefore: robot,
-		RobotAfter:  robot,
-		Damage:      0,
-		Positions: map[string]protocol.Position{
-			robot.ID: robotPos,
-		},
-	})
+	{
+		_robot := robot
+		_robotPos := robotPos
+		_weapon := robotWeapon
+		_weapons := robotWeapons
+		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, _weapon.ProtoID)
+		if err != nil {
+			return origin, protocol.BattleResult{}, err
+		}
+		_robotAfter := _robot
+		switch weaponProto.EnergyType {
+		case "energy":
+			cost := weaponProto.EnergyCost
+			if robot.EN < cost {
+				return origin, protocol.BattleResult{}, fmt.Errorf("robot.EN(%v) not enougth for cost(%v)", robot.EN, cost)
+			}
+			_robotAfter.EN = _robotAfter.EN - cost
+		case "bullet":
+			if _weapon.BulletCount == 0 {
+				return origin, protocol.BattleResult{}, fmt.Errorf("weapon.BulletCount not enougth")
+			}
+			_weapon.BulletCount--
+			_weapons = protocol.AssocStringWeapon(_weapons, _weapon.ID, _weapon)
+			_robotAfter.WeaponsByTransform[_robotAfter.Transform] = _weapons
+		default:
+			return origin, protocol.BattleResult{}, fmt.Errorf("unknown energy type(%+v)", _weapon)
+		}
+		results = append(results, protocol.BattleAnimation{
+			Type:        protocol.BattleResultTypeWeapon,
+			RobotBefore: _robot,
+			RobotAfter:  _robotAfter,
+			Damage:      0,
+			Positions: map[string]protocol.Position{
+				_robot.ID: _robotPos,
+			},
+		})
+		robot = _robotAfter
+	}
 	// 命中率
 	hitRate, err := QueryBattleHitRate(ctx, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
 	if err != nil {
@@ -117,19 +147,51 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 			Type:        protocol.BattleResultTypeAim,
 			AimPosition: [2]protocol.Position{targetRobotPos, robotPos},
 		})
-		// 消費彈藥
-		results = append(results, protocol.BattleAnimation{
-			Type:        protocol.BattleResultTypeWeapon,
-			RobotBefore: targetRobot,
-			RobotAfter:  targetRobot,
-			Damage:      0,
-			Positions: map[string]protocol.Position{
-				targetRobot.ID: targetRobotPos,
-			},
-		})
 		targetRobotWeapon, err := protocol.TryGetStringWeapon(targetRobotWeapons, targetWeaponID)
 		if err != nil {
 			return origin, protocol.BattleResult{}, err
+		}
+		// 消費彈藥
+		{
+			_robot := targetRobot
+			_robotPos := targetRobotPos
+			_weapon := targetRobotWeapon
+			_weapons, err := QueryRobotWeapons(ctx, _robot.ID, _robot.Transform)
+			if err != nil {
+				return origin, protocol.BattleResult{}, err
+			}
+			weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, _weapon.ProtoID)
+			if err != nil {
+				return origin, protocol.BattleResult{}, err
+			}
+			_robotAfter := _robot
+			switch weaponProto.EnergyType {
+			case "energy":
+				cost := weaponProto.EnergyCost
+				if robot.EN < cost {
+					return origin, protocol.BattleResult{}, fmt.Errorf("robot.EN(%v) not enougth for cost(%v)", robot.EN, cost)
+				}
+				_robotAfter.EN = _robotAfter.EN - cost
+			case "bullet":
+				if _weapon.BulletCount == 0 {
+					return origin, protocol.BattleResult{}, fmt.Errorf("weapon.BulletCount not enougth")
+				}
+				_weapon.BulletCount--
+				_weapons = protocol.AssocStringWeapon(_weapons, _weapon.ID, _weapon)
+				_robotAfter.WeaponsByTransform[_robotAfter.Transform] = _weapons
+			default:
+				return origin, protocol.BattleResult{}, fmt.Errorf("unknown energy type(%+v)", _weapon)
+			}
+			results = append(results, protocol.BattleAnimation{
+				Type:        protocol.BattleResultTypeWeapon,
+				RobotBefore: _robot,
+				RobotAfter:  _robotAfter,
+				Damage:      0,
+				Positions: map[string]protocol.Position{
+					_robot.ID: _robotPos,
+				},
+			})
+			targetRobot = _robotAfter
 		}
 		hitRate, err := QueryBattleHitRate(ctx, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
 		if err != nil {

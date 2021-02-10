@@ -38,21 +38,26 @@ func (v model) DissocComponentRobot(componentID string) (protocol.IModel, error)
 	return DissocComponentRobot(v, componentID)
 }
 
-// IGameplayModel
+// IFlow
 func (v model) OnPlayerTurnStart(ui interface{}, player protocol.Player) (interface{}, error) {
 	return OnPlayerTurnStart(ui.(uidata.UI), player)
 }
 func (v model) OnPlayerTurnEnd(ui interface{}, player protocol.Player) (interface{}, error) {
 	return OnPlayerTurnEnd(ui.(uidata.UI), player)
 }
+func (v model) OnEnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
+	return EnemyTurnPhase(origin.(uidata.UI))
+}
+func (v model) OnRobotTransform(ctx interface{}, robotID string, transform string) (interface{}, error) {
+	return OnRobotTransform(ctx.(uidata.UI), robotID, transform)
+}
+
+// IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui.(uidata.UI), id)
 }
 func (v model) ObserveRobot(robot protocol.Robot) (protocol.Robot, error) {
 	return ObserveRobot(v, robot)
-}
-func (v model) EnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
-	return EnemyTurnPhase(origin.(uidata.UI))
 }
 func (v model) New(situation interface{}) (protocol.IModel, error) {
 	return NewModel(v, situation)
@@ -101,9 +106,6 @@ func (v model) RobotDone(robotID string) (protocol.IModel, error) {
 }
 func (v model) RobotMove(robotID string, pos protocol.Position) (protocol.IModel, error) {
 	return RobotMove(v, robotID, pos)
-}
-func (v model) RobotTransform(robotID string, transformID string) (protocol.IModel, error) {
-	return RobotTransform(v, robotID, transformID)
 }
 func (v model) RobotSkyGround(robotID string) (protocol.IModel, error) {
 	return RobotSkyGround(v, robotID)

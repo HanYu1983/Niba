@@ -13,6 +13,7 @@ const (
 )
 
 type RobotProto struct {
+	ID          string
 	Title       string
 	Cost        int
 	Power       int
@@ -25,6 +26,7 @@ type RobotProto struct {
 }
 
 type PilotProto struct {
+	ID       string
 	Title    string
 	Cost     int
 	Melee    float64
@@ -39,6 +41,7 @@ type PilotProto struct {
 }
 
 type WeaponProto struct {
+	ID             string
 	Title          string
 	Cost           int
 	Range          [2]int
@@ -56,6 +59,7 @@ type WeaponProto struct {
 }
 
 type ComponentProto struct {
+	ID        string
 	Title     string
 	Cost      int
 	Desc      string

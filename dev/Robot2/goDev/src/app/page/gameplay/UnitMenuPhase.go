@@ -97,10 +97,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 			}
 		case protocol.RobotMenuFunctionTransform:
 			transformID := selection
-			ctx.Model, err = ctx.Model.RobotTransform(unitID, transformID)
+			ctxObj, err := ctx.Model.OnRobotTransform(ctx, unitID, transformID)
 			if err != nil {
-				view.Alert(err.Error())
+				return origin, false, err
 			}
+			ctx = ctxObj.(uidata.UI)
 			ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 			if err != nil {
 				return origin, false, err

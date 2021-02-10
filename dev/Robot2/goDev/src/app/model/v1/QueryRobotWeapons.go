@@ -3,7 +3,6 @@ package v1
 import (
 	"app/tool/data"
 	"app/tool/protocol"
-	"fmt"
 )
 
 func QueryRobotWeapons(model model, robotID string, transform string) (protocol.Weapons, error) {
@@ -19,14 +18,13 @@ func QueryRobotWeapons(model model, robotID string, transform string) (protocol.
 		return protocol.Weapons{}, err
 	}
 	weapons := protocol.Weapons{}
-	for i, weaponProtoID := range robotProto.Weapons {
+	for _, weaponProtoID := range robotProto.Weapons {
 		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weaponProtoID)
 		if err != nil {
 			return protocol.Weapons{}, err
 		}
-		instanceID := fmt.Sprintf("weapon_%v", i)
 		weapon := protocol.Weapon{
-			ID:          instanceID,
+			ID:          weaponProtoID, // 直接使用ProtoID, 讓變形時狀態能繼承
 			ProtoID:     weaponProtoID,
 			BulletCount: weaponProto.MaxBulletCount,
 		}
