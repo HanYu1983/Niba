@@ -63,8 +63,8 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 		switch weaponProto.EnergyType {
 		case "energy":
 			cost := weaponProto.EnergyCost
-			if robot.EN < cost {
-				return origin, protocol.BattleResult{}, fmt.Errorf("robot.EN(%v) not enougth for cost(%v)", robot.EN, cost)
+			if _robot.EN < cost {
+				return origin, protocol.BattleResult{}, fmt.Errorf("robot.EN(%v) not enougth for cost(%v)", _robot.EN, cost)
 			}
 			_robotAfter.EN = _robotAfter.EN - cost
 		case "bullet":
@@ -165,7 +165,7 @@ func Battle(origin model, robotID string, weaponID string, targetRobotID string,
 			switch weaponProto.EnergyType {
 			case "energy":
 				cost := weaponProto.EnergyCost
-				if robot.EN < cost {
+				if _robot.EN < cost {
 					return origin, protocol.BattleResult{}, fmt.Errorf("robot.EN(%v) not enougth for cost(%v)", robot.EN, cost)
 				}
 				_robotAfter.EN = _robotAfter.EN - cost

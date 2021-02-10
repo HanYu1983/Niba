@@ -21,12 +21,12 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	if err != nil {
 		return origin, false, err
 	}
+	moveRange := helper.MoveRangeTree2MoveRange(tree)
+	ctx.Model = ctx.Model.SetMoveRange(moveRange)
 	ctx.Model, err = ctx.Model.DisableRobotMenu()
 	if err != nil {
 		return origin, false, err
 	}
-	moveRange := helper.MoveRangeTree2MoveRange(tree)
-	ctx.Model = ctx.Model.SetMoveRange(moveRange)
 	for {
 		ctxSnapshot := ctx
 		var cancel bool

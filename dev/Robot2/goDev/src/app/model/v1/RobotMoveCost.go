@@ -19,6 +19,7 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 			return nil
 		}, err
 	}
+	isSky := model.App.Gameplay.Tags[robot.ID].Sky
 	return func(curr *astar.Node) []astar.NeighborsNode {
 		// prevent infinite loop
 		if int(curr.Cost) > 100 {
@@ -49,8 +50,11 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 					continue
 				}
 			}
-			terrain2 := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
-			nextCost := float64(terrain1.Cost + terrain2.Cost)
+			nextCost := 0.8
+			if isSky == false {
+				terrain2 := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
+				nextCost = float64(terrain1.Cost + terrain2.Cost)
+			}
 			if int(curr.Cost+nextCost) > movePower {
 				continue
 			}

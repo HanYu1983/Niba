@@ -19,7 +19,8 @@ func OnPlayerTurnEnd(origin uidata.UI, player protocol.Player) (uidata.UI, error
 	for _, robotID := range robots {
 		model := ctx.Model.(model)
 		tag := model.App.Gameplay.Tags[robotID]
-		tag = protocol.Tag{}
+		tag.MoveCount = 0
+		tag.IsDone = false
 		model.App.Gameplay.Tags = protocol.AssocStringTag(model.App.Gameplay.Tags, robotID, tag)
 		ctx.Model = model
 	}
