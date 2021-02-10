@@ -90,10 +90,6 @@ export class LandMap extends Instant {
                     actions.push(tween().call(()=>{
                         console.log("BattleResultTypeWeapon");
 
-                        // console.log(robotBefore.HP);
-                        // console.log(robotAfter.HP);
-                        
-
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
                         unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
@@ -115,6 +111,14 @@ export class LandMap extends Instant {
                             const explode = this.effects.createEffect(0, pos);
                             explode.getComponent(Explode)?.setDamage(anim.Damage);
                         }
+                    }).delay(.5));
+
+                    actions.push(tween().call(()=>{
+                        console.log("BattleResultTypeDamage");
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
+                        unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:
