@@ -78,5 +78,6 @@ export enum BattleResultType {
 	BattleResultTypeWeapon,
 	BattleResultTypeGuard,
 	BattleResultTypeEvade,
-	BattleResultTypeDamage
+	BattleResultTypeDamage,
+	BattleResultTypeDie,
 }

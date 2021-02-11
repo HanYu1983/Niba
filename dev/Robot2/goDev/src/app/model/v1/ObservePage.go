@@ -5,7 +5,6 @@ import "app/tool/uidata"
 func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	model := ctx.Model.(model)
 	for _, menuID := range ctx.Menus[pageID] {
 		ctx, err = ObserveMenu1D(ctx, menuID)
 		if err != nil {
@@ -26,6 +25,7 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 			return origin, err
 		}
 	}
+	model := ctx.Model.(model)
 	ctx.Info.Money = QueryMoney(model)
 	ctx.Info.Robots = QueryRobots(model)
 	ctx.Info.Pilots = QueryPilots(model)

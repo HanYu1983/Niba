@@ -229,12 +229,15 @@ func GetMoveRange(origin model) []protocol.Position {
 }
 
 func DisableBattleMenu(origin model) (model, error) {
+	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "start")
 	ctx := origin
 	ctx.App.Gameplay.BattleMenu.Active = false
 	ctx, err := DisableRobotMenu(ctx)
 	if err != nil {
 		return origin, err
 	}
+	log.Log(protocol.LogCategoryDetail, "DisableBattleMenu", fmt.Sprintf("after RobotMenu(%v)", ctx.App.Gameplay.RobotMenu))
+	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "end")
 	return ctx, nil
 }
 func GetBattleMenu(origin model) protocol.BattleMenu {

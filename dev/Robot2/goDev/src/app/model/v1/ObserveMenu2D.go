@@ -2,10 +2,13 @@ package v1
 
 import (
 	"app/tool/helper"
+	"app/tool/protocol"
 	"app/tool/uidata"
+	"tool/log"
 )
 
 func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
+	log.Log(protocol.LogCategoryRender, "ObserveMenu2D", "start")
 	ctx := origin
 	model := ctx.Model.(model)
 	menu, has := ctx.Menu2Ds[menuID]
@@ -39,5 +42,6 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		}
 	}
 	ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, menuID, menu)
+	log.Log(protocol.LogCategoryRender, "ObserveMenu2D", "end")
 	return ctx, nil
 }

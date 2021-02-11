@@ -7,6 +7,7 @@ import (
 )
 
 func ObserveRobotMenu(model model, origin protocol.RobotMenu) (protocol.RobotMenu, error) {
+	log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "start")
 	log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", fmt.Sprintf("robotMenu(%v)", origin))
 	ctx := origin
 	if ctx.Active == false {
@@ -20,5 +21,6 @@ func ObserveRobotMenu(model model, origin protocol.RobotMenu) (protocol.RobotMen
 	if err != nil {
 		return origin, err
 	}
+	log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "end")
 	return ctx, nil
 }

@@ -147,6 +147,7 @@ const (
 	BattleResultTypeGuard
 	BattleResultTypeEvade
 	BattleResultTypeDamage
+	BattleResultTypeDie
 )
 
 type BattleAnimation struct {
