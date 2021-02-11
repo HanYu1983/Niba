@@ -14,6 +14,10 @@ export class Explode extends Component {
     damage:Label = null;
 
     setDamage(damage:number){
-        this.damage.string = damage + "";
+        if(damage < 0){
+            this.damage.string = "";
+        }else{
+            this.damage.string = damage + "";
+        }
     }
 }

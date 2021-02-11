@@ -32,9 +32,10 @@ export class Pool extends Component {
         if(!node.active) node.active = true;
 
         // 把物件移到原點，用來代替active = true操作
-        node.setPosition(Vec3.ZERO);
+        node.setPosition(Vec3.ONE);
+        // node.setScale(Vec3.ONE);
 
-        // console.log("[獲取後-]數量:" + pool.length + ", 獲取:" + prefab.name);
+        if(pool.length < 3) console.log("[獲取後-]數量:" + pool.length + ", 獲取:" + prefab.name);
         
         return node;
     }
@@ -48,10 +49,9 @@ export class Pool extends Component {
 
             // 把物件移到很遠的地方，用來代替active = false操作
             node.setPosition(this.outOfWorld);
+            // node.setScale(Vec3.ZERO);
 
-            // console.log("[-釋放後]數量:" + pool.length + ", 釋放:" + prefab.name);
+            if(pool.length < 3) console.log("[-釋放後]數量:" + pool.length + ", 釋放:" + prefab.name);
         }
-
-        
     }
 }

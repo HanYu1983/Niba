@@ -84,12 +84,8 @@ export class LandMap extends Instant {
                     break;
                 case ModelType.BattleResultType.BattleResultTypeWeapon:
 
-                    console.log("push BattleResultTypeWeapon");
-                    
-                    // 扣血扣en動畫
+                    // 使用武器時的扣血扣en動畫
                     actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeWeapon");
-
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
                         unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
@@ -99,8 +95,6 @@ export class LandMap extends Instant {
 
                     // 爆炸動畫
                     actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeDamage");
-
                         this.aimNode.node.setScale(Vec3.ZERO);
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
@@ -113,13 +107,32 @@ export class LandMap extends Instant {
                         }
                     }).delay(.5));
 
+                    // 被攻擊時的扣血扣en動畫
                     actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeDamage");
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
                         unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
                     }).delay(1));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeDie:
+
+                    // 爆炸動畫
+                    actions.push(tween().call(()=>{
+                        this.aimNode.node.setScale(Vec3.ZERO);
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+
+                        // 爆炸動畫
+                        const pos = unitView.getComponent(Unit)?.node.position;
+                        if(pos){
+                            const explode = this.effects.createEffect(0, pos);
+                            explode.getComponent(Explode)?.setDamage(-1);
+
+                            // unit 消失
+                            unitView.setPosition(this.outOfWorld);
+                        }
+                    }).delay(.5));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeEvade:
 
