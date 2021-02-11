@@ -47,13 +47,13 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 			return origin, cancel, nil
 		}
 		cursorWorld := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
-		ctx.Model, err = ctx.Model.RobotMove(robotID, cursorWorld)
+		ctxObj, err := ctx.Model.OnRobotMove(ctx, robotID, tree, cursorWorld)
 		if err != nil {
 			view.Alert(err.Error())
 			ctx = ctxSnapshot
 			continue
 		}
-		view.RenderRobotMove(ctx, robotID, helper.MoveRangeTree2Path(tree, cursorWorld))
+		ctx = ctxObj.(uidata.UI)
 		ctx, cancel, err = UnitMenuPhase(ctx, robotID)
 		if err != nil {
 			return origin, false, err

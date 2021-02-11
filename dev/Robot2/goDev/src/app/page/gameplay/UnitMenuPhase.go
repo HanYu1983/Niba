@@ -132,10 +132,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		default:
 			switch selection {
 			case uidata.MenuOptionUnitDone:
-				ctx.Model, err = ctx.Model.RobotDone(unitID)
+				ctxObj, err := ctx.Model.OnRobotDone(ctx, unitID)
 				if err != nil {
 					return origin, false, err
 				}
+				ctx = ctxObj.(uidata.UI)
 			case uidata.MenuOptionMove:
 				ctx, cancel, err = RobotMovePhase(ctx, unitID)
 				if err != nil {

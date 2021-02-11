@@ -3,7 +3,6 @@ package v1
 import (
 	"app/page/common"
 	"app/tool/def"
-	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -43,23 +42,6 @@ func QueryGoal(model model, robotID string) (Goal, error) {
 	return Goal{Type: GoalTypeSearchAndAttack, Position: protocol.Position{5, 5}}, nil
 }
 
-func MoveRobotAndRender(origin uidata.UI, robot protocol.Robot, targetPosition protocol.Position, path []protocol.Position) (uidata.UI, error) {
-	var err error
-	ctx := origin
-	view := def.View
-	ctx.Model, err = ctx.Model.RobotMove(robot.ID, targetPosition)
-	if err != nil {
-		return origin, err
-	}
-	view.RenderRobotMove(ctx, robot.ID, path)
-	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
-	if err != nil {
-		return origin, err
-	}
-	view.Render(ctx)
-	return ctx, nil
-}
-
 func RenderRobotAim(origin uidata.UI, fromRobot string, toRobot string) error {
 	var err error
 	ctx := origin
@@ -87,7 +69,6 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	var err error
 	var cancel bool
 	ctx := origin
-	view := def.View
 	isRobotDone, err := IsRobotDone(ctx.Model.(model), robot.ID)
 	if err != nil {
 		return origin, false, err
@@ -105,6 +86,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	}
 	switch goal.Type {
 	case GoalTypeSearchAndAttack:
+		// @TODO: check invalid weapon
 		weapons, err := QueryRobotWeapons(ctx.Model.(model), robot.ID, robot.Transform)
 		if err != nil {
 			return origin, false, err
@@ -120,10 +102,11 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			if isCanMove {
-				ctx, err = MoveRobotAndRender(ctx, robot, targetPosition, helper.MoveRangeTree2Path(tree, targetPosition))
+				ctxObj, err := ctx.Model.OnRobotMove(ctx, robot.ID, tree, targetPosition)
 				if err != nil {
 					return origin, false, err
 				}
+				ctx = ctxObj.(uidata.UI)
 			}
 			err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
 			if err != nil {
@@ -140,15 +123,11 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				}
 				break
 			}
-			ctx.Model, err = ctx.Model.RobotDone(robot.ID)
+			ctxObj, err := ctx.Model.OnRobotDone(ctx, robot.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
-			if err != nil {
-				return origin, false, err
-			}
-			view.Render(ctx)
+			ctx = ctxObj.(uidata.UI)
 		}
 	case GoalTypeMoveToPosition:
 		currPos := ctx.Model.(model).App.Gameplay.Positions[robot.ID]
@@ -158,21 +137,17 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			if isCanMove {
-				ctx.Model, err = ctx.Model.RobotMove(robot.ID, targetPosition)
+				ctxObj, err := ctx.Model.OnRobotMove(ctx, robot.ID, tree, targetPosition)
 				if err != nil {
 					return origin, false, err
 				}
-				view.RenderRobotMove(ctx, robot.ID, helper.MoveRangeTree2Path(tree, targetPosition))
+				ctx = ctxObj.(uidata.UI)
 			}
-			ctx.Model, err = ctx.Model.RobotDone(robot.ID)
+			ctxObj, err := ctx.Model.OnRobotDone(ctx, robot.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
-			if err != nil {
-				return origin, false, err
-			}
-			view.Render(ctx)
+			ctx = ctxObj.(uidata.UI)
 		}
 	case GoalTypeAttackTargetRobot:
 		ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")

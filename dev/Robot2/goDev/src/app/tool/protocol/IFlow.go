@@ -1,5 +1,7 @@
 package protocol
 
+import "tool/astar"
+
 type IFlow interface {
 	OnPlayerTurnStart(ctx interface{}, player Player) (interface{}, error)
 	OnPlayerTurnEnd(ctx interface{}, player Player) (interface{}, error)
@@ -7,4 +9,6 @@ type IFlow interface {
 	OnEnemyTurnPhase(ctx interface{}) (interface{}, bool, error)
 	OnRobotTransform(ctx interface{}, robotID string, transform string) (interface{}, error)
 	OnRobotSkyGround(ctx interface{}, robotID string, sky bool) (interface{}, error)
+	OnRobotMove(ctx interface{}, robotID string, tree astar.NodeMap, pos Position) (interface{}, error)
+	OnRobotDone(ctx interface{}, robotID string) (interface{}, error)
 }

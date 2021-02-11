@@ -54,6 +54,12 @@ func (v model) OnRobotTransform(ctx interface{}, robotID string, transform strin
 func (v model) OnRobotSkyGround(ctx interface{}, robotID string, sky bool) (interface{}, error) {
 	return OnRobotSkyGround(ctx.(uidata.UI), robotID, sky)
 }
+func (v model) OnRobotMove(ctx interface{}, robotID string, tree astar.NodeMap, pos protocol.Position) (interface{}, error) {
+	return OnRobotMove(ctx.(uidata.UI), robotID, tree, pos)
+}
+func (v model) OnRobotDone(ctx interface{}, robotID string) (interface{}, error) {
+	return OnRobotDone(ctx.(uidata.UI), robotID)
+}
 
 // IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
@@ -103,12 +109,6 @@ func (v model) SetCursor(cursor protocol.Position) protocol.IModel {
 }
 func (v model) GetCursor() protocol.Position {
 	return GetCursor(v)
-}
-func (v model) RobotDone(robotID string) (protocol.IModel, error) {
-	return RobotDone(v, robotID)
-}
-func (v model) RobotMove(robotID string, pos protocol.Position) (protocol.IModel, error) {
-	return RobotMove(v, robotID, pos)
 }
 func (v model) EnableRobotMenu(robotID string, situation interface{}) (protocol.IModel, error) {
 	return EnableRobotMenu(v, robotID, situation)
