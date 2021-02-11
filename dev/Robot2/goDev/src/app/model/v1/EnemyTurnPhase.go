@@ -178,11 +178,10 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		return origin, false, err
 	}
 	for _, robotID := range robotIDs {
-		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
 		}
-		view.Render(ctx)
 		isRobotDone, err := IsRobotDone(ctx.Model.(model), robotID)
 		if err != nil {
 			return origin, false, err

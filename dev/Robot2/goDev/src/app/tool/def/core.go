@@ -5,5 +5,5 @@ import (
 )
 
 var (
-	View viewer.IViwer = viewer.Cocos{}
+	View viewer.IView = viewer.Cocos{}
 )

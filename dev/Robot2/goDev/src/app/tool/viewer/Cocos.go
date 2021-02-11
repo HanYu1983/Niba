@@ -44,13 +44,25 @@ func (p Cocos) Install() error {
 	return nil
 }
 
-func (p Cocos) Render(app uidata.UI) {
+func (p Cocos) Render(origin uidata.UI) (uidata.UI, error) {
 	view := js.Global.Get("View")
 	if view == js.Undefined {
 		fmt.Println("view not ready")
-		return
+		return origin, nil
 	}
-	view.Call("Render", app)
+	ctx := origin
+	for pageID, active := range ctx.Actives {
+		if active == false {
+			continue
+		}
+		ctxObj, err := ctx.Model.ObservePage(ctx, pageID)
+		if err != nil {
+			return origin, err
+		}
+		ctx = ctxObj.(uidata.UI)
+	}
+	view.Call("Render", ctx)
+	return ctx, nil
 }
 
 func (p Cocos) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {

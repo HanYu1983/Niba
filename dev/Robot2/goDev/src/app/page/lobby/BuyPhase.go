@@ -19,11 +19,10 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		func(origin uidata.UI) (uidata.UI, error) {
 			var err error
 			ctx := origin
-			ctx, err = common.ObservePage(ctx, pageID)
+			ctx, err = view.Render(ctx)
 			if err != nil {
 				return origin, err
 			}
-			view.Render(ctx)
 			return ctx, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {

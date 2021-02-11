@@ -23,8 +23,20 @@ func (p *MockView) Install() error {
 	return nil
 }
 
-func (p *MockView) Render(ui uidata.UI) {
-	p.UI = ui
+func (p *MockView) Render(origin uidata.UI) (uidata.UI, error) {
+	ctx := origin
+	for pageID, active := range ctx.Actives {
+		if active == false {
+			continue
+		}
+		ctxObj, err := ctx.Model.ObservePage(ctx, pageID)
+		if err != nil {
+			return origin, err
+		}
+		ctx = ctxObj.(uidata.UI)
+	}
+	p.UI = ctx
+	return ctx, nil
 }
 
 func (p *MockView) RenderRobotMove(ui uidata.UI, robotID string, path []protocol.Position) {

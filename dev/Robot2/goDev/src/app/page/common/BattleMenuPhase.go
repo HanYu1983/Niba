@@ -56,16 +56,18 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		if err != nil {
 			return origin, false, err
 		}
-		view.Render(ctx)
+		ctx, err = view.Render(ctx)
+		if err != nil {
+			return origin, false, err
+		}
 	PLAYER_MENU2D_STEP:
 		var cancel, tab bool
 		var selection string
 		for {
-			ctx, err = ObservePage(ctx, uidata.PageGameplay)
+			ctx, err = view.Render(ctx)
 			if err != nil {
 				return origin, false, err
 			}
-			view.Render(ctx)
 			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, false, err
@@ -78,11 +80,10 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			}
 			break
 		}
-		ctx, err = ObservePage(ctx, uidata.PageGameplay)
+		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
 		}
-		view.Render(ctx)
 		topMenu := ctx.Menu2Ds[uidata.Menu2DUnitMenu]
 		gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 		switch gameplayPage.RobotMenu.RowFunctionMapping[topMenu.Cursor1] {
@@ -111,11 +112,10 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		var cancel, tab bool
 		var selection string
 		for {
-			ctx, err = ObservePage(ctx, uidata.PageGameplay)
+			ctx, err = view.Render(ctx)
 			if err != nil {
 				return origin, false, err
 			}
-			view.Render(ctx)
 			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, false, err

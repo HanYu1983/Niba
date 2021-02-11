@@ -18,6 +18,9 @@ func OnRobotDone(origin uidata.UI, robotID string) (interface{}, error) {
 	if err != nil {
 		return origin, err
 	}
-	view.Render(ctx)
+	ctx, err = view.Render(ctx)
+	if err != nil {
+		return origin, err
+	}
 	return ctx, nil
 }

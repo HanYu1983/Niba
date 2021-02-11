@@ -28,11 +28,10 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 	view := def.View
 	var err error
 	ctx := origin
-	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, false, err
 	}
-	view.Render(ctx)
 	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 	if robot, is := gameplayPage.Robots[unitID]; is {
 		var _ = robot
@@ -49,11 +48,10 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		var selection string
 	MENU2D_STEP:
 		for {
-			ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+			ctx, err = view.Render(ctx)
 			if err != nil {
 				return origin, false, err
 			}
-			view.Render(ctx)
 			if ctx.Actives[uidata.PageUnitMenu] == false {
 				return origin, false, fmt.Errorf("這時必須打開PageUnitMenu頁")
 			}

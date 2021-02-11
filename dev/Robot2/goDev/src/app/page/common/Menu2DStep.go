@@ -19,11 +19,10 @@ func Menu2DStep(origin uidata.UI, pageID int, menuID int) (uidata.UI, string, bo
 	}
 AskCommand:
 	for {
-		ctx, err = ObservePage(ctx, pageID)
+		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, "", false, false, err
 		}
-		view.Render(ctx)
 		log.Log(protocol.LogCategoryPhase, "Menu2DStep", "AskCommand")
 		cmd := view.AskCommand()
 		log.Log(protocol.LogCategoryPhase, "Menu2DStep", fmt.Sprintf("cmd(%+v)\n", cmd))

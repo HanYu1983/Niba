@@ -1,7 +1,6 @@
 package gameplay
 
 import (
-	"app/page/common"
 	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -19,11 +18,10 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 TURN:
 	for {
 		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
-		ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
 		}
-		view.Render(ctx)
 		evt := view.AskCommand()
 		if evt == nil {
 			return origin, false, protocol.ErrTerminate

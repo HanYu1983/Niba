@@ -20,11 +20,10 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = ObservePage(ctx, uidata.PageGameplay)
+	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, err
 	}
-	view.Render(ctx)
 	view.RenderRobotBattle(ctx, result)
 	// handle robot die
 	robotWillDelete := []protocol.Robot{}

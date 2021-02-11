@@ -100,7 +100,7 @@ func TestCore(t *testing.T) {
 		if robotMenu.RowFunctionMapping[weaponIdx] != protocol.RobotMenuFunctionWeapon {
 			t.Error("cursor1必須是武器選單")
 		}
-		if robotMenu.Weapons["weapon_0"].ProtoID != "beam_sword1" {
+		if robotMenu.Options[weaponIdx][0] != "beam_sword1" {
 			t.Error("第一個武器必須是光束劍")
 		}
 	}
