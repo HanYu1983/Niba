@@ -60,6 +60,9 @@ func (v model) OnRobotMove(ctx interface{}, robotID string, tree astar.NodeMap, 
 func (v model) OnRobotDone(ctx interface{}, robotID string) (interface{}, error) {
 	return OnRobotDone(ctx.(uidata.UI), robotID)
 }
+func (v model) OnCreateRobotMenu(ctx interface{}, robotID string) (interface{}, error) {
+	return OnCreateRobotMenu(ctx.(uidata.UI), robotID)
+}
 
 // IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {

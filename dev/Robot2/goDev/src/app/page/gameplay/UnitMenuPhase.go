@@ -9,16 +9,6 @@ import (
 	"tool/log"
 )
 
-func CreateRobotMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
-	var err error
-	ctx := origin
-	ctx.Model, err = ctx.Model.EnableRobotMenu(unitID, nil)
-	if err != nil {
-		return origin, err
-	}
-	return ctx, nil
-}
-
 func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 	return origin, nil
 }
@@ -40,10 +30,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 			log.Log(protocol.LogCategoryWarning, "UnitMenuPhase", fmt.Sprintf("unitID(%v) already done", unitID))
 			return origin, false, nil
 		}
-		ctx, err = CreateRobotMenu(ctx, unitID)
+		ctxObj, err := ctx.Model.OnCreateRobotMenu(ctx, unitID)
 		if err != nil {
 			return origin, false, err
 		}
+		ctx = ctxObj.(uidata.UI)
 		var cancel, tab bool
 		var selection string
 	MENU2D_STEP:
@@ -76,6 +67,12 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				view.Alert(invalidStr)
 				goto MENU2D_STEP
 			}
+			// 選擇敵機時將選單關掉. 先不使用
+			// disableRobotMenuSnapshotCtx := ctx
+			// ctx.Model, err = ctx.Model.DisableRobotMenu()
+			// if err != nil {
+			// 	return origin, false, err
+			// }
 		SELECT_UNIT_STEP:
 			var targetID string
 			ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
@@ -104,6 +101,8 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				return origin, false, err
 			}
 			if cancel {
+				// 選擇敵機時將選單關掉. 先不使用
+				// ctx = disableRobotMenuSnapshotCtx
 				goto MENU2D_STEP
 			}
 			ctx, cancel, err = common.BattleMenuPhase(ctx, true, unitID, weaponID, targetID)

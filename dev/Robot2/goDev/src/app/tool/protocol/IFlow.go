@@ -11,4 +11,5 @@ type IFlow interface {
 	OnRobotSkyGround(ctx interface{}, robotID string, sky bool) (interface{}, error)
 	OnRobotMove(ctx interface{}, robotID string, tree astar.NodeMap, pos Position) (interface{}, error)
 	OnRobotDone(ctx interface{}, robotID string) (interface{}, error)
+	OnCreateRobotMenu(ctx interface{}, robotID string) (interface{}, error)
 }
