@@ -26,7 +26,7 @@ func QueryRobotWeaponAttackRange(model model, robot protocol.Robot, weapon proto
 			return nil, err
 		}
 	case "line":
-		attackRange, err = helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, 1, weaponRange[0], protocol.Position{})
+		attackRange, err = helper.QueryMinMaxAttackRange(uidata.MapWidth, uidata.MapHeight, 0, weaponRange[0], protocol.Position{})
 		if err != nil {
 			return nil, err
 		}
