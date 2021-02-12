@@ -105,11 +105,13 @@ export class Units extends Instant {
             for (let key in content.HitMarks) {
                 let value = content.HitMarks[key];
                 const robot = content.Robots[key];
-                const position = content.Positions[key];
-                const rate = value.Rate;
 
-                const unitView:Node = this.getUnitByID(robot.ID);
-                if(unitView) unitView.getComponent(Unit)?.showAction(Math.round(rate * 100) + "%");
+                // 可能機體爆去所以找不到
+                if(robot){
+                    const rate = value.Rate;
+                    const unitView:Node = this.getUnitByID(robot.ID);
+                    if(unitView) unitView.getComponent(Unit)?.showAction(Math.round(rate * 100) + "%");
+                }
             }
         }
     }
