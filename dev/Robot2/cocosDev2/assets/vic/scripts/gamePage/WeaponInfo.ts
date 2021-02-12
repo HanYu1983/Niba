@@ -48,6 +48,16 @@ export class WeaponInfo extends Instant {
     
     clear(){
         super.clear();
+
+        this.title.string = "";
+        this.power.string = "";
+        this.range.string = "";
+        this.accuracy.string = "";
+        this.type.string = "";
+        this.count.string = "";
+        this.en.string = "";
+        this.suitable.string = "";
+        this.curage.string = "";
     }
 
     doBuild(content:any, data:any){
