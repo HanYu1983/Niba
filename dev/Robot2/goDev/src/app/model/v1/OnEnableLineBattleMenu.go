@@ -48,7 +48,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		robotMenu.InvalidWeapons = invalidWeapons
 	}
 	_model.App.Gameplay.RobotMenu = robotMenu
-	_model.App.Gameplay.HitMarks = []protocol.HitMark{}
+	_model.App.Gameplay.HitMarks = map[string]protocol.HitMark{}
 
 	fromPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, robotID)
 	if err != nil {
@@ -100,11 +100,10 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			continue
 		}
 		log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("dir2(%v) distance2line(%v)", dir2, distanceWidth))
-		_model.App.Gameplay.HitMarks = append(_model.App.Gameplay.HitMarks, protocol.HitMark{
-			Rate:     1.0 - (distanceWidth / float64(weaponRangeWidth)),
-			Position: targetPosition,
-			Robot:    targetRobot,
-		})
+		var _ = targetRobot
+		_model.App.Gameplay.HitMarks[unitID] = protocol.HitMark{
+			Rate: 1.0 - (distanceWidth / float64(weaponRangeWidth)),
+		}
 	}
 
 	// apply

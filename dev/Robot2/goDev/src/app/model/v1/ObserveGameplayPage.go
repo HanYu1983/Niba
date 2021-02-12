@@ -63,17 +63,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		gameplayPage.MoveRange = []protocol.Position{}
 	}
 	// HitMark
-	hitMarks := model.App.Gameplay.HitMarks
-	if hitMarks != nil {
-		var local = []protocol.HitMark{}
-		for _, hitMark := range hitMarks {
-			hitMark.Position = helper.World2Local(gameplayPage.Camera, hitMark.Position)
-			local = append(local, hitMark)
-		}
-		gameplayPage.HitMarks = local
-	} else {
-		gameplayPage.HitMarks = []protocol.HitMark{}
-	}
+	gameplayPage.HitMarks = model.App.Gameplay.HitMarks
 	// select weapon attack range
 	unitMenuModel := model.App.Gameplay.RobotMenu
 	if unitMenuModel.Active {
@@ -104,12 +94,23 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	} else {
 		gameplayPage.AttackRange = []protocol.Position{}
 	}
-
 	// unit menu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
 	// battle menu
 	battleMenuModel := model.App.Gameplay.BattleMenu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageBattleMenu, battleMenuModel.Active)
+	// CursorInfo
+	terrainID, err := tool.TryGetInt2(model.App.Gameplay.Map, cursor[1])(cursor[0], nil)
+	if err != nil {
+		return origin, err
+	}
+	terrain, err := helper.TerrainID2Terrain(terrainID)
+	if err != nil {
+		return origin, err
+	}
+	unitAtCursor := SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
+	gameplayPage.CursorInfo.UnitID = unitAtCursor
+	gameplayPage.CursorInfo.Terrain = terrain
 	// apply
 	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, gameplayPage)
 	return ctx, nil

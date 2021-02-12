@@ -75,6 +75,11 @@ const (
 	MapHeight = 20
 )
 
+type CursorInfo struct {
+	Terrain data.TerrainProto
+	UnitID  string
+}
+
 // GameplayPage is
 type GameplayPage struct {
 	Players     map[string]protocol.Player
@@ -88,8 +93,9 @@ type GameplayPage struct {
 	Tags        map[string]protocol.Tag
 	MoveRange   []protocol.Position
 	AttackRange []protocol.Position
-	HitMarks    []protocol.HitMark
+	HitMarks    map[string]protocol.HitMark
 	RobotMenu   protocol.RobotMenu
+	CursorInfo  CursorInfo
 }
 
 // ListInt is

@@ -24,7 +24,10 @@ func QueryBattleHitRate(model model, robot protocol.Robot, pilot protocol.Pilot,
 		targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
 		if targetRobotSky == false {
 			targetPos := model.App.Gameplay.Positions[targetRobot.ID]
-			terrain := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
+			terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
+			if err != nil {
+				return 0, err
+			}
 			terrainFactor = terrain.HitRate
 		}
 	}

@@ -26,7 +26,11 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 			return []astar.NeighborsNode{}
 		}
 		currPos := curr.Pather.(protocol.Position)
-		terrain1 := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, currPos)
+		terrain1, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, currPos)
+		if err != nil {
+			fmt.Println(err.Error())
+			return []astar.NeighborsNode{}
+		}
 		offsets := []protocol.Position{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 		ret := []astar.NeighborsNode{}
 		for _, offset := range offsets {
@@ -52,7 +56,11 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 			}
 			nextCost := 0.8
 			if isSky == false {
-				terrain2 := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
+				terrain2, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
+				if err != nil {
+					fmt.Println(err.Error())
+					return []astar.NeighborsNode{}
+				}
 				nextCost = float64(terrain1.Cost + terrain2.Cost)
 			}
 			if int(curr.Cost+nextCost) > movePower {

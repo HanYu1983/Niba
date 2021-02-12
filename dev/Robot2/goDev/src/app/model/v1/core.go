@@ -27,7 +27,7 @@ type gameplay struct {
 	Tags           map[string]protocol.Tag
 	Items          map[string]protocol.Item
 	Pilots         map[string]protocol.Pilot
-	HitMarks       []protocol.HitMark
+	HitMarks       map[string]protocol.HitMark
 	RobotMenu      protocol.RobotMenu
 	BattleMenu     protocol.BattleMenu
 	MoveRange      []protocol.Position

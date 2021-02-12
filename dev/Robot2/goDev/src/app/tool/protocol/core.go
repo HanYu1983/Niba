@@ -192,7 +192,5 @@ func (result BattleResult) MapRobot(mapF func(pos Robot) Robot) BattleResult {
 }
 
 type HitMark struct {
-	Position Position
-	Rate     float64
-	Robot    Robot
+	Rate float64
 }

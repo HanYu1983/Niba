@@ -1,27 +1,40 @@
 package helper
 
 import (
+	"app/tool"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
 	"tool/astar"
-	"tool/log"
 )
 
-func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto, pos protocol.Position) data.TerrainProto {
-	if terrain, has := cache[pos]; has {
-		return terrain
-	}
-	originTerrainID := gameMap[pos[1]][pos[0]]
+func TerrainID2Terrain(originTerrainID int) (data.TerrainProto, error) {
 	terrainMapping, has := data.GameData.TerrainMapping[strconv.Itoa(originTerrainID)]
 	if has == false {
-		log.Log(protocol.LogCategoryWarning, "QueryTerrain", fmt.Sprintf("terrainMapping not found: %v %v\n", originTerrainID, pos))
-		return data.TerrainProto{}
+		return data.TerrainProto{}, fmt.Errorf("terrainMapping not found: %v %v", originTerrainID)
 	}
-	terrain := data.GameData.Terrain[terrainMapping.Terrain]
+	terrain, has := data.GameData.Terrain[terrainMapping.Terrain]
+	if has == false {
+		return data.TerrainProto{}, fmt.Errorf("data.GameData.Terrain not found: %v %v", terrainMapping.Terrain)
+	}
+	return terrain, nil
+}
+
+func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto, pos protocol.Position) (data.TerrainProto, error) {
+	if terrain, has := cache[pos]; has {
+		return terrain, nil
+	}
+	originTerrainID, err := tool.TryGetInt2(gameMap, pos[1])(pos[0], nil)
+	if err != nil {
+		return data.TerrainProto{}, err
+	}
+	terrain, err := TerrainID2Terrain(originTerrainID)
+	if err != nil {
+		return data.TerrainProto{}, err
+	}
 	cache[pos] = terrain
-	return terrain
+	return terrain, nil
 }
 
 func BasicExtentCell(v int) ([]protocol.Position, error) {
