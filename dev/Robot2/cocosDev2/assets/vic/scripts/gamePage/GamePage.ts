@@ -8,6 +8,7 @@
 import { _decorator, Component, Node, tween, Sprite, Vec3 } from 'cc';
 import { BasicPage } from '../BasicPage';
 import { EffectGenerator } from './EffectGenerator';
+import { LandInfo } from './LandInfo';
 import { LandMap } from './LandMap';
 import { TurnChange } from './TurnChange';
 import { UnitInfo } from './UnitInfo';
@@ -22,6 +23,9 @@ export class GamePage extends BasicPage {
     @property(UnitInfo)
     unitInfo:UnitInfo = null;
 
+    @property(LandInfo)
+    landInfo:LandInfo = null;
+
     @property(EffectGenerator)
     frontEffect:EffectGenerator = null;
 
@@ -29,6 +33,7 @@ export class GamePage extends BasicPage {
         super.clear();
         this.map.clear();
         this.unitInfo.clear();
+        this.landInfo.clear();
     }
 
     showTurnChange(info:any, cb:()=>void){
@@ -51,8 +56,7 @@ export class GamePage extends BasicPage {
         const gameData = content.GameplayPages;
         this.map.build(gameData);
 
-        this.unitInfo.hpValueBar.setValue(300);
-        this.unitInfo.enValueBar.setValue(500);
+        this.showGridInfo(content);
 
         // tween(this.node).delay(2).call(()=>{
         //     this.unitInfo.hpValueBar.setValue(1300, ()=>{});
@@ -65,4 +69,16 @@ export class GamePage extends BasicPage {
         // }).start();
     }
 
+    showGridInfo(content:any){
+        const gameData = content.GameplayPages;
+        const cursorInfo = gameData.CursorInfo;
+        if (gameData.Robots[cursorInfo.UnitID]) {
+            this.unitInfo.build(gameData.Robots[cursorInfo.UnitID]);
+        }
+        if (gameData.Items[cursorInfo.UnitID]){
+
+        }
+        const terrainInfo = cursorInfo.Terrain;
+        this.landInfo.build(terrainInfo);
+    }
 }
