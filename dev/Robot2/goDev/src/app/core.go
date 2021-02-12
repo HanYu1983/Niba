@@ -12,9 +12,9 @@ import (
 
 func Main() {
 	log.Category[protocol.LogCategoryPhase] = true
-	log.Category[protocol.LogCategoryDetail] = true
+	log.Category[protocol.LogCategoryDetail] = false
 	log.Category[protocol.LogCategoryWarning] = true
-	log.Category[protocol.LogCategoryRender] = true
+	log.Category[protocol.LogCategoryRender] = false
 	view := def.View
 	defer func() {
 		if x := recover(); x != nil {

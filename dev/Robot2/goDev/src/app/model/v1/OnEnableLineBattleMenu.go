@@ -3,7 +3,11 @@ package v1
 import (
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
+	"math"
 	"tool/log"
+
+	"github.com/go-gl/mathgl/mgl64"
 )
 
 func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, targetPosition protocol.Position) (uidata.UI, error) {
@@ -44,36 +48,67 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		robotMenu.InvalidWeapons = invalidWeapons
 	}
 	_model.App.Gameplay.RobotMenu = robotMenu
-	// gameplayPage
-	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
-	gameplayPage.HitMarks = append(gameplayPage.HitMarks, protocol.HitMark{})
-	//
-	// fromPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, robotID)
-	// if err != nil {
-	// 	return origin, err
-	// }
-	// toPos := targetPosition
+	_model.App.Gameplay.HitMarks = []protocol.HitMark{}
 
-	// leftTop := protocol.Position{helper.Min(fromPos[0], toPos[0]), helper.Min(fromPos[1], toPos[1])}
-	// rightBottom := protocol.Position{helper.Max(fromPos[0], toPos[0]), helper.Max(fromPos[1], toPos[1])}
-	// unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
+	fromPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, robotID)
+	if err != nil {
+		return origin, err
+	}
+	toPos := targetPosition
+	weaponRange, err := QueryRobotWeaponRange(_model, robot, weapon)
+	if err != nil {
+		return origin, err
+	}
+	weaponRangeLength := weaponRange[0]
+	weaponRangeWidth := weaponRange[1] / 2
 
-	// dx, dy := toPos[0]-fromPos[0], toPos[1]-fromPos[1]
-	// for _, unitID := range unitsInRegion {
-	// 	unitPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, unitID)
-	// 	if err != nil {
-	// 		return origin, err
-	// 	}
-	// 	dx2, dy2 := unitPos[0]-fromPos[0], unitPos[1]-fromPos[1]
-	// }
-	// for y := leftTop[1]; y <= rightBottom[1]; y++ {
-	// 	for x := leftTop[0]; x <= rightBottom[0]; x++ {
+	leftTop := protocol.Position{fromPos[0] - 10, fromPos[0] - 10}
+	rightBottom := protocol.Position{fromPos[0] + 10, fromPos[0] + 10}
+	unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
 
-	// 	}
-	// }
+	fromPosV2 := mgl64.Vec2{float64(fromPos[0]), float64(fromPos[1])}
+	toPosV2 := mgl64.Vec2{float64(toPos[0]), float64(toPos[1])}
+	dir1 := toPosV2.Sub(fromPosV2).Normalize()
+	normal := dir1.Vec3(0).Cross(mgl64.Vec3{0, 0, 1.0}).Vec2().Normalize()
+	log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("from(%v) to(%v) normal(%v)", fromPos, toPos, normal))
+	for _, unitID := range unitsInRegion {
+		if unitID == robot.ID {
+			continue
+		}
+		targetRobot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, unitID)
+		if err != nil {
+			return origin, err
+		}
+		targetPosition, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, unitID)
+		if err != nil {
+			return origin, err
+		}
+		unitPosV2 := mgl64.Vec2{float64(targetPosition[0]), float64(targetPosition[1])}
+		dir2 := unitPosV2.Sub(fromPosV2)
+		distanceLength := dir2.Dot(dir1)
+		// 背面的
+		if distanceLength <= 0 {
+			continue
+		}
+		// 超過射程
+		if distanceLength > float64(weaponRangeLength) {
+			continue
+		}
+		// 超過射線粗度
+		distanceWidth := math.Abs(dir2.Dot(normal))
+		if distanceWidth > float64(weaponRangeWidth) {
+			continue
+		}
+		log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("dir2(%v) distance2line(%v)", dir2, distanceWidth))
+		_model.App.Gameplay.HitMarks = append(_model.App.Gameplay.HitMarks, protocol.HitMark{
+			Rate:     1.0 - (distanceWidth / float64(weaponRangeWidth)),
+			Position: targetPosition,
+			Robot:    targetRobot,
+		})
+	}
+
 	// apply
 	ctx.Model = _model
-	ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, uidata.PageGameplay, gameplayPage)
 	log.Log(protocol.LogCategoryInfo, "OnEnableLineBattleMenu", "end")
 	return ctx, nil
 }
