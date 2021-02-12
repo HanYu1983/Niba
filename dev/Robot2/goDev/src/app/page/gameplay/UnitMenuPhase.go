@@ -30,7 +30,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 			log.Log(protocol.LogCategoryWarning, "UnitMenuPhase", fmt.Sprintf("unitID(%v) already done", unitID))
 			return origin, false, nil
 		}
-		ctxObj, err := ctx.Model.OnCreateRobotMenu(ctx, unitID)
+		ctxObj, err := ctx.Model.OnEnableRobotMenu(ctx, unitID)
 		if err != nil {
 			return origin, false, err
 		}
@@ -112,7 +112,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				}
 				ctx = ctxObj.(uidata.UI)
 				// 更新移動範圍
-				ctx, err = HandleShowMoveRangeWhenUnitAtCursor(ctx, struct{}{})
+				ctx, err = common.HandleShowMoveRangeWhenUnitAtCursor(ctx, struct{}{})
 				if err != nil {
 					return origin, false, err
 				}
@@ -127,10 +127,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				// do nothing
 			}
 		}
-		ctx.Model, err = ctx.Model.DisableRobotMenu()
+		ctxObj, err = ctx.Model.OnDisableRobotMenu(ctx)
 		if err != nil {
 			return origin, false, err
 		}
+		ctx = ctxObj.(uidata.UI)
 	}
 	if item, is := gameplayPage.Items[unitID]; is {
 		var _ = item

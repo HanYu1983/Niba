@@ -190,3 +190,9 @@ func (result BattleResult) MapRobot(mapF func(pos Robot) Robot) BattleResult {
 	result.Animations = localAnims
 	return result
 }
+
+type HitMark struct {
+	Position Position
+	HitRate  float64
+	Damage   int
+}

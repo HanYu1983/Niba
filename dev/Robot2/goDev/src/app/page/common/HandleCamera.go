@@ -1,4 +1,4 @@
-package gameplay
+package common
 
 import (
 	"app/tool/uidata"

@@ -3,13 +3,15 @@ package lobby
 import (
 	"app/page/common"
 	"app/page/gameplay"
+	"app/tool/def"
 	"app/tool/uidata"
 )
 
 func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	ctx, err = common.ObservePage(ctx, uidata.PageMultiUnitSelection)
+	view := def.View
+	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, err
 	}
@@ -18,7 +20,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 		ctx,
 		uidata.PageMultiUnitSelection,
 		func(origin uidata.UI) (uidata.UI, error) {
-			return common.ObservePage(ctx, uidata.PageMultiUnitSelection)
+			return view.Render(ctx)
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin

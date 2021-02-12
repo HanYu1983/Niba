@@ -3,6 +3,7 @@ package gameplay
 import (
 	"app/page/common"
 	"app/tool/data"
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -34,7 +35,7 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 		for {
 			var cancel bool
 			var targetID string
-			ctx, targetID, cancel, err = SelectUnitStep(ctx, robotID, func(targetID string) error {
+			ctx, targetID, cancel, err = common.SelectUnitStep(ctx, robotID, func(targetID string) error {
 				robot, err := protocol.TryGetStringRobot(gameplayPage.Robots, robotID)
 				if err != nil {
 					return err
@@ -62,28 +63,40 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 			if cancel {
 				return origin, cancel, nil
 			}
-			ctx, cancel, err = common.BattleMenuPhase(ctx, true, robotID, weaponID, targetID)
+			ctxObj, cancel, err := ctx.Model.OnSingleBattleMenuPhase(ctx, true, robotID, weaponID, targetID)
 			if err != nil {
 				return origin, false, err
 			}
+			ctx = ctxObj.(uidata.UI)
 			if cancel {
 				continue
 			}
 			break
 		}
 	case "line":
-	// 	var cancel bool
-	// 	var cursor protocol.Position
-	// 	ctx, cursor, cancel, err = SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
-	// 		return nil
-	// 	})
-	// 	if err != nil {
-	// 		return origin, false, err
-	// 	}
-	// 	if cancel {
-	// 		return origin, cancel, nil
-	// 	}
-	//  cursorWorld := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
+		for {
+			var cancel bool
+			var cursor protocol.Position
+			ctx, cursor, cancel, err = common.SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
+				return nil
+			})
+			if err != nil {
+				return origin, false, err
+			}
+			if cancel {
+				return origin, cancel, nil
+			}
+			cursorWorld := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, cursor)
+			ctxObj, cancel, err := ctx.Model.OnLineBattleMenuPhase(ctx, true, robotID, weaponID, cursorWorld)
+			if err != nil {
+				return origin, false, err
+			}
+			ctx = ctxObj.(uidata.UI)
+			if cancel {
+				continue
+			}
+			break
+		}
 	default:
 		return origin, false, fmt.Errorf("unknown weapon type(%v)", weaponProto)
 	}

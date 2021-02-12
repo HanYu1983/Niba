@@ -281,7 +281,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 ANIMATE:
 	// 先畫完動畫再應用資料, 因為機器人爆去後資料會被刪除, 所以在轉資料(RenderRobotBattle)給前端時找不到資料
 	// 關掉battleMenuh後再畫戰鬥動畫
-	ctx.Model, err = ctx.Model.DisableBattleMenu()
+	ctx, err = OnDisableBattleMenu(ctx)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}

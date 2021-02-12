@@ -39,11 +39,11 @@ func (v model) DissocComponentRobot(componentID string) (protocol.IModel, error)
 }
 
 // IFlow
-func (v model) OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error) {
-	return OnRobotBattle(ctx.(uidata.UI), robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
+func (v model) OnSingleBattleMenuPhase(origin interface{}, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (interface{}, bool, error) {
+	return OnSingleBattleMenuPhase(origin.(uidata.UI), isPlayerTurn, robotID, weaponID, targetRobotID)
 }
-func (v model) OnRobotBattleLine(ctx interface{}, robotID string, weaponID string, targetPosition protocol.Position) (interface{}, error) {
-	return ctx, nil
+func (v model) OnLineBattleMenuPhase(origin interface{}, isPlayerTurn bool, robotID string, weaponID string, targetPosition protocol.Position) (interface{}, bool, error) {
+	return OnLineBattleMenuPhase(origin.(uidata.UI), isPlayerTurn, robotID, weaponID, targetPosition)
 }
 func (v model) OnPlayerTurnStart(ui interface{}, player protocol.Player) (interface{}, error) {
 	return OnPlayerTurnStart(ui.(uidata.UI), player)
@@ -66,8 +66,17 @@ func (v model) OnRobotMove(ctx interface{}, robotID string, tree astar.NodeMap, 
 func (v model) OnRobotDone(ctx interface{}, robotID string) (interface{}, error) {
 	return OnRobotDone(ctx.(uidata.UI), robotID)
 }
-func (v model) OnCreateRobotMenu(ctx interface{}, robotID string) (interface{}, error) {
-	return OnCreateRobotMenu(ctx.(uidata.UI), robotID)
+func (v model) OnEnableRobotMenu(ctx interface{}, robotID string) (interface{}, error) {
+	return OnEnableRobotMenu(ctx.(uidata.UI), robotID)
+}
+func (v model) OnDisableRobotMenu(ctx interface{}) (interface{}, error) {
+	return OnDisableRobotMenu(ctx.(uidata.UI))
+}
+func (v model) OnEnableBattleMenu(origin interface{}, robotID string, weaponID string, targetRobotID string) (interface{}, error) {
+	return OnEnableBattleMenu(origin.(uidata.UI), robotID, weaponID, targetRobotID)
+}
+func (v model) OnDisableBattleMenu(origin interface{}) (interface{}, error) {
+	return OnDisableBattleMenu(origin.(uidata.UI))
 }
 
 // IGameplayModel
@@ -118,16 +127,4 @@ func (v model) SetCursor(cursor protocol.Position) protocol.IModel {
 }
 func (v model) GetCursor() protocol.Position {
 	return GetCursor(v)
-}
-func (v model) EnableRobotMenu(robotID string, situation interface{}) (protocol.IModel, error) {
-	return EnableRobotMenu(v, robotID, situation)
-}
-func (v model) DisableRobotMenu() (protocol.IModel, error) {
-	return DisableRobotMenu(v)
-}
-func (v model) EnableBattleMenu(robotID string, weaponID string, targetRobotID string) (protocol.IModel, error) {
-	return EnableBattleMenu(v, robotID, weaponID, targetRobotID)
-}
-func (v model) DisableBattleMenu() (protocol.IModel, error) {
-	return DisableBattleMenu(v)
 }

@@ -21,8 +21,4 @@ type IGameplayModel interface {
 	QueryMoveCount(string) int
 	SetCursor(Position) IModel
 	GetCursor() Position
-	EnableRobotMenu(string, interface{}) (IModel, error)
-	DisableRobotMenu() (IModel, error)
-	EnableBattleMenu(robotID string, weaponID string, targetRobotID string) (IModel, error)
-	DisableBattleMenu() (IModel, error)
 }

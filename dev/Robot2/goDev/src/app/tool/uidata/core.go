@@ -88,6 +88,7 @@ type GameplayPage struct {
 	Tags        map[string]protocol.Tag
 	MoveRange   []protocol.Position
 	AttackRange []protocol.Position
+	HitMarks    []protocol.HitMark
 	RobotMenu   protocol.RobotMenu
 }
 

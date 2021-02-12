@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"app/page/common"
 	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -26,7 +27,7 @@ TURN:
 		if evt == nil {
 			return origin, false, protocol.ErrTerminate
 		}
-		ctx, err = helper.UIReduce(HandleCursor, HandleCamera, HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
+		ctx, err = helper.UIReduce(common.HandleCursor, common.HandleCamera, common.HandleShowMoveRangeWhenUnitAtCursor)(ctx, evt)
 		if err != nil {
 			return origin, false, err
 		}

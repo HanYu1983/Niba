@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"app/page/common"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -113,7 +112,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			for {
-				ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, potentail.DesireWeapon.ID, potentail.DesireUnitID)
+				ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, potentail.DesireWeapon.ID, potentail.DesireUnitID)
 				if err != nil {
 					return origin, false, err
 				}
@@ -150,7 +149,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 			ctx = ctxObj.(uidata.UI)
 		}
 	case GoalTypeAttackTargetRobot:
-		ctx, cancel, err = common.BattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")
+		ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")
 		if err != nil {
 			return origin, false, err
 		}

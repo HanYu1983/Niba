@@ -209,11 +209,7 @@ func RobotDone(origin model, robotID string) (model, error) {
 func RobotSkyGround(origin model, robotID string) (model, error) {
 	return origin, nil
 }
-func DisableRobotMenu(origin model) (model, error) {
-	ctx := origin
-	ctx.App.Gameplay.RobotMenu.Active = false
-	return ctx, nil
-}
+
 func GetRobotMenu(origin model) protocol.RobotMenu {
 	ctx := origin
 	return ctx.App.Gameplay.RobotMenu
@@ -228,18 +224,24 @@ func GetMoveRange(origin model) []protocol.Position {
 	return ctx.App.Gameplay.MoveRange
 }
 
-func DisableBattleMenu(origin model) (model, error) {
-	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "start")
-	ctx := origin
-	ctx.App.Gameplay.BattleMenu.Active = false
-	ctx, err := DisableRobotMenu(ctx)
-	if err != nil {
-		return origin, err
-	}
-	log.Log(protocol.LogCategoryDetail, "DisableBattleMenu", fmt.Sprintf("after RobotMenu(%v)", ctx.App.Gameplay.RobotMenu))
-	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "end")
-	return ctx, nil
-}
+// func DisableRobotMenu(origin model) (model, error) {
+// 	ctx := origin
+// 	ctx.App.Gameplay.RobotMenu.Active = false
+// 	return ctx, nil
+// }
+
+// func DisableBattleMenu(origin model) (model, error) {
+// 	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "start")
+// 	ctx := origin
+// 	ctx.App.Gameplay.BattleMenu.Active = false
+// 	ctx, err := DisableRobotMenu(ctx)
+// 	if err != nil {
+// 		return origin, err
+// 	}
+// 	log.Log(protocol.LogCategoryDetail, "DisableBattleMenu", fmt.Sprintf("after RobotMenu(%v)", ctx.App.Gameplay.RobotMenu))
+// 	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "end")
+// 	return ctx, nil
+// }
 func GetBattleMenu(origin model) protocol.BattleMenu {
 	ctx := origin
 	return ctx.App.Gameplay.BattleMenu

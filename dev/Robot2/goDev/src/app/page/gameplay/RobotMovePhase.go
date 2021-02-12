@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"app/page/common"
 	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -23,15 +24,16 @@ func RobotMovePhase(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	}
 	moveRange := helper.MoveRangeTree2MoveRange(tree)
 	ctx.Model = ctx.Model.SetMoveRange(moveRange)
-	ctx.Model, err = ctx.Model.DisableRobotMenu()
+	ctxObj, err := ctx.Model.OnDisableRobotMenu(ctx)
 	if err != nil {
 		return origin, false, err
 	}
+	ctx = ctxObj.(uidata.UI)
 	for {
 		ctxSnapshot := ctx
 		var cancel bool
 		var cursor protocol.Position
-		ctx, cursor, cancel, err = SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
+		ctx, cursor, cancel, err = common.SelectPositionStep(ctx, robotID, func(ctx uidata.UI, localCursor protocol.Position) error {
 			worldCursor := helper.Local2World(ctx.GameplayPages[uidata.PageGameplay].Camera, localCursor)
 			for _, pos := range moveRange {
 				if pos == worldCursor {

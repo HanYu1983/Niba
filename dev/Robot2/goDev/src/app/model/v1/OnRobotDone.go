@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"app/page/common"
 	"app/tool/def"
 	"app/tool/uidata"
 )
@@ -14,7 +13,7 @@ func OnRobotDone(origin uidata.UI, robotID string) (interface{}, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = common.ObservePage(ctx, uidata.PageGameplay)
+	ctx, err = ObservePage(ctx, uidata.PageGameplay)
 	if err != nil {
 		return origin, err
 	}

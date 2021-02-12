@@ -1,6 +1,7 @@
-package common
+package v1
 
 import (
+	"app/page/common"
 	"app/tool"
 	"app/tool/def"
 	"app/tool/protocol"
@@ -36,18 +37,18 @@ func AutoCursorAtWeaponID(origin uidata.UI, menu2DID int, weaponID string) (uida
 	return ctx, nil
 }
 
-func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (uidata.UI, bool, error) {
-	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "start")
+func OnSingleBattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (uidata.UI, bool, error) {
+	log.Log(protocol.LogCategoryPhase, "OnSingleBattleMenuPhase", "start")
 	var err error
 	ctx := origin
 	view := def.View
-	ctx.Model, err = ctx.Model.EnableBattleMenu(robotID, weaponID, targetRobotID)
+	ctx, err = OnEnableBattleMenu(ctx, robotID, weaponID, targetRobotID)
 	if err != nil {
 		return origin, false, err
 	}
 	if isPlayerTurn {
 		// 先準備UI
-		ctx, err = ObservePage(ctx, uidata.PageGameplay)
+		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
 		}
@@ -68,7 +69,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			if err != nil {
 				return origin, false, err
 			}
-			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, false, err
 			}
@@ -99,11 +100,10 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			}
 			targetRobotAction := battleMenus.Right.BattleAction
 			targetRobotWeapon := battleMenus.Right.Weapon
-			ctxObj, err := ctx.Model.OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeapon.ID)
+			ctx, err = OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeapon.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			ctx = ctxObj.(uidata.UI)
 		default:
 			return origin, false, fmt.Errorf("玩家回合時必須只有武器選項")
 		}
@@ -116,7 +116,7 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 			if err != nil {
 				return origin, false, err
 			}
-			ctx, selection, cancel, tab, err = Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
+			ctx, selection, cancel, tab, err = common.Menu2DStep(ctx, uidata.PageGameplay, uidata.Menu2DUnitMenu)
 			if err != nil {
 				return origin, false, err
 			}
@@ -153,16 +153,15 @@ func BattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, weapon
 		}
 		targetRobotAction := playerAction
 		targetRobotWeaponID := playerWeaponID
-		ctxObj, err := ctx.Model.OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
+		ctx, err = OnRobotBattle(ctx, robotID, weaponID, targetRobotID, targetRobotAction, targetRobotWeaponID)
 		if err != nil {
 			return origin, false, err
 		}
-		ctx = ctxObj.(uidata.UI)
 	}
-	ctx.Model, err = ctx.Model.DisableBattleMenu()
+	ctx, err = OnDisableBattleMenu(ctx)
 	if err != nil {
 		return origin, false, err
 	}
-	log.Log(protocol.LogCategoryPhase, "BattleMenuPhase", "end")
+	log.Log(protocol.LogCategoryPhase, "OnSingleBattleMenuPhase", "end")
 	return ctx, false, nil
 }
