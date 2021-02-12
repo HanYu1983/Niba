@@ -39,7 +39,7 @@
     "6c48a": {
       "importer": "texture",
       "uuid": "38654742-0703-41ab-bffc-43532ac05882@6c48a",
-      "displayName": "sea",
+      "displayName": "deepSea",
       "id": "6c48a",
       "name": "texture",
       "userData": {
@@ -62,7 +62,7 @@
     "f9941": {
       "importer": "sprite-frame",
       "uuid": "38654742-0703-41ab-bffc-43532ac05882@f9941",
-      "displayName": "sea",
+      "displayName": "deepSea",
       "id": "f9941",
       "name": "spriteFrame",
       "userData": {
