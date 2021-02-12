@@ -35,7 +35,7 @@ export class Pool extends Component {
         node.setPosition(Vec3.ONE);
         // node.setScale(Vec3.ONE);
 
-        if(pool.length < 3) console.log("[獲取後-]數量:" + pool.length + ", 獲取:" + prefab.name);
+        // if(pool.length < 3) console.log("[獲取後-]數量:" + pool.length + ", 獲取:" + prefab.name);
         
         return node;
     }
@@ -51,7 +51,7 @@ export class Pool extends Component {
             node.setPosition(this.outOfWorld);
             // node.setScale(Vec3.ZERO);
 
-            if(pool.length < 3) console.log("[-釋放後]數量:" + pool.length + ", 釋放:" + prefab.name);
+            // if(pool.length < 3) console.log("[-釋放後]數量:" + pool.length + ", 釋放:" + prefab.name);
         }
     }
 }

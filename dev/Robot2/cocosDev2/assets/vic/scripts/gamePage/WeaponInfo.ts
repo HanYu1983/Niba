@@ -58,12 +58,11 @@ export class WeaponInfo extends Instant {
                 const weaponIds = options[key];
                 const currentWeaponId = weaponIds[content[1][key]];
                 const currentWeapon = robotMenu.Weapons[currentWeaponId];
-                console.log(currentWeapon);
 
                 this.title.string = currentWeapon.Title;
                 this.power.string = currentWeapon.Damage;
                 this.range.string = currentWeapon.Range[0] + "~" + currentWeapon.Range[1];
-                this.accuracy.string = currentWeapon.Accuracy * 100 + "%";
+                this.accuracy.string = Math.round(currentWeapon.Accuracy * 100) + "%";
                 this.type.string = currentWeapon.EnergyType;
                 this.count.string = currentWeapon.MaxBulletCount;
                 this.en.string = currentWeapon.EnergyCost;

@@ -41,7 +41,7 @@ export class ActionInfo extends Instant {
     }
 
     private setInfo(info:any){
-        this.accuracy.string = Math.floor(info.HitRate * 100) + "%";
+        this.accuracy.string = Math.round(info.HitRate * 100) + "%";
     }
 
     private setAction(actionType?:ModelType.BattleMenuAction){

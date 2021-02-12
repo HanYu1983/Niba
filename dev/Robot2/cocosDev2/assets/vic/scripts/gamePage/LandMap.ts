@@ -57,8 +57,6 @@ export class LandMap extends Instant {
     playBattleAnimation(result:any, cb:()=>void){
         const anims = result.Animations;
         
-        console.log(anims);
-        
         this.cursor.node.setScale(Vec3.ZERO);
         
         let actions = [];
