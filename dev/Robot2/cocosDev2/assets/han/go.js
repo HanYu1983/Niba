@@ -35400,8 +35400,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.IsFriendlyRobot = IsFriendlyRobot;
 	ObserveGameplayPage = function(origin, id) {
-		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _i, _i$1, _key, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, activeRobot, attackRange, battleMenuModel, ctx, cursor, err, err$1, err$2, gameplayPage, id, id$1, isSelectingWeapon, leftTop, localPosDict, model$1, modelMap, moveRange, moveRangeLocal, origin, pos, pos$1, rightBottom, robotPos, selectedWeapon, selectedWeaponID, terrain, terrainID, unitAtCursor, unitMenu, unitMenuModel, x, x$1, x$2, x$3, x$4, x$5, y, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; activeRobot = $f.activeRobot; attackRange = $f.attackRange; battleMenuModel = $f.battleMenuModel; ctx = $f.ctx; cursor = $f.cursor; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; gameplayPage = $f.gameplayPage; id = $f.id; id$1 = $f.id$1; isSelectingWeapon = $f.isSelectingWeapon; leftTop = $f.leftTop; localPosDict = $f.localPosDict; model$1 = $f.model$1; modelMap = $f.modelMap; moveRange = $f.moveRange; moveRangeLocal = $f.moveRangeLocal; origin = $f.origin; pos = $f.pos; pos$1 = $f.pos$1; rightBottom = $f.rightBottom; robotPos = $f.robotPos; selectedWeapon = $f.selectedWeapon; selectedWeaponID = $f.selectedWeaponID; terrain = $f.terrain; terrainID = $f.terrainID; unitAtCursor = $f.unitAtCursor; unitMenu = $f.unitMenu; unitMenuModel = $f.unitMenuModel; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _arg$9, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _i, _i$1, _key, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, activeRobot, attackRange, battleMenuModel, ctx, cursor, err, err$1, err$2, gameplayPage, id, id$1, isSelectingWeapon, leftTop, localPosDict, model$1, modelMap, moveRange, moveRangeLocal, origin, pos, pos$1, rightBottom, robotPos, selectedWeapon, selectedWeaponID, terrain, terrainID, unitAtCursor, unitMenu, unitMenuModel, x, x$1, x$2, x$3, x$4, x$5, y, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _arg$9 = $f._arg$9; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; activeRobot = $f.activeRobot; attackRange = $f.attackRange; battleMenuModel = $f.battleMenuModel; ctx = $f.ctx; cursor = $f.cursor; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; gameplayPage = $f.gameplayPage; id = $f.id; id$1 = $f.id$1; isSelectingWeapon = $f.isSelectingWeapon; leftTop = $f.leftTop; localPosDict = $f.localPosDict; model$1 = $f.model$1; modelMap = $f.modelMap; moveRange = $f.moveRange; moveRangeLocal = $f.moveRangeLocal; origin = $f.origin; pos = $f.pos; pos$1 = $f.pos$1; rightBottom = $f.rightBottom; robotPos = $f.robotPos; selectedWeapon = $f.selectedWeapon; selectedWeaponID = $f.selectedWeaponID; terrain = $f.terrain; terrainID = $f.terrainID; unitAtCursor = $f.unitAtCursor; unitMenu = $f.unitMenu; unitMenuModel = $f.unitMenuModel; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
 		model$1 = $clone($assertType(ctx.Model, model), model);
@@ -35526,22 +35526,34 @@ $packages["app/model/v1"] = (function() {
 		_tuple$5 = _r$8;
 		terrainID = _tuple$5[0];
 		err = _tuple$5[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		_r$9 = helper.TerrainID2Terrain(terrainID); /* */ $s = 19; case 19: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		_tuple$6 = _r$9;
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 19; continue; }
+		/* */ $s = 20; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 19:
+			_arg$6 = protocol.LogCategoryWarning;
+			_r$9 = err.Error(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+			_arg$7 = _r$9;
+			$r = log.Log(_arg$6, "ObserveGameplayPage", _arg$7); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			err = $ifaceNil;
+		/* } */ case 20:
+		_r$10 = helper.TerrainID2Terrain(terrainID); /* */ $s = 23; case 23: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_tuple$6 = _r$10;
 		terrain = $clone(_tuple$6[0], data.TerrainProto);
 		err = _tuple$6[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
+		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 24; continue; }
+		/* */ $s = 25; continue;
+		/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 24:
+			_arg$8 = protocol.LogCategoryWarning;
+			_r$11 = err.Error(); /* */ $s = 26; case 26: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+			_arg$9 = _r$11;
+			$r = log.Log(_arg$8, "ObserveGameplayPage", _arg$9); /* */ $s = 27; case 27: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			err = $ifaceNil;
+		/* } */ case 25:
 		unitAtCursor = SearchUnitByPosition(model$1.App.Gameplay.Positions, $clone(cursor, protocol.Position));
 		gameplayPage.CursorInfo.UnitID = unitAtCursor;
 		data.TerrainProto.copy(gameplayPage.CursorInfo.Terrain, terrain);
 		ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, id, $clone(gameplayPage, uidata.GameplayPage));
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveGameplayPage }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.activeRobot = activeRobot; $f.attackRange = attackRange; $f.battleMenuModel = battleMenuModel; $f.ctx = ctx; $f.cursor = cursor; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.gameplayPage = gameplayPage; $f.id = id; $f.id$1 = id$1; $f.isSelectingWeapon = isSelectingWeapon; $f.leftTop = leftTop; $f.localPosDict = localPosDict; $f.model$1 = model$1; $f.modelMap = modelMap; $f.moveRange = moveRange; $f.moveRangeLocal = moveRangeLocal; $f.origin = origin; $f.pos = pos; $f.pos$1 = pos$1; $f.rightBottom = rightBottom; $f.robotPos = robotPos; $f.selectedWeapon = selectedWeapon; $f.selectedWeaponID = selectedWeaponID; $f.terrain = terrain; $f.terrainID = terrainID; $f.unitAtCursor = unitAtCursor; $f.unitMenu = unitMenu; $f.unitMenuModel = unitMenuModel; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveGameplayPage }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._arg$9 = _arg$9; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.activeRobot = activeRobot; $f.attackRange = attackRange; $f.battleMenuModel = battleMenuModel; $f.ctx = ctx; $f.cursor = cursor; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.gameplayPage = gameplayPage; $f.id = id; $f.id$1 = id$1; $f.isSelectingWeapon = isSelectingWeapon; $f.leftTop = leftTop; $f.localPosDict = localPosDict; $f.model$1 = model$1; $f.modelMap = modelMap; $f.moveRange = moveRange; $f.moveRangeLocal = moveRangeLocal; $f.origin = origin; $f.pos = pos; $f.pos$1 = pos$1; $f.rightBottom = rightBottom; $f.robotPos = robotPos; $f.selectedWeapon = selectedWeapon; $f.selectedWeaponID = selectedWeaponID; $f.terrain = terrain; $f.terrainID = terrainID; $f.unitAtCursor = unitAtCursor; $f.unitMenu = unitMenu; $f.unitMenuModel = unitMenuModel; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.ObserveGameplayPage = ObserveGameplayPage;
 	ObserveMenu1D = function(origin, menuID) {

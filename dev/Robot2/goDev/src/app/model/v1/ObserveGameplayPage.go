@@ -102,11 +102,13 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	// CursorInfo
 	terrainID, err := tool.TryGetInt2(model.App.Gameplay.Map, cursor[1])(cursor[0], nil)
 	if err != nil {
-		return origin, err
+		log.Log(protocol.LogCategoryWarning, "ObserveGameplayPage", err.Error())
+		err = nil
 	}
 	terrain, err := helper.TerrainID2Terrain(terrainID)
 	if err != nil {
-		return origin, err
+		log.Log(protocol.LogCategoryWarning, "ObserveGameplayPage", err.Error())
+		err = nil
 	}
 	unitAtCursor := SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
 	gameplayPage.CursorInfo.UnitID = unitAtCursor
