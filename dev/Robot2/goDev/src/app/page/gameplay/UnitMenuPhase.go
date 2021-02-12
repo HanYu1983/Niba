@@ -15,9 +15,9 @@ func CreateItemMenu(origin uidata.UI, unitID string) (uidata.UI, error) {
 
 func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "UnitMenuPhase", fmt.Sprintf("unitID(%v) start", unitID))
-	view := def.View
 	var err error
 	ctx := origin
+	view := def.View
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, false, err
@@ -67,50 +67,12 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				view.Alert(invalidStr)
 				goto MENU2D_STEP
 			}
-			// 選擇敵機時將選單關掉. 先不使用
-			// disableRobotMenuSnapshotCtx := ctx
-			// ctx.Model, err = ctx.Model.DisableRobotMenu()
-			// if err != nil {
-			// 	return origin, false, err
-			// }
-		SELECT_UNIT_STEP:
-			var targetID string
-			ctx, targetID, cancel, err = SelectUnitStep(ctx, unitID, func(targetID string) error {
-				robot, err := protocol.TryGetStringRobot(gameplayPage.Robots, unitID)
-				if err != nil {
-					return err
-				}
-				targetRobot, err := protocol.TryGetStringRobot(gameplayPage.Robots, targetID)
-				if err != nil {
-					return err
-				}
-				plyr1, err := protocol.TryGetStringPlayer(gameplayPage.Players, robot.PlayerID)
-				if err != nil {
-					return err
-				}
-				plyr2, err := protocol.TryGetStringPlayer(gameplayPage.Players, targetRobot.PlayerID)
-				if err != nil {
-					return err
-				}
-				if plyr1.GroupID == plyr2.GroupID {
-					return fmt.Errorf("必須選擇敵人")
-				}
-				return nil
-			})
+			ctx, cancel, err = SelectWeaponTargetPhase(ctx, unitID, weaponID)
 			if err != nil {
 				return origin, false, err
 			}
 			if cancel {
-				// 選擇敵機時將選單關掉. 先不使用
-				// ctx = disableRobotMenuSnapshotCtx
 				goto MENU2D_STEP
-			}
-			ctx, cancel, err = common.BattleMenuPhase(ctx, true, unitID, weaponID, targetID)
-			if err != nil {
-				return origin, false, err
-			}
-			if cancel {
-				goto SELECT_UNIT_STEP
 			}
 		case protocol.RobotMenuFunctionTransform:
 			transformID := selection

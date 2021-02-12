@@ -39,6 +39,12 @@ func (v model) DissocComponentRobot(componentID string) (protocol.IModel, error)
 }
 
 // IFlow
+func (v model) OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error) {
+	return OnRobotBattle(ctx.(uidata.UI), robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
+}
+func (v model) OnRobotBattleLine(ctx interface{}, robotID string, weaponID string, targetPosition protocol.Position) (interface{}, error) {
+	return ctx, nil
+}
 func (v model) OnPlayerTurnStart(ui interface{}, player protocol.Player) (interface{}, error) {
 	return OnPlayerTurnStart(ui.(uidata.UI), player)
 }
@@ -124,7 +130,4 @@ func (v model) EnableBattleMenu(robotID string, weaponID string, targetRobotID s
 }
 func (v model) DisableBattleMenu() (protocol.IModel, error) {
 	return DisableBattleMenu(v)
-}
-func (v model) OnRobotBattle(ctx interface{}, robotID string, weaponID string, targetRobotID string, targetAction int, targetRobotWeaponID string) (interface{}, error) {
-	return OnRobotBattle(ctx.(uidata.UI), robotID, weaponID, targetRobotID, targetAction, targetRobotWeaponID)
 }
