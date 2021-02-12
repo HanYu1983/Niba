@@ -38302,7 +38302,7 @@ $packages["app/model/v1"] = (function() {
 				}
 				$s = 7; continue;
 			/* } else if (_1 === ("line")) { */ case 5:
-				_r$3 = helper.QueryMinMaxAttackRange(20, 20, 1, weaponRange[0], arrayType.zero()); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$3 = helper.QueryMinMaxAttackRange(20, 20, 0, weaponRange[0], arrayType.zero()); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 				_tuple$3 = _r$3;
 				attackRange = _tuple$3[0];
 				err = _tuple$3[1];
