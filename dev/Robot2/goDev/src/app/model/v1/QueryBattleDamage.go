@@ -96,6 +96,9 @@ func QueryBattleDamage(model model, robot protocol.Robot, pilot protocol.Pilot, 
 		isLightingAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
 			return s == "lighting"
 		})) > 0
+		isMissileAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+			return s == "missile"
+		})) > 0
 		switch {
 		case isBeanAttack:
 			targetArmor, err = QueryRobotBeamArmor(model, robot.ID)
@@ -109,6 +112,7 @@ func QueryBattleDamage(model model, robot protocol.Robot, pilot protocol.Pilot, 
 			}
 		case isFireAttack:
 		case isLightingAttack:
+		case isMissileAttack:
 		default:
 			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type. weapon(%+v)", weapon)
 		}

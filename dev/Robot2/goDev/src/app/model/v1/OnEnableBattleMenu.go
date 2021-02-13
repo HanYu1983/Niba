@@ -66,7 +66,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = CheckInvalidWeapons(_model, robot, weapons)
+				invalidWeapons, err = CheckInvalidWeapons(_model, targetRobot, weapons)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = targetRobotID

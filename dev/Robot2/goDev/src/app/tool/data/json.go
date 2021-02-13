@@ -11,7 +11,7 @@ const (
             "value": [
                 "25"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "energy2": {
@@ -22,7 +22,7 @@ const (
             "value": [
                 "50"
             ],
-            "powerCost": 3,
+            "powerCost": 12,
             "action": "equipment"
         },
         "energy3": {
@@ -33,7 +33,7 @@ const (
             "value": [
                 "75"
             ],
-            "powerCost": 4,
+            "powerCost": 14,
             "action": "equipment"
         },
         "energy4": {
@@ -44,7 +44,7 @@ const (
             "value": [
                 "100"
             ],
-            "powerCost": 5,
+            "powerCost": 16,
             "action": "equipment"
         },
         "energy5": {
@@ -55,7 +55,7 @@ const (
             "value": [
                 "125"
             ],
-            "powerCost": 6,
+            "powerCost": 18,
             "action": "equipment"
         },
         "armor1": {
@@ -67,7 +67,7 @@ const (
                 "500.0",
                 "100.0"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "armor2": {
@@ -79,7 +79,7 @@ const (
                 "1000.0",
                 "200.0"
             ],
-            "powerCost": 3,
+            "powerCost": 12,
             "action": "equipment"
         },
         "armor3": {
@@ -91,7 +91,7 @@ const (
                 "1500.0",
                 "300.0"
             ],
-            "powerCost": 4,
+            "powerCost": 14,
             "action": "equipment"
         },
         "armor4": {
@@ -103,7 +103,7 @@ const (
                 "2000.0",
                 "400.0"
             ],
-            "powerCost": 5,
+            "powerCost": 16,
             "action": "equipment"
         },
         "armor5": {
@@ -115,7 +115,7 @@ const (
                 "2500.0",
                 "500.0"
             ],
-            "powerCost": 6,
+            "powerCost": 18,
             "action": "equipment"
         },
         "beam_armor1": {
@@ -127,7 +127,7 @@ const (
                 "500.0",
                 "100.0"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "beam_armor2": {
@@ -139,7 +139,7 @@ const (
                 "1000.0",
                 "200.0"
             ],
-            "powerCost": 3,
+            "powerCost": 12,
             "action": "equipment"
         },
         "beam_armor3": {
@@ -151,7 +151,7 @@ const (
                 "1500.0",
                 "300.0"
             ],
-            "powerCost": 4,
+            "powerCost": 14,
             "action": "equipment"
         },
         "beam_armor4": {
@@ -163,7 +163,7 @@ const (
                 "2000.0",
                 "400.0"
             ],
-            "powerCost": 5,
+            "powerCost": 16,
             "action": "equipment"
         },
         "beam_armor5": {
@@ -175,7 +175,7 @@ const (
                 "2500.0",
                 "500.0"
             ],
-            "powerCost": 6,
+            "powerCost": 18,
             "action": "equipment"
         },
         "fire_armor": {
@@ -187,7 +187,7 @@ const (
                 "500.0",
                 "1000.0"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "lighting_armor": {
@@ -199,7 +199,7 @@ const (
                 "500.0",
                 "1000.0"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "engine1": {
@@ -208,7 +208,7 @@ const (
             "cost": 1000,
             "desc": "增加{0}power",
             "value": [
-                "5"
+                "20"
             ],
             "powerCost": 0,
             "action": "equipment"
@@ -219,7 +219,7 @@ const (
             "cost": 2000,
             "desc": "增加{0}power",
             "value": [
-                "10"
+                "40"
             ],
             "powerCost": 0,
             "action": "equipment"
@@ -230,7 +230,7 @@ const (
             "cost": 3000,
             "desc": "增加{0}power",
             "value": [
-                "15"
+                "60"
             ],
             "powerCost": 0,
             "action": "equipment"
@@ -241,7 +241,7 @@ const (
             "cost": 4000,
             "desc": "增加{0}power",
             "value": [
-                "20"
+                "80"
             ],
             "powerCost": 0,
             "action": "equipment"
@@ -252,7 +252,7 @@ const (
             "cost": 5000,
             "desc": "增加{0}power",
             "value": [
-                "25"
+                "100"
             ],
             "powerCost": 0,
             "action": "equipment"
@@ -265,7 +265,7 @@ const (
             "value": [
                 "3000"
             ],
-            "powerCost": 1,
+            "powerCost": 10,
             "action": "item"
         },
         "energyPack": {
@@ -276,7 +276,7 @@ const (
             "value": [
                 "80"
             ],
-            "powerCost": 1,
+            "powerCost": 10,
             "action": "item"
         },
         "bulletPack": {
@@ -287,7 +287,7 @@ const (
             "value": [
                 "3"
             ],
-            "powerCost": 1,
+            "powerCost": 10,
             "action": "item"
         },
         "shield": {
@@ -299,7 +299,7 @@ const (
                 "0.2",
                 "3000"
             ],
-            "powerCost": 5,
+            "powerCost": 10,
             "action": "equipment"
         },
         "beam_shield": {
@@ -311,7 +311,7 @@ const (
                 "0.2",
                 "3000"
             ],
-            "powerCost": 5,
+            "powerCost": 10,
             "action": "equipment"
         },
         "psArmor": {
@@ -320,135 +320,145 @@ const (
             "cost": 3000,
             "desc": "被實彈傷害-{1}",
             "value": [
-                "1000"
+                "2000"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
+            "action": "equipment"
+        },
+        "afterimage": {
+            "id": "afterimage",
+            "title": "殘像",
+            "cost": 10000,
+            "desc": "氣力{0}以上時, 機率{1}閃避攻擊",
+            "value": [
+                "130",
+                "0.7"
+            ],
+            "powerCost": 30,
+            "action": "equipment"
+        },
+        "defensiveWeapon": {
+            "id": "defensiveWeapon",
+            "title": "防禦兵器",
+            "cost": 1000,
+            "desc": "依技量有機率防禦[飛行兵器]",
+            "value": [],
+            "powerCost": 10,
             "action": "equipment"
         },
         "zeroSystem": {
             "id": "zeroSystem",
             "title": "零式系統",
-            "cost": 2000,
+            "cost": 1000,
             "desc": "武器的最終命中增加{0}%，自身的最終被命中率減少{1}%",
             "value": [
                 "10",
                 "15"
             ],
-            "powerCost": 20,
+            "powerCost": 10,
             "action": "equipment"
         },
         "shejililiang": {
             "id": "shejililiang",
             "title": "射擊力量",
-            "cost": 200,
+            "cost": 1000,
             "desc": "射擊系武器射程增加{0}",
             "value": [
                 "1"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "gedouliliang": {
             "id": "gedouliliang",
             "title": "格鬥力量",
-            "cost": 200,
+            "cost": 1000,
             "desc": "格鬥系武器射程增加{0}",
             "value": [
                 "1"
             ],
-            "powerCost": 2,
-            "action": "equipment"
-        },
-        "shoucigongjihongli": {
-            "id": "shoucigongjihongli",
-            "title": "首次攻擊紅利",
-            "cost": 200,
-            "desc": "自軍第一次發動的攻擊，基本值*{0}",
-            "value": [
-                "3"
-            ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "gushou": {
             "id": "gushou",
             "title": "固守",
-            "cost": 200,
+            "cost": 1000,
             "desc": "這個回合沒有攻擊的話，下個合回開始前受傷害減少{0}",
             "value": [
-                "3000"
+                "1000"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "gedouwang": {
             "id": "gedouwang",
             "title": "格鬥王",
-            "cost": 200,
-            "desc": "若所有武器都是格鬥系，武器傷害+{0}%, 回避+{1}%",
+            "cost": 1000,
+            "desc": "若所有武器都是格鬥系，武器傷害*{0}%, 回避*{1}%",
             "value": [
                 "1.2",
                 "1.2"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "shejiwang": {
             "id": "shejiwang",
             "title": "射擊王",
-            "cost": 200,
-            "desc": "若所有武器都是射擊系，射擊傷害+{0}%, 受傷害減少{0}",
+            "cost": 1000,
+            "desc": "若所有武器都是射擊系，射擊傷害*{0}%, 受傷害減少{0}",
             "value": [
                 "1.2",
-                "1000"
+                "500"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "feixingwang": {
             "id": "feixingwang",
             "title": "飛行王",
-            "cost": 200,
+            "cost": 1000,
             "desc": "飛行狀態時，移動力+{0}，回避+{1}%",
             "value": [
                 "2",
                 "1.2"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "shengwuzhuangjia": {
             "id": "shengwuzhuangjia",
             "title": "生物裝甲",
-            "cost": 200,
+            "cost": 1000,
             "desc": "增加{0}裝中. 每回合開始回復{1}%最大hp.",
             "value": [
                 "300",
                 "0.1"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "feixingqi": {
             "id": "feixingqi",
             "title": "飛行器",
-            "cost": 200,
+            "cost": 1000,
             "desc": "空中適性變成{0}",
             "value": [
                 "0.8"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         },
         "pensheqidian": {
             "id": "pensheqidian",
             "title": "噴射氣墊",
-            "cost": 200,
+            "cost": 1000,
             "desc": "地面移動時出力*{0}",
             "value": [
                 "1.5"
             ],
-            "powerCost": 2,
+            "powerCost": 10,
             "action": "equipment"
         }
     },
@@ -469,10 +479,22 @@ const (
     "config": {
         "default": {
             "id": "default",
-            "powerCostForMove": 5,
+            "powerCostForMove": 1,
             "award": [
                 1.2,
                 1.2
+            ],
+            "robots": [
+                "10",
+                "11",
+                "14"
+            ],
+            "weapons": [],
+            "components": [],
+            "pilots": [
+                "1",
+                "1",
+                "1"
             ]
         }
     },
@@ -1041,33 +1063,109 @@ const (
         }
     },
     "pilot": {
+        "engineer": {
+            "id": "engineer",
+            "title": "工程師",
+            "cost": 4400,
+            "melee": 65,
+            "range": 65,
+            "atk": 70,
+            "evade": 80,
+            "guard": 70,
+            "tech": 90,
+            "ability": [],
+            "total": 440
+        },
+        "boxer": {
+            "id": "boxer",
+            "title": "拳擊手",
+            "cost": 4650,
+            "melee": 90,
+            "range": 65,
+            "atk": 90,
+            "evade": 50,
+            "guard": 90,
+            "tech": 80,
+            "ability": [],
+            "total": 465
+        },
+        "teacher": {
+            "id": "teacher",
+            "title": "教師",
+            "cost": 4400,
+            "melee": 50,
+            "range": 80,
+            "atk": 70,
+            "evade": 80,
+            "guard": 60,
+            "tech": 100,
+            "ability": [],
+            "total": 440
+        },
+        "baseballPitcher": {
+            "id": "baseballPitcher",
+            "title": "棒球投手",
+            "cost": 5150,
+            "melee": 80,
+            "range": 90,
+            "atk": 90,
+            "evade": 75,
+            "guard": 90,
+            "tech": 90,
+            "ability": [],
+            "total": 515
+        },
         "amuro": {
             "id": "amuro",
             "title": "阿姆羅",
-            "cost": 2000,
-            "melee": 0.75,
-            "range": 1.25,
-            "evade": 1,
-            "guard": 1,
-            "expMelee": 80,
-            "expRange": 100,
-            "expEvade": 100,
-            "expGuard": 50,
-            "exp": 100
+            "cost": 6050,
+            "melee": 70,
+            "range": 130,
+            "atk": 100,
+            "evade": 130,
+            "guard": 70,
+            "tech": 105,
+            "ability": [],
+            "total": 605
         },
-        "normal": {
-            "id": "normal",
-            "title": "駕駛",
-            "cost": 600,
-            "melee": 0.5,
-            "range": 0.5,
-            "evade": 0.5,
-            "guard": 0.5,
-            "expMelee": 10,
-            "expRange": 10,
-            "expEvade": 10,
-            "expGuard": 10,
-            "exp": 10
+        "liulongma": {
+            "id": "liulongma",
+            "title": "流龍馬",
+            "cost": 6100,
+            "melee": 130,
+            "range": 70,
+            "atk": 110,
+            "evade": 65,
+            "guard": 135,
+            "tech": 100,
+            "ability": [],
+            "total": 610
+        },
+        "doujiaer": {
+            "id": "doujiaer",
+            "title": "兜甲兒",
+            "cost": 6000,
+            "melee": 125,
+            "range": 70,
+            "atk": 105,
+            "evade": 60,
+            "guard": 140,
+            "tech": 100,
+            "ability": [],
+            "total": 600
+        },
+        "xibuke": {
+            "id": "xibuke",
+            "title": "西布克",
+            "cost": 6050,
+            "melee": 80,
+            "range": 120,
+            "atk": 100,
+            "evade": 125,
+            "guard": 75,
+            "tech": 105,
+            "ability": [],
+            "total": 605
         }
     },
     "pilotAbility": {},
@@ -1075,9 +1173,10 @@ const (
         "gaite_sky": {
             "id": "gaite_sky",
             "title": "空蓋特",
-            "cost": 62500,
+            "cost": 73000,
             "power": 125,
             "hp": 5000,
+            "en": 100,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",
@@ -1105,13 +1204,14 @@ const (
         "gaite_land": {
             "id": "gaite_land",
             "title": "地蓋特",
-            "cost": 62500,
+            "cost": 73000,
             "power": 125,
             "hp": 5000,
+            "en": 100,
             "weapons": [
-                "gaite_punch",
                 "gaite_missle",
-                "gaite_shan"
+                "gaite_drill",
+                "gaite_powerDrill"
             ],
             "components": [
                 "energy1",
@@ -1134,10 +1234,15 @@ const (
         "gaite_sea": {
             "id": "gaite_sea",
             "title": "海蓋特",
-            "cost": 62500,
+            "cost": 73000,
             "power": 125,
             "hp": 5000,
-            "weapons": [],
+            "en": 100,
+            "weapons": [
+                "gaite_punch",
+                "gaite_missle",
+                "gaite_shan"
+            ],
             "components": [
                 "energy1",
                 "energy2",
@@ -1159,9 +1264,10 @@ const (
         "moshen": {
             "id": "moshen",
             "title": "魔神z",
-            "cost": 48400,
+            "cost": 59000,
             "power": 110,
             "hp": 6000,
+            "en": 100,
             "weapons": [
                 "moshen_ray",
                 "moshen_punch",
@@ -1187,11 +1293,13 @@ const (
         "zgundam": {
             "id": "zgundam",
             "title": "z鋼彈",
-            "cost": 32400,
+            "cost": 42700,
             "power": 90,
             "hp": 3000,
+            "en": 100,
             "weapons": [
-                "beam_sword2",
+                "machinegun1",
+                "beam_sword1",
                 "beam_gun1",
                 "beam_mega2"
             ],
@@ -1215,10 +1323,12 @@ const (
         "zgundam_sky": {
             "id": "zgundam_sky",
             "title": "z鋼彈飛翼",
-            "cost": 32400,
+            "cost": 42700,
             "power": 90,
             "hp": 3000,
+            "en": 100,
             "weapons": [
+                "machinegun1",
                 "beam_gun1"
             ],
             "components": [
@@ -1241,10 +1351,12 @@ const (
         "gundam": {
             "id": "gundam",
             "title": "鋼彈",
-            "cost": 16900,
+            "cost": 27150,
             "power": 65,
             "hp": 2500,
+            "en": 100,
             "weapons": [
+                "machinegun1",
                 "beam_sword1",
                 "beam_gun1"
             ],
@@ -1266,10 +1378,12 @@ const (
         "jimu": {
             "id": "jimu",
             "title": "吉姆",
-            "cost": 9216,
+            "cost": 19416,
             "power": 48,
             "hp": 2000,
+            "en": 100,
             "weapons": [
+                "machinegun1",
                 "beam_sword1",
                 "beam_gatling1"
             ],
@@ -1289,9 +1403,10 @@ const (
         "BGD": {
             "id": "BGD",
             "title": "制式格鬥",
-            "cost": 14400,
+            "cost": 24650,
             "power": 60,
             "hp": 2500,
+            "en": 100,
             "weapons": [
                 "beam_sword2",
                 "beam_gatling1"
@@ -1312,9 +1427,10 @@ const (
         "BYJ": {
             "id": "BYJ",
             "title": "制式遊擊",
-            "cost": 14400,
+            "cost": 24650,
             "power": 60,
             "hp": 2500,
+            "en": 100,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling2"
@@ -1335,9 +1451,10 @@ const (
         "BJJ": {
             "id": "BJJ",
             "title": "制式狙擊",
-            "cost": 14400,
+            "cost": 24650,
             "power": 60,
             "hp": 2500,
+            "en": 100,
             "weapons": [
                 "beam_sniper1",
                 "beam_gatling1"
@@ -1358,9 +1475,10 @@ const (
         "BGR": {
             "id": "BGR",
             "title": "制式干擾",
-            "cost": 14400,
+            "cost": 24650,
             "power": 60,
             "hp": 2500,
+            "en": 100,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling1"
@@ -1381,9 +1499,10 @@ const (
         "BFD": {
             "id": "BFD",
             "title": "制式防盾",
-            "cost": 14400,
+            "cost": 24650,
             "power": 60,
             "hp": 2500,
+            "en": 100,
             "weapons": [
                 "beam_gun1"
             ],
@@ -1404,10 +1523,12 @@ const (
         "windgundam": {
             "id": "windgundam",
             "title": "零式鋼彈",
-            "cost": 78400,
+            "cost": 88800,
             "power": 140,
             "hp": 4000,
+            "en": 100,
             "weapons": [
+                "machinegun2",
                 "beam_sword1",
                 "beam_sniper4",
                 "beam_mega4"
@@ -1433,10 +1554,12 @@ const (
         "windgundam_sky": {
             "id": "windgundam_sky",
             "title": "零式鋼彈飛翼",
-            "cost": 78400,
+            "cost": 88800,
             "power": 140,
             "hp": 4000,
+            "en": 100,
             "weapons": [
+                "machinegun2",
                 "beam_sniper4"
             ],
             "components": [
@@ -1460,11 +1583,13 @@ const (
         "strikegundam": {
             "id": "strikegundam",
             "title": "攻擊鋼彈",
-            "cost": 36100,
+            "cost": 46500,
             "power": 95,
             "hp": 4000,
+            "en": 100,
             "weapons": [
-                "sword1",
+                "machinegun1",
+                "beam_sword3",
                 "sword3",
                 "beam_gun1"
             ],
@@ -1487,9 +1612,10 @@ const (
         "exlight": {
             "id": "exlight",
             "title": "特輕型機甲",
-            "cost": 3600,
+            "cost": 13800,
             "power": 30,
             "hp": 2000,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1504,9 +1630,10 @@ const (
         "light": {
             "id": "light",
             "title": "輕型機甲",
-            "cost": 8100,
+            "cost": 18350,
             "power": 45,
             "hp": 2500,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1521,9 +1648,10 @@ const (
         "normal": {
             "id": "normal",
             "title": "制式機甲",
-            "cost": 16900,
+            "cost": 27200,
             "power": 65,
             "hp": 3000,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1538,9 +1666,10 @@ const (
         "medium": {
             "id": "medium",
             "title": "中型機甲",
-            "cost": 32400,
+            "cost": 42750,
             "power": 90,
             "hp": 3500,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1555,9 +1684,10 @@ const (
         "heavy": {
             "id": "heavy",
             "title": "重型機甲",
-            "cost": 57600,
+            "cost": 68000,
             "power": 120,
             "hp": 4000,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1572,9 +1702,10 @@ const (
         "exheavy": {
             "id": "exheavy",
             "title": "特重型機甲",
-            "cost": 96100,
+            "cost": 106550,
             "power": 155,
             "hp": 4500,
+            "en": 100,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1585,68 +1716,95 @@ const (
             ],
             "transform": [],
             "unlockExp": 4
+        },
+        "f91": {
+            "id": "f91",
+            "title": "F91",
+            "cost": 42700,
+            "power": 90,
+            "hp": 3000,
+            "en": 100,
+            "weapons": [
+                "machinegun1",
+                "beam_sword1",
+                "beam_gun1",
+                "beam_mega2"
+            ],
+            "components": [
+                "beam_armor1",
+                "beam_shield",
+                "afterimage"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": [],
+            "unlockExp": 0
         }
     },
     "terrain": {
         "mountain": {
             "id": "mountain",
-            "title": "mountain",
+            "title": "山脈",
             "cost": 2,
             "hitRate": 1,
             "damage": 0.5
         },
         "plain": {
             "id": "plain",
-            "title": "plain",
+            "title": "平原",
             "cost": 0.5,
             "hitRate": 1,
             "damage": 1
         },
         "forest": {
             "id": "forest",
-            "title": "forest",
+            "title": "森林",
             "cost": 1.5,
             "hitRate": 0.5,
             "damage": 0.75
         },
         "road": {
             "id": "road",
-            "title": "road",
-            "cost": 0.1,
+            "title": "道路",
+            "cost": 0.3,
             "hitRate": 1,
             "damage": 1
         },
         "city": {
             "id": "city",
-            "title": "city",
+            "title": "城市",
             "cost": 2,
             "hitRate": 0.9,
             "damage": 0.75
         },
         "beach": {
             "id": "beach",
-            "title": "beach",
+            "title": "沿海",
             "cost": 0.75,
             "hitRate": 1,
             "damage": 1
         },
         "shallowSea": {
             "id": "shallowSea",
-            "title": "shallowSea",
+            "title": "淺海",
             "cost": 1.5,
             "hitRate": 1,
             "damage": 1
         },
         "deepSea": {
             "id": "deepSea",
-            "title": "deepSea",
+            "title": "深海",
             "cost": 3,
             "hitRate": 1,
             "damage": 1
         },
         "award": {
             "id": "award",
-            "title": "award",
+            "title": "能量點",
             "cost": 0.25,
             "hitRate": 1,
             "damage": 1
@@ -1708,8 +1866,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1736,8 +1895,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1764,8 +1924,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1792,8 +1953,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1820,8 +1982,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1848,8 +2011,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1876,8 +2040,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "line",
@@ -1904,8 +2069,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -1932,8 +2098,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -1960,8 +2127,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -1988,8 +2156,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2016,8 +2185,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2044,8 +2214,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2072,8 +2243,9 @@ const (
                 1
             ],
             "ability": [
-                "standAttack",
-                "beam"
+                "range",
+                "beam",
+                "standAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2095,11 +2267,13 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2122,11 +2296,13 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2149,11 +2325,13 @@ const (
             "maxBulletCount": 5,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2176,11 +2354,13 @@ const (
             "maxBulletCount": 4,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2203,11 +2383,13 @@ const (
             "maxBulletCount": 3,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2230,11 +2412,13 @@ const (
             "maxBulletCount": 2,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2257,11 +2441,13 @@ const (
             "maxBulletCount": 2,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "standAttack"
             ],
             "energyType": "bullet",
@@ -2289,7 +2475,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2317,7 +2503,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2345,7 +2531,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2373,7 +2559,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2401,7 +2587,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2429,7 +2615,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2457,7 +2643,7 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam"
             ],
             "energyType": "energy",
@@ -2485,9 +2671,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2514,9 +2701,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2543,9 +2731,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2572,9 +2761,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2601,9 +2791,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2630,9 +2821,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2659,9 +2851,10 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
+                "range",
                 "beam",
-                "multi"
+                "multi",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2683,13 +2876,15 @@ const (
             "maxBulletCount": 8,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2711,13 +2906,15 @@ const (
             "maxBulletCount": 8,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2739,13 +2936,15 @@ const (
             "maxBulletCount": 7,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2767,13 +2966,15 @@ const (
             "maxBulletCount": 7,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2795,13 +2996,15 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2823,13 +3026,15 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2851,13 +3056,15 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "multi"
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -2884,9 +3091,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2913,9 +3120,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2942,9 +3149,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -2971,9 +3178,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3000,9 +3207,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3029,9 +3236,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3058,9 +3265,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
                 "melee",
-                "beam"
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3082,13 +3289,14 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3110,13 +3318,14 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3138,13 +3347,14 @@ const (
             "maxBulletCount": 5,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3166,13 +3376,14 @@ const (
             "maxBulletCount": 5,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3194,13 +3405,14 @@ const (
             "maxBulletCount": 4,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3222,13 +3434,14 @@ const (
             "maxBulletCount": 4,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3250,13 +3463,14 @@ const (
             "maxBulletCount": 3,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3264,6 +3478,276 @@ const (
             "damage": 13312,
             "curage": 0,
             "powerCost": 40,
+            "unlockExp": 0
+        },
+        "shotgun1": {
+            "id": "shotgun1",
+            "title": "霰彈槍L1",
+            "cost": 400,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 2197,
+            "curage": 0,
+            "powerCost": 10,
+            "unlockExp": 0
+        },
+        "shotgun2": {
+            "id": "shotgun2",
+            "title": "霰彈槍L2",
+            "cost": 576,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 2406,
+            "curage": 0,
+            "powerCost": 12,
+            "unlockExp": 0
+        },
+        "shotgun3": {
+            "id": "shotgun3",
+            "title": "霰彈槍L3",
+            "cost": 1600,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 7,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 3375,
+            "curage": 0,
+            "powerCost": 20,
+            "unlockExp": 0
+        },
+        "shotgun4": {
+            "id": "shotgun4",
+            "title": "霰彈槍L4",
+            "cost": 2116,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 7,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 3796,
+            "curage": 0,
+            "powerCost": 23,
+            "unlockExp": 0
+        },
+        "shotgun5": {
+            "id": "shotgun5",
+            "title": "霰彈槍L5",
+            "cost": 3600,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 4913,
+            "curage": 0,
+            "powerCost": 30,
+            "unlockExp": 0
+        },
+        "shotgun6": {
+            "id": "shotgun6",
+            "title": "霰彈槍L6",
+            "cost": 4624,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 5639,
+            "curage": 0,
+            "powerCost": 34,
+            "unlockExp": 0
+        },
+        "shotgun7": {
+            "id": "shotgun7",
+            "title": "霰彈槍L7",
+            "cost": 6400,
+            "range": [
+                2,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "spray",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.25,
+            "damage": 6859,
+            "curage": 0,
+            "powerCost": 40,
+            "unlockExp": 0
+        },
+        "machinegun1": {
+            "id": "machinegun1",
+            "title": "機關砲L1",
+            "cost": 256,
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 2000,
+            "curage": 0,
+            "powerCost": 8,
+            "unlockExp": 0
+        },
+        "machinegun2": {
+            "id": "machinegun2",
+            "title": "機關砲L2",
+            "cost": 400,
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 2197,
+            "curage": 0,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_handSword": {
@@ -3283,8 +3767,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3311,8 +3796,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "bullet",
             "type": "single",
@@ -3339,8 +3825,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "beam"
+                "range",
+                "beam",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3367,6 +3854,8 @@ const (
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "multi"
             ],
             "energyType": "bullet",
@@ -3394,8 +3883,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3422,8 +3912,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3450,8 +3941,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3478,6 +3970,7 @@ const (
                 1
             ],
             "ability": [
+                "range",
                 "missile"
             ],
             "energyType": "bullet",
@@ -3505,8 +3998,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3532,7 +4026,10 @@ const (
                 1,
                 1
             ],
-            "ability": [],
+            "ability": [
+                "range",
+                "beam"
+            ],
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
@@ -3558,8 +4055,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3586,6 +4084,8 @@ const (
                 1
             ],
             "ability": [
+                "range",
+                "physic",
                 "moveAttack"
             ],
             "energyType": "bullet",
@@ -3613,8 +4113,9 @@ const (
                 1
             ],
             "ability": [
-                "moveAttack",
-                "melee"
+                "melee",
+                "physic",
+                "moveAttack"
             ],
             "energyType": "energy",
             "type": "single",
@@ -3641,6 +4142,8 @@ const (
                 1
             ],
             "ability": [
+                "range",
+                "fire",
                 "moveAttack"
             ],
             "energyType": "energy",
@@ -3670,19 +4173,31 @@ const (
         "melee": {
             "id": "melee",
             "title": "格鬥",
-            "desc": "以格鬥值差距影響命中率. 沒有melee就代表以射擊值影響. ",
+            "desc": "以格鬥值差距影響命中率與傷害",
+            "values": []
+        },
+        "range": {
+            "id": "range",
+            "title": "射擊",
+            "desc": "以射擊值差距影響命中率與傷害",
             "values": []
         },
         "beam": {
             "id": "beam",
             "title": "光束",
-            "desc": "裝甲的防禦效果減半",
+            "desc": "光束裝甲可以減輕傷害",
             "values": []
         },
         "physic": {
             "id": "physic",
             "title": "實彈",
-            "desc": "",
+            "desc": "裝甲可以減輕傷害",
+            "values": []
+        },
+        "missile": {
+            "id": "missile",
+            "title": "飛行兵器",
+            "desc": "命中率不受對象剩餘出力影響, 會被[防禦兵器]擊落",
             "values": []
         },
         "fire": {
@@ -3700,27 +4215,18 @@ const (
         "spray": {
             "id": "spray",
             "title": "擴散",
-            "desc": "命中x{0}, 傷害x{1}",
-            "values": [
-                "1.3",
-                "0.8"
-            ]
+            "desc": "一定命中, 傷害力另外*命中率",
+            "values": []
         },
         "multi": {
             "id": "multi",
             "title": "連射",
-            "desc": "命中x{0}, 傷害x{1}~{2}",
+            "desc": "命中*{0}, 傷害*{1}~{2}",
             "values": [
                 "1.1",
                 "0.7",
                 "1.3"
             ]
-        },
-        "missile": {
-            "id": "missile",
-            "title": "飛彈",
-            "desc": "命中率不受對象移動率影響, 會被防禦兵器擊落",
-            "values": []
         }
     },
     "weaponEnergyType": {
