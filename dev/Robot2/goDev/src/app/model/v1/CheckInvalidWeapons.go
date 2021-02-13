@@ -8,6 +8,19 @@ import (
 )
 
 func CheckInvalidWeapon(model model, robot protocol.Robot, weapon protocol.Weapon, units []string) (string, error) {
+	tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robot.ID)
+	if tag.MoveCount > 0 {
+		ability, err := QueryRobotWeaponAbility(model, robot, weapon)
+		if err != nil {
+			return "", err
+		}
+		hasMoveAttack := len(tool.FilterString(ability, func(c string) bool {
+			return c == "moveAttack"
+		})) > 0
+		if hasMoveAttack == false {
+			return "你必須有moveAttack能力, 不然不能移動後攻擊", nil
+		}
+	}
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return "", err
