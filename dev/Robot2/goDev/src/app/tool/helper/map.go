@@ -12,11 +12,11 @@ import (
 func TerrainID2Terrain(originTerrainID int) (data.TerrainProto, error) {
 	terrainMapping, has := data.GameData.TerrainMapping[strconv.Itoa(originTerrainID)]
 	if has == false {
-		return data.TerrainProto{}, fmt.Errorf("terrainMapping not found: %v %v", originTerrainID)
+		return data.TerrainProto{}, fmt.Errorf("terrainMapping not found: %v", originTerrainID)
 	}
 	terrain, has := data.GameData.Terrain[terrainMapping.Terrain]
 	if has == false {
-		return data.TerrainProto{}, fmt.Errorf("data.GameData.Terrain not found: %v %v", terrainMapping.Terrain)
+		return data.TerrainProto{}, fmt.Errorf("data.GameData.Terrain not found: %v", terrainMapping.Terrain)
 	}
 	return terrain, nil
 }
