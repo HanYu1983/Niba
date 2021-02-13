@@ -46,7 +46,7 @@ func OnLineBattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, 
 	if err != nil {
 		return origin, false, err
 	}
-	ctx, err = OnRobotLineBattle(ctx, robotID, weaponID, targetPosition)
+	ctx, _, err = OnRobotLineBattle(ctx, robotID, weaponID, targetPosition)
 	if err != nil {
 		return origin, false, err
 	}

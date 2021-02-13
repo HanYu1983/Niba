@@ -108,7 +108,7 @@ export class Units extends Instant {
                 // 可能機體爆去所以找不到
                 if(robot){
                     let value = content.HitMarks[key];
-                    const rate = value.Rate;
+                    const rate = value.HitRate;
                     const unitView:Node = this.getUnitByID(robot.ID);
                     if(unitView) unitView.getComponent(Unit)?.showAction(Math.round(rate * 100) + "%");
                 }

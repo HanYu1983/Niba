@@ -18,6 +18,10 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	if err != nil {
 		return origin, err
 	}
+	pilot, err := protocol.TryGetStringPilot(_model.App.Gameplay.Pilots, robot.PilotID)
+	if err != nil {
+		return origin, err
+	}
 	weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, err
@@ -48,64 +52,83 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		robotMenu.InvalidWeapons = invalidWeapons
 	}
 	_model.App.Gameplay.RobotMenu = robotMenu
-	_model.App.Gameplay.HitMarks = map[string]protocol.HitMark{}
+	// 計算受機的機體和比例
+	{
+		_model.App.Gameplay.HitMarks = map[string]protocol.HitMark{}
 
-	fromPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, robotID)
-	if err != nil {
-		return origin, err
-	}
-	toPos := targetPosition
-	weaponRange, err := QueryRobotWeaponRange(_model, robot, weapon)
-	if err != nil {
-		return origin, err
-	}
-	weaponRangeLength := weaponRange[0]
-	weaponRangeWidth := weaponRange[1] / 2
-
-	leftTop := protocol.Position{fromPos[0] - 10, fromPos[0] - 10}
-	rightBottom := protocol.Position{fromPos[0] + 10, fromPos[0] + 10}
-	unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
-
-	fromPosV2 := mgl64.Vec2{float64(fromPos[0]), float64(fromPos[1])}
-	toPosV2 := mgl64.Vec2{float64(toPos[0]), float64(toPos[1])}
-	dir1 := toPosV2.Sub(fromPosV2).Normalize()
-	normal := dir1.Vec3(0).Cross(mgl64.Vec3{0, 0, 1.0}).Vec2().Normalize()
-	log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("from(%v) to(%v) normal(%v)", fromPos, toPos, normal))
-	for _, unitID := range unitsInRegion {
-		if unitID == robot.ID {
-			continue
-		}
-		targetRobot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, unitID)
+		// 準備參數
+		fromPos, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, robotID)
 		if err != nil {
 			return origin, err
 		}
-		targetPosition, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, unitID)
+		toPos := targetPosition
+		weaponRange, err := QueryRobotWeaponRange(_model, robot, weapon)
 		if err != nil {
 			return origin, err
 		}
-		unitPosV2 := mgl64.Vec2{float64(targetPosition[0]), float64(targetPosition[1])}
-		dir2 := unitPosV2.Sub(fromPosV2)
-		distanceLength := dir2.Dot(dir1)
-		// 背面的
-		if distanceLength <= 0 {
-			continue
-		}
-		// 超過射程
-		if distanceLength > float64(weaponRangeLength) {
-			continue
-		}
-		// 超過射線粗度
-		distanceWidth := math.Abs(dir2.Dot(normal))
-		if distanceWidth > float64(weaponRangeWidth) {
-			continue
-		}
-		log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("dir2(%v) distance2line(%v)", dir2, distanceWidth))
-		var _ = targetRobot
-		_model.App.Gameplay.HitMarks[unitID] = protocol.HitMark{
-			Rate: 1.0 - (distanceWidth / float64(weaponRangeWidth)),
+		weaponRangeLength := weaponRange[0]
+		weaponRangeWidth := weaponRange[1] / 2
+
+		// 找出周圍的機體
+		leftTop := protocol.Position{fromPos[0] - 10, fromPos[0] - 10}
+		rightBottom := protocol.Position{fromPos[0] + 10, fromPos[0] + 10}
+		unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
+
+		// 射線和法線
+		fromPosV2 := mgl64.Vec2{float64(fromPos[0]), float64(fromPos[1])}
+		toPosV2 := mgl64.Vec2{float64(toPos[0]), float64(toPos[1])}
+		dir1 := toPosV2.Sub(fromPosV2).Normalize()
+		normal := dir1.Vec3(0).Cross(mgl64.Vec3{0, 0, 1.0}).Vec2().Normalize()
+		log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("from(%v) to(%v) normal(%v)", fromPos, toPos, normal))
+
+		// 找出射線線段內的機體, 不分敵我
+		for _, unitID := range unitsInRegion {
+			if unitID == robot.ID {
+				continue
+			}
+			targetRobot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, unitID)
+			if err != nil {
+				return origin, err
+			}
+			targetPilot, err := protocol.TryGetStringPilot(_model.App.Gameplay.Pilots, targetRobot.PilotID)
+			if err != nil {
+				return origin, err
+			}
+			targetPosition, err := protocol.TryGetStringPosition(_model.App.Gameplay.Positions, unitID)
+			if err != nil {
+				return origin, err
+			}
+			unitPosV2 := mgl64.Vec2{float64(targetPosition[0]), float64(targetPosition[1])}
+			dir2 := unitPosV2.Sub(fromPosV2)
+			distanceLength := dir2.Dot(dir1)
+			// 背面的
+			if distanceLength <= 0 {
+				continue
+			}
+			// 超過射程
+			if distanceLength > float64(weaponRangeLength) {
+				continue
+			}
+			// 超過射線粗度
+			distanceWidth := math.Abs(dir2.Dot(normal))
+			if distanceWidth > float64(weaponRangeWidth) {
+				continue
+			}
+			log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("dir2(%v) distance2line(%v)", dir2, distanceWidth))
+			// 機體在射線內的比例
+			rate := 1.0 - (distanceWidth / float64(weaponRangeWidth))
+			// 命中率加成比例
+			hitRate, err := QueryBattleHitRate(_model, robot, pilot, weapon, targetRobot, targetPilot)
+			if err != nil {
+				return origin, err
+			}
+			hitRate = hitRate * rate
+			_model.App.Gameplay.HitMarks[unitID] = protocol.HitMark{
+				HitRate: hitRate,
+				Rate:    rate,
+			}
 		}
 	}
-
 	// apply
 	ctx.Model = _model
 	log.Log(protocol.LogCategoryInfo, "OnEnableLineBattleMenu", "end")
