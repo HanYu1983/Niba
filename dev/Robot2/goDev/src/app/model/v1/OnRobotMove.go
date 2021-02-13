@@ -8,7 +8,7 @@ import (
 	"tool/astar"
 )
 
-func OnRobotMove(origin uidata.UI, robotID string, tree astar.NodeMap, pos protocol.Position) (interface{}, error) {
+func OnRobotMove(origin uidata.UI, robotID string, tree astar.NodeMap, pos protocol.Position) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	view := def.View

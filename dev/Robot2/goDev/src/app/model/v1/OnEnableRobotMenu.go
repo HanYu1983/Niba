@@ -49,7 +49,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		}
 		// sky ground
 		if tags.MoveCount == 0 {
-			suitabiity, err := QueryRobotSuitablility(_model, robot.ID)
+			suitabiity, err := QueryRobotSuitability(_model, robot.ID)
 			if err != nil {
 				return origin, err
 			}
@@ -83,6 +83,15 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		_model.App.Gameplay.RobotMenu.RowFunctionMapping = map[int]int{}
 		_model.App.Gameplay.RobotMenu.Weapons = map[string]protocol.Weapon{}
 		_model.App.Gameplay.RobotMenu.InvalidWeapons = map[string]string{}
+	}
+	{
+		// 重設Cursor
+		menu, err := uidata.TryGetIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu)
+		if err != nil {
+			return origin, err
+		}
+		menu.Cursor1 = 0
+		ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, menu)
 	}
 	log.Log(protocol.LogCategoryDetail, "EnableRobotMenu", fmt.Sprintf("RobotMenu(%v)\n", _model.App.Gameplay.RobotMenu))
 	// apply

@@ -131,6 +131,15 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	}
 	// apply
 	ctx.Model = _model
+	{
+		// 重設Cursor
+		menu, err := uidata.TryGetIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu)
+		if err != nil {
+			return origin, err
+		}
+		menu.Cursor1 = 0
+		ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, menu)
+	}
 	log.Log(protocol.LogCategoryInfo, "OnEnableLineBattleMenu", "end")
 	return ctx, nil
 }

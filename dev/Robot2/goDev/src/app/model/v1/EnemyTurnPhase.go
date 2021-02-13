@@ -85,11 +85,21 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	}
 	switch goal.Type {
 	case GoalTypeSearchAndAttack:
-		// @TODO: check invalid weapon
 		weapons, err := QueryRobotWeapons(ctx.Model.(model), robot.ID, robot.Transform)
 		if err != nil {
 			return origin, false, err
 		}
+		// 取得有效武器
+		// {
+		// 	invalidWeapons, err := CheckInvalidWeapons(ctx.Model.(model), robot, weapons)
+		// 	if err != nil {
+		// 		return origin, false, err
+		// 	}
+		// 	weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
+		// 		_, isInvalid := invalidWeapons[weapon.ID]
+		// 		return isInvalid == false
+		// 	})
+		// }
 		potentails, err := QueryPotentialTarget(ctx.Model.(model), robot, robot.Transform, weapons)
 		if err != nil {
 			return origin, false, err
@@ -101,11 +111,10 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			if isCanMove {
-				ctxObj, err := ctx.Model.OnRobotMove(ctx, robot.ID, tree, targetPosition)
+				ctx, err = OnRobotMove(ctx, robot.ID, tree, targetPosition)
 				if err != nil {
 					return origin, false, err
 				}
-				ctx = ctxObj.(uidata.UI)
 			}
 			err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
 			if err != nil {
@@ -122,11 +131,10 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				}
 				break
 			}
-			ctxObj, err := ctx.Model.OnRobotDone(ctx, robot.ID)
+			ctx, err = OnRobotDone(ctx, robot.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			ctx = ctxObj.(uidata.UI)
 		}
 	case GoalTypeMoveToPosition:
 		currPos := ctx.Model.(model).App.Gameplay.Positions[robot.ID]
@@ -136,17 +144,15 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 			if isCanMove {
-				ctxObj, err := ctx.Model.OnRobotMove(ctx, robot.ID, tree, targetPosition)
+				ctx, err = OnRobotMove(ctx, robot.ID, tree, targetPosition)
 				if err != nil {
 					return origin, false, err
 				}
-				ctx = ctxObj.(uidata.UI)
 			}
-			ctxObj, err := ctx.Model.OnRobotDone(ctx, robot.ID)
+			ctx, err = OnRobotDone(ctx, robot.ID)
 			if err != nil {
 				return origin, false, err
 			}
-			ctx = ctxObj.(uidata.UI)
 		}
 	case GoalTypeAttackTargetRobot:
 		ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")

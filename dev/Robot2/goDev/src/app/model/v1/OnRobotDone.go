@@ -5,7 +5,7 @@ import (
 	"app/tool/uidata"
 )
 
-func OnRobotDone(origin uidata.UI, robotID string) (interface{}, error) {
+func OnRobotDone(origin uidata.UI, robotID string) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	view := def.View

@@ -9,7 +9,7 @@ import (
 
 func OnRobotSkyGround(origin uidata.UI, robotID string, sky bool) (uidata.UI, error) {
 	ctx := origin
-	suitabiity, err := QueryRobotSuitablility(ctx.Model.(model), robotID)
+	suitabiity, err := QueryRobotSuitability(ctx.Model.(model), robotID)
 	if err != nil {
 		return origin, err
 	}

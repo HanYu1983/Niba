@@ -116,6 +116,15 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 	_model.App.Gameplay.BattleMenu = battleMenu
 	_model.App.Gameplay.RobotMenu = robotMenu
 	ctx.Model = _model
+	{
+		// 重設Cursor
+		menu, err := uidata.TryGetIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu)
+		if err != nil {
+			return origin, err
+		}
+		menu.Cursor1 = 0
+		ctx.Menu2Ds = uidata.AssocIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu, menu)
+	}
 	log.Log(protocol.LogCategoryInfo, "EnableBattleMenu", fmt.Sprintf("end. BattleMenu(%v)\n", battleMenu))
 	return ctx, nil
 }

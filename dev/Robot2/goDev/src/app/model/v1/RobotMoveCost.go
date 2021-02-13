@@ -19,6 +19,12 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 			return nil
 		}, err
 	}
+	suitability, err := QueryRobotSuitability(model, robot.ID)
+	if err != nil {
+		return func(curr *astar.Node) []astar.NeighborsNode {
+			return nil
+		}, err
+	}
 	isSky := model.App.Gameplay.Tags[robot.ID].Sky
 	return func(curr *astar.Node) []astar.NeighborsNode {
 		// prevent infinite loop
@@ -26,10 +32,34 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 			return []astar.NeighborsNode{}
 		}
 		currPos := curr.Pather.(protocol.Position)
-		terrain1, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, currPos)
-		if err != nil {
-			fmt.Println(err.Error())
-			return []astar.NeighborsNode{}
+		cost1 := 0.0
+		{
+			terrain1, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, currPos)
+			if err != nil {
+				fmt.Println(err.Error())
+				return []astar.NeighborsNode{}
+			}
+			if isSky {
+				if suitability[data.SuitabilitySky] == 0 {
+					return []astar.NeighborsNode{}
+				}
+				cost1 = 0.4 * 1 / suitability[data.SuitabilitySky]
+			} else {
+				suitabilityFactor := 0.0
+				switch terrain1.ID {
+				case "shallowSea", "deepSea":
+					suitabilityFactor = suitability[data.SuitabilitySea]
+				case "mountain", "plain", "forest", "road", "city", "beach", "award":
+					suitabilityFactor = suitability[data.SuitabilityGround]
+				default:
+					fmt.Printf("unknown terrain(%v)\n", terrain1.ID)
+					return []astar.NeighborsNode{}
+				}
+				if suitabilityFactor == 0.0 {
+					return []astar.NeighborsNode{}
+				}
+				cost1 = terrain1.Cost * 1 / suitabilityFactor
+			}
 		}
 		offsets := []protocol.Position{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
 		ret := []astar.NeighborsNode{}
@@ -54,15 +84,36 @@ func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []
 					continue
 				}
 			}
-			nextCost := 0.8
-			if isSky == false {
+			cost2 := 0.0
+			{
 				terrain2, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, nextPos)
 				if err != nil {
 					fmt.Println(err.Error())
 					return []astar.NeighborsNode{}
 				}
-				nextCost = float64(terrain1.Cost + terrain2.Cost)
+				if isSky {
+					if suitability[data.SuitabilitySky] == 0 {
+						continue
+					}
+					cost2 = 0.4 * 1 / suitability[data.SuitabilitySky]
+				} else {
+					suitabilityFactor := 0.0
+					switch terrain2.ID {
+					case "shallowSea", "deepSea":
+						suitabilityFactor = suitability[data.SuitabilitySea]
+					case "mountain", "plain", "forest", "road", "city", "beach", "award":
+						suitabilityFactor = suitability[data.SuitabilityGround]
+					default:
+						fmt.Printf("unknown terrain(%v)\n", terrain2.ID)
+						return []astar.NeighborsNode{}
+					}
+					if suitabilityFactor == 0.0 {
+						continue
+					}
+					cost2 = terrain2.Cost * 1 / suitabilityFactor
+				}
 			}
+			nextCost := float64(cost1 + cost2)
 			if int(curr.Cost+nextCost) > movePower {
 				continue
 			}

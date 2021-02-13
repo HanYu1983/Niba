@@ -11,7 +11,7 @@ import (
 	"tool/log"
 )
 
-func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, targetPosition protocol.Position) (uidata.UI, protocol.BattleResult, error) {
+func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, targetPosition protocol.Position, marks map[string]protocol.HitMark) (uidata.UI, protocol.BattleResult, error) {
 	log.Log(protocol.LogCategoryPhase, "OnRobotLineBattle", "start")
 	ctx := origin
 	view := def.View
@@ -89,7 +89,6 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	}
 	{
 		// 所有目標
-		marks := ctx.Model.(model).App.Gameplay.HitMarks
 		for targetRobotID, mark := range marks {
 			hitRate := mark.HitRate
 			rate := mark.Rate

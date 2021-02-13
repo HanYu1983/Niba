@@ -5,7 +5,7 @@ import (
 	"app/tool/protocol"
 )
 
-func QueryRobotSuitablility(model model, robotID string) ([4]float64, error) {
+func QueryRobotSuitability(model model, robotID string) ([4]float64, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
