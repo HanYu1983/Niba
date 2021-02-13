@@ -48,6 +48,9 @@ export class Grids extends Instant {
 
         const moveRange = content.MoveRange;
         if(moveRange) this.showMoveRange(moveRange);
+
+        const mapRange = content.MapAttackRange;
+        if(mapRange) this.showMapRange(mapRange);
     }
 
     static getGridPos(x:number, y:number):Vec3{
@@ -75,6 +78,16 @@ export class Grids extends Instant {
             }
         });
     }
+
+    showMapRange(ranges:any[]){
+        ranges.forEach(range=>{
+            const grid = this.getGrid(range[0], range[1]);
+            if(grid){
+                grid.getComponent(Grid)?.showMapRange(true);
+            }
+        });
+    }
+
 
     showMoveRange(ranges:any[]){
         ranges.forEach(range=>{
