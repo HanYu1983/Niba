@@ -6,11 +6,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/planck-js/0.2.7/planck.min.js"></script>
     <script>
         View = {
-            Render: function () {
-                console.log(arguments)
+            Render: (ui) => {
             },
-            Alert: function(msg){
-                alert(msg)
+            RenderRobotMove: (robotID, path, cb) => {
+                cb()
+            },
+            RenderRobotBattle: (result, cb) => {
+                cb()
+            },
+            RenderTurnStart: (playe, cb) => {
+                cb()
+            },
+            Alert: () => {
             },
         }
     </script>

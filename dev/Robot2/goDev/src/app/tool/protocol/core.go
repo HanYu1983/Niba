@@ -34,6 +34,8 @@ type Robot struct {
 	Title       string
 	MaxHP       int
 	MaxEN       int
+	Armor       int
+	BeamArmor   int
 	Cost        int
 	Power       int
 	Suitability [4]float64

@@ -26,6 +26,14 @@ func ObserveRobot(model model, robot protocol.Robot) (protocol.Robot, error) {
 	}
 	robot.MaxHP = maxHP
 	robot.MaxEN = maxEn
+	robot.Armor, err = QueryRobotArmor(model, robot.ID)
+	if err != nil {
+		return protocol.Robot{}, err
+	}
+	robot.BeamArmor, err = QueryRobotBeamArmor(model, robot.ID)
+	if err != nil {
+		return protocol.Robot{}, err
+	}
 	robot.Components = components
 	robot.WeaponsByTransform[robot.Transform] = weapons
 	return robot, nil

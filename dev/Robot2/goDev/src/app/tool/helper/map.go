@@ -83,7 +83,7 @@ func QueryMinMaxAttackRange(w int, h int, min int, max int, offset protocol.Posi
 	}
 	ret := maxRange
 	if min < max {
-		minRange, err := BasicExtentCell(min)
+		minRange, err := BasicExtentCell(min - 1)
 		if err != nil {
 			return []protocol.Position{}, err
 		}

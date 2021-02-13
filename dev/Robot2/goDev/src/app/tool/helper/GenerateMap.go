@@ -45,7 +45,9 @@ var (
 func GenerateMap(config GenerateMapConfig, seed int, offset int, very float32, w int, h int, x int, y int) ([][]int, error) {
 	generateMapFn := js.Global.Get("generateMap")
 	if generateMapFn == js.Undefined {
-		return nil, fmt.Errorf("generateMap.js not found")
+		fmt.Println("generateMap.js not found")
+		//return nil, fmt.Errorf("generateMap.js not found")
+		return [][]int{}, nil
 	}
 	obj := generateMapFn.Invoke(
 		seed,

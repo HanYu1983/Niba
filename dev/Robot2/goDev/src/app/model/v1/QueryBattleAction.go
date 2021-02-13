@@ -21,5 +21,5 @@ func QueryBattleAction(model model, robot protocol.Robot, pilot protocol.Pilot, 
 		}
 		return protocol.BattleMenuActionAttack, weapon, nil
 	}
-	return protocol.BattleMenuActionEvade, protocol.Weapon{}, nil
+	return protocol.BattleMenuActionPending, protocol.Weapon{}, nil
 }
