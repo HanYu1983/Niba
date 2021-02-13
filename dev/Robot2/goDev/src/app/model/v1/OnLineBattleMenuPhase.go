@@ -46,7 +46,12 @@ func OnLineBattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, 
 	if err != nil {
 		return origin, false, err
 	}
-	ctx, _, err = OnRobotLineBattle(ctx, robotID, weaponID, targetPosition)
+	marks := ctx.Model.(model).App.Gameplay.HitMarks
+	ctx, err = OnDisableLineBattleMenu(ctx)
+	if err != nil {
+		return origin, false, err
+	}
+	ctx, _, err = OnRobotLineBattle(ctx, robotID, weaponID, targetPosition, marks)
 	if err != nil {
 		return origin, false, err
 	}
