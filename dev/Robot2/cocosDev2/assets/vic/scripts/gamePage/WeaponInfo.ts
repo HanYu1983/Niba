@@ -74,7 +74,7 @@ export class WeaponInfo extends Instant {
                 this.range.string = currentWeapon.Range[0] + "~" + currentWeapon.Range[1];
                 this.accuracy.string = Math.round(currentWeapon.Accuracy * 100) + "%";
                 this.type.string = currentWeapon.EnergyType;
-                this.count.string = currentWeapon.MaxBulletCount;
+                this.count.string = currentWeapon.BulletCount + "/" + currentWeapon.MaxBulletCount;
                 this.en.string = currentWeapon.EnergyCost;
                 this.suitable.string = currentWeapon.Suitability.toString();
                 this.curage.string = currentWeapon.Curage;
