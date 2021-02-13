@@ -62,6 +62,17 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	} else {
 		gameplayPage.MoveRange = []protocol.Position{}
 	}
+	// map attack range
+	mapAttackRange := model.App.Gameplay.MapAttackRange
+	if mapAttackRange != nil {
+		var moveRangeLocal = []protocol.Position{}
+		for _, pos := range mapAttackRange {
+			moveRangeLocal = append(moveRangeLocal, helper.World2Local(gameplayPage.Camera, pos))
+		}
+		gameplayPage.MapAttackRange = moveRangeLocal
+	} else {
+		gameplayPage.MapAttackRange = []protocol.Position{}
+	}
 	// HitMark
 	gameplayPage.HitMarks = model.App.Gameplay.HitMarks
 	// select weapon attack range

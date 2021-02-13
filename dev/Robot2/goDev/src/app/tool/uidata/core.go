@@ -82,20 +82,21 @@ type CursorInfo struct {
 
 // GameplayPage is
 type GameplayPage struct {
-	Players     map[string]protocol.Player
-	Map         [MapHeight][MapWidth]int
-	Cursor      protocol.Position
-	Camera      protocol.Position
-	Units       []string
-	Robots      map[string]protocol.Robot
-	Items       map[string]protocol.Item
-	Positions   map[string]protocol.Position
-	Tags        map[string]protocol.Tag
-	MoveRange   []protocol.Position
-	AttackRange []protocol.Position
-	HitMarks    map[string]protocol.HitMark
-	RobotMenu   protocol.RobotMenu
-	CursorInfo  CursorInfo
+	Players        map[string]protocol.Player
+	Map            [MapHeight][MapWidth]int
+	Cursor         protocol.Position
+	Camera         protocol.Position
+	Units          []string
+	Robots         map[string]protocol.Robot
+	Items          map[string]protocol.Item
+	Positions      map[string]protocol.Position
+	Tags           map[string]protocol.Tag
+	MoveRange      []protocol.Position
+	AttackRange    []protocol.Position
+	MapAttackRange []protocol.Position
+	HitMarks       map[string]protocol.HitMark
+	RobotMenu      protocol.RobotMenu
+	CursorInfo     CursorInfo
 }
 
 // ListInt is

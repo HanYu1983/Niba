@@ -70,8 +70,9 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		weaponRangeWidth := weaponRange[1] / 2
 
 		// 找出周圍的機體
-		leftTop := protocol.Position{fromPos[0] - 10, fromPos[0] - 10}
-		rightBottom := protocol.Position{fromPos[0] + 10, fromPos[0] + 10}
+		size := 10
+		leftTop := protocol.Position{fromPos[0] - size, fromPos[0] - size}
+		rightBottom := protocol.Position{fromPos[0] + size, fromPos[0] + size}
 		unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
 
 		// 射線和法線
@@ -80,7 +81,6 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		dir1 := toPosV2.Sub(fromPosV2).Normalize()
 		normal := dir1.Vec3(0).Cross(mgl64.Vec3{0, 0, 1.0}).Vec2().Normalize()
 		log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("from(%v) to(%v) normal(%v)", fromPos, toPos, normal))
-
 		// 找出射線線段內的機體, 不分敵我
 		for _, unitID := range unitsInRegion {
 			if unitID == robot.ID {
@@ -111,7 +111,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			}
 			// 超過射線粗度
 			distanceWidth := math.Abs(dir2.Dot(normal))
-			if distanceWidth > float64(weaponRangeWidth) {
+			if distanceWidth >= float64(weaponRangeWidth) {
 				continue
 			}
 			log.Log(protocol.LogCategoryDetail, "OnEnableLineBattleMenu", fmt.Sprintf("dir2(%v) distance2line(%v)", dir2, distanceWidth))
@@ -128,7 +128,34 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 				Rate:    rate,
 			}
 		}
+
+		// 收集攻擊範圍
+		attackRange := []protocol.Position{}
+		for y := -size; y <= size; y++ {
+			for x := -size; x <= size; x++ {
+				cx, cy := x+fromPos[0], y+fromPos[1]
+				currPos := mgl64.Vec2{float64(cx), float64(cy)}
+				dir2 := currPos.Sub(fromPosV2)
+				distanceLength := dir2.Dot(dir1)
+				// 背面的
+				if distanceLength <= 0 {
+					continue
+				}
+				// 超過射程
+				if distanceLength > float64(weaponRangeLength) {
+					continue
+				}
+				// 超過射線粗度
+				distanceWidth := math.Abs(dir2.Dot(normal))
+				if distanceWidth >= float64(weaponRangeWidth) {
+					continue
+				}
+				attackRange = append(attackRange, protocol.Position{cx, cy})
+			}
+		}
+		_model.App.Gameplay.MapAttackRange = attackRange
 	}
+
 	// apply
 	ctx.Model = _model
 	{

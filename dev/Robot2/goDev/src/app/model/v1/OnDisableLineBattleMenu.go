@@ -11,6 +11,7 @@ func OnDisableLineBattleMenu(origin uidata.UI) (uidata.UI, error) {
 	ctx := origin
 	_model := ctx.Model.(model)
 	_model.App.Gameplay.HitMarks = map[string]protocol.HitMark{}
+	_model.App.Gameplay.MapAttackRange = nil
 	// apply
 	ctx.Model = _model
 	ctx, err := OnDisableRobotMenu(ctx)

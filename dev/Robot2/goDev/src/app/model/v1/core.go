@@ -31,6 +31,7 @@ type gameplay struct {
 	RobotMenu      protocol.RobotMenu
 	BattleMenu     protocol.BattleMenu
 	MoveRange      []protocol.Position
+	MapAttackRange []protocol.Position
 	Done           interface{}
 }
 
