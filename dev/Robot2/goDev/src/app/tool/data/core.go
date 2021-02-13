@@ -79,6 +79,16 @@ type TerrainMappingProto struct {
 	Terrain string
 }
 
+type ConfigProto struct {
+	ID               string
+	PowerCostForMove int
+	Award            []float64
+	Robots           []string
+	Weapons          []string
+	Components       []string
+	Pilots           []string
+}
+
 type Data struct {
 	Robot          map[string]RobotProto
 	Pilot          map[string]PilotProto
@@ -86,6 +96,7 @@ type Data struct {
 	Component      map[string]ComponentProto
 	TerrainMapping map[string]TerrainMappingProto
 	Terrain        map[string]TerrainProto
+	Config         map[string]ConfigProto
 }
 
 var (

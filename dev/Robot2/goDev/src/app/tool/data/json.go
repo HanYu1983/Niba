@@ -479,7 +479,7 @@ const (
     "config": {
         "default": {
             "id": "default",
-            "powerCostForMove": 1,
+            "powerCostForMove": 5,
             "award": [
                 1.2,
                 1.2
