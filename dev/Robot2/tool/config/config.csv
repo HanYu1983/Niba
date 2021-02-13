@@ -1,2 +1,2 @@
 id/string,powerCostForMove/int,award/float[2],robots/string[],weapons/string[],components/string[],pilots/string[]
-default,1,"1.2,1.2","10,11,14",,,"1,1,1"
+default,5,"1.2,1.2","10,11,14",,,"1,1,1"

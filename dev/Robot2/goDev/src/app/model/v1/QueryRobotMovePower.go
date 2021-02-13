@@ -36,5 +36,9 @@ func QueryRobotMovePower(model model, robotID string) (int, error) {
 		}
 		total -= component.PowerCost
 	}
-	return total / 5, nil
+	config := data.GameData.Config["default"]
+	if config.PowerCostForMove == 0 {
+		return 0, fmt.Errorf("config.PowerCostForMove不得為0")
+	}
+	return total / config.PowerCostForMove, nil
 }
