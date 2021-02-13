@@ -110,7 +110,7 @@ func QueryBattleDamage(model model, robot protocol.Robot, pilot protocol.Pilot, 
 		case isFireAttack:
 		case isLightingAttack:
 		default:
-			return 0, fmt.Errorf("unknown attack type. (%v)", weapon)
+			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type. weapon(%+v)", weapon)
 		}
 	}
 	terrainFactor := 1.0

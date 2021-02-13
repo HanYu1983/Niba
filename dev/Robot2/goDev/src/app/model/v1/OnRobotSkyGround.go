@@ -14,13 +14,19 @@ func OnRobotSkyGround(origin uidata.UI, robotID string, sky bool) (uidata.UI, er
 		return origin, err
 	}
 	switch {
-	case sky == false && suitabiity[data.SuitabilitySky] == 0:
+	case sky == false:
+		if suitabiity[data.SuitabilityGround] == 0 {
+			return origin, fmt.Errorf("你無法到地上. suitabiity(%v)", suitabiity)
+		}
 		model := ctx.Model.(model)
 		tag := model.App.Gameplay.Tags[robotID]
 		tag.Sky = sky
 		model.App.Gameplay.Tags = protocol.AssocStringTag(model.App.Gameplay.Tags, robotID, tag)
 		ctx.Model = model
-	case sky && suitabiity[data.SuitabilityGround] == 0:
+	case sky:
+		if suitabiity[data.SuitabilitySky] == 0 {
+			return origin, fmt.Errorf("你無法到空中. suitabiity(%v)", suitabiity)
+		}
 		model := ctx.Model.(model)
 		tag := model.App.Gameplay.Tags[robotID]
 		tag.Sky = sky

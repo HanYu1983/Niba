@@ -59,7 +59,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 		return origin, err
 	}
 	ctx, err = NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
-		ProtoID:  "gundam",
+		ProtoID:  "gaite_sky",
 		PlayerID: protocol.PlayerIDPlayer,
 		PilotID:  "pilotB",
 	})

@@ -81,6 +81,11 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 				return origin, false, err
 			}
 			ctx = ctxObj.(uidata.UI)
+			// 更新移動範圍
+			ctx, err = common.HandleShowMoveRangeWhenUnitAtCursor(ctx, struct{}{})
+			if err != nil {
+				return origin, false, err
+			}
 			ctx, cancel, err = UnitMenuPhase(ctx, unitID)
 			if err != nil {
 				return origin, false, err
