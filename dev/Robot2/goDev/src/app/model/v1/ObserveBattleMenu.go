@@ -33,6 +33,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 			}
 			menu.Left.Pilot = pilot
 			menu.Left.BattleAction = protocol.BattleMenuActionAttack
+			menu.Left.Weapon = weapon
 			menu.Left.Info.HitRate = hitRate
 			// 防守方設置在右面板
 			menu.Right.Robot, err = ObserveRobot(model, targetRobot)
