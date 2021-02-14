@@ -30,9 +30,11 @@ export class ActionInfo extends Instant {
     }
 
     doBuild(data:any){
-        this.setAction(data.BattleAction);
         this.setInfo(data.Info);
-        this.setWeapon(data.Weapon)
+        this.setWeapon(data.Weapon);
+
+        // 最後乎叫，因為行動不能的時候，也會設定到武器及命中率
+        this.setAction(data.BattleAction);
     }
 
     private setWeapon(weapon:any){
@@ -54,6 +56,12 @@ export class ActionInfo extends Instant {
                 break;
             case ModelType.BattleMenuAction.BattleMenuActionEvade:
                 this.action.string = "回避";
+                break;
+            case ModelType.BattleMenuAction.BattleMenuActionCanNotMove:
+                this.action.string = "行動不能";
+                this.damage.string = "--";
+                this.title.string = "--";
+                this.accuracy.string = "--";
                 break;
         }
     }
