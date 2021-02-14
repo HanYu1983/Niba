@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, Label } from 'cc';
+import { _decorator, Component, Node, Label, Vec3 } from 'cc';
 import { Drawer } from '../Drawer';
 import { Instant } from '../lib/instanceViewer/Instant';
 import * as ModelType from './../../../han/types'
@@ -48,7 +48,6 @@ export class WeaponInfo extends Instant {
     
     clear(){
         super.clear();
-
         this.title.string = "";
         this.power.string = "";
         this.range.string = "";
@@ -61,10 +60,21 @@ export class WeaponInfo extends Instant {
     }
 
     doBuild(content:any, data:any){
+
+        // 這邊要消失的原因是，通過checkData的檢查其實只有知道是打開了unitmenu，並不知道這次的unitmenu是否有武器選項
+        // 如果沒有武器的選項，就不用秀出武器資料，這邊就要讓面版消失
+        this.node.setScale(Vec3.ZERO);
+
         const options = content[0].slice();
         const robotMenu = data.GameplayPages["10"].RobotMenu;
+
+        // 這邊做是否有武器選項，有的話，就秀出現在是哪一個武器
         for(let key in robotMenu.RowFunctionMapping){
             if(robotMenu.RowFunctionMapping[key] == ModelType.RobotMenuFunction.RobotMenuFunctionWeapon){
+
+                // 秀出現在是哪一個武器
+                this.node.setScale(Vec3.ONE);
+
                 const weaponIds = options[key];
                 const currentWeaponId = weaponIds[content[1][key]];
                 const currentWeapon = robotMenu.Weapons[currentWeaponId];
