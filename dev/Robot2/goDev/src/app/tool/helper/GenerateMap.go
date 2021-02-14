@@ -27,20 +27,20 @@ var (
 		Deepsea:  0,
 		Sea:      1,
 		Sand:     0.05,
-		Grass:    7,
+		Grass:    5,
 		Mountain: 3,
-		City:     0.05,
+		City:     0.2,
 		Tree:     0.3,
-		Award:    0.01,
+		Award:    0.1,
 	}
 	GenerateMapConfigIsland = GenerateMapConfig{
-		Deepsea:  0.3,
-		Sea:      0.1,
-		Sand:     0.1,
-		Grass:    0.2,
-		Mountain: 0.1,
+		Deepsea:  10,
+		Sea:      3,
+		Sand:     0.5,
+		Grass:    1,
+		Mountain: 0.3,
 		City:     0.1,
-		Tree:     0.2,
+		Tree:     0.5,
 		Award:    0.1,
 	}
 )
@@ -88,7 +88,7 @@ func GenerateMap(config GenerateMapConfig, seed int64, offset float64, very floa
 			f = (f + 1) / 2
 			f += offset
 			if f > grassIn {
-				//山脈
+				// 山脈
 				list = append(list, 5)
 			} else if f > sandIn {
 				cityPosX := math.Floor(i*0.4)*scale*3 + 123
@@ -103,30 +103,36 @@ func GenerateMap(config GenerateMapConfig, seed int64, offset float64, very floa
 					f2 = f2 / maxV
 					f2 = (f2 + 1) / 2
 					if f2 > config.Tree {
-						//平原
+						// 平原
 						list = append(list, 3)
 					} else {
-						//樹林
+						// 樹林
 						list = append(list, 6)
 					}
 				} else {
 					if i == 4 || i == 8 || i == 12 || i == 16 ||
 						j == 4 || j == 8 || j == 12 || j == 16 {
-						//路
+						// 路
 						list = append(list, 8)
 					} else {
-						//城市
-						list = append(list, 4)
+						f4 := float64(int(f3*10000)%100.0) / 100.0
+						if f4 > config.Award {
+							// 城市
+							list = append(list, 4)
+						} else {
+							// 恢復點
+							list = append(list, 7)
+						}
 					}
 				}
 			} else if f > seaIn {
-				//沙灘
+				// 沙灘
 				list = append(list, 2)
 			} else if f > deepseaIn {
-				//淺海
+				// 淺海
 				list = append(list, 1)
 			} else {
-				//深海
+				// 深海
 				list = append(list, 0)
 			}
 		}

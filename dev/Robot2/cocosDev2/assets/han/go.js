@@ -30484,8 +30484,8 @@ $packages["app/tool/helper"] = (function() {
 	ptrType = $ptrType(astar.Node);
 	sliceType$6 = $sliceType(astar.NeighborsNode);
 	GenerateMap = function(config, seed, offset, very, w, h, sx, sy) {
-		var _r, cityPosX, cityPosY, config, deepseaIn, f, f2, f3, generatedMap, grassIn, h, i, i$1, j, j$1, list, list$1, maxV, noise, noiseList, offset, p, sandIn, seaIn, seed, sx, sy, total, treePosX, treePosY, very, w, x, x$1, x$2, y, y$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; cityPosX = $f.cityPosX; cityPosY = $f.cityPosY; config = $f.config; deepseaIn = $f.deepseaIn; f = $f.f; f2 = $f.f2; f3 = $f.f3; generatedMap = $f.generatedMap; grassIn = $f.grassIn; h = $f.h; i = $f.i; i$1 = $f.i$1; j = $f.j; j$1 = $f.j$1; list = $f.list; list$1 = $f.list$1; maxV = $f.maxV; noise = $f.noise; noiseList = $f.noiseList; offset = $f.offset; p = $f.p; sandIn = $f.sandIn; seaIn = $f.seaIn; seed = $f.seed; sx = $f.sx; sy = $f.sy; total = $f.total; treePosX = $f.treePosX; treePosY = $f.treePosY; very = $f.very; w = $f.w; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; y = $f.y; y$1 = $f.y$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, cityPosX, cityPosY, config, deepseaIn, f, f2, f3, f4, generatedMap, grassIn, h, i, i$1, j, j$1, list, list$1, maxV, noise, noiseList, offset, p, sandIn, seaIn, seed, sx, sy, total, treePosX, treePosY, very, w, x, x$1, x$2, y, y$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; cityPosX = $f.cityPosX; cityPosY = $f.cityPosY; config = $f.config; deepseaIn = $f.deepseaIn; f = $f.f; f2 = $f.f2; f3 = $f.f3; f4 = $f.f4; generatedMap = $f.generatedMap; grassIn = $f.grassIn; h = $f.h; i = $f.i; i$1 = $f.i$1; j = $f.j; j$1 = $f.j$1; list = $f.list; list$1 = $f.list$1; maxV = $f.maxV; noise = $f.noise; noiseList = $f.noiseList; offset = $f.offset; p = $f.p; sandIn = $f.sandIn; seaIn = $f.seaIn; seed = $f.seed; sx = $f.sx; sy = $f.sy; total = $f.total; treePosX = $f.treePosX; treePosY = $f.treePosY; very = $f.very; w = $f.w; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; y = $f.y; y$1 = $f.y$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = perlin.NewPerlin(2, 2, 1, seed); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		p = _r;
 		total = config.Deepsea + config.Sea + config.Sand + config.Grass + config.Mountain;
@@ -30550,7 +30550,12 @@ $packages["app/tool/helper"] = (function() {
 						if ((i$1 === 4) || (i$1 === 8) || (i$1 === 12) || (i$1 === 16) || (j$1 === 4) || (j$1 === 8) || (j$1 === 12) || (j$1 === 16)) {
 							list$1 = $append(list$1, 8);
 						} else {
-							list$1 = $append(list$1, 4);
+							f4 = ((_r$1 = ((f3 * 10000 >> 0)) % 100, _r$1 === _r$1 ? _r$1 : $throwRuntimeError("integer divide by zero"))) / 100;
+							if (f4 > config.Award) {
+								list$1 = $append(list$1, 4);
+							} else {
+								list$1 = $append(list$1, 7);
+							}
 						}
 					}
 				} else if (f > seaIn) {
@@ -30566,7 +30571,7 @@ $packages["app/tool/helper"] = (function() {
 			y$1 = y$1 + (1) >> 0;
 		}
 		$s = -1; return [generatedMap, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateMap }; } $f._r = _r; $f.cityPosX = cityPosX; $f.cityPosY = cityPosY; $f.config = config; $f.deepseaIn = deepseaIn; $f.f = f; $f.f2 = f2; $f.f3 = f3; $f.generatedMap = generatedMap; $f.grassIn = grassIn; $f.h = h; $f.i = i; $f.i$1 = i$1; $f.j = j; $f.j$1 = j$1; $f.list = list; $f.list$1 = list$1; $f.maxV = maxV; $f.noise = noise; $f.noiseList = noiseList; $f.offset = offset; $f.p = p; $f.sandIn = sandIn; $f.seaIn = seaIn; $f.seed = seed; $f.sx = sx; $f.sy = sy; $f.total = total; $f.treePosX = treePosX; $f.treePosY = treePosY; $f.very = very; $f.w = w; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.y = y; $f.y$1 = y$1; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateMap }; } $f._r = _r; $f._r$1 = _r$1; $f.cityPosX = cityPosX; $f.cityPosY = cityPosY; $f.config = config; $f.deepseaIn = deepseaIn; $f.f = f; $f.f2 = f2; $f.f3 = f3; $f.f4 = f4; $f.generatedMap = generatedMap; $f.grassIn = grassIn; $f.h = h; $f.i = i; $f.i$1 = i$1; $f.j = j; $f.j$1 = j$1; $f.list = list; $f.list$1 = list$1; $f.maxV = maxV; $f.noise = noise; $f.noiseList = noiseList; $f.offset = offset; $f.p = p; $f.sandIn = sandIn; $f.seaIn = seaIn; $f.seed = seed; $f.sx = sx; $f.sy = sy; $f.total = total; $f.treePosX = treePosX; $f.treePosY = treePosY; $f.very = very; $f.w = w; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.y = y; $f.y$1 = y$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.GenerateMap = GenerateMap;
 	MoveRangeTree2MoveRange = function(tree) {
@@ -30846,7 +30851,7 @@ $packages["app/tool/helper"] = (function() {
 		$r = math.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = strconv.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = astar.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.GenerateMapConfigDefault = new GenerateMapConfig.ptr(0, 1, 0.05, 7, 3, 0.05, 0.3, 0.01);
+		$pkg.GenerateMapConfigDefault = new GenerateMapConfig.ptr(0, 1, 0.05, 5, 3, 0.2, 0.3, 0.1);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
