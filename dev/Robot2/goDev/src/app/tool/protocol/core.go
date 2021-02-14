@@ -131,6 +131,7 @@ const (
 	BattleMenuActionAttack
 	BattleMenuActionGuard
 	BattleMenuActionEvade
+	BattleMenuActionCanNotMove
 )
 
 type BattleMenu struct {

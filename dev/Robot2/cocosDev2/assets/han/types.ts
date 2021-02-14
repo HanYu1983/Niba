@@ -27,6 +27,7 @@ export enum BattleMenuAction {
 	BattleMenuActionAttack,
 	BattleMenuActionGuard,
 	BattleMenuActionEvade,
+	BattleMenuActionCanNotMove,
 }
 
 export enum RobotMenuFunction {

@@ -35956,6 +35956,7 @@ $packages["app/model/v1"] = (function() {
 					}
 					protocol.Pilot.copy(menu.Left.Pilot, pilot);
 					menu.Left.BattleAction = 1;
+					protocol.Weapon.copy(menu.Left.Weapon, weapon);
 					menu.Left.Info.HitRate = hitRate;
 					_r$2 = ObserveRobot($clone(model$1, model), $clone(targetRobot, protocol.Robot)); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 					_tuple$3 = _r$2;
@@ -38249,7 +38250,7 @@ $packages["app/model/v1"] = (function() {
 			}
 			$s = -1; return [1, weapon$1, $ifaceNil];
 		}
-		$s = -1; return [0, new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), $ifaceNil];
+		$s = -1; return [4, new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryBattleAction }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.invalidWeapons = invalidWeapons; $f.isInvalid = isInvalid; $f.model$1 = model$1; $f.pilot = pilot; $f.robot = robot; $f.targetPilot = targetPilot; $f.targetRobot = targetRobot; $f.weapon = weapon; $f.weapon$1 = weapon$1; $f.weaponID = weaponID; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryBattleAction = QueryBattleAction;
