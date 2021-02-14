@@ -68,5 +68,14 @@ func GenerateCluster(w int, h int, count int, clusterCount int, iteration int) (
 			posList = append(posList, [2]int{int(observation.Coordinates()[0]), int(observation.Coordinates()[1])})
 		}
 	}
+	// 去掉重復的
+	posSet := map[[2]int]bool{}
+	for _, pos := range posList {
+		posSet[pos] = true
+	}
+	posList = [][2]int{}
+	for pos := range posSet {
+		posList = append(posList, pos)
+	}
 	return posList, nil
 }

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/tool"
+	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
@@ -49,7 +50,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 		"pilotC": {ID: "pilotC"},
 		"pilotD": {ID: "pilotD"},
 	}
-	ctx, err = NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
+	ctx, _, err = NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
 		ID:       "0",
 		ProtoID:  "zgundam",
 		PlayerID: protocol.PlayerIDPlayer,
@@ -58,7 +59,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
+	ctx, _, err = NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
 		ProtoID:  "gaite_sky",
 		PlayerID: protocol.PlayerIDPlayer,
 		PilotID:  "pilotB",
@@ -66,7 +67,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = NewRobot(ctx, protocol.Position{10, 0}, protocol.Robot{
+	ctx, _, err = NewRobot(ctx, protocol.Position{10, 0}, protocol.Robot{
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
 		PilotID:  "pilotC",
@@ -74,11 +75,15 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = NewRobot(ctx, protocol.Position{0, 10}, protocol.Robot{
+	ctx, _, err = NewRobot(ctx, protocol.Position{0, 10}, protocol.Robot{
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
 		PilotID:  "pilotD",
 	})
+	if err != nil {
+		return origin, err
+	}
+	ctx, err = GenerateLevel(ctx, playerAI1)
 	if err != nil {
 		return origin, err
 	}
@@ -90,19 +95,23 @@ func Save(origin model) error {
 func Load(origin model) (model, error) {
 	return origin, nil
 }
-func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (model, error) {
+func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (model, protocol.Robot, error) {
 	var err error
 	ctx := origin
 	var notFound string
+	_, err = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
+	if err != nil {
+		return origin, protocol.Robot{}, err
+	}
 	if robot.PlayerID == notFound {
-		return origin, fmt.Errorf("robot(%v) PlayerID not found", robot)
+		return origin, protocol.Robot{}, fmt.Errorf("robot(%v) PlayerID not found", robot)
 	}
 	if robot.PilotID == notFound {
-		return origin, fmt.Errorf("robot(%v) PilotID not found", robot)
+		return origin, protocol.Robot{}, fmt.Errorf("robot(%v) PilotID not found", robot)
 	}
 	_, err = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID)
 	if err != nil {
-		return origin, err
+		return origin, protocol.Robot{}, err
 	}
 	if robot.ID == notFound {
 		robot.ID = fmt.Sprintf("NewRobot_%v", ctx.App.SeqID)
@@ -112,7 +121,7 @@ func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (m
 		robot.Transform = robot.ProtoID
 	}
 	if robot.Transform != robot.ProtoID {
-		return origin, fmt.Errorf("transform(%v) must equals protoID(%v)", robot.Transform, robot.ProtoID)
+		return origin, protocol.Robot{}, fmt.Errorf("transform(%v) must equals protoID(%v)", robot.Transform, robot.ProtoID)
 	}
 	if robot.WeaponsByTransform == nil {
 		robot.WeaponsByTransform = map[string]protocol.Weapons{}
@@ -124,15 +133,32 @@ func NewRobot(origin model, position protocol.Position, robot protocol.Robot) (m
 	// 再計算機器人的狀態
 	robot.HP, err = QueryRobotMaxHp(ctx, robot.ID)
 	if err != nil {
-		return origin, err
+		return origin, protocol.Robot{}, err
 	}
 	robot.EN, err = QueryRobotMaxEn(ctx, robot.ID)
 	if err != nil {
-		return origin, err
+		return origin, protocol.Robot{}, err
 	}
 	// 算完後再重設
 	ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, robot)
-	return ctx, nil
+	return ctx, robot, nil
+}
+
+func NewPilot(origin model, pilot protocol.Pilot) (model, protocol.Pilot, error) {
+	var err error
+	ctx := origin
+	var notFound string
+	_, err = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID)
+	if err != nil {
+		return origin, protocol.Pilot{}, err
+	}
+	if pilot.ID == notFound {
+		pilot.ID = fmt.Sprintf("NewPilot_%v", ctx.App.SeqID)
+		ctx.App.SeqID++
+	}
+	// 算完後再重設
+	ctx.App.Gameplay.Pilots = protocol.AssocStringPilot(ctx.App.Gameplay.Pilots, pilot.ID, pilot)
+	return ctx, pilot, nil
 }
 
 func QueryActivePlayer(origin model) (protocol.Player, error) {

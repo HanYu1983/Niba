@@ -18,10 +18,31 @@ func SelectRobotForTargetTerrain(terrain data.TerrainProto) (protocol.Robot, err
 	return protocol.Robot{}, nil
 }
 
-func GenerateLevel(model model, force int, positions []protocol.Position) error {
-
-	//gameMap := model.App.Gameplay.Map
-
+func GenerateLevel(origin model, playerID string) (model, error) {
+	ctx := origin
+	if ctx.App.Gameplay.Map == nil {
+		return origin, fmt.Errorf("ctx.App.Gameplay.Map not found")
+	}
+	mapW, mapH := len(ctx.App.Gameplay.Map[0]), len(ctx.App.Gameplay.Map)
+	posList, err := GenerateCluster(mapW, mapH, 10, 2, 2)
+	if err != nil {
+		return origin, err
+	}
+	//gameMap := ctx.App.Gameplay.Map
+	for _, pos := range posList {
+		var pilot protocol.Pilot
+		ctx, pilot, err = NewPilot(ctx, protocol.Pilot{
+			ProtoID: "amuro",
+		})
+		ctx, _, err = NewRobot(ctx, protocol.Position(pos), protocol.Robot{
+			ProtoID:  "gundam",
+			PlayerID: playerID,
+			PilotID:  pilot.ID,
+		})
+		if err != nil {
+			return origin, err
+		}
+	}
 	// count := map[data.TerrainProto]int{}
 	// for _, row := range gameMap {
 	// 	for _, id := range row {
@@ -46,5 +67,5 @@ func GenerateLevel(model model, force int, positions []protocol.Position) error 
 	// 		return err
 	// 	}
 	// }
-	return nil
+	return ctx, nil
 }

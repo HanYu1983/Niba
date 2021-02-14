@@ -14115,7 +14115,7 @@ $packages["github.com/gopherjs/gopherjs/nosync"] = (function() {
 	return $pkg;
 })();
 $packages["time"] = (function() {
-	var $pkg = {}, $init, errors, js, nosync, runtime, syscall, ParseError, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$2, arrayType$3, ptrType$4, ptrType$7, zoneSources, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, startNano, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, errLocation, badData, x, init, initLocal, runtimeNano, indexByte, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseSignedOffset, parseNanoseconds, leadingInt, absWeekday, absClock, fmtFrac, fmtInt, lessThanHalf, absDate, daysIn, unixTime, Unix, isLeap, norm, Date, div, FixedZone;
+	var $pkg = {}, $init, errors, js, nosync, runtime, syscall, ParseError, Time, Month, Weekday, Duration, Location, zone, zoneTrans, sliceType, sliceType$1, ptrType, sliceType$2, arrayType, sliceType$3, arrayType$1, arrayType$2, ptrType$2, arrayType$3, ptrType$4, ptrType$7, zoneSources, std0x, longDayNames, shortDayNames, shortMonthNames, longMonthNames, atoiError, errBad, errLeadingInt, months, days, daysBefore, startNano, utcLoc, utcLoc$24ptr, localLoc, localLoc$24ptr, localOnce, errLocation, badData, x, init, initLocal, runtimeNano, now, indexByte, startsWithLowerCase, nextStdChunk, match, lookup, appendInt, atoi, formatNano, quote, isDigit, getnum, cutspace, skip, Parse, parse, parseTimeZone, parseGMT, parseSignedOffset, parseNanoseconds, leadingInt, absWeekday, absClock, fmtFrac, fmtInt, lessThanHalf, absDate, daysIn, Now, unixTime, Unix, isLeap, norm, Date, div, FixedZone;
 	errors = $packages["errors"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	nosync = $packages["github.com/gopherjs/gopherjs/nosync"];
@@ -14226,6 +14226,20 @@ $packages["time"] = (function() {
 	};
 	runtimeNano = function() {
 		return $mul64($internalize(new ($global.Date)().getTime(), $Int64), new $Int64(0, 1000000));
+	};
+	now = function() {
+		var _tmp, _tmp$1, _tmp$2, mono, n, nsec, sec, x$1;
+		sec = new $Int64(0, 0);
+		nsec = 0;
+		mono = new $Int64(0, 0);
+		n = runtimeNano();
+		_tmp = $div64(n, new $Int64(0, 1000000000), false);
+		_tmp$1 = (((x$1 = $div64(n, new $Int64(0, 1000000000), true), x$1.$low + ((x$1.$high >> 31) * 4294967296)) >> 0));
+		_tmp$2 = n;
+		sec = _tmp;
+		nsec = _tmp$1;
+		mono = _tmp$2;
+		return [sec, nsec, mono];
 	};
 	indexByte = function(s, c) {
 		var c, s;
@@ -16219,6 +16233,20 @@ $packages["time"] = (function() {
 		}
 		return (((((m < 0 || m >= daysBefore.length) ? ($throwRuntimeError("index out of range"), undefined) : daysBefore[m]) - (x$1 = m - 1 >> 0, ((x$1 < 0 || x$1 >= daysBefore.length) ? ($throwRuntimeError("index out of range"), undefined) : daysBefore[x$1])) >> 0) >> 0));
 	};
+	Now = function() {
+		var _tuple, mono, nsec, sec, x$1, x$2, x$3, x$4, x$5, x$6;
+		_tuple = now();
+		sec = _tuple[0];
+		nsec = _tuple[1];
+		mono = _tuple[2];
+		mono = (x$1 = startNano, new $Int64(mono.$high - x$1.$high, mono.$low - x$1.$low));
+		sec = (x$2 = new $Int64(0, 2682288000), new $Int64(sec.$high + x$2.$high, sec.$low + x$2.$low));
+		if (!((x$3 = $shiftRightUint64((new $Uint64(sec.$high, sec.$low)), 33), (x$3.$high === 0 && x$3.$low === 0)))) {
+			return new Time.ptr((new $Uint64(0, nsec)), new $Int64(sec.$high + 13, sec.$low + 3618733952), $pkg.Local);
+		}
+		return new Time.ptr((x$4 = (x$5 = $shiftLeft64((new $Uint64(sec.$high, sec.$low)), 30), new $Uint64(2147483648 | x$5.$high, (0 | x$5.$low) >>> 0)), x$6 = (new $Uint64(0, nsec)), new $Uint64(x$4.$high | x$6.$high, (x$4.$low | x$6.$low) >>> 0)), mono, $pkg.Local);
+	};
+	$pkg.Now = Now;
 	unixTime = function(sec, nsec) {
 		var nsec, sec;
 		return new Time.ptr((new $Uint64(0, nsec)), new $Int64(sec.$high + 14, sec.$low + 2006054656), $pkg.Local);
@@ -22123,7 +22151,7 @@ $packages["fmt"] = (function() {
 	return $pkg;
 })();
 $packages["math/rand"] = (function() {
-	var $pkg = {}, $init, nosync, math, Source, Source64, Rand, lockedSource, rngSource, arrayType, ptrType, ptrType$1, sliceType, ptrType$2, ptrType$3, funcType, sliceType$1, ptrType$5, ke, we, fe, kn, wn, fn, globalRand, rngCooked, absInt32, NewSource, New, read, Seed, Float64, seedrand;
+	var $pkg = {}, $init, nosync, math, Source, Source64, Rand, lockedSource, rngSource, arrayType, ptrType, ptrType$1, sliceType, ptrType$2, ptrType$3, funcType, sliceType$1, ptrType$5, ke, we, fe, kn, wn, fn, globalRand, rngCooked, absInt32, NewSource, New, read, Seed, Int, Intn, Float64, seedrand;
 	nosync = $packages["github.com/gopherjs/gopherjs/nosync"];
 	math = $packages["math"];
 	Source = $pkg.Source = $newType(8, $kindInterface, "rand.Source", true, "math/rand", true, null);
@@ -22567,6 +22595,22 @@ $packages["math/rand"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: Seed }; } $f.seed = seed; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.Seed = Seed;
+	Int = function() {
+		var _r, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = globalRand.Int(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Int }; } $f._r = _r; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Int = Int;
+	Intn = function(n) {
+		var _r, n, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; n = $f.n; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = globalRand.Intn(n); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Intn }; } $f._r = _r; $f.n = n; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Intn = Intn;
 	Float64 = function() {
 		var _r, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -29226,7 +29270,7 @@ $packages["encoding/json"] = (function() {
 	return $pkg;
 })();
 $packages["app/tool/data"] = (function() {
-	var $pkg = {}, $init, json, fmt, RobotProto, PilotProto, WeaponProto, ComponentProto, TerrainProto, TerrainMappingProto, ConfigProto, Data, sliceType, sliceType$2, arrayType, arrayType$1, sliceType$6, sliceType$7, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, KesStringComponentProto, TryGetStringComponentProto, KesStringPilotProto, KesStringRobotProto, TryGetStringRobotProto, AssocStringString, DissocStringString, KesStringWeaponProto, TryGetStringWeaponProto, init;
+	var $pkg = {}, $init, json, fmt, RobotProto, PilotProto, WeaponProto, ComponentProto, TerrainProto, TerrainMappingProto, ConfigProto, Data, sliceType, sliceType$2, arrayType, arrayType$1, sliceType$6, sliceType$7, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, KesStringComponentProto, TryGetStringComponentProto, KesStringPilotProto, TryGetStringPilotProto, KesStringRobotProto, TryGetStringRobotProto, AssocStringString, DissocStringString, KesStringWeaponProto, TryGetStringWeaponProto, init;
 	json = $packages["encoding/json"];
 	fmt = $packages["fmt"];
 	RobotProto = $pkg.RobotProto = $newType(0, $kindStruct, "data.RobotProto", true, "app/tool/data", true, function(ID_, Title_, Cost_, Power_, Hp_, Weapons_, Components_, Suitability_, Transform_, UnlockExp_) {
@@ -29474,6 +29518,22 @@ $packages["app/tool/data"] = (function() {
 		return ret;
 	};
 	$pkg.KesStringPilotProto = KesStringPilotProto;
+	TryGetStringPilotProto = function(a, k) {
+		var _entry, _r, _tuple, a, has, k, ret, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; a = $f.a; has = $f.has; k = $f.k; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_tuple = (_entry = a[$String.keyFor(k)], _entry !== undefined ? [_entry.v, true] : [new PilotProto.ptr("", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
+		ret = $clone(_tuple[0], PilotProto);
+		has = _tuple[1];
+		/* */ if (has === false) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (has === false) { */ case 1:
+			_r = fmt.Errorf("[TryGetStringPilotProto] key not found: %v", new sliceType$2([new $String(k)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [ret, _r];
+		/* } */ case 2:
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TryGetStringPilotProto }; } $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.a = a; $f.has = has; $f.k = k; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TryGetStringPilotProto = TryGetStringPilotProto;
 	KesStringRobotProto = function(dict) {
 		var _entry, _i, _keys, _ref, dict, k, ret;
 		ret = $makeSlice(sliceType, 0, $keys(dict).length);
@@ -35293,11 +35353,304 @@ $packages["github.com/go-gl/mathgl/mgl64"] = (function() {
 	return $pkg;
 })();
 $packages["github.com/muesli/clusters"] = (function() {
-	var $pkg = {}, $init, fmt, math, rand, time;
+	var $pkg = {}, $init, fmt, math, rand, time, Cluster, Clusters, Coordinates, Observation, Observations, sliceType, sliceType$1, ptrType, New, AverageDistance;
 	fmt = $packages["fmt"];
 	math = $packages["math"];
 	rand = $packages["math/rand"];
 	time = $packages["time"];
+	Cluster = $pkg.Cluster = $newType(0, $kindStruct, "clusters.Cluster", true, "github.com/muesli/clusters", true, function(Center_, Observations_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Center = Coordinates.nil;
+			this.Observations = Observations.nil;
+			return;
+		}
+		this.Center = Center_;
+		this.Observations = Observations_;
+	});
+	Clusters = $pkg.Clusters = $newType(12, $kindSlice, "clusters.Clusters", true, "github.com/muesli/clusters", true, null);
+	Coordinates = $pkg.Coordinates = $newType(12, $kindSlice, "clusters.Coordinates", true, "github.com/muesli/clusters", true, null);
+	Observation = $pkg.Observation = $newType(8, $kindInterface, "clusters.Observation", true, "github.com/muesli/clusters", true, null);
+	Observations = $pkg.Observations = $newType(12, $kindSlice, "clusters.Observations", true, "github.com/muesli/clusters", true, null);
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($Float64);
+	ptrType = $ptrType(Cluster);
+	New = function(k, dataset) {
+		var _r, _r$1, _r$2, _r$3, _r$4, _v, c, dataset, i, j, k, p, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _v = $f._v; c = $f.c; dataset = $f.dataset; i = $f.i; j = $f.j; k = $f.k; p = $f.p; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = Clusters.nil;
+		if (dataset.$length === 0) { _v = true; $s = 3; continue s; }
+		_r = (0 >= dataset.$length ? ($throwRuntimeError("index out of range"), undefined) : dataset.$array[dataset.$offset + 0]).Coordinates(); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_v = _r.$length === 0; case 3:
+		/* */ if (_v) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (_v) { */ case 1:
+			_r$1 = fmt.Errorf("there must be at least one dimension in the data set", new sliceType([])); /* */ $s = 5; case 5: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [c, _r$1];
+		/* } */ case 2:
+		/* */ if (k === 0) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (k === 0) { */ case 6:
+			_r$2 = fmt.Errorf("k must be greater than 0", new sliceType([])); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$s = -1; return [c, _r$2];
+		/* } */ case 7:
+		$r = rand.Seed($clone(time.Now(), time.Time).UnixNano()); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		i = 0;
+		/* while (true) { */ case 10:
+			/* if (!(i < k)) { break; } */ if(!(i < k)) { $s = 11; continue; }
+			p = Coordinates.nil;
+			j = 0;
+			/* while (true) { */ case 12:
+				_r$3 = (0 >= dataset.$length ? ($throwRuntimeError("index out of range"), undefined) : dataset.$array[dataset.$offset + 0]).Coordinates(); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				/* if (!(j < _r$3.$length)) { break; } */ if(!(j < _r$3.$length)) { $s = 13; continue; }
+				_r$4 = rand.Float64(); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				p = $append(p, _r$4);
+				j = j + (1) >> 0;
+			/* } */ $s = 12; continue; case 13:
+			c = $append(c, new Cluster.ptr(p, Observations.nil));
+			i = i + (1) >> 0;
+		/* } */ $s = 10; continue; case 11:
+		$s = -1; return [c, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: New }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._v = _v; $f.c = c; $f.dataset = dataset; $f.i = i; $f.j = j; $f.k = k; $f.p = p; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.New = New;
+	Cluster.ptr.prototype.Append = function(point) {
+		var c, point;
+		c = this;
+		c.Observations = $append(c.Observations, point);
+	};
+	Cluster.prototype.Append = function(point) { return this.$val.Append(point); };
+	Clusters.prototype.Nearest = function(point) {
+		var _i, _r, _ref, c, ci, cluster, d, dist, i, point, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; c = $f.c; ci = $f.ci; cluster = $f.cluster; d = $f.d; dist = $f.dist; i = $f.i; point = $f.point; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		ci = 0;
+		dist = -1;
+		_ref = c;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			cluster = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), Cluster);
+			_r = point.Distance(cluster.Center); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			d = _r;
+			if (dist < 0 || d < dist) {
+				dist = d;
+				ci = i;
+			}
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return ci;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Clusters.prototype.Nearest }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.c = c; $f.ci = ci; $f.cluster = cluster; $f.d = d; $f.dist = dist; $f.i = i; $f.point = point; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Clusters).prototype.Nearest = function(point) { return this.$get().Nearest(point); };
+	Clusters.prototype.Neighbour = function(point, fromCluster) {
+		var _i, _r, _ref, c, cd, cluster, d, fromCluster, i, nc, point, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; c = $f.c; cd = $f.cd; cluster = $f.cluster; d = $f.d; fromCluster = $f.fromCluster; i = $f.i; nc = $f.nc; point = $f.point; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		d = 0;
+		nc = -1;
+		_ref = c;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			cluster = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), Cluster);
+			/* */ if (i === fromCluster) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (i === fromCluster) { */ case 3:
+				_i++;
+				/* continue; */ $s = 1; continue;
+			/* } */ case 4:
+			_r = AverageDistance(point, cluster.Observations); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			cd = _r;
+			if (nc < 0 || cd < d) {
+				nc = i;
+				d = cd;
+			}
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [nc, d];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Clusters.prototype.Neighbour }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.c = c; $f.cd = cd; $f.cluster = cluster; $f.d = d; $f.fromCluster = fromCluster; $f.i = i; $f.nc = nc; $f.point = point; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Clusters).prototype.Neighbour = function(point, fromCluster) { return this.$get().Neighbour(point, fromCluster); };
+	Cluster.ptr.prototype.Recenter = function() {
+		var _r, _tuple, c, center, err, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; c = $f.c; center = $f.center; err = $f.err; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		_r = c.Observations.Center(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		center = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return;
+		}
+		c.Center = center;
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cluster.ptr.prototype.Recenter }; } $f._r = _r; $f._tuple = _tuple; $f.c = c; $f.center = center; $f.err = err; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cluster.prototype.Recenter = function() { return this.$val.Recenter(); };
+	Clusters.prototype.Recenter = function() {
+		var c, i, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; c = $f.c; i = $f.i; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < c.$length)) { break; } */ if(!(i < c.$length)) { $s = 2; continue; }
+			$r = ((i < 0 || i >= c.$length) ? ($throwRuntimeError("index out of range"), undefined) : c.$array[c.$offset + i]).Recenter(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Clusters.prototype.Recenter }; } $f.c = c; $f.i = i; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Clusters).prototype.Recenter = function() { return this.$get().Recenter(); };
+	Clusters.prototype.Reset = function() {
+		var c, i;
+		c = this;
+		i = 0;
+		while (true) {
+			if (!(i < c.$length)) { break; }
+			((i < 0 || i >= c.$length) ? ($throwRuntimeError("index out of range"), undefined) : c.$array[c.$offset + i]).Observations = new Observations([]);
+			i = i + (1) >> 0;
+		}
+	};
+	$ptrType(Clusters).prototype.Reset = function() { return this.$get().Reset(); };
+	Cluster.ptr.prototype.PointsInDimension = function(n) {
+		var _i, _r, _ref, c, n, p, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; c = $f.c; n = $f.n; p = $f.p; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		v = sliceType$1.nil;
+		_ref = c.Observations;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			p = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = p.Coordinates(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			v = $append(v, (x = _r, ((n < 0 || n >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + n])));
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return $subslice(new Coordinates(v.$array), v.$offset, v.$offset + v.$length);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cluster.ptr.prototype.PointsInDimension }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.c = c; $f.n = n; $f.p = p; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cluster.prototype.PointsInDimension = function(n) { return this.$val.PointsInDimension(n); };
+	Clusters.prototype.CentersInDimension = function(n) {
+		var _i, _ref, c, cl, n, v, x;
+		c = this;
+		v = sliceType$1.nil;
+		_ref = c;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			cl = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), Cluster);
+			v = $append(v, (x = cl.Center, ((n < 0 || n >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + n])));
+			_i++;
+		}
+		return $subslice(new Coordinates(v.$array), v.$offset, v.$offset + v.$length);
+	};
+	$ptrType(Clusters).prototype.CentersInDimension = function(n) { return this.$get().CentersInDimension(n); };
+	Coordinates.prototype.Coordinates = function() {
+		var c;
+		c = this;
+		return (c);
+	};
+	$ptrType(Coordinates).prototype.Coordinates = function() { return this.$get().Coordinates(); };
+	Coordinates.prototype.Distance = function(p2) {
+		var _i, _ref, c, i, p2, r, v;
+		c = this;
+		r = 0;
+		_ref = c;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			i = _i;
+			v = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			r = r + (math.Pow(v - ((i < 0 || i >= p2.$length) ? ($throwRuntimeError("index out of range"), undefined) : p2.$array[p2.$offset + i]), 2));
+			_i++;
+		}
+		return r;
+	};
+	$ptrType(Coordinates).prototype.Distance = function(p2) { return this.$get().Distance(p2); };
+	Observations.prototype.Center = function() {
+		var _i, _i$1, _i$2, _r, _r$1, _r$2, _ref, _ref$1, _ref$2, c, cc, j, l, mean, point, v, v$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; c = $f.c; cc = $f.cc; j = $f.j; l = $f.l; mean = $f.mean; point = $f.point; v = $f.v; v$1 = $f.v$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		c = this;
+		l = c.$length;
+		/* */ if (l === 0) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (l === 0) { */ case 1:
+			_r = fmt.Errorf("there is no mean for an empty set of points", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [Coordinates.nil, _r];
+		/* } */ case 2:
+		_r$1 = (0 >= c.$length ? ($throwRuntimeError("index out of range"), undefined) : c.$array[c.$offset + 0]).Coordinates(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		cc = $makeSlice(sliceType$1, _r$1.$length);
+		_ref = c;
+		_i = 0;
+		/* while (true) { */ case 5:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
+			point = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r$2 = point.Coordinates(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_ref$1 = _r$2;
+			_i$1 = 0;
+			/* while (true) { */ case 8:
+				/* if (!(_i$1 < _ref$1.$length)) { break; } */ if(!(_i$1 < _ref$1.$length)) { $s = 9; continue; }
+				j = _i$1;
+				v = ((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]);
+				((j < 0 || j >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + j] = ((j < 0 || j >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + j]) + (v));
+				_i$1++;
+			/* } */ $s = 8; continue; case 9:
+			_i++;
+		/* } */ $s = 5; continue; case 6:
+		mean = Coordinates.nil;
+		_ref$2 = cc;
+		_i$2 = 0;
+		while (true) {
+			if (!(_i$2 < _ref$2.$length)) { break; }
+			v$1 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
+			mean = $append(mean, v$1 / (l));
+			_i$2++;
+		}
+		$s = -1; return [mean, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Observations.prototype.Center }; } $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f.c = c; $f.cc = cc; $f.j = j; $f.l = l; $f.mean = mean; $f.point = point; $f.v = v; $f.v$1 = v$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$ptrType(Observations).prototype.Center = function() { return this.$get().Center(); };
+	AverageDistance = function(o, observations) {
+		var _i, _r, _r$1, _ref, d, dist, l, o, observation, observations, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; d = $f.d; dist = $f.dist; l = $f.l; o = $f.o; observation = $f.observation; observations = $f.observations; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		d = 0;
+		l = 0;
+		_ref = observations;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			observation = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = observation.Coordinates(); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r$1 = o.Distance(_r); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			dist = _r$1;
+			if (dist === 0) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			l = l + (1) >> 0;
+			d = d + (dist);
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		if (l === 0) {
+			$s = -1; return 0;
+		}
+		$s = -1; return d / (l);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AverageDistance }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.d = d; $f.dist = dist; $f.l = l; $f.o = o; $f.observation = observation; $f.observations = observations; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AverageDistance = AverageDistance;
+	Cluster.methods = [{prop: "PointsInDimension", name: "PointsInDimension", pkg: "", typ: $funcType([$Int], [Coordinates], false)}];
+	ptrType.methods = [{prop: "Append", name: "Append", pkg: "", typ: $funcType([Observation], [], false)}, {prop: "Recenter", name: "Recenter", pkg: "", typ: $funcType([], [], false)}];
+	Clusters.methods = [{prop: "Nearest", name: "Nearest", pkg: "", typ: $funcType([Observation], [$Int], false)}, {prop: "Neighbour", name: "Neighbour", pkg: "", typ: $funcType([Observation, $Int], [$Int, $Float64], false)}, {prop: "Recenter", name: "Recenter", pkg: "", typ: $funcType([], [], false)}, {prop: "Reset", name: "Reset", pkg: "", typ: $funcType([], [], false)}, {prop: "CentersInDimension", name: "CentersInDimension", pkg: "", typ: $funcType([$Int], [Coordinates], false)}];
+	Coordinates.methods = [{prop: "Coordinates", name: "Coordinates", pkg: "", typ: $funcType([], [Coordinates], false)}, {prop: "Distance", name: "Distance", pkg: "", typ: $funcType([Coordinates], [$Float64], false)}];
+	Observations.methods = [{prop: "Center", name: "Center", pkg: "", typ: $funcType([], [Coordinates, $error], false)}];
+	Cluster.init("", [{prop: "Center", name: "Center", embedded: false, exported: true, typ: Coordinates, tag: ""}, {prop: "Observations", name: "Observations", embedded: false, exported: true, typ: Observations, tag: ""}]);
+	Clusters.init(Cluster);
+	Coordinates.init($Float64);
+	Observation.init([{prop: "Coordinates", name: "Coordinates", pkg: "", typ: $funcType([], [Coordinates], false)}, {prop: "Distance", name: "Distance", pkg: "", typ: $funcType([Coordinates], [$Float64], false)}]);
+	Observations.init(Observation);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -35311,10 +35664,124 @@ $packages["github.com/muesli/clusters"] = (function() {
 	return $pkg;
 })();
 $packages["tool/kmeans"] = (function() {
-	var $pkg = {}, $init, fmt, clusters, rand;
+	var $pkg = {}, $init, fmt, clusters, rand, Kmeans, sliceType, sliceType$1, NewWithOptions, New;
 	fmt = $packages["fmt"];
 	clusters = $packages["github.com/muesli/clusters"];
 	rand = $packages["math/rand"];
+	Kmeans = $pkg.Kmeans = $newType(0, $kindStruct, "kmeans.Kmeans", true, "tool/kmeans", true, function(plotter_, deltaThreshold_, iterationThreshold_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.plotter = $ifaceNil;
+			this.deltaThreshold = 0;
+			this.iterationThreshold = 0;
+			return;
+		}
+		this.plotter = plotter_;
+		this.deltaThreshold = deltaThreshold_;
+		this.iterationThreshold = iterationThreshold_;
+	});
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($Int);
+	NewWithOptions = function(deltaThreshold, plotter) {
+		var _r, deltaThreshold, plotter, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; deltaThreshold = $f.deltaThreshold; plotter = $f.plotter; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ if (deltaThreshold <= 0 || deltaThreshold >= 1) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (deltaThreshold <= 0 || deltaThreshold >= 1) { */ case 1:
+			_r = fmt.Errorf("threshold is out of bounds (must be >0.0 and <1.0, in percent)", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [new Kmeans.ptr($ifaceNil, 0, 0), _r];
+		/* } */ case 2:
+		$s = -1; return [new Kmeans.ptr(plotter, deltaThreshold, 96), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewWithOptions }; } $f._r = _r; $f.deltaThreshold = deltaThreshold; $f.plotter = plotter; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewWithOptions = NewWithOptions;
+	New = function() {
+		var _r, _tuple, m, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; m = $f.m; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = NewWithOptions(0.01, $ifaceNil); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		m = $clone(_tuple[0], Kmeans);
+		$s = -1; return m;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: New }; } $f._r = _r; $f._tuple = _tuple; $f.m = m; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.New = New;
+	Kmeans.ptr.prototype.Partition = function(dataset, k) {
+		var _i, _r, _r$1, _r$2, _r$3, _ref, _tuple, cc, changes, ci, ci$1, dataset, err, i, k, m, p, point, points, ri, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _tuple = $f._tuple; cc = $f.cc; changes = $f.changes; ci = $f.ci; ci$1 = $f.ci$1; dataset = $f.dataset; err = $f.err; i = $f.i; k = $f.k; m = $f.m; p = $f.p; point = $f.point; points = $f.points; ri = $f.ri; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		m = this;
+		/* */ if (k > dataset.$length) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (k > dataset.$length) { */ case 1:
+			_r = fmt.Errorf("the size of the data set must at least equal k", new sliceType([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [new clusters.Clusters([]), _r];
+		/* } */ case 2:
+		_r$1 = clusters.New(k, dataset); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		cc = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [cc, err];
+		}
+		points = $makeSlice(sliceType$1, dataset.$length);
+		changes = 1;
+		i = 0;
+		/* while (true) { */ case 5:
+			/* if (!(changes > 0)) { break; } */ if(!(changes > 0)) { $s = 6; continue; }
+			changes = 0;
+			cc.Reset();
+			_ref = dataset;
+			_i = 0;
+			/* while (true) { */ case 7:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 8; continue; }
+				p = _i;
+				point = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+				_r$2 = cc.Nearest(point); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				ci = _r$2;
+				((ci < 0 || ci >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + ci]).Append(point);
+				if (!((((p < 0 || p >= points.$length) ? ($throwRuntimeError("index out of range"), undefined) : points.$array[points.$offset + p]) === ci))) {
+					((p < 0 || p >= points.$length) ? ($throwRuntimeError("index out of range"), undefined) : points.$array[points.$offset + p] = ci);
+					changes = changes + (1) >> 0;
+				}
+				_i++;
+			/* } */ $s = 7; continue; case 8:
+			ci$1 = 0;
+			/* while (true) { */ case 10:
+				/* if (!(ci$1 < cc.$length)) { break; } */ if(!(ci$1 < cc.$length)) { $s = 11; continue; }
+				/* */ if (((ci$1 < 0 || ci$1 >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + ci$1]).Observations.$length === 0) { $s = 12; continue; }
+				/* */ $s = 13; continue;
+				/* if (((ci$1 < 0 || ci$1 >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + ci$1]).Observations.$length === 0) { */ case 12:
+					ri = 0;
+					/* while (true) { */ case 14:
+						_r$3 = rand.Intn(dataset.$length); /* */ $s = 16; case 16: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+						ri = _r$3;
+						if ((x = ((ri < 0 || ri >= points.$length) ? ($throwRuntimeError("index out of range"), undefined) : points.$array[points.$offset + ri]), ((x < 0 || x >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + x])).Observations.$length > 1) {
+							/* break; */ $s = 15; continue;
+						}
+					/* } */ $s = 14; continue; case 15:
+					((ci$1 < 0 || ci$1 >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + ci$1]).Append(((ri < 0 || ri >= dataset.$length) ? ($throwRuntimeError("index out of range"), undefined) : dataset.$array[dataset.$offset + ri]));
+					((ri < 0 || ri >= points.$length) ? ($throwRuntimeError("index out of range"), undefined) : points.$array[points.$offset + ri] = ci$1);
+					changes = dataset.$length;
+				/* } */ case 13:
+				ci$1 = ci$1 + (1) >> 0;
+			/* } */ $s = 10; continue; case 11:
+			/* */ if (changes > 0) { $s = 17; continue; }
+			/* */ $s = 18; continue;
+			/* if (changes > 0) { */ case 17:
+				$r = cc.Recenter(); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			/* } */ case 18:
+			if (!($interfaceIsEqual(m.plotter, $ifaceNil))) {
+			}
+			if ((i === m.iterationThreshold) || changes < (((dataset.$length) * m.deltaThreshold >> 0))) {
+				/* break; */ $s = 6; continue;
+			}
+			i = i + (1) >> 0;
+		/* } */ $s = 5; continue; case 6:
+		$s = -1; return [cc, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Kmeans.ptr.prototype.Partition }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._tuple = _tuple; $f.cc = cc; $f.changes = changes; $f.ci = ci; $f.ci$1 = ci$1; $f.dataset = dataset; $f.err = err; $f.i = i; $f.k = k; $f.m = m; $f.p = p; $f.point = point; $f.points = points; $f.ri = ri; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Kmeans.prototype.Partition = function(dataset, k) { return this.$val.Partition(dataset, k); };
+	Kmeans.methods = [{prop: "Partition", name: "Partition", pkg: "", typ: $funcType([clusters.Observations, $Int], [clusters.Clusters, $error], false)}];
+	Kmeans.init("tool/kmeans", [{prop: "plotter", name: "plotter", embedded: false, exported: false, typ: $emptyInterface, tag: ""}, {prop: "deltaThreshold", name: "deltaThreshold", embedded: false, exported: false, typ: $Float64, tag: ""}, {prop: "iterationThreshold", name: "iterationThreshold", embedded: false, exported: false, typ: $Int, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -35327,7 +35794,7 @@ $packages["tool/kmeans"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1"] = (function() {
-	var $pkg = {}, $init, common, tool, data, def, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, strconv, astar, kmeans, log, Goal, AIModel, ByAstarNodeEstimatedCost, PotentailTarget, lobby, gameplay, app, model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, structType, arrayType$3, arrayType$4, ptrType, sliceType$9, sliceType$10, mapType, sliceType$11, sliceType$12, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryGoal, RenderRobotAim, RobotThinking, EnemyTurnPhase, IsFriendlyRobot, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase, QueryBattleAction, QueryRobotArmor, QueryRobotBeamArmor, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMove, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, NewModel, Save, Load, NewRobot, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu, QueryUnitsByPlayer, IsRobotDone, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryMoney, QueryRobots, QueryPilots, QueryComponents, QueryWeapons, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
+	var $pkg = {}, $init, common, tool, data, def, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, strconv, astar, kmeans, log, Goal, AIModel, ByAstarNodeEstimatedCost, PotentailTarget, lobby, gameplay, app, model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, sliceType$7, sliceType$8, structType, arrayType$3, arrayType$4, ptrType, sliceType$9, sliceType$10, mapType, sliceType$11, sliceType$12, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryGoal, RenderRobotAim, RobotThinking, EnemyTurnPhase, GenerateCluster, GenerateLevel, IsFriendlyRobot, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase, QueryBattleAction, QueryRobotArmor, QueryRobotBeamArmor, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMove, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, NewModel, Save, Load, NewRobot, NewPilot, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu, QueryUnitsByPlayer, IsRobotDone, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryMoney, QueryRobots, QueryPilots, QueryComponents, QueryWeapons, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
 	common = $packages["app/page/common"];
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
@@ -35474,6 +35941,8 @@ $packages["app/model/v1"] = (function() {
 	sliceType$5 = $sliceType($emptyInterface);
 	sliceType$6 = $sliceType(protocol.BattleAnimation);
 	arrayType$2 = $arrayType(protocol.Position, 2);
+	sliceType$7 = $sliceType(arrayType);
+	sliceType$8 = $sliceType(clusters.Observation);
 	structType = $structType("", [{prop: "HitRate", name: "HitRate", embedded: false, exported: true, typ: $Float64, tag: ""}]);
 	arrayType$3 = $arrayType($Int, 20);
 	arrayType$4 = $arrayType(arrayType$3, 20);
@@ -35911,6 +36380,168 @@ $packages["app/model/v1"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: EnemyTurnPhase }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.activePlayer = activePlayer; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.isRobotDone = isRobotDone; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.EnemyTurnPhase = EnemyTurnPhase;
+	GenerateCluster = function(w, h, count, clusterCount, iteration) {
+		var _entry, _i, _i$1, _i$2, _i$3, _i$4, _i$5, _i$6, _i$7, _key, _keys, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _ref$5, _ref$6, _ref$7, _tuple, c, c$1, cc, centerV2, ci, clusterCount, count, d, err, h, i, i$1, iteration, km, nextObservations, nextObservations$1, observation, observation$1, observation$2, observationV2, pos, pos$1, pos$2, posList, posSet, w, x, x$1, x$2, x$3, x$4, x$5, x$6, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _i$5 = $f._i$5; _i$6 = $f._i$6; _i$7 = $f._i$7; _key = $f._key; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _ref$5 = $f._ref$5; _ref$6 = $f._ref$6; _ref$7 = $f._ref$7; _tuple = $f._tuple; c = $f.c; c$1 = $f.c$1; cc = $f.cc; centerV2 = $f.centerV2; ci = $f.ci; clusterCount = $f.clusterCount; count = $f.count; d = $f.d; err = $f.err; h = $f.h; i = $f.i; i$1 = $f.i$1; iteration = $f.iteration; km = $f.km; nextObservations = $f.nextObservations; nextObservations$1 = $f.nextObservations$1; observation = $f.observation; observation$1 = $f.observation$1; observation$2 = $f.observation$2; observationV2 = $f.observationV2; pos = $f.pos; pos$1 = $f.pos$1; pos$2 = $f.pos$2; posList = $f.posList; posSet = $f.posSet; w = $f.w; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		clusterCount = helper.Min(count, clusterCount);
+		posList = new sliceType$7([]);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < count)) { break; } */ if(!(i < count)) { $s = 2; continue; }
+			_r$1 = rand.Int(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$3 = rand.Int(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			posList = $append(posList, $toNativeArray($kindInt, [(_r = _r$1 % w, _r === _r ? _r : $throwRuntimeError("integer divide by zero")), (_r$2 = _r$3 % h, _r$2 === _r$2 ? _r$2 : $throwRuntimeError("integer divide by zero"))]));
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		d = clusters.Observations.nil;
+		_ref = posList;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			pos = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), arrayType);
+			d = $append(d, new clusters.Coordinates([(pos[0]), (pos[1])]));
+			_i++;
+		}
+		_r$4 = kmeans.New(); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		km = $clone(_r$4, kmeans.Kmeans);
+		_r$5 = $clone(km, kmeans.Kmeans).Partition(d, clusterCount); /* */ $s = 6; case 6: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_tuple = _r$5;
+		cc = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [sliceType$7.nil, err];
+		}
+		i$1 = 0;
+		/* while (true) { */ case 7:
+			/* if (!(i$1 < iteration)) { break; } */ if(!(i$1 < iteration)) { $s = 8; continue; }
+			nextObservations = new clusters.Observations([]);
+			_ref$1 = cc;
+			_i$1 = 0;
+			/* while (true) { */ case 9:
+				/* if (!(_i$1 < _ref$1.$length)) { break; } */ if(!(_i$1 < _ref$1.$length)) { $s = 10; continue; }
+				c = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), clusters.Cluster);
+				centerV2 = $toNativeArray($kindFloat64, [(x = c.Center, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), (x$1 = c.Center, (1 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 1]))]);
+				_ref$2 = c.Observations;
+				_i$2 = 0;
+				/* while (true) { */ case 11:
+					/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 12; continue; }
+					observation = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
+					_r$6 = observation.Coordinates(); /* */ $s = 13; case 13: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+					_r$7 = observation.Coordinates(); /* */ $s = 14; case 14: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+					observationV2 = $toNativeArray($kindFloat64, [(x$2 = _r$6, (0 >= x$2.$length ? ($throwRuntimeError("index out of range"), undefined) : x$2.$array[x$2.$offset + 0])), (x$3 = _r$7, (1 >= x$3.$length ? ($throwRuntimeError("index out of range"), undefined) : x$3.$array[x$3.$offset + 1]))]);
+					mgl64.Vec2.copy(observationV2, new mgl64.Vec2($clone(observationV2, mgl64.Vec2)).Add($clone(new mgl64.Vec2($clone(new mgl64.Vec2($clone(centerV2, mgl64.Vec2)).Sub($clone(observationV2, mgl64.Vec2)), mgl64.Vec2)).Mul(0.5), mgl64.Vec2)));
+					nextObservations = $append(nextObservations, new clusters.Coordinates([new mgl64.Vec2($clone(observationV2, mgl64.Vec2)).X(), new mgl64.Vec2($clone(observationV2, mgl64.Vec2)).Y()]));
+					_i$2++;
+				/* } */ $s = 11; continue; case 12:
+				_i$1++;
+			/* } */ $s = 9; continue; case 10:
+			cc.Reset();
+			_ref$3 = nextObservations;
+			_i$3 = 0;
+			/* while (true) { */ case 15:
+				/* if (!(_i$3 < _ref$3.$length)) { break; } */ if(!(_i$3 < _ref$3.$length)) { $s = 16; continue; }
+				observation$1 = ((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]);
+				_r$8 = cc.Nearest(observation$1); /* */ $s = 17; case 17: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+				ci = _r$8;
+				((ci < 0 || ci >= cc.$length) ? ($throwRuntimeError("index out of range"), undefined) : cc.$array[cc.$offset + ci]).Append(observation$1);
+				_i$3++;
+			/* } */ $s = 15; continue; case 16:
+			$r = cc.Recenter(); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			i$1 = i$1 + (1) >> 0;
+		/* } */ $s = 7; continue; case 8:
+		nextObservations$1 = new clusters.Observations([]);
+		_ref$4 = cc;
+		_i$4 = 0;
+		while (true) {
+			if (!(_i$4 < _ref$4.$length)) { break; }
+			c$1 = $clone(((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]), clusters.Cluster);
+			nextObservations$1 = $appendSlice(nextObservations$1, (x$4 = c$1.Observations, $subslice(new sliceType$8(x$4.$array), x$4.$offset, x$4.$offset + x$4.$length)));
+			_i$4++;
+		}
+		posList = new sliceType$7([]);
+		_ref$5 = nextObservations$1;
+		_i$5 = 0;
+		/* while (true) { */ case 19:
+			/* if (!(_i$5 < _ref$5.$length)) { break; } */ if(!(_i$5 < _ref$5.$length)) { $s = 20; continue; }
+			observation$2 = ((_i$5 < 0 || _i$5 >= _ref$5.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$5.$array[_ref$5.$offset + _i$5]);
+			_r$9 = observation$2.Coordinates(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+			_r$10 = observation$2.Coordinates(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+			posList = $append(posList, $toNativeArray($kindInt, [(((x$5 = _r$9, (0 >= x$5.$length ? ($throwRuntimeError("index out of range"), undefined) : x$5.$array[x$5.$offset + 0])) >> 0)), (((x$6 = _r$10, (1 >= x$6.$length ? ($throwRuntimeError("index out of range"), undefined) : x$6.$array[x$6.$offset + 1])) >> 0))]));
+			_i$5++;
+		/* } */ $s = 19; continue; case 20:
+		posSet = $makeMap(arrayType.keyFor, []);
+		_ref$6 = posList;
+		_i$6 = 0;
+		while (true) {
+			if (!(_i$6 < _ref$6.$length)) { break; }
+			pos$1 = $clone(((_i$6 < 0 || _i$6 >= _ref$6.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$6.$array[_ref$6.$offset + _i$6]), arrayType);
+			_key = $clone(pos$1, arrayType); (posSet || $throwRuntimeError("assignment to entry in nil map"))[arrayType.keyFor(_key)] = { k: _key, v: true };
+			_i$6++;
+		}
+		posList = new sliceType$7([]);
+		_ref$7 = posSet;
+		_i$7 = 0;
+		_keys = $keys(_ref$7);
+		while (true) {
+			if (!(_i$7 < _keys.length)) { break; }
+			_entry = _ref$7[_keys[_i$7]];
+			if (_entry === undefined) {
+				_i$7++;
+				continue;
+			}
+			pos$2 = $clone(_entry.k, arrayType);
+			posList = $append(posList, pos$2);
+			_i$7++;
+		}
+		$s = -1; return [posList, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateCluster }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._i$5 = _i$5; $f._i$6 = _i$6; $f._i$7 = _i$7; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._ref$5 = _ref$5; $f._ref$6 = _ref$6; $f._ref$7 = _ref$7; $f._tuple = _tuple; $f.c = c; $f.c$1 = c$1; $f.cc = cc; $f.centerV2 = centerV2; $f.ci = ci; $f.clusterCount = clusterCount; $f.count = count; $f.d = d; $f.err = err; $f.h = h; $f.i = i; $f.i$1 = i$1; $f.iteration = iteration; $f.km = km; $f.nextObservations = nextObservations; $f.nextObservations$1 = nextObservations$1; $f.observation = observation; $f.observation$1 = observation$1; $f.observation$2 = observation$2; $f.observationV2 = observationV2; $f.pos = pos; $f.pos$1 = pos$1; $f.pos$2 = pos$2; $f.posList = posList; $f.posSet = posSet; $f.w = w; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.GenerateCluster = GenerateCluster;
+	GenerateLevel = function(origin, playerID) {
+		var _i, _r, _r$1, _r$2, _r$3, _ref, _tmp, _tmp$1, _tuple, _tuple$1, _tuple$2, ctx, err, mapH, mapW, origin, pilot, playerID, pos, posList, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; ctx = $f.ctx; err = $f.err; mapH = $f.mapH; mapW = $f.mapW; origin = $f.origin; pilot = $f.pilot; playerID = $f.playerID; pos = $f.pos; posList = $f.posList; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, model);
+		/* */ if (ctx.App.Gameplay.Map === sliceType$2.nil) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (ctx.App.Gameplay.Map === sliceType$2.nil) { */ case 1:
+			_r = fmt.Errorf("ctx.App.Gameplay.Map not found", new sliceType$5([])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [origin, _r];
+		/* } */ case 2:
+		_tmp = (x = ctx.App.Gameplay.Map, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])).$length;
+		_tmp$1 = ctx.App.Gameplay.Map.$length;
+		mapW = _tmp;
+		mapH = _tmp$1;
+		_r$1 = GenerateCluster(mapW, mapH, 10, 2, 2); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		posList = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		_ref = posList;
+		_i = 0;
+		/* while (true) { */ case 5:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
+			pos = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), arrayType);
+			pilot = new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0);
+			_r$2 = NewPilot($clone(ctx, model), new protocol.Pilot.ptr("", "amuro", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$1 = _r$2;
+			model.copy(ctx, _tuple$1[0]);
+			protocol.Pilot.copy(pilot, _tuple$1[1]);
+			err = _tuple$1[2];
+			_r$3 = NewRobot($clone(ctx, model), $clone(($clone(pos, protocol.Position)), protocol.Position), new protocol.Robot.ptr("", playerID, "gundam", pilot.ID, "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0)); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$2 = _r$3;
+			model.copy(ctx, _tuple$2[0]);
+			err = _tuple$2[2];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_i++;
+		/* } */ $s = 5; continue; case 6:
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateLevel }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.ctx = ctx; $f.err = err; $f.mapH = mapH; $f.mapW = mapW; $f.origin = origin; $f.pilot = pilot; $f.playerID = playerID; $f.pos = pos; $f.posList = posList; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.GenerateLevel = GenerateLevel;
 	IsFriendlyRobot = function(model$1, unitID1, unitID2) {
 		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, model$1, plyr1, plyr2, unit1, unit2, unitID1, unitID2, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; model$1 = $f.model$1; plyr1 = $f.plyr1; plyr2 = $f.plyr2; unit1 = $f.unit1; unit2 = $f.unit2; unitID1 = $f.unitID1; unitID2 = $f.unitID2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -40110,8 +40741,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	model.prototype.GetCursor = function() { return this.$val.GetCursor(); };
 	NewModel = function(origin, situation) {
-		var _r, _r$1, _r$2, _r$3, _r$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, ctx, err, origin, situation, tempMap, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; ctx = $f.ctx; err = $f.err; origin = $f.origin; situation = $f.situation; tempMap = $f.tempMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, ctx, err, origin, situation, tempMap, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; ctx = $f.ctx; err = $f.err; origin = $f.origin; situation = $f.situation; tempMap = $f.tempMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = rand.Seed(new $Int64(0, 0)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		ctx = $clone(origin, model);
 		_r = helper.GenerateMap($clone(helper.GenerateMapConfigDefault, helper.GenerateMapConfig), new $Int64(0, 0), 0, 1, 25, 25, 0, 0); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
@@ -40134,33 +40765,40 @@ $packages["app/model/v1"] = (function() {
 		_r$1 = NewRobot($clone(ctx, model), $toNativeArray($kindInt, [0, 0]), new protocol.Robot.ptr("0", "PlayerIDPlayer", "zgundam", "pilotA", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0)); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple$1 = _r$1;
 		model.copy(ctx, _tuple$1[0]);
-		err = _tuple$1[1];
+		err = _tuple$1[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, err];
 		}
 		_r$2 = NewRobot($clone(ctx, model), $toNativeArray($kindInt, [10, 10]), new protocol.Robot.ptr("", "PlayerIDPlayer", "gaite_sky", "pilotB", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0)); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_tuple$2 = _r$2;
 		model.copy(ctx, _tuple$2[0]);
-		err = _tuple$2[1];
+		err = _tuple$2[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, err];
 		}
 		_r$3 = NewRobot($clone(ctx, model), $toNativeArray($kindInt, [10, 0]), new protocol.Robot.ptr("", "ai1", "gundam", "pilotC", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0)); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$3 = _r$3;
 		model.copy(ctx, _tuple$3[0]);
-		err = _tuple$3[1];
+		err = _tuple$3[2];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, err];
 		}
 		_r$4 = NewRobot($clone(ctx, model), $toNativeArray($kindInt, [0, 10]), new protocol.Robot.ptr("", "ai1", "gundam", "pilotD", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0)); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 		_tuple$4 = _r$4;
 		model.copy(ctx, _tuple$4[0]);
-		err = _tuple$4[1];
+		err = _tuple$4[2];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		_r$5 = GenerateLevel($clone(ctx, model), "ai1"); /* */ $s = 7; case 7: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_tuple$5 = _r$5;
+		model.copy(ctx, _tuple$5[0]);
+		err = _tuple$5[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, err];
 		}
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewModel }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.situation = situation; $f.tempMap = tempMap; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewModel }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.situation = situation; $f.tempMap = tempMap; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewModel = NewModel;
 	Save = function(origin) {
@@ -40174,70 +40812,100 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.Load = Load;
 	NewRobot = function(origin, position, robot) {
-		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _tuple, _tuple$1, _tuple$2, ctx, err, notFound, origin, position, robot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; position = $f.position; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple, _tuple$1, _tuple$2, _tuple$3, ctx, err, notFound, origin, position, robot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; position = $f.position; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		ctx = $clone(origin, model);
 		notFound = "";
-		/* */ if (robot.PlayerID === notFound) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (robot.PlayerID === notFound) { */ case 1:
-			_r = fmt.Errorf("robot(%v) PlayerID not found", new sliceType$5([new robot.constructor.elem(robot)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return [origin, _r];
-		/* } */ case 2:
-		/* */ if (robot.PilotID === notFound) { $s = 4; continue; }
-		/* */ $s = 5; continue;
-		/* if (robot.PilotID === notFound) { */ case 4:
-			_r$1 = fmt.Errorf("robot(%v) PilotID not found", new sliceType$5([new robot.constructor.elem(robot)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [origin, _r$1];
-		/* } */ case 5:
-		_r$2 = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple = _r$2;
+		_r = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
 		err = _tuple[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), err];
 		}
-		/* */ if (robot.ID === notFound) { $s = 8; continue; }
-		/* */ $s = 9; continue;
-		/* if (robot.ID === notFound) { */ case 8:
-			_r$3 = fmt.Sprintf("NewRobot_%v", new sliceType$5([new $Int(ctx.App.SeqID)])); /* */ $s = 10; case 10: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			robot.ID = _r$3;
+		/* */ if (robot.PlayerID === notFound) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (robot.PlayerID === notFound) { */ case 2:
+			_r$1 = fmt.Errorf("robot(%v) PlayerID not found", new sliceType$5([new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), _r$1];
+		/* } */ case 3:
+		/* */ if (robot.PilotID === notFound) { $s = 5; continue; }
+		/* */ $s = 6; continue;
+		/* if (robot.PilotID === notFound) { */ case 5:
+			_r$2 = fmt.Errorf("robot(%v) PilotID not found", new sliceType$5([new robot.constructor.elem(robot)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), _r$2];
+		/* } */ case 6:
+		_r$3 = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$1 = _r$3;
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), err];
+		}
+		/* */ if (robot.ID === notFound) { $s = 9; continue; }
+		/* */ $s = 10; continue;
+		/* if (robot.ID === notFound) { */ case 9:
+			_r$4 = fmt.Sprintf("NewRobot_%v", new sliceType$5([new $Int(ctx.App.SeqID)])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			robot.ID = _r$4;
 			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
-		/* } */ case 9:
+		/* } */ case 10:
 		if (robot.Transform === notFound) {
 			robot.Transform = robot.ProtoID;
 		}
-		/* */ if (!(robot.Transform === robot.ProtoID)) { $s = 11; continue; }
-		/* */ $s = 12; continue;
-		/* if (!(robot.Transform === robot.ProtoID)) { */ case 11:
-			_r$4 = fmt.Errorf("transform(%v) must equals protoID(%v)", new sliceType$5([new $String(robot.Transform), new $String(robot.ProtoID)])); /* */ $s = 13; case 13: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			$s = -1; return [origin, _r$4];
-		/* } */ case 12:
+		/* */ if (!(robot.Transform === robot.ProtoID)) { $s = 12; continue; }
+		/* */ $s = 13; continue;
+		/* if (!(robot.Transform === robot.ProtoID)) { */ case 12:
+			_r$5 = fmt.Errorf("transform(%v) must equals protoID(%v)", new sliceType$5([new $String(robot.Transform), new $String(robot.ProtoID)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), _r$5];
+		/* } */ case 13:
 		if (robot.WeaponsByTransform === false) {
 			robot.WeaponsByTransform = $makeMap($String.keyFor, []);
 		}
 		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
 		ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, $clone(position, protocol.Position));
 		ctx.App.Gameplay.Units = $append(ctx.App.Gameplay.Units, robot.ID);
-		_r$5 = QueryRobotMaxHp($clone(ctx, model), robot.ID); /* */ $s = 14; case 14: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_tuple$1 = _r$5;
-		robot.HP = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		_r$6 = QueryRobotMaxEn($clone(ctx, model), robot.ID); /* */ $s = 15; case 15: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$6 = QueryRobotMaxHp($clone(ctx, model), robot.ID); /* */ $s = 15; case 15: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 		_tuple$2 = _r$6;
-		robot.EN = _tuple$2[0];
+		robot.HP = _tuple$2[0];
 		err = _tuple$2[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), err];
+		}
+		_r$7 = QueryRobotMaxEn($clone(ctx, model), robot.ID); /* */ $s = 16; case 16: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_tuple$3 = _r$7;
+		robot.EN = _tuple$3[0];
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), err];
 		}
 		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.position = position; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [ctx, robot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.position = position; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.NewRobot = NewRobot;
+	NewPilot = function(origin, pilot) {
+		var _r, _r$1, _tuple, ctx, err, notFound, origin, pilot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; pilot = $f.pilot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, model);
+		notFound = "";
+		_r = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), err];
+		}
+		/* */ if (pilot.ID === notFound) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (pilot.ID === notFound) { */ case 2:
+			_r$1 = fmt.Sprintf("NewPilot_%v", new sliceType$5([new $Int(ctx.App.SeqID)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			pilot.ID = _r$1;
+			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
+		/* } */ case 3:
+		ctx.App.Gameplay.Pilots = protocol.AssocStringPilot(ctx.App.Gameplay.Pilots, pilot.ID, $clone(pilot, protocol.Pilot));
+		$s = -1; return [ctx, pilot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPilot }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.pilot = pilot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewPilot = NewPilot;
 	QueryActivePlayer = function(origin) {
 		var _r, origin, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:

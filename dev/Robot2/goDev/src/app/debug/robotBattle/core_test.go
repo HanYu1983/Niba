@@ -48,7 +48,7 @@ func init() {
 	mockModel.App.Gameplay.Pilots = map[string]protocol.Pilot{
 		"pilotA": {ID: "pilotA"},
 	}
-	mockModel, err = v1.NewRobot(mockModel, protocol.Position{0, 0}, protocol.Robot{
+	mockModel, _, err = v1.NewRobot(mockModel, protocol.Position{0, 0}, protocol.Robot{
 		ID:       RobotA,
 		ProtoID:  "gundam",
 		PlayerID: protocol.PlayerIDPlayer,
@@ -57,7 +57,7 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	mockModel, err = v1.NewRobot(mockModel, protocol.Position{1, 0}, protocol.Robot{
+	mockModel, _, err = v1.NewRobot(mockModel, protocol.Position{1, 0}, protocol.Robot{
 		ID:       RobotB,
 		ProtoID:  "gundam",
 		PlayerID: playerAI1,
@@ -100,8 +100,8 @@ func TestCore(t *testing.T) {
 		if robotMenu.RowFunctionMapping[weaponIdx] != protocol.RobotMenuFunctionWeapon {
 			t.Error("cursor1必須是武器選單")
 		}
-		if robotMenu.Options[weaponIdx][0] != "beam_sword1" {
-			t.Error("第一個武器必須是光束劍")
+		if robotMenu.Options[weaponIdx][0] != "machinegun1" {
+			t.Error("第一個武器必須是機砲")
 		}
 	}
 	{
