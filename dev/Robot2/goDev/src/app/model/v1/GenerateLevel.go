@@ -18,7 +18,8 @@ func SelectRobotForTargetTerrain(terrain data.TerrainProto) (protocol.Robot, err
 	return protocol.Robot{}, nil
 }
 
-func GenerateLevel(model model, enemyCount int, clusterCount int, iteration int, force int) error {
+func GenerateLevel(model model, force int, positions []protocol.Position) error {
+
 	//gameMap := model.App.Gameplay.Map
 
 	// count := map[data.TerrainProto]int{}
