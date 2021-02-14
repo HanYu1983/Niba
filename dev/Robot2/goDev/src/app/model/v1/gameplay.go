@@ -15,7 +15,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	const (
 		playerAI1 = "ai1"
 	)
-	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, 25, 25, 0, 0)
 	if err != nil {
 		return origin, err
 	}

@@ -2528,7 +2528,7 @@ $packages["math/bits"] = (function() {
 	return $pkg;
 })();
 $packages["math"] = (function() {
-	var $pkg = {}, $init, js, bits, arrayType, arrayType$1, arrayType$2, structType, math, zero, posInf, negInf, nan, buf, Exp, Floor, Hypot, Inf, IsInf, IsNaN, Log, Max, NaN, Signbit, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, max, hypot;
+	var $pkg = {}, $init, js, bits, arrayType, arrayType$1, arrayType$2, structType, math, zero, posInf, negInf, nan, buf, Exp, Floor, Hypot, Inf, IsInf, IsNaN, Log, Max, NaN, Pow, Signbit, Sqrt, init, Float32bits, Float32frombits, Float64bits, Float64frombits, Abs, max, hypot;
 	js = $packages["github.com/gopherjs/gopherjs/js"];
 	bits = $packages["math/bits"];
 	arrayType = $arrayType($Uint32, 2);
@@ -2594,6 +2594,14 @@ $packages["math"] = (function() {
 		return nan;
 	};
 	$pkg.NaN = NaN;
+	Pow = function(x, y) {
+		var x, y;
+		if ((x === 1) || ((x === -1) && ((y === posInf) || (y === negInf)))) {
+			return 1;
+		}
+		return $parseFloat(math.pow(x, y));
+	};
+	$pkg.Pow = Pow;
 	Signbit = function(x) {
 		var x;
 		return x < 0 || (1 / x === negInf);
@@ -30103,24 +30111,354 @@ $packages["app/tool"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["github.com/aquilax/go-perlin"] = (function() {
+	var $pkg = {}, $init, math, rand, Perlin, arrayType, arrayType$1, arrayType$2, arrayType$3, arrayType$4, arrayType$5, arrayType$6, ptrType, NewPerlin, NewPerlinRandSource, normalize2, normalize3, at2, at3, sCurve, lerp;
+	math = $packages["math"];
+	rand = $packages["math/rand"];
+	Perlin = $pkg.Perlin = $newType(0, $kindStruct, "perlin.Perlin", true, "github.com/aquilax/go-perlin", true, function(alpha_, beta_, n_, p_, g3_, g2_, g1_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.alpha = 0;
+			this.beta = 0;
+			this.n = 0;
+			this.p = arrayType.zero();
+			this.g3 = arrayType$2.zero();
+			this.g2 = arrayType$4.zero();
+			this.g1 = arrayType$5.zero();
+			return;
+		}
+		this.alpha = alpha_;
+		this.beta = beta_;
+		this.n = n_;
+		this.p = p_;
+		this.g3 = g3_;
+		this.g2 = g2_;
+		this.g1 = g1_;
+	});
+	arrayType = $arrayType($Int, 514);
+	arrayType$1 = $arrayType($Float64, 3);
+	arrayType$2 = $arrayType(arrayType$1, 514);
+	arrayType$3 = $arrayType($Float64, 2);
+	arrayType$4 = $arrayType(arrayType$3, 514);
+	arrayType$5 = $arrayType($Float64, 514);
+	arrayType$6 = $arrayType($Float64, 1);
+	ptrType = $ptrType(Perlin);
+	NewPerlin = function(alpha, beta, n, seed) {
+		var _r, alpha, beta, n, seed, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; alpha = $f.alpha; beta = $f.beta; n = $f.n; seed = $f.seed; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = NewPerlinRandSource(alpha, beta, n, rand.NewSource(seed)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPerlin }; } $f._r = _r; $f.alpha = alpha; $f.beta = beta; $f.n = n; $f.seed = seed; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewPerlin = NewPerlin;
+	NewPerlinRandSource = function(alpha, beta, n, source) {
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tmp, _tmp$1, _tmp$2, alpha, beta, i, j, k, n, p, r, source, x, x$1, x$10, x$11, x$12, x$13, x$14, x$15, x$16, x$17, x$18, x$19, x$2, x$20, x$21, x$22, x$23, x$24, x$25, x$26, x$27, x$3, x$4, x$5, x$6, x$7, x$8, x$9, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; alpha = $f.alpha; beta = $f.beta; i = $f.i; j = $f.j; k = $f.k; n = $f.n; p = $f.p; r = $f.r; source = $f.source; x = $f.x; x$1 = $f.x$1; x$10 = $f.x$10; x$11 = $f.x$11; x$12 = $f.x$12; x$13 = $f.x$13; x$14 = $f.x$14; x$15 = $f.x$15; x$16 = $f.x$16; x$17 = $f.x$17; x$18 = $f.x$18; x$19 = $f.x$19; x$2 = $f.x$2; x$20 = $f.x$20; x$21 = $f.x$21; x$22 = $f.x$22; x$23 = $f.x$23; x$24 = $f.x$24; x$25 = $f.x$25; x$26 = $f.x$26; x$27 = $f.x$27; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; x$7 = $f.x$7; x$8 = $f.x$8; x$9 = $f.x$9; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		p = [p];
+		p[0] = new Perlin.ptr(0, 0, 0, arrayType.zero(), arrayType$2.zero(), arrayType$4.zero(), arrayType$5.zero());
+		_tmp = 0;
+		_tmp$1 = 0;
+		_tmp$2 = 0;
+		i = _tmp;
+		j = _tmp$1;
+		k = _tmp$2;
+		p[0].alpha = alpha;
+		p[0].beta = beta;
+		p[0].n = n;
+		r = rand.New(source);
+		i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(i < 256)) { break; } */ if(!(i < 256)) { $s = 2; continue; }
+			(x = p[0].p, ((i < 0 || i >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[i] = i));
+			_r$1 = r.Int(); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			(x$1 = p[0].g1, ((i < 0 || i >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[i] = ((((_r = _r$1 % 512, _r === _r ? _r : $throwRuntimeError("integer divide by zero"))) - 256 >> 0)) / 256));
+			j = 0;
+			/* while (true) { */ case 4:
+				/* if (!(j < 2)) { break; } */ if(!(j < 2)) { $s = 5; continue; }
+				_r$3 = r.Int(); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				(x$2 = (x$3 = p[0].g2, ((i < 0 || i >= x$3.length) ? ($throwRuntimeError("index out of range"), undefined) : x$3[i])), ((j < 0 || j >= x$2.length) ? ($throwRuntimeError("index out of range"), undefined) : x$2[j] = ((((_r$2 = _r$3 % 512, _r$2 === _r$2 ? _r$2 : $throwRuntimeError("integer divide by zero"))) - 256 >> 0)) / 256));
+				j = j + (1) >> 0;
+			/* } */ $s = 4; continue; case 5:
+			normalize2((x$4 = p[0].g2, ((i < 0 || i >= x$4.length) ? ($throwRuntimeError("index out of range"), undefined) : x$4[i])));
+			j = 0;
+			/* while (true) { */ case 7:
+				/* if (!(j < 3)) { break; } */ if(!(j < 3)) { $s = 8; continue; }
+				_r$5 = r.Int(); /* */ $s = 9; case 9: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				(x$5 = (x$6 = p[0].g3, ((i < 0 || i >= x$6.length) ? ($throwRuntimeError("index out of range"), undefined) : x$6[i])), ((j < 0 || j >= x$5.length) ? ($throwRuntimeError("index out of range"), undefined) : x$5[j] = ((((_r$4 = _r$5 % 512, _r$4 === _r$4 ? _r$4 : $throwRuntimeError("integer divide by zero"))) - 256 >> 0)) / 256));
+				j = j + (1) >> 0;
+			/* } */ $s = 7; continue; case 8:
+			normalize3((x$7 = p[0].g3, ((i < 0 || i >= x$7.length) ? ($throwRuntimeError("index out of range"), undefined) : x$7[i])));
+			i = i + (1) >> 0;
+		/* } */ $s = 1; continue; case 2:
+		/* while (true) { */ case 10:
+			/* if (!(i > 0)) { break; } */ if(!(i > 0)) { $s = 11; continue; }
+			k = (x$8 = p[0].p, ((i < 0 || i >= x$8.length) ? ($throwRuntimeError("index out of range"), undefined) : x$8[i]));
+			_r$7 = r.Int(); /* */ $s = 12; case 12: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+			j = (_r$6 = _r$7 % 256, _r$6 === _r$6 ? _r$6 : $throwRuntimeError("integer divide by zero"));
+			(x$10 = p[0].p, ((i < 0 || i >= x$10.length) ? ($throwRuntimeError("index out of range"), undefined) : x$10[i] = (x$9 = p[0].p, ((j < 0 || j >= x$9.length) ? ($throwRuntimeError("index out of range"), undefined) : x$9[j]))));
+			(x$11 = p[0].p, ((j < 0 || j >= x$11.length) ? ($throwRuntimeError("index out of range"), undefined) : x$11[j] = k));
+			i = i - (1) >> 0;
+		/* } */ $s = 10; continue; case 11:
+		i = 0;
+		while (true) {
+			if (!(i < 258)) { break; }
+			(x$13 = p[0].p, x$14 = 256 + i >> 0, ((x$14 < 0 || x$14 >= x$13.length) ? ($throwRuntimeError("index out of range"), undefined) : x$13[x$14] = (x$12 = p[0].p, ((i < 0 || i >= x$12.length) ? ($throwRuntimeError("index out of range"), undefined) : x$12[i]))));
+			(x$16 = p[0].g1, x$17 = 256 + i >> 0, ((x$17 < 0 || x$17 >= x$16.length) ? ($throwRuntimeError("index out of range"), undefined) : x$16[x$17] = (x$15 = p[0].g1, ((i < 0 || i >= x$15.length) ? ($throwRuntimeError("index out of range"), undefined) : x$15[i]))));
+			j = 0;
+			while (true) {
+				if (!(j < 2)) { break; }
+				(x$20 = (x$21 = p[0].g2, x$22 = 256 + i >> 0, ((x$22 < 0 || x$22 >= x$21.length) ? ($throwRuntimeError("index out of range"), undefined) : x$21[x$22])), ((j < 0 || j >= x$20.length) ? ($throwRuntimeError("index out of range"), undefined) : x$20[j] = (x$18 = (x$19 = p[0].g2, ((i < 0 || i >= x$19.length) ? ($throwRuntimeError("index out of range"), undefined) : x$19[i])), ((j < 0 || j >= x$18.length) ? ($throwRuntimeError("index out of range"), undefined) : x$18[j]))));
+				j = j + (1) >> 0;
+			}
+			j = 0;
+			while (true) {
+				if (!(j < 3)) { break; }
+				(x$25 = (x$26 = p[0].g3, x$27 = 256 + i >> 0, ((x$27 < 0 || x$27 >= x$26.length) ? ($throwRuntimeError("index out of range"), undefined) : x$26[x$27])), ((j < 0 || j >= x$25.length) ? ($throwRuntimeError("index out of range"), undefined) : x$25[j] = (x$23 = (x$24 = p[0].g3, ((i < 0 || i >= x$24.length) ? ($throwRuntimeError("index out of range"), undefined) : x$24[i])), ((j < 0 || j >= x$23.length) ? ($throwRuntimeError("index out of range"), undefined) : x$23[j]))));
+				j = j + (1) >> 0;
+			}
+			i = i + (1) >> 0;
+		}
+		$s = -1; return p[0];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPerlinRandSource }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f.alpha = alpha; $f.beta = beta; $f.i = i; $f.j = j; $f.k = k; $f.n = n; $f.p = p; $f.r = r; $f.source = source; $f.x = x; $f.x$1 = x$1; $f.x$10 = x$10; $f.x$11 = x$11; $f.x$12 = x$12; $f.x$13 = x$13; $f.x$14 = x$14; $f.x$15 = x$15; $f.x$16 = x$16; $f.x$17 = x$17; $f.x$18 = x$18; $f.x$19 = x$19; $f.x$2 = x$2; $f.x$20 = x$20; $f.x$21 = x$21; $f.x$22 = x$22; $f.x$23 = x$23; $f.x$24 = x$24; $f.x$25 = x$25; $f.x$26 = x$26; $f.x$27 = x$27; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.x$7 = x$7; $f.x$8 = x$8; $f.x$9 = x$9; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewPerlinRandSource = NewPerlinRandSource;
+	normalize2 = function(v) {
+		var s, v;
+		s = math.Sqrt((v.nilCheck, v[0]) * (v.nilCheck, v[0]) + (v.nilCheck, v[1]) * (v.nilCheck, v[1]));
+		v.nilCheck, v[0] = (v.nilCheck, v[0]) / s;
+		v.nilCheck, v[1] = (v.nilCheck, v[1]) / s;
+	};
+	normalize3 = function(v) {
+		var s, v;
+		s = math.Sqrt((v.nilCheck, v[0]) * (v.nilCheck, v[0]) + (v.nilCheck, v[1]) * (v.nilCheck, v[1]) + (v.nilCheck, v[2]) * (v.nilCheck, v[2]));
+		v.nilCheck, v[0] = (v.nilCheck, v[0]) / s;
+		v.nilCheck, v[1] = (v.nilCheck, v[1]) / s;
+		v.nilCheck, v[2] = (v.nilCheck, v[2]) / s;
+	};
+	at2 = function(rx, ry, q) {
+		var q, rx, ry;
+		return rx * q[0] + ry * q[1];
+	};
+	at3 = function(rx, ry, rz, q) {
+		var q, rx, ry, rz;
+		return rx * q[0] + ry * q[1] + rz * q[2];
+	};
+	sCurve = function(t) {
+		var t;
+		return t * t * (3 - 2 * t);
+	};
+	lerp = function(t, a, b) {
+		var a, b, t;
+		return a + t * (b - a);
+	};
+	Perlin.ptr.prototype.noise1 = function(arg) {
+		var arg, bx0, bx1, p, rx0, rx1, sx, t, u, v, vec, x, x$1, x$2, x$3, x$4, x$5;
+		p = this;
+		vec = arrayType$6.zero();
+		vec[0] = arg;
+		t = vec[0] + 4096;
+		bx0 = ((t >> 0)) & 255;
+		bx1 = ((bx0 + 1 >> 0)) & 255;
+		rx0 = t - (((t >> 0)));
+		rx1 = rx0 - 1;
+		sx = sCurve(rx0);
+		u = rx0 * (x = p.g1, x$1 = (x$2 = p.p, ((bx0 < 0 || bx0 >= x$2.length) ? ($throwRuntimeError("index out of range"), undefined) : x$2[bx0])), ((x$1 < 0 || x$1 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[x$1]));
+		v = rx1 * (x$3 = p.g1, x$4 = (x$5 = p.p, ((bx1 < 0 || bx1 >= x$5.length) ? ($throwRuntimeError("index out of range"), undefined) : x$5[bx1])), ((x$4 < 0 || x$4 >= x$3.length) ? ($throwRuntimeError("index out of range"), undefined) : x$3[x$4]));
+		return lerp(sx, u, v);
+	};
+	Perlin.prototype.noise1 = function(arg) { return this.$val.noise1(arg); };
+	Perlin.ptr.prototype.noise2 = function(vec) {
+		var a, b, b00, b01, b10, b11, bx0, bx1, by0, by1, i, j, p, q, rx0, rx1, ry0, ry1, sx, sy, t, u, v, vec, x, x$1, x$10, x$11, x$12, x$13, x$2, x$3, x$4, x$5, x$6, x$7, x$8, x$9;
+		p = this;
+		t = vec[0] + 4096;
+		bx0 = ((t >> 0)) & 255;
+		bx1 = ((bx0 + 1 >> 0)) & 255;
+		rx0 = t - (((t >> 0)));
+		rx1 = rx0 - 1;
+		t = vec[1] + 4096;
+		by0 = ((t >> 0)) & 255;
+		by1 = ((by0 + 1 >> 0)) & 255;
+		ry0 = t - (((t >> 0)));
+		ry1 = ry0 - 1;
+		i = (x = p.p, ((bx0 < 0 || bx0 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[bx0]));
+		j = (x$1 = p.p, ((bx1 < 0 || bx1 >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[bx1]));
+		b00 = (x$2 = p.p, x$3 = i + by0 >> 0, ((x$3 < 0 || x$3 >= x$2.length) ? ($throwRuntimeError("index out of range"), undefined) : x$2[x$3]));
+		b10 = (x$4 = p.p, x$5 = j + by0 >> 0, ((x$5 < 0 || x$5 >= x$4.length) ? ($throwRuntimeError("index out of range"), undefined) : x$4[x$5]));
+		b01 = (x$6 = p.p, x$7 = i + by1 >> 0, ((x$7 < 0 || x$7 >= x$6.length) ? ($throwRuntimeError("index out of range"), undefined) : x$6[x$7]));
+		b11 = (x$8 = p.p, x$9 = j + by1 >> 0, ((x$9 < 0 || x$9 >= x$8.length) ? ($throwRuntimeError("index out of range"), undefined) : x$8[x$9]));
+		sx = sCurve(rx0);
+		sy = sCurve(ry0);
+		q = $clone((x$10 = p.g2, ((b00 < 0 || b00 >= x$10.length) ? ($throwRuntimeError("index out of range"), undefined) : x$10[b00])), arrayType$3);
+		u = at2(rx0, ry0, $clone(q, arrayType$3));
+		arrayType$3.copy(q, (x$11 = p.g2, ((b10 < 0 || b10 >= x$11.length) ? ($throwRuntimeError("index out of range"), undefined) : x$11[b10])));
+		v = at2(rx1, ry0, $clone(q, arrayType$3));
+		a = lerp(sx, u, v);
+		arrayType$3.copy(q, (x$12 = p.g2, ((b01 < 0 || b01 >= x$12.length) ? ($throwRuntimeError("index out of range"), undefined) : x$12[b01])));
+		u = at2(rx0, ry1, $clone(q, arrayType$3));
+		arrayType$3.copy(q, (x$13 = p.g2, ((b11 < 0 || b11 >= x$13.length) ? ($throwRuntimeError("index out of range"), undefined) : x$13[b11])));
+		v = at2(rx1, ry1, $clone(q, arrayType$3));
+		b = lerp(sx, u, v);
+		return lerp(sy, a, b);
+	};
+	Perlin.prototype.noise2 = function(vec) { return this.$val.noise2(vec); };
+	Perlin.ptr.prototype.noise3 = function(vec) {
+		var a, b, b00, b01, b10, b11, bx0, bx1, by0, by1, bz0, bz1, c, d, i, j, p, q, rx0, rx1, ry0, ry1, rz0, rz1, sy, sz, t, u, v, vec, x, x$1, x$10, x$11, x$12, x$13, x$14, x$15, x$16, x$17, x$18, x$19, x$2, x$20, x$21, x$22, x$23, x$24, x$25, x$3, x$4, x$5, x$6, x$7, x$8, x$9;
+		p = this;
+		t = vec[0] + 4096;
+		bx0 = ((t >> 0)) & 255;
+		bx1 = ((bx0 + 1 >> 0)) & 255;
+		rx0 = t - (((t >> 0)));
+		rx1 = rx0 - 1;
+		t = vec[1] + 4096;
+		by0 = ((t >> 0)) & 255;
+		by1 = ((by0 + 1 >> 0)) & 255;
+		ry0 = t - (((t >> 0)));
+		ry1 = ry0 - 1;
+		t = vec[2] + 4096;
+		bz0 = ((t >> 0)) & 255;
+		bz1 = ((bz0 + 1 >> 0)) & 255;
+		rz0 = t - (((t >> 0)));
+		rz1 = rz0 - 1;
+		i = (x = p.p, ((bx0 < 0 || bx0 >= x.length) ? ($throwRuntimeError("index out of range"), undefined) : x[bx0]));
+		j = (x$1 = p.p, ((bx1 < 0 || bx1 >= x$1.length) ? ($throwRuntimeError("index out of range"), undefined) : x$1[bx1]));
+		b00 = (x$2 = p.p, x$3 = i + by0 >> 0, ((x$3 < 0 || x$3 >= x$2.length) ? ($throwRuntimeError("index out of range"), undefined) : x$2[x$3]));
+		b10 = (x$4 = p.p, x$5 = j + by0 >> 0, ((x$5 < 0 || x$5 >= x$4.length) ? ($throwRuntimeError("index out of range"), undefined) : x$4[x$5]));
+		b01 = (x$6 = p.p, x$7 = i + by1 >> 0, ((x$7 < 0 || x$7 >= x$6.length) ? ($throwRuntimeError("index out of range"), undefined) : x$6[x$7]));
+		b11 = (x$8 = p.p, x$9 = j + by1 >> 0, ((x$9 < 0 || x$9 >= x$8.length) ? ($throwRuntimeError("index out of range"), undefined) : x$8[x$9]));
+		t = sCurve(rx0);
+		sy = sCurve(ry0);
+		sz = sCurve(rz0);
+		q = $clone((x$10 = p.g3, x$11 = b00 + bz0 >> 0, ((x$11 < 0 || x$11 >= x$10.length) ? ($throwRuntimeError("index out of range"), undefined) : x$10[x$11])), arrayType$1);
+		u = at3(rx0, ry0, rz0, $clone(q, arrayType$1));
+		arrayType$1.copy(q, (x$12 = p.g3, x$13 = b10 + bz0 >> 0, ((x$13 < 0 || x$13 >= x$12.length) ? ($throwRuntimeError("index out of range"), undefined) : x$12[x$13])));
+		v = at3(rx1, ry0, rz0, $clone(q, arrayType$1));
+		a = lerp(t, u, v);
+		arrayType$1.copy(q, (x$14 = p.g3, x$15 = b01 + bz0 >> 0, ((x$15 < 0 || x$15 >= x$14.length) ? ($throwRuntimeError("index out of range"), undefined) : x$14[x$15])));
+		u = at3(rx0, ry1, rz0, $clone(q, arrayType$1));
+		arrayType$1.copy(q, (x$16 = p.g3, x$17 = b11 + bz0 >> 0, ((x$17 < 0 || x$17 >= x$16.length) ? ($throwRuntimeError("index out of range"), undefined) : x$16[x$17])));
+		v = at3(rx1, ry1, rz0, $clone(q, arrayType$1));
+		b = lerp(t, u, v);
+		c = lerp(sy, a, b);
+		arrayType$1.copy(q, (x$18 = p.g3, x$19 = b00 + bz1 >> 0, ((x$19 < 0 || x$19 >= x$18.length) ? ($throwRuntimeError("index out of range"), undefined) : x$18[x$19])));
+		u = at3(rx0, ry0, rz1, $clone(q, arrayType$1));
+		arrayType$1.copy(q, (x$20 = p.g3, x$21 = b10 + bz1 >> 0, ((x$21 < 0 || x$21 >= x$20.length) ? ($throwRuntimeError("index out of range"), undefined) : x$20[x$21])));
+		v = at3(rx1, ry0, rz1, $clone(q, arrayType$1));
+		a = lerp(t, u, v);
+		arrayType$1.copy(q, (x$22 = p.g3, x$23 = b01 + bz1 >> 0, ((x$23 < 0 || x$23 >= x$22.length) ? ($throwRuntimeError("index out of range"), undefined) : x$22[x$23])));
+		u = at3(rx0, ry1, rz1, $clone(q, arrayType$1));
+		arrayType$1.copy(q, (x$24 = p.g3, x$25 = b11 + bz1 >> 0, ((x$25 < 0 || x$25 >= x$24.length) ? ($throwRuntimeError("index out of range"), undefined) : x$24[x$25])));
+		v = at3(rx1, ry1, rz1, $clone(q, arrayType$1));
+		b = lerp(t, u, v);
+		d = lerp(sy, a, b);
+		return lerp(sz, c, d);
+	};
+	Perlin.prototype.noise3 = function(vec) { return this.$val.noise3(vec); };
+	Perlin.ptr.prototype.Noise1D = function(x) {
+		var _tmp, _tmp$1, i, p, px, scale, sum, val, x;
+		p = this;
+		scale = 1;
+		_tmp = 0;
+		_tmp$1 = 0;
+		sum = _tmp;
+		val = _tmp$1;
+		px = x;
+		i = 0;
+		while (true) {
+			if (!(i < p.n)) { break; }
+			val = p.noise1(px);
+			sum = sum + (val / scale);
+			scale = scale * (p.alpha);
+			px = px * (p.beta);
+			i = i + (1) >> 0;
+		}
+		return sum;
+	};
+	Perlin.prototype.Noise1D = function(x) { return this.$val.Noise1D(x); };
+	Perlin.ptr.prototype.Noise2D = function(x, y) {
+		var _tmp, _tmp$1, i, p, px, scale, sum, val, x, y;
+		p = this;
+		scale = 1;
+		_tmp = 0;
+		_tmp$1 = 0;
+		sum = _tmp;
+		val = _tmp$1;
+		px = arrayType$3.zero();
+		px[0] = x;
+		px[1] = y;
+		i = 0;
+		while (true) {
+			if (!(i < p.n)) { break; }
+			val = p.noise2($clone(px, arrayType$3));
+			sum = sum + (val / scale);
+			scale = scale * (p.alpha);
+			px[0] = px[0] * (p.beta);
+			px[1] = px[1] * (p.beta);
+			i = i + (1) >> 0;
+		}
+		return sum;
+	};
+	Perlin.prototype.Noise2D = function(x, y) { return this.$val.Noise2D(x, y); };
+	Perlin.ptr.prototype.Noise3D = function(x, y, z) {
+		var _tmp, _tmp$1, i, p, px, scale, sum, val, x, y, z;
+		p = this;
+		scale = 1;
+		_tmp = 0;
+		_tmp$1 = 0;
+		sum = _tmp;
+		val = _tmp$1;
+		px = arrayType$1.zero();
+		if (z < 0) {
+			return p.Noise2D(x, y);
+		}
+		px[0] = x;
+		px[1] = y;
+		px[2] = z;
+		i = 0;
+		while (true) {
+			if (!(i < p.n)) { break; }
+			val = p.noise3($clone(px, arrayType$1));
+			sum = sum + (val / scale);
+			scale = scale * (p.alpha);
+			px[0] = px[0] * (p.beta);
+			px[1] = px[1] * (p.beta);
+			px[2] = px[2] * (p.beta);
+			i = i + (1) >> 0;
+		}
+		return sum;
+	};
+	Perlin.prototype.Noise3D = function(x, y, z) { return this.$val.Noise3D(x, y, z); };
+	ptrType.methods = [{prop: "noise1", name: "noise1", pkg: "github.com/aquilax/go-perlin", typ: $funcType([$Float64], [$Float64], false)}, {prop: "noise2", name: "noise2", pkg: "github.com/aquilax/go-perlin", typ: $funcType([arrayType$3], [$Float64], false)}, {prop: "noise3", name: "noise3", pkg: "github.com/aquilax/go-perlin", typ: $funcType([arrayType$1], [$Float64], false)}, {prop: "Noise1D", name: "Noise1D", pkg: "", typ: $funcType([$Float64], [$Float64], false)}, {prop: "Noise2D", name: "Noise2D", pkg: "", typ: $funcType([$Float64, $Float64], [$Float64], false)}, {prop: "Noise3D", name: "Noise3D", pkg: "", typ: $funcType([$Float64, $Float64, $Float64], [$Float64], false)}];
+	Perlin.init("github.com/aquilax/go-perlin", [{prop: "alpha", name: "alpha", embedded: false, exported: false, typ: $Float64, tag: ""}, {prop: "beta", name: "beta", embedded: false, exported: false, typ: $Float64, tag: ""}, {prop: "n", name: "n", embedded: false, exported: false, typ: $Int, tag: ""}, {prop: "p", name: "p", embedded: false, exported: false, typ: arrayType, tag: ""}, {prop: "g3", name: "g3", embedded: false, exported: false, typ: arrayType$2, tag: ""}, {prop: "g2", name: "g2", embedded: false, exported: false, typ: arrayType$4, tag: ""}, {prop: "g1", name: "g1", embedded: false, exported: false, typ: arrayType$5, tag: ""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = math.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = rand.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["app/tool/helper"] = (function() {
-	var $pkg = {}, $init, tool, data, protocol, uidata, fmt, js, strconv, astar, GenerateMapConfig, UIReducer, sliceType, sliceType$1, sliceType$2, sliceType$3, arrayType, ptrType, sliceType$4, GenerateMap, MoveRangeTree2MoveRange, MoveRangeTree2Path, TerrainID2Terrain, QueryTerrain, BasicExtentCell, QueryMinMaxAttackRange, Min, Max, Clamp, World2Local, Local2World, UIReduce;
+	var $pkg = {}, $init, tool, data, protocol, uidata, fmt, perlin, js, math, strconv, astar, GenerateMapConfig, UIReducer, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, sliceType$5, arrayType, ptrType, sliceType$6, GenerateMap, MoveRangeTree2MoveRange, MoveRangeTree2Path, TerrainID2Terrain, QueryTerrain, BasicExtentCell, QueryMinMaxAttackRange, Min, Max, Clamp, World2Local, Local2World, UIReduce;
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
 	protocol = $packages["app/tool/protocol"];
 	uidata = $packages["app/tool/uidata"];
 	fmt = $packages["fmt"];
+	perlin = $packages["github.com/aquilax/go-perlin"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
+	math = $packages["math"];
 	strconv = $packages["strconv"];
 	astar = $packages["tool/astar"];
-	GenerateMapConfig = $pkg.GenerateMapConfig = $newType(0, $kindStruct, "helper.GenerateMapConfig", true, "app/tool/helper", true, function(Deepsea_, Sea_, Sand_, Grass_, Hill_, City_, Tree_, Award_) {
+	GenerateMapConfig = $pkg.GenerateMapConfig = $newType(0, $kindStruct, "helper.GenerateMapConfig", true, "app/tool/helper", true, function(Deepsea_, Sea_, Sand_, Grass_, Mountain_, City_, Tree_, Award_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Deepsea = 0;
 			this.Sea = 0;
 			this.Sand = 0;
 			this.Grass = 0;
-			this.Hill = 0;
+			this.Mountain = 0;
 			this.City = 0;
 			this.Tree = 0;
 			this.Award = 0;
@@ -30130,53 +30468,110 @@ $packages["app/tool/helper"] = (function() {
 		this.Sea = Sea_;
 		this.Sand = Sand_;
 		this.Grass = Grass_;
-		this.Hill = Hill_;
+		this.Mountain = Mountain_;
 		this.City = City_;
 		this.Tree = Tree_;
 		this.Award = Award_;
 	});
 	UIReducer = $pkg.UIReducer = $newType(4, $kindFunc, "helper.UIReducer", true, "app/tool/helper", true, null);
-	sliceType = $sliceType($emptyInterface);
-	sliceType$1 = $sliceType($Int);
-	sliceType$2 = $sliceType(sliceType$1);
-	sliceType$3 = $sliceType(protocol.Position);
+	sliceType = $sliceType($Float64);
+	sliceType$1 = $sliceType(sliceType);
+	sliceType$2 = $sliceType($Int);
+	sliceType$3 = $sliceType(sliceType$2);
+	sliceType$4 = $sliceType($emptyInterface);
+	sliceType$5 = $sliceType(protocol.Position);
 	arrayType = $arrayType($Int, 2);
 	ptrType = $ptrType(astar.Node);
-	sliceType$4 = $sliceType(astar.NeighborsNode);
-	GenerateMap = function(config, seed, offset, very, w, h, x, y) {
-		var _r, ary, config, generateMapFn, h, i, obj, offset, ret, seed, v, very, w, x, y, y$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; ary = $f.ary; config = $f.config; generateMapFn = $f.generateMapFn; h = $f.h; i = $f.i; obj = $f.obj; offset = $f.offset; ret = $f.ret; seed = $f.seed; v = $f.v; very = $f.very; w = $f.w; x = $f.x; y = $f.y; y$1 = $f.y$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		generateMapFn = $global.generateMap;
-		/* */ if (generateMapFn === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (generateMapFn === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("generateMap.js not found")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return [new sliceType$2([]), $ifaceNil];
-		/* } */ case 2:
-		obj = generateMapFn(seed, x, y, w, h, config.Deepsea, config.Sea, config.Sand, config.Grass, config.Hill, config.City, config.Tree, config.Award, very, offset);
-		ary = new sliceType$1([]);
-		i = 0;
+	sliceType$6 = $sliceType(astar.NeighborsNode);
+	GenerateMap = function(config, seed, offset, very, w, h, sx, sy) {
+		var _r, cityPosX, cityPosY, config, deepseaIn, f, f2, f3, generatedMap, grassIn, h, i, i$1, j, j$1, list, list$1, maxV, noise, noiseList, offset, p, sandIn, seaIn, seed, sx, sy, total, treePosX, treePosY, very, w, x, x$1, x$2, y, y$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; cityPosX = $f.cityPosX; cityPosY = $f.cityPosY; config = $f.config; deepseaIn = $f.deepseaIn; f = $f.f; f2 = $f.f2; f3 = $f.f3; generatedMap = $f.generatedMap; grassIn = $f.grassIn; h = $f.h; i = $f.i; i$1 = $f.i$1; j = $f.j; j$1 = $f.j$1; list = $f.list; list$1 = $f.list$1; maxV = $f.maxV; noise = $f.noise; noiseList = $f.noiseList; offset = $f.offset; p = $f.p; sandIn = $f.sandIn; seaIn = $f.seaIn; seed = $f.seed; sx = $f.sx; sy = $f.sy; total = $f.total; treePosX = $f.treePosX; treePosY = $f.treePosY; very = $f.very; w = $f.w; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; y = $f.y; y$1 = $f.y$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = perlin.NewPerlin(2, 2, 1, seed); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		p = _r;
+		total = config.Deepsea + config.Sea + config.Sand + config.Grass + config.Mountain;
+		deepseaIn = config.Deepsea / total;
+		seaIn = config.Sea / total + deepseaIn;
+		sandIn = config.Sand / total + seaIn;
+		grassIn = config.Grass / total + sandIn;
+		noiseList = new sliceType$1([]);
+		maxV = 0;
+		y = 0;
 		while (true) {
-			if (!(i < $parseInt(obj.length))) { break; }
-			v = obj[i];
-			ary = $append(ary, $parseInt(v) >> 0);
-			i = i + (1) >> 0;
+			if (!(y < h)) { break; }
+			list = new sliceType([]);
+			x = 0;
+			while (true) {
+				if (!(x < w)) { break; }
+				i = ((sx + x >> 0));
+				j = ((sy + y >> 0));
+				noise = p.Noise2D(i * 0.1, j * 0.1);
+				maxV = math.Max(maxV, math.Abs(noise));
+				list = $append(list, noise);
+				x = x + (1) >> 0;
+			}
+			noiseList = $append(noiseList, list);
+			y = y + (1) >> 0;
 		}
-		ret = new sliceType$2([]);
+		generatedMap = new sliceType$3([]);
 		y$1 = 0;
 		while (true) {
 			if (!(y$1 < h)) { break; }
-			ret = $append(ret, $subslice(ary, ($imul(y$1, w)), ((($imul(y$1, w))) + w >> 0)));
+			list$1 = new sliceType$2([]);
+			x$1 = 0;
+			while (true) {
+				if (!(x$1 < w)) { break; }
+				i$1 = ((sx + x$1 >> 0));
+				j$1 = ((sy + y$1 >> 0));
+				f = (x$2 = ((y$1 < 0 || y$1 >= noiseList.$length) ? ($throwRuntimeError("index out of range"), undefined) : noiseList.$array[noiseList.$offset + y$1]), ((x$1 < 0 || x$1 >= x$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$2.$array[x$2.$offset + x$1]));
+				f = f / maxV;
+				f = math.Pow(f, very);
+				f = (f + 1) / 2;
+				f = f + (offset);
+				if (f > grassIn) {
+					list$1 = $append(list$1, 5);
+				} else if (f > sandIn) {
+					cityPosX = math.Floor(i$1 * 0.4) * 0.1 * 3 + 123;
+					cityPosY = math.Floor(j$1 * 0.4) * 0.1 * 3 + 245;
+					f3 = p.Noise2D(cityPosX, cityPosY);
+					f3 = f3 / maxV;
+					f3 = (f3 + 1) / 2;
+					if (f3 > config.City) {
+						treePosX = i$1 * 0.1 * 3 + 300;
+						treePosY = j$1 * 0.1 * 3 + 20;
+						f2 = p.Noise2D(treePosX, treePosY);
+						f2 = f2 / maxV;
+						f2 = (f2 + 1) / 2;
+						if (f2 > config.Tree) {
+							list$1 = $append(list$1, 3);
+						} else {
+							list$1 = $append(list$1, 6);
+						}
+					} else {
+						if ((i$1 === 4) || (i$1 === 8) || (i$1 === 12) || (i$1 === 16) || (j$1 === 4) || (j$1 === 8) || (j$1 === 12) || (j$1 === 16)) {
+							list$1 = $append(list$1, 8);
+						} else {
+							list$1 = $append(list$1, 4);
+						}
+					}
+				} else if (f > seaIn) {
+					list$1 = $append(list$1, 2);
+				} else if (f > deepseaIn) {
+					list$1 = $append(list$1, 1);
+				} else {
+					list$1 = $append(list$1, 0);
+				}
+				x$1 = x$1 + (1) >> 0;
+			}
+			generatedMap = $append(generatedMap, list$1);
 			y$1 = y$1 + (1) >> 0;
 		}
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateMap }; } $f._r = _r; $f.ary = ary; $f.config = config; $f.generateMapFn = generateMapFn; $f.h = h; $f.i = i; $f.obj = obj; $f.offset = offset; $f.ret = ret; $f.seed = seed; $f.v = v; $f.very = very; $f.w = w; $f.x = x; $f.y = y; $f.y$1 = y$1; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [generatedMap, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateMap }; } $f._r = _r; $f.cityPosX = cityPosX; $f.cityPosY = cityPosY; $f.config = config; $f.deepseaIn = deepseaIn; $f.f = f; $f.f2 = f2; $f.f3 = f3; $f.generatedMap = generatedMap; $f.grassIn = grassIn; $f.h = h; $f.i = i; $f.i$1 = i$1; $f.j = j; $f.j$1 = j$1; $f.list = list; $f.list$1 = list$1; $f.maxV = maxV; $f.noise = noise; $f.noiseList = noiseList; $f.offset = offset; $f.p = p; $f.sandIn = sandIn; $f.seaIn = seaIn; $f.seed = seed; $f.sx = sx; $f.sy = sy; $f.total = total; $f.treePosX = treePosX; $f.treePosY = treePosY; $f.very = very; $f.w = w; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.y = y; $f.y$1 = y$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.GenerateMap = GenerateMap;
 	MoveRangeTree2MoveRange = function(tree) {
 		var _entry, _i, _keys, _ref, key, moveRange, tree;
-		moveRange = new sliceType$3([]);
+		moveRange = new sliceType$5([]);
 		_ref = tree;
 		_i = 0;
 		_keys = $keys(_ref);
@@ -30199,7 +30594,7 @@ $packages["app/tool/helper"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _ref = $f._ref; from = $f.from; path = $f.path; posObj = $f.posObj; ret = $f.ret; tree = $f.tree; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_r = astar.BuildPath((_entry = tree[$emptyInterface.keyFor(new protocol.Position(from))], _entry !== undefined ? _entry.v : ptrType.nil)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		path = _r;
-		ret = new sliceType$3([]);
+		ret = new sliceType$5([]);
 		_ref = path;
 		_i = 0;
 		while (true) {
@@ -30221,7 +30616,7 @@ $packages["app/tool/helper"] = (function() {
 		/* */ if (has === false) { $s = 1; continue; }
 		/* */ $s = 2; continue;
 		/* if (has === false) { */ case 1:
-			_r = fmt.Errorf("terrainMapping not found: %v", new sliceType([new $Int(originTerrainID)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("terrainMapping not found: %v", new sliceType$4([new $Int(originTerrainID)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), _r];
 		/* } */ case 2:
 		_tuple$1 = (_entry$1 = data.GameData.Terrain[$String.keyFor(terrainMapping.Terrain)], _entry$1 !== undefined ? [_entry$1.v, true] : [new data.TerrainProto.ptr("", "", 0, 0, 0), false]);
@@ -30230,7 +30625,7 @@ $packages["app/tool/helper"] = (function() {
 		/* */ if (has === false) { $s = 4; continue; }
 		/* */ $s = 5; continue;
 		/* if (has === false) { */ case 4:
-			_r$1 = fmt.Errorf("data.GameData.Terrain not found: %v", new sliceType([new $String(terrainMapping.Terrain)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_r$1 = fmt.Errorf("data.GameData.Terrain not found: %v", new sliceType$4([new $String(terrainMapping.Terrain)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), _r$1];
 		/* } */ case 5:
 		$s = -1; return [terrain, $ifaceNil];
@@ -30275,11 +30670,11 @@ $packages["app/tool/helper"] = (function() {
 		}; })(v), (function(v) { return function(curr) {
 			var _i, _ref, _tmp, _tmp$1, curr, currPos, nextCost, nextPos, offset, offsets, ret, x, y;
 			if (((curr.Cost >> 0)) > 100) {
-				return new sliceType$4([]);
+				return new sliceType$6([]);
 			}
 			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
-			offsets = new sliceType$3([$toNativeArray($kindInt, [0, -1]), $toNativeArray($kindInt, [1, 0]), $toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [-1, 0])]);
-			ret = new sliceType$4([]);
+			offsets = new sliceType$5([$toNativeArray($kindInt, [0, -1]), $toNativeArray($kindInt, [1, 0]), $toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [-1, 0])]);
+			ret = new sliceType$6([]);
 			_ref = offsets;
 			_i = 0;
 			while (true) {
@@ -30305,7 +30700,7 @@ $packages["app/tool/helper"] = (function() {
 		}; })(v)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		tree = _tuple[0];
-		retPos = new sliceType$3([]);
+		retPos = new sliceType$5([]);
 		_ref = tree;
 		_i = 0;
 		_keys = $keys(_ref);
@@ -30332,7 +30727,7 @@ $packages["app/tool/helper"] = (function() {
 		maxRange = _tuple[0];
 		err = _tuple[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new sliceType$3([]), err];
+			$s = -1; return [new sliceType$5([]), err];
 		}
 		ret = maxRange;
 		/* */ if (min < max) { $s = 2; continue; }
@@ -30343,11 +30738,11 @@ $packages["app/tool/helper"] = (function() {
 			minRange = _tuple$1[0];
 			err$1 = _tuple$1[1];
 			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [new sliceType$3([]), err$1];
+				$s = -1; return [new sliceType$5([]), err$1];
 			}
 			ret = protocol.DifferencePosition(maxRange, minRange);
 		/* } */ case 3:
-		ret = protocol.DifferencePosition(ret, new sliceType$3([$toNativeArray($kindInt, [0, 0])]));
+		ret = protocol.DifferencePosition(ret, new sliceType$5([$toNativeArray($kindInt, [0, 0])]));
 		_ref = ret;
 		_i = 0;
 		while (true) {
@@ -30436,7 +30831,7 @@ $packages["app/tool/helper"] = (function() {
 		});
 	};
 	$pkg.UIReduce = UIReduce;
-	GenerateMapConfig.init("", [{prop: "Deepsea", name: "Deepsea", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Sea", name: "Sea", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Sand", name: "Sand", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Grass", name: "Grass", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Hill", name: "Hill", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "City", name: "City", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Tree", name: "Tree", embedded: false, exported: true, typ: $Float32, tag: ""}, {prop: "Award", name: "Award", embedded: false, exported: true, typ: $Float32, tag: ""}]);
+	GenerateMapConfig.init("", [{prop: "Deepsea", name: "Deepsea", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Sea", name: "Sea", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Sand", name: "Sand", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Grass", name: "Grass", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Mountain", name: "Mountain", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "City", name: "City", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Tree", name: "Tree", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Award", name: "Award", embedded: false, exported: true, typ: $Float64, tag: ""}]);
 	UIReducer.init([uidata.UI, $emptyInterface], [uidata.UI, $error], false);
 	$init = function() {
 		$pkg.$init = function() {};
@@ -30446,10 +30841,12 @@ $packages["app/tool/helper"] = (function() {
 		$r = protocol.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = uidata.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = js.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = strconv.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = astar.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.GenerateMapConfigIsland = new GenerateMapConfig.ptr(0.30000001192092896, 0.10000000149011612, 0.10000000149011612, 0.20000000298023224, 0.10000000149011612, 0.10000000149011612, 0.20000000298023224, 0.10000000149011612);
+		$r = perlin.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = astar.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.GenerateMapConfigDefault = new GenerateMapConfig.ptr(0, 1, 0.05, 7, 3, 0.05, 0.3, 0.01);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -39675,7 +40072,7 @@ $packages["app/model/v1"] = (function() {
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; ctx = $f.ctx; err = $f.err; origin = $f.origin; situation = $f.situation; tempMap = $f.tempMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = rand.Seed(new $Int64(0, 0)); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		ctx = $clone(origin, model);
-		_r = helper.GenerateMap($clone(helper.GenerateMapConfigIsland, helper.GenerateMapConfig), 0, 0, 1, 25, 25, 0, 0); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = helper.GenerateMap($clone(helper.GenerateMapConfigDefault, helper.GenerateMapConfig), new $Int64(0, 0), 0, 1, 25, 25, 0, 0); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		tempMap = _tuple[0];
 		err = _tuple[1];

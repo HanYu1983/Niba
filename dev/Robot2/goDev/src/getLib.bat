@@ -4,3 +4,4 @@ go get github.com/cheekybits/genny/generic
 go get github.com/muesli/clusters
 go get github.com/muesli/kmeans
 go get github.com/go-gl/mathgl/mgl64
+go get github.com/aquilax/go-perlin
