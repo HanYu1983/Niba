@@ -28,7 +28,7 @@ func p(old float64, new float64, T float64) float64 {
 }
 
 // SimulatedAnnealing is 當溫度(T)幾乎降到零的時候，模擬退火法基本上就會退化成爬山演算法
-func SimulatedAnnealing(iteration int, T float64, gene IGene) (IGene, error) {
+func SimulatedAnnealing(T float64, iteration int, gene IGene) (IGene, error) {
 	if T <= 0 {
 		return nil, fmt.Errorf("T can not be 0")
 	}
