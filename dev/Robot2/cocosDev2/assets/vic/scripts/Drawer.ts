@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Color } from 'cc';
 import { Instant } from './lib/instanceViewer/Instant';
 import * as ModelType from '../../han/types';
 import { Grids } from './gamePage/Grids';
@@ -13,6 +13,15 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Drawer')
 export class Drawer extends Instant {
+
+    @property(Color)
+    playerColors:Color[] = [];
+
+    static staticPlayerColors:Color[] = [];
+
+    onLoad(){
+        Drawer.staticPlayerColors = this.playerColors;
+    }
 
     getPageByName(name:string){
         for(let i = 0; i < this.childs.length; ++i){
