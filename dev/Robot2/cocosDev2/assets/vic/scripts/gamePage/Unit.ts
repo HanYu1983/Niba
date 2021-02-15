@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node, Vec3, Vec2, Sprite, tween, Color, Label } from 'cc';
+import { Drawer } from '../Drawer';
 import { ImageChanger } from '../lib/ImageChanger';
 const { ccclass, property, requireComponent } = _decorator;
 
@@ -48,7 +49,7 @@ export class Unit extends Component {
     }
 
     showColor(side:number){
-        this.unitImage.color = this.unitColors[side];
+        this.unitImage.color = Drawer.staticPlayerColors[side];
     }
     
     changeUnit(robotName:string){

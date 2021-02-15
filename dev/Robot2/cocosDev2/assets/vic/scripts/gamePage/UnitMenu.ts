@@ -5,7 +5,7 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Vec3 } from 'cc';
 import { Drawer } from '../Drawer';
 import { InstMenu } from '../lib/instanceViewer/InstMenu';
 import * as ModelType from './../../../han/types'
@@ -32,8 +32,13 @@ export class UnitMenu extends InstMenu {
         content[0] = options;
         super.doBuild(content, data);
         
-        const cursor = data.GameplayPages["10"].Cursor;
-        let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 100, 0);
-        this.node.setPosition(gridPos);
+        if(Drawer.getBattleMenuInGame(data)){
+            this.node.setPosition(new Vec3(-83,-2,0));
+        }else{
+            const cursor = data.GameplayPages["10"].Cursor;
+            let gridPos = Drawer.getUnitMenuGroupPosition(cursor[0], cursor[1], 100, 0);
+            this.node.setPosition(gridPos);
+        }
+        
     }
 }

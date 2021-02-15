@@ -14,6 +14,7 @@ import * as ModelType from '../../../han/types';
 import { Unit } from './Unit';
 import { Drawer } from '../Drawer';
 import { Explode } from './Explode';
+import { ShotEffectGenerator } from './ShotEffectGenerator';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -33,6 +34,9 @@ export class LandMap extends Instant {
 
     @property(EffectGenerator)
     effects:EffectGenerator = null;
+
+    @property(ShotEffectGenerator)
+    shotEffects:ShotEffectGenerator = null;
 
     clear(){
         super.clear();
@@ -143,9 +147,6 @@ export class LandMap extends Instant {
                     // 回避動畫
                     actions.push(tween().call(()=>{
                         this.aimNode.node.setScale(Vec3.ZERO);
-
-                        console.log("BattleResultTypeEvade");
-
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Animation)?.play("evade");
                         unitView.getComponent(Unit)?.hideAction();
@@ -161,8 +162,6 @@ export class LandMap extends Instant {
 
                     // 防禦動畫
                     actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeGuard");
-
                         this.aimNode.node.setScale(Vec3.ZERO);
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
