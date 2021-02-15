@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand"
-	"tool/genalg"
+	"tool/optalg"
 )
 
 type LevelGene struct {
@@ -39,7 +39,7 @@ func QuerySuitabilityIDCount(gameMap [][]int) (map[int]int, error) {
 	return _count, nil
 }
 
-func (this LevelGene) CalcFitness() (LevelGene, error) {
+func (this LevelGene) CalcFitness() (optalg.IGene, error) {
 	if _count == nil {
 		_count, err := QuerySuitabilityIDCount(this.Map)
 		if err != nil {
@@ -101,7 +101,7 @@ func (this LevelGene) CalcFitness() (LevelGene, error) {
 func (this LevelGene) GetFitness() float64 {
 	return this.Fitness
 }
-func (this LevelGene) Crossover(b genalg.IGene) (genalg.IGene, error) {
+func (this LevelGene) Crossover(b optalg.IGene) (optalg.IGene, error) {
 	units := map[[2]int]string{}
 	mapH, mapW := len(this.Map), len(this.Map[0])
 	for y := 0; y < mapH; y++ {
@@ -129,7 +129,7 @@ func (this LevelGene) Crossover(b genalg.IGene) (genalg.IGene, error) {
 		TargetCost: this.TargetCost,
 	}, nil
 }
-func (this LevelGene) Mutate() (genalg.IGene, error) {
+func (this LevelGene) Mutate() (optalg.IGene, error) {
 
 	generateOne := func(origin map[[2]int]string) map[[2]int]string {
 		units := map[[2]int]string{}

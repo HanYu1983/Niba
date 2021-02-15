@@ -6,7 +6,7 @@ import (
 	"math"
 	"math/rand"
 	"testing"
-	"tool/genalg"
+	"tool/optalg"
 )
 
 type testLevelGene struct {
@@ -15,7 +15,7 @@ type testLevelGene struct {
 	Fitness float64
 }
 
-func (this testLevelGene) CalcFitness() (testLevelGene, error) {
+func (this testLevelGene) CalcFitness() (optalg.IGene, error) {
 	var fitness float64
 	{
 		var fitnessForRobot float64
@@ -43,13 +43,13 @@ func (this testLevelGene) CalcFitness() (testLevelGene, error) {
 	this.Fitness = fitness
 	return this, nil
 }
-func (this testLevelGene) Crossover(b genalg.IGene) (genalg.IGene, error) {
+func (this testLevelGene) Crossover(b optalg.IGene) (optalg.IGene, error) {
 	return this, nil
 }
 func (this testLevelGene) GetFitness() float64 {
 	return this.Fitness
 }
-func (this testLevelGene) Mutate() (genalg.IGene, error) {
+func (this testLevelGene) Mutate() (optalg.IGene, error) {
 	moveOne := func(origin map[[2]int]string) map[[2]int]string {
 		units := map[[2]int]string{}
 		i := rand.Int() % len(origin)
@@ -76,28 +76,10 @@ func (this testLevelGene) Mutate() (genalg.IGene, error) {
 		return units
 	}
 	this.Units = moveOne(this.Units)
-	return this.CalcFitness()
+	return this, nil
 }
 
 func TestLevelGene(t *testing.T) {
-	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, 25, 25, 0, 0)
-	if err != nil {
-		t.Fatal(err)
-	}
-	gene := testLevelGene{
-		Map:   tempMap,
-		Units: map[[2]int]string{{0, 0}: "gaite_sky", {0, 1}: "gaite_sea"},
-	}
-	gene, err = gene.CalcFitness()
-	if err != nil {
-		t.Fatal(err)
-	}
-	if gene.GetFitness() == 0 {
-		t.Fatal("fitness must not be 0")
-	}
-}
-
-func TestLevelGene2(t *testing.T) {
 	tempMap, err := helper.GenerateMap(helper.GenerateMapConfig{
 		Deepsea:  0,
 		Sea:      1,
@@ -142,13 +124,8 @@ func TestLevelGene2(t *testing.T) {
 		}
 	}
 
-	levelGene, err = levelGene.CalcFitness()
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	var gene genalg.IGene = levelGene
-	gene, err = genalg.SimulatedAnnealing(0.00001, 0.999, 300, gene)
+	var gene optalg.IGene = levelGene
+	gene, err = optalg.SimulatedAnnealing(0.00001, 0.999, 300, gene)
 	if err != nil {
 		t.Fatal(err)
 	}
