@@ -146,3 +146,97 @@ func TestLevelGene(t *testing.T) {
 		}
 	}
 }
+
+// func TestLevelGeneForAstar(t *testing.T) {
+// 	tempMap, err := helper.GenerateMap(helper.GenerateMapConfig{
+// 		Deepsea:  0,
+// 		Sea:      1,
+// 		Sand:     0.05,
+// 		Grass:    5,
+// 		Mountain: 3,
+// 		City:     0.2,
+// 		Tree:     0.3,
+// 		Award:    0.1,
+// 	}, 0, 0, 1, 25, 25, 0, 0)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	count, err := QuerySuitabilityIDCount(tempMap)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if count[data.SuitabilitySea] < 10 || count[data.SuitabilitySea] > 30 {
+// 		t.Fatalf("產生的地圖海域格必須小於10~30格")
+// 	}
+// 	levelGene := testLevelGene{
+// 		Map: tempMap,
+// 		Units: map[[2]int]string{
+// 			{0, 1}: "gaite_sea",
+// 			{0, 2}: "gaite_sea",
+// 			{0, 3}: "gaite_sea",
+// 			{0, 4}: "gaite_sea",
+// 		},
+// 	}
+// 	for pos := range levelGene.Units {
+// 		tid := levelGene.Map[pos[1]][pos[0]]
+// 		terrain, err := helper.TerrainID2Terrain(tid)
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		suit, err := data.GetSuitabilityIDBelongTerrain(terrain)
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		if suit != data.SuitabilityGround {
+// 			t.Fatal("一開始必須都在地上")
+// 		}
+// 	}
+
+// 	var gene optalg.IGene = levelGene
+// 	gene, err = optalg.OptAlgByAstar(
+// 		4,
+// 		func(gene optalg.IGene) float64 {
+// 			return 0
+// 		},
+// 		func(gene optalg.IGene) bool {
+// 			levelGene = gene.(testLevelGene)
+// 			for pos := range levelGene.Units {
+// 				tid := levelGene.Map[pos[1]][pos[0]]
+// 				terrain, err := helper.TerrainID2Terrain(tid)
+// 				if err != nil {
+// 					fmt.Println(err.Error())
+// 					return true
+// 				}
+// 				suit, err := data.GetSuitabilityIDBelongTerrain(terrain)
+// 				if err != nil {
+// 					fmt.Println(err.Error())
+// 					return true
+// 				}
+// 				if suit != data.SuitabilitySea {
+// 					return false
+// 				}
+// 			}
+// 			return true
+// 		},
+// 		300,
+// 		gene)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+
+// 	levelGene = gene.(testLevelGene)
+// 	for pos := range levelGene.Units {
+// 		tid := levelGene.Map[pos[1]][pos[0]]
+// 		terrain, err := helper.TerrainID2Terrain(tid)
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		suit, err := data.GetSuitabilityIDBelongTerrain(terrain)
+// 		if err != nil {
+// 			t.Fatal(err)
+// 		}
+// 		if suit != data.SuitabilitySea {
+// 			t.Fatal("校正完後, 應該都要在海域")
+// 		}
+// 	}
+// }
