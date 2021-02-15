@@ -32,20 +32,18 @@ func HillClimbing(iteration int, gene IGene) (IGene, error) {
 	return gene, nil
 }
 
-// https://ccckmit.github.io/aibook/htm/simulatedAnnealing.html
-// http://web.ntnu.edu.tw/~algo/Optimization.html
-func p(old float64, new float64, T float64) float64 {
-	if new > old {
-		return 1.0
-	}
-	return math.Exp((new - old) / T)
-}
-
 // SimulatedAnnealing is 退火演算法
 // 當溫度(T)幾乎降到零的時候，模擬退火法基本上就會退化成爬山演算法
 func SimulatedAnnealing(T float64, factor float64, iteration int, gene IGene) (IGene, error) {
 	if T <= 0 {
 		return nil, fmt.Errorf("T can not be 0")
+	}
+	// http://web.ntnu.edu.tw/~algo/Optimization.html
+	P := func(old float64, new float64, T float64) float64 {
+		if new > old {
+			return 1.0
+		}
+		return math.Exp((new - old) / T)
 	}
 	for i := 0; i < iteration; i++ {
 		clone, err := gene.Mutate()
@@ -55,7 +53,7 @@ func SimulatedAnnealing(T float64, factor float64, iteration int, gene IGene) (I
 		T = T * factor
 		old := gene.GetFitness()
 		new := clone.GetFitness()
-		pv := p(old, new, T)
+		pv := P(old, new, T)
 		if pv > rand.Float64() {
 			gene = clone
 		}
@@ -63,8 +61,8 @@ func SimulatedAnnealing(T float64, factor float64, iteration int, gene IGene) (I
 	return gene, nil
 }
 
-// ParticleSwarm is PSO粒子群演算法修改
-func ParticleSwarm(iteration int, genes []IGene) ([]IGene, error) {
+// ParticleSwarmOptimization is PSO粒子群演算法修改
+func ParticleSwarmOptimization(iteration int, genes []IGene) ([]IGene, error) {
 	ret := []IGene{}
 	for _, gene := range genes {
 		ret = append(ret, gene)
