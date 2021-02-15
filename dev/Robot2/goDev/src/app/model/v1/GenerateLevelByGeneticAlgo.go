@@ -16,19 +16,6 @@ type LevelGene struct {
 	TargetCost float64
 }
 
-func (this LevelGene) Clone() LevelGene {
-	units := map[[2]int]string{}
-	for k, v := range this.Units {
-		units[k] = v
-	}
-	return LevelGene{
-		Map:        this.Map,
-		Units:      units,
-		Fitness:    this.Fitness,
-		TargetCost: this.TargetCost,
-	}
-}
-
 var (
 	_total int
 	_count map[int]int
