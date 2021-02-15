@@ -1,6 +1,7 @@
 package genalg
 
 import (
+	"fmt"
 	"math"
 	"math/rand"
 )
@@ -18,6 +19,7 @@ func HillClimbing(iteration int, gene IGene) (IGene, error) {
 	return gene, nil
 }
 
+// https://ccckmit.github.io/aibook/htm/simulatedAnnealing.html
 func p(old float64, new float64, T float64) float64 {
 	if new < old {
 		return 1.0
@@ -25,16 +27,22 @@ func p(old float64, new float64, T float64) float64 {
 	return math.Exp((old - new) / T)
 }
 
-// https://ccckmit.github.io/aibook/htm/simulatedAnnealing.html
-func SimulatedAnnealing(iteration int, gene IGene) (IGene, error) {
-	T := 100.0
+// SimulatedAnnealing is 當溫度(T)幾乎降到零的時候，模擬退火法基本上就會退化成爬山演算法
+func SimulatedAnnealing(iteration int, T float64, gene IGene) (IGene, error) {
+	if T <= 0 {
+		return nil, fmt.Errorf("T can not be 0")
+	}
 	for i := 0; i < iteration; i++ {
 		clone, err := gene.Mutate()
 		if err != nil {
-			return gene, err
+			return nil, err
 		}
 		T = T * 0.999
-		if p(1/gene.GetFitness(), 1/clone.GetFitness(), T) > rand.Float64() {
+		// 改用倒數, 因為退火演算法的機率公式是優先選小值為前提
+		old := 1.0 / gene.GetFitness()
+		new := 1.0 / clone.GetFitness()
+		pv := p(old, new, T)
+		if pv > rand.Float64() {
 			gene = clone
 		}
 	}

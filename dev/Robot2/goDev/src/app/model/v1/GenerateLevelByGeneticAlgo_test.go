@@ -148,7 +148,7 @@ func TestLevelGene2(t *testing.T) {
 	}
 
 	var gene genalg.IGene = levelGene
-	gene, err = genalg.HillClimbing(300, gene)
+	gene, err = genalg.SimulatedAnnealing(300, 0.00001, gene)
 	if err != nil {
 		t.Fatal(err)
 	}
