@@ -34,7 +34,7 @@ var (
 		Award:    0.1,
 	}
 	GenerateMapConfigIsland = GenerateMapConfig{
-		Deepsea:  10,
+		Deepsea:  2,
 		Sea:      3,
 		Sand:     0.5,
 		Grass:    1,

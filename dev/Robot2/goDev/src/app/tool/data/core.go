@@ -12,6 +12,17 @@ const (
 	SuitabilityUniverse = 3
 )
 
+func GetSuitabilityIDBelongTerrain(terrain TerrainProto) (int, error) {
+	switch terrain.ID {
+	case "shallowSea", "deepSea":
+		return SuitabilitySea, nil
+	case "mountain", "plain", "forest", "road", "city", "beach", "award":
+		return SuitabilityGround, nil
+	default:
+		return 0, fmt.Errorf("unknown terrain(%v)\n", terrain.ID)
+	}
+}
+
 type RobotProto struct {
 	ID          string
 	Title       string

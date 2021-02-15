@@ -1,18 +1,13 @@
 package v1
 
 import (
-	"app/tool/protocol"
 	"fmt"
 	"strconv"
 )
 
 func QueryRobotMaxEn(model model, robotID string) (int, error) {
 	var err error
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return 0, err
-	}
-	components, err := QueryRobotComponents(model, robot.ID)
+	components, err := QueryRobotComponents(model, robotID)
 	if err != nil {
 		return 0, err
 	}
