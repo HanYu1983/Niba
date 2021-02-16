@@ -3,6 +3,7 @@ package data
 import (
 	"encoding/json"
 	"fmt"
+	"math/rand"
 )
 
 const (
@@ -120,4 +121,12 @@ func init() {
 		fmt.Println(err.Error())
 		return
 	}
+}
+
+func RandRobotProto() (RobotProto, error) {
+	protos := ValsStringRobotProto(GameData.Robot)
+	if len(protos) == 0 {
+		return RobotProto{}, fmt.Errorf("protos's len is zero.")
+	}
+	return protos[rand.Intn(len(protos))], nil
 }

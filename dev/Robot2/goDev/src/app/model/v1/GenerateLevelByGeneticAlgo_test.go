@@ -195,6 +195,7 @@ func TestLevelGeneForAstar(t *testing.T) {
 
 	var gene optalg.IGene = levelGene
 	gene, err = optalg.OptAlgByAstar(
+		4,
 		1,
 		func(gene optalg.IGene) float64 {
 			return 0
@@ -240,4 +241,41 @@ func TestLevelGeneForAstar(t *testing.T) {
 			t.Fatal("校正完後, 應該都要在海域")
 		}
 	}
+}
+
+func TestGenerateLevelByGeneticAlgo(t *testing.T) {
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfig{
+		Deepsea:  5,
+		Sea:      1,
+		Sand:     0.05,
+		Grass:    1,
+		Mountain: 3,
+		City:     0.2,
+		Tree:     0.3,
+		Award:    0.1,
+	}, 0, 0, 1, 25, 25, 0, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	model := Model
+	model.App.Gameplay.Map = tempMap
+	ctx, err := GenerateLevelByGeneticAlgo(model, "0")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var _ = ctx
+
+	countOfGaiteSea := 0
+	for _, robot := range ctx.App.Gameplay.Robots {
+		pos := ctx.App.Gameplay.Positions[robot.ID]
+		robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if robotProto.ID == "gaite_sea" {
+			countOfGaiteSea++
+		}
+		t.Errorf("robotProtoID(%v) pos(%v) suit(%v)\n", robot.ProtoID, pos, robotProto.Suitability)
+	}
+	fmt.Printf("countOfGaiteSea(%v/%v)\n", countOfGaiteSea, len(ctx.App.Gameplay.Robots))
 }

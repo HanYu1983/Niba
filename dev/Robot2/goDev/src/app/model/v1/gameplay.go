@@ -6,17 +6,16 @@ import (
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
-	"math/rand"
 	"tool/log"
 )
 
 func NewModel(origin model, situation interface{}) (model, error) {
-	rand.Seed(0)
+	//rand.Seed(0)
 	ctx := origin
 	const (
 		playerAI1 = "ai1"
 	)
-	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, 25, 25, 0, 0)
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
 	if err != nil {
 		return origin, err
 	}
@@ -83,7 +82,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = GenerateLevel(ctx, playerAI1)
+	ctx, err = GenerateLevelByGeneticAlgo(ctx, playerAI1)
 	if err != nil {
 		return origin, err
 	}

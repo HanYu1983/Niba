@@ -1,9 +1,18 @@
 package optalg
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
-// GeneticAlgorithms is 基因演算法
-func GeneticAlgorithms(mutateRate float64, iteration int, population []IGene) ([]IGene, error) {
+// GeneticAlgorithm is 基因演算法
+func GeneticAlgorithm(mutateRate float64, iteration int, population []IGene) ([]IGene, error) {
+	for i, gene := range population {
+		gene, err := gene.CalcFitness()
+		if err != nil {
+			return nil, err
+		}
+		population[i] = gene
+	}
 	for i := 0; i < iteration; i++ {
 		// 找出最優解來計算後選池(賭輪選擇法)
 		bestGene := GetBest(population)
@@ -27,7 +36,8 @@ func GeneticAlgorithms(mutateRate float64, iteration int, population []IGene) ([
 			}
 			// 突變
 			if rand.Float64() < mutateRate {
-				child, err = child.Mutate()
+				// 加快登頂
+				child, err = HillClimbing(10, child)
 				if err != nil {
 					return nil, err
 				}

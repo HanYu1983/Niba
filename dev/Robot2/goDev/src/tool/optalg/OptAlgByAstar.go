@@ -6,7 +6,9 @@ import (
 )
 
 // OptAlgByAstar is
-func OptAlgByAstar(mutateCount int, estimateF func(IGene) float64, goalF func(IGene) bool, iteration int, gene IGene) (IGene, error) {
+// mutateCount 每次產生新解的個數
+// forwardCount 新解中一定要最少的數目朝目標前進
+func OptAlgByAstar(mutateCount int, forwardCount int, estimateF func(IGene) float64, goalF func(IGene) bool, iteration int, gene IGene) (IGene, error) {
 	gene, err := gene.CalcFitness()
 	if err != nil {
 		return nil, err
@@ -20,13 +22,13 @@ func OptAlgByAstar(mutateCount int, estimateF func(IGene) float64, goalF func(IG
 		func(curr *astar.Node) bool {
 			currIdx := curr.Pather.(int)
 			currGene := geneMapping[currIdx]
-			bestGene = currGene
+			if currGene.GetFitness() > bestGene.GetFitness() {
+				bestGene = currGene
+			}
 			generation++
 			if generation >= iteration {
 				return true
 			}
-			fmt.Println("====")
-			fmt.Println(bestGene.GetFitness())
 			return goalF(gene)
 		},
 		func(curr *astar.Node) []astar.NeighborsNode {
@@ -35,31 +37,27 @@ func OptAlgByAstar(mutateCount int, estimateF func(IGene) float64, goalF func(IG
 			ret := []astar.NeighborsNode{}
 			for i := 0; i < mutateCount; i++ {
 				nextGene := currGene
-				// 挑到更好的解
-				for i := 0; i < iteration; i++ {
-					nextGene, err = currGene.Mutate()
+				if i < forwardCount {
+					nextGene, err = HillClimbing(10, currGene)
 					if err != nil {
 						fmt.Println(err.Error())
 						continue
 					}
-					nextGene, err = nextGene.CalcFitness()
+				} else {
+					nextGene, err = HillClimbing(1, currGene)
 					if err != nil {
 						fmt.Println(err.Error())
 						continue
 					}
-					if nextGene.GetFitness() <= currGene.GetFitness() {
-						continue
-					}
-					// 倒數, 因為要優先選最小值
-					cost := 1.0 / nextGene.GetFitness()
-					currIdx := len(geneMapping)
-					geneMapping = append(geneMapping, nextGene)
-					ret = append(ret, astar.NeighborsNode{
-						Pather: currIdx,
-						Cost:   cost,
-					})
-					break
 				}
+				// 倒數, 因為要優先選最小值
+				cost := 1.0 / nextGene.GetFitness()
+				currIdx := len(geneMapping)
+				geneMapping = append(geneMapping, nextGene)
+				ret = append(ret, astar.NeighborsNode{
+					Pather: currIdx,
+					Cost:   cost,
+				})
 			}
 			return ret
 		},

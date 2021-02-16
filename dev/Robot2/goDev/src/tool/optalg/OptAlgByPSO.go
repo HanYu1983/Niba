@@ -1,7 +1,7 @@
 package optalg
 
-// ParticleSwarmOptimization is PSO粒子群演算法修改
-func ParticleSwarmOptimization(iteration int, genes []IGene) ([]IGene, error) {
+// OptAlgByPSO is PSO粒子群演算法修改
+func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 	ret := []IGene{}
 	for _, gene := range genes {
 		gene, err := gene.CalcFitness()
@@ -20,7 +20,7 @@ func ParticleSwarmOptimization(iteration int, genes []IGene) ([]IGene, error) {
 	for i := 0; i < iteration; i++ {
 		for j := 0; j < len(ret); j++ {
 			// 突變
-			nextGene, err := ret[j].Mutate()
+			nextGene, err := HillClimbing(10, ret[j])
 			if err != nil {
 				return nil, err
 			}
