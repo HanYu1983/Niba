@@ -23,7 +23,7 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 	// 群體最佳
 	globalBestGene := GetBest(genes)
 	for i := 0; i < iteration; i++ {
-		fmt.Printf("[OptAlgByPSO] ieration(%v)\n", i)
+		fmt.Printf("[OptAlgByPSO] ieration(%v/%v)\n", i, iteration)
 		time.Sleep(10)
 		for j := 0; j < len(ret); j++ {
 			// 突變

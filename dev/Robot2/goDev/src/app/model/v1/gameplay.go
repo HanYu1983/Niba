@@ -36,7 +36,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	ctx.App.Gameplay.AIModel = AIModel{}
 	ctx.App.Money = 100000
 	ctx.App.Gameplay.Map = tempMap
-	ctx.App.Gameplay.Units = []string{"0", "1"}
+	ctx.App.Gameplay.Units = []string{}
 	ctx.App.Gameplay.Players = map[string]protocol.Player{
 		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
 		playerAI1:               {ID: playerAI1, GroupID: "1"},

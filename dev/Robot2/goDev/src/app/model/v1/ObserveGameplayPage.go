@@ -35,6 +35,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	leftTop := gameplayPage.Camera
 	rightBottom := protocol.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
 	gameplayPage.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
+	//gameplayPage.Units = model.App.Gameplay.Units
 	// local position
 	localPosDict := map[string]protocol.Position{}
 	for _, id := range gameplayPage.Units {

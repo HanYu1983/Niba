@@ -82,23 +82,6 @@ func (v model) OnClickSystemMenu(origin interface{}, selection string) (interfac
 	return OnClickSystemMenu(origin.(uidata.UI), selection)
 }
 
-func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
-	var err error
-	ctx := origin
-	switch selection {
-	case uidata.MenuOptionTest:
-		model := ctx.Model.(model)
-		model.App.Gameplay.Units = []string{}
-		model.App.Gameplay.Robots = map[string]protocol.Robot{}
-		model, err = GenerateLevelByGeneticAlgo(model, "ai1")
-		if err != nil {
-			return origin, err
-		}
-		ctx.Model = model
-	}
-	return ctx, nil
-}
-
 // IGameplayModel
 func (v model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui.(uidata.UI), id)

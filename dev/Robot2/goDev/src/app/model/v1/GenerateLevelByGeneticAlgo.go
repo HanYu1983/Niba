@@ -265,21 +265,22 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 func GenerateLevelByGeneticAlgo(origin model, playerID string) (model, error) {
 	var err error
 	ctx := origin
+	mapW, mapH := len(ctx.App.Gameplay.Map), len(ctx.App.Gameplay.Map[0])
+
 	genes := []optalg.IGene{}
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 5; i++ {
 		robotProto, err := data.RandRobotProto()
 		if err != nil {
 			return origin, err
 		}
-		fmt.Println(robotProto.ID)
+		units := map[[2]int]string{}
+		for j := 0; j < 20; j++ {
+			pos := [2]int{rand.Intn(mapW), rand.Intn(mapH)}
+			units[pos] = robotProto.ID
+		}
 		gene := LevelGene{
-			Map: ctx.App.Gameplay.Map,
-			Units: map[[2]int]string{
-				{0, 1}: robotProto.ID,
-				{0, 2}: robotProto.ID,
-				{0, 3}: robotProto.ID,
-				{0, 4}: robotProto.ID,
-			},
+			Map:   ctx.App.Gameplay.Map,
+			Units: units,
 		}
 		genes = append(genes, gene)
 	}
