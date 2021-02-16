@@ -7,46 +7,66 @@ import (
 
 // OptAlgByAstar is
 func OptAlgByAstar(mutateCount int, estimateF func(IGene) float64, goalF func(IGene) bool, iteration int, gene IGene) (IGene, error) {
-	i := 0
-	tree, _ := astar.ShortedPathTree(gene,
+	gene, err := gene.CalcFitness()
+	if err != nil {
+		return nil, err
+	}
+	geneMapping := []IGene{}
+	currIdx := len(geneMapping)
+	geneMapping = append(geneMapping, gene)
+	bestGene := gene
+	generation := 0
+	astar.ShortedPathTree(currIdx,
 		func(curr *astar.Node) bool {
-			i++
-			if i >= iteration {
+			currIdx := curr.Pather.(int)
+			currGene := geneMapping[currIdx]
+			bestGene = currGene
+			generation++
+			if generation >= iteration {
 				return true
 			}
-			gene := curr.Pather.(IGene)
+			fmt.Println("====")
+			fmt.Println(bestGene.GetFitness())
 			return goalF(gene)
 		},
 		func(curr *astar.Node) []astar.NeighborsNode {
-			gene := curr.Pather.(IGene)
+			currIdx := curr.Pather.(int)
+			currGene := geneMapping[currIdx]
 			ret := []astar.NeighborsNode{}
 			for i := 0; i < mutateCount; i++ {
-				nextGene, err := gene.Mutate()
-				if err != nil {
-					fmt.Println(err.Error())
-					continue
+				nextGene := currGene
+				// 挑到更好的解
+				for i := 0; i < iteration; i++ {
+					nextGene, err = currGene.Mutate()
+					if err != nil {
+						fmt.Println(err.Error())
+						continue
+					}
+					nextGene, err = nextGene.CalcFitness()
+					if err != nil {
+						fmt.Println(err.Error())
+						continue
+					}
+					if nextGene.GetFitness() <= currGene.GetFitness() {
+						continue
+					}
+					// 倒數, 因為要優先選最小值
+					cost := 1.0 / nextGene.GetFitness()
+					currIdx := len(geneMapping)
+					geneMapping = append(geneMapping, nextGene)
+					ret = append(ret, astar.NeighborsNode{
+						Pather: currIdx,
+						Cost:   cost,
+					})
+					break
 				}
-				nextGene, err = nextGene.CalcFitness()
-				if err != nil {
-					fmt.Println(err.Error())
-					continue
-				}
-				// 倒數, 因為要優先選最小值
-				cost := 1.0 / nextGene.GetFitness()
-				ret = append(ret, astar.NeighborsNode{
-					Pather: nextGene,
-					Cost:   cost,
-				})
 			}
-			return nil
+			return ret
 		},
 		func(curr *astar.Node) float64 {
-			gene := curr.Pather.(IGene)
-			return estimateF(gene)
+			currIdx := curr.Pather.(int)
+			currGene := geneMapping[currIdx]
+			return estimateF(currGene)
 		})
-	var genes []IGene
-	for gene := range tree {
-		genes = append(genes, gene.(IGene))
-	}
-	return GetBest(genes), nil
+	return bestGene, nil
 }
