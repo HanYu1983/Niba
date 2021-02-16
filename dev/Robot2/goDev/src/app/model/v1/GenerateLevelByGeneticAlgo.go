@@ -49,6 +49,10 @@ func (this LevelGene) CalcFitness() (optalg.IGene, error) {
 			_total += c
 		}
 	}
+	if len(this.Units) == 0 {
+		this.Fitness = 0.0
+		return this, nil
+	}
 	var fitness float64
 	{
 		var fitnessForRobot float64
@@ -58,25 +62,25 @@ func (this LevelGene) CalcFitness() (optalg.IGene, error) {
 				return this, err
 			}
 			// 所在位置
-			// {
-			// 	tid := this.Map[pos[1]][pos[0]]
-			// 	terrain, err := helper.TerrainID2Terrain(tid)
-			// 	if err != nil {
-			// 		return this, err
-			// 	}
-			// 	suit, err := data.GetSuitabilityIDBelongTerrain(terrain)
-			// 	if err != nil {
-			// 		return this, err
-			// 	}
-			// 	// fitnessForRobot += math.Max(robotProto.Suitability[data.SuitabilitySky], robotProto.Suitability[suit]) * 10
-			// 	fitnessForRobot += robotProto.Suitability[suit] * 10
-			// }
+			{
+				tid := this.Map[pos[1]][pos[0]]
+				terrain, err := helper.TerrainID2Terrain(tid)
+				if err != nil {
+					return this, err
+				}
+				suit, err := data.GetSuitabilityIDBelongTerrain(terrain)
+				if err != nil {
+					return this, err
+				}
+				// fitnessForRobot += math.Max(robotProto.Suitability[data.SuitabilitySky], robotProto.Suitability[suit]) * 10
+				fitnessForRobot += robotProto.Suitability[suit] * 10
+			}
 			// 平均地型適性
 			// groundScore := (float64(_count[data.SuitabilityGround]) / float64(_total)) * robotProto.Suitability[data.SuitabilityGround]
 			// seaScore := (float64(_count[data.SuitabilitySea]) / float64(_total)) * robotProto.Suitability[data.SuitabilitySea]
 			// skyScore := robotProto.Suitability[data.SuitabilitySky]
 			// fitnessForRobot += (groundScore + seaScore + skyScore)
-			// // 武器分數
+			// 武器分數
 			// for _, weaponProtoID := range robotProto.Weapons {
 			// 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weaponProtoID)
 			// 	if err != nil {
@@ -86,18 +90,18 @@ func (this LevelGene) CalcFitness() (optalg.IGene, error) {
 			// 	groundScore := (float64(_count[data.SuitabilityGround]) / float64(_total)) * weaponProto.Suitability[data.SuitabilityGround]
 			// 	seaScore := (float64(_count[data.SuitabilitySea]) / float64(_total)) * weaponProto.Suitability[data.SuitabilitySea]
 			// 	skyScore := weaponProto.Suitability[data.SuitabilitySky]
-			// 	fitnessForRobot += (groundScore + seaScore + skyScore) * 5
+			// 	fitnessForRobot += (groundScore + seaScore + skyScore) / float64(len(robotProto.Weapons))
 			// }
 			// // 成本分數
-			var _ = pos
-			if robotProto.Cost == 0 {
-				return this, fmt.Errorf("cost must not 0. (%v)", robotProto)
-			}
-			fitnessForRobot += float64(robotProto.Cost)
+			// var _ = pos
+			// if robotProto.Cost == 0 {
+			// 	return this, fmt.Errorf("cost must not 0. (%v)", robotProto)
+			// }
+			// fitnessForRobot += float64(robotProto.Cost)
 		}
 		fitness += fitnessForRobot
 	}
-	this.Fitness = fitness
+	this.Fitness = fitness / float64(len(this.Units))
 	return this, nil
 }
 func (this LevelGene) GetFitness() float64 {
@@ -174,15 +178,15 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 			units[k] = v
 		}
 		mapH, mapW := len(this.Map), len(this.Map[0])
-		for i := 0; i < 3; i++ {
-			pos := [2]int{rand.Int() % mapW, rand.Int() % mapH}
+		for i := 0; i < 10; i++ {
+			pos := [2]int{rand.Intn(mapW), rand.Intn(mapH)}
 			if _, has := units[pos]; has {
 				continue
 			}
 			robotProto, err := data.RandRobotProto()
 			if err != nil {
 				fmt.Println(err.Error())
-				break
+				continue
 			}
 			units[pos] = robotProto.ID
 			break
@@ -195,7 +199,7 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 			return origin
 		}
 		units := map[[2]int]string{}
-		i := rand.Int() % len(origin)
+		i := rand.Intn(len(origin))
 		var j int
 		for k, v := range origin {
 			if j == i {
@@ -213,7 +217,7 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 			return origin
 		}
 		units := map[[2]int]string{}
-		i := rand.Int() % len(origin)
+		i := rand.Intn(len(origin))
 		var j int
 		var removedValue string
 		for k, v := range origin {
@@ -237,21 +241,24 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 		return units
 	}
 
-	// if len(this.Units) > 20 {
-	// 	this.Units = deleteOne(this.Units)
-	// 	return this, nil
-	// }
+	if len(this.Units) > 20 {
+		this.Units = deleteOne(this.Units)
+		return this, nil
+	}
 
-	// switch rand.Intn(3) {
-	// case 0:
-	// 	this.Units = generateOne(this.Units)
-	// case 1:
-	// 	this.Units = deleteOne(this.Units)
-	// case 2:
-	// 	this.Units = moveOne(this.Units)
-	// }
-	var _, _ = generateOne, deleteOne
-	this.Units = moveOne(this.Units)
+	idx := rand.Float64()
+
+	switch {
+	case idx < 0.05:
+		this.Units = deleteOne(this.Units)
+		this.Units = generateOne(this.Units)
+	case idx < 0.2:
+		this.Units = generateOne(this.Units)
+	default:
+		this.Units = moveOne(this.Units)
+	}
+	// var _, _ = generateOne, deleteOne
+	// this.Units = moveOne(this.Units)
 
 	return this, nil
 }
@@ -260,19 +267,6 @@ func GenerateLevelByGeneticAlgo(origin model, playerID string) (model, error) {
 	ctx := origin
 	genes := []optalg.IGene{}
 	for i := 0; i < 10; i++ {
-		// if i == 0 {
-		// 	gene := LevelGene{
-		// 		Map: ctx.App.Gameplay.Map,
-		// 		Units: map[[2]int]string{
-		// 			{0, 1}: "gaite_sea",
-		// 			{0, 2}: "gaite_sea",
-		// 			{0, 3}: "gaite_sea",
-		// 			{0, 4}: "gaite_sea",
-		// 		},
-		// 	}
-		// 	genes = append(genes, gene)
-		// 	continue
-		// }
 		robotProto, err := data.RandRobotProto()
 		if err != nil {
 			return origin, err
@@ -289,7 +283,7 @@ func GenerateLevelByGeneticAlgo(origin model, playerID string) (model, error) {
 		}
 		genes = append(genes, gene)
 	}
-	genes, err = optalg.OptAlgByPSO(300, genes)
+	genes, err = optalg.OptAlgByPSO(100, genes)
 	if err != nil {
 		return origin, err
 	}

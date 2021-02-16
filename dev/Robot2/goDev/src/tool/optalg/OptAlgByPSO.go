@@ -1,5 +1,10 @@
 package optalg
 
+import (
+	"fmt"
+	"time"
+)
+
 // OptAlgByPSO is PSO粒子群演算法修改
 func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 	ret := []IGene{}
@@ -18,6 +23,8 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 	// 群體最佳
 	globalBestGene := GetBest(genes)
 	for i := 0; i < iteration; i++ {
+		fmt.Printf("[OptAlgByPSO] ieration(%v)\n", i)
+		time.Sleep(10)
 		for j := 0; j < len(ret); j++ {
 			// 突變
 			nextGene, err := HillClimbing(10, ret[j])
@@ -44,6 +51,7 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 			// 更新最佳解
 			if nextGene.GetFitness() > bestGene.GetFitness() {
 				bestGenes[j] = nextGene
+				//fmt.Println(globalBestGene.GetFitness())
 			}
 			if nextGene.GetFitness() > globalBestGene.GetFitness() {
 				globalBestGene = nextGene

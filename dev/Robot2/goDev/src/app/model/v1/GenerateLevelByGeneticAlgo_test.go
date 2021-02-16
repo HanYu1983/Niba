@@ -246,10 +246,10 @@ func TestLevelGeneForAstar(t *testing.T) {
 func TestGenerateLevelByGeneticAlgo(t *testing.T) {
 	tempMap, err := helper.GenerateMap(helper.GenerateMapConfig{
 		Deepsea:  5,
-		Sea:      1,
+		Sea:      3,
 		Sand:     0.05,
 		Grass:    1,
-		Mountain: 3,
+		Mountain: 1,
 		City:     0.2,
 		Tree:     0.3,
 		Award:    0.1,
@@ -275,7 +275,7 @@ func TestGenerateLevelByGeneticAlgo(t *testing.T) {
 		if robotProto.ID == "gaite_sea" {
 			countOfGaiteSea++
 		}
-		t.Errorf("robotProtoID(%v) pos(%v) suit(%v)\n", robot.ProtoID, pos, robotProto.Suitability)
+		fmt.Printf("robotProtoID(%v) pos(%v) suit(%v)\n", robot.ProtoID, pos, robotProto.Suitability)
 	}
-	fmt.Printf("countOfGaiteSea(%v/%v)\n", countOfGaiteSea, len(ctx.App.Gameplay.Robots))
+	t.Errorf("countOfGaiteSea(%v/%v)\n", countOfGaiteSea, len(ctx.App.Gameplay.Robots))
 }

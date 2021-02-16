@@ -16,4 +16,5 @@ type IFlow interface {
 	OnDisableRobotMenu(origin interface{}) (interface{}, error)
 	OnEnableBattleMenu(origin interface{}, robotID string, weaponID string, targetRobotID string) (interface{}, error)
 	OnDisableBattleMenu(origin interface{}) (interface{}, error)
+	OnClickSystemMenu(origin interface{}, selection string) (interface{}, error)
 }

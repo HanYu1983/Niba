@@ -27,7 +27,12 @@ func SystemMenuPhase(origin uidata.UI) (uidata.UI, string, error) {
 		}
 		break
 	}
+	ctxObj, err := ctx.Model.OnClickSystemMenu(ctx, selection)
+	if err != nil {
+		return origin, "", err
+	}
+	ctx = ctxObj.(uidata.UI)
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, false)
 	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "end")
-	return origin, selection, nil
+	return ctx, selection, nil
 }

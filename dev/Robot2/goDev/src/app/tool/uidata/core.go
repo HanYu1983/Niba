@@ -157,6 +157,7 @@ const (
 	MenuOptionConfirm   = "MenuOptionConfirm"
 
 	MenuOptionTurnDone = "MenuOptionTurnDone"
+	MenuOptionTest     = "MenuOptionTest"
 )
 
 //
