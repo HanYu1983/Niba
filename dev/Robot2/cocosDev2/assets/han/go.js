@@ -39460,6 +39460,374 @@ $packages["app/model/v1"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: EnemyTurnPhase }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.activePlayer = activePlayer; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.isRobotDone = isRobotDone; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.EnemyTurnPhase = EnemyTurnPhase;
+	Model.ptr.prototype.BuyRobot = function(id) {
+		var _r, _tuple, err, id, model, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.BuyRobot($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyRobot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.BuyRobot = function(id) { return this.$val.BuyRobot(id); };
+	Model.ptr.prototype.BuyPilot = function(id) {
+		var _r, _tuple, err, id, model, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.BuyPilot($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyPilot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.BuyPilot = function(id) { return this.$val.BuyPilot(id); };
+	Model.ptr.prototype.BuyWeapon = function(id) {
+		var _r, _tuple, err, id, model, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.BuyWeapon($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyWeapon }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.BuyWeapon = function(id) { return this.$val.BuyWeapon(id); };
+	Model.ptr.prototype.BuyComponent = function(id) {
+		var _r, _tuple, err, id, model, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.BuyComponent($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyComponent }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.BuyComponent = function(id) { return this.$val.BuyComponent(id); };
+	Model.ptr.prototype.AssocRobotPilot = function(robotID, pilotID) {
+		var _tuple, err, model, pilotID, robotID, v, x;
+		v = this;
+		_tuple = impl.AssocRobotPilot($clone(($clone(v, impl.Model)), impl.Model), robotID, pilotID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.AssocRobotPilot = function(robotID, pilotID) { return this.$val.AssocRobotPilot(robotID, pilotID); };
+	Model.ptr.prototype.DissocRobotPilot = function(robotID) {
+		var _tuple, err, model, robotID, v, x;
+		v = this;
+		_tuple = impl.DissocRobotPilot($clone(($clone(v, impl.Model)), impl.Model), robotID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.DissocRobotPilot = function(robotID) { return this.$val.DissocRobotPilot(robotID); };
+	Model.ptr.prototype.AssocWeaponRobot = function(weaponID, robotID) {
+		var _tuple, err, model, robotID, v, weaponID, x;
+		v = this;
+		_tuple = impl.AssocWeaponRobot($clone(($clone(v, impl.Model)), impl.Model), weaponID, robotID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.AssocWeaponRobot = function(weaponID, robotID) { return this.$val.AssocWeaponRobot(weaponID, robotID); };
+	Model.ptr.prototype.DissocWeaponRobot = function(weaponID) {
+		var _tuple, err, model, v, weaponID, x;
+		v = this;
+		_tuple = impl.DissocWeaponRobot($clone(($clone(v, impl.Model)), impl.Model), weaponID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.DissocWeaponRobot = function(weaponID) { return this.$val.DissocWeaponRobot(weaponID); };
+	Model.ptr.prototype.AssocComponentRobot = function(componentID, robotID) {
+		var _tuple, componentID, err, model, robotID, v, x;
+		v = this;
+		_tuple = impl.AssocComponentRobot($clone(($clone(v, impl.Model)), impl.Model), componentID, robotID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.AssocComponentRobot = function(componentID, robotID) { return this.$val.AssocComponentRobot(componentID, robotID); };
+	Model.ptr.prototype.DissocComponentRobot = function(componentID) {
+		var _tuple, componentID, err, model, v, x;
+		v = this;
+		_tuple = impl.DissocComponentRobot($clone(($clone(v, impl.Model)), impl.Model), componentID);
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.DissocComponentRobot = function(componentID) { return this.$val.DissocComponentRobot(componentID); };
+	Model.ptr.prototype.OnSingleBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetRobotID) {
+		var _r, _returncast, isPlayerTurn, origin, robotID, targetRobotID, v, weaponID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; isPlayerTurn = $f.isPlayerTurn; origin = $f.origin; robotID = $f.robotID; targetRobotID = $f.targetRobotID; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnSingleBattleMenuPhase($clone($assertType(origin, uidata.UI), uidata.UI), isPlayerTurn, robotID, weaponID, targetRobotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnSingleBattleMenuPhase }; } $f._r = _r; $f._returncast = _returncast; $f.isPlayerTurn = isPlayerTurn; $f.origin = origin; $f.robotID = robotID; $f.targetRobotID = targetRobotID; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnSingleBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetRobotID) { return this.$val.OnSingleBattleMenuPhase(origin, isPlayerTurn, robotID, weaponID, targetRobotID); };
+	Model.ptr.prototype.OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) {
+		var _r, _returncast, isPlayerTurn, origin, robotID, targetPosition, v, weaponID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; isPlayerTurn = $f.isPlayerTurn; origin = $f.origin; robotID = $f.robotID; targetPosition = $f.targetPosition; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnLineBattleMenuPhase($clone($assertType(origin, uidata.UI), uidata.UI), isPlayerTurn, robotID, weaponID, $clone(targetPosition, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnLineBattleMenuPhase }; } $f._r = _r; $f._returncast = _returncast; $f.isPlayerTurn = isPlayerTurn; $f.origin = origin; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) { return this.$val.OnLineBattleMenuPhase(origin, isPlayerTurn, robotID, weaponID, targetPosition); };
+	Model.ptr.prototype.OnPlayerTurnStart = function(ui, player) {
+		var _r, _returncast, player, ui, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; player = $f.player; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnPlayerTurnStart($clone($assertType(ui, uidata.UI), uidata.UI), $clone(player, protocol.Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnPlayerTurnStart }; } $f._r = _r; $f._returncast = _returncast; $f.player = player; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnPlayerTurnStart = function(ui, player) { return this.$val.OnPlayerTurnStart(ui, player); };
+	Model.ptr.prototype.OnPlayerTurnEnd = function(ui, player) {
+		var _r, _returncast, player, ui, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; player = $f.player; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnPlayerTurnEnd($clone($assertType(ui, uidata.UI), uidata.UI), $clone(player, protocol.Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnPlayerTurnEnd }; } $f._r = _r; $f._returncast = _returncast; $f.player = player; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnPlayerTurnEnd = function(ui, player) { return this.$val.OnPlayerTurnEnd(ui, player); };
+	Model.ptr.prototype.OnEnemyTurnPhase = function(origin) {
+		var _r, _returncast, origin, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = EnemyTurnPhase($clone($assertType(origin, uidata.UI), uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnemyTurnPhase }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnEnemyTurnPhase = function(origin) { return this.$val.OnEnemyTurnPhase(origin); };
+	Model.ptr.prototype.OnRobotTransform = function(ctx, robotID, transform) {
+		var _r, _returncast, ctx, robotID, transform, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; transform = $f.transform; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnRobotTransform($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, transform); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotTransform }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.transform = transform; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnRobotTransform = function(ctx, robotID, transform) { return this.$val.OnRobotTransform(ctx, robotID, transform); };
+	Model.ptr.prototype.OnRobotSkyGround = function(ctx, robotID, sky) {
+		var _r, _returncast, ctx, robotID, sky, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; sky = $f.sky; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnRobotSkyGround($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, sky); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotSkyGround }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.sky = sky; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnRobotSkyGround = function(ctx, robotID, sky) { return this.$val.OnRobotSkyGround(ctx, robotID, sky); };
+	Model.ptr.prototype.OnRobotMove = function(ctx, robotID, tree, pos) {
+		var _r, _returncast, ctx, pos, robotID, tree, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; pos = $f.pos; robotID = $f.robotID; tree = $f.tree; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnRobotMove($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, tree, $clone(pos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotMove }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.pos = pos; $f.robotID = robotID; $f.tree = tree; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnRobotMove = function(ctx, robotID, tree, pos) { return this.$val.OnRobotMove(ctx, robotID, tree, pos); };
+	Model.ptr.prototype.OnRobotDone = function(ctx, robotID) {
+		var _r, _returncast, ctx, robotID, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnRobotDone($clone($assertType(ctx, uidata.UI), uidata.UI), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotDone }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnRobotDone = function(ctx, robotID) { return this.$val.OnRobotDone(ctx, robotID); };
+	Model.ptr.prototype.OnEnableRobotMenu = function(ctx, robotID) {
+		var _r, _returncast, ctx, robotID, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnEnableRobotMenu($clone($assertType(ctx, uidata.UI), uidata.UI), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnableRobotMenu }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnEnableRobotMenu = function(ctx, robotID) { return this.$val.OnEnableRobotMenu(ctx, robotID); };
+	Model.ptr.prototype.OnDisableRobotMenu = function(ctx) {
+		var _returncast, ctx, v;
+		v = this;
+		_returncast = OnDisableRobotMenu($clone($assertType(ctx, uidata.UI), uidata.UI));
+		return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+	};
+	Model.prototype.OnDisableRobotMenu = function(ctx) { return this.$val.OnDisableRobotMenu(ctx); };
+	Model.ptr.prototype.OnEnableBattleMenu = function(origin, robotID, weaponID, targetRobotID) {
+		var _r, _returncast, origin, robotID, targetRobotID, v, weaponID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; robotID = $f.robotID; targetRobotID = $f.targetRobotID; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnEnableBattleMenu($clone($assertType(origin, uidata.UI), uidata.UI), robotID, weaponID, targetRobotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnableBattleMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.robotID = robotID; $f.targetRobotID = targetRobotID; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnEnableBattleMenu = function(origin, robotID, weaponID, targetRobotID) { return this.$val.OnEnableBattleMenu(origin, robotID, weaponID, targetRobotID); };
+	Model.ptr.prototype.OnDisableBattleMenu = function(origin) {
+		var _r, _returncast, origin, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnDisableBattleMenu($clone($assertType(origin, uidata.UI), uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnDisableBattleMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnDisableBattleMenu = function(origin) { return this.$val.OnDisableBattleMenu(origin); };
+	Model.ptr.prototype.OnClickSystemMenu = function(origin, selection) {
+		var _r, _returncast, origin, selection, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; selection = $f.selection; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = OnClickSystemMenu($clone($assertType(origin, uidata.UI), uidata.UI), selection); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnClickSystemMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.selection = selection; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.OnClickSystemMenu = function(origin, selection) { return this.$val.OnClickSystemMenu(origin, selection); };
+	Model.ptr.prototype.ObservePage = function(ui, id) {
+		var _r, _returncast, id, ui, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; id = $f.id; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = ObservePage($clone($assertType(ui, uidata.UI), uidata.UI), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_returncast = _r;
+		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.ObservePage }; } $f._r = _r; $f._returncast = _returncast; $f.id = id; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.ObservePage = function(ui, id) { return this.$val.ObservePage(ui, id); };
+	Model.ptr.prototype.ObserveRobot = function(robot) {
+		var _r, robot, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robot = $f.robot; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.ObserveRobot($clone(($clone(v, impl.Model)), impl.Model), $clone(robot, protocol.Robot)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.ObserveRobot }; } $f._r = _r; $f.robot = robot; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.ObserveRobot = function(robot) { return this.$val.ObserveRobot(robot); };
+	Model.ptr.prototype.New = function(situation) {
+		var _r, _tuple, err, model, situation, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; situation = $f.situation; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.NewModel($clone(($clone(v, impl.Model)), impl.Model), situation); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.New }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.situation = situation; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.New = function(situation) { return this.$val.New(situation); };
+	Model.ptr.prototype.Save = function() {
+		var v;
+		v = this;
+		return impl.Save($clone(($clone(v, impl.Model)), impl.Model));
+	};
+	Model.prototype.Save = function() { return this.$val.Save(); };
+	Model.ptr.prototype.Load = function() {
+		var _tuple, err, model, v, x;
+		v = this;
+		_tuple = impl.Load($clone(($clone(v, impl.Model)), impl.Model));
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+	};
+	Model.prototype.Load = function() { return this.$val.Load(); };
+	Model.ptr.prototype.QueryActivePlayer = function() {
+		var _r, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.QueryActivePlayer($clone(($clone(v, impl.Model)), impl.Model)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryActivePlayer }; } $f._r = _r; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.QueryActivePlayer = function() { return this.$val.QueryActivePlayer(); };
+	Model.ptr.prototype.NextPlayer = function() {
+		var _r, _tuple, err, model, v, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.NextPlayer($clone(($clone(v, impl.Model)), impl.Model)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		model = $clone(_tuple[0], impl.Model);
+		err = _tuple[1];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.NextPlayer }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.NextPlayer = function() { return this.$val.NextPlayer(); };
+	Model.ptr.prototype.IsDone = function() {
+		var v;
+		v = this;
+		return impl.IsDone($clone(($clone(v, impl.Model)), impl.Model));
+	};
+	Model.prototype.IsDone = function() { return this.$val.IsDone(); };
+	Model.ptr.prototype.QueryUnitsByRegion = function(p1, p2) {
+		var p1, p2, v;
+		v = this;
+		return impl.QueryUnitsByRegion($clone(($clone(v, impl.Model)), impl.Model), $clone(p1, protocol.Position), $clone(p2, protocol.Position));
+	};
+	Model.prototype.QueryUnitsByRegion = function(p1, p2) { return this.$val.QueryUnitsByRegion(p1, p2); };
+	Model.ptr.prototype.QueryUnitByPosition = function(p1) {
+		var p1, v;
+		v = this;
+		return impl.QueryUnitByPosition($clone(($clone(v, impl.Model)), impl.Model), $clone(p1, protocol.Position));
+	};
+	Model.prototype.QueryUnitByPosition = function(p1) { return this.$val.QueryUnitByPosition(p1); };
+	Model.ptr.prototype.SetMoveRange = function(moveRange) {
+		var model, moveRange, v, x;
+		v = this;
+		model = $clone(impl.SetMoveRange($clone(($clone(v, impl.Model)), impl.Model), moveRange), impl.Model);
+		return (x = ($clone(model, Model)), new x.constructor.elem(x));
+	};
+	Model.prototype.SetMoveRange = function(moveRange) { return this.$val.SetMoveRange(moveRange); };
+	Model.ptr.prototype.GetMoveRange = function() {
+		var v;
+		v = this;
+		return impl.GetMoveRange($clone(($clone(v, impl.Model)), impl.Model));
+	};
+	Model.prototype.GetMoveRange = function() { return this.$val.GetMoveRange(); };
+	Model.ptr.prototype.QueryMoveRangeTree = function(robotID) {
+		var _r, robotID, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.QueryMoveRangeTree($clone(($clone(v, impl.Model)), impl.Model), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryMoveRangeTree }; } $f._r = _r; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.QueryMoveRangeTree = function(robotID) { return this.$val.QueryMoveRangeTree(robotID); };
+	Model.ptr.prototype.QueryMoveCount = function(robotID) {
+		var _r, robotID, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		v = this;
+		_r = impl.QueryMoveCount($clone(($clone(v, impl.Model)), impl.Model), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryMoveCount }; } $f._r = _r; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Model.prototype.QueryMoveCount = function(robotID) { return this.$val.QueryMoveCount(robotID); };
+	Model.ptr.prototype.SetCursor = function(cursor) {
+		var cursor, model, v, x;
+		v = this;
+		model = $clone(impl.SetCursor($clone(($clone(v, impl.Model)), impl.Model), $clone(cursor, protocol.Position)), impl.Model);
+		return (x = ($clone(model, Model)), new x.constructor.elem(x));
+	};
+	Model.prototype.SetCursor = function(cursor) { return this.$val.SetCursor(cursor); };
+	Model.ptr.prototype.GetCursor = function() {
+		var v;
+		v = this;
+		return impl.GetCursor($clone(($clone(v, impl.Model)), impl.Model));
+	};
+	Model.prototype.GetCursor = function() { return this.$val.GetCursor(); };
 	ObserveBattleMenu = function(origin, menuID) {
 		var _1, _entry, _entry$1, _entry$2, _entry$3, _entry$4, _r, _r$1, _r$10, _r$11, _r$12, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tmp, _tmp$1, _tmp$2, _tmp$3, _tmp$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, battleMenuModel, ctx, err, err$1, err$2, has, hitRate, hitRate$1, hitRate$2, isSelectingWeapon, menu, menuID, model, origin, pilot, robot, selectedWeapon, selectedWeapon$1, selection, targetAction, targetPilot, targetRobot, targetWeapon, unitMenu, unitMenuModel, weapon, x, x$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; battleMenuModel = $f.battleMenuModel; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; has = $f.has; hitRate = $f.hitRate; hitRate$1 = $f.hitRate$1; hitRate$2 = $f.hitRate$2; isSelectingWeapon = $f.isSelectingWeapon; menu = $f.menu; menuID = $f.menuID; model = $f.model; origin = $f.origin; pilot = $f.pilot; robot = $f.robot; selectedWeapon = $f.selectedWeapon; selectedWeapon$1 = $f.selectedWeapon$1; selection = $f.selection; targetAction = $f.targetAction; targetPilot = $f.targetPilot; targetRobot = $f.targetRobot; targetWeapon = $f.targetWeapon; unitMenu = $f.unitMenu; unitMenuModel = $f.unitMenuModel; weapon = $f.weapon; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -41635,374 +42003,6 @@ $packages["app/model/v1"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: OnSingleBattleMenuPhase }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.battleMenus = battleMenus; $f.cancel = cancel; $f.cancel$1 = cancel$1; $f.ctx = ctx; $f.err = err; $f.gameplayPage = gameplayPage; $f.gameplayPage$1 = gameplayPage$1; $f.has = has; $f.has$1 = has$1; $f.hasBattleMenu = hasBattleMenu; $f.invalidStr = invalidStr; $f.invalidStr$1 = invalidStr$1; $f.isPlayerTurn = isPlayerTurn; $f.origin = origin; $f.playerAction = playerAction; $f.playerWeaponID = playerWeaponID; $f.robotID = robotID; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.tab$1 = tab$1; $f.targetRobotAction = targetRobotAction; $f.targetRobotAction$1 = targetRobotAction$1; $f.targetRobotID = targetRobotID; $f.targetRobotWeapon = targetRobotWeapon; $f.targetRobotWeaponID = targetRobotWeaponID; $f.topMenu = topMenu; $f.topMenu$1 = topMenu$1; $f.view = view; $f.weaponID = weaponID; $f.weaponID$1 = weaponID$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OnSingleBattleMenuPhase = OnSingleBattleMenuPhase;
-	Model.ptr.prototype.BuyRobot = function(id) {
-		var _r, _tuple, err, id, model, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.BuyRobot($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyRobot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.BuyRobot = function(id) { return this.$val.BuyRobot(id); };
-	Model.ptr.prototype.BuyPilot = function(id) {
-		var _r, _tuple, err, id, model, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.BuyPilot($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyPilot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.BuyPilot = function(id) { return this.$val.BuyPilot(id); };
-	Model.ptr.prototype.BuyWeapon = function(id) {
-		var _r, _tuple, err, id, model, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.BuyWeapon($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyWeapon }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.BuyWeapon = function(id) { return this.$val.BuyWeapon(id); };
-	Model.ptr.prototype.BuyComponent = function(id) {
-		var _r, _tuple, err, id, model, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; id = $f.id; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.BuyComponent($clone(($clone(v, impl.Model)), impl.Model), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.BuyComponent }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.id = id; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.BuyComponent = function(id) { return this.$val.BuyComponent(id); };
-	Model.ptr.prototype.AssocRobotPilot = function(robotID, pilotID) {
-		var _tuple, err, model, pilotID, robotID, v, x;
-		v = this;
-		_tuple = impl.AssocRobotPilot($clone(($clone(v, impl.Model)), impl.Model), robotID, pilotID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.AssocRobotPilot = function(robotID, pilotID) { return this.$val.AssocRobotPilot(robotID, pilotID); };
-	Model.ptr.prototype.DissocRobotPilot = function(robotID) {
-		var _tuple, err, model, robotID, v, x;
-		v = this;
-		_tuple = impl.DissocRobotPilot($clone(($clone(v, impl.Model)), impl.Model), robotID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.DissocRobotPilot = function(robotID) { return this.$val.DissocRobotPilot(robotID); };
-	Model.ptr.prototype.AssocWeaponRobot = function(weaponID, robotID) {
-		var _tuple, err, model, robotID, v, weaponID, x;
-		v = this;
-		_tuple = impl.AssocWeaponRobot($clone(($clone(v, impl.Model)), impl.Model), weaponID, robotID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.AssocWeaponRobot = function(weaponID, robotID) { return this.$val.AssocWeaponRobot(weaponID, robotID); };
-	Model.ptr.prototype.DissocWeaponRobot = function(weaponID) {
-		var _tuple, err, model, v, weaponID, x;
-		v = this;
-		_tuple = impl.DissocWeaponRobot($clone(($clone(v, impl.Model)), impl.Model), weaponID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.DissocWeaponRobot = function(weaponID) { return this.$val.DissocWeaponRobot(weaponID); };
-	Model.ptr.prototype.AssocComponentRobot = function(componentID, robotID) {
-		var _tuple, componentID, err, model, robotID, v, x;
-		v = this;
-		_tuple = impl.AssocComponentRobot($clone(($clone(v, impl.Model)), impl.Model), componentID, robotID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.AssocComponentRobot = function(componentID, robotID) { return this.$val.AssocComponentRobot(componentID, robotID); };
-	Model.ptr.prototype.DissocComponentRobot = function(componentID) {
-		var _tuple, componentID, err, model, v, x;
-		v = this;
-		_tuple = impl.DissocComponentRobot($clone(($clone(v, impl.Model)), impl.Model), componentID);
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.DissocComponentRobot = function(componentID) { return this.$val.DissocComponentRobot(componentID); };
-	Model.ptr.prototype.OnSingleBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetRobotID) {
-		var _r, _returncast, isPlayerTurn, origin, robotID, targetRobotID, v, weaponID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; isPlayerTurn = $f.isPlayerTurn; origin = $f.origin; robotID = $f.robotID; targetRobotID = $f.targetRobotID; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnSingleBattleMenuPhase($clone($assertType(origin, uidata.UI), uidata.UI), isPlayerTurn, robotID, weaponID, targetRobotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnSingleBattleMenuPhase }; } $f._r = _r; $f._returncast = _returncast; $f.isPlayerTurn = isPlayerTurn; $f.origin = origin; $f.robotID = robotID; $f.targetRobotID = targetRobotID; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnSingleBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetRobotID) { return this.$val.OnSingleBattleMenuPhase(origin, isPlayerTurn, robotID, weaponID, targetRobotID); };
-	Model.ptr.prototype.OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) {
-		var _r, _returncast, isPlayerTurn, origin, robotID, targetPosition, v, weaponID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; isPlayerTurn = $f.isPlayerTurn; origin = $f.origin; robotID = $f.robotID; targetPosition = $f.targetPosition; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnLineBattleMenuPhase($clone($assertType(origin, uidata.UI), uidata.UI), isPlayerTurn, robotID, weaponID, $clone(targetPosition, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnLineBattleMenuPhase }; } $f._r = _r; $f._returncast = _returncast; $f.isPlayerTurn = isPlayerTurn; $f.origin = origin; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) { return this.$val.OnLineBattleMenuPhase(origin, isPlayerTurn, robotID, weaponID, targetPosition); };
-	Model.ptr.prototype.OnPlayerTurnStart = function(ui, player) {
-		var _r, _returncast, player, ui, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; player = $f.player; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnPlayerTurnStart($clone($assertType(ui, uidata.UI), uidata.UI), $clone(player, protocol.Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnPlayerTurnStart }; } $f._r = _r; $f._returncast = _returncast; $f.player = player; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnPlayerTurnStart = function(ui, player) { return this.$val.OnPlayerTurnStart(ui, player); };
-	Model.ptr.prototype.OnPlayerTurnEnd = function(ui, player) {
-		var _r, _returncast, player, ui, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; player = $f.player; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnPlayerTurnEnd($clone($assertType(ui, uidata.UI), uidata.UI), $clone(player, protocol.Player)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnPlayerTurnEnd }; } $f._r = _r; $f._returncast = _returncast; $f.player = player; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnPlayerTurnEnd = function(ui, player) { return this.$val.OnPlayerTurnEnd(ui, player); };
-	Model.ptr.prototype.OnEnemyTurnPhase = function(origin) {
-		var _r, _returncast, origin, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = EnemyTurnPhase($clone($assertType(origin, uidata.UI), uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1], _returncast[2]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnemyTurnPhase }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnEnemyTurnPhase = function(origin) { return this.$val.OnEnemyTurnPhase(origin); };
-	Model.ptr.prototype.OnRobotTransform = function(ctx, robotID, transform) {
-		var _r, _returncast, ctx, robotID, transform, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; transform = $f.transform; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnRobotTransform($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, transform); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotTransform }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.transform = transform; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnRobotTransform = function(ctx, robotID, transform) { return this.$val.OnRobotTransform(ctx, robotID, transform); };
-	Model.ptr.prototype.OnRobotSkyGround = function(ctx, robotID, sky) {
-		var _r, _returncast, ctx, robotID, sky, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; sky = $f.sky; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnRobotSkyGround($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, sky); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotSkyGround }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.sky = sky; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnRobotSkyGround = function(ctx, robotID, sky) { return this.$val.OnRobotSkyGround(ctx, robotID, sky); };
-	Model.ptr.prototype.OnRobotMove = function(ctx, robotID, tree, pos) {
-		var _r, _returncast, ctx, pos, robotID, tree, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; pos = $f.pos; robotID = $f.robotID; tree = $f.tree; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnRobotMove($clone($assertType(ctx, uidata.UI), uidata.UI), robotID, tree, $clone(pos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotMove }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.pos = pos; $f.robotID = robotID; $f.tree = tree; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnRobotMove = function(ctx, robotID, tree, pos) { return this.$val.OnRobotMove(ctx, robotID, tree, pos); };
-	Model.ptr.prototype.OnRobotDone = function(ctx, robotID) {
-		var _r, _returncast, ctx, robotID, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnRobotDone($clone($assertType(ctx, uidata.UI), uidata.UI), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnRobotDone }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnRobotDone = function(ctx, robotID) { return this.$val.OnRobotDone(ctx, robotID); };
-	Model.ptr.prototype.OnEnableRobotMenu = function(ctx, robotID) {
-		var _r, _returncast, ctx, robotID, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; ctx = $f.ctx; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnEnableRobotMenu($clone($assertType(ctx, uidata.UI), uidata.UI), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnableRobotMenu }; } $f._r = _r; $f._returncast = _returncast; $f.ctx = ctx; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnEnableRobotMenu = function(ctx, robotID) { return this.$val.OnEnableRobotMenu(ctx, robotID); };
-	Model.ptr.prototype.OnDisableRobotMenu = function(ctx) {
-		var _returncast, ctx, v;
-		v = this;
-		_returncast = OnDisableRobotMenu($clone($assertType(ctx, uidata.UI), uidata.UI));
-		return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-	};
-	Model.prototype.OnDisableRobotMenu = function(ctx) { return this.$val.OnDisableRobotMenu(ctx); };
-	Model.ptr.prototype.OnEnableBattleMenu = function(origin, robotID, weaponID, targetRobotID) {
-		var _r, _returncast, origin, robotID, targetRobotID, v, weaponID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; robotID = $f.robotID; targetRobotID = $f.targetRobotID; v = $f.v; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnEnableBattleMenu($clone($assertType(origin, uidata.UI), uidata.UI), robotID, weaponID, targetRobotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnEnableBattleMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.robotID = robotID; $f.targetRobotID = targetRobotID; $f.v = v; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnEnableBattleMenu = function(origin, robotID, weaponID, targetRobotID) { return this.$val.OnEnableBattleMenu(origin, robotID, weaponID, targetRobotID); };
-	Model.ptr.prototype.OnDisableBattleMenu = function(origin) {
-		var _r, _returncast, origin, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnDisableBattleMenu($clone($assertType(origin, uidata.UI), uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnDisableBattleMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnDisableBattleMenu = function(origin) { return this.$val.OnDisableBattleMenu(origin); };
-	Model.ptr.prototype.OnClickSystemMenu = function(origin, selection) {
-		var _r, _returncast, origin, selection, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; origin = $f.origin; selection = $f.selection; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = OnClickSystemMenu($clone($assertType(origin, uidata.UI), uidata.UI), selection); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.OnClickSystemMenu }; } $f._r = _r; $f._returncast = _returncast; $f.origin = origin; $f.selection = selection; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.OnClickSystemMenu = function(origin, selection) { return this.$val.OnClickSystemMenu(origin, selection); };
-	Model.ptr.prototype.ObservePage = function(ui, id) {
-		var _r, _returncast, id, ui, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _returncast = $f._returncast; id = $f.id; ui = $f.ui; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = ObservePage($clone($assertType(ui, uidata.UI), uidata.UI), id); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_returncast = _r;
-		$s = -1; return [new _returncast[0].constructor.elem(_returncast[0]), _returncast[1]];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.ObservePage }; } $f._r = _r; $f._returncast = _returncast; $f.id = id; $f.ui = ui; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.ObservePage = function(ui, id) { return this.$val.ObservePage(ui, id); };
-	Model.ptr.prototype.ObserveRobot = function(robot) {
-		var _r, robot, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robot = $f.robot; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.ObserveRobot($clone(($clone(v, impl.Model)), impl.Model), $clone(robot, protocol.Robot)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.ObserveRobot }; } $f._r = _r; $f.robot = robot; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.ObserveRobot = function(robot) { return this.$val.ObserveRobot(robot); };
-	Model.ptr.prototype.New = function(situation) {
-		var _r, _tuple, err, model, situation, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; situation = $f.situation; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.NewModel($clone(($clone(v, impl.Model)), impl.Model), situation); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.New }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.situation = situation; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.New = function(situation) { return this.$val.New(situation); };
-	Model.ptr.prototype.Save = function() {
-		var v;
-		v = this;
-		return impl.Save($clone(($clone(v, impl.Model)), impl.Model));
-	};
-	Model.prototype.Save = function() { return this.$val.Save(); };
-	Model.ptr.prototype.Load = function() {
-		var _tuple, err, model, v, x;
-		v = this;
-		_tuple = impl.Load($clone(($clone(v, impl.Model)), impl.Model));
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-	};
-	Model.prototype.Load = function() { return this.$val.Load(); };
-	Model.ptr.prototype.QueryActivePlayer = function() {
-		var _r, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.QueryActivePlayer($clone(($clone(v, impl.Model)), impl.Model)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryActivePlayer }; } $f._r = _r; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.QueryActivePlayer = function() { return this.$val.QueryActivePlayer(); };
-	Model.ptr.prototype.NextPlayer = function() {
-		var _r, _tuple, err, model, v, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; v = $f.v; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.NextPlayer($clone(($clone(v, impl.Model)), impl.Model)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		model = $clone(_tuple[0], impl.Model);
-		err = _tuple[1];
-		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.NextPlayer }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.v = v; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.NextPlayer = function() { return this.$val.NextPlayer(); };
-	Model.ptr.prototype.IsDone = function() {
-		var v;
-		v = this;
-		return impl.IsDone($clone(($clone(v, impl.Model)), impl.Model));
-	};
-	Model.prototype.IsDone = function() { return this.$val.IsDone(); };
-	Model.ptr.prototype.QueryUnitsByRegion = function(p1, p2) {
-		var p1, p2, v;
-		v = this;
-		return impl.QueryUnitsByRegion($clone(($clone(v, impl.Model)), impl.Model), $clone(p1, protocol.Position), $clone(p2, protocol.Position));
-	};
-	Model.prototype.QueryUnitsByRegion = function(p1, p2) { return this.$val.QueryUnitsByRegion(p1, p2); };
-	Model.ptr.prototype.QueryUnitByPosition = function(p1) {
-		var p1, v;
-		v = this;
-		return impl.QueryUnitByPosition($clone(($clone(v, impl.Model)), impl.Model), $clone(p1, protocol.Position));
-	};
-	Model.prototype.QueryUnitByPosition = function(p1) { return this.$val.QueryUnitByPosition(p1); };
-	Model.ptr.prototype.SetMoveRange = function(moveRange) {
-		var model, moveRange, v, x;
-		v = this;
-		model = $clone(impl.SetMoveRange($clone(($clone(v, impl.Model)), impl.Model), moveRange), impl.Model);
-		return (x = ($clone(model, Model)), new x.constructor.elem(x));
-	};
-	Model.prototype.SetMoveRange = function(moveRange) { return this.$val.SetMoveRange(moveRange); };
-	Model.ptr.prototype.GetMoveRange = function() {
-		var v;
-		v = this;
-		return impl.GetMoveRange($clone(($clone(v, impl.Model)), impl.Model));
-	};
-	Model.prototype.GetMoveRange = function() { return this.$val.GetMoveRange(); };
-	Model.ptr.prototype.QueryMoveRangeTree = function(robotID) {
-		var _r, robotID, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.QueryMoveRangeTree($clone(($clone(v, impl.Model)), impl.Model), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryMoveRangeTree }; } $f._r = _r; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.QueryMoveRangeTree = function(robotID) { return this.$val.QueryMoveRangeTree(robotID); };
-	Model.ptr.prototype.QueryMoveCount = function(robotID) {
-		var _r, robotID, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; robotID = $f.robotID; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		v = this;
-		_r = impl.QueryMoveCount($clone(($clone(v, impl.Model)), impl.Model), robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.QueryMoveCount }; } $f._r = _r; $f.robotID = robotID; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Model.prototype.QueryMoveCount = function(robotID) { return this.$val.QueryMoveCount(robotID); };
-	Model.ptr.prototype.SetCursor = function(cursor) {
-		var cursor, model, v, x;
-		v = this;
-		model = $clone(impl.SetCursor($clone(($clone(v, impl.Model)), impl.Model), $clone(cursor, protocol.Position)), impl.Model);
-		return (x = ($clone(model, Model)), new x.constructor.elem(x));
-	};
-	Model.prototype.SetCursor = function(cursor) { return this.$val.SetCursor(cursor); };
-	Model.ptr.prototype.GetCursor = function() {
-		var v;
-		v = this;
-		return impl.GetCursor($clone(($clone(v, impl.Model)), impl.Model));
-	};
-	Model.prototype.GetCursor = function() { return this.$val.GetCursor(); };
 	Model.methods = [{prop: "BuyRobot", name: "BuyRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyPilot", name: "BuyPilot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyWeapon", name: "BuyWeapon", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyComponent", name: "BuyComponent", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocRobotPilot", name: "AssocRobotPilot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocRobotPilot", name: "DissocRobotPilot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocWeaponRobot", name: "AssocWeaponRobot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocWeaponRobot", name: "DissocWeaponRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocComponentRobot", name: "AssocComponentRobot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocComponentRobot", name: "DissocComponentRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "OnSingleBattleMenuPhase", name: "OnSingleBattleMenuPhase", pkg: "", typ: $funcType([$emptyInterface, $Bool, $String, $String, $String], [$emptyInterface, $Bool, $error], false)}, {prop: "OnLineBattleMenuPhase", name: "OnLineBattleMenuPhase", pkg: "", typ: $funcType([$emptyInterface, $Bool, $String, $String, protocol.Position], [$emptyInterface, $Bool, $error], false)}, {prop: "OnPlayerTurnStart", name: "OnPlayerTurnStart", pkg: "", typ: $funcType([$emptyInterface, protocol.Player], [$emptyInterface, $error], false)}, {prop: "OnPlayerTurnEnd", name: "OnPlayerTurnEnd", pkg: "", typ: $funcType([$emptyInterface, protocol.Player], [$emptyInterface, $error], false)}, {prop: "OnEnemyTurnPhase", name: "OnEnemyTurnPhase", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $Bool, $error], false)}, {prop: "OnRobotTransform", name: "OnRobotTransform", pkg: "", typ: $funcType([$emptyInterface, $String, $String], [$emptyInterface, $error], false)}, {prop: "OnRobotSkyGround", name: "OnRobotSkyGround", pkg: "", typ: $funcType([$emptyInterface, $String, $Bool], [$emptyInterface, $error], false)}, {prop: "OnRobotMove", name: "OnRobotMove", pkg: "", typ: $funcType([$emptyInterface, $String, astar.NodeMap, protocol.Position], [$emptyInterface, $error], false)}, {prop: "OnRobotDone", name: "OnRobotDone", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "OnEnableRobotMenu", name: "OnEnableRobotMenu", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "OnDisableRobotMenu", name: "OnDisableRobotMenu", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $error], false)}, {prop: "OnEnableBattleMenu", name: "OnEnableBattleMenu", pkg: "", typ: $funcType([$emptyInterface, $String, $String, $String], [$emptyInterface, $error], false)}, {prop: "OnDisableBattleMenu", name: "OnDisableBattleMenu", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $error], false)}, {prop: "OnClickSystemMenu", name: "OnClickSystemMenu", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "ObservePage", name: "ObservePage", pkg: "", typ: $funcType([$emptyInterface, $Int], [$emptyInterface, $error], false)}, {prop: "ObserveRobot", name: "ObserveRobot", pkg: "", typ: $funcType([protocol.Robot], [protocol.Robot, $error], false)}, {prop: "New", name: "New", pkg: "", typ: $funcType([$emptyInterface], [protocol.IModel, $error], false)}, {prop: "Save", name: "Save", pkg: "", typ: $funcType([], [$error], false)}, {prop: "Load", name: "Load", pkg: "", typ: $funcType([], [protocol.IModel, $error], false)}, {prop: "QueryActivePlayer", name: "QueryActivePlayer", pkg: "", typ: $funcType([], [protocol.Player, $error], false)}, {prop: "NextPlayer", name: "NextPlayer", pkg: "", typ: $funcType([], [protocol.IModel, $error], false)}, {prop: "IsDone", name: "IsDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "QueryUnitsByRegion", name: "QueryUnitsByRegion", pkg: "", typ: $funcType([protocol.Position, protocol.Position], [sliceType], false)}, {prop: "QueryUnitByPosition", name: "QueryUnitByPosition", pkg: "", typ: $funcType([protocol.Position], [$String], false)}, {prop: "SetMoveRange", name: "SetMoveRange", pkg: "", typ: $funcType([sliceType$4], [protocol.IModel], false)}, {prop: "GetMoveRange", name: "GetMoveRange", pkg: "", typ: $funcType([], [sliceType$4], false)}, {prop: "QueryMoveRangeTree", name: "QueryMoveRangeTree", pkg: "", typ: $funcType([$String], [astar.NodeMap, $error], false)}, {prop: "QueryMoveCount", name: "QueryMoveCount", pkg: "", typ: $funcType([$String], [$Int], false)}, {prop: "SetCursor", name: "SetCursor", pkg: "", typ: $funcType([protocol.Position], [protocol.IModel], false)}, {prop: "GetCursor", name: "GetCursor", pkg: "", typ: $funcType([], [protocol.Position], false)}];
 	Model.init("", [{prop: "App", name: "App", embedded: false, exported: true, typ: impl.app, tag: ""}]);
 	$init = function() {
