@@ -82,7 +82,7 @@ func NewModel(origin model, situation interface{}) (model, error) {
 	if err != nil {
 		return origin, err
 	}
-	// ctx, err = GenerateLevelByGeneticAlgo(ctx, playerAI1)
+	// ctx, err = GenerateLevelByPSO(ctx, playerAI1)
 	// if err != nil {
 	// 	return origin, err
 	// }

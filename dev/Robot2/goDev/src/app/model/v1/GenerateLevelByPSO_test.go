@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestGenerateLevelByGeneticAlgo(t *testing.T) {
+func TestGenerateLevelByPSO(t *testing.T) {
 	tempMap, err := helper.GenerateMap(helper.GenerateMapConfig{
 		Deepsea:  1,
 		Sea:      0,
@@ -23,7 +23,7 @@ func TestGenerateLevelByGeneticAlgo(t *testing.T) {
 	}
 	model := DefaultModel
 	model.App.Gameplay.Map = tempMap
-	ctx, err := GenerateLevelByGeneticAlgo(model, "0")
+	ctx, err := GenerateLevelByPSO(model, "0")
 	if err != nil {
 		t.Fatal(err)
 	}

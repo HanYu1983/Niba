@@ -33,7 +33,7 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
-		model, err = GenerateLevelByGeneticAlgo(model, "ai1")
+		model, err = GenerateLevelByPSO(model, "ai1")
 		if err != nil {
 			return origin, err
 		}

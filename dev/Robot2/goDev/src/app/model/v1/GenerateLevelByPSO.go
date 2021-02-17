@@ -108,11 +108,20 @@ func (this LevelGene) CalcFitness() (optalg.IGene, error) {
 	// 但js環境很像和桌面環境不一樣, 不這樣做的話, 會修改到this記憶體(沒有copy前)的值(this應該是copy過後的值, 修改它應該是要安全的. 但在JS環境並不)
 	// 以上並不確定
 	// 但確定的是一定要建一個新的, 才有預期中的效果
-	return LevelGene{
-		Units:   this.Units,
-		Map:     this.Map,
-		Fitness: fitness / float64(len(this.Units)),
-	}, nil
+	// 程式碼1和程式碼2應該是一樣的效果才對(淺複製與傳值), 但程式碼1不行
+	// ===============程式碼1
+	// this.Fitness = fitness / float64(len(this.Units))
+	// return this
+	// ===============程式碼2
+	// return LevelGene{
+	// 	Units:   this.Units,
+	// 	Map:     this.Map,
+	// 	Fitness: fitness / float64(len(this.Units)),
+	// }, nil
+	// 但由以上來看, this可能不是複製後的值
+	ret := this
+	ret.Fitness = fitness / float64(len(this.Units))
+	return ret, nil
 }
 func (this LevelGene) GetFitness() float64 {
 	return this.Fitness
@@ -256,22 +265,24 @@ func (this LevelGene) Mutate() (optalg.IGene, error) {
 		return this, nil
 	}
 
+	ret := this
+
 	idx := rand.Float64()
 	switch {
 	case idx < 0.05:
-		this.Units = deleteOne(this.Units)
-		this.Units = generateOne(this.Units)
+		ret.Units = deleteOne(this.Units)
+		ret.Units = generateOne(this.Units)
 	case idx < 0.2:
-		this.Units = generateOne(this.Units)
+		ret.Units = generateOne(this.Units)
 	default:
-		this.Units = moveOne(this.Units)
+		ret.Units = moveOne(this.Units)
 	}
 	// this.Units = generateOne(this.Units)
 	// var _, _, _ = generateOne, deleteOne, moveOne
 
-	return this, nil
+	return ret, nil
 }
-func GenerateLevelByGeneticAlgo(origin model, playerID string) (model, error) {
+func GenerateLevelByPSO(origin model, playerID string) (model, error) {
 	var err error
 	ctx := origin
 	mapW, mapH := len(ctx.App.Gameplay.Map), len(ctx.App.Gameplay.Map[0])

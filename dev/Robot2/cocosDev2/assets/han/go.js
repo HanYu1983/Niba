@@ -35609,7 +35609,7 @@ $packages["tool/optalg"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1"] = (function() {
-	var $pkg = {}, $init, common, tool, data, def, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, strconv, astar, kmeans, log, optalg, Goal, AIModel, LevelGene, ByAstarNodeEstimatedCost, PotentailTarget, lobby, gameplay, app, model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, sliceType$9, structType, arrayType$3, arrayType$4, ptrType, sliceType$10, sliceType$11, mapType, sliceType$12, sliceType$13, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, _total, _count, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryGoal, RenderRobotAim, RobotThinking, EnemyTurnPhase, QuerySuitabilityIDCount, GenerateLevelByGeneticAlgo, IsFriendlyRobot, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, OnClickSystemMenu, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase, QueryBattleAction, QueryRobotArmor, QueryRobotBeamArmor, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMove, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, NewModel, Save, Load, NewRobot, NewPilot, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu, QueryUnitsByPlayer, IsRobotDone, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryMoney, QueryRobots, QueryPilots, QueryComponents, QueryWeapons, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
+	var $pkg = {}, $init, common, tool, data, def, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, strconv, astar, kmeans, log, optalg, Goal, AIModel, LevelGene, ByAstarNodeEstimatedCost, PotentailTarget, lobby, gameplay, app, model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, sliceType$5, sliceType$6, arrayType$2, sliceType$9, structType, arrayType$3, arrayType$4, ptrType, sliceType$10, sliceType$11, mapType, sliceType$12, sliceType$13, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, _total, _count, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, QueryGoal, RenderRobotAim, RobotThinking, EnemyTurnPhase, QuerySuitabilityIDCount, GenerateLevelByPSO, IsFriendlyRobot, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, OnClickSystemMenu, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase, QueryBattleAction, QueryRobotArmor, QueryRobotBeamArmor, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMove, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, NewModel, Save, Load, NewRobot, NewPilot, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu, QueryUnitsByPlayer, IsRobotDone, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryMoney, QueryRobots, QueryPilots, QueryComponents, QueryWeapons, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
 	common = $packages["app/page/common"];
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
@@ -36246,8 +36246,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.QuerySuitabilityIDCount = QuerySuitabilityIDCount;
 	LevelGene.ptr.prototype.CalcFitness = function() {
-		var _count$1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, c, err, err$1, err$2, fitness, fitnessForRobot, pos, robotProto, robotProtoID, suit, terrain, this$1, tid, x, x$1, x$2, x$3, x$4, x$5, x$6, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _count$1 = $f._count$1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; c = $f.c; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; fitness = $f.fitness; fitnessForRobot = $f.fitnessForRobot; pos = $f.pos; robotProto = $f.robotProto; robotProtoID = $f.robotProtoID; suit = $f.suit; terrain = $f.terrain; this$1 = $f.this$1; tid = $f.tid; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _count$1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, c, err, err$1, err$2, fitness, fitnessForRobot, pos, ret, robotProto, robotProtoID, suit, terrain, this$1, tid, x, x$1, x$2, x$3, x$4, x$5, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _count$1 = $f._count$1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; c = $f.c; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; fitness = $f.fitness; fitnessForRobot = $f.fitnessForRobot; pos = $f.pos; ret = $f.ret; robotProto = $f.robotProto; robotProtoID = $f.robotProtoID; suit = $f.suit; terrain = $f.terrain; this$1 = $f.this$1; tid = $f.tid; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		this$1 = this;
 		/* */ if (_count === false) { $s = 1; continue; }
 		/* */ $s = 2; continue;
@@ -36317,8 +36317,10 @@ $packages["app/model/v1"] = (function() {
 			_i$1++;
 		/* } */ $s = 4; continue; case 5:
 		fitness = fitness + (fitnessForRobot);
-		$s = -1; return [(x$6 = new LevelGene.ptr(this$1.Map, this$1.Units, fitness / ($keys(this$1.Units).length)), new x$6.constructor.elem(x$6)), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.CalcFitness }; } $f._count$1 = _count$1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.c = c; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fitness = fitness; $f.fitnessForRobot = fitnessForRobot; $f.pos = pos; $f.robotProto = robotProto; $f.robotProtoID = robotProtoID; $f.suit = suit; $f.terrain = terrain; $f.this$1 = this$1; $f.tid = tid; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.$s = $s; $f.$r = $r; return $f;
+		ret = $clone(this$1, LevelGene);
+		ret.Fitness = fitness / ($keys(this$1.Units).length);
+		$s = -1; return [new ret.constructor.elem(ret), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.CalcFitness }; } $f._count$1 = _count$1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.c = c; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fitness = fitness; $f.fitnessForRobot = fitnessForRobot; $f.pos = pos; $f.ret = ret; $f.robotProto = robotProto; $f.robotProtoID = robotProtoID; $f.suit = suit; $f.terrain = terrain; $f.this$1 = this$1; $f.tid = tid; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelGene.prototype.CalcFitness = function() { return this.$val.CalcFitness(); };
 	LevelGene.ptr.prototype.GetFitness = function() {
@@ -36424,8 +36426,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	LevelGene.prototype.Crossover = function(b) { return this.$val.Crossover(b); };
 	LevelGene.ptr.prototype.Mutate = function() {
-		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, deleteOne, generateOne, idx, moveOne, this$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; deleteOne = $f.deleteOne; generateOne = $f.generateOne; idx = $f.idx; moveOne = $f.moveOne; this$1 = $f.this$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, deleteOne, generateOne, idx, moveOne, ret, this$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; deleteOne = $f.deleteOne; generateOne = $f.generateOne; idx = $f.idx; moveOne = $f.moveOne; ret = $f.ret; this$1 = $f.this$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		this$1 = [this$1];
 		this$1[0] = this;
 		generateOne = (function(this$1) { return function $b(origin) {
@@ -36579,6 +36581,7 @@ $packages["app/model/v1"] = (function() {
 			this$1[0].Units = _r;
 			$s = -1; return [new this$1[0].constructor.elem(this$1[0]), $ifaceNil];
 		/* } */ case 2:
+		ret = $clone(this$1[0], LevelGene);
 		_r$1 = rand.Float64(); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		idx = _r$1;
 			/* */ if (idx < 0.05) { $s = 6; continue; }
@@ -36586,24 +36589,24 @@ $packages["app/model/v1"] = (function() {
 			/* */ $s = 8; continue;
 			/* if (idx < 0.05) { */ case 6:
 				_r$2 = deleteOne(this$1[0].Units); /* */ $s = 10; case 10: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				this$1[0].Units = _r$2;
+				ret.Units = _r$2;
 				_r$3 = generateOne(this$1[0].Units); /* */ $s = 11; case 11: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				this$1[0].Units = _r$3;
+				ret.Units = _r$3;
 				$s = 9; continue;
 			/* } else if (idx < 0.2) { */ case 7:
 				_r$4 = generateOne(this$1[0].Units); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				this$1[0].Units = _r$4;
+				ret.Units = _r$4;
 				$s = 9; continue;
 			/* } else { */ case 8:
 				_r$5 = moveOne(this$1[0].Units); /* */ $s = 13; case 13: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-				this$1[0].Units = _r$5;
+				ret.Units = _r$5;
 			/* } */ case 9:
 		case 5:
-		$s = -1; return [new this$1[0].constructor.elem(this$1[0]), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.Mutate }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.deleteOne = deleteOne; $f.generateOne = generateOne; $f.idx = idx; $f.moveOne = moveOne; $f.this$1 = this$1; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [new ret.constructor.elem(ret), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.Mutate }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f.deleteOne = deleteOne; $f.generateOne = generateOne; $f.idx = idx; $f.moveOne = moveOne; $f.ret = ret; $f.this$1 = this$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelGene.prototype.Mutate = function() { return this.$val.Mutate(); };
-	GenerateLevelByGeneticAlgo = function(origin, playerID) {
+	GenerateLevelByPSO = function(origin, playerID) {
 		var _entry, _i, _key, _keys, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _ref, _tmp, _tmp$1, _tuple, _tuple$1, _tuple$2, _tuple$3, ctx, err, err$1, gene, gene$1, genes, i, j, mapH, mapW, origin, pilot, playerID, pos, pos$1, protoID, robotProto, units, x, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; gene = $f.gene; gene$1 = $f.gene$1; genes = $f.genes; i = $f.i; j = $f.j; mapH = $f.mapH; mapW = $f.mapW; origin = $f.origin; pilot = $f.pilot; playerID = $f.playerID; pos = $f.pos; pos$1 = $f.pos$1; protoID = $f.protoID; robotProto = $f.robotProto; units = $f.units; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
@@ -36677,9 +36680,9 @@ $packages["app/model/v1"] = (function() {
 			_i++;
 		/* } */ $s = 10; continue; case 11:
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateLevelByGeneticAlgo }; } $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.genes = genes; $f.i = i; $f.j = j; $f.mapH = mapH; $f.mapW = mapW; $f.origin = origin; $f.pilot = pilot; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.protoID = protoID; $f.robotProto = robotProto; $f.units = units; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: GenerateLevelByPSO }; } $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.genes = genes; $f.i = i; $f.j = j; $f.mapH = mapH; $f.mapW = mapW; $f.origin = origin; $f.pilot = pilot; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.protoID = protoID; $f.robotProto = robotProto; $f.units = units; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.GenerateLevelByGeneticAlgo = GenerateLevelByGeneticAlgo;
+	$pkg.GenerateLevelByPSO = GenerateLevelByPSO;
 	IsFriendlyRobot = function(model$1, unitID1, unitID2) {
 		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, model$1, plyr1, plyr2, unit1, unit2, unitID1, unitID2, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; model$1 = $f.model$1; plyr1 = $f.plyr1; plyr2 = $f.plyr2; unit1 = $f.unit1; unit2 = $f.unit2; unitID1 = $f.unitID1; unitID2 = $f.unitID2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -37451,7 +37454,7 @@ $packages["app/model/v1"] = (function() {
 				model$2.App.Gameplay.Units = new sliceType([]);
 				model$2.App.Gameplay.Robots = $makeMap($String.keyFor, []);
 				model$2.App.Gameplay.Positions = $makeMap($String.keyFor, []);
-				_r$10 = GenerateLevelByGeneticAlgo($clone(model$2, model), "ai1"); /* */ $s = 15; case 15: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+				_r$10 = GenerateLevelByPSO($clone(model$2, model), "ai1"); /* */ $s = 15; case 15: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
 				_tuple$1 = _r$10;
 				model.copy(model$2, _tuple$1[0]);
 				err = _tuple$1[1];
