@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	terrainCache = map[protocol.Position]data.TerrainProto{}
+	terrainCache map[protocol.Position]data.TerrainProto
 )
 
 func RobotMoveCost(model model, robot protocol.Robot) (func(curr *astar.Node) []astar.NeighborsNode, error) {

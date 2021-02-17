@@ -22,8 +22,10 @@ func TerrainID2Terrain(originTerrainID int) (data.TerrainProto, error) {
 }
 
 func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto, pos protocol.Position) (data.TerrainProto, error) {
-	if terrain, has := cache[pos]; has {
-		return terrain, nil
+	if cache != nil {
+		if terrain, has := cache[pos]; has {
+			return terrain, nil
+		}
 	}
 	originTerrainID, err := tool.TryGetInt2(gameMap, pos[1])(pos[0], nil)
 	if err != nil {
@@ -33,7 +35,9 @@ func QueryTerrain(gameMap [][]int, cache map[protocol.Position]data.TerrainProto
 	if err != nil {
 		return data.TerrainProto{}, err
 	}
-	cache[pos] = terrain
+	if cache != nil {
+		cache[pos] = terrain
+	}
 	return terrain, nil
 }
 

@@ -30737,11 +30737,13 @@ $packages["app/tool/helper"] = (function() {
 	QueryTerrain = function(gameMap, cache, pos) {
 		var _entry, _key, _r, _r$1, _tuple, _tuple$1, _tuple$2, cache, err, gameMap, has, originTerrainID, pos, terrain, terrain$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; cache = $f.cache; err = $f.err; gameMap = $f.gameMap; has = $f.has; originTerrainID = $f.originTerrainID; pos = $f.pos; terrain = $f.terrain; terrain$1 = $f.terrain$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_tuple = (_entry = cache[protocol.Position.keyFor(pos)], _entry !== undefined ? [_entry.v, true] : [new data.TerrainProto.ptr("", "", 0, 0, 0), false]);
-		terrain = $clone(_tuple[0], data.TerrainProto);
-		has = _tuple[1];
-		if (has) {
-			$s = -1; return [terrain, $ifaceNil];
+		if (!(cache === false)) {
+			_tuple = (_entry = cache[protocol.Position.keyFor(pos)], _entry !== undefined ? [_entry.v, true] : [new data.TerrainProto.ptr("", "", 0, 0, 0), false]);
+			terrain = $clone(_tuple[0], data.TerrainProto);
+			has = _tuple[1];
+			if (has) {
+				$s = -1; return [terrain, $ifaceNil];
+			}
 		}
 		_r = tool.TryGetInt2(gameMap, pos[1])(pos[0], $ifaceNil); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple$1 = _r;
@@ -30757,7 +30759,9 @@ $packages["app/tool/helper"] = (function() {
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), err];
 		}
-		_key = $clone(pos, protocol.Position); (cache || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: $clone(terrain$1, data.TerrainProto) };
+		if (!(cache === false)) {
+			_key = $clone(pos, protocol.Position); (cache || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: $clone(terrain$1, data.TerrainProto) };
+		}
 		$s = -1; return [terrain$1, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTerrain }; } $f._entry = _entry; $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.cache = cache; $f.err = err; $f.gameMap = gameMap; $f.has = has; $f.originTerrainID = originTerrainID; $f.pos = pos; $f.terrain = terrain; $f.terrain$1 = terrain$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -41934,7 +41938,7 @@ $packages["app/model/v1"] = (function() {
 		_total = 0;
 		_count = false;
 		$pkg.DefaultModel = new model.ptr(new app.ptr(0, 0, new gameplay.ptr(new AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false)));
-		terrainCache = $makeMap(protocol.Position.keyFor, []);
+		terrainCache = false;
 		unitByPosition = $makeMap(protocol.Position.keyFor, []);
 		unitByRegion = $makeMap(protocol.Position.keyFor, []);
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
