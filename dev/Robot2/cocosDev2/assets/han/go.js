@@ -35475,8 +35475,8 @@ $packages["tool/optalg"] = (function() {
 	};
 	$pkg.HillClimbing = HillClimbing;
 	OptAlgByPSO = function(iteration, genes) {
-		var _arg, _arg$1, _arg$2, _i, _i$1, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, bestGene, bestGenes, err, err$1, gene, gene$1, gene$2, genes, globalBestGene, i, iteration, j, nextGene, ret, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; bestGene = $f.bestGene; bestGenes = $f.bestGenes; err = $f.err; err$1 = $f.err$1; gene = $f.gene; gene$1 = $f.gene$1; gene$2 = $f.gene$2; genes = $f.genes; globalBestGene = $f.globalBestGene; i = $f.i; iteration = $f.iteration; j = $f.j; nextGene = $f.nextGene; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _i, _i$1, _i$2, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _ref$2, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, bestGene, bestGenes, err, err$1, gene, gene$1, gene$2, gene$3, genes, globalBestGene, i, iteration, j, nextGene, ret, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; bestGene = $f.bestGene; bestGenes = $f.bestGenes; err = $f.err; err$1 = $f.err$1; gene = $f.gene; gene$1 = $f.gene$1; gene$2 = $f.gene$2; gene$3 = $f.gene$3; genes = $f.genes; globalBestGene = $f.globalBestGene; i = $f.i; iteration = $f.iteration; j = $f.j; nextGene = $f.nextGene; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ret = new sliceType([]);
 		_ref = genes;
 		_i = 0;
@@ -35502,7 +35502,7 @@ $packages["tool/optalg"] = (function() {
 			bestGenes = $append(bestGenes, gene$2);
 			_i$1++;
 		}
-		_r$1 = GetBest(genes); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = GetBest(bestGenes); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		globalBestGene = _r$1;
 		i = 0;
 		/* while (true) { */ case 5:
@@ -35513,18 +35513,20 @@ $packages["tool/optalg"] = (function() {
 			_arg$2 = new $Float64(_r$2);
 			_r$3 = fmt.Printf("[OptAlgByPSO] ieration(%v/%v) score(%v)\n", new sliceType$2([_arg, _arg$1, _arg$2])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 			_r$3;
-			$r = time.Sleep(new time.Duration(0, 1)); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			j = 0;
-			/* while (true) { */ case 10:
-				/* if (!(j < ret.$length)) { break; } */ if(!(j < ret.$length)) { $s = 11; continue; }
-				_r$4 = HillClimbing(10, ((j < 0 || j >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + j])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_ref$2 = ret;
+			_i$2 = 0;
+			/* while (true) { */ case 9:
+				/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 10; continue; }
+				j = _i$2;
+				gene$3 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
+				$r = time.Sleep(new time.Duration(0, 1)); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				_r$4 = HillClimbing(10, gene$3); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 				_tuple$1 = _r$4;
 				nextGene = _tuple$1[0];
 				err$1 = _tuple$1[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
-				bestGene = ((j < 0 || j >= bestGenes.$length) ? ($throwRuntimeError("index out of range"), undefined) : bestGenes.$array[bestGenes.$offset + j]);
 				_r$5 = nextGene.Crossover(globalBestGene); /* */ $s = 13; case 13: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
 				_tuple$2 = _r$5;
 				nextGene = _tuple$2[0];
@@ -35532,6 +35534,7 @@ $packages["tool/optalg"] = (function() {
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
+				bestGene = ((j < 0 || j >= bestGenes.$length) ? ($throwRuntimeError("index out of range"), undefined) : bestGenes.$array[bestGenes.$offset + j]);
 				_r$6 = nextGene.Crossover(bestGene); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 				_tuple$3 = _r$6;
 				nextGene = _tuple$3[0];
@@ -35561,12 +35564,12 @@ $packages["tool/optalg"] = (function() {
 					globalBestGene = nextGene;
 				/* } */ case 21:
 				((j < 0 || j >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + j] = nextGene);
-				j = j + (1) >> 0;
-			/* } */ $s = 10; continue; case 11:
+				_i$2++;
+			/* } */ $s = 9; continue; case 10:
 			i = i + (1) >> 0;
 		/* } */ $s = 5; continue; case 6:
 		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: OptAlgByPSO }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.bestGene = bestGene; $f.bestGenes = bestGenes; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.gene$2 = gene$2; $f.genes = genes; $f.globalBestGene = globalBestGene; $f.i = i; $f.iteration = iteration; $f.j = j; $f.nextGene = nextGene; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: OptAlgByPSO }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.bestGene = bestGene; $f.bestGenes = bestGenes; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.gene$2 = gene$2; $f.gene$3 = gene$3; $f.genes = genes; $f.globalBestGene = globalBestGene; $f.i = i; $f.iteration = iteration; $f.j = j; $f.nextGene = nextGene; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OptAlgByPSO = OptAlgByPSO;
 	GetBest = function(population) {
@@ -35645,19 +35648,17 @@ $packages["app/model/v1"] = (function() {
 		}
 		this.Directive = Directive_;
 	});
-	LevelGene = $pkg.LevelGene = $newType(0, $kindStruct, "v1.LevelGene", true, "app/model/v1", true, function(Map_, Units_, Fitness_, TargetCost_) {
+	LevelGene = $pkg.LevelGene = $newType(0, $kindStruct, "v1.LevelGene", true, "app/model/v1", true, function(Map_, Units_, Fitness_) {
 		this.$val = this;
 		if (arguments.length === 0) {
 			this.Map = sliceType$2.nil;
 			this.Units = false;
 			this.Fitness = 0;
-			this.TargetCost = 0;
 			return;
 		}
 		this.Map = Map_;
 		this.Units = Units_;
 		this.Fitness = Fitness_;
-		this.TargetCost = TargetCost_;
 	});
 	ByAstarNodeEstimatedCost = $pkg.ByAstarNodeEstimatedCost = $newType(12, $kindSlice, "v1.ByAstarNodeEstimatedCost", true, "app/model/v1", true, null);
 	PotentailTarget = $pkg.PotentailTarget = $newType(0, $kindStruct, "v1.PotentailTarget", true, "app/model/v1", true, function(DesirePositions_, DesireUnitID_, DesireTransform_, DesireWeapon_) {
@@ -36245,8 +36246,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.QuerySuitabilityIDCount = QuerySuitabilityIDCount;
 	LevelGene.ptr.prototype.CalcFitness = function() {
-		var _count$1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, c, err, err$1, err$2, fitness, fitnessForRobot, pos, robotProto, robotProtoID, suit, terrain, this$1, tid, x, x$1, x$2, x$3, x$4, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _count$1 = $f._count$1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; c = $f.c; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; fitness = $f.fitness; fitnessForRobot = $f.fitnessForRobot; pos = $f.pos; robotProto = $f.robotProto; robotProtoID = $f.robotProtoID; suit = $f.suit; terrain = $f.terrain; this$1 = $f.this$1; tid = $f.tid; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _count$1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, c, err, err$1, err$2, fitness, fitnessForRobot, pos, robotProto, robotProtoID, suit, terrain, this$1, tid, x, x$1, x$2, x$3, x$4, x$5, x$6, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _count$1 = $f._count$1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; c = $f.c; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; fitness = $f.fitness; fitnessForRobot = $f.fitnessForRobot; pos = $f.pos; robotProto = $f.robotProto; robotProtoID = $f.robotProtoID; suit = $f.suit; terrain = $f.terrain; this$1 = $f.this$1; tid = $f.tid; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; x$3 = $f.x$3; x$4 = $f.x$4; x$5 = $f.x$5; x$6 = $f.x$6; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		this$1 = this;
 		/* */ if (_count === false) { $s = 1; continue; }
 		/* */ $s = 2; continue;
@@ -36274,8 +36275,7 @@ $packages["app/model/v1"] = (function() {
 			}
 		/* } */ case 2:
 		if ($keys(this$1.Units).length === 0) {
-			this$1.Fitness = 0;
-			$s = -1; return [new this$1.constructor.elem(this$1), $ifaceNil];
+			$s = -1; return [(x = new LevelGene.ptr(this$1.Map, this$1.Units, 0), new x.constructor.elem(x)), $ifaceNil];
 		}
 		fitness = 0;
 		fitnessForRobot = 0;
@@ -36298,7 +36298,7 @@ $packages["app/model/v1"] = (function() {
 			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 				$s = -1; return [new this$1.constructor.elem(this$1), err$1];
 			}
-			tid = (x = (x$1 = this$1.Map, x$2 = pos[1], ((x$2 < 0 || x$2 >= x$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + x$2])), x$3 = pos[0], ((x$3 < 0 || x$3 >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + x$3]));
+			tid = (x$1 = (x$2 = this$1.Map, x$3 = pos[1], ((x$3 < 0 || x$3 >= x$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$2.$array[x$2.$offset + x$3])), x$4 = pos[0], ((x$4 < 0 || x$4 >= x$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + x$4]));
 			_r$2 = helper.TerrainID2Terrain(tid); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 			_tuple$2 = _r$2;
 			terrain = $clone(_tuple$2[0], data.TerrainProto);
@@ -36313,13 +36313,12 @@ $packages["app/model/v1"] = (function() {
 			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
 				$s = -1; return [new this$1.constructor.elem(this$1), err$2];
 			}
-			fitnessForRobot = fitnessForRobot + ((x$4 = robotProto.Suitability, ((suit < 0 || suit >= x$4.length) ? ($throwRuntimeError("index out of range"), undefined) : x$4[suit])) * 10);
+			fitnessForRobot = fitnessForRobot + ((x$5 = robotProto.Suitability, ((suit < 0 || suit >= x$5.length) ? ($throwRuntimeError("index out of range"), undefined) : x$5[suit])) * 10);
 			_i$1++;
 		/* } */ $s = 4; continue; case 5:
 		fitness = fitness + (fitnessForRobot);
-		this$1.Fitness = fitness / ($keys(this$1.Units).length);
-		$s = -1; return [new this$1.constructor.elem(this$1), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.CalcFitness }; } $f._count$1 = _count$1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.c = c; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fitness = fitness; $f.fitnessForRobot = fitnessForRobot; $f.pos = pos; $f.robotProto = robotProto; $f.robotProtoID = robotProtoID; $f.suit = suit; $f.terrain = terrain; $f.this$1 = this$1; $f.tid = tid; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.$s = $s; $f.$r = $r; return $f;
+		$s = -1; return [(x$6 = new LevelGene.ptr(this$1.Map, this$1.Units, fitness / ($keys(this$1.Units).length)), new x$6.constructor.elem(x$6)), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.CalcFitness }; } $f._count$1 = _count$1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.c = c; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.fitness = fitness; $f.fitnessForRobot = fitnessForRobot; $f.pos = pos; $f.robotProto = robotProto; $f.robotProtoID = robotProtoID; $f.suit = suit; $f.terrain = terrain; $f.this$1 = this$1; $f.tid = tid; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.x$5 = x$5; $f.x$6 = x$6; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelGene.prototype.CalcFitness = function() { return this.$val.CalcFitness(); };
 	LevelGene.ptr.prototype.GetFitness = function() {
@@ -36420,7 +36419,7 @@ $packages["app/model/v1"] = (function() {
 				}
 			}
 		case 1:
-		$s = -1; return [(x$4 = new LevelGene.ptr(this$1.Map, units, 0, this$1.TargetCost), new x$4.constructor.elem(x$4)), $ifaceNil];
+		$s = -1; return [(x$4 = new LevelGene.ptr(this$1.Map, units, 0), new x$4.constructor.elem(x$4)), $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: LevelGene.ptr.prototype.Crossover }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$10 = _entry$10; $f._entry$11 = _entry$11; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._entry$9 = _entry$9; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._key$4 = _key$4; $f._key$5 = _key$5; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.b = b; $f.cx = cx; $f.cx$1 = cx$1; $f.has = has; $f.has$1 = has$1; $f.has$2 = has$2; $f.has$3 = has$3; $f.has$4 = has$4; $f.has$5 = has$5; $f.mapH = mapH; $f.mapW = mapW; $f.offset = offset; $f.offset$1 = offset$1; $f.pos1 = pos1; $f.pos1$1 = pos1$1; $f.pos1$2 = pos1$2; $f.pos2 = pos2; $f.pos2$1 = pos2$1; $f.pos2$2 = pos2$2; $f.this$1 = this$1; $f.units = units; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.x$3 = x$3; $f.x$4 = x$4; $f.y = y; $f.y$1 = y$1; $f.y$2 = y$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	LevelGene.prototype.Crossover = function(b) { return this.$val.Crossover(b); };
@@ -36477,6 +36476,7 @@ $packages["app/model/v1"] = (function() {
 					i = i + (1) >> 0;
 					/* continue; */ $s = 1; continue;
 				/* } */ case 7:
+				$unused(robotProto);
 				_key$1 = $clone(pos, arrayType); (units || $throwRuntimeError("assignment to entry in nil map"))[arrayType.keyFor(_key$1)] = { k: _key$1, v: robotProto.ID };
 				/* break; */ $s = 2; continue;
 			/* } */ $s = 1; continue; case 2:
@@ -36633,11 +36633,11 @@ $packages["app/model/v1"] = (function() {
 				_key = $clone(pos, arrayType); (units || $throwRuntimeError("assignment to entry in nil map"))[arrayType.keyFor(_key)] = { k: _key, v: robotProto.ID };
 				j = j + (1) >> 0;
 			/* } */ $s = 4; continue; case 5:
-			gene = new LevelGene.ptr(ctx.App.Gameplay.Map, units, 0, 0);
+			gene = new LevelGene.ptr(ctx.App.Gameplay.Map, units, 0);
 			genes = $append(genes, new gene.constructor.elem(gene));
 			i = i + (1) >> 0;
 		/* } */ $s = 1; continue; case 2:
-		_r$3 = optalg.OptAlgByPSO(200, genes); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3 = optalg.OptAlgByPSO(100, genes); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$1 = _r$3;
 		genes = _tuple$1[0];
 		err = _tuple$1[1];
@@ -41460,7 +41460,7 @@ $packages["app/model/v1"] = (function() {
 	model.methods = [{prop: "BuyRobot", name: "BuyRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyPilot", name: "BuyPilot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyWeapon", name: "BuyWeapon", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "BuyComponent", name: "BuyComponent", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocRobotPilot", name: "AssocRobotPilot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocRobotPilot", name: "DissocRobotPilot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocWeaponRobot", name: "AssocWeaponRobot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocWeaponRobot", name: "DissocWeaponRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "AssocComponentRobot", name: "AssocComponentRobot", pkg: "", typ: $funcType([$String, $String], [protocol.IModel, $error], false)}, {prop: "DissocComponentRobot", name: "DissocComponentRobot", pkg: "", typ: $funcType([$String], [protocol.IModel, $error], false)}, {prop: "OnSingleBattleMenuPhase", name: "OnSingleBattleMenuPhase", pkg: "", typ: $funcType([$emptyInterface, $Bool, $String, $String, $String], [$emptyInterface, $Bool, $error], false)}, {prop: "OnLineBattleMenuPhase", name: "OnLineBattleMenuPhase", pkg: "", typ: $funcType([$emptyInterface, $Bool, $String, $String, protocol.Position], [$emptyInterface, $Bool, $error], false)}, {prop: "OnPlayerTurnStart", name: "OnPlayerTurnStart", pkg: "", typ: $funcType([$emptyInterface, protocol.Player], [$emptyInterface, $error], false)}, {prop: "OnPlayerTurnEnd", name: "OnPlayerTurnEnd", pkg: "", typ: $funcType([$emptyInterface, protocol.Player], [$emptyInterface, $error], false)}, {prop: "OnEnemyTurnPhase", name: "OnEnemyTurnPhase", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $Bool, $error], false)}, {prop: "OnRobotTransform", name: "OnRobotTransform", pkg: "", typ: $funcType([$emptyInterface, $String, $String], [$emptyInterface, $error], false)}, {prop: "OnRobotSkyGround", name: "OnRobotSkyGround", pkg: "", typ: $funcType([$emptyInterface, $String, $Bool], [$emptyInterface, $error], false)}, {prop: "OnRobotMove", name: "OnRobotMove", pkg: "", typ: $funcType([$emptyInterface, $String, astar.NodeMap, protocol.Position], [$emptyInterface, $error], false)}, {prop: "OnRobotDone", name: "OnRobotDone", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "OnEnableRobotMenu", name: "OnEnableRobotMenu", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "OnDisableRobotMenu", name: "OnDisableRobotMenu", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $error], false)}, {prop: "OnEnableBattleMenu", name: "OnEnableBattleMenu", pkg: "", typ: $funcType([$emptyInterface, $String, $String, $String], [$emptyInterface, $error], false)}, {prop: "OnDisableBattleMenu", name: "OnDisableBattleMenu", pkg: "", typ: $funcType([$emptyInterface], [$emptyInterface, $error], false)}, {prop: "OnClickSystemMenu", name: "OnClickSystemMenu", pkg: "", typ: $funcType([$emptyInterface, $String], [$emptyInterface, $error], false)}, {prop: "ObservePage", name: "ObservePage", pkg: "", typ: $funcType([$emptyInterface, $Int], [$emptyInterface, $error], false)}, {prop: "ObserveRobot", name: "ObserveRobot", pkg: "", typ: $funcType([protocol.Robot], [protocol.Robot, $error], false)}, {prop: "New", name: "New", pkg: "", typ: $funcType([$emptyInterface], [protocol.IModel, $error], false)}, {prop: "Save", name: "Save", pkg: "", typ: $funcType([], [$error], false)}, {prop: "Load", name: "Load", pkg: "", typ: $funcType([], [protocol.IModel, $error], false)}, {prop: "QueryActivePlayer", name: "QueryActivePlayer", pkg: "", typ: $funcType([], [protocol.Player, $error], false)}, {prop: "NextPlayer", name: "NextPlayer", pkg: "", typ: $funcType([], [protocol.IModel, $error], false)}, {prop: "IsDone", name: "IsDone", pkg: "", typ: $funcType([], [$Bool], false)}, {prop: "QueryUnitsByRegion", name: "QueryUnitsByRegion", pkg: "", typ: $funcType([protocol.Position, protocol.Position], [sliceType], false)}, {prop: "QueryUnitByPosition", name: "QueryUnitByPosition", pkg: "", typ: $funcType([protocol.Position], [$String], false)}, {prop: "SetMoveRange", name: "SetMoveRange", pkg: "", typ: $funcType([sliceType$4], [protocol.IModel], false)}, {prop: "GetMoveRange", name: "GetMoveRange", pkg: "", typ: $funcType([], [sliceType$4], false)}, {prop: "QueryMoveRangeTree", name: "QueryMoveRangeTree", pkg: "", typ: $funcType([$String], [astar.NodeMap, $error], false)}, {prop: "QueryMoveCount", name: "QueryMoveCount", pkg: "", typ: $funcType([$String], [$Int], false)}, {prop: "SetCursor", name: "SetCursor", pkg: "", typ: $funcType([protocol.Position], [protocol.IModel], false)}, {prop: "GetCursor", name: "GetCursor", pkg: "", typ: $funcType([], [protocol.Position], false)}];
 	Goal.init("", [{prop: "Type", name: "Type", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "RobotID", name: "RobotID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Position", name: "Position", embedded: false, exported: true, typ: protocol.Position, tag: ""}]);
 	AIModel.init("", [{prop: "Directive", name: "Directive", embedded: false, exported: true, typ: mapType$2, tag: ""}]);
-	LevelGene.init("", [{prop: "Map", name: "Map", embedded: false, exported: true, typ: sliceType$2, tag: ""}, {prop: "Units", name: "Units", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Fitness", name: "Fitness", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "TargetCost", name: "TargetCost", embedded: false, exported: true, typ: $Float64, tag: ""}]);
+	LevelGene.init("", [{prop: "Map", name: "Map", embedded: false, exported: true, typ: sliceType$2, tag: ""}, {prop: "Units", name: "Units", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Fitness", name: "Fitness", embedded: false, exported: true, typ: $Float64, tag: ""}]);
 	ByAstarNodeEstimatedCost.init(ptrType);
 	PotentailTarget.init("", [{prop: "DesirePositions", name: "DesirePositions", embedded: false, exported: true, typ: sliceType$4, tag: ""}, {prop: "DesireUnitID", name: "DesireUnitID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "DesireTransform", name: "DesireTransform", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "DesireWeapon", name: "DesireWeapon", embedded: false, exported: true, typ: protocol.Weapon, tag: ""}]);
 	lobby.init("", [{prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$7, tag: ""}]);

@@ -21,18 +21,19 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 		bestGenes = append(bestGenes, gene)
 	}
 	// 群體最佳
-	globalBestGene := GetBest(genes)
+	globalBestGene := GetBest(bestGenes)
 	for i := 0; i < iteration; i++ {
 		fmt.Printf("[OptAlgByPSO] ieration(%v/%v) score(%v)\n", i, iteration, globalBestGene.GetFitness())
-		for j := 0; j < len(ret); j++ {
+		for j, gene := range ret {
+			//fmt.Printf("[OptAlgByPSO] ieration(%v) score(%v)\n", j, globalBestGene.GetFitness())
 			time.Sleep(1)
+			//fmt.Printf("[OptAlgByPSO] before(%v)\n", gene.GetFitness())
 			// 突變
-			nextGene, err := HillClimbing(10, ret[j])
+			nextGene, err := HillClimbing(10, gene)
 			if err != nil {
 				return nil, err
 			}
-			// 個人最佳解
-			bestGene := bestGenes[j]
+			//fmt.Printf("[OptAlgByPSO] after(%v)\n", nextGene.GetFitness())
 			// 和群體最佳解雜交
 			// 注意雜交的演算法所選的基因位置必須有隨機性
 			nextGene, err = nextGene.Crossover(globalBestGene)
@@ -40,6 +41,7 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 				return nil, err
 			}
 			// 和個人最佳解雜交
+			bestGene := bestGenes[j]
 			nextGene, err = nextGene.Crossover(bestGene)
 			if err != nil {
 				return nil, err

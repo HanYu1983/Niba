@@ -28,6 +28,46 @@ func QuerySuitabilityIDCount(gameMap [][]int) (map[int]int, error) {
 	return _count, nil
 }
 
+type testLevelGene0 struct {
+	Fitness float64
+}
+
+func (this testLevelGene0) CalcFitness() (optalg.IGene, error) {
+	this.Fitness = 1
+	return this, nil
+}
+func (this testLevelGene0) Crossover(b optalg.IGene) (optalg.IGene, error) {
+	return this, nil
+}
+func (this testLevelGene0) GetFitness() float64 {
+	return this.Fitness
+}
+func (this testLevelGene0) Mutate() (optalg.IGene, error) {
+	return this, nil
+}
+
+func TestGene(t *testing.T) {
+	levelGene := testLevelGene0{}
+	{
+		levelGene2 := levelGene
+		levelGene2.Fitness = 2
+		if levelGene.Fitness == levelGene2.Fitness {
+			t.Fatal("必須是不同的記憶體")
+		}
+	}
+
+	var levelGene3 optalg.IGene = levelGene
+	levelGene.Fitness = 3
+	if levelGene.Fitness == levelGene3.GetFitness() {
+		t.Fatal("必須是不同的記憶體")
+	}
+	var levelGene4 optalg.IGene = levelGene3
+	_, _ = levelGene3.CalcFitness()
+	if levelGene3.GetFitness() != levelGene4.GetFitness() {
+		t.Fatal("必須是不同的記憶體")
+	}
+}
+
 type testLevelGene struct {
 	Map     [][]int
 	Units   map[[2]int]string
