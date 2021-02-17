@@ -29,7 +29,7 @@ func TestOnPlayerTurnEnd(t *testing.T) {
 	ctx := def.DefaultUI
 	ctx.Model = mockModel
 
-	if ctx.Model.(model).App.Gameplay.Tags["0"].IsDone == false {
+	if ctx.Model.(Model).App.Gameplay.Tags["0"].IsDone == false {
 		t.Error("請先將IsDone設為true")
 	}
 	{
@@ -38,7 +38,7 @@ func TestOnPlayerTurnEnd(t *testing.T) {
 		if err != nil {
 			t.Error(err.Error())
 		}
-		if ctx.Model.(model).App.Gameplay.Tags["0"].IsDone == false {
+		if ctx.Model.(Model).App.Gameplay.Tags["0"].IsDone == false {
 			t.Error("敵人回合結束時和好人無關")
 		}
 	}
@@ -48,7 +48,7 @@ func TestOnPlayerTurnEnd(t *testing.T) {
 		if err != nil {
 			t.Error(err.Error())
 		}
-		if ctx.Model.(model).App.Gameplay.Tags["0"].IsDone {
+		if ctx.Model.(Model).App.Gameplay.Tags["0"].IsDone {
 			t.Error("好人回合結束時必須恢復IsDone")
 		}
 	}

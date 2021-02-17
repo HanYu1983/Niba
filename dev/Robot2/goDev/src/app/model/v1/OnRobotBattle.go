@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/data"
 	"app/tool/def"
 	"app/tool/helper"
@@ -21,13 +22,13 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 	}
 	// handle robot die
 	// robotWillDelete := []protocol.Robot{}
-	// for _, robot := range ctx.Model.(model).App.Gameplay.Robots {
+	// for _, robot := range ctx.Model.(Model).App.Gameplay.Robots {
 	// 	if robot.HP > 0 {
 	// 		continue
 	// 	}
 	// 	robotWillDelete = append(robotWillDelete, robot)
 	// }
-	// model := ctx.Model.(model)
+	// model := ctx.Model.(Model)
 	// for _, robot := range robotWillDelete {
 	// 	model.App.Gameplay.Robots = protocol.DissocStringRobot(model.App.Gameplay.Robots, robot.ID)
 	// 	model.App.Gameplay.Positions = protocol.DissocStringPosition(model.App.Gameplay.Positions, robot.ID)
@@ -42,7 +43,7 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (uidata.UI, protocol.BattleResult, error) {
 	log.Log(protocol.LogCategoryPhase, "Battle", "start")
 	ctx := origin
-	_model := ctx.Model.(model)
+	_model := impl.Model(ctx.Model.(Model))
 	view := def.View
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
@@ -52,7 +53,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	robotWeapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	robotWeapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -72,7 +73,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	targetRobotWeapons, err := QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
+	targetRobotWeapons, err := impl.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -124,7 +125,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 		robot = _robotAfter
 	}
 	// 命中率
-	hitRate, err := QueryBattleHitRate(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
+	hitRate, err := impl.QueryBattleHitRate(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -138,7 +139,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 		// 傷害動畫
 		animationType := protocol.BattleResultTypeDamage
 		// 命中
-		damage, err := QueryBattleDamage(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
+		damage, err := impl.QueryBattleDamage(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
 		if err != nil {
 			return origin, protocol.BattleResult{}, err
 		}
@@ -234,13 +235,13 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 			})
 			targetRobot = _robotAfter
 		}
-		hitRate, err := QueryBattleHitRate(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
+		hitRate, err := impl.QueryBattleHitRate(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
 		if err != nil {
 			return origin, protocol.BattleResult{}, err
 		}
 		isHit := rand.Float64() < hitRate
 		if isHit {
-			damage, err := QueryBattleDamage(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
+			damage, err := impl.QueryBattleDamage(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
 			if err != nil {
 				return origin, protocol.BattleResult{}, err
 			}
@@ -290,7 +291,7 @@ ANIMATE:
 		return origin, protocol.BattleResult{}, err
 	}
 	view.RenderRobotBattle(ctx, battleResult)
-	_model = ctx.Model.(model)
+	_model = impl.Model(ctx.Model.(Model))
 	if robot.HP <= 0 {
 		_model.App.Gameplay.Robots = protocol.DissocStringRobot(_model.App.Gameplay.Robots, robot.ID)
 		_model.App.Gameplay.Positions = protocol.DissocStringPosition(_model.App.Gameplay.Positions, robot.ID)
@@ -309,7 +310,7 @@ ANIMATE:
 		_model.App.Gameplay.Robots = protocol.AssocStringRobot(_model.App.Gameplay.Robots, targetRobot.ID, targetRobot)
 		_model.App.Gameplay.Pilots = protocol.AssocStringPilot(_model.App.Gameplay.Pilots, targetRobotPilot.ID, targetRobotPilot)
 	}
-	ctx.Model = _model
+	ctx.Model = Model(_model)
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, battleResult, err

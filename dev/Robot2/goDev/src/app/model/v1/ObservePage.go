@@ -1,6 +1,9 @@
 package v1
 
-import "app/tool/uidata"
+import (
+	"app/model/v1/internal/impl"
+	"app/tool/uidata"
+)
 
 func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	var err error
@@ -25,18 +28,18 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	model := ctx.Model.(model)
-	ctx.Info.Money = QueryMoney(model)
-	ctx.Info.Robots = QueryRobots(model)
-	ctx.Info.Pilots = QueryPilots(model)
-	ctx.Info.Weapons = QueryWeapons(model)
-	ctx.Info.Components = QueryComponents(model)
-	ctx.Info.CanBuyRobots = QueryRobotCanBuy(model)
-	ctx.Info.CanBuyPilots = QueryPilotCanBuy(model)
-	ctx.Info.CanBuyWeapons = QueryWeaponCanBuy(model)
-	ctx.Info.CanBuyComponents = QueryComponentCanBuy(model)
-	ctx.Info.PilotIDByRobotID = QueryPilotIDByRobotID(model)
-	ctx.Info.RobotIDByWeaponID = QueryRobotIDByWeaponID(model)
-	ctx.Info.RobotIDByComponentID = QueryRobotIDByComponentID(model)
+	model := impl.Model(ctx.Model.(Model))
+	ctx.Info.Money = impl.QueryMoney(model)
+	ctx.Info.Robots = impl.QueryRobots(model)
+	ctx.Info.Pilots = impl.QueryPilots(model)
+	ctx.Info.Weapons = impl.QueryWeapons(model)
+	ctx.Info.Components = impl.QueryComponents(model)
+	ctx.Info.CanBuyRobots = impl.QueryRobotCanBuy(model)
+	ctx.Info.CanBuyPilots = impl.QueryPilotCanBuy(model)
+	ctx.Info.CanBuyWeapons = impl.QueryWeaponCanBuy(model)
+	ctx.Info.CanBuyComponents = impl.QueryComponentCanBuy(model)
+	ctx.Info.PilotIDByRobotID = impl.QueryPilotIDByRobotID(model)
+	ctx.Info.RobotIDByWeaponID = impl.QueryRobotIDByWeaponID(model)
+	ctx.Info.RobotIDByComponentID = impl.QueryRobotIDByComponentID(model)
 	return ctx, nil
 }

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -12,10 +13,12 @@ func OnRobotMove(origin uidata.UI, robotID string, tree astar.NodeMap, pos proto
 	var err error
 	ctx := origin
 	view := def.View
-	ctx.Model, err = RobotMove(ctx.Model.(model), robotID, pos)
+	model := impl.Model(ctx.Model.(Model))
+	model, err = impl.RobotMove(model, robotID, pos)
 	if err != nil {
 		return origin, err
 	}
+	ctx.Model = Model(model)
 	view.RenderRobotMove(ctx, robotID, helper.MoveRangeTree2Path(tree, pos))
 	ctx, err = view.Render(ctx)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 func OnDisableLineBattleMenu(origin uidata.UI) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "OnDisableLineBattleMenu", "start")
 	ctx := origin
-	_model := ctx.Model.(model)
+	_model := ctx.Model.(Model)
 	_model.App.Gameplay.HitMarks = map[string]protocol.HitMark{}
 	_model.App.Gameplay.MapAttackRange = nil
 	// apply

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -9,7 +10,7 @@ import (
 
 func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
-	model := ctx.Model.(model)
+	model := impl.Model(ctx.Model.(Model))
 	menu, has := ctx.Menu1Ds[menuID]
 	if has == false {
 		return origin, nil
@@ -25,16 +26,16 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	case uidata.Menu1DComponentRobotListMenu, uidata.Menu1DComponentListMenu:
 		options = protocol.KesStringComponent(model.App.Lobby.Components)
 	case uidata.Menu1DBuyRobotMenu:
-		canBuy := QueryRobotCanBuy(model)
+		canBuy := impl.QueryRobotCanBuy(model)
 		options = data.KesStringRobotProto(canBuy)
 	case uidata.Menu1DBuyPilotMenu:
-		canBuy := QueryPilotCanBuy(model)
+		canBuy := impl.QueryPilotCanBuy(model)
 		options = data.KesStringPilotProto(canBuy)
 	case uidata.Menu1DBuyWeaponMenu:
-		canBuy := QueryWeaponCanBuy(model)
+		canBuy := impl.QueryWeaponCanBuy(model)
 		options = data.KesStringWeaponProto(canBuy)
 	case uidata.Menu1DBuyComponentMenu:
-		canBuy := QueryComponentCanBuy(model)
+		canBuy := impl.QueryComponentCanBuy(model)
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
 		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}

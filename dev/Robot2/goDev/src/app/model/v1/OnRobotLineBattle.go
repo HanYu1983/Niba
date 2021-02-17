@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/data"
 	"app/tool/def"
 	"app/tool/helper"
@@ -15,7 +16,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	log.Log(protocol.LogCategoryPhase, "OnRobotLineBattle", "start")
 	ctx := origin
 	view := def.View
-	_model := ctx.Model.(model)
+	_model := impl.Model(ctx.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
@@ -28,7 +29,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -107,7 +108,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 			isHit := rand.Float64() < hitRate
 			if isHit {
 				// 傷害加成比例
-				damage, err := QueryBattleDamage(_model, robot, robotPilot, weapon, targetRobot, targetRobotPilot)
+				damage, err := impl.QueryBattleDamage(_model, robot, robotPilot, weapon, targetRobot, targetRobotPilot)
 				if err != nil {
 					return origin, protocol.BattleResult{}, err
 				}
@@ -170,7 +171,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	}
 	view.RenderRobotBattle(ctx, battleResult)
 	// 套用
-	ctx.Model = _model
+	ctx.Model = Model(_model)
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err

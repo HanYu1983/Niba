@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/data"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -10,7 +11,7 @@ import (
 
 func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 	ctx := origin
-	_model := ctx.Model.(model)
+	_model := impl.Model(ctx.Model.(Model))
 	tags := _model.App.Gameplay.Tags[robotID]
 	if tags.IsDone {
 		return origin, fmt.Errorf("[EnableRobotMenu] robot(%v) already done", robotID)
@@ -31,7 +32,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 			options = append(options, []string{uidata.MenuOptionMove})
 		}
 		// weapons
-		weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+		weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 		if err != nil {
 			return origin, err
 		}
@@ -49,7 +50,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		}
 		// sky ground
 		if tags.MoveCount == 0 {
-			suitabiity, err := QueryRobotSuitability(_model, robot.ID)
+			suitabiity, err := impl.QueryRobotSuitability(_model, robot.ID)
 			if err != nil {
 				return origin, err
 			}
@@ -65,7 +66,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		// invalidWeapons
 		invalidWeapons := map[string]string{}
 		if len(weapons) > 0 {
-			invalidWeapons, err = CheckInvalidWeapons(_model, robot, weapons)
+			invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons)
 		}
 		_model.App.Gameplay.RobotMenu.Active = true
 		_model.App.Gameplay.RobotMenu.ActiveRobotID = robotID
@@ -95,6 +96,6 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 	}
 	log.Log(protocol.LogCategoryDetail, "EnableRobotMenu", fmt.Sprintf("RobotMenu(%v)\n", _model.App.Gameplay.RobotMenu))
 	// apply
-	ctx.Model = _model
+	ctx.Model = Model(_model)
 	return ctx, nil
 }

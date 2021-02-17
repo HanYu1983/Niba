@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -13,7 +14,7 @@ import (
 func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, targetPosition protocol.Position) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "OnEnableLineBattleMenu", "start")
 	ctx := origin
-	_model := ctx.Model.(model)
+	_model := impl.Model(ctx.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, err
@@ -22,7 +23,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	if err != nil {
 		return origin, err
 	}
-	weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, err
 	}
@@ -42,7 +43,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		}
 		invalidWeapons := map[string]string{}
 		if len(weapons) > 0 {
-			invalidWeapons, err = CheckInvalidWeapons(_model, robot, weapons)
+			invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons)
 		}
 		robotMenu.Active = true
 		robotMenu.ActiveRobotID = robot.ID
@@ -62,7 +63,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			return origin, err
 		}
 		toPos := targetPosition
-		weaponRange, err := QueryRobotWeaponRange(_model, robot, weapon)
+		weaponRange, err := impl.QueryRobotWeaponRange(_model, robot, weapon)
 		if err != nil {
 			return origin, err
 		}
@@ -73,7 +74,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		size := 10
 		leftTop := protocol.Position{fromPos[0] - size, fromPos[0] - size}
 		rightBottom := protocol.Position{fromPos[0] + size, fromPos[0] + size}
-		unitsInRegion := SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
+		unitsInRegion := impl.SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
 
 		// 射線和法線
 		fromPosV2 := mgl64.Vec2{float64(fromPos[0]), float64(fromPos[1])}
@@ -118,7 +119,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			// 機體在射線內的比例
 			rate := 1.0 - (distanceWidth / float64(weaponRangeWidth))
 			// 命中率加成比例
-			hitRate, err := QueryBattleHitRate(_model, robot, pilot, weapon, targetRobot, targetPilot)
+			hitRate, err := impl.QueryBattleHitRate(_model, robot, pilot, weapon, targetRobot, targetPilot)
 			if err != nil {
 				return origin, err
 			}
@@ -157,7 +158,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	}
 
 	// apply
-	ctx.Model = _model
+	ctx.Model = Model(_model)
 	{
 		// 重設Cursor
 		menu, err := uidata.TryGetIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu)

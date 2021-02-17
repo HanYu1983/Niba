@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -25,29 +26,29 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		if err != nil {
 			return origin, err
 		}
-		model := ctx.Model.(model)
+		model := ctx.Model.(Model)
 		model.App.Gameplay.Map = tempMap
 		ctx.Model = model
 	case uidata.MenuOptionTest2:
-		model := ctx.Model.(model)
+		model := impl.Model(ctx.Model.(Model))
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
-		model, err = GenerateLevelByPSO(model, "ai1")
+		model, err = impl.GenerateLevelByPSO(model, "ai1")
 		if err != nil {
 			return origin, err
 		}
-		ctx.Model = model
+		ctx.Model = Model(model)
 	case uidata.MenuOptionTest3:
-		model := ctx.Model.(model)
+		model := impl.Model(ctx.Model.(Model))
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
-		model, err = GenerateLevelByHC(model, "ai1")
+		model, err = impl.GenerateLevelByHC(model, "ai1")
 		if err != nil {
 			return origin, err
 		}
-		ctx.Model = model
+		ctx.Model = Model(model)
 	}
 	return ctx, nil
 }

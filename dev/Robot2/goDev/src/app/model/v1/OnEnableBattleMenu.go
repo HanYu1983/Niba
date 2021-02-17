@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -9,7 +10,7 @@ import (
 
 func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targetRobotID string) (uidata.UI, error) {
 	ctx := origin
-	_model := origin.Model.(model)
+	_model := impl.Model(origin.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, err
@@ -23,7 +24,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 	// battleMenu
 	battleMenu := _model.App.Gameplay.BattleMenu
 	{
-		weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+		weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 		weapon, err := protocol.TryGetStringWeapon(weapons, weaponID)
 		if err != nil {
 			return origin, err
@@ -42,12 +43,12 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			options := [][]string{}
 			rowFunctionMapping := map[int]int{}
 			// weapons
-			weapons, err := QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
+			weapons, err := impl.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
 			if err != nil {
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := CheckInvalidWeapon(_model, targetRobot, weapon, []string{robot.ID})
+				invalieStr, err := impl.CheckInvalidWeapon(_model, targetRobot, weapon, []string{robot.ID})
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -66,7 +67,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = CheckInvalidWeapons(_model, targetRobot, weapons)
+				invalidWeapons, err = impl.CheckInvalidWeapons(_model, targetRobot, weapons)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = targetRobotID
@@ -79,12 +80,12 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			options := [][]string{}
 			rowFunctionMapping := map[int]int{}
 			// weapons
-			weapons, err := QueryRobotWeapons(_model, robot.ID, robot.Transform)
+			weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 			if err != nil {
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := CheckInvalidWeapon(_model, robot, weapon, []string{targetRobot.ID})
+				invalieStr, err := impl.CheckInvalidWeapon(_model, robot, weapon, []string{targetRobot.ID})
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -100,7 +101,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = CheckInvalidWeapons(_model, robot, weapons)
+				invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = robotID
@@ -115,7 +116,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 	// apply
 	_model.App.Gameplay.BattleMenu = battleMenu
 	_model.App.Gameplay.RobotMenu = robotMenu
-	ctx.Model = _model
+	ctx.Model = Model(_model)
 	{
 		// 重設Cursor
 		menu, err := uidata.TryGetIntMenu2D(ctx.Menu2Ds, uidata.Menu2DUnitMenu)

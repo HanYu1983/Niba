@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/impl"
 	"app/tool"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -12,7 +13,7 @@ import (
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	model := ctx.Model.(model)
+	model := impl.Model(ctx.Model.(Model))
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.App.Gameplay.Map
 	cursor := model.App.Gameplay.Cursor
@@ -34,7 +35,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	// local units
 	leftTop := gameplayPage.Camera
 	rightBottom := protocol.Position{leftTop[0] + uidata.MapWidth, leftTop[1] + uidata.MapHeight}
-	gameplayPage.Units = model.QueryUnitsByRegion(leftTop, rightBottom)
+	gameplayPage.Units = impl.QueryUnitsByRegion(model, leftTop, rightBottom)
 	//gameplayPage.Units = model.App.Gameplay.Units
 	// local position
 	localPosDict := map[string]protocol.Position{}
@@ -44,7 +45,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	gameplayPage.Positions = localPosDict
 	// robots
-	gameplayPage.Robots, err = ObserveRobots(model, model.App.Gameplay.Robots)
+	gameplayPage.Robots, err = impl.ObserveRobots(model, model.App.Gameplay.Robots)
 	if err != nil {
 		return origin, err
 	}
@@ -95,7 +96,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
-			attackRange, err := QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
+			attackRange, err := impl.QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
 			if err != nil {
 				return origin, err
 			}
@@ -122,7 +123,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		log.Log(protocol.LogCategoryWarning, "ObserveGameplayPage", err.Error())
 		err = nil
 	}
-	unitAtCursor := SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
+	unitAtCursor := impl.SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
 	gameplayPage.CursorInfo.UnitID = unitAtCursor
 	gameplayPage.CursorInfo.Terrain = terrain
 	// apply
