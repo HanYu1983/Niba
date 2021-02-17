@@ -42,7 +42,7 @@ func Main() {
 	view.Install()
 	var err error
 	ui := def.DefaultUI
-	ui.Model, err = v1.Model.New(nil)
+	ui.Model, err = v1.DefaultModel.New(nil)
 	if err != nil {
 		panic(err)
 	}

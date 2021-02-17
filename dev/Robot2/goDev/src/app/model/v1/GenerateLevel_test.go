@@ -11,7 +11,7 @@ func TestGenerateLevel(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ctx := Model
+	ctx := DefaultModel
 	ctx.App.Gameplay.Map = tempMap
 	ctx, err = GenerateLevel(ctx, "abc")
 	if err != nil {

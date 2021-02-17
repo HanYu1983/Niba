@@ -23,9 +23,9 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 	// 群體最佳
 	globalBestGene := GetBest(genes)
 	for i := 0; i < iteration; i++ {
-		fmt.Printf("[OptAlgByPSO] ieration(%v/%v)\n", i, iteration)
-		time.Sleep(10)
+		fmt.Printf("[OptAlgByPSO] ieration(%v/%v) score(%v)\n", i, iteration, globalBestGene.GetFitness())
 		for j := 0; j < len(ret); j++ {
+			time.Sleep(1)
 			// 突變
 			nextGene, err := HillClimbing(10, ret[j])
 			if err != nil {
@@ -51,7 +51,6 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 			// 更新最佳解
 			if nextGene.GetFitness() > bestGene.GetFitness() {
 				bestGenes[j] = nextGene
-				//fmt.Println(globalBestGene.GetFitness())
 			}
 			if nextGene.GetFitness() > globalBestGene.GetFitness() {
 				globalBestGene = nextGene

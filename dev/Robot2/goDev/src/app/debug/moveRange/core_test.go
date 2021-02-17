@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	mockModel = v1.Model
+	mockModel = v1.DefaultModel
 	mockView  = helper.CreateMockView()
 )
 

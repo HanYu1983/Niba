@@ -44,7 +44,12 @@ func OptAlgByAstar(mutateCount int, forwardCount int, estimateF func(IGene) floa
 						continue
 					}
 				} else {
-					nextGene, err = HillClimbing(1, currGene)
+					nextGene, err = currGene.Mutate()
+					if err != nil {
+						fmt.Println(err.Error())
+						continue
+					}
+					nextGene, err = currGene.CalcFitness()
 					if err != nil {
 						fmt.Println(err.Error())
 						continue

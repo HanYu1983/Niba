@@ -33,10 +33,9 @@ func QuerySuitabilityIDCount(gameMap [][]int) (map[int]int, error) {
 }
 
 type LevelGene struct {
-	Map        [][]int
-	Units      map[[2]int]string
-	Fitness    float64
-	TargetCost float64
+	Map     [][]int
+	Units   map[[2]int]string
+	Fitness float64
 }
 
 func (this LevelGene) CalcFitness() (optalg.IGene, error) {
@@ -166,9 +165,8 @@ func (this LevelGene) Crossover(b optalg.IGene) (optalg.IGene, error) {
 		}
 	}
 	return LevelGene{
-		Units:      units,
-		Map:        this.Map,
-		TargetCost: this.TargetCost,
+		Units: units,
+		Map:   this.Map,
 	}, nil
 }
 func (this LevelGene) Mutate() (optalg.IGene, error) {
@@ -284,7 +282,7 @@ func GenerateLevelByGeneticAlgo(origin model, playerID string) (model, error) {
 		}
 		genes = append(genes, gene)
 	}
-	genes, err = optalg.OptAlgByPSO(100, genes)
+	genes, err = optalg.OptAlgByPSO(200, genes)
 	if err != nil {
 		return origin, err
 	}

@@ -35475,8 +35475,8 @@ $packages["tool/optalg"] = (function() {
 	};
 	$pkg.HillClimbing = HillClimbing;
 	OptAlgByPSO = function(iteration, genes) {
-		var _i, _i$1, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, bestGene, bestGenes, err, err$1, gene, gene$1, gene$2, genes, globalBestGene, i, iteration, j, nextGene, ret, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; bestGene = $f.bestGene; bestGenes = $f.bestGenes; err = $f.err; err$1 = $f.err$1; gene = $f.gene; gene$1 = $f.gene$1; gene$2 = $f.gene$2; genes = $f.genes; globalBestGene = $f.globalBestGene; i = $f.i; iteration = $f.iteration; j = $f.j; nextGene = $f.nextGene; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _i, _i$1, _r, _r$1, _r$10, _r$11, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, bestGene, bestGenes, err, err$1, gene, gene$1, gene$2, genes, globalBestGene, i, iteration, j, nextGene, ret, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _i = $f._i; _i$1 = $f._i$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; bestGene = $f.bestGene; bestGenes = $f.bestGenes; err = $f.err; err$1 = $f.err$1; gene = $f.gene; gene$1 = $f.gene$1; gene$2 = $f.gene$2; genes = $f.genes; globalBestGene = $f.globalBestGene; i = $f.i; iteration = $f.iteration; j = $f.j; nextGene = $f.nextGene; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ret = new sliceType([]);
 		_ref = genes;
 		_i = 0;
@@ -35507,62 +35507,66 @@ $packages["tool/optalg"] = (function() {
 		i = 0;
 		/* while (true) { */ case 5:
 			/* if (!(i < iteration)) { break; } */ if(!(i < iteration)) { $s = 6; continue; }
-			_r$2 = fmt.Printf("[OptAlgByPSO] ieration(%v/%v)\n", new sliceType$2([new $Int(i), new $Int(iteration)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_r$2;
-			$r = time.Sleep(new time.Duration(0, 10)); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_arg = new $Int(i);
+			_arg$1 = new $Int(iteration);
+			_r$2 = globalBestGene.GetFitness(); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_arg$2 = new $Float64(_r$2);
+			_r$3 = fmt.Printf("[OptAlgByPSO] ieration(%v/%v) score(%v)\n", new sliceType$2([_arg, _arg$1, _arg$2])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_r$3;
+			$r = time.Sleep(new time.Duration(0, 1)); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 			j = 0;
-			/* while (true) { */ case 9:
-				/* if (!(j < ret.$length)) { break; } */ if(!(j < ret.$length)) { $s = 10; continue; }
-				_r$3 = HillClimbing(10, ((j < 0 || j >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + j])); /* */ $s = 11; case 11: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_tuple$1 = _r$3;
+			/* while (true) { */ case 10:
+				/* if (!(j < ret.$length)) { break; } */ if(!(j < ret.$length)) { $s = 11; continue; }
+				_r$4 = HillClimbing(10, ((j < 0 || j >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + j])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_tuple$1 = _r$4;
 				nextGene = _tuple$1[0];
 				err$1 = _tuple$1[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
 				bestGene = ((j < 0 || j >= bestGenes.$length) ? ($throwRuntimeError("index out of range"), undefined) : bestGenes.$array[bestGenes.$offset + j]);
-				_r$4 = nextGene.Crossover(globalBestGene); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				_tuple$2 = _r$4;
+				_r$5 = nextGene.Crossover(globalBestGene); /* */ $s = 13; case 13: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				_tuple$2 = _r$5;
 				nextGene = _tuple$2[0];
 				err$1 = _tuple$2[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
-				_r$5 = nextGene.Crossover(bestGene); /* */ $s = 13; case 13: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-				_tuple$3 = _r$5;
+				_r$6 = nextGene.Crossover(bestGene); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_tuple$3 = _r$6;
 				nextGene = _tuple$3[0];
 				err$1 = _tuple$3[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
-				_r$6 = nextGene.CalcFitness(); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-				_tuple$4 = _r$6;
+				_r$7 = nextGene.CalcFitness(); /* */ $s = 15; case 15: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_tuple$4 = _r$7;
 				nextGene = _tuple$4[0];
 				err$1 = _tuple$4[1];
 				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 					$s = -1; return [sliceType.nil, err$1];
 				}
-				_r$7 = nextGene.GetFitness(); /* */ $s = 17; case 17: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				_r$8 = bestGene.GetFitness(); /* */ $s = 18; case 18: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-				/* */ if (_r$7 > _r$8) { $s = 15; continue; }
-				/* */ $s = 16; continue;
-				/* if (_r$7 > _r$8) { */ case 15:
+				_r$8 = nextGene.GetFitness(); /* */ $s = 18; case 18: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+				_r$9 = bestGene.GetFitness(); /* */ $s = 19; case 19: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+				/* */ if (_r$8 > _r$9) { $s = 16; continue; }
+				/* */ $s = 17; continue;
+				/* if (_r$8 > _r$9) { */ case 16:
 					((j < 0 || j >= bestGenes.$length) ? ($throwRuntimeError("index out of range"), undefined) : bestGenes.$array[bestGenes.$offset + j] = nextGene);
-				/* } */ case 16:
-				_r$9 = nextGene.GetFitness(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-				_r$10 = globalBestGene.GetFitness(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-				/* */ if (_r$9 > _r$10) { $s = 19; continue; }
-				/* */ $s = 20; continue;
-				/* if (_r$9 > _r$10) { */ case 19:
+				/* } */ case 17:
+				_r$10 = nextGene.GetFitness(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+				_r$11 = globalBestGene.GetFitness(); /* */ $s = 23; case 23: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+				/* */ if (_r$10 > _r$11) { $s = 20; continue; }
+				/* */ $s = 21; continue;
+				/* if (_r$10 > _r$11) { */ case 20:
 					globalBestGene = nextGene;
-				/* } */ case 20:
+				/* } */ case 21:
 				((j < 0 || j >= ret.$length) ? ($throwRuntimeError("index out of range"), undefined) : ret.$array[ret.$offset + j] = nextGene);
 				j = j + (1) >> 0;
-			/* } */ $s = 9; continue; case 10:
+			/* } */ $s = 10; continue; case 11:
 			i = i + (1) >> 0;
 		/* } */ $s = 5; continue; case 6:
 		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: OptAlgByPSO }; } $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.bestGene = bestGene; $f.bestGenes = bestGenes; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.gene$2 = gene$2; $f.genes = genes; $f.globalBestGene = globalBestGene; $f.i = i; $f.iteration = iteration; $f.j = j; $f.nextGene = nextGene; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: OptAlgByPSO }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._i = _i; $f._i$1 = _i$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.bestGene = bestGene; $f.bestGenes = bestGenes; $f.err = err; $f.err$1 = err$1; $f.gene = gene; $f.gene$1 = gene$1; $f.gene$2 = gene$2; $f.genes = genes; $f.globalBestGene = globalBestGene; $f.i = i; $f.iteration = iteration; $f.j = j; $f.nextGene = nextGene; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OptAlgByPSO = OptAlgByPSO;
 	GetBest = function(population) {
@@ -36633,7 +36637,7 @@ $packages["app/model/v1"] = (function() {
 			genes = $append(genes, new gene.constructor.elem(gene));
 			i = i + (1) >> 0;
 		/* } */ $s = 1; continue; case 2:
-		_r$3 = optalg.OptAlgByPSO(100, genes); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3 = optalg.OptAlgByPSO(200, genes); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 		_tuple$1 = _r$3;
 		genes = _tuple$1[0];
 		err = _tuple$1[1];
@@ -41486,7 +41490,7 @@ $packages["app/model/v1"] = (function() {
 		$r = optalg.$init(); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		_total = 0;
 		_count = false;
-		$pkg.Model = new model.ptr(new app.ptr(0, 0, new gameplay.ptr(new AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false)));
+		$pkg.DefaultModel = new model.ptr(new app.ptr(0, 0, new gameplay.ptr(new AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false)));
 		terrainCache = $makeMap(protocol.Position.keyFor, []);
 		unitByPosition = $makeMap(protocol.Position.keyFor, []);
 		unitByRegion = $makeMap(protocol.Position.keyFor, []);
@@ -43069,7 +43073,7 @@ $packages["app"] = (function() {
 		_r;
 		err = $ifaceNil;
 		ui = $clone(def.DefaultUI, $packages["app/tool/uidata"].UI);
-		_r$1 = $clone(v1.Model, v1.model).New($ifaceNil); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = $clone(v1.DefaultModel, v1.model).New($ifaceNil); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple = _r$1;
 		ui.Model = _tuple[0];
 		err = _tuple[1];

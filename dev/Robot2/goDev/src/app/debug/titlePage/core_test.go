@@ -23,7 +23,7 @@ func init() {
 func TestStartPagePhaseBasic(t *testing.T) {
 	log.Category[protocol.LogCategoryPhase] = true
 	ui := def.DefaultUI
-	ui.Model = v1.Model
+	ui.Model = v1.DefaultModel
 	wait := make(chan interface{})
 	go func() {
 		_, err := title.StartPagePhase(ui)
