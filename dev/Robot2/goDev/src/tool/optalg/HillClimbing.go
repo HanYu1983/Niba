@@ -1,5 +1,9 @@
 package optalg
 
+import (
+	"time"
+)
+
 // HillClimbing is 爬山演算法
 func HillClimbing(iteration int, gene IGene) (IGene, error) {
 	var err error
@@ -8,6 +12,8 @@ func HillClimbing(iteration int, gene IGene) (IGene, error) {
 		return nil, err
 	}
 	for i := 0; i < iteration; i++ {
+		// fmt.Printf("[HillClimbing] ieration(%v/%v) score(%v)\n", i, iteration, gene.GetFitness())
+		time.Sleep(1)
 		clone, err := gene.Mutate()
 		if err != nil {
 			return nil, err

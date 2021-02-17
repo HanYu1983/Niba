@@ -2,7 +2,6 @@ package optalg
 
 import (
 	"fmt"
-	"time"
 )
 
 // OptAlgByPSO is PSO粒子群演算法修改
@@ -26,7 +25,6 @@ func OptAlgByPSO(iteration int, genes []IGene) ([]IGene, error) {
 		fmt.Printf("[OptAlgByPSO] ieration(%v/%v) score(%v)\n", i, iteration, globalBestGene.GetFitness())
 		for j, gene := range ret {
 			//fmt.Printf("[OptAlgByPSO] ieration(%v) score(%v)\n", j, globalBestGene.GetFitness())
-			time.Sleep(1)
 			//fmt.Printf("[OptAlgByPSO] before(%v)\n", gene.GetFitness())
 			// 突變
 			nextGene, err := HillClimbing(10, gene)

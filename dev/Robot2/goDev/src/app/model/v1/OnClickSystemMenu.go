@@ -11,7 +11,7 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	switch selection {
-	case uidata.MenuOptionTest2:
+	case uidata.MenuOptionTest:
 		var tempMap [][]int
 		tempMap, err = helper.GenerateMap(helper.GenerateMapConfig{
 			Deepsea:  rand.Float64(),
@@ -28,12 +28,22 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model := ctx.Model.(model)
 		model.App.Gameplay.Map = tempMap
 		ctx.Model = model
-	case uidata.MenuOptionTest:
+	case uidata.MenuOptionTest2:
 		model := ctx.Model.(model)
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
 		model, err = GenerateLevelByPSO(model, "ai1")
+		if err != nil {
+			return origin, err
+		}
+		ctx.Model = model
+	case uidata.MenuOptionTest3:
+		model := ctx.Model.(model)
+		model.App.Gameplay.Units = []string{}
+		model.App.Gameplay.Robots = map[string]protocol.Robot{}
+		model.App.Gameplay.Positions = map[string]protocol.Position{}
+		model, err = GenerateLevelByHC(model, "ai1")
 		if err != nil {
 			return origin, err
 		}
