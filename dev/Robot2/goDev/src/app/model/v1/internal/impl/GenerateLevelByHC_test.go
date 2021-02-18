@@ -45,4 +45,5 @@ func TestGenerateLevelByHC(t *testing.T) {
 	if float64(countOfGaiteSea)/float64(len(ctx.App.Gameplay.Robots)) < 0.5 {
 		t.Fatalf("GaiteSea必須佔了一半以上")
 	}
+	t.Error("X")
 }

@@ -261,12 +261,11 @@ func (this LevelGeneByPSO) Mutate() (optalg.IGene, error) {
 		return units
 	}
 
-	if len(this.Units) > 20 {
-		this.Units = deleteOne(this.Units)
-		return this, nil
-	}
-
 	ret := this
+	if len(this.Units) > 20 {
+		ret.Units = deleteOne(this.Units)
+		return ret, nil
+	}
 
 	idx := rand.Float64()
 	switch {
