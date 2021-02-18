@@ -12,6 +12,10 @@ import (
 	"tool/log"
 )
 
+var (
+	terrainCache map[protocol.Position]data.TerrainProto
+)
+
 func QueryPilotRange(model types.Model) {
 
 }

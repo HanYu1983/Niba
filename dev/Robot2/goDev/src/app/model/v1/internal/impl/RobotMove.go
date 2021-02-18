@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"fmt"
@@ -13,7 +14,7 @@ func RobotMove(origin types.Model, robotID string, pos protocol.Position) (types
 	if tags.MoveCount >= 5 {
 		return origin, fmt.Errorf("[RobotMove] already move %v", robotID)
 	}
-	unitAtPos := SearchUnitByPosition(v.App.Gameplay.Positions, pos)
+	unitAtPos := common.SearchUnitByPosition(v.App.Gameplay.Positions, pos)
 	var notFound string
 	if unitAtPos != notFound {
 		return origin, fmt.Errorf("[RobotMove] already occupy %v", pos)

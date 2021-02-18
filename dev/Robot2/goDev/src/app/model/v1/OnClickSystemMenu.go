@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
@@ -24,7 +23,7 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 			Mountain: rand.Float64(),
 			City:     rand.Float64(),
 			Tree:     rand.Float64(),
-		}, 0, 0, 1, 25, 25, rand.Int(), rand.Int())
+		}, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, rand.Int(), rand.Int())
 		if err != nil {
 			return origin, err
 		}
@@ -46,21 +45,11 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
-		model, err = impl.GenerateLevelByHC(model, "ai1")
+		model, err = impl.GenerateLevelByHC(model, "ai1", protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, 500000)
 		if err != nil {
 			return origin, err
 		}
-		var pilot protocol.Pilot
-		model, pilot, err = common.NewPilot(model, protocol.Pilot{ProtoID: "amuro"})
-		if err != nil {
-			return origin, err
-		}
-		model, _, err = common.NewRobot(model, protocol.Position{0, 0}, protocol.Robot{
-			ID:       "0",
-			ProtoID:  "zgundam",
-			PlayerID: protocol.PlayerIDPlayer,
-			PilotID:  pilot.ID,
-		})
+		model, err = impl.GenerateLevelByHC(model, protocol.PlayerIDPlayer, protocol.Position{0, 0}, 500000)
 		if err != nil {
 			return origin, err
 		}

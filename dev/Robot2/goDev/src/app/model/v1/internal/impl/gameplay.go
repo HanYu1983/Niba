@@ -6,6 +6,7 @@ import (
 	"app/tool"
 	"app/tool/helper"
 	"app/tool/protocol"
+	"app/tool/uidata"
 	"fmt"
 	"tool/log"
 )
@@ -16,7 +17,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	const (
 		playerAI1 = "ai1"
 	)
-	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, 25, 25, 0, 0)
+	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
 	if err != nil {
 		return origin, err
 	}
@@ -119,11 +120,11 @@ func IsDone(origin types.Model) bool {
 }
 func QueryUnitsByRegion(origin types.Model, p1 protocol.Position, p2 protocol.Position) []string {
 	ctx := origin
-	return SearchUnitByRegion(ctx.App.Gameplay.Positions, p1, p2)
+	return common.SearchUnitByRegion(ctx.App.Gameplay.Positions, p1, p2)
 }
 func QueryUnitByPosition(origin types.Model, pos protocol.Position) string {
 	ctx := origin
-	return SearchUnitByPosition(ctx.App.Gameplay.Positions, pos)
+	return common.SearchUnitByPosition(ctx.App.Gameplay.Positions, pos)
 }
 func GetGameplayRobots(origin types.Model) map[string]protocol.Robot {
 	ctx := origin

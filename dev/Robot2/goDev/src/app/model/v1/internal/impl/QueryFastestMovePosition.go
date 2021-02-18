@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"sort"
@@ -23,7 +24,11 @@ func QueryFastestMovePosition(model types.Model, robot protocol.Robot, target pr
 	if originPos == target {
 		return false, protocol.Position{}, nil, err
 	}
-	costFn, err := RobotMoveCost(model, robot)
+	movePower, err := common.QueryRobotMovePower(model, robot.ID)
+	if err != nil {
+		return false, protocol.Position{}, nil, err
+	}
+	costFn, err := common.RobotMoveCost(model, robot, movePower, false)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
 	}
@@ -48,7 +53,7 @@ func QueryFastestMovePosition(model types.Model, robot protocol.Robot, target pr
 	for _, node := range nodes {
 		pos := node.Pather.(protocol.Position)
 		var notFound string
-		unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, pos)
+		unitAtPos := common.SearchUnitByPosition(model.App.Gameplay.Positions, pos)
 		if unitAtPos == notFound {
 			return true, pos, tree, nil
 		}

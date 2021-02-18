@@ -125,7 +125,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		log.Log(protocol.LogCategoryWarning, "ObserveGameplayPage", err.Error())
 		err = nil
 	}
-	unitAtCursor := impl.SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
+	unitAtCursor := common.SearchUnitByPosition(model.App.Gameplay.Positions, cursor)
 	gameplayPage.CursorInfo.UnitID = unitAtCursor
 	gameplayPage.CursorInfo.Terrain = terrain
 	// apply

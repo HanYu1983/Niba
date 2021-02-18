@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"tool/astar"
@@ -15,7 +16,11 @@ func QueryMoveRangeTree(model types.Model, robotID string) (astar.NodeMap, error
 	if err != nil {
 		return nil, err
 	}
-	costFn, err := RobotMoveCost(model, robot)
+	movePower, err := common.QueryRobotMovePower(model, robotID)
+	if err != nil {
+		return nil, err
+	}
+	costFn, err := common.RobotMoveCost(model, robot, movePower, false)
 	if err != nil {
 		return nil, err
 	}

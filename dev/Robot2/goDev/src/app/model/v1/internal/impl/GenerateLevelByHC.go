@@ -211,7 +211,7 @@ func (self LevelGeneByHC) Mutate() (optalg.IGene, error) {
 	}
 	return ret, nil
 }
-func GenerateLevelByHC(origin types.Model, playerID string) (types.Model, error) {
+func GenerateLevelByHC(origin types.Model, playerID string, center protocol.Position, cost int) (types.Model, error) {
 	var err error
 	ctx := origin
 	mapW, mapH := len(ctx.App.Gameplay.Map), len(ctx.App.Gameplay.Map[0])
@@ -227,12 +227,8 @@ func GenerateLevelByHC(origin types.Model, playerID string) (types.Model, error)
 	var gene optalg.IGene = LevelGeneByHC{
 		Map:        ctx.App.Gameplay.Map,
 		Units:      units,
-		TargetCost: 1000000,
-		Center:     [2]int{25, 0},
-		Weight: map[string]float64{
-			"gaite_sea": 2,
-			"moshen":    1.2,
-		},
+		TargetCost: cost,
+		Center:     [2]int{center[0], center[1]},
 	}
 	gene, err = optalg.HillClimbing(300, gene)
 	if err != nil {

@@ -1,7 +1,6 @@
-package impl
+package common
 
 import (
-	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
@@ -14,14 +13,8 @@ var (
 	terrainCache map[protocol.Position]data.TerrainProto
 )
 
-func RobotMoveCost(model types.Model, robot protocol.Robot) (func(curr *astar.Node) []astar.NeighborsNode, error) {
-	movePower, err := common.QueryRobotMovePower(model, robot.ID)
-	if err != nil {
-		return func(curr *astar.Node) []astar.NeighborsNode {
-			return nil
-		}, err
-	}
-	suitability, err := common.QueryRobotSuitability(model, robot.ID)
+func RobotMoveCost(model types.Model, robot protocol.Robot, movePower int, ignoreOccupy bool) (func(curr *astar.Node) []astar.NeighborsNode, error) {
+	suitability, err := QueryRobotSuitability(model, robot.ID)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil
@@ -74,16 +67,18 @@ func RobotMoveCost(model types.Model, robot protocol.Robot) (func(curr *astar.No
 				continue
 			}
 			nextPos := protocol.Position{x, y}
-			var notFound string
-			unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, nextPos)
-			if unitAtPos != notFound {
-				isFriendlyRobot, err := IsFriendlyRobot(model, robot.ID, unitAtPos)
-				if err != nil {
-					fmt.Println(err)
-					continue
-				}
-				if isFriendlyRobot == false {
-					continue
+			if ignoreOccupy == false {
+				var notFound string
+				unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, nextPos)
+				if unitAtPos != notFound {
+					isFriendlyRobot, err := IsFriendlyRobot(model, robot.ID, unitAtPos)
+					if err != nil {
+						fmt.Println(err)
+						continue
+					}
+					if isFriendlyRobot == false {
+						continue
+					}
 				}
 			}
 			cost2 := 0.0

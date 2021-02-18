@@ -76,7 +76,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		size := 10
 		leftTop := protocol.Position{fromPos[0] - size, fromPos[0] - size}
 		rightBottom := protocol.Position{fromPos[0] + size, fromPos[0] + size}
-		unitsInRegion := impl.SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
+		unitsInRegion := common.SearchUnitByRegion(_model.App.Gameplay.Positions, leftTop, rightBottom)
 
 		// 射線和法線
 		fromPosV2 := mgl64.Vec2{float64(fromPos[0]), float64(fromPos[1])}

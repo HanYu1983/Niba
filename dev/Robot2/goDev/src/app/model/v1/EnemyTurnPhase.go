@@ -15,7 +15,7 @@ func QueryGoal(model Model, robotID string) (types.Goal, error) {
 	if goal, has := model.App.Gameplay.AIModel.Directive[robotID]; has {
 		return goal, nil
 	}
-	return types.Goal{Type: types.GoalTypeMoveToPosition, Position: protocol.Position{0, 0}}, nil
+	return types.Goal{Type: types.GoalTypeSearchAndAttack, Position: protocol.Position{0, 0}}, nil
 }
 
 func RenderRobotAim(origin uidata.UI, fromRobot string, toRobot string) error {
@@ -57,6 +57,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	if err != nil {
 		return origin, false, err
 	}
+	log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("robotID(%v) goal(%+v)", robot.ID, goal))
 	if goal == noGoal {
 		return origin, false, nil
 	}
@@ -81,12 +82,14 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 		if err != nil {
 			return origin, false, err
 		}
+		log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("potentails.len(%v)", len(potentails)))
 		if len(potentails) > 0 {
 			potentail := potentails[len(potentails)-1]
 			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, potentail.DesirePositions[0])
 			if err != nil {
 				return origin, false, err
 			}
+			log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("isCanMove(%v) targetPosition(%v)", isCanMove, targetPosition))
 			if isCanMove {
 				ctx, err = OnRobotMove(ctx, robot.ID, tree, targetPosition)
 				if err != nil {
@@ -107,6 +110,29 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 					continue
 				}
 				break
+			}
+			ctx, err = OnRobotDone(ctx, robot.ID)
+			if err != nil {
+				return origin, false, err
+			}
+		} else {
+			targetPosition, find, err := common.QueryMostCloseEnemyPosition(types.Model(ctx.Model.(Model)), robot.ID)
+			if err != nil {
+				return origin, false, err
+			}
+			log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("QueryMostCloseEnemyPosition() targetPosition(%v) find(%v)", targetPosition, find))
+			if find {
+				isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, targetPosition)
+				if err != nil {
+					return origin, false, err
+				}
+				log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("isCanMove(%v) targetPosition(%v)", isCanMove, targetPosition))
+				if isCanMove {
+					ctx, err = OnRobotMove(ctx, robot.ID, tree, targetPosition)
+					if err != nil {
+						return origin, false, err
+					}
+				}
 			}
 			ctx, err = OnRobotDone(ctx, robot.ID)
 			if err != nil {

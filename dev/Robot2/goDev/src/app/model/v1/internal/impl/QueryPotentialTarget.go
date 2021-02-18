@@ -25,7 +25,7 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 	leftTopPos := protocol.Position{selfPos[0] - 20, selfPos[1] - 20}
 	rightBottomPos := protocol.Position{selfPos[0] + 20, selfPos[1] + 20}
 	// 區域內的單位
-	units := SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
+	units := common.SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 		if err != nil {
 			return nil, err
 		}
-		isFriendly, err := IsFriendlyRobot(model, robot.ID, targetRobot.ID)
+		isFriendly, err := common.IsFriendlyRobot(model, robot.ID, targetRobot.ID)
 		if err != nil {
 			return nil, err
 		}

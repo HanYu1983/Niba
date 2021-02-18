@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/protocol"
@@ -15,10 +16,10 @@ func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protoc
 	}
 	leftTopPos := protocol.Position{robotPos[0] - 10, robotPos[1] - 10}
 	rightBottomPos := protocol.Position{robotPos[0] + 10, robotPos[1] + 10}
-	units := SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
+	units := common.SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
 	// 選出敵對的機體
 	units = tool.FilterString(units, func(unitID string) bool {
-		isFriendly, err := IsFriendlyRobot(model, robot.ID, unitID)
+		isFriendly, err := common.IsFriendlyRobot(model, robot.ID, unitID)
 		if err != nil {
 			fmt.Println(err.Error())
 			return false
