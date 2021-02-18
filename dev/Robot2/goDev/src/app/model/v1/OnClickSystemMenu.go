@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
@@ -46,6 +47,20 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
 		model, err = impl.GenerateLevelByHC(model, "ai1")
+		if err != nil {
+			return origin, err
+		}
+		var pilot protocol.Pilot
+		model, pilot, err = common.NewPilot(model, protocol.Pilot{ProtoID: "amuro"})
+		if err != nil {
+			return origin, err
+		}
+		model, _, err = common.NewRobot(model, protocol.Position{0, 0}, protocol.Robot{
+			ID:       "0",
+			ProtoID:  "zgundam",
+			PlayerID: protocol.PlayerIDPlayer,
+			PilotID:  pilot.ID,
+		})
 		if err != nil {
 			return origin, err
 		}

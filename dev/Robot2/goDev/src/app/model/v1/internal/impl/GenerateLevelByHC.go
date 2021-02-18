@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
@@ -244,11 +245,11 @@ func GenerateLevelByHC(origin types.Model, playerID string) (types.Model, error)
 	fmt.Printf("totalCost(%v)\n", totalCost)
 	for pos, protoID := range gene.(LevelGeneByHC).Units {
 		var pilot protocol.Pilot
-		ctx, pilot, err = NewPilot(ctx, protocol.Pilot{ProtoID: "amuro"})
+		ctx, pilot, err = common.NewPilot(ctx, protocol.Pilot{ProtoID: "amuro"})
 		if err != nil {
 			return origin, err
 		}
-		ctx, _, err = NewRobot(ctx, protocol.Position{pos[0], pos[1]}, protocol.Robot{
+		ctx, _, err = common.NewRobot(ctx, protocol.Position{pos[0], pos[1]}, protocol.Robot{
 			ProtoID:  protoID,
 			PlayerID: playerID,
 			PilotID:  pilot.ID,

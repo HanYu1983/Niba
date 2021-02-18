@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
@@ -32,10 +33,10 @@ func GenerateLevel(origin types.Model, playerID string) (types.Model, error) {
 	//gameMap := ctx.App.Gameplay.Map
 	for _, pos := range posList {
 		var pilot protocol.Pilot
-		ctx, pilot, err = NewPilot(ctx, protocol.Pilot{
+		ctx, pilot, err = common.NewPilot(ctx, protocol.Pilot{
 			ProtoID: "amuro",
 		})
-		ctx, _, err = NewRobot(ctx, protocol.Position(pos), protocol.Robot{
+		ctx, _, err = common.NewRobot(ctx, protocol.Position(pos), protocol.Robot{
 			ProtoID:  "gundam",
 			PlayerID: playerID,
 			PilotID:  pilot.ID,

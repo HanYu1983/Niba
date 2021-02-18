@@ -15,7 +15,7 @@ func QueryGoal(model Model, robotID string) (types.Goal, error) {
 	if goal, has := model.App.Gameplay.AIModel.Directive[robotID]; has {
 		return goal, nil
 	}
-	return types.Goal{Type: types.GoalTypeSearchAndAttack, Position: protocol.Position{5, 5}}, nil
+	return types.Goal{Type: types.GoalTypeMoveToPosition, Position: protocol.Position{0, 0}}, nil
 }
 
 func RenderRobotAim(origin uidata.UI, fromRobot string, toRobot string) error {

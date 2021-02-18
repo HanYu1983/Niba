@@ -19,8 +19,8 @@ func OnRobotMove(origin uidata.UI, robotID string, tree astar.NodeMap, pos proto
 	if err != nil {
 		return origin, err
 	}
-	ctx.Model = Model(model)
 	view.RenderRobotMove(ctx, robotID, helper.MoveRangeTree2Path(tree, pos))
+	ctx.Model = Model(model)
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, err
