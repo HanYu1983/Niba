@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/def"
 	"app/tool/helper"
@@ -16,7 +18,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	log.Log(protocol.LogCategoryPhase, "OnRobotLineBattle", "start")
 	ctx := origin
 	view := def.View
-	_model := impl.Model(ctx.Model.(Model))
+	_model := types.Model(ctx.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
@@ -29,7 +31,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}

@@ -1,7 +1,8 @@
 package v1
 
 import (
-	"app/model/v1/internal/impl"
+	"app/model/v1/internal/lobby"
+	"app/model/v1/internal/tool/types"
 	"app/tool/uidata"
 )
 
@@ -28,18 +29,18 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	model := impl.Model(ctx.Model.(Model))
-	ctx.Info.Money = impl.QueryMoney(model)
-	ctx.Info.Robots = impl.QueryRobots(model)
-	ctx.Info.Pilots = impl.QueryPilots(model)
-	ctx.Info.Weapons = impl.QueryWeapons(model)
-	ctx.Info.Components = impl.QueryComponents(model)
-	ctx.Info.CanBuyRobots = impl.QueryRobotCanBuy(model)
-	ctx.Info.CanBuyPilots = impl.QueryPilotCanBuy(model)
-	ctx.Info.CanBuyWeapons = impl.QueryWeaponCanBuy(model)
-	ctx.Info.CanBuyComponents = impl.QueryComponentCanBuy(model)
-	ctx.Info.PilotIDByRobotID = impl.QueryPilotIDByRobotID(model)
-	ctx.Info.RobotIDByWeaponID = impl.QueryRobotIDByWeaponID(model)
-	ctx.Info.RobotIDByComponentID = impl.QueryRobotIDByComponentID(model)
+	model := types.Model(ctx.Model.(Model))
+	ctx.Info.Money = lobby.QueryMoney(model)
+	ctx.Info.Robots = lobby.QueryRobots(model)
+	ctx.Info.Pilots = lobby.QueryPilots(model)
+	ctx.Info.Weapons = lobby.QueryWeapons(model)
+	ctx.Info.Components = lobby.QueryComponents(model)
+	ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy(model)
+	ctx.Info.CanBuyPilots = lobby.QueryPilotCanBuy(model)
+	ctx.Info.CanBuyWeapons = lobby.QueryWeaponCanBuy(model)
+	ctx.Info.CanBuyComponents = lobby.QueryComponentCanBuy(model)
+	ctx.Info.PilotIDByRobotID = lobby.QueryPilotIDByRobotID(model)
+	ctx.Info.RobotIDByWeaponID = lobby.QueryRobotIDByWeaponID(model)
+	ctx.Info.RobotIDByComponentID = lobby.QueryRobotIDByComponentID(model)
 	return ctx, nil
 }

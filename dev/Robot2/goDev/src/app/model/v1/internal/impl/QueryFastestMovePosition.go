@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"sort"
 	"tool/astar"
@@ -14,7 +15,7 @@ func (a ByAstarNodeEstimatedCost) Less(i, j int) bool {
 	return a[i].Rank-a[i].Cost < a[j].Rank-a[j].Cost
 }
 
-func QueryFastestMovePosition(model Model, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
+func QueryFastestMovePosition(model types.Model, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
 	originPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
 		return false, protocol.Position{}, nil, err

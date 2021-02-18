@@ -1,11 +1,12 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 )
 
-func QueryRobotWeaponSuitability(model Model, robot protocol.Robot, weapon protocol.Weapon) ([4]float64, error) {
+func QueryRobotWeaponSuitability(model types.Model, robot protocol.Robot, weapon protocol.Weapon) ([4]float64, error) {
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return [4]float64{}, err

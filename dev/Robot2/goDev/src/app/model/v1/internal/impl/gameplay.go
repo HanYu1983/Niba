@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/data"
 	"app/tool/helper"
@@ -9,7 +11,7 @@ import (
 	"tool/log"
 )
 
-func NewModel(origin Model, situation interface{}) (Model, error) {
+func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	//rand.Seed(0)
 	ctx := origin
 	const (
@@ -33,7 +35,7 @@ func NewModel(origin Model, situation interface{}) (Model, error) {
 		"lobbyWeapon_0": "0",
 		"lobbyWeapon_1": "0",
 	}
-	ctx.App.Gameplay.AIModel = AIModel{}
+	ctx.App.Gameplay.AIModel = types.AIModel{}
 	ctx.App.Money = 100000
 	ctx.App.Gameplay.Map = tempMap
 	ctx.App.Gameplay.Units = []string{}
@@ -88,13 +90,13 @@ func NewModel(origin Model, situation interface{}) (Model, error) {
 	// }
 	return ctx, nil
 }
-func Save(origin Model) error {
+func Save(origin types.Model) error {
 	return nil
 }
-func Load(origin Model) (Model, error) {
+func Load(origin types.Model) (types.Model, error) {
 	return origin, nil
 }
-func NewRobot(origin Model, position protocol.Position, robot protocol.Robot) (Model, protocol.Robot, error) {
+func NewRobot(origin types.Model, position protocol.Position, robot protocol.Robot) (types.Model, protocol.Robot, error) {
 	var err error
 	ctx := origin
 	var notFound string
@@ -130,11 +132,11 @@ func NewRobot(origin Model, position protocol.Position, robot protocol.Robot) (M
 	ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, position)
 	ctx.App.Gameplay.Units = append(ctx.App.Gameplay.Units, robot.ID)
 	// 再計算機器人的狀態
-	robot.HP, err = QueryRobotMaxHp(ctx, robot.ID)
+	robot.HP, err = common.QueryRobotMaxHp(ctx, robot.ID)
 	if err != nil {
 		return origin, protocol.Robot{}, err
 	}
-	robot.EN, err = QueryRobotMaxEn(ctx, robot.ID)
+	robot.EN, err = common.QueryRobotMaxEn(ctx, robot.ID)
 	if err != nil {
 		return origin, protocol.Robot{}, err
 	}
@@ -143,7 +145,7 @@ func NewRobot(origin Model, position protocol.Position, robot protocol.Robot) (M
 	return ctx, robot, nil
 }
 
-func NewPilot(origin Model, pilot protocol.Pilot) (Model, protocol.Pilot, error) {
+func NewPilot(origin types.Model, pilot protocol.Pilot) (types.Model, protocol.Pilot, error) {
 	var err error
 	ctx := origin
 	var notFound string
@@ -160,10 +162,10 @@ func NewPilot(origin Model, pilot protocol.Pilot) (Model, protocol.Pilot, error)
 	return ctx, pilot, nil
 }
 
-func QueryActivePlayer(origin Model) (protocol.Player, error) {
+func QueryActivePlayer(origin types.Model) (protocol.Player, error) {
 	return protocol.TryGetStringPlayer(origin.App.Gameplay.Players, origin.App.Gameplay.ActivePlayerID)
 }
-func NextPlayer(origin Model) (Model, error) {
+func NextPlayer(origin types.Model) (types.Model, error) {
 	ctx := origin
 	var notFound string
 	if ctx.App.Gameplay.ActivePlayerID == notFound {
@@ -178,102 +180,84 @@ func NextPlayer(origin Model) (Model, error) {
 	ctx.App.Gameplay.ActivePlayerID = nextPlayer
 	return ctx, nil
 }
-func IsDone(origin Model) bool {
+func IsDone(origin types.Model) bool {
 	return false
 }
-func QueryUnitsByRegion(origin Model, p1 protocol.Position, p2 protocol.Position) []string {
+func QueryUnitsByRegion(origin types.Model, p1 protocol.Position, p2 protocol.Position) []string {
 	ctx := origin
 	return SearchUnitByRegion(ctx.App.Gameplay.Positions, p1, p2)
 }
-func QueryUnitByPosition(origin Model, pos protocol.Position) string {
+func QueryUnitByPosition(origin types.Model, pos protocol.Position) string {
 	ctx := origin
 	return SearchUnitByPosition(ctx.App.Gameplay.Positions, pos)
 }
-func GetGameplayRobots(origin Model) map[string]protocol.Robot {
+func GetGameplayRobots(origin types.Model) map[string]protocol.Robot {
 	ctx := origin
 	return ctx.App.Gameplay.Robots
 }
-func GetGameplayItems(origin Model) map[string]protocol.Item {
+func GetGameplayItems(origin types.Model) map[string]protocol.Item {
 	ctx := origin
 	return ctx.App.Gameplay.Items
 }
-func GetGameplayPositions(origin Model) map[string]protocol.Position {
+func GetGameplayPositions(origin types.Model) map[string]protocol.Position {
 	ctx := origin
 	return ctx.App.Gameplay.Positions
 }
-func GetGameplayTags(origin Model) map[string]protocol.Tag {
+func GetGameplayTags(origin types.Model) map[string]protocol.Tag {
 	ctx := origin
 	return ctx.App.Gameplay.Tags
 }
-func SetCursor(origin Model, cursor protocol.Position) Model {
+func SetCursor(origin types.Model, cursor protocol.Position) types.Model {
 	ctx := origin
 	ctx.App.Gameplay.Cursor = cursor
 	return ctx
 }
-func GetCursor(origin Model) protocol.Position {
+func GetCursor(origin types.Model) protocol.Position {
 	ctx := origin
 	return ctx.App.Gameplay.Cursor
 }
-func GetMap(origin Model) [][]int {
+func GetMap(origin types.Model) [][]int {
 	ctx := origin
 	return ctx.App.Gameplay.Map
 }
-func QueryMoveCount(origin Model, robotID string) int {
+func QueryMoveCount(origin types.Model, robotID string) int {
 	ctx := origin
 	log.Log(protocol.LogCategoryInfo, "QueryMoveCount", fmt.Sprintf("tags(%+v)\n", ctx.App.Gameplay.Tags[robotID]))
 	return ctx.App.Gameplay.Tags[robotID].MoveCount
 }
 
-func RobotDone(origin Model, robotID string) (Model, error) {
+func RobotDone(origin types.Model, robotID string) (types.Model, error) {
 	ctx := origin
 	tags := ctx.App.Gameplay.Tags[robotID]
 	tags.IsDone = true
 	ctx.App.Gameplay.Tags = protocol.AssocStringTag(ctx.App.Gameplay.Tags, robotID, tags)
 	return ctx, nil
 }
-func RobotSkyGround(origin Model, robotID string) (Model, error) {
+func RobotSkyGround(origin types.Model, robotID string) (types.Model, error) {
 	return origin, nil
 }
 
-func GetRobotMenu(origin Model) protocol.RobotMenu {
+func GetRobotMenu(origin types.Model) protocol.RobotMenu {
 	ctx := origin
 	return ctx.App.Gameplay.RobotMenu
 }
-func SetMoveRange(origin Model, moveRange []protocol.Position) Model {
+func SetMoveRange(origin types.Model, moveRange []protocol.Position) types.Model {
 	ctx := origin
 	ctx.App.Gameplay.MoveRange = moveRange
 	return ctx
 }
-func GetMoveRange(origin Model) []protocol.Position {
+func GetMoveRange(origin types.Model) []protocol.Position {
 	ctx := origin
 	return ctx.App.Gameplay.MoveRange
 }
 
-// func DisableRobotMenu(origin Model) (Model, error) {
-// 	ctx := origin
-// 	ctx.App.Gameplay.RobotMenu.Active = false
-// 	return ctx, nil
-// }
-
-// func DisableBattleMenu(origin Model) (Model, error) {
-// 	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "start")
-// 	ctx := origin
-// 	ctx.App.Gameplay.BattleMenu.Active = false
-// 	ctx, err := DisableRobotMenu(ctx)
-// 	if err != nil {
-// 		return origin, err
-// 	}
-// 	log.Log(protocol.LogCategoryDetail, "DisableBattleMenu", fmt.Sprintf("after RobotMenu(%v)", ctx.App.Gameplay.RobotMenu))
-// 	log.Log(protocol.LogCategoryPhase, "DisableBattleMenu", "end")
-// 	return ctx, nil
-// }
-func GetBattleMenu(origin Model) protocol.BattleMenu {
+func GetBattleMenu(origin types.Model) protocol.BattleMenu {
 	ctx := origin
 	return ctx.App.Gameplay.BattleMenu
 }
 
 // ai
-func QueryUnitsByPlayer(model Model, player protocol.Player) ([]string, error) {
+func QueryUnitsByPlayer(model types.Model, player protocol.Player) ([]string, error) {
 	_, err := protocol.TryGetStringPlayer(model.App.Gameplay.Players, player.ID)
 	if err != nil {
 		return []string{}, err
@@ -287,6 +271,6 @@ func QueryUnitsByPlayer(model Model, player protocol.Player) ([]string, error) {
 	return ret, nil
 }
 
-func IsRobotDone(model Model, robotID string) (bool, error) {
+func IsRobotDone(model types.Model, robotID string) (bool, error) {
 	return model.App.Gameplay.Tags[robotID].IsDone, nil
 }

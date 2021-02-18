@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -10,7 +12,7 @@ import (
 
 func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targetRobotID string) (uidata.UI, error) {
 	ctx := origin
-	_model := impl.Model(origin.Model.(Model))
+	_model := types.Model(origin.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, err
@@ -24,7 +26,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 	// battleMenu
 	battleMenu := _model.App.Gameplay.BattleMenu
 	{
-		weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+		weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 		weapon, err := protocol.TryGetStringWeapon(weapons, weaponID)
 		if err != nil {
 			return origin, err
@@ -43,7 +45,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			options := [][]string{}
 			rowFunctionMapping := map[int]int{}
 			// weapons
-			weapons, err := impl.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
+			weapons, err := common.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
 			if err != nil {
 				return origin, err
 			}
@@ -80,7 +82,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			options := [][]string{}
 			rowFunctionMapping := map[int]int{}
 			// weapons
-			weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+			weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 			if err != nil {
 				return origin, err
 			}

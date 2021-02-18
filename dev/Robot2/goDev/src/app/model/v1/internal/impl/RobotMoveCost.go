@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -12,14 +14,14 @@ var (
 	terrainCache map[protocol.Position]data.TerrainProto
 )
 
-func RobotMoveCost(model Model, robot protocol.Robot) (func(curr *astar.Node) []astar.NeighborsNode, error) {
-	movePower, err := QueryRobotMovePower(model, robot.ID)
+func RobotMoveCost(model types.Model, robot protocol.Robot) (func(curr *astar.Node) []astar.NeighborsNode, error) {
+	movePower, err := common.QueryRobotMovePower(model, robot.ID)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil
 		}, err
 	}
-	suitability, err := QueryRobotSuitability(model, robot.ID)
+	suitability, err := common.QueryRobotSuitability(model, robot.ID)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil

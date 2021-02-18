@@ -1,12 +1,13 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"math"
 )
 
-func ObserveWeapon(model Model, robot protocol.Robot, weapon protocol.Weapon) (protocol.Weapon, error) {
+func ObserveWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon) (protocol.Weapon, error) {
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return protocol.Weapon{}, err

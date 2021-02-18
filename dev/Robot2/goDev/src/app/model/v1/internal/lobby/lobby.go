@@ -1,13 +1,14 @@
-package impl
+package lobby
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
 )
 
-func BuyRobot(origin Model, protoID string) (Model, error) {
+func BuyRobot(origin types.Model, protoID string) (types.Model, error) {
 	ctx := origin
 	item, has := data.GameData.Robot[protoID]
 	if has == false {
@@ -26,7 +27,7 @@ func BuyRobot(origin Model, protoID string) (Model, error) {
 	})
 	return ctx, nil
 }
-func BuyPilot(origin Model, protoID string) (Model, error) {
+func BuyPilot(origin types.Model, protoID string) (types.Model, error) {
 	ctx := origin
 	item, has := data.GameData.Pilot[protoID]
 	if has == false {
@@ -45,7 +46,7 @@ func BuyPilot(origin Model, protoID string) (Model, error) {
 	})
 	return ctx, nil
 }
-func BuyWeapon(origin Model, protoID string) (Model, error) {
+func BuyWeapon(origin types.Model, protoID string) (types.Model, error) {
 	ctx := origin
 	item, has := data.GameData.Weapon[protoID]
 	if has == false {
@@ -64,7 +65,7 @@ func BuyWeapon(origin Model, protoID string) (Model, error) {
 	})
 	return ctx, nil
 }
-func BuyComponent(origin Model, protoID string) (Model, error) {
+func BuyComponent(origin types.Model, protoID string) (types.Model, error) {
 	ctx := origin
 	item, has := data.GameData.Component[protoID]
 	if has == false {
@@ -84,77 +85,77 @@ func BuyComponent(origin Model, protoID string) (Model, error) {
 	return ctx, nil
 }
 
-func AssocRobotPilot(origin Model, robotID string, pilotID string) (Model, error) {
+func AssocRobotPilot(origin types.Model, robotID string, pilotID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.PilotIDByRobotID = data.AssocStringString(ctx.App.Lobby.PilotIDByRobotID, robotID, pilotID)
 	return ctx, nil
 }
-func DissocRobotPilot(origin Model, robotID string) (Model, error) {
+func DissocRobotPilot(origin types.Model, robotID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.PilotIDByRobotID = data.DissocStringString(ctx.App.Lobby.PilotIDByRobotID, robotID)
 	return ctx, nil
 }
-func AssocWeaponRobot(origin Model, weaponID string, robotID string) (Model, error) {
+func AssocWeaponRobot(origin types.Model, weaponID string, robotID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.RobotIDByWeaponID = data.AssocStringString(ctx.App.Lobby.RobotIDByWeaponID, weaponID, robotID)
 	return ctx, nil
 }
-func DissocWeaponRobot(origin Model, weaponID string) (Model, error) {
+func DissocWeaponRobot(origin types.Model, weaponID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.RobotIDByWeaponID = data.DissocStringString(ctx.App.Lobby.RobotIDByWeaponID, weaponID)
 	return ctx, nil
 }
-func AssocComponentRobot(origin Model, componentID string, robotID string) (Model, error) {
+func AssocComponentRobot(origin types.Model, componentID string, robotID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.RobotIDByComponentID = data.AssocStringString(ctx.App.Lobby.RobotIDByComponentID, componentID, robotID)
 	return ctx, nil
 }
-func DissocComponentRobot(origin Model, componentID string) (Model, error) {
+func DissocComponentRobot(origin types.Model, componentID string) (types.Model, error) {
 	ctx := origin
 	ctx.App.Lobby.RobotIDByComponentID = data.DissocStringString(ctx.App.Lobby.RobotIDByComponentID, componentID)
 	return ctx, nil
 }
-func QueryRobotCanBuy(origin Model) map[string]data.RobotProto {
+func QueryRobotCanBuy(origin types.Model) map[string]data.RobotProto {
 	return data.GameData.Robot
 }
-func QueryPilotCanBuy(origin Model) map[string]data.PilotProto {
+func QueryPilotCanBuy(origin types.Model) map[string]data.PilotProto {
 	return data.GameData.Pilot
 }
-func QueryWeaponCanBuy(origin Model) map[string]data.WeaponProto {
+func QueryWeaponCanBuy(origin types.Model) map[string]data.WeaponProto {
 	return data.GameData.Weapon
 }
-func QueryComponentCanBuy(origin Model) map[string]data.ComponentProto {
+func QueryComponentCanBuy(origin types.Model) map[string]data.ComponentProto {
 	return data.GameData.Component
 }
-func QueryMoney(origin Model) int {
+func QueryMoney(origin types.Model) int {
 	ctx := origin
 	return ctx.App.Money
 }
-func QueryRobots(origin Model) map[string]protocol.Robot {
+func QueryRobots(origin types.Model) map[string]protocol.Robot {
 	ctx := origin
 	return ctx.App.Lobby.Robots
 }
-func QueryPilots(origin Model) map[string]protocol.Pilot {
+func QueryPilots(origin types.Model) map[string]protocol.Pilot {
 	ctx := origin
 	return ctx.App.Lobby.Pilots
 }
-func QueryComponents(origin Model) map[string]protocol.Component {
+func QueryComponents(origin types.Model) map[string]protocol.Component {
 	ctx := origin
 	return ctx.App.Lobby.Components
 }
-func QueryWeapons(origin Model) map[string]protocol.Weapon {
+func QueryWeapons(origin types.Model) map[string]protocol.Weapon {
 	ctx := origin
 	return ctx.App.Lobby.Weapons
 }
-func QueryRobotIDByWeaponID(origin Model) map[string]string {
+func QueryRobotIDByWeaponID(origin types.Model) map[string]string {
 	ctx := origin
 	return ctx.App.Lobby.RobotIDByWeaponID
 }
-func QueryRobotIDByComponentID(origin Model) map[string]string {
+func QueryRobotIDByComponentID(origin types.Model) map[string]string {
 	ctx := origin
 	return ctx.App.Lobby.RobotIDByComponentID
 }
-func QueryPilotIDByRobotID(origin Model) map[string]string {
+func QueryPilotIDByRobotID(origin types.Model) map[string]string {
 	ctx := origin
 	return ctx.App.Lobby.PilotIDByRobotID
 }

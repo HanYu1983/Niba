@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/def"
 	"app/tool/helper"
@@ -43,7 +45,7 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID string, targetAction int, targetWeaponID string) (uidata.UI, protocol.BattleResult, error) {
 	log.Log(protocol.LogCategoryPhase, "Battle", "start")
 	ctx := origin
-	_model := impl.Model(ctx.Model.(Model))
+	_model := types.Model(ctx.Model.(Model))
 	view := def.View
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
@@ -53,7 +55,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	robotWeapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	robotWeapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -73,7 +75,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	targetRobotWeapons, err := impl.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
+	targetRobotWeapons, err := common.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -291,7 +293,7 @@ ANIMATE:
 		return origin, protocol.BattleResult{}, err
 	}
 	view.RenderRobotBattle(ctx, battleResult)
-	_model = impl.Model(ctx.Model.(Model))
+	_model = types.Model(ctx.Model.(Model))
 	if robot.HP <= 0 {
 		_model.App.Gameplay.Robots = protocol.DissocStringRobot(_model.App.Gameplay.Robots, robot.ID)
 		_model.App.Gameplay.Positions = protocol.DissocStringPosition(_model.App.Gameplay.Positions, robot.ID)

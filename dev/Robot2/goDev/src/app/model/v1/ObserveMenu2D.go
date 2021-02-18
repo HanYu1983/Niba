@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -11,7 +13,7 @@ import (
 func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryRender, "ObserveMenu2D", "start")
 	ctx := origin
-	model := impl.Model(ctx.Model.(Model))
+	model := types.Model(ctx.Model.(Model))
 	menu, has := ctx.Menu2Ds[menuID]
 	if has == false {
 		return origin, nil
@@ -19,7 +21,7 @@ func ObserveMenu2D(origin uidata.UI, menuID int) (uidata.UI, error) {
 	options := [][]string{}
 	switch menuID {
 	case uidata.Menu2DUnitMenu:
-		unitMenuModel, err := impl.ObserveRobotMenu(model, impl.GetRobotMenu(model))
+		unitMenuModel, err := common.ObserveRobotMenu(model, impl.GetRobotMenu(model))
 		if err != nil {
 			return origin, err
 		}

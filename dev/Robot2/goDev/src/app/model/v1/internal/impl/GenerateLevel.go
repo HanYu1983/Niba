@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
@@ -18,7 +19,7 @@ func SelectRobotForTargetTerrain(terrain data.TerrainProto) (protocol.Robot, err
 	return protocol.Robot{}, nil
 }
 
-func GenerateLevel(origin Model, playerID string) (Model, error) {
+func GenerateLevel(origin types.Model, playerID string) (types.Model, error) {
 	ctx := origin
 	if ctx.App.Gameplay.Map == nil {
 		return origin, fmt.Errorf("ctx.App.Gameplay.Map not found")

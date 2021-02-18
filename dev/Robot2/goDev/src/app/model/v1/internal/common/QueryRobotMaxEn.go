@@ -1,11 +1,12 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"fmt"
 	"strconv"
 )
 
-func QueryRobotMaxEn(model Model, robotID string) (int, error) {
+func QueryRobotMaxEn(model types.Model, robotID string) (int, error) {
 	var err error
 	components, err := QueryRobotComponents(model, robotID)
 	if err != nil {

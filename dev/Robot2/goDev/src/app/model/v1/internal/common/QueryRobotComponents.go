@@ -1,12 +1,13 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 )
 
-func QueryRobotComponents(model Model, robotID string) (map[string]protocol.Component, error) {
+func QueryRobotComponents(model types.Model, robotID string) (map[string]protocol.Component, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {

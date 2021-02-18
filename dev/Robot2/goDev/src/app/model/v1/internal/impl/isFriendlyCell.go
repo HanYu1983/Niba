@@ -1,8 +1,11 @@
 package impl
 
-import "app/tool/protocol"
+import (
+	"app/model/v1/internal/tool/types"
+	"app/tool/protocol"
+)
 
-func IsFriendlyCell(model Model, unitID string, pos protocol.Position) (bool, error) {
+func IsFriendlyCell(model types.Model, unitID string, pos protocol.Position) (bool, error) {
 	unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, pos)
 	var notFound string
 	if unitAtPos == notFound {

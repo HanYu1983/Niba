@@ -1,86 +1,31 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
 	"math"
-	"strconv"
 	"tool/log"
 )
 
-func QueryRobotArmor(model Model, robotID string) (int, error) {
-	var err error
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return 0, err
-	}
-	components, err := QueryRobotComponents(model, robot.ID)
-	if err != nil {
-		return 0, err
-	}
-	total := 0
-	for _, component := range components {
-		val := 0.0
-		switch component.ProtoID {
-		case "armor1", "armor2", "armor3", "armor4", "armor5":
-			if len(component.Value) != 2 {
-				return 0, fmt.Errorf("component value's len not right. %v", component)
-			}
-			val, err = strconv.ParseFloat(component.Value[1], 10)
-			if err != nil {
-				return 0, fmt.Errorf("component value not right. (%v)", component)
-			}
-		}
-		total += int(val)
-	}
-	return total, nil
-}
-
-func QueryRobotBeamArmor(model Model, robotID string) (int, error) {
-	var err error
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return 0, err
-	}
-	components, err := QueryRobotComponents(model, robot.ID)
-	if err != nil {
-		return 0, err
-	}
-	total := 0
-	for _, component := range components {
-		val := 0.0
-		switch component.ProtoID {
-		case "beam_armor1", "beam_armor2", "beam_armor3", "beam_armor4", "beam_armor5":
-			if len(component.Value) != 2 {
-				return 0, fmt.Errorf("component value's len not right. %v", component)
-			}
-			val, err = strconv.ParseFloat(component.Value[1], 10)
-			if err != nil {
-				return 0, fmt.Errorf("component value not right. (%v)", component)
-			}
-		}
-		total += int(val)
-	}
-	return total, nil
-}
-
-func QueryPilotRange(model Model) {
+func QueryPilotRange(model types.Model) {
 
 }
 
-func QueryBattleDamage(model Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, error) {
+func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, error) {
 	var err error
 	targetArmor := 0
 	{
 		var weaponAbility []string
-		weaponAbility, err = QueryRobotWeaponAbility(model, robot, weapon)
+		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot, weapon)
 		if err != nil {
 			return 0, err
 		}
-		targetArmor, err = QueryRobotArmor(model, robot.ID)
+		targetArmor, err = common.QueryRobotArmor(model, robot.ID)
 		if err != nil {
 			return 0, err
 		}
@@ -101,12 +46,12 @@ func QueryBattleDamage(model Model, robot protocol.Robot, pilot protocol.Pilot, 
 		})) > 0
 		switch {
 		case isBeanAttack:
-			targetArmor, err = QueryRobotBeamArmor(model, robot.ID)
+			targetArmor, err = common.QueryRobotBeamArmor(model, robot.ID)
 			if err != nil {
 				return 0, err
 			}
 		case isPhysicAttack:
-			targetArmor, err = QueryRobotArmor(model, robot.ID)
+			targetArmor, err = common.QueryRobotArmor(model, robot.ID)
 			if err != nil {
 				return 0, err
 			}
@@ -131,7 +76,7 @@ func QueryBattleDamage(model Model, robot protocol.Robot, pilot protocol.Pilot, 
 	}
 	suitabilityFactor := 1.0
 	{
-		weaponSuitability, err := QueryRobotWeaponSuitability(model, robot, weapon)
+		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot, weapon)
 		if err != nil {
 			return 0, err
 		}

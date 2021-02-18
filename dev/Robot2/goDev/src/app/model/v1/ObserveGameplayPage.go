@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -13,7 +15,7 @@ import (
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	var err error
 	ctx := origin
-	model := impl.Model(ctx.Model.(Model))
+	model := types.Model(ctx.Model.(Model))
 	gameplayPage := ctx.GameplayPages[id]
 	modelMap := model.App.Gameplay.Map
 	cursor := model.App.Gameplay.Cursor
@@ -45,7 +47,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	gameplayPage.Positions = localPosDict
 	// robots
-	gameplayPage.Robots, err = impl.ObserveRobots(model, model.App.Gameplay.Robots)
+	gameplayPage.Robots, err = common.ObserveRobots(model, model.App.Gameplay.Robots)
 	if err != nil {
 		return origin, err
 	}
@@ -96,7 +98,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
-			attackRange, err := impl.QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
+			attackRange, err := common.QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
 			if err != nil {
 				return origin, err
 			}

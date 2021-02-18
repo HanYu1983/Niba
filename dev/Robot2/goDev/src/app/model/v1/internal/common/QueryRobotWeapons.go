@@ -1,11 +1,12 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 )
 
-func QueryRobotWeapons(model Model, robotID string, transform string) (protocol.Weapons, error) {
+func QueryRobotWeapons(model types.Model, robotID string, transform string) (protocol.Weapons, error) {
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return nil, err

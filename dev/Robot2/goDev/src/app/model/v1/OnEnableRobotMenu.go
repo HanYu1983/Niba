@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -11,7 +13,7 @@ import (
 
 func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 	ctx := origin
-	_model := impl.Model(ctx.Model.(Model))
+	_model := types.Model(ctx.Model.(Model))
 	tags := _model.App.Gameplay.Tags[robotID]
 	if tags.IsDone {
 		return origin, fmt.Errorf("[EnableRobotMenu] robot(%v) already done", robotID)
@@ -32,7 +34,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 			options = append(options, []string{uidata.MenuOptionMove})
 		}
 		// weapons
-		weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+		weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 		if err != nil {
 			return origin, err
 		}
@@ -50,7 +52,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		}
 		// sky ground
 		if tags.MoveCount == 0 {
-			suitabiity, err := impl.QueryRobotSuitability(_model, robot.ID)
+			suitabiity, err := common.QueryRobotSuitability(_model, robot.ID)
 			if err != nil {
 				return origin, err
 			}

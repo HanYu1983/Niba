@@ -1,7 +1,8 @@
 package v1
 
 import (
-	"app/model/v1/internal/impl"
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -10,7 +11,7 @@ import (
 
 func OnRobotSkyGround(origin uidata.UI, robotID string, sky bool) (uidata.UI, error) {
 	ctx := origin
-	suitabiity, err := impl.QueryRobotSuitability(impl.Model(ctx.Model.(Model)), robotID)
+	suitabiity, err := common.QueryRobotSuitability(types.Model(ctx.Model.(Model)), robotID)
 	if err != nil {
 		return origin, err
 	}

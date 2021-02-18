@@ -1,8 +1,11 @@
-package impl
+package common
 
-import "app/tool/protocol"
+import (
+	"app/model/v1/internal/tool/types"
+	"app/tool/protocol"
+)
 
-func ObserveRobot(model Model, robot protocol.Robot) (protocol.Robot, error) {
+func ObserveRobot(model types.Model, robot protocol.Robot) (protocol.Robot, error) {
 	var err error
 	maxHP, err := QueryRobotMaxHp(model, robot.ID)
 	if err != nil {

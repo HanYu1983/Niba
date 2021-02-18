@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -282,7 +283,7 @@ func (this LevelGeneByPSO) Mutate() (optalg.IGene, error) {
 
 	return ret, nil
 }
-func GenerateLevelByPSO(origin Model, playerID string) (Model, error) {
+func GenerateLevelByPSO(origin types.Model, playerID string) (types.Model, error) {
 	var err error
 	ctx := origin
 	mapW, mapH := len(ctx.App.Gameplay.Map), len(ctx.App.Gameplay.Map[0])

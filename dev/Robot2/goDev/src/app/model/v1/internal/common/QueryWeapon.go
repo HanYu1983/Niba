@@ -1,4 +1,4 @@
-package impl
+package common
 
 // func QueryWeapon(model Model, instanceID WeaponInstanceID) (protocol.Weapon, error) {
 // 	switch instanceID.Type {

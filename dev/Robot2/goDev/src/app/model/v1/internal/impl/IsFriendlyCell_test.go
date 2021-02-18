@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"testing"
 )
@@ -9,7 +10,7 @@ func TestIsFriendlyCell(t *testing.T) {
 	const (
 		playerAI1 = "playerAI1"
 	)
-	mockModel := Model{}
+	mockModel := types.Model{}
 	mockModel.App.Gameplay.Players = map[string]protocol.Player{
 		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
 		playerAI1:               {ID: playerAI1, GroupID: "1"},

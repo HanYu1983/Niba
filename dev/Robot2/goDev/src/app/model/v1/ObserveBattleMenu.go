@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -10,7 +12,7 @@ import (
 
 func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	ctx := origin
-	model := impl.Model(ctx.Model.(Model))
+	model := types.Model(ctx.Model.(Model))
 	menu, has := ctx.BattleMenus[menuID]
 	if has == false {
 		return origin, nil
@@ -28,7 +30,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 				return origin, err
 			}
 			// 攻擊方設置在左面板
-			menu.Left.Robot, err = impl.ObserveRobot(model, robot)
+			menu.Left.Robot, err = common.ObserveRobot(model, robot)
 			if err != nil {
 				return origin, err
 			}
@@ -37,7 +39,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 			menu.Left.Weapon = weapon
 			menu.Left.Info.HitRate = hitRate
 			// 防守方設置在右面板
-			menu.Right.Robot, err = impl.ObserveRobot(model, targetRobot)
+			menu.Right.Robot, err = common.ObserveRobot(model, targetRobot)
 			if err != nil {
 				return origin, err
 			}

@@ -1,13 +1,14 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
 )
 
-func QueryRobotMaxHp(model Model, robotID string) (int, error) {
+func QueryRobotMovePower(model types.Model, robotID string) (int, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
@@ -21,22 +22,24 @@ func QueryRobotMaxHp(model Model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Hp
+	total := robotProto.Power
 	for _, component := range components {
-		val := 0.0
 		switch component.ProtoID {
-		case "armor1", "armor2", "armor3", "armor4", "armor5",
-			"beam_armor1", "beam_armor2", "beam_armor3", "beam_armor4", "beam_armor5",
-			"fire_armor", "lighting_armor":
-			if len(component.Value) != 2 {
+		case "engine1", "engine2", "engine3", "engine4", "engine5":
+			if len(component.Value) != 1 {
 				return 0, fmt.Errorf("component value's len not right. %v", component)
 			}
-			val, err = strconv.ParseFloat(component.Value[0], 10)
+			val, err := strconv.ParseFloat(component.Value[0], 10)
 			if err != nil {
 				return 0, fmt.Errorf("component value not right. (%v)", component)
 			}
+			total += int(val)
 		}
-		total += int(val)
+		total -= component.PowerCost
 	}
-	return total, nil
+	config := data.GameData.Config["default"]
+	if config.PowerCostForMove == 0 {
+		return 0, fmt.Errorf("config.PowerCostForMove不得為0")
+	}
+	return total / config.PowerCostForMove, nil
 }

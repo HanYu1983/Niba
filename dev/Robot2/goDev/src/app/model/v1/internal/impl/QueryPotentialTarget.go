@@ -1,6 +1,8 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
@@ -14,7 +16,7 @@ type PotentailTarget struct {
 	DesireWeapon    protocol.Weapon
 }
 
-func QueryPotentialTarget(model Model, robot protocol.Robot, transform string, weapons protocol.Weapons) ([]PotentailTarget, error) {
+func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform string, weapons protocol.Weapons) ([]PotentailTarget, error) {
 	// 取得尋找區域
 	selfPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
@@ -57,7 +59,7 @@ func QueryPotentialTarget(model Model, robot protocol.Robot, transform string, w
 	ret := []PotentailTarget{}
 	for _, weapon := range weapons {
 		// 武器攻擊範圍
-		attackRange, err := QueryRobotWeaponAttackRange(model, robot, weapon, protocol.Position{})
+		attackRange, err := common.QueryRobotWeaponAttackRange(model, robot, weapon, protocol.Position{})
 		if err != nil {
 			return nil, err
 		}

@@ -1,8 +1,11 @@
 package impl
 
-import "app/tool/protocol"
+import (
+	"app/model/v1/internal/tool/types"
+	"app/tool/protocol"
+)
 
-func IsFriendlyRobot(model Model, unitID1 string, unitID2 string) (bool, error) {
+func IsFriendlyRobot(model types.Model, unitID1 string, unitID2 string) (bool, error) {
 	unit1, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID1)
 	if err != nil {
 		return false, err

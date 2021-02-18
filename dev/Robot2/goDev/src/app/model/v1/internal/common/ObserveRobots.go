@@ -1,8 +1,11 @@
-package impl
+package common
 
-import "app/tool/protocol"
+import (
+	"app/model/v1/internal/tool/types"
+	"app/tool/protocol"
+)
 
-func ObserveRobots(model Model, origin map[string]protocol.Robot) (map[string]protocol.Robot, error) {
+func ObserveRobots(model types.Model, origin map[string]protocol.Robot) (map[string]protocol.Robot, error) {
 	localRobots := map[string]protocol.Robot{}
 	for ID, robot := range origin {
 		robot, err := ObserveRobot(model, robot)

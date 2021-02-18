@@ -1,6 +1,7 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
@@ -8,7 +9,7 @@ import (
 	"fmt"
 )
 
-func QueryRobotWeaponAttackRange(model Model, robot protocol.Robot, weapon protocol.Weapon, offset protocol.Position) ([]protocol.Position, error) {
+func QueryRobotWeaponAttackRange(model types.Model, robot protocol.Robot, weapon protocol.Weapon, offset protocol.Position) ([]protocol.Position, error) {
 	var err error
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -30,7 +31,7 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Map = tempMap
 		ctx.Model = model
 	case uidata.MenuOptionTest2:
-		model := impl.Model(ctx.Model.(Model))
+		model := types.Model(ctx.Model.(Model))
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
@@ -40,7 +41,7 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		}
 		ctx.Model = Model(model)
 	case uidata.MenuOptionTest3:
-		model := impl.Model(ctx.Model.(Model))
+		model := types.Model(ctx.Model.(Model))
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}

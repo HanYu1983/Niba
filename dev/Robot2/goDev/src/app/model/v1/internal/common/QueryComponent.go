@@ -1,4 +1,4 @@
-package impl
+package common
 
 // const (
 // 	InstanceIDTypePending = iota

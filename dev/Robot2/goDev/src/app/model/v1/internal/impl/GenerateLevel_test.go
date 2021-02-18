@@ -1,6 +1,7 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
 	"testing"
 )
@@ -11,7 +12,7 @@ func TestGenerateLevel(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	ctx := Model{}
+	ctx := types.Model{}
 	ctx.App.Gameplay.Map = tempMap
 	ctx, err = GenerateLevel(ctx, "abc")
 	if err != nil {

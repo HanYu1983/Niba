@@ -1,4 +1,4 @@
-package impl
+package common
 
 // func QueryRobot(model Model, robotID string) (protocol.Robot, error) {
 // 	var err error

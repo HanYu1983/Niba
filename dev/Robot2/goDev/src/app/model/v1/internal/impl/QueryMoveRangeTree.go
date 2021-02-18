@@ -1,11 +1,12 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"tool/astar"
 )
 
-func QueryMoveRangeTree(model Model, robotID string) (astar.NodeMap, error) {
+func QueryMoveRangeTree(model types.Model, robotID string) (astar.NodeMap, error) {
 	pos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robotID)
 	if err != nil {
 		return nil, err

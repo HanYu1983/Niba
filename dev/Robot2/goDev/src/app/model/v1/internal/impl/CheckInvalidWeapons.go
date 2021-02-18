@@ -1,12 +1,13 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/protocol"
 	"fmt"
 )
 
-func CheckInvalidWeapons(model Model, robot protocol.Robot, weapons protocol.Weapons) (map[string]string, error) {
+func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protocol.Weapons) (map[string]string, error) {
 	ret := map[string]string{}
 	robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {

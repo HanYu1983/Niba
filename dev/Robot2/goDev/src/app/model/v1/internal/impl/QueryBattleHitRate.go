@@ -1,19 +1,21 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool/helper"
 	"app/tool/protocol"
 )
 
-func QueryBattleHitRate(model Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (float64, error) {
+func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (float64, error) {
 	var err error
 	powerFactor := 0.0
 	{
-		robotPower, err := QueryRobotMovePower(model, robot.ID)
+		robotPower, err := common.QueryRobotMovePower(model, robot.ID)
 		if err != nil {
 			return 0, err
 		}
-		targetPower, err := QueryRobotMovePower(model, targetRobot.ID)
+		targetPower, err := common.QueryRobotMovePower(model, targetRobot.ID)
 		if err != nil {
 			return 0, err
 		}
@@ -31,7 +33,7 @@ func QueryBattleHitRate(model Model, robot protocol.Robot, pilot protocol.Pilot,
 			terrainFactor = terrain.HitRate
 		}
 	}
-	basic, err := QueryRobotWeaponAccuracy(model, robot, weapon)
+	basic, err := common.QueryRobotWeaponAccuracy(model, robot, weapon)
 	if err != nil {
 		return 0, err
 	}

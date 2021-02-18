@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -14,7 +16,7 @@ import (
 func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, targetPosition protocol.Position) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "OnEnableLineBattleMenu", "start")
 	ctx := origin
-	_model := impl.Model(ctx.Model.(Model))
+	_model := types.Model(ctx.Model.(Model))
 	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return origin, err
@@ -23,7 +25,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	if err != nil {
 		return origin, err
 	}
-	weapons, err := impl.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
 	if err != nil {
 		return origin, err
 	}
@@ -63,7 +65,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			return origin, err
 		}
 		toPos := targetPosition
-		weaponRange, err := impl.QueryRobotWeaponRange(_model, robot, weapon)
+		weaponRange, err := common.QueryRobotWeaponRange(_model, robot, weapon)
 		if err != nil {
 			return origin, err
 		}

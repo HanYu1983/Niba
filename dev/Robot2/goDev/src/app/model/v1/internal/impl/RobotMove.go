@@ -1,12 +1,13 @@
 package impl
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"fmt"
 	"tool/log"
 )
 
-func RobotMove(origin Model, robotID string, pos protocol.Position) (Model, error) {
+func RobotMove(origin types.Model, robotID string, pos protocol.Position) (types.Model, error) {
 	v := origin
 	tags := v.App.Gameplay.Tags[robotID]
 	if tags.MoveCount >= 5 {

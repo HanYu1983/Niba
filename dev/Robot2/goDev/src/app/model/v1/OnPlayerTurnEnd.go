@@ -2,6 +2,7 @@ package v1
 
 import (
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -12,13 +13,13 @@ func OnPlayerTurnEnd(origin uidata.UI, player protocol.Player) (uidata.UI, error
 	log.Log(protocol.LogCategoryPhase, "OnPlayerTurnEnd", "start")
 	var err error
 	ctx := origin
-	robots, err := impl.QueryUnitsByPlayer(impl.Model(ctx.Model.(Model)), player)
+	robots, err := impl.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), player)
 	if err != nil {
 		return origin, err
 	}
 	log.Log(protocol.LogCategoryDetail, "OnPlayerTurnEnd", fmt.Sprintf("robots(%v)", robots))
 	for _, robotID := range robots {
-		model := impl.Model(ctx.Model.(Model))
+		model := types.Model(ctx.Model.(Model))
 		tag := model.App.Gameplay.Tags[robotID]
 		tag.MoveCount = 0
 		tag.IsDone = false

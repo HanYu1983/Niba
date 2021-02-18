@@ -1,12 +1,13 @@
-package impl
+package common
 
 import (
+	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"fmt"
 	"tool/log"
 )
 
-func ObserveRobotMenu(model Model, origin protocol.RobotMenu) (protocol.RobotMenu, error) {
+func ObserveRobotMenu(model types.Model, origin protocol.RobotMenu) (protocol.RobotMenu, error) {
 	log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "start")
 	log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", fmt.Sprintf("robotMenu(%v)", origin))
 	ctx := origin

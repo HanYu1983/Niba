@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
+	"app/model/v1/internal/tool/types"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -9,22 +11,22 @@ import (
 	"tool/log"
 )
 
-func QueryGoal(model Model, robotID string) (impl.Goal, error) {
+func QueryGoal(model Model, robotID string) (types.Goal, error) {
 	if goal, has := model.App.Gameplay.AIModel.Directive[robotID]; has {
 		return goal, nil
 	}
-	return impl.Goal{Type: impl.GoalTypeSearchAndAttack, Position: protocol.Position{5, 5}}, nil
+	return types.Goal{Type: types.GoalTypeSearchAndAttack, Position: protocol.Position{5, 5}}, nil
 }
 
 func RenderRobotAim(origin uidata.UI, fromRobot string, toRobot string) error {
 	var err error
 	ctx := origin
 	view := def.View
-	fromPos, err := protocol.TryGetStringPosition(impl.Model(ctx.Model.(Model)).App.Gameplay.Positions, fromRobot)
+	fromPos, err := protocol.TryGetStringPosition(types.Model(ctx.Model.(Model)).App.Gameplay.Positions, fromRobot)
 	if err != nil {
 		return err
 	}
-	toPos, err := protocol.TryGetStringPosition(impl.Model(ctx.Model.(Model)).App.Gameplay.Positions, toRobot)
+	toPos, err := protocol.TryGetStringPosition(types.Model(ctx.Model.(Model)).App.Gameplay.Positions, toRobot)
 	if err != nil {
 		return err
 	}
@@ -43,14 +45,14 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	var err error
 	var cancel bool
 	ctx := origin
-	isRobotDone, err := impl.IsRobotDone(impl.Model(ctx.Model.(Model)), robot.ID)
+	isRobotDone, err := impl.IsRobotDone(types.Model(ctx.Model.(Model)), robot.ID)
 	if err != nil {
 		return origin, false, err
 	}
 	if isRobotDone {
 		return origin, false, fmt.Errorf("[RobotThinking]robot(%v) already done.", robot.ID)
 	}
-	var noGoal impl.Goal
+	var noGoal types.Goal
 	goal, err := QueryGoal(ctx.Model.(Model), robot.ID)
 	if err != nil {
 		return origin, false, err
@@ -59,14 +61,14 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 		return origin, false, nil
 	}
 	switch goal.Type {
-	case impl.GoalTypeSearchAndAttack:
-		weapons, err := impl.QueryRobotWeapons(impl.Model(impl.Model(ctx.Model.(Model))), robot.ID, robot.Transform)
+	case types.GoalTypeSearchAndAttack:
+		weapons, err := common.QueryRobotWeapons(types.Model(types.Model(ctx.Model.(Model))), robot.ID, robot.Transform)
 		if err != nil {
 			return origin, false, err
 		}
 		// 取得有效武器
 		// {
-		// 	invalidWeapons, err := CheckInvalidWeapons(impl.Model(ctx.Model.(Model)), robot, weapons)
+		// 	invalidWeapons, err := CheckInvalidWeapons(types.Model(ctx.Model.(Model)), robot, weapons)
 		// 	if err != nil {
 		// 		return origin, false, err
 		// 	}
@@ -75,13 +77,13 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 		// 		return isInvalid == false
 		// 	})
 		// }
-		potentails, err := impl.QueryPotentialTarget(impl.Model(ctx.Model.(Model)), robot, robot.Transform, weapons)
+		potentails, err := impl.QueryPotentialTarget(types.Model(ctx.Model.(Model)), robot, robot.Transform, weapons)
 		if err != nil {
 			return origin, false, err
 		}
 		if len(potentails) > 0 {
 			potentail := potentails[len(potentails)-1]
-			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(impl.Model(ctx.Model.(Model)), robot, potentail.DesirePositions[0])
+			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, potentail.DesirePositions[0])
 			if err != nil {
 				return origin, false, err
 			}
@@ -111,10 +113,10 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 		}
-	case impl.GoalTypeMoveToPosition:
+	case types.GoalTypeMoveToPosition:
 		currPos := ctx.Model.(Model).App.Gameplay.Positions[robot.ID]
 		if currPos != goal.Position {
-			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(impl.Model(ctx.Model.(Model)), robot, goal.Position)
+			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, goal.Position)
 			if err != nil {
 				return origin, false, err
 			}
@@ -129,7 +131,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				return origin, false, err
 			}
 		}
-	case impl.GoalTypeAttackTargetRobot:
+	case types.GoalTypeAttackTargetRobot:
 		ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")
 		if err != nil {
 			return origin, false, err
@@ -153,7 +155,7 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	if err != nil {
 		return origin, false, err
 	}
-	robotIDs, err := impl.QueryUnitsByPlayer(impl.Model(ctx.Model.(Model)), activePlayer)
+	robotIDs, err := impl.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), activePlayer)
 	if err != nil {
 		return origin, false, err
 	}
@@ -162,14 +164,14 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		if err != nil {
 			return origin, false, err
 		}
-		isRobotDone, err := impl.IsRobotDone(impl.Model(ctx.Model.(Model)), robotID)
+		isRobotDone, err := impl.IsRobotDone(types.Model(ctx.Model.(Model)), robotID)
 		if err != nil {
 			return origin, false, err
 		}
 		if isRobotDone {
 			continue
 		}
-		robot, err := protocol.TryGetStringRobot(impl.Model(ctx.Model.(Model)).App.Gameplay.Robots, robotID)
+		robot, err := protocol.TryGetStringRobot(types.Model(ctx.Model.(Model)).App.Gameplay.Robots, robotID)
 		if err != nil {
 			return origin, false, err
 		}

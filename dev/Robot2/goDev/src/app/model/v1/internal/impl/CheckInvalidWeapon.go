@@ -1,16 +1,18 @@
 package impl
 
 import (
+	"app/model/v1/internal/common"
+	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
 )
 
-func CheckInvalidWeapon(model Model, robot protocol.Robot, weapon protocol.Weapon, units []string) (string, error) {
+func CheckInvalidWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon, units []string) (string, error) {
 	tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robot.ID)
 	if tag.MoveCount > 0 {
-		ability, err := QueryRobotWeaponAbility(model, robot, weapon)
+		ability, err := common.QueryRobotWeaponAbility(model, robot, weapon)
 		if err != nil {
 			return "", err
 		}
@@ -43,7 +45,7 @@ func CheckInvalidWeapon(model Model, robot protocol.Robot, weapon protocol.Weapo
 		if err != nil {
 			return "", err
 		}
-		attackRange, err := QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
+		attackRange, err := common.QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
 		if err != nil {
 			return "", err
 		}
