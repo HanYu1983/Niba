@@ -1,1 +1,1 @@
-browserify index.js --outfile ..\cocosDev2\assets\han\go.js
+browserify index.js --outfile ..\cocosDev2\assets\han\lib.js

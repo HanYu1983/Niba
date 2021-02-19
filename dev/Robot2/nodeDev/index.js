@@ -21,6 +21,3 @@ var ans = knn.predict(test_dataset)
 console.log(ans)
 
 globalThis._KNN = KNN
-const a = require("./go.js")
-console.log(a)
-console.log(globalThis)
