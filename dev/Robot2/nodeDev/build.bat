@@ -1,0 +1,1 @@
+browserify index.js --outfile ..\cocosDev2\assets\han\go.js
