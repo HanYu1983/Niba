@@ -12,9 +12,25 @@ import (
 	"tool/log"
 )
 
-func QueryGoal(model Model, robotID string) (types.Goal, error) {
-	if goal, has := model.App.Gameplay.AIModel.Directive[robotID]; has {
+func QueryGoal(model Model, robot protocol.Robot) (types.Goal, error) {
+	if goal, has := model.App.Gameplay.AIModel.GoalByRobotID[robot.ID]; has {
 		return goal, nil
+	}
+	memory := model.App.Gameplay.AIModel.Memory[robot.PlayerID]
+	teamID, hasTeam := memory.TeamIDByRobotID[robot.ID]
+	log.Log(protocol.LogCategoryDetail, "QueryGoal", fmt.Sprintf("robotID(%v) teamID(%v) hasTeam(%v)", robot.ID, teamID, hasTeam))
+	if hasTeam {
+		targetTeamID, hasTargetTeam := memory.MyTeamTarget[teamID]
+		log.Log(protocol.LogCategoryDetail, "QueryGoal", fmt.Sprintf("robotID(%v) targetTeamID(%v) hasTargetTeam(%v)", robot.ID, targetTeamID, hasTargetTeam))
+		if hasTargetTeam {
+			if targetTeamID >= len(memory.TargetClusters.Clusters) {
+				return types.Goal{}, fmt.Errorf("targetTeamID not found in clusters")
+			}
+			centroidV2 := memory.TargetClusters.Centroids[targetTeamID].Centroid
+			centroid := protocol.Position{int(centroidV2[0]), int(centroidV2[1])}
+			log.Log(protocol.LogCategoryDetail, "QueryGoal", fmt.Sprintf("centroid(%v)", centroid))
+			return types.Goal{Type: types.GoalTypeMoveToPosition, Position: centroid}, nil
+		}
 	}
 	return types.Goal{Type: types.GoalTypeSearchAndAttack, Position: protocol.Position{0, 0}}, nil
 }
@@ -54,7 +70,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 		return origin, false, fmt.Errorf("[RobotThinking]robot(%v) already done.", robot.ID)
 	}
 	var noGoal types.Goal
-	goal, err := QueryGoal(ctx.Model.(Model), robot.ID)
+	goal, err := QueryGoal(ctx.Model.(Model), robot)
 	if err != nil {
 		return origin, false, err
 	}
@@ -187,8 +203,12 @@ func OnEnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		return origin, false, err
 	}
 	{
+		targetRobotIDs, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), protocol.PlayerIDPlayer)
+		if err != nil {
+			return origin, false, err
+		}
 		_model := types.Model(ctx.Model.(Model))
-		_model, err = ai.Strategy(_model, activePlayer.ID, robotIDs)
+		_model, err = ai.Strategy(_model, activePlayer.ID, robotIDs, targetRobotIDs)
 		if err != nil {
 			return origin, false, err
 		}

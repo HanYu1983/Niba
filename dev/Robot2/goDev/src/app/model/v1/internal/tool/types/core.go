@@ -77,6 +77,6 @@ type Memory struct {
 }
 
 type AIModel struct {
-	Memory    map[string]Memory
-	Directive map[string]Goal
+	Memory        map[string]Memory
+	GoalByRobotID map[string]Goal
 }
