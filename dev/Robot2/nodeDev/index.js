@@ -20,4 +20,4 @@ var test_dataset = [
 var ans = knn.predict(test_dataset)
 console.log(ans)
 
-globalThis._KNN = KNN
+globalThis["ml-knn"] = KNN
