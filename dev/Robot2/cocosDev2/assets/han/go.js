@@ -31400,11 +31400,17 @@ $packages["app/model/v1/internal/ai"] = (function() {
 			while (true) {
 				if (!(_i$1 < _ref$1.$length)) { break; }
 				v = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), mlkmeans.Centroid);
+				if (v.Size === 0) {
+					_i$1++;
+					continue;
+				}
 				centroidV2 = v.Centroid;
 				centers = $append(centers, new sliceType$3([new $Float64((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0])), new $Float64((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]))]));
 				_i$1++;
 			}
-			_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
+			if (cnt === centers.$length) {
+				_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
+			}
 		}
 		_tuple$1 = mlkmeans.KMeans(posData, cnt, options);
 		mlkmeans.KMeansResult.copy(myTeams, _tuple$1[0]);
@@ -31440,11 +31446,17 @@ $packages["app/model/v1/internal/ai"] = (function() {
 			while (true) {
 				if (!(_i$3 < _ref$3.$length)) { break; }
 				v$1 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), mlkmeans.Centroid);
+				if (v$1.Size === 0) {
+					_i$3++;
+					continue;
+				}
 				centroidV2$1 = v$1.Centroid;
 				centers$1 = $append(centers$1, new sliceType$3([new $Float64((0 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 0])), new $Float64((1 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 1]))]));
 				_i$3++;
 			}
-			_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
+			if (cnt$1 === centers$1.$length) {
+				_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
+			}
 		}
 		_tuple$3 = mlkmeans.KMeans(posData$1, cnt$1, options$1);
 		mlkmeans.KMeansResult.copy(targetTeams, _tuple$3[0]);
@@ -41217,8 +41229,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.OnEnableRobotMenu = OnEnableRobotMenu;
 	QueryGoal = function(model, robot) {
-		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _entry, _entry$1, _entry$2, _entry$3, _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, centroid, centroidV2, goal, has, hasTargetTeam, hasTeam, memory, model, robot, targetTeamID, teamID, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; centroid = $f.centroid; centroidV2 = $f.centroidV2; goal = $f.goal; has = $f.has; hasTargetTeam = $f.hasTargetTeam; hasTeam = $f.hasTeam; memory = $f.memory; model = $f.model; robot = $f.robot; targetTeamID = $f.targetTeamID; teamID = $f.teamID; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _entry, _entry$1, _entry$2, _entry$3, _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, centroid, centroidV2, goal, has, hasTargetTeam, hasTeam, memory, model, robot, targetTeamID, teamID, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; centroid = $f.centroid; centroidV2 = $f.centroidV2; goal = $f.goal; has = $f.has; hasTargetTeam = $f.hasTargetTeam; hasTeam = $f.hasTeam; memory = $f.memory; model = $f.model; robot = $f.robot; targetTeamID = $f.targetTeamID; teamID = $f.teamID; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_tuple = (_entry = model.App.Gameplay.AIModel.GoalByRobotID[$String.keyFor(robot.ID)], _entry !== undefined ? [_entry.v, true] : [new types.Goal.ptr("", "", arrayType.zero()), false]);
 		goal = $clone(_tuple[0], types.Goal);
 		has = _tuple[1];
@@ -41252,7 +41264,10 @@ $packages["app/model/v1"] = (function() {
 					_r$2 = fmt.Errorf("targetTeamID not found in clusters", new sliceType$5([])); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 					$s = -1; return [new types.Goal.ptr("", "", arrayType.zero()), _r$2];
 				/* } */ case 10:
-				centroidV2 = (x = memory.TargetClusters.Centroids, ((targetTeamID < 0 || targetTeamID >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + targetTeamID])).Centroid;
+				if ((x = memory.TargetClusters.Centroids, ((targetTeamID < 0 || targetTeamID >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + targetTeamID])).Size === 0) {
+					$s = -1; return [new types.Goal.ptr("GoalTypeSearchAndAttack", "", arrayType.zero()), $ifaceNil];
+				}
+				centroidV2 = (x$1 = memory.TargetClusters.Centroids, ((targetTeamID < 0 || targetTeamID >= x$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + targetTeamID])).Centroid;
 				centroid = $toNativeArray($kindInt, [(((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0]) >> 0)), (((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]) >> 0))]);
 				_arg$4 = protocol.LogCategoryDetail;
 				_r$3 = fmt.Sprintf("centroid(%v)", new sliceType$5([new protocol.Position(centroid)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
@@ -41262,7 +41277,7 @@ $packages["app/model/v1"] = (function() {
 			/* } */ case 8:
 		/* } */ case 4:
 		$s = -1; return [new types.Goal.ptr("GoalTypeSearchAndAttack", "", $toNativeArray($kindInt, [0, 0])), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryGoal }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.centroid = centroid; $f.centroidV2 = centroidV2; $f.goal = goal; $f.has = has; $f.hasTargetTeam = hasTargetTeam; $f.hasTeam = hasTeam; $f.memory = memory; $f.model = model; $f.robot = robot; $f.targetTeamID = targetTeamID; $f.teamID = teamID; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryGoal }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.centroid = centroid; $f.centroidV2 = centroidV2; $f.goal = goal; $f.has = has; $f.hasTargetTeam = hasTargetTeam; $f.hasTeam = hasTeam; $f.memory = memory; $f.model = model; $f.robot = robot; $f.targetTeamID = targetTeamID; $f.teamID = teamID; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryGoal = QueryGoal;
 	RenderRobotAim = function(origin, fromRobot, toRobot) {

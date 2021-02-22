@@ -26,6 +26,11 @@ func QueryGoal(model Model, robot protocol.Robot) (types.Goal, error) {
 			if targetTeamID >= len(memory.TargetClusters.Clusters) {
 				return types.Goal{}, fmt.Errorf("targetTeamID not found in clusters")
 			}
+			// 目標隊的機體已清空
+			if memory.TargetClusters.Centroids[targetTeamID].Size == 0 {
+				return types.Goal{Type: types.GoalTypeSearchAndAttack, Position: protocol.Position{}}, nil
+			}
+			// 目標隊存在機體, 移向目標隊
 			centroidV2 := memory.TargetClusters.Centroids[targetTeamID].Centroid
 			centroid := protocol.Position{int(centroidV2[0]), int(centroidV2[1])}
 			log.Log(protocol.LogCategoryDetail, "QueryGoal", fmt.Sprintf("centroid(%v)", centroid))

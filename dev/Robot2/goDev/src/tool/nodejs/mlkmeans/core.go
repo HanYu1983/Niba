@@ -30,6 +30,7 @@ type KMeansResult struct {
 // let centers = [[1, 2, 1], [-1, -1, -1]];
 // let ans = kmeans(data, 2, { initialization: centers });
 // console.log(ans);
+// The initial centers should have the same length as K
 func KMeans(dataset interface{}, cnt int, options map[string]interface{}) (KMeansResult, error) {
 	ans := js.Global.Get("ml-kmeans").New(dataset, cnt, options)
 	clusters := js2intary(ans.Get("clusters"))

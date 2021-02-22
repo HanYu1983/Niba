@@ -58,12 +58,17 @@ func Strategy(origin types.Model, playerID string, myRobotIDs []string, targetRo
 			centers := [][]interface{}{}
 			if len(clusters.Centroids) > 0 {
 				for _, v := range clusters.Centroids {
+					if v.Size == 0 {
+						continue
+					}
 					centroidV2 := v.Centroid
 					centers = append(centers, []interface{}{
 						centroidV2[0], centroidV2[1],
 					})
 				}
-				options["initialization"] = centers
+				if cnt == len(centers) {
+					options["initialization"] = centers
+				}
 			}
 		}
 		myTeams, err = mlkmeans.KMeans(posData, cnt, options)
@@ -89,12 +94,17 @@ func Strategy(origin types.Model, playerID string, myRobotIDs []string, targetRo
 			centers := [][]interface{}{}
 			if len(clusters.Centroids) > 0 {
 				for _, v := range clusters.Centroids {
+					if v.Size == 0 {
+						continue
+					}
 					centroidV2 := v.Centroid
 					centers = append(centers, []interface{}{
 						centroidV2[0], centroidV2[1],
 					})
 				}
-				options["initialization"] = centers
+				if cnt == len(centers) {
+					options["initialization"] = centers
+				}
 			}
 		}
 		targetTeams, err = mlkmeans.KMeans(posData, cnt, options)
