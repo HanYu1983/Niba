@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"app/model/v1/internal/ai"
 	"app/model/v1/internal/common"
 	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
@@ -45,7 +46,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	var err error
 	var cancel bool
 	ctx := origin
-	isRobotDone, err := impl.IsRobotDone(types.Model(ctx.Model.(Model)), robot.ID)
+	isRobotDone, err := common.IsRobotDone(types.Model(ctx.Model.(Model)), robot.ID)
 	if err != nil {
 		return origin, false, err
 	}
@@ -171,8 +172,8 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	return ctx, false, nil
 }
 
-func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
-	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "start")
+func OnEnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
+	log.Log(protocol.LogCategoryPhase, "OnEnemyTurnPhase", "start")
 	var err error
 	var cancel bool
 	view := def.View
@@ -181,16 +182,24 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	if err != nil {
 		return origin, false, err
 	}
-	robotIDs, err := impl.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), activePlayer)
+	robotIDs, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), activePlayer)
 	if err != nil {
 		return origin, false, err
+	}
+	{
+		_model := types.Model(ctx.Model.(Model))
+		_model, err = ai.Strategy(_model, activePlayer.ID, robotIDs)
+		if err != nil {
+			return origin, false, err
+		}
+		ctx.Model = Model(_model)
 	}
 	for _, robotID := range robotIDs {
 		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
 		}
-		isRobotDone, err := impl.IsRobotDone(types.Model(ctx.Model.(Model)), robotID)
+		isRobotDone, err := common.IsRobotDone(types.Model(ctx.Model.(Model)), robotID)
 		if err != nil {
 			return origin, false, err
 		}
@@ -209,7 +218,7 @@ func EnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 			return origin, cancel, nil
 		}
 	}
-	log.Log(protocol.LogCategoryPhase, "EnemyTurnPhase", "end")
+	log.Log(protocol.LogCategoryPhase, "OnEnemyTurnPhase", "end")
 	var _ = view
 	return ctx, false, nil
 }

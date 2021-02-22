@@ -20,11 +20,11 @@ func (knn KNN) Predict(test_dataset [][]interface{}) interface{} {
 	return ary
 }
 
-func New(train_dataset interface{}, labels interface{}, option map[string]interface{}) (KNN, error) {
+func New(train_dataset interface{}, labels interface{}, options map[string]interface{}) (KNN, error) {
 	if _, has := option["k"]; has == false {
 		return KNN{}, fmt.Errorf("option must has k field")
 	}
 	_knn := js.Global.Get("ml-knn")
-	knn := _knn.New(train_dataset, labels, option)
+	knn := _knn.New(train_dataset, labels, options)
 	return KNN{knn}, nil
 }

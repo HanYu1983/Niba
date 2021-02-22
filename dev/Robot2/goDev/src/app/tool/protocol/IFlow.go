@@ -3,6 +3,7 @@ package protocol
 import "tool/astar"
 
 type IFlow interface {
+	ObservePage(ctx interface{}, id int) (interface{}, error)
 	OnPlayerTurnStart(origin interface{}, player Player) (interface{}, error)
 	OnPlayerTurnEnd(origin interface{}, player Player) (interface{}, error)
 	OnSingleBattleMenuPhase(origin interface{}, isPlayerTurn bool, robotID string, weaponID string, targetRobotID string) (interface{}, bool, error)

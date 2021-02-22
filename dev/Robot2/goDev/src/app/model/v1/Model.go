@@ -68,7 +68,7 @@ func (v Model) OnPlayerTurnEnd(ui interface{}, player protocol.Player) (interfac
 	return OnPlayerTurnEnd(ui.(uidata.UI), player)
 }
 func (v Model) OnEnemyTurnPhase(origin interface{}) (interface{}, bool, error) {
-	return EnemyTurnPhase(origin.(uidata.UI))
+	return OnEnemyTurnPhase(origin.(uidata.UI))
 }
 func (v Model) OnRobotTransform(ctx interface{}, robotID string, transform string) (interface{}, error) {
 	return OnRobotTransform(ctx.(uidata.UI), robotID, transform)
@@ -97,11 +97,12 @@ func (v Model) OnDisableBattleMenu(origin interface{}) (interface{}, error) {
 func (v Model) OnClickSystemMenu(origin interface{}, selection string) (interface{}, error) {
 	return OnClickSystemMenu(origin.(uidata.UI), selection)
 }
-
-// IGameplayModel
 func (v Model) ObservePage(ui interface{}, id int) (interface{}, error) {
 	return ObservePage(ui.(uidata.UI), id)
 }
+
+// IGameplayModel
+
 func (v Model) ObserveRobot(robot protocol.Robot) (protocol.Robot, error) {
 	return common.ObserveRobot(types.Model(v), robot)
 }

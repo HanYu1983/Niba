@@ -2,6 +2,7 @@ package types
 
 import (
 	"app/tool/protocol"
+	"tool/nodejs/mlkmeans"
 )
 
 type lobby struct {
@@ -68,6 +69,13 @@ type Goal struct {
 	Position protocol.Position
 }
 
+type Memory struct {
+	TargetClusters mlkmeans.KMeansResult
+	MyClusters     mlkmeans.KMeansResult
+	MyTeamTarget   map[int]int
+}
+
 type AIModel struct {
+	Memory    map[string]Memory
 	Directive map[string]Goal
 }

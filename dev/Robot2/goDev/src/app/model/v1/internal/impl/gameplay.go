@@ -190,22 +190,3 @@ func GetBattleMenu(origin types.Model) protocol.BattleMenu {
 	ctx := origin
 	return ctx.App.Gameplay.BattleMenu
 }
-
-// ai
-func QueryUnitsByPlayer(model types.Model, player protocol.Player) ([]string, error) {
-	_, err := protocol.TryGetStringPlayer(model.App.Gameplay.Players, player.ID)
-	if err != nil {
-		return []string{}, err
-	}
-	ret := []string{}
-	for ID, robot := range model.App.Gameplay.Robots {
-		if robot.PlayerID == player.ID {
-			ret = append(ret, ID)
-		}
-	}
-	return ret, nil
-}
-
-func IsRobotDone(model types.Model, robotID string) (bool, error) {
-	return model.App.Gameplay.Tags[robotID].IsDone, nil
-}

@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "ml-kmeans": "^5.0.0",
     "ml-knn": "^3.0.0"
   }
 }

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"app/model/v1/internal/impl"
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -13,7 +13,7 @@ func OnPlayerTurnEnd(origin uidata.UI, player protocol.Player) (uidata.UI, error
 	log.Log(protocol.LogCategoryPhase, "OnPlayerTurnEnd", "start")
 	var err error
 	ctx := origin
-	robots, err := impl.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), player)
+	robots, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), player)
 	if err != nil {
 		return origin, err
 	}

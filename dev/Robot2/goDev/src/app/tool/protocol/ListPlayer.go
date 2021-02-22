@@ -92,7 +92,7 @@ func ReplacePlayerIndex(items []Player, info map[int]Player) []Player {
 func TryGetPlayer(items []Player, i int) (Player, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]Player{}
-		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
+		return ret[0], fmt.Errorf("[TryGetPlayer]out of range (%v/%v)", i, len(items))
 	}
 	return items[i], nil
 }
@@ -106,11 +106,11 @@ func TryGetPlayer2(items [][]Player, i int) func(j int, err error) (Player, erro
 		}
 		if i < 0 || i >= len(items) {
 			ret := map[int]Player{}
-			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+			return ret[0], fmt.Errorf("[TryGetPlayer2]out of range i (%v/%v)", i, len(items))
 		}
 		if j < 0 || j >= len(items[i]) {
 			ret := map[int]Player{}
-			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+			return ret[0], fmt.Errorf("[TryGetPlayer2]out of range j (%v/%v)", j, len(items[i]))
 		}
 		return items[i][j], nil
 	}

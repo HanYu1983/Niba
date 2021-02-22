@@ -92,7 +92,7 @@ func ReplacePositionIndex(items []Position, info map[int]Position) []Position {
 func TryGetPosition(items []Position, i int) (Position, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]Position{}
-		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
+		return ret[0], fmt.Errorf("[TryGetPosition]out of range (%v/%v)", i, len(items))
 	}
 	return items[i], nil
 }
@@ -106,11 +106,11 @@ func TryGetPosition2(items [][]Position, i int) func(j int, err error) (Position
 		}
 		if i < 0 || i >= len(items) {
 			ret := map[int]Position{}
-			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+			return ret[0], fmt.Errorf("[TryGetPosition2]out of range i (%v/%v)", i, len(items))
 		}
 		if j < 0 || j >= len(items[i]) {
 			ret := map[int]Position{}
-			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+			return ret[0], fmt.Errorf("[TryGetPosition2]out of range j (%v/%v)", j, len(items[i]))
 		}
 		return items[i][j], nil
 	}

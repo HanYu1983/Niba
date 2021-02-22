@@ -88,7 +88,7 @@ func ReplaceItemIndex(items []Item, info map[int]Item) []Item {
 func TryGetItem(items []Item, i int) (Item, error) {
 	if i < 0 || i >= len(items) {
 		ret := map[int]Item{}
-		return ret[0], fmt.Errorf("out of range (%v/%v)", i, len(items))
+		return ret[0], fmt.Errorf("[TryGetItem]out of range (%v/%v)", i, len(items))
 	}
 	return items[i], nil
 }
@@ -102,11 +102,11 @@ func TryGetItem2(items [][]Item, i int) func(j int, err error) (Item, error) {
 		}
 		if i < 0 || i >= len(items) {
 			ret := map[int]Item{}
-			return ret[0], fmt.Errorf("out of range i (%v/%v)", i, len(items))
+			return ret[0], fmt.Errorf("[TryGetItem2]out of range i (%v/%v)", i, len(items))
 		}
 		if j < 0 || j >= len(items[i]) {
 			ret := map[int]Item{}
-			return ret[0], fmt.Errorf("out of range j (%v/%v)", j, len(items[i]))
+			return ret[0], fmt.Errorf("[TryGetItem2]out of range j (%v/%v)", j, len(items[i]))
 		}
 		return items[i][j], nil
 	}

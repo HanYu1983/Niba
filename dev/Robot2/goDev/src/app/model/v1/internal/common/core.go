@@ -8,6 +8,24 @@ import (
 	"strconv"
 )
 
+func QueryUnitsByPlayer(model types.Model, playerID string) ([]string, error) {
+	_, err := protocol.TryGetStringPlayer(model.App.Gameplay.Players, playerID)
+	if err != nil {
+		return []string{}, err
+	}
+	ret := []string{}
+	for ID, robot := range model.App.Gameplay.Robots {
+		if robot.PlayerID == playerID {
+			ret = append(ret, ID)
+		}
+	}
+	return ret, nil
+}
+
+func IsRobotDone(model types.Model, robotID string) (bool, error) {
+	return model.App.Gameplay.Tags[robotID].IsDone, nil
+}
+
 func QueryRobotArmor(model types.Model, robotID string) (int, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)

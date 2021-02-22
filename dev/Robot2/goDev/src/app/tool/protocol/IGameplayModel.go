@@ -5,7 +5,6 @@ import (
 )
 
 type IGameplayModel interface {
-	ObservePage(ctx interface{}, id int) (interface{}, error)
 	ObserveRobot(robot Robot) (Robot, error)
 	New(situation interface{}) (IModel, error)
 	Save() error
