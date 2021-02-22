@@ -13,7 +13,7 @@ func OnPlayerTurnEnd(origin uidata.UI, player protocol.Player) (uidata.UI, error
 	log.Log(protocol.LogCategoryPhase, "OnPlayerTurnEnd", "start")
 	var err error
 	ctx := origin
-	robots, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), player)
+	robots, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), player.ID)
 	if err != nil {
 		return origin, err
 	}

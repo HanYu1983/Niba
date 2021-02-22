@@ -2,7 +2,6 @@ package main
 
 import (
 	"app"
-	"fmt"
 
 	"github.com/gopherjs/gopherjs/js"
 )
@@ -39,33 +38,7 @@ import (
 //go:generate genny -in tool/template/map.go -out app/model/v1/internal/tool/types/MapStringMemory.go -pkg types gen "Key=string Value=Memory"
 
 func init() {
-	TestKNN()
 	app.Main()
-}
-
-func TestKNN() {
-	KNN := js.Global.Get("_KNN")
-	train_dataset := [][]interface{}{
-		{0, 0, 0},
-		{0, 1, 1},
-		{1, 1, 0},
-		{2, 2, 2},
-		{1, 2, 2},
-		{2, 1, 2},
-	}
-	train_labels := []interface{}{
-		0, 0, 0, 1, 1, 1,
-	}
-	test_dataset := [][]interface{}{
-		{0.9, 0.9, 0.9},
-		{1.1, 1.1, 1.1},
-		{1.1, 1.1, 1.2},
-		{1.2, 1.2, 1.2},
-	}
-	knn := KNN.New(train_dataset, train_labels, map[string]interface{}{"k": 2})
-	ans := knn.Call("predict", test_dataset)
-	js.Global.Get("console").Call("log", ans)
-	fmt.Println(js.Global.Get("A").String())
 }
 
 func TestModule() {

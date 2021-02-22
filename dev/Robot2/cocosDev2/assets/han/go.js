@@ -23937,9 +23937,54 @@ $packages["app/tool/protocol"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["tool/nodejs/mlkmeans"] = (function() {
+	var $pkg = {}, $init, js, Centroid, KMeansResult, sliceType, sliceType$1, sliceType$2;
+	js = $packages["github.com/gopherjs/gopherjs/js"];
+	Centroid = $pkg.Centroid = $newType(0, $kindStruct, "mlkmeans.Centroid", true, "tool/nodejs/mlkmeans", true, function(Centroid_, Error_, Size_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Centroid = sliceType$1.nil;
+			this.Error = 0;
+			this.Size = 0;
+			return;
+		}
+		this.Centroid = Centroid_;
+		this.Error = Error_;
+		this.Size = Size_;
+	});
+	KMeansResult = $pkg.KMeansResult = $newType(0, $kindStruct, "mlkmeans.KMeansResult", true, "tool/nodejs/mlkmeans", true, function(Clusters_, Centroids_, Converged_, Iterations_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Clusters = sliceType$2.nil;
+			this.Centroids = sliceType.nil;
+			this.Converged = false;
+			this.Iterations = 0;
+			return;
+		}
+		this.Clusters = Clusters_;
+		this.Centroids = Centroids_;
+		this.Converged = Converged_;
+		this.Iterations = Iterations_;
+	});
+	sliceType = $sliceType(Centroid);
+	sliceType$1 = $sliceType($Float64);
+	sliceType$2 = $sliceType($Int);
+	Centroid.init("", [{prop: "Centroid", name: "Centroid", embedded: false, exported: true, typ: sliceType$1, tag: ""}, {prop: "Error", name: "Error", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Size", name: "Size", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	KMeansResult.init("", [{prop: "Clusters", name: "Clusters", embedded: false, exported: true, typ: sliceType$2, tag: ""}, {prop: "Centroids", name: "Centroids", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Converged", name: "Converged", embedded: false, exported: true, typ: $Bool, tag: ""}, {prop: "Iterations", name: "Iterations", embedded: false, exported: true, typ: $Int, tag: ""}]);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = js.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["app/model/v1/internal/tool/types"] = (function() {
-	var $pkg = {}, $init, protocol, lobby, gameplay, app, Model, Goal, AIModel, mapType, mapType$1, mapType$2, mapType$3, mapType$4, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$11;
+	var $pkg = {}, $init, protocol, fmt, mlkmeans, lobby, gameplay, app, Model, Goal, Memory, AIModel, sliceType, sliceType$2, sliceType$3, mapType, mapType$1, mapType$2, mapType$3, mapType$4, sliceType$5, arrayType, sliceType$6, arrayType$1, sliceType$7, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$11, mapType$12, mapType$13, mapType$14, AssocStringMemory;
 	protocol = $packages["app/tool/protocol"];
+	fmt = $packages["fmt"];
+	mlkmeans = $packages["tool/nodejs/mlkmeans"];
 	lobby = $pkg.lobby = $newType(0, $kindStruct, "types.lobby", true, "app/model/v1/internal/tool/types", false, function(Robots_, Pilots_, Weapons_, Components_, RobotIDByWeaponID_, RobotIDByComponentID_, PilotIDByRobotID_) {
 		this.$val = this;
 		if (arguments.length === 0) {
@@ -23963,10 +24008,10 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 	gameplay = $pkg.gameplay = $newType(0, $kindStruct, "types.gameplay", true, "app/model/v1/internal/tool/types", false, function(AIModel_, ActivePlayerID_, PlayerOrder_, Map_, Cursor_, Units_, Players_, Positions_, Robots_, Tags_, Items_, Pilots_, HitMarks_, RobotMenu_, BattleMenu_, MoveRange_, MapAttackRange_, Done_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.AIModel = new AIModel.ptr(false);
+			this.AIModel = new AIModel.ptr(false, false);
 			this.ActivePlayerID = "";
 			this.PlayerOrder = sliceType.nil;
-			this.Map = sliceType$2.nil;
+			this.Map = sliceType$5.nil;
 			this.Cursor = arrayType.zero();
 			this.Units = sliceType.nil;
 			this.Players = false;
@@ -23976,10 +24021,10 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 			this.Items = false;
 			this.Pilots = false;
 			this.HitMarks = false;
-			this.RobotMenu = new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false);
+			this.RobotMenu = new protocol.RobotMenu.ptr(false, "", sliceType$6.nil, false, false, false, false);
 			this.BattleMenu = new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0));
-			this.MoveRange = sliceType$4.nil;
-			this.MapAttackRange = sliceType$4.nil;
+			this.MoveRange = sliceType$7.nil;
+			this.MapAttackRange = sliceType$7.nil;
 			this.Done = $ifaceNil;
 			return;
 		}
@@ -24007,7 +24052,7 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 		if (arguments.length === 0) {
 			this.SeqID = 0;
 			this.Money = 0;
-			this.Gameplay = new gameplay.ptr(new AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil);
+			this.Gameplay = new gameplay.ptr(new AIModel.ptr(false, false), "", sliceType.nil, sliceType$5.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$6.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$7.nil, sliceType$7.nil, $ifaceNil);
 			this.Lobby = new lobby.ptr(false, false, false, false, false, false, false);
 			return;
 		}
@@ -24019,7 +24064,7 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 	Model = $pkg.Model = $newType(0, $kindStruct, "types.Model", true, "app/model/v1/internal/tool/types", true, function(App_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.App = new app.ptr(0, 0, new gameplay.ptr(new AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false));
+			this.App = new app.ptr(0, 0, new gameplay.ptr(new AIModel.ptr(false, false), "", sliceType.nil, sliceType$5.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$6.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$7.nil, sliceType$7.nil, $ifaceNil), new lobby.ptr(false, false, false, false, false, false, false));
 			return;
 		}
 		this.App = App_;
@@ -24036,42 +24081,87 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 		this.RobotID = RobotID_;
 		this.Position = Position_;
 	});
-	AIModel = $pkg.AIModel = $newType(0, $kindStruct, "types.AIModel", true, "app/model/v1/internal/tool/types", true, function(Directive_) {
+	Memory = $pkg.Memory = $newType(0, $kindStruct, "types.Memory", true, "app/model/v1/internal/tool/types", true, function(TargetClusters_, MyClusters_, MyTeamTarget_, TeamIDByRobotID_) {
 		this.$val = this;
 		if (arguments.length === 0) {
+			this.TargetClusters = new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0);
+			this.MyClusters = new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0);
+			this.MyTeamTarget = false;
+			this.TeamIDByRobotID = false;
+			return;
+		}
+		this.TargetClusters = TargetClusters_;
+		this.MyClusters = MyClusters_;
+		this.MyTeamTarget = MyTeamTarget_;
+		this.TeamIDByRobotID = TeamIDByRobotID_;
+	});
+	AIModel = $pkg.AIModel = $newType(0, $kindStruct, "types.AIModel", true, "app/model/v1/internal/tool/types", true, function(Memory_, Directive_) {
+		this.$val = this;
+		if (arguments.length === 0) {
+			this.Memory = false;
 			this.Directive = false;
 			return;
 		}
+		this.Memory = Memory_;
 		this.Directive = Directive_;
 	});
+	sliceType = $sliceType($String);
+	sliceType$2 = $sliceType($Int);
+	sliceType$3 = $sliceType(mlkmeans.Centroid);
 	mapType = $mapType($String, protocol.Robot);
 	mapType$1 = $mapType($String, protocol.Pilot);
 	mapType$2 = $mapType($String, protocol.Weapon);
 	mapType$3 = $mapType($String, protocol.Component);
 	mapType$4 = $mapType($String, $String);
-	sliceType = $sliceType($String);
-	sliceType$1 = $sliceType($Int);
-	sliceType$2 = $sliceType(sliceType$1);
+	sliceType$5 = $sliceType(sliceType$2);
 	arrayType = $arrayType($Int, 2);
-	sliceType$3 = $sliceType(sliceType);
+	sliceType$6 = $sliceType(sliceType);
 	arrayType$1 = $arrayType($Float64, 4);
-	sliceType$4 = $sliceType(protocol.Position);
+	sliceType$7 = $sliceType(protocol.Position);
 	mapType$5 = $mapType($String, protocol.Player);
 	mapType$6 = $mapType($String, protocol.Position);
 	mapType$7 = $mapType($String, protocol.Tag);
 	mapType$8 = $mapType($String, protocol.Item);
 	mapType$9 = $mapType($String, protocol.HitMark);
-	mapType$11 = $mapType($String, Goal);
+	mapType$11 = $mapType($Int, $Int);
+	mapType$12 = $mapType($String, $Int);
+	mapType$13 = $mapType($String, Memory);
+	mapType$14 = $mapType($String, Goal);
+	AssocStringMemory = function(a, k, v) {
+		var _entry, _i, _key, _key$1, _keys, _ref, a, k, k$1, ret, v, v$1;
+		ret = $makeMap($String.keyFor, []);
+		_ref = a;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			k$1 = _entry.k;
+			v$1 = $clone(_entry.v, Memory);
+			_key = k$1; (ret || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(v$1, Memory) };
+			_i++;
+		}
+		_key$1 = k; (ret || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(v, Memory) };
+		return ret;
+	};
+	$pkg.AssocStringMemory = AssocStringMemory;
 	lobby.init("", [{prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$4, tag: ""}]);
-	gameplay.init("", [{prop: "AIModel", name: "AIModel", embedded: false, exported: true, typ: AIModel, tag: ""}, {prop: "ActivePlayerID", name: "ActivePlayerID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerOrder", name: "PlayerOrder", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Map", name: "Map", embedded: false, exported: true, typ: sliceType$2, tag: ""}, {prop: "Cursor", name: "Cursor", embedded: false, exported: true, typ: protocol.Position, tag: ""}, {prop: "Units", name: "Units", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Players", name: "Players", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Positions", name: "Positions", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Tags", name: "Tags", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "Items", name: "Items", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "HitMarks", name: "HitMarks", embedded: false, exported: true, typ: mapType$9, tag: ""}, {prop: "RobotMenu", name: "RobotMenu", embedded: false, exported: true, typ: protocol.RobotMenu, tag: ""}, {prop: "BattleMenu", name: "BattleMenu", embedded: false, exported: true, typ: protocol.BattleMenu, tag: ""}, {prop: "MoveRange", name: "MoveRange", embedded: false, exported: true, typ: sliceType$4, tag: ""}, {prop: "MapAttackRange", name: "MapAttackRange", embedded: false, exported: true, typ: sliceType$4, tag: ""}, {prop: "Done", name: "Done", embedded: false, exported: true, typ: $emptyInterface, tag: ""}]);
+	gameplay.init("", [{prop: "AIModel", name: "AIModel", embedded: false, exported: true, typ: AIModel, tag: ""}, {prop: "ActivePlayerID", name: "ActivePlayerID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PlayerOrder", name: "PlayerOrder", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Map", name: "Map", embedded: false, exported: true, typ: sliceType$5, tag: ""}, {prop: "Cursor", name: "Cursor", embedded: false, exported: true, typ: protocol.Position, tag: ""}, {prop: "Units", name: "Units", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Players", name: "Players", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Positions", name: "Positions", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Tags", name: "Tags", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "Items", name: "Items", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "HitMarks", name: "HitMarks", embedded: false, exported: true, typ: mapType$9, tag: ""}, {prop: "RobotMenu", name: "RobotMenu", embedded: false, exported: true, typ: protocol.RobotMenu, tag: ""}, {prop: "BattleMenu", name: "BattleMenu", embedded: false, exported: true, typ: protocol.BattleMenu, tag: ""}, {prop: "MoveRange", name: "MoveRange", embedded: false, exported: true, typ: sliceType$7, tag: ""}, {prop: "MapAttackRange", name: "MapAttackRange", embedded: false, exported: true, typ: sliceType$7, tag: ""}, {prop: "Done", name: "Done", embedded: false, exported: true, typ: $emptyInterface, tag: ""}]);
 	app.init("", [{prop: "SeqID", name: "SeqID", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Gameplay", name: "Gameplay", embedded: false, exported: true, typ: gameplay, tag: ""}, {prop: "Lobby", name: "Lobby", embedded: false, exported: true, typ: lobby, tag: ""}]);
 	Model.init("", [{prop: "App", name: "App", embedded: false, exported: true, typ: app, tag: ""}]);
 	Goal.init("", [{prop: "Type", name: "Type", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "RobotID", name: "RobotID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Position", name: "Position", embedded: false, exported: true, typ: protocol.Position, tag: ""}]);
-	AIModel.init("", [{prop: "Directive", name: "Directive", embedded: false, exported: true, typ: mapType$11, tag: ""}]);
+	Memory.init("", [{prop: "TargetClusters", name: "TargetClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyClusters", name: "MyClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyTeamTarget", name: "MyTeamTarget", embedded: false, exported: true, typ: mapType$11, tag: ""}, {prop: "TeamIDByRobotID", name: "TeamIDByRobotID", embedded: false, exported: true, typ: mapType$12, tag: ""}]);
+	AIModel.init("", [{prop: "Memory", name: "Memory", embedded: false, exported: true, typ: mapType$13, tag: ""}, {prop: "Directive", name: "Directive", embedded: false, exported: true, typ: mapType$14, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = protocol.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mlkmeans.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -29877,7 +29967,7 @@ $packages["app/tool"] = (function() {
 		/* */ $s = 2; continue;
 		/* if (i < 0 || i >= items.$length) { */ case 1:
 			ret = $makeMap($Int.keyFor, []);
-			_r = fmt.Errorf("out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("[TryGetInt]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : 0), _r];
 		/* } */ case 2:
 		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
@@ -29897,14 +29987,14 @@ $packages["app/tool"] = (function() {
 			/* */ $s = 2; continue;
 			/* if (i < 0 || i >= items.$length) { */ case 1:
 				ret$1 = $makeMap($Int.keyFor, []);
-				_r = fmt.Errorf("out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r = fmt.Errorf("[TryGetInt2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : 0), _r];
 			/* } */ case 2:
 			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
 			/* */ $s = 5; continue;
 			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
 				ret$2 = $makeMap($Int.keyFor, []);
-				_r$1 = fmt.Errorf("out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_r$1 = fmt.Errorf("[TryGetInt2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : 0), _r$1];
 			/* } */ case 5:
 			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
@@ -29956,7 +30046,7 @@ $packages["app/tool"] = (function() {
 		/* */ $s = 2; continue;
 		/* if (i < 0 || i >= items.$length) { */ case 1:
 			ret = $makeMap($Int.keyFor, []);
-			_r = fmt.Errorf("out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r = fmt.Errorf("[TryGetString]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : ""), _r];
 		/* } */ case 2:
 		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
@@ -29976,14 +30066,14 @@ $packages["app/tool"] = (function() {
 			/* */ $s = 2; continue;
 			/* if (i < 0 || i >= items.$length) { */ case 1:
 				ret$1 = $makeMap($Int.keyFor, []);
-				_r = fmt.Errorf("out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_r = fmt.Errorf("[TryGetString2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : ""), _r];
 			/* } */ case 2:
 			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
 			/* */ $s = 5; continue;
 			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
 				ret$2 = $makeMap($Int.keyFor, []);
-				_r$1 = fmt.Errorf("out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_r$1 = fmt.Errorf("[TryGetString2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : ""), _r$1];
 			/* } */ case 5:
 			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
@@ -31125,7 +31215,7 @@ $packages["tool/log"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1/internal/common"] = (function() {
-	var $pkg = {}, $init, types, data, helper, protocol, uidata, fmt, math, strconv, astar, log, arrayType, sliceType, arrayType$1, sliceType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryRobotArmor, QueryRobotBeamArmor, NewRobot, NewPilot, IsFriendlyCell, IsFriendlyRobot;
+	var $pkg = {}, $init, types, data, helper, protocol, uidata, fmt, math, strconv, astar, log, arrayType, sliceType, arrayType$1, sliceType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryUnitsByPlayer, IsRobotDone, QueryRobotArmor, QueryRobotBeamArmor, NewRobot, NewPilot, IsFriendlyCell, IsFriendlyRobot;
 	types = $packages["app/model/v1/internal/tool/types"];
 	data = $packages["app/tool/data"];
 	helper = $packages["app/tool/helper"];
@@ -32273,6 +32363,42 @@ $packages["app/model/v1/internal/common"] = (function() {
 		return ret;
 	};
 	$pkg.SearchUnitByRegion = SearchUnitByRegion;
+	QueryUnitsByPlayer = function(model, playerID) {
+		var ID, _entry, _i, _keys, _r, _ref, _tuple, err, model, playerID, ret, robot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; model = $f.model; playerID = $f.playerID; ret = $f.ret; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = protocol.TryGetStringPlayer(model.App.Gameplay.Players, playerID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new sliceType$1([]), err];
+		}
+		ret = new sliceType$1([]);
+		_ref = model.App.Gameplay.Robots;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			ID = _entry.k;
+			robot = $clone(_entry.v, protocol.Robot);
+			if (robot.PlayerID === playerID) {
+				ret = $append(ret, ID);
+			}
+			_i++;
+		}
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryUnitsByPlayer }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.playerID = playerID; $f.ret = ret; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryUnitsByPlayer = QueryUnitsByPlayer;
+	IsRobotDone = function(model, robotID) {
+		var _entry, model, robotID;
+		return [(_entry = model.App.Gameplay.Tags[$String.keyFor(robotID)], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).IsDone, $ifaceNil];
+	};
+	$pkg.IsRobotDone = IsRobotDone;
 	QueryRobotArmor = function(model, robotID) {
 		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _ref, _tuple, _tuple$1, _tuple$2, component, components, err, model, robot, robotID, total, val, x, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; component = $f.component; components = $f.components; err = $f.err; model = $f.model; robot = $f.robot; robotID = $f.robotID; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -32565,6 +32691,187 @@ $packages["app/model/v1/internal/common"] = (function() {
 		terrainCache = false;
 		unitByPosition = $makeMap(protocol.Position.keyFor, []);
 		unitByRegion = $makeMap(protocol.Position.keyFor, []);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/model/v1/internal/ai"] = (function() {
+	var $pkg = {}, $init, common, types, tool, protocol, fmt, mlkmeans, sliceType, sliceType$1, sliceType$2, sliceType$3, QueryTeamTarget, QueryTeammate, QueryTeamCount, QueryTeamPower, Strategy;
+	common = $packages["app/model/v1/internal/common"];
+	types = $packages["app/model/v1/internal/tool/types"];
+	tool = $packages["app/tool"];
+	protocol = $packages["app/tool/protocol"];
+	fmt = $packages["fmt"];
+	mlkmeans = $packages["tool/nodejs/mlkmeans"];
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType($String);
+	sliceType$2 = $sliceType($Int);
+	sliceType$3 = $sliceType(mlkmeans.Centroid);
+	QueryTeamTarget = function(origin, myRobotIDs, myTeams, targetRobotIDs, targetTeams) {
+		var _key, _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, ctx, currMyTeamPower, currMyTeammate, currTargetTeamID, currTargetTeamPower, currTargetTeammate, err, err$1, err$2, i, myRobotIDs, myTeamCnt, myTeams, origin, selectTargetTeamID, targetRobotIDs, targetTeamCnt, targetTeams, totalPower, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; ctx = $f.ctx; currMyTeamPower = $f.currMyTeamPower; currMyTeammate = $f.currMyTeammate; currTargetTeamID = $f.currTargetTeamID; currTargetTeamPower = $f.currTargetTeamPower; currTargetTeammate = $f.currTargetTeammate; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; myRobotIDs = $f.myRobotIDs; myTeamCnt = $f.myTeamCnt; myTeams = $f.myTeams; origin = $f.origin; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeamCnt = $f.targetTeamCnt; targetTeams = $f.targetTeams; totalPower = $f.totalPower; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		_tuple = QueryTeamCount($clone(myTeams, mlkmeans.KMeansResult));
+		myTeamCnt = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		_tuple$1 = QueryTeamCount($clone(targetTeams, mlkmeans.KMeansResult));
+		targetTeamCnt = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		if (targetTeamCnt === 0) {
+			$s = -1; return [false, false, $ifaceNil];
+		}
+		selectTargetTeamID = $makeMap($Int.keyFor, []);
+		currTargetTeamID = 0;
+		_r = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple$2 = _r;
+		currTargetTeammate = _tuple$2[0];
+		err$1 = _tuple$2[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		_tuple$3 = QueryTeamPower($clone(ctx, types.Model), currTargetTeammate);
+		currTargetTeamPower = _tuple$3[0];
+		err$1 = _tuple$3[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		totalPower = 0;
+		i = 0;
+		/* while (true) { */ case 2:
+			/* if (!(i < myTeamCnt)) { break; } */ if(!(i < myTeamCnt)) { $s = 3; continue; }
+			_key = i; (selectTargetTeamID || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: currTargetTeamID };
+			_r$1 = QueryTeammate($clone(myTeams, mlkmeans.KMeansResult), myRobotIDs, i); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$4 = _r$1;
+			currMyTeammate = _tuple$4[0];
+			err$2 = _tuple$4[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_tuple$5 = QueryTeamPower($clone(ctx, types.Model), currMyTeammate);
+			currMyTeamPower = _tuple$5[0];
+			err$2 = _tuple$5[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			totalPower = totalPower + (currMyTeamPower) >> 0;
+			/* */ if (totalPower < currTargetTeamPower) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (totalPower < currTargetTeamPower) { */ case 5:
+				i = i + (1) >> 0;
+				/* continue; */ $s = 2; continue;
+			/* } */ case 6:
+			totalPower = 0;
+			currTargetTeamID = currTargetTeamID + (1) >> 0;
+			if (currTargetTeamID >= targetTeamCnt) {
+				/* break; */ $s = 3; continue;
+			}
+			_r$2 = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$6 = _r$2;
+			currTargetTeammate = _tuple$6[0];
+			err$2 = _tuple$6[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_tuple$7 = QueryTeamPower($clone(ctx, types.Model), currTargetTeammate);
+			currTargetTeamPower = _tuple$7[0];
+			err$2 = _tuple$7[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			i = i + (1) >> 0;
+		/* } */ $s = 2; continue; case 3:
+		$s = -1; return [selectTargetTeamID, true, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamTarget }; } $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.ctx = ctx; $f.currMyTeamPower = currMyTeamPower; $f.currMyTeammate = currMyTeammate; $f.currTargetTeamID = currTargetTeamID; $f.currTargetTeamPower = currTargetTeamPower; $f.currTargetTeammate = currTargetTeammate; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.myRobotIDs = myRobotIDs; $f.myTeamCnt = myTeamCnt; $f.myTeams = myTeams; $f.origin = origin; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeamCnt = targetTeamCnt; $f.targetTeams = targetTeams; $f.totalPower = totalPower; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeamTarget = QueryTeamTarget;
+	QueryTeammate = function(result, robotIDs, teamID) {
+		var _i, _r, _ref, _tuple, currTeamID, err, i, result, ret, robotID, robotIDs, teamID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; currTeamID = $f.currTeamID; err = $f.err; i = $f.i; result = $f.result; ret = $f.ret; robotID = $f.robotID; robotIDs = $f.robotIDs; teamID = $f.teamID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ret = new sliceType$1([]);
+		_ref = result.Clusters;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			currTeamID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			/* */ if (!((currTeamID === teamID))) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!((currTeamID === teamID))) { */ case 3:
+				_i++;
+				/* continue; */ $s = 1; continue;
+			/* } */ case 4:
+			_r = tool.TryGetString(robotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robotID = _tuple[0];
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [sliceType$1.nil, err];
+			}
+			ret = $append(ret, robotID);
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeammate }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.currTeamID = currTeamID; $f.err = err; $f.i = i; $f.result = result; $f.ret = ret; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.teamID = teamID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeammate = QueryTeammate;
+	QueryTeamCount = function(result) {
+		var result;
+		return [result.Clusters.$length, $ifaceNil];
+	};
+	$pkg.QueryTeamCount = QueryTeamCount;
+	QueryTeamPower = function(origin, robotIDs) {
+		var origin, robotIDs;
+		return [0, $ifaceNil];
+	};
+	$pkg.QueryTeamPower = QueryTeamPower;
+	Strategy = function(origin, playerID, robots) {
+		var _entry, _r, _r$1, _r$2, _tuple, _tuple$1, ctx, err, memory, myRobotIDs, myTeams, origin, playerID, robots, selectTargetTeamID, targetRobotIDs, targetTeams, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; ctx = $f.ctx; err = $f.err; memory = $f.memory; myRobotIDs = $f.myRobotIDs; myTeams = $f.myTeams; origin = $f.origin; playerID = $f.playerID; robots = $f.robots; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeams = $f.targetTeams; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		memory = $clone((_entry = ctx.App.Gameplay.AIModel.Memory[$String.keyFor(playerID)], _entry !== undefined ? _entry.v : new types.Memory.ptr(new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0), new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0), false, false)), types.Memory);
+		myRobotIDs = robots;
+		_r = common.QueryUnitsByPlayer($clone(ctx, types.Model), "PlayerIDPlayer"); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		targetRobotIDs = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		myTeams = new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0);
+		targetTeams = new mlkmeans.KMeansResult.ptr(sliceType$2.nil, sliceType$3.nil, false, 0);
+		_r$1 = QueryTeamTarget($clone(ctx, types.Model), myRobotIDs, $clone(myTeams, mlkmeans.KMeansResult), targetRobotIDs, $clone(targetTeams, mlkmeans.KMeansResult)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		selectTargetTeamID = _tuple$1[0];
+		err = _tuple$1[2];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		memory.MyTeamTarget = selectTargetTeamID;
+		mlkmeans.KMeansResult.copy(memory.MyClusters, myTeams);
+		mlkmeans.KMeansResult.copy(memory.TargetClusters, targetTeams);
+		ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, $clone(memory, types.Memory));
+		_r$2 = fmt.Println(new sliceType([new memory.constructor.elem(memory)])); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2;
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Strategy }; } $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.memory = memory; $f.myRobotIDs = myRobotIDs; $f.myTeams = myTeams; $f.origin = origin; $f.playerID = playerID; $f.robots = robots; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeams = targetTeams; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Strategy = Strategy;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = types.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tool.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mlkmeans.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -36188,7 +36495,7 @@ $packages["tool/optalg"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1/internal/impl"] = (function() {
-	var $pkg = {}, $init, common, types, tool, data, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, astar, kmeans, log, optalg, LevelGeneByHC, LevelGeneByPSO, ByAstarNodeEstimatedCost, PotentailTarget, sliceType, sliceType$1, arrayType, arrayType$1, sliceType$4, sliceType$5, sliceType$6, sliceType$7, ptrType, sliceType$8, sliceType$9, mapType, mapType$1, mapType$2, _total, _count, terrainCache, CheckInvalidWeapon, CheckInvalidWeapons, GenerateLevelByHC, QuerySuitabilityIDCount, GenerateLevelByPSO, QueryBattleAction, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, RobotMove, NewModel, Save, Load, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu, QueryUnitsByPlayer, IsRobotDone;
+	var $pkg = {}, $init, common, types, tool, data, helper, protocol, uidata, fmt, mgl64, clusters, math, rand, sort, astar, kmeans, log, optalg, LevelGeneByHC, LevelGeneByPSO, ByAstarNodeEstimatedCost, PotentailTarget, sliceType, sliceType$1, arrayType, arrayType$1, sliceType$4, sliceType$5, sliceType$6, sliceType$7, ptrType, sliceType$8, sliceType$9, mapType, mapType$1, mapType$2, _total, _count, terrainCache, CheckInvalidWeapon, CheckInvalidWeapons, GenerateLevelByHC, QuerySuitabilityIDCount, GenerateLevelByPSO, QueryBattleAction, QueryBattleDamage, QueryBattleHitRate, QueryFastestMovePosition, QueryMoveRangeTree, QueryPotentialTarget, RobotMove, NewModel, Save, Load, QueryActivePlayer, NextPlayer, IsDone, QueryUnitsByRegion, QueryUnitByPosition, SetCursor, GetCursor, QueryMoveCount, RobotDone, GetRobotMenu, SetMoveRange, GetMoveRange, GetBattleMenu;
 	common = $packages["app/model/v1/internal/common"];
 	types = $packages["app/model/v1/internal/tool/types"];
 	tool = $packages["app/tool"];
@@ -37808,7 +38115,7 @@ $packages["app/model/v1/internal/impl"] = (function() {
 		}
 		ctx.App.Lobby.Weapons = $makeMap($String.keyFor, [{ k: "lobbyWeapon_0", v: new protocol.Weapon.ptr("lobbyWeapon_0", "beam_mega1", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$7.nil, "", "", 0, 0, 0, 0) }, { k: "lobbyWeapon_1", v: new protocol.Weapon.ptr("lobbyWeapon_1", "beam_sniper1", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$7.nil, "", "", 0, 0, 0, 0) }]);
 		ctx.App.Lobby.RobotIDByWeaponID = $makeMap($String.keyFor, [{ k: "lobbyWeapon_0", v: "0" }, { k: "lobbyWeapon_1", v: "0" }]);
-		types.AIModel.copy(ctx.App.Gameplay.AIModel, new types.AIModel.ptr(false));
+		types.AIModel.copy(ctx.App.Gameplay.AIModel, new types.AIModel.ptr(false, false));
 		ctx.App.Money = 100000;
 		ctx.App.Gameplay.Map = tempMap;
 		ctx.App.Gameplay.Units = new sliceType$7([]);
@@ -37967,42 +38274,6 @@ $packages["app/model/v1/internal/impl"] = (function() {
 		return ctx.App.Gameplay.BattleMenu;
 	};
 	$pkg.GetBattleMenu = GetBattleMenu;
-	QueryUnitsByPlayer = function(model, player) {
-		var ID, _entry, _i, _keys, _r, _ref, _tuple, err, model, player, ret, robot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; model = $f.model; player = $f.player; ret = $f.ret; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = protocol.TryGetStringPlayer(model.App.Gameplay.Players, player.ID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new sliceType$7([]), err];
-		}
-		ret = new sliceType$7([]);
-		_ref = model.App.Gameplay.Robots;
-		_i = 0;
-		_keys = $keys(_ref);
-		while (true) {
-			if (!(_i < _keys.length)) { break; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				continue;
-			}
-			ID = _entry.k;
-			robot = $clone(_entry.v, protocol.Robot);
-			if (robot.PlayerID === player.ID) {
-				ret = $append(ret, ID);
-			}
-			_i++;
-		}
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryUnitsByPlayer }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.player = player; $f.ret = ret; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryUnitsByPlayer = QueryUnitsByPlayer;
-	IsRobotDone = function(model, robotID) {
-		var _entry, model, robotID;
-		return [(_entry = model.App.Gameplay.Tags[$String.keyFor(robotID)], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).IsDone, $ifaceNil];
-	};
-	$pkg.IsRobotDone = IsRobotDone;
 	LevelGeneByHC.methods = [{prop: "TotalCost", name: "TotalCost", pkg: "", typ: $funcType([], [$Int, $error], false)}, {prop: "CalcFitness", name: "CalcFitness", pkg: "", typ: $funcType([], [optalg.IGene, $error], false)}, {prop: "GetFitness", name: "GetFitness", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Crossover", name: "Crossover", pkg: "", typ: $funcType([optalg.IGene], [optalg.IGene, $error], false)}, {prop: "Mutate", name: "Mutate", pkg: "", typ: $funcType([], [optalg.IGene, $error], false)}];
 	LevelGeneByPSO.methods = [{prop: "CalcFitness", name: "CalcFitness", pkg: "", typ: $funcType([], [optalg.IGene, $error], false)}, {prop: "GetFitness", name: "GetFitness", pkg: "", typ: $funcType([], [$Float64], false)}, {prop: "Crossover", name: "Crossover", pkg: "", typ: $funcType([optalg.IGene], [optalg.IGene, $error], false)}, {prop: "Mutate", name: "Mutate", pkg: "", typ: $funcType([], [optalg.IGene, $error], false)}];
 	ByAstarNodeEstimatedCost.methods = [{prop: "Len", name: "Len", pkg: "", typ: $funcType([], [$Int], false)}, {prop: "Swap", name: "Swap", pkg: "", typ: $funcType([$Int, $Int], [], false)}, {prop: "Less", name: "Less", pkg: "", typ: $funcType([$Int, $Int], [$Bool], false)}];
@@ -39292,7 +39563,8 @@ $packages["app/page/common"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1"] = (function() {
-	var $pkg = {}, $init, common, impl, lobby, types, common$1, tool, data, def, helper, protocol, uidata, fmt, mgl64, math, rand, astar, log, Model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, structType, sliceType$5, arrayType$2, arrayType$3, sliceType$6, arrayType$4, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, OnClickSystemMenu, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, QueryGoal, RenderRobotAim, RobotThinking, OnEnemyTurnPhase, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase;
+	var $pkg = {}, $init, ai, common, impl, lobby, types, common$1, tool, data, def, helper, protocol, uidata, fmt, mgl64, math, rand, astar, log, Model, sliceType, sliceType$1, sliceType$2, arrayType, sliceType$3, arrayType$1, sliceType$4, structType, sliceType$5, arrayType$2, arrayType$3, sliceType$6, arrayType$4, ObserveBattleMenu, ObserveGameplayPage, ObserveMenu1D, ObserveMenu2D, ObservePage, OnClickSystemMenu, OnDisableBattleMenu, OnDisableLineBattleMenu, OnDisableRobotMenu, OnEnableBattleMenu, OnEnableLineBattleMenu, OnEnableRobotMenu, QueryGoal, RenderRobotAim, RobotThinking, OnEnemyTurnPhase, OnLineBattleMenuPhase, OnPlayerTurnEnd, OnPlayerTurnStart, OnRobotBattle, Battle, OnRobotDone, OnRobotLineBattle, OnRobotMove, OnRobotSkyGround, OnRobotTransform, AutoCursorAtWeaponID, OnSingleBattleMenuPhase;
+	ai = $packages["app/model/v1/internal/ai"];
 	common = $packages["app/model/v1/internal/common"];
 	impl = $packages["app/model/v1/internal/impl"];
 	lobby = $packages["app/model/v1/internal/lobby"];
@@ -39313,7 +39585,7 @@ $packages["app/model/v1"] = (function() {
 	Model = $pkg.Model = $newType(0, $kindStruct, "v1.Model", true, "app/model/v1", true, function(App_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.App = new types.app.ptr(0, 0, new types.gameplay.ptr(new types.AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new types.lobby.ptr(false, false, false, false, false, false, false));
+			this.App = new types.app.ptr(0, 0, new types.gameplay.ptr(new types.AIModel.ptr(false, false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new types.lobby.ptr(false, false, false, false, false, false, false));
 			return;
 		}
 		this.App = App_;
@@ -40860,7 +41132,7 @@ $packages["app/model/v1"] = (function() {
 		err = $ifaceNil;
 		cancel = false;
 		ctx = $clone(origin, uidata.UI);
-		_tuple = impl.IsRobotDone($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), robot.ID);
+		_tuple = common.IsRobotDone($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), robot.ID);
 		isRobotDone = _tuple[0];
 		err = _tuple[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
@@ -41072,8 +41344,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.RobotThinking = RobotThinking;
 	OnEnemyTurnPhase = function(origin) {
-		var _i, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, activePlayer, cancel, ctx, err, err$1, isRobotDone, origin, robot, robotID, robotIDs, view, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; activePlayer = $f.activePlayer; cancel = $f.cancel; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; isRobotDone = $f.isRobotDone; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotIDs = $f.robotIDs; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _i, _model, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, activePlayer, cancel, ctx, err, err$1, isRobotDone, origin, robot, robotID, robotIDs, view, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _model = $f._model; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; activePlayer = $f.activePlayer; cancel = $f.cancel; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; isRobotDone = $f.isRobotDone; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotIDs = $f.robotIDs; view = $f.view; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = log.Log(protocol.LogCategoryPhase, "OnEnemyTurnPhase", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		err = $ifaceNil;
 		cancel = false;
@@ -41086,49 +41358,58 @@ $packages["app/model/v1"] = (function() {
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, false, err];
 		}
-		_r$1 = impl.QueryUnitsByPlayer($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), $clone(activePlayer, protocol.Player)); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = common.QueryUnitsByPlayer($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), activePlayer.ID); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple$1 = _r$1;
 		robotIDs = _tuple$1[0];
 		err = _tuple$1[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, false, err];
 		}
+		_model = $clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model);
+		_r$2 = ai.Strategy($clone(_model, types.Model), activePlayer.ID, robotIDs); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		types.Model.copy(_model, _tuple$2[0]);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, false, err];
+		}
+		ctx.Model = (x = ($clone(_model, Model)), new x.constructor.elem(x));
 		_ref = robotIDs;
 		_i = 0;
-		/* while (true) { */ case 4:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 5; continue; }
+		/* while (true) { */ case 5:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
 			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r$2 = view.Render($clone(ctx, uidata.UI)); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$2 = _r$2;
-			uidata.UI.copy(ctx, _tuple$2[0]);
-			err = _tuple$2[1];
+			_r$3 = view.Render($clone(ctx, uidata.UI)); /* */ $s = 7; case 7: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$3 = _r$3;
+			uidata.UI.copy(ctx, _tuple$3[0]);
+			err = _tuple$3[1];
 			if (!($interfaceIsEqual(err, $ifaceNil))) {
 				$s = -1; return [origin, false, err];
 			}
-			_tuple$3 = impl.IsRobotDone($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), robotID);
-			isRobotDone = _tuple$3[0];
-			err$1 = _tuple$3[1];
-			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [origin, false, err$1];
-			}
-			/* */ if (isRobotDone) { $s = 7; continue; }
-			/* */ $s = 8; continue;
-			/* if (isRobotDone) { */ case 7:
-				_i++;
-				/* continue; */ $s = 4; continue;
-			/* } */ case 8:
-			_r$3 = protocol.TryGetStringRobot(($clone($assertType(ctx.Model, Model), types.Model)).App.Gameplay.Robots, robotID); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_tuple$4 = _r$3;
-			robot = $clone(_tuple$4[0], protocol.Robot);
+			_tuple$4 = common.IsRobotDone($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), robotID);
+			isRobotDone = _tuple$4[0];
 			err$1 = _tuple$4[1];
 			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 				$s = -1; return [origin, false, err$1];
 			}
-			_r$4 = RobotThinking($clone(ctx, uidata.UI), $clone(robot, protocol.Robot)); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			/* */ if (isRobotDone) { $s = 8; continue; }
+			/* */ $s = 9; continue;
+			/* if (isRobotDone) { */ case 8:
+				_i++;
+				/* continue; */ $s = 5; continue;
+			/* } */ case 9:
+			_r$4 = protocol.TryGetStringRobot(($clone($assertType(ctx.Model, Model), types.Model)).App.Gameplay.Robots, robotID); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
 			_tuple$5 = _r$4;
-			uidata.UI.copy(ctx, _tuple$5[0]);
-			cancel = _tuple$5[1];
-			err$1 = _tuple$5[2];
+			robot = $clone(_tuple$5[0], protocol.Robot);
+			err$1 = _tuple$5[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [origin, false, err$1];
+			}
+			_r$5 = RobotThinking($clone(ctx, uidata.UI), $clone(robot, protocol.Robot)); /* */ $s = 11; case 11: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_tuple$6 = _r$5;
+			uidata.UI.copy(ctx, _tuple$6[0]);
+			cancel = _tuple$6[1];
+			err$1 = _tuple$6[2];
 			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 				$s = -1; return [origin, false, err$1];
 			}
@@ -41136,11 +41417,11 @@ $packages["app/model/v1"] = (function() {
 				$s = -1; return [origin, cancel, $ifaceNil];
 			}
 			_i++;
-		/* } */ $s = 4; continue; case 5:
-		$r = log.Log(protocol.LogCategoryPhase, "OnEnemyTurnPhase", "end"); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* } */ $s = 5; continue; case 6:
+		$r = log.Log(protocol.LogCategoryPhase, "OnEnemyTurnPhase", "end"); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$unused(view);
 		$s = -1; return [ctx, false, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: OnEnemyTurnPhase }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f.activePlayer = activePlayer; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.isRobotDone = isRobotDone; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: OnEnemyTurnPhase }; } $f._i = _i; $f._model = _model; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.activePlayer = activePlayer; $f.cancel = cancel; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.isRobotDone = isRobotDone; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.view = view; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OnEnemyTurnPhase = OnEnemyTurnPhase;
 	OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) {
@@ -41229,7 +41510,7 @@ $packages["app/model/v1"] = (function() {
 		$r = log.Log(protocol.LogCategoryPhase, "OnPlayerTurnEnd", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		err = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
-		_r = impl.QueryUnitsByPlayer($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), $clone(player, protocol.Player)); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = common.QueryUnitsByPlayer($clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model), player.ID); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		robots = _tuple[0];
 		err = _tuple[1];
@@ -42211,24 +42492,25 @@ $packages["app/model/v1"] = (function() {
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = impl.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = lobby.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = types.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = common$1.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = tool.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = data.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = def.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = helper.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = uidata.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mgl64.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = math.$init(); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = rand.$init(); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = astar.$init(); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = log.$init(); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.DefaultModel = new Model.ptr(new types.app.ptr(0, 0, new types.gameplay.ptr(new types.AIModel.ptr(false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new types.lobby.ptr(false, false, false, false, false, false, false)));
+		$r = ai.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = common.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = impl.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = lobby.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = types.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = common$1.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tool.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = data.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = def.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = helper.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = uidata.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl64.$init(); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = rand.$init(); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = astar.$init(); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.DefaultModel = new Model.ptr(new types.app.ptr(0, 0, new types.gameplay.ptr(new types.AIModel.ptr(false, false), "", sliceType.nil, sliceType$2.nil, arrayType.zero(), sliceType.nil, false, false, false, false, false, false, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new protocol.BattleMenu.ptr(false, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0), new protocol.Weapon.ptr("", "", 0, "", arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType.nil, "", "", 0, 0, 0, 0), new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0)), sliceType$4.nil, sliceType$4.nil, $ifaceNil), new types.lobby.ptr(false, false, false, false, false, false, false)));
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -43845,46 +44127,24 @@ $packages["app"] = (function() {
 	return $pkg;
 })();
 $packages["main"] = (function() {
-	var $pkg = {}, $init, app, fmt, js, sliceType, sliceType$1, mapType, init, TestKNN, main;
+	var $pkg = {}, $init, app, js, init, main;
 	app = $packages["app"];
-	fmt = $packages["fmt"];
 	js = $packages["github.com/gopherjs/gopherjs/js"];
-	sliceType = $sliceType($emptyInterface);
-	sliceType$1 = $sliceType(sliceType);
-	mapType = $mapType($String, $emptyInterface);
 	init = function() {
 		var $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = TestKNN(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = app.Main(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = app.Main(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
 		/* */ } return; } if ($f === undefined) { $f = { $blk: init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
-	TestKNN = function() {
-		var KNN, _r, ans, knn, test_dataset, train_dataset, train_labels, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; KNN = $f.KNN; _r = $f._r; ans = $f.ans; knn = $f.knn; test_dataset = $f.test_dataset; train_dataset = $f.train_dataset; train_labels = $f.train_labels; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		KNN = $global._KNN;
-		train_dataset = new sliceType$1([new sliceType([new $Int(0), new $Int(0), new $Int(0)]), new sliceType([new $Int(0), new $Int(1), new $Int(1)]), new sliceType([new $Int(1), new $Int(1), new $Int(0)]), new sliceType([new $Int(2), new $Int(2), new $Int(2)]), new sliceType([new $Int(1), new $Int(2), new $Int(2)]), new sliceType([new $Int(2), new $Int(1), new $Int(2)])]);
-		train_labels = new sliceType([new $Int(0), new $Int(0), new $Int(0), new $Int(1), new $Int(1), new $Int(1)]);
-		test_dataset = new sliceType$1([new sliceType([new $Float64(0.9), new $Float64(0.9), new $Float64(0.9)]), new sliceType([new $Float64(1.1), new $Float64(1.1), new $Float64(1.1)]), new sliceType([new $Float64(1.1), new $Float64(1.1), new $Float64(1.2)]), new sliceType([new $Float64(1.2), new $Float64(1.2), new $Float64(1.2)])]);
-		knn = new (KNN)($externalize(train_dataset, sliceType$1), $externalize(train_labels, sliceType), $externalize($makeMap($String.keyFor, [{ k: "k", v: new $Int(2) }]), mapType));
-		ans = knn.predict($externalize(test_dataset, sliceType$1));
-		$global.console.log(ans);
-		_r = fmt.Println(new sliceType([new $String($internalize($global.A, $String))])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: TestKNN }; } $f.KNN = KNN; $f._r = _r; $f.ans = ans; $f.knn = knn; $f.test_dataset = test_dataset; $f.train_dataset = train_dataset; $f.train_labels = train_labels; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.TestKNN = TestKNN;
 	main = function() {
 	};
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = app.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = js.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		if ($pkg === $mainPkg) {
 			main();
 			$mainFinished = true;

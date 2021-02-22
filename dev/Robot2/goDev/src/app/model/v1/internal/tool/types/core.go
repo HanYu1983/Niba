@@ -70,9 +70,10 @@ type Goal struct {
 }
 
 type Memory struct {
-	TargetClusters mlkmeans.KMeansResult
-	MyClusters     mlkmeans.KMeansResult
-	MyTeamTarget   map[int]int
+	TargetClusters  mlkmeans.KMeansResult
+	MyClusters      mlkmeans.KMeansResult
+	MyTeamTarget    map[int]int
+	TeamIDByRobotID map[string]int
 }
 
 type AIModel struct {

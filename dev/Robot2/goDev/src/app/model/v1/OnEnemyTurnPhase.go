@@ -182,7 +182,7 @@ func OnEnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	if err != nil {
 		return origin, false, err
 	}
-	robotIDs, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), activePlayer)
+	robotIDs, err := common.QueryUnitsByPlayer(types.Model(ctx.Model.(Model)), activePlayer.ID)
 	if err != nil {
 		return origin, false, err
 	}
