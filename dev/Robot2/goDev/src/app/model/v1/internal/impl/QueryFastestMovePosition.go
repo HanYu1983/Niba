@@ -16,7 +16,7 @@ func (a ByAstarNodeEstimatedCost) Less(i, j int) bool {
 	return a[i].Rank-a[i].Cost < a[j].Rank-a[j].Cost
 }
 
-func QueryFastestMovePosition(model types.Model, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
+func QueryFastestMovePosition(model types.Model, weightMap [][]float64, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
 	originPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
@@ -42,7 +42,16 @@ func QueryFastestMovePosition(model types.Model, robot protocol.Robot, target pr
 		func(curr *astar.Node) float64 {
 			currPos := curr.Pather.(protocol.Position)
 			ox, oy := target[0]-currPos[0], target[1]-currPos[1]
-			return float64(ox*ox + oy*oy)
+			targetCost := float64(ox*ox + oy*oy)
+			weightCost := 0.0
+			if weightMap != nil {
+				if ox >= 0 && ox < len(weightMap[0]) {
+					if oy >= 0 && oy < len(weightMap) {
+						weightCost = weightMap[oy][ox]
+					}
+				}
+			}
+			return targetCost + weightCost
 		},
 	)
 	nodes := []*astar.Node{}

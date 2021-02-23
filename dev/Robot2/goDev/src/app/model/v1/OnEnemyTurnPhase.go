@@ -107,7 +107,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 		log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("potentails.len(%v)", len(potentails)))
 		if len(potentails) > 0 {
 			potentail := potentails[len(potentails)-1]
-			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, potentail.DesirePositions[0])
+			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), nil, robot, potentail.DesirePositions[0])
 			if err != nil {
 				return origin, false, err
 			}
@@ -144,7 +144,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 			}
 			log.Log(protocol.LogCategoryDetail, "RobotThinking", fmt.Sprintf("QueryMostCloseEnemyPosition() targetPosition(%v) find(%v)", targetPosition, find))
 			if find {
-				isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, targetPosition)
+				isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), nil, robot, targetPosition)
 				if err != nil {
 					return origin, false, err
 				}
@@ -164,7 +164,7 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	case types.GoalTypeMoveToPosition:
 		currPos := ctx.Model.(Model).App.Gameplay.Positions[robot.ID]
 		if currPos != goal.Position {
-			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), robot, goal.Position)
+			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), nil, robot, goal.Position)
 			if err != nil {
 				return origin, false, err
 			}
