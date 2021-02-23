@@ -50,7 +50,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := impl.CheckInvalidWeapon(_model, targetRobot, weapon, []string{robot.ID})
+				invalieStr, err := impl.CheckInvalidWeapon(_model, targetRobot, weapon, []string{robot.ID}, nil)
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -69,7 +69,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = impl.CheckInvalidWeapons(_model, targetRobot, weapons)
+				invalidWeapons, err = impl.CheckInvalidWeapons(_model, targetRobot, weapons, nil)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = targetRobotID
@@ -87,7 +87,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := impl.CheckInvalidWeapon(_model, robot, weapon, []string{targetRobot.ID})
+				invalieStr, err := impl.CheckInvalidWeapon(_model, robot, weapon, []string{targetRobot.ID}, nil)
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -103,7 +103,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons)
+				invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons, nil)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = robotID

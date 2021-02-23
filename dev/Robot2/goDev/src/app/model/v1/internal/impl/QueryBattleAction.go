@@ -14,7 +14,7 @@ func QueryBattleAction(model types.Model, robot protocol.Robot, pilot protocol.P
 	if len(weapons) == 0 {
 		return protocol.BattleMenuActionPending, protocol.Weapon{}, nil
 	}
-	invalidWeapons, err := CheckInvalidWeapons(model, targetRobot, weapons)
+	invalidWeapons, err := CheckInvalidWeapons(model, targetRobot, weapons, nil)
 	if err != nil {
 		return protocol.BattleMenuActionPending, protocol.Weapon{}, err
 	}

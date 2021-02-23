@@ -45,7 +45,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 		}
 		invalidWeapons := map[string]string{}
 		if len(weapons) > 0 {
-			invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons)
+			invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons, nil)
 		}
 		robotMenu.Active = true
 		robotMenu.ActiveRobotID = robot.ID

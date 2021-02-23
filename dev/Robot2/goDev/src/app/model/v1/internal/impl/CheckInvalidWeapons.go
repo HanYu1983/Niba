@@ -8,7 +8,7 @@ import (
 	"fmt"
 )
 
-func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protocol.Weapons) (map[string]string, error) {
+func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protocol.Weapons, hideFlag map[int]bool) (map[string]string, error) {
 	ret := map[string]string{}
 	robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
@@ -28,7 +28,7 @@ func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protoc
 	})
 	var notFound string
 	for weaponID, weapon := range weapons {
-		validStr, err := CheckInvalidWeapon(model, robot, weapon, units)
+		validStr, err := CheckInvalidWeapon(model, robot, weapon, units, hideFlag)
 		if err != nil {
 			return ret, err
 		}

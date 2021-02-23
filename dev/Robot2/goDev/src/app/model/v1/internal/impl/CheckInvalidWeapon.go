@@ -9,38 +9,53 @@ import (
 	"fmt"
 )
 
-func CheckInvalidWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon, units []string) (string, error) {
-	tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robot.ID)
-	if tag.MoveCount > 0 {
-		ability, err := common.QueryRobotWeaponAbility(model, robot, weapon)
+const (
+	HideFlagMoveAttack = iota
+	HideFlagEnergyBullet
+	HideFlagAttackRange
+)
+
+func CheckInvalidWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon, units []string, hideFlag map[int]bool) (string, error) {
+	if hideFlag == nil {
+		hideFlag = map[int]bool{}
+	}
+
+	if _, has := hideFlag[HideFlagMoveAttack]; has == false {
+		tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robot.ID)
+		if tag.MoveCount > 0 {
+			ability, err := common.QueryRobotWeaponAbility(model, robot, weapon)
+			if err != nil {
+				return "", err
+			}
+			hasMoveAttack := len(tool.FilterString(ability, func(c string) bool {
+				return c == "moveAttack"
+			})) > 0
+			if hasMoveAttack == false {
+				return "你必須有moveAttack能力, 不然不能移動後攻擊", nil
+			}
+		}
+	}
+
+	if _, has := hideFlag[HideFlagEnergyBullet]; has == false {
+		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 		if err != nil {
 			return "", err
 		}
-		hasMoveAttack := len(tool.FilterString(ability, func(c string) bool {
-			return c == "moveAttack"
-		})) > 0
-		if hasMoveAttack == false {
-			return "你必須有moveAttack能力, 不然不能移動後攻擊", nil
+		switch weaponProto.EnergyType {
+		case "energy":
+			cost := weaponProto.EnergyCost
+			if robot.EN < cost {
+				return fmt.Sprintf("能量不足(%v/%v)", cost, robot.EN), nil
+			}
+		case "bullet":
+			if weapon.BulletCount == 0 {
+				return "彈藥不足", nil
+			}
+		default:
+			return fmt.Sprintf("未定義的能量類型(%+v)", weaponProto), nil
 		}
 	}
-	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
-	if err != nil {
-		return "", err
-	}
-	switch weaponProto.EnergyType {
-	case "energy":
-		cost := weaponProto.EnergyCost
-		if robot.EN < cost {
-			return fmt.Sprintf("能量不足(%v/%v)", cost, robot.EN), nil
-		}
-	case "bullet":
-		if weapon.BulletCount == 0 {
-			return "彈藥不足", nil
-		}
-	default:
-		return fmt.Sprintf("未定義的能量類型(%+v)", weaponProto), nil
-	}
-	{
+	if _, has := hideFlag[HideFlagAttackRange]; has == false {
 		robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 		if err != nil {
 			return "", err

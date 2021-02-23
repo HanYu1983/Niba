@@ -90,17 +90,17 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 			return origin, false, err
 		}
 		// 取得有效武器
-		// {
-		// 	invalidWeapons, err := CheckInvalidWeapons(types.Model(ctx.Model.(Model)), robot, weapons)
-		// 	if err != nil {
-		// 		return origin, false, err
-		// 	}
-		// 	weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-		// 		_, isInvalid := invalidWeapons[weapon.ID]
-		// 		return isInvalid == false
-		// 	})
-		// }
-		potentails, err := impl.QueryPotentialTarget(types.Model(ctx.Model.(Model)), robot, robot.Transform, weapons)
+		{
+			invalidWeapons, err := impl.CheckInvalidWeapons(types.Model(ctx.Model.(Model)), robot, weapons, nil)
+			if err != nil {
+				return origin, false, err
+			}
+			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
+				_, isInvalid := invalidWeapons[weapon.ID]
+				return isInvalid == false
+			})
+		}
+		potentails, err := impl.QueryPotentialTarget(types.Model(ctx.Model.(Model)), robot, robot.Transform, weapons, true)
 		if err != nil {
 			return origin, false, err
 		}
@@ -164,6 +164,21 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 	case types.GoalTypeMoveToPosition:
 		currPos := ctx.Model.(Model).App.Gameplay.Positions[robot.ID]
 		if currPos != goal.Position {
+			weapons, err := common.QueryRobotWeapons(types.Model(ctx.Model.(Model)), robot.ID, robot.Transform)
+			if err != nil {
+				return origin, false, err
+			}
+			// 取得有效武器
+			{
+				invalidWeapons, err := impl.CheckInvalidWeapons(types.Model(ctx.Model.(Model)), robot, weapons, nil)
+				if err != nil {
+					return origin, false, err
+				}
+				weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
+					_, isInvalid := invalidWeapons[weapon.ID]
+					return isInvalid == false
+				})
+			}
 			isCanMove, targetPosition, tree, err := impl.QueryFastestMovePosition(types.Model(ctx.Model.(Model)), nil, robot, goal.Position)
 			if err != nil {
 				return origin, false, err
@@ -173,12 +188,58 @@ func RobotThinking(origin uidata.UI, robot protocol.Robot) (uidata.UI, bool, err
 				if err != nil {
 					return origin, false, err
 				}
+				// 重新篩選可移動攻擊的武器
+				// weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
+				// 	ability, err := common.QueryRobotWeaponAbility(types.Model(ctx.Model.(Model)), robot, weapon)
+				// 	if err != nil {
+				// 		fmt.Println(err.Error())
+				// 		return false
+				// 	}
+				// 	hasMoveAttack := len(tool.FilterString(ability, func(c string) bool {
+				// 		return c == "moveAttack"
+				// 	})) > 0
+				// 	return hasMoveAttack == true
+				// })
+				// 取得有效武器
+				{
+					invalidWeapons, err := impl.CheckInvalidWeapons(types.Model(ctx.Model.(Model)), robot, weapons, nil)
+					if err != nil {
+						return origin, false, err
+					}
+					weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
+						_, isInvalid := invalidWeapons[weapon.ID]
+						return isInvalid == false
+					})
+				}
+			}
+			potentails, err := impl.QueryPotentialTarget(types.Model(ctx.Model.(Model)), robot, robot.Transform, weapons, false)
+			if err != nil {
+				return origin, false, err
+			}
+			if len(potentails) > 0 {
+				potentail := potentails[len(potentails)-1]
+				err = RenderRobotAim(ctx, robot.ID, potentail.DesireUnitID)
+				if err != nil {
+					return origin, false, err
+				}
+				for {
+					ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, potentail.DesireWeapon.ID, potentail.DesireUnitID)
+					if err != nil {
+						return origin, false, err
+					}
+					// can not cancel
+					if cancel {
+						continue
+					}
+					break
+				}
 			}
 			ctx, err = OnRobotDone(ctx, robot.ID)
 			if err != nil {
 				return origin, false, err
 			}
 		}
+
 	case types.GoalTypeAttackTargetRobot:
 		ctx, cancel, err = OnSingleBattleMenuPhase(ctx, false, robot.ID, "weaponID", "targetID")
 		if err != nil {

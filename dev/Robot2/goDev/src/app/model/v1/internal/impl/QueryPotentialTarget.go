@@ -16,7 +16,7 @@ type PotentailTarget struct {
 	DesireWeapon    protocol.Weapon
 }
 
-func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform string, weapons protocol.Weapons) ([]PotentailTarget, error) {
+func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform string, weapons protocol.Weapons, canMove bool) ([]PotentailTarget, error) {
 	// 取得尋找區域
 	selfPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
 	if err != nil {
@@ -54,7 +54,10 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 	if err != nil {
 		return nil, err
 	}
-	selfMoveRange := helper.MoveRangeTree2MoveRange(tree)
+	selfMoveRange := []protocol.Position{selfPos}
+	if canMove {
+		selfMoveRange = helper.MoveRangeTree2MoveRange(tree)
+	}
 	// 比對所有武器
 	ret := []PotentailTarget{}
 	for _, weapon := range weapons {

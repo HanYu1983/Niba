@@ -45,11 +45,11 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Units = []string{}
 		model.App.Gameplay.Robots = map[string]protocol.Robot{}
 		model.App.Gameplay.Positions = map[string]protocol.Position{}
-		model, err = impl.GenerateLevelByHC(model, "ai1", protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, 100000)
+		model, err = impl.GenerateLevelByHC(model, "ai1", protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, 200000)
 		if err != nil {
 			return origin, err
 		}
-		model, err = impl.GenerateLevelByHC(model, protocol.PlayerIDPlayer, protocol.Position{0, 0}, 100000)
+		model, err = impl.GenerateLevelByHC(model, protocol.PlayerIDPlayer, protocol.Position{0, 0}, 200000)
 		if err != nil {
 			return origin, err
 		}
