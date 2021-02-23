@@ -70,10 +70,6 @@ export class Controller extends Component {
     isTargetDevice(){
         // var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
         var isChrome = window.chrome;
-        console.log("isChrome");
-        console.log(isChrome);
-        
-        
         return isChrome;
     }
 
