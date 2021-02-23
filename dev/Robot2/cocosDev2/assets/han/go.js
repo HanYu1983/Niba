@@ -24023,7 +24023,7 @@ $packages["tool/nodejs/mlkmeans"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1/internal/tool/types"] = (function() {
-	var $pkg = {}, $init, protocol, fmt, mlkmeans, lobby, gameplay, app, Model, Goal, Memory, AIModel, sliceType, sliceType$2, sliceType$3, mapType, mapType$1, mapType$2, mapType$3, mapType$4, sliceType$5, arrayType, sliceType$6, arrayType$1, sliceType$7, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$11, mapType$12, mapType$13, mapType$14, AssocStringMemory;
+	var $pkg = {}, $init, protocol, fmt, mlkmeans, lobby, gameplay, app, Model, Goal, Memory, AIModel, sliceType, sliceType$2, sliceType$3, mapType, mapType$1, mapType$2, mapType$3, mapType$4, sliceType$5, arrayType, sliceType$6, arrayType$1, sliceType$7, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, mapType$13, AssocStringMemory;
 	protocol = $packages["app/tool/protocol"];
 	fmt = $packages["fmt"];
 	mlkmeans = $packages["tool/nodejs/mlkmeans"];
@@ -24165,10 +24165,10 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 	mapType$7 = $mapType($String, protocol.Tag);
 	mapType$8 = $mapType($String, protocol.Item);
 	mapType$9 = $mapType($String, protocol.HitMark);
-	mapType$11 = $mapType($Int, $Int);
-	mapType$12 = $mapType($String, $Int);
-	mapType$13 = $mapType($String, Memory);
-	mapType$14 = $mapType($String, Goal);
+	mapType$10 = $mapType($Int, $Int);
+	mapType$11 = $mapType($String, $Int);
+	mapType$12 = $mapType($String, Memory);
+	mapType$13 = $mapType($String, Goal);
 	AssocStringMemory = function(a, k, v) {
 		var _entry, _i, _key, _key$1, _keys, _ref, a, k, k$1, ret, v, v$1;
 		ret = $makeMap($String.keyFor, []);
@@ -24196,153 +24196,14 @@ $packages["app/model/v1/internal/tool/types"] = (function() {
 	app.init("", [{prop: "SeqID", name: "SeqID", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Gameplay", name: "Gameplay", embedded: false, exported: true, typ: gameplay, tag: ""}, {prop: "Lobby", name: "Lobby", embedded: false, exported: true, typ: lobby, tag: ""}]);
 	Model.init("", [{prop: "App", name: "App", embedded: false, exported: true, typ: app, tag: ""}]);
 	Goal.init("", [{prop: "Type", name: "Type", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "RobotID", name: "RobotID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Position", name: "Position", embedded: false, exported: true, typ: protocol.Position, tag: ""}]);
-	Memory.init("", [{prop: "TargetClusters", name: "TargetClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyClusters", name: "MyClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyTeamTarget", name: "MyTeamTarget", embedded: false, exported: true, typ: mapType$11, tag: ""}, {prop: "TeamIDByRobotID", name: "TeamIDByRobotID", embedded: false, exported: true, typ: mapType$12, tag: ""}]);
-	AIModel.init("", [{prop: "Memory", name: "Memory", embedded: false, exported: true, typ: mapType$13, tag: ""}, {prop: "GoalByRobotID", name: "GoalByRobotID", embedded: false, exported: true, typ: mapType$14, tag: ""}]);
+	Memory.init("", [{prop: "TargetClusters", name: "TargetClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyClusters", name: "MyClusters", embedded: false, exported: true, typ: mlkmeans.KMeansResult, tag: ""}, {prop: "MyTeamTarget", name: "MyTeamTarget", embedded: false, exported: true, typ: mapType$10, tag: ""}, {prop: "TeamIDByRobotID", name: "TeamIDByRobotID", embedded: false, exported: true, typ: mapType$11, tag: ""}]);
+	AIModel.init("", [{prop: "Memory", name: "Memory", embedded: false, exported: true, typ: mapType$12, tag: ""}, {prop: "GoalByRobotID", name: "GoalByRobotID", embedded: false, exported: true, typ: mapType$13, tag: ""}]);
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = protocol.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = mlkmeans.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/tool"] = (function() {
-	var $pkg = {}, $init, fmt, rand, time, sliceType$1, sliceType$2, TryGetInt, TryGetInt2, FilterString, FindStringIndex, TryGetString, TryGetString2;
-	fmt = $packages["fmt"];
-	rand = $packages["math/rand"];
-	time = $packages["time"];
-	sliceType$1 = $sliceType($emptyInterface);
-	sliceType$2 = $sliceType($String);
-	TryGetInt = function(items, i) {
-		var _entry, _r, i, items, ret, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; i = $f.i; items = $f.items; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (i < 0 || i >= items.$length) { */ case 1:
-			ret = $makeMap($Int.keyFor, []);
-			_r = fmt.Errorf("[TryGetInt]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : 0), _r];
-		/* } */ case 2:
-		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: TryGetInt }; } $f._entry = _entry; $f._r = _r; $f.i = i; $f.items = items; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.TryGetInt = TryGetInt;
-	TryGetInt2 = function(items, i) {
-		var i, items;
-		return (function $b(j, err) {
-			var _entry, _entry$1, _entry$2, _r, _r$1, err, j, ret, ret$1, ret$2, x, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; err = $f.err; j = $f.j; ret = $f.ret; ret$1 = $f.ret$1; ret$2 = $f.ret$2; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				ret = $makeMap($Int.keyFor, []);
-				$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : 0), err];
-			}
-			/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
-			/* */ $s = 2; continue;
-			/* if (i < 0 || i >= items.$length) { */ case 1:
-				ret$1 = $makeMap($Int.keyFor, []);
-				_r = fmt.Errorf("[TryGetInt2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : 0), _r];
-			/* } */ case 2:
-			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
-			/* */ $s = 5; continue;
-			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
-				ret$2 = $makeMap($Int.keyFor, []);
-				_r$1 = fmt.Errorf("[TryGetInt2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : 0), _r$1];
-			/* } */ case 5:
-			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.j = j; $f.ret = ret; $f.ret$1 = ret$1; $f.ret$2 = ret$2; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-		});
-	};
-	$pkg.TryGetInt2 = TryGetInt2;
-	FilterString = function(s1, f) {
-		var _i, _r, _ref, f, ret, s1, v, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; f = $f.f; ret = $f.ret; s1 = $f.s1; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ret = new sliceType$2([]);
-		_ref = s1;
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			v = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r = f(v); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			/* */ if (_r) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (_r) { */ case 3:
-				ret = $append(ret, v);
-			/* } */ case 4:
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return ret;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: FilterString }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.f = f; $f.ret = ret; $f.s1 = s1; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.FilterString = FilterString;
-	FindStringIndex = function(items, target) {
-		var _i, _ref, idx, item, items, target;
-		_ref = items;
-		_i = 0;
-		while (true) {
-			if (!(_i < _ref.$length)) { break; }
-			idx = _i;
-			item = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			if (item === target) {
-				return idx;
-			}
-			_i++;
-		}
-		return -1;
-	};
-	$pkg.FindStringIndex = FindStringIndex;
-	TryGetString = function(items, i) {
-		var _entry, _r, i, items, ret, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; i = $f.i; items = $f.items; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (i < 0 || i >= items.$length) { */ case 1:
-			ret = $makeMap($Int.keyFor, []);
-			_r = fmt.Errorf("[TryGetString]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : ""), _r];
-		/* } */ case 2:
-		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: TryGetString }; } $f._entry = _entry; $f._r = _r; $f.i = i; $f.items = items; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.TryGetString = TryGetString;
-	TryGetString2 = function(items, i) {
-		var i, items;
-		return (function $b(j, err) {
-			var _entry, _entry$1, _entry$2, _r, _r$1, err, j, ret, ret$1, ret$2, x, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; err = $f.err; j = $f.j; ret = $f.ret; ret$1 = $f.ret$1; ret$2 = $f.ret$2; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				ret = $makeMap($Int.keyFor, []);
-				$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : ""), err];
-			}
-			/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
-			/* */ $s = 2; continue;
-			/* if (i < 0 || i >= items.$length) { */ case 1:
-				ret$1 = $makeMap($Int.keyFor, []);
-				_r = fmt.Errorf("[TryGetString2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : ""), _r];
-			/* } */ case 2:
-			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
-			/* */ $s = 5; continue;
-			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
-				ret$2 = $makeMap($Int.keyFor, []);
-				_r$1 = fmt.Errorf("[TryGetString2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : ""), _r$1];
-			/* } */ case 5:
-			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.j = j; $f.ret = ret; $f.ret$1 = ret$1; $f.ret$2 = ret$2; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-		});
-	};
-	$pkg.TryGetString2 = TryGetString2;
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = rand.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -30134,6 +29995,145 @@ $packages["app/tool/data"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["app/tool"] = (function() {
+	var $pkg = {}, $init, fmt, rand, time, sliceType$1, sliceType$2, TryGetInt, TryGetInt2, FilterString, FindStringIndex, TryGetString, TryGetString2;
+	fmt = $packages["fmt"];
+	rand = $packages["math/rand"];
+	time = $packages["time"];
+	sliceType$1 = $sliceType($emptyInterface);
+	sliceType$2 = $sliceType($String);
+	TryGetInt = function(items, i) {
+		var _entry, _r, i, items, ret, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; i = $f.i; items = $f.items; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (i < 0 || i >= items.$length) { */ case 1:
+			ret = $makeMap($Int.keyFor, []);
+			_r = fmt.Errorf("[TryGetInt]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : 0), _r];
+		/* } */ case 2:
+		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TryGetInt }; } $f._entry = _entry; $f._r = _r; $f.i = i; $f.items = items; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TryGetInt = TryGetInt;
+	TryGetInt2 = function(items, i) {
+		var i, items;
+		return (function $b(j, err) {
+			var _entry, _entry$1, _entry$2, _r, _r$1, err, j, ret, ret$1, ret$2, x, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; err = $f.err; j = $f.j; ret = $f.ret; ret$1 = $f.ret$1; ret$2 = $f.ret$2; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				ret = $makeMap($Int.keyFor, []);
+				$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : 0), err];
+			}
+			/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
+			/* */ $s = 2; continue;
+			/* if (i < 0 || i >= items.$length) { */ case 1:
+				ret$1 = $makeMap($Int.keyFor, []);
+				_r = fmt.Errorf("[TryGetInt2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : 0), _r];
+			/* } */ case 2:
+			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
+				ret$2 = $makeMap($Int.keyFor, []);
+				_r$1 = fmt.Errorf("[TryGetInt2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : 0), _r$1];
+			/* } */ case 5:
+			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.j = j; $f.ret = ret; $f.ret$1 = ret$1; $f.ret$2 = ret$2; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		});
+	};
+	$pkg.TryGetInt2 = TryGetInt2;
+	FilterString = function(s1, f) {
+		var _i, _r, _ref, f, ret, s1, v, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; f = $f.f; ret = $f.ret; s1 = $f.s1; v = $f.v; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ret = new sliceType$2([]);
+		_ref = s1;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			v = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = f(v); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			/* */ if (_r) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (_r) { */ case 3:
+				ret = $append(ret, v);
+			/* } */ case 4:
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return ret;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: FilterString }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f.f = f; $f.ret = ret; $f.s1 = s1; $f.v = v; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.FilterString = FilterString;
+	FindStringIndex = function(items, target) {
+		var _i, _ref, idx, item, items, target;
+		_ref = items;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			idx = _i;
+			item = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			if (item === target) {
+				return idx;
+			}
+			_i++;
+		}
+		return -1;
+	};
+	$pkg.FindStringIndex = FindStringIndex;
+	TryGetString = function(items, i) {
+		var _entry, _r, i, items, ret, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; i = $f.i; items = $f.items; ret = $f.ret; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (i < 0 || i >= items.$length) { */ case 1:
+			ret = $makeMap($Int.keyFor, []);
+			_r = fmt.Errorf("[TryGetString]out of range (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : ""), _r];
+		/* } */ case 2:
+		$s = -1; return [((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: TryGetString }; } $f._entry = _entry; $f._r = _r; $f.i = i; $f.items = items; $f.ret = ret; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.TryGetString = TryGetString;
+	TryGetString2 = function(items, i) {
+		var i, items;
+		return (function $b(j, err) {
+			var _entry, _entry$1, _entry$2, _r, _r$1, err, j, ret, ret$1, ret$2, x, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; err = $f.err; j = $f.j; ret = $f.ret; ret$1 = $f.ret$1; ret$2 = $f.ret$2; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				ret = $makeMap($Int.keyFor, []);
+				$s = -1; return [(_entry = ret[$Int.keyFor(0)], _entry !== undefined ? _entry.v : ""), err];
+			}
+			/* */ if (i < 0 || i >= items.$length) { $s = 1; continue; }
+			/* */ $s = 2; continue;
+			/* if (i < 0 || i >= items.$length) { */ case 1:
+				ret$1 = $makeMap($Int.keyFor, []);
+				_r = fmt.Errorf("[TryGetString2]out of range i (%v/%v)", new sliceType$1([new $Int(i), new $Int(items.$length)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$s = -1; return [(_entry$1 = ret$1[$Int.keyFor(0)], _entry$1 !== undefined ? _entry$1.v : ""), _r];
+			/* } */ case 2:
+			/* */ if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { $s = 4; continue; }
+			/* */ $s = 5; continue;
+			/* if (j < 0 || j >= ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length) { */ case 4:
+				ret$2 = $makeMap($Int.keyFor, []);
+				_r$1 = fmt.Errorf("[TryGetString2]out of range j (%v/%v)", new sliceType$1([new $Int(j), new $Int(((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]).$length)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				$s = -1; return [(_entry$2 = ret$2[$Int.keyFor(0)], _entry$2 !== undefined ? _entry$2.v : ""), _r$1];
+			/* } */ case 5:
+			$s = -1; return [(x = ((i < 0 || i >= items.$length) ? ($throwRuntimeError("index out of range"), undefined) : items.$array[items.$offset + i]), ((j < 0 || j >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + j])), $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f.err = err; $f.j = j; $f.ret = ret; $f.ret$1 = ret$1; $f.ret$2 = ret$2; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		});
+	};
+	$pkg.TryGetString2 = TryGetString2;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = rand.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = time.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["app/tool/uidata"] = (function() {
 	var $pkg = {}, $init, data, protocol, fmt, CommandKeyDown, CommandFlush, Menu1D, Menu2D, BattleMenuSlot, BattleMenu, CursorInfo, GameplayPage, ListInt, UI, sliceType, arrayType, arrayType$1, sliceType$2, structType, sliceType$3, arrayType$2, arrayType$3, sliceType$6, sliceType$7, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, mapType$9, mapType$10, mapType$11, mapType$12, mapType$13, mapType$14, structType$1, mapType$15, mapType$16, mapType$17, mapType$18, mapType$19, mapType$20, mapType$21, AssocIntBattleMenu, AssocIntBool, AssocIntGameplayPage, AssocIntInt, AssocIntMenu1D, AssocIntMenu2D, TryGetIntMenu2D;
 	data = $packages["app/tool/data"];
@@ -31230,282 +31230,6 @@ $packages["app/tool/helper"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
-$packages["app/model/v1/internal/ai"] = (function() {
-	var $pkg = {}, $init, types, tool, helper, protocol, fmt, mlkmeans, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, QueryTeamTarget, QueryTeammate, QueryTeamCount, QueryTeamPower, Strategy;
-	types = $packages["app/model/v1/internal/tool/types"];
-	tool = $packages["app/tool"];
-	helper = $packages["app/tool/helper"];
-	protocol = $packages["app/tool/protocol"];
-	fmt = $packages["fmt"];
-	mlkmeans = $packages["tool/nodejs/mlkmeans"];
-	sliceType = $sliceType($String);
-	sliceType$1 = $sliceType($Int);
-	sliceType$2 = $sliceType(mlkmeans.Centroid);
-	sliceType$3 = $sliceType($emptyInterface);
-	sliceType$4 = $sliceType(sliceType$3);
-	QueryTeamTarget = function(origin, myRobotIDs, myTeams, targetRobotIDs, targetTeams) {
-		var _key, _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, ctx, currMyTeamPower, currMyTeammate, currTargetTeamID, currTargetTeamPower, currTargetTeammate, err, err$1, err$2, i, myRobotIDs, myTeamCnt, myTeams, origin, selectTargetTeamID, targetRobotIDs, targetTeamCnt, targetTeams, totalPower, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; ctx = $f.ctx; currMyTeamPower = $f.currMyTeamPower; currMyTeammate = $f.currMyTeammate; currTargetTeamID = $f.currTargetTeamID; currTargetTeamPower = $f.currTargetTeamPower; currTargetTeammate = $f.currTargetTeammate; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; myRobotIDs = $f.myRobotIDs; myTeamCnt = $f.myTeamCnt; myTeams = $f.myTeams; origin = $f.origin; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeamCnt = $f.targetTeamCnt; targetTeams = $f.targetTeams; totalPower = $f.totalPower; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ctx = $clone(origin, types.Model);
-		_tuple = QueryTeamCount($clone(myTeams, mlkmeans.KMeansResult));
-		myTeamCnt = _tuple[0];
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, false, err];
-		}
-		_tuple$1 = QueryTeamCount($clone(targetTeams, mlkmeans.KMeansResult));
-		targetTeamCnt = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, false, err];
-		}
-		if (targetTeamCnt === 0) {
-			$s = -1; return [false, false, $ifaceNil];
-		}
-		selectTargetTeamID = $makeMap($Int.keyFor, []);
-		currTargetTeamID = 0;
-		_r = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple$2 = _r;
-		currTargetTeammate = _tuple$2[0];
-		err$1 = _tuple$2[1];
-		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-			$s = -1; return [false, false, err$1];
-		}
-		_tuple$3 = QueryTeamPower($clone(ctx, types.Model), currTargetTeammate);
-		currTargetTeamPower = _tuple$3[0];
-		err$1 = _tuple$3[1];
-		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-			$s = -1; return [false, false, err$1];
-		}
-		totalPower = 0;
-		i = 0;
-		/* while (true) { */ case 2:
-			/* if (!(i < myTeamCnt)) { break; } */ if(!(i < myTeamCnt)) { $s = 3; continue; }
-			_key = i; (selectTargetTeamID || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: currTargetTeamID };
-			_r$1 = QueryTeammate($clone(myTeams, mlkmeans.KMeansResult), myRobotIDs, i); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$4 = _r$1;
-			currMyTeammate = _tuple$4[0];
-			err$2 = _tuple$4[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			_tuple$5 = QueryTeamPower($clone(ctx, types.Model), currMyTeammate);
-			currMyTeamPower = _tuple$5[0];
-			err$2 = _tuple$5[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			totalPower = totalPower + (currMyTeamPower) >> 0;
-			/* */ if (totalPower < currTargetTeamPower) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (totalPower < currTargetTeamPower) { */ case 5:
-				i = i + (1) >> 0;
-				/* continue; */ $s = 2; continue;
-			/* } */ case 6:
-			totalPower = 0;
-			currTargetTeamID = currTargetTeamID + (1) >> 0;
-			if (currTargetTeamID >= targetTeamCnt) {
-				/* break; */ $s = 3; continue;
-			}
-			_r$2 = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$6 = _r$2;
-			currTargetTeammate = _tuple$6[0];
-			err$2 = _tuple$6[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			_tuple$7 = QueryTeamPower($clone(ctx, types.Model), currTargetTeammate);
-			currTargetTeamPower = _tuple$7[0];
-			err$2 = _tuple$7[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			i = i + (1) >> 0;
-		/* } */ $s = 2; continue; case 3:
-		$s = -1; return [selectTargetTeamID, true, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamTarget }; } $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.ctx = ctx; $f.currMyTeamPower = currMyTeamPower; $f.currMyTeammate = currMyTeammate; $f.currTargetTeamID = currTargetTeamID; $f.currTargetTeamPower = currTargetTeamPower; $f.currTargetTeammate = currTargetTeammate; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.myRobotIDs = myRobotIDs; $f.myTeamCnt = myTeamCnt; $f.myTeams = myTeams; $f.origin = origin; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeamCnt = targetTeamCnt; $f.targetTeams = targetTeams; $f.totalPower = totalPower; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryTeamTarget = QueryTeamTarget;
-	QueryTeammate = function(result, robotIDs, teamID) {
-		var _i, _r, _ref, _tuple, currTeamID, err, i, result, ret, robotID, robotIDs, teamID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; currTeamID = $f.currTeamID; err = $f.err; i = $f.i; result = $f.result; ret = $f.ret; robotID = $f.robotID; robotIDs = $f.robotIDs; teamID = $f.teamID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ret = new sliceType([]);
-		_ref = result.Clusters;
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			i = _i;
-			currTeamID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			/* */ if (!((currTeamID === teamID))) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (!((currTeamID === teamID))) { */ case 3:
-				_i++;
-				/* continue; */ $s = 1; continue;
-			/* } */ case 4:
-			_r = tool.TryGetString(robotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			robotID = _tuple[0];
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [sliceType.nil, err];
-			}
-			ret = $append(ret, robotID);
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeammate }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.currTeamID = currTeamID; $f.err = err; $f.i = i; $f.result = result; $f.ret = ret; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.teamID = teamID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryTeammate = QueryTeammate;
-	QueryTeamCount = function(result) {
-		var result;
-		return [result.Clusters.$length, $ifaceNil];
-	};
-	$pkg.QueryTeamCount = QueryTeamCount;
-	QueryTeamPower = function(origin, robotIDs) {
-		var origin, robotIDs;
-		return [0, $ifaceNil];
-	};
-	$pkg.QueryTeamPower = QueryTeamPower;
-	Strategy = function(origin, playerID, myRobotIDs, targetRobotIDs) {
-		var _entry, _i, _i$1, _i$2, _i$3, _i$4, _key, _key$1, _key$2, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, centers, centers$1, centroidV2, centroidV2$1, clusters, clusters$1, cnt, cnt$1, ctx, err, err$1, err$2, i, memory, myRobotIDs, myRobotTeamID, myTeams, options, options$1, origin, playerID, pos, pos$1, posData, posData$1, robotID, robotID$1, robotID$2, robotIDs, robotIDs$1, selectTargetTeamID, targetRobotIDs, targetTeams, v, v$1, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; centers = $f.centers; centers$1 = $f.centers$1; centroidV2 = $f.centroidV2; centroidV2$1 = $f.centroidV2$1; clusters = $f.clusters; clusters$1 = $f.clusters$1; cnt = $f.cnt; cnt$1 = $f.cnt$1; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; memory = $f.memory; myRobotIDs = $f.myRobotIDs; myRobotTeamID = $f.myRobotTeamID; myTeams = $f.myTeams; options = $f.options; options$1 = $f.options$1; origin = $f.origin; playerID = $f.playerID; pos = $f.pos; pos$1 = $f.pos$1; posData = $f.posData; posData$1 = $f.posData$1; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotID$2 = $f.robotID$2; robotIDs = $f.robotIDs; robotIDs$1 = $f.robotIDs$1; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeams = $f.targetTeams; v = $f.v; v$1 = $f.v$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		ctx = $clone(origin, types.Model);
-		memory = $clone((_entry = ctx.App.Gameplay.AIModel.Memory[$String.keyFor(playerID)], _entry !== undefined ? _entry.v : new types.Memory.ptr(new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), false, false)), types.Memory);
-		myTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
-		clusters = $clone(memory.MyClusters, mlkmeans.KMeansResult);
-		robotIDs = myRobotIDs;
-		posData = new sliceType$4([]);
-		_ref = robotIDs;
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			pos = $clone(_tuple[0], protocol.Position);
-			err$1 = _tuple[1];
-			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [origin, err$1];
-			}
-			posData = $append(posData, new sliceType$3([new $Int(pos[0]), new $Int(pos[1])]));
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		cnt = helper.Min(robotIDs.$length, 4);
-		options = $makeMap($String.keyFor, []);
-		centers = new sliceType$4([]);
-		if (clusters.Centroids.$length > 0) {
-			_ref$1 = clusters.Centroids;
-			_i$1 = 0;
-			while (true) {
-				if (!(_i$1 < _ref$1.$length)) { break; }
-				v = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), mlkmeans.Centroid);
-				if (v.Size === 0) {
-					_i$1++;
-					continue;
-				}
-				centroidV2 = v.Centroid;
-				centers = $append(centers, new sliceType$3([new $Float64((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0])), new $Float64((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]))]));
-				_i$1++;
-			}
-			if (cnt === centers.$length) {
-				_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
-			}
-		}
-		_tuple$1 = mlkmeans.KMeans(posData, cnt, options);
-		mlkmeans.KMeansResult.copy(myTeams, _tuple$1[0]);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		targetTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
-		clusters$1 = $clone(memory.TargetClusters, mlkmeans.KMeansResult);
-		robotIDs$1 = targetRobotIDs;
-		posData$1 = new sliceType$4([]);
-		_ref$2 = robotIDs$1;
-		_i$2 = 0;
-		/* while (true) { */ case 4:
-			/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 5; continue; }
-			robotID$1 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
-			_r$1 = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID$1); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$2 = _r$1;
-			pos$1 = $clone(_tuple$2[0], protocol.Position);
-			err$2 = _tuple$2[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [origin, err$2];
-			}
-			posData$1 = $append(posData$1, new sliceType$3([new $Int(pos$1[0]), new $Int(pos$1[1])]));
-			_i$2++;
-		/* } */ $s = 4; continue; case 5:
-		cnt$1 = helper.Min(robotIDs$1.$length, 4);
-		options$1 = $makeMap($String.keyFor, []);
-		centers$1 = new sliceType$4([]);
-		if (clusters$1.Centroids.$length > 0) {
-			_ref$3 = clusters$1.Centroids;
-			_i$3 = 0;
-			while (true) {
-				if (!(_i$3 < _ref$3.$length)) { break; }
-				v$1 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), mlkmeans.Centroid);
-				if (v$1.Size === 0) {
-					_i$3++;
-					continue;
-				}
-				centroidV2$1 = v$1.Centroid;
-				centers$1 = $append(centers$1, new sliceType$3([new $Float64((0 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 0])), new $Float64((1 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 1]))]));
-				_i$3++;
-			}
-			if (cnt$1 === centers$1.$length) {
-				_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
-			}
-		}
-		_tuple$3 = mlkmeans.KMeans(posData$1, cnt$1, options$1);
-		mlkmeans.KMeansResult.copy(targetTeams, _tuple$3[0]);
-		err = _tuple$3[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		myRobotTeamID = $makeMap($String.keyFor, []);
-		_ref$4 = myRobotIDs;
-		_i$4 = 0;
-		while (true) {
-			if (!(_i$4 < _ref$4.$length)) { break; }
-			i = _i$4;
-			robotID$2 = ((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]);
-			_key$2 = robotID$2; (myRobotTeamID || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: (x = myTeams.Clusters, ((i < 0 || i >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + i])) };
-			_i$4++;
-		}
-		_r$2 = QueryTeamTarget($clone(ctx, types.Model), myRobotIDs, $clone(myTeams, mlkmeans.KMeansResult), targetRobotIDs, $clone(targetTeams, mlkmeans.KMeansResult)); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$4 = _r$2;
-		selectTargetTeamID = _tuple$4[0];
-		err = _tuple$4[2];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		memory.MyTeamTarget = selectTargetTeamID;
-		mlkmeans.KMeansResult.copy(memory.MyClusters, myTeams);
-		mlkmeans.KMeansResult.copy(memory.TargetClusters, targetTeams);
-		memory.TeamIDByRobotID = myRobotTeamID;
-		ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, $clone(memory, types.Memory));
-		_r$3 = fmt.Println(new sliceType$3([new memory.constructor.elem(memory)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_r$3;
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Strategy }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.centers = centers; $f.centers$1 = centers$1; $f.centroidV2 = centroidV2; $f.centroidV2$1 = centroidV2$1; $f.clusters = clusters; $f.clusters$1 = clusters$1; $f.cnt = cnt; $f.cnt$1 = cnt$1; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.memory = memory; $f.myRobotIDs = myRobotIDs; $f.myRobotTeamID = myRobotTeamID; $f.myTeams = myTeams; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.posData = posData; $f.posData$1 = posData$1; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotID$2 = robotID$2; $f.robotIDs = robotIDs; $f.robotIDs$1 = robotIDs$1; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeams = targetTeams; $f.v = v; $f.v$1 = v$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.Strategy = Strategy;
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = types.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = tool.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = helper.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mlkmeans.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
 $packages["tool/log"] = (function() {
 	var $pkg = {}, $init, fmt, sliceType, Log;
 	fmt = $packages["fmt"];
@@ -31533,7 +31257,7 @@ $packages["tool/log"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1/internal/common"] = (function() {
-	var $pkg = {}, $init, types, data, helper, protocol, uidata, fmt, math, strconv, astar, log, arrayType, sliceType, arrayType$1, sliceType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryUnitsByPlayer, IsRobotDone, QueryRobotArmor, QueryRobotBeamArmor, NewRobot, NewPilot, IsFriendlyCell, IsFriendlyRobot;
+	var $pkg = {}, $init, types, data, helper, protocol, uidata, fmt, math, strconv, astar, log, arrayType, sliceType, arrayType$1, sliceType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryRobotCombatPower, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryUnitsByPlayer, IsRobotDone, QueryRobotArmor, QueryRobotBeamArmor, NewRobot, NewPilot, IsFriendlyCell, IsFriendlyRobot;
 	types = $packages["app/model/v1/internal/tool/types"];
 	data = $packages["app/tool/data"];
 	helper = $packages["app/tool/helper"];
@@ -31804,6 +31528,44 @@ $packages["app/model/v1/internal/common"] = (function() {
 		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMostCloseEnemyPosition }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.costFn = costFn; $f.err = err; $f.find = find; $f.model = model; $f.originPos = originPos; $f.robot = robot; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryMostCloseEnemyPosition = QueryMostCloseEnemyPosition;
+	QueryRobotCombatPower = function(model, robot, weapons) {
+		var _1, _entry, _i, _keys, _r, _ref, _tuple, bulletCombatPower, enCombatCost, enCombatPower, err, model, robot, total, weapon, weaponProto, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; bulletCombatPower = $f.bulletCombatPower; enCombatCost = $f.enCombatCost; enCombatPower = $f.enCombatPower; err = $f.err; model = $f.model; robot = $f.robot; total = $f.total; weapon = $f.weapon; weaponProto = $f.weaponProto; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		enCombatPower = 0;
+		enCombatCost = 0;
+		bulletCombatPower = 0;
+		_ref = weapons;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			weapon = $clone(_entry.v, protocol.Weapon);
+			_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			weaponProto = $clone(_tuple[0], data.WeaponProto);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, $ifaceNil];
+			}
+			_1 = weaponProto.EnergyType;
+			if (_1 === ("energy")) {
+				enCombatPower = enCombatPower + (weaponProto.Damage) >> 0;
+				enCombatCost = enCombatCost + (weaponProto.EnergyCost) >> 0;
+			} else if (_1 === ("bullet")) {
+				bulletCombatPower = bulletCombatPower + (($imul(weaponProto.Damage, weapon.BulletCount))) >> 0;
+			}
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		total = (robot.HP + bulletCombatPower >> 0) + (((enCombatPower) * (robot.EN) / (enCombatCost) >> 0)) >> 0;
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotCombatPower }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.bulletCombatPower = bulletCombatPower; $f.enCombatCost = enCombatCost; $f.enCombatPower = enCombatPower; $f.err = err; $f.model = model; $f.robot = robot; $f.total = total; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotCombatPower = QueryRobotCombatPower;
 	QueryRobotComponents = function(model, robotID) {
 		var _entry, _entry$1, _i, _i$1, _key, _key$1, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, component, componentID, componentProto, componentProto$1, componentProtoID, components, err, err$1, err$2, i, instanceID, instanceID$1, model, robot, robotID, robotID$1, robotProto, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; component = $f.component; componentID = $f.componentID; componentProto = $f.componentProto; componentProto$1 = $f.componentProto$1; componentProtoID = $f.componentProtoID; components = $f.components; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; instanceID = $f.instanceID; instanceID$1 = $f.instanceID$1; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotProto = $f.robotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -33009,6 +32771,320 @@ $packages["app/model/v1/internal/common"] = (function() {
 		terrainCache = false;
 		unitByPosition = $makeMap(protocol.Position.keyFor, []);
 		unitByRegion = $makeMap(protocol.Position.keyFor, []);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/model/v1/internal/ai"] = (function() {
+	var $pkg = {}, $init, common, types, tool, helper, protocol, fmt, mlkmeans, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, QueryTeamTarget, QueryTeammate, QueryTeamCount, QueryTeamCombatPower, Strategy;
+	common = $packages["app/model/v1/internal/common"];
+	types = $packages["app/model/v1/internal/tool/types"];
+	tool = $packages["app/tool"];
+	helper = $packages["app/tool/helper"];
+	protocol = $packages["app/tool/protocol"];
+	fmt = $packages["fmt"];
+	mlkmeans = $packages["tool/nodejs/mlkmeans"];
+	sliceType = $sliceType($String);
+	sliceType$1 = $sliceType($Int);
+	sliceType$2 = $sliceType(mlkmeans.Centroid);
+	sliceType$3 = $sliceType($emptyInterface);
+	sliceType$4 = $sliceType(sliceType$3);
+	QueryTeamTarget = function(origin, myRobotIDs, myTeams, targetRobotIDs, targetTeams) {
+		var _key, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, ctx, currMyTeamPower, currMyTeammate, currTargetTeamID, currTargetTeamPower, currTargetTeammate, err, err$1, err$2, i, myRobotIDs, myTeamCnt, myTeams, origin, selectTargetTeamID, targetRobotIDs, targetTeamCnt, targetTeams, totalPower, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; ctx = $f.ctx; currMyTeamPower = $f.currMyTeamPower; currMyTeammate = $f.currMyTeammate; currTargetTeamID = $f.currTargetTeamID; currTargetTeamPower = $f.currTargetTeamPower; currTargetTeammate = $f.currTargetTeammate; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; myRobotIDs = $f.myRobotIDs; myTeamCnt = $f.myTeamCnt; myTeams = $f.myTeams; origin = $f.origin; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeamCnt = $f.targetTeamCnt; targetTeams = $f.targetTeams; totalPower = $f.totalPower; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		_tuple = QueryTeamCount($clone(myTeams, mlkmeans.KMeansResult));
+		myTeamCnt = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		_tuple$1 = QueryTeamCount($clone(targetTeams, mlkmeans.KMeansResult));
+		targetTeamCnt = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		if (targetTeamCnt === 0) {
+			$s = -1; return [false, false, $ifaceNil];
+		}
+		selectTargetTeamID = $makeMap($Int.keyFor, []);
+		currTargetTeamID = 0;
+		_r = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple$2 = _r;
+		currTargetTeammate = _tuple$2[0];
+		err$1 = _tuple$2[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		_r$1 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$3 = _r$1;
+		currTargetTeamPower = _tuple$3[0];
+		err$1 = _tuple$3[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		totalPower = 0;
+		i = 0;
+		/* while (true) { */ case 3:
+			/* if (!(i < myTeamCnt)) { break; } */ if(!(i < myTeamCnt)) { $s = 4; continue; }
+			_key = i; (selectTargetTeamID || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: currTargetTeamID };
+			_r$2 = QueryTeammate($clone(myTeams, mlkmeans.KMeansResult), myRobotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$4 = _r$2;
+			currMyTeammate = _tuple$4[0];
+			err$2 = _tuple$4[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_r$3 = QueryTeamCombatPower($clone(ctx, types.Model), currMyTeammate); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$5 = _r$3;
+			currMyTeamPower = _tuple$5[0];
+			err$2 = _tuple$5[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			totalPower = totalPower + (currMyTeamPower) >> 0;
+			/* */ if (totalPower < currTargetTeamPower) { $s = 7; continue; }
+			/* */ $s = 8; continue;
+			/* if (totalPower < currTargetTeamPower) { */ case 7:
+				i = i + (1) >> 0;
+				/* continue; */ $s = 3; continue;
+			/* } */ case 8:
+			totalPower = 0;
+			currTargetTeamID = currTargetTeamID + (1) >> 0;
+			if (currTargetTeamID >= targetTeamCnt) {
+				/* break; */ $s = 4; continue;
+			}
+			_r$4 = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_tuple$6 = _r$4;
+			currTargetTeammate = _tuple$6[0];
+			err$2 = _tuple$6[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_r$5 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_tuple$7 = _r$5;
+			currTargetTeamPower = _tuple$7[0];
+			err$2 = _tuple$7[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			i = i + (1) >> 0;
+		/* } */ $s = 3; continue; case 4:
+		$s = -1; return [selectTargetTeamID, true, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamTarget }; } $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.ctx = ctx; $f.currMyTeamPower = currMyTeamPower; $f.currMyTeammate = currMyTeammate; $f.currTargetTeamID = currTargetTeamID; $f.currTargetTeamPower = currTargetTeamPower; $f.currTargetTeammate = currTargetTeammate; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.myRobotIDs = myRobotIDs; $f.myTeamCnt = myTeamCnt; $f.myTeams = myTeams; $f.origin = origin; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeamCnt = targetTeamCnt; $f.targetTeams = targetTeams; $f.totalPower = totalPower; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeamTarget = QueryTeamTarget;
+	QueryTeammate = function(result, robotIDs, teamID) {
+		var _i, _r, _ref, _tuple, currTeamID, err, i, result, ret, robotID, robotIDs, teamID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; currTeamID = $f.currTeamID; err = $f.err; i = $f.i; result = $f.result; ret = $f.ret; robotID = $f.robotID; robotIDs = $f.robotIDs; teamID = $f.teamID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ret = new sliceType([]);
+		_ref = result.Clusters;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			currTeamID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			/* */ if (!((currTeamID === teamID))) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!((currTeamID === teamID))) { */ case 3:
+				_i++;
+				/* continue; */ $s = 1; continue;
+			/* } */ case 4:
+			_r = tool.TryGetString(robotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robotID = _tuple[0];
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [sliceType.nil, err];
+			}
+			ret = $append(ret, robotID);
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeammate }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.currTeamID = currTeamID; $f.err = err; $f.i = i; $f.result = result; $f.ret = ret; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.teamID = teamID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeammate = QueryTeammate;
+	QueryTeamCount = function(result) {
+		var result;
+		return [result.Clusters.$length, $ifaceNil];
+	};
+	$pkg.QueryTeamCount = QueryTeamCount;
+	QueryTeamCombatPower = function(origin, robotIDs) {
+		var _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, _tuple$2, combatPower, ctx, err, origin, robot, robotID, robotIDs, totalCombatPower, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; combatPower = $f.combatPower; ctx = $f.ctx; err = $f.err; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotIDs = $f.robotIDs; totalCombatPower = $f.totalCombatPower; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		totalCombatPower = 0;
+		_ref = robotIDs;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robot = $clone(_tuple[0], protocol.Robot);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			_r$1 = common.QueryRobotWeapons($clone(ctx, types.Model), robot.ID, robot.Transform); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$1 = _r$1;
+			weapons = _tuple$1[0];
+			err = _tuple$1[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			_r$2 = common.QueryRobotCombatPower($clone(ctx, types.Model), $clone(robot, protocol.Robot), weapons); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$2 = _r$2;
+			combatPower = _tuple$2[0];
+			err = _tuple$2[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			totalCombatPower = totalCombatPower + (combatPower) >> 0;
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [totalCombatPower, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamCombatPower }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.combatPower = combatPower; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.totalCombatPower = totalCombatPower; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeamCombatPower = QueryTeamCombatPower;
+	Strategy = function(origin, playerID, myRobotIDs, targetRobotIDs) {
+		var _entry, _i, _i$1, _i$2, _i$3, _i$4, _key, _key$1, _key$2, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, centers, centers$1, centroidV2, centroidV2$1, clusters, clusters$1, cnt, cnt$1, ctx, err, err$1, err$2, i, memory, myRobotIDs, myRobotTeamID, myTeams, options, options$1, origin, playerID, pos, pos$1, posData, posData$1, robotID, robotID$1, robotID$2, robotIDs, robotIDs$1, selectTargetTeamID, targetRobotIDs, targetTeams, v, v$1, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; centers = $f.centers; centers$1 = $f.centers$1; centroidV2 = $f.centroidV2; centroidV2$1 = $f.centroidV2$1; clusters = $f.clusters; clusters$1 = $f.clusters$1; cnt = $f.cnt; cnt$1 = $f.cnt$1; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; memory = $f.memory; myRobotIDs = $f.myRobotIDs; myRobotTeamID = $f.myRobotTeamID; myTeams = $f.myTeams; options = $f.options; options$1 = $f.options$1; origin = $f.origin; playerID = $f.playerID; pos = $f.pos; pos$1 = $f.pos$1; posData = $f.posData; posData$1 = $f.posData$1; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotID$2 = $f.robotID$2; robotIDs = $f.robotIDs; robotIDs$1 = $f.robotIDs$1; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeams = $f.targetTeams; v = $f.v; v$1 = $f.v$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, types.Model);
+		memory = $clone((_entry = ctx.App.Gameplay.AIModel.Memory[$String.keyFor(playerID)], _entry !== undefined ? _entry.v : new types.Memory.ptr(new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), false, false)), types.Memory);
+		myTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
+		clusters = $clone(memory.MyClusters, mlkmeans.KMeansResult);
+		robotIDs = myRobotIDs;
+		posData = new sliceType$4([]);
+		_ref = robotIDs;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			pos = $clone(_tuple[0], protocol.Position);
+			err$1 = _tuple[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [origin, err$1];
+			}
+			posData = $append(posData, new sliceType$3([new $Int(pos[0]), new $Int(pos[1])]));
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		cnt = helper.Min(robotIDs.$length, 4);
+		options = $makeMap($String.keyFor, []);
+		centers = new sliceType$4([]);
+		if (clusters.Centroids.$length > 0) {
+			_ref$1 = clusters.Centroids;
+			_i$1 = 0;
+			while (true) {
+				if (!(_i$1 < _ref$1.$length)) { break; }
+				v = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), mlkmeans.Centroid);
+				if (v.Size === 0) {
+					_i$1++;
+					continue;
+				}
+				centroidV2 = v.Centroid;
+				centers = $append(centers, new sliceType$3([new $Float64((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0])), new $Float64((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]))]));
+				_i$1++;
+			}
+			if (cnt === centers.$length) {
+				_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
+			}
+		}
+		_tuple$1 = mlkmeans.KMeans(posData, cnt, options);
+		mlkmeans.KMeansResult.copy(myTeams, _tuple$1[0]);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		targetTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
+		clusters$1 = $clone(memory.TargetClusters, mlkmeans.KMeansResult);
+		robotIDs$1 = targetRobotIDs;
+		posData$1 = new sliceType$4([]);
+		_ref$2 = robotIDs$1;
+		_i$2 = 0;
+		/* while (true) { */ case 4:
+			/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 5; continue; }
+			robotID$1 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
+			_r$1 = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID$1); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$2 = _r$1;
+			pos$1 = $clone(_tuple$2[0], protocol.Position);
+			err$2 = _tuple$2[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [origin, err$2];
+			}
+			posData$1 = $append(posData$1, new sliceType$3([new $Int(pos$1[0]), new $Int(pos$1[1])]));
+			_i$2++;
+		/* } */ $s = 4; continue; case 5:
+		cnt$1 = helper.Min(robotIDs$1.$length, 4);
+		options$1 = $makeMap($String.keyFor, []);
+		centers$1 = new sliceType$4([]);
+		if (clusters$1.Centroids.$length > 0) {
+			_ref$3 = clusters$1.Centroids;
+			_i$3 = 0;
+			while (true) {
+				if (!(_i$3 < _ref$3.$length)) { break; }
+				v$1 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), mlkmeans.Centroid);
+				if (v$1.Size === 0) {
+					_i$3++;
+					continue;
+				}
+				centroidV2$1 = v$1.Centroid;
+				centers$1 = $append(centers$1, new sliceType$3([new $Float64((0 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 0])), new $Float64((1 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 1]))]));
+				_i$3++;
+			}
+			if (cnt$1 === centers$1.$length) {
+				_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
+			}
+		}
+		_tuple$3 = mlkmeans.KMeans(posData$1, cnt$1, options$1);
+		mlkmeans.KMeansResult.copy(targetTeams, _tuple$3[0]);
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		myRobotTeamID = $makeMap($String.keyFor, []);
+		_ref$4 = myRobotIDs;
+		_i$4 = 0;
+		while (true) {
+			if (!(_i$4 < _ref$4.$length)) { break; }
+			i = _i$4;
+			robotID$2 = ((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]);
+			_key$2 = robotID$2; (myRobotTeamID || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: (x = myTeams.Clusters, ((i < 0 || i >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + i])) };
+			_i$4++;
+		}
+		_r$2 = QueryTeamTarget($clone(ctx, types.Model), myRobotIDs, $clone(myTeams, mlkmeans.KMeansResult), targetRobotIDs, $clone(targetTeams, mlkmeans.KMeansResult)); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$4 = _r$2;
+		selectTargetTeamID = _tuple$4[0];
+		err = _tuple$4[2];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		memory.MyTeamTarget = selectTargetTeamID;
+		mlkmeans.KMeansResult.copy(memory.MyClusters, myTeams);
+		mlkmeans.KMeansResult.copy(memory.TargetClusters, targetTeams);
+		memory.TeamIDByRobotID = myRobotTeamID;
+		ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, $clone(memory, types.Memory));
+		_r$3 = fmt.Println(new sliceType$3([new memory.constructor.elem(memory)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3;
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Strategy }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.centers = centers; $f.centers$1 = centers$1; $f.centroidV2 = centroidV2; $f.centroidV2$1 = centroidV2$1; $f.clusters = clusters; $f.clusters$1 = clusters$1; $f.cnt = cnt; $f.cnt$1 = cnt$1; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.memory = memory; $f.myRobotIDs = myRobotIDs; $f.myRobotTeamID = myRobotTeamID; $f.myTeams = myTeams; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.posData = posData; $f.posData$1 = posData$1; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotID$2 = robotID$2; $f.robotIDs = robotIDs; $f.robotIDs$1 = robotIDs$1; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeams = targetTeams; $f.v = v; $f.v$1 = v$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Strategy = Strategy;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = types.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tool.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mlkmeans.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
