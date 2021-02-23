@@ -48,16 +48,6 @@ type Model struct {
 }
 
 const (
-	RoleTeamLeader = iota
-	RoleTeamMember
-)
-
-type Team struct {
-	Leader string
-	Member map[string]bool
-}
-
-const (
 	GoalTypeAttackTargetRobot = "GoalTypeAttackTargetRobot"
 	GoalTypeMoveToPosition    = "GoalTypeMoveToPosition"
 	GoalTypeSearchAndAttack   = "GoalTypeSearchAndAttack"

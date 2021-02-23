@@ -25,7 +25,7 @@ func QueryTeamTarget(origin types.Model, myRobotIDs []string, myTeams mlkmeans.K
 		if err != nil {
 			return nil, false, err
 		}
-		currTargetTeamPower, err := QueryTeamPower(ctx, currTargetTeammate)
+		currTargetTeamPower, err := QueryTeamCombatPower(ctx, currTargetTeammate)
 		if err != nil {
 			return nil, false, err
 		}
@@ -42,7 +42,7 @@ func QueryTeamTarget(origin types.Model, myRobotIDs []string, myTeams mlkmeans.K
 				return nil, false, err
 			}
 			// 隊戰力
-			currMyTeamPower, err := QueryTeamPower(ctx, currMyTeammate)
+			currMyTeamPower, err := QueryTeamCombatPower(ctx, currMyTeammate)
 			if err != nil {
 				return nil, false, err
 			}
@@ -66,7 +66,7 @@ func QueryTeamTarget(origin types.Model, myRobotIDs []string, myTeams mlkmeans.K
 			if err != nil {
 				return nil, false, err
 			}
-			currTargetTeamPower, err = QueryTeamPower(ctx, currTargetTeammate)
+			currTargetTeamPower, err = QueryTeamCombatPower(ctx, currTargetTeammate)
 			if err != nil {
 				return nil, false, err
 			}

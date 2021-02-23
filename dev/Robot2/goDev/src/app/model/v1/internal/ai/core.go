@@ -1,6 +1,7 @@
 package ai
 
 import (
+	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/helper"
@@ -32,8 +33,25 @@ func QueryTeamCount(result mlkmeans.KMeansResult) (int, error) {
 	return len(result.Clusters), nil
 }
 
-func QueryTeamPower(origin types.Model, robotIDs []string) (int, error) {
-	return 0, nil
+func QueryTeamCombatPower(origin types.Model, robotIDs []string) (int, error) {
+	ctx := origin
+	var totalCombatPower int
+	for _, robotID := range robotIDs {
+		robot, err := protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID)
+		if err != nil {
+			return 0, err
+		}
+		weapons, err := common.QueryRobotWeapons(ctx, robot.ID, robot.Transform)
+		if err != nil {
+			return 0, err
+		}
+		combatPower, err := common.QueryRobotCombatPower(ctx, robot, weapons)
+		if err != nil {
+			return 0, err
+		}
+		totalCombatPower += combatPower
+	}
+	return totalCombatPower, nil
 }
 
 func Strategy(origin types.Model, playerID string, myRobotIDs []string, targetRobotIDs []string) (types.Model, error) {
