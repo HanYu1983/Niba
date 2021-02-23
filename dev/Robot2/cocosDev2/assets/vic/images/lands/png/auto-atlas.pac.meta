@@ -2,7 +2,7 @@
   "ver": "1.0.5",
   "importer": "auto-atlas",
   "imported": true,
-  "uuid": "94037a2f-5117-4824-89a1-e2979a97c992",
+  "uuid": "2de74966-d1ea-4e4d-8e3f-677061a8be9b",
   "files": [
     ".json"
   ],
@@ -20,9 +20,7 @@
     "contourBleed": true,
     "paddingBleed": true,
     "filterUnused": false,
-    "compressSettings": {
-      "useCompressTexture": false
-    },
+    "compressSettings": {},
     "textureSetting": {
       "wrapModeS": "clamp-to-edge",
       "wrapModeT": "clamp-to-edge",

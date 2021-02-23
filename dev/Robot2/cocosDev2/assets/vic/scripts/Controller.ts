@@ -68,7 +68,12 @@ export class Controller extends Component {
     model: ModelType.Model = window.Model
 
     isTargetDevice(){
-        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        var isChrome = window.chrome;
+        console.log("isChrome");
+        console.log(isChrome);
+        
+        
         return isChrome;
     }
 
