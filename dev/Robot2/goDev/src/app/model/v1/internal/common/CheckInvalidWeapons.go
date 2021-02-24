@@ -1,25 +1,24 @@
-package impl
+package common
 
 import (
-	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/protocol"
 	"fmt"
 )
 
-func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protocol.Weapons, hideFlag map[int]bool) (map[string]string, error) {
+func CheckInvalidWeapons(model types.Model, robotID string, weapons protocol.Weapons, hideFlag map[int]bool) (map[string]string, error) {
 	ret := map[string]string{}
-	robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
+	robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robotID)
 	if err != nil {
 		return ret, err
 	}
 	leftTopPos := protocol.Position{robotPos[0] - 10, robotPos[1] - 10}
 	rightBottomPos := protocol.Position{robotPos[0] + 10, robotPos[1] + 10}
-	units := common.SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
+	units := SearchUnitByRegion(model.App.Gameplay.Positions, leftTopPos, rightBottomPos)
 	// 選出敵對的機體
 	units = tool.FilterString(units, func(unitID string) bool {
-		isFriendly, err := common.IsFriendlyRobot(model, robot.ID, unitID)
+		isFriendly, err := IsFriendlyRobot(model, robotID, unitID)
 		if err != nil {
 			fmt.Println(err.Error())
 			return false
@@ -28,7 +27,7 @@ func CheckInvalidWeapons(model types.Model, robot protocol.Robot, weapons protoc
 	})
 	var notFound string
 	for weaponID, weapon := range weapons {
-		validStr, err := CheckInvalidWeapon(model, robot, weapon, units, hideFlag)
+		validStr, err := CheckInvalidWeapon(model, robotID, weapon, units, hideFlag)
 		if err != nil {
 			return ret, err
 		}

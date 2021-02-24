@@ -16,9 +16,13 @@ type PotentailTarget struct {
 	DesireWeapon    protocol.Weapon
 }
 
-func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform string, weapons protocol.Weapons, canMove bool) ([]PotentailTarget, error) {
+func QueryPotentialTarget(model types.Model, robotID string, transform string, weapons protocol.Weapons, canMove bool) ([]PotentailTarget, error) {
+	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+	if err != nil {
+		return nil, err
+	}
 	// 取得尋找區域
-	selfPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
+	selfPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robotID)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +43,7 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 		if err != nil {
 			return nil, err
 		}
-		isFriendly, err := common.IsFriendlyRobot(model, robot.ID, targetRobot.ID)
+		isFriendly, err := common.IsFriendlyRobot(model, robotID, targetRobot.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -50,7 +54,7 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 	}
 	log.Log(protocol.LogCategoryDetail, "QueryPotentialTarget", fmt.Sprintf("robots(%v)", robots))
 	// 自身的移動範圍(範圍A)
-	tree, err := QueryMoveRangeTree(model, robot.ID)
+	tree, err := QueryMoveRangeTree(model, robotID)
 	if err != nil {
 		return nil, err
 	}
@@ -67,9 +71,9 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 			return nil, err
 		}
 		// 比對所有敵對象
-		for _, robot := range robots {
+		for targetRobotID := range robots {
 			// 將自身的武器攻擊範圍以敵方位置為中心(範圍B)
-			robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
+			robotPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, targetRobotID)
 			if err != nil {
 				return nil, err
 			}
@@ -86,7 +90,7 @@ func QueryPotentialTarget(model types.Model, robot protocol.Robot, transform str
 			}
 			ret = append(ret, PotentailTarget{
 				DesirePositions: overlayRange,
-				DesireUnitID:    robot.ID,
+				DesireUnitID:    targetRobotID,
 				DesireTransform: transform,
 				DesireWeapon:    weapon,
 			})

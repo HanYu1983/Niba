@@ -2,7 +2,6 @@ package v1
 
 import (
 	"app/model/v1/internal/common"
-	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -50,7 +49,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := impl.CheckInvalidWeapon(_model, targetRobot, weapon, []string{robot.ID}, nil)
+				invalieStr, err := common.CheckInvalidWeapon(_model, targetRobot.ID, weapon, []string{robot.ID}, nil)
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -69,7 +68,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = impl.CheckInvalidWeapons(_model, targetRobot, weapons, nil)
+				invalidWeapons, err = common.CheckInvalidWeapons(_model, targetRobot.ID, weapons, nil)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = targetRobotID
@@ -87,7 +86,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 				return origin, err
 			}
 			weapons = protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-				invalieStr, err := impl.CheckInvalidWeapon(_model, robot, weapon, []string{targetRobot.ID}, nil)
+				invalieStr, err := common.CheckInvalidWeapon(_model, robot.ID, weapon, []string{targetRobot.ID}, nil)
 				if err != nil {
 					log.Log(protocol.LogCategoryWarning, "EnableBattleMenu", err.Error())
 					return false
@@ -103,7 +102,7 @@ func OnEnableBattleMenu(origin uidata.UI, robotID string, weaponID string, targe
 			// invalidWeapons
 			invalidWeapons := map[string]string{}
 			if len(weapons) > 0 {
-				invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons, nil)
+				invalidWeapons, err = common.CheckInvalidWeapons(_model, robot.ID, weapons, nil)
 			}
 			robotMenu.Active = true
 			robotMenu.ActiveRobotID = robotID

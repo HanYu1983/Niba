@@ -12,15 +12,11 @@ func QueryMoveRangeTree(model types.Model, robotID string) (astar.NodeMap, error
 	if err != nil {
 		return nil, err
 	}
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return nil, err
-	}
 	movePower, err := common.QueryRobotMovePower(model, robotID)
 	if err != nil {
 		return nil, err
 	}
-	costFn, err := common.RobotMoveCost(model, robot, movePower, false)
+	costFn, err := common.RobotMoveCost(model, robotID, movePower, false)
 	if err != nil {
 		return nil, err
 	}

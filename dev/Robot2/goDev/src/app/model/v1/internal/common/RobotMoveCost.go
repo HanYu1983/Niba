@@ -13,14 +13,14 @@ var (
 	terrainCache map[protocol.Position]data.TerrainProto
 )
 
-func RobotMoveCost(model types.Model, robot protocol.Robot, movePower int, ignoreOccupy bool) (func(curr *astar.Node) []astar.NeighborsNode, error) {
-	suitability, err := QueryRobotSuitability(model, robot.ID)
+func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccupy bool) (func(curr *astar.Node) []astar.NeighborsNode, error) {
+	suitability, err := QueryRobotSuitability(model, robotID)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil
 		}, err
 	}
-	isSky := model.App.Gameplay.Tags[robot.ID].Sky
+	isSky := model.App.Gameplay.Tags[robotID].Sky
 	return func(curr *astar.Node) []astar.NeighborsNode {
 		// prevent infinite loop
 		if int(curr.Cost) > 100 {
@@ -71,7 +71,7 @@ func RobotMoveCost(model types.Model, robot protocol.Robot, movePower int, ignor
 				var notFound string
 				unitAtPos := SearchUnitByPosition(model.App.Gameplay.Positions, nextPos)
 				if unitAtPos != notFound {
-					isFriendlyRobot, err := IsFriendlyRobot(model, robot.ID, unitAtPos)
+					isFriendlyRobot, err := IsFriendlyRobot(model, robotID, unitAtPos)
 					if err != nil {
 						fmt.Println(err)
 						continue

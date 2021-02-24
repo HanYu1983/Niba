@@ -16,19 +16,19 @@ func (a ByAstarNodeEstimatedCost) Less(i, j int) bool {
 	return a[i].Rank-a[i].Cost < a[j].Rank-a[j].Cost
 }
 
-func QueryFastestMovePosition(model types.Model, weightMap [][]float64, robot protocol.Robot, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
-	originPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID)
+func QueryFastestMovePosition(model types.Model, weightMap [][]float64, robotID string, target protocol.Position) (bool, protocol.Position, astar.NodeMap, error) {
+	originPos, err := protocol.TryGetStringPosition(model.App.Gameplay.Positions, robotID)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
 	}
 	if originPos == target {
 		return false, protocol.Position{}, nil, err
 	}
-	movePower, err := common.QueryRobotMovePower(model, robot.ID)
+	movePower, err := common.QueryRobotMovePower(model, robotID)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
 	}
-	costFn, err := common.RobotMoveCost(model, robot, movePower, false)
+	costFn, err := common.RobotMoveCost(model, robotID, movePower, false)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
 	}

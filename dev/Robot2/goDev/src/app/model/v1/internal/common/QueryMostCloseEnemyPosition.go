@@ -12,11 +12,7 @@ func QueryMostCloseEnemyPosition(model types.Model, robotID string) (protocol.Po
 	if err != nil {
 		return protocol.Position{}, false, err
 	}
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
-	if err != nil {
-		return protocol.Position{}, false, err
-	}
-	costFn, err := RobotMoveCost(model, robot, 999999, true)
+	costFn, err := RobotMoveCost(model, robotID, 999999, true)
 	if err != nil {
 		return protocol.Position{}, false, err
 	}

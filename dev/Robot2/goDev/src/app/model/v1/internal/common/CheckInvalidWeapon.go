@@ -1,7 +1,6 @@
-package impl
+package common
 
 import (
-	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
 	"app/tool/data"
@@ -15,15 +14,18 @@ const (
 	HideFlagAttackRange
 )
 
-func CheckInvalidWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon, units []string, hideFlag map[int]bool) (string, error) {
+func CheckInvalidWeapon(model types.Model, robotID string, weapon protocol.Weapon, units []string, hideFlag map[int]bool) (string, error) {
 	if hideFlag == nil {
 		hideFlag = map[int]bool{}
 	}
-
+	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+	if err != nil {
+		return "", err
+	}
 	if _, has := hideFlag[HideFlagMoveAttack]; has == false {
-		tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robot.ID)
+		tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robotID)
 		if tag.MoveCount > 0 {
-			ability, err := common.QueryRobotWeaponAbility(model, robot, weapon)
+			ability, err := QueryRobotWeaponAbility(model, robot, weapon)
 			if err != nil {
 				return "", err
 			}
@@ -60,7 +62,7 @@ func CheckInvalidWeapon(model types.Model, robot protocol.Robot, weapon protocol
 		if err != nil {
 			return "", err
 		}
-		attackRange, err := common.QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
+		attackRange, err := QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
 		if err != nil {
 			return "", err
 		}

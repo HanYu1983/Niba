@@ -2,7 +2,6 @@ package v1
 
 import (
 	"app/model/v1/internal/common"
-	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
@@ -68,7 +67,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		// invalidWeapons
 		invalidWeapons := map[string]string{}
 		if len(weapons) > 0 {
-			invalidWeapons, err = impl.CheckInvalidWeapons(_model, robot, weapons, nil)
+			invalidWeapons, err = common.CheckInvalidWeapons(_model, robot.ID, weapons, nil)
 		}
 		_model.App.Gameplay.RobotMenu.Active = true
 		_model.App.Gameplay.RobotMenu.ActiveRobotID = robotID
