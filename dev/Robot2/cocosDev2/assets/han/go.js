@@ -43478,11 +43478,14 @@ $packages["app/page/gameplay"] = (function() {
 	};
 	$pkg.SelectWeaponTargetPhase = SelectWeaponTargetPhase;
 	SystemMenuPhase = function(origin) {
-		var _r, _r$1, _tmp, _tmp$1, _tuple, _tuple$1, cancel, ctx, ctxObj, err, origin, selection, tab, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cancel = $f.cancel; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; origin = $f.origin; selection = $f.selection; tab = $f.tab; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _entry, _r, _r$1, _tmp, _tmp$1, _tuple, _tuple$1, cancel, ctx, ctxObj, err, menu, origin, selection, tab, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; cancel = $f.cancel; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; menu = $f.menu; origin = $f.origin; selection = $f.selection; tab = $f.tab; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		ctx = $clone(origin, uidata.UI);
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 12, true);
+		menu = $clone((_entry = ctx.Menu1Ds[$Int.keyFor(31)], _entry !== undefined ? _entry.v : new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 0)), uidata.Menu1D);
+		menu.Cursor = 0;
+		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, 31, $clone(menu, uidata.Menu1D));
 		err = $ifaceNil;
 		_tmp = false;
 		_tmp$1 = false;
@@ -43519,7 +43522,7 @@ $packages["app/page/gameplay"] = (function() {
 		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 12, false);
 		$r = log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "end"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return [ctx, selection, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: SystemMenuPhase }; } $f._r = _r; $f._r$1 = _r$1; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cancel = cancel; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.origin = origin; $f.selection = selection; $f.tab = tab; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: SystemMenuPhase }; } $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.cancel = cancel; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.menu = menu; $f.origin = origin; $f.selection = selection; $f.tab = tab; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.SystemMenuPhase = SystemMenuPhase;
 	TurnPhase = function(origin, player) {

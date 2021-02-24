@@ -11,6 +11,11 @@ func SystemMenuPhase(origin uidata.UI) (uidata.UI, string, error) {
 	log.Log(protocol.LogCategoryPhase, "SystemMenuPhase", "start")
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSystemMenu, true)
+	{
+		menu := ctx.Menu1Ds[uidata.Menu1DSystemMenu]
+		menu.Cursor = 0
+		ctx.Menu1Ds = uidata.AssocIntMenu1D(ctx.Menu1Ds, uidata.Menu1DSystemMenu, menu)
+	}
 	var err error
 	var cancel, tab bool
 	var selection string
