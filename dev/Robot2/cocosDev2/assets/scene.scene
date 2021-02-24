@@ -34485,7 +34485,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": -54,
       "y": 16.666666666666664,
       "z": 0
     },
@@ -34594,8 +34594,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": 54,
-    "_right": -54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -34635,7 +34635,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": -54,
       "y": -3.552713678800501e-15,
       "z": 0
     },
@@ -34744,8 +34744,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": 54,
-    "_right": -54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -34785,7 +34785,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": -54,
       "y": -16.66666666666667,
       "z": 0
     },
@@ -34894,8 +34894,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": 54,
-    "_right": -54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -35074,7 +35074,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 54,
       "y": 16.666666666666664,
       "z": 0
     },
@@ -35183,8 +35183,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": -54,
-    "_right": 54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -35224,7 +35224,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 54,
       "y": -3.552713678800501e-15,
       "z": 0
     },
@@ -35333,8 +35333,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": -54,
-    "_right": 54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
@@ -35374,7 +35374,7 @@
     "_prefab": null,
     "_lpos": {
       "__type__": "cc.Vec3",
-      "x": 0,
+      "x": 54,
       "y": -16.66666666666667,
       "z": 0
     },
@@ -35483,8 +35483,8 @@
     "__prefab": null,
     "_alignFlags": 40,
     "_target": null,
-    "_left": -54,
-    "_right": 54,
+    "_left": 0,
+    "_right": 0,
     "_top": 0,
     "_bottom": 0,
     "_horizontalCenter": 0,
