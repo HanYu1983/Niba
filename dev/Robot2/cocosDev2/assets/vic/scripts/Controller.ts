@@ -27,7 +27,6 @@ export class Controller extends Component {
             // 這個時候，他會把本來應該要進入游戲才創建的物件就直接創建在場景上了
             // 導致我又要手動刪掉
             // 這邊先暫時用js檢查是不是在chrome的環境，是的話，再render畫面來避免bug
-            // var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
             if(this.isTargetDevice()){
                 console.log("Render", ui);
                 this.view.build(ui);

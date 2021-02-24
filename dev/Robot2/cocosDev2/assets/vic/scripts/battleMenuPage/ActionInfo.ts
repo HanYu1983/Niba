@@ -27,6 +27,11 @@ export class ActionInfo extends Instant {
 
     clear(){
         super.clear();
+
+        this.damage.string = "";
+        this.title.string = "";
+        this.accuracy.string = "";
+        this.action.string = "";
     }
 
     doBuild(data:any){
