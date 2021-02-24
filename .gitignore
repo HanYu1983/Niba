@@ -139,4 +139,4 @@ Thumbs.db
 
 pkg/
 *.exe
-
+bin/

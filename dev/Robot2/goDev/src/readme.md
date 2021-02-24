@@ -6,7 +6,7 @@
     go get -u github.com/gopherjs/gopherjs
 
 # setting gopath
-    ctr + ,
+    ctr + , (command + ,)
     search gopath
 
 # install lib
