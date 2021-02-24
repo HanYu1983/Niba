@@ -38120,8 +38120,8 @@ $packages["app/model/v1/internal/impl"] = (function() {
 	};
 	$ptrType(ByAstarNodeEstimatedCost).prototype.Less = function(i, j) { return this.$get().Less(i, j); };
 	QueryFastestMovePosition = function(model, weightMap, robotID, target) {
-		var _entry, _i, _i$1, _keys, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, costFn, err, model, movePower, node, node$1, nodes, notFound, originPos, pos, robotID, target, tree, unitAtPos, weightMap, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; costFn = $f.costFn; err = $f.err; model = $f.model; movePower = $f.movePower; node = $f.node; node$1 = $f.node$1; nodes = $f.nodes; notFound = $f.notFound; originPos = $f.originPos; pos = $f.pos; robotID = $f.robotID; target = $f.target; tree = $f.tree; unitAtPos = $f.unitAtPos; weightMap = $f.weightMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _entry, _entry$1, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, costFn, err, i, model, mostPos, movePower, node, nodes, notFound, originPos, path, pos, robotID, target, tree, unitAtPos, weightMap, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; costFn = $f.costFn; err = $f.err; i = $f.i; model = $f.model; mostPos = $f.mostPos; movePower = $f.movePower; node = $f.node; nodes = $f.nodes; notFound = $f.notFound; originPos = $f.originPos; path = $f.path; pos = $f.pos; robotID = $f.robotID; target = $f.target; tree = $f.tree; unitAtPos = $f.unitAtPos; weightMap = $f.weightMap; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		target = [target];
 		weightMap = [weightMap];
 		_r = protocol.TryGetStringPosition(model.App.Gameplay.Positions, robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
@@ -38141,7 +38141,7 @@ $packages["app/model/v1/internal/impl"] = (function() {
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [false, arrayType.zero(), false, err];
 		}
-		_r$2 = common.RobotMoveCost($clone(model, types.Model), robotID, movePower, false); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_r$2 = common.RobotMoveCost($clone(model, types.Model), robotID, 999999, false); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
 		_tuple$2 = _r$2;
 		costFn = _tuple$2[0];
 		err = _tuple$2[1];
@@ -38187,13 +38187,21 @@ $packages["app/model/v1/internal/impl"] = (function() {
 			nodes = $append(nodes, node);
 			_i++;
 		}
+		if (nodes.$length === 0) {
+			$s = -1; return [false, originPos, false, $ifaceNil];
+		}
 		$r = sort.Sort(($subslice(new ByAstarNodeEstimatedCost(nodes.$array), nodes.$offset, nodes.$offset + nodes.$length))); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_ref$1 = nodes;
-		_i$1 = 0;
+		mostPos = $clone($assertType((0 >= nodes.$length ? ($throwRuntimeError("index out of range"), undefined) : nodes.$array[nodes.$offset + 0]).Pather, protocol.Position), protocol.Position);
+		_r$4 = helper.MoveRangeTree2Path(tree, $clone(mostPos, protocol.Position)); /* */ $s = 6; case 6: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		path = _r$4;
+		i = path.$length - 1 >> 0;
 		while (true) {
-			if (!(_i$1 < _ref$1.$length)) { break; }
-			node$1 = ((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]);
-			pos = $clone($assertType(node$1.Pather, protocol.Position), protocol.Position);
+			if (!(i >= 0)) { break; }
+			pos = $clone(((i < 0 || i >= path.$length) ? ($throwRuntimeError("index out of range"), undefined) : path.$array[path.$offset + i]), protocol.Position);
+			if ((_entry$1 = tree[$emptyInterface.keyFor(new protocol.Position(pos))], _entry$1 !== undefined ? _entry$1.v : ptrType.nil).Cost > (movePower)) {
+				i = i - (1) >> 0;
+				continue;
+			}
 			notFound = "";
 			unitAtPos = common.SearchUnitByPosition(model.App.Gameplay.Positions, $clone(pos, protocol.Position));
 			if (unitAtPos === notFound) {
@@ -38202,10 +38210,10 @@ $packages["app/model/v1/internal/impl"] = (function() {
 			if ($equal(pos, originPos, protocol.Position)) {
 				break;
 			}
-			_i$1++;
+			i = i - (1) >> 0;
 		}
 		$s = -1; return [false, originPos, false, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryFastestMovePosition }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.costFn = costFn; $f.err = err; $f.model = model; $f.movePower = movePower; $f.node = node; $f.node$1 = node$1; $f.nodes = nodes; $f.notFound = notFound; $f.originPos = originPos; $f.pos = pos; $f.robotID = robotID; $f.target = target; $f.tree = tree; $f.unitAtPos = unitAtPos; $f.weightMap = weightMap; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryFastestMovePosition }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.costFn = costFn; $f.err = err; $f.i = i; $f.model = model; $f.mostPos = mostPos; $f.movePower = movePower; $f.node = node; $f.nodes = nodes; $f.notFound = notFound; $f.originPos = originPos; $f.path = path; $f.pos = pos; $f.robotID = robotID; $f.target = target; $f.tree = tree; $f.unitAtPos = unitAtPos; $f.weightMap = weightMap; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.QueryFastestMovePosition = QueryFastestMovePosition;
 	QueryMoveRangeTree = function(model, robotID) {
@@ -41717,8 +41725,9 @@ $packages["app/model/v1"] = (function() {
 			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
 				$s = -1; return [origin, false, err$1];
 			}
+			$s = -1; return [ctx[0], true, $ifaceNil];
 		/* } */ case 12:
-		$s = -1; return [ctx[0], true, $ifaceNil];
+		$s = -1; return [ctx[0], false, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: OnAIRobotAttackFirst }; } $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.invalidWeapons = invalidWeapons; $f.isCanMove = isCanMove; $f.origin = origin; $f.potentail = potentail; $f.potentail$1 = potentail$1; $f.potentails = potentails; $f.robot = robot; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.tree = tree; $f.weapons = weapons; $f.weaponsCanMoveAttack = weaponsCanMoveAttack; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OnAIRobotAttackFirst = OnAIRobotAttackFirst;

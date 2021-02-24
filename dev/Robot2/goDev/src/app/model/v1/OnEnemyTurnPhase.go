@@ -208,8 +208,9 @@ func OnAIRobotAttackFirst(origin uidata.UI, robotID string) (uidata.UI, bool, er
 		if err != nil {
 			return origin, false, err
 		}
+		return ctx, true, nil
 	}
-	return ctx, true, nil
+	return ctx, false, nil
 }
 func OnRobotThinking(origin uidata.UI, robotID string) (uidata.UI, bool, error) {
 	var err error
