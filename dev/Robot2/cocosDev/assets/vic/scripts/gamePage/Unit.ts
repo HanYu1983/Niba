@@ -6,6 +6,7 @@
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
 import { _decorator, Component, Node, Vec3, Vec2, Sprite, tween, Color, Label } from 'cc';
+import { Drawer } from '../Drawer';
 import { ImageChanger } from '../lib/ImageChanger';
 const { ccclass, property, requireComponent } = _decorator;
 
@@ -48,7 +49,7 @@ export class Unit extends Component {
     }
 
     showColor(side:number){
-        this.unitImage.color = this.unitColors[side];
+        this.unitImage.color = Drawer.staticPlayerColors[side];
     }
     
     changeUnit(robotName:string){
@@ -68,13 +69,13 @@ export class Unit extends Component {
     }
     
     hideHPEN(){
-        this.HPBar.node.scale = new Vec3();
-        this.ENBar.node.scale = new Vec3();
+        this.HPBar.node.setScale(new Vec3());
+        this.ENBar.node.setScale(new Vec3());
     }
 
     showHPEN(hp:number, maxHP:number, en:number, maxEN:number){
-        this.HPBar.node.scale = new Vec3(hp/maxHP, 1, 1);
-        this.ENBar.node.scale = new Vec3(en/maxEN, 1, 1);
+        this.HPBar.node.setScale(hp/maxHP, 1, 1);
+        this.ENBar.node.setScale(en/maxEN, 1, 1);
     }
 
     tweenHPEN(hp:number, maxHP:number, en:number, maxEN:number){

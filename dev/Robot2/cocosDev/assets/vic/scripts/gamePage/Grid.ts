@@ -63,7 +63,7 @@ export class Grid extends Component {
         switch (type) {
             case 0:
                 //"深";
-                this.node.getComponent(ImageChanger)?.changeImage(0, "sea");
+                this.node.getComponent(ImageChanger)?.changeImage(0, "deepSea");
                 break;
             case 1:
                 //"海"

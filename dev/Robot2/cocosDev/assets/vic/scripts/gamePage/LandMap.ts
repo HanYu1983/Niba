@@ -14,6 +14,7 @@ import * as ModelType from '../../../han/types';
 import { Unit } from './Unit';
 import { Drawer } from '../Drawer';
 import { Explode } from './Explode';
+import { ShotEffectGenerator } from './ShotEffectGenerator';
 const { ccclass, property } = _decorator;
 
 @ccclass('LandMap')
@@ -33,6 +34,9 @@ export class LandMap extends Instant {
 
     @property(EffectGenerator)
     effects:EffectGenerator = null;
+
+    @property(ShotEffectGenerator)
+    shotEffects:ShotEffectGenerator = null;
 
     clear(){
         super.clear();
@@ -56,7 +60,7 @@ export class LandMap extends Instant {
 
     playBattleAnimation(result:any, cb:()=>void){
         const anims = result.Animations;
-
+        
         this.cursor.node.setScale(Vec3.ZERO);
         
         let actions = [];
@@ -71,6 +75,7 @@ export class LandMap extends Instant {
                     break;
                 case ModelType.BattleResultType.BattleResultTypeAim:
 
+                    // 瞄準動畫
                     actions.push(tween().call(()=>{
                         this.aimNode.node.setScale(Vec3.ONE);
                         const from = anim.AimPosition[0];
@@ -80,18 +85,18 @@ export class LandMap extends Instant {
                     }).delay(.5));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeWeapon:
-                    actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeWeapon");
 
+                    // 使用武器時的扣血扣en動畫
+                    actions.push(tween().call(()=>{
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
                         unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeDamage:
-                    actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeDamage");
 
+                    // 爆炸動畫
+                    actions.push(tween().call(()=>{
                         this.aimNode.node.setScale(Vec3.ZERO);
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
@@ -102,28 +107,61 @@ export class LandMap extends Instant {
                             const explode = this.effects.createEffect(0, pos);
                             explode.getComponent(Explode)?.setDamage(anim.Damage);
                         }
+                    }).delay(.5));
+
+                    // 被攻擊時的扣血扣en動畫
+                    actions.push(tween().call(()=>{
+
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showHPEN(robotBefore.HP, robotBefore.MaxHP, robotBefore.EN, robotBefore.MaxEN);
+                        unitView.getComponent(Unit)?.tweenHPEN(robotAfter.HP, robotAfter.MaxHP, robotAfter.EN, robotAfter.MaxEN);
                     }).delay(1));
                     break;
-                case ModelType.BattleResultType.BattleResultTypeEvade:
+                case ModelType.BattleResultType.BattleResultTypeDie:
+
+                    // 爆炸動畫
                     actions.push(tween().call(()=>{
                         this.aimNode.node.setScale(Vec3.ZERO);
 
-                        console.log("BattleResultTypeEvade");
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
 
+                        // 爆炸動畫
+                        const pos = unitView.getComponent(Unit)?.node.position;
+                        if(pos){
+                            const explode = this.effects.createEffect(0, pos);
+                            explode.getComponent(Explode)?.setDamage(-1);
+
+                            // unit 消失
+                            unitView.setPosition(this.outOfWorld);
+                        }
+                    }).delay(.5));
+                    break;
+                case ModelType.BattleResultType.BattleResultTypeEvade:
+
+                    // 顯示回避標示
+                    actions.push(tween().call(()=>{
+                        const unitView = this.units.getUnitByID(robotAfter.ID);
+                        unitView.getComponent(Unit)?.showAction("回避");
+                    }).delay(.5));
+
+                    // 回避動畫
+                    actions.push(tween().call(()=>{
+                        this.aimNode.node.setScale(Vec3.ZERO);
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Animation)?.play("evade");
+                        unitView.getComponent(Unit)?.hideAction();
                     }).delay(1));
                     break;
                 case ModelType.BattleResultType.BattleResultTypeGuard:
 
+                    // 顯示防禦標示
                     actions.push(tween().call(()=>{
                         const unitView = this.units.getUnitByID(robotAfter.ID);
                         unitView.getComponent(Unit)?.showAction("防禦");
                     }).delay(.5));
 
+                    // 防禦動畫
                     actions.push(tween().call(()=>{
-                        console.log("BattleResultTypeGuard");
-
                         this.aimNode.node.setScale(Vec3.ZERO);
 
                         const unitView = this.units.getUnitByID(robotAfter.ID);
@@ -140,7 +178,6 @@ export class LandMap extends Instant {
             }
         });
 
-
         if(actions.length > 0){
             const t = tween(this.node);
 
@@ -151,8 +188,9 @@ export class LandMap extends Instant {
             }else{
 
                 // 不知道爲什麽只有一個動作序列的時候，就不能用sequence的方法，改用then才可以
-                t.then(actions[0]).call(cb).start();
+                t.then(actions[0]).delay(.5).call(cb).start();
             }
         }
+
     }
 }
