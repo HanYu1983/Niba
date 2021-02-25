@@ -40,13 +40,6 @@ export class Units extends Instant {
         // cb();
     }
 
-    damageUnit(unidId:string, hp:number, en:number){
-        const unit = this.getUnitByID(unidId);
-        if(unit){
-            // unit.getComponent(Unit)
-        }
-    }
-
     getUnitByID(unitId: string):Node{
         for(let i = 0; i < this.units.length; ++i){
             const unit = this.units[i];
@@ -76,6 +69,7 @@ export class Units extends Instant {
                 unit.getComponent(Unit).unitId = unitKey;
                 unit.getComponent(Unit).gridPos.x = pos[0];
                 unit.getComponent(Unit).gridPos.y = pos[1];
+                unit.getComponent(Unit)?.showAction("");
                 if(robot){
                     if(robot.PlayerID == "PlayerIDPlayer"){
                         unit.getComponent(Unit)?.showColor(0);
@@ -87,8 +81,11 @@ export class Units extends Instant {
                     if(unitTag){
                         if(unitTag.IsDone) unit.getComponent(Unit)?.showColor(2);
                         unit.getComponent(Unit)?.isAir(unitTag.Sky);
+                    }else{
+                        unit.getComponent(Unit)?.isAir(false);
                     }
                     unit.getComponent(Unit)?.changeUnit(robot.ProtoID);
+                    unit.getComponent(Unit)?.showHPEN(robot.HP, robot.MaxHP, robot.EN, robot.MaxEN);
                 }
                 if(pos){
                     unit.setPosition(Grids.getGridPos(pos[0], pos[1]));
@@ -97,6 +94,24 @@ export class Units extends Instant {
                     // deal with item
                 }
                 this.units.push(unit);
+            }
+        }
+
+        this.showMapWeaponInfo(content);
+    }
+
+    showMapWeaponInfo(content:any){
+        if(content.HitMarks){
+            for (let key in content.HitMarks) {
+                const robot = content.Robots[key];
+
+                // 可能機體爆去所以找不到
+                if(robot){
+                    let value = content.HitMarks[key];
+                    const rate = value.HitRate;
+                    const unitView:Node = this.getUnitByID(robot.ID);
+                    if(unitView) unitView.getComponent(Unit)?.showAction(Math.round(rate * 100) + "%");
+                }
             }
         }
     }

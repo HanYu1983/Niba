@@ -15,10 +15,19 @@ export enum PlayerID {
 	PlayerIDPlayer = "PlayerIDPlayer"
 }
 
+// 不使用了, 改用BattleMenuAction. 這個enum之後會刪掉
 export enum BattleAction {
 	BattleActionAttack,
 	BattleActionGuard,
 	BattleActionEvade,
+}
+
+export enum BattleMenuAction {
+	BattleMenuActionPending,
+	BattleMenuActionAttack,
+	BattleMenuActionGuard,
+	BattleMenuActionEvade,
+	BattleMenuActionCanNotMove,
 }
 
 export enum RobotMenuFunction {
@@ -70,5 +79,6 @@ export enum BattleResultType {
 	BattleResultTypeWeapon,
 	BattleResultTypeGuard,
 	BattleResultTypeEvade,
-	BattleResultTypeDamage
+	BattleResultTypeDamage,
+	BattleResultTypeDie,
 }

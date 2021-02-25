@@ -14,6 +14,9 @@ const { ccclass, property } = _decorator;
 export class ActionInfo extends Instant {
 
     @property(Label)
+    title:Label = null;
+
+    @property(Label)
     damage:Label = null;
 
     @property(Label)
@@ -24,32 +27,46 @@ export class ActionInfo extends Instant {
 
     clear(){
         super.clear();
+
+        this.damage.string = "";
+        this.title.string = "";
+        this.accuracy.string = "";
+        this.action.string = "";
     }
 
     doBuild(data:any){
-        this.setAction(data.BattleAction);
         this.setInfo(data.Info);
-        this.setPower(data.Weapon)
+        this.setWeapon(data.Weapon);
+
+        // 最後乎叫，因為行動不能的時候，也會設定到武器及命中率
+        this.setAction(data.BattleAction);
     }
 
-    private setPower(weapon:any){
+    private setWeapon(weapon:any){
         this.damage.string = weapon.Damage;
+        this.title.string = weapon.Title;
     }
 
     private setInfo(info:any){
-        this.accuracy.string = Math.floor(info.HitRate * 100) + "%";
+        this.accuracy.string = Math.round(info.HitRate * 100) + "%";
     }
 
-    private setAction(actionType?:ModelType.BattleAction){
+    private setAction(actionType?:ModelType.BattleMenuAction){
         switch(actionType){
-            case ModelType.BattleAction.BattleActionAttack:
+            case ModelType.BattleMenuAction.BattleMenuActionAttack:
                 this.action.string = "攻擊";
                 break;
-            case ModelType.BattleAction.BattleActionGuard:
+            case ModelType.BattleMenuAction.BattleMenuActionGuard:
                 this.action.string = "防禦";
                 break;
-            case ModelType.BattleAction.BattleActionEvade:
+            case ModelType.BattleMenuAction.BattleMenuActionEvade:
                 this.action.string = "回避";
+                break;
+            case ModelType.BattleMenuAction.BattleMenuActionCanNotMove:
+                this.action.string = "行動不能";
+                this.damage.string = "--";
+                this.title.string = "--";
+                this.accuracy.string = "--";
                 break;
         }
     }
