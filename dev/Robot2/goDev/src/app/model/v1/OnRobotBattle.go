@@ -312,6 +312,14 @@ ANIMATE:
 		_model.App.Gameplay.Robots = protocol.AssocStringRobot(_model.App.Gameplay.Robots, targetRobot.ID, targetRobot)
 		_model.App.Gameplay.Pilots = protocol.AssocStringPilot(_model.App.Gameplay.Pilots, targetRobotPilot.ID, targetRobotPilot)
 	}
+	_model, err = impl.OnRobotBattleEnd(_model, robot, targetRobot)
+	if err != nil {
+		return origin, battleResult, err
+	}
+	_model, err = impl.OnRobotBattleEnd(_model, targetRobot, robot)
+	if err != nil {
+		return origin, battleResult, err
+	}
 	ctx.Model = Model(_model)
 	ctx, err = view.Render(ctx)
 	if err != nil {

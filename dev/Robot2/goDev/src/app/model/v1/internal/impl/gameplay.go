@@ -4,10 +4,13 @@ import (
 	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
+	"app/tool/data"
+	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"strings"
 	"tool/log"
 )
 
@@ -189,4 +192,28 @@ func GetMoveRange(origin types.Model) []protocol.Position {
 func GetBattleMenu(origin types.Model) protocol.BattleMenu {
 	ctx := origin
 	return ctx.App.Gameplay.BattleMenu
+}
+
+func OnRobotBattleEnd(origin types.Model, robotAfter protocol.Robot, targetRobotAfter protocol.Robot) (types.Model, error) {
+	ctx := origin
+	view := def.View
+	msg := []string{}
+	if robotAfter.PlayerID == protocol.PlayerIDPlayer {
+		if targetRobotAfter.HP <= 0 {
+			awardMoney := 0
+			{
+				robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, targetRobotAfter.ProtoID)
+				if err != nil {
+					return origin, err
+				}
+				awardMoney = robotProto.Cost
+			}
+			ctx.App.Money += awardMoney
+			msg = append(msg, fmt.Sprintf("獲得%v資金", awardMoney))
+		}
+	}
+	if len(msg) > 0 {
+		view.Alert(strings.Join(msg, "\n"))
+	}
+	return ctx, nil
 }
