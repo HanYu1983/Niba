@@ -15,7 +15,6 @@ func PlayerTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	var err error
 	var cancel bool
 	ctx := origin
-	model := ctx.Model
 TURN:
 	for {
 		log.Log(protocol.LogCategoryPhase, "PlayerTurnPhase", "ObservePage")
@@ -68,7 +67,17 @@ TURN:
 		default:
 			var _ = detail
 		}
-		if model.IsDone() {
+		ctxObj, err := ctx.Model.OnEventPlayerTurnPhase(ctx, evt)
+		if err != nil {
+			return origin, false, err
+		}
+		ctx = ctxObj.(uidata.UI)
+		// 更新移動範圍
+		ctx, err = common.HandleShowMoveRangeWhenUnitAtCursor(ctx, struct{}{})
+		if err != nil {
+			return origin, false, err
+		}
+		if ctx.Model.IsDone() {
 			break
 		}
 	}

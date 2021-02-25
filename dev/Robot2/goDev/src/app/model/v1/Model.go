@@ -97,8 +97,11 @@ func (v Model) OnDisableBattleMenu(origin interface{}) (interface{}, error) {
 func (v Model) OnClickSystemMenu(origin interface{}, selection string) (interface{}, error) {
 	return OnClickSystemMenu(origin.(uidata.UI), selection)
 }
-func (v Model) ObservePage(ui interface{}, id int) (interface{}, error) {
-	return ObservePage(ui.(uidata.UI), id)
+func (v Model) ObservePage(origin interface{}, id int) (interface{}, error) {
+	return ObservePage(origin.(uidata.UI), id)
+}
+func (v Model) OnEventPlayerTurnPhase(origin interface{}, evt interface{}) (interface{}, error) {
+	return OnEventPlayerTurnPhase(origin.(uidata.UI), evt)
 }
 
 // IGameplayModel
