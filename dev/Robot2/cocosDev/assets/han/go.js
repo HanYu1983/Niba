@@ -11771,8 +11771,8 @@ $packages["internal/fmtsort"] = (function() {
 	};
 	$pkg.Sort = Sort;
 	compare = function(aVal, bVal) {
-		var _1, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tmp, _tmp$1, _tmp$10, _tmp$11, _tmp$12, _tmp$13, _tmp$14, _tmp$15, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tmp$8, _tmp$9, _tuple, _tuple$1, a, a$1, a$2, a$3, a$4, a$5, aType, aVal, ap, b, b$1, b$2, b$3, b$4, b$5, bType, bVal, bp, c, c$1, c$2, c$3, c$4, c$5, i, i$1, ok, ok$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$10 = $f._tmp$10; _tmp$11 = $f._tmp$11; _tmp$12 = $f._tmp$12; _tmp$13 = $f._tmp$13; _tmp$14 = $f._tmp$14; _tmp$15 = $f._tmp$15; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tmp$6 = $f._tmp$6; _tmp$7 = $f._tmp$7; _tmp$8 = $f._tmp$8; _tmp$9 = $f._tmp$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; a = $f.a; a$1 = $f.a$1; a$2 = $f.a$2; a$3 = $f.a$3; a$4 = $f.a$4; a$5 = $f.a$5; aType = $f.aType; aVal = $f.aVal; ap = $f.ap; b = $f.b; b$1 = $f.b$1; b$2 = $f.b$2; b$3 = $f.b$3; b$4 = $f.b$4; b$5 = $f.b$5; bType = $f.bType; bVal = $f.bVal; bp = $f.bp; c = $f.c; c$1 = $f.c$1; c$2 = $f.c$2; c$3 = $f.c$3; c$4 = $f.c$4; c$5 = $f.c$5; i = $f.i; i$1 = $f.i$1; ok = $f.ok; ok$1 = $f.ok$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _1, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tmp, _tmp$1, _tmp$10, _tmp$11, _tmp$12, _tmp$13, _tmp$14, _tmp$15, _tmp$2, _tmp$3, _tmp$4, _tmp$5, _tmp$6, _tmp$7, _tmp$8, _tmp$9, _tuple, _tuple$1, a, a$1, a$2, a$3, a$4, a$5, aType, aVal, ap, b, b$1, b$2, b$3, b$4, b$5, bType, bVal, bp, c, c$1, c$2, c$3, c$4, c$5, i, i$1, ok, ok$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$10 = $f._tmp$10; _tmp$11 = $f._tmp$11; _tmp$12 = $f._tmp$12; _tmp$13 = $f._tmp$13; _tmp$14 = $f._tmp$14; _tmp$15 = $f._tmp$15; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tmp$4 = $f._tmp$4; _tmp$5 = $f._tmp$5; _tmp$6 = $f._tmp$6; _tmp$7 = $f._tmp$7; _tmp$8 = $f._tmp$8; _tmp$9 = $f._tmp$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; a = $f.a; a$1 = $f.a$1; a$2 = $f.a$2; a$3 = $f.a$3; a$4 = $f.a$4; a$5 = $f.a$5; aType = $f.aType; aVal = $f.aVal; ap = $f.ap; b = $f.b; b$1 = $f.b$1; b$2 = $f.b$2; b$3 = $f.b$3; b$4 = $f.b$4; b$5 = $f.b$5; bType = $f.bType; bVal = $f.bVal; bp = $f.bp; c = $f.c; c$1 = $f.c$1; c$2 = $f.c$2; c$3 = $f.c$3; c$4 = $f.c$4; c$5 = $f.c$5; i = $f.i; i$1 = $f.i$1; ok = $f.ok; ok$1 = $f.ok$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		_tmp = $clone(aVal, reflect.Value).Type();
 		_tmp$1 = $clone(bVal, reflect.Value).Type();
 		aType = _tmp;
@@ -11930,28 +11930,32 @@ $packages["internal/fmtsort"] = (function() {
 				if (ok$1) {
 					$s = -1; return c$4;
 				}
-				_r$8 = reflect.ValueOf(aType); /* */ $s = 27; case 27: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-				_arg$4 = $clone(_r$8, reflect.Value);
-				_r$9 = reflect.ValueOf(bType); /* */ $s = 28; case 28: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-				_arg$5 = $clone(_r$9, reflect.Value);
-				_r$10 = compare(_arg$4, _arg$5); /* */ $s = 29; case 29: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-				c$5 = _r$10;
+				_r$8 = $clone(aVal, reflect.Value).Elem(); /* */ $s = 27; case 27: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+				_r$9 = $clone(_r$8, reflect.Value).Type(); /* */ $s = 28; case 28: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+				_r$10 = reflect.ValueOf(_r$9); /* */ $s = 29; case 29: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+				_arg$4 = $clone(_r$10, reflect.Value);
+				_r$11 = $clone(bVal, reflect.Value).Elem(); /* */ $s = 30; case 30: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+				_r$12 = $clone(_r$11, reflect.Value).Type(); /* */ $s = 31; case 31: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+				_r$13 = reflect.ValueOf(_r$12); /* */ $s = 32; case 32: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+				_arg$5 = $clone(_r$13, reflect.Value);
+				_r$14 = compare(_arg$4, _arg$5); /* */ $s = 33; case 33: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+				c$5 = _r$14;
 				if (!((c$5 === 0))) {
 					$s = -1; return c$5;
 				}
-				_r$11 = $clone(aVal, reflect.Value).Elem(); /* */ $s = 30; case 30: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-				_arg$6 = $clone(_r$11, reflect.Value);
-				_r$12 = $clone(bVal, reflect.Value).Elem(); /* */ $s = 31; case 31: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-				_arg$7 = $clone(_r$12, reflect.Value);
-				_r$13 = compare(_arg$6, _arg$7); /* */ $s = 32; case 32: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-				$s = -1; return _r$13;
+				_r$15 = $clone(aVal, reflect.Value).Elem(); /* */ $s = 34; case 34: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+				_arg$6 = $clone(_r$15, reflect.Value);
+				_r$16 = $clone(bVal, reflect.Value).Elem(); /* */ $s = 35; case 35: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+				_arg$7 = $clone(_r$16, reflect.Value);
+				_r$17 = compare(_arg$6, _arg$7); /* */ $s = 36; case 36: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+				$s = -1; return _r$17;
 			/* } else { */ case 13:
-				_r$14 = aType.String(); /* */ $s = 33; case 33: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-				$panic(new $String("bad type in compare: " + _r$14));
+				_r$18 = aType.String(); /* */ $s = 37; case 37: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+				$panic(new $String("bad type in compare: " + _r$18));
 			/* } */ case 14:
 		case 1:
 		$s = -1; return 0;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: compare }; } $f._1 = _1; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$10 = _tmp$10; $f._tmp$11 = _tmp$11; $f._tmp$12 = _tmp$12; $f._tmp$13 = _tmp$13; $f._tmp$14 = _tmp$14; $f._tmp$15 = _tmp$15; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tmp$6 = _tmp$6; $f._tmp$7 = _tmp$7; $f._tmp$8 = _tmp$8; $f._tmp$9 = _tmp$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.a = a; $f.a$1 = a$1; $f.a$2 = a$2; $f.a$3 = a$3; $f.a$4 = a$4; $f.a$5 = a$5; $f.aType = aType; $f.aVal = aVal; $f.ap = ap; $f.b = b; $f.b$1 = b$1; $f.b$2 = b$2; $f.b$3 = b$3; $f.b$4 = b$4; $f.b$5 = b$5; $f.bType = bType; $f.bVal = bVal; $f.bp = bp; $f.c = c; $f.c$1 = c$1; $f.c$2 = c$2; $f.c$3 = c$3; $f.c$4 = c$4; $f.c$5 = c$5; $f.i = i; $f.i$1 = i$1; $f.ok = ok; $f.ok$1 = ok$1; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: compare }; } $f._1 = _1; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$10 = _tmp$10; $f._tmp$11 = _tmp$11; $f._tmp$12 = _tmp$12; $f._tmp$13 = _tmp$13; $f._tmp$14 = _tmp$14; $f._tmp$15 = _tmp$15; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tmp$4 = _tmp$4; $f._tmp$5 = _tmp$5; $f._tmp$6 = _tmp$6; $f._tmp$7 = _tmp$7; $f._tmp$8 = _tmp$8; $f._tmp$9 = _tmp$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.a = a; $f.a$1 = a$1; $f.a$2 = a$2; $f.a$3 = a$3; $f.a$4 = a$4; $f.a$5 = a$5; $f.aType = aType; $f.aVal = aVal; $f.ap = ap; $f.b = b; $f.b$1 = b$1; $f.b$2 = b$2; $f.b$3 = b$3; $f.b$4 = b$4; $f.b$5 = b$5; $f.bType = bType; $f.bVal = bVal; $f.bp = bp; $f.c = c; $f.c$1 = c$1; $f.c$2 = c$2; $f.c$3 = c$3; $f.c$4 = c$4; $f.c$5 = c$5; $f.i = i; $f.i$1 = i$1; $f.ok = ok; $f.ok$1 = ok$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	nilCompare = function(aVal, bVal) {
 		var aVal, bVal;
