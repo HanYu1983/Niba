@@ -67,10 +67,15 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 			if err != nil {
 				return origin, false, err
 			}
-			ctx = ctxObj.(uidata.UI)
 			if cancel {
 				continue
 			}
+			ctx = ctxObj.(uidata.UI)
+			ctxObj, err = ctx.Model.OnRobotDone(ctx, robotID)
+			if err != nil {
+				return origin, false, err
+			}
+			ctx = ctxObj.(uidata.UI)
 			break
 		}
 	case "line":
@@ -91,10 +96,15 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 			if err != nil {
 				return origin, false, err
 			}
-			ctx = ctxObj.(uidata.UI)
 			if cancel {
 				continue
 			}
+			ctx = ctxObj.(uidata.UI)
+			ctxObj, err = ctx.Model.OnRobotDone(ctx, robotID)
+			if err != nil {
+				return origin, false, err
+			}
+			ctx = ctxObj.(uidata.UI)
 			break
 		}
 	default:

@@ -6,7 +6,7 @@ import (
 	"app/tool"
 	"app/tool/helper"
 	"app/tool/protocol"
-	"fmt"
+	"tool/log"
 	"tool/nodejs/mlkmeans"
 )
 
@@ -62,79 +62,86 @@ func Strategy(origin types.Model, playerID string, myRobotIDs []string, targetRo
 	{
 		clusters := memory.MyClusters
 		robotIDs := myRobotIDs
-		posData := [][]interface{}{}
-		for _, robotID := range robotIDs {
-			pos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
+		if len(robotIDs) == 0 {
+			log.Log(protocol.LogCategoryWarning, "Strategy", "機體不存在, 無法分隊.")
+		} else {
+			posData := [][]interface{}{}
+			for _, robotID := range robotIDs {
+				pos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
+				if err != nil {
+					return origin, err
+				}
+				posData = append(posData, []interface{}{pos[0], pos[1]})
+			}
+			cnt := helper.Min(len(robotIDs), 4)
+			options := map[string]interface{}{}
+			{
+				centers := [][]interface{}{}
+				if len(clusters.Centroids) > 0 {
+					for _, v := range clusters.Centroids {
+						if v.Size == 0 {
+							continue
+						}
+						centroidV2 := v.Centroid
+						centers = append(centers, []interface{}{
+							centroidV2[0], centroidV2[1],
+						})
+					}
+					if cnt == len(centers) {
+						options["initialization"] = centers
+					}
+				}
+			}
+			myTeams, err = mlkmeans.KMeans(posData, cnt, options)
 			if err != nil {
 				return origin, err
 			}
-			posData = append(posData, []interface{}{pos[0], pos[1]})
-		}
-		cnt := helper.Min(len(robotIDs), 4)
-		options := map[string]interface{}{}
-		{
-			centers := [][]interface{}{}
-			if len(clusters.Centroids) > 0 {
-				for _, v := range clusters.Centroids {
-					if v.Size == 0 {
-						continue
-					}
-					centroidV2 := v.Centroid
-					centers = append(centers, []interface{}{
-						centroidV2[0], centroidV2[1],
-					})
-				}
-				if cnt == len(centers) {
-					options["initialization"] = centers
-				}
-			}
-		}
-		myTeams, err = mlkmeans.KMeans(posData, cnt, options)
-		if err != nil {
-			return origin, err
 		}
 	}
 	targetTeams := mlkmeans.KMeansResult{}
 	{
 		clusters := memory.TargetClusters
 		robotIDs := targetRobotIDs
-		posData := [][]interface{}{}
-		for _, robotID := range robotIDs {
-			pos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
+		if len(robotIDs) == 0 {
+			log.Log(protocol.LogCategoryWarning, "Strategy", "機體不存在, 無法分隊.")
+		} else {
+			posData := [][]interface{}{}
+			for _, robotID := range robotIDs {
+				pos, err := protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID)
+				if err != nil {
+					return origin, err
+				}
+				posData = append(posData, []interface{}{pos[0], pos[1]})
+			}
+			cnt := helper.Min(len(robotIDs), 4)
+			options := map[string]interface{}{}
+			{
+				centers := [][]interface{}{}
+				if len(clusters.Centroids) > 0 {
+					for _, v := range clusters.Centroids {
+						if v.Size == 0 {
+							continue
+						}
+						centroidV2 := v.Centroid
+						centers = append(centers, []interface{}{
+							centroidV2[0], centroidV2[1],
+						})
+					}
+					if cnt == len(centers) {
+						options["initialization"] = centers
+					}
+				}
+			}
+			targetTeams, err = mlkmeans.KMeans(posData, cnt, options)
 			if err != nil {
 				return origin, err
 			}
-			posData = append(posData, []interface{}{pos[0], pos[1]})
-		}
-		cnt := helper.Min(len(robotIDs), 4)
-		options := map[string]interface{}{}
-		{
-			centers := [][]interface{}{}
-			if len(clusters.Centroids) > 0 {
-				for _, v := range clusters.Centroids {
-					if v.Size == 0 {
-						continue
-					}
-					centroidV2 := v.Centroid
-					centers = append(centers, []interface{}{
-						centroidV2[0], centroidV2[1],
-					})
-				}
-				if cnt == len(centers) {
-					options["initialization"] = centers
-				}
-			}
-		}
-		targetTeams, err = mlkmeans.KMeans(posData, cnt, options)
-		if err != nil {
-			return origin, err
 		}
 	}
 	myRobotTeamID := map[string]int{}
 	for i, robotID := range myRobotIDs {
 		myRobotTeamID[robotID] = myTeams.Clusters[i]
 	}
-
 	selectTargetTeamID, _, err := QueryTeamTarget(ctx, myRobotIDs, myTeams, targetRobotIDs, targetTeams)
 	if err != nil {
 		return origin, err
@@ -144,6 +151,5 @@ func Strategy(origin types.Model, playerID string, myRobotIDs []string, targetRo
 	memory.TargetClusters = targetTeams
 	memory.TeamIDByRobotID = myRobotTeamID
 	ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, memory)
-	fmt.Println(memory)
 	return ctx, nil
 }
