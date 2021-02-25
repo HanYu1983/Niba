@@ -39,16 +39,23 @@ func OnEventPlayerTurnPhase(origin uidata.UI, evt interface{}) (uidata.UI, error
 			} else {
 				i := tool.FindStringIndex(robotIDs, unitAtCursor)
 				if i == -1 {
-					return origin, fmt.Errorf("[OnEventPlayerTurnPhase] unitAtCursor(%v) not found in myRobotIDs(%v)", unitAtCursor, robotIDs)
+					log.Log(protocol.LogCategoryDetail, "OnEventPlayerTurnPhase", fmt.Sprintf("[OnEventPlayerTurnPhase] unitAtCursor(%v) not found in myRobotIDs(%v)", unitAtCursor, robotIDs))
+					switch detail.KeyCode {
+					case uidata.KeyCodeL:
+						nextUnitID = robotIDs[len(robotIDs)-1]
+					case uidata.KeyCodeR:
+						nextUnitID = robotIDs[0]
+					}
+				} else {
+					switch detail.KeyCode {
+					case uidata.KeyCodeL:
+						i--
+					case uidata.KeyCodeR:
+						i++
+					}
+					i = (i + len(robotIDs)) % len(robotIDs)
+					nextUnitID = robotIDs[i]
 				}
-				switch detail.KeyCode {
-				case uidata.KeyCodeL:
-					i--
-				case uidata.KeyCodeR:
-					i++
-				}
-				i = (i + len(robotIDs)) % len(robotIDs)
-				nextUnitID = robotIDs[i]
 			}
 			log.Log(protocol.LogCategoryDetail, "OnEventPlayerTurnPhase", fmt.Sprintf("nextUnitID(%v)", nextUnitID))
 			nextCursor := model.App.Gameplay.Positions[nextUnitID]

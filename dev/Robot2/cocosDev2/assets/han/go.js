@@ -42144,8 +42144,8 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.OnEnemyTurnPhase = OnEnemyTurnPhase;
 	OnEventPlayerTurnPhase = function(origin, evt) {
-		var _1, _2, _3, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _entry, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, ctx, detail, err, evt, i, model, nextCursor, nextUnitID, notFound, origin, robotIDs, unitAtCursor, x, x$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; detail = $f.detail; err = $f.err; evt = $f.evt; i = $f.i; model = $f.model; nextCursor = $f.nextCursor; nextUnitID = $f.nextUnitID; notFound = $f.notFound; origin = $f.origin; robotIDs = $f.robotIDs; unitAtCursor = $f.unitAtCursor; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _1, _2, _3, _4, _arg, _arg$1, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _entry, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, ctx, detail, err, evt, i, model, nextCursor, nextUnitID, notFound, origin, robotIDs, unitAtCursor, x, x$1, x$2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; detail = $f.detail; err = $f.err; evt = $f.evt; i = $f.i; model = $f.model; nextCursor = $f.nextCursor; nextUnitID = $f.nextUnitID; notFound = $f.notFound; origin = $f.origin; robotIDs = $f.robotIDs; unitAtCursor = $f.unitAtCursor; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		$r = log.Log(protocol.LogCategoryPhase, "OnEventPlayerTurnPhase", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		ctx = $clone(origin, uidata.UI);
 		_ref = evt;
@@ -42190,35 +42190,45 @@ $packages["app/model/v1"] = (function() {
 						/* */ if (i === -1) { $s = 13; continue; }
 						/* */ $s = 14; continue;
 						/* if (i === -1) { */ case 13:
-							_r$2 = fmt.Errorf("[OnEventPlayerTurnPhase] unitAtCursor(%v) not found in myRobotIDs(%v)", new sliceType$5([new $String(unitAtCursor), robotIDs])); /* */ $s = 15; case 15: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-							$s = -1; return [origin, _r$2];
-						/* } */ case 14:
-						_3 = detail.KeyCode;
-						if (_3 === (81)) {
-							i = i - (1) >> 0;
-						} else if (_3 === (69)) {
-							i = i + (1) >> 0;
-						}
-						i = (_r$3 = ((i + robotIDs.$length >> 0)) % robotIDs.$length, _r$3 === _r$3 ? _r$3 : $throwRuntimeError("integer divide by zero"));
-						nextUnitID = ((i < 0 || i >= robotIDs.$length) ? ($throwRuntimeError("index out of range"), undefined) : robotIDs.$array[robotIDs.$offset + i]);
+							_arg$2 = protocol.LogCategoryDetail;
+							_r$2 = fmt.Sprintf("[OnEventPlayerTurnPhase] unitAtCursor(%v) not found in myRobotIDs(%v)", new sliceType$5([new $String(unitAtCursor), robotIDs])); /* */ $s = 16; case 16: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+							_arg$3 = _r$2;
+							$r = log.Log(_arg$2, "OnEventPlayerTurnPhase", _arg$3); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+							_3 = detail.KeyCode;
+							if (_3 === (81)) {
+								nextUnitID = (x$1 = robotIDs.$length - 1 >> 0, ((x$1 < 0 || x$1 >= robotIDs.$length) ? ($throwRuntimeError("index out of range"), undefined) : robotIDs.$array[robotIDs.$offset + x$1]));
+							} else if (_3 === (69)) {
+								nextUnitID = (0 >= robotIDs.$length ? ($throwRuntimeError("index out of range"), undefined) : robotIDs.$array[robotIDs.$offset + 0]);
+							}
+							$s = 15; continue;
+						/* } else { */ case 14:
+							_4 = detail.KeyCode;
+							if (_4 === (81)) {
+								i = i - (1) >> 0;
+							} else if (_4 === (69)) {
+								i = i + (1) >> 0;
+							}
+							i = (_r$3 = ((i + robotIDs.$length >> 0)) % robotIDs.$length, _r$3 === _r$3 ? _r$3 : $throwRuntimeError("integer divide by zero"));
+							nextUnitID = ((i < 0 || i >= robotIDs.$length) ? ($throwRuntimeError("index out of range"), undefined) : robotIDs.$array[robotIDs.$offset + i]);
+						/* } */ case 15:
 					/* } */ case 12:
-					_arg$2 = protocol.LogCategoryDetail;
-					_r$4 = fmt.Sprintf("nextUnitID(%v)", new sliceType$5([new $String(nextUnitID)])); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-					_arg$3 = _r$4;
-					$r = log.Log(_arg$2, "OnEventPlayerTurnPhase", _arg$3); /* */ $s = 17; case 17: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-					nextCursor = $clone((_entry = model.App.Gameplay.Positions[$String.keyFor(nextUnitID)], _entry !== undefined ? _entry.v : arrayType.zero()), protocol.Position);
 					_arg$4 = protocol.LogCategoryDetail;
-					_r$5 = fmt.Sprintf("nextCursor(%v)", new sliceType$5([new protocol.Position(nextCursor)])); /* */ $s = 18; case 18: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-					_arg$5 = _r$5;
+					_r$4 = fmt.Sprintf("nextUnitID(%v)", new sliceType$5([new $String(nextUnitID)])); /* */ $s = 18; case 18: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					_arg$5 = _r$4;
 					$r = log.Log(_arg$4, "OnEventPlayerTurnPhase", _arg$5); /* */ $s = 19; case 19: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					nextCursor = $clone((_entry = model.App.Gameplay.Positions[$String.keyFor(nextUnitID)], _entry !== undefined ? _entry.v : arrayType.zero()), protocol.Position);
+					_arg$6 = protocol.LogCategoryDetail;
+					_r$5 = fmt.Sprintf("nextCursor(%v)", new sliceType$5([new protocol.Position(nextCursor)])); /* */ $s = 20; case 20: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+					_arg$7 = _r$5;
+					$r = log.Log(_arg$6, "OnEventPlayerTurnPhase", _arg$7); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 					protocol.Position.copy(model.App.Gameplay.Cursor, nextCursor);
-					ctx.Model = (x$1 = ($clone(model, Model)), new x$1.constructor.elem(x$1));
+					ctx.Model = (x$2 = ($clone(model, Model)), new x$2.constructor.elem(x$2));
 				/* } */ case 6:
 			case 4:
 		/* } */ case 3:
-		$r = log.Log(protocol.LogCategoryPhase, "OnEventPlayerTurnPhase", "end"); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.Log(protocol.LogCategoryPhase, "OnEventPlayerTurnPhase", "end"); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: OnEventPlayerTurnPhase }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.detail = detail; $f.err = err; $f.evt = evt; $f.i = i; $f.model = model; $f.nextCursor = nextCursor; $f.nextUnitID = nextUnitID; $f.notFound = notFound; $f.origin = origin; $f.robotIDs = robotIDs; $f.unitAtCursor = unitAtCursor; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: OnEventPlayerTurnPhase }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.detail = detail; $f.err = err; $f.evt = evt; $f.i = i; $f.model = model; $f.nextCursor = nextCursor; $f.nextUnitID = nextUnitID; $f.notFound = notFound; $f.origin = origin; $f.robotIDs = robotIDs; $f.unitAtCursor = unitAtCursor; $f.x = x; $f.x$1 = x$1; $f.x$2 = x$2; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OnEventPlayerTurnPhase = OnEventPlayerTurnPhase;
 	OnLineBattleMenuPhase = function(origin, isPlayerTurn, robotID, weaponID, targetPosition) {
