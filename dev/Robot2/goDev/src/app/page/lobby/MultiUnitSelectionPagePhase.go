@@ -4,6 +4,7 @@ import (
 	"app/page/common"
 	"app/page/gameplay"
 	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
 )
 
@@ -31,12 +32,17 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 					return ctx, cancel, nil
 				}
 				selection := ctx.Menu1Ds[menuID].Selection
-				var _ = selection
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
+				ctx.Model, err = ctx.Model.New(protocol.NewGameplayWithSelection{Selection: selection})
+				if err != nil {
+					return origin, cancel, err
+				}
 				ctx, err = gameplay.GameLoop(ctx)
 				if err != nil {
 					return origin, cancel, err
 				}
+				reason := ctx.Model.IsDone()
+				var _ = reason
 				return ctx, true, nil
 			}
 			return ctx, cancel, nil

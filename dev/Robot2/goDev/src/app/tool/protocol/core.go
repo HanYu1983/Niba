@@ -198,3 +198,9 @@ type HitMark struct {
 	HitRate float64
 	Rate    float64
 }
+
+type NewGameplayWithSelection struct {
+	Selection map[string]bool
+}
+
+type NewModelWithTest struct{}

@@ -1,6 +1,7 @@
 package gameplay
 
 import (
+	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"tool/log"
@@ -10,7 +11,12 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "start")
 	var err error
 	ctx := origin
+	view := def.View
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, true)
+	ctx, err = view.Render(ctx)
+	if err != nil {
+		return origin, err
+	}
 	for {
 		var activePlayer protocol.Player
 		activePlayer, err = ctx.Model.QueryActivePlayer()
@@ -25,7 +31,7 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 		if cancel {
 			break
 		}
-		if ctx.Model.IsDone() {
+		if ctx.Model.IsDone() != nil {
 			break
 		}
 		ctx.Model, err = ctx.Model.NextPlayer()

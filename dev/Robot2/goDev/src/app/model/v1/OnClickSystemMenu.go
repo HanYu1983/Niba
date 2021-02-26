@@ -13,6 +13,11 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 	var err error
 	ctx := origin
 	switch selection {
+	case uidata.MenuOptionGiveUp:
+		model := ctx.Model.(Model)
+		model.App.Gameplay.Done = "giveUp"
+		ctx.Model = model
+		return ctx, err
 	case uidata.MenuOptionTest:
 		var tempMap [][]int
 		tempMap, err = helper.GenerateMap(helper.GenerateMapConfig{

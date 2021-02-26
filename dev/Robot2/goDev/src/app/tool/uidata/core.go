@@ -157,6 +157,7 @@ const (
 	MenuOptionConfirm   = "MenuOptionConfirm"
 
 	MenuOptionTurnDone = "MenuOptionTurnDone"
+	MenuOptionGiveUp   = "MenuOptionGiveUp"
 	MenuOptionTest     = "MenuOptionTest"
 	MenuOptionTest2    = "MenuOptionTest2"
 	MenuOptionTest3    = "MenuOptionTest3"

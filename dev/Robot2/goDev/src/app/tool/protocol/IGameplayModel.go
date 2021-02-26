@@ -11,7 +11,7 @@ type IGameplayModel interface {
 	Load() (IModel, error)
 	QueryActivePlayer() (Player, error)
 	NextPlayer() (IModel, error)
-	IsDone() bool
+	IsDone() interface{}
 	QueryUnitsByRegion(p1 Position, p2 Position) []string
 	QueryUnitByPosition(Position) string
 	SetMoveRange([]Position) IModel

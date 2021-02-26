@@ -6,93 +6,12 @@ import (
 	"app/tool"
 	"app/tool/data"
 	"app/tool/def"
-	"app/tool/helper"
 	"app/tool/protocol"
-	"app/tool/uidata"
 	"fmt"
 	"strings"
 	"tool/log"
 )
 
-func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
-	//rand.Seed(0)
-	ctx := origin
-	const (
-		playerAI1 = "ai1"
-	)
-	tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
-	if err != nil {
-		return origin, err
-	}
-	ctx.App.Lobby.Weapons = map[string]protocol.Weapon{
-		"lobbyWeapon_0": {
-			ID:      "lobbyWeapon_0",
-			ProtoID: "beam_mega1",
-		},
-		"lobbyWeapon_1": {
-			ID:      "lobbyWeapon_1",
-			ProtoID: "beam_sniper1",
-		},
-	}
-	ctx.App.Lobby.RobotIDByWeaponID = map[string]string{
-		"lobbyWeapon_0": "0",
-		"lobbyWeapon_1": "0",
-	}
-	ctx.App.Gameplay.AIModel = types.AIModel{}
-	ctx.App.Money = 100000
-	ctx.App.Gameplay.Map = tempMap
-	ctx.App.Gameplay.Units = []string{}
-	ctx.App.Gameplay.Players = map[string]protocol.Player{
-		protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
-		playerAI1:               {ID: playerAI1, GroupID: "1"},
-	}
-	ctx.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
-	ctx.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
-	ctx.App.Gameplay.Pilots = map[string]protocol.Pilot{
-		"pilotA": {ID: "pilotA", ProtoID: "amuro"},
-		"pilotB": {ID: "pilotB", ProtoID: "baseballPitcher"},
-		"pilotC": {ID: "pilotC", ProtoID: "teacher"},
-		"pilotD": {ID: "pilotD", ProtoID: "engineer"},
-	}
-	ctx, _, err = common.NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
-		ID:       "0",
-		ProtoID:  "zgundam",
-		PlayerID: protocol.PlayerIDPlayer,
-		PilotID:  "pilotA",
-	})
-	if err != nil {
-		return origin, err
-	}
-	ctx, _, err = common.NewRobot(ctx, protocol.Position{10, 10}, protocol.Robot{
-		ProtoID:  "gaite_sky",
-		PlayerID: protocol.PlayerIDPlayer,
-		PilotID:  "pilotB",
-	})
-	if err != nil {
-		return origin, err
-	}
-	ctx, _, err = common.NewRobot(ctx, protocol.Position{10, 0}, protocol.Robot{
-		ProtoID:  "gundam",
-		PlayerID: playerAI1,
-		PilotID:  "pilotC",
-	})
-	if err != nil {
-		return origin, err
-	}
-	ctx, _, err = common.NewRobot(ctx, protocol.Position{0, 10}, protocol.Robot{
-		ProtoID:  "gundam",
-		PlayerID: playerAI1,
-		PilotID:  "pilotD",
-	})
-	if err != nil {
-		return origin, err
-	}
-	// ctx, err = GenerateLevelByPSO(ctx, playerAI1)
-	// if err != nil {
-	// 	return origin, err
-	// }
-	return ctx, nil
-}
 func Save(origin types.Model) error {
 	return nil
 }
@@ -118,8 +37,8 @@ func NextPlayer(origin types.Model) (types.Model, error) {
 	ctx.App.Gameplay.ActivePlayerID = nextPlayer
 	return ctx, nil
 }
-func IsDone(origin types.Model) bool {
-	return false
+func IsDone(origin types.Model) interface{} {
+	return origin.App.Gameplay.Done
 }
 func QueryUnitsByRegion(origin types.Model, p1 protocol.Position, p2 protocol.Position) []string {
 	ctx := origin

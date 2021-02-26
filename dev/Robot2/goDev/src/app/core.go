@@ -40,18 +40,32 @@ func Main() {
 		}
 	}()
 	view.Install()
+	StartWithProduct()
+	log.Log(protocol.LogCategoryPhase, "Main", "end")
+}
+
+func StartWithGameplayTest() {
+	var err error
+	ui := def.DefaultUI
+	ui.Model, err = v1.DefaultModel.New(protocol.NewModelWithTest{})
+	if err != nil {
+		panic(err)
+	}
+	_, err = gameplay.GameLoop(ui)
+	if err != nil {
+		panic(err)
+	}
+}
+
+func StartWithProduct() {
 	var err error
 	ui := def.DefaultUI
 	ui.Model, err = v1.DefaultModel.New(nil)
 	if err != nil {
 		panic(err)
 	}
-	var _ = gameplay.GameLoop
-	var _ = title.StartPagePhase
-	startPhase := gameplay.GameLoop
-	_, err = startPhase(ui)
+	_, err = title.StartPagePhase(ui)
 	if err != nil {
 		panic(err)
 	}
-	log.Log(protocol.LogCategoryPhase, "Main", "end")
 }

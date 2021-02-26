@@ -77,7 +77,7 @@ TURN:
 		if err != nil {
 			return origin, false, err
 		}
-		if ctx.Model.IsDone() {
+		if ctx.Model.IsDone() != nil {
 			break
 		}
 	}

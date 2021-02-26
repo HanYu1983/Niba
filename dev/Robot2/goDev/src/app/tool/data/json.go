@@ -485,16 +485,12 @@ const (
                 1.2
             ],
             "robots": [
-                "10",
-                "11",
-                "14"
+                "gaite_sky","jimu","jimu"
             ],
             "weapons": [],
             "components": [],
             "pilots": [
-                "1",
-                "1",
-                "1"
+                "engineer","engineer","engineer"
             ]
         }
     },

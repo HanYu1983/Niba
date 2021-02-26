@@ -5,7 +5,7 @@ import (
 	"tool/nodejs/mlkmeans"
 )
 
-type lobby struct {
+type Lobby struct {
 	Robots               map[string]protocol.Robot
 	Pilots               map[string]protocol.Pilot
 	Weapons              map[string]protocol.Weapon
@@ -15,7 +15,7 @@ type lobby struct {
 	PilotIDByRobotID     map[string]string
 }
 
-type gameplay struct {
+type Gameplay struct {
 	AIModel        AIModel
 	ActivePlayerID string
 	PlayerOrder    []string
@@ -39,8 +39,8 @@ type gameplay struct {
 type app struct {
 	SeqID    int
 	Money    int
-	Gameplay gameplay
-	Lobby    lobby
+	Gameplay Gameplay
+	Lobby    Lobby
 }
 
 type Model struct {

@@ -39,7 +39,7 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		canBuy := lobby.QueryComponentCanBuy(model)
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
-		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
+		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
 	}
 	menu.Offset = helper.Max(0, helper.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
 	left, right := helper.Max(0, helper.Min(menu.Offset, len(options)-1)), helper.Min(menu.Offset+menu.Limit, len(options))
