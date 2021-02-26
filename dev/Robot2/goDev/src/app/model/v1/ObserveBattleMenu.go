@@ -8,9 +8,11 @@ import (
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
+	log.Log(protocol.LogCategoryPhase, "ObserveBattleMenu", "start")
 	ctx := origin
 	model := types.Model(ctx.Model.(Model))
 	menu, has := ctx.BattleMenus[menuID]
@@ -24,13 +26,25 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		if battleMenuModel.Active {
 			robot, pilot, weapon := battleMenuModel.AttackRobot, battleMenuModel.AttackPilot, battleMenuModel.AttackWeapon
 			targetRobot, targetPilot := battleMenuModel.DeffenceRobot, battleMenuModel.DeffencePilot
+			if robot.ID == "" {
+				return origin, fmt.Errorf("你忘了在OnEnableBattleMenu中設定AttackRobot")
+			}
+			if pilot.ID == "" {
+				return origin, fmt.Errorf("你忘了在OnEnableBattleMenu中設定AttackPilot")
+			}
+			if targetRobot.ID == "" {
+				return origin, fmt.Errorf("你忘了在OnEnableBattleMenu中設定DeffenceRobot")
+			}
+			if targetPilot.ID == "" {
+				return origin, fmt.Errorf("你忘了在OnEnableBattleMenu中設定DeffencePilot")
+			}
 			// 攻擊方命中率
 			hitRate, err := impl.QueryBattleHitRate(model, robot, pilot, weapon, targetRobot, targetPilot)
 			if err != nil {
 				return origin, err
 			}
 			// 攻擊方設置在左面板
-			menu.Left.Robot, err = common.ObserveRobot(model, robot)
+			menu.Left.Robot, err = common.ObserveRobot(model, robot, true)
 			if err != nil {
 				return origin, err
 			}
@@ -39,7 +53,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 			menu.Left.Weapon = weapon
 			menu.Left.Info.HitRate = hitRate
 			// 防守方設置在右面板
-			menu.Right.Robot, err = common.ObserveRobot(model, targetRobot)
+			menu.Right.Robot, err = common.ObserveRobot(model, targetRobot, true)
 			if err != nil {
 				return origin, err
 			}
@@ -123,5 +137,6 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		}
 	}
 	ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, menuID, menu)
+	log.Log(protocol.LogCategoryPhase, "ObserveBattleMenu", "end")
 	return ctx, nil
 }

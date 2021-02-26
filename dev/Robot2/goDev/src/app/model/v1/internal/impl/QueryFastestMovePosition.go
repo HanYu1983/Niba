@@ -41,7 +41,7 @@ func QueryFastestMovePosition(model types.Model, weightMap [][]float64, robotID 
 	if originPos == target {
 		return false, protocol.Position{}, nil, err
 	}
-	movePower, err := common.QueryRobotMovePower(model, robotID)
+	movePower, err := common.QueryRobotMovePower(model, robotID, true)
 	if err != nil {
 		return false, protocol.Position{}, nil, err
 	}

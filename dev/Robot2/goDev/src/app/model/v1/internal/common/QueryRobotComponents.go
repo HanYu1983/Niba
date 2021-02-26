@@ -7,9 +7,9 @@ import (
 	"fmt"
 )
 
-func QueryRobotComponents(model types.Model, robotID string) (map[string]protocol.Component, error) {
+func QueryRobotComponents(model types.Model, robotID string, isGameplay bool) (map[string]protocol.Component, error) {
 	var err error
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+	robot, err := QueryRobot(model, robotID, isGameplay)
 	if err != nil {
 		return nil, err
 	}

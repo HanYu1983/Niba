@@ -12,7 +12,7 @@ func QueryMoveRangeTree(model types.Model, robotID string) (astar.NodeMap, error
 	if err != nil {
 		return nil, err
 	}
-	movePower, err := common.QueryRobotMovePower(model, robotID)
+	movePower, err := common.QueryRobotMovePower(model, robotID, true)
 	if err != nil {
 		return nil, err
 	}

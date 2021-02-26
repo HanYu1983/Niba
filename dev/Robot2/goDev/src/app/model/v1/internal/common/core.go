@@ -26,13 +26,13 @@ func IsRobotDone(model types.Model, robotID string) (bool, error) {
 	return model.App.Gameplay.Tags[robotID].IsDone, nil
 }
 
-func QueryRobotArmor(model types.Model, robotID string) (int, error) {
+func QueryRobotArmor(model types.Model, robotID string, isGameplay bool) (int, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return 0, err
 	}
-	components, err := QueryRobotComponents(model, robot.ID)
+	components, err := QueryRobotComponents(model, robot.ID, isGameplay)
 	if err != nil {
 		return 0, err
 	}
@@ -54,13 +54,13 @@ func QueryRobotArmor(model types.Model, robotID string) (int, error) {
 	return total, nil
 }
 
-func QueryRobotBeamArmor(model types.Model, robotID string) (int, error) {
+func QueryRobotBeamArmor(model types.Model, robotID string, isGameplay bool) (int, error) {
 	var err error
 	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
 	if err != nil {
 		return 0, err
 	}
-	components, err := QueryRobotComponents(model, robot.ID)
+	components, err := QueryRobotComponents(model, robot.ID, isGameplay)
 	if err != nil {
 		return 0, err
 	}
@@ -118,11 +118,11 @@ func NewRobot(origin types.Model, position protocol.Position, robot protocol.Rob
 	ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, position)
 	ctx.App.Gameplay.Units = append(ctx.App.Gameplay.Units, robot.ID)
 	// 再計算機器人的狀態
-	robot.HP, err = QueryRobotMaxHp(ctx, robot.ID)
+	robot.HP, err = QueryRobotMaxHp(ctx, robot.ID, true)
 	if err != nil {
 		return origin, protocol.Robot{}, err
 	}
-	robot.EN, err = QueryRobotMaxEn(ctx, robot.ID)
+	robot.EN, err = QueryRobotMaxEn(ctx, robot.ID, true)
 	if err != nil {
 		return origin, protocol.Robot{}, err
 	}

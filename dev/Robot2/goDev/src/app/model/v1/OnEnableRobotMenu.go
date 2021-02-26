@@ -33,7 +33,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 			options = append(options, []string{uidata.MenuOptionMove})
 		}
 		// weapons
-		weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+		weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform, true)
 		if err != nil {
 			return origin, err
 		}
@@ -51,7 +51,7 @@ func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
 		}
 		// sky ground
 		if tags.MoveCount == 0 {
-			suitabiity, err := common.QueryRobotSuitability(_model, robot.ID)
+			suitabiity, err := common.QueryRobotSuitability(_model, robot.ID, true)
 			if err != nil {
 				return origin, err
 			}

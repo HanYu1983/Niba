@@ -3,14 +3,13 @@ package common
 import (
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
-	"app/tool/protocol"
 	"fmt"
 	"strconv"
 )
 
-func QueryRobotMaxHp(model types.Model, robotID string) (int, error) {
+func QueryRobotMaxHp(model types.Model, robotID string, isGameplay bool) (int, error) {
 	var err error
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+	robot, err := QueryRobot(model, robotID, isGameplay)
 	if err != nil {
 		return 0, err
 	}
@@ -18,7 +17,7 @@ func QueryRobotMaxHp(model types.Model, robotID string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	components, err := QueryRobotComponents(model, robot.ID)
+	components, err := QueryRobotComponents(model, robot.ID, isGameplay)
 	if err != nil {
 		return 0, err
 	}

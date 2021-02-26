@@ -5,21 +5,21 @@ import (
 	"app/tool/protocol"
 )
 
-func ObserveRobot(model types.Model, robot protocol.Robot) (protocol.Robot, error) {
+func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (protocol.Robot, error) {
 	var err error
-	maxHP, err := QueryRobotMaxHp(model, robot.ID)
+	maxHP, err := QueryRobotMaxHp(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	maxEn, err := QueryRobotMaxEn(model, robot.ID)
+	maxEn, err := QueryRobotMaxEn(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	components, err := QueryRobotComponents(model, robot.ID)
+	components, err := QueryRobotComponents(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	weapons, err := QueryRobotWeapons(model, robot.ID, robot.Transform)
+	weapons, err := QueryRobotWeapons(model, robot.ID, robot.Transform, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
@@ -29,11 +29,11 @@ func ObserveRobot(model types.Model, robot protocol.Robot) (protocol.Robot, erro
 	}
 	robot.MaxHP = maxHP
 	robot.MaxEN = maxEn
-	robot.Armor, err = QueryRobotArmor(model, robot.ID)
+	robot.Armor, err = QueryRobotArmor(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	robot.BeamArmor, err = QueryRobotBeamArmor(model, robot.ID)
+	robot.BeamArmor, err = QueryRobotBeamArmor(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}

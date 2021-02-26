@@ -7,7 +7,7 @@ import (
 )
 
 func QueryBattleAction(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, protocol.Weapon, error) {
-	weapons, err := common.QueryRobotWeapons(model, targetRobot.ID, targetRobot.Transform)
+	weapons, err := common.QueryRobotWeapons(model, targetRobot.ID, targetRobot.Transform, true)
 	if err != nil {
 		return protocol.BattleMenuActionPending, protocol.Weapon{}, err
 	}

@@ -49,10 +49,10 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	ctx.App.Gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
 	ctx.App.Gameplay.ActivePlayerID = protocol.PlayerIDPlayer
 	ctx.App.Gameplay.Pilots = map[string]protocol.Pilot{
-		"pilotA": {ID: "pilotA"},
-		"pilotB": {ID: "pilotB"},
-		"pilotC": {ID: "pilotC"},
-		"pilotD": {ID: "pilotD"},
+		"pilotA": {ID: "pilotA", ProtoID: "amuro"},
+		"pilotB": {ID: "pilotB", ProtoID: "baseballPitcher"},
+		"pilotC": {ID: "pilotC", ProtoID: "teacher"},
+		"pilotD": {ID: "pilotD", ProtoID: "engineer"},
 	}
 	ctx, _, err = common.NewRobot(ctx, protocol.Position{0, 0}, protocol.Robot{
 		ID:       "0",

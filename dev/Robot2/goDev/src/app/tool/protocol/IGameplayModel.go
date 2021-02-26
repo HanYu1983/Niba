@@ -5,7 +5,7 @@ import (
 )
 
 type IGameplayModel interface {
-	ObserveRobot(robot Robot) (Robot, error)
+	ObserveRobot(robot Robot, isGameplay bool) (Robot, error)
 	New(situation interface{}) (IModel, error)
 	Save() error
 	Load() (IModel, error)

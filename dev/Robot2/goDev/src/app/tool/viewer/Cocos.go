@@ -95,7 +95,7 @@ func (p Cocos) RenderRobotBattle(ui uidata.UI, result protocol.BattleResult) {
 		return helper.World2Local(ui.GameplayPages[uidata.PageGameplay].Camera, pos)
 	})
 	result = result.MapRobot(func(robot protocol.Robot) protocol.Robot {
-		robot, err := ui.Model.ObserveRobot(robot)
+		robot, err := ui.Model.ObserveRobot(robot, true)
 		if err != nil {
 			fmt.Println(err.Error())
 		}

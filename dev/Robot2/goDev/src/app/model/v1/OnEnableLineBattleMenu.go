@@ -25,7 +25,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 	if err != nil {
 		return origin, err
 	}
-	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform, true)
 	if err != nil {
 		return origin, err
 	}

@@ -38,18 +38,16 @@ type RobotProto struct {
 }
 
 type PilotProto struct {
-	ID       string
-	Title    string
-	Cost     int
-	Melee    float64
-	Range    float64
-	Evade    float64
-	Guard    float64
-	ExpMelee int
-	ExpRange int
-	ExpEvade int
-	ExpGuard int
-	Exp      int
+	ID      string
+	Title   string
+	Cost    int
+	Melee   int
+	Range   int
+	Atk     int
+	Evade   int
+	Guard   int
+	Tech    int
+	Ability []string
 }
 
 type WeaponProto struct {

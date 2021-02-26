@@ -31,7 +31,7 @@ func OnRobotLineBattle(origin uidata.UI, robotID string, weaponID string, target
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform, true)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}

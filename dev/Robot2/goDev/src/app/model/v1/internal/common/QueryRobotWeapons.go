@@ -6,8 +6,8 @@ import (
 	"app/tool/protocol"
 )
 
-func QueryRobotWeapons(model types.Model, robotID string, transform string) (protocol.Weapons, error) {
-	robot, err := protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID)
+func QueryRobotWeapons(model types.Model, robotID string, transform string, isGameplay bool) (protocol.Weapons, error) {
+	robot, err := QueryRobot(model, robotID, isGameplay)
 	if err != nil {
 		return nil, err
 	}

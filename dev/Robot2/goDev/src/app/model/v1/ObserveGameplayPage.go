@@ -47,7 +47,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 	}
 	gameplayPage.Positions = localPosDict
 	// robots
-	gameplayPage.Robots, err = common.ObserveRobots(model, model.App.Gameplay.Robots)
+	gameplayPage.Robots, err = common.ObserveRobots(model, model.App.Gameplay.Robots, true)
 	if err != nil {
 		return origin, err
 	}

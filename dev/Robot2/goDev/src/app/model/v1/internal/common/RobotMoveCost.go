@@ -14,7 +14,7 @@ var (
 )
 
 func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccupy bool) (func(curr *astar.Node) []astar.NeighborsNode, error) {
-	suitability, err := QueryRobotSuitability(model, robotID)
+	suitability, err := QueryRobotSuitability(model, robotID, true)
 	if err != nil {
 		return func(curr *astar.Node) []astar.NeighborsNode {
 			return nil

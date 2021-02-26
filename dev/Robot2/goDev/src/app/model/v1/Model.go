@@ -106,8 +106,8 @@ func (v Model) OnEventPlayerTurnPhase(origin interface{}, evt interface{}) (inte
 
 // IGameplayModel
 
-func (v Model) ObserveRobot(robot protocol.Robot) (protocol.Robot, error) {
-	return common.ObserveRobot(types.Model(v), robot)
+func (v Model) ObserveRobot(robot protocol.Robot, isGameplay bool) (protocol.Robot, error) {
+	return common.ObserveRobot(types.Model(v), robot, isGameplay)
 }
 func (v Model) New(situation interface{}) (protocol.IModel, error) {
 	model, err := impl.NewModel(types.Model(v), situation)

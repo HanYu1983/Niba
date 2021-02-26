@@ -41,7 +41,7 @@ func QueryTeamCombatPower(origin types.Model, robotIDs []string) (int, error) {
 		if err != nil {
 			return 0, err
 		}
-		weapons, err := common.QueryRobotWeapons(ctx, robot.ID, robot.Transform)
+		weapons, err := common.QueryRobotWeapons(ctx, robot.ID, robot.Transform, true)
 		if err != nil {
 			return 0, err
 		}

@@ -109,7 +109,7 @@ func OnAIRobotMoveFirst(origin uidata.UI, robotID string, targetPosition protoco
 	if err != nil {
 		return origin, false, err
 	}
-	weapons, err := common.QueryRobotWeapons(types.Model(ctx.Model.(Model)), robotID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(types.Model(ctx.Model.(Model)), robotID, robot.Transform, true)
 	if err != nil {
 		return origin, false, err
 	}
@@ -142,7 +142,7 @@ func OnAIRobotAttackFirst(origin uidata.UI, robotID string) (uidata.UI, bool, er
 	if err != nil {
 		return origin, false, err
 	}
-	weapons, err := common.QueryRobotWeapons(types.Model(ctx.Model.(Model)), robotID, robot.Transform)
+	weapons, err := common.QueryRobotWeapons(types.Model(ctx.Model.(Model)), robotID, robot.Transform, true)
 	if err != nil {
 		return origin, false, err
 	}

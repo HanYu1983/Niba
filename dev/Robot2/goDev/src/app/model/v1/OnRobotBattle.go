@@ -47,15 +47,15 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	ctx := origin
 	_model := types.Model(ctx.Model.(Model))
 	view := def.View
-	robot, err := protocol.TryGetStringRobot(_model.App.Gameplay.Robots, robotID)
+	robot, err := common.QueryRobot(_model, robotID, true)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	robotPilot, err := protocol.TryGetStringPilot(_model.App.Gameplay.Pilots, robot.PilotID)
+	robotPilot, err := common.QueryPilot(_model, robot.PilotID, true)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	robotWeapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform)
+	robotWeapons, err := common.QueryRobotWeapons(_model, robot.ID, robot.Transform, true)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -75,7 +75,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
-	targetRobotWeapons, err := common.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform)
+	targetRobotWeapons, err := common.QueryRobotWeapons(_model, targetRobot.ID, targetRobot.Transform, true)
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}

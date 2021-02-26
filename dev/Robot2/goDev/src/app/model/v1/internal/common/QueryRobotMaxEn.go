@@ -6,9 +6,9 @@ import (
 	"strconv"
 )
 
-func QueryRobotMaxEn(model types.Model, robotID string) (int, error) {
+func QueryRobotMaxEn(model types.Model, robotID string, isGameplay bool) (int, error) {
 	var err error
-	components, err := QueryRobotComponents(model, robotID)
+	components, err := QueryRobotComponents(model, robotID, isGameplay)
 	if err != nil {
 		return 0, err
 	}
