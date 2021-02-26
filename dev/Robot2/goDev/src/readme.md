@@ -16,3 +16,10 @@
 # run app
     cd src
     .\dev.bat
+
+# mac
+    go get golang.org/x/tools/cmd/goimports
+settings.json
+    "editor.formatOnSave": true,
+    "go.formatTool": "goimports",
+
