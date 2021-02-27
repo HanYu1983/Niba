@@ -5,9 +5,11 @@ import (
 	"app/tool/data"
 	"app/tool/protocol"
 	"fmt"
+	"tool/log"
 )
 
 func QueryRobotComponents(model types.Model, robotID string, isGameplay bool) (map[string]protocol.Component, error) {
+	log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "start")
 	var err error
 	robot, err := QueryRobot(model, robotID, isGameplay)
 	if err != nil {
@@ -53,5 +55,6 @@ func QueryRobotComponents(model types.Model, robotID string, isGameplay bool) (m
 			PowerCost: componentProto.PowerCost,
 		}
 	}
+	log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "end")
 	return components, nil
 }

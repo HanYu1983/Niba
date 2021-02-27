@@ -4,9 +4,11 @@ import (
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/protocol"
+	"tool/log"
 )
 
 func QueryRobotWeapons(model types.Model, robotID string, transform string, isGameplay bool) (protocol.Weapons, error) {
+	log.Log(protocol.LogCategoryRender, "QueryRobotWeapons", "start")
 	robot, err := QueryRobot(model, robotID, isGameplay)
 	if err != nil {
 		return nil, err

@@ -11,6 +11,7 @@ import (
 )
 
 func OnEnableRobotMenu(origin uidata.UI, robotID string) (uidata.UI, error) {
+	log.Log(protocol.LogCategoryPhase, "OnEnableRobotMenu", "start")
 	ctx := origin
 	_model := types.Model(ctx.Model.(Model))
 	tags := _model.App.Gameplay.Tags[robotID]

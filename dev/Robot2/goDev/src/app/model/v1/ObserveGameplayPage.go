@@ -13,6 +13,7 @@ import (
 )
 
 func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
+	log.Log(protocol.LogCategoryRender, "ObserveGameplayPage", "start")
 	var err error
 	ctx := origin
 	model := types.Model(ctx.Model.(Model))

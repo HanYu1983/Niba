@@ -169,6 +169,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 				obj := protocol.Robot{
 					ID:                 id,
 					ProtoID:            protoID,
+					Transform:          protoID,
 					PlayerID:           protocol.PlayerIDPlayer,
 					WeaponsByTransform: map[string]protocol.Weapons{},
 				}
@@ -201,7 +202,9 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 				}
 				lobby.Components = protocol.AssocStringComponent(lobby.Components, obj.ID, obj)
 			}
+
 			ctx.App.Lobby = lobby
+			ctx.App.Money = 100000
 		}
 	}
 	return ctx, nil

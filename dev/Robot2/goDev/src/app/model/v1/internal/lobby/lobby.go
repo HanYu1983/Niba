@@ -21,9 +21,12 @@ func BuyRobot(origin types.Model, protoID string) (types.Model, error) {
 	ID := strconv.Itoa(ctx.App.SeqID)
 	ctx.App.SeqID++
 	ctx.App.Lobby.Robots = protocol.AssocStringRobot(ctx.App.Lobby.Robots, ID, protocol.Robot{
-		ID:      ID,
-		ProtoID: protoID,
-		Title:   data.GameData.Robot[protoID].Title,
+		ID:                 ID,
+		ProtoID:            protoID,
+		Title:              data.GameData.Robot[protoID].Title,
+		Transform:          protoID,
+		PlayerID:           protocol.PlayerIDPlayer,
+		WeaponsByTransform: map[string]protocol.Weapons{},
 	})
 	return ctx, nil
 }
@@ -126,26 +129,6 @@ func QueryWeaponCanBuy(origin types.Model) map[string]data.WeaponProto {
 }
 func QueryComponentCanBuy(origin types.Model) map[string]data.ComponentProto {
 	return data.GameData.Component
-}
-func QueryMoney(origin types.Model) int {
-	ctx := origin
-	return ctx.App.Money
-}
-func QueryRobots(origin types.Model) map[string]protocol.Robot {
-	ctx := origin
-	return ctx.App.Lobby.Robots
-}
-func QueryPilots(origin types.Model) map[string]protocol.Pilot {
-	ctx := origin
-	return ctx.App.Lobby.Pilots
-}
-func QueryComponents(origin types.Model) map[string]protocol.Component {
-	ctx := origin
-	return ctx.App.Lobby.Components
-}
-func QueryWeapons(origin types.Model) map[string]protocol.Weapon {
-	ctx := origin
-	return ctx.App.Lobby.Weapons
 }
 func QueryRobotIDByWeaponID(origin types.Model) map[string]string {
 	ctx := origin

@@ -5,9 +5,11 @@ import (
 	"app/tool/data"
 	"app/tool/protocol"
 	"math"
+	"tool/log"
 )
 
 func ObserveWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon) (protocol.Weapon, error) {
+	log.Log(protocol.LogCategoryRender, "ObserveWeapon", "start")
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return protocol.Weapon{}, err
@@ -33,5 +35,6 @@ func ObserveWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weap
 	weapon.Damage = weaponProto.Damage
 	weapon.Curage = weaponProto.Curage
 	weapon.UnlockExp = weaponProto.UnlockExp
+	log.Log(protocol.LogCategoryRender, "ObserveWeapon", "end")
 	return weapon, nil
 }

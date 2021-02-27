@@ -12,8 +12,12 @@ import (
 )
 
 func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
-	log.Log(protocol.LogCategoryPhase, "ObserveBattleMenu", "start")
+	log.Log(protocol.LogCategoryRender, "ObserveBattleMenu", "start")
 	ctx := origin
+	log.Log(protocol.LogCategoryRender, "ObserveBattleMenu", fmt.Sprintf("ctx.Actives[uidata.PageGameplay](%v)", ctx.Actives[uidata.PageGameplay]))
+	if ctx.Actives[uidata.PageGameplay] == false {
+		return origin, nil
+	}
 	model := types.Model(ctx.Model.(Model))
 	menu, has := ctx.BattleMenus[menuID]
 	if has == false {
@@ -23,6 +27,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 	case uidata.BattleMenuUnitBattleMenu:
 		unitMenuModel := impl.GetRobotMenu(model)
 		battleMenuModel := impl.GetBattleMenu(model)
+		log.Log(protocol.LogCategoryRender, "ObserveBattleMenu", fmt.Sprintf("battleMenuModel(%+v)", battleMenuModel))
 		if battleMenuModel.Active {
 			robot, pilot, weapon := battleMenuModel.AttackRobot, battleMenuModel.AttackPilot, battleMenuModel.AttackWeapon
 			targetRobot, targetPilot := battleMenuModel.DeffenceRobot, battleMenuModel.DeffencePilot
@@ -137,6 +142,6 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 		}
 	}
 	ctx.BattleMenus = uidata.AssocIntBattleMenu(ctx.BattleMenus, menuID, menu)
-	log.Log(protocol.LogCategoryPhase, "ObserveBattleMenu", "end")
+	log.Log(protocol.LogCategoryRender, "ObserveBattleMenu", "end")
 	return ctx, nil
 }
