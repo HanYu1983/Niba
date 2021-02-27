@@ -40,7 +40,10 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 	if err != nil {
 		return origin, err
 	}
-	ctx.Info.Pilots = model.App.Lobby.Pilots
+	ctx.Info.Pilots, err = common.ObservePilots(model, model.App.Lobby.Pilots, false)
+	if err != nil {
+		return origin, err
+	}
 	ctx.Info.Weapons = model.App.Lobby.Weapons
 	ctx.Info.Components = model.App.Lobby.Components
 	ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy(model)

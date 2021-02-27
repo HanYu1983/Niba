@@ -54,10 +54,12 @@ type Pilot struct {
 	ProtoID string
 	// 以下是顯示用, 不能修改
 	Title    string
-	Melee    float64
-	Range    float64
-	Evade    float64
-	Guard    float64
+	Melee    int
+	Range    int
+	Atk      int
+	Tech     int
+	Evade    int
+	Guard    int
 	ExpMelee int
 	ExpRange int
 	ExpEvade int

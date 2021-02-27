@@ -12,9 +12,6 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", "start")
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", fmt.Sprintf("robot(%+v)", robot))
 	var err error
-	if robot.WeaponsByTransform == nil {
-		return protocol.Robot{}, fmt.Errorf("ObserveRobot這時必須初始化這個欄位(WeaponsByTransform)")
-	}
 	maxHP, err := QueryRobotMaxHp(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
@@ -51,7 +48,12 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 		return protocol.Robot{}, err
 	}
 	robot.Components = components
-	robot.WeaponsByTransform[robot.Transform] = weapons
+
+	// 這時不能給WeaponsByTransform付值，不然會QueryRobotWeapons會不正確。
+	// if robot.WeaponsByTransform == nil {
+	// 	return protocol.Robot{}, fmt.Errorf("ObserveRobot這時必須初始化這個欄位(WeaponsByTransform)")
+	// }
+	//robot.WeaponsByTransform[robot.Transform] = weapons
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", "end")
 	return robot, nil
 }

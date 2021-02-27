@@ -156,5 +156,5 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 		return ctx, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID, false)
-	return origin, nil
+	return ctx, nil
 }
