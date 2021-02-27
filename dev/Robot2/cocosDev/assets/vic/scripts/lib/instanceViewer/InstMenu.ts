@@ -45,6 +45,7 @@ export class InstMenu extends Instant {
     
     start(){
         
+        super.start();
         // example code
         //
         // tween(this.node).call(()=>{
