@@ -61,7 +61,10 @@ func (p Cocos) Render(origin uidata.UI) (uidata.UI, error) {
 		}
 		ctx = ctxObj.(uidata.UI)
 	}
+	model := ctx.Model
+	ctx.Model = nil
 	view.Call("Render", ctx)
+	ctx.Model = model
 	return ctx, nil
 }
 
