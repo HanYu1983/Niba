@@ -149,7 +149,11 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 		}
 		pilotAtkFactor = float64(pilotAtk) / float64(pilotGuard)
 	}
-	basicDamage := weapon.Damage - targetArmor
+	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
+	if err != nil {
+		return 0, err
+	}
+	basicDamage := weaponProto.Damage - targetArmor
 	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotRangeFactor * pilotAtkFactor
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("basicDamage(%v) = weapon.Damage(%v) - targetArmor(%v)", basicDamage, weapon.Damage, targetArmor))
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotRangeFactor, pilotAtkFactor))

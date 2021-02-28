@@ -26,11 +26,10 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖
-			tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
+			gameplay.Map, err = helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
 			if err != nil {
 				return origin, err
 			}
-			gameplay.Map = tempMap
 			// 參與玩家
 			gameplay.Players = map[string]protocol.Player{
 				protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
@@ -73,7 +72,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		}
 	case protocol.NewModelWithTest:
 		{
-			lobby := types.Lobby{}
+			lobby := types.DefaultLobby
 			lobby.Weapons = map[string]protocol.Weapon{
 				"lobbyWeapon_0": {
 					ID:      "lobbyWeapon_0",
@@ -91,13 +90,12 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			ctx.App.Lobby = lobby
 		}
 		{
-			tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
+			gameplay := types.DefaultGameplay
+			gameplay.AIModel = types.AIModel{}
+			gameplay.Map, err = helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
 			if err != nil {
 				return origin, err
 			}
-			gameplay := types.DefaultGameplay
-			gameplay.AIModel = types.AIModel{}
-			gameplay.Map = tempMap
 			gameplay.Players = map[string]protocol.Player{
 				protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
 				playerAI1:               {ID: playerAI1, GroupID: "1"},
@@ -148,15 +146,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		}
 	default:
 		{
-			lobby := types.Lobby{
-				Robots:               map[string]protocol.Robot{},
-				Pilots:               map[string]protocol.Pilot{},
-				Weapons:              map[string]protocol.Weapon{},
-				Components:           map[string]protocol.Component{},
-				RobotIDByWeaponID:    map[string]string{},
-				RobotIDByComponentID: map[string]string{},
-				PilotIDByRobotID:     map[string]string{},
-			}
+			lobby := types.DefaultLobby
 			for i, protoID := range data.GameData.Config["default"].Robots {
 				id := fmt.Sprintf("DefaultRobot_%v", i)
 				obj := protocol.Robot{

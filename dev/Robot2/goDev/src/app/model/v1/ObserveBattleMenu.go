@@ -55,7 +55,10 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 			}
 			menu.Left.Pilot = pilot
 			menu.Left.BattleAction = protocol.BattleMenuActionAttack
-			menu.Left.Weapon = weapon
+			menu.Left.Weapon, err = common.ObserveWeapon(model, robot, weapon)
+			if err != nil {
+				return origin, err
+			}
 			menu.Left.Info.HitRate = hitRate
 			// 防守方設置在右面板
 			menu.Right.Robot, err = common.ObserveRobot(model, targetRobot, true)
@@ -90,10 +93,16 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 					if err != nil {
 						return origin, err
 					}
+					if targetAction == protocol.BattleMenuActionPending {
+						return origin, fmt.Errorf("QueryBattleAction不能回傳pending")
+					}
 					// 若敵方反擊
 					if targetAction == protocol.BattleMenuActionAttack {
 						// 重設武器
-						menu.Right.Weapon = targetWeapon
+						menu.Right.Weapon, err = common.ObserveWeapon(model, targetRobot, targetWeapon)
+						if err != nil {
+							return origin, err
+						}
 						// 重算命中率
 						hitRate, err = impl.QueryBattleHitRate(model, targetRobot, targetPilot, targetWeapon, robot, pilot)
 						if err != nil {
