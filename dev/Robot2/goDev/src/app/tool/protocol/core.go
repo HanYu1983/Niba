@@ -40,6 +40,12 @@ type Robot struct {
 	Power       int
 	Suitability [4]float64
 	UnlockExp   int
+	Weapons     Weapons
+}
+
+var DefaultRobot = Robot{
+	WeaponsByTransform: WeaponsByTransform{},
+	Components:         map[string]Component{},
 }
 
 type Item struct {
@@ -48,6 +54,8 @@ type Item struct {
 	// 以下是顯示用, 不能修改
 	Title string
 }
+
+var DefaultItem = Item{}
 
 type Pilot struct {
 	ID      string
@@ -66,6 +74,8 @@ type Pilot struct {
 	ExpGuard int
 	Exp      int
 }
+
+var DefaultPilot = Pilot{}
 
 type Weapon struct {
 	ID          string

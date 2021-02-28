@@ -22,7 +22,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		rand.Seed(0)
 		selection := detail.Selection
 		{
-			gameplay := types.Gameplay{}
+			gameplay := types.DefaultGameplay
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖
@@ -40,38 +40,31 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			gameplay.PlayerOrder = []string{protocol.PlayerIDPlayer, playerAI1}
 			// 主動玩家
 			gameplay.ActivePlayerID = protocol.PlayerIDPlayer
-			// 使用所選的建立機體
-			robots := map[string]protocol.Robot{}
-			for robotID, isSelection := range selection {
-				if isSelection == false {
-					continue
-				}
-				robot, has := ctx.App.Lobby.Robots[robotID]
-				if has == false {
-					return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)找不到", robotID)
-				}
-				robot.PilotID, has = ctx.App.Lobby.PilotIDByRobotID[robotID]
-				if has == false {
-					//return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)的駕駛找不到", robotID)
-				}
-				robots[robotID] = robot
-			}
-			gameplay.Robots = robots
-			// 位置
-			positions := map[string]protocol.Position{}
-			{
-				var i int
-				for robotID := range robots {
-					pos := protocol.Position{0, i}
-					positions[robotID] = pos
-					i++
-				}
-			}
-			gameplay.Positions = positions
 			// 駕駛
 			gameplay.Pilots = ctx.App.Lobby.Pilots
 			// 套用
 			ctx.App.Gameplay = gameplay
+		}
+		var i int
+		// 使用所選的建立機體
+		for robotID, isSelection := range selection {
+			if isSelection == false {
+				continue
+			}
+			robot, has := ctx.App.Lobby.Robots[robotID]
+			if has == false {
+				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)找不到", robotID)
+			}
+			robot.PlayerID = protocol.PlayerIDPlayer
+			robot.PilotID, has = ctx.App.Lobby.PilotIDByRobotID[robotID]
+			if has == false {
+				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)找不到駕駛", robotID)
+			}
+			ctx, _, err = common.NewRobot(ctx, protocol.Position{0, i}, robot)
+			if err != nil {
+				return origin, err
+			}
+			i++
 		}
 		// 敵機
 		ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, 200000)
@@ -102,7 +95,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			if err != nil {
 				return origin, err
 			}
-			gameplay := types.Gameplay{}
+			gameplay := types.DefaultGameplay
 			gameplay.AIModel = types.AIModel{}
 			gameplay.Map = tempMap
 			gameplay.Players = map[string]protocol.Player{

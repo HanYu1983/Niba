@@ -12,18 +12,25 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", "start")
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", fmt.Sprintf("robot(%+v)", robot))
 	var err error
+	// MaxHP
 	maxHP, err := QueryRobotMaxHp(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	robot.MaxHP = maxHP
+	// MaxEN
 	maxEn, err := QueryRobotMaxEn(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	robot.MaxEN = maxEn
+	// Components
 	components, err := QueryRobotComponents(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	robot.Components = components
+	// Weapons
 	weapons, err := QueryRobotWeapons(model, robot.ID, robot.Transform, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
@@ -32,28 +39,27 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	robot.Weapons = weapons
+	// Title
 	robotProto, err := data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
 	robot.Title = robotProto.Title
-	robot.MaxHP = maxHP
-	robot.MaxEN = maxEn
+	// Armor
 	robot.Armor, err = QueryRobotArmor(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	// BeamArmor
 	robot.BeamArmor, err = QueryRobotBeamArmor(model, robot.ID, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	robot.Components = components
-
 	// 這時不能給WeaponsByTransform付值，不然會QueryRobotWeapons會不正確。
 	// if robot.WeaponsByTransform == nil {
 	// 	return protocol.Robot{}, fmt.Errorf("ObserveRobot這時必須初始化這個欄位(WeaponsByTransform)")
 	// }
-	//robot.WeaponsByTransform[robot.Transform] = weapons
 	log.Log(protocol.LogCategoryRender, "ObserveRobot", "end")
 	return robot, nil
 }

@@ -15,6 +15,16 @@ type Lobby struct {
 	PilotIDByRobotID     map[string]string
 }
 
+var DefaultLoggy = Lobby{
+	Robots:               map[string]protocol.Robot{},
+	Pilots:               map[string]protocol.Pilot{},
+	Weapons:              map[string]protocol.Weapon{},
+	Components:           map[string]protocol.Component{},
+	RobotIDByWeaponID:    map[string]string{},
+	RobotIDByComponentID: map[string]string{},
+	PilotIDByRobotID:     map[string]string{},
+}
+
 type Gameplay struct {
 	AIModel        AIModel
 	ActivePlayerID string
@@ -36,7 +46,22 @@ type Gameplay struct {
 	Done           interface{}
 }
 
-type app struct {
+var DefaultGameplay = Gameplay{
+	PlayerOrder:    []string{},
+	Map:            [][]int{},
+	Units:          []string{},
+	Players:        map[string]protocol.Player{},
+	Positions:      map[string]protocol.Position{},
+	Robots:         map[string]protocol.Robot{},
+	Tags:           map[string]protocol.Tag{},
+	Items:          map[string]protocol.Item{},
+	Pilots:         map[string]protocol.Pilot{},
+	HitMarks:       map[string]protocol.HitMark{},
+	MoveRange:      []protocol.Position{},
+	MapAttackRange: []protocol.Position{},
+}
+
+type App struct {
 	SeqID    int
 	Money    int
 	Gameplay Gameplay
@@ -44,7 +69,7 @@ type app struct {
 }
 
 type Model struct {
-	App app
+	App App
 }
 
 const (
