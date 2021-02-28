@@ -58,6 +58,8 @@ export class Controller extends Component {
         },
         Alert: (msg: string) => {
             if(this.isTargetDevice()){
+                // alert面板擋住了, 先用alert來debug
+                alert(msg)
                 const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
                 gamePage?.getComponent(GamePage)?.showMsg(msg);
             }

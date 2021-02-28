@@ -45423,8 +45423,8 @@ $packages["app/page/lobby"] = (function() {
 			$s = -1; return _r$1;
 			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(ctx, err, view), (function(ctx, err, view) { return function $b(origin$1, focus, selection, cancel, tab) {
-			var _1, _entry, _entry$1, _r$1, _r$2, _r$3, _tuple$2, _tuple$3, cancel, ctx$1, focus, menuID, origin$1, reason, selection, selection$1, tab, x, x$1, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; menuID = $f.menuID; origin$1 = $f.origin$1; reason = $f.reason; selection = $f.selection; selection$1 = $f.selection$1; tab = $f.tab; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			var _1, _entry, _entry$1, _entry$2, _i, _keys, _r$1, _r$2, _r$3, _r$4, _ref, _tuple$2, _tuple$3, cancel, cnt, ctx$1, focus, menuID, origin$1, reason, sel, selection, selection$1, tab, x, x$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _i = $f._i; _keys = $f._keys; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; cancel = $f.cancel; cnt = $f.cnt; ctx$1 = $f.ctx$1; focus = $f.focus; menuID = $f.menuID; origin$1 = $f.origin$1; reason = $f.reason; sel = $f.sel; selection = $f.selection; selection$1 = $f.selection$1; tab = $f.tab; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 			ctx$1 = $clone(origin$1, uidata.UI);
 			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(9)], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
 				_1 = menuID;
@@ -45435,29 +45435,58 @@ $packages["app/page/lobby"] = (function() {
 						$s = -1; return [ctx$1, cancel, $ifaceNil];
 					}
 					selection$1 = (_entry$1 = ctx$1.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0)).Selection;
+					cnt = 0;
+					_ref = selection$1;
+					_i = 0;
+					_keys = $keys(_ref);
+					/* while (true) { */ case 4:
+						/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+						_entry$2 = _ref[_keys[_i]];
+						if (_entry$2 === undefined) {
+							_i++;
+							/* continue; */ $s = 4; continue;
+						}
+						sel = _entry$2.v;
+						if (sel === false) {
+							_i++;
+							/* continue; */ $s = 4; continue;
+						}
+						cnt = cnt + (1) >> 0;
+						_i++;
+					/* } */ $s = 4; continue; case 5:
+					/* */ if (cnt === 0) { $s = 6; continue; }
+					/* */ $s = 7; continue;
+					/* if (cnt === 0) { */ case 6:
+						$r = view[0].Alert("\xE8\xAB\x8B\xE9\x81\xB8\xE6\x93\x87\xE8\x87\xB3\xE5\xB0\x91\xE4\xB8\x80\xE6\xA9\x9F"); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [origin$1, false, $ifaceNil];
+					/* } */ case 7:
 					ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 9, false);
-					_r$1 = ctx$1.Model.New((x$1 = new protocol.NewGameplayWithSelection.ptr(selection$1), new x$1.constructor.elem(x$1))); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					_r$1 = ctx$1.Model.New((x$1 = new protocol.NewGameplayWithSelection.ptr(selection$1), new x$1.constructor.elem(x$1))); /* */ $s = 9; case 9: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 					_tuple$2 = _r$1;
 					ctx$1.Model = _tuple$2[0];
 					err[0] = _tuple$2[1];
-					if (!($interfaceIsEqual(err[0], $ifaceNil))) {
-						$s = -1; return [origin$1, cancel, err[0]];
-					}
-					_r$2 = gameplay.GameLoop($clone(ctx$1, uidata.UI)); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-					_tuple$3 = _r$2;
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 10:
+						_r$2 = err[0].Error(); /* */ $s = 12; case 12: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$2); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [origin$1, false, $ifaceNil];
+					/* } */ case 11:
+					_r$3 = gameplay.GameLoop($clone(ctx$1, uidata.UI)); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$3 = _r$3;
 					uidata.UI.copy(ctx$1, _tuple$3[0]);
 					err[0] = _tuple$3[1];
 					if (!($interfaceIsEqual(err[0], $ifaceNil))) {
 						$s = -1; return [origin$1, cancel, err[0]];
 					}
-					_r$3 = ctx$1.Model.IsDone(); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-					reason = _r$3;
+					_r$4 = ctx$1.Model.IsDone(); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					reason = _r$4;
 					$unused(reason);
 					$s = -1; return [ctx$1, true, $ifaceNil];
 				/* } */ case 3:
 			case 1:
 			$s = -1; return [ctx$1, cancel, $ifaceNil];
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.menuID = menuID; $f.origin$1 = origin$1; $f.reason = reason; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._i = _i; $f._keys = _keys; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.cancel = cancel; $f.cnt = cnt; $f.ctx$1 = ctx$1; $f.focus = focus; $f.menuID = menuID; $f.origin$1 = origin$1; $f.reason = reason; $f.sel = sel; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 		}; })(ctx, err, view), (function(ctx, err, view) { return function(origin$1, focus, selection, cancel, tab) {
 			var cancel, focus, origin$1, selection, tab;
 			return [origin$1, cancel, $ifaceNil];
