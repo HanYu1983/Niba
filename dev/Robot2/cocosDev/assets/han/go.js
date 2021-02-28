@@ -33859,8 +33859,8 @@ $packages["app/tool/viewer"] = (function() {
 	};
 	Cocos.prototype.Install = function() { return this.$val.Install(); };
 	Cocos.ptr.prototype.Render = function(origin) {
-		var _entry, _i, _keys, _r, _r$1, _ref, _tuple, active, ctx, ctxObj, err, origin, p, pageID, view, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tuple = $f._tuple; active = $f.active; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; origin = $f.origin; p = $f.p; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _entry, _i, _keys, _r, _r$1, _ref, _tuple, active, ctx, ctxObj, err, model, origin, p, pageID, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tuple = $f._tuple; active = $f.active; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; model = $f.model; origin = $f.origin; p = $f.p; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		p = this;
 		view = $global.View;
 		/* */ if (view === undefined) { $s = 1; continue; }
@@ -33899,9 +33899,12 @@ $packages["app/tool/viewer"] = (function() {
 			uidata.UI.copy(ctx, $assertType(ctxObj, uidata.UI));
 			_i++;
 		/* } */ $s = 4; continue; case 5:
+		model = ctx.Model;
+		ctx.Model = $ifaceNil;
 		view.Render($externalize(ctx, uidata.UI));
+		ctx.Model = model;
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Render }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f.active = active; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.origin = origin; $f.p = p; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Render }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f.active = active; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.model = model; $f.origin = origin; $f.p = p; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Cocos.prototype.Render = function(origin) { return this.$val.Render(origin); };
 	Cocos.ptr.prototype.RenderRobotMove = function(ui, robotID, path) {
@@ -41567,35 +41570,39 @@ $packages["app/model/v1"] = (function() {
 				$s = -1; return [origin, err];
 			}
 		/* } */ case 8:
-		model = $clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model);
-		ctx.Info.Money = model.App.Money;
-		_r$4 = common.ObserveRobots($clone(model, types.Model), model.App.Lobby.Robots, false); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		_tuple$5 = _r$4;
-		ctx.Info.Robots = _tuple$5[0];
-		err = _tuple$5[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		_r$5 = common.ObservePilots($clone(model, types.Model), model.App.Lobby.Pilots, false); /* */ $s = 11; case 11: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_tuple$6 = _r$5;
-		ctx.Info.Pilots = _tuple$6[0];
-		err = _tuple$6[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		ctx.Info.Weapons = model.App.Lobby.Weapons;
-		ctx.Info.Components = model.App.Lobby.Components;
-		ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy($clone(model, types.Model));
-		ctx.Info.CanBuyPilots = lobby.QueryPilotCanBuy($clone(model, types.Model));
-		ctx.Info.CanBuyWeapons = lobby.QueryWeaponCanBuy($clone(model, types.Model));
-		ctx.Info.CanBuyComponents = lobby.QueryComponentCanBuy($clone(model, types.Model));
-		ctx.Info.PilotIDByRobotID = lobby.QueryPilotIDByRobotID($clone(model, types.Model));
-		ctx.Info.RobotIDByWeaponID = lobby.QueryRobotIDByWeaponID($clone(model, types.Model));
-		ctx.Info.RobotIDByComponentID = lobby.QueryRobotIDByComponentID($clone(model, types.Model));
+		/* */ if (pageID === 1) { $s = 10; continue; }
+		/* */ $s = 11; continue;
+		/* if (pageID === 1) { */ case 10:
+			model = $clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model);
+			ctx.Info.Money = model.App.Money;
+			_r$4 = common.ObserveRobots($clone(model, types.Model), model.App.Lobby.Robots, false); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_tuple$5 = _r$4;
+			ctx.Info.Robots = _tuple$5[0];
+			err = _tuple$5[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_r$5 = common.ObservePilots($clone(model, types.Model), model.App.Lobby.Pilots, false); /* */ $s = 13; case 13: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_tuple$6 = _r$5;
+			ctx.Info.Pilots = _tuple$6[0];
+			err = _tuple$6[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			ctx.Info.Weapons = model.App.Lobby.Weapons;
+			ctx.Info.Components = model.App.Lobby.Components;
+			ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy($clone(model, types.Model));
+			ctx.Info.CanBuyPilots = lobby.QueryPilotCanBuy($clone(model, types.Model));
+			ctx.Info.CanBuyWeapons = lobby.QueryWeaponCanBuy($clone(model, types.Model));
+			ctx.Info.CanBuyComponents = lobby.QueryComponentCanBuy($clone(model, types.Model));
+			ctx.Info.PilotIDByRobotID = lobby.QueryPilotIDByRobotID($clone(model, types.Model));
+			ctx.Info.RobotIDByWeaponID = lobby.QueryRobotIDByWeaponID($clone(model, types.Model));
+			ctx.Info.RobotIDByComponentID = lobby.QueryRobotIDByComponentID($clone(model, types.Model));
+		/* } */ case 11:
 		_arg$2 = protocol.LogCategoryRender;
-		_r$6 = fmt.Sprintf("end with pageID(%v)", new sliceType$5([new $Int(pageID)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_r$6 = fmt.Sprintf("end with pageID(%v)", new sliceType$5([new $Int(pageID)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 		_arg$3 = _r$6;
-		$r = log.Log(_arg$2, "ObservePage", _arg$3); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.Log(_arg$2, "ObservePage", _arg$3); /* */ $s = 15; case 15: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return [ctx, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: ObservePage }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.ctx = ctx; $f.err = err; $f.has = has; $f.menuID = menuID; $f.model = model; $f.origin = origin; $f.pageID = pageID; $f.$s = $s; $f.$r = $r; return $f;
 	};

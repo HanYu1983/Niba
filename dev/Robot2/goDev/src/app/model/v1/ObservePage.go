@@ -34,25 +34,27 @@ func ObservePage(origin uidata.UI, pageID int) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	model := types.Model(ctx.Model.(Model))
-	ctx.Info.Money = model.App.Money
-	ctx.Info.Robots, err = common.ObserveRobots(model, model.App.Lobby.Robots, false)
-	if err != nil {
-		return origin, err
+	if pageID == uidata.PageLobby {
+		model := types.Model(ctx.Model.(Model))
+		ctx.Info.Money = model.App.Money
+		ctx.Info.Robots, err = common.ObserveRobots(model, model.App.Lobby.Robots, false)
+		if err != nil {
+			return origin, err
+		}
+		ctx.Info.Pilots, err = common.ObservePilots(model, model.App.Lobby.Pilots, false)
+		if err != nil {
+			return origin, err
+		}
+		ctx.Info.Weapons = model.App.Lobby.Weapons
+		ctx.Info.Components = model.App.Lobby.Components
+		ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy(model)
+		ctx.Info.CanBuyPilots = lobby.QueryPilotCanBuy(model)
+		ctx.Info.CanBuyWeapons = lobby.QueryWeaponCanBuy(model)
+		ctx.Info.CanBuyComponents = lobby.QueryComponentCanBuy(model)
+		ctx.Info.PilotIDByRobotID = lobby.QueryPilotIDByRobotID(model)
+		ctx.Info.RobotIDByWeaponID = lobby.QueryRobotIDByWeaponID(model)
+		ctx.Info.RobotIDByComponentID = lobby.QueryRobotIDByComponentID(model)
 	}
-	ctx.Info.Pilots, err = common.ObservePilots(model, model.App.Lobby.Pilots, false)
-	if err != nil {
-		return origin, err
-	}
-	ctx.Info.Weapons = model.App.Lobby.Weapons
-	ctx.Info.Components = model.App.Lobby.Components
-	ctx.Info.CanBuyRobots = lobby.QueryRobotCanBuy(model)
-	ctx.Info.CanBuyPilots = lobby.QueryPilotCanBuy(model)
-	ctx.Info.CanBuyWeapons = lobby.QueryWeaponCanBuy(model)
-	ctx.Info.CanBuyComponents = lobby.QueryComponentCanBuy(model)
-	ctx.Info.PilotIDByRobotID = lobby.QueryPilotIDByRobotID(model)
-	ctx.Info.RobotIDByWeaponID = lobby.QueryRobotIDByWeaponID(model)
-	ctx.Info.RobotIDByComponentID = lobby.QueryRobotIDByComponentID(model)
 	log.Log(protocol.LogCategoryRender, "ObservePage", fmt.Sprintf("end with pageID(%v)", pageID))
 	return ctx, nil
 }
