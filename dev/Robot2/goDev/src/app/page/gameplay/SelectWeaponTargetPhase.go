@@ -55,6 +55,18 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 				if plyr1.GroupID == plyr2.GroupID {
 					return fmt.Errorf("必須選擇敵人")
 				}
+				attackRange := ctx.GameplayPages[uidata.PageGameplay].AttackRange
+				if len(attackRange) == 0 {
+					return fmt.Errorf("這時必須有AttackRange")
+				}
+				localPos, has := ctx.GameplayPages[uidata.PageGameplay].Positions[targetID]
+				if has == false {
+					return fmt.Errorf("指定的robotID(%v)必須有position. positions(%v)", targetID, ctx.GameplayPages[uidata.PageGameplay].Positions)
+				}
+				insideAttackRange := len(protocol.IntersectionPosition(attackRange, []protocol.Position{localPos})) > 0
+				if insideAttackRange == false {
+					return fmt.Errorf("指定的機體(%v)所在位置(%v)必須在攻擊範圍內", targetID, localPos)
+				}
 				return nil
 			})
 			if err != nil {

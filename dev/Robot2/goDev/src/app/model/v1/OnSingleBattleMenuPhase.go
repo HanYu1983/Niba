@@ -19,17 +19,17 @@ func AutoCursorAtWeaponID(origin uidata.UI, menu2DID int, weaponID string) (uida
 	for i, function := range gameplayPage.RobotMenu.RowFunctionMapping {
 		if function == protocol.RobotMenuFunctionWeapon {
 			if i >= len(unitMenu.Options) {
-				return origin, fmt.Errorf("[BattleMenuPhase] function idx(%v) more then Options", i)
+				return origin, fmt.Errorf("[AutoCursorAtWeaponID] function idx(%v) more then Options", i)
 			}
 			weaponFunctionIdx = i
 			weaponIdx = tool.FindStringIndex(unitMenu.Options[i], weaponID)
 		}
 	}
 	if weaponFunctionIdx == -1 {
-		return origin, fmt.Errorf("[BattleMenuPhase] weaponFunctionIdx(%v) not found.", weaponFunctionIdx)
+		return origin, fmt.Errorf("[AutoCursorAtWeaponID] weaponFunctionIdx(%v) not found.", weaponFunctionIdx)
 	}
 	if weaponIdx == -1 {
-		return origin, fmt.Errorf("[BattleMenuPhase] weaponID(%v) not found in Options(%v).", weaponID, unitMenu.Options)
+		return origin, fmt.Errorf("[AutoCursorAtWeaponID] weaponID(%v) not found in Options(%v).", weaponID, unitMenu.Options)
 	}
 	unitMenu.Cursor1 = weaponFunctionIdx
 	unitMenu.Cursor2[unitMenu.Cursor1] = weaponIdx

@@ -40,7 +40,7 @@ func Main() {
 		}
 	}()
 	view.Install()
-	StartWithProduct()
+	StartWithGameplayTest()
 	log.Log(protocol.LogCategoryPhase, "Main", "end")
 }
 
