@@ -15,7 +15,7 @@ type Lobby struct {
 	PilotIDByRobotID     map[string]string
 }
 
-var DefaultLoggy = Lobby{
+var DefaultLobby = Lobby{
 	Robots:               map[string]protocol.Robot{},
 	Pilots:               map[string]protocol.Pilot{},
 	Weapons:              map[string]protocol.Weapon{},
