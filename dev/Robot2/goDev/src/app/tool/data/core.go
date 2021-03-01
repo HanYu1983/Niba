@@ -29,7 +29,8 @@ type RobotProto struct {
 	Title       string
 	Cost        int
 	Power       int
-	Hp          int
+	HP          int
+	EN          int
 	Weapons     []string
 	Components  []string
 	Suitability [4]float64

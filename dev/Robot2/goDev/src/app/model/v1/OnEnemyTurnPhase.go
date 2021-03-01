@@ -173,7 +173,7 @@ func OnAIRobotAttackFirst(origin uidata.UI, robotID string) (uidata.UI, bool, er
 	}
 	// 可移動攻擊的武器
 	weaponsCanMoveAttack := protocol.FilterStringWeapon(weapons, func(_ string, weapon protocol.Weapon) bool {
-		ability, err := common.QueryRobotWeaponAbility(types.Model(ctx.Model.(Model)), robot, weapon)
+		ability, err := common.QueryRobotWeaponAbility(types.Model(ctx.Model.(Model)), robot.ID, weapon, true)
 		if err != nil {
 			fmt.Print(err.Error())
 			return false

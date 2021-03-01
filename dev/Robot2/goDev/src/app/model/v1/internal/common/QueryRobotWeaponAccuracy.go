@@ -6,7 +6,7 @@ import (
 	"app/tool/protocol"
 )
 
-func QueryRobotWeaponAccuracy(model types.Model, robot protocol.Robot, weapon protocol.Weapon) (float64, error) {
+func QueryRobotWeaponAccuracy(model types.Model, robotID string, weapon protocol.Weapon, isGameplay bool) (float64, error) {
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return 0.0, err

@@ -9,13 +9,13 @@ import (
 	"fmt"
 )
 
-func QueryRobotWeaponAttackRange(model types.Model, robot protocol.Robot, weapon protocol.Weapon, offset protocol.Position) ([]protocol.Position, error) {
+func QueryRobotWeaponAttackRange(model types.Model, robotID string, weapon protocol.Weapon, offset protocol.Position) ([]protocol.Position, error) {
 	var err error
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return nil, err
 	}
-	weaponRange, err := QueryRobotWeaponRange(model, robot, weapon)
+	weaponRange, err := QueryRobotWeaponRange(model, robotID, weapon, true)
 	if err != nil {
 		return nil, err
 	}

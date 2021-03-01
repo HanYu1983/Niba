@@ -66,7 +66,7 @@ func QueryPotentialTarget(model types.Model, robotID string, transform string, w
 	ret := []PotentailTarget{}
 	for _, weapon := range weapons {
 		// 武器攻擊範圍
-		attackRange, err := common.QueryRobotWeaponAttackRange(model, robot, weapon, protocol.Position{})
+		attackRange, err := common.QueryRobotWeaponAttackRange(model, robot.ID, weapon, protocol.Position{})
 		if err != nil {
 			return nil, err
 		}

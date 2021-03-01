@@ -21,7 +21,7 @@ func QueryRobotMaxHp(model types.Model, robotID string, isGameplay bool) (int, e
 	if err != nil {
 		return 0, err
 	}
-	total := robotProto.Hp
+	total := robotProto.HP
 	for _, component := range components {
 		val := 0.0
 		switch component.ProtoID {

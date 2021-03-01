@@ -8,24 +8,24 @@ import (
 	"tool/log"
 )
 
-func ObserveWeapon(model types.Model, robot protocol.Robot, weapon protocol.Weapon) (protocol.Weapon, error) {
+func ObserveWeapon(model types.Model, robotID string, weapon protocol.Weapon, isGameplay bool) (protocol.Weapon, error) {
 	log.Log(protocol.LogCategoryRender, "ObserveWeapon", "start")
 	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}
 	weapon.Title = weaponProto.Title
-	weapon.Range, err = QueryRobotWeaponRange(model, robot, weapon)
+	weapon.Range, err = QueryRobotWeaponRange(model, robotID, weapon, isGameplay)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}
 	weapon.EnergyCost = weaponProto.EnergyCost
 	weapon.MaxBulletCount = weaponProto.MaxBulletCount
-	weapon.Suitability, err = QueryRobotWeaponSuitability(model, robot, weapon)
+	weapon.Suitability, err = QueryRobotWeaponSuitability(model, robotID, weapon)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}
-	weapon.Ability, err = QueryRobotWeaponAbility(model, robot, weapon)
+	weapon.Ability, err = QueryRobotWeaponAbility(model, robotID, weapon, isGameplay)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}

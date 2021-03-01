@@ -35,7 +35,7 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 	if err != nil {
 		return protocol.Robot{}, err
 	}
-	weapons, err = ObserveWeapons(model, robot, weapons)
+	weapons, err = ObserveWeapons(model, robot.ID, weapons, isGameplay)
 	if err != nil {
 		return protocol.Robot{}, err
 	}

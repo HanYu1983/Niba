@@ -1,2 +1,2 @@
 id/string,powerCostForMove/int,award/float[2],robots/string[],weapons/string[],components/string[],pilots/string[]
-default,5,"1.2,1.2","10,11,14",,,"1,1,1"
+default,5,"1.2,1.2","medium,medium,heavy","beam_gun1,beam_gun2,beam_gun3,beam_gatling1,beam_gatling2,beam_gatling3,beam_sword1,beam_sword2,beam_sword3,machinegun1,machinegun2,shotgun3","energy1,energy2,energy3,armor1,armor2,armor3,beam_armor1,beam_armor2,beam_armor3","engineer,engineer,engineer"

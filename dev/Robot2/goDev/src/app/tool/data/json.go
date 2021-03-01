@@ -485,12 +485,39 @@ const (
                 1.2
             ],
             "robots": [
-                "gaite_sky","jimu","jimu"
+                "medium",
+                "medium",
+                "heavy"
             ],
-            "weapons": [],
-            "components": [],
+            "weapons": [
+                "beam_gun1",
+                "beam_gun2",
+                "beam_gun3",
+                "beam_gatling1",
+                "beam_gatling2",
+                "beam_gatling3",
+                "beam_sword1",
+                "beam_sword2",
+                "beam_sword3",
+                "machinegun1",
+                "machinegun2",
+                "shotgun3"
+            ],
+            "components": [
+                "energy1",
+                "energy2",
+                "energy3",
+                "armor1",
+                "armor2",
+                "armor3",
+                "beam_armor1",
+                "beam_armor2",
+                "beam_armor3"
+            ],
             "pilots": [
-                "engineer","engineer","engineer"
+                "engineer",
+                "engineer",
+                "engineer"
             ]
         }
     },
@@ -1169,10 +1196,10 @@ const (
         "gaite_sky": {
             "id": "gaite_sky",
             "title": "空蓋特",
-            "cost": 73000,
+            "cost": 83500,
             "power": 125,
-            "hp": 5000,
-            "en": 100,
+            "hp": 10000,
+            "en": 200,
             "weapons": [
                 "gaite_handSword",
                 "gaite_axe",
@@ -1200,10 +1227,10 @@ const (
         "gaite_land": {
             "id": "gaite_land",
             "title": "地蓋特",
-            "cost": 73000,
+            "cost": 83500,
             "power": 125,
-            "hp": 5000,
-            "en": 100,
+            "hp": 10000,
+            "en": 200,
             "weapons": [
                 "gaite_missle",
                 "gaite_drill",
@@ -1230,10 +1257,10 @@ const (
         "gaite_sea": {
             "id": "gaite_sea",
             "title": "海蓋特",
-            "cost": 73000,
+            "cost": 83500,
             "power": 125,
-            "hp": 5000,
-            "en": 100,
+            "hp": 10000,
+            "en": 200,
             "weapons": [
                 "gaite_punch",
                 "gaite_missle",
@@ -1260,10 +1287,10 @@ const (
         "moshen": {
             "id": "moshen",
             "title": "魔神z",
-            "cost": 59000,
+            "cost": 69600,
             "power": 110,
-            "hp": 6000,
-            "en": 100,
+            "hp": 12000,
+            "en": 200,
             "weapons": [
                 "moshen_ray",
                 "moshen_punch",
@@ -1289,10 +1316,10 @@ const (
         "zgundam": {
             "id": "zgundam",
             "title": "z鋼彈",
-            "cost": 42700,
+            "cost": 53000,
             "power": 90,
-            "hp": 3000,
-            "en": 100,
+            "hp": 6000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_sword1",
@@ -1319,10 +1346,10 @@ const (
         "zgundam_sky": {
             "id": "zgundam_sky",
             "title": "z鋼彈飛翼",
-            "cost": 42700,
+            "cost": 53000,
             "power": 90,
-            "hp": 3000,
-            "en": 100,
+            "hp": 6000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_gun1"
@@ -1347,10 +1374,10 @@ const (
         "gundam": {
             "id": "gundam",
             "title": "鋼彈",
-            "cost": 27150,
+            "cost": 37400,
             "power": 65,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_sword1",
@@ -1374,10 +1401,10 @@ const (
         "jimu": {
             "id": "jimu",
             "title": "吉姆",
-            "cost": 19416,
+            "cost": 29616,
             "power": 48,
-            "hp": 2000,
-            "en": 100,
+            "hp": 4000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_sword1",
@@ -1399,10 +1426,10 @@ const (
         "BGD": {
             "id": "BGD",
             "title": "制式格鬥",
-            "cost": 24650,
+            "cost": 34900,
             "power": 60,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "beam_sword2",
                 "beam_gatling1"
@@ -1423,10 +1450,10 @@ const (
         "BYJ": {
             "id": "BYJ",
             "title": "制式遊擊",
-            "cost": 24650,
+            "cost": 34900,
             "power": 60,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling2"
@@ -1447,10 +1474,10 @@ const (
         "BJJ": {
             "id": "BJJ",
             "title": "制式狙擊",
-            "cost": 24650,
+            "cost": 34900,
             "power": 60,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "beam_sniper1",
                 "beam_gatling1"
@@ -1471,10 +1498,10 @@ const (
         "BGR": {
             "id": "BGR",
             "title": "制式干擾",
-            "cost": 24650,
+            "cost": 34900,
             "power": 60,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "beam_sword1",
                 "beam_gatling1"
@@ -1495,10 +1522,10 @@ const (
         "BFD": {
             "id": "BFD",
             "title": "制式防盾",
-            "cost": 24650,
+            "cost": 34900,
             "power": 60,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [
                 "beam_gun1"
             ],
@@ -1519,10 +1546,10 @@ const (
         "windgundam": {
             "id": "windgundam",
             "title": "零式鋼彈",
-            "cost": 88800,
+            "cost": 99200,
             "power": 140,
-            "hp": 4000,
-            "en": 100,
+            "hp": 8000,
+            "en": 200,
             "weapons": [
                 "machinegun2",
                 "beam_sword1",
@@ -1550,10 +1577,10 @@ const (
         "windgundam_sky": {
             "id": "windgundam_sky",
             "title": "零式鋼彈飛翼",
-            "cost": 88800,
+            "cost": 99200,
             "power": 140,
-            "hp": 4000,
-            "en": 100,
+            "hp": 8000,
+            "en": 200,
             "weapons": [
                 "machinegun2",
                 "beam_sniper4"
@@ -1579,10 +1606,10 @@ const (
         "strikegundam": {
             "id": "strikegundam",
             "title": "攻擊鋼彈",
-            "cost": 46500,
+            "cost": 56900,
             "power": 95,
-            "hp": 4000,
-            "en": 100,
+            "hp": 8000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_sword3",
@@ -1608,10 +1635,10 @@ const (
         "exlight": {
             "id": "exlight",
             "title": "特輕型機甲",
-            "cost": 13800,
+            "cost": 24100,
             "power": 30,
-            "hp": 2000,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1626,10 +1653,10 @@ const (
         "light": {
             "id": "light",
             "title": "輕型機甲",
-            "cost": 18350,
+            "cost": 28600,
             "power": 45,
-            "hp": 2500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1644,10 +1671,10 @@ const (
         "normal": {
             "id": "normal",
             "title": "制式機甲",
-            "cost": 27200,
+            "cost": 37400,
             "power": 65,
-            "hp": 3000,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1662,10 +1689,10 @@ const (
         "medium": {
             "id": "medium",
             "title": "中型機甲",
-            "cost": 42750,
+            "cost": 52900,
             "power": 90,
-            "hp": 3500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1680,10 +1707,10 @@ const (
         "heavy": {
             "id": "heavy",
             "title": "重型機甲",
-            "cost": 68000,
+            "cost": 78100,
             "power": 120,
-            "hp": 4000,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1698,10 +1725,10 @@ const (
         "exheavy": {
             "id": "exheavy",
             "title": "特重型機甲",
-            "cost": 106550,
+            "cost": 116600,
             "power": 155,
-            "hp": 4500,
-            "en": 100,
+            "hp": 5000,
+            "en": 200,
             "weapons": [],
             "components": [],
             "suitability": [
@@ -1716,10 +1743,10 @@ const (
         "f91": {
             "id": "f91",
             "title": "F91",
-            "cost": 42700,
+            "cost": 53000,
             "power": 90,
-            "hp": 3000,
-            "en": 100,
+            "hp": 6000,
+            "en": 200,
             "weapons": [
                 "machinegun1",
                 "beam_sword1",
@@ -1738,7 +1765,35 @@ const (
                 1
             ],
             "transform": [],
-            "unlockExp": 0
+            "unlockExp": 10
+        },
+        "duankongka": {
+            "id": "duankongka",
+            "title": "斷空我",
+            "cost": 48400,
+            "power": 110,
+            "hp": 12000,
+            "en": 200,
+            "weapons": [
+                "duankong_fight",
+                "duankong_laser",
+                "duankong_sword",
+                "duankong_shot"
+            ],
+            "components": [
+                "energy1",
+                "energy1",
+                "armor1",
+                "armor1"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": [],
+            "unlockExp": 10
         }
     },
     "terrain": {
@@ -1911,7 +1966,7 @@ const (
                 6,
                 3
             ],
-            "energyCost": 72,
+            "energyCost": 76,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1940,7 +1995,7 @@ const (
                 6,
                 3
             ],
-            "energyCost": 84,
+            "energyCost": 89,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1969,7 +2024,7 @@ const (
                 7,
                 4
             ],
-            "energyCost": 112,
+            "energyCost": 120,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1998,7 +2053,7 @@ const (
                 7,
                 4
             ],
-            "energyCost": 120,
+            "energyCost": 128,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2027,7 +2082,7 @@ const (
                 7,
                 4
             ],
-            "energyCost": 152,
+            "energyCost": 164,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2071,7 +2126,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 4096,
             "curage": 0,
             "powerCost": 20,
@@ -2085,7 +2140,7 @@ const (
                 3,
                 9
             ],
-            "energyCost": 37,
+            "energyCost": 39,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2100,7 +2155,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 4640,
             "curage": 0,
             "powerCost": 24,
@@ -2114,7 +2169,7 @@ const (
                 4,
                 12
             ],
-            "energyCost": 57,
+            "energyCost": 65,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2129,7 +2184,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 7301,
             "curage": 105,
             "powerCost": 40,
@@ -2143,7 +2198,7 @@ const (
                 4,
                 12
             ],
-            "energyCost": 64,
+            "energyCost": 74,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2158,7 +2213,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 8514,
             "curage": 105,
             "powerCost": 46,
@@ -2172,7 +2227,7 @@ const (
                 5,
                 15
             ],
-            "energyCost": 81,
+            "energyCost": 97,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2187,7 +2242,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 11852,
             "curage": 110,
             "powerCost": 60,
@@ -2201,7 +2256,7 @@ const (
                 5,
                 15
             ],
-            "energyCost": 85,
+            "energyCost": 103,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2216,7 +2271,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 12944,
             "curage": 120,
             "powerCost": 64,
@@ -2230,7 +2285,7 @@ const (
                 5,
                 15
             ],
-            "energyCost": 105,
+            "energyCost": 129,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2245,7 +2300,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 17984,
             "curage": 130,
             "powerCost": 80,
@@ -2274,7 +2329,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 4096,
             "curage": 0,
             "powerCost": 20,
@@ -2303,7 +2358,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 4640,
             "curage": 0,
             "powerCost": 24,
@@ -2332,7 +2387,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 7301,
             "curage": 0,
             "powerCost": 40,
@@ -2361,7 +2416,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 8514,
             "curage": 0,
             "powerCost": 46,
@@ -2390,7 +2445,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 11852,
             "curage": 0,
             "powerCost": 60,
@@ -2419,7 +2474,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 12944,
             "curage": 0,
             "powerCost": 64,
@@ -2448,7 +2503,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.7,
             "damage": 17984,
             "curage": 0,
             "powerCost": 80,
@@ -2476,7 +2531,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 2744,
             "curage": 0,
             "powerCost": 10,
@@ -2504,7 +2559,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 3048,
             "curage": 0,
             "powerCost": 12,
@@ -2518,7 +2573,7 @@ const (
                 2,
                 5
             ],
-            "energyCost": 20,
+            "energyCost": 24,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2532,7 +2587,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 4492,
             "curage": 0,
             "powerCost": 20,
@@ -2546,7 +2601,7 @@ const (
                 2,
                 5
             ],
-            "energyCost": 23,
+            "energyCost": 28,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2560,7 +2615,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 5132,
             "curage": 0,
             "powerCost": 23,
@@ -2574,7 +2629,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 30,
+            "energyCost": 38,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2588,7 +2643,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 6859,
             "curage": 0,
             "powerCost": 30,
@@ -2602,7 +2657,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 34,
+            "energyCost": 43,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2616,7 +2671,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 8000,
             "curage": 0,
             "powerCost": 34,
@@ -2630,7 +2685,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 40,
+            "energyCost": 52,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2644,7 +2699,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 9938,
             "curage": 0,
             "powerCost": 40,
@@ -2674,7 +2729,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 2197,
             "curage": 0,
             "powerCost": 10,
@@ -2704,7 +2759,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 2406,
             "curage": 0,
             "powerCost": 12,
@@ -2718,7 +2773,7 @@ const (
                 2,
                 5
             ],
-            "energyCost": 20,
+            "energyCost": 24,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2734,7 +2789,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 3375,
             "curage": 0,
             "powerCost": 20,
@@ -2748,7 +2803,7 @@ const (
                 2,
                 5
             ],
-            "energyCost": 23,
+            "energyCost": 28,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2764,7 +2819,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 3796,
             "curage": 0,
             "powerCost": 23,
@@ -2778,7 +2833,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 30,
+            "energyCost": 38,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2794,7 +2849,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 4913,
             "curage": 0,
             "powerCost": 30,
@@ -2808,7 +2863,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 34,
+            "energyCost": 43,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2824,7 +2879,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 5639,
             "curage": 0,
             "powerCost": 34,
@@ -2838,7 +2893,7 @@ const (
                 2,
                 6
             ],
-            "energyCost": 40,
+            "energyCost": 52,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2854,7 +2909,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 6859,
             "curage": 0,
             "powerCost": 40,
@@ -2884,7 +2939,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 2197,
             "curage": 0,
             "powerCost": 10,
@@ -2914,7 +2969,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 2406,
             "curage": 0,
             "powerCost": 12,
@@ -2944,7 +2999,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 3375,
             "curage": 0,
             "powerCost": 20,
@@ -2974,7 +3029,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 3796,
             "curage": 0,
             "powerCost": 23,
@@ -3004,7 +3059,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 4913,
             "curage": 0,
             "powerCost": 30,
@@ -3034,7 +3089,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 5639,
             "curage": 0,
             "powerCost": 34,
@@ -3064,7 +3119,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1.5,
+            "accuracy": 1.3,
             "damage": 6859,
             "curage": 0,
             "powerCost": 40,
@@ -3758,7 +3813,7 @@ const (
             "maxBulletCount": 0,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
@@ -3769,7 +3824,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 0.9,
+            "accuracy": 1,
             "damage": 3800,
             "curage": 0,
             "powerCost": 12,
@@ -3787,7 +3842,7 @@ const (
             "maxBulletCount": 3,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
@@ -3800,7 +3855,7 @@ const (
             "type": "single",
             "accuracy": 0.7,
             "damage": 10000,
-            "curage": 110,
+            "curage": 120,
             "powerCost": 30,
             "unlockExp": 0
         },
@@ -3817,7 +3872,7 @@ const (
             "suitability": [
                 1,
                 0.5,
-                1,
+                1.1,
                 1
             ],
             "ability": [
@@ -3827,9 +3882,9 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.95,
             "damage": 9000,
-            "curage": 120,
+            "curage": 130,
             "powerCost": 30,
             "unlockExp": 0
         },
@@ -3845,7 +3900,7 @@ const (
             "maxBulletCount": 6,
             "suitability": [
                 1,
-                1,
+                0.5,
                 1,
                 1
             ],
@@ -3856,7 +3911,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 3000,
             "curage": 0,
             "powerCost": 12,
@@ -3874,7 +3929,7 @@ const (
             "maxBulletCount": 0,
             "suitability": [
                 1,
-                1,
+                0.75,
                 1,
                 1
             ],
@@ -3903,7 +3958,7 @@ const (
             "maxBulletCount": 0,
             "suitability": [
                 1.2,
-                1,
+                0.75,
                 1,
                 1
             ],
@@ -3914,9 +3969,9 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.95,
             "damage": 7000,
-            "curage": 110,
+            "curage": 120,
             "powerCost": 26,
             "unlockExp": 0
         },
@@ -3943,7 +3998,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1.1,
+            "accuracy": 1,
             "damage": 3200,
             "curage": 0,
             "powerCost": 10,
@@ -3971,7 +4026,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 3000,
             "curage": 0,
             "powerCost": 12,
@@ -4000,9 +4055,9 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.9,
             "damage": 9500,
-            "curage": 120,
+            "curage": 130,
             "powerCost": 30,
             "unlockExp": 0
         },
@@ -4028,7 +4083,7 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 2500,
             "curage": 0,
             "powerCost": 8,
@@ -4042,8 +4097,8 @@ const (
                 1,
                 1
             ],
-            "energyCost": 8,
-            "maxBulletCount": 0,
+            "energyCost": 0,
+            "maxBulletCount": 6,
             "suitability": [
                 1,
                 1,
@@ -4055,7 +4110,7 @@ const (
                 "physic",
                 "moveAttack"
             ],
-            "energyType": "energy",
+            "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
             "damage": 3300,
@@ -4086,7 +4141,7 @@ const (
             ],
             "energyType": "bullet",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.85,
             "damage": 4000,
             "curage": 0,
             "powerCost": 25,
@@ -4100,7 +4155,7 @@ const (
                 1,
                 1
             ],
-            "energyCost": 15,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -4117,7 +4172,7 @@ const (
             "type": "single",
             "accuracy": 1,
             "damage": 6000,
-            "curage": 110,
+            "curage": 120,
             "powerCost": 20,
             "unlockExp": 0
         },
@@ -4129,7 +4184,7 @@ const (
                 1,
                 2
             ],
-            "energyCost": 23,
+            "energyCost": 45,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -4144,10 +4199,126 @@ const (
             ],
             "energyType": "energy",
             "type": "single",
-            "accuracy": 1,
+            "accuracy": 0.9,
             "damage": 8500,
-            "curage": 120,
+            "curage": 130,
             "powerCost": 30,
+            "unlockExp": 0
+        },
+        "duankong_fight": {
+            "id": "duankong_fight",
+            "title": "格鬥",
+            "cost": 0,
+            "range": [
+                1,
+                1
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "melee",
+                "physic",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1,
+            "damage": 3000,
+            "curage": 0,
+            "powerCost": 9,
+            "unlockExp": 0
+        },
+        "duankong_laser": {
+            "id": "duankong_laser",
+            "title": "四連炮",
+            "cost": 0,
+            "range": [
+                2,
+                3
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 6,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "melee",
+                "beam",
+                "multi",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.1,
+            "damage": 2600,
+            "curage": 0,
+            "powerCost": 8,
+            "unlockExp": 0
+        },
+        "duankong_sword": {
+            "id": "duankong_sword",
+            "title": "斷空劍",
+            "cost": 0,
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 23,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "melee",
+                "physic",
+                "moveAttack"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 0.95,
+            "damage": 6300,
+            "curage": 115,
+            "powerCost": 21,
+            "unlockExp": 0
+        },
+        "duankong_shot": {
+            "id": "duankong_shot",
+            "title": "斷空炮",
+            "cost": 0,
+            "range": [
+                2,
+                5
+            ],
+            "energyCost": 43,
+            "maxBulletCount": 0,
+            "suitability": [
+                1,
+                0.5,
+                1,
+                1
+            ],
+            "ability": [
+                "melee",
+                "beam"
+            ],
+            "energyType": "energy",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 8000,
+            "curage": 130,
+            "powerCost": 28,
             "unlockExp": 0
         }
     },

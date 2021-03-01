@@ -65,7 +65,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			return origin, err
 		}
 		toPos := targetPosition
-		weaponRange, err := common.QueryRobotWeaponRange(_model, robot, weapon)
+		weaponRange, err := common.QueryRobotWeaponRange(_model, robot.ID, weapon, true)
 		if err != nil {
 			return origin, err
 		}

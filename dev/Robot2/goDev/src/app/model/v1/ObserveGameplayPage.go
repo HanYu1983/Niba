@@ -99,7 +99,7 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("selectedWeapon(%v)", selectedWeapon))
 			robotPos := gameplayPage.Positions[unitMenuModel.ActiveRobotID]
 			log.Log(protocol.LogCategoryRender, "Model.Render", fmt.Sprintf("robotPos(%v)", robotPos))
-			attackRange, err := common.QueryRobotWeaponAttackRange(model, activeRobot, selectedWeapon, robotPos)
+			attackRange, err := common.QueryRobotWeaponAttackRange(model, activeRobot.ID, selectedWeapon, robotPos)
 			if err != nil {
 				return origin, err
 			}

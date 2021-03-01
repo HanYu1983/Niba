@@ -21,7 +21,7 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	targetArmor := 0
 	{
 		var weaponAbility []string
-		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot, weapon)
+		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
 		if err != nil {
 			return 0, err
 		}
@@ -76,7 +76,7 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	}
 	suitabilityFactor := 1.0
 	{
-		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot, weapon)
+		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon)
 		if err != nil {
 			return 0, err
 		}
@@ -102,7 +102,7 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	pilotRangeFactor := 1.0
 	{
 		var weaponAbility []string
-		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot, weapon)
+		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
 		if err != nil {
 			return 0, err
 		}

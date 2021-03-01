@@ -18,7 +18,7 @@ func ObserveRobotMenu(model types.Model, origin protocol.RobotMenu) (protocol.Ro
 	if err != nil {
 		return origin, err
 	}
-	ctx.Weapons, err = ObserveWeapons(model, robot, ctx.Weapons)
+	ctx.Weapons, err = ObserveWeapons(model, robot.ID, ctx.Weapons, true)
 	if err != nil {
 		return origin, err
 	}

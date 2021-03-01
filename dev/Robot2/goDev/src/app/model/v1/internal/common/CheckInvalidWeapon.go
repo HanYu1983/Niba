@@ -25,7 +25,7 @@ func CheckInvalidWeapon(model types.Model, robotID string, weapon protocol.Weapo
 	if _, has := hideFlag[HideFlagMoveAttack]; has == false {
 		tag, _ := protocol.TryGetStringTag(model.App.Gameplay.Tags, robotID)
 		if tag.MoveCount > 0 {
-			ability, err := QueryRobotWeaponAbility(model, robot, weapon)
+			ability, err := QueryRobotWeaponAbility(model, robot.ID, weapon, true)
 			if err != nil {
 				return "", err
 			}
@@ -62,7 +62,7 @@ func CheckInvalidWeapon(model types.Model, robotID string, weapon protocol.Weapo
 		if err != nil {
 			return "", err
 		}
-		attackRange, err := QueryRobotWeaponAttackRange(model, robot, weapon, robotPos)
+		attackRange, err := QueryRobotWeaponAttackRange(model, robot.ID, weapon, robotPos)
 		if err != nil {
 			return "", err
 		}

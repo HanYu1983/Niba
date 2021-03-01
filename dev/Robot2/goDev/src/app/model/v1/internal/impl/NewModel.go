@@ -26,7 +26,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖
-			tempMap, err := helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
+			tempMap, err := helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
 			if err != nil {
 				return origin, err
 			}

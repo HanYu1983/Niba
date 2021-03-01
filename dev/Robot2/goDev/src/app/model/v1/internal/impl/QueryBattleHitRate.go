@@ -40,7 +40,7 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	pilotRangeFactor := 1.0
 	{
 		var weaponAbility []string
-		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot, weapon)
+		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
 		if err != nil {
 			return 0, err
 		}
@@ -75,7 +75,7 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type(melee or range). weapon(%+v)", weapon)
 		}
 	}
-	basic, err := common.QueryRobotWeaponAccuracy(model, robot, weapon)
+	basic, err := common.QueryRobotWeaponAccuracy(model, robot.ID, weapon, true)
 	if err != nil {
 		return 0, err
 	}
