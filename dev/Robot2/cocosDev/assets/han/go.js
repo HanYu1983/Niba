@@ -39774,12 +39774,13 @@ $packages["app/model/v1/internal/impl"] = (function() {
 	return $pkg;
 })();
 $packages["app/model/v1/internal/lobby"] = (function() {
-	var $pkg = {}, $init, types, data, protocol, fmt, strconv, sliceType, arrayType, sliceType$1, arrayType$1, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
+	var $pkg = {}, $init, types, data, protocol, fmt, strconv, log, sliceType, arrayType, sliceType$1, arrayType$1, BuyRobot, BuyPilot, BuyWeapon, BuyComponent, AssocRobotPilot, DissocRobotPilot, AssocWeaponRobot, DissocWeaponRobot, AssocComponentRobot, DissocComponentRobot, QueryRobotCanBuy, QueryPilotCanBuy, QueryWeaponCanBuy, QueryComponentCanBuy, QueryRobotIDByWeaponID, QueryRobotIDByComponentID, QueryPilotIDByRobotID;
 	types = $packages["app/model/v1/internal/tool/types"];
 	data = $packages["app/tool/data"];
 	protocol = $packages["app/tool/protocol"];
 	fmt = $packages["fmt"];
 	strconv = $packages["strconv"];
+	log = $packages["tool/log"];
 	sliceType = $sliceType($String);
 	arrayType = $arrayType($Float64, 4);
 	sliceType$1 = $sliceType($emptyInterface);
@@ -39788,7 +39789,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 		var ID, _entry, _entry$1, _r, _r$1, _tuple, ctx, has, item, origin, protoID, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; ctx = $f.ctx; has = $f.has; item = $f.item; origin = $f.origin; protoID = $f.protoID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ctx = $clone(origin, types.Model);
-		_tuple = (_entry = data.GameData.Robot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.RobotProto.ptr("", "", 0, 0, 0, sliceType.nil, sliceType.nil, arrayType.zero(), sliceType.nil, 0), false]);
+		_tuple = (_entry = data.GameData.Robot[$String.keyFor(protoID)], _entry !== undefined ? [_entry.v, true] : [new data.RobotProto.ptr("", "", 0, 0, 0, 0, sliceType.nil, sliceType.nil, arrayType.zero(), sliceType.nil, 0), false]);
 		item = $clone(_tuple[0], data.RobotProto);
 		has = _tuple[1];
 		/* */ if (has === false) { $s = 1; continue; }
@@ -39806,7 +39807,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 		ctx.App.Money = ctx.App.Money - (item.Cost) >> 0;
 		ID = strconv.Itoa(ctx.App.SeqID);
 		ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
-		ctx.App.Lobby.Robots = protocol.AssocStringRobot(ctx.App.Lobby.Robots, ID, new protocol.Robot.ptr(ID, "PlayerIDPlayer", protoID, "", protoID, 0, 0, $makeMap($String.keyFor, []), false, (_entry$1 = data.GameData.Robot[$String.keyFor(protoID)], _entry$1 !== undefined ? _entry$1.v : new data.RobotProto.ptr("", "", 0, 0, 0, sliceType.nil, sliceType.nil, arrayType.zero(), sliceType.nil, 0)).Title, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0));
+		ctx.App.Lobby.Robots = protocol.AssocStringRobot(ctx.App.Lobby.Robots, ID, new protocol.Robot.ptr(ID, "PlayerIDPlayer", protoID, "", protoID, 0, 0, $makeMap($String.keyFor, []), false, (_entry$1 = data.GameData.Robot[$String.keyFor(protoID)], _entry$1 !== undefined ? _entry$1.v : new data.RobotProto.ptr("", "", 0, 0, 0, 0, sliceType.nil, sliceType.nil, arrayType.zero(), sliceType.nil, 0)).Title, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false));
 		$s = -1; return [ctx, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: BuyRobot }; } $f.ID = ID; $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.ctx = ctx; $f.has = has; $f.item = item; $f.origin = origin; $f.protoID = protoID; $f.$s = $s; $f.$r = $r; return $f;
 	};
@@ -39907,10 +39908,16 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 	};
 	$pkg.DissocRobotPilot = DissocRobotPilot;
 	AssocWeaponRobot = function(origin, weaponID, robotID) {
-		var ctx, origin, robotID, weaponID;
+		var _arg, _arg$1, _r, ctx, origin, robotID, weaponID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; ctx = $f.ctx; origin = $f.origin; robotID = $f.robotID; weaponID = $f.weaponID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_arg = protocol.LogCategoryDetail;
+		_r = fmt.Sprintf("weaponID(%v) robotID(%v)", new sliceType$1([new $String(weaponID), new $String(robotID)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg$1 = _r;
+		$r = log.Log(_arg, "AssocWeaponRobot", _arg$1); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		ctx = $clone(origin, types.Model);
 		ctx.App.Lobby.RobotIDByWeaponID = data.AssocStringString(ctx.App.Lobby.RobotIDByWeaponID, weaponID, robotID);
-		return [ctx, $ifaceNil];
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AssocWeaponRobot }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f.ctx = ctx; $f.origin = origin; $f.robotID = robotID; $f.weaponID = weaponID; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.AssocWeaponRobot = AssocWeaponRobot;
 	DissocWeaponRobot = function(origin, weaponID) {
@@ -39980,13 +39987,14 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 		$r = protocol.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = strconv.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
 	return $pkg;
 })();
 $packages["app/page/common"] = (function() {
-	var $pkg = {}, $init, def, helper, protocol, uidata, fmt, log, sliceType, sliceType$1, sliceType$2, sliceType$3, arrayType, arrayType$1, arrayType$2, sliceType$4, sliceType$5, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, HandleCamera, HandleCursor, HandleFocus, HandleShowMoveRangeWhenUnitAtCursor, Menu1DStep, Menu2DStep, SelectPositionStep, SelectUnitStep;
+	var $pkg = {}, $init, def, helper, protocol, uidata, fmt, log, sliceType, sliceType$1, sliceType$2, sliceType$3, arrayType, arrayType$1, arrayType$2, sliceType$4, sliceType$5, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, BasicPagePhase, HandleCamera, HandleCursor, HandleFocus, HandleShowMoveRangeWhenUnitAtCursor, Menu1DStep, Menu2DStep, SelectPositionStep, SelectUnitStep;
 	def = $packages["app/tool/def"];
 	helper = $packages["app/tool/helper"];
 	protocol = $packages["app/tool/protocol"];
@@ -40012,6 +40020,109 @@ $packages["app/page/common"] = (function() {
 	mapType$7 = $mapType($String, protocol.Component);
 	mapType$8 = $mapType($String, $String);
 	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$8, tag: ""}]);
+	BasicPagePhase = function(origin, pageID, onUpdate, onClickMenu1D, onClickMenu2D) {
+		var _entry, _entry$1, _entry$2, _entry$3, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tmp, _tmp$1, _tmp$2, _tmp$3, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, cancel, cancel$1, ctx, err, focus, is, is$1, menuID, onClickMenu1D, onClickMenu2D, onUpdate, origin, pageID, selection, selection$1, tab, tab$1, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tmp$2 = $f._tmp$2; _tmp$3 = $f._tmp$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; cancel = $f.cancel; cancel$1 = $f.cancel$1; ctx = $f.ctx; err = $f.err; focus = $f.focus; is = $f.is; is$1 = $f.is$1; menuID = $f.menuID; onClickMenu1D = $f.onClickMenu1D; onClickMenu2D = $f.onClickMenu2D; onUpdate = $f.onUpdate; origin = $f.origin; pageID = $f.pageID; selection = $f.selection; selection$1 = $f.selection$1; tab = $f.tab; tab$1 = $f.tab$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		/* while (true) { */ case 2:
+			$r = log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "onUpdate"); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			_r = onUpdate($clone(ctx, uidata.UI)); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			uidata.UI.copy(ctx, _tuple[0]);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			focus = (_entry = ctx.Focus[$Int.keyFor(pageID)], _entry !== undefined ? _entry.v : 0);
+			menuID = (x = (_entry$1 = ctx.Menus[$Int.keyFor(pageID)], _entry$1 !== undefined ? _entry$1.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
+			_tuple$1 = (_entry$2 = ctx.Menu1Ds[$Int.keyFor(menuID)], _entry$2 !== undefined ? [_entry$2.v, true] : [new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0), false]);
+			is = _tuple$1[1];
+			/* */ if (is) { $s = 6; continue; }
+			/* */ $s = 7; continue;
+			/* if (is) { */ case 6:
+				selection = "";
+				_tmp = false;
+				_tmp$1 = false;
+				cancel = _tmp;
+				tab = _tmp$1;
+				_r$1 = Menu1DStep($clone(ctx, uidata.UI), pageID, menuID); /* */ $s = 9; case 9: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_tuple$2 = _r$1;
+				uidata.UI.copy(ctx, _tuple$2[0]);
+				selection = _tuple$2[1];
+				cancel = _tuple$2[2];
+				tab = _tuple$2[3];
+				err = _tuple$2[4];
+				if (!($interfaceIsEqual(err, $ifaceNil))) {
+					$s = -1; return [origin, err];
+				}
+				/* */ if (tab) { $s = 10; continue; }
+				/* */ $s = 11; continue;
+				/* if (tab) { */ case 10:
+					/* continue; */ $s = 2; continue;
+				/* } */ case 11:
+				_r$2 = onClickMenu1D($clone(ctx, uidata.UI), focus, selection, cancel, tab); /* */ $s = 12; case 12: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_tuple$3 = _r$2;
+				uidata.UI.copy(ctx, _tuple$3[0]);
+				cancel = _tuple$3[1];
+				err = _tuple$3[2];
+				if (!($interfaceIsEqual(err, $ifaceNil))) {
+					$s = -1; return [origin, err];
+				}
+				if (cancel) {
+					/* break Menu; */ $s = 3; continue s;
+				}
+				$s = 8; continue;
+			/* } else { */ case 7:
+				_tuple$4 = (_entry$3 = ctx.Menu2Ds[$Int.keyFor(menuID)], _entry$3 !== undefined ? [_entry$3.v, true] : [new uidata.Menu2D.ptr(sliceType$1.nil, 0, sliceType$2.nil), false]);
+				is$1 = _tuple$4[1];
+				/* */ if (is$1) { $s = 13; continue; }
+				/* */ $s = 14; continue;
+				/* if (is$1) { */ case 13:
+					selection$1 = "";
+					_tmp$2 = false;
+					_tmp$3 = false;
+					cancel$1 = _tmp$2;
+					tab$1 = _tmp$3;
+					_r$3 = Menu2DStep($clone(ctx, uidata.UI), 1, menuID); /* */ $s = 16; case 16: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$5 = _r$3;
+					uidata.UI.copy(ctx, _tuple$5[0]);
+					selection$1 = _tuple$5[1];
+					cancel$1 = _tuple$5[2];
+					tab$1 = _tuple$5[3];
+					err = _tuple$5[4];
+					if (!($interfaceIsEqual(err, $ifaceNil))) {
+						$s = -1; return [origin, err];
+					}
+					/* */ if (tab$1) { $s = 17; continue; }
+					/* */ $s = 18; continue;
+					/* if (tab$1) { */ case 17:
+						/* continue; */ $s = 2; continue;
+					/* } */ case 18:
+					_r$4 = onClickMenu2D($clone(ctx, uidata.UI), focus, selection$1, cancel$1, tab$1); /* */ $s = 19; case 19: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					_tuple$6 = _r$4;
+					uidata.UI.copy(ctx, _tuple$6[0]);
+					cancel$1 = _tuple$6[1];
+					err = _tuple$6[2];
+					if (!($interfaceIsEqual(err, $ifaceNil))) {
+						$s = -1; return [origin, err];
+					}
+					if (cancel$1) {
+						/* break Menu; */ $s = 3; continue s;
+					}
+					$s = 15; continue;
+				/* } else { */ case 14:
+					_r$5 = fmt.Errorf("component not found: %v", new sliceType$3([new $Int(menuID)])); /* */ $s = 20; case 20: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+					$s = -1; return [origin, _r$5];
+				/* } */ case 15:
+			/* } */ case 8:
+		/* } */ $s = 2; continue; case 3:
+		$r = log.Log(protocol.LogCategoryPhase, "BasicPagePhase", "end"); /* */ $s = 21; case 21: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: BasicPagePhase }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tmp$2 = _tmp$2; $f._tmp$3 = _tmp$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.cancel = cancel; $f.cancel$1 = cancel$1; $f.ctx = ctx; $f.err = err; $f.focus = focus; $f.is = is; $f.is$1 = is$1; $f.menuID = menuID; $f.onClickMenu1D = onClickMenu1D; $f.onClickMenu2D = onClickMenu2D; $f.onUpdate = onUpdate; $f.origin = origin; $f.pageID = pageID; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.tab$1 = tab$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.BasicPagePhase = BasicPagePhase;
 	HandleCamera = function(origin, evt) {
 		var _1, _entry, _entry$1, _entry$2, _entry$3, _ref, ctx, detail, evt, gameplayPage, gameplayPage$1, gameplayPage$2, gameplayPage$3, origin;
 		ctx = $clone(origin, uidata.UI);
@@ -40698,12 +40809,15 @@ $packages["app/model/v1"] = (function() {
 	};
 	Model.prototype.DissocRobotPilot = function(robotID) { return this.$val.DissocRobotPilot(robotID); };
 	Model.ptr.prototype.AssocWeaponRobot = function(weaponID, robotID) {
-		var _tuple, err, model, robotID, v, weaponID, x;
+		var _r, _tuple, err, model, robotID, v, weaponID, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; robotID = $f.robotID; v = $f.v; weaponID = $f.weaponID; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		v = this;
-		_tuple = lobby.AssocWeaponRobot($clone(($clone(v, types.Model)), types.Model), weaponID, robotID);
+		_r = lobby.AssocWeaponRobot($clone(($clone(v, types.Model)), types.Model), weaponID, robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
 		model = $clone(_tuple[0], types.Model);
 		err = _tuple[1];
-		return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		$s = -1; return [(x = ($clone(model, Model)), new x.constructor.elem(x)), err];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Model.ptr.prototype.AssocWeaponRobot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.robotID = robotID; $f.v = v; $f.weaponID = weaponID; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	Model.prototype.AssocWeaponRobot = function(weaponID, robotID) { return this.$val.AssocWeaponRobot(weaponID, robotID); };
 	Model.ptr.prototype.DissocWeaponRobot = function(weaponID) {
@@ -44875,7 +44989,7 @@ $packages["app/page/gameplay"] = (function() {
 	return $pkg;
 })();
 $packages["app/page/lobby"] = (function() {
-	var $pkg = {}, $init, common, gameplay, tool, def, helper, protocol, uidata, fmt;
+	var $pkg = {}, $init, common, gameplay, tool, def, helper, protocol, uidata, fmt, log, sliceType, sliceType$1, AssocPhase, BuyPhase, LobbyPagePhase, MultiUnitSelectionPagePhase;
 	common = $packages["app/page/common"];
 	gameplay = $packages["app/page/gameplay"];
 	tool = $packages["app/tool"];
@@ -44884,6 +44998,675 @@ $packages["app/page/lobby"] = (function() {
 	protocol = $packages["app/tool/protocol"];
 	uidata = $packages["app/tool/uidata"];
 	fmt = $packages["fmt"];
+	log = $packages["tool/log"];
+	sliceType = $sliceType($String);
+	sliceType$1 = $sliceType($emptyInterface);
+	AssocPhase = function(origin, pageID) {
+		var _r, _tuple, ctx, err, leftMapping, origin, pageID, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; leftMapping = $f.leftMapping; origin = $f.origin; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = [err];
+		leftMapping = [leftMapping];
+		pageID = [pageID];
+		view = [view];
+		view[0] = def.View;
+		err[0] = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], true);
+		leftMapping[0] = $makeMap($Int.keyFor, [{ k: 6, v: 25 }, { k: 7, v: 26 }, { k: 8, v: 27 }]);
+		_r = common.BasicPagePhase($clone(ctx, uidata.UI), pageID[0], (function(err, leftMapping, pageID, view) { return function $b(origin$1) {
+			var _r, _tuple$1, ctx$1, err$1, origin$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple$1 = $f._tuple$1; ctx$1 = $f.ctx$1; err$1 = $f.err$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			err$1 = $ifaceNil;
+			ctx$1 = $clone(origin$1, uidata.UI);
+			_r = view[0].Render($clone(ctx$1, uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple$1 = _r;
+			uidata.UI.copy(ctx$1, _tuple$1[0]);
+			err$1 = _tuple$1[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [origin$1, err$1];
+			}
+			$s = -1; return [ctx$1, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._tuple$1 = _tuple$1; $f.ctx$1 = ctx$1; $f.err$1 = err$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err, leftMapping, pageID, view), (function(err, leftMapping, pageID, view) { return function $b(origin$1, focus, selection, cancel, tab) {
+			var _1, _2, _3, _4, _5, _6, _7, _arg, _arg$1, _arg$10, _arg$11, _arg$2, _arg$3, _arg$4, _arg$5, _arg$6, _arg$7, _arg$8, _arg$9, _entry, _entry$1, _entry$10, _entry$11, _entry$12, _entry$13, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _entry$9, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$16, _r$17, _r$18, _r$19, _r$2, _r$20, _r$21, _r$22, _r$23, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple$1, _tuple$10, _tuple$11, _tuple$12, _tuple$13, _tuple$14, _tuple$15, _tuple$16, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, cancel, ctx$1, focus, focus$1, focus$2, focus$3, focus$4, leftMenu, leftMenu$1, leftSelection, leftSelection$1, menuID, middleMenu, middleSelection, origin$1, outOfRange, outOfRange$1, rightSelection, selection, tab, x, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _3 = $f._3; _4 = $f._4; _5 = $f._5; _6 = $f._6; _7 = $f._7; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$10 = $f._arg$10; _arg$11 = $f._arg$11; _arg$2 = $f._arg$2; _arg$3 = $f._arg$3; _arg$4 = $f._arg$4; _arg$5 = $f._arg$5; _arg$6 = $f._arg$6; _arg$7 = $f._arg$7; _arg$8 = $f._arg$8; _arg$9 = $f._arg$9; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$10 = $f._entry$10; _entry$11 = $f._entry$11; _entry$12 = $f._entry$12; _entry$13 = $f._entry$13; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _entry$8 = $f._entry$8; _entry$9 = $f._entry$9; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$16 = $f._r$16; _r$17 = $f._r$17; _r$18 = $f._r$18; _r$19 = $f._r$19; _r$2 = $f._r$2; _r$20 = $f._r$20; _r$21 = $f._r$21; _r$22 = $f._r$22; _r$23 = $f._r$23; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$12 = $f._tuple$12; _tuple$13 = $f._tuple$13; _tuple$14 = $f._tuple$14; _tuple$15 = $f._tuple$15; _tuple$16 = $f._tuple$16; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; focus$1 = $f.focus$1; focus$2 = $f.focus$2; focus$3 = $f.focus$3; focus$4 = $f.focus$4; leftMenu = $f.leftMenu; leftMenu$1 = $f.leftMenu$1; leftSelection = $f.leftSelection; leftSelection$1 = $f.leftSelection$1; menuID = $f.menuID; middleMenu = $f.middleMenu; middleSelection = $f.middleSelection; origin$1 = $f.origin$1; outOfRange = $f.outOfRange; outOfRange$1 = $f.outOfRange$1; rightSelection = $f.rightSelection; selection = $f.selection; tab = $f.tab; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			ctx$1 = $clone(origin$1, uidata.UI);
+			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
+				_1 = menuID;
+				/* */ if ((_1 === (25)) || (_1 === (26)) || (_1 === (27))) { $s = 2; continue; }
+				/* */ if ((_1 === (17)) || (_1 === (16))) { $s = 3; continue; }
+				/* */ if (_1 === (28)) { $s = 4; continue; }
+				/* */ $s = 5; continue;
+				/* if ((_1 === (25)) || (_1 === (26)) || (_1 === (27))) { */ case 2:
+					if (cancel) {
+						$s = -1; return [ctx$1, cancel, $ifaceNil];
+					}
+					_tuple$1 = helper.Clamp((_entry$1 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$1 !== undefined ? _entry$1.v : 0) + 1 >> 0, 0, (_entry$2 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$2 !== undefined ? _entry$2.v : uidata.ListInt.nil).$length);
+					focus$1 = _tuple$1[0];
+					ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$1);
+					$s = 6; continue;
+				/* } else if ((_1 === (17)) || (_1 === (16))) { */ case 3:
+					if (cancel) {
+						_tuple$2 = helper.Clamp((_entry$3 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$3 !== undefined ? _entry$3.v : 0) - 1 >> 0, 0, (_entry$4 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$4 !== undefined ? _entry$4.v : uidata.ListInt.nil).$length);
+						focus$2 = _tuple$2[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$2);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+					leftMenu = $clone((_entry$6 = ctx$1.Menu1Ds[$Int.keyFor((_entry$5 = leftMapping[0][$Int.keyFor(pageID[0])], _entry$5 !== undefined ? _entry$5.v : 0))], _entry$6 !== undefined ? _entry$6.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0)), uidata.Menu1D);
+					middleMenu = $clone((_entry$7 = ctx$1.Menu1Ds[$Int.keyFor(28)], _entry$7 !== undefined ? _entry$7.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0)), uidata.Menu1D);
+					_r = tool.TryGetString(leftMenu.Options, leftMenu.Cursor); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+					_tuple$3 = _r;
+					leftSelection = _tuple$3[0];
+					outOfRange = _tuple$3[1];
+					_arg = protocol.LogCategoryDetail;
+					_r$1 = fmt.Sprintf("leftSelection(%v)", new sliceType$1([new $String(leftSelection)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					_arg$1 = _r$1;
+					$r = log.Log(_arg, "AssocPhase", _arg$1); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* */ if (!($interfaceIsEqual(outOfRange, $ifaceNil))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!($interfaceIsEqual(outOfRange, $ifaceNil))) { */ case 10:
+						_arg$2 = protocol.LogCategoryWarning;
+						_r$2 = outOfRange.Error(); /* */ $s = 12; case 12: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+						_arg$3 = _r$2;
+						$r = log.Log(_arg$2, "AssocPhase", _arg$3); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [ctx$1, cancel, $ifaceNil];
+					/* } */ case 11:
+					_r$3 = tool.TryGetString(middleMenu.Options, middleMenu.Cursor); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$4 = _r$3;
+					middleSelection = _tuple$4[0];
+					outOfRange = _tuple$4[1];
+					_arg$4 = protocol.LogCategoryDetail;
+					_r$4 = fmt.Sprintf("middleSelection(%v)", new sliceType$1([new $String(middleSelection)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					_arg$5 = _r$4;
+					$r = log.Log(_arg$4, "AssocPhase", _arg$5); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* */ if (!($interfaceIsEqual(outOfRange, $ifaceNil))) { $s = 17; continue; }
+					/* */ $s = 18; continue;
+					/* if (!($interfaceIsEqual(outOfRange, $ifaceNil))) { */ case 17:
+						_arg$6 = protocol.LogCategoryWarning;
+						_r$5 = outOfRange.Error(); /* */ $s = 19; case 19: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+						_arg$7 = _r$5;
+						$r = log.Log(_arg$6, "AssocPhase", _arg$7); /* */ $s = 20; case 20: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [ctx$1, cancel, $ifaceNil];
+					/* } */ case 18:
+					rightSelection = selection;
+					_arg$8 = protocol.LogCategoryDetail;
+					_r$6 = fmt.Sprintf("rightSelection(%v)", new sliceType$1([new $String(rightSelection)])); /* */ $s = 21; case 21: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+					_arg$9 = _r$6;
+					$r = log.Log(_arg$8, "AssocPhase", _arg$9); /* */ $s = 22; case 22: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						_2 = pageID[0];
+						/* */ if (_2 === (6)) { $s = 24; continue; }
+						/* */ if (_2 === (7)) { $s = 25; continue; }
+						/* */ if (_2 === (8)) { $s = 26; continue; }
+						/* */ $s = 27; continue;
+						/* if (_2 === (6)) { */ case 24:
+								_3 = middleSelection;
+								/* */ if (_3 === ("MenuOptionAssoc")) { $s = 30; continue; }
+								/* */ if (_3 === ("MenuOptionDissoc")) { $s = 31; continue; }
+								/* */ $s = 32; continue;
+								/* if (_3 === ("MenuOptionAssoc")) { */ case 30:
+									_r$7 = ctx$1.Model.AssocRobotPilot(leftSelection, rightSelection); /* */ $s = 34; case 34: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+									_tuple$5 = _r$7;
+									ctx$1.Model = _tuple$5[0];
+									err[0] = _tuple$5[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 33; continue;
+								/* } else if (_3 === ("MenuOptionDissoc")) { */ case 31:
+									_r$8 = ctx$1.Model.DissocRobotPilot(leftSelection); /* */ $s = 35; case 35: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+									_tuple$6 = _r$8;
+									ctx$1.Model = _tuple$6[0];
+									err[0] = _tuple$6[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 33; continue;
+								/* } else { */ case 32:
+									_r$9 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$1([new $String(middleSelection)])); /* */ $s = 36; case 36: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+									$s = -1; return [origin$1, cancel, _r$9];
+								/* } */ case 33:
+							case 29:
+							$s = 28; continue;
+						/* } else if (_2 === (7)) { */ case 25:
+								_4 = middleSelection;
+								/* */ if (_4 === ("MenuOptionAssoc")) { $s = 38; continue; }
+								/* */ if (_4 === ("MenuOptionDissoc")) { $s = 39; continue; }
+								/* */ $s = 40; continue;
+								/* if (_4 === ("MenuOptionAssoc")) { */ case 38:
+									_r$10 = ctx$1.Model.AssocWeaponRobot(leftSelection, rightSelection); /* */ $s = 42; case 42: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+									_tuple$7 = _r$10;
+									ctx$1.Model = _tuple$7[0];
+									err[0] = _tuple$7[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 41; continue;
+								/* } else if (_4 === ("MenuOptionDissoc")) { */ case 39:
+									_r$11 = ctx$1.Model.DissocWeaponRobot(leftSelection); /* */ $s = 43; case 43: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+									_tuple$8 = _r$11;
+									ctx$1.Model = _tuple$8[0];
+									err[0] = _tuple$8[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 41; continue;
+								/* } else { */ case 40:
+									_r$12 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$1([new $String(middleSelection)])); /* */ $s = 44; case 44: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+									$s = -1; return [origin$1, cancel, _r$12];
+								/* } */ case 41:
+							case 37:
+							$s = 28; continue;
+						/* } else if (_2 === (8)) { */ case 26:
+								_5 = middleSelection;
+								/* */ if (_5 === ("MenuOptionAssoc")) { $s = 46; continue; }
+								/* */ if (_5 === ("MenuOptionDissoc")) { $s = 47; continue; }
+								/* */ $s = 48; continue;
+								/* if (_5 === ("MenuOptionAssoc")) { */ case 46:
+									_r$13 = ctx$1.Model.AssocComponentRobot(leftSelection, rightSelection); /* */ $s = 50; case 50: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+									_tuple$9 = _r$13;
+									ctx$1.Model = _tuple$9[0];
+									err[0] = _tuple$9[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 49; continue;
+								/* } else if (_5 === ("MenuOptionDissoc")) { */ case 47:
+									_r$14 = ctx$1.Model.DissocComponentRobot(leftSelection); /* */ $s = 51; case 51: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+									_tuple$10 = _r$14;
+									ctx$1.Model = _tuple$10[0];
+									err[0] = _tuple$10[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 49; continue;
+								/* } else { */ case 48:
+									_r$15 = fmt.Errorf("AssocPhase: you must select option: %v", new sliceType$1([new $String(middleSelection)])); /* */ $s = 52; case 52: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+									$s = -1; return [origin$1, cancel, _r$15];
+								/* } */ case 49:
+							case 45:
+							$s = 28; continue;
+						/* } else { */ case 27:
+							_r$16 = fmt.Errorf("AssocPhase: you must have page: %v", new sliceType$1([new $Int(pageID[0])])); /* */ $s = 53; case 53: if($c) { $c = false; _r$16 = _r$16.$blk(); } if (_r$16 && _r$16.$blk !== undefined) { break s; }
+							$s = -1; return [origin$1, cancel, _r$16];
+						/* } */ case 28:
+					case 23:
+					$s = 6; continue;
+				/* } else if (_1 === (28)) { */ case 4:
+					if (cancel) {
+						_tuple$11 = helper.Clamp((_entry$8 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$8 !== undefined ? _entry$8.v : 0) - 1 >> 0, 0, (_entry$9 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$9 !== undefined ? _entry$9.v : uidata.ListInt.nil).$length);
+						focus$3 = _tuple$11[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$3);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+						_6 = selection;
+						/* */ if (_6 === ("MenuOptionAssoc")) { $s = 55; continue; }
+						/* */ if (_6 === ("MenuOptionDissoc")) { $s = 56; continue; }
+						/* */ $s = 57; continue;
+						/* if (_6 === ("MenuOptionAssoc")) { */ case 55:
+							_tuple$12 = helper.Clamp((_entry$10 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$10 !== undefined ? _entry$10.v : 0) + 1 >> 0, 0, (_entry$11 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$11 !== undefined ? _entry$11.v : uidata.ListInt.nil).$length);
+							focus$4 = _tuple$12[0];
+							ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$4);
+							$s = 57; continue;
+						/* } else if (_6 === ("MenuOptionDissoc")) { */ case 56:
+							leftMenu$1 = $clone((_entry$13 = ctx$1.Menu1Ds[$Int.keyFor((_entry$12 = leftMapping[0][$Int.keyFor(pageID[0])], _entry$12 !== undefined ? _entry$12.v : 0))], _entry$13 !== undefined ? _entry$13.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0)), uidata.Menu1D);
+							_r$17 = tool.TryGetString(leftMenu$1.Options, leftMenu$1.Cursor); /* */ $s = 58; case 58: if($c) { $c = false; _r$17 = _r$17.$blk(); } if (_r$17 && _r$17.$blk !== undefined) { break s; }
+							_tuple$13 = _r$17;
+							leftSelection$1 = _tuple$13[0];
+							outOfRange$1 = _tuple$13[1];
+							/* */ if (!($interfaceIsEqual(outOfRange$1, $ifaceNil))) { $s = 59; continue; }
+							/* */ $s = 60; continue;
+							/* if (!($interfaceIsEqual(outOfRange$1, $ifaceNil))) { */ case 59:
+								_arg$10 = protocol.LogCategoryWarning;
+								_r$18 = outOfRange$1.Error(); /* */ $s = 61; case 61: if($c) { $c = false; _r$18 = _r$18.$blk(); } if (_r$18 && _r$18.$blk !== undefined) { break s; }
+								_arg$11 = _r$18;
+								$r = log.Log(_arg$10, "AssocPhase", _arg$11); /* */ $s = 62; case 62: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+								$s = -1; return [ctx$1, cancel, $ifaceNil];
+							/* } */ case 60:
+								_7 = pageID[0];
+								/* */ if (_7 === (6)) { $s = 64; continue; }
+								/* */ if (_7 === (7)) { $s = 65; continue; }
+								/* */ if (_7 === (8)) { $s = 66; continue; }
+								/* */ $s = 67; continue;
+								/* if (_7 === (6)) { */ case 64:
+									_r$19 = ctx$1.Model.DissocRobotPilot(leftSelection$1); /* */ $s = 69; case 69: if($c) { $c = false; _r$19 = _r$19.$blk(); } if (_r$19 && _r$19.$blk !== undefined) { break s; }
+									_tuple$14 = _r$19;
+									ctx$1.Model = _tuple$14[0];
+									err[0] = _tuple$14[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 68; continue;
+								/* } else if (_7 === (7)) { */ case 65:
+									_r$20 = ctx$1.Model.DissocWeaponRobot(leftSelection$1); /* */ $s = 70; case 70: if($c) { $c = false; _r$20 = _r$20.$blk(); } if (_r$20 && _r$20.$blk !== undefined) { break s; }
+									_tuple$15 = _r$20;
+									ctx$1.Model = _tuple$15[0];
+									err[0] = _tuple$15[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 68; continue;
+								/* } else if (_7 === (8)) { */ case 66:
+									_r$21 = ctx$1.Model.DissocComponentRobot(leftSelection$1); /* */ $s = 71; case 71: if($c) { $c = false; _r$21 = _r$21.$blk(); } if (_r$21 && _r$21.$blk !== undefined) { break s; }
+									_tuple$16 = _r$21;
+									ctx$1.Model = _tuple$16[0];
+									err[0] = _tuple$16[1];
+									if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+										$s = -1; return [ctx$1, false, err[0]];
+									}
+									$s = 68; continue;
+								/* } else { */ case 67:
+									_r$22 = fmt.Errorf("AssocPhase: you must have page: %v", new sliceType$1([new $Int(pageID[0])])); /* */ $s = 72; case 72: if($c) { $c = false; _r$22 = _r$22.$blk(); } if (_r$22 && _r$22.$blk !== undefined) { break s; }
+									$s = -1; return [origin$1, cancel, _r$22];
+								/* } */ case 68:
+							case 63:
+						/* } */ case 57:
+					case 54:
+					$s = 6; continue;
+				/* } else { */ case 5:
+					_r$23 = fmt.Errorf("AssocPhase: menu not found %v", new sliceType$1([new $Int(menuID)])); /* */ $s = 73; case 73: if($c) { $c = false; _r$23 = _r$23.$blk(); } if (_r$23 && _r$23.$blk !== undefined) { break s; }
+					$s = -1; return [origin$1, cancel, _r$23];
+				/* } */ case 6:
+			case 1:
+			$s = -1; return [ctx$1, cancel, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._3 = _3; $f._4 = _4; $f._5 = _5; $f._6 = _6; $f._7 = _7; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$10 = _arg$10; $f._arg$11 = _arg$11; $f._arg$2 = _arg$2; $f._arg$3 = _arg$3; $f._arg$4 = _arg$4; $f._arg$5 = _arg$5; $f._arg$6 = _arg$6; $f._arg$7 = _arg$7; $f._arg$8 = _arg$8; $f._arg$9 = _arg$9; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$10 = _entry$10; $f._entry$11 = _entry$11; $f._entry$12 = _entry$12; $f._entry$13 = _entry$13; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._entry$9 = _entry$9; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$16 = _r$16; $f._r$17 = _r$17; $f._r$18 = _r$18; $f._r$19 = _r$19; $f._r$2 = _r$2; $f._r$20 = _r$20; $f._r$21 = _r$21; $f._r$22 = _r$22; $f._r$23 = _r$23; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$12 = _tuple$12; $f._tuple$13 = _tuple$13; $f._tuple$14 = _tuple$14; $f._tuple$15 = _tuple$15; $f._tuple$16 = _tuple$16; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.focus$1 = focus$1; $f.focus$2 = focus$2; $f.focus$3 = focus$3; $f.focus$4 = focus$4; $f.leftMenu = leftMenu; $f.leftMenu$1 = leftMenu$1; $f.leftSelection = leftSelection; $f.leftSelection$1 = leftSelection$1; $f.menuID = menuID; $f.middleMenu = middleMenu; $f.middleSelection = middleSelection; $f.origin$1 = origin$1; $f.outOfRange = outOfRange; $f.outOfRange$1 = outOfRange$1; $f.rightSelection = rightSelection; $f.selection = selection; $f.tab = tab; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err, leftMapping, pageID, view), (function(err, leftMapping, pageID, view) { return function(origin$1, focus, selection, cancel, tab) {
+			var cancel, focus, origin$1, selection, tab;
+			return [origin$1, cancel, $ifaceNil];
+		}; })(err, leftMapping, pageID, view)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		uidata.UI.copy(ctx, _tuple[0]);
+		err[0] = _tuple[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [ctx, err[0]];
+		}
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], false);
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: AssocPhase }; } $f._r = _r; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.leftMapping = leftMapping; $f.origin = origin; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.AssocPhase = AssocPhase;
+	BuyPhase = function(origin, pageID) {
+		var _r, _tuple, ctx, err, origin, pageID, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; origin = $f.origin; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = [err];
+		pageID = [pageID];
+		view = [view];
+		view[0] = def.View;
+		err[0] = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], true);
+		_r = common.BasicPagePhase($clone(ctx, uidata.UI), pageID[0], (function(err, pageID, view) { return function $b(origin$1) {
+			var _r, _tuple$1, ctx$1, err$1, origin$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple$1 = $f._tuple$1; ctx$1 = $f.ctx$1; err$1 = $f.err$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			err$1 = $ifaceNil;
+			ctx$1 = $clone(origin$1, uidata.UI);
+			_r = view[0].Render($clone(ctx$1, uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple$1 = _r;
+			uidata.UI.copy(ctx$1, _tuple$1[0]);
+			err$1 = _tuple$1[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [origin$1, err$1];
+			}
+			$s = -1; return [ctx$1, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r = _r; $f._tuple$1 = _tuple$1; $f.ctx$1 = ctx$1; $f.err$1 = err$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err, pageID, view), (function(err, pageID, view) { return function $b(origin$1, focus, selection, cancel, tab) {
+			var _1, _2, _entry, _entry$1, _entry$10, _entry$11, _entry$12, _entry$13, _entry$14, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _entry$9, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _tuple$1, _tuple$10, _tuple$11, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, cancel, ctx$1, focus, focus$1, focus$2, focus$3, focus$4, focus$5, focus$6, focus$7, menuID, origin$1, selection, tab, x, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$10 = $f._entry$10; _entry$11 = $f._entry$11; _entry$12 = $f._entry$12; _entry$13 = $f._entry$13; _entry$14 = $f._entry$14; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _entry$4 = $f._entry$4; _entry$5 = $f._entry$5; _entry$6 = $f._entry$6; _entry$7 = $f._entry$7; _entry$8 = $f._entry$8; _entry$9 = $f._entry$9; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _tuple$1 = $f._tuple$1; _tuple$10 = $f._tuple$10; _tuple$11 = $f._tuple$11; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; focus$1 = $f.focus$1; focus$2 = $f.focus$2; focus$3 = $f.focus$3; focus$4 = $f.focus$4; focus$5 = $f.focus$5; focus$6 = $f.focus$6; focus$7 = $f.focus$7; menuID = $f.menuID; origin$1 = $f.origin$1; selection = $f.selection; tab = $f.tab; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			ctx$1 = $clone(origin$1, uidata.UI);
+			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
+				_1 = menuID;
+				/* */ if (_1 === (24)) { $s = 2; continue; }
+				/* */ if ((_1 === (16)) || (_1 === (17)) || (_1 === (18)) || (_1 === (19))) { $s = 3; continue; }
+				/* */ if (_1 === (20)) { $s = 4; continue; }
+				/* */ if (_1 === (21)) { $s = 5; continue; }
+				/* */ if (_1 === (22)) { $s = 6; continue; }
+				/* */ if (_1 === (23)) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (_1 === (24)) { */ case 2:
+					if (cancel) {
+						_tuple$1 = helper.Clamp((_entry$1 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$1 !== undefined ? _entry$1.v : 0) - 1 >> 0, 0, (_entry$2 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$2 !== undefined ? _entry$2.v : uidata.ListInt.nil).$length);
+						focus$1 = _tuple$1[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$1);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+						_2 = selection;
+						/* */ if (_2 === ("MenuOptionCreateNew")) { $s = 10; continue; }
+						/* */ if (_2 === ("MenuOptionSell")) { $s = 11; continue; }
+						/* */ $s = 12; continue;
+						/* if (_2 === ("MenuOptionCreateNew")) { */ case 10:
+							_tuple$2 = helper.Clamp((_entry$3 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$3 !== undefined ? _entry$3.v : 0) + 1 >> 0, 0, (_entry$4 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$4 !== undefined ? _entry$4.v : uidata.ListInt.nil).$length);
+							focus$2 = _tuple$2[0];
+							ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$2);
+							$s = 12; continue;
+						/* } else if (_2 === ("MenuOptionSell")) { */ case 11:
+							_r = fmt.Println(new sliceType$1([new $String("Sell")])); /* */ $s = 13; case 13: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+							_r;
+						/* } */ case 12:
+					case 9:
+					$s = 8; continue;
+				/* } else if ((_1 === (16)) || (_1 === (17)) || (_1 === (18)) || (_1 === (19))) { */ case 3:
+					if (cancel) {
+						$s = -1; return [ctx$1, cancel, $ifaceNil];
+					}
+					_tuple$3 = helper.Clamp((_entry$5 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$5 !== undefined ? _entry$5.v : 0) + 1 >> 0, 0, (_entry$6 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$6 !== undefined ? _entry$6.v : uidata.ListInt.nil).$length);
+					focus$3 = _tuple$3[0];
+					ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$3);
+					$s = 8; continue;
+				/* } else if (_1 === (20)) { */ case 4:
+					if (cancel) {
+						_tuple$4 = helper.Clamp((_entry$7 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$7 !== undefined ? _entry$7.v : 0) - 1 >> 0, 0, (_entry$8 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$8 !== undefined ? _entry$8.v : uidata.ListInt.nil).$length);
+						focus$4 = _tuple$4[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$4);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+					_r$1 = ctx$1.Model.BuyRobot(selection); /* */ $s = 14; case 14: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					_tuple$5 = _r$1;
+					ctx$1.Model = _tuple$5[0];
+					err[0] = _tuple$5[1];
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 15; continue; }
+					/* */ $s = 16; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 15:
+						_r$2 = err[0].Error(); /* */ $s = 17; case 17: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$2); /* */ $s = 18; case 18: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 16:
+					$s = 8; continue;
+				/* } else if (_1 === (21)) { */ case 5:
+					if (cancel) {
+						_tuple$6 = helper.Clamp((_entry$9 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$9 !== undefined ? _entry$9.v : 0) - 1 >> 0, 0, (_entry$10 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$10 !== undefined ? _entry$10.v : uidata.ListInt.nil).$length);
+						focus$5 = _tuple$6[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$5);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+					_r$3 = ctx$1.Model.BuyPilot(selection); /* */ $s = 19; case 19: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$7 = _r$3;
+					ctx$1.Model = _tuple$7[0];
+					err[0] = _tuple$7[1];
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 20; continue; }
+					/* */ $s = 21; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 20:
+						_r$4 = err[0].Error(); /* */ $s = 22; case 22: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$4); /* */ $s = 23; case 23: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 21:
+					$s = 8; continue;
+				/* } else if (_1 === (22)) { */ case 6:
+					if (cancel) {
+						_tuple$8 = helper.Clamp((_entry$11 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$11 !== undefined ? _entry$11.v : 0) - 1 >> 0, 0, (_entry$12 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$12 !== undefined ? _entry$12.v : uidata.ListInt.nil).$length);
+						focus$6 = _tuple$8[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$6);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+					_r$5 = ctx$1.Model.BuyWeapon(selection); /* */ $s = 24; case 24: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+					_tuple$9 = _r$5;
+					ctx$1.Model = _tuple$9[0];
+					err[0] = _tuple$9[1];
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 25; continue; }
+					/* */ $s = 26; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 25:
+						_r$6 = err[0].Error(); /* */ $s = 27; case 27: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$6); /* */ $s = 28; case 28: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 26:
+					$s = 8; continue;
+				/* } else if (_1 === (23)) { */ case 7:
+					if (cancel) {
+						_tuple$10 = helper.Clamp((_entry$13 = ctx$1.Focus[$Int.keyFor(pageID[0])], _entry$13 !== undefined ? _entry$13.v : 0) - 1 >> 0, 0, (_entry$14 = ctx$1.Menus[$Int.keyFor(pageID[0])], _entry$14 !== undefined ? _entry$14.v : uidata.ListInt.nil).$length);
+						focus$7 = _tuple$10[0];
+						ctx$1.Focus = uidata.AssocIntInt(ctx$1.Focus, pageID[0], focus$7);
+						$s = -1; return [ctx$1, false, $ifaceNil];
+					}
+					_r$7 = ctx$1.Model.BuyComponent(selection); /* */ $s = 29; case 29: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+					_tuple$11 = _r$7;
+					ctx$1.Model = _tuple$11[0];
+					err[0] = _tuple$11[1];
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 30; continue; }
+					/* */ $s = 31; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 30:
+						_r$8 = err[0].Error(); /* */ $s = 32; case 32: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$8); /* */ $s = 33; case 33: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					/* } */ case 31:
+				/* } */ case 8:
+			case 1:
+			$s = -1; return [ctx$1, cancel, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$10 = _entry$10; $f._entry$11 = _entry$11; $f._entry$12 = _entry$12; $f._entry$13 = _entry$13; $f._entry$14 = _entry$14; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._entry$4 = _entry$4; $f._entry$5 = _entry$5; $f._entry$6 = _entry$6; $f._entry$7 = _entry$7; $f._entry$8 = _entry$8; $f._entry$9 = _entry$9; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._tuple$1 = _tuple$1; $f._tuple$10 = _tuple$10; $f._tuple$11 = _tuple$11; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.focus$1 = focus$1; $f.focus$2 = focus$2; $f.focus$3 = focus$3; $f.focus$4 = focus$4; $f.focus$5 = focus$5; $f.focus$6 = focus$6; $f.focus$7 = focus$7; $f.menuID = menuID; $f.origin$1 = origin$1; $f.selection = selection; $f.tab = tab; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err, pageID, view), (function(err, pageID, view) { return function(origin$1, focus, selection, cancel, tab) {
+			var cancel, focus, origin$1, selection, tab;
+			return [origin$1, cancel, $ifaceNil];
+		}; })(err, pageID, view)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		uidata.UI.copy(ctx, _tuple[0]);
+		err[0] = _tuple[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [origin, err[0]];
+		}
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, pageID[0], false);
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: BuyPhase }; } $f._r = _r; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.BuyPhase = BuyPhase;
+	LobbyPagePhase = function(origin) {
+		var _r, _tuple, ctx, err, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = [err];
+		err[0] = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 1, true);
+		_r = common.BasicPagePhase($clone(ctx, uidata.UI), 1, (function(err) { return function(origin$1) {
+			var origin$1;
+			return [origin$1, $ifaceNil];
+		}; })(err), (function(err) { return function $b(origin$1, focus, selection, cancel, tab) {
+			var _1, _2, _entry, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, cancel, ctx$1, focus, menuID, origin$1, selection, tab, x, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _entry = $f._entry; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; menuID = $f.menuID; origin$1 = $f.origin$1; selection = $f.selection; tab = $f.tab; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			ctx$1 = $clone(origin$1, uidata.UI);
+			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(1)], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
+				_1 = menuID;
+				/* */ if (_1 === (15)) { $s = 2; continue; }
+				/* */ $s = 3; continue;
+				/* if (_1 === (15)) { */ case 2:
+						_2 = selection;
+						/* */ if (_2 === ("MenuOptionBuyPilot")) { $s = 5; continue; }
+						/* */ if (_2 === ("MenuOptionBuyRobot")) { $s = 6; continue; }
+						/* */ if (_2 === ("MenuOptionBuyWeapon")) { $s = 7; continue; }
+						/* */ if (_2 === ("MenuOptionBuyComponent")) { $s = 8; continue; }
+						/* */ if (_2 === ("MenuOptionAssocRobotPilot")) { $s = 9; continue; }
+						/* */ if (_2 === ("MenuOptionAssocWeaponRobot")) { $s = 10; continue; }
+						/* */ if (_2 === ("MenuOptionAssocComponentRobot")) { $s = 11; continue; }
+						/* */ if (_2 === ("MenuOptionStartGameplay")) { $s = 12; continue; }
+						/* */ $s = 13; continue;
+						/* if (_2 === ("MenuOptionBuyPilot")) { */ case 5:
+							_r = BuyPhase($clone(ctx$1, uidata.UI), 3); /* */ $s = 14; case 14: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+							_tuple$1 = _r;
+							uidata.UI.copy(ctx$1, _tuple$1[0]);
+							err[0] = _tuple$1[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionBuyRobot")) { */ case 6:
+							_r$1 = BuyPhase($clone(ctx$1, uidata.UI), 2); /* */ $s = 15; case 15: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+							_tuple$2 = _r$1;
+							uidata.UI.copy(ctx$1, _tuple$2[0]);
+							err[0] = _tuple$2[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionBuyWeapon")) { */ case 7:
+							_r$2 = BuyPhase($clone(ctx$1, uidata.UI), 4); /* */ $s = 16; case 16: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+							_tuple$3 = _r$2;
+							uidata.UI.copy(ctx$1, _tuple$3[0]);
+							err[0] = _tuple$3[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionBuyComponent")) { */ case 8:
+							_r$3 = BuyPhase($clone(ctx$1, uidata.UI), 5); /* */ $s = 17; case 17: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+							_tuple$4 = _r$3;
+							uidata.UI.copy(ctx$1, _tuple$4[0]);
+							err[0] = _tuple$4[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionAssocRobotPilot")) { */ case 9:
+							_r$4 = AssocPhase($clone(ctx$1, uidata.UI), 6); /* */ $s = 18; case 18: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+							_tuple$5 = _r$4;
+							uidata.UI.copy(ctx$1, _tuple$5[0]);
+							err[0] = _tuple$5[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionAssocWeaponRobot")) { */ case 10:
+							_r$5 = AssocPhase($clone(ctx$1, uidata.UI), 7); /* */ $s = 19; case 19: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+							_tuple$6 = _r$5;
+							uidata.UI.copy(ctx$1, _tuple$6[0]);
+							err[0] = _tuple$6[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionAssocComponentRobot")) { */ case 11:
+							_r$6 = AssocPhase($clone(ctx$1, uidata.UI), 8); /* */ $s = 20; case 20: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+							_tuple$7 = _r$6;
+							uidata.UI.copy(ctx$1, _tuple$7[0]);
+							err[0] = _tuple$7[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							$s = 13; continue;
+						/* } else if (_2 === ("MenuOptionStartGameplay")) { */ case 12:
+							ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 1, false);
+							_r$7 = MultiUnitSelectionPagePhase($clone(ctx$1, uidata.UI)); /* */ $s = 21; case 21: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+							_tuple$8 = _r$7;
+							uidata.UI.copy(ctx$1, _tuple$8[0]);
+							err[0] = _tuple$8[1];
+							if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+								$s = -1; return [origin$1, cancel, err[0]];
+							}
+							ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 1, true);
+						/* } */ case 13:
+					case 4:
+				/* } */ case 3:
+			case 1:
+			$s = -1; return [ctx$1, cancel, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._entry = _entry; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.menuID = menuID; $f.origin$1 = origin$1; $f.selection = selection; $f.tab = tab; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err), (function(err) { return function(origin$1, focus, selection, cancel, tab) {
+			var cancel, focus, origin$1, selection, tab;
+			return [origin$1, cancel, $ifaceNil];
+		}; })(err)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		uidata.UI.copy(ctx, _tuple[0]);
+		err[0] = _tuple[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [ctx, err[0]];
+		}
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 1, false);
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: LobbyPagePhase }; } $f._r = _r; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.LobbyPagePhase = LobbyPagePhase;
+	MultiUnitSelectionPagePhase = function(origin) {
+		var _r, _r$1, _tuple, _tuple$1, ctx, err, origin, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; ctx = $f.ctx; err = $f.err; origin = $f.origin; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = [ctx];
+		err = [err];
+		view = [view];
+		err[0] = $ifaceNil;
+		ctx[0] = $clone(origin, uidata.UI);
+		view[0] = def.View;
+		_r = view[0].Render($clone(ctx[0], uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		uidata.UI.copy(ctx[0], _tuple[0]);
+		err[0] = _tuple[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [origin, err[0]];
+		}
+		ctx[0].Actives = uidata.AssocIntBool(ctx[0].Actives, 9, true);
+		_r$1 = common.BasicPagePhase($clone(ctx[0], uidata.UI), 9, (function(ctx, err, view) { return function $b(origin$1) {
+			var _r$1, origin$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; origin$1 = $f.origin$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$1 = view[0].Render($clone(ctx[0], uidata.UI)); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return _r$1;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f.origin$1 = origin$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(ctx, err, view), (function(ctx, err, view) { return function $b(origin$1, focus, selection, cancel, tab) {
+			var _1, _entry, _entry$1, _entry$2, _i, _keys, _r$1, _r$2, _r$3, _r$4, _ref, _tuple$2, _tuple$3, cancel, cnt, ctx$1, focus, menuID, origin$1, reason, sel, selection, selection$1, tab, x, x$1, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _i = $f._i; _keys = $f._keys; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; cancel = $f.cancel; cnt = $f.cnt; ctx$1 = $f.ctx$1; focus = $f.focus; menuID = $f.menuID; origin$1 = $f.origin$1; reason = $f.reason; sel = $f.sel; selection = $f.selection; selection$1 = $f.selection$1; tab = $f.tab; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			ctx$1 = $clone(origin$1, uidata.UI);
+			menuID = (x = (_entry = ctx$1.Menus[$Int.keyFor(9)], _entry !== undefined ? _entry.v : uidata.ListInt.nil), ((focus < 0 || focus >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + focus]));
+				_1 = menuID;
+				/* */ if (_1 === (29)) { $s = 2; continue; }
+				/* */ $s = 3; continue;
+				/* if (_1 === (29)) { */ case 2:
+					if (cancel) {
+						$s = -1; return [ctx$1, cancel, $ifaceNil];
+					}
+					selection$1 = (_entry$1 = ctx$1.Menu1Ds[$Int.keyFor(menuID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu1D.ptr(sliceType.nil, false, 0, 0, 0)).Selection;
+					cnt = 0;
+					_ref = selection$1;
+					_i = 0;
+					_keys = $keys(_ref);
+					/* while (true) { */ case 4:
+						/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+						_entry$2 = _ref[_keys[_i]];
+						if (_entry$2 === undefined) {
+							_i++;
+							/* continue; */ $s = 4; continue;
+						}
+						sel = _entry$2.v;
+						if (sel === false) {
+							_i++;
+							/* continue; */ $s = 4; continue;
+						}
+						cnt = cnt + (1) >> 0;
+						_i++;
+					/* } */ $s = 4; continue; case 5:
+					/* */ if (cnt === 0) { $s = 6; continue; }
+					/* */ $s = 7; continue;
+					/* if (cnt === 0) { */ case 6:
+						$r = view[0].Alert("\xE8\xAB\x8B\xE9\x81\xB8\xE6\x93\x87\xE8\x87\xB3\xE5\xB0\x91\xE4\xB8\x80\xE6\xA9\x9F"); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [origin$1, false, $ifaceNil];
+					/* } */ case 7:
+					ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 9, false);
+					_r$1 = ctx$1.Model.New((x$1 = new protocol.NewGameplayWithSelection.ptr(selection$1), new x$1.constructor.elem(x$1))); /* */ $s = 9; case 9: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+					_tuple$2 = _r$1;
+					ctx$1.Model = _tuple$2[0];
+					err[0] = _tuple$2[1];
+					/* */ if (!($interfaceIsEqual(err[0], $ifaceNil))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!($interfaceIsEqual(err[0], $ifaceNil))) { */ case 10:
+						_r$2 = err[0].Error(); /* */ $s = 12; case 12: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+						$r = view[0].Alert(_r$2); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+						$s = -1; return [origin$1, false, $ifaceNil];
+					/* } */ case 11:
+					_r$3 = gameplay.GameLoop($clone(ctx$1, uidata.UI)); /* */ $s = 14; case 14: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$3 = _r$3;
+					uidata.UI.copy(ctx$1, _tuple$3[0]);
+					err[0] = _tuple$3[1];
+					if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+						$s = -1; return [origin$1, cancel, err[0]];
+					}
+					_r$4 = ctx$1.Model.IsDone(); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+					reason = _r$4;
+					$unused(reason);
+					$s = -1; return [ctx$1, true, $ifaceNil];
+				/* } */ case 3:
+			case 1:
+			$s = -1; return [ctx$1, cancel, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._i = _i; $f._keys = _keys; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.cancel = cancel; $f.cnt = cnt; $f.ctx$1 = ctx$1; $f.focus = focus; $f.menuID = menuID; $f.origin$1 = origin$1; $f.reason = reason; $f.sel = sel; $f.selection = selection; $f.selection$1 = selection$1; $f.tab = tab; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(ctx, err, view), (function(ctx, err, view) { return function(origin$1, focus, selection, cancel, tab) {
+			var cancel, focus, origin$1, selection, tab;
+			return [origin$1, cancel, $ifaceNil];
+		}; })(ctx, err, view)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		uidata.UI.copy(ctx[0], _tuple$1[0]);
+		err[0] = _tuple$1[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [ctx[0], err[0]];
+		}
+		ctx[0].Actives = uidata.AssocIntBool(ctx[0].Actives, 9, false);
+		$s = -1; return [ctx[0], $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: MultiUnitSelectionPagePhase }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.MultiUnitSelectionPagePhase = MultiUnitSelectionPagePhase;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -44895,16 +45678,63 @@ $packages["app/page/lobby"] = (function() {
 		$r = protocol.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = uidata.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = fmt.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
 	return $pkg;
 })();
 $packages["app/page/title"] = (function() {
-	var $pkg = {}, $init, common, lobby, uidata;
+	var $pkg = {}, $init, common, lobby, uidata, StartPagePhase;
 	common = $packages["app/page/common"];
 	lobby = $packages["app/page/lobby"];
 	uidata = $packages["app/tool/uidata"];
+	StartPagePhase = function(origin) {
+		var _r, _tuple, ctx, err, origin, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; origin = $f.origin; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = [err];
+		err[0] = $ifaceNil;
+		ctx = $clone(origin, uidata.UI);
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 0, true);
+		_r = common.BasicPagePhase($clone(ctx, uidata.UI), 0, (function(err) { return function(origin$1) {
+			var origin$1;
+			return [origin$1, $ifaceNil];
+		}; })(err), (function(err) { return function $b(origin$1, focus, selection, cancel, tab) {
+			var _1, _r, _tuple$1, cancel, ctx$1, focus, origin$1, selection, tab, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _r = $f._r; _tuple$1 = $f._tuple$1; cancel = $f.cancel; ctx$1 = $f.ctx$1; focus = $f.focus; origin$1 = $f.origin$1; selection = $f.selection; tab = $f.tab; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			ctx$1 = $clone(origin$1, uidata.UI);
+				_1 = selection;
+				/* */ if (_1 === ("MenuOptionNewGame")) { $s = 2; continue; }
+				/* */ $s = 3; continue;
+				/* if (_1 === ("MenuOptionNewGame")) { */ case 2:
+					ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 0, false);
+					_r = lobby.LobbyPagePhase($clone(ctx$1, uidata.UI)); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+					_tuple$1 = _r;
+					uidata.UI.copy(ctx$1, _tuple$1[0]);
+					err[0] = _tuple$1[1];
+					if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+						$s = -1; return [origin$1, cancel, err[0]];
+					}
+					ctx$1.Actives = uidata.AssocIntBool(ctx$1.Actives, 0, true);
+				/* } */ case 3:
+			case 1:
+			$s = -1; return [ctx$1, cancel, $ifaceNil];
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._r = _r; $f._tuple$1 = _tuple$1; $f.cancel = cancel; $f.ctx$1 = ctx$1; $f.focus = focus; $f.origin$1 = origin$1; $f.selection = selection; $f.tab = tab; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(err), (function(err) { return function(origin$1, focus, selection, cancel, tab) {
+			var cancel, focus, origin$1, selection, tab;
+			return [origin$1, cancel, $ifaceNil];
+		}; })(err)); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		uidata.UI.copy(ctx, _tuple[0]);
+		err[0] = _tuple[1];
+		if (!($interfaceIsEqual(err[0], $ifaceNil))) {
+			$s = -1; return [origin, err[0]];
+		}
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, 0, false);
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: StartPagePhase }; } $f._r = _r; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.StartPagePhase = StartPagePhase;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
@@ -44917,7 +45747,7 @@ $packages["app/page/title"] = (function() {
 	return $pkg;
 })();
 $packages["app"] = (function() {
-	var $pkg = {}, $init, v1, gameplay, title, def, protocol, fmt, log, sliceType, Main, StartWithGameplayTest;
+	var $pkg = {}, $init, v1, gameplay, title, def, protocol, fmt, log, sliceType, Main, StartWithProduct;
 	v1 = $packages["app/model/v1"];
 	gameplay = $packages["app/page/gameplay"];
 	title = $packages["app/page/title"];
@@ -44932,7 +45762,7 @@ $packages["app"] = (function() {
 		view = [view];
 		_key = protocol.LogCategoryPhase; (log.Category || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: true };
 		_key$1 = protocol.LogCategoryDetail; (log.Category || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: true };
-		_key$2 = protocol.LogCategoryWarning; (log.Category || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: false };
+		_key$2 = protocol.LogCategoryWarning; (log.Category || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: true };
 		_key$3 = protocol.LogCategoryRender; (log.Category || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: false };
 		view[0] = def.View;
 		$deferred.push([(function(view) { return function $b() {
@@ -44969,34 +45799,34 @@ $packages["app"] = (function() {
 		}; })(view), []]);
 		_r = view[0].Install(); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_r;
-		$r = StartWithGameplayTest(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = StartWithProduct(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$r = log.Log(protocol.LogCategoryPhase, "Main", "end"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$s = -1; return;
 		/* */ } return; } } catch(err) { $err = err; $s = -1; } finally { $callDeferred($deferred, $err); if($curGoroutine.asleep) { if ($f === undefined) { $f = { $blk: Main }; } $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._key$3 = _key$3; $f._r = _r; $f.view = view; $f.$s = $s; $f.$deferred = $deferred; $f.$r = $r; return $f; } }
 	};
 	$pkg.Main = Main;
-	StartWithGameplayTest = function() {
-		var _r, _r$1, _tuple, _tuple$1, err, ui, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; ui = $f.ui; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+	StartWithProduct = function() {
+		var _r, _r$1, _tuple, _tuple$1, err, ui, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; ui = $f.ui; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		ui = $clone(def.DefaultUI, $packages["app/tool/uidata"].UI);
-		_r = $clone(v1.DefaultModel, v1.Model).New((x = new protocol.NewModelWithTest.ptr(), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = $clone(v1.DefaultModel, v1.Model).New($ifaceNil); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		ui.Model = _tuple[0];
 		err = _tuple[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$panic(err);
 		}
-		_r$1 = gameplay.GameLoop($clone(ui, $packages["app/tool/uidata"].UI)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1 = title.StartPagePhase($clone(ui, $packages["app/tool/uidata"].UI)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple$1 = _r$1;
 		err = _tuple$1[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$panic(err);
 		}
 		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: StartWithGameplayTest }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.ui = ui; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: StartWithProduct }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.ui = ui; $f.$s = $s; $f.$r = $r; return $f;
 	};
-	$pkg.StartWithGameplayTest = StartWithGameplayTest;
+	$pkg.StartWithProduct = StartWithProduct;
 	$init = function() {
 		$pkg.$init = function() {};
 		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:

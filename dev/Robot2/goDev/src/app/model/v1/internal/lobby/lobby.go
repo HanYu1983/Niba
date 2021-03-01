@@ -6,6 +6,7 @@ import (
 	"app/tool/protocol"
 	"fmt"
 	"strconv"
+	"tool/log"
 )
 
 func BuyRobot(origin types.Model, protoID string) (types.Model, error) {
@@ -99,6 +100,7 @@ func DissocRobotPilot(origin types.Model, robotID string) (types.Model, error) {
 	return ctx, nil
 }
 func AssocWeaponRobot(origin types.Model, weaponID string, robotID string) (types.Model, error) {
+	log.Log(protocol.LogCategoryDetail, "AssocWeaponRobot", fmt.Sprintf("weaponID(%v) robotID(%v)", weaponID, robotID))
 	ctx := origin
 	ctx.App.Lobby.RobotIDByWeaponID = data.AssocStringString(ctx.App.Lobby.RobotIDByWeaponID, weaponID, robotID)
 	return ctx, nil

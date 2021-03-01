@@ -5,8 +5,10 @@ import (
 	"app/tool"
 	"app/tool/def"
 	"app/tool/helper"
+	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
+	"tool/log"
 )
 
 func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
@@ -49,15 +51,20 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 				}
 				leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
 				middleMenu := ctx.Menu1Ds[uidata.Menu1DAssocOrDisMenu]
-				leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor+leftMenu.Offset)
+				leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor)
+				log.Log(protocol.LogCategoryDetail, "AssocPhase", fmt.Sprintf("leftSelection(%v)", leftSelection))
 				if outOfRange != nil {
+					log.Log(protocol.LogCategoryWarning, "AssocPhase", outOfRange.Error())
 					return ctx, cancel, nil
 				}
-				middleSelection, outOfRange := tool.TryGetString(middleMenu.Options, middleMenu.Cursor+middleMenu.Offset)
+				middleSelection, outOfRange := tool.TryGetString(middleMenu.Options, middleMenu.Cursor)
+				log.Log(protocol.LogCategoryDetail, "AssocPhase", fmt.Sprintf("middleSelection(%v)", middleSelection))
 				if outOfRange != nil {
+					log.Log(protocol.LogCategoryWarning, "AssocPhase", outOfRange.Error())
 					return ctx, cancel, nil
 				}
 				rightSelection := selection
+				log.Log(protocol.LogCategoryDetail, "AssocPhase", fmt.Sprintf("rightSelection(%v)", rightSelection))
 				switch pageID {
 				case uidata.PageAssocRobotToPilot:
 					switch middleSelection {
@@ -119,8 +126,9 @@ func AssocPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				case uidata.MenuOptionDissoc:
 					leftMenu := ctx.Menu1Ds[leftMapping[pageID]]
-					leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor+leftMenu.Offset)
+					leftSelection, outOfRange := tool.TryGetString(leftMenu.Options, leftMenu.Cursor)
 					if outOfRange != nil {
+						log.Log(protocol.LogCategoryWarning, "AssocPhase", outOfRange.Error())
 						return ctx, cancel, nil
 					}
 					switch pageID {
