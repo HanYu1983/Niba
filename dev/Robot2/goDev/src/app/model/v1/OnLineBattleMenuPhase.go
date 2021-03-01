@@ -13,6 +13,7 @@ func OnLineBattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string, 
 	var err error
 	ctx := origin
 	view := def.View
+	ctx.PhaseMark = 0
 	ctx, err = OnEnableLineBattleMenu(ctx, robotID, weaponID, targetPosition)
 	if err != nil {
 		return origin, false, err

@@ -111,7 +111,12 @@ func ObserveGameplayPage(origin uidata.UI, id int) (uidata.UI, error) {
 		gameplayPage.AttackRange = []protocol.Position{}
 	}
 	// unit menu
-	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
+	if ctx.PhaseMark == uidata.PhaseMarkSelectWeaponTargetPhase {
+		// 選擇攻擊對象時不顯示單位菜單
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, false)
+	} else {
+		ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageUnitMenu, unitMenuModel.Active)
+	}
 	// battle menu
 	battleMenuModel := model.App.Gameplay.BattleMenu
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageBattleMenu, battleMenuModel.Active)

@@ -15,12 +15,7 @@ func SelectWeaponTargetPhase(origin uidata.UI, robotID string, weaponID string) 
 	if err != nil {
 		return origin, false, err
 	}
-	// 選擇敵機時將選單關掉
-	// 先不使用
-	// ctx.Model, err = ctx.Model.DisableRobotMenu()
-	// if err != nil {
-	// 	return origin, false, err
-	// }
+	ctx.PhaseMark = uidata.PhaseMarkSelectWeaponTargetPhase
 	gameplayPage := ctx.GameplayPages[uidata.PageGameplay]
 	weapon, err := protocol.TryGetStringWeapon(gameplayPage.RobotMenu.Weapons, weaponID)
 	if err != nil {

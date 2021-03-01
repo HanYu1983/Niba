@@ -32,19 +32,19 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 					return ctx, cancel, nil
 				}
 				selection := ctx.Menu1Ds[menuID].Selection
-				{
-					cnt := 0
-					for _, sel := range selection {
-						if sel == false {
-							continue
-						}
-						cnt++
-					}
-					if cnt == 0 {
-						view.Alert("請選擇至少一機")
-						return origin, false, nil
-					}
-				}
+				// {
+				// 	cnt := 0
+				// 	for _, sel := range selection {
+				// 		if sel == false {
+				// 			continue
+				// 		}
+				// 		cnt++
+				// 	}
+				// 	if cnt == 0 {
+				// 		view.Alert("請選擇至少一機")
+				// 		return origin, false, nil
+				// 	}
+				// }
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
 				ctx.Model, err = ctx.Model.New(protocol.NewGameplayWithSelection{Selection: selection})
 				if err != nil {

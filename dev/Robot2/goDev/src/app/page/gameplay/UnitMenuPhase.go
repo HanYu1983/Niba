@@ -18,6 +18,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 	var err error
 	ctx := origin
 	view := def.View
+	ctx.PhaseMark = 0
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, false, err
@@ -39,6 +40,7 @@ func UnitMenuPhase(origin uidata.UI, unitID string) (uidata.UI, bool, error) {
 		var selection string
 	MENU2D_STEP:
 		for {
+			ctx.PhaseMark = 0
 			ctx, err = view.Render(ctx)
 			if err != nil {
 				return origin, false, err

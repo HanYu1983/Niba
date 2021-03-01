@@ -42,6 +42,7 @@ func OnSingleBattleMenuPhase(origin uidata.UI, isPlayerTurn bool, robotID string
 	var err error
 	ctx := origin
 	view := def.View
+	ctx.PhaseMark = 0
 	ctx, err = OnEnableBattleMenu(ctx, robotID, weaponID, targetRobotID)
 	if err != nil {
 		return origin, false, err

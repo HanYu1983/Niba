@@ -102,9 +102,15 @@ type GameplayPage struct {
 // ListInt is
 type ListInt []int
 
+const (
+	PhaseMarkPending = iota
+	PhaseMarkSelectWeaponTargetPhase
+)
+
 // UI is
 type UI struct {
 	Model         protocol.IModel
+	PhaseMark     int
 	Actives       map[int]bool
 	Menus         map[int]ListInt
 	Focus         map[int]int
