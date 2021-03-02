@@ -16,16 +16,8 @@ export class EffectGenerator extends Instant {
     @property(Node)
     effects:Node[] = [];
 
-    // protected doBuild(content:any, data:any):void{
-    //     for(let i = 0; i < content.length; ++i){
-    //         const effectInfo = content[i];
-    //         const effectType = effectInfo[0];
-    //         const pos = effectInfo[1];
-    //         this.createEffect(effectType, pos);
-    //     }
-    // }
-
     createEffect(effectType:number, pos:Vec3, cb?:()=>void):Node{
+
         const effect:Node = this.pool.aquire(this.effects[effectType], this.node);
         effect.setPosition(pos);
 
@@ -39,7 +31,6 @@ export class EffectGenerator extends Instant {
         effect.on(AnimationEndCallback.ON_ANIMATION_END, ()=>{
             effect.off(AnimationEndCallback.ON_ANIMATION_END);            
             this.pool.release(this.effects[effectType], effect);
-            
             if(cb) cb();
         });
         return effect;
