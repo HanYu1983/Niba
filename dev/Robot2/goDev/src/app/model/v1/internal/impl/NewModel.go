@@ -52,12 +52,19 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			}
 			robot, has := ctx.App.Lobby.Robots[robotID]
 			if has == false {
-				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)找不到", robotID)
+				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體(%v)找不到", robotID)
 			}
 			robot.PlayerID = protocol.PlayerIDPlayer
 			robot.PilotID, has = ctx.App.Lobby.PilotIDByRobotID[robotID]
 			if has == false {
-				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體id(%v)找不到駕駛", robotID)
+				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體(%v)找不到駕駛", robotID)
+			}
+			power, err := common.QueryRobotPower(ctx, robot.ID, false)
+			if err != nil {
+				return origin, err
+			}
+			if power <= 0 {
+				return origin, fmt.Errorf("正在使用選擇的機體建立關卡，但所選擇的機體(%v)的剩餘出力小於0", robotID)
 			}
 			ctx, _, err = common.NewRobot(ctx, protocol.Position{0, i}, robot)
 			if err != nil {

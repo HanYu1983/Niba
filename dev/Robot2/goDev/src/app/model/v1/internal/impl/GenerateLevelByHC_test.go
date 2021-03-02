@@ -4,6 +4,7 @@ import (
 	"app/model/v1/internal/tool/types"
 	"app/tool/data"
 	"app/tool/helper"
+	"app/tool/protocol"
 	"fmt"
 	"testing"
 )
@@ -24,7 +25,7 @@ func TestGenerateLevelByHC(t *testing.T) {
 	}
 	model := types.Model{}
 	model.App.Gameplay.Map = tempMap
-	ctx, err := GenerateLevelByHC(model, "0")
+	ctx, err := GenerateLevelByHC(model, "0", protocol.Position{}, 10000)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -38,6 +38,7 @@ type Robot struct {
 	BeamArmor   int
 	Cost        int
 	Power       int
+	MaxPower    int
 	Suitability [4]float64
 	UnlockExp   int
 	Weapons     Weapons

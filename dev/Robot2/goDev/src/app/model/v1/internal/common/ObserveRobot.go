@@ -46,6 +46,12 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 		return protocol.Robot{}, err
 	}
 	robot.Title = robotProto.Title
+	// power
+	robot.Power, err = QueryRobotPower(model, robot.ID, isGameplay)
+	if err != nil {
+		return protocol.Robot{}, err
+	}
+	robot.MaxPower = robotProto.Power
 	// Armor
 	robot.Armor, err = QueryRobotArmor(model, robot.ID, isGameplay)
 	if err != nil {
