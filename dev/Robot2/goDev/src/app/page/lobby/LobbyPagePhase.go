@@ -18,6 +18,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageLobby,
+		false,
 		func(origin uidata.UI) (uidata.UI, error) {
 			return origin, nil
 		},

@@ -16,6 +16,7 @@ func BuyPhase(origin uidata.UI, pageID int) (uidata.UI, error) {
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		pageID,
+		false,
 		func(origin uidata.UI) (uidata.UI, error) {
 			var err error
 			ctx := origin

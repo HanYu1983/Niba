@@ -13,6 +13,7 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageStart,
+		false,
 		func(origin uidata.UI) (uidata.UI, error) {
 			return origin, nil
 		},

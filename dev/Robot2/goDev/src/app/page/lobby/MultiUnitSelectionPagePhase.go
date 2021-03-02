@@ -23,6 +23,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, map[string]bool, 
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageMultiUnitSelection,
+		false,
 		func(origin uidata.UI) (uidata.UI, error) {
 			return view.Render(ctx)
 		},

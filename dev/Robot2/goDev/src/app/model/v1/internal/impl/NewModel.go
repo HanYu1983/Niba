@@ -20,16 +20,46 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	switch detail := situation.(type) {
 	case protocol.NewGameplayWithSelection:
 		rand.Seed(0)
+		selectLevelSelection := detail.SelectLevelSelection
 		selection := detail.Selection
 		{
 			gameplay := types.DefaultGameplay
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖
-			gameplay.Map, err = helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, 0, 0)
-			if err != nil {
-				return origin, err
+			var tmpMap [][]int
+			{
+				offset := selectLevelSelection.Cursor * uidata.MapWidth
+				switch selectLevelSelection.MenuID {
+				case uidata.Menu1DGroundLevelMenu:
+					tmpMap, err = helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, offset, offset)
+					if err != nil {
+						return origin, err
+					}
+				case uidata.Menu1DSeaLevelMenu:
+					tmpMap, err = helper.GenerateMap(helper.GenerateMapConfigIsland, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, offset, offset)
+					if err != nil {
+						return origin, err
+					}
+				case uidata.Menu1DRandomLevelMenu:
+					tmpMap, err = helper.GenerateMap(helper.GenerateMapConfig{
+						Deepsea:  rand.Float64(),
+						Sea:      rand.Float64(),
+						Sand:     rand.Float64(),
+						Grass:    rand.Float64(),
+						Mountain: rand.Float64(),
+						City:     rand.Float64(),
+						Tree:     rand.Float64(),
+					}, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, offset, offset)
+					if err != nil {
+						return origin, err
+					}
+				}
 			}
+			if tmpMap == nil {
+				return origin, fmt.Errorf("tmpMap為nil, 必須建立地圖")
+			}
+			gameplay.Map = tmpMap
 			// 參與玩家
 			gameplay.Players = map[string]protocol.Player{
 				protocol.PlayerIDPlayer: {ID: protocol.PlayerIDPlayer, GroupID: "0"},
@@ -72,11 +102,15 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			}
 			i++
 		}
-		// 敵機
-		ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, 200000)
-		if err != nil {
-			return origin, err
+		{
+			enemyPower := selectLevelSelection.Cursor * 200000
+			// 敵機
+			ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, enemyPower)
+			if err != nil {
+				return origin, err
+			}
 		}
+
 	case protocol.NewModelWithTest:
 		{
 			lobby := types.DefaultLobby

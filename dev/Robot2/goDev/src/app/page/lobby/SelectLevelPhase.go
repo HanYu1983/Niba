@@ -18,10 +18,12 @@ func SelectLevelPhase(origin uidata.UI) (uidata.UI, protocol.SelectLevelSelectio
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageSelectLevel,
+		true,
 		func(origin uidata.UI) (uidata.UI, error) {
 			return origin, nil
 		},
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
+			log.Log(protocol.LogCategoryDetail, "SelectLevelPhase", fmt.Sprintf("cancel(%v) tab(%v)", cancel, tab))
 			ctx := origin
 			menuID := ctx.Menus[uidata.PageSelectLevel][focus]
 			if cancel {

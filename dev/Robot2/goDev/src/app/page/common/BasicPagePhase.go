@@ -1,6 +1,7 @@
 package common
 
 import (
+	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
 	"fmt"
@@ -10,6 +11,7 @@ import (
 func BasicPagePhase(
 	origin uidata.UI,
 	pageID int,
+	autoTab bool,
 	onUpdate func(uidata.UI) (uidata.UI, error),
 	onClickMenu1D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
 	onClickMenu2D func(uidata.UI, int, string, bool, bool) (uidata.UI, bool, error),
@@ -34,6 +36,10 @@ Menu:
 				return origin, err
 			}
 			if tab {
+				if autoTab {
+					focus, _ := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+				}
 				continue
 			}
 			ctx, cancel, err = onClickMenu1D(ctx, focus, selection, cancel, tab)
@@ -51,6 +57,10 @@ Menu:
 				return origin, err
 			}
 			if tab {
+				if autoTab {
+					focus, _ := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
+				}
 				continue
 			}
 			ctx, cancel, err = onClickMenu2D(ctx, focus, selection, cancel, tab)
