@@ -5,10 +5,12 @@
 // Learn life-cycle callbacks:
 //  - https://docs.cocos.com/creator/manual/en/scripting/life-cycle-callbacks.html
 
-import { _decorator, Component, Node, Color } from 'cc';
+import { _decorator, Component, Node, Color, Vec3 } from 'cc';
 import { Instant } from './lib/instanceViewer/Instant';
 import * as ModelType from '../../han/types';
 import { Grids } from './gamePage/Grids';
+import { EffectGenerator } from './gamePage/EffectGenerator';
+import { TurnChange } from './gamePage/TurnChange';
 const { ccclass, property } = _decorator;
 
 @ccclass('Drawer')
@@ -17,10 +19,27 @@ export class Drawer extends Instant {
     @property(Color)
     playerColors:Color[] = [];
 
+    @property(EffectGenerator)
+    frontEffect:EffectGenerator = null;
+
     static staticPlayerColors:Color[] = [];
 
     onLoad(){
         Drawer.staticPlayerColors = this.playerColors;
+    }
+
+    showTurnChange(info:any, cb:()=>void){
+        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, cb);
+        if(info.ID == "PlayerIDPlayer"){
+            turnChange.getComponent(TurnChange)?.setTitleAndColor("自軍回合開始", 0);
+        }else{
+            turnChange.getComponent(TurnChange)?.setTitleAndColor("敵軍回合開始", 1);
+        }
+    }
+
+    showMsg(msg:string){
+        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, ()=>{});
+        turnChange.getComponent(TurnChange)?.setTitleAndColor(msg, 2);
     }
 
     getPageByName(name:string){
@@ -143,8 +162,8 @@ export class Drawer extends Instant {
         let gridPos = Grids.getGridPos(x, y);
         gridPos.x += offsetX;
         gridPos.y += offsetY;
-        if(x > 9)  gridPos.x -= (x - 9) * 32;
-        if(y > 9)  gridPos.y += (y - 9) * 32;
+        // if(x > 9)  gridPos.x -= (x - 9) * 32;
+        // if(y > 9)  gridPos.y += (y - 9) * 32;
         return gridPos;
     }
 }

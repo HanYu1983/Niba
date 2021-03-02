@@ -26,28 +26,11 @@ export class GamePage extends BasicPage {
     @property(LandInfo)
     landInfo:LandInfo = null;
 
-    @property(EffectGenerator)
-    frontEffect:EffectGenerator = null;
-
     clear(){
         super.clear();
         this.map.clear();
         this.unitInfo.clear();
         this.landInfo.clear();
-    }
-
-    showTurnChange(info:any, cb:()=>void){
-        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, cb);
-        if(info.ID == "PlayerIDPlayer"){
-            turnChange.getComponent(TurnChange)?.setTitleAndColor("自軍回合開始", 0);
-        }else{
-            turnChange.getComponent(TurnChange)?.setTitleAndColor("敵軍回合開始", 1);
-        }
-    }
-
-    showMsg(msg:string){
-        let turnChange = this.frontEffect.createEffect(0, Vec3.ZERO, ()=>{});
-        turnChange.getComponent(TurnChange)?.setTitleAndColor(msg, 2);
     }
    
     protected doBuild(content:any, data:any):void{

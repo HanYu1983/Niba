@@ -10,7 +10,6 @@ import { Drawer } from './Drawer';
 const { ccclass, property } = _decorator;
 import * as ModelType from "../../han/types"
 import { Instant } from './lib/instanceViewer/Instant';
-import { LandMap } from './gamePage/LandMap';
 import { GamePage } from './gamePage/GamePage';
 
 @ccclass('Controller')
@@ -51,17 +50,12 @@ export class Controller extends Component {
         RenderTurnStart: (player: any, cb:()=>void)=>{
             if(this.isTargetDevice()){
                 console.log(`[Controller][RenderTurnStart]`, player)
-
-                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
-                gamePage?.getComponent(GamePage)?.showTurnChange(player, cb);
+                this.view.showTurnChange(player, cb);
             }
         },
         Alert: (msg: string) => {
             if(this.isTargetDevice()){
-                // alert面板擋住了, 先用alert來debug
-                alert(msg)
-                const gamePage:Instant|null = this.view.getPageByName("GameplayPage");
-                gamePage?.getComponent(GamePage)?.showMsg(msg);
+                this.view.showMsg(msg);
             }
         },
     }
