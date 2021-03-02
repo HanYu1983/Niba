@@ -7,6 +7,7 @@ import (
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"fmt"
 )
 
 func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
@@ -40,6 +41,9 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
 		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
+	}
+	if menu.Limit == 0 {
+		return origin, fmt.Errorf("menuID(%v) Menu1D(%+v)的Limit不能為0", menuID, menu)
 	}
 	menu.Offset = helper.Max(0, helper.Min((len(options)/menu.Limit)*menu.Limit, menu.Offset))
 	left, right := helper.Max(0, helper.Min(menu.Offset, len(options)-1)), helper.Min(menu.Offset+menu.Limit, len(options))

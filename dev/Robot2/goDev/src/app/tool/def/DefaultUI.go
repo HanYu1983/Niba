@@ -54,6 +54,9 @@ var (
 			PageGameplay: []int{
 				Menu2DUnitMenu, BattleMenuUnitBattleMenu,
 			},
+			PageSelectLevel: []int{
+				Menu1DGroundLevelMenu, Menu1DSeaLevelMenu, Menu1DRandomLevelMenu,
+			},
 		},
 		Focus: map[int]int{},
 		Menu1Ds: map[int]Menu1D{
@@ -127,6 +130,18 @@ var (
 			},
 			Menu1DSystemMenu: {
 				Limit: 10,
+			},
+			Menu1DGroundLevelMenu: {
+				Limit:   10,
+				Options: []string{"Ground1", "Ground2", "Ground3", "Ground4", "Ground5"},
+			},
+			Menu1DSeaLevelMenu: {
+				Limit:   10,
+				Options: []string{"Sea1", "Sea2", "Sea3", "Sea4", "Sea5"},
+			},
+			Menu1DRandomLevelMenu: {
+				Limit:   10,
+				Options: []string{"Random1", "Random2", "Random3", "Random4", "Random5"},
 			},
 		},
 		Menu2Ds: map[int]Menu2D{

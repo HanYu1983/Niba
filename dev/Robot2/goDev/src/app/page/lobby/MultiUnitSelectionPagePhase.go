@@ -2,21 +2,24 @@ package lobby
 
 import (
 	"app/page/common"
-	"app/page/gameplay"
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
+	"tool/log"
 )
 
-func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
+func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, map[string]bool, bool, error) {
+	log.Log(protocol.LogCategoryPhase, "MultiUnitSelectionPagePhase", "start")
 	var err error
 	ctx := origin
 	view := def.View
 	ctx, err = view.Render(ctx)
 	if err != nil {
-		return origin, err
+		return origin, nil, false, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, true)
+	var unitSelection map[string]bool
+	var confirm bool
 	ctx, err = common.BasicPagePhase(
 		ctx,
 		uidata.PageMultiUnitSelection,
@@ -31,7 +34,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 				if cancel {
 					return ctx, cancel, nil
 				}
-				selection := ctx.Menu1Ds[menuID].Selection
+				unitSelection = ctx.Menu1Ds[menuID].Selection
 				// {
 				// 	cnt := 0
 				// 	for _, sel := range selection {
@@ -45,18 +48,7 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 				// 		return origin, false, nil
 				// 	}
 				// }
-				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
-				ctx.Model, err = ctx.Model.New(protocol.NewGameplayWithSelection{Selection: selection})
-				if err != nil {
-					view.Alert(err.Error())
-					return origin, false, nil
-				}
-				ctx, err = gameplay.GameLoop(ctx)
-				if err != nil {
-					return origin, cancel, err
-				}
-				reason := ctx.Model.IsDone()
-				var _ = reason
+				confirm = true
 				return ctx, true, nil
 			}
 			return ctx, cancel, nil
@@ -66,8 +58,10 @@ func MultiUnitSelectionPagePhase(origin uidata.UI) (uidata.UI, error) {
 		},
 	)
 	if err != nil {
-		return ctx, err
+		return ctx, nil, false, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageMultiUnitSelection, false)
-	return ctx, nil
+	cancel := confirm == false
+	log.Log(protocol.LogCategoryPhase, "MultiUnitSelectionPagePhase", "end")
+	return ctx, unitSelection, cancel, nil
 }

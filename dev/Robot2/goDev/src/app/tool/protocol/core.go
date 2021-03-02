@@ -212,8 +212,14 @@ type HitMark struct {
 	Rate    float64
 }
 
+type SelectLevelSelection struct {
+	MenuID int
+	Cursor int
+}
+
 type NewGameplayWithSelection struct {
-	Selection map[string]bool
+	Selection            map[string]bool
+	SelectLevelSelection SelectLevelSelection
 }
 
 type NewModelWithTest struct{}

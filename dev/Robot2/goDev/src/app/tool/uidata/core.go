@@ -171,7 +171,7 @@ const (
 
 //
 const (
-	PageStart = iota
+	PageStart = iota // 0
 	PageLobby
 	PageBuyRobot
 	PageBuyPilot
@@ -181,17 +181,18 @@ const (
 	PageAssocWeaponToRobot
 	PageAssocComponentToRobot
 	PageMultiUnitSelection
-	PageGameplay
+	PageGameplay // 10
 	PageUnitMenu
 	PageSystemMenu
 	PageBattleMenu
+	PageSelectLevel
 
 	Menu1DStartMenu
 	Menu1DLobbyMenu
 	Menu1DRobotListMenu
 	Menu1DPilotListMenu
 	Menu1DWeaponListMenu
-	Menu1DComponentListMenu
+	Menu1DComponentListMenu // 20
 	Menu1DBuyRobotMenu
 	Menu1DBuyPilotMenu
 	Menu1DBuyWeaponMenu
@@ -201,8 +202,12 @@ const (
 	Menu1DWeaponRobotListMenu
 	Menu1DComponentRobotListMenu
 	Menu1DAssocOrDisMenu
-	Menu1DMultiUnitSelectionMenu
+
+	Menu1DMultiUnitSelectionMenu // 30
 	Menu2DUnitMenu
 	Menu1DSystemMenu
 	BattleMenuUnitBattleMenu
+	Menu1DGroundLevelMenu
+	Menu1DSeaLevelMenu
+	Menu1DRandomLevelMenu
 )

@@ -2,12 +2,18 @@ package lobby
 
 import (
 	"app/page/common"
+	"app/page/gameplay"
+	"app/tool/def"
+	"app/tool/protocol"
 	"app/tool/uidata"
+	"tool/log"
 )
 
 func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
+	log.Log(protocol.LogCategoryPhase, "LobbyPagePhase", "start")
 	var err error
 	ctx := origin
+	view := def.View
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
@@ -58,10 +64,45 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					}
 				case uidata.MenuOptionStartGameplay:
 					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
-					ctx, err = MultiUnitSelectionPagePhase(ctx)
+				SELECT_LEVEL:
+					for {
+						var levelSelection protocol.SelectLevelSelection
+						ctx, levelSelection, cancel, err = SelectLevelPhase(ctx)
+						if err != nil {
+							return origin, cancel, err
+						}
+						if cancel {
+							return origin, false, err
+						}
+						for {
+							var unitSelection map[string]bool
+							ctx, unitSelection, cancel, err = MultiUnitSelectionPagePhase(ctx)
+							if err != nil {
+								return origin, cancel, err
+							}
+							if cancel {
+								continue SELECT_LEVEL
+							}
+							ctx.Model, err = ctx.Model.New(protocol.NewGameplayWithSelection{
+								SelectLevelSelection: levelSelection,
+								Selection:            unitSelection,
+							})
+							if err != nil {
+								view.Alert(err.Error())
+								continue
+							}
+							break
+						}
+						break
+					}
+
+					ctx, err = gameplay.GameLoop(ctx)
 					if err != nil {
 						return origin, cancel, err
 					}
+					reason := ctx.Model.IsDone()
+					var _ = reason
+
 					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
 				}
 			}
@@ -75,5 +116,6 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 		return ctx, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
+	log.Log(protocol.LogCategoryPhase, "LobbyPagePhase", "end")
 	return ctx, nil
 }

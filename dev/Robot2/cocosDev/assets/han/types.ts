@@ -51,6 +51,7 @@ export enum Const {
 	PageUnitMenu,
 	PageSystemMenu,
 	PageBattleMenu,
+	PageSelectLevel,
 
 	Menu1DStartMenu,
 	Menu1DLobbyMenu,
@@ -71,6 +72,9 @@ export enum Const {
 	Menu2DUnitMenu,
 	Menu1DSystemMenu,
 	BattleMenuUnitBattleMenu,
+	Menu1DGroundLevelMenu,
+	Menu1DSeaLevelMenu,
+	Menu1DRandomLevelMenu
 }
 
 export enum BattleResultType {
