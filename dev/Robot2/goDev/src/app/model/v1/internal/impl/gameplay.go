@@ -12,13 +12,6 @@ import (
 	"tool/log"
 )
 
-func Save(origin types.Model) error {
-	return nil
-}
-func Load(origin types.Model) (types.Model, error) {
-	return origin, nil
-}
-
 func QueryActivePlayer(origin types.Model) (protocol.Player, error) {
 	return protocol.TryGetStringPlayer(origin.App.Gameplay.Players, origin.App.Gameplay.ActivePlayerID)
 }

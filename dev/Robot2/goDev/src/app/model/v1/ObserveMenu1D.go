@@ -40,7 +40,7 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		canBuy := lobby.QueryComponentCanBuy(model)
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
-		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
+		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionSave, uidata.MenuOptionLoad, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
 	}
 	if menu.Limit == 0 {
 		return origin, fmt.Errorf("menuID(%v) Menu1D(%+v)的Limit不能為0", menuID, menu)

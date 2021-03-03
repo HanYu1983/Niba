@@ -167,6 +167,9 @@ const (
 	MenuOptionTest     = "MenuOptionTest"
 	MenuOptionTest2    = "MenuOptionTest2"
 	MenuOptionTest3    = "MenuOptionTest3"
+
+	MenuOptionSave = "MenuOptionSave"
+	MenuOptionLoad = "MenuOptionLoad"
 )
 
 //
