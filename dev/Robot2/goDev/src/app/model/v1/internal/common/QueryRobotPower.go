@@ -34,7 +34,22 @@ func QueryRobotPower(model types.Model, robotID string, isGameplay bool) (int, e
 			}
 			total += int(val)
 		}
-		total -= component.PowerCost
+		componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID)
+		if err != nil {
+			return 0, err
+		}
+		total -= componentProto.PowerCost
+	}
+	weapons, err := QueryRobotWeapons(model, robot.ID, robot.Transform, isGameplay)
+	if err != nil {
+		return 0, err
+	}
+	for _, weapon := range weapons {
+		weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
+		if err != nil {
+			return 0, err
+		}
+		total -= weaponProto.PowerCost
 	}
 	return total, nil
 }

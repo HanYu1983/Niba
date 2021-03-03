@@ -14,6 +14,12 @@ func ObserveComponent(model types.Model, robotID string, weapon protocol.Compone
 		return protocol.Component{}, err
 	}
 	weapon.Title = weaponProto.Title
+	weapon.Value = weaponProto.Value
+	weapon.PowerCost = weaponProto.PowerCost
+	weapon.Cost = weaponProto.Cost
+	weapon.Desc = weaponProto.Desc
+	weapon.Title = weaponProto.Title
+	weapon.Action = weaponProto.Action
 	log.Log(protocol.LogCategoryRender, "ObserveComponent", "end")
 	return weapon, nil
 }

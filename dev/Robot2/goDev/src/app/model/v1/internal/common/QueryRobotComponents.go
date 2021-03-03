@@ -24,17 +24,14 @@ func QueryRobotComponents(model types.Model, robotID string, isGameplay bool) (m
 	}
 	components := map[string]protocol.Component{}
 	for i, componentProtoID := range robotProto.Components {
-		componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, componentProtoID)
-		if err != nil {
-			return nil, err
-		}
+		// componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, componentProtoID)
+		// if err != nil {
+		// 	return nil, err
+		// }
 		instanceID := fmt.Sprintf("component_%v", i)
 		components[instanceID] = protocol.Component{
-			ID:        instanceID,
-			ProtoID:   componentProtoID,
-			Title:     componentProto.Title,
-			Value:     componentProto.Value,
-			PowerCost: componentProto.PowerCost,
+			ID:      instanceID,
+			ProtoID: componentProtoID,
 		}
 	}
 	for componentID, robotID := range model.App.Lobby.RobotIDByComponentID {
@@ -42,17 +39,14 @@ func QueryRobotComponents(model types.Model, robotID string, isGameplay bool) (m
 			continue
 		}
 		component := model.App.Lobby.Components[componentID]
-		componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID)
-		if err != nil {
-			return nil, err
-		}
+		// componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID)
+		// if err != nil {
+		// 	return nil, err
+		// }
 		instanceID := component.ID
 		components[instanceID] = protocol.Component{
-			ID:        instanceID,
-			ProtoID:   component.ProtoID,
-			Title:     componentProto.Title,
-			Value:     componentProto.Value,
-			PowerCost: componentProto.PowerCost,
+			ID:      instanceID,
+			ProtoID: component.ProtoID,
 		}
 	}
 	log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "end")

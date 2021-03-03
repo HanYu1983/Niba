@@ -84,6 +84,7 @@ type Weapon struct {
 	BulletCount int
 	// 以下是顯示用, 不能修改
 	Title          string
+	PowerCost      int
 	Range          [2]int
 	EnergyCost     int
 	MaxBulletCount int
@@ -102,6 +103,7 @@ type Component struct {
 	ProtoID string
 	// 以下是顯示用, 不能修改
 	Title     string
+	Cost      int
 	Desc      string
 	Value     []string
 	PowerCost int
