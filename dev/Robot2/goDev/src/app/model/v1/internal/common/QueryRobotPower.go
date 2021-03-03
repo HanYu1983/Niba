@@ -23,20 +23,20 @@ func QueryRobotPower(model types.Model, robotID string, isGameplay bool) (int, e
 	}
 	total := robotProto.Power
 	for _, component := range components {
-		switch component.ProtoID {
-		case "engine1", "engine2", "engine3", "engine4", "engine5":
-			if len(component.Value) != 1 {
-				return 0, fmt.Errorf("component value's len not right. %v", component)
-			}
-			val, err := strconv.ParseFloat(component.Value[0], 10)
-			if err != nil {
-				return 0, fmt.Errorf("component value not right. (%v)", component)
-			}
-			total += int(val)
-		}
 		componentProto, err := data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID)
 		if err != nil {
 			return 0, err
+		}
+		switch component.ProtoID {
+		case "engine1", "engine2", "engine3", "engine4", "engine5":
+			if len(componentProto.Value) != 1 {
+				return 0, fmt.Errorf("component value's len not right. %v", componentProto)
+			}
+			val, err := strconv.ParseFloat(componentProto.Value[0], 10)
+			if err != nil {
+				return 0, fmt.Errorf("component value not right. (%v)", componentProto)
+			}
+			total += int(val)
 		}
 		total -= componentProto.PowerCost
 	}
