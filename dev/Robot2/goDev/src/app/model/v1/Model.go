@@ -117,7 +117,10 @@ func (v Model) Save() error {
 	return impl.Save(types.Model(v))
 }
 func (v Model) Load() (protocol.IModel, error) {
-	model, err := impl.Load(types.Model(v))
+	model, has, err := impl.Load()
+	if has == false {
+		return v, nil
+	}
 	return Model(model), err
 }
 func (v Model) QueryActivePlayer() (protocol.Player, error) {

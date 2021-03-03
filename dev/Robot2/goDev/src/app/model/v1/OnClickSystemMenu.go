@@ -18,6 +18,16 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Done = "giveUp"
 		ctx.Model = model
 		return ctx, err
+	case uidata.MenuOptionSave:
+		err = ctx.Model.Save()
+		if err != nil {
+			return origin, err
+		}
+	case uidata.MenuOptionLoad:
+		ctx.Model, err = ctx.Model.Load()
+		if err != nil {
+			return origin, err
+		}
 	case uidata.MenuOptionTest:
 		var tempMap [][]int
 		tempMap, err = helper.GenerateMap(helper.GenerateMapConfig{
