@@ -20,6 +20,17 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			ctx := origin
 			switch selection {
+			case uidata.MenuOptionLoadGame:
+				ctx.Model, err = ctx.Model.Load()
+				if err != nil {
+					return origin, cancel, err
+				}
+				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
+				ctx, err = lobby.LobbyPagePhase(ctx)
+				if err != nil {
+					return origin, cancel, err
+				}
+				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
 			case uidata.MenuOptionNewGame:
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
 				ctx, err = lobby.LobbyPagePhase(ctx)

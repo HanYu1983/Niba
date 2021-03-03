@@ -28,6 +28,11 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 			switch menuID {
 			case uidata.Menu1DLobbyMenu:
 				switch selection {
+				case uidata.MenuOptionSaveGame:
+					err = ctx.Model.Save()
+					if err != nil {
+						return origin, cancel, err
+					}
 				case uidata.MenuOptionBuyPilot:
 					ctx, err = BuyPhase(ctx, uidata.PageBuyPilot)
 					if err != nil {

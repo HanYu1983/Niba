@@ -76,6 +76,7 @@ var (
 					MenuOptionAssocWeaponRobot,
 					MenuOptionAssocComponentRobot,
 					MenuOptionStartGameplay,
+					MenuOptionSaveGame,
 				},
 				Limit: 10,
 			},

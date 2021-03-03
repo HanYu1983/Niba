@@ -18,12 +18,12 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		model.App.Gameplay.Done = "giveUp"
 		ctx.Model = model
 		return ctx, err
-	case uidata.MenuOptionSave:
+	case uidata.MenuOptionSaveGame:
 		err = ctx.Model.Save()
 		if err != nil {
 			return origin, err
 		}
-	case uidata.MenuOptionLoad:
+	case uidata.MenuOptionLoadGame:
 		ctx.Model, err = ctx.Model.Load()
 		if err != nil {
 			return origin, err
