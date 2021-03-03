@@ -16,7 +16,8 @@ export class AssocWRMyRobotList extends BasicInstMenu {
     doBuild(content:any, data:any):void{
         const robots = content[0];
         content[0] = robots.map((id)=>{
-            return Drawer.getRobot(id, data).Title;
+            const robot = Drawer.getRobot(id, data);
+            return robot.Title + "_" + robot.Power + "_" + robot.MaxPower;
         });
         super.doBuild(content, data);
     }
