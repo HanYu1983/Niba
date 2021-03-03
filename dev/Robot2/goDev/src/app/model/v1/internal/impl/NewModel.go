@@ -24,6 +24,8 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		selection := detail.Selection
 		{
 			gameplay := types.DefaultGameplay
+			// state
+			gameplay.State = protocol.GameplayModelStatePlaying
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖

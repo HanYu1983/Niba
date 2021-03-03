@@ -2,7 +2,9 @@ package title
 
 import (
 	"app/page/common"
+	"app/page/gameplay"
 	"app/page/lobby"
+	"app/tool/protocol"
 	"app/tool/uidata"
 )
 
@@ -26,6 +28,15 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 					return origin, cancel, err
 				}
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
+				switch ctx.Model.State() {
+				case protocol.GameplayModelStatePlaying:
+					ctx, err = gameplay.GameLoop(ctx)
+					if err != nil {
+						return origin, cancel, err
+					}
+					reason := ctx.Model.StateReason()
+					var _ = reason
+				}
 				ctx, err = lobby.LobbyPagePhase(ctx)
 				if err != nil {
 					return origin, cancel, err

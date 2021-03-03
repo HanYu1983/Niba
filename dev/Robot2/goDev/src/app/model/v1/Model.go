@@ -130,8 +130,11 @@ func (v Model) NextPlayer() (protocol.IModel, error) {
 	model, err := impl.NextPlayer(types.Model(v))
 	return Model(model), err
 }
-func (v Model) IsDone() interface{} {
-	return impl.IsDone(types.Model(v))
+func (v Model) State() string {
+	return v.App.Gameplay.State
+}
+func (v Model) StateReason() interface{} {
+	return v.App.Gameplay.StateReason
 }
 func (v Model) QueryUnitsByRegion(p1 protocol.Position, p2 protocol.Position) []string {
 	return impl.QueryUnitsByRegion(types.Model(v), p1, p2)

@@ -15,7 +15,8 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 	switch selection {
 	case uidata.MenuOptionGiveUp:
 		model := ctx.Model.(Model)
-		model.App.Gameplay.Done = "giveUp"
+		model.App.Gameplay.State = protocol.GameplayModelStateDone
+		model.App.Gameplay.StateReason = "giveUp"
 		ctx.Model = model
 		return ctx, err
 	case uidata.MenuOptionSaveGame:

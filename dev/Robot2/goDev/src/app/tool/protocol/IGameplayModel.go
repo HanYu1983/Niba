@@ -4,6 +4,11 @@ import (
 	"tool/astar"
 )
 
+const (
+	GameplayModelStatePlaying = "GameplayModelStatePlaying"
+	GameplayModelStateDone    = "GameplayModelStateDone"
+)
+
 type IGameplayModel interface {
 	ObserveRobot(robot Robot, isGameplay bool) (Robot, error)
 	New(situation interface{}) (IModel, error)
@@ -11,7 +16,8 @@ type IGameplayModel interface {
 	Load() (IModel, error)
 	QueryActivePlayer() (Player, error)
 	NextPlayer() (IModel, error)
-	IsDone() interface{}
+	State() string
+	StateReason() interface{}
 	QueryUnitsByRegion(p1 Position, p2 Position) []string
 	QueryUnitByPosition(Position) string
 	SetMoveRange([]Position) IModel

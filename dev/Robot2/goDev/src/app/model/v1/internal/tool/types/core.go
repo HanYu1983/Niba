@@ -43,7 +43,8 @@ type Gameplay struct {
 	BattleMenu     protocol.BattleMenu
 	MoveRange      []protocol.Position
 	MapAttackRange []protocol.Position
-	Done           interface{}
+	State          string
+	StateReason    interface{}
 }
 
 var DefaultGameplay = Gameplay{
@@ -66,6 +67,7 @@ type App struct {
 	Money    int
 	Gameplay Gameplay
 	Lobby    Lobby
+	CurrPage int
 }
 
 type Model struct {

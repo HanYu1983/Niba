@@ -106,7 +106,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					if err != nil {
 						return origin, cancel, err
 					}
-					reason := ctx.Model.IsDone()
+					reason := ctx.Model.StateReason()
 					var _ = reason
 
 					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)

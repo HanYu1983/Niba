@@ -30,9 +30,6 @@ func NextPlayer(origin types.Model) (types.Model, error) {
 	ctx.App.Gameplay.ActivePlayerID = nextPlayer
 	return ctx, nil
 }
-func IsDone(origin types.Model) interface{} {
-	return origin.App.Gameplay.Done
-}
 func QueryUnitsByRegion(origin types.Model, p1 protocol.Position, p2 protocol.Position) []string {
 	ctx := origin
 	return common.SearchUnitByRegion(ctx.App.Gameplay.Positions, p1, p2)

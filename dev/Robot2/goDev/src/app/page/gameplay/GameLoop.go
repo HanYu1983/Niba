@@ -31,7 +31,7 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 		if cancel {
 			break
 		}
-		if ctx.Model.IsDone() != nil {
+		if ctx.Model.StateReason() != nil {
 			break
 		}
 		ctx.Model, err = ctx.Model.NextPlayer()
