@@ -10,16 +10,19 @@ export class AssocCRMyRobotListButton extends InstButton {
 
     doBuild(content:any, data:any):void{
         const dataString = content[0];
-        const title = dataString.split("_")[0];
-        const power = dataString.split("_")[1];
-        const maxPower = dataString.split("_")[2];
+        const datas = dataString.split("_");
+        const title = datas[0];
+        
         content[0] = title;
         super.doBuild(content, data);
-        this.setPower(power, maxPower);
-    }
-
-    private setPower(power:number, maxPower:number){
-        this.lblPower.string = power + "/" + maxPower;
+        
+        const power = datas[1];
+        const maxPower = datas[2];
+        const maxHP = datas[3];
+        const maxEN = datas[4];
+        const armor = datas[5];
+        const beamArmor = datas[6];
+        this.lblPower.string = "[HP] " + maxHP + " [EN] " + maxEN + " [AR] " + armor + " [BAR] " + beamArmor + " [P] " + power + " / " + maxPower;
     }
 }
 

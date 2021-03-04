@@ -17,7 +17,7 @@ export class AssocCRMyRobotList extends BasicInstMenu {
         const robots = content[0];
         content[0] = robots.map((id)=>{
             const robot = Drawer.getRobot(id, data);
-            return robot.Title + "_" + robot.Power + "_" + robot.MaxPower;
+            return [robot.Title, robot.Power, robot.MaxPower, robot.MaxHP, robot.MaxEN, robot.Armor, robot.BeamArmor].join("_")
         });
         super.doBuild(content, data);
     }

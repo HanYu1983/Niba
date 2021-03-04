@@ -16,6 +16,8 @@ export class Pool extends Component {
     private outOfWorld:Vec3 = new Vec3(5000,5000,0);
 
     aquire(prefab:Node, parent:Node){
+        if(prefab.active) prefab.active = false;
+        
         const poolId = prefab.uuid.toString();
         if (!this.poolDict.hasOwnProperty(poolId)){
 
