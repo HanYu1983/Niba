@@ -479,7 +479,7 @@ const (
     "config": {
         "default": {
             "id": "default",
-            "powerCostForMove": 7,
+            "powerCostForMove": 5,
             "award": [
                 1.2,
                 1.2
@@ -1273,8 +1273,8 @@ const (
                 "armor2"
             ],
             "suitability": [
-                0.5,
-                1.25,
+                0.75,
+                1,
                 0,
                 1
             ],
@@ -1861,8 +1861,8 @@ const (
             "id": "beach",
             "title": "沿海",
             "cost": [
-                0.75,
-                0.75,
+                0.5,
+                0.5,
                 0,
                 0
             ],
@@ -1948,12 +1948,12 @@ const (
         "beam_mega1": {
             "id": "beam_mega1",
             "title": "粒子炮L1",
-            "cost": 1600,
+            "cost": 400,
             "range": [
                 5,
                 2
             ],
-            "energyCost": 32,
+            "energyCost": 10,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1968,21 +1968,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.6,
-            "damage": 4096,
+            "accuracy": 0.63,
+            "damage": 3241,
             "curage": 110,
-            "powerCost": 20,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "beam_mega2": {
             "id": "beam_mega2",
             "title": "粒子炮L2",
-            "cost": 2304,
+            "cost": 676,
             "range": [
                 5,
                 2
             ],
-            "energyCost": 40,
+            "energyCost": 16,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -1997,21 +1997,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.588,
-            "damage": 4475,
+            "accuracy": 0.621,
+            "damage": 3484,
             "curage": 110,
-            "powerCost": 24,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "beam_mega3": {
             "id": "beam_mega3",
             "title": "粒子炮L3",
-            "cost": 6400,
+            "cost": 1024,
             "range": [
                 6,
                 3
             ],
-            "energyCost": 76,
+            "energyCost": 23,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2026,21 +2026,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.54,
-            "damage": 6229,
+            "accuracy": 0.612,
+            "damage": 3738,
             "curage": 120,
-            "powerCost": 40,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "beam_mega4": {
             "id": "beam_mega4",
             "title": "粒子炮L4",
-            "cost": 8464,
+            "cost": 1444,
             "range": [
                 6,
                 3
             ],
-            "energyCost": 89,
+            "energyCost": 29,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2055,21 +2055,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.522,
-            "damage": 6989,
+            "accuracy": 0.603,
+            "damage": 4004,
             "curage": 120,
-            "powerCost": 46,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "beam_mega5": {
             "id": "beam_mega5",
             "title": "粒子炮L5",
-            "cost": 14400,
+            "cost": 1936,
             "range": [
                 7,
                 4
             ],
-            "energyCost": 120,
+            "energyCost": 36,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2084,21 +2084,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.48,
-            "damage": 8998,
+            "accuracy": 0.594,
+            "damage": 4283,
             "curage": 130,
-            "powerCost": 60,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "beam_mega6": {
             "id": "beam_mega6",
             "title": "粒子炮L6",
-            "cost": 16384,
+            "cost": 2500,
             "range": [
                 7,
                 4
             ],
-            "energyCost": 128,
+            "energyCost": 43,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2113,21 +2113,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.46799999999999997,
-            "damage": 9636,
+            "accuracy": 0.585,
+            "damage": 4574,
             "curage": 130,
-            "powerCost": 64,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "beam_mega7": {
             "id": "beam_mega7",
             "title": "粒子炮L7",
-            "cost": 25600,
+            "cost": 3136,
             "range": [
                 7,
                 4
             ],
-            "energyCost": 164,
+            "energyCost": 49,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2142,21 +2142,21 @@ const (
             ],
             "energyType": "energy",
             "type": "line",
-            "accuracy": 0.42,
-            "damage": 12487,
+            "accuracy": 0.576,
+            "damage": 4878,
             "curage": 130,
-            "powerCost": 80,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "beam_sniper1": {
             "id": "beam_sniper1",
             "title": "光束狙擊鎗L1",
-            "cost": 1600,
+            "cost": 400,
             "range": [
                 3,
                 9
             ],
-            "energyCost": 33,
+            "energyCost": 17,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2172,20 +2172,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 4096,
+            "damage": 2924,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "beam_sniper2": {
             "id": "beam_sniper2",
             "title": "光束狙擊鎗L2",
-            "cost": 2304,
+            "cost": 676,
             "range": [
                 3,
                 9
             ],
-            "energyCost": 39,
+            "energyCost": 21,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2201,20 +2201,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 4640,
+            "damage": 3248,
             "curage": 0,
-            "powerCost": 24,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "beam_sniper3": {
             "id": "beam_sniper3",
             "title": "光束狙擊鎗L3",
-            "cost": 6400,
+            "cost": 1024,
             "range": [
                 4,
                 12
             ],
-            "energyCost": 65,
+            "energyCost": 26,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2230,20 +2230,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 7301,
+            "damage": 3595,
             "curage": 105,
-            "powerCost": 40,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "beam_sniper4": {
             "id": "beam_sniper4",
             "title": "光束狙擊鎗L4",
-            "cost": 8464,
+            "cost": 1444,
             "range": [
                 4,
                 12
             ],
-            "energyCost": 74,
+            "energyCost": 31,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2259,20 +2259,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 8514,
+            "damage": 3966,
             "curage": 105,
-            "powerCost": 46,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "beam_sniper5": {
             "id": "beam_sniper5",
             "title": "光束狙擊鎗L5",
-            "cost": 14400,
+            "cost": 1936,
             "range": [
                 5,
                 15
             ],
-            "energyCost": 97,
+            "energyCost": 36,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2288,20 +2288,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 11852,
+            "damage": 4362,
             "curage": 110,
-            "powerCost": 60,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "beam_sniper6": {
             "id": "beam_sniper6",
             "title": "光束狙擊鎗L6",
-            "cost": 16384,
+            "cost": 2500,
             "range": [
                 5,
                 15
             ],
-            "energyCost": 103,
+            "energyCost": 41,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2317,20 +2317,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 12944,
+            "damage": 4784,
             "curage": 120,
-            "powerCost": 64,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "beam_sniper7": {
             "id": "beam_sniper7",
             "title": "光束狙擊鎗L7",
-            "cost": 25600,
+            "cost": 3136,
             "range": [
                 5,
                 15
             ],
-            "energyCost": 129,
+            "energyCost": 45,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2346,15 +2346,15 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 17984,
+            "damage": 5231,
             "curage": 130,
-            "powerCost": 80,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "sniper1": {
             "id": "sniper1",
             "title": "狙擊炮L1",
-            "cost": 1600,
+            "cost": 400,
             "range": [
                 3,
                 9
@@ -2375,15 +2375,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 4096,
+            "damage": 2924,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "sniper2": {
             "id": "sniper2",
             "title": "狙擊炮L2",
-            "cost": 2304,
+            "cost": 676,
             "range": [
                 3,
                 9
@@ -2404,15 +2404,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 4640,
+            "damage": 3248,
             "curage": 0,
-            "powerCost": 24,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "sniper3": {
             "id": "sniper3",
             "title": "狙擊炮L3",
-            "cost": 6400,
+            "cost": 1024,
             "range": [
                 4,
                 12
@@ -2433,15 +2433,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 7301,
+            "damage": 3595,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "sniper4": {
             "id": "sniper4",
             "title": "狙擊炮L4",
-            "cost": 8464,
+            "cost": 1444,
             "range": [
                 4,
                 12
@@ -2462,15 +2462,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 8514,
+            "damage": 3966,
             "curage": 0,
-            "powerCost": 46,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "sniper5": {
             "id": "sniper5",
             "title": "狙擊炮L5",
-            "cost": 14400,
+            "cost": 1936,
             "range": [
                 5,
                 15
@@ -2491,15 +2491,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 11852,
+            "damage": 4362,
             "curage": 0,
-            "powerCost": 60,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "sniper6": {
             "id": "sniper6",
             "title": "狙擊炮L6",
-            "cost": 16384,
+            "cost": 2500,
             "range": [
                 5,
                 15
@@ -2520,15 +2520,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 12944,
+            "damage": 4784,
             "curage": 0,
-            "powerCost": 64,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "sniper7": {
             "id": "sniper7",
             "title": "狙擊炮L7",
-            "cost": 25600,
+            "cost": 3136,
             "range": [
                 5,
                 15
@@ -2549,9 +2549,9 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.7,
-            "damage": 17984,
+            "damage": 5231,
             "curage": 0,
-            "powerCost": 80,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "beam_gun1": {
@@ -2585,12 +2585,12 @@ const (
         "beam_gun2": {
             "id": "beam_gun2",
             "title": "光束鎗L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 2,
                 4
             ],
-            "energyCost": 12,
+            "energyCost": 14,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2605,20 +2605,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 3048,
+            "damage": 3209,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "beam_gun3": {
             "id": "beam_gun3",
             "title": "光束鎗L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 2,
                 5
             ],
-            "energyCost": 24,
+            "energyCost": 18,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2633,20 +2633,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 4492,
+            "damage": 3723,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "beam_gun4": {
             "id": "beam_gun4",
             "title": "光束鎗L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 2,
                 5
             ],
-            "energyCost": 28,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2661,20 +2661,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 5132,
+            "damage": 4291,
             "curage": 0,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "beam_gun5": {
             "id": "beam_gun5",
             "title": "光束鎗L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 38,
+            "energyCost": 26,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2689,20 +2689,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 6859,
+            "damage": 4913,
             "curage": 0,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "beam_gun6": {
             "id": "beam_gun6",
             "title": "光束鎗L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 43,
+            "energyCost": 31,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2717,20 +2717,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 8000,
+            "damage": 5592,
             "curage": 0,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "beam_gun7": {
             "id": "beam_gun7",
             "title": "光束鎗L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 52,
+            "energyCost": 35,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2745,9 +2745,9 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 0.85,
-            "damage": 9938,
+            "damage": 6331,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "beam_gatling1": {
@@ -2783,12 +2783,12 @@ const (
         "beam_gatling2": {
             "id": "beam_gatling2",
             "title": "光束衝鋒鎗L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 2,
                 4
             ],
-            "energyCost": 12,
+            "energyCost": 14,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2805,20 +2805,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 2406,
+            "damage": 2515,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "beam_gatling3": {
             "id": "beam_gatling3",
             "title": "光束衝鋒鎗L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 2,
                 5
             ],
-            "energyCost": 24,
+            "energyCost": 18,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2835,20 +2835,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 3375,
+            "damage": 2863,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "beam_gatling4": {
             "id": "beam_gatling4",
             "title": "光束衝鋒鎗L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 2,
                 5
             ],
-            "energyCost": 28,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2865,20 +2865,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 3796,
+            "damage": 3241,
             "curage": 0,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "beam_gatling5": {
             "id": "beam_gatling5",
             "title": "光束衝鋒鎗L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 38,
+            "energyCost": 26,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2895,20 +2895,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 4913,
+            "damage": 3652,
             "curage": 0,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "beam_gatling6": {
             "id": "beam_gatling6",
             "title": "光束衝鋒鎗L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 43,
+            "energyCost": 31,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2925,20 +2925,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 5639,
+            "damage": 4096,
             "curage": 0,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "beam_gatling7": {
             "id": "beam_gatling7",
             "title": "光束衝鋒鎗L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 6
             ],
-            "energyCost": 52,
+            "energyCost": 35,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -2955,9 +2955,9 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 6859,
+            "damage": 4574,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "gatling1": {
@@ -2993,7 +2993,7 @@ const (
         "gatling2": {
             "id": "gatling2",
             "title": "衝鋒鎗L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 2,
                 4
@@ -3015,15 +3015,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 2406,
+            "damage": 2515,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "gatling3": {
             "id": "gatling3",
             "title": "衝鋒鎗L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 2,
                 5
@@ -3045,15 +3045,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 3375,
+            "damage": 2863,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "gatling4": {
             "id": "gatling4",
             "title": "衝鋒鎗L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 2,
                 5
@@ -3075,15 +3075,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 3796,
+            "damage": 3241,
             "curage": 0,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "gatling5": {
             "id": "gatling5",
             "title": "衝鋒鎗L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 6
@@ -3105,15 +3105,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 4913,
+            "damage": 3652,
             "curage": 0,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "gatling6": {
             "id": "gatling6",
             "title": "衝鋒鎗L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 6
@@ -3135,15 +3135,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 5639,
+            "damage": 4096,
             "curage": 0,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "gatling7": {
             "id": "gatling7",
             "title": "衝鋒鎗L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 6
@@ -3165,9 +3165,9 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.3,
-            "damage": 6859,
+            "damage": 4574,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "beam_sword1": {
@@ -3202,12 +3202,12 @@ const (
         "beam_sword2": {
             "id": "beam_sword2",
             "title": "光束劍L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 1,
                 1
             ],
-            "energyCost": 10,
+            "energyCost": 11,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3223,20 +3223,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 3581,
+            "damage": 3796,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "beam_sword3": {
             "id": "beam_sword3",
             "title": "光束劍L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 1,
                 2
             ],
-            "energyCost": 20,
+            "energyCost": 15,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3252,20 +3252,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 5545,
+            "damage": 4492,
             "curage": 105,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "beam_sword4": {
             "id": "beam_sword4",
             "title": "光束劍L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 1,
                 2
             ],
-            "energyCost": 23,
+            "energyCost": 18,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3281,20 +3281,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 6434,
+            "damage": 5268,
             "curage": 110,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "beam_sword5": {
             "id": "beam_sword5",
             "title": "光束劍L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 3
             ],
-            "energyCost": 32,
+            "energyCost": 22,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3310,20 +3310,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 8869,
+            "damage": 6128,
             "curage": 120,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "beam_sword6": {
             "id": "beam_sword6",
             "title": "光束劍L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 3
             ],
-            "energyCost": 36,
+            "energyCost": 26,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3339,20 +3339,20 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 10503,
+            "damage": 7077,
             "curage": 125,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "beam_sword7": {
             "id": "beam_sword7",
             "title": "光束劍L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 3
             ],
-            "energyCost": 44,
+            "energyCost": 29,
             "maxBulletCount": 0,
             "suitability": [
                 1,
@@ -3368,9 +3368,9 @@ const (
             "energyType": "energy",
             "type": "single",
             "accuracy": 1,
-            "damage": 13312,
+            "damage": 8120,
             "curage": 130,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "sword1": {
@@ -3405,7 +3405,7 @@ const (
         "sword2": {
             "id": "sword2",
             "title": "實體劍L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 1,
                 1
@@ -3426,15 +3426,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 3581,
+            "damage": 3796,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "sword3": {
             "id": "sword3",
             "title": "實體劍L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 1,
                 2
@@ -3455,15 +3455,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 5545,
+            "damage": 4492,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "sword4": {
             "id": "sword4",
             "title": "實體劍L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 1,
                 2
@@ -3484,15 +3484,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 6434,
+            "damage": 5268,
             "curage": 0,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "sword5": {
             "id": "sword5",
             "title": "實體劍L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 3
@@ -3513,15 +3513,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 8869,
+            "damage": 6128,
             "curage": 0,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "sword6": {
             "id": "sword6",
             "title": "實體劍L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 3
@@ -3542,15 +3542,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 10503,
+            "damage": 7077,
             "curage": 0,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "sword7": {
             "id": "sword7",
             "title": "實體劍L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 3
@@ -3571,9 +3571,9 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1,
-            "damage": 13312,
+            "damage": 8120,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "shotgun1": {
@@ -3609,7 +3609,7 @@ const (
         "shotgun2": {
             "id": "shotgun2",
             "title": "霰彈槍L2",
-            "cost": 576,
+            "cost": 676,
             "range": [
                 2,
                 4
@@ -3631,15 +3631,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 2406,
+            "damage": 2515,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "shotgun3": {
             "id": "shotgun3",
             "title": "霰彈槍L3",
-            "cost": 1600,
+            "cost": 1024,
             "range": [
                 2,
                 4
@@ -3661,15 +3661,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 3375,
+            "damage": 2863,
             "curage": 0,
-            "powerCost": 20,
+            "powerCost": 16,
             "unlockExp": 0
         },
         "shotgun4": {
             "id": "shotgun4",
             "title": "霰彈槍L4",
-            "cost": 2116,
+            "cost": 1444,
             "range": [
                 2,
                 4
@@ -3691,15 +3691,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 3796,
+            "damage": 3241,
             "curage": 0,
-            "powerCost": 23,
+            "powerCost": 19,
             "unlockExp": 0
         },
         "shotgun5": {
             "id": "shotgun5",
             "title": "霰彈槍L5",
-            "cost": 3600,
+            "cost": 1936,
             "range": [
                 2,
                 4
@@ -3721,15 +3721,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 4913,
+            "damage": 3652,
             "curage": 0,
-            "powerCost": 30,
+            "powerCost": 22,
             "unlockExp": 0
         },
         "shotgun6": {
             "id": "shotgun6",
             "title": "霰彈槍L6",
-            "cost": 4624,
+            "cost": 2500,
             "range": [
                 2,
                 4
@@ -3751,15 +3751,15 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 5639,
+            "damage": 4096,
             "curage": 0,
-            "powerCost": 34,
+            "powerCost": 25,
             "unlockExp": 0
         },
         "shotgun7": {
             "id": "shotgun7",
             "title": "霰彈槍L7",
-            "cost": 6400,
+            "cost": 3136,
             "range": [
                 2,
                 4
@@ -3781,44 +3781,14 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 1.25,
-            "damage": 6859,
+            "damage": 4574,
             "curage": 0,
-            "powerCost": 40,
+            "powerCost": 28,
             "unlockExp": 0
         },
         "machinegun1": {
             "id": "machinegun1",
             "title": "機關砲L1",
-            "cost": 256,
-            "range": [
-                1,
-                2
-            ],
-            "energyCost": 0,
-            "maxBulletCount": 8,
-            "suitability": [
-                1,
-                0.75,
-                1,
-                1
-            ],
-            "ability": [
-                "range",
-                "physic",
-                "multi",
-                "moveAttack"
-            ],
-            "energyType": "bullet",
-            "type": "single",
-            "accuracy": 1.5,
-            "damage": 2000,
-            "curage": 0,
-            "powerCost": 8,
-            "unlockExp": 0
-        },
-        "machinegun2": {
-            "id": "machinegun2",
-            "title": "機關砲L2",
             "cost": 400,
             "range": [
                 1,
@@ -3844,6 +3814,36 @@ const (
             "damage": 2197,
             "curage": 0,
             "powerCost": 10,
+            "unlockExp": 0
+        },
+        "machinegun2": {
+            "id": "machinegun2",
+            "title": "機關砲L2",
+            "cost": 676,
+            "range": [
+                1,
+                2
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                1,
+                0.75,
+                1,
+                1
+            ],
+            "ability": [
+                "range",
+                "physic",
+                "multi",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 1.5,
+            "damage": 2515,
+            "curage": 0,
+            "powerCost": 13,
             "unlockExp": 0
         },
         "gaite_handSword": {
@@ -3872,7 +3872,7 @@ const (
             "accuracy": 1,
             "damage": 3800,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_axe": {
@@ -3901,7 +3901,7 @@ const (
             "accuracy": 0.7,
             "damage": 10000,
             "curage": 120,
-            "powerCost": 30,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_beam": {
@@ -3930,7 +3930,7 @@ const (
             "accuracy": 0.95,
             "damage": 9000,
             "curage": 130,
-            "powerCost": 30,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_cannon": {
@@ -3959,7 +3959,7 @@ const (
             "accuracy": 0.85,
             "damage": 3000,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_drill": {
@@ -3988,7 +3988,7 @@ const (
             "accuracy": 1,
             "damage": 3500,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_powerDrill": {
@@ -4017,7 +4017,7 @@ const (
             "accuracy": 0.95,
             "damage": 7000,
             "curage": 120,
-            "powerCost": 26,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_punch": {
@@ -4074,7 +4074,7 @@ const (
             "accuracy": 0.85,
             "damage": 3000,
             "curage": 0,
-            "powerCost": 12,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "gaite_shan": {
@@ -4103,7 +4103,7 @@ const (
             "accuracy": 0.9,
             "damage": 9500,
             "curage": 130,
-            "powerCost": 30,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "moshen_ray": {
@@ -4131,7 +4131,7 @@ const (
             "accuracy": 0.85,
             "damage": 2500,
             "curage": 0,
-            "powerCost": 8,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "moshen_punch": {
@@ -4189,7 +4189,7 @@ const (
             "accuracy": 0.85,
             "damage": 4000,
             "curage": 0,
-            "powerCost": 25,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "moshen_jian": {
@@ -4218,7 +4218,7 @@ const (
             "accuracy": 1,
             "damage": 6000,
             "curage": 120,
-            "powerCost": 20,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "moshen_fire": {
@@ -4247,7 +4247,7 @@ const (
             "accuracy": 0.9,
             "damage": 8500,
             "curage": 130,
-            "powerCost": 30,
+            "powerCost": 10,
             "unlockExp": 0
         },
         "duankong_fight": {

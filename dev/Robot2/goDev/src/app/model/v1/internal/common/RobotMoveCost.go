@@ -42,7 +42,7 @@ func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccup
 				}
 				cost1 = 0.4 * 1 / suitability[data.SuitabilitySky]
 			} else {
-				factor := mgl64.Vec4(suitability).Dot(mgl64.Vec4(terrain1.Cost)) / 2.0
+				factor := mgl64.Vec2{suitability[0], suitability[1]}.Dot(mgl64.Vec2{terrain1.Cost[0], terrain1.Cost[1]})
 				cost1 = 0.5 / factor
 			}
 		}
@@ -84,7 +84,7 @@ func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccup
 					}
 					cost2 = 0.4 * 1 / suitability[data.SuitabilitySky]
 				} else {
-					factor := mgl64.Vec4(suitability).Dot(mgl64.Vec4(terrain2.Cost)) / 2.0
+					factor := mgl64.Vec2{suitability[0], suitability[1]}.Dot(mgl64.Vec2{terrain2.Cost[0], terrain2.Cost[1]})
 					cost2 = 0.5 / factor
 				}
 			}

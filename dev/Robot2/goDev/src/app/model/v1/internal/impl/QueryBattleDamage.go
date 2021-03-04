@@ -10,6 +10,8 @@ import (
 	"fmt"
 	"math"
 	"tool/log"
+
+	"github.com/go-gl/mathgl/mgl64"
 )
 
 var (
@@ -18,32 +20,49 @@ var (
 
 func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (int, error) {
 	var err error
+	robotSuitability, err := common.QueryRobotSuitability(model, robot.ID, true)
+	if err != nil {
+		return 0, err
+	}
+	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
+	if err != nil {
+		return 0, err
+	}
+	weaponAbility, err := common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
+	if err != nil {
+		return 0, err
+	}
+	isBeanAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "beam"
+	})) > 0
+	isPhysicAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "physic"
+	})) > 0
+	isFireAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "fire"
+	})) > 0
+	isLightingAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "lighting"
+	})) > 0
+	isMissileAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "missile"
+	})) > 0
+	weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon, true)
+	if err != nil {
+		return 0, err
+	}
+	targetPos := model.App.Gameplay.Positions[targetRobot.ID]
+	terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
+	if err != nil {
+		return 0, err
+	}
+	targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
 	targetArmor := 0
 	{
-		var weaponAbility []string
-		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
-		if err != nil {
-			return 0, err
-		}
 		targetArmor, err = common.QueryRobotArmor(model, robot.ID, true)
 		if err != nil {
 			return 0, err
 		}
-		isBeanAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "beam"
-		})) > 0
-		isPhysicAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "physic"
-		})) > 0
-		isFireAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "fire"
-		})) > 0
-		isLightingAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "lighting"
-		})) > 0
-		isMissileAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "missile"
-		})) > 0
 		switch {
 		case isBeanAttack:
 			targetArmor, err = common.QueryRobotBeamArmor(model, robot.ID, true)
@@ -76,7 +95,7 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	}
 	suitabilityFactor := 1.0
 	{
-		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon)
+		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon, true)
 		if err != nil {
 			return 0, err
 		}
@@ -149,13 +168,25 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 		}
 		pilotAtkFactor = float64(pilotAtk) / float64(pilotGuard)
 	}
-	weaponProto, err := data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID)
-	if err != nil {
-		return 0, err
+	robotSuitabilityFactor := 1.0
+	{
+		if targetRobotSky == false {
+			factor := mgl64.Vec2{robotSuitability[0], robotSuitability[1]}.Dot(mgl64.Vec2{terrain.Cost[0], terrain.Cost[1]})
+			robotSuitabilityFactor = factor
+		}
+		// 機體適性分數佔比數較少(除3)
+		robotSuitabilityFactor += ((1 - robotSuitabilityFactor) / 3)
+	}
+	weaponSuitabilityFactor := 1.0
+	{
+		if targetRobotSky == false {
+			factor := mgl64.Vec2{weaponSuitability[0], weaponSuitability[1]}.Dot(mgl64.Vec2{terrain.Cost[0], terrain.Cost[1]})
+			weaponSuitabilityFactor = factor
+		}
 	}
 	basicDamage := weaponProto.Damage - targetArmor
-	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotRangeFactor * pilotAtkFactor
+	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotRangeFactor * pilotAtkFactor * robotSuitabilityFactor * weaponSuitabilityFactor
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("basicDamage(%v) = weapon.Damage(%v) - targetArmor(%v)", basicDamage, weapon.Damage, targetArmor))
-	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotRangeFactor, pilotAtkFactor))
+	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v) *  robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotRangeFactor, pilotAtkFactor, robotSuitabilityFactor, weaponSuitabilityFactor))
 	return int(math.Max(0, finalDamage)), nil
 }

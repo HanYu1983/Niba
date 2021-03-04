@@ -19,9 +19,10 @@ func ObserveWeapon(model types.Model, robotID string, weapon protocol.Weapon, is
 	if err != nil {
 		return protocol.Weapon{}, err
 	}
+	weapon.PowerCost = weaponProto.PowerCost
 	weapon.EnergyCost = weaponProto.EnergyCost
 	weapon.MaxBulletCount = weaponProto.MaxBulletCount
-	weapon.Suitability, err = QueryRobotWeaponSuitability(model, robotID, weapon)
+	weapon.Suitability, err = QueryRobotWeaponSuitability(model, robotID, weapon, isGameplay)
 	if err != nil {
 		return protocol.Weapon{}, err
 	}
