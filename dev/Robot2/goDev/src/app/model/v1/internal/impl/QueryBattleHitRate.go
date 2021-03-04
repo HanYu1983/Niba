@@ -121,7 +121,7 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 		default:
 			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type(melee or range). weapon(%+v)", weapon)
 		}
-		// 格鬥射擊分數佔比數較少(除3)
+		// 格鬥射擊分數佔比數較少
 		pilotRangeFactor += ((1 - pilotRangeFactor) / 3)
 	}
 	robotSuitabilityFactor := 1.0
