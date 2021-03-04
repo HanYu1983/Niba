@@ -22,7 +22,7 @@ export class AssocWRMyRobotListButton extends InstButton {
         const maxEN = datas[4];
         const armor = datas[5];
         const beamArmor = datas[6];
-        this.lblPower.string = "[HP] " + maxHP + " [EN] " + maxEN + " [AR] " + armor + " [BAR] " + beamArmor + " [P] " + power + " / " + maxPower;
+        this.lblPower.string = "[耐久] " + maxHP + " [能量] " + maxEN + " [裝甲] " + armor + " [抗光束] " + beamArmor + " [出力] " + power + " / " + maxPower;
     }
 }
 
