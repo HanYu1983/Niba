@@ -77,7 +77,7 @@ TURN:
 		if err != nil {
 			return origin, false, err
 		}
-		if ctx.Model.StateReason() != nil {
+		if ctx.Model.State() == protocol.GameplayModelStateDone {
 			break
 		}
 	}

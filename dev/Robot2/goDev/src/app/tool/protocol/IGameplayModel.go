@@ -9,6 +9,15 @@ const (
 	GameplayModelStateDone    = "GameplayModelStateDone"
 )
 
+type StateReasonWin struct {
+}
+
+type StateReasonLose struct {
+}
+
+type StateReasonGiveUp struct {
+}
+
 type IGameplayModel interface {
 	ObserveRobot(robot Robot, isGameplay bool) (Robot, error)
 	New(situation interface{}) (IModel, error)

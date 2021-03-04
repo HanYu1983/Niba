@@ -22,6 +22,10 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 	if err != nil {
 		return origin, err
 	}
+	ctx, err = OnCheckWinOrLose(ctx)
+	if err != nil {
+		return origin, err
+	}
 	// handle robot die
 	// robotWillDelete := []protocol.Robot{}
 	// for _, robot := range ctx.Model.(Model).App.Gameplay.Robots {

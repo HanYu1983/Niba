@@ -295,6 +295,10 @@ func OnEnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 	var cancel bool
 	view := def.View
 	ctx := origin
+	ctx, err = OnCheckWinOrLose(ctx)
+	if err != nil {
+		return origin, false, err
+	}
 	activePlayer, err := ctx.Model.QueryActivePlayer()
 	if err != nil {
 		return origin, false, err
@@ -319,6 +323,12 @@ func OnEnemyTurnPhase(origin uidata.UI) (uidata.UI, bool, error) {
 		ctx, err = view.Render(ctx)
 		if err != nil {
 			return origin, false, err
+		}
+		if ctx.Model.State() == protocol.GameplayModelStateDone {
+			if ctx.Model.StateReason() == nil {
+				return origin, false, fmt.Errorf("State == GameplayModelStateDone. 但是StateReason是空值，請確認當設定為GameplayModelStateDone時, 一定要給StateReason")
+			}
+			break
 		}
 		isRobotDone, err := common.IsRobotDone(types.Model(ctx.Model.(Model)), robotID)
 		if err != nil {
