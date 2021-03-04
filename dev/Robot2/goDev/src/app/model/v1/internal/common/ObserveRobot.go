@@ -62,6 +62,11 @@ func ObserveRobot(model types.Model, robot protocol.Robot, isGameplay bool) (pro
 	if err != nil {
 		return protocol.Robot{}, err
 	}
+	// Suitability
+	robot.Suitability, err = QueryRobotSuitability(model, robot.ID, isGameplay)
+	if err != nil {
+		return protocol.Robot{}, err
+	}
 	// 這時不能給WeaponsByTransform付值，不然會QueryRobotWeapons會不正確。
 	// if robot.WeaponsByTransform == nil {
 	// 	return protocol.Robot{}, fmt.Errorf("ObserveRobot這時必須初始化這個欄位(WeaponsByTransform)")

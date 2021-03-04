@@ -7,6 +7,8 @@ import (
 	"app/tool/protocol"
 	"fmt"
 	"tool/astar"
+
+	"github.com/go-gl/mathgl/mgl64"
 )
 
 var (
@@ -40,20 +42,8 @@ func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccup
 				}
 				cost1 = 0.4 * 1 / suitability[data.SuitabilitySky]
 			} else {
-				suitabilityFactor := 0.0
-				switch terrain1.ID {
-				case "shallowSea", "deepSea":
-					suitabilityFactor = suitability[data.SuitabilitySea]
-				case "mountain", "plain", "forest", "road", "city", "beach", "award":
-					suitabilityFactor = suitability[data.SuitabilityGround]
-				default:
-					fmt.Printf("unknown terrain(%v)\n", terrain1.ID)
-					return []astar.NeighborsNode{}
-				}
-				if suitabilityFactor == 0.0 {
-					return []astar.NeighborsNode{}
-				}
-				cost1 = terrain1.Cost * 1 / suitabilityFactor
+				factor := mgl64.Vec4(suitability).Dot(mgl64.Vec4(terrain1.Cost)) / 2.0
+				cost1 = 0.5 / factor
 			}
 		}
 		offsets := []protocol.Position{{0, -1}, {1, 0}, {0, 1}, {-1, 0}}
@@ -94,20 +84,8 @@ func RobotMoveCost(model types.Model, robotID string, movePower int, ignoreOccup
 					}
 					cost2 = 0.4 * 1 / suitability[data.SuitabilitySky]
 				} else {
-					suitabilityFactor := 0.0
-					switch terrain2.ID {
-					case "shallowSea", "deepSea":
-						suitabilityFactor = suitability[data.SuitabilitySea]
-					case "mountain", "plain", "forest", "road", "city", "beach", "award":
-						suitabilityFactor = suitability[data.SuitabilityGround]
-					default:
-						fmt.Printf("unknown terrain(%v)\n", terrain2.ID)
-						return []astar.NeighborsNode{}
-					}
-					if suitabilityFactor == 0.0 {
-						continue
-					}
-					cost2 = terrain2.Cost * 1 / suitabilityFactor
+					factor := mgl64.Vec4(suitability).Dot(mgl64.Vec4(terrain2.Cost)) / 2.0
+					cost2 = 0.5 / factor
 				}
 			}
 			nextCost := float64(cost1 + cost2)

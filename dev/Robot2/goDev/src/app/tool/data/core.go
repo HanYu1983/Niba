@@ -81,7 +81,7 @@ type ComponentProto struct {
 type TerrainProto struct {
 	ID      string
 	Title   string
-	Cost    float64
+	Cost    [4]float64
 	HitRate float64
 	Damage  float64
 }

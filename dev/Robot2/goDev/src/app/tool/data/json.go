@@ -479,7 +479,7 @@ const (
     "config": {
         "default": {
             "id": "default",
-            "powerCostForMove": 5,
+            "powerCostForMove": 7,
             "award": [
                 1.2,
                 1.2
@@ -1273,8 +1273,8 @@ const (
                 "armor2"
             ],
             "suitability": [
-                0.75,
-                1,
+                0.5,
+                1.25,
                 0,
                 1
             ],
@@ -1800,63 +1800,108 @@ const (
         "mountain": {
             "id": "mountain",
             "title": "山脈",
-            "cost": 2,
-            "hitRate": 1,
+            "cost": [
+                0.5,
+                0,
+                0,
+                0
+            ],
+            "hitRate": 0.75,
             "damage": 0.5
         },
         "plain": {
             "id": "plain",
             "title": "平原",
-            "cost": 0.5,
+            "cost": [
+                1,
+                0,
+                0,
+                0
+            ],
             "hitRate": 1,
             "damage": 1
         },
         "forest": {
             "id": "forest",
             "title": "森林",
-            "cost": 1.5,
+            "cost": [
+                0.75,
+                0,
+                0,
+                0
+            ],
             "hitRate": 0.5,
             "damage": 0.75
         },
         "road": {
             "id": "road",
             "title": "道路",
-            "cost": 0.3,
+            "cost": [
+                1.25,
+                0,
+                0,
+                0
+            ],
             "hitRate": 1,
             "damage": 1
         },
         "city": {
             "id": "city",
             "title": "城市",
-            "cost": 2,
+            "cost": [
+                1,
+                0,
+                0,
+                0
+            ],
             "hitRate": 0.9,
             "damage": 0.75
         },
         "beach": {
             "id": "beach",
             "title": "沿海",
-            "cost": 0.75,
+            "cost": [
+                0.75,
+                0.75,
+                0,
+                0
+            ],
             "hitRate": 1,
             "damage": 1
         },
         "shallowSea": {
             "id": "shallowSea",
             "title": "淺海",
-            "cost": 1.5,
-            "hitRate": 1,
-            "damage": 1
+            "cost": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "hitRate": 0.75,
+            "damage": 0.75
         },
         "deepSea": {
             "id": "deepSea",
             "title": "深海",
-            "cost": 3,
-            "hitRate": 1,
-            "damage": 1
+            "cost": [
+                0,
+                0.5,
+                0,
+                0
+            ],
+            "hitRate": 0.5,
+            "damage": 0.5
         },
         "award": {
             "id": "award",
             "title": "能量點",
-            "cost": 0.25,
+            "cost": [
+                1,
+                1,
+                0,
+                0
+            ],
             "hitRate": 1,
             "damage": 1
         }

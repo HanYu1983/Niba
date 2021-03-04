@@ -30027,7 +30027,7 @@ $packages["app/tool/data"] = (function() {
 		if (arguments.length === 0) {
 			this.ID = "";
 			this.Title = "";
-			this.Cost = 0;
+			this.Cost = arrayType.zero();
 			this.HitRate = 0;
 			this.Damage = 0;
 			return;
@@ -30331,7 +30331,7 @@ $packages["app/tool/data"] = (function() {
 	init = function() {
 		var _r, _r$1, _r$2, err, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; err = $f.err; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = json.Unmarshal((new sliceType$6($stringToBytes("{\n    \"component\": {\n        \"energy1\": {\n            \"id\": \"energy1\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"25\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"energy2\": {\n            \"id\": \"energy2\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"50\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"energy3\": {\n            \"id\": \"energy3\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"75\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"energy4\": {\n            \"id\": \"energy4\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"100\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"energy5\": {\n            \"id\": \"energy5\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"125\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"armor1\": {\n            \"id\": \"armor1\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"100.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"armor2\": {\n            \"id\": \"armor2\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1000.0\",\n                \"200.0\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"armor3\": {\n            \"id\": \"armor3\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1500.0\",\n                \"300.0\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"armor4\": {\n            \"id\": \"armor4\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000.0\",\n                \"400.0\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"armor5\": {\n            \"id\": \"armor5\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2500.0\",\n                \"500.0\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor1\": {\n            \"id\": \"beam_armor1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"100.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor2\": {\n            \"id\": \"beam_armor2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1000.0\",\n                \"200.0\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor3\": {\n            \"id\": \"beam_armor3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1500.0\",\n                \"300.0\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor4\": {\n            \"id\": \"beam_armor4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000.0\",\n                \"400.0\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor5\": {\n            \"id\": \"beam_armor5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2500.0\",\n                \"500.0\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"fire_armor\": {\n            \"id\": \"fire_armor\",\n            \"title\": \"\xE9\x98\xB2\xE7\x81\xAB\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE4\xB8\x8D\xE5\x8F\x97\xE7\x81\xAB\xE7\x84\xB0\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\xB1\xE9\x9F\xBF. \xE8\xA2\xAB\xE7\x81\xAB\xE7\x84\xB0\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"1000.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"lighting_armor\": {\n            \"id\": \"lighting_armor\",\n            \"title\": \"\xE9\x98\xB2\xE9\x9B\xBB\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE4\xB8\x8D\xE5\x8F\x97\xE9\x9B\xB7\xE9\x9B\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\xB1\xE9\x9F\xBF. \xE8\xA2\xAB\xE9\x9B\xB7\xE9\x9B\xBB\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"1000.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"engine1\": {\n            \"id\": \"engine1\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"20\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine2\": {\n            \"id\": \"engine2\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"40\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine3\": {\n            \"id\": \"engine3\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"60\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine4\": {\n            \"id\": \"engine4\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"80\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine5\": {\n            \"id\": \"engine5\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"100\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"fixPack\": {\n            \"id\": \"fixPack\",\n            \"title\": \"\xE4\xBF\xAE\xE5\xBE\xA9\xE5\x8C\x85\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9B\x9E\xE5\xBE\xA9{0}HP\",\n            \"value\": [\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"energyPack\": {\n            \"id\": \"energyPack\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\x8C\x85\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9B\x9E\xE5\xBE\xA9{0}EN\",\n            \"value\": [\n                \"80\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"bulletPack\": {\n            \"id\": \"bulletPack\",\n            \"title\": \"\xE5\xBD\x88\xE5\xA4\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\x89\x80\xE6\x9C\x89\xE5\xBD\x88\xE8\x97\xA5\xE9\xA1\x9E\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\x88\xE6\x95\xB8\xE8\xA3\x9C\xE5\x85\x85{0}\",\n            \"value\": [\n                \"3\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"shield\": {\n            \"id\": \"shield\",\n            \"title\": \"\xE7\x9B\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA9\x9F\xE7\x8E\x87{0}\xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}.\",\n            \"value\": [\n                \"0.2\",\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"beam_shield\": {\n            \"id\": \"beam_shield\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x9B\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA9\x9F\xE7\x8E\x87{0}\xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}.\",\n            \"value\": [\n                \"0.2\",\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"psArmor\": {\n            \"id\": \"psArmor\",\n            \"title\": \"ps\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 3000,\n            \"desc\": \"\xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"afterimage\": {\n            \"id\": \"afterimage\",\n            \"title\": \"\xE6\xAE\x98\xE5\x83\x8F\",\n            \"cost\": 10000,\n            \"desc\": \"\xE6\xB0\xA3\xE5\x8A\x9B{0}\xE4\xBB\xA5\xE4\xB8\x8A\xE6\x99\x82, \xE6\xA9\x9F\xE7\x8E\x87{1}\xE9\x96\x83\xE9\x81\xBF\xE6\x94\xBB\xE6\x93\x8A\",\n            \"value\": [\n                \"130\",\n                \"0.7\"\n            ],\n            \"powerCost\": 30,\n            \"action\": \"equipment\"\n        },\n        \"defensiveWeapon\": {\n            \"id\": \"defensiveWeapon\",\n            \"title\": \"\xE9\x98\xB2\xE7\xA6\xA6\xE5\x85\xB5\xE5\x99\xA8\",\n            \"cost\": 1000,\n            \"desc\": \"\xE4\xBE\x9D\xE6\x8A\x80\xE9\x87\x8F\xE6\x9C\x89\xE6\xA9\x9F\xE7\x8E\x87\xE9\x98\xB2\xE7\xA6\xA6[\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x85\xB5\xE5\x99\xA8]\",\n            \"value\": [],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"zeroSystem\": {\n            \"id\": \"zeroSystem\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE7\xB3\xBB\xE7\xB5\xB1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xAD\xA6\xE5\x99\xA8\xE7\x9A\x84\xE6\x9C\x80\xE7\xB5\x82\xE5\x91\xBD\xE4\xB8\xAD\xE5\xA2\x9E\xE5\x8A\xA0{0}%\xEF\xBC\x8C\xE8\x87\xAA\xE8\xBA\xAB\xE7\x9A\x84\xE6\x9C\x80\xE7\xB5\x82\xE8\xA2\xAB\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE6\xB8\x9B\xE5\xB0\x91{1}%\",\n            \"value\": [\n                \"10\",\n                \"15\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shejililiang\": {\n            \"id\": \"shejililiang\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\xE5\x8A\x9B\xE9\x87\x8F\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xB0\x84\xE6\x93\x8A\xE7\xB3\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xB0\x84\xE7\xA8\x8B\xE5\xA2\x9E\xE5\x8A\xA0{0}\",\n            \"value\": [\n                \"1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gedouliliang\": {\n            \"id\": \"gedouliliang\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE5\x8A\x9B\xE9\x87\x8F\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE7\xB3\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xB0\x84\xE7\xA8\x8B\xE5\xA2\x9E\xE5\x8A\xA0{0}\",\n            \"value\": [\n                \"1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gushou\": {\n            \"id\": \"gushou\",\n            \"title\": \"\xE5\x9B\xBA\xE5\xAE\x88\",\n            \"cost\": 1000,\n            \"desc\": \"\xE9\x80\x99\xE5\x80\x8B\xE5\x9B\x9E\xE5\x90\x88\xE6\xB2\x92\xE6\x9C\x89\xE6\x94\xBB\xE6\x93\x8A\xE7\x9A\x84\xE8\xA9\xB1\xEF\xBC\x8C\xE4\xB8\x8B\xE5\x80\x8B\xE5\x90\x88\xE5\x9B\x9E\xE9\x96\x8B\xE5\xA7\x8B\xE5\x89\x8D\xE5\x8F\x97\xE5\x82\xB7\xE5\xAE\xB3\xE6\xB8\x9B\xE5\xB0\x91{0}\",\n            \"value\": [\n                \"1000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gedouwang\": {\n            \"id\": \"gedouwang\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE8\x8B\xA5\xE6\x89\x80\xE6\x9C\x89\xE6\xAD\xA6\xE5\x99\xA8\xE9\x83\xBD\xE6\x98\xAF\xE6\xA0\xBC\xE9\xAC\xA5\xE7\xB3\xBB\xEF\xBC\x8C\xE6\xAD\xA6\xE5\x99\xA8\xE5\x82\xB7\xE5\xAE\xB3*{0}%, \xE5\x9B\x9E\xE9\x81\xBF*{1}%\",\n            \"value\": [\n                \"1.2\",\n                \"1.2\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shejiwang\": {\n            \"id\": \"shejiwang\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE8\x8B\xA5\xE6\x89\x80\xE6\x9C\x89\xE6\xAD\xA6\xE5\x99\xA8\xE9\x83\xBD\xE6\x98\xAF\xE5\xB0\x84\xE6\x93\x8A\xE7\xB3\xBB\xEF\xBC\x8C\xE5\xB0\x84\xE6\x93\x8A\xE5\x82\xB7\xE5\xAE\xB3*{0}%, \xE5\x8F\x97\xE5\x82\xB7\xE5\xAE\xB3\xE6\xB8\x9B\xE5\xB0\x91{0}\",\n            \"value\": [\n                \"1.2\",\n                \"500\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"feixingwang\": {\n            \"id\": \"feixingwang\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE7\x8B\x80\xE6\x85\x8B\xE6\x99\x82\xEF\xBC\x8C\xE7\xA7\xBB\xE5\x8B\x95\xE5\x8A\x9B+{0}\xEF\xBC\x8C\xE5\x9B\x9E\xE9\x81\xBF+{1}%\",\n            \"value\": [\n                \"2\",\n                \"1.2\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shengwuzhuangjia\": {\n            \"id\": \"shengwuzhuangjia\",\n            \"title\": \"\xE7\x94\x9F\xE7\x89\xA9\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\xA3\x9D\xE4\xB8\xAD. \xE6\xAF\x8F\xE5\x9B\x9E\xE5\x90\x88\xE9\x96\x8B\xE5\xA7\x8B\xE5\x9B\x9E\xE5\xBE\xA9{1}%\xE6\x9C\x80\xE5\xA4\xA7hp.\",\n            \"value\": [\n                \"300\",\n                \"0.1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"feixingqi\": {\n            \"id\": \"feixingqi\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x99\xA8\",\n            \"cost\": 1000,\n            \"desc\": \"\xE7\xA9\xBA\xE4\xB8\xAD\xE9\x81\xA9\xE6\x80\xA7\xE8\xAE\x8A\xE6\x88\x90{0}\",\n            \"value\": [\n                \"0.8\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"pensheqidian\": {\n            \"id\": \"pensheqidian\",\n            \"title\": \"\xE5\x99\xB4\xE5\xB0\x84\xE6\xB0\xA3\xE5\xA2\x8A\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9C\xB0\xE9\x9D\xA2\xE7\xA7\xBB\xE5\x8B\x95\xE6\x99\x82\xE5\x87\xBA\xE5\x8A\x9B*{0}\",\n            \"value\": [\n                \"1.5\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        }\n    },\n    \"componentAction\": {\n        \"equipment\": {\n            \"id\": \"equipment\",\n            \"title\": \"\xE8\xA3\x9D\xE5\x82\x99\"\n        },\n        \"item\": {\n            \"id\": \"item\",\n            \"title\": \"\xE4\xBD\xBF\xE7\x94\xA8\"\n        },\n        \"itemForSelf\": {\n            \"id\": \"itemForSelf\",\n            \"title\": \"\xE4\xBD\xBF\xE7\x94\xA8\xE8\x87\xAA\xE8\xBA\xAB\"\n        }\n    },\n    \"config\": {\n        \"default\": {\n            \"id\": \"default\",\n            \"powerCostForMove\": 5,\n            \"award\": [\n                1.2,\n                1.2\n            ],\n            \"robots\": [\n                \"medium\",\n                \"medium\",\n                \"heavy\"\n            ],\n            \"weapons\": [\n                \"beam_gun1\",\n                \"beam_gun2\",\n                \"beam_gun3\",\n                \"beam_gatling1\",\n                \"beam_gatling2\",\n                \"beam_gatling3\",\n                \"beam_sword1\",\n                \"beam_sword2\",\n                \"beam_sword3\",\n                \"machinegun1\",\n                \"machinegun2\",\n                \"shotgun3\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"energy3\",\n                \"armor1\",\n                \"armor2\",\n                \"armor3\",\n                \"beam_armor1\",\n                \"beam_armor2\",\n                \"beam_armor3\"\n            ],\n            \"pilots\": [\n                \"engineer\",\n                \"engineer\",\n                \"engineer\"\n            ]\n        }\n    },\n    \"level\": {\n        \"ground1\": {\n            \"id\": \"ground1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": [\n                \"moshen\"\n            ]\n        },\n        \"ground2\": {\n            \"id\": \"ground2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground3\": {\n            \"id\": \"ground3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground4\": {\n            \"id\": \"ground4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground5\": {\n            \"id\": \"ground5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground6\": {\n            \"id\": \"ground6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground7\": {\n            \"id\": \"ground7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground8\": {\n            \"id\": \"ground8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"ground9\": {\n            \"id\": \"ground9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"ground10\": {\n            \"id\": \"ground10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"sea1\": {\n            \"id\": \"sea1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"sea2\": {\n            \"id\": \"sea2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea3\": {\n            \"id\": \"sea3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea4\": {\n            \"id\": \"sea4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea5\": {\n            \"id\": \"sea5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea6\": {\n            \"id\": \"sea6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea7\": {\n            \"id\": \"sea7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea8\": {\n            \"id\": \"sea8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"sea9\": {\n            \"id\": \"sea9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"sea10\": {\n            \"id\": \"sea10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"sky1\": {\n            \"id\": \"sky1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"sky2\": {\n            \"id\": \"sky2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky3\": {\n            \"id\": \"sky3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky4\": {\n            \"id\": \"sky4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky5\": {\n            \"id\": \"sky5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky6\": {\n            \"id\": \"sky6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky7\": {\n            \"id\": \"sky7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky8\": {\n            \"id\": \"sky8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"sky9\": {\n            \"id\": \"sky9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"sky10\": {\n            \"id\": \"sky10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"common1\": {\n            \"id\": \"common1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"common2\": {\n            \"id\": \"common2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common3\": {\n            \"id\": \"common3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common4\": {\n            \"id\": \"common4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common5\": {\n            \"id\": \"common5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common6\": {\n            \"id\": \"common6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common7\": {\n            \"id\": \"common7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common8\": {\n            \"id\": \"common8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"common9\": {\n            \"id\": \"common9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"common10\": {\n            \"id\": \"common10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        }\n    },\n    \"pilot\": {\n        \"engineer\": {\n            \"id\": \"engineer\",\n            \"title\": \"\xE5\xB7\xA5\xE7\xA8\x8B\xE5\xB8\xAB\",\n            \"cost\": 4400,\n            \"melee\": 65,\n            \"range\": 65,\n            \"atk\": 70,\n            \"evade\": 80,\n            \"guard\": 70,\n            \"tech\": 90,\n            \"ability\": [],\n            \"total\": 440\n        },\n        \"boxer\": {\n            \"id\": \"boxer\",\n            \"title\": \"\xE6\x8B\xB3\xE6\x93\x8A\xE6\x89\x8B\",\n            \"cost\": 4650,\n            \"melee\": 90,\n            \"range\": 65,\n            \"atk\": 90,\n            \"evade\": 50,\n            \"guard\": 90,\n            \"tech\": 80,\n            \"ability\": [],\n            \"total\": 465\n        },\n        \"teacher\": {\n            \"id\": \"teacher\",\n            \"title\": \"\xE6\x95\x99\xE5\xB8\xAB\",\n            \"cost\": 4400,\n            \"melee\": 50,\n            \"range\": 80,\n            \"atk\": 70,\n            \"evade\": 80,\n            \"guard\": 60,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 440\n        },\n        \"baseballPitcher\": {\n            \"id\": \"baseballPitcher\",\n            \"title\": \"\xE6\xA3\x92\xE7\x90\x83\xE6\x8A\x95\xE6\x89\x8B\",\n            \"cost\": 5150,\n            \"melee\": 80,\n            \"range\": 90,\n            \"atk\": 90,\n            \"evade\": 75,\n            \"guard\": 90,\n            \"tech\": 90,\n            \"ability\": [],\n            \"total\": 515\n        },\n        \"amuro\": {\n            \"id\": \"amuro\",\n            \"title\": \"\xE9\x98\xBF\xE5\xA7\x86\xE7\xBE\x85\",\n            \"cost\": 6050,\n            \"melee\": 70,\n            \"range\": 130,\n            \"atk\": 100,\n            \"evade\": 130,\n            \"guard\": 70,\n            \"tech\": 105,\n            \"ability\": [],\n            \"total\": 605\n        },\n        \"liulongma\": {\n            \"id\": \"liulongma\",\n            \"title\": \"\xE6\xB5\x81\xE9\xBE\x8D\xE9\xA6\xAC\",\n            \"cost\": 6100,\n            \"melee\": 130,\n            \"range\": 70,\n            \"atk\": 110,\n            \"evade\": 65,\n            \"guard\": 135,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 610\n        },\n        \"doujiaer\": {\n            \"id\": \"doujiaer\",\n            \"title\": \"\xE5\x85\x9C\xE7\x94\xB2\xE5\x85\x92\",\n            \"cost\": 6000,\n            \"melee\": 125,\n            \"range\": 70,\n            \"atk\": 105,\n            \"evade\": 60,\n            \"guard\": 140,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 600\n        },\n        \"xibuke\": {\n            \"id\": \"xibuke\",\n            \"title\": \"\xE8\xA5\xBF\xE5\xB8\x83\xE5\x85\x8B\",\n            \"cost\": 6050,\n            \"melee\": 80,\n            \"range\": 120,\n            \"atk\": 100,\n            \"evade\": 125,\n            \"guard\": 75,\n            \"tech\": 105,\n            \"ability\": [],\n            \"total\": 605\n        }\n    },\n    \"pilotAbility\": {},\n    \"robot\": {\n        \"gaite_sky\": {\n            \"id\": \"gaite_sky\",\n            \"title\": \"\xE7\xA9\xBA\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_handSword\",\n                \"gaite_axe\",\n                \"gaite_beam\",\n                \"gaite_cannon\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor1\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                0.75,\n                0.5,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"gaite_land\",\n                \"gaite_sea\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gaite_land\": {\n            \"id\": \"gaite_land\",\n            \"title\": \"\xE5\x9C\xB0\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_missle\",\n                \"gaite_drill\",\n                \"gaite_powerDrill\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.75,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"gaite_sky\",\n                \"gaite_sea\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gaite_sea\": {\n            \"id\": \"gaite_sea\",\n            \"title\": \"\xE6\xB5\xB7\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_punch\",\n                \"gaite_missle\",\n                \"gaite_shan\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor2\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                0.75,\n                1,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"gaite_sky\",\n                \"gaite_land\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"moshen\": {\n            \"id\": \"moshen\",\n            \"title\": \"\xE9\xAD\x94\xE7\xA5\x9Ez\",\n            \"cost\": 69600,\n            \"power\": 110,\n            \"hp\": 12000,\n            \"en\": 200,\n            \"weapons\": [\n                \"moshen_ray\",\n                \"moshen_punch\",\n                \"moshen_flypunch\",\n                \"moshen_jian\",\n                \"moshen_fire\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor2\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"zgundam\": {\n            \"id\": \"zgundam\",\n            \"title\": \"z\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\",\n                \"beam_mega2\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"zgundam_sky\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"zgundam_sky\": {\n            \"id\": \"zgundam_sky\",\n            \"title\": \"z\xE9\x8B\xBC\xE5\xBD\x88\xE9\xA3\x9B\xE7\xBF\xBC\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                0,\n                0,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"zgundam\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gundam\": {\n            \"id\": \"gundam\",\n            \"title\": \"\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 37400,\n            \"power\": 65,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"jimu\": {\n            \"id\": \"jimu\",\n            \"title\": \"\xE5\x90\x89\xE5\xA7\x86\",\n            \"cost\": 29616,\n            \"power\": 48,\n            \"hp\": 4000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BGD\": {\n            \"id\": \"BGD\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword2\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BYJ\": {\n            \"id\": \"BYJ\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE9\x81\x8A\xE6\x93\x8A\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword1\",\n                \"beam_gatling2\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BJJ\": {\n            \"id\": \"BJJ\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE7\x8B\x99\xE6\x93\x8A\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sniper1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BGR\": {\n            \"id\": \"BGR\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE5\xB9\xB2\xE6\x93\xBE\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BFD\": {\n            \"id\": \"BFD\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE9\x98\xB2\xE7\x9B\xBE\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor2\",\n                \"shield\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                2\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"windgundam\": {\n            \"id\": \"windgundam\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 99200,\n            \"power\": 140,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun2\",\n                \"beam_sword1\",\n                \"beam_sniper4\",\n                \"beam_mega4\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\",\n                \"zeroSystem\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"windgundam_sky\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"windgundam_sky\": {\n            \"id\": \"windgundam_sky\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE9\x8B\xBC\xE5\xBD\x88\xE9\xA3\x9B\xE7\xBF\xBC\",\n            \"cost\": 99200,\n            \"power\": 140,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun2\",\n                \"beam_sniper4\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\",\n                \"zeroSystem\"\n            ],\n            \"suitability\": [\n                0,\n                0,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"windgundam\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"strikegundam\": {\n            \"id\": \"strikegundam\",\n            \"title\": \"\xE6\x94\xBB\xE6\x93\x8A\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 56900,\n            \"power\": 95,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword3\",\n                \"sword3\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\",\n                \"psArmor\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"exlight\": {\n            \"id\": \"exlight\",\n            \"title\": \"\xE7\x89\xB9\xE8\xBC\x95\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 24100,\n            \"power\": 30,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 2\n        },\n        \"light\": {\n            \"id\": \"light\",\n            \"title\": \"\xE8\xBC\x95\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 28600,\n            \"power\": 45,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 1\n        },\n        \"normal\": {\n            \"id\": \"normal\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 37400,\n            \"power\": 65,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 0\n        },\n        \"medium\": {\n            \"id\": \"medium\",\n            \"title\": \"\xE4\xB8\xAD\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 52900,\n            \"power\": 90,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 1\n        },\n        \"heavy\": {\n            \"id\": \"heavy\",\n            \"title\": \"\xE9\x87\x8D\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 78100,\n            \"power\": 120,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 3\n        },\n        \"exheavy\": {\n            \"id\": \"exheavy\",\n            \"title\": \"\xE7\x89\xB9\xE9\x87\x8D\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 116600,\n            \"power\": 155,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 4\n        },\n        \"f91\": {\n            \"id\": \"f91\",\n            \"title\": \"F91\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\",\n                \"beam_mega2\"\n            ],\n            \"components\": [\n                \"beam_armor1\",\n                \"beam_shield\",\n                \"afterimage\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"duankongka\": {\n            \"id\": \"duankongka\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE6\x88\x91\",\n            \"cost\": 48400,\n            \"power\": 110,\n            \"hp\": 12000,\n            \"en\": 200,\n            \"weapons\": [\n                \"duankong_fight\",\n                \"duankong_laser\",\n                \"duankong_sword\",\n                \"duankong_shot\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        }\n    },\n    \"terrain\": {\n        \"mountain\": {\n            \"id\": \"mountain\",\n            \"title\": \"\xE5\xB1\xB1\xE8\x84\x88\",\n            \"cost\": 2,\n            \"hitRate\": 1,\n            \"damage\": 0.5\n        },\n        \"plain\": {\n            \"id\": \"plain\",\n            \"title\": \"\xE5\xB9\xB3\xE5\x8E\x9F\",\n            \"cost\": 0.5,\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"forest\": {\n            \"id\": \"forest\",\n            \"title\": \"\xE6\xA3\xAE\xE6\x9E\x97\",\n            \"cost\": 1.5,\n            \"hitRate\": 0.5,\n            \"damage\": 0.75\n        },\n        \"road\": {\n            \"id\": \"road\",\n            \"title\": \"\xE9\x81\x93\xE8\xB7\xAF\",\n            \"cost\": 0.3,\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"city\": {\n            \"id\": \"city\",\n            \"title\": \"\xE5\x9F\x8E\xE5\xB8\x82\",\n            \"cost\": 2,\n            \"hitRate\": 0.9,\n            \"damage\": 0.75\n        },\n        \"beach\": {\n            \"id\": \"beach\",\n            \"title\": \"\xE6\xB2\xBF\xE6\xB5\xB7\",\n            \"cost\": 0.75,\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"shallowSea\": {\n            \"id\": \"shallowSea\",\n            \"title\": \"\xE6\xB7\xBA\xE6\xB5\xB7\",\n            \"cost\": 1.5,\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"deepSea\": {\n            \"id\": \"deepSea\",\n            \"title\": \"\xE6\xB7\xB1\xE6\xB5\xB7\",\n            \"cost\": 3,\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"award\": {\n            \"id\": \"award\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE9\xBB\x9E\",\n            \"cost\": 0.25,\n            \"hitRate\": 1,\n            \"damage\": 1\n        }\n    },\n    \"terrainMapping\": {\n        \"0\": {\n            \"id\": \"0\",\n            \"terrain\": \"deepSea\"\n        },\n        \"1\": {\n            \"id\": \"1\",\n            \"terrain\": \"shallowSea\"\n        },\n        \"2\": {\n            \"id\": \"2\",\n            \"terrain\": \"beach\"\n        },\n        \"3\": {\n            \"id\": \"3\",\n            \"terrain\": \"plain\"\n        },\n        \"4\": {\n            \"id\": \"4\",\n            \"terrain\": \"city\"\n        },\n        \"5\": {\n            \"id\": \"5\",\n            \"terrain\": \"mountain\"\n        },\n        \"6\": {\n            \"id\": \"6\",\n            \"terrain\": \"forest\"\n        },\n        \"7\": {\n            \"id\": \"7\",\n            \"terrain\": \"award\"\n        },\n        \"8\": {\n            \"id\": \"8\",\n            \"terrain\": \"road\"\n        }\n    },\n    \"weapon\": {\n        \"beam_mega1\": {\n            \"id\": \"beam_mega1\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL1\",\n            \"cost\": 1600,\n            \"range\": [\n                5,\n                2\n            ],\n            \"energyCost\": 32,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.6,\n            \"damage\": 4096,\n            \"curage\": 110,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_mega2\": {\n            \"id\": \"beam_mega2\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL2\",\n            \"cost\": 2304,\n            \"range\": [\n                5,\n                2\n            ],\n            \"energyCost\": 40,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.588,\n            \"damage\": 4475,\n            \"curage\": 110,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"beam_mega3\": {\n            \"id\": \"beam_mega3\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL3\",\n            \"cost\": 6400,\n            \"range\": [\n                6,\n                3\n            ],\n            \"energyCost\": 76,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.54,\n            \"damage\": 6229,\n            \"curage\": 120,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_mega4\": {\n            \"id\": \"beam_mega4\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL4\",\n            \"cost\": 8464,\n            \"range\": [\n                6,\n                3\n            ],\n            \"energyCost\": 89,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.522,\n            \"damage\": 6989,\n            \"curage\": 120,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"beam_mega5\": {\n            \"id\": \"beam_mega5\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL5\",\n            \"cost\": 14400,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 120,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.48,\n            \"damage\": 8998,\n            \"curage\": 130,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"beam_mega6\": {\n            \"id\": \"beam_mega6\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL6\",\n            \"cost\": 16384,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 128,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.46799999999999997,\n            \"damage\": 9636,\n            \"curage\": 130,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"beam_mega7\": {\n            \"id\": \"beam_mega7\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL7\",\n            \"cost\": 25600,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 164,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.42,\n            \"damage\": 12487,\n            \"curage\": 130,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper1\": {\n            \"id\": \"beam_sniper1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L1\",\n            \"cost\": 1600,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 33,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4096,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper2\": {\n            \"id\": \"beam_sniper2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L2\",\n            \"cost\": 2304,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 39,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4640,\n            \"curage\": 0,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper3\": {\n            \"id\": \"beam_sniper3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L3\",\n            \"cost\": 6400,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 65,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 7301,\n            \"curage\": 105,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper4\": {\n            \"id\": \"beam_sniper4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L4\",\n            \"cost\": 8464,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 74,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 8514,\n            \"curage\": 105,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper5\": {\n            \"id\": \"beam_sniper5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L5\",\n            \"cost\": 14400,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 97,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 11852,\n            \"curage\": 110,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper6\": {\n            \"id\": \"beam_sniper6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L6\",\n            \"cost\": 16384,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 103,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 12944,\n            \"curage\": 120,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper7\": {\n            \"id\": \"beam_sniper7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L7\",\n            \"cost\": 25600,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 129,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 17984,\n            \"curage\": 130,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"sniper1\": {\n            \"id\": \"sniper1\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL1\",\n            \"cost\": 1600,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4096,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"sniper2\": {\n            \"id\": \"sniper2\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL2\",\n            \"cost\": 2304,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4640,\n            \"curage\": 0,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"sniper3\": {\n            \"id\": \"sniper3\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL3\",\n            \"cost\": 6400,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 7301,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"sniper4\": {\n            \"id\": \"sniper4\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL4\",\n            \"cost\": 8464,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 8514,\n            \"curage\": 0,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"sniper5\": {\n            \"id\": \"sniper5\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL5\",\n            \"cost\": 14400,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 11852,\n            \"curage\": 0,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"sniper6\": {\n            \"id\": \"sniper6\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL6\",\n            \"cost\": 16384,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 2,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 12944,\n            \"curage\": 0,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"sniper7\": {\n            \"id\": \"sniper7\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL7\",\n            \"cost\": 25600,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 2,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 17984,\n            \"curage\": 0,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"beam_gun1\": {\n            \"id\": \"beam_gun1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 2744,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_gun2\": {\n            \"id\": \"beam_gun2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 12,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3048,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_gun3\": {\n            \"id\": \"beam_gun3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 24,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 4492,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_gun4\": {\n            \"id\": \"beam_gun4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 28,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 5132,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_gun5\": {\n            \"id\": \"beam_gun5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 38,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_gun6\": {\n            \"id\": \"beam_gun6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 8000,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_gun7\": {\n            \"id\": \"beam_gun7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 52,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 9938,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling1\": {\n            \"id\": \"beam_gatling1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling2\": {\n            \"id\": \"beam_gatling2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 12,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling3\": {\n            \"id\": \"beam_gatling3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 24,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling4\": {\n            \"id\": \"beam_gatling4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 28,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling5\": {\n            \"id\": \"beam_gatling5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 38,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling6\": {\n            \"id\": \"beam_gatling6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling7\": {\n            \"id\": \"beam_gatling7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 52,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"gatling1\": {\n            \"id\": \"gatling1\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gatling2\": {\n            \"id\": \"gatling2\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gatling3\": {\n            \"id\": \"gatling3\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"gatling4\": {\n            \"id\": \"gatling4\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"gatling5\": {\n            \"id\": \"gatling5\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gatling6\": {\n            \"id\": \"gatling6\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"gatling7\": {\n            \"id\": \"gatling7\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_sword1\": {\n            \"id\": \"beam_sword1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 8,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3176,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_sword2\": {\n            \"id\": \"beam_sword2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3581,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_sword3\": {\n            \"id\": \"beam_sword3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 5545,\n            \"curage\": 105,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_sword4\": {\n            \"id\": \"beam_sword4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 23,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6434,\n            \"curage\": 110,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_sword5\": {\n            \"id\": \"beam_sword5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 32,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 8869,\n            \"curage\": 120,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_sword6\": {\n            \"id\": \"beam_sword6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 36,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 10503,\n            \"curage\": 125,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_sword7\": {\n            \"id\": \"beam_sword7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 44,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 13312,\n            \"curage\": 130,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"sword1\": {\n            \"id\": \"sword1\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3176,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"sword2\": {\n            \"id\": \"sword2\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3581,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"sword3\": {\n            \"id\": \"sword3\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 5545,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"sword4\": {\n            \"id\": \"sword4\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6434,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"sword5\": {\n            \"id\": \"sword5\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 8869,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"sword6\": {\n            \"id\": \"sword6\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 10503,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"sword7\": {\n            \"id\": \"sword7\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 13312,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"shotgun1\": {\n            \"id\": \"shotgun1\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"shotgun2\": {\n            \"id\": \"shotgun2\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"shotgun3\": {\n            \"id\": \"shotgun3\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"shotgun4\": {\n            \"id\": \"shotgun4\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"shotgun5\": {\n            \"id\": \"shotgun5\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"shotgun6\": {\n            \"id\": \"shotgun6\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"shotgun7\": {\n            \"id\": \"shotgun7\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"machinegun1\": {\n            \"id\": \"machinegun1\",\n            \"title\": \"\xE6\xA9\x9F\xE9\x97\x9C\xE7\xA0\xB2L1\",\n            \"cost\": 256,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.5,\n            \"damage\": 2000,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"machinegun2\": {\n            \"id\": \"machinegun2\",\n            \"title\": \"\xE6\xA9\x9F\xE9\x97\x9C\xE7\xA0\xB2L2\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.5,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gaite_handSword\": {\n            \"id\": \"gaite_handSword\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE6\x89\x8B\xE5\x88\x80\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3800,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_axe\": {\n            \"id\": \"gaite_axe\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xB7\xA8\xE6\x96\xA7\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 10000,\n            \"curage\": 120,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gaite_beam\": {\n            \"id\": \"gaite_beam\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\x85\x89\xE7\xB7\x9A\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                3\n            ],\n            \"energyCost\": 30,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1.1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 9000,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gaite_cannon\": {\n            \"id\": \"gaite_cannon\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\x8A\xA0\xE8\xBE\xB2\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_drill\": {\n            \"id\": \"gaite_drill\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\x9B\xBB\xE9\x91\xBD\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 9,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3500,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_powerDrill\": {\n            \"id\": \"gaite_powerDrill\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xBC\xBA\xE5\x8A\x9B\xE9\x9B\xBB\xE9\x89\x86\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1.2,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 7000,\n            \"curage\": 120,\n            \"powerCost\": 26,\n            \"unlockExp\": 0\n        },\n        \"gaite_punch\": {\n            \"id\": \"gaite_punch\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\x87\x8D\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 5,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3200,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gaite_missle\": {\n            \"id\": \"gaite_missle\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\xA3\x9B\xE5\xBD\x88\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"missile\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_shan\": {\n            \"id\": \"gaite_shan\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xA4\xA7\xE9\x9B\xAA\xE5\xB1\xB1\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1.3,\n                0.75,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.9,\n            \"damage\": 9500,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"moshen_ray\": {\n            \"id\": \"moshen_ray\",\n            \"title\": \"\xE5\x85\x89\xE5\xAD\x90\xE5\x8A\x9B\xE5\xB0\x84\xE7\xB6\xAB\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                4\n            ],\n            \"energyCost\": 3,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                2,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 2500,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"moshen_punch\": {\n            \"id\": \"moshen_punch\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE9\x87\x8D\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3300,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"moshen_flypunch\": {\n            \"id\": \"moshen_flypunch\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE9\xA3\x9B\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 4000,\n            \"curage\": 0,\n            \"powerCost\": 25,\n            \"unlockExp\": 0\n        },\n        \"moshen_jian\": {\n            \"id\": \"moshen_jian\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE7\xA5\x9E\xE5\x8A\x8D\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 22,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6000,\n            \"curage\": 120,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"moshen_fire\": {\n            \"id\": \"moshen_fire\",\n            \"title\": \"\xE9\xAD\x94\xE7\xA5\x9E\xE7\x81\xAB\xE7\x84\xB0\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 45,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"fire\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.9,\n            \"damage\": 8500,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"duankong_fight\": {\n            \"id\": \"duankong_fight\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 9,\n            \"unlockExp\": 0\n        },\n        \"duankong_laser\": {\n            \"id\": \"duankong_laser\",\n            \"title\": \"\xE5\x9B\x9B\xE9\x80\xA3\xE7\x82\xAE\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.1,\n            \"damage\": 2600,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"duankong_sword\": {\n            \"id\": \"duankong_sword\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE5\x8A\x8D\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 23,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 6300,\n            \"curage\": 115,\n            \"powerCost\": 21,\n            \"unlockExp\": 0\n        },\n        \"duankong_shot\": {\n            \"id\": \"duankong_shot\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE7\x82\xAE\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.8,\n            \"damage\": 8000,\n            \"curage\": 130,\n            \"powerCost\": 28,\n            \"unlockExp\": 0\n        }\n    },\n    \"weaponAbility\": {\n        \"moveAttack\": {\n            \"id\": \"moveAttack\",\n            \"title\": \"\xE7\xA7\xBB\xE5\x8B\x95\xE5\x8F\xAF\",\n            \"desc\": \"\xE5\x8F\xAF\xE7\xA7\xBB\xE5\x8B\x95\xE4\xBD\xBF\xE7\x94\xA8\",\n            \"values\": []\n        },\n        \"standAttack\": {\n            \"id\": \"standAttack\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\",\n            \"desc\": \"\xE5\x8E\x9F\xE5\x9C\xB0\xE4\xBD\xBF\xE7\x94\xA8\xE6\x99\x82\xE3\x80\x82\xE5\x91\xBD\xE4\xB8\xAD\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE3\x80\x82\xE4\xB8\x8D\xE5\x8F\xAF\xE5\x8F\x8D\xE6\x93\x8A\xE3\x80\x82\",\n            \"values\": [\n                \"1\"\n            ]\n        },\n        \"melee\": {\n            \"id\": \"melee\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"desc\": \"\xE4\xBB\xA5\xE6\xA0\xBC\xE9\xAC\xA5\xE5\x80\xBC\xE5\xB7\xAE\xE8\xB7\x9D\xE5\xBD\xB1\xE9\x9F\xBF\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE8\x88\x87\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"range\": {\n            \"id\": \"range\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\",\n            \"desc\": \"\xE4\xBB\xA5\xE5\xB0\x84\xE6\x93\x8A\xE5\x80\xBC\xE5\xB7\xAE\xE8\xB7\x9D\xE5\xBD\xB1\xE9\x9F\xBF\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE8\x88\x87\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"beam\": {\n            \"id\": \"beam\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\",\n            \"desc\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2\xE5\x8F\xAF\xE4\xBB\xA5\xE6\xB8\x9B\xE8\xBC\x95\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"physic\": {\n            \"id\": \"physic\",\n            \"title\": \"\xE5\xAF\xA6\xE5\xBD\x88\",\n            \"desc\": \"\xE8\xA3\x9D\xE7\x94\xB2\xE5\x8F\xAF\xE4\xBB\xA5\xE6\xB8\x9B\xE8\xBC\x95\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"missile\": {\n            \"id\": \"missile\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x85\xB5\xE5\x99\xA8\",\n            \"desc\": \"\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE4\xB8\x8D\xE5\x8F\x97\xE5\xB0\x8D\xE8\xB1\xA1\xE5\x89\xA9\xE9\xA4\x98\xE5\x87\xBA\xE5\x8A\x9B\xE5\xBD\xB1\xE9\x9F\xBF, \xE6\x9C\x83\xE8\xA2\xAB[\xE9\x98\xB2\xE7\xA6\xA6\xE5\x85\xB5\xE5\x99\xA8]\xE6\x93\x8A\xE8\x90\xBD\",\n            \"values\": []\n        },\n        \"fire\": {\n            \"id\": \"fire\",\n            \"title\": \"\xE7\x81\xAB\xE7\x84\xB0\",\n            \"desc\": \"\xE5\xB0\x8D\xE8\xB1\xA1\xE4\xB8\x8D\xE5\x8F\x97\xE6\xA8\xB9\xE6\x9E\x97\xE5\x9C\xB0\xE5\x9E\x8B\xE8\xA3\x9C\xE6\xAD\xA3.\",\n            \"values\": []\n        },\n        \"lighting\": {\n            \"id\": \"lighting\",\n            \"title\": \"\xE9\x9B\xBB\xE6\x93\x8A\",\n            \"desc\": \"\xE5\xB0\x8D\xE8\xB1\xA1\xE4\xB8\x8D\xE5\x8F\x97\xE6\xB0\xB4\xE5\x9F\x9F\xE5\x9C\xB0\xE5\x9E\x8B\xE8\xA3\x9C\xE6\xAD\xA3.\",\n            \"values\": []\n        },\n        \"spray\": {\n            \"id\": \"spray\",\n            \"title\": \"\xE6\x93\xB4\xE6\x95\xA3\",\n            \"desc\": \"\xE4\xB8\x80\xE5\xAE\x9A\xE5\x91\xBD\xE4\xB8\xAD, \xE5\x82\xB7\xE5\xAE\xB3\xE5\x8A\x9B\xE5\x8F\xA6\xE5\xA4\x96*\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\",\n            \"values\": []\n        },\n        \"multi\": {\n            \"id\": \"multi\",\n            \"title\": \"\xE9\x80\xA3\xE5\xB0\x84\",\n            \"desc\": \"\xE5\x91\xBD\xE4\xB8\xAD*{0}, \xE5\x82\xB7\xE5\xAE\xB3*{1}~{2}\",\n            \"values\": [\n                \"1.1\",\n                \"0.7\",\n                \"1.3\"\n            ]\n        }\n    },\n    \"weaponEnergyType\": {\n        \"energy\": {\n            \"id\": \"energy\",\n            \"title\": \"energy\"\n        },\n        \"bullet\": {\n            \"id\": \"bullet\",\n            \"title\": \"bullet\"\n        }\n    },\n    \"weaponType\": {\n        \"single\": {\n            \"id\": \"single\",\n            \"title\": \"single\"\n        },\n        \"line\": {\n            \"id\": \"line\",\n            \"title\": \"line\"\n        }\n    }\n}"))), $pkg.GameData); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r = json.Unmarshal((new sliceType$6($stringToBytes("{\n    \"component\": {\n        \"energy1\": {\n            \"id\": \"energy1\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"25\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"energy2\": {\n            \"id\": \"energy2\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"50\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"energy3\": {\n            \"id\": \"energy3\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"75\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"energy4\": {\n            \"id\": \"energy4\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"100\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"energy5\": {\n            \"id\": \"energy5\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\xA4\xBEL5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x83\xBD\xE9\x87\x8F.\",\n            \"value\": [\n                \"125\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"armor1\": {\n            \"id\": \"armor1\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"100.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"armor2\": {\n            \"id\": \"armor2\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1000.0\",\n                \"200.0\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"armor3\": {\n            \"id\": \"armor3\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1500.0\",\n                \"300.0\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"armor4\": {\n            \"id\": \"armor4\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000.0\",\n                \"400.0\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"armor5\": {\n            \"id\": \"armor5\",\n            \"title\": \"\xE8\xA3\x9D\xE7\x94\xB2L5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2500.0\",\n                \"500.0\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor1\": {\n            \"id\": \"beam_armor1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"100.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor2\": {\n            \"id\": \"beam_armor2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1000.0\",\n                \"200.0\"\n            ],\n            \"powerCost\": 12,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor3\": {\n            \"id\": \"beam_armor3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"1500.0\",\n                \"300.0\"\n            ],\n            \"powerCost\": 14,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor4\": {\n            \"id\": \"beam_armor4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000.0\",\n                \"400.0\"\n            ],\n            \"powerCost\": 16,\n            \"action\": \"equipment\"\n        },\n        \"beam_armor5\": {\n            \"id\": \"beam_armor5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2L5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2500.0\",\n                \"500.0\"\n            ],\n            \"powerCost\": 18,\n            \"action\": \"equipment\"\n        },\n        \"fire_armor\": {\n            \"id\": \"fire_armor\",\n            \"title\": \"\xE9\x98\xB2\xE7\x81\xAB\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE4\xB8\x8D\xE5\x8F\x97\xE7\x81\xAB\xE7\x84\xB0\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\xB1\xE9\x9F\xBF. \xE8\xA2\xAB\xE7\x81\xAB\xE7\x84\xB0\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"1000.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"lighting_armor\": {\n            \"id\": \"lighting_armor\",\n            \"title\": \"\xE9\x98\xB2\xE9\x9B\xBB\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\x80\x90\xE4\xB9\x85. \xE4\xB8\x8D\xE5\x8F\x97\xE9\x9B\xB7\xE9\x9B\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\xB1\xE9\x9F\xBF. \xE8\xA2\xAB\xE9\x9B\xB7\xE9\x9B\xBB\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"500.0\",\n                \"1000.0\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"engine1\": {\n            \"id\": \"engine1\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"20\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine2\": {\n            \"id\": \"engine2\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL2\",\n            \"cost\": 2000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"40\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine3\": {\n            \"id\": \"engine3\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL3\",\n            \"cost\": 3000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"60\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine4\": {\n            \"id\": \"engine4\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL4\",\n            \"cost\": 4000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"80\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"engine5\": {\n            \"id\": \"engine5\",\n            \"title\": \"\xE5\xBC\x95\xE6\x93\x8EL5\",\n            \"cost\": 5000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}power\",\n            \"value\": [\n                \"100\"\n            ],\n            \"powerCost\": 0,\n            \"action\": \"equipment\"\n        },\n        \"fixPack\": {\n            \"id\": \"fixPack\",\n            \"title\": \"\xE4\xBF\xAE\xE5\xBE\xA9\xE5\x8C\x85\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9B\x9E\xE5\xBE\xA9{0}HP\",\n            \"value\": [\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"energyPack\": {\n            \"id\": \"energyPack\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE5\x8C\x85\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9B\x9E\xE5\xBE\xA9{0}EN\",\n            \"value\": [\n                \"80\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"bulletPack\": {\n            \"id\": \"bulletPack\",\n            \"title\": \"\xE5\xBD\x88\xE5\xA4\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\x89\x80\xE6\x9C\x89\xE5\xBD\x88\xE8\x97\xA5\xE9\xA1\x9E\xE6\xAD\xA6\xE5\x99\xA8\xE5\xBD\x88\xE6\x95\xB8\xE8\xA3\x9C\xE5\x85\x85{0}\",\n            \"value\": [\n                \"3\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"item\"\n        },\n        \"shield\": {\n            \"id\": \"shield\",\n            \"title\": \"\xE7\x9B\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA9\x9F\xE7\x8E\x87{0}\xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}.\",\n            \"value\": [\n                \"0.2\",\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"beam_shield\": {\n            \"id\": \"beam_shield\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x9B\xBE\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA9\x9F\xE7\x8E\x87{0}\xE8\xA2\xAB\xE5\x85\x89\xE6\x9D\x9F\xE5\x82\xB7\xE5\xAE\xB3-{1}.\",\n            \"value\": [\n                \"0.2\",\n                \"3000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"psArmor\": {\n            \"id\": \"psArmor\",\n            \"title\": \"ps\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 3000,\n            \"desc\": \"\xE8\xA2\xAB\xE5\xAF\xA6\xE5\xBD\x88\xE5\x82\xB7\xE5\xAE\xB3-{1}\",\n            \"value\": [\n                \"2000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"afterimage\": {\n            \"id\": \"afterimage\",\n            \"title\": \"\xE6\xAE\x98\xE5\x83\x8F\",\n            \"cost\": 10000,\n            \"desc\": \"\xE6\xB0\xA3\xE5\x8A\x9B{0}\xE4\xBB\xA5\xE4\xB8\x8A\xE6\x99\x82, \xE6\xA9\x9F\xE7\x8E\x87{1}\xE9\x96\x83\xE9\x81\xBF\xE6\x94\xBB\xE6\x93\x8A\",\n            \"value\": [\n                \"130\",\n                \"0.7\"\n            ],\n            \"powerCost\": 30,\n            \"action\": \"equipment\"\n        },\n        \"defensiveWeapon\": {\n            \"id\": \"defensiveWeapon\",\n            \"title\": \"\xE9\x98\xB2\xE7\xA6\xA6\xE5\x85\xB5\xE5\x99\xA8\",\n            \"cost\": 1000,\n            \"desc\": \"\xE4\xBE\x9D\xE6\x8A\x80\xE9\x87\x8F\xE6\x9C\x89\xE6\xA9\x9F\xE7\x8E\x87\xE9\x98\xB2\xE7\xA6\xA6[\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x85\xB5\xE5\x99\xA8]\",\n            \"value\": [],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"zeroSystem\": {\n            \"id\": \"zeroSystem\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE7\xB3\xBB\xE7\xB5\xB1\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xAD\xA6\xE5\x99\xA8\xE7\x9A\x84\xE6\x9C\x80\xE7\xB5\x82\xE5\x91\xBD\xE4\xB8\xAD\xE5\xA2\x9E\xE5\x8A\xA0{0}%\xEF\xBC\x8C\xE8\x87\xAA\xE8\xBA\xAB\xE7\x9A\x84\xE6\x9C\x80\xE7\xB5\x82\xE8\xA2\xAB\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE6\xB8\x9B\xE5\xB0\x91{1}%\",\n            \"value\": [\n                \"10\",\n                \"15\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shejililiang\": {\n            \"id\": \"shejililiang\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\xE5\x8A\x9B\xE9\x87\x8F\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xB0\x84\xE6\x93\x8A\xE7\xB3\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xB0\x84\xE7\xA8\x8B\xE5\xA2\x9E\xE5\x8A\xA0{0}\",\n            \"value\": [\n                \"1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gedouliliang\": {\n            \"id\": \"gedouliliang\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE5\x8A\x9B\xE9\x87\x8F\",\n            \"cost\": 1000,\n            \"desc\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE7\xB3\xBB\xE6\xAD\xA6\xE5\x99\xA8\xE5\xB0\x84\xE7\xA8\x8B\xE5\xA2\x9E\xE5\x8A\xA0{0}\",\n            \"value\": [\n                \"1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gushou\": {\n            \"id\": \"gushou\",\n            \"title\": \"\xE5\x9B\xBA\xE5\xAE\x88\",\n            \"cost\": 1000,\n            \"desc\": \"\xE9\x80\x99\xE5\x80\x8B\xE5\x9B\x9E\xE5\x90\x88\xE6\xB2\x92\xE6\x9C\x89\xE6\x94\xBB\xE6\x93\x8A\xE7\x9A\x84\xE8\xA9\xB1\xEF\xBC\x8C\xE4\xB8\x8B\xE5\x80\x8B\xE5\x90\x88\xE5\x9B\x9E\xE9\x96\x8B\xE5\xA7\x8B\xE5\x89\x8D\xE5\x8F\x97\xE5\x82\xB7\xE5\xAE\xB3\xE6\xB8\x9B\xE5\xB0\x91{0}\",\n            \"value\": [\n                \"1000\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"gedouwang\": {\n            \"id\": \"gedouwang\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE8\x8B\xA5\xE6\x89\x80\xE6\x9C\x89\xE6\xAD\xA6\xE5\x99\xA8\xE9\x83\xBD\xE6\x98\xAF\xE6\xA0\xBC\xE9\xAC\xA5\xE7\xB3\xBB\xEF\xBC\x8C\xE6\xAD\xA6\xE5\x99\xA8\xE5\x82\xB7\xE5\xAE\xB3*{0}%, \xE5\x9B\x9E\xE9\x81\xBF*{1}%\",\n            \"value\": [\n                \"1.2\",\n                \"1.2\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shejiwang\": {\n            \"id\": \"shejiwang\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE8\x8B\xA5\xE6\x89\x80\xE6\x9C\x89\xE6\xAD\xA6\xE5\x99\xA8\xE9\x83\xBD\xE6\x98\xAF\xE5\xB0\x84\xE6\x93\x8A\xE7\xB3\xBB\xEF\xBC\x8C\xE5\xB0\x84\xE6\x93\x8A\xE5\x82\xB7\xE5\xAE\xB3*{0}%, \xE5\x8F\x97\xE5\x82\xB7\xE5\xAE\xB3\xE6\xB8\x9B\xE5\xB0\x91{0}\",\n            \"value\": [\n                \"1.2\",\n                \"500\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"feixingwang\": {\n            \"id\": \"feixingwang\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE7\x8E\x8B\",\n            \"cost\": 1000,\n            \"desc\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE7\x8B\x80\xE6\x85\x8B\xE6\x99\x82\xEF\xBC\x8C\xE7\xA7\xBB\xE5\x8B\x95\xE5\x8A\x9B+{0}\xEF\xBC\x8C\xE5\x9B\x9E\xE9\x81\xBF+{1}%\",\n            \"value\": [\n                \"2\",\n                \"1.2\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"shengwuzhuangjia\": {\n            \"id\": \"shengwuzhuangjia\",\n            \"title\": \"\xE7\x94\x9F\xE7\x89\xA9\xE8\xA3\x9D\xE7\x94\xB2\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE8\xA3\x9D\xE4\xB8\xAD. \xE6\xAF\x8F\xE5\x9B\x9E\xE5\x90\x88\xE9\x96\x8B\xE5\xA7\x8B\xE5\x9B\x9E\xE5\xBE\xA9{1}%\xE6\x9C\x80\xE5\xA4\xA7hp.\",\n            \"value\": [\n                \"300\",\n                \"0.1\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"feixingqi\": {\n            \"id\": \"feixingqi\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x99\xA8\",\n            \"cost\": 1000,\n            \"desc\": \"\xE7\xA9\xBA\xE4\xB8\xAD\xE9\x81\xA9\xE6\x80\xA7\xE8\xAE\x8A\xE6\x88\x90{0}\",\n            \"value\": [\n                \"0.8\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        },\n        \"pensheqidian\": {\n            \"id\": \"pensheqidian\",\n            \"title\": \"\xE5\x99\xB4\xE5\xB0\x84\xE6\xB0\xA3\xE5\xA2\x8A\",\n            \"cost\": 1000,\n            \"desc\": \"\xE5\x9C\xB0\xE9\x9D\xA2\xE7\xA7\xBB\xE5\x8B\x95\xE6\x99\x82\xE5\x87\xBA\xE5\x8A\x9B*{0}\",\n            \"value\": [\n                \"1.5\"\n            ],\n            \"powerCost\": 10,\n            \"action\": \"equipment\"\n        }\n    },\n    \"componentAction\": {\n        \"equipment\": {\n            \"id\": \"equipment\",\n            \"title\": \"\xE8\xA3\x9D\xE5\x82\x99\"\n        },\n        \"item\": {\n            \"id\": \"item\",\n            \"title\": \"\xE4\xBD\xBF\xE7\x94\xA8\"\n        },\n        \"itemForSelf\": {\n            \"id\": \"itemForSelf\",\n            \"title\": \"\xE4\xBD\xBF\xE7\x94\xA8\xE8\x87\xAA\xE8\xBA\xAB\"\n        }\n    },\n    \"config\": {\n        \"default\": {\n            \"id\": \"default\",\n            \"powerCostForMove\": 7,\n            \"award\": [\n                1.2,\n                1.2\n            ],\n            \"robots\": [\n                \"medium\",\n                \"medium\",\n                \"heavy\"\n            ],\n            \"weapons\": [\n                \"beam_gun1\",\n                \"beam_gun2\",\n                \"beam_gun3\",\n                \"beam_gatling1\",\n                \"beam_gatling2\",\n                \"beam_gatling3\",\n                \"beam_sword1\",\n                \"beam_sword2\",\n                \"beam_sword3\",\n                \"machinegun1\",\n                \"machinegun2\",\n                \"shotgun3\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"energy3\",\n                \"armor1\",\n                \"armor2\",\n                \"armor3\",\n                \"beam_armor1\",\n                \"beam_armor2\",\n                \"beam_armor3\"\n            ],\n            \"pilots\": [\n                \"engineer\",\n                \"engineer\",\n                \"engineer\"\n            ]\n        }\n    },\n    \"level\": {\n        \"ground1\": {\n            \"id\": \"ground1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": [\n                \"moshen\"\n            ]\n        },\n        \"ground2\": {\n            \"id\": \"ground2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground3\": {\n            \"id\": \"ground3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground4\": {\n            \"id\": \"ground4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"ground5\": {\n            \"id\": \"ground5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground6\": {\n            \"id\": \"ground6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground7\": {\n            \"id\": \"ground7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"ground8\": {\n            \"id\": \"ground8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"ground9\": {\n            \"id\": \"ground9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"ground10\": {\n            \"id\": \"ground10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"sea1\": {\n            \"id\": \"sea1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"sea2\": {\n            \"id\": \"sea2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea3\": {\n            \"id\": \"sea3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea4\": {\n            \"id\": \"sea4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sea5\": {\n            \"id\": \"sea5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea6\": {\n            \"id\": \"sea6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea7\": {\n            \"id\": \"sea7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sea8\": {\n            \"id\": \"sea8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"sea9\": {\n            \"id\": \"sea9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"sea10\": {\n            \"id\": \"sea10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"sky1\": {\n            \"id\": \"sky1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"sky2\": {\n            \"id\": \"sky2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky3\": {\n            \"id\": \"sky3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky4\": {\n            \"id\": \"sky4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"sky5\": {\n            \"id\": \"sky5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky6\": {\n            \"id\": \"sky6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky7\": {\n            \"id\": \"sky7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"sky8\": {\n            \"id\": \"sky8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"sky9\": {\n            \"id\": \"sky9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"sky10\": {\n            \"id\": \"sky10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        },\n        \"common1\": {\n            \"id\": \"common1\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 5,\n            \"groupCount\": 1,\n            \"boss\": []\n        },\n        \"common2\": {\n            \"id\": \"common2\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 8,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common3\": {\n            \"id\": \"common3\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 11,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common4\": {\n            \"id\": \"common4\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 14,\n            \"groupCount\": 2,\n            \"boss\": []\n        },\n        \"common5\": {\n            \"id\": \"common5\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 17,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common6\": {\n            \"id\": \"common6\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 20,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common7\": {\n            \"id\": \"common7\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 23,\n            \"groupCount\": 3,\n            \"boss\": []\n        },\n        \"common8\": {\n            \"id\": \"common8\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 26,\n            \"groupCount\": 4,\n            \"boss\": []\n        },\n        \"common9\": {\n            \"id\": \"common9\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 29,\n            \"groupCount\": 5,\n            \"boss\": []\n        },\n        \"common10\": {\n            \"id\": \"common10\",\n            \"robots\": [\n                \"BGD\",\n                \"BGD\",\n                \"BGD\",\n                \"BYJ\",\n                \"BYJ\",\n                \"BYJ\"\n            ],\n            \"count\": 32,\n            \"groupCount\": 6,\n            \"boss\": []\n        }\n    },\n    \"pilot\": {\n        \"engineer\": {\n            \"id\": \"engineer\",\n            \"title\": \"\xE5\xB7\xA5\xE7\xA8\x8B\xE5\xB8\xAB\",\n            \"cost\": 4400,\n            \"melee\": 65,\n            \"range\": 65,\n            \"atk\": 70,\n            \"evade\": 80,\n            \"guard\": 70,\n            \"tech\": 90,\n            \"ability\": [],\n            \"total\": 440\n        },\n        \"boxer\": {\n            \"id\": \"boxer\",\n            \"title\": \"\xE6\x8B\xB3\xE6\x93\x8A\xE6\x89\x8B\",\n            \"cost\": 4650,\n            \"melee\": 90,\n            \"range\": 65,\n            \"atk\": 90,\n            \"evade\": 50,\n            \"guard\": 90,\n            \"tech\": 80,\n            \"ability\": [],\n            \"total\": 465\n        },\n        \"teacher\": {\n            \"id\": \"teacher\",\n            \"title\": \"\xE6\x95\x99\xE5\xB8\xAB\",\n            \"cost\": 4400,\n            \"melee\": 50,\n            \"range\": 80,\n            \"atk\": 70,\n            \"evade\": 80,\n            \"guard\": 60,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 440\n        },\n        \"baseballPitcher\": {\n            \"id\": \"baseballPitcher\",\n            \"title\": \"\xE6\xA3\x92\xE7\x90\x83\xE6\x8A\x95\xE6\x89\x8B\",\n            \"cost\": 5150,\n            \"melee\": 80,\n            \"range\": 90,\n            \"atk\": 90,\n            \"evade\": 75,\n            \"guard\": 90,\n            \"tech\": 90,\n            \"ability\": [],\n            \"total\": 515\n        },\n        \"amuro\": {\n            \"id\": \"amuro\",\n            \"title\": \"\xE9\x98\xBF\xE5\xA7\x86\xE7\xBE\x85\",\n            \"cost\": 6050,\n            \"melee\": 70,\n            \"range\": 130,\n            \"atk\": 100,\n            \"evade\": 130,\n            \"guard\": 70,\n            \"tech\": 105,\n            \"ability\": [],\n            \"total\": 605\n        },\n        \"liulongma\": {\n            \"id\": \"liulongma\",\n            \"title\": \"\xE6\xB5\x81\xE9\xBE\x8D\xE9\xA6\xAC\",\n            \"cost\": 6100,\n            \"melee\": 130,\n            \"range\": 70,\n            \"atk\": 110,\n            \"evade\": 65,\n            \"guard\": 135,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 610\n        },\n        \"doujiaer\": {\n            \"id\": \"doujiaer\",\n            \"title\": \"\xE5\x85\x9C\xE7\x94\xB2\xE5\x85\x92\",\n            \"cost\": 6000,\n            \"melee\": 125,\n            \"range\": 70,\n            \"atk\": 105,\n            \"evade\": 60,\n            \"guard\": 140,\n            \"tech\": 100,\n            \"ability\": [],\n            \"total\": 600\n        },\n        \"xibuke\": {\n            \"id\": \"xibuke\",\n            \"title\": \"\xE8\xA5\xBF\xE5\xB8\x83\xE5\x85\x8B\",\n            \"cost\": 6050,\n            \"melee\": 80,\n            \"range\": 120,\n            \"atk\": 100,\n            \"evade\": 125,\n            \"guard\": 75,\n            \"tech\": 105,\n            \"ability\": [],\n            \"total\": 605\n        }\n    },\n    \"pilotAbility\": {},\n    \"robot\": {\n        \"gaite_sky\": {\n            \"id\": \"gaite_sky\",\n            \"title\": \"\xE7\xA9\xBA\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_handSword\",\n                \"gaite_axe\",\n                \"gaite_beam\",\n                \"gaite_cannon\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor1\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                0.75,\n                0.5,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"gaite_land\",\n                \"gaite_sea\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gaite_land\": {\n            \"id\": \"gaite_land\",\n            \"title\": \"\xE5\x9C\xB0\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_missle\",\n                \"gaite_drill\",\n                \"gaite_powerDrill\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.75,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"gaite_sky\",\n                \"gaite_sea\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gaite_sea\": {\n            \"id\": \"gaite_sea\",\n            \"title\": \"\xE6\xB5\xB7\xE8\x93\x8B\xE7\x89\xB9\",\n            \"cost\": 83500,\n            \"power\": 125,\n            \"hp\": 10000,\n            \"en\": 200,\n            \"weapons\": [\n                \"gaite_punch\",\n                \"gaite_missle\",\n                \"gaite_shan\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor2\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                0.5,\n                1.25,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"gaite_sky\",\n                \"gaite_land\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"moshen\": {\n            \"id\": \"moshen\",\n            \"title\": \"\xE9\xAD\x94\xE7\xA5\x9Ez\",\n            \"cost\": 69600,\n            \"power\": 110,\n            \"hp\": 12000,\n            \"en\": 200,\n            \"weapons\": [\n                \"moshen_ray\",\n                \"moshen_punch\",\n                \"moshen_flypunch\",\n                \"moshen_jian\",\n                \"moshen_fire\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy2\",\n                \"armor2\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"zgundam\": {\n            \"id\": \"zgundam\",\n            \"title\": \"z\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\",\n                \"beam_mega2\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [\n                \"zgundam_sky\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"zgundam_sky\": {\n            \"id\": \"zgundam_sky\",\n            \"title\": \"z\xE9\x8B\xBC\xE5\xBD\x88\xE9\xA3\x9B\xE7\xBF\xBC\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                0,\n                0,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"zgundam\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"gundam\": {\n            \"id\": \"gundam\",\n            \"title\": \"\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 37400,\n            \"power\": 65,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"jimu\": {\n            \"id\": \"jimu\",\n            \"title\": \"\xE5\x90\x89\xE5\xA7\x86\",\n            \"cost\": 29616,\n            \"power\": 48,\n            \"hp\": 4000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BGD\": {\n            \"id\": \"BGD\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword2\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BYJ\": {\n            \"id\": \"BYJ\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE9\x81\x8A\xE6\x93\x8A\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword1\",\n                \"beam_gatling2\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BJJ\": {\n            \"id\": \"BJJ\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE7\x8B\x99\xE6\x93\x8A\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sniper1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BGR\": {\n            \"id\": \"BGR\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE5\xB9\xB2\xE6\x93\xBE\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_sword1\",\n                \"beam_gatling1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor2\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"BFD\": {\n            \"id\": \"BFD\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE9\x98\xB2\xE7\x9B\xBE\",\n            \"cost\": 34900,\n            \"power\": 60,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"armor2\",\n                \"shield\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                2\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"windgundam\": {\n            \"id\": \"windgundam\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 99200,\n            \"power\": 140,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun2\",\n                \"beam_sword1\",\n                \"beam_sniper4\",\n                \"beam_mega4\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\",\n                \"zeroSystem\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"windgundam_sky\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"windgundam_sky\": {\n            \"id\": \"windgundam_sky\",\n            \"title\": \"\xE9\x9B\xB6\xE5\xBC\x8F\xE9\x8B\xBC\xE5\xBD\x88\xE9\xA3\x9B\xE7\xBF\xBC\",\n            \"cost\": 99200,\n            \"power\": 140,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun2\",\n                \"beam_sniper4\"\n            ],\n            \"components\": [\n                \"energy2\",\n                \"energy2\",\n                \"armor1\",\n                \"armor1\",\n                \"zeroSystem\"\n            ],\n            \"suitability\": [\n                0,\n                0,\n                1,\n                1\n            ],\n            \"transform\": [\n                \"windgundam\"\n            ],\n            \"unlockExp\": 10\n        },\n        \"strikegundam\": {\n            \"id\": \"strikegundam\",\n            \"title\": \"\xE6\x94\xBB\xE6\x93\x8A\xE9\x8B\xBC\xE5\xBD\x88\",\n            \"cost\": 56900,\n            \"power\": 95,\n            \"hp\": 8000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword3\",\n                \"sword3\",\n                \"beam_gun1\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\",\n                \"psArmor\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"exlight\": {\n            \"id\": \"exlight\",\n            \"title\": \"\xE7\x89\xB9\xE8\xBC\x95\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 24100,\n            \"power\": 30,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 2\n        },\n        \"light\": {\n            \"id\": \"light\",\n            \"title\": \"\xE8\xBC\x95\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 28600,\n            \"power\": 45,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 1\n        },\n        \"normal\": {\n            \"id\": \"normal\",\n            \"title\": \"\xE5\x88\xB6\xE5\xBC\x8F\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 37400,\n            \"power\": 65,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 0\n        },\n        \"medium\": {\n            \"id\": \"medium\",\n            \"title\": \"\xE4\xB8\xAD\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 52900,\n            \"power\": 90,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 1\n        },\n        \"heavy\": {\n            \"id\": \"heavy\",\n            \"title\": \"\xE9\x87\x8D\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 78100,\n            \"power\": 120,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 3\n        },\n        \"exheavy\": {\n            \"id\": \"exheavy\",\n            \"title\": \"\xE7\x89\xB9\xE9\x87\x8D\xE5\x9E\x8B\xE6\xA9\x9F\xE7\x94\xB2\",\n            \"cost\": 116600,\n            \"power\": 155,\n            \"hp\": 5000,\n            \"en\": 200,\n            \"weapons\": [],\n            \"components\": [],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 4\n        },\n        \"f91\": {\n            \"id\": \"f91\",\n            \"title\": \"F91\",\n            \"cost\": 53000,\n            \"power\": 90,\n            \"hp\": 6000,\n            \"en\": 200,\n            \"weapons\": [\n                \"machinegun1\",\n                \"beam_sword1\",\n                \"beam_gun1\",\n                \"beam_mega2\"\n            ],\n            \"components\": [\n                \"beam_armor1\",\n                \"beam_shield\",\n                \"afterimage\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        },\n        \"duankongka\": {\n            \"id\": \"duankongka\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE6\x88\x91\",\n            \"cost\": 48400,\n            \"power\": 110,\n            \"hp\": 12000,\n            \"en\": 200,\n            \"weapons\": [\n                \"duankong_fight\",\n                \"duankong_laser\",\n                \"duankong_sword\",\n                \"duankong_shot\"\n            ],\n            \"components\": [\n                \"energy1\",\n                \"energy1\",\n                \"armor1\",\n                \"armor1\"\n            ],\n            \"suitability\": [\n                1,\n                0.5,\n                0,\n                1\n            ],\n            \"transform\": [],\n            \"unlockExp\": 10\n        }\n    },\n    \"terrain\": {\n        \"mountain\": {\n            \"id\": \"mountain\",\n            \"title\": \"\xE5\xB1\xB1\xE8\x84\x88\",\n            \"cost\": [\n                0.5,\n                0,\n                0,\n                0\n            ],\n            \"hitRate\": 0.75,\n            \"damage\": 0.5\n        },\n        \"plain\": {\n            \"id\": \"plain\",\n            \"title\": \"\xE5\xB9\xB3\xE5\x8E\x9F\",\n            \"cost\": [\n                1,\n                0,\n                0,\n                0\n            ],\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"forest\": {\n            \"id\": \"forest\",\n            \"title\": \"\xE6\xA3\xAE\xE6\x9E\x97\",\n            \"cost\": [\n                0.75,\n                0,\n                0,\n                0\n            ],\n            \"hitRate\": 0.5,\n            \"damage\": 0.75\n        },\n        \"road\": {\n            \"id\": \"road\",\n            \"title\": \"\xE9\x81\x93\xE8\xB7\xAF\",\n            \"cost\": [\n                1.25,\n                0,\n                0,\n                0\n            ],\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"city\": {\n            \"id\": \"city\",\n            \"title\": \"\xE5\x9F\x8E\xE5\xB8\x82\",\n            \"cost\": [\n                1,\n                0,\n                0,\n                0\n            ],\n            \"hitRate\": 0.9,\n            \"damage\": 0.75\n        },\n        \"beach\": {\n            \"id\": \"beach\",\n            \"title\": \"\xE6\xB2\xBF\xE6\xB5\xB7\",\n            \"cost\": [\n                0.75,\n                0.75,\n                0,\n                0\n            ],\n            \"hitRate\": 1,\n            \"damage\": 1\n        },\n        \"shallowSea\": {\n            \"id\": \"shallowSea\",\n            \"title\": \"\xE6\xB7\xBA\xE6\xB5\xB7\",\n            \"cost\": [\n                0,\n                1,\n                0,\n                0\n            ],\n            \"hitRate\": 0.75,\n            \"damage\": 0.75\n        },\n        \"deepSea\": {\n            \"id\": \"deepSea\",\n            \"title\": \"\xE6\xB7\xB1\xE6\xB5\xB7\",\n            \"cost\": [\n                0,\n                0.5,\n                0,\n                0\n            ],\n            \"hitRate\": 0.5,\n            \"damage\": 0.5\n        },\n        \"award\": {\n            \"id\": \"award\",\n            \"title\": \"\xE8\x83\xBD\xE9\x87\x8F\xE9\xBB\x9E\",\n            \"cost\": [\n                1,\n                1,\n                0,\n                0\n            ],\n            \"hitRate\": 1,\n            \"damage\": 1\n        }\n    },\n    \"terrainMapping\": {\n        \"0\": {\n            \"id\": \"0\",\n            \"terrain\": \"deepSea\"\n        },\n        \"1\": {\n            \"id\": \"1\",\n            \"terrain\": \"shallowSea\"\n        },\n        \"2\": {\n            \"id\": \"2\",\n            \"terrain\": \"beach\"\n        },\n        \"3\": {\n            \"id\": \"3\",\n            \"terrain\": \"plain\"\n        },\n        \"4\": {\n            \"id\": \"4\",\n            \"terrain\": \"city\"\n        },\n        \"5\": {\n            \"id\": \"5\",\n            \"terrain\": \"mountain\"\n        },\n        \"6\": {\n            \"id\": \"6\",\n            \"terrain\": \"forest\"\n        },\n        \"7\": {\n            \"id\": \"7\",\n            \"terrain\": \"award\"\n        },\n        \"8\": {\n            \"id\": \"8\",\n            \"terrain\": \"road\"\n        }\n    },\n    \"weapon\": {\n        \"beam_mega1\": {\n            \"id\": \"beam_mega1\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL1\",\n            \"cost\": 1600,\n            \"range\": [\n                5,\n                2\n            ],\n            \"energyCost\": 32,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.6,\n            \"damage\": 4096,\n            \"curage\": 110,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_mega2\": {\n            \"id\": \"beam_mega2\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL2\",\n            \"cost\": 2304,\n            \"range\": [\n                5,\n                2\n            ],\n            \"energyCost\": 40,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.588,\n            \"damage\": 4475,\n            \"curage\": 110,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"beam_mega3\": {\n            \"id\": \"beam_mega3\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL3\",\n            \"cost\": 6400,\n            \"range\": [\n                6,\n                3\n            ],\n            \"energyCost\": 76,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.54,\n            \"damage\": 6229,\n            \"curage\": 120,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_mega4\": {\n            \"id\": \"beam_mega4\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL4\",\n            \"cost\": 8464,\n            \"range\": [\n                6,\n                3\n            ],\n            \"energyCost\": 89,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.522,\n            \"damage\": 6989,\n            \"curage\": 120,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"beam_mega5\": {\n            \"id\": \"beam_mega5\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL5\",\n            \"cost\": 14400,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 120,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.48,\n            \"damage\": 8998,\n            \"curage\": 130,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"beam_mega6\": {\n            \"id\": \"beam_mega6\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL6\",\n            \"cost\": 16384,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 128,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.46799999999999997,\n            \"damage\": 9636,\n            \"curage\": 130,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"beam_mega7\": {\n            \"id\": \"beam_mega7\",\n            \"title\": \"\xE7\xB2\x92\xE5\xAD\x90\xE7\x82\xAEL7\",\n            \"cost\": 25600,\n            \"range\": [\n                7,\n                4\n            ],\n            \"energyCost\": 164,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"line\",\n            \"accuracy\": 0.42,\n            \"damage\": 12487,\n            \"curage\": 130,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper1\": {\n            \"id\": \"beam_sniper1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L1\",\n            \"cost\": 1600,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 33,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4096,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper2\": {\n            \"id\": \"beam_sniper2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L2\",\n            \"cost\": 2304,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 39,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4640,\n            \"curage\": 0,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper3\": {\n            \"id\": \"beam_sniper3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L3\",\n            \"cost\": 6400,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 65,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 7301,\n            \"curage\": 105,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper4\": {\n            \"id\": \"beam_sniper4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L4\",\n            \"cost\": 8464,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 74,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 8514,\n            \"curage\": 105,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper5\": {\n            \"id\": \"beam_sniper5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L5\",\n            \"cost\": 14400,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 97,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 11852,\n            \"curage\": 110,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper6\": {\n            \"id\": \"beam_sniper6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L6\",\n            \"cost\": 16384,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 103,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 12944,\n            \"curage\": 120,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"beam_sniper7\": {\n            \"id\": \"beam_sniper7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE7\x8B\x99\xE6\x93\x8A\xE9\x8E\x97L7\",\n            \"cost\": 25600,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 129,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 17984,\n            \"curage\": 130,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"sniper1\": {\n            \"id\": \"sniper1\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL1\",\n            \"cost\": 1600,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4096,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"sniper2\": {\n            \"id\": \"sniper2\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL2\",\n            \"cost\": 2304,\n            \"range\": [\n                3,\n                9\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 4640,\n            \"curage\": 0,\n            \"powerCost\": 24,\n            \"unlockExp\": 0\n        },\n        \"sniper3\": {\n            \"id\": \"sniper3\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL3\",\n            \"cost\": 6400,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 7301,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"sniper4\": {\n            \"id\": \"sniper4\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL4\",\n            \"cost\": 8464,\n            \"range\": [\n                4,\n                12\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 8514,\n            \"curage\": 0,\n            \"powerCost\": 46,\n            \"unlockExp\": 0\n        },\n        \"sniper5\": {\n            \"id\": \"sniper5\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL5\",\n            \"cost\": 14400,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 11852,\n            \"curage\": 0,\n            \"powerCost\": 60,\n            \"unlockExp\": 0\n        },\n        \"sniper6\": {\n            \"id\": \"sniper6\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL6\",\n            \"cost\": 16384,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 2,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 12944,\n            \"curage\": 0,\n            \"powerCost\": 64,\n            \"unlockExp\": 0\n        },\n        \"sniper7\": {\n            \"id\": \"sniper7\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\xE7\x82\xAEL7\",\n            \"cost\": 25600,\n            \"range\": [\n                5,\n                15\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 2,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"standAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 17984,\n            \"curage\": 0,\n            \"powerCost\": 80,\n            \"unlockExp\": 0\n        },\n        \"beam_gun1\": {\n            \"id\": \"beam_gun1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 2744,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_gun2\": {\n            \"id\": \"beam_gun2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 12,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3048,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_gun3\": {\n            \"id\": \"beam_gun3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 24,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 4492,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_gun4\": {\n            \"id\": \"beam_gun4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 28,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 5132,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_gun5\": {\n            \"id\": \"beam_gun5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 38,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_gun6\": {\n            \"id\": \"beam_gun6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 8000,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_gun7\": {\n            \"id\": \"beam_gun7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 52,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 9938,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling1\": {\n            \"id\": \"beam_gatling1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling2\": {\n            \"id\": \"beam_gatling2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 12,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling3\": {\n            \"id\": \"beam_gatling3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 24,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling4\": {\n            \"id\": \"beam_gatling4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 28,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling5\": {\n            \"id\": \"beam_gatling5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 38,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling6\": {\n            \"id\": \"beam_gatling6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_gatling7\": {\n            \"id\": \"beam_gatling7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 52,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"gatling1\": {\n            \"id\": \"gatling1\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gatling2\": {\n            \"id\": \"gatling2\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gatling3\": {\n            \"id\": \"gatling3\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"gatling4\": {\n            \"id\": \"gatling4\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"gatling5\": {\n            \"id\": \"gatling5\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gatling6\": {\n            \"id\": \"gatling6\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"gatling7\": {\n            \"id\": \"gatling7\",\n            \"title\": \"\xE8\xA1\x9D\xE9\x8B\x92\xE9\x8E\x97L7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                6\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.3,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"beam_sword1\": {\n            \"id\": \"beam_sword1\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 8,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3176,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"beam_sword2\": {\n            \"id\": \"beam_sword2\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3581,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"beam_sword3\": {\n            \"id\": \"beam_sword3\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 5545,\n            \"curage\": 105,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"beam_sword4\": {\n            \"id\": \"beam_sword4\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 23,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6434,\n            \"curage\": 110,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"beam_sword5\": {\n            \"id\": \"beam_sword5\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 32,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 8869,\n            \"curage\": 120,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"beam_sword6\": {\n            \"id\": \"beam_sword6\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 36,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 10503,\n            \"curage\": 125,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"beam_sword7\": {\n            \"id\": \"beam_sword7\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\xE5\x8A\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 44,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 13312,\n            \"curage\": 130,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"sword1\": {\n            \"id\": \"sword1\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3176,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"sword2\": {\n            \"id\": \"sword2\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3581,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"sword3\": {\n            \"id\": \"sword3\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 5545,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"sword4\": {\n            \"id\": \"sword4\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 5,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6434,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"sword5\": {\n            \"id\": \"sword5\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 8869,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"sword6\": {\n            \"id\": \"sword6\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 10503,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"sword7\": {\n            \"id\": \"sword7\",\n            \"title\": \"\xE5\xAF\xA6\xE9\xAB\x94\xE5\x8A\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 13312,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"shotgun1\": {\n            \"id\": \"shotgun1\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL1\",\n            \"cost\": 400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"shotgun2\": {\n            \"id\": \"shotgun2\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL2\",\n            \"cost\": 576,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 2406,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"shotgun3\": {\n            \"id\": \"shotgun3\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL3\",\n            \"cost\": 1600,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 3375,\n            \"curage\": 0,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"shotgun4\": {\n            \"id\": \"shotgun4\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL4\",\n            \"cost\": 2116,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 7,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 3796,\n            \"curage\": 0,\n            \"powerCost\": 23,\n            \"unlockExp\": 0\n        },\n        \"shotgun5\": {\n            \"id\": \"shotgun5\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL5\",\n            \"cost\": 3600,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 4913,\n            \"curage\": 0,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"shotgun6\": {\n            \"id\": \"shotgun6\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL6\",\n            \"cost\": 4624,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 5639,\n            \"curage\": 0,\n            \"powerCost\": 34,\n            \"unlockExp\": 0\n        },\n        \"shotgun7\": {\n            \"id\": \"shotgun7\",\n            \"title\": \"\xE9\x9C\xB0\xE5\xBD\x88\xE6\xA7\x8DL7\",\n            \"cost\": 6400,\n            \"range\": [\n                2,\n                4\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"spray\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.25,\n            \"damage\": 6859,\n            \"curage\": 0,\n            \"powerCost\": 40,\n            \"unlockExp\": 0\n        },\n        \"machinegun1\": {\n            \"id\": \"machinegun1\",\n            \"title\": \"\xE6\xA9\x9F\xE9\x97\x9C\xE7\xA0\xB2L1\",\n            \"cost\": 256,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.5,\n            \"damage\": 2000,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"machinegun2\": {\n            \"id\": \"machinegun2\",\n            \"title\": \"\xE6\xA9\x9F\xE9\x97\x9C\xE7\xA0\xB2L2\",\n            \"cost\": 400,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 8,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.5,\n            \"damage\": 2197,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gaite_handSword\": {\n            \"id\": \"gaite_handSword\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE6\x89\x8B\xE5\x88\x80\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 10,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3800,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_axe\": {\n            \"id\": \"gaite_axe\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xB7\xA8\xE6\x96\xA7\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 3,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.7,\n            \"damage\": 10000,\n            \"curage\": 120,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gaite_beam\": {\n            \"id\": \"gaite_beam\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\x85\x89\xE7\xB7\x9A\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                3\n            ],\n            \"energyCost\": 30,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1.1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 9000,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"gaite_cannon\": {\n            \"id\": \"gaite_cannon\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\x8A\xA0\xE8\xBE\xB2\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"multi\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_drill\": {\n            \"id\": \"gaite_drill\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\x9B\xBB\xE9\x91\xBD\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 9,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3500,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_powerDrill\": {\n            \"id\": \"gaite_powerDrill\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xBC\xBA\xE5\x8A\x9B\xE9\x9B\xBB\xE9\x89\x86\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1.2,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 7000,\n            \"curage\": 120,\n            \"powerCost\": 26,\n            \"unlockExp\": 0\n        },\n        \"gaite_punch\": {\n            \"id\": \"gaite_punch\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\x87\x8D\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 5,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3200,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"gaite_missle\": {\n            \"id\": \"gaite_missle\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE9\xA3\x9B\xE5\xBD\x88\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"missile\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 12,\n            \"unlockExp\": 0\n        },\n        \"gaite_shan\": {\n            \"id\": \"gaite_shan\",\n            \"title\": \"\xE8\x93\x8B\xE7\x89\xB9\xE5\xA4\xA7\xE9\x9B\xAA\xE5\xB1\xB1\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 20,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1.3,\n                0.75,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.9,\n            \"damage\": 9500,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"moshen_ray\": {\n            \"id\": \"moshen_ray\",\n            \"title\": \"\xE5\x85\x89\xE5\xAD\x90\xE5\x8A\x9B\xE5\xB0\x84\xE7\xB6\xAB\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                4\n            ],\n            \"energyCost\": 3,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                2,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 2500,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"moshen_punch\": {\n            \"id\": \"moshen_punch\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE9\x87\x8D\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3300,\n            \"curage\": 0,\n            \"powerCost\": 10,\n            \"unlockExp\": 0\n        },\n        \"moshen_flypunch\": {\n            \"id\": \"moshen_flypunch\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE9\xA3\x9B\xE6\x8B\xB3\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 4,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 0.85,\n            \"damage\": 4000,\n            \"curage\": 0,\n            \"powerCost\": 25,\n            \"unlockExp\": 0\n        },\n        \"moshen_jian\": {\n            \"id\": \"moshen_jian\",\n            \"title\": \"\xE9\x87\x91\xE5\x89\x9B\xE7\xA5\x9E\xE5\x8A\x8D\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 22,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                1,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 6000,\n            \"curage\": 120,\n            \"powerCost\": 20,\n            \"unlockExp\": 0\n        },\n        \"moshen_fire\": {\n            \"id\": \"moshen_fire\",\n            \"title\": \"\xE9\xAD\x94\xE7\xA5\x9E\xE7\x81\xAB\xE7\x84\xB0\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 45,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.75,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"range\",\n                \"fire\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.9,\n            \"damage\": 8500,\n            \"curage\": 130,\n            \"powerCost\": 30,\n            \"unlockExp\": 0\n        },\n        \"duankong_fight\": {\n            \"id\": \"duankong_fight\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                1\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1,\n            \"damage\": 3000,\n            \"curage\": 0,\n            \"powerCost\": 9,\n            \"unlockExp\": 0\n        },\n        \"duankong_laser\": {\n            \"id\": \"duankong_laser\",\n            \"title\": \"\xE5\x9B\x9B\xE9\x80\xA3\xE7\x82\xAE\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                3\n            ],\n            \"energyCost\": 0,\n            \"maxBulletCount\": 6,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\",\n                \"multi\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"bullet\",\n            \"type\": \"single\",\n            \"accuracy\": 1.1,\n            \"damage\": 2600,\n            \"curage\": 0,\n            \"powerCost\": 8,\n            \"unlockExp\": 0\n        },\n        \"duankong_sword\": {\n            \"id\": \"duankong_sword\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE5\x8A\x8D\",\n            \"cost\": 0,\n            \"range\": [\n                1,\n                2\n            ],\n            \"energyCost\": 23,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"physic\",\n                \"moveAttack\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.95,\n            \"damage\": 6300,\n            \"curage\": 115,\n            \"powerCost\": 21,\n            \"unlockExp\": 0\n        },\n        \"duankong_shot\": {\n            \"id\": \"duankong_shot\",\n            \"title\": \"\xE6\x96\xB7\xE7\xA9\xBA\xE7\x82\xAE\",\n            \"cost\": 0,\n            \"range\": [\n                2,\n                5\n            ],\n            \"energyCost\": 43,\n            \"maxBulletCount\": 0,\n            \"suitability\": [\n                1,\n                0.5,\n                1,\n                1\n            ],\n            \"ability\": [\n                \"melee\",\n                \"beam\"\n            ],\n            \"energyType\": \"energy\",\n            \"type\": \"single\",\n            \"accuracy\": 0.8,\n            \"damage\": 8000,\n            \"curage\": 130,\n            \"powerCost\": 28,\n            \"unlockExp\": 0\n        }\n    },\n    \"weaponAbility\": {\n        \"moveAttack\": {\n            \"id\": \"moveAttack\",\n            \"title\": \"\xE7\xA7\xBB\xE5\x8B\x95\xE5\x8F\xAF\",\n            \"desc\": \"\xE5\x8F\xAF\xE7\xA7\xBB\xE5\x8B\x95\xE4\xBD\xBF\xE7\x94\xA8\",\n            \"values\": []\n        },\n        \"standAttack\": {\n            \"id\": \"standAttack\",\n            \"title\": \"\xE7\x8B\x99\xE6\x93\x8A\",\n            \"desc\": \"\xE5\x8E\x9F\xE5\x9C\xB0\xE4\xBD\xBF\xE7\x94\xA8\xE6\x99\x82\xE3\x80\x82\xE5\x91\xBD\xE4\xB8\xAD\xE5\xA2\x9E\xE5\x8A\xA0{0}\xE3\x80\x82\xE4\xB8\x8D\xE5\x8F\xAF\xE5\x8F\x8D\xE6\x93\x8A\xE3\x80\x82\",\n            \"values\": [\n                \"1\"\n            ]\n        },\n        \"melee\": {\n            \"id\": \"melee\",\n            \"title\": \"\xE6\xA0\xBC\xE9\xAC\xA5\",\n            \"desc\": \"\xE4\xBB\xA5\xE6\xA0\xBC\xE9\xAC\xA5\xE5\x80\xBC\xE5\xB7\xAE\xE8\xB7\x9D\xE5\xBD\xB1\xE9\x9F\xBF\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE8\x88\x87\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"range\": {\n            \"id\": \"range\",\n            \"title\": \"\xE5\xB0\x84\xE6\x93\x8A\",\n            \"desc\": \"\xE4\xBB\xA5\xE5\xB0\x84\xE6\x93\x8A\xE5\x80\xBC\xE5\xB7\xAE\xE8\xB7\x9D\xE5\xBD\xB1\xE9\x9F\xBF\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE8\x88\x87\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"beam\": {\n            \"id\": \"beam\",\n            \"title\": \"\xE5\x85\x89\xE6\x9D\x9F\",\n            \"desc\": \"\xE5\x85\x89\xE6\x9D\x9F\xE8\xA3\x9D\xE7\x94\xB2\xE5\x8F\xAF\xE4\xBB\xA5\xE6\xB8\x9B\xE8\xBC\x95\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"physic\": {\n            \"id\": \"physic\",\n            \"title\": \"\xE5\xAF\xA6\xE5\xBD\x88\",\n            \"desc\": \"\xE8\xA3\x9D\xE7\x94\xB2\xE5\x8F\xAF\xE4\xBB\xA5\xE6\xB8\x9B\xE8\xBC\x95\xE5\x82\xB7\xE5\xAE\xB3\",\n            \"values\": []\n        },\n        \"missile\": {\n            \"id\": \"missile\",\n            \"title\": \"\xE9\xA3\x9B\xE8\xA1\x8C\xE5\x85\xB5\xE5\x99\xA8\",\n            \"desc\": \"\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\xE4\xB8\x8D\xE5\x8F\x97\xE5\xB0\x8D\xE8\xB1\xA1\xE5\x89\xA9\xE9\xA4\x98\xE5\x87\xBA\xE5\x8A\x9B\xE5\xBD\xB1\xE9\x9F\xBF, \xE6\x9C\x83\xE8\xA2\xAB[\xE9\x98\xB2\xE7\xA6\xA6\xE5\x85\xB5\xE5\x99\xA8]\xE6\x93\x8A\xE8\x90\xBD\",\n            \"values\": []\n        },\n        \"fire\": {\n            \"id\": \"fire\",\n            \"title\": \"\xE7\x81\xAB\xE7\x84\xB0\",\n            \"desc\": \"\xE5\xB0\x8D\xE8\xB1\xA1\xE4\xB8\x8D\xE5\x8F\x97\xE6\xA8\xB9\xE6\x9E\x97\xE5\x9C\xB0\xE5\x9E\x8B\xE8\xA3\x9C\xE6\xAD\xA3.\",\n            \"values\": []\n        },\n        \"lighting\": {\n            \"id\": \"lighting\",\n            \"title\": \"\xE9\x9B\xBB\xE6\x93\x8A\",\n            \"desc\": \"\xE5\xB0\x8D\xE8\xB1\xA1\xE4\xB8\x8D\xE5\x8F\x97\xE6\xB0\xB4\xE5\x9F\x9F\xE5\x9C\xB0\xE5\x9E\x8B\xE8\xA3\x9C\xE6\xAD\xA3.\",\n            \"values\": []\n        },\n        \"spray\": {\n            \"id\": \"spray\",\n            \"title\": \"\xE6\x93\xB4\xE6\x95\xA3\",\n            \"desc\": \"\xE4\xB8\x80\xE5\xAE\x9A\xE5\x91\xBD\xE4\xB8\xAD, \xE5\x82\xB7\xE5\xAE\xB3\xE5\x8A\x9B\xE5\x8F\xA6\xE5\xA4\x96*\xE5\x91\xBD\xE4\xB8\xAD\xE7\x8E\x87\",\n            \"values\": []\n        },\n        \"multi\": {\n            \"id\": \"multi\",\n            \"title\": \"\xE9\x80\xA3\xE5\xB0\x84\",\n            \"desc\": \"\xE5\x91\xBD\xE4\xB8\xAD*{0}, \xE5\x82\xB7\xE5\xAE\xB3*{1}~{2}\",\n            \"values\": [\n                \"1.1\",\n                \"0.7\",\n                \"1.3\"\n            ]\n        }\n    },\n    \"weaponEnergyType\": {\n        \"energy\": {\n            \"id\": \"energy\",\n            \"title\": \"energy\"\n        },\n        \"bullet\": {\n            \"id\": \"bullet\",\n            \"title\": \"bullet\"\n        }\n    },\n    \"weaponType\": {\n        \"single\": {\n            \"id\": \"single\",\n            \"title\": \"single\"\n        },\n        \"line\": {\n            \"id\": \"line\",\n            \"title\": \"line\"\n        }\n    }\n}"))), $pkg.GameData); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		err = _r;
 		/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
 		/* */ $s = 3; continue;
@@ -30363,7 +30363,7 @@ $packages["app/tool/data"] = (function() {
 	PilotProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Melee", name: "Melee", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Range", name: "Range", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Atk", name: "Atk", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Evade", name: "Evade", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Guard", name: "Guard", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Tech", name: "Tech", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Ability", name: "Ability", embedded: false, exported: true, typ: sliceType, tag: ""}]);
 	WeaponProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Range", name: "Range", embedded: false, exported: true, typ: arrayType$1, tag: ""}, {prop: "EnergyCost", name: "EnergyCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "MaxBulletCount", name: "MaxBulletCount", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Suitability", name: "Suitability", embedded: false, exported: true, typ: arrayType, tag: ""}, {prop: "Ability", name: "Ability", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "EnergyType", name: "EnergyType", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Type", name: "Type", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Accuracy", name: "Accuracy", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Damage", name: "Damage", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Curage", name: "Curage", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "PowerCost", name: "PowerCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "UnlockExp", name: "UnlockExp", embedded: false, exported: true, typ: $Int, tag: ""}]);
 	ComponentProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Desc", name: "Desc", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Value", name: "Value", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "PowerCost", name: "PowerCost", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Action", name: "Action", embedded: false, exported: true, typ: $String, tag: ""}]);
-	TerrainProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "HitRate", name: "HitRate", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Damage", name: "Damage", embedded: false, exported: true, typ: $Float64, tag: ""}]);
+	TerrainProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Title", name: "Title", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "Cost", name: "Cost", embedded: false, exported: true, typ: arrayType, tag: ""}, {prop: "HitRate", name: "HitRate", embedded: false, exported: true, typ: $Float64, tag: ""}, {prop: "Damage", name: "Damage", embedded: false, exported: true, typ: $Float64, tag: ""}]);
 	TerrainMappingProto.init("", [{prop: "Terrain", name: "Terrain", embedded: false, exported: true, typ: $String, tag: ""}]);
 	ConfigProto.init("", [{prop: "ID", name: "ID", embedded: false, exported: true, typ: $String, tag: ""}, {prop: "PowerCostForMove", name: "PowerCostForMove", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "Award", name: "Award", embedded: false, exported: true, typ: sliceType$7, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: sliceType, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: sliceType, tag: ""}]);
 	Data.init("", [{prop: "Robot", name: "Robot", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "Pilot", name: "Pilot", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "Weapon", name: "Weapon", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "Component", name: "Component", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "TerrainMapping", name: "TerrainMapping", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Terrain", name: "Terrain", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Config", name: "Config", embedded: false, exported: true, typ: mapType$6, tag: ""}]);
@@ -30456,7 +30456,7 @@ $packages["app/tool/uidata"] = (function() {
 	CursorInfo = $pkg.CursorInfo = $newType(0, $kindStruct, "uidata.CursorInfo", true, "app/tool/uidata", true, function(Terrain_, UnitID_) {
 		this.$val = this;
 		if (arguments.length === 0) {
-			this.Terrain = new data.TerrainProto.ptr("", "", 0, 0, 0);
+			this.Terrain = new data.TerrainProto.ptr("", "", arrayType.zero(), 0, 0);
 			this.UnitID = "";
 			return;
 		}
@@ -30480,7 +30480,7 @@ $packages["app/tool/uidata"] = (function() {
 			this.MapAttackRange = sliceType$6.nil;
 			this.HitMarks = false;
 			this.RobotMenu = new protocol.RobotMenu.ptr(false, "", sliceType$7.nil, false, false, false, false);
-			this.CursorInfo = new CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), "");
+			this.CursorInfo = new CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType.zero(), 0, 0), "");
 			return;
 		}
 		this.Players = Players_;
@@ -31057,7 +31057,7 @@ $packages["github.com/aquilax/go-perlin"] = (function() {
 	return $pkg;
 })();
 $packages["app/tool/helper"] = (function() {
-	var $pkg = {}, $init, tool, data, protocol, uidata, fmt, perlin, js, math, strconv, astar, GenerateMapConfig, UIReducer, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, sliceType$5, arrayType, ptrType, sliceType$6, GenerateMap, MoveRangeTree2MoveRange, MoveRangeTree2Path, TerrainID2Terrain, QueryTerrain, BasicExtentCell, QueryMinMaxAttackRange, Min, Max, Clamp, World2Local, Local2World, UIReduce;
+	var $pkg = {}, $init, tool, data, protocol, uidata, fmt, perlin, js, math, strconv, astar, GenerateMapConfig, UIReducer, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, sliceType$5, arrayType, ptrType, arrayType$1, sliceType$6, GenerateMap, MoveRangeTree2MoveRange, MoveRangeTree2Path, TerrainID2Terrain, QueryTerrain, BasicExtentCell, QueryMinMaxAttackRange, Min, Max, Clamp, World2Local, Local2World, UIReduce;
 	tool = $packages["app/tool"];
 	data = $packages["app/tool/data"];
 	protocol = $packages["app/tool/protocol"];
@@ -31099,6 +31099,7 @@ $packages["app/tool/helper"] = (function() {
 	sliceType$5 = $sliceType(protocol.Position);
 	arrayType = $arrayType($Int, 2);
 	ptrType = $ptrType(astar.Node);
+	arrayType$1 = $arrayType($Float64, 4);
 	sliceType$6 = $sliceType(astar.NeighborsNode);
 	GenerateMap = function(config, seed, offset, very, w, h, sx, sy) {
 		var _r, _r$1, cityPosX, cityPosY, config, deepseaIn, f, f2, f3, f4, generatedMap, grassIn, h, i, i$1, j, j$1, list, list$1, maxV, noise, noiseList, offset, p, sandIn, seaIn, seed, sx, sy, total, treePosX, treePosY, very, w, x, x$1, x$2, y, y$1, $s, $r;
@@ -31239,16 +31240,16 @@ $packages["app/tool/helper"] = (function() {
 		/* */ $s = 2; continue;
 		/* if (has === false) { */ case 1:
 			_r = fmt.Errorf("terrainMapping not found: %v", new sliceType$4([new $Int(originTerrainID)])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), _r];
+			$s = -1; return [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), _r];
 		/* } */ case 2:
-		_tuple$1 = (_entry$1 = data.GameData.Terrain[$String.keyFor(terrainMapping.Terrain)], _entry$1 !== undefined ? [_entry$1.v, true] : [new data.TerrainProto.ptr("", "", 0, 0, 0), false]);
+		_tuple$1 = (_entry$1 = data.GameData.Terrain[$String.keyFor(terrainMapping.Terrain)], _entry$1 !== undefined ? [_entry$1.v, true] : [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), false]);
 		terrain = $clone(_tuple$1[0], data.TerrainProto);
 		has = _tuple$1[1];
 		/* */ if (has === false) { $s = 4; continue; }
 		/* */ $s = 5; continue;
 		/* if (has === false) { */ case 4:
 			_r$1 = fmt.Errorf("data.GameData.Terrain not found: %v", new sliceType$4([new $String(terrainMapping.Terrain)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), _r$1];
+			$s = -1; return [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), _r$1];
 		/* } */ case 5:
 		$s = -1; return [terrain, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: TerrainID2Terrain }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.has = has; $f.originTerrainID = originTerrainID; $f.terrain = terrain; $f.terrainMapping = terrainMapping; $f.$s = $s; $f.$r = $r; return $f;
@@ -31258,7 +31259,7 @@ $packages["app/tool/helper"] = (function() {
 		var _entry, _key, _r, _r$1, _tuple, _tuple$1, _tuple$2, cache, err, gameMap, has, originTerrainID, pos, terrain, terrain$1, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; cache = $f.cache; err = $f.err; gameMap = $f.gameMap; has = $f.has; originTerrainID = $f.originTerrainID; pos = $f.pos; terrain = $f.terrain; terrain$1 = $f.terrain$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		if (!(cache === false)) {
-			_tuple = (_entry = cache[protocol.Position.keyFor(pos)], _entry !== undefined ? [_entry.v, true] : [new data.TerrainProto.ptr("", "", 0, 0, 0), false]);
+			_tuple = (_entry = cache[protocol.Position.keyFor(pos)], _entry !== undefined ? [_entry.v, true] : [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), false]);
 			terrain = $clone(_tuple[0], data.TerrainProto);
 			has = _tuple[1];
 			if (has) {
@@ -31270,14 +31271,14 @@ $packages["app/tool/helper"] = (function() {
 		originTerrainID = _tuple$1[0];
 		err = _tuple$1[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), err];
+			$s = -1; return [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), err];
 		}
 		_r$1 = TerrainID2Terrain(originTerrainID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
 		_tuple$2 = _r$1;
 		terrain$1 = $clone(_tuple$2[0], data.TerrainProto);
 		err = _tuple$2[1];
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new data.TerrainProto.ptr("", "", 0, 0, 0), err];
+			$s = -1; return [new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), err];
 		}
 		if (!(cache === false)) {
 			_key = $clone(pos, protocol.Position); (cache || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: $clone(terrain$1, data.TerrainProto) };
@@ -31474,2777 +31475,6 @@ $packages["app/tool/helper"] = (function() {
 		$r = astar.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
 		$pkg.GenerateMapConfigDefault = new GenerateMapConfig.ptr(0, 1, 0.05, 5, 3, 0.2, 0.3, 0.1);
 		$pkg.GenerateMapConfigIsland = new GenerateMapConfig.ptr(2, 3, 0.5, 1, 0.3, 0.1, 0.5, 0.1);
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["tool/log"] = (function() {
-	var $pkg = {}, $init, fmt, sliceType, Log;
-	fmt = $packages["fmt"];
-	sliceType = $sliceType($emptyInterface);
-	Log = function(category, title, msg) {
-		var _entry, _r, category, msg, title, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; category = $f.category; msg = $f.msg; title = $f.title; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		if ((_entry = $pkg.Category[$String.keyFor(category)], _entry !== undefined ? _entry.v : false) === false) {
-			$s = -1; return;
-		}
-		_r = fmt.Printf("[%v][%v]%v\n", new sliceType([new $String(category), new $String(title), new $String(msg)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_r;
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Log }; } $f._entry = _entry; $f._r = _r; $f.category = category; $f.msg = msg; $f.title = title; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.Log = Log;
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.Category = $makeMap($String.keyFor, []);
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/model/v1/internal/common"] = (function() {
-	var $pkg = {}, $init, types, tool, data, helper, protocol, uidata, fmt, math, strconv, astar, log, sliceType, sliceType$1, arrayType, arrayType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, NewPilot, NewRobot, ObserveComponent, ObserveComponents, ObservePilot, ObservePilots, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryPilot, QueryPilotAtk, QueryPilotGuard, QueryPilotMelee, QueryPilotRange, QueryRobot, QueryRobotArmor, QueryRobotBeamArmor, QueryRobotCombatPower, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotPower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryUnitsByPlayer, IsRobotDone, IsFriendlyCell, IsFriendlyRobot;
-	types = $packages["app/model/v1/internal/tool/types"];
-	tool = $packages["app/tool"];
-	data = $packages["app/tool/data"];
-	helper = $packages["app/tool/helper"];
-	protocol = $packages["app/tool/protocol"];
-	uidata = $packages["app/tool/uidata"];
-	fmt = $packages["fmt"];
-	math = $packages["math"];
-	strconv = $packages["strconv"];
-	astar = $packages["tool/astar"];
-	log = $packages["tool/log"];
-	sliceType = $sliceType($emptyInterface);
-	sliceType$1 = $sliceType(protocol.Position);
-	arrayType = $arrayType($Int, 2);
-	arrayType$1 = $arrayType($Float64, 4);
-	sliceType$2 = $sliceType($String);
-	sliceType$3 = $sliceType($Float64);
-	sliceType$4 = $sliceType(astar.NeighborsNode);
-	CheckInvalidWeapon = function(model, robotID, weapon, units, hideFlag) {
-		var _1, _entry, _entry$1, _entry$2, _entry$3, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, ability, attackRange, cost, err, err$1, err$2, err$3, has, has$1, has$2, hasMoveAttack, hideFlag, isAllUnitOutSideOutRange, model, robot, robotID, robotPos, tag, unitID, unitPosList, unitPosOutSideOfRange, units, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; ability = $f.ability; attackRange = $f.attackRange; cost = $f.cost; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; has = $f.has; has$1 = $f.has$1; has$2 = $f.has$2; hasMoveAttack = $f.hasMoveAttack; hideFlag = $f.hideFlag; isAllUnitOutSideOutRange = $f.isAllUnitOutSideOutRange; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotPos = $f.robotPos; tag = $f.tag; unitID = $f.unitID; unitPosList = $f.unitPosList; unitPosOutSideOfRange = $f.unitPosOutSideOfRange; units = $f.units; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		if (hideFlag === false) {
-			hideFlag = $makeMap($Int.keyFor, []);
-		}
-		_r = protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return ["", err];
-		}
-		_tuple$1 = (_entry = hideFlag[$Int.keyFor(0)], _entry !== undefined ? [_entry.v, true] : [false, false]);
-		has = _tuple$1[1];
-		/* */ if (has === false) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (has === false) { */ case 2:
-			_r$1 = protocol.TryGetStringTag(model.App.Gameplay.Tags, robotID); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$2 = _r$1;
-			tag = $clone(_tuple$2[0], protocol.Tag);
-			/* */ if (tag.MoveCount > 0) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (tag.MoveCount > 0) { */ case 5:
-				_r$2 = QueryRobotWeaponAbility($clone(model, types.Model), robot.ID, $clone(weapon, protocol.Weapon), true); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_tuple$3 = _r$2;
-				ability = _tuple$3[0];
-				err$1 = _tuple$3[1];
-				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-					$s = -1; return ["", err$1];
-				}
-				_r$3 = tool.FilterString(ability, (function(c) {
-					var c;
-					return c === "moveAttack";
-				})); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				hasMoveAttack = _r$3.$length > 0;
-				if (hasMoveAttack === false) {
-					$s = -1; return ["\xE4\xBD\xA0\xE5\xBF\x85\xE9\xA0\x88\xE6\x9C\x89moveAttack\xE8\x83\xBD\xE5\x8A\x9B, \xE4\xB8\x8D\xE7\x84\xB6\xE4\xB8\x8D\xE8\x83\xBD\xE7\xA7\xBB\xE5\x8B\x95\xE5\xBE\x8C\xE6\x94\xBB\xE6\x93\x8A", $ifaceNil];
-				}
-			/* } */ case 6:
-		/* } */ case 3:
-		_tuple$4 = (_entry$1 = hideFlag[$Int.keyFor(1)], _entry$1 !== undefined ? [_entry$1.v, true] : [false, false]);
-		has$1 = _tuple$4[1];
-		/* */ if (has$1 === false) { $s = 9; continue; }
-		/* */ $s = 10; continue;
-		/* if (has$1 === false) { */ case 9:
-			_r$4 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_tuple$5 = _r$4;
-			weaponProto = $clone(_tuple$5[0], data.WeaponProto);
-			err$2 = _tuple$5[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return ["", err$2];
-			}
-				_1 = weaponProto.EnergyType;
-				/* */ if (_1 === ("energy")) { $s = 13; continue; }
-				/* */ if (_1 === ("bullet")) { $s = 14; continue; }
-				/* */ $s = 15; continue;
-				/* if (_1 === ("energy")) { */ case 13:
-					cost = weaponProto.EnergyCost;
-					/* */ if (robot.EN < cost) { $s = 17; continue; }
-					/* */ $s = 18; continue;
-					/* if (robot.EN < cost) { */ case 17:
-						_r$5 = fmt.Sprintf("\xE8\x83\xBD\xE9\x87\x8F\xE4\xB8\x8D\xE8\xB6\xB3(%v/%v)", new sliceType([new $Int(cost), new $Int(robot.EN)])); /* */ $s = 19; case 19: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-						$s = -1; return [_r$5, $ifaceNil];
-					/* } */ case 18:
-					$s = 16; continue;
-				/* } else if (_1 === ("bullet")) { */ case 14:
-					if (weapon.BulletCount === 0) {
-						$s = -1; return ["\xE5\xBD\x88\xE8\x97\xA5\xE4\xB8\x8D\xE8\xB6\xB3", $ifaceNil];
-					}
-					$s = 16; continue;
-				/* } else { */ case 15:
-					_r$6 = fmt.Sprintf("\xE6\x9C\xAA\xE5\xAE\x9A\xE7\xBE\xA9\xE7\x9A\x84\xE8\x83\xBD\xE9\x87\x8F\xE9\xA1\x9E\xE5\x9E\x8B(%+v)", new sliceType([new weaponProto.constructor.elem(weaponProto)])); /* */ $s = 20; case 20: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-					$s = -1; return [_r$6, $ifaceNil];
-				/* } */ case 16:
-			case 12:
-		/* } */ case 10:
-		_tuple$6 = (_entry$2 = hideFlag[$Int.keyFor(2)], _entry$2 !== undefined ? [_entry$2.v, true] : [false, false]);
-		has$2 = _tuple$6[1];
-		/* */ if (has$2 === false) { $s = 21; continue; }
-		/* */ $s = 22; continue;
-		/* if (has$2 === false) { */ case 21:
-			_r$7 = protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID); /* */ $s = 23; case 23: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-			_tuple$7 = _r$7;
-			robotPos = $clone(_tuple$7[0], protocol.Position);
-			err$3 = _tuple$7[1];
-			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-				$s = -1; return ["", err$3];
-			}
-			_r$8 = QueryRobotWeaponAttackRange($clone(model, types.Model), robot.ID, $clone(weapon, protocol.Weapon), $clone(robotPos, protocol.Position)); /* */ $s = 24; case 24: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-			_tuple$8 = _r$8;
-			attackRange = _tuple$8[0];
-			err$3 = _tuple$8[1];
-			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-				$s = -1; return ["", err$3];
-			}
-			unitPosList = new sliceType$1([]);
-			_ref = units;
-			_i = 0;
-			while (true) {
-				if (!(_i < _ref.$length)) { break; }
-				unitID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-				unitPosList = $append(unitPosList, (_entry$3 = model.App.Gameplay.Positions[$String.keyFor(unitID)], _entry$3 !== undefined ? _entry$3.v : arrayType.zero()));
-				_i++;
-			}
-			unitPosOutSideOfRange = protocol.DifferencePosition(unitPosList, attackRange);
-			isAllUnitOutSideOutRange = unitPosOutSideOfRange.$length === unitPosList.$length;
-			/* */ if (isAllUnitOutSideOutRange) { $s = 25; continue; }
-			/* */ $s = 26; continue;
-			/* if (isAllUnitOutSideOutRange) { */ case 25:
-				_r$9 = fmt.Sprintf("\xE6\x95\xB5\xE4\xBA\xBA\xE4\xB8\x8D\xE5\x9C\xA8\xE7\xAF\x84\xE5\x9C\x8D\xE5\x85\xA7", new sliceType([])); /* */ $s = 27; case 27: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-				$s = -1; return [_r$9, $ifaceNil];
-			/* } */ case 26:
-		/* } */ case 22:
-		$s = -1; return ["", $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: CheckInvalidWeapon }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f.ability = ability; $f.attackRange = attackRange; $f.cost = cost; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.has = has; $f.has$1 = has$1; $f.has$2 = has$2; $f.hasMoveAttack = hasMoveAttack; $f.hideFlag = hideFlag; $f.isAllUnitOutSideOutRange = isAllUnitOutSideOutRange; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotPos = robotPos; $f.tag = tag; $f.unitID = unitID; $f.unitPosList = unitPosList; $f.unitPosOutSideOfRange = unitPosOutSideOfRange; $f.units = units; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.CheckInvalidWeapon = CheckInvalidWeapon;
-	CheckInvalidWeapons = function(model, robotID, weapons, hideFlag) {
-		var _entry, _i, _key, _keys, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, err, err$1, hideFlag, leftTopPos, model, notFound, ret, rightBottomPos, robotID, robotPos, units, validStr, weapon, weaponID, weapons, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; err$1 = $f.err$1; hideFlag = $f.hideFlag; leftTopPos = $f.leftTopPos; model = $f.model; notFound = $f.notFound; ret = $f.ret; rightBottomPos = $f.rightBottomPos; robotID = $f.robotID; robotPos = $f.robotPos; units = $f.units; validStr = $f.validStr; weapon = $f.weapon; weaponID = $f.weaponID; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		model = [model];
-		robotID = [robotID];
-		ret = $makeMap($String.keyFor, []);
-		_r = protocol.TryGetStringPosition(model[0].App.Gameplay.Positions, robotID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robotPos = $clone(_tuple[0], protocol.Position);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [ret, err];
-		}
-		leftTopPos = $toNativeArray($kindInt, [robotPos[0] - 10 >> 0, robotPos[1] - 10 >> 0]);
-		rightBottomPos = $toNativeArray($kindInt, [robotPos[0] + 10 >> 0, robotPos[1] + 10 >> 0]);
-		units = SearchUnitByRegion(model[0].App.Gameplay.Positions, $clone(leftTopPos, protocol.Position), $clone(rightBottomPos, protocol.Position));
-		_r$1 = tool.FilterString(units, (function(model, robotID) { return function $b(unitID) {
-			var _r$1, _r$2, _r$3, _tuple$1, err$1, isFriendly, unitID, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple$1 = $f._tuple$1; err$1 = $f.err$1; isFriendly = $f.isFriendly; unitID = $f.unitID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$1 = IsFriendlyRobot($clone(model[0], types.Model), robotID[0], unitID); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$1 = _r$1;
-			isFriendly = _tuple$1[0];
-			err$1 = _tuple$1[1];
-			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
-			/* */ $s = 3; continue;
-			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
-				_r$2 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_r$3 = fmt.Println(new sliceType([new $String(_r$2)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$3;
-				$s = -1; return false;
-			/* } */ case 3:
-			$s = -1; return isFriendly === false;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple$1 = _tuple$1; $f.err$1 = err$1; $f.isFriendly = isFriendly; $f.unitID = unitID; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(model, robotID)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		units = _r$1;
-		notFound = "";
-		_ref = weapons;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 3:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 4; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 3; continue;
-			}
-			weaponID = _entry.k;
-			weapon = $clone(_entry.v, protocol.Weapon);
-			_r$2 = CheckInvalidWeapon($clone(model[0], types.Model), robotID[0], $clone(weapon, protocol.Weapon), units, hideFlag); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$1 = _r$2;
-			validStr = _tuple$1[0];
-			err$1 = _tuple$1[1];
-			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [ret, err$1];
-			}
-			if (!(validStr === notFound)) {
-				_key = weaponID; (ret || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: validStr };
-			}
-			_i++;
-		/* } */ $s = 3; continue; case 4:
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: CheckInvalidWeapons }; } $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.err$1 = err$1; $f.hideFlag = hideFlag; $f.leftTopPos = leftTopPos; $f.model = model; $f.notFound = notFound; $f.ret = ret; $f.rightBottomPos = rightBottomPos; $f.robotID = robotID; $f.robotPos = robotPos; $f.units = units; $f.validStr = validStr; $f.weapon = weapon; $f.weaponID = weaponID; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.CheckInvalidWeapons = CheckInvalidWeapons;
-	NewPilot = function(origin, pilot) {
-		var _r, _r$1, _tuple, ctx, err, notFound, origin, pilot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; pilot = $f.pilot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		ctx = $clone(origin, types.Model);
-		notFound = "";
-		_r = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), err];
-		}
-		/* */ if (pilot.ID === notFound) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (pilot.ID === notFound) { */ case 2:
-			_r$1 = fmt.Sprintf("NewPilot_%v", new sliceType([new $Int(ctx.App.SeqID)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			pilot.ID = _r$1;
-			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
-		/* } */ case 3:
-		ctx.App.Gameplay.Pilots = protocol.AssocStringPilot(ctx.App.Gameplay.Pilots, pilot.ID, $clone(pilot, protocol.Pilot));
-		$s = -1; return [ctx, pilot, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPilot }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.pilot = pilot; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.NewPilot = NewPilot;
-	NewRobot = function(origin, position, robot) {
-		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple, _tuple$1, _tuple$2, _tuple$3, ctx, err, notFound, origin, position, robot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; position = $f.position; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		ctx = $clone(origin, types.Model);
-		notFound = "";
-		_r = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		/* */ if (robot.PlayerID === notFound) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (robot.PlayerID === notFound) { */ case 2:
-			_r$1 = fmt.Errorf("robot(%v) PlayerID not found", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$1];
-		/* } */ case 3:
-		/* */ if (robot.PilotID === notFound) { $s = 5; continue; }
-		/* */ $s = 6; continue;
-		/* if (robot.PilotID === notFound) { */ case 5:
-			_r$2 = fmt.Errorf("robot(%v) PilotID not found", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$2];
-		/* } */ case 6:
-		_r$3 = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$1 = _r$3;
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		/* */ if (robot.ID === notFound) { $s = 9; continue; }
-		/* */ $s = 10; continue;
-		/* if (robot.ID === notFound) { */ case 9:
-			_r$4 = fmt.Sprintf("NewRobot_%v", new sliceType([new $Int(ctx.App.SeqID)])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			robot.ID = _r$4;
-			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
-		/* } */ case 10:
-		if (robot.Transform === notFound) {
-			robot.Transform = robot.ProtoID;
-		}
-		/* */ if (!(robot.Transform === robot.ProtoID)) { $s = 12; continue; }
-		/* */ $s = 13; continue;
-		/* if (!(robot.Transform === robot.ProtoID)) { */ case 12:
-			_r$5 = fmt.Errorf("transform(%v) must equals protoID(%v)", new sliceType([new $String(robot.Transform), new $String(robot.ProtoID)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$5];
-		/* } */ case 13:
-		if (robot.WeaponsByTransform === false) {
-			robot.WeaponsByTransform = $makeMap($String.keyFor, []);
-		}
-		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
-		ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, $clone(position, protocol.Position));
-		ctx.App.Gameplay.Units = $append(ctx.App.Gameplay.Units, robot.ID);
-		_r$6 = QueryRobotMaxHp($clone(ctx, types.Model), robot.ID, true); /* */ $s = 15; case 15: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_tuple$2 = _r$6;
-		robot.HP = _tuple$2[0];
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		_r$7 = QueryRobotMaxEn($clone(ctx, types.Model), robot.ID, true); /* */ $s = 16; case 16: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_tuple$3 = _r$7;
-		robot.EN = _tuple$3[0];
-		err = _tuple$3[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
-		$s = -1; return [ctx, robot, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: NewRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.position = position; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.NewRobot = NewRobot;
-	ObserveComponent = function(model, robotID, weapon, isGameplay) {
-		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveComponent", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r = data.TryGetStringComponentProto(data.GameData.Component, weapon.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.ComponentProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Component.ptr("", "", "", 0, "", sliceType$2.nil, 0, ""), err];
-		}
-		weapon.Title = weaponProto.Title;
-		weapon.Value = weaponProto.Value;
-		weapon.PowerCost = weaponProto.PowerCost;
-		weapon.Cost = weaponProto.Cost;
-		weapon.Desc = weaponProto.Desc;
-		weapon.Title = weaponProto.Title;
-		weapon.Action = weaponProto.Action;
-		$r = log.Log(protocol.LogCategoryRender, "ObserveComponent", "end"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [weapon, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveComponent }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveComponent = ObserveComponent;
-	ObserveComponents = function(model, robotID, origin, isGameplay) {
-		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, ctx, err, isGameplay, model, origin, robotID, weapon, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; origin = $f.origin; robotID = $f.robotID; weapon = $f.weapon; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveComponents", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		ctx = origin;
-		_ref = origin;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 2:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 3; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 2; continue;
-			}
-			ID = _entry.k;
-			weapon = $clone(_entry.v, protocol.Component);
-			_r = ObserveComponent($clone(model, types.Model), robotID, $clone(weapon, protocol.Component), isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			_key = ID; (ctx || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(_tuple[0], protocol.Component) };
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			_i++;
-		/* } */ $s = 2; continue; case 3:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveComponents", "end"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveComponents }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.origin = origin; $f.robotID = robotID; $f.weapon = weapon; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveComponents = ObserveComponents;
-	ObservePilot = function(model, pilot, isGameplay) {
-		var _r, _tuple, err, isGameplay, model, pilot, pilotProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotProto = $f.pilotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		pilotProto = $clone(_tuple[0], data.PilotProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), err];
-		}
-		pilot.Title = pilotProto.Title;
-		pilot.Melee = pilotProto.Melee;
-		pilot.Range = pilotProto.Melee;
-		pilot.Atk = pilotProto.Atk;
-		pilot.Guard = pilotProto.Guard;
-		pilot.Evade = pilotProto.Evade;
-		pilot.Tech = pilotProto.Tech;
-		$s = -1; return [pilot, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObservePilot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotProto = pilotProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObservePilot = ObservePilot;
-	ObservePilots = function(model, origin, isGameplay) {
-		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, err, isGameplay, localRobots, model, origin, robot, robot$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; localRobots = $f.localRobots; model = $f.model; origin = $f.origin; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		localRobots = $makeMap($String.keyFor, []);
-		_ref = origin;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 1:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 1; continue;
-			}
-			ID = _entry.k;
-			robot = $clone(_entry.v, protocol.Pilot);
-			_r = ObservePilot($clone(model, types.Model), $clone(robot, protocol.Pilot), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			robot$1 = $clone(_tuple[0], protocol.Pilot);
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			_key = ID; (localRobots || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(robot$1, protocol.Pilot) };
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [localRobots, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObservePilots }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.localRobots = localRobots; $f.model = model; $f.origin = origin; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObservePilots = ObservePilots;
-	ObserveRobot = function(model, robot, isGameplay) {
-		var _arg, _arg$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, components, err, isGameplay, maxEn, maxHP, model, robot, robotProto, weapons, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; components = $f.components; err = $f.err; isGameplay = $f.isGameplay; maxEn = $f.maxEn; maxHP = $f.maxHP; model = $f.model; robot = $f.robot; robotProto = $f.robotProto; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveRobot", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_arg = protocol.LogCategoryRender;
-		_r = fmt.Sprintf("robot(%+v)", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_arg$1 = _r;
-		$r = log.Log(_arg, "ObserveRobot", _arg$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		_r$1 = QueryRobotMaxHp($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple = _r$1;
-		maxHP = _tuple[0];
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.MaxHP = maxHP;
-		_r$2 = QueryRobotMaxEn($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		maxEn = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.MaxEN = maxEn;
-		_r$3 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$2 = _r$3;
-		components = _tuple$2[0];
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.Components = components;
-		_r$4 = QueryRobotWeapons($clone(model, types.Model), robot.ID, robot.Transform, isGameplay); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-		_tuple$3 = _r$4;
-		weapons = _tuple$3[0];
-		err = _tuple$3[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		_r$5 = ObserveWeapons($clone(model, types.Model), robot.ID, weapons, isGameplay); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-		_tuple$4 = _r$5;
-		weapons = _tuple$4[0];
-		err = _tuple$4[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.Weapons = weapons;
-		_r$6 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_tuple$5 = _r$6;
-		robotProto = $clone(_tuple$5[0], data.RobotProto);
-		err = _tuple$5[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.Title = robotProto.Title;
-		_r$7 = QueryRobotPower($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-		_tuple$6 = _r$7;
-		robot.Power = _tuple$6[0];
-		err = _tuple$6[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		robot.MaxPower = robotProto.Power;
-		_r$8 = QueryRobotArmor($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 11; case 11: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-		_tuple$7 = _r$8;
-		robot.Armor = _tuple$7[0];
-		err = _tuple$7[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		_r$9 = QueryRobotBeamArmor($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 12; case 12: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-		_tuple$8 = _r$9;
-		robot.BeamArmor = _tuple$8[0];
-		err = _tuple$8[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
-		}
-		$r = log.Log(protocol.LogCategoryRender, "ObserveRobot", "end"); /* */ $s = 13; case 13: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [robot, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobot }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f.components = components; $f.err = err; $f.isGameplay = isGameplay; $f.maxEn = maxEn; $f.maxHP = maxHP; $f.model = model; $f.robot = robot; $f.robotProto = robotProto; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveRobot = ObserveRobot;
-	ObserveRobotMenu = function(model, origin) {
-		var _arg, _arg$1, _r, _r$1, _r$2, _tuple, _tuple$1, ctx, err, model, origin, robot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; ctx = $f.ctx; err = $f.err; model = $f.model; origin = $f.origin; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_arg = protocol.LogCategoryRender;
-		_r = fmt.Sprintf("robotMenu(%v)", new sliceType([new origin.constructor.elem(origin)])); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_arg$1 = _r;
-		$r = log.Log(_arg, "ObserveRobotMenu", _arg$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		ctx = $clone(origin, protocol.RobotMenu);
-		if (ctx.Active === false) {
-			$s = -1; return [origin, $ifaceNil];
-		}
-		_r$1 = protocol.TryGetStringRobot(model.App.Gameplay.Robots, ctx.ActiveRobotID); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple = _r$1;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		_r$2 = ObserveWeapons($clone(model, types.Model), robot.ID, ctx.Weapons, true); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		ctx.Weapons = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		$r = log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "end"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobotMenu }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.model = model; $f.origin = origin; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveRobotMenu = ObserveRobotMenu;
-	ObserveRobots = function(model, origin, isGameplay) {
-		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, err, isGameplay, localRobots, model, origin, robot, robot$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; localRobots = $f.localRobots; model = $f.model; origin = $f.origin; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		localRobots = $makeMap($String.keyFor, []);
-		_ref = origin;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 1:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 1; continue;
-			}
-			ID = _entry.k;
-			robot = $clone(_entry.v, protocol.Robot);
-			_r = ObserveRobot($clone(model, types.Model), $clone(robot, protocol.Robot), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			robot$1 = $clone(_tuple[0], protocol.Robot);
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			_key = ID; (localRobots || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(robot$1, protocol.Robot) };
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [localRobots, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobots }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.localRobots = localRobots; $f.model = model; $f.origin = origin; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveRobots = ObserveRobots;
-	ObserveWeapon = function(model, robotID, weapon, isGameplay) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapon", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
-		}
-		weapon.Title = weaponProto.Title;
-		_r$1 = QueryRobotWeaponRange($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		arrayType.copy(weapon.Range, _tuple$1[0]);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
-		}
-		weapon.EnergyCost = weaponProto.EnergyCost;
-		weapon.MaxBulletCount = weaponProto.MaxBulletCount;
-		_r$2 = QueryRobotWeaponSuitability($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon)); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		arrayType$1.copy(weapon.Suitability, _tuple$2[0]);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
-		}
-		_r$3 = QueryRobotWeaponAbility($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$3 = _r$3;
-		weapon.Ability = _tuple$3[0];
-		err = _tuple$3[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
-		}
-		weapon.EnergyType = weaponProto.EnergyType;
-		weapon.Type = weaponProto.Type;
-		weapon.Accuracy = math.Floor(weaponProto.Accuracy * 100) / 100;
-		weapon.Damage = weaponProto.Damage;
-		weapon.Curage = weaponProto.Curage;
-		weapon.UnlockExp = weaponProto.UnlockExp;
-		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapon", "end"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [weapon, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveWeapon }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveWeapon = ObserveWeapon;
-	ObserveWeapons = function(model, robotID, origin, isGameplay) {
-		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, ctx, err, isGameplay, model, origin, robotID, weapon, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; origin = $f.origin; robotID = $f.robotID; weapon = $f.weapon; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapons", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		ctx = origin;
-		_ref = origin;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 2:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 3; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 2; continue;
-			}
-			ID = _entry.k;
-			weapon = $clone(_entry.v, protocol.Weapon);
-			_r = ObserveWeapon($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			_key = ID; (ctx || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(_tuple[0], protocol.Weapon) };
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			_i++;
-		/* } */ $s = 2; continue; case 3:
-		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapons", "end"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveWeapons }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.origin = origin; $f.robotID = robotID; $f.weapon = weapon; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.ObserveWeapons = ObserveWeapons;
-	QueryMostCloseEnemyPosition = function(model, robotID) {
-		var _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, costFn, err, find, model, originPos, robotID, targetPosition, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; costFn = $f.costFn; err = $f.err; find = $f.find; model = $f.model; originPos = $f.originPos; robotID = $f.robotID; targetPosition = $f.targetPosition; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		model = [model];
-		robotID = [robotID];
-		targetPosition = [targetPosition];
-		_r = protocol.TryGetStringPosition(model[0].App.Gameplay.Positions, robotID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		originPos = $clone(_tuple[0], protocol.Position);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType.zero(), false, err];
-		}
-		_r$1 = RobotMoveCost($clone(model[0], types.Model), robotID[0], 999999, true); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		costFn = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType.zero(), false, err];
-		}
-		targetPosition[0] = arrayType.zero();
-		_r$2 = astar.ShortedPathTree(new protocol.Position(originPos), (function(model, robotID, targetPosition) { return function $b(curr) {
-			var _r$2, _r$3, _r$4, _tuple$3, curr, currPos, err$1, friendCell, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple$3 = $f._tuple$3; curr = $f.curr; currPos = $f.currPos; err$1 = $f.err$1; friendCell = $f.friendCell; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
-			_r$2 = IsFriendlyCell($clone(model[0], types.Model), robotID[0], $clone(currPos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$3 = _r$2;
-			friendCell = _tuple$3[0];
-			err$1 = _tuple$3[1];
-			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
-			/* */ $s = 3; continue;
-			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
-				_r$3 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$4 = fmt.Println(new sliceType([new $String(_r$3)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				_r$4;
-				$s = -1; return true;
-			/* } */ case 3:
-			protocol.Position.copy(targetPosition[0], currPos);
-			$s = -1; return friendCell === false;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple$3 = _tuple$3; $f.curr = curr; $f.currPos = currPos; $f.err$1 = err$1; $f.friendCell = friendCell; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(model, robotID, targetPosition), costFn, (function(model, robotID, targetPosition) { return function(curr) {
-			var curr;
-			return 0;
-		}; })(model, robotID, targetPosition)); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		find = _tuple$2[1];
-		$s = -1; return [targetPosition[0], find, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMostCloseEnemyPosition }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.costFn = costFn; $f.err = err; $f.find = find; $f.model = model; $f.originPos = originPos; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryMostCloseEnemyPosition = QueryMostCloseEnemyPosition;
-	QueryPilot = function(model, pilotID, isGameplay) {
-		var _entry, _entry$1, _r, _r$1, _tuple, _tuple$1, has, has$1, isGameplay, model, pilotID, robot, robot$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; has = $f.has; has$1 = $f.has$1; isGameplay = $f.isGameplay; model = $f.model; pilotID = $f.pilotID; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		/* */ if (isGameplay) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (isGameplay) { */ case 1:
-			_tuple = (_entry = model.App.Gameplay.Pilots[$String.keyFor(pilotID)], _entry !== undefined ? [_entry.v, true] : [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
-			robot = $clone(_tuple[0], protocol.Pilot);
-			has = _tuple[1];
-			/* */ if (has === false) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (has === false) { */ case 3:
-				_r = fmt.Errorf("pilotID(%v) not found", new sliceType([new $String(pilotID)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), _r];
-			/* } */ case 4:
-			$s = -1; return [robot, $ifaceNil];
-		/* } */ case 2:
-		_tuple$1 = (_entry$1 = model.App.Lobby.Pilots[$String.keyFor(pilotID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
-		robot$1 = $clone(_tuple$1[0], protocol.Pilot);
-		has$1 = _tuple$1[1];
-		/* */ if (has$1 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (has$1 === false) { */ case 6:
-			_r$1 = fmt.Errorf("pilotID(%v) not found", new sliceType([new $String(pilotID)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), _r$1];
-		/* } */ case 7:
-		$s = -1; return [robot$1, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilot }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.has = has; $f.has$1 = has$1; $f.isGameplay = isGameplay; $f.model = model; $f.pilotID = pilotID; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryPilot = QueryPilot;
-	QueryPilotAtk = function(model, robotID, pilotID, isGameplay) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!(robot.PilotID === pilotID)) { */ case 2:
-			_r$1 = fmt.Errorf("[QueryPilotAtk] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [0, _r$1];
-		/* } */ case 3:
-		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		pilot = $clone(_tuple$1[0], protocol.Pilot);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$2 = _r$3;
-		pilotProto = $clone(_tuple$2[0], data.PilotProto);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		$s = -1; return [pilotProto.Atk, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotAtk }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryPilotAtk = QueryPilotAtk;
-	QueryPilotGuard = function(model, robotID, pilotID, isGameplay) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!(robot.PilotID === pilotID)) { */ case 2:
-			_r$1 = fmt.Errorf("[QueryPilotGuard] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [0, _r$1];
-		/* } */ case 3:
-		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		pilot = $clone(_tuple$1[0], protocol.Pilot);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$2 = _r$3;
-		pilotProto = $clone(_tuple$2[0], data.PilotProto);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		$s = -1; return [pilotProto.Guard, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotGuard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryPilotGuard = QueryPilotGuard;
-	QueryPilotMelee = function(model, robotID, pilotID, isGameplay) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!(robot.PilotID === pilotID)) { */ case 2:
-			_r$1 = fmt.Errorf("[QueryPilotMelee] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [0, _r$1];
-		/* } */ case 3:
-		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		pilot = $clone(_tuple$1[0], protocol.Pilot);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$2 = _r$3;
-		pilotProto = $clone(_tuple$2[0], data.PilotProto);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		$s = -1; return [pilotProto.Melee, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotMelee }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryPilotMelee = QueryPilotMelee;
-	QueryPilotRange = function(model, robotID, pilotID, isGameplay) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (!(robot.PilotID === pilotID)) { */ case 2:
-			_r$1 = fmt.Errorf("[QueryPilotRange] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [0, _r$1];
-		/* } */ case 3:
-		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$1 = _r$2;
-		pilot = $clone(_tuple$1[0], protocol.Pilot);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$2 = _r$3;
-		pilotProto = $clone(_tuple$2[0], data.PilotProto);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		$s = -1; return [pilotProto.Range, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotRange }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryPilotRange = QueryPilotRange;
-	QueryRobot = function(model, robotID, isGameplay) {
-		var _entry, _entry$1, _entry$2, _r, _r$1, _tuple, _tuple$1, has, has$1, isGameplay, model, robot, robot$1, robotID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; has = $f.has; has$1 = $f.has$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robot$1 = $f.robot$1; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		/* */ if (isGameplay) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (isGameplay) { */ case 1:
-			_tuple = (_entry = model.App.Gameplay.Robots[$String.keyFor(robotID)], _entry !== undefined ? [_entry.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
-			robot = $clone(_tuple[0], protocol.Robot);
-			has = _tuple[1];
-			/* */ if (has === false) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (has === false) { */ case 3:
-				_r = fmt.Errorf("robotID(%v) not found", new sliceType([new $String(robotID)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r];
-			/* } */ case 4:
-			$s = -1; return [robot, $ifaceNil];
-		/* } */ case 2:
-		_tuple$1 = (_entry$1 = model.App.Lobby.Robots[$String.keyFor(robotID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
-		robot$1 = $clone(_tuple$1[0], protocol.Robot);
-		has$1 = _tuple$1[1];
-		/* */ if (has$1 === false) { $s = 6; continue; }
-		/* */ $s = 7; continue;
-		/* if (has$1 === false) { */ case 6:
-			_r$1 = fmt.Errorf("robotID(%v) not found", new sliceType([new $String(robotID)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$1];
-		/* } */ case 7:
-		robot$1.PilotID = (_entry$2 = model.App.Lobby.PilotIDByRobotID[$String.keyFor(robot$1.ID)], _entry$2 !== undefined ? _entry$2.v : "");
-		$s = -1; return [robot$1, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobot }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.has = has; $f.has$1 = has$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robot$1 = robot$1; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobot = QueryRobot;
-	QueryRobotArmor = function(model, robotID, isGameplay) {
-		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, total, val, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotArmor", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$1 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		components = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		total = 0;
-		_ref = components;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			component = $clone(_entry.v, protocol.Component);
-			val = 0;
-				_1 = component.ProtoID;
-				/* */ if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5")) { $s = 7; continue; }
-				/* */ $s = 8; continue;
-				/* if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5")) { */ case 7:
-					_r$2 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-					_tuple$2 = _r$2;
-					componentProto = $clone(_tuple$2[0], data.ComponentProto);
-					err$1 = _tuple$2[1];
-					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-						$s = -1; return [0, err$1];
-					}
-					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
-					/* */ $s = 11; continue;
-					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
-						_r$3 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$3];
-					/* } */ case 11:
-					_tuple$3 = strconv.ParseFloat((x = componentProto.Value, (1 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 1])), 10);
-					val = _tuple$3[0];
-					err$1 = _tuple$3[1];
-					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
-					/* */ $s = 14; continue;
-					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
-						_r$4 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$4];
-					/* } */ case 14:
-				/* } */ case 8:
-			case 6:
-			total = total + (((val >> 0))) >> 0;
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotArmor", "end"); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotArmor }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotArmor = QueryRobotArmor;
-	QueryRobotBeamArmor = function(model, robotID, isGameplay) {
-		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, total, val, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotBeamArmor", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$1 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		components = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		total = 0;
-		_ref = components;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			component = $clone(_entry.v, protocol.Component);
-			val = 0;
-				_1 = component.ProtoID;
-				/* */ if (_1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5")) { $s = 7; continue; }
-				/* */ $s = 8; continue;
-				/* if (_1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5")) { */ case 7:
-					_r$2 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-					_tuple$2 = _r$2;
-					componentProto = $clone(_tuple$2[0], data.ComponentProto);
-					err$1 = _tuple$2[1];
-					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-						$s = -1; return [0, err$1];
-					}
-					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
-					/* */ $s = 11; continue;
-					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
-						_r$3 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$3];
-					/* } */ case 11:
-					_tuple$3 = strconv.ParseFloat((x = componentProto.Value, (1 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 1])), 10);
-					val = _tuple$3[0];
-					err$1 = _tuple$3[1];
-					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
-					/* */ $s = 14; continue;
-					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
-						_r$4 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$4];
-					/* } */ case 14:
-				/* } */ case 8:
-			case 6:
-			total = total + (((val >> 0))) >> 0;
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotBeamArmor", "end"); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotBeamArmor }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotBeamArmor = QueryRobotBeamArmor;
-	QueryRobotCombatPower = function(model, robot, weapons) {
-		var _1, _entry, _i, _keys, _r, _ref, _tuple, bulletCombatPower, enCombatCost, enCombatPower, err, model, robot, total, weapon, weaponProto, weapons, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; bulletCombatPower = $f.bulletCombatPower; enCombatCost = $f.enCombatCost; enCombatPower = $f.enCombatPower; err = $f.err; model = $f.model; robot = $f.robot; total = $f.total; weapon = $f.weapon; weaponProto = $f.weaponProto; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		enCombatPower = 0;
-		enCombatCost = 0;
-		bulletCombatPower = 0;
-		_ref = weapons;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 1:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 1; continue;
-			}
-			weapon = $clone(_entry.v, protocol.Weapon);
-			_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			weaponProto = $clone(_tuple[0], data.WeaponProto);
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [0, $ifaceNil];
-			}
-			_1 = weaponProto.EnergyType;
-			if (_1 === ("energy")) {
-				enCombatPower = enCombatPower + (weaponProto.Damage) >> 0;
-				enCombatCost = enCombatCost + (weaponProto.EnergyCost) >> 0;
-			} else if (_1 === ("bullet")) {
-				bulletCombatPower = bulletCombatPower + (($imul(weaponProto.Damage, weapon.BulletCount))) >> 0;
-			}
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		total = (robot.HP + bulletCombatPower >> 0) + (((enCombatPower) * (robot.EN) / (enCombatCost) >> 0)) >> 0;
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotCombatPower }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.bulletCombatPower = bulletCombatPower; $f.enCombatCost = enCombatCost; $f.enCombatPower = enCombatPower; $f.err = err; $f.model = model; $f.robot = robot; $f.total = total; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotCombatPower = QueryRobotCombatPower;
-	QueryRobotComponents = function(model, robotID, isGameplay) {
-		var _entry, _entry$1, _i, _i$1, _key, _key$1, _keys, _r, _r$1, _r$2, _ref, _ref$1, _tuple, _tuple$1, component, componentID, componentProtoID, components, err, i, instanceID, instanceID$1, isGameplay, model, robot, robotID, robotID$1, robotProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; component = $f.component; componentID = $f.componentID; componentProtoID = $f.componentProtoID; components = $f.components; err = $f.err; i = $f.i; instanceID = $f.instanceID; instanceID$1 = $f.instanceID$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotProto = $f.robotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		if (!(robot.Components === false)) {
-			$s = -1; return [robot.Components, $ifaceNil];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		robotProto = $clone(_tuple$1[0], data.RobotProto);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		components = $makeMap($String.keyFor, []);
-		_ref = robotProto.Components;
-		_i = 0;
-		/* while (true) { */ case 4:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 5; continue; }
-			i = _i;
-			componentProtoID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r$2 = fmt.Sprintf("component_%v", new sliceType([new $Int(i)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			instanceID = _r$2;
-			_key = instanceID; (components || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new protocol.Component.ptr(instanceID, componentProtoID, "", 0, "", sliceType$2.nil, 0, "") };
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		_ref$1 = model.App.Lobby.RobotIDByComponentID;
-		_i$1 = 0;
-		_keys = $keys(_ref$1);
-		/* while (true) { */ case 7:
-			/* if (!(_i$1 < _keys.length)) { break; } */ if(!(_i$1 < _keys.length)) { $s = 8; continue; }
-			_entry = _ref$1[_keys[_i$1]];
-			if (_entry === undefined) {
-				_i$1++;
-				/* continue; */ $s = 7; continue;
-			}
-			componentID = _entry.k;
-			robotID$1 = _entry.v;
-			if (!(robotID$1 === robot.ID)) {
-				_i$1++;
-				/* continue; */ $s = 7; continue;
-			}
-			component = $clone((_entry$1 = model.App.Lobby.Components[$String.keyFor(componentID)], _entry$1 !== undefined ? _entry$1.v : new protocol.Component.ptr("", "", "", 0, "", sliceType$2.nil, 0, "")), protocol.Component);
-			instanceID$1 = component.ID;
-			_key$1 = instanceID$1; (components || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: new protocol.Component.ptr(instanceID$1, component.ProtoID, "", 0, "", sliceType$2.nil, 0, "") };
-			_i$1++;
-		/* } */ $s = 7; continue; case 8:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "end"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$s = -1; return [components, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotComponents }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.component = component; $f.componentID = componentID; $f.componentProtoID = componentProtoID; $f.components = components; $f.err = err; $f.i = i; $f.instanceID = instanceID; $f.instanceID$1 = instanceID$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotProto = robotProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotComponents = QueryRobotComponents;
-	QueryRobotMaxEn = function(model, robotID, isGameplay) {
-		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, robotProto, total, val, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		robotProto = $clone(_tuple$1[0], data.RobotProto);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$2 = QueryRobotComponents($clone(model, types.Model), robotID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		components = _tuple$2[0];
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		total = robotProto.EN;
-		_ref = components;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			component = $clone(_entry.v, protocol.Component);
-			val = 0;
-				_1 = component.ProtoID;
-				/* */ if (_1 === ("energy1") || _1 === ("energy2") || _1 === ("energy3") || _1 === ("energy4") || _1 === ("energy5")) { $s = 7; continue; }
-				/* */ $s = 8; continue;
-				/* if (_1 === ("energy1") || _1 === ("energy2") || _1 === ("energy3") || _1 === ("energy4") || _1 === ("energy5")) { */ case 7:
-					_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-					_tuple$3 = _r$3;
-					componentProto = $clone(_tuple$3[0], data.ComponentProto);
-					err$1 = _tuple$3[1];
-					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-						$s = -1; return [0, err$1];
-					}
-					/* */ if (!((componentProto.Value.$length === 1))) { $s = 10; continue; }
-					/* */ $s = 11; continue;
-					/* if (!((componentProto.Value.$length === 1))) { */ case 10:
-						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$4];
-					/* } */ case 11:
-					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
-					val = _tuple$4[0];
-					err$1 = _tuple$4[1];
-					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
-					/* */ $s = 14; continue;
-					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
-						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$5];
-					/* } */ case 14:
-				/* } */ case 8:
-			case 6:
-			total = total + (((val >> 0))) >> 0;
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMaxEn }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotMaxEn = QueryRobotMaxEn;
-	QueryRobotMaxHp = function(model, robotID, isGameplay) {
-		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, robotProto, total, val, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		robotProto = $clone(_tuple$1[0], data.RobotProto);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$2 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		components = _tuple$2[0];
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		total = robotProto.HP;
-		_ref = components;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			component = $clone(_entry.v, protocol.Component);
-			val = 0;
-				_1 = component.ProtoID;
-				/* */ if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5") || _1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5") || _1 === ("fire_armor") || _1 === ("lighting_armor")) { $s = 7; continue; }
-				/* */ $s = 8; continue;
-				/* if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5") || _1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5") || _1 === ("fire_armor") || _1 === ("lighting_armor")) { */ case 7:
-					_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-					_tuple$3 = _r$3;
-					componentProto = $clone(_tuple$3[0], data.ComponentProto);
-					err$1 = _tuple$3[1];
-					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-						$s = -1; return [0, err$1];
-					}
-					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
-					/* */ $s = 11; continue;
-					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
-						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$4];
-					/* } */ case 11:
-					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
-					val = _tuple$4[0];
-					err$1 = _tuple$4[1];
-					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
-					/* */ $s = 14; continue;
-					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
-						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$5];
-					/* } */ case 14:
-				/* } */ case 8:
-			case 6:
-			total = total + (((val >> 0))) >> 0;
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMaxHp }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotMaxHp = QueryRobotMaxHp;
-	QueryRobotMovePower = function(model, robotID, isGameplay) {
-		var _entry, _q, _r, _r$1, _tuple, config, err, isGameplay, model, robotID, total, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _q = $f._q; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; config = $f.config; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; total = $f.total; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = QueryRobotPower($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		total = _tuple[0];
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		config = $clone((_entry = data.GameData.Config[$String.keyFor("default")], _entry !== undefined ? _entry.v : new data.ConfigProto.ptr("", 0, sliceType$3.nil, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil)), data.ConfigProto);
-		/* */ if (config.PowerCostForMove === 0) { $s = 2; continue; }
-		/* */ $s = 3; continue;
-		/* if (config.PowerCostForMove === 0) { */ case 2:
-			_r$1 = fmt.Errorf("config.PowerCostForMove\xE4\xB8\x8D\xE5\xBE\x97\xE7\x82\xBA0", new sliceType([])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			$s = -1; return [0, _r$1];
-		/* } */ case 3:
-		$s = -1; return [(_q = total / config.PowerCostForMove, (_q === _q && _q !== 1/0 && _q !== -1/0) ? _q >> 0 : $throwRuntimeError("integer divide by zero")), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMovePower }; } $f._entry = _entry; $f._q = _q; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.config = config; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.total = total; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotMovePower = QueryRobotMovePower;
-	QueryRobotPower = function(model, robotID, isGameplay) {
-		var _1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, component, componentProto, components, err, err$1, err$2, err$3, isGameplay, model, robot, robotID, robotProto, total, val, weapon, weaponProto, weapons, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; weapon = $f.weapon; weaponProto = $f.weaponProto; weapons = $f.weapons; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		robotProto = $clone(_tuple$1[0], data.RobotProto);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_r$2 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		components = _tuple$2[0];
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		total = robotProto.Power;
-		_ref = components;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			component = $clone(_entry.v, protocol.Component);
-			_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_tuple$3 = _r$3;
-			componentProto = $clone(_tuple$3[0], data.ComponentProto);
-			err$1 = _tuple$3[1];
-			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [0, err$1];
-			}
-				_1 = component.ProtoID;
-				/* */ if (_1 === ("engine1") || _1 === ("engine2") || _1 === ("engine3") || _1 === ("engine4") || _1 === ("engine5")) { $s = 8; continue; }
-				/* */ $s = 9; continue;
-				/* if (_1 === ("engine1") || _1 === ("engine2") || _1 === ("engine3") || _1 === ("engine4") || _1 === ("engine5")) { */ case 8:
-					/* */ if (!((componentProto.Value.$length === 1))) { $s = 10; continue; }
-					/* */ $s = 11; continue;
-					/* if (!((componentProto.Value.$length === 1))) { */ case 10:
-						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$4];
-					/* } */ case 11:
-					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
-					val = _tuple$4[0];
-					err$2 = _tuple$4[1];
-					/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 13; continue; }
-					/* */ $s = 14; continue;
-					/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 13:
-						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-						$s = -1; return [0, _r$5];
-					/* } */ case 14:
-					total = total + (((val >> 0))) >> 0;
-				/* } */ case 9:
-			case 7:
-			total = total - (componentProto.PowerCost) >> 0;
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		_r$6 = QueryRobotWeapons($clone(model, types.Model), robot.ID, robot.Transform, isGameplay); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-		_tuple$5 = _r$6;
-		weapons = _tuple$5[0];
-		err = _tuple$5[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		_ref$1 = weapons;
-		_i$1 = 0;
-		_keys$1 = $keys(_ref$1);
-		/* while (true) { */ case 17:
-			/* if (!(_i$1 < _keys$1.length)) { break; } */ if(!(_i$1 < _keys$1.length)) { $s = 18; continue; }
-			_entry$1 = _ref$1[_keys$1[_i$1]];
-			if (_entry$1 === undefined) {
-				_i$1++;
-				/* continue; */ $s = 17; continue;
-			}
-			weapon = $clone(_entry$1.v, protocol.Weapon);
-			_r$7 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-			_tuple$6 = _r$7;
-			weaponProto = $clone(_tuple$6[0], data.WeaponProto);
-			err$3 = _tuple$6[1];
-			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
-				$s = -1; return [0, err$3];
-			}
-			total = total - (weaponProto.PowerCost) >> 0;
-			_i$1++;
-		/* } */ $s = 17; continue; case 18:
-		$s = -1; return [total, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotPower }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weapons = weapons; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotPower = QueryRobotPower;
-	QueryRobotSuitability = function(model, robotID, isGameplay) {
-		var _r, _r$1, _tuple, _tuple$1, err, isGameplay, model, robot, robotID, robotProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType$1.zero(), err];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		robotProto = $clone(_tuple$1[0], data.RobotProto);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType$1.zero(), err];
-		}
-		$s = -1; return [robotProto.Suitability, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotSuitability }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotSuitability = QueryRobotSuitability;
-	QueryRobotWeaponAbility = function(model, robotID, weapon, isGameplay) {
-		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new sliceType$2([]), err];
-		}
-		$s = -1; return [weaponProto.Ability, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAbility }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeaponAbility = QueryRobotWeaponAbility;
-	QueryRobotWeaponAccuracy = function(model, robotID, weapon, isGameplay) {
-		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [0, err];
-		}
-		$s = -1; return [weaponProto.Accuracy, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAccuracy }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeaponAccuracy = QueryRobotWeaponAccuracy;
-	QueryRobotWeaponAttackRange = function(model, robotID, weapon, offset) {
-		var _1, _i, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, attackPos, attackPosWithCenter, attackRange, attackRangeWithCenter, err, model, offset, robotID, weapon, weaponProto, weaponRange, zeroOffset, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; attackPos = $f.attackPos; attackPosWithCenter = $f.attackPosWithCenter; attackRange = $f.attackRange; attackRangeWithCenter = $f.attackRangeWithCenter; err = $f.err; model = $f.model; offset = $f.offset; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; weaponRange = $f.weaponRange; zeroOffset = $f.zeroOffset; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [sliceType$1.nil, err];
-		}
-		_r$1 = QueryRobotWeaponRange($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), true); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		weaponRange = $clone(_tuple$1[0], arrayType);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [sliceType$1.nil, err];
-		}
-		attackRange = new sliceType$1([]);
-			_1 = weaponProto.Type;
-			/* */ if (_1 === ("single")) { $s = 4; continue; }
-			/* */ if (_1 === ("line")) { $s = 5; continue; }
-			/* */ $s = 6; continue;
-			/* if (_1 === ("single")) { */ case 4:
-				_r$2 = helper.QueryMinMaxAttackRange(20, 20, weaponRange[0], weaponRange[1], arrayType.zero()); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_tuple$2 = _r$2;
-				attackRange = _tuple$2[0];
-				err = _tuple$2[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [sliceType$1.nil, err];
-				}
-				$s = 7; continue;
-			/* } else if (_1 === ("line")) { */ case 5:
-				_r$3 = helper.QueryMinMaxAttackRange(20, 20, 0, weaponRange[0], arrayType.zero()); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_tuple$3 = _r$3;
-				attackRange = _tuple$3[0];
-				err = _tuple$3[1];
-				if (!($interfaceIsEqual(err, $ifaceNil))) {
-					$s = -1; return [sliceType$1.nil, err];
-				}
-				$s = 7; continue;
-			/* } else { */ case 6:
-				_r$4 = fmt.Errorf("unknown weapon type (%v)", new sliceType([new weaponProto.constructor.elem(weaponProto)])); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				$s = -1; return [sliceType$1.nil, _r$4];
-			/* } */ case 7:
-		case 3:
-		zeroOffset = arrayType.zero();
-		if ($equal(offset, zeroOffset, protocol.Position)) {
-			$s = -1; return [attackRange, $ifaceNil];
-		}
-		attackRangeWithCenter = new sliceType$1([]);
-		_ref = attackRange;
-		_i = 0;
-		while (true) {
-			if (!(_i < _ref.$length)) { break; }
-			attackPos = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
-			attackPosWithCenter = $toNativeArray($kindInt, [offset[0] + attackPos[0] >> 0, offset[1] + attackPos[1] >> 0]);
-			attackRangeWithCenter = $append(attackRangeWithCenter, attackPosWithCenter);
-			_i++;
-		}
-		$s = -1; return [attackRangeWithCenter, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAttackRange }; } $f._1 = _1; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.attackPos = attackPos; $f.attackPosWithCenter = attackPosWithCenter; $f.attackRange = attackRange; $f.attackRangeWithCenter = attackRangeWithCenter; $f.err = err; $f.model = model; $f.offset = offset; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weaponRange = weaponRange; $f.zeroOffset = zeroOffset; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeaponAttackRange = QueryRobotWeaponAttackRange;
-	QueryRobotWeaponRange = function(model, robotID, weapon, isGameplay) {
-		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType.zero(), err];
-		}
-		$s = -1; return [weaponProto.Range, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponRange }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeaponRange = QueryRobotWeaponRange;
-	QueryRobotWeaponSuitability = function(model, robotID, weapon) {
-		var _r, _tuple, err, model, robotID, weapon, weaponProto, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		weaponProto = $clone(_tuple[0], data.WeaponProto);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [arrayType$1.zero(), err];
-		}
-		$s = -1; return [weaponProto.Suitability, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponSuitability }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeaponSuitability = QueryRobotWeaponSuitability;
-	QueryRobotWeapons = function(model, robotID, transform, isGameplay) {
-		var _entry, _entry$1, _entry$2, _i, _i$1, _key, _key$1, _keys, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, err, err$1, err$2, has, isGameplay, model, robot, robotID, robotID$1, robotProto, transform, weapon, weapon$1, weaponID, weaponProto, weaponProto$1, weaponProtoID, weaponState, weapons, weapons$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; has = $f.has; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotProto = $f.robotProto; transform = $f.transform; weapon = $f.weapon; weapon$1 = $f.weapon$1; weaponID = $f.weaponID; weaponProto = $f.weaponProto; weaponProto$1 = $f.weaponProto$1; weaponProtoID = $f.weaponProtoID; weaponState = $f.weaponState; weapons = $f.weapons; weapons$1 = $f.weapons$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = log.Log(protocol.LogCategoryRender, "QueryRobotWeapons", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		robot = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		_tuple$1 = (_entry = robot.WeaponsByTransform[$String.keyFor(transform)], _entry !== undefined ? [_entry.v, true] : [false, false]);
-		weapons = _tuple$1[0];
-		has = _tuple$1[1];
-		if (has) {
-			$s = -1; return [weapons, $ifaceNil];
-		}
-		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$2 = _r$1;
-		robotProto = $clone(_tuple$2[0], data.RobotProto);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [$makeMap($String.keyFor, []), err];
-		}
-		weapons$1 = $makeMap($String.keyFor, []);
-		_ref = robotProto.Weapons;
-		_i = 0;
-		/* while (true) { */ case 4:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 5; continue; }
-			weaponProtoID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r$2 = data.TryGetStringWeaponProto(data.GameData.Weapon, weaponProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$3 = _r$2;
-			weaponProto = $clone(_tuple$3[0], data.WeaponProto);
-			err$1 = _tuple$3[1];
-			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-				$s = -1; return [$makeMap($String.keyFor, []), err$1];
-			}
-			weapon = new protocol.Weapon.ptr(weaponProtoID, weaponProtoID, weaponProto.MaxBulletCount, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0);
-			_key = weapon.ID; (weapons$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(weapon, protocol.Weapon) };
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		_ref$1 = model.App.Lobby.RobotIDByWeaponID;
-		_i$1 = 0;
-		_keys = $keys(_ref$1);
-		/* while (true) { */ case 7:
-			/* if (!(_i$1 < _keys.length)) { break; } */ if(!(_i$1 < _keys.length)) { $s = 8; continue; }
-			_entry$1 = _ref$1[_keys[_i$1]];
-			if (_entry$1 === undefined) {
-				_i$1++;
-				/* continue; */ $s = 7; continue;
-			}
-			weaponID = _entry$1.k;
-			robotID$1 = _entry$1.v;
-			/* */ if (!(robotID$1 === robot.ID)) { $s = 9; continue; }
-			/* */ $s = 10; continue;
-			/* if (!(robotID$1 === robot.ID)) { */ case 9:
-				_i$1++;
-				/* continue; */ $s = 7; continue;
-			/* } */ case 10:
-			weapon$1 = $clone((_entry$2 = model.App.Lobby.Weapons[$String.keyFor(weaponID)], _entry$2 !== undefined ? _entry$2.v : new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0)), protocol.Weapon);
-			_r$3 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon$1.ProtoID); /* */ $s = 11; case 11: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_tuple$4 = _r$3;
-			weaponProto$1 = $clone(_tuple$4[0], data.WeaponProto);
-			err$2 = _tuple$4[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [$makeMap($String.keyFor, []), err$2];
-			}
-			weaponState = new protocol.Weapon.ptr(weapon$1.ID, weapon$1.ProtoID, weaponProto$1.MaxBulletCount, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0);
-			_key$1 = weaponState.ID; (weapons$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(weaponState, protocol.Weapon) };
-			_i$1++;
-		/* } */ $s = 7; continue; case 8:
-		$s = -1; return [weapons$1, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeapons }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.has = has; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotProto = robotProto; $f.transform = transform; $f.weapon = weapon; $f.weapon$1 = weapon$1; $f.weaponID = weaponID; $f.weaponProto = weaponProto; $f.weaponProto$1 = weaponProto$1; $f.weaponProtoID = weaponProtoID; $f.weaponState = weaponState; $f.weapons = weapons; $f.weapons$1 = weapons$1; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryRobotWeapons = QueryRobotWeapons;
-	RobotMoveCost = function(model, robotID, movePower, ignoreOccupy) {
-		var _entry, _r, _tuple, err, ignoreOccupy, isSky, model, movePower, robotID, suitability, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; err = $f.err; ignoreOccupy = $f.ignoreOccupy; isSky = $f.isSky; model = $f.model; movePower = $f.movePower; robotID = $f.robotID; suitability = $f.suitability; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ignoreOccupy = [ignoreOccupy];
-		isSky = [isSky];
-		model = [model];
-		movePower = [movePower];
-		robotID = [robotID];
-		suitability = [suitability];
-		_r = QueryRobotSuitability($clone(model[0], types.Model), robotID[0], true); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		suitability[0] = $clone(_tuple[0], arrayType$1);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [(function(ignoreOccupy, isSky, model, movePower, robotID, suitability) { return function(curr) {
-				var curr;
-				return sliceType$4.nil;
-			}; })(ignoreOccupy, isSky, model, movePower, robotID, suitability), err];
-		}
-		isSky[0] = (_entry = model[0].App.Gameplay.Tags[$String.keyFor(robotID[0])], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).Sky;
-		$s = -1; return [(function(ignoreOccupy, isSky, model, movePower, robotID, suitability) { return function $b(curr) {
-			var _1, _2, _i, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _tmp, _tmp$1, _tuple$1, _tuple$2, _tuple$3, cost1, cost2, curr, currPos, err$1, err$2, err$3, isFriendlyRobot, nextCost, nextPos, notFound, offset, offsets, ret, suitabilityFactor, suitabilityFactor$1, terrain1, terrain2, unitAtPos, x, x$1, y, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _2 = $f._2; _i = $f._i; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; cost1 = $f.cost1; cost2 = $f.cost2; curr = $f.curr; currPos = $f.currPos; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; isFriendlyRobot = $f.isFriendlyRobot; nextCost = $f.nextCost; nextPos = $f.nextPos; notFound = $f.notFound; offset = $f.offset; offsets = $f.offsets; ret = $f.ret; suitabilityFactor = $f.suitabilityFactor; suitabilityFactor$1 = $f.suitabilityFactor$1; terrain1 = $f.terrain1; terrain2 = $f.terrain2; unitAtPos = $f.unitAtPos; x = $f.x; x$1 = $f.x$1; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			if (((curr.Cost >> 0)) > 100) {
-				$s = -1; return new sliceType$4([]);
-			}
-			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
-			cost1 = 0;
-			_r$1 = helper.QueryTerrain(model[0].App.Gameplay.Map, terrainCache, $clone(currPos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$1 = _r$1;
-			terrain1 = $clone(_tuple$1[0], data.TerrainProto);
-			err$1 = _tuple$1[1];
-			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
-			/* */ $s = 3; continue;
-			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
-				_r$2 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_r$3 = fmt.Println(new sliceType([new $String(_r$2)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$3;
-				$s = -1; return new sliceType$4([]);
-			/* } */ case 3:
-			/* */ if (isSky[0]) { $s = 6; continue; }
-			/* */ $s = 7; continue;
-			/* if (isSky[0]) { */ case 6:
-				if (suitability[0][2] === 0) {
-					$s = -1; return new sliceType$4([]);
-				}
-				cost1 = 0.4 / suitability[0][2];
-				$s = 8; continue;
-			/* } else { */ case 7:
-				suitabilityFactor = 0;
-					_1 = terrain1.ID;
-					/* */ if (_1 === ("shallowSea") || _1 === ("deepSea")) { $s = 10; continue; }
-					/* */ if (_1 === ("mountain") || _1 === ("plain") || _1 === ("forest") || _1 === ("road") || _1 === ("city") || _1 === ("beach") || _1 === ("award")) { $s = 11; continue; }
-					/* */ $s = 12; continue;
-					/* if (_1 === ("shallowSea") || _1 === ("deepSea")) { */ case 10:
-						suitabilityFactor = suitability[0][1];
-						$s = 13; continue;
-					/* } else if (_1 === ("mountain") || _1 === ("plain") || _1 === ("forest") || _1 === ("road") || _1 === ("city") || _1 === ("beach") || _1 === ("award")) { */ case 11:
-						suitabilityFactor = suitability[0][0];
-						$s = 13; continue;
-					/* } else { */ case 12:
-						_r$4 = fmt.Printf("unknown terrain(%v)\n", new sliceType([new $String(terrain1.ID)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-						_r$4;
-						$s = -1; return new sliceType$4([]);
-					/* } */ case 13:
-				case 9:
-				if (suitabilityFactor === 0) {
-					$s = -1; return new sliceType$4([]);
-				}
-				cost1 = terrain1.Cost * 1 / suitabilityFactor;
-			/* } */ case 8:
-			offsets = new sliceType$1([$toNativeArray($kindInt, [0, -1]), $toNativeArray($kindInt, [1, 0]), $toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [-1, 0])]);
-			ret = new sliceType$4([]);
-			_ref = offsets;
-			_i = 0;
-			/* while (true) { */ case 15:
-				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 16; continue; }
-				offset = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
-				_tmp = currPos[0] + offset[0] >> 0;
-				_tmp$1 = currPos[1] + offset[1] >> 0;
-				x = _tmp;
-				y = _tmp$1;
-				/* */ if (x < 0 || x >= (x$1 = model[0].App.Gameplay.Map, (0 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 0])).$length) { $s = 17; continue; }
-				/* */ $s = 18; continue;
-				/* if (x < 0 || x >= (x$1 = model[0].App.Gameplay.Map, (0 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 0])).$length) { */ case 17:
-					_i++;
-					/* continue; */ $s = 15; continue;
-				/* } */ case 18:
-				/* */ if (y < 0 || y >= model[0].App.Gameplay.Map.$length) { $s = 19; continue; }
-				/* */ $s = 20; continue;
-				/* if (y < 0 || y >= model[0].App.Gameplay.Map.$length) { */ case 19:
-					_i++;
-					/* continue; */ $s = 15; continue;
-				/* } */ case 20:
-				nextPos = $toNativeArray($kindInt, [x, y]);
-				/* */ if (ignoreOccupy[0] === false) { $s = 21; continue; }
-				/* */ $s = 22; continue;
-				/* if (ignoreOccupy[0] === false) { */ case 21:
-					notFound = "";
-					unitAtPos = SearchUnitByPosition(model[0].App.Gameplay.Positions, $clone(nextPos, protocol.Position));
-					/* */ if (!(unitAtPos === notFound)) { $s = 23; continue; }
-					/* */ $s = 24; continue;
-					/* if (!(unitAtPos === notFound)) { */ case 23:
-						_r$5 = IsFriendlyRobot($clone(model[0], types.Model), robotID[0], unitAtPos); /* */ $s = 25; case 25: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-						_tuple$2 = _r$5;
-						isFriendlyRobot = _tuple$2[0];
-						err$2 = _tuple$2[1];
-						/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 26; continue; }
-						/* */ $s = 27; continue;
-						/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 26:
-							_r$6 = fmt.Println(new sliceType([err$2])); /* */ $s = 28; case 28: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-							_r$6;
-							_i++;
-							/* continue; */ $s = 15; continue;
-						/* } */ case 27:
-						if (isFriendlyRobot === false) {
-							_i++;
-							/* continue; */ $s = 15; continue;
-						}
-					/* } */ case 24:
-				/* } */ case 22:
-				cost2 = 0;
-				_r$7 = helper.QueryTerrain(model[0].App.Gameplay.Map, terrainCache, $clone(nextPos, protocol.Position)); /* */ $s = 29; case 29: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				_tuple$3 = _r$7;
-				terrain2 = $clone(_tuple$3[0], data.TerrainProto);
-				err$3 = _tuple$3[1];
-				/* */ if (!($interfaceIsEqual(err$3, $ifaceNil))) { $s = 30; continue; }
-				/* */ $s = 31; continue;
-				/* if (!($interfaceIsEqual(err$3, $ifaceNil))) { */ case 30:
-					_r$8 = err$3.Error(); /* */ $s = 32; case 32: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-					_r$9 = fmt.Println(new sliceType([new $String(_r$8)])); /* */ $s = 33; case 33: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-					_r$9;
-					$s = -1; return new sliceType$4([]);
-				/* } */ case 31:
-				/* */ if (isSky[0]) { $s = 34; continue; }
-				/* */ $s = 35; continue;
-				/* if (isSky[0]) { */ case 34:
-					if (suitability[0][2] === 0) {
-						_i++;
-						/* continue; */ $s = 15; continue;
-					}
-					cost2 = 0.4 / suitability[0][2];
-					$s = 36; continue;
-				/* } else { */ case 35:
-					suitabilityFactor$1 = 0;
-						_2 = terrain2.ID;
-						/* */ if (_2 === ("shallowSea") || _2 === ("deepSea")) { $s = 38; continue; }
-						/* */ if (_2 === ("mountain") || _2 === ("plain") || _2 === ("forest") || _2 === ("road") || _2 === ("city") || _2 === ("beach") || _2 === ("award")) { $s = 39; continue; }
-						/* */ $s = 40; continue;
-						/* if (_2 === ("shallowSea") || _2 === ("deepSea")) { */ case 38:
-							suitabilityFactor$1 = suitability[0][1];
-							$s = 41; continue;
-						/* } else if (_2 === ("mountain") || _2 === ("plain") || _2 === ("forest") || _2 === ("road") || _2 === ("city") || _2 === ("beach") || _2 === ("award")) { */ case 39:
-							suitabilityFactor$1 = suitability[0][0];
-							$s = 41; continue;
-						/* } else { */ case 40:
-							_r$10 = fmt.Printf("unknown terrain(%v)\n", new sliceType([new $String(terrain2.ID)])); /* */ $s = 42; case 42: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-							_r$10;
-							$s = -1; return new sliceType$4([]);
-						/* } */ case 41:
-					case 37:
-					if (suitabilityFactor$1 === 0) {
-						_i++;
-						/* continue; */ $s = 15; continue;
-					}
-					cost2 = terrain2.Cost * 1 / suitabilityFactor$1;
-				/* } */ case 36:
-				nextCost = (cost1 + cost2);
-				if (((curr.Cost + nextCost >> 0)) > movePower[0]) {
-					_i++;
-					/* continue; */ $s = 15; continue;
-				}
-				ret = $append(ret, new astar.NeighborsNode.ptr(new protocol.Position(nextPos), nextCost));
-				_i++;
-			/* } */ $s = 15; continue; case 16:
-			$s = -1; return ret;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._1 = _1; $f._2 = _2; $f._i = _i; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.cost1 = cost1; $f.cost2 = cost2; $f.curr = curr; $f.currPos = currPos; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.isFriendlyRobot = isFriendlyRobot; $f.nextCost = nextCost; $f.nextPos = nextPos; $f.notFound = notFound; $f.offset = offset; $f.offsets = offsets; $f.ret = ret; $f.suitabilityFactor = suitabilityFactor; $f.suitabilityFactor$1 = suitabilityFactor$1; $f.terrain1 = terrain1; $f.terrain2 = terrain2; $f.unitAtPos = unitAtPos; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(ignoreOccupy, isSky, model, movePower, robotID, suitability), $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: RobotMoveCost }; } $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.ignoreOccupy = ignoreOccupy; $f.isSky = isSky; $f.model = model; $f.movePower = movePower; $f.robotID = robotID; $f.suitability = suitability; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.RobotMoveCost = RobotMoveCost;
-	SearchUnitByPosition = function(posComs, pos) {
-		var _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _i, _i$1, _i$2, _key, _key$1, _keys, _keys$1, _keys$2, _ref, _ref$1, _ref$2, _tuple, _tuple$1, _tuple$2, has, has$1, has$2, pos, posComs, unitID, unitID$1, unitID$2, unitID$3, unitNewPos, unitOldPos, unitPos, unitPos$1;
-		_ref = unitByPosition;
-		_i = 0;
-		_keys = $keys(_ref);
-		while (true) {
-			if (!(_i < _keys.length)) { break; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				continue;
-			}
-			unitPos = $clone(_entry.k, protocol.Position);
-			unitID = _entry.v;
-			_tuple = (_entry$1 = posComs[$String.keyFor(unitID)], _entry$1 !== undefined ? [_entry$1.v, true] : [arrayType.zero(), false]);
-			has = _tuple[1];
-			if (has === false) {
-				delete unitByPosition[protocol.Position.keyFor(unitPos)];
-			}
-			_i++;
-		}
-		_ref$1 = posComs;
-		_i$1 = 0;
-		_keys$1 = $keys(_ref$1);
-		while (true) {
-			if (!(_i$1 < _keys$1.length)) { break; }
-			_entry$2 = _ref$1[_keys$1[_i$1]];
-			if (_entry$2 === undefined) {
-				_i$1++;
-				continue;
-			}
-			unitID$1 = _entry$2.k;
-			unitPos$1 = $clone(_entry$2.v, protocol.Position);
-			_tuple$1 = (_entry$3 = unitByPosition[protocol.Position.keyFor(unitPos$1)], _entry$3 !== undefined ? [_entry$3.v, true] : ["", false]);
-			has$1 = _tuple$1[1];
-			if (has$1 === false) {
-				_key = $clone(unitPos$1, protocol.Position); (unitByPosition || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: unitID$1 };
-			}
-			_i$1++;
-		}
-		_ref$2 = unitByPosition;
-		_i$2 = 0;
-		_keys$2 = $keys(_ref$2);
-		while (true) {
-			if (!(_i$2 < _keys$2.length)) { break; }
-			_entry$4 = _ref$2[_keys$2[_i$2]];
-			if (_entry$4 === undefined) {
-				_i$2++;
-				continue;
-			}
-			unitOldPos = $clone(_entry$4.k, protocol.Position);
-			unitID$2 = _entry$4.v;
-			unitNewPos = $clone((_entry$5 = posComs[$String.keyFor(unitID$2)], _entry$5 !== undefined ? _entry$5.v : arrayType.zero()), protocol.Position);
-			if (!($equal(unitOldPos, unitNewPos, protocol.Position))) {
-				delete unitByPosition[protocol.Position.keyFor(unitOldPos)];
-				_key$1 = $clone(unitNewPos, protocol.Position); (unitByPosition || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key$1)] = { k: _key$1, v: unitID$2 };
-			}
-			_i$2++;
-		}
-		_tuple$2 = (_entry$6 = unitByPosition[protocol.Position.keyFor(pos)], _entry$6 !== undefined ? [_entry$6.v, true] : ["", false]);
-		unitID$3 = _tuple$2[0];
-		has$2 = _tuple$2[1];
-		if (has$2) {
-			return unitID$3;
-		}
-		return "";
-	};
-	$pkg.SearchUnitByPosition = SearchUnitByPosition;
-	proj = function(pos) {
-		var _q, _q$1, pos;
-		pos[0] = (_q = pos[0] / 5, (_q === _q && _q !== 1/0 && _q !== -1/0) ? _q >> 0 : $throwRuntimeError("integer divide by zero"));
-		pos[1] = (_q$1 = pos[1] / 5, (_q$1 === _q$1 && _q$1 !== 1/0 && _q$1 !== -1/0) ? _q$1 >> 0 : $throwRuntimeError("integer divide by zero"));
-		return pos;
-	};
-	SearchUnitByRegion = function(posComs, p1, p2) {
-		var _entry, _entry$1, _entry$10, _entry$11, _entry$12, _entry$13, _entry$14, _entry$15, _entry$16, _entry$17, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _entry$9, _i, _i$1, _i$2, _i$3, _i$4, _i$5, _i$6, _key, _key$1, _key$2, _key$3, _key$4, _keys, _keys$1, _keys$2, _keys$3, _keys$4, _keys$5, _keys$6, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _ref$5, _ref$6, _tuple, _tuple$1, has, has$1, has$2, p1, p2, posComs, ret, total, unitID, unitID$1, unitID$2, unitID$3, unitID$4, unitIDs, unitNewPos, unitOldPos, unitPos, unitPos$1, units, units$1, x, y;
-		_ref = unitByRegion;
-		_i = 0;
-		_keys = $keys(_ref);
-		while (true) {
-			if (!(_i < _keys.length)) { break; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				continue;
-			}
-			unitPos = $clone(_entry.k, protocol.Position);
-			units = _entry.v;
-			_ref$1 = units;
-			_i$1 = 0;
-			_keys$1 = $keys(_ref$1);
-			while (true) {
-				if (!(_i$1 < _keys$1.length)) { break; }
-				_entry$1 = _ref$1[_keys$1[_i$1]];
-				if (_entry$1 === undefined) {
-					_i$1++;
-					continue;
-				}
-				unitID = _entry$1.k;
-				_tuple = (_entry$2 = posComs[$String.keyFor(unitID)], _entry$2 !== undefined ? [_entry$2.v, true] : [arrayType.zero(), false]);
-				has = _tuple[1];
-				if (has === false) {
-					delete (_entry$3 = unitByRegion[protocol.Position.keyFor(unitPos)], _entry$3 !== undefined ? _entry$3.v : false)[$String.keyFor(unitID)];
-				}
-				_i$1++;
-			}
-			_i++;
-		}
-		_ref$2 = posComs;
-		_i$2 = 0;
-		_keys$2 = $keys(_ref$2);
-		while (true) {
-			if (!(_i$2 < _keys$2.length)) { break; }
-			_entry$4 = _ref$2[_keys$2[_i$2]];
-			if (_entry$4 === undefined) {
-				_i$2++;
-				continue;
-			}
-			unitID$1 = _entry$4.k;
-			unitPos$1 = $clone(_entry$4.v, protocol.Position);
-			protocol.Position.copy(unitPos$1, proj($clone(unitPos$1, protocol.Position)));
-			has$1 = (_entry$5 = (_entry$6 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$6 !== undefined ? _entry$6.v : false)[$String.keyFor(unitID$1)], _entry$5 !== undefined ? _entry$5.v : false);
-			if (has$1 === false) {
-				if ((_entry$7 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$7 !== undefined ? _entry$7.v : false) === false) {
-					_key = $clone(unitPos$1, protocol.Position); (unitByRegion || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: $makeMap($String.keyFor, []) };
-				}
-				_key$1 = unitID$1; ((_entry$8 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$8 !== undefined ? _entry$8.v : false) || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: true };
-			}
-			_i$2++;
-		}
-		_ref$3 = unitByRegion;
-		_i$3 = 0;
-		_keys$3 = $keys(_ref$3);
-		while (true) {
-			if (!(_i$3 < _keys$3.length)) { break; }
-			_entry$9 = _ref$3[_keys$3[_i$3]];
-			if (_entry$9 === undefined) {
-				_i$3++;
-				continue;
-			}
-			unitOldPos = $clone(_entry$9.k, protocol.Position);
-			units$1 = _entry$9.v;
-			_ref$4 = units$1;
-			_i$4 = 0;
-			_keys$4 = $keys(_ref$4);
-			while (true) {
-				if (!(_i$4 < _keys$4.length)) { break; }
-				_entry$10 = _ref$4[_keys$4[_i$4]];
-				if (_entry$10 === undefined) {
-					_i$4++;
-					continue;
-				}
-				unitID$2 = _entry$10.k;
-				unitNewPos = $clone(proj($clone((_entry$11 = posComs[$String.keyFor(unitID$2)], _entry$11 !== undefined ? _entry$11.v : arrayType.zero()), protocol.Position)), protocol.Position);
-				if (!($equal(unitOldPos, unitNewPos, protocol.Position))) {
-					delete (_entry$12 = unitByRegion[protocol.Position.keyFor(unitOldPos)], _entry$12 !== undefined ? _entry$12.v : false)[$String.keyFor(unitID$2)];
-					if ((_entry$13 = unitByRegion[protocol.Position.keyFor(unitNewPos)], _entry$13 !== undefined ? _entry$13.v : false) === false) {
-						_key$2 = $clone(unitNewPos, protocol.Position); (unitByRegion || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key$2)] = { k: _key$2, v: $makeMap($String.keyFor, []) };
-					}
-					_key$3 = unitID$2; ((_entry$14 = unitByRegion[protocol.Position.keyFor(unitNewPos)], _entry$14 !== undefined ? _entry$14.v : false) || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: true };
-				}
-				_i$4++;
-			}
-			_i$3++;
-		}
-		protocol.Position.copy(p1, proj($clone(p1, protocol.Position)));
-		protocol.Position.copy(p2, proj($clone(p2, protocol.Position)));
-		total = $makeMap($String.keyFor, []);
-		x = p1[0];
-		while (true) {
-			if (!(x <= p2[0])) { break; }
-			y = p1[1];
-			while (true) {
-				if (!(y <= p2[1])) { break; }
-				_tuple$1 = (_entry$15 = unitByRegion[protocol.Position.keyFor($toNativeArray($kindInt, [x, y]))], _entry$15 !== undefined ? [_entry$15.v, true] : [false, false]);
-				unitIDs = _tuple$1[0];
-				has$2 = _tuple$1[1];
-				if (has$2) {
-					_ref$5 = unitIDs;
-					_i$5 = 0;
-					_keys$5 = $keys(_ref$5);
-					while (true) {
-						if (!(_i$5 < _keys$5.length)) { break; }
-						_entry$16 = _ref$5[_keys$5[_i$5]];
-						if (_entry$16 === undefined) {
-							_i$5++;
-							continue;
-						}
-						unitID$3 = _entry$16.k;
-						_key$4 = unitID$3; (total || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: true };
-						_i$5++;
-					}
-				}
-				y = y + (1) >> 0;
-			}
-			x = x + (1) >> 0;
-		}
-		ret = new sliceType$2([]);
-		_ref$6 = total;
-		_i$6 = 0;
-		_keys$6 = $keys(_ref$6);
-		while (true) {
-			if (!(_i$6 < _keys$6.length)) { break; }
-			_entry$17 = _ref$6[_keys$6[_i$6]];
-			if (_entry$17 === undefined) {
-				_i$6++;
-				continue;
-			}
-			unitID$4 = _entry$17.k;
-			ret = $append(ret, unitID$4);
-			_i$6++;
-		}
-		return ret;
-	};
-	$pkg.SearchUnitByRegion = SearchUnitByRegion;
-	QueryUnitsByPlayer = function(model, playerID) {
-		var ID, _entry, _i, _keys, _r, _ref, _tuple, err, model, playerID, ret, robot, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; model = $f.model; playerID = $f.playerID; ret = $f.ret; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = protocol.TryGetStringPlayer(model.App.Gameplay.Players, playerID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [new sliceType$2([]), err];
-		}
-		ret = new sliceType$2([]);
-		_ref = model.App.Gameplay.Robots;
-		_i = 0;
-		_keys = $keys(_ref);
-		while (true) {
-			if (!(_i < _keys.length)) { break; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				continue;
-			}
-			ID = _entry.k;
-			robot = $clone(_entry.v, protocol.Robot);
-			if (robot.PlayerID === playerID) {
-				ret = $append(ret, ID);
-			}
-			_i++;
-		}
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryUnitsByPlayer }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.playerID = playerID; $f.ret = ret; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryUnitsByPlayer = QueryUnitsByPlayer;
-	IsRobotDone = function(model, robotID) {
-		var _entry, model, robotID;
-		return [(_entry = model.App.Gameplay.Tags[$String.keyFor(robotID)], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).IsDone, $ifaceNil];
-	};
-	$pkg.IsRobotDone = IsRobotDone;
-	IsFriendlyCell = function(model, unitID, pos) {
-		var _entry, _entry$1, _r, _tuple, _tuple$1, is, is$1, item, model, notFound, pos, robot, unitAtPos, unitID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; is = $f.is; is$1 = $f.is$1; item = $f.item; model = $f.model; notFound = $f.notFound; pos = $f.pos; robot = $f.robot; unitAtPos = $f.unitAtPos; unitID = $f.unitID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		unitAtPos = SearchUnitByPosition(model.App.Gameplay.Positions, $clone(pos, protocol.Position));
-		notFound = "";
-		if (unitAtPos === notFound) {
-			$s = -1; return [true, $ifaceNil];
-		}
-		_tuple = (_entry = model.App.Gameplay.Robots[$String.keyFor(unitAtPos)], _entry !== undefined ? [_entry.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
-		robot = $clone(_tuple[0], protocol.Robot);
-		is = _tuple[1];
-		/* */ if (is) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (is) { */ case 1:
-			_r = IsFriendlyRobot($clone(model, types.Model), unitID, robot.ID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			$s = -1; return _r;
-		/* } */ case 2:
-		_tuple$1 = (_entry$1 = model.App.Gameplay.Items[$String.keyFor(unitAtPos)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Item.ptr("", "", ""), false]);
-		item = $clone(_tuple$1[0], protocol.Item);
-		is$1 = _tuple$1[1];
-		if (is$1) {
-			$unused(item);
-			$s = -1; return [true, $ifaceNil];
-		}
-		$s = -1; return [false, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: IsFriendlyCell }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.is = is; $f.is$1 = is$1; $f.item = item; $f.model = model; $f.notFound = notFound; $f.pos = pos; $f.robot = robot; $f.unitAtPos = unitAtPos; $f.unitID = unitID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.IsFriendlyCell = IsFriendlyCell;
-	IsFriendlyRobot = function(model, unitID1, unitID2) {
-		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, model, plyr1, plyr2, unit1, unit2, unitID1, unitID2, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; model = $f.model; plyr1 = $f.plyr1; plyr2 = $f.plyr2; unit1 = $f.unit1; unit2 = $f.unit2; unitID1 = $f.unitID1; unitID2 = $f.unitID2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		_r = protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple = _r;
-		unit1 = $clone(_tuple[0], protocol.Robot);
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		_r$1 = protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID2); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$1 = _r$1;
-		unit2 = $clone(_tuple$1[0], protocol.Robot);
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		_r$2 = protocol.TryGetStringPlayer(model.App.Gameplay.Players, unit1.PlayerID); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$2 = _r$2;
-		plyr1 = $clone(_tuple$2[0], protocol.Player);
-		err = _tuple$2[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		_r$3 = protocol.TryGetStringPlayer(model.App.Gameplay.Players, unit2.PlayerID); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_tuple$3 = _r$3;
-		plyr2 = $clone(_tuple$3[0], protocol.Player);
-		err = _tuple$3[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, err];
-		}
-		$s = -1; return [plyr1.GroupID === plyr2.GroupID, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: IsFriendlyRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.err = err; $f.model = model; $f.plyr1 = plyr1; $f.plyr2 = plyr2; $f.unit1 = unit1; $f.unit2 = unit2; $f.unitID1 = unitID1; $f.unitID2 = unitID2; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.IsFriendlyRobot = IsFriendlyRobot;
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = types.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = tool.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = data.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = uidata.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = math.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = strconv.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = astar.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = log.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		terrainCache = false;
-		unitByPosition = $makeMap(protocol.Position.keyFor, []);
-		unitByRegion = $makeMap(protocol.Position.keyFor, []);
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/model/v1/internal/ai"] = (function() {
-	var $pkg = {}, $init, common, types, tool, helper, protocol, log, mlkmeans, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, QueryTeamTarget, QueryTeammate, QueryTeamCount, QueryTeamCombatPower, Strategy;
-	common = $packages["app/model/v1/internal/common"];
-	types = $packages["app/model/v1/internal/tool/types"];
-	tool = $packages["app/tool"];
-	helper = $packages["app/tool/helper"];
-	protocol = $packages["app/tool/protocol"];
-	log = $packages["tool/log"];
-	mlkmeans = $packages["tool/nodejs/mlkmeans"];
-	sliceType = $sliceType($String);
-	sliceType$1 = $sliceType($Int);
-	sliceType$2 = $sliceType(mlkmeans.Centroid);
-	sliceType$3 = $sliceType($emptyInterface);
-	sliceType$4 = $sliceType(sliceType$3);
-	QueryTeamTarget = function(origin, myRobotIDs, myTeams, targetRobotIDs, targetTeams) {
-		var _key, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, ctx, currMyTeamPower, currMyTeammate, currTargetTeamID, currTargetTeamPower, currTargetTeammate, err, err$1, err$2, i, myRobotIDs, myTeamCnt, myTeams, origin, selectTargetTeamID, targetRobotIDs, targetTeamCnt, targetTeams, totalPower, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; ctx = $f.ctx; currMyTeamPower = $f.currMyTeamPower; currMyTeammate = $f.currMyTeammate; currTargetTeamID = $f.currTargetTeamID; currTargetTeamPower = $f.currTargetTeamPower; currTargetTeammate = $f.currTargetTeammate; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; myRobotIDs = $f.myRobotIDs; myTeamCnt = $f.myTeamCnt; myTeams = $f.myTeams; origin = $f.origin; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeamCnt = $f.targetTeamCnt; targetTeams = $f.targetTeams; totalPower = $f.totalPower; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ctx = $clone(origin, types.Model);
-		_tuple = QueryTeamCount($clone(myTeams, mlkmeans.KMeansResult));
-		myTeamCnt = _tuple[0];
-		err = _tuple[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, false, err];
-		}
-		_tuple$1 = QueryTeamCount($clone(targetTeams, mlkmeans.KMeansResult));
-		targetTeamCnt = _tuple$1[0];
-		err = _tuple$1[1];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [false, false, err];
-		}
-		if (targetTeamCnt === 0) {
-			$s = -1; return [false, false, $ifaceNil];
-		}
-		selectTargetTeamID = $makeMap($Int.keyFor, []);
-		currTargetTeamID = 0;
-		_r = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		_tuple$2 = _r;
-		currTargetTeammate = _tuple$2[0];
-		err$1 = _tuple$2[1];
-		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-			$s = -1; return [false, false, err$1];
-		}
-		_r$1 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_tuple$3 = _r$1;
-		currTargetTeamPower = _tuple$3[0];
-		err$1 = _tuple$3[1];
-		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-			$s = -1; return [false, false, err$1];
-		}
-		totalPower = 0;
-		i = 0;
-		/* while (true) { */ case 3:
-			/* if (!(i < myTeamCnt)) { break; } */ if(!(i < myTeamCnt)) { $s = 4; continue; }
-			_key = i; (selectTargetTeamID || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: currTargetTeamID };
-			_r$2 = QueryTeammate($clone(myTeams, mlkmeans.KMeansResult), myRobotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$4 = _r$2;
-			currMyTeammate = _tuple$4[0];
-			err$2 = _tuple$4[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			_r$3 = QueryTeamCombatPower($clone(ctx, types.Model), currMyTeammate); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-			_tuple$5 = _r$3;
-			currMyTeamPower = _tuple$5[0];
-			err$2 = _tuple$5[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			totalPower = totalPower + (currMyTeamPower) >> 0;
-			/* */ if (totalPower < currTargetTeamPower) { $s = 7; continue; }
-			/* */ $s = 8; continue;
-			/* if (totalPower < currTargetTeamPower) { */ case 7:
-				i = i + (1) >> 0;
-				/* continue; */ $s = 3; continue;
-			/* } */ case 8:
-			totalPower = 0;
-			currTargetTeamID = currTargetTeamID + (1) >> 0;
-			if (currTargetTeamID >= targetTeamCnt) {
-				/* break; */ $s = 4; continue;
-			}
-			_r$4 = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-			_tuple$6 = _r$4;
-			currTargetTeammate = _tuple$6[0];
-			err$2 = _tuple$6[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			_r$5 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-			_tuple$7 = _r$5;
-			currTargetTeamPower = _tuple$7[0];
-			err$2 = _tuple$7[1];
-			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-				$s = -1; return [false, false, err$2];
-			}
-			i = i + (1) >> 0;
-		/* } */ $s = 3; continue; case 4:
-		$s = -1; return [selectTargetTeamID, true, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamTarget }; } $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.ctx = ctx; $f.currMyTeamPower = currMyTeamPower; $f.currMyTeammate = currMyTeammate; $f.currTargetTeamID = currTargetTeamID; $f.currTargetTeamPower = currTargetTeamPower; $f.currTargetTeammate = currTargetTeammate; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.myRobotIDs = myRobotIDs; $f.myTeamCnt = myTeamCnt; $f.myTeams = myTeams; $f.origin = origin; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeamCnt = targetTeamCnt; $f.targetTeams = targetTeams; $f.totalPower = totalPower; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryTeamTarget = QueryTeamTarget;
-	QueryTeammate = function(result, robotIDs, teamID) {
-		var _i, _r, _ref, _tuple, currTeamID, err, i, result, ret, robotID, robotIDs, teamID, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; currTeamID = $f.currTeamID; err = $f.err; i = $f.i; result = $f.result; ret = $f.ret; robotID = $f.robotID; robotIDs = $f.robotIDs; teamID = $f.teamID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ret = new sliceType([]);
-		_ref = result.Clusters;
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			i = _i;
-			currTeamID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			/* */ if (!((currTeamID === teamID))) { $s = 3; continue; }
-			/* */ $s = 4; continue;
-			/* if (!((currTeamID === teamID))) { */ case 3:
-				_i++;
-				/* continue; */ $s = 1; continue;
-			/* } */ case 4:
-			_r = tool.TryGetString(robotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			robotID = _tuple[0];
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [sliceType.nil, err];
-			}
-			ret = $append(ret, robotID);
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [ret, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeammate }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.currTeamID = currTeamID; $f.err = err; $f.i = i; $f.result = result; $f.ret = ret; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.teamID = teamID; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryTeammate = QueryTeammate;
-	QueryTeamCount = function(result) {
-		var result;
-		return [result.Clusters.$length, $ifaceNil];
-	};
-	$pkg.QueryTeamCount = QueryTeamCount;
-	QueryTeamCombatPower = function(origin, robotIDs) {
-		var _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, _tuple$2, combatPower, ctx, err, origin, robot, robotID, robotIDs, totalCombatPower, weapons, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; combatPower = $f.combatPower; ctx = $f.ctx; err = $f.err; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotIDs = $f.robotIDs; totalCombatPower = $f.totalCombatPower; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ctx = $clone(origin, types.Model);
-		totalCombatPower = 0;
-		_ref = robotIDs;
-		_i = 0;
-		/* while (true) { */ case 1:
-			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
-			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-			_r = protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_tuple = _r;
-			robot = $clone(_tuple[0], protocol.Robot);
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [0, err];
-			}
-			_r$1 = common.QueryRobotWeapons($clone(ctx, types.Model), robot.ID, robot.Transform, true); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple$1 = _r$1;
-			weapons = _tuple$1[0];
-			err = _tuple$1[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [0, err];
-			}
-			_r$2 = common.QueryRobotCombatPower($clone(ctx, types.Model), $clone(robot, protocol.Robot), weapons); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple$2 = _r$2;
-			combatPower = _tuple$2[0];
-			err = _tuple$2[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [0, err];
-			}
-			totalCombatPower = totalCombatPower + (combatPower) >> 0;
-			_i++;
-		/* } */ $s = 1; continue; case 2:
-		$s = -1; return [totalCombatPower, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamCombatPower }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.combatPower = combatPower; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.totalCombatPower = totalCombatPower; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.QueryTeamCombatPower = QueryTeamCombatPower;
-	Strategy = function(origin, playerID, myRobotIDs, targetRobotIDs) {
-		var _entry, _i, _i$1, _i$2, _i$3, _i$4, _key, _key$1, _key$2, _r, _r$1, _r$2, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, centers, centers$1, centroidV2, centroidV2$1, clusters, clusters$1, cnt, cnt$1, ctx, err, err$1, err$2, i, memory, myRobotIDs, myRobotTeamID, myTeams, options, options$1, origin, playerID, pos, pos$1, posData, posData$1, robotID, robotID$1, robotID$2, robotIDs, robotIDs$1, selectTargetTeamID, targetRobotIDs, targetTeams, v, v$1, x, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; centers = $f.centers; centers$1 = $f.centers$1; centroidV2 = $f.centroidV2; centroidV2$1 = $f.centroidV2$1; clusters = $f.clusters; clusters$1 = $f.clusters$1; cnt = $f.cnt; cnt$1 = $f.cnt$1; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; memory = $f.memory; myRobotIDs = $f.myRobotIDs; myRobotTeamID = $f.myRobotTeamID; myTeams = $f.myTeams; options = $f.options; options$1 = $f.options$1; origin = $f.origin; playerID = $f.playerID; pos = $f.pos; pos$1 = $f.pos$1; posData = $f.posData; posData$1 = $f.posData$1; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotID$2 = $f.robotID$2; robotIDs = $f.robotIDs; robotIDs$1 = $f.robotIDs$1; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeams = $f.targetTeams; v = $f.v; v$1 = $f.v$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		err = $ifaceNil;
-		ctx = $clone(origin, types.Model);
-		memory = $clone((_entry = ctx.App.Gameplay.AIModel.Memory[$String.keyFor(playerID)], _entry !== undefined ? _entry.v : new types.Memory.ptr(new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), false, false)), types.Memory);
-		myTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
-		clusters = $clone(memory.MyClusters, mlkmeans.KMeansResult);
-		robotIDs = myRobotIDs;
-		/* */ if (robotIDs.$length === 0) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (robotIDs.$length === 0) { */ case 1:
-			$r = log.Log(protocol.LogCategoryWarning, "Strategy", "\xE6\xA9\x9F\xE9\xAB\x94\xE4\xB8\x8D\xE5\xAD\x98\xE5\x9C\xA8, \xE7\x84\xA1\xE6\xB3\x95\xE5\x88\x86\xE9\x9A\x8A."); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$s = 3; continue;
-		/* } else { */ case 2:
-			posData = new sliceType$4([]);
-			_ref = robotIDs;
-			_i = 0;
-			/* while (true) { */ case 5:
-				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
-				robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
-				_r = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-				_tuple = _r;
-				pos = $clone(_tuple[0], protocol.Position);
-				err$1 = _tuple[1];
-				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
-					$s = -1; return [origin, err$1];
-				}
-				posData = $append(posData, new sliceType$3([new $Int(pos[0]), new $Int(pos[1])]));
-				_i++;
-			/* } */ $s = 5; continue; case 6:
-			cnt = helper.Min(robotIDs.$length, 4);
-			options = $makeMap($String.keyFor, []);
-			centers = new sliceType$4([]);
-			if (clusters.Centroids.$length > 0) {
-				_ref$1 = clusters.Centroids;
-				_i$1 = 0;
-				while (true) {
-					if (!(_i$1 < _ref$1.$length)) { break; }
-					v = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), mlkmeans.Centroid);
-					if (v.Size === 0) {
-						_i$1++;
-						continue;
-					}
-					centroidV2 = v.Centroid;
-					centers = $append(centers, new sliceType$3([new $Float64((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0])), new $Float64((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]))]));
-					_i$1++;
-				}
-				if (cnt === centers.$length) {
-					_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
-				}
-			}
-			_tuple$1 = mlkmeans.KMeans(posData, cnt, options);
-			mlkmeans.KMeansResult.copy(myTeams, _tuple$1[0]);
-			err = _tuple$1[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-		/* } */ case 3:
-		targetTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
-		clusters$1 = $clone(memory.TargetClusters, mlkmeans.KMeansResult);
-		robotIDs$1 = targetRobotIDs;
-		/* */ if (robotIDs$1.$length === 0) { $s = 8; continue; }
-		/* */ $s = 9; continue;
-		/* if (robotIDs$1.$length === 0) { */ case 8:
-			$r = log.Log(protocol.LogCategoryWarning, "Strategy", "\xE6\xA9\x9F\xE9\xAB\x94\xE4\xB8\x8D\xE5\xAD\x98\xE5\x9C\xA8, \xE7\x84\xA1\xE6\xB3\x95\xE5\x88\x86\xE9\x9A\x8A."); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-			$s = 10; continue;
-		/* } else { */ case 9:
-			posData$1 = new sliceType$4([]);
-			_ref$2 = robotIDs$1;
-			_i$2 = 0;
-			/* while (true) { */ case 12:
-				/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 13; continue; }
-				robotID$1 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
-				_r$1 = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID$1); /* */ $s = 14; case 14: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-				_tuple$2 = _r$1;
-				pos$1 = $clone(_tuple$2[0], protocol.Position);
-				err$2 = _tuple$2[1];
-				if (!($interfaceIsEqual(err$2, $ifaceNil))) {
-					$s = -1; return [origin, err$2];
-				}
-				posData$1 = $append(posData$1, new sliceType$3([new $Int(pos$1[0]), new $Int(pos$1[1])]));
-				_i$2++;
-			/* } */ $s = 12; continue; case 13:
-			cnt$1 = helper.Min(robotIDs$1.$length, 4);
-			options$1 = $makeMap($String.keyFor, []);
-			centers$1 = new sliceType$4([]);
-			if (clusters$1.Centroids.$length > 0) {
-				_ref$3 = clusters$1.Centroids;
-				_i$3 = 0;
-				while (true) {
-					if (!(_i$3 < _ref$3.$length)) { break; }
-					v$1 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), mlkmeans.Centroid);
-					if (v$1.Size === 0) {
-						_i$3++;
-						continue;
-					}
-					centroidV2$1 = v$1.Centroid;
-					centers$1 = $append(centers$1, new sliceType$3([new $Float64((0 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 0])), new $Float64((1 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 1]))]));
-					_i$3++;
-				}
-				if (cnt$1 === centers$1.$length) {
-					_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
-				}
-			}
-			_tuple$3 = mlkmeans.KMeans(posData$1, cnt$1, options$1);
-			mlkmeans.KMeansResult.copy(targetTeams, _tuple$3[0]);
-			err = _tuple$3[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-		/* } */ case 10:
-		myRobotTeamID = $makeMap($String.keyFor, []);
-		_ref$4 = myRobotIDs;
-		_i$4 = 0;
-		while (true) {
-			if (!(_i$4 < _ref$4.$length)) { break; }
-			i = _i$4;
-			robotID$2 = ((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]);
-			_key$2 = robotID$2; (myRobotTeamID || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: (x = myTeams.Clusters, ((i < 0 || i >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + i])) };
-			_i$4++;
-		}
-		_r$2 = QueryTeamTarget($clone(ctx, types.Model), myRobotIDs, $clone(myTeams, mlkmeans.KMeansResult), targetRobotIDs, $clone(targetTeams, mlkmeans.KMeansResult)); /* */ $s = 15; case 15: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		_tuple$4 = _r$2;
-		selectTargetTeamID = _tuple$4[0];
-		err = _tuple$4[2];
-		if (!($interfaceIsEqual(err, $ifaceNil))) {
-			$s = -1; return [origin, err];
-		}
-		memory.MyTeamTarget = selectTargetTeamID;
-		mlkmeans.KMeansResult.copy(memory.MyClusters, myTeams);
-		mlkmeans.KMeansResult.copy(memory.TargetClusters, targetTeams);
-		memory.TeamIDByRobotID = myRobotTeamID;
-		ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, $clone(memory, types.Memory));
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Strategy }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.centers = centers; $f.centers$1 = centers$1; $f.centroidV2 = centroidV2; $f.centroidV2$1 = centroidV2$1; $f.clusters = clusters; $f.clusters$1 = clusters$1; $f.cnt = cnt; $f.cnt$1 = cnt$1; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.memory = memory; $f.myRobotIDs = myRobotIDs; $f.myRobotTeamID = myRobotTeamID; $f.myTeams = myTeams; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.posData = posData; $f.posData$1 = posData$1; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotID$2 = robotID$2; $f.robotIDs = robotIDs; $f.robotIDs$1 = robotIDs$1; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeams = targetTeams; $f.v = v; $f.v$1 = v$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.Strategy = Strategy;
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = types.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = tool.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = log.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = mlkmeans.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/view/p5"] = (function() {
-	var $pkg = {}, $init, uidata, fmt, js, eventQueue;
-	uidata = $packages["app/tool/uidata"];
-	fmt = $packages["fmt"];
-	js = $packages["github.com/gopherjs/gopherjs/js"];
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = uidata.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = js.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		eventQueue = new $Chan($emptyInterface, 0);
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/tool/viewer"] = (function() {
-	var $pkg = {}, $init, helper, protocol, uidata, p5, fmt, js, Cocos, ptrType, funcType, mapType, sliceType, arrayType, arrayType$1, arrayType$2, sliceType$1, sliceType$2, sliceType$3, funcType$1, evtQueue;
-	helper = $packages["app/tool/helper"];
-	protocol = $packages["app/tool/protocol"];
-	uidata = $packages["app/tool/uidata"];
-	p5 = $packages["app/view/p5"];
-	fmt = $packages["fmt"];
-	js = $packages["github.com/gopherjs/gopherjs/js"];
-	Cocos = $pkg.Cocos = $newType(0, $kindStruct, "viewer.Cocos", true, "app/tool/viewer", true, function() {
-		this.$val = this;
-		if (arguments.length === 0) {
-			return;
-		}
-	});
-	ptrType = $ptrType(js.Object);
-	funcType = $funcType([ptrType], [], false);
-	mapType = $mapType($String, $emptyInterface);
-	sliceType = $sliceType($emptyInterface);
-	arrayType = $arrayType($Int, 20);
-	arrayType$1 = $arrayType(arrayType, 20);
-	arrayType$2 = $arrayType($Int, 2);
-	sliceType$1 = $sliceType($String);
-	sliceType$2 = $sliceType(protocol.Position);
-	sliceType$3 = $sliceType(sliceType$1);
-	funcType$1 = $funcType([], [], false);
-	Cocos.ptr.prototype.AskCommand = function() {
-		var _r, p, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; p = $f.p; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		p = this;
-		_r = $recv(evtQueue); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-		$s = -1; return _r[0];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.AskCommand }; } $f._r = _r; $f.p = p; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.AskCommand = function() { return this.$val.AskCommand(); };
-	Cocos.ptr.prototype.Install = function() {
-		var p;
-		p = this;
-		$global.Model = $externalize($makeMap($String.keyFor, [{ k: "OnKeyDown", v: new funcType((function(evt) {
-			var evt;
-			$go((function $b() {
-				var keyCode, x, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; keyCode = $f.keyCode; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				keyCode = $parseInt(evt.keyCode) >> 0;
-				$r = $send(evtQueue, (x = new uidata.CommandKeyDown.ptr(keyCode), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-				$s = -1; return;
-				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.keyCode = keyCode; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-			}), []);
-		})) }, { k: "OnKeyUp", v: new funcType((function(evt) {
-			var evt;
-			$go((function() {
-			}), []);
-		})) }, { k: "Flush", v: new funcType((function(evt) {
-			var evt;
-			$go((function $b() {
-				var x, $s, $r;
-				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				$r = $send(evtQueue, (x = new uidata.CommandFlush.ptr(), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-				$s = -1; return;
-				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
-			}), []);
-		})) }]), mapType);
-		return $ifaceNil;
-	};
-	Cocos.prototype.Install = function() { return this.$val.Install(); };
-	Cocos.ptr.prototype.Render = function(origin) {
-		var _entry, _i, _keys, _r, _r$1, _ref, _tuple, active, ctx, ctxObj, err, model, origin, p, pageID, view, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tuple = $f._tuple; active = $f.active; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; model = $f.model; origin = $f.origin; p = $f.p; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		p = this;
-		view = $global.View;
-		/* */ if (view === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (view === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return [origin, $ifaceNil];
-		/* } */ case 2:
-		ctx = $clone(origin, uidata.UI);
-		_ref = ctx.Actives;
-		_i = 0;
-		_keys = $keys(_ref);
-		/* while (true) { */ case 4:
-			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
-			_entry = _ref[_keys[_i]];
-			if (_entry === undefined) {
-				_i++;
-				/* continue; */ $s = 4; continue;
-			}
-			pageID = _entry.k;
-			active = _entry.v;
-			/* */ if (active === false) { $s = 6; continue; }
-			/* */ $s = 7; continue;
-			/* if (active === false) { */ case 6:
-				_i++;
-				/* continue; */ $s = 4; continue;
-			/* } */ case 7:
-			_r$1 = ctx.Model.ObservePage(new ctx.constructor.elem(ctx), pageID); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-			_tuple = _r$1;
-			ctxObj = _tuple[0];
-			err = _tuple[1];
-			if (!($interfaceIsEqual(err, $ifaceNil))) {
-				$s = -1; return [origin, err];
-			}
-			uidata.UI.copy(ctx, $assertType(ctxObj, uidata.UI));
-			_i++;
-		/* } */ $s = 4; continue; case 5:
-		model = ctx.Model;
-		ctx.Model = $ifaceNil;
-		view.Render($externalize(ctx, uidata.UI));
-		ctx.Model = model;
-		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Render }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f.active = active; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.model = model; $f.origin = origin; $f.p = p; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.Render = function(origin) { return this.$val.Render(origin); };
-	Cocos.ptr.prototype.RenderRobotMove = function(ui, robotID, path) {
-		var _entry, _i, _r, _r$1, _ref, i, local, p, path, robotID, ui, view, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; i = $f.i; local = $f.local; p = $f.p; path = $f.path; robotID = $f.robotID; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		wait = [wait];
-		p = this;
-		_ref = path;
-		_i = 0;
-		while (true) {
-			if (!(_i < _ref.$length)) { break; }
-			i = _i;
-			local = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
-			protocol.Position.copy(((i < 0 || i >= path.$length) ? ($throwRuntimeError("index out of range"), undefined) : path.$array[path.$offset + i]), helper.World2Local($clone((_entry = ui.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))).Camera, protocol.Position), $clone(local, protocol.Position)));
-			_i++;
-		}
-		wait[0] = new $Chan($emptyInterface, 0);
-		view = $global.View;
-		/* */ if (view === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (view === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return;
-		/* } */ case 2:
-		view.RenderRobotMove($externalize(robotID, $String), $externalize(path, sliceType$2), $externalize((function(wait) { return function() {
-			$go((function(wait) { return function() {
-				$close(wait[0]);
-			}; })(wait), []);
-		}; })(wait), funcType$1));
-		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_r$1[0];
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderRobotMove }; } $f._entry = _entry; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.i = i; $f.local = local; $f.p = p; $f.path = path; $f.robotID = robotID; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.RenderRobotMove = function(ui, robotID, path) { return this.$val.RenderRobotMove(ui, robotID, path); };
-	Cocos.ptr.prototype.RenderRobotBattle = function(ui, result) {
-		var _r, _r$1, _r$2, _r$3, p, result, ui, view, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; p = $f.p; result = $f.result; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		ui = [ui];
-		wait = [wait];
-		p = this;
-		wait[0] = new $Chan($emptyInterface, 0);
-		view = $global.View;
-		/* */ if (view === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (view === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return;
-		/* } */ case 2:
-		_r$1 = $clone(result, protocol.BattleResult).MapPosition((function(ui, wait) { return function(pos) {
-			var _entry, pos;
-			return helper.World2Local($clone((_entry = ui[0].GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))).Camera, protocol.Position), $clone(pos, protocol.Position));
-		}; })(ui, wait)); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		protocol.BattleResult.copy(result, _r$1);
-		_r$2 = $clone(result, protocol.BattleResult).MapRobot((function(ui, wait) { return function $b(robot) {
-			var _r$2, _r$3, _r$4, _tuple, err, robot, $s, $r;
-			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; err = $f.err; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-			_r$2 = ui[0].Model.ObserveRobot($clone(robot, protocol.Robot), true); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-			_tuple = _r$2;
-			robot = $clone(_tuple[0], protocol.Robot);
-			err = _tuple[1];
-			/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
-			/* */ $s = 3; continue;
-			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
-				_r$3 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$4 = fmt.Println(new sliceType([new $String(_r$3)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				_r$4;
-			/* } */ case 3:
-			$s = -1; return robot;
-			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f.err = err; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
-		}; })(ui, wait)); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-		protocol.BattleResult.copy(result, _r$2);
-		view.RenderRobotBattle($externalize(result, protocol.BattleResult), $externalize((function(ui, wait) { return function() {
-			$go((function(ui, wait) { return function() {
-				$close(wait[0]);
-			}; })(ui, wait), []);
-		}; })(ui, wait), funcType$1));
-		_r$3 = $recv(wait[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-		_r$3[0];
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderRobotBattle }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.p = p; $f.result = result; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.RenderRobotBattle = function(ui, result) { return this.$val.RenderRobotBattle(ui, result); };
-	Cocos.ptr.prototype.RenderTurnStart = function(ui, player) {
-		var _r, _r$1, p, player, ui, view, wait, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; p = $f.p; player = $f.player; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		wait = [wait];
-		p = this;
-		wait[0] = new $Chan($emptyInterface, 0);
-		view = $global.View;
-		/* */ if (view === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (view === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return;
-		/* } */ case 2:
-		view.RenderTurnStart($externalize(player, protocol.Player), $externalize((function(wait) { return function() {
-			$go((function(wait) { return function() {
-				$close(wait[0]);
-			}; })(wait), []);
-		}; })(wait), funcType$1));
-		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
-		_r$1[0];
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderTurnStart }; } $f._r = _r; $f._r$1 = _r$1; $f.p = p; $f.player = player; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.RenderTurnStart = function(ui, player) { return this.$val.RenderTurnStart(ui, player); };
-	Cocos.ptr.prototype.Alert = function(msg) {
-		var _r, msg, p, view, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; msg = $f.msg; p = $f.p; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		p = this;
-		view = $global.View;
-		/* */ if (view === undefined) { $s = 1; continue; }
-		/* */ $s = 2; continue;
-		/* if (view === undefined) { */ case 1:
-			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
-			_r;
-			$s = -1; return;
-		/* } */ case 2:
-		view.Alert($externalize(msg, $String));
-		$s = -1; return;
-		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Alert }; } $f._r = _r; $f.msg = msg; $f.p = p; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
-	};
-	Cocos.prototype.Alert = function(msg) { return this.$val.Alert(msg); };
-	Cocos.methods = [{prop: "AskCommand", name: "AskCommand", pkg: "", typ: $funcType([], [$emptyInterface], false)}, {prop: "Install", name: "Install", pkg: "", typ: $funcType([], [$error], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([uidata.UI], [uidata.UI, $error], false)}, {prop: "RenderRobotMove", name: "RenderRobotMove", pkg: "", typ: $funcType([uidata.UI, $String, sliceType$2], [], false)}, {prop: "RenderRobotBattle", name: "RenderRobotBattle", pkg: "", typ: $funcType([uidata.UI, protocol.BattleResult], [], false)}, {prop: "RenderTurnStart", name: "RenderTurnStart", pkg: "", typ: $funcType([uidata.UI, protocol.Player], [], false)}, {prop: "Alert", name: "Alert", pkg: "", typ: $funcType([$String], [], false)}];
-	Cocos.init("", []);
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = helper.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = protocol.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = uidata.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = p5.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = js.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		evtQueue = new $Chan($emptyInterface, 0);
-		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
-	};
-	$pkg.$init = $init;
-	return $pkg;
-})();
-$packages["app/tool/def"] = (function() {
-	var $pkg = {}, $init, protocol, uidata, viewer, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, sliceType, sliceType$1, sliceType$2, arrayType, arrayType$1, structType$1, arrayType$2, arrayType$3, sliceType$3, x, x$1, x$2, x$3, x$4, x$5, x$6, x$7, x$8, x$9, x$10, x$11, x$12, x$13, x$14, x$15;
-	protocol = $packages["app/tool/protocol"];
-	uidata = $packages["app/tool/uidata"];
-	viewer = $packages["app/tool/viewer"];
-	mapType = $mapType($String, $packages["app/tool/data"].RobotProto);
-	mapType$1 = $mapType($String, $packages["app/tool/data"].PilotProto);
-	mapType$2 = $mapType($String, $packages["app/tool/data"].WeaponProto);
-	mapType$3 = $mapType($String, $packages["app/tool/data"].ComponentProto);
-	mapType$4 = $mapType($String, protocol.Robot);
-	mapType$5 = $mapType($String, protocol.Pilot);
-	mapType$6 = $mapType($String, protocol.Weapon);
-	mapType$7 = $mapType($String, protocol.Component);
-	mapType$8 = $mapType($String, $String);
-	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$8, tag: ""}]);
-	sliceType = $sliceType($Int);
-	sliceType$1 = $sliceType($String);
-	sliceType$2 = $sliceType(sliceType$1);
-	arrayType = $arrayType($Float64, 4);
-	arrayType$1 = $arrayType($Int, 2);
-	structType$1 = $structType("", [{prop: "HitRate", name: "HitRate", embedded: false, exported: true, typ: $Float64, tag: ""}]);
-	arrayType$2 = $arrayType($Int, 20);
-	arrayType$3 = $arrayType(arrayType$2, 20);
-	sliceType$3 = $sliceType(protocol.Position);
-	$init = function() {
-		$pkg.$init = function() {};
-		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-		$r = protocol.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = uidata.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$r = viewer.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
-		$pkg.DefaultUI = new uidata.UI.ptr($ifaceNil, 0, $makeMap($Int.keyFor, [{ k: 13, v: false }, { k: 11, v: false }]), $makeMap($Int.keyFor, [{ k: 0, v: (x = new sliceType([15]), $subslice(new uidata.ListInt(x.$array), x.$offset, x.$offset + x.$length)) }, { k: 1, v: (x$1 = new sliceType([16]), $subslice(new uidata.ListInt(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length)) }, { k: 2, v: (x$2 = new sliceType([17, 25, 21]), $subslice(new uidata.ListInt(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length)) }, { k: 3, v: (x$3 = new sliceType([18, 25, 22]), $subslice(new uidata.ListInt(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length)) }, { k: 4, v: (x$4 = new sliceType([19, 25, 23]), $subslice(new uidata.ListInt(x$4.$array), x$4.$offset, x$4.$offset + x$4.$length)) }, { k: 5, v: (x$5 = new sliceType([20, 25, 24]), $subslice(new uidata.ListInt(x$5.$array), x$5.$offset, x$5.$offset + x$5.$length)) }, { k: 6, v: (x$6 = new sliceType([26, 29, 18]), $subslice(new uidata.ListInt(x$6.$array), x$6.$offset, x$6.$offset + x$6.$length)) }, { k: 7, v: (x$7 = new sliceType([27, 29, 17]), $subslice(new uidata.ListInt(x$7.$array), x$7.$offset, x$7.$offset + x$7.$length)) }, { k: 8, v: (x$8 = new sliceType([28, 29, 17]), $subslice(new uidata.ListInt(x$8.$array), x$8.$offset, x$8.$offset + x$8.$length)) }, { k: 9, v: (x$9 = new sliceType([30]), $subslice(new uidata.ListInt(x$9.$array), x$9.$offset, x$9.$offset + x$9.$length)) }, { k: 11, v: (x$10 = new sliceType([31]), $subslice(new uidata.ListInt(x$10.$array), x$10.$offset, x$10.$offset + x$10.$length)) }, { k: 12, v: (x$11 = new sliceType([32]), $subslice(new uidata.ListInt(x$11.$array), x$11.$offset, x$11.$offset + x$11.$length)) }, { k: 13, v: (x$12 = new sliceType([33]), $subslice(new uidata.ListInt(x$12.$array), x$12.$offset, x$12.$offset + x$12.$length)) }, { k: 10, v: (x$13 = new sliceType([31, 33]), $subslice(new uidata.ListInt(x$13.$array), x$13.$offset, x$13.$offset + x$13.$length)) }, { k: 14, v: (x$14 = new sliceType([34, 35, 36]), $subslice(new uidata.ListInt(x$14.$array), x$14.$offset, x$14.$offset + x$14.$length)) }]), $makeMap($Int.keyFor, []), $makeMap($Int.keyFor, [{ k: 15, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionNewGame", "MenuOptionLoadGame"]), false, 0, 0, 10) }, { k: 16, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionBuyRobot", "MenuOptionBuyPilot", "MenuOptionBuyWeapon", "MenuOptionBuyComponent", "MenuOptionAssocRobotPilot", "MenuOptionAssocWeaponRobot", "MenuOptionAssocComponentRobot", "MenuOptionStartGameplay", "MenuOptionSaveGame"]), false, 0, 0, 10) }, { k: 25, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionCreateNew", "MenuOptionSell"]), false, 0, 0, 10) }, { k: 29, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionAssoc", "MenuOptionDissoc"]), false, 0, 0, 10) }, { k: 17, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 21, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 18, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 22, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 19, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 23, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 20, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 24, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 26, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 27, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 28, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 30, v: new uidata.Menu1D.ptr(sliceType$1.nil, $makeMap($String.keyFor, []), 0, 0, 10) }, { k: 32, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 34, v: new uidata.Menu1D.ptr(new sliceType$1(["Ground1", "Ground2", "Ground3", "Ground4", "Ground5"]), false, 0, 0, 10) }, { k: 35, v: new uidata.Menu1D.ptr(new sliceType$1(["Sea1", "Sea2", "Sea3", "Sea4", "Sea5"]), false, 0, 0, 10) }, { k: 36, v: new uidata.Menu1D.ptr(new sliceType$1(["Random1", "Random2", "Random3", "Random4", "Random5"]), false, 0, 0, 10) }]), $makeMap($Int.keyFor, [{ k: 31, v: new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType.nil) }]), $makeMap($Int.keyFor, [{ k: 33, v: new uidata.BattleMenu.ptr(new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 1, new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0), new structType$1.ptr(0)), new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 1, new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0), new structType$1.ptr(0))) }]), $makeMap($Int.keyFor, [{ k: 10, v: new uidata.GameplayPage.ptr(false, arrayType$3.zero(), $toNativeArray($kindInt, [1, 1]), arrayType$1.zero(), new sliceType$1(["0"]), $makeMap($String.keyFor, [{ k: "0", v: new protocol.Robot.ptr("", "", "", "", "", 0, 0, $makeMap($String.keyFor, [{ k: "", v: $makeMap($String.keyFor, [{ k: "0", v: new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0) }]) }]), false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false) }]), $makeMap($String.keyFor, []), $makeMap($String.keyFor, [{ k: "0", v: $toNativeArray($kindInt, [0, 0]) }]), false, new sliceType$3([$toNativeArray($kindInt, [0, 0]), $toNativeArray($kindInt, [0, 1])]), new sliceType$3([$toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [1, 1])]), sliceType$3.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$2.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), "")) }]), new structType.ptr(0, false, false, false, false, false, false, false, false, false, false, false));
-		$pkg.View = (x$15 = new viewer.Cocos.ptr(), new x$15.constructor.elem(x$15));
 		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.$init = $init;
@@ -37648,6 +34878,2742 @@ $packages["github.com/go-gl/mathgl/mgl64"] = (function() {
 	$pkg.$init = $init;
 	return $pkg;
 })();
+$packages["tool/log"] = (function() {
+	var $pkg = {}, $init, fmt, sliceType, Log;
+	fmt = $packages["fmt"];
+	sliceType = $sliceType($emptyInterface);
+	Log = function(category, title, msg) {
+		var _entry, _r, category, msg, title, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; category = $f.category; msg = $f.msg; title = $f.title; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		if ((_entry = $pkg.Category[$String.keyFor(category)], _entry !== undefined ? _entry.v : false) === false) {
+			$s = -1; return;
+		}
+		_r = fmt.Printf("[%v][%v]%v\n", new sliceType([new $String(category), new $String(title), new $String(msg)])); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_r;
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Log }; } $f._entry = _entry; $f._r = _r; $f.category = category; $f.msg = msg; $f.title = title; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Log = Log;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = fmt.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.Category = $makeMap($String.keyFor, []);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/model/v1/internal/common"] = (function() {
+	var $pkg = {}, $init, types, tool, data, helper, protocol, uidata, fmt, mgl64, math, strconv, astar, log, sliceType, sliceType$1, arrayType, arrayType$1, sliceType$2, sliceType$3, sliceType$4, terrainCache, unitByPosition, unitByRegion, CheckInvalidWeapon, CheckInvalidWeapons, NewPilot, NewRobot, ObserveComponent, ObserveComponents, ObservePilot, ObservePilots, ObserveRobot, ObserveRobotMenu, ObserveRobots, ObserveWeapon, ObserveWeapons, QueryMostCloseEnemyPosition, QueryPilot, QueryPilotAtk, QueryPilotGuard, QueryPilotMelee, QueryPilotRange, QueryRobot, QueryRobotArmor, QueryRobotBeamArmor, QueryRobotCombatPower, QueryRobotComponents, QueryRobotMaxEn, QueryRobotMaxHp, QueryRobotMovePower, QueryRobotPower, QueryRobotSuitability, QueryRobotWeaponAbility, QueryRobotWeaponAccuracy, QueryRobotWeaponAttackRange, QueryRobotWeaponRange, QueryRobotWeaponSuitability, QueryRobotWeapons, RobotMoveCost, SearchUnitByPosition, proj, SearchUnitByRegion, QueryUnitsByPlayer, IsRobotDone, IsFriendlyCell, IsFriendlyRobot;
+	types = $packages["app/model/v1/internal/tool/types"];
+	tool = $packages["app/tool"];
+	data = $packages["app/tool/data"];
+	helper = $packages["app/tool/helper"];
+	protocol = $packages["app/tool/protocol"];
+	uidata = $packages["app/tool/uidata"];
+	fmt = $packages["fmt"];
+	mgl64 = $packages["github.com/go-gl/mathgl/mgl64"];
+	math = $packages["math"];
+	strconv = $packages["strconv"];
+	astar = $packages["tool/astar"];
+	log = $packages["tool/log"];
+	sliceType = $sliceType($emptyInterface);
+	sliceType$1 = $sliceType(protocol.Position);
+	arrayType = $arrayType($Int, 2);
+	arrayType$1 = $arrayType($Float64, 4);
+	sliceType$2 = $sliceType($String);
+	sliceType$3 = $sliceType($Float64);
+	sliceType$4 = $sliceType(astar.NeighborsNode);
+	CheckInvalidWeapon = function(model, robotID, weapon, units, hideFlag) {
+		var _1, _entry, _entry$1, _entry$2, _entry$3, _i, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, ability, attackRange, cost, err, err$1, err$2, err$3, has, has$1, has$2, hasMoveAttack, hideFlag, isAllUnitOutSideOutRange, model, robot, robotID, robotPos, tag, unitID, unitPosList, unitPosOutSideOfRange, units, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _entry$3 = $f._entry$3; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; ability = $f.ability; attackRange = $f.attackRange; cost = $f.cost; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; has = $f.has; has$1 = $f.has$1; has$2 = $f.has$2; hasMoveAttack = $f.hasMoveAttack; hideFlag = $f.hideFlag; isAllUnitOutSideOutRange = $f.isAllUnitOutSideOutRange; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotPos = $f.robotPos; tag = $f.tag; unitID = $f.unitID; unitPosList = $f.unitPosList; unitPosOutSideOfRange = $f.unitPosOutSideOfRange; units = $f.units; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		if (hideFlag === false) {
+			hideFlag = $makeMap($Int.keyFor, []);
+		}
+		_r = protocol.TryGetStringRobot(model.App.Gameplay.Robots, robotID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return ["", err];
+		}
+		_tuple$1 = (_entry = hideFlag[$Int.keyFor(0)], _entry !== undefined ? [_entry.v, true] : [false, false]);
+		has = _tuple$1[1];
+		/* */ if (has === false) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (has === false) { */ case 2:
+			_r$1 = protocol.TryGetStringTag(model.App.Gameplay.Tags, robotID); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$2 = _r$1;
+			tag = $clone(_tuple$2[0], protocol.Tag);
+			/* */ if (tag.MoveCount > 0) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (tag.MoveCount > 0) { */ case 5:
+				_r$2 = QueryRobotWeaponAbility($clone(model, types.Model), robot.ID, $clone(weapon, protocol.Weapon), true); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_tuple$3 = _r$2;
+				ability = _tuple$3[0];
+				err$1 = _tuple$3[1];
+				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+					$s = -1; return ["", err$1];
+				}
+				_r$3 = tool.FilterString(ability, (function(c) {
+					var c;
+					return c === "moveAttack";
+				})); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				hasMoveAttack = _r$3.$length > 0;
+				if (hasMoveAttack === false) {
+					$s = -1; return ["\xE4\xBD\xA0\xE5\xBF\x85\xE9\xA0\x88\xE6\x9C\x89moveAttack\xE8\x83\xBD\xE5\x8A\x9B, \xE4\xB8\x8D\xE7\x84\xB6\xE4\xB8\x8D\xE8\x83\xBD\xE7\xA7\xBB\xE5\x8B\x95\xE5\xBE\x8C\xE6\x94\xBB\xE6\x93\x8A", $ifaceNil];
+				}
+			/* } */ case 6:
+		/* } */ case 3:
+		_tuple$4 = (_entry$1 = hideFlag[$Int.keyFor(1)], _entry$1 !== undefined ? [_entry$1.v, true] : [false, false]);
+		has$1 = _tuple$4[1];
+		/* */ if (has$1 === false) { $s = 9; continue; }
+		/* */ $s = 10; continue;
+		/* if (has$1 === false) { */ case 9:
+			_r$4 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_tuple$5 = _r$4;
+			weaponProto = $clone(_tuple$5[0], data.WeaponProto);
+			err$2 = _tuple$5[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return ["", err$2];
+			}
+				_1 = weaponProto.EnergyType;
+				/* */ if (_1 === ("energy")) { $s = 13; continue; }
+				/* */ if (_1 === ("bullet")) { $s = 14; continue; }
+				/* */ $s = 15; continue;
+				/* if (_1 === ("energy")) { */ case 13:
+					cost = weaponProto.EnergyCost;
+					/* */ if (robot.EN < cost) { $s = 17; continue; }
+					/* */ $s = 18; continue;
+					/* if (robot.EN < cost) { */ case 17:
+						_r$5 = fmt.Sprintf("\xE8\x83\xBD\xE9\x87\x8F\xE4\xB8\x8D\xE8\xB6\xB3(%v/%v)", new sliceType([new $Int(cost), new $Int(robot.EN)])); /* */ $s = 19; case 19: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+						$s = -1; return [_r$5, $ifaceNil];
+					/* } */ case 18:
+					$s = 16; continue;
+				/* } else if (_1 === ("bullet")) { */ case 14:
+					if (weapon.BulletCount === 0) {
+						$s = -1; return ["\xE5\xBD\x88\xE8\x97\xA5\xE4\xB8\x8D\xE8\xB6\xB3", $ifaceNil];
+					}
+					$s = 16; continue;
+				/* } else { */ case 15:
+					_r$6 = fmt.Sprintf("\xE6\x9C\xAA\xE5\xAE\x9A\xE7\xBE\xA9\xE7\x9A\x84\xE8\x83\xBD\xE9\x87\x8F\xE9\xA1\x9E\xE5\x9E\x8B(%+v)", new sliceType([new weaponProto.constructor.elem(weaponProto)])); /* */ $s = 20; case 20: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+					$s = -1; return [_r$6, $ifaceNil];
+				/* } */ case 16:
+			case 12:
+		/* } */ case 10:
+		_tuple$6 = (_entry$2 = hideFlag[$Int.keyFor(2)], _entry$2 !== undefined ? [_entry$2.v, true] : [false, false]);
+		has$2 = _tuple$6[1];
+		/* */ if (has$2 === false) { $s = 21; continue; }
+		/* */ $s = 22; continue;
+		/* if (has$2 === false) { */ case 21:
+			_r$7 = protocol.TryGetStringPosition(model.App.Gameplay.Positions, robot.ID); /* */ $s = 23; case 23: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+			_tuple$7 = _r$7;
+			robotPos = $clone(_tuple$7[0], protocol.Position);
+			err$3 = _tuple$7[1];
+			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+				$s = -1; return ["", err$3];
+			}
+			_r$8 = QueryRobotWeaponAttackRange($clone(model, types.Model), robot.ID, $clone(weapon, protocol.Weapon), $clone(robotPos, protocol.Position)); /* */ $s = 24; case 24: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+			_tuple$8 = _r$8;
+			attackRange = _tuple$8[0];
+			err$3 = _tuple$8[1];
+			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+				$s = -1; return ["", err$3];
+			}
+			unitPosList = new sliceType$1([]);
+			_ref = units;
+			_i = 0;
+			while (true) {
+				if (!(_i < _ref.$length)) { break; }
+				unitID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+				unitPosList = $append(unitPosList, (_entry$3 = model.App.Gameplay.Positions[$String.keyFor(unitID)], _entry$3 !== undefined ? _entry$3.v : arrayType.zero()));
+				_i++;
+			}
+			unitPosOutSideOfRange = protocol.DifferencePosition(unitPosList, attackRange);
+			isAllUnitOutSideOutRange = unitPosOutSideOfRange.$length === unitPosList.$length;
+			/* */ if (isAllUnitOutSideOutRange) { $s = 25; continue; }
+			/* */ $s = 26; continue;
+			/* if (isAllUnitOutSideOutRange) { */ case 25:
+				_r$9 = fmt.Sprintf("\xE6\x95\xB5\xE4\xBA\xBA\xE4\xB8\x8D\xE5\x9C\xA8\xE7\xAF\x84\xE5\x9C\x8D\xE5\x85\xA7", new sliceType([])); /* */ $s = 27; case 27: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+				$s = -1; return [_r$9, $ifaceNil];
+			/* } */ case 26:
+		/* } */ case 22:
+		$s = -1; return ["", $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: CheckInvalidWeapon }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._entry$3 = _entry$3; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f.ability = ability; $f.attackRange = attackRange; $f.cost = cost; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.has = has; $f.has$1 = has$1; $f.has$2 = has$2; $f.hasMoveAttack = hasMoveAttack; $f.hideFlag = hideFlag; $f.isAllUnitOutSideOutRange = isAllUnitOutSideOutRange; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotPos = robotPos; $f.tag = tag; $f.unitID = unitID; $f.unitPosList = unitPosList; $f.unitPosOutSideOfRange = unitPosOutSideOfRange; $f.units = units; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.CheckInvalidWeapon = CheckInvalidWeapon;
+	CheckInvalidWeapons = function(model, robotID, weapons, hideFlag) {
+		var _entry, _i, _key, _keys, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, err, err$1, hideFlag, leftTopPos, model, notFound, ret, rightBottomPos, robotID, robotPos, units, validStr, weapon, weaponID, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; err$1 = $f.err$1; hideFlag = $f.hideFlag; leftTopPos = $f.leftTopPos; model = $f.model; notFound = $f.notFound; ret = $f.ret; rightBottomPos = $f.rightBottomPos; robotID = $f.robotID; robotPos = $f.robotPos; units = $f.units; validStr = $f.validStr; weapon = $f.weapon; weaponID = $f.weaponID; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		model = [model];
+		robotID = [robotID];
+		ret = $makeMap($String.keyFor, []);
+		_r = protocol.TryGetStringPosition(model[0].App.Gameplay.Positions, robotID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robotPos = $clone(_tuple[0], protocol.Position);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [ret, err];
+		}
+		leftTopPos = $toNativeArray($kindInt, [robotPos[0] - 10 >> 0, robotPos[1] - 10 >> 0]);
+		rightBottomPos = $toNativeArray($kindInt, [robotPos[0] + 10 >> 0, robotPos[1] + 10 >> 0]);
+		units = SearchUnitByRegion(model[0].App.Gameplay.Positions, $clone(leftTopPos, protocol.Position), $clone(rightBottomPos, protocol.Position));
+		_r$1 = tool.FilterString(units, (function(model, robotID) { return function $b(unitID) {
+			var _r$1, _r$2, _r$3, _tuple$1, err$1, isFriendly, unitID, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple$1 = $f._tuple$1; err$1 = $f.err$1; isFriendly = $f.isFriendly; unitID = $f.unitID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$1 = IsFriendlyRobot($clone(model[0], types.Model), robotID[0], unitID); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$1 = _r$1;
+			isFriendly = _tuple$1[0];
+			err$1 = _tuple$1[1];
+			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
+				_r$2 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$3 = fmt.Println(new sliceType([new $String(_r$2)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$3;
+				$s = -1; return false;
+			/* } */ case 3:
+			$s = -1; return isFriendly === false;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple$1 = _tuple$1; $f.err$1 = err$1; $f.isFriendly = isFriendly; $f.unitID = unitID; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(model, robotID)); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		units = _r$1;
+		notFound = "";
+		_ref = weapons;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 3:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 4; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 3; continue;
+			}
+			weaponID = _entry.k;
+			weapon = $clone(_entry.v, protocol.Weapon);
+			_r$2 = CheckInvalidWeapon($clone(model[0], types.Model), robotID[0], $clone(weapon, protocol.Weapon), units, hideFlag); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$1 = _r$2;
+			validStr = _tuple$1[0];
+			err$1 = _tuple$1[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [ret, err$1];
+			}
+			if (!(validStr === notFound)) {
+				_key = weaponID; (ret || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: validStr };
+			}
+			_i++;
+		/* } */ $s = 3; continue; case 4:
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: CheckInvalidWeapons }; } $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.err$1 = err$1; $f.hideFlag = hideFlag; $f.leftTopPos = leftTopPos; $f.model = model; $f.notFound = notFound; $f.ret = ret; $f.rightBottomPos = rightBottomPos; $f.robotID = robotID; $f.robotPos = robotPos; $f.units = units; $f.validStr = validStr; $f.weapon = weapon; $f.weaponID = weaponID; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.CheckInvalidWeapons = CheckInvalidWeapons;
+	NewPilot = function(origin, pilot) {
+		var _r, _r$1, _tuple, ctx, err, notFound, origin, pilot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; pilot = $f.pilot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, types.Model);
+		notFound = "";
+		_r = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), err];
+		}
+		/* */ if (pilot.ID === notFound) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (pilot.ID === notFound) { */ case 2:
+			_r$1 = fmt.Sprintf("NewPilot_%v", new sliceType([new $Int(ctx.App.SeqID)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			pilot.ID = _r$1;
+			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
+		/* } */ case 3:
+		ctx.App.Gameplay.Pilots = protocol.AssocStringPilot(ctx.App.Gameplay.Pilots, pilot.ID, $clone(pilot, protocol.Pilot));
+		$s = -1; return [ctx, pilot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewPilot }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.pilot = pilot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewPilot = NewPilot;
+	NewRobot = function(origin, position, robot) {
+		var _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _tuple, _tuple$1, _tuple$2, _tuple$3, ctx, err, notFound, origin, position, robot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; ctx = $f.ctx; err = $f.err; notFound = $f.notFound; origin = $f.origin; position = $f.position; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, types.Model);
+		notFound = "";
+		_r = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		/* */ if (robot.PlayerID === notFound) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (robot.PlayerID === notFound) { */ case 2:
+			_r$1 = fmt.Errorf("robot(%v) PlayerID not found", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$1];
+		/* } */ case 3:
+		/* */ if (robot.PilotID === notFound) { $s = 5; continue; }
+		/* */ $s = 6; continue;
+		/* if (robot.PilotID === notFound) { */ case 5:
+			_r$2 = fmt.Errorf("robot(%v) PilotID not found", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 7; case 7: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$2];
+		/* } */ case 6:
+		_r$3 = protocol.TryGetStringPilot(ctx.App.Gameplay.Pilots, robot.PilotID); /* */ $s = 8; case 8: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$1 = _r$3;
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		/* */ if (robot.ID === notFound) { $s = 9; continue; }
+		/* */ $s = 10; continue;
+		/* if (robot.ID === notFound) { */ case 9:
+			_r$4 = fmt.Sprintf("NewRobot_%v", new sliceType([new $Int(ctx.App.SeqID)])); /* */ $s = 11; case 11: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			robot.ID = _r$4;
+			ctx.App.SeqID = ctx.App.SeqID + (1) >> 0;
+		/* } */ case 10:
+		if (robot.Transform === notFound) {
+			robot.Transform = robot.ProtoID;
+		}
+		/* */ if (!(robot.Transform === robot.ProtoID)) { $s = 12; continue; }
+		/* */ $s = 13; continue;
+		/* if (!(robot.Transform === robot.ProtoID)) { */ case 12:
+			_r$5 = fmt.Errorf("transform(%v) must equals protoID(%v)", new sliceType([new $String(robot.Transform), new $String(robot.ProtoID)])); /* */ $s = 14; case 14: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$5];
+		/* } */ case 13:
+		if (robot.WeaponsByTransform === false) {
+			robot.WeaponsByTransform = $makeMap($String.keyFor, []);
+		}
+		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
+		ctx.App.Gameplay.Positions = protocol.AssocStringPosition(ctx.App.Gameplay.Positions, robot.ID, $clone(position, protocol.Position));
+		ctx.App.Gameplay.Units = $append(ctx.App.Gameplay.Units, robot.ID);
+		_r$6 = QueryRobotMaxHp($clone(ctx, types.Model), robot.ID, true); /* */ $s = 15; case 15: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_tuple$2 = _r$6;
+		robot.HP = _tuple$2[0];
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		_r$7 = QueryRobotMaxEn($clone(ctx, types.Model), robot.ID, true); /* */ $s = 16; case 16: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_tuple$3 = _r$7;
+		robot.EN = _tuple$3[0];
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		ctx.App.Gameplay.Robots = protocol.AssocStringRobot(ctx.App.Gameplay.Robots, robot.ID, $clone(robot, protocol.Robot));
+		$s = -1; return [ctx, robot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: NewRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.ctx = ctx; $f.err = err; $f.notFound = notFound; $f.origin = origin; $f.position = position; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.NewRobot = NewRobot;
+	ObserveComponent = function(model, robotID, weapon, isGameplay) {
+		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveComponent", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = data.TryGetStringComponentProto(data.GameData.Component, weapon.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.ComponentProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Component.ptr("", "", "", 0, "", sliceType$2.nil, 0, ""), err];
+		}
+		weapon.Title = weaponProto.Title;
+		weapon.Value = weaponProto.Value;
+		weapon.PowerCost = weaponProto.PowerCost;
+		weapon.Cost = weaponProto.Cost;
+		weapon.Desc = weaponProto.Desc;
+		weapon.Title = weaponProto.Title;
+		weapon.Action = weaponProto.Action;
+		$r = log.Log(protocol.LogCategoryRender, "ObserveComponent", "end"); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [weapon, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveComponent }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveComponent = ObserveComponent;
+	ObserveComponents = function(model, robotID, origin, isGameplay) {
+		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, ctx, err, isGameplay, model, origin, robotID, weapon, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; origin = $f.origin; robotID = $f.robotID; weapon = $f.weapon; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveComponents", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		ctx = origin;
+		_ref = origin;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 2:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 3; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 2; continue;
+			}
+			ID = _entry.k;
+			weapon = $clone(_entry.v, protocol.Component);
+			_r = ObserveComponent($clone(model, types.Model), robotID, $clone(weapon, protocol.Component), isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			_key = ID; (ctx || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(_tuple[0], protocol.Component) };
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_i++;
+		/* } */ $s = 2; continue; case 3:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveComponents", "end"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveComponents }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.origin = origin; $f.robotID = robotID; $f.weapon = weapon; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveComponents = ObserveComponents;
+	ObservePilot = function(model, pilot, isGameplay) {
+		var _r, _tuple, err, isGameplay, model, pilot, pilotProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotProto = $f.pilotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		pilotProto = $clone(_tuple[0], data.PilotProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), err];
+		}
+		pilot.Title = pilotProto.Title;
+		pilot.Melee = pilotProto.Melee;
+		pilot.Range = pilotProto.Melee;
+		pilot.Atk = pilotProto.Atk;
+		pilot.Guard = pilotProto.Guard;
+		pilot.Evade = pilotProto.Evade;
+		pilot.Tech = pilotProto.Tech;
+		$s = -1; return [pilot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObservePilot }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotProto = pilotProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObservePilot = ObservePilot;
+	ObservePilots = function(model, origin, isGameplay) {
+		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, err, isGameplay, localRobots, model, origin, robot, robot$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; localRobots = $f.localRobots; model = $f.model; origin = $f.origin; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		localRobots = $makeMap($String.keyFor, []);
+		_ref = origin;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			ID = _entry.k;
+			robot = $clone(_entry.v, protocol.Pilot);
+			_r = ObservePilot($clone(model, types.Model), $clone(robot, protocol.Pilot), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robot$1 = $clone(_tuple[0], protocol.Pilot);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_key = ID; (localRobots || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(robot$1, protocol.Pilot) };
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [localRobots, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObservePilots }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.localRobots = localRobots; $f.model = model; $f.origin = origin; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObservePilots = ObservePilots;
+	ObserveRobot = function(model, robot, isGameplay) {
+		var _arg, _arg$1, _r, _r$1, _r$10, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, _tuple$8, _tuple$9, components, err, isGameplay, maxEn, maxHP, model, robot, robotProto, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; _tuple$8 = $f._tuple$8; _tuple$9 = $f._tuple$9; components = $f.components; err = $f.err; isGameplay = $f.isGameplay; maxEn = $f.maxEn; maxHP = $f.maxHP; model = $f.model; robot = $f.robot; robotProto = $f.robotProto; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveRobot", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_arg = protocol.LogCategoryRender;
+		_r = fmt.Sprintf("robot(%+v)", new sliceType([new robot.constructor.elem(robot)])); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg$1 = _r;
+		$r = log.Log(_arg, "ObserveRobot", _arg$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		_r$1 = QueryRobotMaxHp($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		maxHP = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.MaxHP = maxHP;
+		_r$2 = QueryRobotMaxEn($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		maxEn = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.MaxEN = maxEn;
+		_r$3 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$2 = _r$3;
+		components = _tuple$2[0];
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.Components = components;
+		_r$4 = QueryRobotWeapons($clone(model, types.Model), robot.ID, robot.Transform, isGameplay); /* */ $s = 7; case 7: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+		_tuple$3 = _r$4;
+		weapons = _tuple$3[0];
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		_r$5 = ObserveWeapons($clone(model, types.Model), robot.ID, weapons, isGameplay); /* */ $s = 8; case 8: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+		_tuple$4 = _r$5;
+		weapons = _tuple$4[0];
+		err = _tuple$4[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.Weapons = weapons;
+		_r$6 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_tuple$5 = _r$6;
+		robotProto = $clone(_tuple$5[0], data.RobotProto);
+		err = _tuple$5[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.Title = robotProto.Title;
+		_r$7 = QueryRobotPower($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+		_tuple$6 = _r$7;
+		robot.Power = _tuple$6[0];
+		err = _tuple$6[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		robot.MaxPower = robotProto.Power;
+		_r$8 = QueryRobotArmor($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 11; case 11: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+		_tuple$7 = _r$8;
+		robot.Armor = _tuple$7[0];
+		err = _tuple$7[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		_r$9 = QueryRobotBeamArmor($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 12; case 12: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+		_tuple$8 = _r$9;
+		robot.BeamArmor = _tuple$8[0];
+		err = _tuple$8[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		_r$10 = QueryRobotSuitability($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 13; case 13: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+		_tuple$9 = _r$10;
+		arrayType$1.copy(robot.Suitability, _tuple$9[0]);
+		err = _tuple$9[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), err];
+		}
+		$r = log.Log(protocol.LogCategoryRender, "ObserveRobot", "end"); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [robot, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobot }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f._tuple$8 = _tuple$8; $f._tuple$9 = _tuple$9; $f.components = components; $f.err = err; $f.isGameplay = isGameplay; $f.maxEn = maxEn; $f.maxHP = maxHP; $f.model = model; $f.robot = robot; $f.robotProto = robotProto; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveRobot = ObserveRobot;
+	ObserveRobotMenu = function(model, origin) {
+		var _arg, _arg$1, _r, _r$1, _r$2, _tuple, _tuple$1, ctx, err, model, origin, robot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _arg = $f._arg; _arg$1 = $f._arg$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; ctx = $f.ctx; err = $f.err; model = $f.model; origin = $f.origin; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_arg = protocol.LogCategoryRender;
+		_r = fmt.Sprintf("robotMenu(%v)", new sliceType([new origin.constructor.elem(origin)])); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_arg$1 = _r;
+		$r = log.Log(_arg, "ObserveRobotMenu", _arg$1); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		ctx = $clone(origin, protocol.RobotMenu);
+		if (ctx.Active === false) {
+			$s = -1; return [origin, $ifaceNil];
+		}
+		_r$1 = protocol.TryGetStringRobot(model.App.Gameplay.Robots, ctx.ActiveRobotID); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple = _r$1;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		_r$2 = ObserveWeapons($clone(model, types.Model), robot.ID, ctx.Weapons, true); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		ctx.Weapons = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		$r = log.Log(protocol.LogCategoryRender, "ObserveRobotMenu", "end"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobotMenu }; } $f._arg = _arg; $f._arg$1 = _arg$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.err = err; $f.model = model; $f.origin = origin; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveRobotMenu = ObserveRobotMenu;
+	ObserveRobots = function(model, origin, isGameplay) {
+		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, err, isGameplay, localRobots, model, origin, robot, robot$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; localRobots = $f.localRobots; model = $f.model; origin = $f.origin; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		localRobots = $makeMap($String.keyFor, []);
+		_ref = origin;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			ID = _entry.k;
+			robot = $clone(_entry.v, protocol.Robot);
+			_r = ObserveRobot($clone(model, types.Model), $clone(robot, protocol.Robot), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robot$1 = $clone(_tuple[0], protocol.Robot);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_key = ID; (localRobots || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(robot$1, protocol.Robot) };
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [localRobots, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveRobots }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.localRobots = localRobots; $f.model = model; $f.origin = origin; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveRobots = ObserveRobots;
+	ObserveWeapon = function(model, robotID, weapon, isGameplay) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapon", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
+		}
+		weapon.Title = weaponProto.Title;
+		_r$1 = QueryRobotWeaponRange($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		arrayType.copy(weapon.Range, _tuple$1[0]);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
+		}
+		weapon.EnergyCost = weaponProto.EnergyCost;
+		weapon.MaxBulletCount = weaponProto.MaxBulletCount;
+		_r$2 = QueryRobotWeaponSuitability($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon)); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		arrayType$1.copy(weapon.Suitability, _tuple$2[0]);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
+		}
+		_r$3 = QueryRobotWeaponAbility($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$3 = _r$3;
+		weapon.Ability = _tuple$3[0];
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0), err];
+		}
+		weapon.EnergyType = weaponProto.EnergyType;
+		weapon.Type = weaponProto.Type;
+		weapon.Accuracy = math.Floor(weaponProto.Accuracy * 100) / 100;
+		weapon.Damage = weaponProto.Damage;
+		weapon.Curage = weaponProto.Curage;
+		weapon.UnlockExp = weaponProto.UnlockExp;
+		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapon", "end"); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [weapon, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveWeapon }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveWeapon = ObserveWeapon;
+	ObserveWeapons = function(model, robotID, origin, isGameplay) {
+		var ID, _entry, _i, _key, _keys, _r, _ref, _tuple, ctx, err, isGameplay, model, origin, robotID, weapon, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _key = $f._key; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; ctx = $f.ctx; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; origin = $f.origin; robotID = $f.robotID; weapon = $f.weapon; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapons", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		ctx = origin;
+		_ref = origin;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 2:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 3; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 2; continue;
+			}
+			ID = _entry.k;
+			weapon = $clone(_entry.v, protocol.Weapon);
+			_r = ObserveWeapon($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), isGameplay); /* */ $s = 4; case 4: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			_key = ID; (ctx || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(_tuple[0], protocol.Weapon) };
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			_i++;
+		/* } */ $s = 2; continue; case 3:
+		$r = log.Log(protocol.LogCategoryRender, "ObserveWeapons", "end"); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: ObserveWeapons }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._key = _key; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.ctx = ctx; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.origin = origin; $f.robotID = robotID; $f.weapon = weapon; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.ObserveWeapons = ObserveWeapons;
+	QueryMostCloseEnemyPosition = function(model, robotID) {
+		var _r, _r$1, _r$2, _tuple, _tuple$1, _tuple$2, costFn, err, find, model, originPos, robotID, targetPosition, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; costFn = $f.costFn; err = $f.err; find = $f.find; model = $f.model; originPos = $f.originPos; robotID = $f.robotID; targetPosition = $f.targetPosition; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		model = [model];
+		robotID = [robotID];
+		targetPosition = [targetPosition];
+		_r = protocol.TryGetStringPosition(model[0].App.Gameplay.Positions, robotID[0]); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		originPos = $clone(_tuple[0], protocol.Position);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType.zero(), false, err];
+		}
+		_r$1 = RobotMoveCost($clone(model[0], types.Model), robotID[0], 999999, true); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		costFn = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType.zero(), false, err];
+		}
+		targetPosition[0] = arrayType.zero();
+		_r$2 = astar.ShortedPathTree(new protocol.Position(originPos), (function(model, robotID, targetPosition) { return function $b(curr) {
+			var _r$2, _r$3, _r$4, _tuple$3, curr, currPos, err$1, friendCell, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple$3 = $f._tuple$3; curr = $f.curr; currPos = $f.currPos; err$1 = $f.err$1; friendCell = $f.friendCell; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
+			_r$2 = IsFriendlyCell($clone(model[0], types.Model), robotID[0], $clone(currPos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$3 = _r$2;
+			friendCell = _tuple$3[0];
+			err$1 = _tuple$3[1];
+			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
+				_r$3 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$4 = fmt.Println(new sliceType([new $String(_r$3)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_r$4;
+				$s = -1; return true;
+			/* } */ case 3:
+			protocol.Position.copy(targetPosition[0], currPos);
+			$s = -1; return friendCell === false;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple$3 = _tuple$3; $f.curr = curr; $f.currPos = currPos; $f.err$1 = err$1; $f.friendCell = friendCell; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(model, robotID, targetPosition), costFn, (function(model, robotID, targetPosition) { return function(curr) {
+			var curr;
+			return 0;
+		}; })(model, robotID, targetPosition)); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		find = _tuple$2[1];
+		$s = -1; return [targetPosition[0], find, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryMostCloseEnemyPosition }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.costFn = costFn; $f.err = err; $f.find = find; $f.model = model; $f.originPos = originPos; $f.robotID = robotID; $f.targetPosition = targetPosition; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryMostCloseEnemyPosition = QueryMostCloseEnemyPosition;
+	QueryPilot = function(model, pilotID, isGameplay) {
+		var _entry, _entry$1, _r, _r$1, _tuple, _tuple$1, has, has$1, isGameplay, model, pilotID, robot, robot$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; has = $f.has; has$1 = $f.has$1; isGameplay = $f.isGameplay; model = $f.model; pilotID = $f.pilotID; robot = $f.robot; robot$1 = $f.robot$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ if (isGameplay) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (isGameplay) { */ case 1:
+			_tuple = (_entry = model.App.Gameplay.Pilots[$String.keyFor(pilotID)], _entry !== undefined ? [_entry.v, true] : [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
+			robot = $clone(_tuple[0], protocol.Pilot);
+			has = _tuple[1];
+			/* */ if (has === false) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (has === false) { */ case 3:
+				_r = fmt.Errorf("pilotID(%v) not found", new sliceType([new $String(pilotID)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), _r];
+			/* } */ case 4:
+			$s = -1; return [robot, $ifaceNil];
+		/* } */ case 2:
+		_tuple$1 = (_entry$1 = model.App.Lobby.Pilots[$String.keyFor(pilotID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), false]);
+		robot$1 = $clone(_tuple$1[0], protocol.Pilot);
+		has$1 = _tuple$1[1];
+		/* */ if (has$1 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (has$1 === false) { */ case 6:
+			_r$1 = fmt.Errorf("pilotID(%v) not found", new sliceType([new $String(pilotID)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), _r$1];
+		/* } */ case 7:
+		$s = -1; return [robot$1, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilot }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.has = has; $f.has$1 = has$1; $f.isGameplay = isGameplay; $f.model = model; $f.pilotID = pilotID; $f.robot = robot; $f.robot$1 = robot$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryPilot = QueryPilot;
+	QueryPilotAtk = function(model, robotID, pilotID, isGameplay) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!(robot.PilotID === pilotID)) { */ case 2:
+			_r$1 = fmt.Errorf("[QueryPilotAtk] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [0, _r$1];
+		/* } */ case 3:
+		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		pilot = $clone(_tuple$1[0], protocol.Pilot);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$2 = _r$3;
+		pilotProto = $clone(_tuple$2[0], data.PilotProto);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		$s = -1; return [pilotProto.Atk, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotAtk }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryPilotAtk = QueryPilotAtk;
+	QueryPilotGuard = function(model, robotID, pilotID, isGameplay) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!(robot.PilotID === pilotID)) { */ case 2:
+			_r$1 = fmt.Errorf("[QueryPilotGuard] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [0, _r$1];
+		/* } */ case 3:
+		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		pilot = $clone(_tuple$1[0], protocol.Pilot);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$2 = _r$3;
+		pilotProto = $clone(_tuple$2[0], data.PilotProto);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		$s = -1; return [pilotProto.Guard, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotGuard }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryPilotGuard = QueryPilotGuard;
+	QueryPilotMelee = function(model, robotID, pilotID, isGameplay) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!(robot.PilotID === pilotID)) { */ case 2:
+			_r$1 = fmt.Errorf("[QueryPilotMelee] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [0, _r$1];
+		/* } */ case 3:
+		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		pilot = $clone(_tuple$1[0], protocol.Pilot);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$2 = _r$3;
+		pilotProto = $clone(_tuple$2[0], data.PilotProto);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		$s = -1; return [pilotProto.Melee, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotMelee }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryPilotMelee = QueryPilotMelee;
+	QueryPilotRange = function(model, robotID, pilotID, isGameplay) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, err, isGameplay, model, pilot, pilotID, pilotProto, robot, robotID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; pilot = $f.pilot; pilotID = $f.pilotID; pilotProto = $f.pilotProto; robot = $f.robot; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		/* */ if (!(robot.PilotID === pilotID)) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (!(robot.PilotID === pilotID)) { */ case 2:
+			_r$1 = fmt.Errorf("[QueryPilotRange] PilotID(%v) not match robot(%v)", new sliceType([new $String(pilotID), new robot.constructor.elem(robot)])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [0, _r$1];
+		/* } */ case 3:
+		_r$2 = QueryPilot($clone(model, types.Model), pilotID, isGameplay); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$1 = _r$2;
+		pilot = $clone(_tuple$1[0], protocol.Pilot);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$3 = data.TryGetStringPilotProto(data.GameData.Pilot, pilot.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$2 = _r$3;
+		pilotProto = $clone(_tuple$2[0], data.PilotProto);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		$s = -1; return [pilotProto.Range, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryPilotRange }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.pilot = pilot; $f.pilotID = pilotID; $f.pilotProto = pilotProto; $f.robot = robot; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryPilotRange = QueryPilotRange;
+	QueryRobot = function(model, robotID, isGameplay) {
+		var _entry, _entry$1, _entry$2, _r, _r$1, _tuple, _tuple$1, has, has$1, isGameplay, model, robot, robot$1, robotID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; has = $f.has; has$1 = $f.has$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robot$1 = $f.robot$1; robotID = $f.robotID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		/* */ if (isGameplay) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (isGameplay) { */ case 1:
+			_tuple = (_entry = model.App.Gameplay.Robots[$String.keyFor(robotID)], _entry !== undefined ? [_entry.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
+			robot = $clone(_tuple[0], protocol.Robot);
+			has = _tuple[1];
+			/* */ if (has === false) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (has === false) { */ case 3:
+				_r = fmt.Errorf("robotID(%v) not found", new sliceType([new $String(robotID)])); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r];
+			/* } */ case 4:
+			$s = -1; return [robot, $ifaceNil];
+		/* } */ case 2:
+		_tuple$1 = (_entry$1 = model.App.Lobby.Robots[$String.keyFor(robotID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
+		robot$1 = $clone(_tuple$1[0], protocol.Robot);
+		has$1 = _tuple$1[1];
+		/* */ if (has$1 === false) { $s = 6; continue; }
+		/* */ $s = 7; continue;
+		/* if (has$1 === false) { */ case 6:
+			_r$1 = fmt.Errorf("robotID(%v) not found", new sliceType([new $String(robotID)])); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), _r$1];
+		/* } */ case 7:
+		robot$1.PilotID = (_entry$2 = model.App.Lobby.PilotIDByRobotID[$String.keyFor(robot$1.ID)], _entry$2 !== undefined ? _entry$2.v : "");
+		$s = -1; return [robot$1, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobot }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.has = has; $f.has$1 = has$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robot$1 = robot$1; $f.robotID = robotID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobot = QueryRobot;
+	QueryRobotArmor = function(model, robotID, isGameplay) {
+		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, total, val, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotArmor", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$1 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		components = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		total = 0;
+		_ref = components;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			component = $clone(_entry.v, protocol.Component);
+			val = 0;
+				_1 = component.ProtoID;
+				/* */ if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5")) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5")) { */ case 7:
+					_r$2 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+					_tuple$2 = _r$2;
+					componentProto = $clone(_tuple$2[0], data.ComponentProto);
+					err$1 = _tuple$2[1];
+					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+						$s = -1; return [0, err$1];
+					}
+					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
+						_r$3 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$3];
+					/* } */ case 11:
+					_tuple$3 = strconv.ParseFloat((x = componentProto.Value, (1 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 1])), 10);
+					val = _tuple$3[0];
+					err$1 = _tuple$3[1];
+					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
+					/* */ $s = 14; continue;
+					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
+						_r$4 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$4];
+					/* } */ case 14:
+				/* } */ case 8:
+			case 6:
+			total = total + (((val >> 0))) >> 0;
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotArmor", "end"); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotArmor }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotArmor = QueryRobotArmor;
+	QueryRobotBeamArmor = function(model, robotID, isGameplay) {
+		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, total, val, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotBeamArmor", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$1 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		components = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		total = 0;
+		_ref = components;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			component = $clone(_entry.v, protocol.Component);
+			val = 0;
+				_1 = component.ProtoID;
+				/* */ if (_1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5")) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (_1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5")) { */ case 7:
+					_r$2 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+					_tuple$2 = _r$2;
+					componentProto = $clone(_tuple$2[0], data.ComponentProto);
+					err$1 = _tuple$2[1];
+					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+						$s = -1; return [0, err$1];
+					}
+					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
+						_r$3 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$3];
+					/* } */ case 11:
+					_tuple$3 = strconv.ParseFloat((x = componentProto.Value, (1 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 1])), 10);
+					val = _tuple$3[0];
+					err$1 = _tuple$3[1];
+					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
+					/* */ $s = 14; continue;
+					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
+						_r$4 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$4];
+					/* } */ case 14:
+				/* } */ case 8:
+			case 6:
+			total = total + (((val >> 0))) >> 0;
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotBeamArmor", "end"); /* */ $s = 16; case 16: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotBeamArmor }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotBeamArmor = QueryRobotBeamArmor;
+	QueryRobotCombatPower = function(model, robot, weapons) {
+		var _1, _entry, _i, _keys, _r, _ref, _tuple, bulletCombatPower, enCombatCost, enCombatPower, err, model, robot, total, weapon, weaponProto, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; bulletCombatPower = $f.bulletCombatPower; enCombatCost = $f.enCombatCost; enCombatPower = $f.enCombatPower; err = $f.err; model = $f.model; robot = $f.robot; total = $f.total; weapon = $f.weapon; weaponProto = $f.weaponProto; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		enCombatPower = 0;
+		enCombatCost = 0;
+		bulletCombatPower = 0;
+		_ref = weapons;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 1:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 2; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 1; continue;
+			}
+			weapon = $clone(_entry.v, protocol.Weapon);
+			_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			weaponProto = $clone(_tuple[0], data.WeaponProto);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, $ifaceNil];
+			}
+			_1 = weaponProto.EnergyType;
+			if (_1 === ("energy")) {
+				enCombatPower = enCombatPower + (weaponProto.Damage) >> 0;
+				enCombatCost = enCombatCost + (weaponProto.EnergyCost) >> 0;
+			} else if (_1 === ("bullet")) {
+				bulletCombatPower = bulletCombatPower + (($imul(weaponProto.Damage, weapon.BulletCount))) >> 0;
+			}
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		total = (robot.HP + bulletCombatPower >> 0) + (((enCombatPower) * (robot.EN) / (enCombatCost) >> 0)) >> 0;
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotCombatPower }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.bulletCombatPower = bulletCombatPower; $f.enCombatCost = enCombatCost; $f.enCombatPower = enCombatPower; $f.err = err; $f.model = model; $f.robot = robot; $f.total = total; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotCombatPower = QueryRobotCombatPower;
+	QueryRobotComponents = function(model, robotID, isGameplay) {
+		var _entry, _entry$1, _i, _i$1, _key, _key$1, _keys, _r, _r$1, _r$2, _ref, _ref$1, _tuple, _tuple$1, component, componentID, componentProtoID, components, err, i, instanceID, instanceID$1, isGameplay, model, robot, robotID, robotID$1, robotProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; component = $f.component; componentID = $f.componentID; componentProtoID = $f.componentProtoID; components = $f.components; err = $f.err; i = $f.i; instanceID = $f.instanceID; instanceID$1 = $f.instanceID$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotProto = $f.robotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		if (!(robot.Components === false)) {
+			$s = -1; return [robot.Components, $ifaceNil];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		robotProto = $clone(_tuple$1[0], data.RobotProto);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		components = $makeMap($String.keyFor, []);
+		_ref = robotProto.Components;
+		_i = 0;
+		/* while (true) { */ case 4:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 5; continue; }
+			i = _i;
+			componentProtoID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r$2 = fmt.Sprintf("component_%v", new sliceType([new $Int(i)])); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			instanceID = _r$2;
+			_key = instanceID; (components || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: new protocol.Component.ptr(instanceID, componentProtoID, "", 0, "", sliceType$2.nil, 0, "") };
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		_ref$1 = model.App.Lobby.RobotIDByComponentID;
+		_i$1 = 0;
+		_keys = $keys(_ref$1);
+		/* while (true) { */ case 7:
+			/* if (!(_i$1 < _keys.length)) { break; } */ if(!(_i$1 < _keys.length)) { $s = 8; continue; }
+			_entry = _ref$1[_keys[_i$1]];
+			if (_entry === undefined) {
+				_i$1++;
+				/* continue; */ $s = 7; continue;
+			}
+			componentID = _entry.k;
+			robotID$1 = _entry.v;
+			if (!(robotID$1 === robot.ID)) {
+				_i$1++;
+				/* continue; */ $s = 7; continue;
+			}
+			component = $clone((_entry$1 = model.App.Lobby.Components[$String.keyFor(componentID)], _entry$1 !== undefined ? _entry$1.v : new protocol.Component.ptr("", "", "", 0, "", sliceType$2.nil, 0, "")), protocol.Component);
+			instanceID$1 = component.ID;
+			_key$1 = instanceID$1; (components || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: new protocol.Component.ptr(instanceID$1, component.ProtoID, "", 0, "", sliceType$2.nil, 0, "") };
+			_i$1++;
+		/* } */ $s = 7; continue; case 8:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotComponents", "end"); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$s = -1; return [components, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotComponents }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.component = component; $f.componentID = componentID; $f.componentProtoID = componentProtoID; $f.components = components; $f.err = err; $f.i = i; $f.instanceID = instanceID; $f.instanceID$1 = instanceID$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotProto = robotProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotComponents = QueryRobotComponents;
+	QueryRobotMaxEn = function(model, robotID, isGameplay) {
+		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, robotProto, total, val, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		robotProto = $clone(_tuple$1[0], data.RobotProto);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$2 = QueryRobotComponents($clone(model, types.Model), robotID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		components = _tuple$2[0];
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		total = robotProto.EN;
+		_ref = components;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			component = $clone(_entry.v, protocol.Component);
+			val = 0;
+				_1 = component.ProtoID;
+				/* */ if (_1 === ("energy1") || _1 === ("energy2") || _1 === ("energy3") || _1 === ("energy4") || _1 === ("energy5")) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (_1 === ("energy1") || _1 === ("energy2") || _1 === ("energy3") || _1 === ("energy4") || _1 === ("energy5")) { */ case 7:
+					_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$3 = _r$3;
+					componentProto = $clone(_tuple$3[0], data.ComponentProto);
+					err$1 = _tuple$3[1];
+					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+						$s = -1; return [0, err$1];
+					}
+					/* */ if (!((componentProto.Value.$length === 1))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!((componentProto.Value.$length === 1))) { */ case 10:
+						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$4];
+					/* } */ case 11:
+					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
+					val = _tuple$4[0];
+					err$1 = _tuple$4[1];
+					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
+					/* */ $s = 14; continue;
+					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
+						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$5];
+					/* } */ case 14:
+				/* } */ case 8:
+			case 6:
+			total = total + (((val >> 0))) >> 0;
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMaxEn }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotMaxEn = QueryRobotMaxEn;
+	QueryRobotMaxHp = function(model, robotID, isGameplay) {
+		var _1, _entry, _i, _keys, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, component, componentProto, components, err, err$1, isGameplay, model, robot, robotID, robotProto, total, val, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		robotProto = $clone(_tuple$1[0], data.RobotProto);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$2 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		components = _tuple$2[0];
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		total = robotProto.HP;
+		_ref = components;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			component = $clone(_entry.v, protocol.Component);
+			val = 0;
+				_1 = component.ProtoID;
+				/* */ if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5") || _1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5") || _1 === ("fire_armor") || _1 === ("lighting_armor")) { $s = 7; continue; }
+				/* */ $s = 8; continue;
+				/* if (_1 === ("armor1") || _1 === ("armor2") || _1 === ("armor3") || _1 === ("armor4") || _1 === ("armor5") || _1 === ("beam_armor1") || _1 === ("beam_armor2") || _1 === ("beam_armor3") || _1 === ("beam_armor4") || _1 === ("beam_armor5") || _1 === ("fire_armor") || _1 === ("lighting_armor")) { */ case 7:
+					_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+					_tuple$3 = _r$3;
+					componentProto = $clone(_tuple$3[0], data.ComponentProto);
+					err$1 = _tuple$3[1];
+					if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+						$s = -1; return [0, err$1];
+					}
+					/* */ if (!((componentProto.Value.$length === 2))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!((componentProto.Value.$length === 2))) { */ case 10:
+						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$4];
+					/* } */ case 11:
+					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
+					val = _tuple$4[0];
+					err$1 = _tuple$4[1];
+					/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 13; continue; }
+					/* */ $s = 14; continue;
+					/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 13:
+						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$5];
+					/* } */ case 14:
+				/* } */ case 8:
+			case 6:
+			total = total + (((val >> 0))) >> 0;
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMaxHp }; } $f._1 = _1; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotMaxHp = QueryRobotMaxHp;
+	QueryRobotMovePower = function(model, robotID, isGameplay) {
+		var _entry, _q, _r, _r$1, _tuple, config, err, isGameplay, model, robotID, total, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _q = $f._q; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; config = $f.config; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; total = $f.total; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = QueryRobotPower($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		total = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		config = $clone((_entry = data.GameData.Config[$String.keyFor("default")], _entry !== undefined ? _entry.v : new data.ConfigProto.ptr("", 0, sliceType$3.nil, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil)), data.ConfigProto);
+		/* */ if (config.PowerCostForMove === 0) { $s = 2; continue; }
+		/* */ $s = 3; continue;
+		/* if (config.PowerCostForMove === 0) { */ case 2:
+			_r$1 = fmt.Errorf("config.PowerCostForMove\xE4\xB8\x8D\xE5\xBE\x97\xE7\x82\xBA0", new sliceType([])); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			$s = -1; return [0, _r$1];
+		/* } */ case 3:
+		$s = -1; return [(_q = total / config.PowerCostForMove, (_q === _q && _q !== 1/0 && _q !== -1/0) ? _q >> 0 : $throwRuntimeError("integer divide by zero")), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotMovePower }; } $f._entry = _entry; $f._q = _q; $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f.config = config; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.total = total; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotMovePower = QueryRobotMovePower;
+	QueryRobotPower = function(model, robotID, isGameplay) {
+		var _1, _entry, _entry$1, _i, _i$1, _keys, _keys$1, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, component, componentProto, components, err, err$1, err$2, err$3, isGameplay, model, robot, robotID, robotProto, total, val, weapon, weaponProto, weapons, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _entry = $f._entry; _entry$1 = $f._entry$1; _i = $f._i; _i$1 = $f._i$1; _keys = $f._keys; _keys$1 = $f._keys$1; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; component = $f.component; componentProto = $f.componentProto; components = $f.components; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; total = $f.total; val = $f.val; weapon = $f.weapon; weaponProto = $f.weaponProto; weapons = $f.weapons; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		robotProto = $clone(_tuple$1[0], data.RobotProto);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_r$2 = QueryRobotComponents($clone(model, types.Model), robot.ID, isGameplay); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		components = _tuple$2[0];
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		total = robotProto.Power;
+		_ref = components;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			component = $clone(_entry.v, protocol.Component);
+			_r$3 = data.TryGetStringComponentProto(data.GameData.Component, component.ProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$3 = _r$3;
+			componentProto = $clone(_tuple$3[0], data.ComponentProto);
+			err$1 = _tuple$3[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [0, err$1];
+			}
+				_1 = component.ProtoID;
+				/* */ if (_1 === ("engine1") || _1 === ("engine2") || _1 === ("engine3") || _1 === ("engine4") || _1 === ("engine5")) { $s = 8; continue; }
+				/* */ $s = 9; continue;
+				/* if (_1 === ("engine1") || _1 === ("engine2") || _1 === ("engine3") || _1 === ("engine4") || _1 === ("engine5")) { */ case 8:
+					/* */ if (!((componentProto.Value.$length === 1))) { $s = 10; continue; }
+					/* */ $s = 11; continue;
+					/* if (!((componentProto.Value.$length === 1))) { */ case 10:
+						_r$4 = fmt.Errorf("component value's len not right. %v", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 12; case 12: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$4];
+					/* } */ case 11:
+					_tuple$4 = strconv.ParseFloat((x = componentProto.Value, (0 >= x.$length ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + 0])), 10);
+					val = _tuple$4[0];
+					err$2 = _tuple$4[1];
+					/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 13; continue; }
+					/* */ $s = 14; continue;
+					/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 13:
+						_r$5 = fmt.Errorf("component value not right. (%v)", new sliceType([new componentProto.constructor.elem(componentProto)])); /* */ $s = 15; case 15: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+						$s = -1; return [0, _r$5];
+					/* } */ case 14:
+					total = total + (((val >> 0))) >> 0;
+				/* } */ case 9:
+			case 7:
+			total = total - (componentProto.PowerCost) >> 0;
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		_r$6 = QueryRobotWeapons($clone(model, types.Model), robot.ID, robot.Transform, isGameplay); /* */ $s = 16; case 16: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+		_tuple$5 = _r$6;
+		weapons = _tuple$5[0];
+		err = _tuple$5[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		_ref$1 = weapons;
+		_i$1 = 0;
+		_keys$1 = $keys(_ref$1);
+		/* while (true) { */ case 17:
+			/* if (!(_i$1 < _keys$1.length)) { break; } */ if(!(_i$1 < _keys$1.length)) { $s = 18; continue; }
+			_entry$1 = _ref$1[_keys$1[_i$1]];
+			if (_entry$1 === undefined) {
+				_i$1++;
+				/* continue; */ $s = 17; continue;
+			}
+			weapon = $clone(_entry$1.v, protocol.Weapon);
+			_r$7 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+			_tuple$6 = _r$7;
+			weaponProto = $clone(_tuple$6[0], data.WeaponProto);
+			err$3 = _tuple$6[1];
+			if (!($interfaceIsEqual(err$3, $ifaceNil))) {
+				$s = -1; return [0, err$3];
+			}
+			total = total - (weaponProto.PowerCost) >> 0;
+			_i$1++;
+		/* } */ $s = 17; continue; case 18:
+		$s = -1; return [total, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotPower }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._i = _i; $f._i$1 = _i$1; $f._keys = _keys; $f._keys$1 = _keys$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f.component = component; $f.componentProto = componentProto; $f.components = components; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.total = total; $f.val = val; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weapons = weapons; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotPower = QueryRobotPower;
+	QueryRobotSuitability = function(model, robotID, isGameplay) {
+		var _r, _r$1, _tuple, _tuple$1, err, isGameplay, model, robot, robotID, robotProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotProto = $f.robotProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType$1.zero(), err];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		robotProto = $clone(_tuple$1[0], data.RobotProto);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType$1.zero(), err];
+		}
+		$s = -1; return [robotProto.Suitability, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotSuitability }; } $f._r = _r; $f._r$1 = _r$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotProto = robotProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotSuitability = QueryRobotSuitability;
+	QueryRobotWeaponAbility = function(model, robotID, weapon, isGameplay) {
+		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new sliceType$2([]), err];
+		}
+		$s = -1; return [weaponProto.Ability, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAbility }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeaponAbility = QueryRobotWeaponAbility;
+	QueryRobotWeaponAccuracy = function(model, robotID, weapon, isGameplay) {
+		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [0, err];
+		}
+		$s = -1; return [weaponProto.Accuracy, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAccuracy }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeaponAccuracy = QueryRobotWeaponAccuracy;
+	QueryRobotWeaponAttackRange = function(model, robotID, weapon, offset) {
+		var _1, _i, _r, _r$1, _r$2, _r$3, _r$4, _ref, _tuple, _tuple$1, _tuple$2, _tuple$3, attackPos, attackPosWithCenter, attackRange, attackRangeWithCenter, err, model, offset, robotID, weapon, weaponProto, weaponRange, zeroOffset, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; attackPos = $f.attackPos; attackPosWithCenter = $f.attackPosWithCenter; attackRange = $f.attackRange; attackRangeWithCenter = $f.attackRangeWithCenter; err = $f.err; model = $f.model; offset = $f.offset; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; weaponRange = $f.weaponRange; zeroOffset = $f.zeroOffset; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [sliceType$1.nil, err];
+		}
+		_r$1 = QueryRobotWeaponRange($clone(model, types.Model), robotID, $clone(weapon, protocol.Weapon), true); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		weaponRange = $clone(_tuple$1[0], arrayType);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [sliceType$1.nil, err];
+		}
+		attackRange = new sliceType$1([]);
+			_1 = weaponProto.Type;
+			/* */ if (_1 === ("single")) { $s = 4; continue; }
+			/* */ if (_1 === ("line")) { $s = 5; continue; }
+			/* */ $s = 6; continue;
+			/* if (_1 === ("single")) { */ case 4:
+				_r$2 = helper.QueryMinMaxAttackRange(20, 20, weaponRange[0], weaponRange[1], arrayType.zero()); /* */ $s = 8; case 8: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_tuple$2 = _r$2;
+				attackRange = _tuple$2[0];
+				err = _tuple$2[1];
+				if (!($interfaceIsEqual(err, $ifaceNil))) {
+					$s = -1; return [sliceType$1.nil, err];
+				}
+				$s = 7; continue;
+			/* } else if (_1 === ("line")) { */ case 5:
+				_r$3 = helper.QueryMinMaxAttackRange(20, 20, 0, weaponRange[0], arrayType.zero()); /* */ $s = 9; case 9: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_tuple$3 = _r$3;
+				attackRange = _tuple$3[0];
+				err = _tuple$3[1];
+				if (!($interfaceIsEqual(err, $ifaceNil))) {
+					$s = -1; return [sliceType$1.nil, err];
+				}
+				$s = 7; continue;
+			/* } else { */ case 6:
+				_r$4 = fmt.Errorf("unknown weapon type (%v)", new sliceType([new weaponProto.constructor.elem(weaponProto)])); /* */ $s = 10; case 10: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				$s = -1; return [sliceType$1.nil, _r$4];
+			/* } */ case 7:
+		case 3:
+		zeroOffset = arrayType.zero();
+		if ($equal(offset, zeroOffset, protocol.Position)) {
+			$s = -1; return [attackRange, $ifaceNil];
+		}
+		attackRangeWithCenter = new sliceType$1([]);
+		_ref = attackRange;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			attackPos = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
+			attackPosWithCenter = $toNativeArray($kindInt, [offset[0] + attackPos[0] >> 0, offset[1] + attackPos[1] >> 0]);
+			attackRangeWithCenter = $append(attackRangeWithCenter, attackPosWithCenter);
+			_i++;
+		}
+		$s = -1; return [attackRangeWithCenter, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponAttackRange }; } $f._1 = _1; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.attackPos = attackPos; $f.attackPosWithCenter = attackPosWithCenter; $f.attackRange = attackRange; $f.attackRangeWithCenter = attackRangeWithCenter; $f.err = err; $f.model = model; $f.offset = offset; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.weaponRange = weaponRange; $f.zeroOffset = zeroOffset; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeaponAttackRange = QueryRobotWeaponAttackRange;
+	QueryRobotWeaponRange = function(model, robotID, weapon, isGameplay) {
+		var _r, _tuple, err, isGameplay, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; isGameplay = $f.isGameplay; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType.zero(), err];
+		}
+		$s = -1; return [weaponProto.Range, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponRange }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.isGameplay = isGameplay; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeaponRange = QueryRobotWeaponRange;
+	QueryRobotWeaponSuitability = function(model, robotID, weapon) {
+		var _r, _tuple, err, model, robotID, weapon, weaponProto, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _tuple = $f._tuple; err = $f.err; model = $f.model; robotID = $f.robotID; weapon = $f.weapon; weaponProto = $f.weaponProto; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon.ProtoID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		weaponProto = $clone(_tuple[0], data.WeaponProto);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [arrayType$1.zero(), err];
+		}
+		$s = -1; return [weaponProto.Suitability, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeaponSuitability }; } $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.robotID = robotID; $f.weapon = weapon; $f.weaponProto = weaponProto; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeaponSuitability = QueryRobotWeaponSuitability;
+	QueryRobotWeapons = function(model, robotID, transform, isGameplay) {
+		var _entry, _entry$1, _entry$2, _i, _i$1, _key, _key$1, _keys, _r, _r$1, _r$2, _r$3, _ref, _ref$1, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, err, err$1, err$2, has, isGameplay, model, robot, robotID, robotID$1, robotProto, transform, weapon, weapon$1, weaponID, weaponProto, weaponProto$1, weaponProtoID, weaponState, weapons, weapons$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _i = $f._i; _i$1 = $f._i$1; _key = $f._key; _key$1 = $f._key$1; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _ref = $f._ref; _ref$1 = $f._ref$1; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; has = $f.has; isGameplay = $f.isGameplay; model = $f.model; robot = $f.robot; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotProto = $f.robotProto; transform = $f.transform; weapon = $f.weapon; weapon$1 = $f.weapon$1; weaponID = $f.weaponID; weaponProto = $f.weaponProto; weaponProto$1 = $f.weaponProto$1; weaponProtoID = $f.weaponProtoID; weaponState = $f.weaponState; weapons = $f.weapons; weapons$1 = $f.weapons$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = log.Log(protocol.LogCategoryRender, "QueryRobotWeapons", "start"); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		_r = QueryRobot($clone(model, types.Model), robotID, isGameplay); /* */ $s = 2; case 2: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		robot = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		_tuple$1 = (_entry = robot.WeaponsByTransform[$String.keyFor(transform)], _entry !== undefined ? [_entry.v, true] : [false, false]);
+		weapons = _tuple$1[0];
+		has = _tuple$1[1];
+		if (has) {
+			$s = -1; return [weapons, $ifaceNil];
+		}
+		_r$1 = data.TryGetStringRobotProto(data.GameData.Robot, robot.ProtoID); /* */ $s = 3; case 3: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$2 = _r$1;
+		robotProto = $clone(_tuple$2[0], data.RobotProto);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [$makeMap($String.keyFor, []), err];
+		}
+		weapons$1 = $makeMap($String.keyFor, []);
+		_ref = robotProto.Weapons;
+		_i = 0;
+		/* while (true) { */ case 4:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 5; continue; }
+			weaponProtoID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r$2 = data.TryGetStringWeaponProto(data.GameData.Weapon, weaponProtoID); /* */ $s = 6; case 6: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$3 = _r$2;
+			weaponProto = $clone(_tuple$3[0], data.WeaponProto);
+			err$1 = _tuple$3[1];
+			if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+				$s = -1; return [$makeMap($String.keyFor, []), err$1];
+			}
+			weapon = new protocol.Weapon.ptr(weaponProtoID, weaponProtoID, weaponProto.MaxBulletCount, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0);
+			_key = weapon.ID; (weapons$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: $clone(weapon, protocol.Weapon) };
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		_ref$1 = model.App.Lobby.RobotIDByWeaponID;
+		_i$1 = 0;
+		_keys = $keys(_ref$1);
+		/* while (true) { */ case 7:
+			/* if (!(_i$1 < _keys.length)) { break; } */ if(!(_i$1 < _keys.length)) { $s = 8; continue; }
+			_entry$1 = _ref$1[_keys[_i$1]];
+			if (_entry$1 === undefined) {
+				_i$1++;
+				/* continue; */ $s = 7; continue;
+			}
+			weaponID = _entry$1.k;
+			robotID$1 = _entry$1.v;
+			/* */ if (!(robotID$1 === robot.ID)) { $s = 9; continue; }
+			/* */ $s = 10; continue;
+			/* if (!(robotID$1 === robot.ID)) { */ case 9:
+				_i$1++;
+				/* continue; */ $s = 7; continue;
+			/* } */ case 10:
+			weapon$1 = $clone((_entry$2 = model.App.Lobby.Weapons[$String.keyFor(weaponID)], _entry$2 !== undefined ? _entry$2.v : new protocol.Weapon.ptr("", "", 0, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0)), protocol.Weapon);
+			_r$3 = data.TryGetStringWeaponProto(data.GameData.Weapon, weapon$1.ProtoID); /* */ $s = 11; case 11: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$4 = _r$3;
+			weaponProto$1 = $clone(_tuple$4[0], data.WeaponProto);
+			err$2 = _tuple$4[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [$makeMap($String.keyFor, []), err$2];
+			}
+			weaponState = new protocol.Weapon.ptr(weapon$1.ID, weapon$1.ProtoID, weaponProto$1.MaxBulletCount, "", 0, arrayType.zero(), 0, 0, arrayType$1.zero(), sliceType$2.nil, "", "", 0, 0, 0, 0);
+			_key$1 = weaponState.ID; (weapons$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: $clone(weaponState, protocol.Weapon) };
+			_i$1++;
+		/* } */ $s = 7; continue; case 8:
+		$s = -1; return [weapons$1, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryRobotWeapons }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._entry$2 = _entry$2; $f._i = _i; $f._i$1 = _i$1; $f._key = _key; $f._key$1 = _key$1; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._ref = _ref; $f._ref$1 = _ref$1; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.has = has; $f.isGameplay = isGameplay; $f.model = model; $f.robot = robot; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotProto = robotProto; $f.transform = transform; $f.weapon = weapon; $f.weapon$1 = weapon$1; $f.weaponID = weaponID; $f.weaponProto = weaponProto; $f.weaponProto$1 = weaponProto$1; $f.weaponProtoID = weaponProtoID; $f.weaponState = weaponState; $f.weapons = weapons; $f.weapons$1 = weapons$1; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryRobotWeapons = QueryRobotWeapons;
+	RobotMoveCost = function(model, robotID, movePower, ignoreOccupy) {
+		var _entry, _r, _tuple, err, ignoreOccupy, isSky, model, movePower, robotID, suitability, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _r = $f._r; _tuple = $f._tuple; err = $f.err; ignoreOccupy = $f.ignoreOccupy; isSky = $f.isSky; model = $f.model; movePower = $f.movePower; robotID = $f.robotID; suitability = $f.suitability; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ignoreOccupy = [ignoreOccupy];
+		isSky = [isSky];
+		model = [model];
+		movePower = [movePower];
+		robotID = [robotID];
+		suitability = [suitability];
+		_r = QueryRobotSuitability($clone(model[0], types.Model), robotID[0], true); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		suitability[0] = $clone(_tuple[0], arrayType$1);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [(function(ignoreOccupy, isSky, model, movePower, robotID, suitability) { return function(curr) {
+				var curr;
+				return sliceType$4.nil;
+			}; })(ignoreOccupy, isSky, model, movePower, robotID, suitability), err];
+		}
+		isSky[0] = (_entry = model[0].App.Gameplay.Tags[$String.keyFor(robotID[0])], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).Sky;
+		$s = -1; return [(function(ignoreOccupy, isSky, model, movePower, robotID, suitability) { return function $b(curr) {
+			var _i, _r$1, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _ref, _tmp, _tmp$1, _tuple$1, _tuple$2, _tuple$3, cost1, cost2, curr, currPos, err$1, err$2, err$3, factor, factor$1, isFriendlyRobot, nextCost, nextPos, notFound, offset, offsets, ret, terrain1, terrain2, unitAtPos, x, x$1, y, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _ref = $f._ref; _tmp = $f._tmp; _tmp$1 = $f._tmp$1; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; cost1 = $f.cost1; cost2 = $f.cost2; curr = $f.curr; currPos = $f.currPos; err$1 = $f.err$1; err$2 = $f.err$2; err$3 = $f.err$3; factor = $f.factor; factor$1 = $f.factor$1; isFriendlyRobot = $f.isFriendlyRobot; nextCost = $f.nextCost; nextPos = $f.nextPos; notFound = $f.notFound; offset = $f.offset; offsets = $f.offsets; ret = $f.ret; terrain1 = $f.terrain1; terrain2 = $f.terrain2; unitAtPos = $f.unitAtPos; x = $f.x; x$1 = $f.x$1; y = $f.y; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			if (((curr.Cost >> 0)) > 100) {
+				$s = -1; return new sliceType$4([]);
+			}
+			currPos = $clone($assertType(curr.Pather, protocol.Position), protocol.Position);
+			cost1 = 0;
+			_r$1 = helper.QueryTerrain(model[0].App.Gameplay.Map, terrainCache, $clone(currPos, protocol.Position)); /* */ $s = 1; case 1: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$1 = _r$1;
+			terrain1 = $clone(_tuple$1[0], data.TerrainProto);
+			err$1 = _tuple$1[1];
+			/* */ if (!($interfaceIsEqual(err$1, $ifaceNil))) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (!($interfaceIsEqual(err$1, $ifaceNil))) { */ case 2:
+				_r$2 = err$1.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				_r$3 = fmt.Println(new sliceType([new $String(_r$2)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$3;
+				$s = -1; return new sliceType$4([]);
+			/* } */ case 3:
+			if (isSky[0]) {
+				if (suitability[0][2] === 0) {
+					$s = -1; return new sliceType$4([]);
+				}
+				cost1 = 0.4 / suitability[0][2];
+			} else {
+				factor = new mgl64.Vec4($clone(($clone(suitability[0], mgl64.Vec4)), mgl64.Vec4)).Dot($clone(($clone(terrain1.Cost, mgl64.Vec4)), mgl64.Vec4)) / 2;
+				cost1 = 0.5 / factor;
+			}
+			offsets = new sliceType$1([$toNativeArray($kindInt, [0, -1]), $toNativeArray($kindInt, [1, 0]), $toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [-1, 0])]);
+			ret = new sliceType$4([]);
+			_ref = offsets;
+			_i = 0;
+			/* while (true) { */ case 6:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 7; continue; }
+				offset = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
+				_tmp = currPos[0] + offset[0] >> 0;
+				_tmp$1 = currPos[1] + offset[1] >> 0;
+				x = _tmp;
+				y = _tmp$1;
+				/* */ if (x < 0 || x >= (x$1 = model[0].App.Gameplay.Map, (0 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 0])).$length) { $s = 8; continue; }
+				/* */ $s = 9; continue;
+				/* if (x < 0 || x >= (x$1 = model[0].App.Gameplay.Map, (0 >= x$1.$length ? ($throwRuntimeError("index out of range"), undefined) : x$1.$array[x$1.$offset + 0])).$length) { */ case 8:
+					_i++;
+					/* continue; */ $s = 6; continue;
+				/* } */ case 9:
+				/* */ if (y < 0 || y >= model[0].App.Gameplay.Map.$length) { $s = 10; continue; }
+				/* */ $s = 11; continue;
+				/* if (y < 0 || y >= model[0].App.Gameplay.Map.$length) { */ case 10:
+					_i++;
+					/* continue; */ $s = 6; continue;
+				/* } */ case 11:
+				nextPos = $toNativeArray($kindInt, [x, y]);
+				/* */ if (ignoreOccupy[0] === false) { $s = 12; continue; }
+				/* */ $s = 13; continue;
+				/* if (ignoreOccupy[0] === false) { */ case 12:
+					notFound = "";
+					unitAtPos = SearchUnitByPosition(model[0].App.Gameplay.Positions, $clone(nextPos, protocol.Position));
+					/* */ if (!(unitAtPos === notFound)) { $s = 14; continue; }
+					/* */ $s = 15; continue;
+					/* if (!(unitAtPos === notFound)) { */ case 14:
+						_r$4 = IsFriendlyRobot($clone(model[0], types.Model), robotID[0], unitAtPos); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+						_tuple$2 = _r$4;
+						isFriendlyRobot = _tuple$2[0];
+						err$2 = _tuple$2[1];
+						/* */ if (!($interfaceIsEqual(err$2, $ifaceNil))) { $s = 17; continue; }
+						/* */ $s = 18; continue;
+						/* if (!($interfaceIsEqual(err$2, $ifaceNil))) { */ case 17:
+							_r$5 = fmt.Println(new sliceType([err$2])); /* */ $s = 19; case 19: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+							_r$5;
+							_i++;
+							/* continue; */ $s = 6; continue;
+						/* } */ case 18:
+						if (isFriendlyRobot === false) {
+							_i++;
+							/* continue; */ $s = 6; continue;
+						}
+					/* } */ case 15:
+				/* } */ case 13:
+				cost2 = 0;
+				_r$6 = helper.QueryTerrain(model[0].App.Gameplay.Map, terrainCache, $clone(nextPos, protocol.Position)); /* */ $s = 20; case 20: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_tuple$3 = _r$6;
+				terrain2 = $clone(_tuple$3[0], data.TerrainProto);
+				err$3 = _tuple$3[1];
+				/* */ if (!($interfaceIsEqual(err$3, $ifaceNil))) { $s = 21; continue; }
+				/* */ $s = 22; continue;
+				/* if (!($interfaceIsEqual(err$3, $ifaceNil))) { */ case 21:
+					_r$7 = err$3.Error(); /* */ $s = 23; case 23: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+					_r$8 = fmt.Println(new sliceType([new $String(_r$7)])); /* */ $s = 24; case 24: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+					_r$8;
+					$s = -1; return new sliceType$4([]);
+				/* } */ case 22:
+				if (isSky[0]) {
+					if (suitability[0][2] === 0) {
+						_i++;
+						/* continue; */ $s = 6; continue;
+					}
+					cost2 = 0.4 / suitability[0][2];
+				} else {
+					factor$1 = new mgl64.Vec4($clone(($clone(suitability[0], mgl64.Vec4)), mgl64.Vec4)).Dot($clone(($clone(terrain2.Cost, mgl64.Vec4)), mgl64.Vec4)) / 2;
+					cost2 = 0.5 / factor$1;
+				}
+				nextCost = (cost1 + cost2);
+				if (((curr.Cost + nextCost >> 0)) > movePower[0]) {
+					_i++;
+					/* continue; */ $s = 6; continue;
+				}
+				ret = $append(ret, new astar.NeighborsNode.ptr(new protocol.Position(nextPos), nextCost));
+				_i++;
+			/* } */ $s = 6; continue; case 7:
+			$s = -1; return ret;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._i = _i; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._ref = _ref; $f._tmp = _tmp; $f._tmp$1 = _tmp$1; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.cost1 = cost1; $f.cost2 = cost2; $f.curr = curr; $f.currPos = currPos; $f.err$1 = err$1; $f.err$2 = err$2; $f.err$3 = err$3; $f.factor = factor; $f.factor$1 = factor$1; $f.isFriendlyRobot = isFriendlyRobot; $f.nextCost = nextCost; $f.nextPos = nextPos; $f.notFound = notFound; $f.offset = offset; $f.offsets = offsets; $f.ret = ret; $f.terrain1 = terrain1; $f.terrain2 = terrain2; $f.unitAtPos = unitAtPos; $f.x = x; $f.x$1 = x$1; $f.y = y; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(ignoreOccupy, isSky, model, movePower, robotID, suitability), $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: RobotMoveCost }; } $f._entry = _entry; $f._r = _r; $f._tuple = _tuple; $f.err = err; $f.ignoreOccupy = ignoreOccupy; $f.isSky = isSky; $f.model = model; $f.movePower = movePower; $f.robotID = robotID; $f.suitability = suitability; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.RobotMoveCost = RobotMoveCost;
+	SearchUnitByPosition = function(posComs, pos) {
+		var _entry, _entry$1, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _i, _i$1, _i$2, _key, _key$1, _keys, _keys$1, _keys$2, _ref, _ref$1, _ref$2, _tuple, _tuple$1, _tuple$2, has, has$1, has$2, pos, posComs, unitID, unitID$1, unitID$2, unitID$3, unitNewPos, unitOldPos, unitPos, unitPos$1;
+		_ref = unitByPosition;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			unitPos = $clone(_entry.k, protocol.Position);
+			unitID = _entry.v;
+			_tuple = (_entry$1 = posComs[$String.keyFor(unitID)], _entry$1 !== undefined ? [_entry$1.v, true] : [arrayType.zero(), false]);
+			has = _tuple[1];
+			if (has === false) {
+				delete unitByPosition[protocol.Position.keyFor(unitPos)];
+			}
+			_i++;
+		}
+		_ref$1 = posComs;
+		_i$1 = 0;
+		_keys$1 = $keys(_ref$1);
+		while (true) {
+			if (!(_i$1 < _keys$1.length)) { break; }
+			_entry$2 = _ref$1[_keys$1[_i$1]];
+			if (_entry$2 === undefined) {
+				_i$1++;
+				continue;
+			}
+			unitID$1 = _entry$2.k;
+			unitPos$1 = $clone(_entry$2.v, protocol.Position);
+			_tuple$1 = (_entry$3 = unitByPosition[protocol.Position.keyFor(unitPos$1)], _entry$3 !== undefined ? [_entry$3.v, true] : ["", false]);
+			has$1 = _tuple$1[1];
+			if (has$1 === false) {
+				_key = $clone(unitPos$1, protocol.Position); (unitByPosition || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: unitID$1 };
+			}
+			_i$1++;
+		}
+		_ref$2 = unitByPosition;
+		_i$2 = 0;
+		_keys$2 = $keys(_ref$2);
+		while (true) {
+			if (!(_i$2 < _keys$2.length)) { break; }
+			_entry$4 = _ref$2[_keys$2[_i$2]];
+			if (_entry$4 === undefined) {
+				_i$2++;
+				continue;
+			}
+			unitOldPos = $clone(_entry$4.k, protocol.Position);
+			unitID$2 = _entry$4.v;
+			unitNewPos = $clone((_entry$5 = posComs[$String.keyFor(unitID$2)], _entry$5 !== undefined ? _entry$5.v : arrayType.zero()), protocol.Position);
+			if (!($equal(unitOldPos, unitNewPos, protocol.Position))) {
+				delete unitByPosition[protocol.Position.keyFor(unitOldPos)];
+				_key$1 = $clone(unitNewPos, protocol.Position); (unitByPosition || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key$1)] = { k: _key$1, v: unitID$2 };
+			}
+			_i$2++;
+		}
+		_tuple$2 = (_entry$6 = unitByPosition[protocol.Position.keyFor(pos)], _entry$6 !== undefined ? [_entry$6.v, true] : ["", false]);
+		unitID$3 = _tuple$2[0];
+		has$2 = _tuple$2[1];
+		if (has$2) {
+			return unitID$3;
+		}
+		return "";
+	};
+	$pkg.SearchUnitByPosition = SearchUnitByPosition;
+	proj = function(pos) {
+		var _q, _q$1, pos;
+		pos[0] = (_q = pos[0] / 5, (_q === _q && _q !== 1/0 && _q !== -1/0) ? _q >> 0 : $throwRuntimeError("integer divide by zero"));
+		pos[1] = (_q$1 = pos[1] / 5, (_q$1 === _q$1 && _q$1 !== 1/0 && _q$1 !== -1/0) ? _q$1 >> 0 : $throwRuntimeError("integer divide by zero"));
+		return pos;
+	};
+	SearchUnitByRegion = function(posComs, p1, p2) {
+		var _entry, _entry$1, _entry$10, _entry$11, _entry$12, _entry$13, _entry$14, _entry$15, _entry$16, _entry$17, _entry$2, _entry$3, _entry$4, _entry$5, _entry$6, _entry$7, _entry$8, _entry$9, _i, _i$1, _i$2, _i$3, _i$4, _i$5, _i$6, _key, _key$1, _key$2, _key$3, _key$4, _keys, _keys$1, _keys$2, _keys$3, _keys$4, _keys$5, _keys$6, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _ref$5, _ref$6, _tuple, _tuple$1, has, has$1, has$2, p1, p2, posComs, ret, total, unitID, unitID$1, unitID$2, unitID$3, unitID$4, unitIDs, unitNewPos, unitOldPos, unitPos, unitPos$1, units, units$1, x, y;
+		_ref = unitByRegion;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			unitPos = $clone(_entry.k, protocol.Position);
+			units = _entry.v;
+			_ref$1 = units;
+			_i$1 = 0;
+			_keys$1 = $keys(_ref$1);
+			while (true) {
+				if (!(_i$1 < _keys$1.length)) { break; }
+				_entry$1 = _ref$1[_keys$1[_i$1]];
+				if (_entry$1 === undefined) {
+					_i$1++;
+					continue;
+				}
+				unitID = _entry$1.k;
+				_tuple = (_entry$2 = posComs[$String.keyFor(unitID)], _entry$2 !== undefined ? [_entry$2.v, true] : [arrayType.zero(), false]);
+				has = _tuple[1];
+				if (has === false) {
+					delete (_entry$3 = unitByRegion[protocol.Position.keyFor(unitPos)], _entry$3 !== undefined ? _entry$3.v : false)[$String.keyFor(unitID)];
+				}
+				_i$1++;
+			}
+			_i++;
+		}
+		_ref$2 = posComs;
+		_i$2 = 0;
+		_keys$2 = $keys(_ref$2);
+		while (true) {
+			if (!(_i$2 < _keys$2.length)) { break; }
+			_entry$4 = _ref$2[_keys$2[_i$2]];
+			if (_entry$4 === undefined) {
+				_i$2++;
+				continue;
+			}
+			unitID$1 = _entry$4.k;
+			unitPos$1 = $clone(_entry$4.v, protocol.Position);
+			protocol.Position.copy(unitPos$1, proj($clone(unitPos$1, protocol.Position)));
+			has$1 = (_entry$5 = (_entry$6 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$6 !== undefined ? _entry$6.v : false)[$String.keyFor(unitID$1)], _entry$5 !== undefined ? _entry$5.v : false);
+			if (has$1 === false) {
+				if ((_entry$7 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$7 !== undefined ? _entry$7.v : false) === false) {
+					_key = $clone(unitPos$1, protocol.Position); (unitByRegion || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key)] = { k: _key, v: $makeMap($String.keyFor, []) };
+				}
+				_key$1 = unitID$1; ((_entry$8 = unitByRegion[protocol.Position.keyFor(unitPos$1)], _entry$8 !== undefined ? _entry$8.v : false) || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: true };
+			}
+			_i$2++;
+		}
+		_ref$3 = unitByRegion;
+		_i$3 = 0;
+		_keys$3 = $keys(_ref$3);
+		while (true) {
+			if (!(_i$3 < _keys$3.length)) { break; }
+			_entry$9 = _ref$3[_keys$3[_i$3]];
+			if (_entry$9 === undefined) {
+				_i$3++;
+				continue;
+			}
+			unitOldPos = $clone(_entry$9.k, protocol.Position);
+			units$1 = _entry$9.v;
+			_ref$4 = units$1;
+			_i$4 = 0;
+			_keys$4 = $keys(_ref$4);
+			while (true) {
+				if (!(_i$4 < _keys$4.length)) { break; }
+				_entry$10 = _ref$4[_keys$4[_i$4]];
+				if (_entry$10 === undefined) {
+					_i$4++;
+					continue;
+				}
+				unitID$2 = _entry$10.k;
+				unitNewPos = $clone(proj($clone((_entry$11 = posComs[$String.keyFor(unitID$2)], _entry$11 !== undefined ? _entry$11.v : arrayType.zero()), protocol.Position)), protocol.Position);
+				if (!($equal(unitOldPos, unitNewPos, protocol.Position))) {
+					delete (_entry$12 = unitByRegion[protocol.Position.keyFor(unitOldPos)], _entry$12 !== undefined ? _entry$12.v : false)[$String.keyFor(unitID$2)];
+					if ((_entry$13 = unitByRegion[protocol.Position.keyFor(unitNewPos)], _entry$13 !== undefined ? _entry$13.v : false) === false) {
+						_key$2 = $clone(unitNewPos, protocol.Position); (unitByRegion || $throwRuntimeError("assignment to entry in nil map"))[protocol.Position.keyFor(_key$2)] = { k: _key$2, v: $makeMap($String.keyFor, []) };
+					}
+					_key$3 = unitID$2; ((_entry$14 = unitByRegion[protocol.Position.keyFor(unitNewPos)], _entry$14 !== undefined ? _entry$14.v : false) || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$3)] = { k: _key$3, v: true };
+				}
+				_i$4++;
+			}
+			_i$3++;
+		}
+		protocol.Position.copy(p1, proj($clone(p1, protocol.Position)));
+		protocol.Position.copy(p2, proj($clone(p2, protocol.Position)));
+		total = $makeMap($String.keyFor, []);
+		x = p1[0];
+		while (true) {
+			if (!(x <= p2[0])) { break; }
+			y = p1[1];
+			while (true) {
+				if (!(y <= p2[1])) { break; }
+				_tuple$1 = (_entry$15 = unitByRegion[protocol.Position.keyFor($toNativeArray($kindInt, [x, y]))], _entry$15 !== undefined ? [_entry$15.v, true] : [false, false]);
+				unitIDs = _tuple$1[0];
+				has$2 = _tuple$1[1];
+				if (has$2) {
+					_ref$5 = unitIDs;
+					_i$5 = 0;
+					_keys$5 = $keys(_ref$5);
+					while (true) {
+						if (!(_i$5 < _keys$5.length)) { break; }
+						_entry$16 = _ref$5[_keys$5[_i$5]];
+						if (_entry$16 === undefined) {
+							_i$5++;
+							continue;
+						}
+						unitID$3 = _entry$16.k;
+						_key$4 = unitID$3; (total || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$4)] = { k: _key$4, v: true };
+						_i$5++;
+					}
+				}
+				y = y + (1) >> 0;
+			}
+			x = x + (1) >> 0;
+		}
+		ret = new sliceType$2([]);
+		_ref$6 = total;
+		_i$6 = 0;
+		_keys$6 = $keys(_ref$6);
+		while (true) {
+			if (!(_i$6 < _keys$6.length)) { break; }
+			_entry$17 = _ref$6[_keys$6[_i$6]];
+			if (_entry$17 === undefined) {
+				_i$6++;
+				continue;
+			}
+			unitID$4 = _entry$17.k;
+			ret = $append(ret, unitID$4);
+			_i$6++;
+		}
+		return ret;
+	};
+	$pkg.SearchUnitByRegion = SearchUnitByRegion;
+	QueryUnitsByPlayer = function(model, playerID) {
+		var ID, _entry, _i, _keys, _r, _ref, _tuple, err, model, playerID, ret, robot, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; ID = $f.ID; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; err = $f.err; model = $f.model; playerID = $f.playerID; ret = $f.ret; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = protocol.TryGetStringPlayer(model.App.Gameplay.Players, playerID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [new sliceType$2([]), err];
+		}
+		ret = new sliceType$2([]);
+		_ref = model.App.Gameplay.Robots;
+		_i = 0;
+		_keys = $keys(_ref);
+		while (true) {
+			if (!(_i < _keys.length)) { break; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				continue;
+			}
+			ID = _entry.k;
+			robot = $clone(_entry.v, protocol.Robot);
+			if (robot.PlayerID === playerID) {
+				ret = $append(ret, ID);
+			}
+			_i++;
+		}
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryUnitsByPlayer }; } $f.ID = ID; $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.err = err; $f.model = model; $f.playerID = playerID; $f.ret = ret; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryUnitsByPlayer = QueryUnitsByPlayer;
+	IsRobotDone = function(model, robotID) {
+		var _entry, model, robotID;
+		return [(_entry = model.App.Gameplay.Tags[$String.keyFor(robotID)], _entry !== undefined ? _entry.v : new protocol.Tag.ptr(0, false, false)).IsDone, $ifaceNil];
+	};
+	$pkg.IsRobotDone = IsRobotDone;
+	IsFriendlyCell = function(model, unitID, pos) {
+		var _entry, _entry$1, _r, _tuple, _tuple$1, is, is$1, item, model, notFound, pos, robot, unitAtPos, unitID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _r = $f._r; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; is = $f.is; is$1 = $f.is$1; item = $f.item; model = $f.model; notFound = $f.notFound; pos = $f.pos; robot = $f.robot; unitAtPos = $f.unitAtPos; unitID = $f.unitID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		unitAtPos = SearchUnitByPosition(model.App.Gameplay.Positions, $clone(pos, protocol.Position));
+		notFound = "";
+		if (unitAtPos === notFound) {
+			$s = -1; return [true, $ifaceNil];
+		}
+		_tuple = (_entry = model.App.Gameplay.Robots[$String.keyFor(unitAtPos)], _entry !== undefined ? [_entry.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$1.zero(), 0, false), false]);
+		robot = $clone(_tuple[0], protocol.Robot);
+		is = _tuple[1];
+		/* */ if (is) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (is) { */ case 1:
+			_r = IsFriendlyRobot($clone(model, types.Model), unitID, robot.ID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			$s = -1; return _r;
+		/* } */ case 2:
+		_tuple$1 = (_entry$1 = model.App.Gameplay.Items[$String.keyFor(unitAtPos)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Item.ptr("", "", ""), false]);
+		item = $clone(_tuple$1[0], protocol.Item);
+		is$1 = _tuple$1[1];
+		if (is$1) {
+			$unused(item);
+			$s = -1; return [true, $ifaceNil];
+		}
+		$s = -1; return [false, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: IsFriendlyCell }; } $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.is = is; $f.is$1 = is$1; $f.item = item; $f.model = model; $f.notFound = notFound; $f.pos = pos; $f.robot = robot; $f.unitAtPos = unitAtPos; $f.unitID = unitID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.IsFriendlyCell = IsFriendlyCell;
+	IsFriendlyRobot = function(model, unitID1, unitID2) {
+		var _r, _r$1, _r$2, _r$3, _tuple, _tuple$1, _tuple$2, _tuple$3, err, model, plyr1, plyr2, unit1, unit2, unitID1, unitID2, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; err = $f.err; model = $f.model; plyr1 = $f.plyr1; plyr2 = $f.plyr2; unit1 = $f.unit1; unit2 = $f.unit2; unitID1 = $f.unitID1; unitID2 = $f.unitID2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		_r = protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID1); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple = _r;
+		unit1 = $clone(_tuple[0], protocol.Robot);
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		_r$1 = protocol.TryGetStringRobot(model.App.Gameplay.Robots, unitID2); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$1 = _r$1;
+		unit2 = $clone(_tuple$1[0], protocol.Robot);
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		_r$2 = protocol.TryGetStringPlayer(model.App.Gameplay.Players, unit1.PlayerID); /* */ $s = 3; case 3: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$2 = _r$2;
+		plyr1 = $clone(_tuple$2[0], protocol.Player);
+		err = _tuple$2[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		_r$3 = protocol.TryGetStringPlayer(model.App.Gameplay.Players, unit2.PlayerID); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_tuple$3 = _r$3;
+		plyr2 = $clone(_tuple$3[0], protocol.Player);
+		err = _tuple$3[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, err];
+		}
+		$s = -1; return [plyr1.GroupID === plyr2.GroupID, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: IsFriendlyRobot }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f.err = err; $f.model = model; $f.plyr1 = plyr1; $f.plyr2 = plyr2; $f.unit1 = unit1; $f.unit2 = unit2; $f.unitID1 = unitID1; $f.unitID2 = unitID2; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.IsFriendlyRobot = IsFriendlyRobot;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = types.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tool.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = data.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = uidata.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mgl64.$init(); /* */ $s = 8; case 8: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = math.$init(); /* */ $s = 9; case 9: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = strconv.$init(); /* */ $s = 10; case 10: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = astar.$init(); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 12; case 12: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		terrainCache = false;
+		unitByPosition = $makeMap(protocol.Position.keyFor, []);
+		unitByRegion = $makeMap(protocol.Position.keyFor, []);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/model/v1/internal/ai"] = (function() {
+	var $pkg = {}, $init, common, types, tool, helper, protocol, log, mlkmeans, sliceType, sliceType$1, sliceType$2, sliceType$3, sliceType$4, QueryTeamTarget, QueryTeammate, QueryTeamCount, QueryTeamCombatPower, Strategy;
+	common = $packages["app/model/v1/internal/common"];
+	types = $packages["app/model/v1/internal/tool/types"];
+	tool = $packages["app/tool"];
+	helper = $packages["app/tool/helper"];
+	protocol = $packages["app/tool/protocol"];
+	log = $packages["tool/log"];
+	mlkmeans = $packages["tool/nodejs/mlkmeans"];
+	sliceType = $sliceType($String);
+	sliceType$1 = $sliceType($Int);
+	sliceType$2 = $sliceType(mlkmeans.Centroid);
+	sliceType$3 = $sliceType($emptyInterface);
+	sliceType$4 = $sliceType(sliceType$3);
+	QueryTeamTarget = function(origin, myRobotIDs, myTeams, targetRobotIDs, targetTeams) {
+		var _key, _r, _r$1, _r$2, _r$3, _r$4, _r$5, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, _tuple$5, _tuple$6, _tuple$7, ctx, currMyTeamPower, currMyTeammate, currTargetTeamID, currTargetTeamPower, currTargetTeammate, err, err$1, err$2, i, myRobotIDs, myTeamCnt, myTeams, origin, selectTargetTeamID, targetRobotIDs, targetTeamCnt, targetTeams, totalPower, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _key = $f._key; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; _tuple$5 = $f._tuple$5; _tuple$6 = $f._tuple$6; _tuple$7 = $f._tuple$7; ctx = $f.ctx; currMyTeamPower = $f.currMyTeamPower; currMyTeammate = $f.currMyTeammate; currTargetTeamID = $f.currTargetTeamID; currTargetTeamPower = $f.currTargetTeamPower; currTargetTeammate = $f.currTargetTeammate; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; myRobotIDs = $f.myRobotIDs; myTeamCnt = $f.myTeamCnt; myTeams = $f.myTeams; origin = $f.origin; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeamCnt = $f.targetTeamCnt; targetTeams = $f.targetTeams; totalPower = $f.totalPower; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		_tuple = QueryTeamCount($clone(myTeams, mlkmeans.KMeansResult));
+		myTeamCnt = _tuple[0];
+		err = _tuple[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		_tuple$1 = QueryTeamCount($clone(targetTeams, mlkmeans.KMeansResult));
+		targetTeamCnt = _tuple$1[0];
+		err = _tuple$1[1];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [false, false, err];
+		}
+		if (targetTeamCnt === 0) {
+			$s = -1; return [false, false, $ifaceNil];
+		}
+		selectTargetTeamID = $makeMap($Int.keyFor, []);
+		currTargetTeamID = 0;
+		_r = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		_tuple$2 = _r;
+		currTargetTeammate = _tuple$2[0];
+		err$1 = _tuple$2[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		_r$1 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 2; case 2: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_tuple$3 = _r$1;
+		currTargetTeamPower = _tuple$3[0];
+		err$1 = _tuple$3[1];
+		if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+			$s = -1; return [false, false, err$1];
+		}
+		totalPower = 0;
+		i = 0;
+		/* while (true) { */ case 3:
+			/* if (!(i < myTeamCnt)) { break; } */ if(!(i < myTeamCnt)) { $s = 4; continue; }
+			_key = i; (selectTargetTeamID || $throwRuntimeError("assignment to entry in nil map"))[$Int.keyFor(_key)] = { k: _key, v: currTargetTeamID };
+			_r$2 = QueryTeammate($clone(myTeams, mlkmeans.KMeansResult), myRobotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$4 = _r$2;
+			currMyTeammate = _tuple$4[0];
+			err$2 = _tuple$4[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_r$3 = QueryTeamCombatPower($clone(ctx, types.Model), currMyTeammate); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+			_tuple$5 = _r$3;
+			currMyTeamPower = _tuple$5[0];
+			err$2 = _tuple$5[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			totalPower = totalPower + (currMyTeamPower) >> 0;
+			/* */ if (totalPower < currTargetTeamPower) { $s = 7; continue; }
+			/* */ $s = 8; continue;
+			/* if (totalPower < currTargetTeamPower) { */ case 7:
+				i = i + (1) >> 0;
+				/* continue; */ $s = 3; continue;
+			/* } */ case 8:
+			totalPower = 0;
+			currTargetTeamID = currTargetTeamID + (1) >> 0;
+			if (currTargetTeamID >= targetTeamCnt) {
+				/* break; */ $s = 4; continue;
+			}
+			_r$4 = QueryTeammate($clone(targetTeams, mlkmeans.KMeansResult), targetRobotIDs, currTargetTeamID); /* */ $s = 9; case 9: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+			_tuple$6 = _r$4;
+			currTargetTeammate = _tuple$6[0];
+			err$2 = _tuple$6[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			_r$5 = QueryTeamCombatPower($clone(ctx, types.Model), currTargetTeammate); /* */ $s = 10; case 10: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+			_tuple$7 = _r$5;
+			currTargetTeamPower = _tuple$7[0];
+			err$2 = _tuple$7[1];
+			if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+				$s = -1; return [false, false, err$2];
+			}
+			i = i + (1) >> 0;
+		/* } */ $s = 3; continue; case 4:
+		$s = -1; return [selectTargetTeamID, true, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamTarget }; } $f._key = _key; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f._tuple$5 = _tuple$5; $f._tuple$6 = _tuple$6; $f._tuple$7 = _tuple$7; $f.ctx = ctx; $f.currMyTeamPower = currMyTeamPower; $f.currMyTeammate = currMyTeammate; $f.currTargetTeamID = currTargetTeamID; $f.currTargetTeamPower = currTargetTeamPower; $f.currTargetTeammate = currTargetTeammate; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.myRobotIDs = myRobotIDs; $f.myTeamCnt = myTeamCnt; $f.myTeams = myTeams; $f.origin = origin; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeamCnt = targetTeamCnt; $f.targetTeams = targetTeams; $f.totalPower = totalPower; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeamTarget = QueryTeamTarget;
+	QueryTeammate = function(result, robotIDs, teamID) {
+		var _i, _r, _ref, _tuple, currTeamID, err, i, result, ret, robotID, robotIDs, teamID, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _ref = $f._ref; _tuple = $f._tuple; currTeamID = $f.currTeamID; err = $f.err; i = $f.i; result = $f.result; ret = $f.ret; robotID = $f.robotID; robotIDs = $f.robotIDs; teamID = $f.teamID; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ret = new sliceType([]);
+		_ref = result.Clusters;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			i = _i;
+			currTeamID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			/* */ if (!((currTeamID === teamID))) { $s = 3; continue; }
+			/* */ $s = 4; continue;
+			/* if (!((currTeamID === teamID))) { */ case 3:
+				_i++;
+				/* continue; */ $s = 1; continue;
+			/* } */ case 4:
+			_r = tool.TryGetString(robotIDs, i); /* */ $s = 5; case 5: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robotID = _tuple[0];
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [sliceType.nil, err];
+			}
+			ret = $append(ret, robotID);
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [ret, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeammate }; } $f._i = _i; $f._r = _r; $f._ref = _ref; $f._tuple = _tuple; $f.currTeamID = currTeamID; $f.err = err; $f.i = i; $f.result = result; $f.ret = ret; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.teamID = teamID; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeammate = QueryTeammate;
+	QueryTeamCount = function(result) {
+		var result;
+		return [result.Clusters.$length, $ifaceNil];
+	};
+	$pkg.QueryTeamCount = QueryTeamCount;
+	QueryTeamCombatPower = function(origin, robotIDs) {
+		var _i, _r, _r$1, _r$2, _ref, _tuple, _tuple$1, _tuple$2, combatPower, ctx, err, origin, robot, robotID, robotIDs, totalCombatPower, weapons, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; combatPower = $f.combatPower; ctx = $f.ctx; err = $f.err; origin = $f.origin; robot = $f.robot; robotID = $f.robotID; robotIDs = $f.robotIDs; totalCombatPower = $f.totalCombatPower; weapons = $f.weapons; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ctx = $clone(origin, types.Model);
+		totalCombatPower = 0;
+		_ref = robotIDs;
+		_i = 0;
+		/* while (true) { */ case 1:
+			/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 2; continue; }
+			robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+			_r = protocol.TryGetStringRobot(ctx.App.Gameplay.Robots, robotID); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_tuple = _r;
+			robot = $clone(_tuple[0], protocol.Robot);
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			_r$1 = common.QueryRobotWeapons($clone(ctx, types.Model), robot.ID, robot.Transform, true); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple$1 = _r$1;
+			weapons = _tuple$1[0];
+			err = _tuple$1[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			_r$2 = common.QueryRobotCombatPower($clone(ctx, types.Model), $clone(robot, protocol.Robot), weapons); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple$2 = _r$2;
+			combatPower = _tuple$2[0];
+			err = _tuple$2[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [0, err];
+			}
+			totalCombatPower = totalCombatPower + (combatPower) >> 0;
+			_i++;
+		/* } */ $s = 1; continue; case 2:
+		$s = -1; return [totalCombatPower, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: QueryTeamCombatPower }; } $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f.combatPower = combatPower; $f.ctx = ctx; $f.err = err; $f.origin = origin; $f.robot = robot; $f.robotID = robotID; $f.robotIDs = robotIDs; $f.totalCombatPower = totalCombatPower; $f.weapons = weapons; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.QueryTeamCombatPower = QueryTeamCombatPower;
+	Strategy = function(origin, playerID, myRobotIDs, targetRobotIDs) {
+		var _entry, _i, _i$1, _i$2, _i$3, _i$4, _key, _key$1, _key$2, _r, _r$1, _r$2, _ref, _ref$1, _ref$2, _ref$3, _ref$4, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, centers, centers$1, centroidV2, centroidV2$1, clusters, clusters$1, cnt, cnt$1, ctx, err, err$1, err$2, i, memory, myRobotIDs, myRobotTeamID, myTeams, options, options$1, origin, playerID, pos, pos$1, posData, posData$1, robotID, robotID$1, robotID$2, robotIDs, robotIDs$1, selectTargetTeamID, targetRobotIDs, targetTeams, v, v$1, x, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _i$1 = $f._i$1; _i$2 = $f._i$2; _i$3 = $f._i$3; _i$4 = $f._i$4; _key = $f._key; _key$1 = $f._key$1; _key$2 = $f._key$2; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; _ref$1 = $f._ref$1; _ref$2 = $f._ref$2; _ref$3 = $f._ref$3; _ref$4 = $f._ref$4; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; centers = $f.centers; centers$1 = $f.centers$1; centroidV2 = $f.centroidV2; centroidV2$1 = $f.centroidV2$1; clusters = $f.clusters; clusters$1 = $f.clusters$1; cnt = $f.cnt; cnt$1 = $f.cnt$1; ctx = $f.ctx; err = $f.err; err$1 = $f.err$1; err$2 = $f.err$2; i = $f.i; memory = $f.memory; myRobotIDs = $f.myRobotIDs; myRobotTeamID = $f.myRobotTeamID; myTeams = $f.myTeams; options = $f.options; options$1 = $f.options$1; origin = $f.origin; playerID = $f.playerID; pos = $f.pos; pos$1 = $f.pos$1; posData = $f.posData; posData$1 = $f.posData$1; robotID = $f.robotID; robotID$1 = $f.robotID$1; robotID$2 = $f.robotID$2; robotIDs = $f.robotIDs; robotIDs$1 = $f.robotIDs$1; selectTargetTeamID = $f.selectTargetTeamID; targetRobotIDs = $f.targetRobotIDs; targetTeams = $f.targetTeams; v = $f.v; v$1 = $f.v$1; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		err = $ifaceNil;
+		ctx = $clone(origin, types.Model);
+		memory = $clone((_entry = ctx.App.Gameplay.AIModel.Memory[$String.keyFor(playerID)], _entry !== undefined ? _entry.v : new types.Memory.ptr(new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0), false, false)), types.Memory);
+		myTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
+		clusters = $clone(memory.MyClusters, mlkmeans.KMeansResult);
+		robotIDs = myRobotIDs;
+		/* */ if (robotIDs.$length === 0) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (robotIDs.$length === 0) { */ case 1:
+			$r = log.Log(protocol.LogCategoryWarning, "Strategy", "\xE6\xA9\x9F\xE9\xAB\x94\xE4\xB8\x8D\xE5\xAD\x98\xE5\x9C\xA8, \xE7\x84\xA1\xE6\xB3\x95\xE5\x88\x86\xE9\x9A\x8A."); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = 3; continue;
+		/* } else { */ case 2:
+			posData = new sliceType$4([]);
+			_ref = robotIDs;
+			_i = 0;
+			/* while (true) { */ case 5:
+				/* if (!(_i < _ref.$length)) { break; } */ if(!(_i < _ref.$length)) { $s = 6; continue; }
+				robotID = ((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]);
+				_r = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID); /* */ $s = 7; case 7: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+				_tuple = _r;
+				pos = $clone(_tuple[0], protocol.Position);
+				err$1 = _tuple[1];
+				if (!($interfaceIsEqual(err$1, $ifaceNil))) {
+					$s = -1; return [origin, err$1];
+				}
+				posData = $append(posData, new sliceType$3([new $Int(pos[0]), new $Int(pos[1])]));
+				_i++;
+			/* } */ $s = 5; continue; case 6:
+			cnt = helper.Min(robotIDs.$length, 4);
+			options = $makeMap($String.keyFor, []);
+			centers = new sliceType$4([]);
+			if (clusters.Centroids.$length > 0) {
+				_ref$1 = clusters.Centroids;
+				_i$1 = 0;
+				while (true) {
+					if (!(_i$1 < _ref$1.$length)) { break; }
+					v = $clone(((_i$1 < 0 || _i$1 >= _ref$1.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$1.$array[_ref$1.$offset + _i$1]), mlkmeans.Centroid);
+					if (v.Size === 0) {
+						_i$1++;
+						continue;
+					}
+					centroidV2 = v.Centroid;
+					centers = $append(centers, new sliceType$3([new $Float64((0 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 0])), new $Float64((1 >= centroidV2.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2.$array[centroidV2.$offset + 1]))]));
+					_i$1++;
+				}
+				if (cnt === centers.$length) {
+					_key = "initialization"; (options || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key)] = { k: _key, v: centers };
+				}
+			}
+			_tuple$1 = mlkmeans.KMeans(posData, cnt, options);
+			mlkmeans.KMeansResult.copy(myTeams, _tuple$1[0]);
+			err = _tuple$1[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+		/* } */ case 3:
+		targetTeams = new mlkmeans.KMeansResult.ptr(sliceType$1.nil, sliceType$2.nil, false, 0);
+		clusters$1 = $clone(memory.TargetClusters, mlkmeans.KMeansResult);
+		robotIDs$1 = targetRobotIDs;
+		/* */ if (robotIDs$1.$length === 0) { $s = 8; continue; }
+		/* */ $s = 9; continue;
+		/* if (robotIDs$1.$length === 0) { */ case 8:
+			$r = log.Log(protocol.LogCategoryWarning, "Strategy", "\xE6\xA9\x9F\xE9\xAB\x94\xE4\xB8\x8D\xE5\xAD\x98\xE5\x9C\xA8, \xE7\x84\xA1\xE6\xB3\x95\xE5\x88\x86\xE9\x9A\x8A."); /* */ $s = 11; case 11: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+			$s = 10; continue;
+		/* } else { */ case 9:
+			posData$1 = new sliceType$4([]);
+			_ref$2 = robotIDs$1;
+			_i$2 = 0;
+			/* while (true) { */ case 12:
+				/* if (!(_i$2 < _ref$2.$length)) { break; } */ if(!(_i$2 < _ref$2.$length)) { $s = 13; continue; }
+				robotID$1 = ((_i$2 < 0 || _i$2 >= _ref$2.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$2.$array[_ref$2.$offset + _i$2]);
+				_r$1 = protocol.TryGetStringPosition(ctx.App.Gameplay.Positions, robotID$1); /* */ $s = 14; case 14: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+				_tuple$2 = _r$1;
+				pos$1 = $clone(_tuple$2[0], protocol.Position);
+				err$2 = _tuple$2[1];
+				if (!($interfaceIsEqual(err$2, $ifaceNil))) {
+					$s = -1; return [origin, err$2];
+				}
+				posData$1 = $append(posData$1, new sliceType$3([new $Int(pos$1[0]), new $Int(pos$1[1])]));
+				_i$2++;
+			/* } */ $s = 12; continue; case 13:
+			cnt$1 = helper.Min(robotIDs$1.$length, 4);
+			options$1 = $makeMap($String.keyFor, []);
+			centers$1 = new sliceType$4([]);
+			if (clusters$1.Centroids.$length > 0) {
+				_ref$3 = clusters$1.Centroids;
+				_i$3 = 0;
+				while (true) {
+					if (!(_i$3 < _ref$3.$length)) { break; }
+					v$1 = $clone(((_i$3 < 0 || _i$3 >= _ref$3.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$3.$array[_ref$3.$offset + _i$3]), mlkmeans.Centroid);
+					if (v$1.Size === 0) {
+						_i$3++;
+						continue;
+					}
+					centroidV2$1 = v$1.Centroid;
+					centers$1 = $append(centers$1, new sliceType$3([new $Float64((0 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 0])), new $Float64((1 >= centroidV2$1.$length ? ($throwRuntimeError("index out of range"), undefined) : centroidV2$1.$array[centroidV2$1.$offset + 1]))]));
+					_i$3++;
+				}
+				if (cnt$1 === centers$1.$length) {
+					_key$1 = "initialization"; (options$1 || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$1)] = { k: _key$1, v: centers$1 };
+				}
+			}
+			_tuple$3 = mlkmeans.KMeans(posData$1, cnt$1, options$1);
+			mlkmeans.KMeansResult.copy(targetTeams, _tuple$3[0]);
+			err = _tuple$3[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+		/* } */ case 10:
+		myRobotTeamID = $makeMap($String.keyFor, []);
+		_ref$4 = myRobotIDs;
+		_i$4 = 0;
+		while (true) {
+			if (!(_i$4 < _ref$4.$length)) { break; }
+			i = _i$4;
+			robotID$2 = ((_i$4 < 0 || _i$4 >= _ref$4.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref$4.$array[_ref$4.$offset + _i$4]);
+			_key$2 = robotID$2; (myRobotTeamID || $throwRuntimeError("assignment to entry in nil map"))[$String.keyFor(_key$2)] = { k: _key$2, v: (x = myTeams.Clusters, ((i < 0 || i >= x.$length) ? ($throwRuntimeError("index out of range"), undefined) : x.$array[x.$offset + i])) };
+			_i$4++;
+		}
+		_r$2 = QueryTeamTarget($clone(ctx, types.Model), myRobotIDs, $clone(myTeams, mlkmeans.KMeansResult), targetRobotIDs, $clone(targetTeams, mlkmeans.KMeansResult)); /* */ $s = 15; case 15: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		_tuple$4 = _r$2;
+		selectTargetTeamID = _tuple$4[0];
+		err = _tuple$4[2];
+		if (!($interfaceIsEqual(err, $ifaceNil))) {
+			$s = -1; return [origin, err];
+		}
+		memory.MyTeamTarget = selectTargetTeamID;
+		mlkmeans.KMeansResult.copy(memory.MyClusters, myTeams);
+		mlkmeans.KMeansResult.copy(memory.TargetClusters, targetTeams);
+		memory.TeamIDByRobotID = myRobotTeamID;
+		ctx.App.Gameplay.AIModel.Memory = types.AssocStringMemory(ctx.App.Gameplay.AIModel.Memory, playerID, $clone(memory, types.Memory));
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Strategy }; } $f._entry = _entry; $f._i = _i; $f._i$1 = _i$1; $f._i$2 = _i$2; $f._i$3 = _i$3; $f._i$4 = _i$4; $f._key = _key; $f._key$1 = _key$1; $f._key$2 = _key$2; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._ref = _ref; $f._ref$1 = _ref$1; $f._ref$2 = _ref$2; $f._ref$3 = _ref$3; $f._ref$4 = _ref$4; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.centers = centers; $f.centers$1 = centers$1; $f.centroidV2 = centroidV2; $f.centroidV2$1 = centroidV2$1; $f.clusters = clusters; $f.clusters$1 = clusters$1; $f.cnt = cnt; $f.cnt$1 = cnt$1; $f.ctx = ctx; $f.err = err; $f.err$1 = err$1; $f.err$2 = err$2; $f.i = i; $f.memory = memory; $f.myRobotIDs = myRobotIDs; $f.myRobotTeamID = myRobotTeamID; $f.myTeams = myTeams; $f.options = options; $f.options$1 = options$1; $f.origin = origin; $f.playerID = playerID; $f.pos = pos; $f.pos$1 = pos$1; $f.posData = posData; $f.posData$1 = posData$1; $f.robotID = robotID; $f.robotID$1 = robotID$1; $f.robotID$2 = robotID$2; $f.robotIDs = robotIDs; $f.robotIDs$1 = robotIDs$1; $f.selectTargetTeamID = selectTargetTeamID; $f.targetRobotIDs = targetRobotIDs; $f.targetTeams = targetTeams; $f.v = v; $f.v$1 = v$1; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.Strategy = Strategy;
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = common.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = types.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = tool.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = helper.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = log.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = mlkmeans.$init(); /* */ $s = 7; case 7: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/view/p5"] = (function() {
+	var $pkg = {}, $init, uidata, fmt, js, eventQueue;
+	uidata = $packages["app/tool/uidata"];
+	fmt = $packages["fmt"];
+	js = $packages["github.com/gopherjs/gopherjs/js"];
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = uidata.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		eventQueue = new $Chan($emptyInterface, 0);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/tool/viewer"] = (function() {
+	var $pkg = {}, $init, helper, protocol, uidata, p5, fmt, js, Cocos, ptrType, funcType, mapType, sliceType, arrayType, arrayType$1, arrayType$2, sliceType$1, sliceType$2, sliceType$3, arrayType$3, funcType$1, evtQueue;
+	helper = $packages["app/tool/helper"];
+	protocol = $packages["app/tool/protocol"];
+	uidata = $packages["app/tool/uidata"];
+	p5 = $packages["app/view/p5"];
+	fmt = $packages["fmt"];
+	js = $packages["github.com/gopherjs/gopherjs/js"];
+	Cocos = $pkg.Cocos = $newType(0, $kindStruct, "viewer.Cocos", true, "app/tool/viewer", true, function() {
+		this.$val = this;
+		if (arguments.length === 0) {
+			return;
+		}
+	});
+	ptrType = $ptrType(js.Object);
+	funcType = $funcType([ptrType], [], false);
+	mapType = $mapType($String, $emptyInterface);
+	sliceType = $sliceType($emptyInterface);
+	arrayType = $arrayType($Int, 20);
+	arrayType$1 = $arrayType(arrayType, 20);
+	arrayType$2 = $arrayType($Int, 2);
+	sliceType$1 = $sliceType($String);
+	sliceType$2 = $sliceType(protocol.Position);
+	sliceType$3 = $sliceType(sliceType$1);
+	arrayType$3 = $arrayType($Float64, 4);
+	funcType$1 = $funcType([], [], false);
+	Cocos.ptr.prototype.AskCommand = function() {
+		var _r, p, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; p = $f.p; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		p = this;
+		_r = $recv(evtQueue); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+		$s = -1; return _r[0];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.AskCommand }; } $f._r = _r; $f.p = p; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.AskCommand = function() { return this.$val.AskCommand(); };
+	Cocos.ptr.prototype.Install = function() {
+		var p;
+		p = this;
+		$global.Model = $externalize($makeMap($String.keyFor, [{ k: "OnKeyDown", v: new funcType((function(evt) {
+			var evt;
+			$go((function $b() {
+				var keyCode, x, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; keyCode = $f.keyCode; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				keyCode = $parseInt(evt.keyCode) >> 0;
+				$r = $send(evtQueue, (x = new uidata.CommandKeyDown.ptr(keyCode), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = -1; return;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.keyCode = keyCode; $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+			}), []);
+		})) }, { k: "OnKeyUp", v: new funcType((function(evt) {
+			var evt;
+			$go((function() {
+			}), []);
+		})) }, { k: "Flush", v: new funcType((function(evt) {
+			var evt;
+			$go((function $b() {
+				var x, $s, $r;
+				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; x = $f.x; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+				$r = $send(evtQueue, (x = new uidata.CommandFlush.ptr(), new x.constructor.elem(x))); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+				$s = -1; return;
+				/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f.x = x; $f.$s = $s; $f.$r = $r; return $f;
+			}), []);
+		})) }]), mapType);
+		return $ifaceNil;
+	};
+	Cocos.prototype.Install = function() { return this.$val.Install(); };
+	Cocos.ptr.prototype.Render = function(origin) {
+		var _entry, _i, _keys, _r, _r$1, _ref, _tuple, active, ctx, ctxObj, err, model, origin, p, pageID, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; _tuple = $f._tuple; active = $f.active; ctx = $f.ctx; ctxObj = $f.ctxObj; err = $f.err; model = $f.model; origin = $f.origin; p = $f.p; pageID = $f.pageID; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		p = this;
+		view = $global.View;
+		/* */ if (view === undefined) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (view === undefined) { */ case 1:
+			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			$s = -1; return [origin, $ifaceNil];
+		/* } */ case 2:
+		ctx = $clone(origin, uidata.UI);
+		_ref = ctx.Actives;
+		_i = 0;
+		_keys = $keys(_ref);
+		/* while (true) { */ case 4:
+			/* if (!(_i < _keys.length)) { break; } */ if(!(_i < _keys.length)) { $s = 5; continue; }
+			_entry = _ref[_keys[_i]];
+			if (_entry === undefined) {
+				_i++;
+				/* continue; */ $s = 4; continue;
+			}
+			pageID = _entry.k;
+			active = _entry.v;
+			/* */ if (active === false) { $s = 6; continue; }
+			/* */ $s = 7; continue;
+			/* if (active === false) { */ case 6:
+				_i++;
+				/* continue; */ $s = 4; continue;
+			/* } */ case 7:
+			_r$1 = ctx.Model.ObservePage(new ctx.constructor.elem(ctx), pageID); /* */ $s = 8; case 8: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+			_tuple = _r$1;
+			ctxObj = _tuple[0];
+			err = _tuple[1];
+			if (!($interfaceIsEqual(err, $ifaceNil))) {
+				$s = -1; return [origin, err];
+			}
+			uidata.UI.copy(ctx, $assertType(ctxObj, uidata.UI));
+			_i++;
+		/* } */ $s = 4; continue; case 5:
+		model = ctx.Model;
+		ctx.Model = $ifaceNil;
+		view.Render($externalize(ctx, uidata.UI));
+		ctx.Model = model;
+		$s = -1; return [ctx, $ifaceNil];
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Render }; } $f._entry = _entry; $f._i = _i; $f._keys = _keys; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f._tuple = _tuple; $f.active = active; $f.ctx = ctx; $f.ctxObj = ctxObj; $f.err = err; $f.model = model; $f.origin = origin; $f.p = p; $f.pageID = pageID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.Render = function(origin) { return this.$val.Render(origin); };
+	Cocos.ptr.prototype.RenderRobotMove = function(ui, robotID, path) {
+		var _entry, _i, _r, _r$1, _ref, i, local, p, path, robotID, ui, view, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r = $f._r; _r$1 = $f._r$1; _ref = $f._ref; i = $f.i; local = $f.local; p = $f.p; path = $f.path; robotID = $f.robotID; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		wait = [wait];
+		p = this;
+		_ref = path;
+		_i = 0;
+		while (true) {
+			if (!(_i < _ref.$length)) { break; }
+			i = _i;
+			local = $clone(((_i < 0 || _i >= _ref.$length) ? ($throwRuntimeError("index out of range"), undefined) : _ref.$array[_ref.$offset + _i]), protocol.Position);
+			protocol.Position.copy(((i < 0 || i >= path.$length) ? ($throwRuntimeError("index out of range"), undefined) : path.$array[path.$offset + i]), helper.World2Local($clone((_entry = ui.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Camera, protocol.Position), $clone(local, protocol.Position)));
+			_i++;
+		}
+		wait[0] = new $Chan($emptyInterface, 0);
+		view = $global.View;
+		/* */ if (view === undefined) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (view === undefined) { */ case 1:
+			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			$s = -1; return;
+		/* } */ case 2:
+		view.RenderRobotMove($externalize(robotID, $String), $externalize(path, sliceType$2), $externalize((function(wait) { return function() {
+			$go((function(wait) { return function() {
+				$close(wait[0]);
+			}; })(wait), []);
+		}; })(wait), funcType$1));
+		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1[0];
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderRobotMove }; } $f._entry = _entry; $f._i = _i; $f._r = _r; $f._r$1 = _r$1; $f._ref = _ref; $f.i = i; $f.local = local; $f.p = p; $f.path = path; $f.robotID = robotID; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.RenderRobotMove = function(ui, robotID, path) { return this.$val.RenderRobotMove(ui, robotID, path); };
+	Cocos.ptr.prototype.RenderRobotBattle = function(ui, result) {
+		var _r, _r$1, _r$2, _r$3, p, result, ui, view, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _r$3 = $f._r$3; p = $f.p; result = $f.result; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		ui = [ui];
+		wait = [wait];
+		p = this;
+		wait[0] = new $Chan($emptyInterface, 0);
+		view = $global.View;
+		/* */ if (view === undefined) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (view === undefined) { */ case 1:
+			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			$s = -1; return;
+		/* } */ case 2:
+		_r$1 = $clone(result, protocol.BattleResult).MapPosition((function(ui, wait) { return function(pos) {
+			var _entry, pos;
+			return helper.World2Local($clone((_entry = ui[0].GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Camera, protocol.Position), $clone(pos, protocol.Position));
+		}; })(ui, wait)); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		protocol.BattleResult.copy(result, _r$1);
+		_r$2 = $clone(result, protocol.BattleResult).MapRobot((function(ui, wait) { return function $b(robot) {
+			var _r$2, _r$3, _r$4, _tuple, err, robot, $s, $r;
+			/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _tuple = $f._tuple; err = $f.err; robot = $f.robot; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+			_r$2 = ui[0].Model.ObserveRobot($clone(robot, protocol.Robot), true); /* */ $s = 1; case 1: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+			_tuple = _r$2;
+			robot = $clone(_tuple[0], protocol.Robot);
+			err = _tuple[1];
+			/* */ if (!($interfaceIsEqual(err, $ifaceNil))) { $s = 2; continue; }
+			/* */ $s = 3; continue;
+			/* if (!($interfaceIsEqual(err, $ifaceNil))) { */ case 2:
+				_r$3 = err.Error(); /* */ $s = 4; case 4: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$4 = fmt.Println(new sliceType([new $String(_r$3)])); /* */ $s = 5; case 5: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_r$4;
+			/* } */ case 3:
+			$s = -1; return robot;
+			/* */ } return; } if ($f === undefined) { $f = { $blk: $b }; } $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._tuple = _tuple; $f.err = err; $f.robot = robot; $f.$s = $s; $f.$r = $r; return $f;
+		}; })(ui, wait)); /* */ $s = 5; case 5: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+		protocol.BattleResult.copy(result, _r$2);
+		view.RenderRobotBattle($externalize(result, protocol.BattleResult), $externalize((function(ui, wait) { return function() {
+			$go((function(ui, wait) { return function() {
+				$close(wait[0]);
+			}; })(ui, wait), []);
+		}; })(ui, wait), funcType$1));
+		_r$3 = $recv(wait[0]); /* */ $s = 6; case 6: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+		_r$3[0];
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderRobotBattle }; } $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f.p = p; $f.result = result; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.RenderRobotBattle = function(ui, result) { return this.$val.RenderRobotBattle(ui, result); };
+	Cocos.ptr.prototype.RenderTurnStart = function(ui, player) {
+		var _r, _r$1, p, player, ui, view, wait, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; _r$1 = $f._r$1; p = $f.p; player = $f.player; ui = $f.ui; view = $f.view; wait = $f.wait; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		wait = [wait];
+		p = this;
+		wait[0] = new $Chan($emptyInterface, 0);
+		view = $global.View;
+		/* */ if (view === undefined) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (view === undefined) { */ case 1:
+			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			$s = -1; return;
+		/* } */ case 2:
+		view.RenderTurnStart($externalize(player, protocol.Player), $externalize((function(wait) { return function() {
+			$go((function(wait) { return function() {
+				$close(wait[0]);
+			}; })(wait), []);
+		}; })(wait), funcType$1));
+		_r$1 = $recv(wait[0]); /* */ $s = 4; case 4: if($c) { $c = false; _r$1 = _r$1.$blk(); } if (_r$1 && _r$1.$blk !== undefined) { break s; }
+		_r$1[0];
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.RenderTurnStart }; } $f._r = _r; $f._r$1 = _r$1; $f.p = p; $f.player = player; $f.ui = ui; $f.view = view; $f.wait = wait; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.RenderTurnStart = function(ui, player) { return this.$val.RenderTurnStart(ui, player); };
+	Cocos.ptr.prototype.Alert = function(msg) {
+		var _r, msg, p, view, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _r = $f._r; msg = $f.msg; p = $f.p; view = $f.view; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		p = this;
+		view = $global.View;
+		/* */ if (view === undefined) { $s = 1; continue; }
+		/* */ $s = 2; continue;
+		/* if (view === undefined) { */ case 1:
+			_r = fmt.Println(new sliceType([new $String("view not ready")])); /* */ $s = 3; case 3: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
+			_r;
+			$s = -1; return;
+		/* } */ case 2:
+		view.Alert($externalize(msg, $String));
+		$s = -1; return;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: Cocos.ptr.prototype.Alert }; } $f._r = _r; $f.msg = msg; $f.p = p; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
+	};
+	Cocos.prototype.Alert = function(msg) { return this.$val.Alert(msg); };
+	Cocos.methods = [{prop: "AskCommand", name: "AskCommand", pkg: "", typ: $funcType([], [$emptyInterface], false)}, {prop: "Install", name: "Install", pkg: "", typ: $funcType([], [$error], false)}, {prop: "Render", name: "Render", pkg: "", typ: $funcType([uidata.UI], [uidata.UI, $error], false)}, {prop: "RenderRobotMove", name: "RenderRobotMove", pkg: "", typ: $funcType([uidata.UI, $String, sliceType$2], [], false)}, {prop: "RenderRobotBattle", name: "RenderRobotBattle", pkg: "", typ: $funcType([uidata.UI, protocol.BattleResult], [], false)}, {prop: "RenderTurnStart", name: "RenderTurnStart", pkg: "", typ: $funcType([uidata.UI, protocol.Player], [], false)}, {prop: "Alert", name: "Alert", pkg: "", typ: $funcType([$String], [], false)}];
+	Cocos.init("", []);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = helper.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = protocol.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = uidata.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = p5.$init(); /* */ $s = 4; case 4: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = fmt.$init(); /* */ $s = 5; case 5: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = js.$init(); /* */ $s = 6; case 6: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		evtQueue = new $Chan($emptyInterface, 0);
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
+$packages["app/tool/def"] = (function() {
+	var $pkg = {}, $init, protocol, uidata, viewer, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, sliceType, sliceType$1, sliceType$2, arrayType, arrayType$1, structType$1, arrayType$2, arrayType$3, sliceType$3, x, x$1, x$2, x$3, x$4, x$5, x$6, x$7, x$8, x$9, x$10, x$11, x$12, x$13, x$14, x$15;
+	protocol = $packages["app/tool/protocol"];
+	uidata = $packages["app/tool/uidata"];
+	viewer = $packages["app/tool/viewer"];
+	mapType = $mapType($String, $packages["app/tool/data"].RobotProto);
+	mapType$1 = $mapType($String, $packages["app/tool/data"].PilotProto);
+	mapType$2 = $mapType($String, $packages["app/tool/data"].WeaponProto);
+	mapType$3 = $mapType($String, $packages["app/tool/data"].ComponentProto);
+	mapType$4 = $mapType($String, protocol.Robot);
+	mapType$5 = $mapType($String, protocol.Pilot);
+	mapType$6 = $mapType($String, protocol.Weapon);
+	mapType$7 = $mapType($String, protocol.Component);
+	mapType$8 = $mapType($String, $String);
+	structType = $structType("", [{prop: "Money", name: "Money", embedded: false, exported: true, typ: $Int, tag: ""}, {prop: "CanBuyRobots", name: "CanBuyRobots", embedded: false, exported: true, typ: mapType, tag: ""}, {prop: "CanBuyPilots", name: "CanBuyPilots", embedded: false, exported: true, typ: mapType$1, tag: ""}, {prop: "CanBuyWeapons", name: "CanBuyWeapons", embedded: false, exported: true, typ: mapType$2, tag: ""}, {prop: "CanBuyComponents", name: "CanBuyComponents", embedded: false, exported: true, typ: mapType$3, tag: ""}, {prop: "Robots", name: "Robots", embedded: false, exported: true, typ: mapType$4, tag: ""}, {prop: "Pilots", name: "Pilots", embedded: false, exported: true, typ: mapType$5, tag: ""}, {prop: "Weapons", name: "Weapons", embedded: false, exported: true, typ: mapType$6, tag: ""}, {prop: "Components", name: "Components", embedded: false, exported: true, typ: mapType$7, tag: ""}, {prop: "RobotIDByWeaponID", name: "RobotIDByWeaponID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "RobotIDByComponentID", name: "RobotIDByComponentID", embedded: false, exported: true, typ: mapType$8, tag: ""}, {prop: "PilotIDByRobotID", name: "PilotIDByRobotID", embedded: false, exported: true, typ: mapType$8, tag: ""}]);
+	sliceType = $sliceType($Int);
+	sliceType$1 = $sliceType($String);
+	sliceType$2 = $sliceType(sliceType$1);
+	arrayType = $arrayType($Float64, 4);
+	arrayType$1 = $arrayType($Int, 2);
+	structType$1 = $structType("", [{prop: "HitRate", name: "HitRate", embedded: false, exported: true, typ: $Float64, tag: ""}]);
+	arrayType$2 = $arrayType($Int, 20);
+	arrayType$3 = $arrayType(arrayType$2, 20);
+	sliceType$3 = $sliceType(protocol.Position);
+	$init = function() {
+		$pkg.$init = function() {};
+		/* */ var $f, $c = false, $s = 0, $r; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		$r = protocol.$init(); /* */ $s = 1; case 1: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = uidata.$init(); /* */ $s = 2; case 2: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$r = viewer.$init(); /* */ $s = 3; case 3: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+		$pkg.DefaultUI = new uidata.UI.ptr($ifaceNil, 0, $makeMap($Int.keyFor, [{ k: 13, v: false }, { k: 11, v: false }]), $makeMap($Int.keyFor, [{ k: 0, v: (x = new sliceType([15]), $subslice(new uidata.ListInt(x.$array), x.$offset, x.$offset + x.$length)) }, { k: 1, v: (x$1 = new sliceType([16]), $subslice(new uidata.ListInt(x$1.$array), x$1.$offset, x$1.$offset + x$1.$length)) }, { k: 2, v: (x$2 = new sliceType([17, 25, 21]), $subslice(new uidata.ListInt(x$2.$array), x$2.$offset, x$2.$offset + x$2.$length)) }, { k: 3, v: (x$3 = new sliceType([18, 25, 22]), $subslice(new uidata.ListInt(x$3.$array), x$3.$offset, x$3.$offset + x$3.$length)) }, { k: 4, v: (x$4 = new sliceType([19, 25, 23]), $subslice(new uidata.ListInt(x$4.$array), x$4.$offset, x$4.$offset + x$4.$length)) }, { k: 5, v: (x$5 = new sliceType([20, 25, 24]), $subslice(new uidata.ListInt(x$5.$array), x$5.$offset, x$5.$offset + x$5.$length)) }, { k: 6, v: (x$6 = new sliceType([26, 29, 18]), $subslice(new uidata.ListInt(x$6.$array), x$6.$offset, x$6.$offset + x$6.$length)) }, { k: 7, v: (x$7 = new sliceType([27, 29, 17]), $subslice(new uidata.ListInt(x$7.$array), x$7.$offset, x$7.$offset + x$7.$length)) }, { k: 8, v: (x$8 = new sliceType([28, 29, 17]), $subslice(new uidata.ListInt(x$8.$array), x$8.$offset, x$8.$offset + x$8.$length)) }, { k: 9, v: (x$9 = new sliceType([30]), $subslice(new uidata.ListInt(x$9.$array), x$9.$offset, x$9.$offset + x$9.$length)) }, { k: 11, v: (x$10 = new sliceType([31]), $subslice(new uidata.ListInt(x$10.$array), x$10.$offset, x$10.$offset + x$10.$length)) }, { k: 12, v: (x$11 = new sliceType([32]), $subslice(new uidata.ListInt(x$11.$array), x$11.$offset, x$11.$offset + x$11.$length)) }, { k: 13, v: (x$12 = new sliceType([33]), $subslice(new uidata.ListInt(x$12.$array), x$12.$offset, x$12.$offset + x$12.$length)) }, { k: 10, v: (x$13 = new sliceType([31, 33]), $subslice(new uidata.ListInt(x$13.$array), x$13.$offset, x$13.$offset + x$13.$length)) }, { k: 14, v: (x$14 = new sliceType([34, 35, 36]), $subslice(new uidata.ListInt(x$14.$array), x$14.$offset, x$14.$offset + x$14.$length)) }]), $makeMap($Int.keyFor, []), $makeMap($Int.keyFor, [{ k: 15, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionNewGame", "MenuOptionLoadGame"]), false, 0, 0, 10) }, { k: 16, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionBuyRobot", "MenuOptionBuyPilot", "MenuOptionBuyWeapon", "MenuOptionBuyComponent", "MenuOptionAssocRobotPilot", "MenuOptionAssocWeaponRobot", "MenuOptionAssocComponentRobot", "MenuOptionStartGameplay", "MenuOptionSaveGame"]), false, 0, 0, 10) }, { k: 25, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionCreateNew", "MenuOptionSell"]), false, 0, 0, 10) }, { k: 29, v: new uidata.Menu1D.ptr(new sliceType$1(["MenuOptionAssoc", "MenuOptionDissoc"]), false, 0, 0, 10) }, { k: 17, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 21, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 18, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 22, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 19, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 23, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 20, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 24, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 26, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 27, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 28, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 30, v: new uidata.Menu1D.ptr(sliceType$1.nil, $makeMap($String.keyFor, []), 0, 0, 10) }, { k: 32, v: new uidata.Menu1D.ptr(sliceType$1.nil, false, 0, 0, 10) }, { k: 34, v: new uidata.Menu1D.ptr(new sliceType$1(["Ground1", "Ground2", "Ground3", "Ground4", "Ground5"]), false, 0, 0, 10) }, { k: 35, v: new uidata.Menu1D.ptr(new sliceType$1(["Sea1", "Sea2", "Sea3", "Sea4", "Sea5"]), false, 0, 0, 10) }, { k: 36, v: new uidata.Menu1D.ptr(new sliceType$1(["Random1", "Random2", "Random3", "Random4", "Random5"]), false, 0, 0, 10) }]), $makeMap($Int.keyFor, [{ k: 31, v: new uidata.Menu2D.ptr(sliceType$2.nil, 0, sliceType.nil) }]), $makeMap($Int.keyFor, [{ k: 33, v: new uidata.BattleMenu.ptr(new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 1, new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0), new structType$1.ptr(0)), new uidata.BattleMenuSlot.ptr(new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false), new protocol.Pilot.ptr("", "", "", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 1, new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0), new structType$1.ptr(0))) }]), $makeMap($Int.keyFor, [{ k: 10, v: new uidata.GameplayPage.ptr(false, arrayType$3.zero(), $toNativeArray($kindInt, [1, 1]), arrayType$1.zero(), new sliceType$1(["0"]), $makeMap($String.keyFor, [{ k: "0", v: new protocol.Robot.ptr("", "", "", "", "", 0, 0, $makeMap($String.keyFor, [{ k: "", v: $makeMap($String.keyFor, [{ k: "0", v: new protocol.Weapon.ptr("", "", 0, "", 0, arrayType$1.zero(), 0, 0, arrayType.zero(), sliceType$1.nil, "", "", 0, 0, 0, 0) }]) }]), false, "", 0, 0, 0, 0, 0, 0, 0, arrayType.zero(), 0, false) }]), $makeMap($String.keyFor, []), $makeMap($String.keyFor, [{ k: "0", v: $toNativeArray($kindInt, [0, 0]) }]), false, new sliceType$3([$toNativeArray($kindInt, [0, 0]), $toNativeArray($kindInt, [0, 1])]), new sliceType$3([$toNativeArray($kindInt, [0, 1]), $toNativeArray($kindInt, [1, 1])]), sliceType$3.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$2.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType.zero(), 0, 0), "")) }]), new structType.ptr(0, false, false, false, false, false, false, false, false, false, false, false));
+		$pkg.View = (x$15 = new viewer.Cocos.ptr(), new x$15.constructor.elem(x$15));
+		/* */ } return; } if ($f === undefined) { $f = { $blk: $init }; } $f.$s = $s; $f.$r = $r; return $f;
+	};
+	$pkg.$init = $init;
+	return $pkg;
+})();
 $packages["github.com/muesli/clusters"] = (function() {
 	var $pkg = {}, $init, fmt, math, rand, time;
 	fmt = $packages["fmt"];
@@ -40250,7 +40216,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 	return $pkg;
 })();
 $packages["app/page/common"] = (function() {
-	var $pkg = {}, $init, def, helper, protocol, uidata, fmt, log, sliceType, sliceType$1, sliceType$2, sliceType$3, arrayType, arrayType$1, arrayType$2, sliceType$4, sliceType$5, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, BasicPagePhase, HandleCamera, HandleCursor, HandleFocus, HandleShowMoveRangeWhenUnitAtCursor, Menu1DStep, Menu2DStep, SelectPositionStep, SelectUnitStep;
+	var $pkg = {}, $init, def, helper, protocol, uidata, fmt, log, sliceType, sliceType$1, sliceType$2, sliceType$3, arrayType, arrayType$1, arrayType$2, sliceType$4, arrayType$3, sliceType$5, mapType, mapType$1, mapType$2, mapType$3, mapType$4, mapType$5, mapType$6, mapType$7, mapType$8, structType, BasicPagePhase, HandleCamera, HandleCursor, HandleFocus, HandleShowMoveRangeWhenUnitAtCursor, Menu1DStep, Menu2DStep, SelectPositionStep, SelectUnitStep;
 	def = $packages["app/tool/def"];
 	helper = $packages["app/tool/helper"];
 	protocol = $packages["app/tool/protocol"];
@@ -40265,6 +40231,7 @@ $packages["app/page/common"] = (function() {
 	arrayType$1 = $arrayType(arrayType, 20);
 	arrayType$2 = $arrayType($Int, 2);
 	sliceType$4 = $sliceType(protocol.Position);
+	arrayType$3 = $arrayType($Float64, 4);
 	sliceType$5 = $sliceType(helper.UIReducer);
 	mapType = $mapType($String, $packages["app/tool/data"].RobotProto);
 	mapType$1 = $mapType($String, $packages["app/tool/data"].PilotProto);
@@ -40397,19 +40364,19 @@ $packages["app/page/common"] = (function() {
 			detail = $clone(_ref.$val, uidata.CommandKeyDown);
 			_1 = detail.KeyCode;
 			if (_1 === (38)) {
-				gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+				gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 				gameplayPage.Camera[1] = (gameplayPage.Camera[1] - (1) >> 0);
 				ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage, uidata.GameplayPage));
 			} else if (_1 === (40)) {
-				gameplayPage$1 = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+				gameplayPage$1 = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 				gameplayPage$1.Camera[1] = (gameplayPage$1.Camera[1] + (1) >> 0);
 				ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage$1, uidata.GameplayPage));
 			} else if (_1 === (37)) {
-				gameplayPage$2 = $clone((_entry$2 = ctx.GameplayPages[$Int.keyFor(10)], _entry$2 !== undefined ? _entry$2.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+				gameplayPage$2 = $clone((_entry$2 = ctx.GameplayPages[$Int.keyFor(10)], _entry$2 !== undefined ? _entry$2.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 				gameplayPage$2.Camera[0] = (gameplayPage$2.Camera[0] - (1) >> 0);
 				ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage$2, uidata.GameplayPage));
 			} else if (_1 === (39)) {
-				gameplayPage$3 = $clone((_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+				gameplayPage$3 = $clone((_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 				gameplayPage$3.Camera[0] = (gameplayPage$3.Camera[0] + (1) >> 0);
 				ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage$3, uidata.GameplayPage));
 			}
@@ -40433,7 +40400,7 @@ $packages["app/page/common"] = (function() {
 				/* */ if (_1 === (68)) { $s = 7; continue; }
 				/* */ $s = 8; continue;
 				/* if (_1 === (87)) { */ case 4:
-					gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+					gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 					if (gameplayPage.Cursor[1] === 0) {
 						gameplayPage.Camera[1] = (gameplayPage.Camera[1] - (1) >> 0);
 					} else {
@@ -40444,7 +40411,7 @@ $packages["app/page/common"] = (function() {
 					ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage, uidata.GameplayPage));
 					$s = 8; continue;
 				/* } else if (_1 === (83)) { */ case 5:
-					gameplayPage$1 = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+					gameplayPage$1 = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 					if (gameplayPage$1.Cursor[1] === 19) {
 						gameplayPage$1.Camera[1] = (gameplayPage$1.Camera[1] + (1) >> 0);
 					} else {
@@ -40455,7 +40422,7 @@ $packages["app/page/common"] = (function() {
 					ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage$1, uidata.GameplayPage));
 					$s = 8; continue;
 				/* } else if (_1 === (65)) { */ case 6:
-					gameplayPage$2 = $clone((_entry$2 = ctx.GameplayPages[$Int.keyFor(10)], _entry$2 !== undefined ? _entry$2.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+					gameplayPage$2 = $clone((_entry$2 = ctx.GameplayPages[$Int.keyFor(10)], _entry$2 !== undefined ? _entry$2.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 					if (gameplayPage$2.Cursor[0] === 0) {
 						gameplayPage$2.Camera[0] = (gameplayPage$2.Camera[0] - (1) >> 0);
 					} else {
@@ -40466,7 +40433,7 @@ $packages["app/page/common"] = (function() {
 					ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage$2, uidata.GameplayPage));
 					$s = 8; continue;
 				/* } else if (_1 === (68)) { */ case 7:
-					gameplayPage$3 = $clone((_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+					gameplayPage$3 = $clone((_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 					if (gameplayPage$3.Cursor[0] === 19) {
 						gameplayPage$3.Camera[0] = (gameplayPage$3.Camera[0] + (1) >> 0);
 					} else {
@@ -40859,7 +40826,7 @@ $packages["app/page/common"] = (function() {
 					/* if (_1 === (222)) { */ case 10:
 						$s = -1; return [origin, arrayType$2.zero(), true, $ifaceNil];
 					/* } else if (_1 === (13)) { */ case 11:
-						_r$3 = isValid($clone(ctx, uidata.UI), $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))).Cursor, protocol.Position)); /* */ $s = 13; case 13: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+						_r$3 = isValid($clone(ctx, uidata.UI), $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Cursor, protocol.Position)); /* */ $s = 13; case 13: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
 						errMsg = _r$3;
 						/* */ if (!($interfaceIsEqual(errMsg, $ifaceNil))) { $s = 14; continue; }
 						/* */ $s = 15; continue;
@@ -40873,7 +40840,7 @@ $packages["app/page/common"] = (function() {
 				case 9:
 			/* } */ case 8:
 		/* } */ $s = 2; continue; case 3:
-		$s = -1; return [ctx, (_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))).Cursor, false, $ifaceNil];
+		$s = -1; return [ctx, (_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Cursor, false, $ifaceNil];
 		/* */ } return; } if ($f === undefined) { $f = { $blk: SelectPositionStep }; } $f._1 = _1; $f._entry = _entry; $f._entry$1 = _entry$1; $f._r = _r; $f._r$1 = _r$1; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._ref = _ref; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f.ctx = ctx; $f.detail = detail; $f.err = err; $f.errMsg = errMsg; $f.evt = evt; $f.isValid = isValid; $f.origin = origin; $f.robotID = robotID; $f.view = view; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.SelectPositionStep = SelectPositionStep;
@@ -40916,7 +40883,7 @@ $packages["app/page/common"] = (function() {
 					/* if (_1 === (222)) { */ case 10:
 						$s = -1; return [origin, "", true, $ifaceNil];
 					/* } else if (_1 === (13)) { */ case 11:
-						gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+						gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$1.nil, false, false, false, false), new uidata.CursorInfo.ptr(new $packages["app/tool/data"].TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 						_ref$1 = gameplayPage.Positions;
 						_i = 0;
 						_keys = $keys(_ref$1);
@@ -41633,7 +41600,7 @@ $packages["app/model/v1"] = (function() {
 		err = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
 		model = $clone(($clone($assertType(ctx.Model, Model), types.Model)), types.Model);
-		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(id)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(id)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), ""))), uidata.GameplayPage);
 		modelMap = model.App.Gameplay.Map;
 		cursor = $clone(model.App.Gameplay.Cursor, protocol.Position);
 		gameplayPage.Players = model.App.Gameplay.Players;
@@ -41885,7 +41852,7 @@ $packages["app/model/v1"] = (function() {
 				}
 				if (unitMenuModel.Active) {
 					options = unitMenuModel.Options;
-					gameplayPage = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+					gameplayPage = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), ""))), uidata.GameplayPage);
 					protocol.RobotMenu.copy(gameplayPage.RobotMenu, unitMenuModel);
 					ctx.GameplayPages = uidata.AssocIntGameplayPage(ctx.GameplayPages, 10, $clone(gameplayPage, uidata.GameplayPage));
 				}
@@ -41949,7 +41916,7 @@ $packages["app/model/v1"] = (function() {
 			}
 			_i++;
 		/* } */ $s = 3; continue; case 4:
-		_tuple$3 = (_entry$1 = ctx.GameplayPages[$Int.keyFor(pageID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), "")), false]);
+		_tuple$3 = (_entry$1 = ctx.GameplayPages[$Int.keyFor(pageID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), "")), false]);
 		has = _tuple$3[1];
 		/* */ if (has) { $s = 8; continue; }
 		/* */ $s = 9; continue;
@@ -44106,7 +44073,7 @@ $packages["app/model/v1"] = (function() {
 		var _entry, _entry$1, _entry$2, _i, _keys, _r, _r$1, _r$2, _ref, ctx, function$1, gameplayPage, i, menu2DID, origin, unitMenu, weaponFunctionIdx, weaponID, weaponIdx, x, x$1, x$2, $s, $r;
 		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _entry$1 = $f._entry$1; _entry$2 = $f._entry$2; _i = $f._i; _keys = $f._keys; _r = $f._r; _r$1 = $f._r$1; _r$2 = $f._r$2; _ref = $f._ref; ctx = $f.ctx; function$1 = $f.function$1; gameplayPage = $f.gameplayPage; i = $f.i; menu2DID = $f.menu2DID; origin = $f.origin; unitMenu = $f.unitMenu; weaponFunctionIdx = $f.weaponFunctionIdx; weaponID = $f.weaponID; weaponIdx = $f.weaponIdx; x = $f.x; x$1 = $f.x$1; x$2 = $f.x$2; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		ctx = $clone(origin, uidata.UI);
-		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), ""))), uidata.GameplayPage);
 		unitMenu = $clone((_entry$1 = ctx.Menu2Ds[$Int.keyFor(menu2DID)], _entry$1 !== undefined ? _entry$1.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType$1.nil)), uidata.Menu2D);
 		weaponFunctionIdx = -1;
 		weaponIdx = -1;
@@ -44234,7 +44201,7 @@ $packages["app/model/v1"] = (function() {
 				$s = -1; return [origin, false, err];
 			}
 			topMenu = $clone((_entry = ctx.Menu2Ds[$Int.keyFor(31)], _entry !== undefined ? _entry.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType$1.nil)), uidata.Menu2D);
-			gameplayPage = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+			gameplayPage = $clone((_entry$1 = ctx.GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), ""))), uidata.GameplayPage);
 				_1 = (_entry$2 = gameplayPage.RobotMenu.RowFunctionMapping[$Int.keyFor(topMenu.Cursor1)], _entry$2 !== undefined ? _entry$2.v : 0);
 				/* */ if (_1 === (1)) { $s = 16; continue; }
 				/* */ $s = 17; continue;
@@ -44313,7 +44280,7 @@ $packages["app/model/v1"] = (function() {
 				/* break; */ $s = 29; continue;
 			/* } */ $s = 28; continue; case 29:
 			topMenu$1 = $clone((_entry$5 = ctx.Menu2Ds[$Int.keyFor(31)], _entry$5 !== undefined ? _entry$5.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType$1.nil)), uidata.Menu2D);
-			gameplayPage$1 = $clone((_entry$6 = ctx.GameplayPages[$Int.keyFor(10)], _entry$6 !== undefined ? _entry$6.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+			gameplayPage$1 = $clone((_entry$6 = ctx.GameplayPages[$Int.keyFor(10)], _entry$6 !== undefined ? _entry$6.v : new uidata.GameplayPage.ptr(false, arrayType$3.zero(), arrayType.zero(), arrayType.zero(), sliceType.nil, false, false, false, false, sliceType$4.nil, sliceType$4.nil, sliceType$4.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$1.zero(), 0, 0), ""))), uidata.GameplayPage);
 			playerAction = 0;
 			playerWeaponID = "";
 				_2 = (_entry$7 = gameplayPage$1.RobotMenu.RowFunctionMapping[$Int.keyFor(topMenu$1.Cursor1)], _entry$7 !== undefined ? _entry$7.v : 0);
@@ -44402,7 +44369,7 @@ $packages["app/model/v1"] = (function() {
 	return $pkg;
 })();
 $packages["app/page/gameplay"] = (function() {
-	var $pkg = {}, $init, common, data, def, helper, protocol, uidata, fmt, log, sliceType, arrayType, arrayType$1, arrayType$2, sliceType$1, sliceType$2, sliceType$3, structType, sliceType$4, mapType, arrayType$3, sliceType$5, EnemyTurnPhase, GameLoop, PlayerTurnPhase, RobotMovePhase, SelectWeaponTargetPhase, SystemMenuPhase, TurnPhase, CreateItemMenu, UnitMenuPhase;
+	var $pkg = {}, $init, common, data, def, helper, protocol, uidata, fmt, log, sliceType, arrayType, arrayType$1, arrayType$2, sliceType$1, sliceType$2, sliceType$3, arrayType$3, structType, sliceType$4, mapType, sliceType$5, EnemyTurnPhase, GameLoop, PlayerTurnPhase, RobotMovePhase, SelectWeaponTargetPhase, SystemMenuPhase, TurnPhase, CreateItemMenu, UnitMenuPhase;
 	common = $packages["app/page/common"];
 	data = $packages["app/tool/data"];
 	def = $packages["app/tool/def"];
@@ -44418,10 +44385,10 @@ $packages["app/page/gameplay"] = (function() {
 	sliceType$1 = $sliceType($String);
 	sliceType$2 = $sliceType(protocol.Position);
 	sliceType$3 = $sliceType(sliceType$1);
+	arrayType$3 = $arrayType($Float64, 4);
 	structType = $structType("", []);
 	sliceType$4 = $sliceType($emptyInterface);
 	mapType = $mapType($String, protocol.Position);
-	arrayType$3 = $arrayType($Float64, 4);
 	sliceType$5 = $sliceType($Int);
 	EnemyTurnPhase = function(origin) {
 		var _r, _tuple, cancel, ctx, err, origin, $s, $r;
@@ -44532,7 +44499,7 @@ $packages["app/page/gameplay"] = (function() {
 					/* */ if (_1 === (13)) { $s = 12; continue; }
 					/* */ $s = 13; continue;
 					/* if (_1 === (13)) { */ case 12:
-						gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+						gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 						unitID = "";
 						_ref$1 = gameplayPage.Positions;
 						_i = 0;
@@ -44660,7 +44627,7 @@ $packages["app/page/gameplay"] = (function() {
 			_r$6 = common.SelectPositionStep($clone(ctx, uidata.UI), robotID, (function(moveRange) { return function $b(ctx$1, localCursor) {
 				var _entry, _i, _r$6, _ref, ctx$1, localCursor, pos, worldCursor, $s, $r;
 				/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _entry = $f._entry; _i = $f._i; _r$6 = $f._r$6; _ref = $f._ref; ctx$1 = $f.ctx$1; localCursor = $f.localCursor; pos = $f.pos; worldCursor = $f.worldCursor; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
-				worldCursor = $clone(helper.Local2World($clone((_entry = ctx$1.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Camera, protocol.Position), $clone(localCursor, protocol.Position)), protocol.Position);
+				worldCursor = $clone(helper.Local2World($clone((_entry = ctx$1.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Camera, protocol.Position), $clone(localCursor, protocol.Position)), protocol.Position);
 				_ref = moveRange[0];
 				_i = 0;
 				while (true) {
@@ -44686,7 +44653,7 @@ $packages["app/page/gameplay"] = (function() {
 			if (cancel) {
 				$s = -1; return [origin, cancel, $ifaceNil];
 			}
-			cursorWorld = $clone(helper.Local2World($clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Camera, protocol.Position), $clone(cursor, protocol.Position)), protocol.Position);
+			cursorWorld = $clone(helper.Local2World($clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Camera, protocol.Position), $clone(cursor, protocol.Position)), protocol.Position);
 			_r$7 = ctx.Model.OnRobotMove(new ctx.constructor.elem(ctx), robotID, tree, $clone(cursorWorld, protocol.Position)); /* */ $s = 13; case 13: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 			_tuple$3 = _r$7;
 			ctxObj$1 = _tuple$3[0];
@@ -44736,7 +44703,7 @@ $packages["app/page/gameplay"] = (function() {
 			$s = -1; return [origin, false, err];
 		}
 		ctx[0].PhaseMark = 1;
-		gameplayPage[0] = $clone((_entry = ctx[0].GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+		gameplayPage[0] = $clone((_entry = ctx[0].GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 		_r = protocol.TryGetStringWeapon(gameplayPage[0].RobotMenu.Weapons, weaponID); /* */ $s = 1; case 1: if($c) { $c = false; _r = _r.$blk(); } if (_r && _r.$blk !== undefined) { break s; }
 		_tuple = _r;
 		weapon = $clone(_tuple[0], protocol.Weapon);
@@ -44796,20 +44763,20 @@ $packages["app/page/gameplay"] = (function() {
 							_r$6 = fmt.Errorf("\xE5\xBF\x85\xE9\xA0\x88\xE9\x81\xB8\xE6\x93\x87\xE6\x95\xB5\xE4\xBA\xBA", new sliceType$4([])); /* */ $s = 7; case 7: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 							$s = -1; return _r$6;
 						/* } */ case 6:
-						attackRange = (_entry$1 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).AttackRange;
+						attackRange = (_entry$1 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).AttackRange;
 						/* */ if (attackRange.$length === 0) { $s = 8; continue; }
 						/* */ $s = 9; continue;
 						/* if (attackRange.$length === 0) { */ case 8:
 							_r$7 = fmt.Errorf("\xE9\x80\x99\xE6\x99\x82\xE5\xBF\x85\xE9\xA0\x88\xE6\x9C\x89AttackRange", new sliceType$4([])); /* */ $s = 10; case 10: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
 							$s = -1; return _r$7;
 						/* } */ case 9:
-						_tuple$7 = (_entry$2 = (_entry$3 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Positions[$String.keyFor(targetID$1)], _entry$2 !== undefined ? [_entry$2.v, true] : [arrayType$2.zero(), false]);
+						_tuple$7 = (_entry$2 = (_entry$3 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Positions[$String.keyFor(targetID$1)], _entry$2 !== undefined ? [_entry$2.v, true] : [arrayType$2.zero(), false]);
 						localPos = $clone(_tuple$7[0], protocol.Position);
 						has = _tuple$7[1];
 						/* */ if (has === false) { $s = 11; continue; }
 						/* */ $s = 12; continue;
 						/* if (has === false) { */ case 11:
-							_r$8 = fmt.Errorf("\xE6\x8C\x87\xE5\xAE\x9A\xE7\x9A\x84robotID(%v)\xE5\xBF\x85\xE9\xA0\x88\xE6\x9C\x89position. positions(%v)", new sliceType$4([new $String(targetID$1), new mapType((_entry$4 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$4 !== undefined ? _entry$4.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Positions)])); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+							_r$8 = fmt.Errorf("\xE6\x8C\x87\xE5\xAE\x9A\xE7\x9A\x84robotID(%v)\xE5\xBF\x85\xE9\xA0\x88\xE6\x9C\x89position. positions(%v)", new sliceType$4([new $String(targetID$1), new mapType((_entry$4 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$4 !== undefined ? _entry$4.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Positions)])); /* */ $s = 13; case 13: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
 							$s = -1; return _r$8;
 						/* } */ case 12:
 						insideAttackRange = protocol.IntersectionPosition(attackRange, new sliceType$2([$clone(localPos, protocol.Position)])).$length > 0;
@@ -44877,7 +44844,7 @@ $packages["app/page/gameplay"] = (function() {
 					if (cancel$1) {
 						$s = -1; return [origin, cancel$1, $ifaceNil];
 					}
-					cursorWorld = $clone(helper.Local2World($clone((_entry$1 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Camera, protocol.Position), $clone(cursor, protocol.Position)), protocol.Position);
+					cursorWorld = $clone(helper.Local2World($clone((_entry$1 = ctx[0].GameplayPages[$Int.keyFor(10)], _entry$1 !== undefined ? _entry$1.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Camera, protocol.Position), $clone(cursor, protocol.Position)), protocol.Position);
 					_r$6 = ctx[0].Model.OnLineBattleMenuPhase(new ctx[0].constructor.elem(ctx[0]), true, robotID[0], weaponID, $clone(cursorWorld, protocol.Position)); /* */ $s = 18; case 18: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
 					_tuple$6 = _r$6;
 					ctxObj$1 = _tuple$6[0];
@@ -45040,7 +45007,7 @@ $packages["app/page/gameplay"] = (function() {
 		if (!($interfaceIsEqual(err, $ifaceNil))) {
 			$s = -1; return [origin, false, err];
 		}
-		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))), uidata.GameplayPage);
+		gameplayPage = $clone((_entry = ctx.GameplayPages[$Int.keyFor(10)], _entry !== undefined ? _entry.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))), uidata.GameplayPage);
 		_tuple$1 = (_entry$1 = gameplayPage.Robots[$String.keyFor(unitID)], _entry$1 !== undefined ? [_entry$1.v, true] : [new protocol.Robot.ptr("", "", "", "", "", 0, 0, false, false, "", 0, 0, 0, 0, 0, 0, 0, arrayType$3.zero(), 0, false), false]);
 		robot = $clone(_tuple$1[0], protocol.Robot);
 		is = _tuple$1[1];
@@ -45048,7 +45015,7 @@ $packages["app/page/gameplay"] = (function() {
 		/* */ $s = 5; continue;
 		/* if (is) { */ case 4:
 			$unused(robot);
-			isRobotDone = (_entry$2 = (_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))).Tags[$String.keyFor(unitID)], _entry$2 !== undefined ? _entry$2.v : new protocol.Tag.ptr(0, false, false)).IsDone;
+			isRobotDone = (_entry$2 = (_entry$3 = ctx.GameplayPages[$Int.keyFor(10)], _entry$3 !== undefined ? _entry$3.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))).Tags[$String.keyFor(unitID)], _entry$2 !== undefined ? _entry$2.v : new protocol.Tag.ptr(0, false, false)).IsDone;
 			/* */ if (isRobotDone) { $s = 6; continue; }
 			/* */ $s = 7; continue;
 			/* if (isRobotDone) { */ case 6:
@@ -45106,7 +45073,7 @@ $packages["app/page/gameplay"] = (function() {
 				/* break; */ $s = 13; continue;
 			/* } */ $s = 12; continue; case 13:
 			topMenu = $clone((_entry$5 = ctx.Menu2Ds[$Int.keyFor(31)], _entry$5 !== undefined ? _entry$5.v : new uidata.Menu2D.ptr(sliceType$3.nil, 0, sliceType$5.nil)), uidata.Menu2D);
-			uidata.GameplayPage.copy(gameplayPage, (_entry$6 = ctx.GameplayPages[$Int.keyFor(10)], _entry$6 !== undefined ? _entry$6.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", 0, 0, 0), ""))));
+			uidata.GameplayPage.copy(gameplayPage, (_entry$6 = ctx.GameplayPages[$Int.keyFor(10)], _entry$6 !== undefined ? _entry$6.v : new uidata.GameplayPage.ptr(false, arrayType$1.zero(), arrayType$2.zero(), arrayType$2.zero(), sliceType$1.nil, false, false, false, false, sliceType$2.nil, sliceType$2.nil, sliceType$2.nil, false, new protocol.RobotMenu.ptr(false, "", sliceType$3.nil, false, false, false, false), new uidata.CursorInfo.ptr(new data.TerrainProto.ptr("", "", arrayType$3.zero(), 0, 0), ""))));
 				_1 = (_entry$7 = gameplayPage.RobotMenu.RowFunctionMapping[$Int.keyFor(topMenu.Cursor1)], _entry$7 !== undefined ? _entry$7.v : 0);
 				/* */ if (_1 === (1)) { $s = 20; continue; }
 				/* */ if (_1 === (2)) { $s = 21; continue; }
