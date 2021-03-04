@@ -22,10 +22,6 @@ func OnRobotBattle(origin uidata.UI, robotID string, weaponID string, targetRobo
 	if err != nil {
 		return origin, err
 	}
-	ctx, err = OnCheckWinOrLose(ctx)
-	if err != nil {
-		return origin, err
-	}
 	// handle robot die
 	// robotWillDelete := []protocol.Robot{}
 	// for _, robot := range ctx.Model.(Model).App.Gameplay.Robots {
@@ -131,7 +127,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 		robot = _robotAfter
 	}
 	// 命中率
-	hitRate, err := impl.QueryBattleHitRate(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot)
+	hitRate, err := impl.QueryBattleHitRate(_model, robot, robotPilot, robotWeapon, targetRobot, targetRobotPilot, impl.QueryBattleHitRateOptions{})
 	if err != nil {
 		return origin, protocol.BattleResult{}, err
 	}
@@ -241,7 +237,7 @@ func Battle(origin uidata.UI, robotID string, weaponID string, targetRobotID str
 			})
 			targetRobot = _robotAfter
 		}
-		hitRate, err := impl.QueryBattleHitRate(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot)
+		hitRate, err := impl.QueryBattleHitRate(_model, targetRobot, targetRobotPilot, targetRobotWeapon, robot, robotPilot, impl.QueryBattleHitRateOptions{})
 		if err != nil {
 			return origin, protocol.BattleResult{}, err
 		}
@@ -316,15 +312,15 @@ ANIMATE:
 		_model.App.Gameplay.Robots = protocol.AssocStringRobot(_model.App.Gameplay.Robots, targetRobot.ID, targetRobot)
 		_model.App.Gameplay.Pilots = protocol.AssocStringPilot(_model.App.Gameplay.Pilots, targetRobotPilot.ID, targetRobotPilot)
 	}
-	_model, err = impl.OnRobotBattleEnd(_model, robot, targetRobot)
-	if err != nil {
-		return origin, battleResult, err
-	}
-	_model, err = impl.OnRobotBattleEnd(_model, targetRobot, robot)
-	if err != nil {
-		return origin, battleResult, err
-	}
 	ctx.Model = Model(_model)
+	ctx, err = OnRobotBattleEnd(ctx, robot, targetRobot)
+	if err != nil {
+		return origin, battleResult, err
+	}
+	ctx, err = OnRobotBattleEnd(ctx, targetRobot, robot)
+	if err != nil {
+		return origin, battleResult, err
+	}
 	ctx, err = view.Render(ctx)
 	if err != nil {
 		return origin, battleResult, err

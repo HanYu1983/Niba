@@ -95,5 +95,6 @@ AskCommand:
 	if idx < 0 || idx >= len(menu.Options) {
 		return ctx, "", false, false, fmt.Errorf("Menu1DStep index out of range. Menu(%v) (%v/%v)", menuID, idx, len(menu.Options))
 	}
+	log.Log(protocol.LogCategoryPhase, "Menu1DStep", "end")
 	return ctx, menu.Options[idx], false, false, nil
 }

@@ -44,7 +44,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 				return origin, fmt.Errorf("你忘了在OnEnableBattleMenu中設定DeffencePilot")
 			}
 			// 攻擊方命中率
-			hitRate, err := impl.QueryBattleHitRate(model, robot, pilot, weapon, targetRobot, targetPilot)
+			hitRate, err := impl.QueryBattleHitRate(model, robot, pilot, weapon, targetRobot, targetPilot, impl.QueryBattleHitRateOptions{})
 			if err != nil {
 				return origin, err
 			}
@@ -83,7 +83,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 					// 重設武器
 					menu.Left.Weapon = selectedWeapon
 					// 重算命中率
-					hitRate, err := impl.QueryBattleHitRate(model, robot, pilot, selectedWeapon, targetRobot, targetPilot)
+					hitRate, err := impl.QueryBattleHitRate(model, robot, pilot, selectedWeapon, targetRobot, targetPilot, impl.QueryBattleHitRateOptions{})
 					if err != nil {
 						return origin, err
 					}
@@ -104,7 +104,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 							return origin, err
 						}
 						// 重算命中率
-						hitRate, err = impl.QueryBattleHitRate(model, targetRobot, targetPilot, targetWeapon, robot, pilot)
+						hitRate, err = impl.QueryBattleHitRate(model, targetRobot, targetPilot, targetWeapon, robot, pilot, impl.QueryBattleHitRateOptions{})
 						if err != nil {
 							return origin, err
 						}
@@ -122,7 +122,7 @@ func ObserveBattleMenu(origin uidata.UI, menuID int) (uidata.UI, error) {
 					menu.Right.Weapon = selectedWeapon
 					menu.Right.BattleAction = protocol.BattleMenuActionAttack
 					// 重算命中率
-					hitRate, err := impl.QueryBattleHitRate(model, targetRobot, targetPilot, selectedWeapon, robot, pilot)
+					hitRate, err := impl.QueryBattleHitRate(model, targetRobot, targetPilot, selectedWeapon, robot, pilot, impl.QueryBattleHitRateOptions{})
 					if err != nil {
 						return origin, err
 					}

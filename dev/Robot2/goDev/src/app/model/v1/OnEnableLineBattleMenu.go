@@ -121,7 +121,7 @@ func OnEnableLineBattleMenu(origin uidata.UI, robotID string, weaponID string, t
 			// 機體在射線內的比例
 			rate := 1.0 - (distanceWidth / float64(weaponRangeWidth))
 			// 命中率加成比例
-			hitRate, err := impl.QueryBattleHitRate(_model, robot, pilot, weapon, targetRobot, targetPilot)
+			hitRate, err := impl.QueryBattleHitRate(_model, robot, pilot, weapon, targetRobot, targetPilot, impl.QueryBattleHitRateOptions{})
 			if err != nil {
 				return origin, err
 			}

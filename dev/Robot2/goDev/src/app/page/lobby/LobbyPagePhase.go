@@ -31,7 +31,8 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 				case uidata.MenuOptionSaveGame:
 					err = ctx.Model.Save()
 					if err != nil {
-						return origin, cancel, err
+						view.Alert(err.Error())
+						return origin, cancel, nil
 					}
 				case uidata.MenuOptionBuyPilot:
 					ctx, err = BuyPhase(ctx, uidata.PageBuyPilot)
@@ -106,9 +107,6 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					if err != nil {
 						return origin, cancel, err
 					}
-					reason := ctx.Model.StateReason()
-					var _ = reason
-
 					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, true)
 				}
 			}

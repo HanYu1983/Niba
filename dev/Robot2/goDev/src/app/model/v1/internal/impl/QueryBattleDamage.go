@@ -32,6 +32,9 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	if err != nil {
 		return 0, err
 	}
+	isSprayAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "spray"
+	})) > 0
 	isBeanAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
 		return s == "beam"
 	})) > 0
@@ -188,5 +191,13 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotRangeFactor * pilotAtkFactor * robotSuitabilityFactor * weaponSuitabilityFactor
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("basicDamage(%v) = weapon.Damage(%v) - targetArmor(%v)", basicDamage, weapon.Damage, targetArmor))
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v) *  robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotRangeFactor, pilotAtkFactor, robotSuitabilityFactor, weaponSuitabilityFactor))
+	if isSprayAttack {
+		hitRate, err := QueryBattleHitRate(model, robot, pilot, weapon, targetRobot, targetPilot, QueryBattleHitRateOptions{IgnoreSprayAttack: true})
+		if err != nil {
+			return 0, err
+		}
+		finalDamage *= hitRate
+		log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) after spray effect(%v)", finalDamage, hitRate))
+	}
 	return int(math.Max(0, finalDamage)), nil
 }

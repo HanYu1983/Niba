@@ -24,12 +24,14 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 	case uidata.MenuOptionSaveGame:
 		err = ctx.Model.Save()
 		if err != nil {
-			return origin, err
+			view.Alert(err.Error())
+			return origin, nil
 		}
 	case uidata.MenuOptionLoadGame:
 		ctx.Model, err = ctx.Model.Load()
 		if err != nil {
-			return origin, err
+			view.Alert(err.Error())
+			return origin, nil
 		}
 		if ctx.Model.State() != protocol.GameplayModelStatePlaying {
 			view.Alert("你沒有戰鬥中存檔")

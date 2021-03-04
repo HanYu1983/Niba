@@ -12,7 +12,11 @@ import (
 	"github.com/go-gl/mathgl/mgl64"
 )
 
-func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot) (float64, error) {
+type QueryBattleHitRateOptions struct {
+	IgnoreSprayAttack bool
+}
+
+func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.Pilot, weapon protocol.Weapon, targetRobot protocol.Robot, targetPilot protocol.Pilot, options QueryBattleHitRateOptions) (float64, error) {
 	log.Log(protocol.LogCategoryPhase, "QueryBattleHitRate", "start")
 	var err error
 	robotSuitability, err := common.QueryRobotSuitability(model, robot.ID, true)
@@ -22,6 +26,15 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	weaponAbility, err := common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
 	if err != nil {
 		return 0, err
+	}
+	isSprayAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "spray"
+	})) > 0
+	if options.IgnoreSprayAttack == false {
+		// 擴散攻擊一定命中
+		if isSprayAttack {
+			return 1, nil
+		}
 	}
 	isRangeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
 		return s == "range"
@@ -72,7 +85,13 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 		}
 	}
 	pilotRangeFactor := 1.0
+	pilotHitRateFactor := 1.0
 	{
+		targetPilotEvade, err := common.QueryPilotEvade(model, targetRobot.ID, targetPilot.ID, true)
+		if err != nil {
+			return 0, err
+		}
+
 		switch {
 		case isRangeAttack:
 			pilotRange, err := common.QueryPilotRange(model, robot.ID, pilot.ID, true)
@@ -84,6 +103,7 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 				return 0, err
 			}
 			pilotRangeFactor = float64(pilotRange) / float64(targetPilotRange)
+			pilotHitRateFactor = float64(pilotRange) / float64(targetPilotEvade)
 		case isMeleeAttack:
 			pilotMelee, err := common.QueryPilotMelee(model, robot.ID, pilot.ID, true)
 			if err != nil {
@@ -94,9 +114,12 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 				return 0, err
 			}
 			pilotRangeFactor = float64(pilotMelee) / float64(targetPilotMelee)
+			pilotHitRateFactor = float64(pilotMelee) / float64(targetPilotEvade)
 		default:
 			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type(melee or range). weapon(%+v)", weapon)
 		}
+		// 格鬥射擊分數佔比數較少(除3)
+		pilotRangeFactor += ((1 - pilotRangeFactor) / 3)
 	}
 	robotSuitabilityFactor := 1.0
 	{
@@ -118,8 +141,8 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	if err != nil {
 		return 0, err
 	}
-	final := basic * powerFactor * terrainFactor * pilotRangeFactor * robotSuitabilityFactor * weaponSuitabilityFactor
-	log.Log(protocol.LogCategoryDetail, "QueryBattleHitRate", fmt.Sprintf("final(%v) = basic(%v) * powerFactor(%v) * terrainFactor(%v) * pilotRangeFactor(%v) * robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v)", final, basic, powerFactor, terrainFactor, pilotRangeFactor, robotSuitabilityFactor, weaponSuitabilityFactor))
+	final := basic * powerFactor * terrainFactor * pilotRangeFactor * robotSuitabilityFactor * weaponSuitabilityFactor * pilotHitRateFactor
+	log.Log(protocol.LogCategoryDetail, "QueryBattleHitRate", fmt.Sprintf("final(%v) = basic(%v) * powerFactor(%v) * terrainFactor(%v) * pilotRangeFactor(%v) * robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v) * pilotHitRateFactor(%v)", final, basic, powerFactor, terrainFactor, pilotRangeFactor, robotSuitabilityFactor, weaponSuitabilityFactor, pilotHitRateFactor))
 	log.Log(protocol.LogCategoryPhase, "QueryBattleHitRate", "end")
 	return final, nil
 }

@@ -4,6 +4,7 @@ import (
 	"app/page/common"
 	"app/page/gameplay"
 	"app/page/lobby"
+	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
 )
@@ -11,6 +12,7 @@ import (
 func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 	var err error
 	ctx := origin
+	view := def.View
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, true)
 	ctx, err = common.BasicPagePhase(
 		ctx,
@@ -25,7 +27,8 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 			case uidata.MenuOptionLoadGame:
 				ctx.Model, err = ctx.Model.Load()
 				if err != nil {
-					return origin, cancel, err
+					view.Alert(err.Error())
+					return origin, cancel, nil
 				}
 				ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageStart, false)
 				switch ctx.Model.State() {
@@ -34,8 +37,6 @@ func StartPagePhase(origin uidata.UI) (uidata.UI, error) {
 					if err != nil {
 						return origin, cancel, err
 					}
-					reason := ctx.Model.StateReason()
-					var _ = reason
 				}
 				ctx, err = lobby.LobbyPagePhase(ctx)
 				if err != nil {

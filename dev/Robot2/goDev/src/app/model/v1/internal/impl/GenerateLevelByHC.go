@@ -241,7 +241,7 @@ func GenerateLevelByHC(origin types.Model, playerID string, center protocol.Posi
 	fmt.Printf("totalCost(%v)\n", totalCost)
 	for pos, protoID := range gene.(LevelGeneByHC).Units {
 		var pilot protocol.Pilot
-		ctx, pilot, err = common.NewPilot(ctx, protocol.Pilot{ProtoID: "amuro"})
+		ctx, pilot, err = common.NewPilot(ctx, protocol.Pilot{ProtoID: "baseballPitcher"})
 		if err != nil {
 			return origin, err
 		}

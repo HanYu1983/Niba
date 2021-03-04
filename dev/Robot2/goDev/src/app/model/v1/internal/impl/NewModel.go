@@ -107,7 +107,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		{
 			enemyPower := selectLevelSelection.Cursor * 200000
 			// 敵機
-			ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 1, uidata.MapHeight - 1}, enemyPower)
+			ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 5, uidata.MapHeight - 5}, enemyPower)
 			if err != nil {
 				return origin, err
 			}
