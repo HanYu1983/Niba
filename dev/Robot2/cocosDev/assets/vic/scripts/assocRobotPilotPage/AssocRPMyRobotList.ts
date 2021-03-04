@@ -19,11 +19,7 @@ export class AssocRPMyRobotList extends BasicInstMenu {
             const robot = Drawer.getRobot(id, data);
             const pilotId = Drawer.getPilotIDByRobotID(robot.ID, data);
             const pilot = Drawer.getPilot(pilotId, data);
-            if(pilot){
-                return robot.Title + "_" + pilot.Title;
-            }else{
-                return robot.Title + "_--";
-            }
+            return [robot.Title, robot.Power, robot.MaxPower, robot.MaxHP, robot.MaxEN, robot.Armor, robot.BeamArmor, pilot ? pilot.Title : "--"].join("_")
         });
         super.doBuild(content, data);
     }

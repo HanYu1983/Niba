@@ -18,14 +18,20 @@ export class AssocRPMyRobotListButton extends InstButton {
 
     doBuild(content:any, data:any):void{
         const dataString = content[0];
-        const title = dataString.split("_")[0];
-        const pilot = dataString.split("_")[1];
+        const datas = dataString.split("_");
+        const title = datas[0];
+        
         content[0] = title;
         super.doBuild(content, data);
-        this.setPilot(pilot);
-    }
+        
+        const power = datas[1];
+        const maxPower = datas[2];
+        const maxHP = datas[3];
+        const maxEN = datas[4];
+        const armor = datas[5];
+        const beamArmor = datas[6];
+        const pilot = datas[7];
+        this.lblPilot.string = "[耐久] " + maxHP + " [能量] " + maxEN + " [裝甲] " + armor + " [抗光束] " + beamArmor + " [出力] " + power + " / " + maxPower + " [駕駛] " + pilot;
 
-    private setPilot(money:number){
-        this.lblPilot.string = money.toString();
     }
 }
