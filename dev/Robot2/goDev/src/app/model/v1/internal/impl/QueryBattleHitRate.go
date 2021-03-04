@@ -4,6 +4,7 @@ import (
 	"app/model/v1/internal/common"
 	"app/model/v1/internal/tool/types"
 	"app/tool"
+	"app/tool/data"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"fmt"
@@ -27,8 +28,24 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	if err != nil {
 		return 0, err
 	}
+
+	isRangeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "range"
+	})) > 0
+	isMeleeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "melee"
+	})) > 0
 	isSprayAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
 		return s == "spray"
+	})) > 0
+	isFireAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "fire"
+	})) > 0
+	isLightingAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "lighting"
+	})) > 0
+	isMissileAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "missile"
 	})) > 0
 	if options.IgnoreSprayAttack == false {
 		// 擴散攻擊一定命中
@@ -36,15 +53,6 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 			return 1, nil
 		}
 	}
-	isRangeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-		return s == "range"
-	})) > 0
-	isMeleeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-		return s == "melee"
-	})) > 0
-	isMissileAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-		return s == "missile"
-	})) > 0
 	weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon, true)
 	if err != nil {
 		return 0, err
@@ -59,6 +67,7 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	if err != nil {
 		return 0, err
 	}
+	robotSky := model.App.Gameplay.Tags[robot.ID].Sky
 	targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
 	powerFactor := 1.0
 	{
@@ -76,12 +85,6 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 			// 所以剩餘出力越低的越適合使用飛彈
 		default:
 			powerFactor = (float64(robotPower) + 20.0) / (float64(targetPower) + 20.0)
-		}
-	}
-	terrainFactor := 1.0
-	{
-		if targetRobotSky == false {
-			//terrainFactor = targetTerrain.HitRate
 		}
 	}
 	pilotRangeFactor := 1.0
@@ -123,16 +126,26 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	}
 	robotSuitabilityFactor := 1.0
 	{
-		if targetRobotSky == false {
+		if robotSky {
+			robotSuitabilityFactor = robotSuitability[data.SuitabilitySky]
+		} else {
 			factor := mgl64.Vec2{robotSuitability[0], robotSuitability[1]}.Dot(mgl64.Vec2{terrain.Cost[0], terrain.Cost[1]})
 			robotSuitabilityFactor = factor
 		}
-		// 機體適性分數佔比數較少(除3)
-		robotSuitabilityFactor += ((1 - robotSuitabilityFactor) / 3)
+		// 機體適性分數佔比數較少
+		robotSuitabilityFactor += ((1 - robotSuitabilityFactor) / 1.1)
 	}
 	weaponSuitabilityFactor := 1.0
 	{
-		if targetRobotSky == false {
+		switch {
+		case targetRobotSky:
+			weaponSuitabilityFactor = weaponSuitability[data.SuitabilitySky]
+		case isFireAttack && targetTerrain.ID == "forest":
+			// 火焰攻擊對象不受地形補正
+		case isLightingAttack && targetTerrain.ID == "shallowSea":
+		case isLightingAttack && targetTerrain.ID == "deepSea":
+			// 雷電攻擊對象不受地形補正
+		default:
 			factor := mgl64.Vec2{weaponSuitability[0], weaponSuitability[1]}.Dot(mgl64.Vec2{targetTerrain.Cost[0], targetTerrain.Cost[1]})
 			weaponSuitabilityFactor = factor
 		}
@@ -141,8 +154,9 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 	if err != nil {
 		return 0, err
 	}
-	final := basic * powerFactor * terrainFactor * pilotRangeFactor * robotSuitabilityFactor * weaponSuitabilityFactor * pilotHitRateFactor
-	log.Log(protocol.LogCategoryDetail, "QueryBattleHitRate", fmt.Sprintf("final(%v) = basic(%v) * powerFactor(%v) * terrainFactor(%v) * pilotRangeFactor(%v) * robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v) * pilotHitRateFactor(%v)", final, basic, powerFactor, terrainFactor, pilotRangeFactor, robotSuitabilityFactor, weaponSuitabilityFactor, pilotHitRateFactor))
+	basic += 0.25
+	final := basic * powerFactor * pilotRangeFactor * robotSuitabilityFactor * weaponSuitabilityFactor * pilotHitRateFactor
+	log.Log(protocol.LogCategoryDetail, "QueryBattleHitRate", fmt.Sprintf("final(%v) = basic(%v) * powerFactor(%v) * pilotRangeFactor(%v) * robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v) * pilotHitRateFactor(%v)", final, basic, powerFactor, pilotRangeFactor, robotSuitabilityFactor, weaponSuitabilityFactor, pilotHitRateFactor))
 	log.Log(protocol.LogCategoryPhase, "QueryBattleHitRate", "end")
 	return final, nil
 }

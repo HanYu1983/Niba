@@ -32,6 +32,12 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	if err != nil {
 		return 0, err
 	}
+	isRangeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "range"
+	})) > 0
+	isMeleeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
+		return s == "melee"
+	})) > 0
 	isSprayAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
 		return s == "spray"
 	})) > 0
@@ -54,11 +60,17 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	if err != nil {
 		return 0, err
 	}
-	targetPos := model.App.Gameplay.Positions[targetRobot.ID]
-	terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
+	pos := model.App.Gameplay.Positions[robot.ID]
+	terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, pos)
 	if err != nil {
 		return 0, err
 	}
+	targetPos := model.App.Gameplay.Positions[targetRobot.ID]
+	targetTerrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
+	if err != nil {
+		return 0, err
+	}
+	robotSky := model.App.Gameplay.Tags[robot.ID].Sky
 	targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
 	targetArmor := 0
 	{
@@ -84,56 +96,8 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 			return 0, fmt.Errorf("[QueryBattleDamage]unknown attack type. weapon(%+v)", weapon)
 		}
 	}
-	terrainFactor := 1.0
-	{
-		targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
-		if targetRobotSky == false {
-			targetPos := model.App.Gameplay.Positions[targetRobot.ID]
-			terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
-			if err != nil {
-				return 0, err
-			}
-			terrainFactor = terrain.Damage
-		}
-	}
-	suitabilityFactor := 1.0
-	{
-		weaponSuitability, err := common.QueryRobotWeaponSuitability(model, robot.ID, weapon, true)
-		if err != nil {
-			return 0, err
-		}
-		targetRobotSky := model.App.Gameplay.Tags[targetRobot.ID].Sky
-		if targetRobotSky {
-			suitabilityFactor = weaponSuitability[data.SuitabilitySky]
-		} else {
-			targetPos := model.App.Gameplay.Positions[targetRobot.ID]
-			terrain, err := helper.QueryTerrain(model.App.Gameplay.Map, terrainCache, targetPos)
-			if err != nil {
-				return 0, err
-			}
-			switch terrain.ID {
-			case "shallowSea", "deepSea":
-				suitabilityFactor = weaponSuitability[data.SuitabilitySea]
-			case "mountain", "plain", "forest", "road", "city", "beach", "award":
-				suitabilityFactor = weaponSuitability[data.SuitabilityGround]
-			default:
-				return 0, fmt.Errorf("unknown terrain(%v)", terrain.ID)
-			}
-		}
-	}
 	pilotRangeFactor := 1.0
 	{
-		var weaponAbility []string
-		weaponAbility, err = common.QueryRobotWeaponAbility(model, robot.ID, weapon, true)
-		if err != nil {
-			return 0, err
-		}
-		isRangeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "range"
-		})) > 0
-		isMeleeAttack := len(tool.FilterString(weaponAbility, func(s string) bool {
-			return s == "melee"
-		})) > 0
 		switch {
 		case isRangeAttack:
 			pilotRange, err := common.QueryPilotRange(model, robot.ID, pilot.ID, true)
@@ -173,24 +137,34 @@ func QueryBattleDamage(model types.Model, robot protocol.Robot, pilot protocol.P
 	}
 	robotSuitabilityFactor := 1.0
 	{
-		if targetRobotSky == false {
+		if robotSky {
+			robotSuitabilityFactor = robotSuitability[data.SuitabilitySky]
+		} else {
 			factor := mgl64.Vec2{robotSuitability[0], robotSuitability[1]}.Dot(mgl64.Vec2{terrain.Cost[0], terrain.Cost[1]})
 			robotSuitabilityFactor = factor
 		}
-		// 機體適性分數佔比數較少(除3)
-		robotSuitabilityFactor += ((1 - robotSuitabilityFactor) / 3)
+		// 機體適性分數佔比數較少
+		robotSuitabilityFactor += ((1 - robotSuitabilityFactor) / 1.1)
 	}
 	weaponSuitabilityFactor := 1.0
 	{
-		if targetRobotSky == false {
-			factor := mgl64.Vec2{weaponSuitability[0], weaponSuitability[1]}.Dot(mgl64.Vec2{terrain.Cost[0], terrain.Cost[1]})
+		switch {
+		case targetRobotSky:
+			weaponSuitabilityFactor = weaponSuitability[data.SuitabilitySky]
+		case isFireAttack && targetTerrain.ID == "forest":
+			// 火焰攻擊對象不受地形補正
+		case isLightingAttack && targetTerrain.ID == "shallowSea":
+		case isLightingAttack && targetTerrain.ID == "deepSea":
+			// 雷電攻擊對象不受地形補正
+		default:
+			factor := mgl64.Vec2{weaponSuitability[0], weaponSuitability[1]}.Dot(mgl64.Vec2{targetTerrain.Cost[0], targetTerrain.Cost[1]})
 			weaponSuitabilityFactor = factor
 		}
 	}
 	basicDamage := weaponProto.Damage - targetArmor
-	finalDamage := float64(basicDamage) * terrainFactor * suitabilityFactor * pilotRangeFactor * pilotAtkFactor * robotSuitabilityFactor * weaponSuitabilityFactor
+	finalDamage := float64(basicDamage) * pilotRangeFactor * pilotAtkFactor * robotSuitabilityFactor * weaponSuitabilityFactor
 	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("basicDamage(%v) = weapon.Damage(%v) - targetArmor(%v)", basicDamage, weapon.Damage, targetArmor))
-	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * terrainFactor(%v) * suitabilityFactor(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v) *  robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v)", finalDamage, basicDamage, terrainFactor, suitabilityFactor, pilotRangeFactor, pilotAtkFactor, robotSuitabilityFactor, weaponSuitabilityFactor))
+	log.Log(protocol.LogCategoryDetail, "QueryBattleDamage", fmt.Sprintf("finalDamage(%v) = basicDamage(%v) * pilotRangeFactor(%v) * pilotAtkFactor(%v) *  robotSuitabilityFactor(%v) * weaponSuitabilityFactor(%v)", finalDamage, basicDamage, pilotRangeFactor, pilotAtkFactor, robotSuitabilityFactor, weaponSuitabilityFactor))
 	if isSprayAttack {
 		hitRate, err := QueryBattleHitRate(model, robot, pilot, weapon, targetRobot, targetPilot, QueryBattleHitRateOptions{IgnoreSprayAttack: true})
 		if err != nil {
