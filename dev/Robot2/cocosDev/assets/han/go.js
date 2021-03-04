@@ -42054,10 +42054,11 @@ $packages["app/model/v1"] = (function() {
 	};
 	$pkg.ObservePage = ObservePage;
 	OnClickSystemMenu = function(origin, selection) {
-		var _1, _arg, _arg$1, _arg$2, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, ctx, err, model, model$1, model$2, model$3, origin, selection, tempMap, x, x$1, $s, $r;
-		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; ctx = $f.ctx; err = $f.err; model = $f.model; model$1 = $f.model$1; model$2 = $f.model$2; model$3 = $f.model$3; origin = $f.origin; selection = $f.selection; tempMap = $f.tempMap; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
+		var _1, _arg, _arg$1, _arg$2, _r, _r$1, _r$10, _r$11, _r$12, _r$13, _r$14, _r$15, _r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, _tuple, _tuple$1, _tuple$2, _tuple$3, _tuple$4, ctx, err, model, model$1, model$2, model$3, origin, selection, tempMap, view, x, x$1, $s, $r;
+		/* */ $s = 0; var $f, $c = false; if (this !== undefined && this.$blk !== undefined) { $f = this; $c = true; _1 = $f._1; _arg = $f._arg; _arg$1 = $f._arg$1; _arg$2 = $f._arg$2; _r = $f._r; _r$1 = $f._r$1; _r$10 = $f._r$10; _r$11 = $f._r$11; _r$12 = $f._r$12; _r$13 = $f._r$13; _r$14 = $f._r$14; _r$15 = $f._r$15; _r$2 = $f._r$2; _r$3 = $f._r$3; _r$4 = $f._r$4; _r$5 = $f._r$5; _r$6 = $f._r$6; _r$7 = $f._r$7; _r$8 = $f._r$8; _r$9 = $f._r$9; _tuple = $f._tuple; _tuple$1 = $f._tuple$1; _tuple$2 = $f._tuple$2; _tuple$3 = $f._tuple$3; _tuple$4 = $f._tuple$4; ctx = $f.ctx; err = $f.err; model = $f.model; model$1 = $f.model$1; model$2 = $f.model$2; model$3 = $f.model$3; origin = $f.origin; selection = $f.selection; tempMap = $f.tempMap; view = $f.view; x = $f.x; x$1 = $f.x$1; $s = $f.$s; $r = $f.$r; } s: while (true) { switch ($s) { case 0:
 		err = $ifaceNil;
 		ctx = $clone(origin, uidata.UI);
+		view = def.View;
 			_1 = selection;
 			/* */ if (_1 === ("MenuOptionGiveUp")) { $s = 2; continue; }
 			/* */ if (_1 === ("MenuOptionSaveGame")) { $s = 3; continue; }
@@ -42087,23 +42088,30 @@ $packages["app/model/v1"] = (function() {
 				if (!($interfaceIsEqual(err, $ifaceNil))) {
 					$s = -1; return [origin, err];
 				}
+				_r$2 = ctx.Model.State(); /* */ $s = 13; case 13: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
+				/* */ if (!(_r$2 === "GameplayModelStatePlaying")) { $s = 11; continue; }
+				/* */ $s = 12; continue;
+				/* if (!(_r$2 === "GameplayModelStatePlaying")) { */ case 11:
+					$r = view.Alert("\xE4\xBD\xA0\xE6\xB2\x92\xE6\x9C\x89\xE6\x88\xB0\xE9\xAC\xA5\xE4\xB8\xAD\xE5\xAD\x98\xE6\xAA\x94"); /* */ $s = 14; case 14: if($c) { $c = false; $r = $r.$blk(); } if ($r && $r.$blk !== undefined) { break s; }
+					$s = -1; return [origin, $ifaceNil];
+				/* } */ case 12:
 				$s = 8; continue;
 			/* } else if (_1 === ("MenuOptionTest")) { */ case 5:
 				tempMap = sliceType$2.nil;
-				_r$2 = rand.Float64(); /* */ $s = 11; case 11: if($c) { $c = false; _r$2 = _r$2.$blk(); } if (_r$2 && _r$2.$blk !== undefined) { break s; }
-				_r$3 = rand.Float64(); /* */ $s = 12; case 12: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
-				_r$4 = rand.Float64(); /* */ $s = 13; case 13: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
-				_r$5 = rand.Float64(); /* */ $s = 14; case 14: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
-				_r$6 = rand.Float64(); /* */ $s = 15; case 15: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
-				_r$7 = rand.Float64(); /* */ $s = 16; case 16: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
-				_r$8 = rand.Float64(); /* */ $s = 17; case 17: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
-				_arg = new helper.GenerateMapConfig.ptr(_r$2, _r$3, _r$4, _r$5, _r$6, _r$7, _r$8, 0);
-				_r$9 = rand.Int(); /* */ $s = 18; case 18: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
-				_arg$1 = _r$9;
-				_r$10 = rand.Int(); /* */ $s = 19; case 19: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
-				_arg$2 = _r$10;
-				_r$11 = helper.GenerateMap(_arg, new $Int64(0, 0), 0, 1, 20, 20, _arg$1, _arg$2); /* */ $s = 20; case 20: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
-				_tuple$1 = _r$11;
+				_r$3 = rand.Float64(); /* */ $s = 15; case 15: if($c) { $c = false; _r$3 = _r$3.$blk(); } if (_r$3 && _r$3.$blk !== undefined) { break s; }
+				_r$4 = rand.Float64(); /* */ $s = 16; case 16: if($c) { $c = false; _r$4 = _r$4.$blk(); } if (_r$4 && _r$4.$blk !== undefined) { break s; }
+				_r$5 = rand.Float64(); /* */ $s = 17; case 17: if($c) { $c = false; _r$5 = _r$5.$blk(); } if (_r$5 && _r$5.$blk !== undefined) { break s; }
+				_r$6 = rand.Float64(); /* */ $s = 18; case 18: if($c) { $c = false; _r$6 = _r$6.$blk(); } if (_r$6 && _r$6.$blk !== undefined) { break s; }
+				_r$7 = rand.Float64(); /* */ $s = 19; case 19: if($c) { $c = false; _r$7 = _r$7.$blk(); } if (_r$7 && _r$7.$blk !== undefined) { break s; }
+				_r$8 = rand.Float64(); /* */ $s = 20; case 20: if($c) { $c = false; _r$8 = _r$8.$blk(); } if (_r$8 && _r$8.$blk !== undefined) { break s; }
+				_r$9 = rand.Float64(); /* */ $s = 21; case 21: if($c) { $c = false; _r$9 = _r$9.$blk(); } if (_r$9 && _r$9.$blk !== undefined) { break s; }
+				_arg = new helper.GenerateMapConfig.ptr(_r$3, _r$4, _r$5, _r$6, _r$7, _r$8, _r$9, 0);
+				_r$10 = rand.Int(); /* */ $s = 22; case 22: if($c) { $c = false; _r$10 = _r$10.$blk(); } if (_r$10 && _r$10.$blk !== undefined) { break s; }
+				_arg$1 = _r$10;
+				_r$11 = rand.Int(); /* */ $s = 23; case 23: if($c) { $c = false; _r$11 = _r$11.$blk(); } if (_r$11 && _r$11.$blk !== undefined) { break s; }
+				_arg$2 = _r$11;
+				_r$12 = helper.GenerateMap(_arg, new $Int64(0, 0), 0, 1, 20, 20, _arg$1, _arg$2); /* */ $s = 24; case 24: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
+				_tuple$1 = _r$12;
 				tempMap = _tuple$1[0];
 				err = _tuple$1[1];
 				if (!($interfaceIsEqual(err, $ifaceNil))) {
@@ -42118,8 +42126,8 @@ $packages["app/model/v1"] = (function() {
 				model$2.App.Gameplay.Units = new sliceType([]);
 				model$2.App.Gameplay.Robots = $makeMap($String.keyFor, []);
 				model$2.App.Gameplay.Positions = $makeMap($String.keyFor, []);
-				_r$12 = impl.GenerateLevelByPSO($clone(model$2, types.Model), "ai1"); /* */ $s = 21; case 21: if($c) { $c = false; _r$12 = _r$12.$blk(); } if (_r$12 && _r$12.$blk !== undefined) { break s; }
-				_tuple$2 = _r$12;
+				_r$13 = impl.GenerateLevelByPSO($clone(model$2, types.Model), "ai1"); /* */ $s = 25; case 25: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
+				_tuple$2 = _r$13;
 				types.Model.copy(model$2, _tuple$2[0]);
 				err = _tuple$2[1];
 				if (!($interfaceIsEqual(err, $ifaceNil))) {
@@ -42132,15 +42140,15 @@ $packages["app/model/v1"] = (function() {
 				model$3.App.Gameplay.Units = new sliceType([]);
 				model$3.App.Gameplay.Robots = $makeMap($String.keyFor, []);
 				model$3.App.Gameplay.Positions = $makeMap($String.keyFor, []);
-				_r$13 = impl.GenerateLevelByHC($clone(model$3, types.Model), "ai1", $toNativeArray($kindInt, [19, 19]), 200000); /* */ $s = 22; case 22: if($c) { $c = false; _r$13 = _r$13.$blk(); } if (_r$13 && _r$13.$blk !== undefined) { break s; }
-				_tuple$3 = _r$13;
+				_r$14 = impl.GenerateLevelByHC($clone(model$3, types.Model), "ai1", $toNativeArray($kindInt, [19, 19]), 200000); /* */ $s = 26; case 26: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
+				_tuple$3 = _r$14;
 				types.Model.copy(model$3, _tuple$3[0]);
 				err = _tuple$3[1];
 				if (!($interfaceIsEqual(err, $ifaceNil))) {
 					$s = -1; return [origin, err];
 				}
-				_r$14 = impl.GenerateLevelByHC($clone(model$3, types.Model), "PlayerIDPlayer", $toNativeArray($kindInt, [0, 0]), 200000); /* */ $s = 23; case 23: if($c) { $c = false; _r$14 = _r$14.$blk(); } if (_r$14 && _r$14.$blk !== undefined) { break s; }
-				_tuple$4 = _r$14;
+				_r$15 = impl.GenerateLevelByHC($clone(model$3, types.Model), "PlayerIDPlayer", $toNativeArray($kindInt, [0, 0]), 200000); /* */ $s = 27; case 27: if($c) { $c = false; _r$15 = _r$15.$blk(); } if (_r$15 && _r$15.$blk !== undefined) { break s; }
+				_tuple$4 = _r$15;
 				types.Model.copy(model$3, _tuple$4[0]);
 				err = _tuple$4[1];
 				if (!($interfaceIsEqual(err, $ifaceNil))) {
@@ -42150,7 +42158,7 @@ $packages["app/model/v1"] = (function() {
 			/* } */ case 8:
 		case 1:
 		$s = -1; return [ctx, $ifaceNil];
-		/* */ } return; } if ($f === undefined) { $f = { $blk: OnClickSystemMenu }; } $f._1 = _1; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.ctx = ctx; $f.err = err; $f.model = model; $f.model$1 = model$1; $f.model$2 = model$2; $f.model$3 = model$3; $f.origin = origin; $f.selection = selection; $f.tempMap = tempMap; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
+		/* */ } return; } if ($f === undefined) { $f = { $blk: OnClickSystemMenu }; } $f._1 = _1; $f._arg = _arg; $f._arg$1 = _arg$1; $f._arg$2 = _arg$2; $f._r = _r; $f._r$1 = _r$1; $f._r$10 = _r$10; $f._r$11 = _r$11; $f._r$12 = _r$12; $f._r$13 = _r$13; $f._r$14 = _r$14; $f._r$15 = _r$15; $f._r$2 = _r$2; $f._r$3 = _r$3; $f._r$4 = _r$4; $f._r$5 = _r$5; $f._r$6 = _r$6; $f._r$7 = _r$7; $f._r$8 = _r$8; $f._r$9 = _r$9; $f._tuple = _tuple; $f._tuple$1 = _tuple$1; $f._tuple$2 = _tuple$2; $f._tuple$3 = _tuple$3; $f._tuple$4 = _tuple$4; $f.ctx = ctx; $f.err = err; $f.model = model; $f.model$1 = model$1; $f.model$2 = model$2; $f.model$3 = model$3; $f.origin = origin; $f.selection = selection; $f.tempMap = tempMap; $f.view = view; $f.x = x; $f.x$1 = x$1; $f.$s = $s; $f.$r = $r; return $f;
 	};
 	$pkg.OnClickSystemMenu = OnClickSystemMenu;
 	OnDisableBattleMenu = function(origin) {

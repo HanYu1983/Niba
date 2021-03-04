@@ -3,6 +3,7 @@ package v1
 import (
 	"app/model/v1/internal/impl"
 	"app/model/v1/internal/tool/types"
+	"app/tool/def"
 	"app/tool/helper"
 	"app/tool/protocol"
 	"app/tool/uidata"
@@ -12,6 +13,7 @@ import (
 func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 	var err error
 	ctx := origin
+	view := def.View
 	switch selection {
 	case uidata.MenuOptionGiveUp:
 		model := ctx.Model.(Model)
@@ -28,6 +30,10 @@ func OnClickSystemMenu(origin uidata.UI, selection string) (uidata.UI, error) {
 		ctx.Model, err = ctx.Model.Load()
 		if err != nil {
 			return origin, err
+		}
+		if ctx.Model.State() != protocol.GameplayModelStatePlaying {
+			view.Alert("你沒有戰鬥中存檔")
+			return origin, nil
 		}
 	case uidata.MenuOptionTest:
 		var tempMap [][]int
