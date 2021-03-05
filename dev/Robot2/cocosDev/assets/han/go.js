@@ -40081,7 +40081,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 			}
 			protoID = _entry.k;
 			proto = $clone(_entry.v, data.RobotProto);
-			if (proto.UnlockExp < $keys(origin.App.Lobby.ClearStateByLevelID).length) {
+			if (proto.UnlockExp > $keys(origin.App.Lobby.ClearStateByLevelID).length) {
 				_i++;
 				continue;
 			}
@@ -40106,7 +40106,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 			}
 			protoID = _entry.k;
 			proto = $clone(_entry.v, data.PilotProto);
-			if (proto.UnlockExp < $keys(origin.App.Lobby.ClearStateByLevelID).length) {
+			if (proto.UnlockExp > $keys(origin.App.Lobby.ClearStateByLevelID).length) {
 				_i++;
 				continue;
 			}
@@ -40131,7 +40131,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 			}
 			protoID = _entry.k;
 			proto = $clone(_entry.v, data.WeaponProto);
-			if (proto.UnlockExp < $keys(origin.App.Lobby.ClearStateByLevelID).length) {
+			if (proto.UnlockExp > $keys(origin.App.Lobby.ClearStateByLevelID).length) {
 				_i++;
 				continue;
 			}
@@ -40156,7 +40156,7 @@ $packages["app/model/v1/internal/lobby"] = (function() {
 			}
 			protoID = _entry.k;
 			proto = $clone(_entry.v, data.ComponentProto);
-			if (proto.UnlockExp < $keys(origin.App.Lobby.ClearStateByLevelID).length) {
+			if (proto.UnlockExp > $keys(origin.App.Lobby.ClearStateByLevelID).length) {
 				_i++;
 				continue;
 			}

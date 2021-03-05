@@ -123,7 +123,7 @@ func DissocComponentRobot(origin types.Model, componentID string) (types.Model, 
 func QueryRobotCanBuy(origin types.Model) map[string]data.RobotProto {
 	canBuy := map[string]data.RobotProto{}
 	for protoID, proto := range data.GameData.Robot {
-		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+		if proto.UnlockExp > len(origin.App.Lobby.ClearStateByLevelID) {
 			continue
 		}
 		canBuy[protoID] = proto
@@ -133,7 +133,7 @@ func QueryRobotCanBuy(origin types.Model) map[string]data.RobotProto {
 func QueryPilotCanBuy(origin types.Model) map[string]data.PilotProto {
 	canBuy := map[string]data.PilotProto{}
 	for protoID, proto := range data.GameData.Pilot {
-		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+		if proto.UnlockExp > len(origin.App.Lobby.ClearStateByLevelID) {
 			continue
 		}
 		canBuy[protoID] = proto
@@ -143,7 +143,7 @@ func QueryPilotCanBuy(origin types.Model) map[string]data.PilotProto {
 func QueryWeaponCanBuy(origin types.Model) map[string]data.WeaponProto {
 	canBuy := map[string]data.WeaponProto{}
 	for protoID, proto := range data.GameData.Weapon {
-		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+		if proto.UnlockExp > len(origin.App.Lobby.ClearStateByLevelID) {
 			continue
 		}
 		canBuy[protoID] = proto
@@ -153,7 +153,7 @@ func QueryWeaponCanBuy(origin types.Model) map[string]data.WeaponProto {
 func QueryComponentCanBuy(origin types.Model) map[string]data.ComponentProto {
 	canBuy := map[string]data.ComponentProto{}
 	for protoID, proto := range data.GameData.Component {
-		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+		if proto.UnlockExp > len(origin.App.Lobby.ClearStateByLevelID) {
 			continue
 		}
 		canBuy[protoID] = proto
