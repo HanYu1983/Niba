@@ -35,7 +35,7 @@ func OnRobotBattleEnd(origin uidata.UI, robotAfter protocol.Robot, targetRobotAf
 		}
 		if len(msg) > 0 {
 			view.Alert(strings.Join(msg, "\n"))
-			time.Sleep(3 * time.Second)
+			time.Sleep(2 * time.Second)
 		}
 		ctx.Model = Model(model)
 	}

@@ -1196,8 +1196,9 @@ const (
         "gaite_sky": {
             "id": "gaite_sky",
             "title": "空蓋特",
-            "cost": 83500,
-            "power": 125,
+            "enemy": true,
+            "cost": 88600,
+            "power": 130,
             "hp": 10000,
             "en": 200,
             "weapons": [
@@ -1227,8 +1228,9 @@ const (
         "gaite_land": {
             "id": "gaite_land",
             "title": "地蓋特",
-            "cost": 83500,
-            "power": 125,
+            "enemy": true,
+            "cost": 88600,
+            "power": 130,
             "hp": 10000,
             "en": 200,
             "weapons": [
@@ -1257,8 +1259,9 @@ const (
         "gaite_sea": {
             "id": "gaite_sea",
             "title": "海蓋特",
-            "cost": 83500,
-            "power": 125,
+            "enemy": true,
+            "cost": 88600,
+            "power": 130,
             "hp": 10000,
             "en": 200,
             "weapons": [
@@ -1287,8 +1290,9 @@ const (
         "moshen": {
             "id": "moshen",
             "title": "魔神z",
-            "cost": 69600,
-            "power": 110,
+            "enemy": true,
+            "cost": 88800,
+            "power": 130,
             "hp": 12000,
             "en": 200,
             "weapons": [
@@ -1316,8 +1320,9 @@ const (
         "zgundam": {
             "id": "zgundam",
             "title": "z鋼彈",
-            "cost": 53000,
-            "power": 90,
+            "enemy": true,
+            "cost": 60600,
+            "power": 100,
             "hp": 6000,
             "en": 200,
             "weapons": [
@@ -1346,8 +1351,9 @@ const (
         "zgundam_sky": {
             "id": "zgundam_sky",
             "title": "z鋼彈飛翼",
-            "cost": 53000,
-            "power": 90,
+            "enemy": true,
+            "cost": 60600,
+            "power": 100,
             "hp": 6000,
             "en": 200,
             "weapons": [
@@ -1374,8 +1380,9 @@ const (
         "gundam": {
             "id": "gundam",
             "title": "鋼彈",
-            "cost": 37400,
-            "power": 65,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1401,8 +1408,9 @@ const (
         "jimu": {
             "id": "jimu",
             "title": "吉姆",
-            "cost": 29616,
-            "power": 48,
+            "enemy": true,
+            "cost": 60400,
+            "power": 100,
             "hp": 4000,
             "en": 200,
             "weapons": [
@@ -1426,8 +1434,9 @@ const (
         "BGD": {
             "id": "BGD",
             "title": "制式格鬥",
-            "cost": 34900,
-            "power": 60,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1450,8 +1459,9 @@ const (
         "BYJ": {
             "id": "BYJ",
             "title": "制式遊擊",
-            "cost": 34900,
-            "power": 60,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1474,8 +1484,9 @@ const (
         "BJJ": {
             "id": "BJJ",
             "title": "制式狙擊",
-            "cost": 34900,
-            "power": 60,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1498,8 +1509,9 @@ const (
         "BGR": {
             "id": "BGR",
             "title": "制式干擾",
-            "cost": 34900,
-            "power": 60,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1522,8 +1534,9 @@ const (
         "BFD": {
             "id": "BFD",
             "title": "制式防盾",
-            "cost": 34900,
-            "power": 60,
+            "enemy": true,
+            "cost": 60500,
+            "power": 100,
             "hp": 5000,
             "en": 200,
             "weapons": [
@@ -1546,8 +1559,9 @@ const (
         "windgundam": {
             "id": "windgundam",
             "title": "零式鋼彈",
-            "cost": 99200,
-            "power": 140,
+            "enemy": true,
+            "cost": 88400,
+            "power": 130,
             "hp": 8000,
             "en": 200,
             "weapons": [
@@ -1577,8 +1591,9 @@ const (
         "windgundam_sky": {
             "id": "windgundam_sky",
             "title": "零式鋼彈飛翼",
-            "cost": 99200,
-            "power": 140,
+            "enemy": true,
+            "cost": 88400,
+            "power": 130,
             "hp": 8000,
             "en": 200,
             "weapons": [
@@ -1606,8 +1621,9 @@ const (
         "strikegundam": {
             "id": "strikegundam",
             "title": "攻擊鋼彈",
-            "cost": 56900,
-            "power": 95,
+            "enemy": true,
+            "cost": 60800,
+            "power": 100,
             "hp": 8000,
             "en": 200,
             "weapons": [
@@ -1635,6 +1651,7 @@ const (
         "exlight": {
             "id": "exlight",
             "title": "特輕型機甲",
+            "enemy": false,
             "cost": 24100,
             "power": 30,
             "hp": 5000,
@@ -1653,6 +1670,7 @@ const (
         "light": {
             "id": "light",
             "title": "輕型機甲",
+            "enemy": false,
             "cost": 28600,
             "power": 45,
             "hp": 5000,
@@ -1671,6 +1689,7 @@ const (
         "normal": {
             "id": "normal",
             "title": "制式機甲",
+            "enemy": false,
             "cost": 37400,
             "power": 65,
             "hp": 5000,
@@ -1689,6 +1708,7 @@ const (
         "medium": {
             "id": "medium",
             "title": "中型機甲",
+            "enemy": false,
             "cost": 52900,
             "power": 90,
             "hp": 5000,
@@ -1707,6 +1727,7 @@ const (
         "heavy": {
             "id": "heavy",
             "title": "重型機甲",
+            "enemy": false,
             "cost": 78100,
             "power": 120,
             "hp": 5000,
@@ -1725,6 +1746,7 @@ const (
         "exheavy": {
             "id": "exheavy",
             "title": "特重型機甲",
+            "enemy": false,
             "cost": 116600,
             "power": 155,
             "hp": 5000,
@@ -1743,8 +1765,9 @@ const (
         "f91": {
             "id": "f91",
             "title": "F91",
-            "cost": 53000,
-            "power": 90,
+            "enemy": true,
+            "cost": 60600,
+            "power": 100,
             "hp": 6000,
             "en": 200,
             "weapons": [
@@ -1770,8 +1793,9 @@ const (
         "duankongka": {
             "id": "duankongka",
             "title": "斷空我",
-            "cost": 48400,
-            "power": 110,
+            "enemy": true,
+            "cost": 67600,
+            "power": 130,
             "hp": 12000,
             "en": 200,
             "weapons": [
@@ -1791,6 +1815,58 @@ const (
                 0.5,
                 0,
                 1
+            ],
+            "transform": [],
+            "unlockExp": 10
+        },
+        "altrongundam": {
+            "id": "altrongundam",
+            "title": "雙頭龍鋼彈",
+            "enemy": true,
+            "cost": 67600,
+            "power": 130,
+            "hp": 8000,
+            "en": 200,
+            "weapons": [
+                "machinegun1",
+                "physic_sword3",
+                "range_physic_sword3",
+                "firegun3"
+            ],
+            "components": [
+                "armor3",
+                "fire_armor"
+            ],
+            "suitability": [
+                1,
+                0.5,
+                0,
+                1
+            ],
+            "transform": [],
+            "unlockExp": 10
+        },
+        "seamonster": {
+            "id": "seamonster",
+            "title": "海怪",
+            "enemy": true,
+            "cost": 67600,
+            "power": 130,
+            "hp": 500,
+            "en": 0,
+            "weapons": [
+                "torpedo3",
+                "sea_mine3"
+            ],
+            "components": [
+                "armor2",
+                "lighting_armor"
+            ],
+            "suitability": [
+                0,
+                1,
+                0,
+                0
             ],
             "transform": [],
             "unlockExp": 10
@@ -5173,6 +5249,405 @@ const (
             "energyType": "bullet",
             "type": "single",
             "accuracy": 0.9,
+            "damage": 4574,
+            "curage": 0,
+            "powerCost": 28,
+            "unlockExp": 0
+        },
+        "torpedo1": {
+            "id": "torpedo1",
+            "title": "魚雷L1",
+            "cost": 400,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2197,
+            "curage": 0,
+            "powerCost": 10,
+            "unlockExp": 0
+        },
+        "torpedo2": {
+            "id": "torpedo2",
+            "title": "魚雷L2",
+            "cost": 676,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2515,
+            "curage": 0,
+            "powerCost": 13,
+            "unlockExp": 0
+        },
+        "torpedo3": {
+            "id": "torpedo3",
+            "title": "魚雷L3",
+            "cost": 1024,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2863,
+            "curage": 0,
+            "powerCost": 16,
+            "unlockExp": 0
+        },
+        "torpedo4": {
+            "id": "torpedo4",
+            "title": "魚雷L4",
+            "cost": 1444,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 3241,
+            "curage": 0,
+            "powerCost": 19,
+            "unlockExp": 0
+        },
+        "torpedo5": {
+            "id": "torpedo5",
+            "title": "魚雷L5",
+            "cost": 1936,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 3652,
+            "curage": 0,
+            "powerCost": 22,
+            "unlockExp": 0
+        },
+        "torpedo6": {
+            "id": "torpedo6",
+            "title": "魚雷L6",
+            "cost": 2500,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 4096,
+            "curage": 0,
+            "powerCost": 25,
+            "unlockExp": 0
+        },
+        "torpedo7": {
+            "id": "torpedo7",
+            "title": "魚雷L7",
+            "cost": 3136,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 4574,
+            "curage": 0,
+            "powerCost": 28,
+            "unlockExp": 0
+        },
+        "sea_mine1": {
+            "id": "sea_mine1",
+            "title": "海機雷L1",
+            "cost": 400,
+            "range": [
+                1,
+                4
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2197,
+            "curage": 0,
+            "powerCost": 10,
+            "unlockExp": 0
+        },
+        "sea_mine2": {
+            "id": "sea_mine2",
+            "title": "海機雷L2",
+            "cost": 676,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2515,
+            "curage": 0,
+            "powerCost": 13,
+            "unlockExp": 0
+        },
+        "sea_mine3": {
+            "id": "sea_mine3",
+            "title": "海機雷L3",
+            "cost": 1024,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 2863,
+            "curage": 0,
+            "powerCost": 16,
+            "unlockExp": 0
+        },
+        "sea_mine4": {
+            "id": "sea_mine4",
+            "title": "海機雷L4",
+            "cost": 1444,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 3241,
+            "curage": 0,
+            "powerCost": 19,
+            "unlockExp": 0
+        },
+        "sea_mine5": {
+            "id": "sea_mine5",
+            "title": "海機雷L5",
+            "cost": 1936,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 3652,
+            "curage": 0,
+            "powerCost": 22,
+            "unlockExp": 0
+        },
+        "sea_mine6": {
+            "id": "sea_mine6",
+            "title": "海機雷L6",
+            "cost": 2500,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
+            "damage": 4096,
+            "curage": 0,
+            "powerCost": 25,
+            "unlockExp": 0
+        },
+        "sea_mine7": {
+            "id": "sea_mine7",
+            "title": "海機雷L7",
+            "cost": 3136,
+            "range": [
+                3,
+                9
+            ],
+            "energyCost": 0,
+            "maxBulletCount": 8,
+            "suitability": [
+                0,
+                1,
+                0,
+                0
+            ],
+            "ability": [
+                "range",
+                "missile",
+                "moveAttack"
+            ],
+            "energyType": "bullet",
+            "type": "single",
+            "accuracy": 0.8,
             "damage": 4574,
             "curage": 0,
             "powerCost": 28,

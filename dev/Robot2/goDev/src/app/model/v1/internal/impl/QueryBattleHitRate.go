@@ -149,6 +149,8 @@ func QueryBattleHitRate(model types.Model, robot protocol.Robot, pilot protocol.
 			factor := mgl64.Vec2{weaponSuitability[0], weaponSuitability[1]}.Dot(mgl64.Vec2{targetTerrain.Cost[0], targetTerrain.Cost[1]})
 			weaponSuitabilityFactor = factor
 		}
+		// 地形補正在命中率上減半(和在傷害率比較)
+		weaponSuitabilityFactor += ((1 - weaponSuitabilityFactor) / 2)
 	}
 	basic, err := common.QueryRobotWeaponAccuracy(model, robot.ID, weapon, true)
 	if err != nil {

@@ -29,7 +29,7 @@ async function main(config) {
         output
     } = config;
 
-    const tmpl = await readFile(template, {encoding: 'utf-8'})
+    const tmpl = await readFile(template, { encoding: 'utf-8' })
     const filepaths = await getFiles("./config")
     const formated = {}
 
@@ -49,7 +49,7 @@ async function main(config) {
         })
 
         list = list.map(obj => {
-            if(obj["id/string"] == null){
+            if (obj["id/string"] == null) {
                 return null
             }
             if (obj["id/string"].trim() == "") {
@@ -61,7 +61,7 @@ async function main(config) {
             const ret = {}
             for (const k in obj) {
                 let v = obj[k]
-                if(k.trim().length == 0){
+                if (k.trim().length == 0) {
                     continue;
                 }
                 const [keyName, type] = k.split("/")
@@ -74,6 +74,20 @@ async function main(config) {
                             break;
                         }
                         v = v.split(",")
+                        break;
+                    case "bool":
+                        {
+                            if (v.trim() == "") {
+                                v = false
+                                break;
+                            }
+                            v = parseInt(v)
+                            if (isNaN(v)) {
+                                v = false
+                                break;
+                            }
+                            v = v != 0
+                        }
                         break;
                     case "int":
                         {
@@ -125,7 +139,7 @@ async function main(config) {
                         break;
                     default:
                         {
-                            if(type == null){
+                            if (type == null) {
                                 console.log(`${tableKey}/${k} has not type. ignore this field`)
                                 break
                             }

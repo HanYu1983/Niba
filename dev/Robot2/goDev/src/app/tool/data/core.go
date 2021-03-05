@@ -36,6 +36,7 @@ type RobotProto struct {
 	Suitability [4]float64
 	Transform   []string
 	UnlockExp   int
+	Enemy       bool
 }
 
 type PilotProto struct {
@@ -123,7 +124,14 @@ func init() {
 }
 
 func RandRobotProto() (RobotProto, error) {
-	protos := ValsStringRobotProto(GameData.Robot)
+	filtered := map[string]RobotProto{}
+	for protoID, proto := range GameData.Robot {
+		if proto.Enemy == false {
+			continue
+		}
+		filtered[protoID] = proto
+	}
+	protos := ValsStringRobotProto(filtered)
 	if len(protos) == 0 {
 		return RobotProto{}, fmt.Errorf("protos's len is zero.")
 	}
