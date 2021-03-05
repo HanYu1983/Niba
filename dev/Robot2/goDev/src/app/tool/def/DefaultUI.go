@@ -133,16 +133,13 @@ var (
 				Limit: 10,
 			},
 			Menu1DGroundLevelMenu: {
-				Limit:   10,
-				Options: []string{"Ground1", "Ground2", "Ground3", "Ground4", "Ground5"},
+				Limit: 10,
 			},
 			Menu1DSeaLevelMenu: {
-				Limit:   10,
-				Options: []string{"Sea1", "Sea2", "Sea3", "Sea4", "Sea5"},
+				Limit: 10,
 			},
 			Menu1DRandomLevelMenu: {
-				Limit:   10,
-				Options: []string{"Random1", "Random2", "Random3", "Random4", "Random5"},
+				Limit: 10,
 			},
 		},
 		Menu2Ds: map[int]Menu2D{

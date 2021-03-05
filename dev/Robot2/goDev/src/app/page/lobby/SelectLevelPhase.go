@@ -8,12 +8,12 @@ import (
 	"tool/log"
 )
 
-func SelectLevelPhase(origin uidata.UI) (uidata.UI, protocol.SelectLevelSelection, bool, error) {
+func SelectLevelPhase(origin uidata.UI) (uidata.UI, string, bool, error) {
 	log.Log(protocol.LogCategoryPhase, "SelectLevelPhase", "start")
 	var err error
 	ctx := origin
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSelectLevel, true)
-	var levelSelection protocol.SelectLevelSelection
+	var levelSelection string
 	var confirm bool
 	ctx, err = common.BasicPagePhase(
 		ctx,
@@ -25,16 +25,10 @@ func SelectLevelPhase(origin uidata.UI) (uidata.UI, protocol.SelectLevelSelectio
 		func(origin uidata.UI, focus int, selection string, cancel bool, tab bool) (uidata.UI, bool, error) {
 			log.Log(protocol.LogCategoryDetail, "SelectLevelPhase", fmt.Sprintf("cancel(%v) tab(%v)", cancel, tab))
 			ctx := origin
-			menuID := ctx.Menus[uidata.PageSelectLevel][focus]
 			if cancel {
 				return ctx, cancel, nil
 			}
-			menu, has := ctx.Menu1Ds[menuID]
-			if has == false {
-				return ctx, cancel, fmt.Errorf("選擇關卡時找不到menu(%v). 請檢查DefaultUI或是ObserveMenu1D中有沒有給予Options.", menuID)
-			}
-			levelSelection.MenuID = menuID
-			levelSelection.Cursor = menu.Cursor
+			levelSelection = selection
 			confirm = true
 			return ctx, true, nil
 		},
@@ -43,7 +37,7 @@ func SelectLevelPhase(origin uidata.UI) (uidata.UI, protocol.SelectLevelSelectio
 		},
 	)
 	if err != nil {
-		return ctx, protocol.SelectLevelSelection{}, false, err
+		return ctx, "", false, err
 	}
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageSelectLevel, false)
 	cancel := confirm == false

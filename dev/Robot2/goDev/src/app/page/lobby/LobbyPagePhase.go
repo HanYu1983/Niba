@@ -73,7 +73,7 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 					ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageLobby, false)
 				SELECT_LEVEL:
 					for {
-						var levelSelection protocol.SelectLevelSelection
+						var levelSelection string
 						ctx, levelSelection, cancel, err = SelectLevelPhase(ctx)
 						if err != nil {
 							return origin, cancel, err
@@ -91,8 +91,8 @@ func LobbyPagePhase(origin uidata.UI) (uidata.UI, error) {
 								continue SELECT_LEVEL
 							}
 							ctx.Model, err = ctx.Model.New(protocol.NewGameplayWithSelection{
-								SelectLevelSelection: levelSelection,
-								Selection:            unitSelection,
+								LevelSelection: levelSelection,
+								UnitSelection:  unitSelection,
 							})
 							if err != nil {
 								view.Alert(err.Error())

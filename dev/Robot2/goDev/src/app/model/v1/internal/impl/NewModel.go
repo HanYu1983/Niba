@@ -20,8 +20,11 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	switch detail := situation.(type) {
 	case protocol.NewGameplayWithSelection:
 		rand.Seed(0)
-		selectLevelSelection := detail.SelectLevelSelection
-		selection := detail.Selection
+		unitSelection := detail.UnitSelection
+		normalLevel, hasLevel := types.DefaultNormalLevels[detail.LevelSelection]
+		if hasLevel == false {
+			return origin, fmt.Errorf("找不到所選關卡(%v)", detail.LevelSelection)
+		}
 		{
 			gameplay := types.DefaultGameplay
 			// state
@@ -31,8 +34,9 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			// 地圖
 			var tmpMap [][]int
 			{
-				offset := selectLevelSelection.Cursor * uidata.MapWidth
-				switch selectLevelSelection.MenuID {
+
+				offset := normalLevel.Cursor * uidata.MapWidth
+				switch normalLevel.MenuID {
 				case uidata.Menu1DGroundLevelMenu:
 					tmpMap, err = helper.GenerateMap(helper.GenerateMapConfigDefault, 0, 0, 1, uidata.MapWidth, uidata.MapHeight, offset, offset)
 					if err != nil {
@@ -78,7 +82,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 		}
 		var i int
 		// 使用所選的建立機體
-		for robotID, isSelection := range selection {
+		for robotID, isSelection := range unitSelection {
 			if isSelection == false {
 				continue
 			}
@@ -105,7 +109,7 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			i++
 		}
 		{
-			enemyPower := selectLevelSelection.Cursor * 200000
+			enemyPower := normalLevel.Cursor * 200000
 			// 敵機
 			ctx, err = GenerateLevelByHC(ctx, playerAI1, protocol.Position{uidata.MapWidth - 5, uidata.MapHeight - 5}, enemyPower)
 			if err != nil {

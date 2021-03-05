@@ -41,6 +41,20 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
 		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionSaveGame, uidata.MenuOptionLoadGame, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
+	case uidata.Menu1DGroundLevelMenu, uidata.Menu1DSeaLevelMenu, uidata.Menu1DRandomLevelMenu:
+		levels := []string{}
+		{
+			for k, level := range types.DefaultNormalLevels {
+				if level.MenuID != menuID {
+					continue
+				}
+				if model.App.Lobby.ClearStateByLevelID[k] {
+					continue
+				}
+				levels = append(levels, k)
+			}
+		}
+		options = levels
 	}
 	if menu.Limit == 0 {
 		return origin, fmt.Errorf("menuID(%v) Menu1D(%+v)的Limit不能為0", menuID, menu)

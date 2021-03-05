@@ -40,16 +40,17 @@ type RobotProto struct {
 }
 
 type PilotProto struct {
-	ID      string
-	Title   string
-	Cost    int
-	Melee   int
-	Range   int
-	Atk     int
-	Evade   int
-	Guard   int
-	Tech    int
-	Ability []string
+	ID        string
+	Title     string
+	Cost      int
+	Melee     int
+	Range     int
+	Atk       int
+	Evade     int
+	Guard     int
+	Tech      int
+	Ability   []string
+	UnlockExp int
 }
 
 type WeaponProto struct {
@@ -78,6 +79,7 @@ type ComponentProto struct {
 	Value     []string
 	PowerCost int
 	Action    string
+	UnlockExp int
 }
 type TerrainProto struct {
 	ID      string

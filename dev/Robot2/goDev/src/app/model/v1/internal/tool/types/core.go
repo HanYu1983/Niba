@@ -13,6 +13,7 @@ type Lobby struct {
 	RobotIDByWeaponID    map[string]string
 	RobotIDByComponentID map[string]string
 	PilotIDByRobotID     map[string]string
+	ClearStateByLevelID  map[string]bool
 }
 
 var DefaultLobby = Lobby{
@@ -23,6 +24,7 @@ var DefaultLobby = Lobby{
 	RobotIDByWeaponID:    map[string]string{},
 	RobotIDByComponentID: map[string]string{},
 	PilotIDByRobotID:     map[string]string{},
+	ClearStateByLevelID:  map[string]bool{},
 }
 
 type Gameplay struct {
@@ -96,4 +98,9 @@ type Memory struct {
 type AIModel struct {
 	Memory        map[string]Memory
 	GoalByRobotID map[string]Goal
+}
+
+type NormalLevel struct {
+	MenuID int
+	Cursor int
 }
