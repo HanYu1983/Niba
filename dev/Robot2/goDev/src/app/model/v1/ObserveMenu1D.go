@@ -40,7 +40,7 @@ func ObserveMenu1D(origin uidata.UI, menuID int) (uidata.UI, error) {
 		canBuy := lobby.QueryComponentCanBuy(model)
 		options = data.KesStringComponentProto(canBuy)
 	case uidata.Menu1DSystemMenu:
-		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionSaveGame, uidata.MenuOptionLoadGame, uidata.MenuOptionGiveUp, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3}
+		options = []string{uidata.MenuOptionTurnDone, uidata.MenuOptionSaveGame, uidata.MenuOptionLoadGame, uidata.MenuOptionGiveUp /*, uidata.MenuOptionTest, uidata.MenuOptionTest2, uidata.MenuOptionTest3*/}
 	case uidata.Menu1DGroundLevelMenu, uidata.Menu1DSeaLevelMenu, uidata.Menu1DRandomLevelMenu:
 		levels := []string{}
 		{

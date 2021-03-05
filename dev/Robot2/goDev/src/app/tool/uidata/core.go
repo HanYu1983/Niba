@@ -136,39 +136,39 @@ type UI struct {
 
 //
 const (
-	MenuOptionNewGame       = "MenuOptionNewGame"
-	MenuOptionLoadGame      = "MenuOptionLoadGame"
-	MenuOptionStartGameplay = "MenuOptionStartGameplay"
+	MenuOptionNewGame       = "新遊戲"
+	MenuOptionLoadGame      = "讀檔"
+	MenuOptionStartGameplay = "選擇關卡"
 
-	MenuOptionBuyRobot            = "MenuOptionBuyRobot"
-	MenuOptionBuyPilot            = "MenuOptionBuyPilot"
-	MenuOptionBuyWeapon           = "MenuOptionBuyWeapon"
-	MenuOptionBuyComponent        = "MenuOptionBuyComponent"
-	MenuOptionAssocRobotPilot     = "MenuOptionAssocRobotPilot"
-	MenuOptionAssocWeaponRobot    = "MenuOptionAssocWeaponRobot"
-	MenuOptionAssocComponentRobot = "MenuOptionAssocComponentRobot"
+	MenuOptionBuyRobot            = "買機體"
+	MenuOptionBuyPilot            = "買駕駛"
+	MenuOptionBuyWeapon           = "買武器"
+	MenuOptionBuyComponent        = "買配件"
+	MenuOptionAssocRobotPilot     = "設定駕駛"
+	MenuOptionAssocWeaponRobot    = "裝備武器"
+	MenuOptionAssocComponentRobot = "裝備配件"
 
-	MenuOptionCreateNew = "MenuOptionCreateNew"
-	MenuOptionSell      = "MenuOptionSell"
+	MenuOptionCreateNew = "買"
+	MenuOptionSell      = "賣"
 
-	MenuOptionAssoc  = "MenuOptionAssoc"
-	MenuOptionDissoc = "MenuOptionDissoc"
+	MenuOptionAssoc  = "指定"
+	MenuOptionDissoc = "移除"
 
-	MenuOptionMove      = "MenuOptionMove"
-	MenuOptionSkyGround = "MenuOptionSkyGround"
-	MenuOptionUnitDone  = "MenuOptionUnitDone"
+	MenuOptionMove      = "移動"
+	MenuOptionSkyGround = "空中陸地"
+	MenuOptionUnitDone  = "結束行動"
 
-	MenuOptionUnitGuard = "MenuOptionUnitGuard"
-	MenuOptionUnitEvade = "MenuOptionUnitEvade"
-	MenuOptionConfirm   = "MenuOptionConfirm"
+	MenuOptionUnitGuard = "防禦"
+	MenuOptionUnitEvade = "閃避"
+	MenuOptionConfirm   = "確認"
 
-	MenuOptionTurnDone = "MenuOptionTurnDone"
-	MenuOptionGiveUp   = "MenuOptionGiveUp"
+	MenuOptionTurnDone = "回合結束"
+	MenuOptionGiveUp   = "放棄遊戲"
 	MenuOptionTest     = "MenuOptionTest"
 	MenuOptionTest2    = "MenuOptionTest2"
 	MenuOptionTest3    = "MenuOptionTest3"
 
-	MenuOptionSaveGame = "MenuOptionSaveGame"
+	MenuOptionSaveGame = "存檔"
 )
 
 //

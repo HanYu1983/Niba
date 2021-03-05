@@ -37,7 +37,10 @@ Menu:
 			}
 			if tab {
 				if autoTab {
-					focus, _ := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					focus, outOfRange := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					if outOfRange {
+						focus = 0
+					}
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				}
 				continue
@@ -58,7 +61,10 @@ Menu:
 			}
 			if tab {
 				if autoTab {
-					focus, _ := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					focus, outOfRange := helper.Clamp(focus+1, 0, len(ctx.Menus[pageID]))
+					if outOfRange {
+						focus = 0
+					}
 					ctx.Focus = uidata.AssocIntInt(ctx.Focus, pageID, focus)
 				}
 				continue

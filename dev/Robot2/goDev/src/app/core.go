@@ -20,9 +20,9 @@ import (
 // 	fmt.Printf("%+v\n", slot2)
 // }
 func Main() {
-	log.Category[protocol.LogCategoryPhase] = true
-	log.Category[protocol.LogCategoryDetail] = true
-	log.Category[protocol.LogCategoryWarning] = true
+	log.Category[protocol.LogCategoryPhase] = false
+	log.Category[protocol.LogCategoryDetail] = false
+	log.Category[protocol.LogCategoryWarning] = false
 	log.Category[protocol.LogCategoryRender] = false
 	view := def.View
 	defer func() {
