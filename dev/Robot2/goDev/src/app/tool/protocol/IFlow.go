@@ -19,4 +19,5 @@ type IFlow interface {
 	OnDisableBattleMenu(origin interface{}) (interface{}, error)
 	OnClickSystemMenu(origin interface{}, selection string) (interface{}, error)
 	OnEventPlayerTurnPhase(origin interface{}, evt interface{}) (interface{}, error)
+	OnApplyPassLevel(origin interface{}) (interface{}, error)
 }

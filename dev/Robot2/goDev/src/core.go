@@ -36,6 +36,7 @@ import (
 //go:generate genny -in tool/template/map.go -out app/tool/uidata/MapIntBattleMenu.go -pkg uidata gen "Key=int Value=BattleMenu"
 
 //go:generate genny -in tool/template/map.go -out app/model/v1/internal/tool/types/MapStringMemory.go -pkg types gen "Key=string Value=Memory"
+//go:generate genny -in tool/template/map.go -out app/model/v1/internal/tool/types/MapStringBool.go -pkg types gen "Key=string Value=bool"
 
 func init() {
 	app.Main()

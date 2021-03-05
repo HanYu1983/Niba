@@ -103,6 +103,9 @@ func (v Model) ObservePage(origin interface{}, id int) (interface{}, error) {
 func (v Model) OnEventPlayerTurnPhase(origin interface{}, evt interface{}) (interface{}, error) {
 	return OnEventPlayerTurnPhase(origin.(uidata.UI), evt)
 }
+func (v Model) OnApplyPassLevel(origin interface{}) (interface{}, error) {
+	return OnApplyPassLevel(origin.(uidata.UI))
+}
 
 // IGameplayModel
 

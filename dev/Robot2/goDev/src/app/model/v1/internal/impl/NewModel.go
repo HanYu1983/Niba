@@ -21,7 +21,8 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 	case protocol.NewGameplayWithSelection:
 		rand.Seed(0)
 		unitSelection := detail.UnitSelection
-		normalLevel, hasLevel := types.DefaultNormalLevels[detail.LevelSelection]
+		levelID := detail.LevelSelection
+		normalLevel, hasLevel := types.DefaultNormalLevels[levelID]
 		if hasLevel == false {
 			return origin, fmt.Errorf("找不到所選關卡(%v)", detail.LevelSelection)
 		}
@@ -29,6 +30,8 @@ func NewModel(origin types.Model, situation interface{}) (types.Model, error) {
 			gameplay := types.DefaultGameplay
 			// state
 			gameplay.State = protocol.GameplayModelStatePlaying
+			// level
+			gameplay.LevelID = levelID
 			// ai版本
 			gameplay.AIModel = types.AIModel{}
 			// 地圖

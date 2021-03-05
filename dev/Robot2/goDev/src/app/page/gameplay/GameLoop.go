@@ -4,8 +4,6 @@ import (
 	"app/tool/def"
 	"app/tool/protocol"
 	"app/tool/uidata"
-	"fmt"
-	"time"
 	"tool/log"
 )
 
@@ -41,22 +39,11 @@ func GameLoop(origin uidata.UI) (uidata.UI, error) {
 			return origin, err
 		}
 	}
-	if ctx.Model.StateReason() == nil {
-		return origin, fmt.Errorf("State == GameplayModelStateDone. 但是StateReason是空值，請確認當設定為GameplayModelStateDone時, 一定要給StateReason")
+	ctxObj, err := ctx.Model.OnApplyPassLevel(ctx)
+	if err != nil {
+		return origin, err
 	}
-	switch detail := ctx.Model.StateReason().(type) {
-	case protocol.StateReasonGiveUp:
-		view.Alert("你放棄了遊戲, 將回到機庫")
-		time.Sleep(2 * time.Second)
-	case protocol.StateReasonLose:
-		view.Alert("你輸了遊戲, 將回到機庫")
-		time.Sleep(2 * time.Second)
-	case protocol.StateReasonWin:
-		view.Alert("你勝了遊戲, 將回到機庫")
-		time.Sleep(2 * time.Second)
-	default:
-		return origin, fmt.Errorf("離開了GameLoop，卻不知原因(%+v)。請檢查", detail)
-	}
+	ctx = ctxObj.(uidata.UI)
 	ctx.Actives = uidata.AssocIntBool(ctx.Actives, uidata.PageGameplay, false)
 	log.Log(protocol.LogCategoryPhase, "GameLoop", "end")
 	return ctx, nil

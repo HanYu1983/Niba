@@ -29,6 +29,7 @@ var DefaultLobby = Lobby{
 
 type Gameplay struct {
 	AIModel        AIModel
+	LevelID        string
 	ActivePlayerID string
 	PlayerOrder    []string
 	Map            [][]int
