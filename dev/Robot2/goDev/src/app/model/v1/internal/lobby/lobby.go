@@ -121,16 +121,44 @@ func DissocComponentRobot(origin types.Model, componentID string) (types.Model, 
 	return ctx, nil
 }
 func QueryRobotCanBuy(origin types.Model) map[string]data.RobotProto {
-	return data.GameData.Robot
+	canBuy := map[string]data.RobotProto{}
+	for protoID, proto := range data.GameData.Robot {
+		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+			continue
+		}
+		canBuy[protoID] = proto
+	}
+	return canBuy
 }
 func QueryPilotCanBuy(origin types.Model) map[string]data.PilotProto {
-	return data.GameData.Pilot
+	canBuy := map[string]data.PilotProto{}
+	for protoID, proto := range data.GameData.Pilot {
+		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+			continue
+		}
+		canBuy[protoID] = proto
+	}
+	return canBuy
 }
 func QueryWeaponCanBuy(origin types.Model) map[string]data.WeaponProto {
-	return data.GameData.Weapon
+	canBuy := map[string]data.WeaponProto{}
+	for protoID, proto := range data.GameData.Weapon {
+		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+			continue
+		}
+		canBuy[protoID] = proto
+	}
+	return canBuy
 }
 func QueryComponentCanBuy(origin types.Model) map[string]data.ComponentProto {
-	return data.GameData.Component
+	canBuy := map[string]data.ComponentProto{}
+	for protoID, proto := range data.GameData.Component {
+		if proto.UnlockExp < len(origin.App.Lobby.ClearStateByLevelID) {
+			continue
+		}
+		canBuy[protoID] = proto
+	}
+	return canBuy
 }
 func QueryRobotIDByWeaponID(origin types.Model) map[string]string {
 	ctx := origin

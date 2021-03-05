@@ -1,43 +1,43 @@
-id/string,title/string,cost/int,desc/string,value/string[],powerCost/int,action/string
-# 基本,,,,,,
-energy1,能量夾L1,1000,增加{0}能量.,25,10,equipment
-energy2,能量夾L2,2000,增加{0}能量.,50,12,equipment
-energy3,能量夾L3,3000,增加{0}能量.,75,14,equipment
-energy4,能量夾L4,4000,增加{0}能量.,100,16,equipment
-energy5,能量夾L5,5000,增加{0}能量.,125,18,equipment
-armor1,裝甲L1,1000,增加{0}耐久. 被實彈傷害-{1},"500.0,100.0",10,equipment
-armor2,裝甲L2,2000,增加{0}耐久. 被實彈傷害-{1},"1000.0,200.0",12,equipment
-armor3,裝甲L3,3000,增加{0}耐久. 被實彈傷害-{1},"1500.0,300.0",14,equipment
-armor4,裝甲L4,4000,增加{0}耐久. 被實彈傷害-{1},"2000.0,400.0",16,equipment
-armor5,裝甲L5,5000,增加{0}耐久. 被實彈傷害-{1},"2500.0,500.0",18,equipment
-beam_armor1,光束裝甲L1,1000,增加{0}耐久. 被光束傷害-{1},"500.0,100.0",10,equipment
-beam_armor2,光束裝甲L2,2000,增加{0}耐久. 被光束傷害-{1},"1000.0,200.0",12,equipment
-beam_armor3,光束裝甲L3,3000,增加{0}耐久. 被光束傷害-{1},"1500.0,300.0",14,equipment
-beam_armor4,光束裝甲L4,4000,增加{0}耐久. 被光束傷害-{1},"2000.0,400.0",16,equipment
-beam_armor5,光束裝甲L5,5000,增加{0}耐久. 被光束傷害-{1},"2500.0,500.0",18,equipment
-fire_armor,防火裝甲,2000,增加{0}耐久. 不受火焰武器影響. 被火焰傷害-{1},"500.0,1000.0",10,equipment
-lighting_armor,防電裝甲,2000,增加{0}耐久. 不受雷電武器影響. 被雷電傷害-{1},"500.0,1000.0",10,equipment
-engine1,引擎L1,1000,增加{0}power,20,0,equipment
-engine2,引擎L2,2000,增加{0}power,40,0,equipment
-engine3,引擎L3,3000,增加{0}power,60,0,equipment
-engine4,引擎L4,4000,增加{0}power,80,0,equipment
-engine5,引擎L5,5000,增加{0}power,100,0,equipment
-fixPack,修復包,1000,回復{0}HP,3000,10,item
-energyPack,能量包,1000,回復{0}EN,80,10,item
-bulletPack,彈夾,1000,所有彈藥類武器彈數補充{0},3,10,item
-shield,盾,1000,機率{0}被實彈傷害-{1}.,"0.2,3000",10,equipment
-beam_shield,光束盾,1000,機率{0}被光束傷害-{1}.,"0.2,3000",10,equipment
-psArmor,ps裝甲,3000,被實彈傷害-{1},2000,10,equipment
-# 特殊,,,,,,
-afterimage,殘像,10000,"氣力{0}以上時, 機率{1}閃避攻擊","130,0.7",30,equipment
-defensiveWeapon,防禦兵器,1000,依技量有機率防禦[飛行兵器],,10,equipment
-zeroSystem,零式系統,1000,武器的最終命中增加{0}%，自身的最終被命中率減少{1}%,"10,15",10,equipment
-shejililiang,射擊力量,1000,射擊系武器射程增加{0},1,10,equipment
-gedouliliang,格鬥力量,1000,格鬥系武器射程增加{0},1,10,equipment
-gushou,固守,1000,這個回合沒有攻擊的話，下個合回開始前受傷害減少{0},1000,10,equipment
-gedouwang,格鬥王,1000,"若所有武器都是格鬥系，武器傷害*{0}%, 回避*{1}%","1.2,1.2",10,equipment
-shejiwang,射擊王,1000,"若所有武器都是射擊系，射擊傷害*{0}%, 受傷害減少{0}","1.2,500",10,equipment
-feixingwang,飛行王,1000,飛行狀態時，移動力+{0}，回避+{1}%,"2,1.2",10,equipment
-shengwuzhuangjia,生物裝甲,1000,增加{0}裝中. 每回合開始回復{1}%最大hp.,"300,0.1",10,equipment
-feixingqi,飛行器,1000,空中適性變成{0},0.8,10,equipment
-pensheqidian,噴射氣墊,1000,地面移動時出力*{0},1.5,10,equipment
+id/string,title/string,unlockExp/int,cost/int,desc/string,value/string[],powerCost/int,action/string
+# 基本,,,,,,,
+energy1,能量夾L1,,1000,增加{0}能量.,25,10,equipment
+energy2,能量夾L2,,2000,增加{0}能量.,50,13,equipment
+energy3,能量夾L3,3,3000,增加{0}能量.,75,16,equipment
+energy4,能量夾L4,3,4000,增加{0}能量.,100,19,equipment
+energy5,能量夾L5,5,5000,增加{0}能量.,125,22,equipment
+armor1,裝甲L1,,1000,增加{0}耐久. 被實彈傷害-{1},"500.0,100.0",10,equipment
+armor2,裝甲L2,,2000,增加{0}耐久. 被實彈傷害-{1},"1000.0,200.0",13,equipment
+armor3,裝甲L3,3,3000,增加{0}耐久. 被實彈傷害-{1},"1500.0,300.0",16,equipment
+armor4,裝甲L4,3,4000,增加{0}耐久. 被實彈傷害-{1},"2000.0,400.0",19,equipment
+armor5,裝甲L5,5,5000,增加{0}耐久. 被實彈傷害-{1},"2500.0,500.0",22,equipment
+beam_armor1,光束裝甲L1,,1000,增加{0}耐久. 被光束傷害-{1},"500.0,100.0",10,equipment
+beam_armor2,光束裝甲L2,,2000,增加{0}耐久. 被光束傷害-{1},"1000.0,200.0",13,equipment
+beam_armor3,光束裝甲L3,3,3000,增加{0}耐久. 被光束傷害-{1},"1500.0,300.0",16,equipment
+beam_armor4,光束裝甲L4,3,4000,增加{0}耐久. 被光束傷害-{1},"2000.0,400.0",19,equipment
+beam_armor5,光束裝甲L5,5,5000,增加{0}耐久. 被光束傷害-{1},"2500.0,500.0",22,equipment
+fire_armor,防火裝甲,3,2000,增加{0}耐久. 不受火焰武器影響. 被火焰傷害-{1},"500.0,1000.0",10,equipment
+lighting_armor,防電裝甲,3,2000,增加{0}耐久. 不受雷電武器影響. 被雷電傷害-{1},"500.0,1000.0",10,equipment
+engine1,引擎L1,,1000,增加{0}power,20,0,equipment
+engine2,引擎L2,3,2000,增加{0}power,40,0,equipment
+engine3,引擎L3,5,3000,增加{0}power,60,0,equipment
+engine4,引擎L4,7,4000,增加{0}power,80,0,equipment
+engine5,引擎L5,9,5000,增加{0}power,100,0,equipment
+fixPack,修復包,,1000,回復{0}HP,3000,10,item
+energyPack,能量包,,1000,回復{0}EN,80,10,item
+bulletPack,彈夾,3,1000,所有彈藥類武器彈數補充{0},3,10,item
+shield,盾,3,1000,機率{0}被實彈傷害-{1}.,"0.2,3000",10,equipment
+beam_shield,光束盾,3,1000,機率{0}被光束傷害-{1}.,"0.2,3000",10,equipment
+psArmor,ps裝甲,3,3000,被實彈傷害-{1},2000,10,equipment
+# 特殊,,,,,,,
+afterimage,殘像,5,10000,"氣力{0}以上時, 機率{1}閃避攻擊","130,0.7",30,equipment
+defensiveWeapon,防禦兵器,5,1000,依技量有機率防禦[飛行兵器],,10,equipment
+zeroSystem,零式系統,5,1000,武器的最終命中增加{0}%，自身的最終被命中率減少{1}%,"10,15",10,equipment
+shejililiang,射擊力量,5,1000,射擊系武器射程增加{0},1,10,equipment
+gedouliliang,格鬥力量,5,1000,格鬥系武器射程增加{0},1,10,equipment
+gushou,固守,5,1000,這個回合沒有攻擊的話，下個合回開始前受傷害減少{0},1000,10,equipment
+gedouwang,格鬥王,5,1000,"若所有武器都是格鬥系，武器傷害*{0}%, 回避*{1}%","1.2,1.2",10,equipment
+shejiwang,射擊王,5,1000,"若所有武器都是射擊系，射擊傷害*{0}%, 受傷害減少{0}","1.2,500",10,equipment
+feixingwang,飛行王,5,1000,飛行狀態時，移動力+{0}，回避+{1}%,"2,1.2",10,equipment
+shengwuzhuangjia,生物裝甲,5,1000,增加{0}裝中. 每回合開始回復{1}%最大hp.,"300,0.1",10,equipment
+feixingqi,飛行器,5,1000,空中適性變成{0},0.8,10,equipment
+pensheqidian,噴射氣墊,5,1000,地面移動時出力*{0},1.5,10,equipment
