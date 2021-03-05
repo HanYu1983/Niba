@@ -65,11 +65,11 @@ export class Controller extends Component {
     isTargetDevice(){
 
         // 要正式build的時候，直接開這行
-        // return true
+        return true
 
         // 平常debug的時候要開這行
-        var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
-        return isChrome;
+        // var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+        // return isChrome;
     }
 
     start() {
