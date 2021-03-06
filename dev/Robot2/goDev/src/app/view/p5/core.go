@@ -1,3 +1,4 @@
+// Package p5 為p5版本的實作，但這個專案沒有用到。不需要的話可以刪除
 package p5
 
 import (

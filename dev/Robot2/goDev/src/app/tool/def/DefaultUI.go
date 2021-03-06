@@ -6,6 +6,7 @@ import (
 )
 
 var (
+	// DefaultUI 靜態UI配置
 	DefaultUI = UI{
 		Actives: map[int]bool{
 			PageBattleMenu: false,

@@ -1,3 +1,4 @@
+// Package data 遊戲用到的資料
 package data
 
 import (
@@ -6,6 +7,7 @@ import (
 	"math/rand"
 )
 
+// 地形適性索引。資料中的地形適性是[4]float，比如[1,1,0.5,1]
 const (
 	SuitabilityGround   = 0
 	SuitabilitySea      = 1
@@ -114,6 +116,7 @@ type Data struct {
 }
 
 var (
+	// GameData 遊戲資料的全域參照
 	GameData Data
 )
 
@@ -125,6 +128,7 @@ func init() {
 	}
 }
 
+// RandRobotProto 隨機機器人，用來自動生成敵人。只會取用資料中enemy為true的
 func RandRobotProto() (RobotProto, error) {
 	filtered := map[string]RobotProto{}
 	for protoID, proto := range GameData.Robot {
