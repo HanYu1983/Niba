@@ -1,11 +1,12 @@
 (ns test
   (:require [cljs.test :refer-macros [run-tests]]
+            [clojure.spec.alpha :as s]
             [tool.asyncjs]
-            [app.core-test]))
+            [app2.core-test]))
 
 (defn main []
   (enable-console-print!)
-  (run-tests 'tool.asyncjs
-             'app.core-test))
+  (s/check-asserts true)
+  (run-tests 'app2.core-test))
 
 (main)
