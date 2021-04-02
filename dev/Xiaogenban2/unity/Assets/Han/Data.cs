@@ -13,12 +13,11 @@ public struct Earn
     public static Earn empty;
 }
 
-public struct Memonto
+public class Memonto
 {
     public int seqId;
     public List<Earn> earns;
     public List<string> memo;
-    public static Memonto empty;
 }
 
 public enum SaveWorkerState
