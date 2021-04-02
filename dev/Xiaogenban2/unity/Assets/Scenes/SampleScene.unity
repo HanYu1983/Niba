@@ -18991,13 +18991,13 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Highlighted
     m_DisabledTrigger: Disabled
-  m_Interactable: 0
+  m_Interactable: 1
   m_TargetGraphic: {fileID: 1480375839}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 876292945}
-        m_MethodName: OnMainPageSaveClick
+        m_MethodName: OnMainPageBtnDataClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
