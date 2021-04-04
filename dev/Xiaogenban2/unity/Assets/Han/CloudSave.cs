@@ -229,7 +229,7 @@ public class CloudSave : MonoBehaviour {
         return earn;
     }
 
-    private Memonto modelMemonto = Memonto.empty;
+    private Memonto modelMemonto;
     private string error = null;
 
     public Memonto GetModelMemonto()

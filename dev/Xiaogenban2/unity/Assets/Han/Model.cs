@@ -130,7 +130,7 @@ public class Model : MonoBehaviour, IModel{
     private Memonto isDirty;
     private bool saveWorkDone;
     public bool IsPendingDirty(){
-        return isDirty.Equals(Memonto.empty) == false;
+        return isDirty != null;
     }
 
     private void RequestSave(Memonto memonto)
@@ -169,19 +169,19 @@ public class Model : MonoBehaviour, IModel{
         {
             saveState = SaveWorkerState.Checking;
             yield return new WaitForSeconds(1);
-            if (isDirty.Equals(Memonto.empty))
+            if(isDirty == null)
             {
                 continue;
             }
             saveState = SaveWorkerState.Saving;
             var temp = isDirty;
-            isDirty = Memonto.empty;
+            isDirty = null;
             yield return SaveDisk(temp);
             yield return InvokeSaveToCloud();
             saveState = SaveWorkerState.Saved;
         }
         saveState = SaveWorkerState.Checking;
-        if (isDirty.Equals(Memonto.empty))
+        if (isDirty == null)
         {
             yield break;
         }
@@ -810,7 +810,7 @@ public class Model : MonoBehaviour, IModel{
 
     public Memonto GetMemonto()
     {
-        Memonto temp;
+        var temp = new Memonto();
         temp.seqId = this.seqId;
         temp.earns = new List<Earn>(earns.Values);
         temp.memo = new List<string>(memoItems.Values.Select(d => d.Memo));
