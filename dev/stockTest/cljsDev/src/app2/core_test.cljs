@@ -13,4 +13,4 @@
         model (alg/step-earn model 0)
         _ (s/assert ::alg/model model)
         _ (testing "xxx"
-            (is (= 1 (get-in model [:grids 0 :city :food]))))]))
+            (is (= 1 (get-in model [:grids 0 :building :food]))))]))

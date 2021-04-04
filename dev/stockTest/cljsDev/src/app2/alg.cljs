@@ -14,10 +14,19 @@
 (s/def ::city (s/and (s/keys :req-un [::city-id ::money ::army ::food])
                      (s/map-of #{:city-id :money :army :food} any?)))
 
-(s/def ::terrain #{"city" "enemy"})
+(s/def ::terrain #{"plain" "hill"})
+(s/def ::resource #{"wheat" "forest"})
+(s/def ::creature #{"bandit" "gentleman"})
+(s/def ::building (s/or :city ::city
+                        :house #{"house"}
+                        :mine #{"mine"}
+                        :farmland #{"farmland"}
+                        :sawmill #{"sawmill"}))
 (s/def ::grid (s/and (s/keys :req-un [::terrain]
-                             :opt-un [::city])
-                     (s/map-of #{:terrain :city} any?)))
+                             :opt-un [::building
+                                      ::resource
+                                      ::creature])
+                     (s/map-of #{:terrain :building :resource :creature} any?)))
 
 (s/def ::grids (s/coll-of ::grid))
 (s/def ::players (s/map-of ::player-id ::player))
@@ -32,11 +41,11 @@
                                 :army 0
                                 :food 0}}
             :player-order ["player" "ai1"]
-            :grids [{:terrain "enemy"
-                     :city {:city-id "master"
-                            :money 0
-                            :army 0
-                            :food 0}}]})
+            :grids [{:terrain "hill"
+                     :building {:city-id "master"
+                                :money 0
+                                :army 0
+                                :food 0}}]})
 
 
 (defn player-move [ctx player-id cnt]
@@ -52,7 +61,7 @@
 
 (defn step-earn [ctx grid-id]
   (log "step-earn" "start")
-  (assertx ::city (get-in ctx [:grids grid-id :city])
+  (assertx ::city (get-in ctx [:grids grid-id :building])
            (str "grid-id " grid-id " 必須是城市"))
-  (update-in ctx [:grids grid-id :city] (fn [grid]
-                                          (update grid :food inc))))
+  (update-in ctx [:grids grid-id :building] (fn [building]
+                                              (update building :food inc))))
