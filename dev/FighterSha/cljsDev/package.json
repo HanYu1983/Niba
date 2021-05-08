@@ -11,5 +11,7 @@
   "devDependencies": {
     "shadow-cljs": "2.10.21"
   },
-  "dependencies": {}
+  "dependencies": {
+    "async": "^3.2.0"
+  }
 }
