@@ -6,7 +6,8 @@
             [app2.spec.protocol :as protocol]
             [app2.spec.app :as spec-app]
             [app2.spec.card :as spec-card]
-            [app2.spec.gameplay :as spec-gameplay]))
+            [app2.spec.gameplay :as spec-gameplay]
+            [app2.alg :as alg]))
 
 (defn assert-phase [app phase-step cb]
   (if (not= phase-step (get-in app spec-app/path-phase-step))
@@ -16,15 +17,16 @@
 (defmethod protocol/on-process-cmd :default [app plyr-id cmd cb]
   (cb (js/Error. (str "unknown cmd " cmd))))
 
-(defmethod protocol/on-process-cmd :cmd-play-card [app plyr-id {costs :costs card-id :card-id} cb]
+(defmethod protocol/on-process-cmd :cmd-play-card [app plyr-id [_ card-id costs] cb]
   (async/waterfall (array (async/constant app)
                           (fn [app cb]
-                            (assert-phase app [:setting :body] cb))
+                            (if (not (get-in app `[~@spec-app/path-cards ~card-id]))
+                              (cb (js/Error. (str "card not found " card-id)))
+                              (cb nil app)))
                           (fn [app cb]
-                            (cb nil app)))
+                            (let [card-info (get-in app `[~@spec-app/path-cards ~card-id])]
+                              (alg/move-card app [card-id card-info] [plyr-id :unit] (fn [card cb] (cb nil card)) cb))))
                    cb))
-
-
 
 (defmethod protocol/on-process-cmd :cmd-next-step [app plyr-id cmd cb]
   (let [app (update-in app spec-app/path-tags (fn [origin]

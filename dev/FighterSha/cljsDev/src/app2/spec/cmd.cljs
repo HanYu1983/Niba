@@ -6,7 +6,8 @@
 (s/def ::cost (s/or :color ::cost-color
                     :tap ::cost-tap))
 (s/def ::costs (s/* ::cost))
-(s/def ::cmd-play-card (s/keys :req-un [::costs ::card-id ::player-id]))
+(s/def ::card-id any?)
+(s/def ::cmd-play-card (s/tuple #{:cmd-play-card} ::card-id ::costs))
 (s/def ::cmd-next-step #{:cmd-next-step})
 (s/def ::cmd (s/or :cmd-play-card ::cmd-play-card
                    :cmd-next-step ::cmd-next-step))

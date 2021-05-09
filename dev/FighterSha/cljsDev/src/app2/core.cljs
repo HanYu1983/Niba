@@ -113,10 +113,36 @@
                                   (partial assert-spec ::spec-app/app))
                            cb)]))
 
+(defn test-invoke-cmd-play-card [cb]
+  (let [card1 [0 {:face :down :proto-id 0 :card-stack-id [:a :home]}]
+        app {:gameplay {:desktop {:cards (into {}
+                                               [card1])}
+                        :phase-step [:draw :before]
+                        :tags #{[:tag-pass-step :a]}}}
+        _ (async/waterfall (array (async/constant app)
+                                  (partial assert-spec ::spec-app/app)
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :a
+                                                        [:cmd-play-card 0 []]
+                                                        cb))
+                                  (fn [app cb]
+                                    (let [cards-in-a-unit (filter (partial alg/equal-card-stack-id [:a :unit])
+                                                                  (get-in app spec-app/path-cards))]
+                                      (cond
+                                        (not= 1 (count cards-in-a-unit))
+                                        (cb (js/Error. "cards-in-a-unit len must be 1"))
+
+                                        :else
+                                        (cb nil app))))
+                                  (partial assert-spec ::spec-app/app))
+                           cb)]))
+
 (defn test-all []
   (s/check-asserts true)
   (async/series (array test-move-card
-                       test-invoke-cmd-next-step)
+                       test-invoke-cmd-next-step
+                       test-invoke-cmd-play-card)
                 (fn [err]
                   (when err
                     (throw err)))))

@@ -3,10 +3,10 @@
             [cljs.reader]
             [app2.spec.card :as card]))
 
+
 #_(s/def ::card-stack-name (fn [origin]
                              (re-find #"(\w)+-\w+" (str origin))))
 
-#_(s/def ::card-stack-key (s/tuple #{:common :a :b} #{:home :gravyard :mana}))
 #_(s/def ::card-stack-name (fn [origin]
                              (s/valid? ::card-stack-key ((comp cljs.reader/read-string clj->js) origin))))
 #_(s/def ::card-stack (s/tuple ::card-stack-key (s/coll-of ::card/card)))

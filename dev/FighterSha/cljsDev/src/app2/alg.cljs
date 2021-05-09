@@ -6,16 +6,16 @@
             [app2.spec.gameplay :as spec-gameplay]
             [app2.spec.cmd :as spec-cmd]
             [app2.spec.card :as spec-card]
-            [app2.spec.protocol :as protocol]
-            [app2.impl.ver1]))
+            [app2.spec.protocol :as protocol]))
 
 (defn equal-card-stack-id [target-card-stack-id [_ {card-stack-id :card-stack-id}]]
   (= target-card-stack-id card-stack-id))
 
-(defn move-card [app [card-id {from-card-stack-id :card-stack-id} :as card] card-stack-id next-card cb]
+(defn move-card [app card card-stack-id next-card cb]
   (s/assert (s/tuple ::spec-app/app ::spec-card/card ::spec-card/card-stack-id fn? fn?)
             [app card card-stack-id next-card cb])
-  (let [check-card-exist (fn [app cb]
+  (let [[card-id {from-card-stack-id :card-stack-id}] card
+        check-card-exist (fn [app cb]
                            (if-not (get-in app `[~@spec-app/path-cards ~card-id])
                              (cb (js/Error. (str "card not exist " card)))
                              (cb nil app)))
