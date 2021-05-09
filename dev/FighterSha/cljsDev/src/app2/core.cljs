@@ -19,8 +19,6 @@
                                                 [1 {:face :down :proto-id 0 :card-stack-id [:b :home]}]])}
                         :phase-step [:setting :body]
                         :tags #{[:tag-pass-step :a]}}}
-        equal-card-stack-id (fn [target-card-stack-id [_ {card-stack-id :card-stack-id}]]
-                              (= target-card-stack-id card-stack-id))
         _ (async/waterfall (array (async/constant app)
                                   (partial assert-spec ::spec-app/app)
                                   (fn [app cb]
@@ -31,9 +29,9 @@
                                                          (cb (js/Error. "移動不存在的卡必須吐出錯誤"))
                                                          (cb nil app))))))
                                   (fn [app cb]
-                                    (let [cards-in-a-home (filter (partial equal-card-stack-id [:a :home])
+                                    (let [cards-in-a-home (filter (partial alg/equal-card-stack-id [:a :home])
                                                                   (get-in app spec-app/path-cards))
-                                          cards-in-b-home (filter (partial equal-card-stack-id [:b :home])
+                                          cards-in-b-home (filter (partial alg/equal-card-stack-id [:b :home])
                                                                   (get-in app spec-app/path-cards))]
                                       (cond
                                         (not= 1 (count cards-in-a-home))
@@ -48,9 +46,9 @@
                                                      (cb nil [card-id (assoc card-info :face :up)]))
                                                    cb))
                                   (fn [app cb]
-                                    (let [cards-in-a-home (filter (partial equal-card-stack-id [:a :home])
+                                    (let [cards-in-a-home (filter (partial alg/equal-card-stack-id [:a :home])
                                                                   (get-in app spec-app/path-cards))
-                                          cards-in-b-home (filter (partial equal-card-stack-id [:b :home])
+                                          cards-in-b-home (filter (partial alg/equal-card-stack-id [:b :home])
                                                                   (get-in app spec-app/path-cards))]
                                       (cond
                                         (not= 0 (count cards-in-a-home))

@@ -9,6 +9,9 @@
             [app2.spec.protocol :as protocol]
             [app2.impl.ver1]))
 
+(defn equal-card-stack-id [target-card-stack-id [_ {card-stack-id :card-stack-id}]]
+  (= target-card-stack-id card-stack-id))
+
 (defn move-card [app [card-id {from-card-stack-id :card-stack-id} :as card] card-stack-id next-card cb]
   (s/assert (s/tuple ::spec-app/app ::spec-card/card ::spec-card/card-stack-id fn? fn?)
             [app card card-stack-id next-card cb])
