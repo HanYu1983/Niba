@@ -9,3 +9,12 @@
 (s/def ::tag (s/or :tag-pass-step ::tag-pass-step))
 (s/def ::tags (s/coll-of ::tag))
 (s/def ::gameplay (s/keys :req-un [::desktop/desktop ::phase-step ::tags]))
+
+
+(def next-step-mapping {:before :body
+                        :body :after
+                        :after :before})
+
+(def next-phase-mapping {:draw :setting
+                         :setting :attack
+                         :attack :deffence})

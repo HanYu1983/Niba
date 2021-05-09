@@ -3,49 +3,127 @@
             [cljs.reader]
             ["async" :as async]
             [app2.spec.app :as spec-app]
-            [app2.spec.gameplay :as spec-gameplay]
-            [app2.spec.cmd :as spec-cmd]
-            [app2.spec.card :as spec-card]
-            [app2.spec.protocol :as protocol]
+            [app2.alg :as alg]
             [app2.impl.ver1])
   (:require-macros [app2.core :refer [defnx]]))
 
+(defn assert-spec [spec target cb]
+  (if (not (s/valid? spec target))
+    (cb (js/Error. (s/explain-str spec target)))
+    (cb nil target)))
 
-(defn move-card [app [card-id {from-card-stack-id :card-stack-id} :as card] card-stack-id next-card cb]
-  (s/assert (s/tuple ::spec-app/app ::spec-card/card ::spec-card/card-stack-id fn? fn?)
-            [app card card-stack-id next-card cb])
-  (let [check-card-exist (fn [app cb]
-                           (if-not (get-in app `[~@spec-app/path-cards ~card-id])
-                             (cb (js/Error. "card not exist"))
-                             (cb nil app)))
-        update-card-stack-id (fn [[id card-info] cb]
-                               (cb nil [id (assoc card-info :card-stack-id card-stack-id)]))
-        remove-and-append (fn [app card2 cb]
-                            (cb nil (update-in app spec-app/path-cards (fn [origin]
-                                                                         (-> origin
-                                                                             (dissoc card-id)
-                                                                             (conj card2))))
-                                card2))
+(defn test-move-card [cb]
+  (let [card1 [0 {:face :down :proto-id 0 :card-stack-id [:a :home]}]
+        app {:gameplay {:desktop {:cards (into {}
+                                               [card1
+                                                [1 {:face :down :proto-id 0 :card-stack-id [:b :home]}]])}
+                        :phase-step [:setting :body]
+                        :tags #{[:tag-pass-step :a]}}}
+        equal-card-stack-id (fn [target-card-stack-id [_ {card-stack-id :card-stack-id}]]
+                              (= target-card-stack-id card-stack-id))
         _ (async/waterfall (array (async/constant app)
-                                  check-card-exist
+                                  (partial assert-spec ::spec-app/app)
                                   (fn [app cb]
-                                    (async/waterfall (array #(next-card card %)
-                                                            update-card-stack-id
-                                                            (fn [card cb]
-                                                              (remove-and-append app card cb))
-                                                            (fn [app card cb]
-                                                              (protocol/on-move-card app card from-card-stack-id card-stack-id cb)))
-                                                     cb)))
+                                    (let [unknown-card [78798 {:face :down :proto-id 0 :card-stack-id [:a :home]}]]
+                                      (alg/move-card app unknown-card [:b :home] (fn [card cb] (cb nil card))
+                                                     (fn [err]
+                                                       (if (not err)
+                                                         (cb (js/Error. "移動不存在的卡必須吐出錯誤"))
+                                                         (cb nil app))))))
+                                  (fn [app cb]
+                                    (let [cards-in-a-home (filter (partial equal-card-stack-id [:a :home])
+                                                                  (get-in app spec-app/path-cards))
+                                          cards-in-b-home (filter (partial equal-card-stack-id [:b :home])
+                                                                  (get-in app spec-app/path-cards))]
+                                      (cond
+                                        (not= 1 (count cards-in-a-home))
+                                        (cb (js/Error. "cards-in-a-home len must be 1"))
+                                        (not= 1 (count cards-in-b-home))
+                                        (cb (js/Error. "cards-in-b-home len must be 1"))
+                                        :else
+                                        (cb nil app))))
+                                  (fn [app cb]
+                                    (alg/move-card app card1 [:b :home]
+                                                   (fn [[card-id card-info] cb]
+                                                     (cb nil [card-id (assoc card-info :face :up)]))
+                                                   cb))
+                                  (fn [app cb]
+                                    (let [cards-in-a-home (filter (partial equal-card-stack-id [:a :home])
+                                                                  (get-in app spec-app/path-cards))
+                                          cards-in-b-home (filter (partial equal-card-stack-id [:b :home])
+                                                                  (get-in app spec-app/path-cards))]
+                                      (cond
+                                        (not= 0 (count cards-in-a-home))
+                                        (cb (js/Error. "cards-in-a-home len must be 0"))
+                                        (not= 2 (count cards-in-b-home))
+                                        (cb (js/Error. "cards-in-b-home len must be 2"))
+                                        :else
+                                        (cb nil app))))
+                                  (partial assert-spec ::spec-app/app))
                            cb)]))
 
-(defn invoke-command [app plyr-id cmd cb]
-  (s/assert (s/tuple ::spec-app/app any? fn?)
-            [app cmd cb])
-  (let [_ (async/waterfall (array (async/constant app)
+(defn test-invoke-cmd-next-step [cb]
+  (let [card1 [0 {:face :down :proto-id 0 :card-stack-id [:a :home]}]
+        app {:gameplay {:desktop {:cards (into {}
+                                               [card1
+                                                [1 {:face :down :proto-id 0 :card-stack-id [:b :home]}]])}
+                        :phase-step [:draw :before]
+                        :tags #{[:tag-pass-step :a]}}}
+        _ (async/waterfall (array (async/constant app)
+                                  (partial assert-spec ::spec-app/app)
                                   (fn [app cb]
-                                    (protocol/on-process-cmd app plyr-id cmd cb)))
+                                    (if (not= [:draw :before] (get-in app spec-app/path-phase-step))
+                                      (cb (js/Error. "phase not right"))
+                                      (cb nil app)))
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :b
+                                                        :cmd-next-step
+                                                        cb))
+                                  (fn [app cb]
+                                    (if (not= [:draw :body] (get-in app spec-app/path-phase-step))
+                                      (cb (js/Error. "step must be body"))
+                                      (cb nil app)))
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :a
+                                                        :cmd-next-step
+                                                        cb))
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :b
+                                                        :cmd-next-step
+                                                        cb))
+                                  (fn [app cb]
+                                    (if (not= [:draw :after] (get-in app spec-app/path-phase-step))
+                                      (cb (js/Error. "step must be after"))
+                                      (cb nil app)))
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :a
+                                                        :cmd-next-step
+                                                        cb))
+                                  (fn [app cb]
+                                    (alg/invoke-command app
+                                                        :b
+                                                        :cmd-next-step
+                                                        cb))
+                                  (fn [app cb]
+                                    (if (not= [:setting :before] (get-in app spec-app/path-phase-step))
+                                      (cb (js/Error. "phase-step must be [setting before]"))
+                                      (cb nil app)))
+                                  (partial assert-spec ::spec-app/app))
                            cb)]))
 
+(defn test-all []
+  (s/check-asserts true)
+  (async/series (array test-move-card
+                       test-invoke-cmd-next-step)
+                (fn [err]
+                  (when err
+                    (throw err)))))
+
+(test-all)
 
 (defn test-it []
   #_(let [_ (println (macroexpand '(defnx xxx [app ::app, x int?] (println x))))])
@@ -88,28 +166,28 @@
         _ (println app)
         _ (s/assert ::spec-app/app app)
         _ (js/console.log (clj->js app))
-        _ (move-card app card1 [:b :home]
-                     (fn [[card-id card-info] cb]
-                       (cb nil [card-id (assoc card-info :face :up)]))
-                     (fn [err app]
-                       (println err (s/assert ::spec-app/app app))))
+        _ (alg/move-card app card1 [:b :home]
+                         (fn [[card-id card-info] cb]
+                           (cb nil [card-id (assoc card-info :face :up)]))
+                         (fn [err app]
+                           (println err (s/assert ::spec-app/app app))))
         equal-card-stack-id (fn [target-card-stack-id [_ {card-stack-id :card-stack-id}]]
                               (= target-card-stack-id card-stack-id))
         _ (println (filter (partial equal-card-stack-id [:b :home])
                            (get-in app spec-app/path-cards)))
-        _ (invoke-command app
-                          :a
-                          {:costs [[:color 0] [:tap 2]]
-                           :card-id 0
-                           :player-id :a}
-                          (fn [err app]
-                            (println err app)))
+        _ (alg/invoke-command app
+                              :a
+                              {:costs [[:color 0] [:tap 2]]
+                               :card-id 0
+                               :player-id :a}
+                              (fn [err app]
+                                (println err app)))
 
-        _ (invoke-command app
-                          :b
-                          :cmd-next-step
-                          (fn [err app]
-                            (println err app)))]))
+        _ (alg/invoke-command app
+                              :b
+                              :cmd-next-step
+                              (fn [err app]
+                                (println err app)))]))
 
-(test-it)
+
 
