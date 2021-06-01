@@ -14,8 +14,10 @@
 
                 ; "main.js" is the name for the bundle entry
                 :modules {:shared {:entries [hook]}
-                          :app {:entries [app.core]
-                                :depends-on #{:shared}}}}
+                          :app {:entries [app2.core]
+                                :depends-on #{:shared}}
+                          :recipe {:entries [app3.recipe2.core]
+                                   :depends-on #{:shared}}}}
 
           :alpha {:target :browser
                   :output-dir "../cocosDev/assets/scripts/han"
