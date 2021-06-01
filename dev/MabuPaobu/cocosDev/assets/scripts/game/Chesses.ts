@@ -1,36 +1,24 @@
 
-import { _decorator, Component, Node, Color } from 'cc';
+import { _decorator, Component, Node, Color, Vec2 } from 'cc';
 import { Pool } from '../lib/Pool';
+import { View } from '../View';
 import { Chess } from './Chess';
 const { ccclass, property, requireComponent } = _decorator;
 
 @ccclass('Chesses')
 @requireComponent(Pool)
 export class Chesses extends Component {
-    
-    private chessPool: Pool;
+   
 
-    start(){
-        this.chessPool = this.getComponent(Pool);
-    }
-
-    createHorse(id:number){
-        const chess = this.chessPool.getNode();
+    create(chessModel:any){
+        const chess = this.getComponent(Pool).getNode();
         if(chess){
             let chessComp = chess.getComponent(Chess);
             if(chessComp){
-                chessComp.setNameAndColor('馬', Color.RED);
+                chessComp.setNameAndColor(chessModel.type == 0 ? '馬' : '炮', Color.RED);
             }
-        }
-    }
-
-    createCannon(){
-        const chess = this.chessPool.getNode();
-        if(chess){
-            let chessComp = chess.getComponent(Chess);
-            if(chessComp){
-                chessComp.setNameAndColor('炮', Color.BLUE);
-            }
+            const pos = View.convertToPos(new Vec2(chessModel.pos[0], chessModel.pos[1]));
+            chess.setPosition(pos);
         }
     }
 }

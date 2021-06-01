@@ -12,8 +12,8 @@ export class DebugModel extends Component {
 
     getTable(){
         return [
-            {id:0, type:0, pos:[0, 0], player:0},
-            {id:1, type:1, pos:[20, 20], player:1}
+            {id:0, type:0, pos:[5, 5], player:0},
+            {id:1, type:1, pos:[19, 19], player:1}
         ]
     }
 }

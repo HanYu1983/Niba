@@ -20,13 +20,15 @@ export class Pool extends Component {
     }
 
     getNode(){
+        if(this._nodes.length == 0){
+            this.addNode();
+        }
         let node = this._nodes.pop();
         if(node){
             node.setScale(Vec3.ONE);
             if(!node.active) node.active = true;
             return node;
         }
-        this.addNode()
     }
 
     releaseNode(node:Node){

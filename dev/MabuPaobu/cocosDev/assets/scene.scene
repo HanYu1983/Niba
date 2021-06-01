@@ -1588,7 +1588,9 @@
     "cursor": {
       "__id__": 31
     },
-    "chesses": null,
+    "chesses": {
+      "__id__": 30
+    },
     "_id": "631BJ5JJVDcIH4vLYLM16T"
   },
   {

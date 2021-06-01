@@ -19,7 +19,7 @@ export class View extends Component {
 
         const chess:Array<any> = this.model.getTable();
         chess.forEach(elem=>{
-            this.table.chess
+            this.table.chesses.create(elem);
         });
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
