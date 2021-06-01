@@ -5,11 +5,18 @@ const { ccclass, property } = _decorator;
 @ccclass('DebugModel')
 export class DebugModel extends Component {
     
+    /**
+     * 游戲開始,目前設定是20*20的格子
+     */
     startGame(){
         console.log('start game');
         
     }
 
+    /**
+     * 取得目前場上所有的棋子
+     * @returns 
+     */
     getTable(){
         return [
             {id:0, type:0, pos:[5, 5], player:0},
@@ -17,22 +24,36 @@ export class DebugModel extends Component {
         ]
     }
 
+    /**
+     * 取得指定格子的棋子,如果沒有棋子,回傳null
+     * @param x 格子的x
+     * @param y 格子的y
+     * @returns 
+     */
     getGridModel(x:number, y:number){
 
         // if empty
         // return null;
         
         return {id:4, type:1, pos:[x, y], player:0};
-
-        
     }
 
+    /**
+     * 取得指定棋子的移動範圍
+     * @param id 棋子id
+     * @returns 
+     */
     getChessMoveRangeById(id:number){
         return [
             [0, 0], [0, 1], [0, 2]
         ]
     }
 
+    /**
+     * 檢查給定的id是否為玩家
+     * @param id 
+     * @returns 
+     */
     isPlayer(id:number){
         return id == 0;
     }
