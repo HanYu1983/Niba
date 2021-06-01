@@ -1,6 +1,7 @@
 
 import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, Pool } from 'cc';
 import { DebugModel } from './DebugModel';
+import { ChessMenu } from './game/ChessMenu';
 import { Table } from './game/Table';
 import { Tool } from './lib/Tool';
 const { ccclass, property } = _decorator;
@@ -14,6 +15,9 @@ export class View extends Component {
     @property(Table)
     table:Table = null;
 
+    @property(ChessMenu)
+    chessMenu:ChessMenu;
+
     start(){
         this.model.startGame();
 
@@ -22,6 +26,20 @@ export class View extends Component {
             this.table.chesses.create(elem);
         });
 
+        this.onPlayerStartState();
+
+        
+
+    }
+
+    removeAllListener(){
+        this.table.node.off(SystemEventType.MOUSE_MOVE);
+        this.table.node.off(SystemEventType.MOUSE_UP);
+    }
+
+    onPlayerStartState(){
+        this.removeAllListener();
+
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
             const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
             const grid = View.convertToGrid(localPos);
@@ -29,6 +47,29 @@ export class View extends Component {
             this.table.setCursorByGrid(grid);
         });
 
+        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const grid = View.convertToGrid(localPos);
+            const model = this.model.getGridModel(grid.x, grid.y);
+            if(model){
+                if(this.model.isPlayer(model.player)){
+                    this.chessMenu.open();
+
+                    let pos = View.convertToPosByArray(model.pos);
+
+                    this.chessMenu.node.setPosition(pos.add(new Vec3(30, 0, 0)));
+                    this.onPlayerClickSelfChessState(model);
+                }
+            }
+        });
+    }
+
+    onPlayerClickSelfChessState(chessModel:any){
+        this.removeAllListener();
+
+        const moveRange = this.model.getChessMoveRangeById(chessModel.id);
+        console.log(moveRange);
+        
     }
 
     static convertToGrid(local:Vec2){
@@ -39,6 +80,10 @@ export class View extends Component {
     static convertToPos(grid:Vec2){
         const offset = new Vec2(grid.x * 30 - 300 + 15, grid.y * 30 - 300 + 15);
         return new Vec3(offset.x, offset.y, 0);
+    }
+
+    static convertToPosByArray(pos:Array<number>){
+        return View.convertToPos(new Vec2(pos[0], pos[1]));
     }
 }
 

@@ -16,6 +16,26 @@ export class DebugModel extends Component {
             {id:1, type:1, pos:[19, 19], player:1}
         ]
     }
+
+    getGridModel(x:number, y:number){
+
+        // if empty
+        // return null;
+        
+        return {id:4, type:1, pos:[x, y], player:0};
+
+        
+    }
+
+    getChessMoveRangeById(id:number){
+        return [
+            [0, 0], [0, 1], [0, 2]
+        ]
+    }
+
+    isPlayer(id:number){
+        return id == 0;
+    }
 }
 
 /**
