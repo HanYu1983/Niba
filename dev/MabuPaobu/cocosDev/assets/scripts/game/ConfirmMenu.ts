@@ -1,12 +1,17 @@
 
-import { _decorator, Component, Node, Button } from 'cc';
+import { _decorator, Component, Node, Label } from 'cc';
 import { MenuViewer } from '../lib/MenuViewer';
-import { Viewer } from '../lib/Viewer';
 const { ccclass, property } = _decorator;
 
-@ccclass('ChessMenu')
-export class ChessMenu extends MenuViewer {
+@ccclass('ConfirmMenu')
+export class ConfirmMenu extends MenuViewer {
 
+    @property(Label)
+    lblContent:Label;
+
+    setContent(content:string){
+        this.lblContent.string = content;
+    }
 }
 
 /**

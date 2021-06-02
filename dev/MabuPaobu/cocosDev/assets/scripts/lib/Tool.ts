@@ -1,4 +1,4 @@
-import { Vec2, Node } from "cc";
+import { Vec2, Node, tween } from "cc";
 
 export class Tool {
     static getLocal(x:number, y:number, node:Node){
@@ -6,6 +6,21 @@ export class Tool {
             x - node.getWorldPosition().x,
             y - node.getWorldPosition().y,
         );
+    }
+
+    static playSequence(node:Node, actions:any[], cb:()=>void, delay:number = 1){
+        if(actions.length > 0){
+            const t = tween(node);
+            if(actions.length > 1){
+
+                // 爲了達成可以用陣列的形式，改用apply
+                t.sequence.apply(t, actions).delay(delay).call(cb).start();
+            }else{
+
+                // 不知道爲什麽只有一個動作序列的時候，就不能用sequence的方法，改用then才可以
+                t.then(actions[0]).delay(delay).call(cb).start();
+            }
+        }
     }
 }
 

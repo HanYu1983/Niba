@@ -1,25 +1,28 @@
 
-import { _decorator, Component, Node, Vec2 } from 'cc';
-import { Pool } from '../lib/Pool';
-import { View } from '../View';
-import { Chesses } from './Chesses';
+import { _decorator, Component, Node, Button, SystemEventType } from 'cc';
+import { Viewer } from './Viewer';
 const { ccclass, property } = _decorator;
 
-@ccclass('Table')
-export class Table extends Component {
-    
-    @property(Node)
-    cursor:Node;
+@ccclass('MenuViewer')
+export class MenuViewer extends Viewer {
+    @property(Button)
+    btns:Button[] = [];
 
-    @property(Chesses)
-    chesses:Chesses;
+    setButtonEnable(enables:number[]){
 
-    @property(Pool)
-    colorRanges:Pool;
+        this.btns.forEach(elem=>{
+            elem.interactable = false;
+        });
 
-    setCursorByGrid(grid:Vec2){
-        const pos = View.convertToPos(grid);
-        this.cursor.setPosition(pos);
+        enables.forEach(elem=>{
+            this.btns[elem].interactable = true;
+        });
+    }
+
+    offAllListener(){
+        this.btns.forEach(elem=>{
+            elem.node.off(SystemEventType.MOUSE_UP);
+        });
     }
 }
 

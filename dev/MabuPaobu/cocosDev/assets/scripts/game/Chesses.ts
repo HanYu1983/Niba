@@ -9,7 +9,6 @@ const { ccclass, property, requireComponent } = _decorator;
 @requireComponent(Pool)
 export class Chesses extends Component {
    
-
     create(chessModel:any){
         const chess = this.getComponent(Pool).getNode();
         if(chess){
@@ -20,6 +19,10 @@ export class Chesses extends Component {
             const pos = View.convertToPos(new Vec2(chessModel.pos[0], chessModel.pos[1]));
             chess.setPosition(pos);
         }
+    }
+
+    releaseAllNodes(){
+        this.getComponent(Pool)?.releaseAllNodes();
     }
 }
 

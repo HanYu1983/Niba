@@ -1,7 +1,8 @@
 
-import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, Pool } from 'cc';
+import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, Pool, tween } from 'cc';
 import { DebugModel } from './DebugModel';
 import { ChessMenu } from './game/ChessMenu';
+import { ConfirmMenu } from './game/ConfirmMenu';
 import { Table } from './game/Table';
 import { Tool } from './lib/Tool';
 const { ccclass, property } = _decorator;
@@ -18,26 +19,38 @@ export class View extends Component {
     @property(ChessMenu)
     chessMenu:ChessMenu;
 
+    @property(ConfirmMenu)
+    confirmMenu:ConfirmMenu;
+
     start(){
         this.model.startGame();
+        this.updateChessed();
+        this.onPlayerStartState();
+    }
+
+    private updateChessed(){
+        console.log('更新目前所有棋子');
+        
+        this.table.chesses.releaseAllNodes();
 
         const chess:Array<any> = this.model.getTable();
         chess.forEach(elem=>{
             this.table.chesses.create(elem);
         });
-
-        this.onPlayerStartState();
-
-        
-
     }
 
-    removeAllListener(){
+    private removeAllListener(){
+        console.log('--移除所有監聽');
+
         this.table.node.off(SystemEventType.MOUSE_MOVE);
         this.table.node.off(SystemEventType.MOUSE_UP);
+        this.confirmMenu.offAllListener();
+        this.chessMenu.offAllListener();
     }
 
     onPlayerStartState(){
+        console.log('玩家回合開始');
+
         this.removeAllListener();
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
@@ -52,24 +65,127 @@ export class View extends Component {
             const grid = View.convertToGrid(localPos);
             const model = this.model.getGridModel(grid.x, grid.y);
             if(model){
+                // this.chessMenu.open();
+                // let pos = View.convertToPosByArray(model.pos);
+                // this.chessMenu.node.setPosition(pos.add(new Vec3(30, 0, 0)));
+
                 if(this.model.isPlayer(model.player)){
-                    this.chessMenu.open();
-
-                    let pos = View.convertToPosByArray(model.pos);
-
-                    this.chessMenu.node.setPosition(pos.add(new Vec3(30, 0, 0)));
                     this.onPlayerClickSelfChessState(model);
+                }else{
+                    // this.chessMenu.setButtonEnable([1]);
+                    this.onPlayerClickEnemyChessState(model);
                 }
             }
         });
     }
 
-    onPlayerClickSelfChessState(chessModel:any){
+    private showPlayerChessMoveRange(player:number){
+        console.log('顯示玩家' + player +'移動範圍');
+
+        const moveRange = this.model.getPlayerAllChessMoveRange(player);   
+        moveRange.forEach(elem=>{
+            const node = this.table.colorRanges.getNode();
+            if(node){
+                node.setPosition(View.convertToPosByArray(elem));
+            }
+        });
+    }
+
+    onPlayerClickEnemyChessState(chessModel:any){
+        console.log('玩家點擊敵人的棋子');
+
         this.removeAllListener();
 
-        const moveRange = this.model.getChessMoveRangeById(chessModel.id);
-        console.log(moveRange);
+        this.table.colorRanges.releaseAllNodes();
+        this.showPlayerChessMoveRange(chessModel.player);
+
+        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            this.table.colorRanges.releaseAllNodes();
+            this.onPlayerStartState();
+            // this.chessMenu.close();
+        });
+    }
+
+    onPlayerClickSelfChessState(chessModel:any){
+        console.log('玩家點擊自己的棋子');
+
+        this.removeAllListener();
+
+        this.table.colorRanges.releaseAllNodes();
+        this.showPlayerChessMoveRange(chessModel.player);
+
+        this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
+            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const grid = View.convertToGrid(localPos);
         
+            this.table.setCursorByGrid(grid);
+        });
+
+        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const grid = View.convertToGrid(localPos);
+
+            if(this.model.isValidMove(chessModel.player, grid.x, grid.y)){
+                this.confirmMenu.open();
+                this.onPlayerMoveConfirmState(chessModel, grid);
+            }else{
+                this.table.colorRanges.releaseAllNodes();
+                this.onPlayerStartState();
+                // this.chessMenu.close();
+            }
+        });
+    }
+
+    onPlayerMoveConfirmState(chessModel:any, grid:Vec2){
+        console.log('玩家確認移動');
+        this.removeAllListener();
+        
+        this.confirmMenu.btns[0].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            this.confirmMenu.close();
+            this.onPlayerStartState();
+            this.table.colorRanges.releaseAllNodes();
+
+            const from = chessModel.pos;
+            this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
+
+            console.log('播放移動動畫');
+            console.log(from);
+            console.log(grid);
+            
+            tween(this.node).delay(1).call(()=>{
+                this.updateChessed();
+                this.onPlayerEndState();
+            }).start();
+        });
+
+        this.confirmMenu.btns[1].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            this.confirmMenu.close();
+            this.onPlayerStartState();
+            this.table.colorRanges.releaseAllNodes();
+        });
+    }
+
+    onPlayerEndState(){
+        console.log('玩家回合結束');
+        this.removeAllListener();
+
+        const result:any[] = this.model.playerEndTurn();
+        let sequence = [];
+        result.forEach(action=>{
+            switch(action.action){
+                case 0:
+                    sequence.push(tween().call(()=>{
+                        console.log('播放ai' + action.player + '移動');
+                    }).delay(2));
+                    break;
+                case 1:
+                    sequence.push(tween().call(()=>{
+                        console.log('播放切換玩家' + action.player + '動畫');
+                    }).delay(1));
+                    break;
+            }
+        });
+        Tool.playSequence(this.node, sequence, ()=>{this.onPlayerStartState();} );
     }
 
     static convertToGrid(local:Vec2){

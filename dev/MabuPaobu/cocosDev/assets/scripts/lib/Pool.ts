@@ -13,6 +13,8 @@ export class Pool extends Component {
 
     private _nodes:Array<Node> = [];
 
+    private _usingNodes:Array<Node> = [];
+
     start(){
         for(let i = 0; i < this.count; ++i){
             this.addNode();
@@ -27,6 +29,8 @@ export class Pool extends Component {
         if(node){
             node.setScale(Vec3.ONE);
             if(!node.active) node.active = true;
+
+            this._usingNodes.push(node);
             return node;
         }
     }
@@ -34,6 +38,13 @@ export class Pool extends Component {
     releaseNode(node:Node){
         node.setScale(Vec3.ZERO);
         this._nodes.push(node);
+    }
+
+    releaseAllNodes(){
+        this._usingNodes.forEach(elem=>{
+            this.releaseNode(elem);
+        });
+        this._usingNodes = [];
     }
 
     addNode(){
