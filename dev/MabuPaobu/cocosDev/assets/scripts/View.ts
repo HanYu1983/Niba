@@ -154,7 +154,7 @@ export class View extends Component {
             this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
 
             console.log('播放移動動畫');
-            this.effects.chessMoveEffect.create(chessModel, new Vec2(from[0], from[1]), new Vec2(grid.x, grid.y));
+            this.effects.createChessMoveEffect(chessModel, new Vec2(from[0], from[1]), new Vec2(grid.x, grid.y));
             
             tween(this.node).delay(1.5).call(()=>{
                 this.updateChessed();
@@ -182,13 +182,15 @@ export class View extends Component {
                         console.log('播放ai' + action.player + '移動');
 
                         const chessModel = this.model.getChessById(action.id);
-                        this.effects.chessMoveEffect.create(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
+                        this.effects.createChessMoveEffect(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
                     }).delay(1.5).call(()=>{this.updateChessed();}));
                     break;
                 case 1:
                     sequence.push(tween().call(()=>{
                         console.log('播放切換玩家' + action.player + '動畫');
-                    }).delay(1));
+                        
+                        this.effects.createTurnChangeEffect();
+                    }).delay(1.5));
                     break;
             }
         });
