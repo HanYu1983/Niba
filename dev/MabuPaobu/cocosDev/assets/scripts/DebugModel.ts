@@ -106,9 +106,9 @@ export class DebugModel extends Component {
         return [
             // action 代表動作類型: 0是指棋子移動動畫, 1是指切換玩家的動畫
             {action:1, player:1},
-            {action:0, id:0, from:4, to:2, player:1},
+            {action:0, id:0, from:[4, 0], to:[2, 2], player:1},
             {action:1, player:2},
-            {action:0, id:0, from:8, to:3, player:2},
+            {action:0, id:2, from:[8, 0], to:[3, 1], player:2},
             {action:1, player:0},
         ]
     }
