@@ -64,6 +64,8 @@ export class View extends Component {
             const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
             const grid = View.convertToGrid(localPos);
             const model = this.model.getGridModel(grid.x, grid.y);
+            console.log(e);
+            
             if(model){
                 // this.chessMenu.open();
                 // let pos = View.convertToPosByArray(model.pos);
