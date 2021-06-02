@@ -54,19 +54,16 @@ export class View extends Component {
         this.removeAllListener();
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
-            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
             const grid = View.convertToGrid(localPos);
         
             this.table.setCursorByGrid(grid);
         });
 
         this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
             const grid = View.convertToGrid(localPos);
             const model = this.model.getGridModel(grid.x, grid.y);
-            console.log(e);
-            console.log(e.getLocation());
-            
             
             if(model){
                 // this.chessMenu.open();
@@ -119,14 +116,14 @@ export class View extends Component {
         this.showPlayerChessMoveRange(chessModel.player);
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
-            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
             const grid = View.convertToGrid(localPos);
         
             this.table.setCursorByGrid(grid);
         });
 
         this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            const localPos = Tool.getLocal(e._x, e._y, e.currentTarget);
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
             const grid = View.convertToGrid(localPos);
 
             if(this.model.isValidMove(chessModel.player, grid.x, grid.y)){

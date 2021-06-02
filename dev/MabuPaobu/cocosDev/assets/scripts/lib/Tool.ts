@@ -1,10 +1,10 @@
-import { Vec2, Node, tween } from "cc";
+import { Vec2, Node, tween, Vec3 } from "cc";
 
 export class Tool {
-    static getLocal(x:number, y:number, node:Node){
+    static getLocal(pos:Vec2, node:Node){
         return new Vec2(
-            x - node.getWorldPosition().x,
-            y - node.getWorldPosition().y,
+            pos.x - node.getWorldPosition().x,
+            pos.y - node.getWorldPosition().y,
         );
     }
 
