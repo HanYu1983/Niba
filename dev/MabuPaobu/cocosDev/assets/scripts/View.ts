@@ -65,6 +65,8 @@ export class View extends Component {
             const grid = View.convertToGrid(localPos);
             const model = this.model.getGridModel(grid.x, grid.y);
             console.log(e);
+            console.log(e.getLocation());
+            
             
             if(model){
                 // this.chessMenu.open();
