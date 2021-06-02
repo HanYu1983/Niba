@@ -3,6 +3,7 @@ import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, Pool, tween }
 import { DebugModel } from './DebugModel';
 import { ChessMenu } from './game/ChessMenu';
 import { ConfirmMenu } from './game/ConfirmMenu';
+import { Effects } from './game/Effects';
 import { Table } from './game/Table';
 import { Tool } from './lib/Tool';
 const { ccclass, property } = _decorator;
@@ -21,6 +22,9 @@ export class View extends Component {
 
     @property(ConfirmMenu)
     confirmMenu:ConfirmMenu;
+
+    @property(Effects)
+    effects:Effects;
 
     start(){
         this.model.startGame();
@@ -150,10 +154,9 @@ export class View extends Component {
             this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
 
             console.log('播放移動動畫');
-            console.log(from);
-            console.log(grid);
+            this.effects.chessMoveEffect.create(chessModel, new Vec2(from[0], from[1]), new Vec2(grid.x, grid.y));
             
-            tween(this.node).delay(1).call(()=>{
+            tween(this.node).delay(1.5).call(()=>{
                 this.updateChessed();
                 this.onPlayerEndState();
             }).start();
@@ -177,7 +180,10 @@ export class View extends Component {
                 case 0:
                     sequence.push(tween().call(()=>{
                         console.log('播放ai' + action.player + '移動');
-                    }).delay(2));
+
+                        const chessModel = this.model.getChessById(action.id);
+                        this.effects.chessMoveEffect.create(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
+                    }).delay(1.5).call(()=>{this.updateChessed();}));
                     break;
                 case 1:
                     sequence.push(tween().call(()=>{

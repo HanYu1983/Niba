@@ -1,9 +1,10 @@
 
 import { _decorator, Component, Node, Label, Sprite, Color } from 'cc';
+import { Viewer } from '../lib/Viewer';
 const { ccclass, property } = _decorator;
 
 @ccclass('Chess')
-export class Chess extends Component {
+export class Chess extends Viewer {
     
     @property(Label)
     lblName:Label = null;
@@ -11,9 +12,13 @@ export class Chess extends Component {
     @property(Sprite)
     backNode:Sprite = null;
     
-    setNameAndColor(name:string, color:Color){
+    private setNameAndColor(name:string, color:Color){
         this.lblName.string = name;
         this.backNode.color = color;
+    }
+
+    protected doOpen(data?:any){
+        this.setNameAndColor(data.type == 0 ? '馬' : '炮', data.player == 0 ? Color.BLUE : Color.RED)
     }
 }
 

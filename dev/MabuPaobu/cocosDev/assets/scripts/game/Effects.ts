@@ -1,21 +1,13 @@
 
-import { _decorator, Component, Node, Label, Vec3 } from 'cc';
-import { MenuViewer } from '../lib/MenuViewer';
+import { _decorator, Component, Node } from 'cc';
+import { ChessMoveEffect } from './ChessMoveEffect';
 const { ccclass, property } = _decorator;
 
-@ccclass('ConfirmMenu')
-export class ConfirmMenu extends MenuViewer {
-
-    @property(Label)
-    lblContent:Label;
-
-    start(){
-        this.node.setPosition(Vec3.ZERO);
-    }
-
-    setContent(content:string){
-        this.lblContent.string = content;
-    }
+@ccclass('Effects')
+export class Effects extends Component {
+    
+    @property(ChessMoveEffect)
+    chessMoveEffect:ChessMoveEffect;
 }
 
 /**

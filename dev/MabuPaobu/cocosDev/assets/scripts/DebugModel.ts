@@ -112,6 +112,15 @@ export class DebugModel extends Component {
             {action:1, player:0},
         ]
     }
+
+    /**
+     * 用id取得棋子
+     * @param id 
+     * @returns 棋子資料
+     */
+    getChessById(id:number){
+        return {id:0, type:0, pos:[5, 5], player:1}
+    }
 }
 
 /**

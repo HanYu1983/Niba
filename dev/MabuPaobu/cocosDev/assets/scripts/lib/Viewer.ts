@@ -6,8 +6,8 @@ const { ccclass, property } = _decorator;
 export class Viewer extends Component {
 
     private isOpen = true;
-
-    start(){
+    
+    onLoad(){
         this.close();
     }
 
@@ -19,7 +19,6 @@ export class Viewer extends Component {
             this.node.scale = Vec3.ONE;
             this.doOpen(data);
         }
-        
     }
 
     close(){
