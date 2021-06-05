@@ -5,7 +5,122 @@ const { ccclass, property } = _decorator;
 
 @ccclass('Model')
 export class Model extends DebugModel {
-    
+
+    activePlayer = 0
+
+    table = [
+        { id: 0, type: 0, pos: [5, 5], player: 0 },
+        { id: 1, type: 1, pos: [19, 19], player: 1 },
+        { id: 2, type: 1, pos: [18, 19], player: 1 }
+    ]
+
+    startGame() {
+
+    }
+
+    getTable() {
+        return this.table
+    }
+
+    getGridModel(x: number, y: number) {
+        const find = this.table.filter(chess => {
+            return chess.pos[0] == x && chess.pos[1] == y
+        })
+        if (find.length == 0) {
+            return null
+        }
+        return find[0]
+    }
+
+    getChessMoveRangeById(id: number) {
+        const chess = this.getChessById(id)
+        return [[1, 0], [0, 1], [-1, 0], [0, -1]].map(([ox, oy]) => {
+            return [chess.pos[0] + ox, chess.pos[1] + oy]
+        })
+    }
+
+    getPlayerAllChessMoveRange(playerId: number) {
+        const find = this.table.filter(chess => {
+            return chess.player == playerId
+        })
+        const posStrSet = find
+            .map(chess => this.getChessMoveRangeById(chess.id))
+            .reduce((acc, c) => { return [...acc, ...c] }, [])
+            .map(pos => JSON.stringify(pos))
+            .reduce((acc, c) => { acc[c] = 1; return acc }, {} as any)
+        const posStrSetNotContainChess = this.table
+            .map(chess => chess.pos)
+            .map(pos => JSON.stringify(pos))
+            .reduce((acc, c) => {
+                delete acc[c]
+                return acc
+            }, posStrSet)
+        const posList = Object.keys(posStrSetNotContainChess).map(posStr => JSON.parse(posStr))
+        return posList
+    }
+
+    isValidMove(playerId: number, x: number, y: number) {
+        const posList = this.getPlayerAllChessMoveRange(playerId)
+        const findPos = posList.filter(pos => {
+            return pos[0] == x && pos[1] == y
+        })
+        if (findPos.length == 0) {
+            return false
+        }
+        return true
+    }
+
+    isPlayer(id: number) {
+        try {
+            const chess = this.getChessById(id)
+            return chess.player == 0
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    }
+
+    getCurrentPlayerId() {
+        return this.activePlayer;
+    }
+
+    playerMoveChess(id: number, x: number, y: number) {
+        const chess = this.getChessById(id)
+        const moveRange = this.getChessMoveRangeById(id)
+        const findPos = moveRange.filter(pos => {
+            return pos[0] == x && pos[1] == y
+        })
+        if (findPos.length == 0) {
+            throw new Error(`chess(${id}) can not move to [${x}, ${y}]`)
+        }
+        chess.pos = [x, y]
+        return this.table
+    }
+
+    playerEndTurn() {
+        const findChess = this.table.filter(chess => {
+            return chess.player == 1
+        })
+        const actions = findChess.map(chess => {
+            const oldPos = [...chess.pos]
+            chess.pos[1] -= 1
+            return { action: 0, id: 0, from: oldPos, to: chess.pos, player: 1 }
+        })
+        return [
+            ...actions,
+            { action: 1, player: 0 }
+        ]
+    }
+
+    getChessById(id: number) {
+        const findChess = this.table.filter(chess => {
+            return chess.id == id
+        })
+        if (findChess.length == 0) {
+            throw new Error(`chess(${id}) not found`)
+        }
+        return findChess[0]
+    }
 }
 
 /**
