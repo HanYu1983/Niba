@@ -10,7 +10,7 @@ const { ccclass, property, requireComponent } = _decorator;
 export class Chesses extends Component {
    
     create(chessModel:any){
-        const chess = this.getComponent(Pool).getNode();
+        const chess = this.getComponent(Pool)?.getNode();
         if(chess){
             let chessComp = chess.getComponent(Chess);
             if(chessComp){

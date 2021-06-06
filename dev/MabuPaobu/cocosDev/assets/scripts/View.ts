@@ -14,10 +14,10 @@ const { ccclass, property } = _decorator;
 export class View extends Component {
 
     @property(DebugModel)
-    model:DebugModel = null;
+    model:DebugModel
 
     @property(Table)
-    table:Table = null;
+    table:Table;
 
     @property(ChessMenu)
     chessMenu:ChessMenu;
@@ -34,15 +34,13 @@ export class View extends Component {
         this.onPlayerStartState();
     }
 
-    private updateChessed(){
+    private updateChessed(chess?:any[]){
         console.log('更新目前所有棋子');
         
         this.table.chesses.releaseAllNodes();
 
-        const chess:Array<any> = this.model.getTable();
-        console.log(chess);
-        
-        chess.forEach(elem=>{
+        let usingChess:any[] = chess ? chess : this.model.getTable();
+        usingChess.forEach(elem=>{
             this.table.chesses.create(elem);
         });
     }
@@ -100,6 +98,16 @@ export class View extends Component {
         });
     }
 
+    private showChessMoveRange(chessId:number){
+        const moveRange = this.model.getChessMoveRangeById(chessId);   
+        moveRange.forEach(elem=>{
+            const node = this.table.colorRanges.getNode();
+            if(node){
+                node.setPosition(View.convertToPosByArray(elem));
+            }
+        });
+    }
+
     onPlayerClickEnemyChessState(chessModel:any){
         console.log('玩家點擊敵人的棋子');
 
@@ -121,7 +129,7 @@ export class View extends Component {
         this.removeAllListener();
 
         this.table.colorRanges.releaseAllNodes();
-        this.showPlayerChessMoveRange(chessModel.player);
+        this.showChessMoveRange(chessModel.id);
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
             const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
@@ -178,20 +186,17 @@ export class View extends Component {
         this.removeAllListener();
 
         const result:any[] = this.model.playerEndTurn();
-        let sequence = [];
+        let sequence:any[] = [];
         result.forEach(action=>{
             switch(action.action){
                 case 0:
                     sequence.push(tween().call(()=>{
                         
                         console.log('播放ai' + action.player + '移動');
-                        console.log(action);
 
                         const chessModel = this.model.getChessById(action.id);
-                        console.log(chessModel);
-                        
                         this.effects.createChessMoveEffect(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
-                    }).delay(1.5).call(()=>{this.updateChessed();}));
+                    }).delay(1.5).call(()=>{this.updateChessed(action.table);}));
                     break;
                 case 1:
                     sequence.push(tween().call(()=>{

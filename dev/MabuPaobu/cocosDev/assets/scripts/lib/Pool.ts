@@ -9,7 +9,10 @@ export class Pool extends Component {
     prefab:Node = null;
 
     @property(CCInteger)
-    count:number = 10;
+    count:number = 0;
+
+    @property(Boolean)
+    log = false;
 
     // onGetNode:any;
     // onReleaseNode:any;
@@ -17,6 +20,8 @@ export class Pool extends Component {
     private _nodes:Array<Node> = [];
 
     private _usingNodes:Array<Node> = [];
+
+    
 
     start(){
         for(let i = 0; i < this.count; ++i){
@@ -35,20 +40,27 @@ export class Pool extends Component {
             if(!node.active) node.active = true;
 
             this._usingNodes.push(node);
+
+            if(this.log) console.log('取得節點, 剩餘:', this._nodes.length, '使用中:', this._usingNodes.length);
+
             return node;
         }
     }
 
     releaseNode(node:Node){
         // if(this.onReleaseNode) this.onReleaseNode(node);
+
         node.setScale(Vec3.ZERO);
         this._nodes.push(node);
+        this._usingNodes.splice(this._usingNodes.indexOf(node), 1);
+
+        if(this.log) console.log('交還節點, 剩餘:', this._nodes.length, '使用中:', this._usingNodes.length);
     }
 
     releaseAllNodes(){
-        this._usingNodes.forEach(elem=>{
-            this.releaseNode(elem);
-        });
+        for(let i = this._usingNodes.length - 1; i >= 0; --i){
+            this.releaseNode(this._usingNodes[i]);
+        }
         this._usingNodes = [];
     }
 
@@ -57,6 +69,8 @@ export class Pool extends Component {
         node.setParent(this.node);
         node.setScale(Vec3.ZERO);
         this._nodes.push(node);
+
+        if(this.log) console.log('新增節點, 剩餘:', this._nodes.length, '使用中:', this._usingNodes.length);
     }
 
     getUsingNodes(){

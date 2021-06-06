@@ -31,8 +31,6 @@ export class Effects extends Component {
         to(.3, {position:to}).
         to(.5, {scale:Vec3.ONE}, {easing:'elasticOut'}).
         call(()=>{
-            console.log('close chess');
-            
             this.chess.close();
         }).
         start();
