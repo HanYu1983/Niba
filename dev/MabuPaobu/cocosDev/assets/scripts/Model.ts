@@ -108,23 +108,24 @@ export class Model extends DebugModel {
         const findChess = this.table.filter(chess => {
             return chess.player == 1
         })
-        const actions = findChess.map(chess => {
+        const actions = []
+        if (findChess.length) {
+            const activeChess = findChess[findChess.length - 1]
             const newChess = {
-                ...chess,
-                pos: [chess.pos[0], chess.pos[1] - 1],
+                ...activeChess,
+                pos: [activeChess.pos[0], activeChess.pos[1] - 1],
                 id: this.seqId++,
             }
             this.table.push(newChess)
-            return {
-                ...chess,
+            actions.push({
+                ...newChess,
                 action: 0,
-                from: chess.pos, to: newChess.pos
-            }
-        })
-        return [
-            ...actions,
-            { action: 1, player: 0 }
-        ]
+                from: activeChess.pos, to: newChess.pos,
+                table: [...this.table]
+            })
+        }
+        actions.push({ action: 1, player: 0, table: [...this.table] })
+        return actions
     }
 
     getChessById(id: number) {
