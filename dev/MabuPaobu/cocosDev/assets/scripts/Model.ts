@@ -6,12 +6,14 @@ const { ccclass, property } = _decorator;
 @ccclass('Model')
 export class Model extends DebugModel {
 
+    seqId = 0
+
     activePlayer = 0
 
     table = [
-        { id: 0, type: 0, pos: [5, 5], player: 0 },
-        { id: 1, type: 1, pos: [19, 19], player: 1 },
-        { id: 2, type: 1, pos: [18, 19], player: 1 }
+        { id: this.seqId++, type: 0, pos: [5, 5], player: 0 },
+        { id: this.seqId++, type: 1, pos: [19, 19], player: 1 },
+        { id: this.seqId++, type: 1, pos: [18, 19], player: 1 }
     ]
 
     startGame() {
@@ -93,7 +95,12 @@ export class Model extends DebugModel {
         if (findPos.length == 0) {
             throw new Error(`chess(${id}) can not move to [${x}, ${y}]`)
         }
-        chess.pos = [x, y]
+        const newChess = {
+            ...chess,
+            pos: [x, y],
+            id: this.seqId++,
+        }
+        this.table.push(newChess)
         return this.table
     }
 
@@ -102,9 +109,17 @@ export class Model extends DebugModel {
             return chess.player == 1
         })
         const actions = findChess.map(chess => {
-            const oldPos = [...chess.pos]
-            chess.pos[1] -= 1
-            return { action: 0, id: 0, from: oldPos, to: chess.pos, player: 1 }
+            const newChess = {
+                ...chess,
+                pos: [chess.pos[0], chess.pos[1] - 1],
+                id: this.seqId++,
+            }
+            this.table.push(newChess)
+            return {
+                ...chess,
+                action: 0,
+                from: chess.pos, to: newChess.pos
+            }
         })
         return [
             ...actions,
@@ -113,6 +128,7 @@ export class Model extends DebugModel {
     }
 
     getChessById(id: number) {
+        console.log(id)
         const findChess = this.table.filter(chess => {
             return chess.id == id
         })
