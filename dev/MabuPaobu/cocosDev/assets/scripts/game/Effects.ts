@@ -12,6 +12,9 @@ export class Effects extends Component {
     // @property(ChessMoveEffect)
     // chessMoveEffect:ChessMoveEffect;
 
+    @property(Node)
+    cursor:Node;
+
     @property(Chess)
     chess:Chess;
 
@@ -19,7 +22,6 @@ export class Effects extends Component {
     turnChange:Viewer;
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
-
         const from = View.convertToPos(fromGrid);
         const to = View.convertToPos(toGrid);
 
@@ -45,6 +47,14 @@ export class Effects extends Component {
         to(.3, {scale:new Vec3(1,0,1)}, {easing:'quadOut'}).
         call(()=>{this.turnChange.close();}).
         start();
+    }
+
+    showCursor(){
+        this.cursor.scale = Vec3.ONE;
+    }
+
+    hideCursor(){
+        this.cursor.scale = Vec3.ZERO;
     }
 }
 

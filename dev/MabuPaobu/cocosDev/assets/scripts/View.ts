@@ -58,6 +58,7 @@ export class View extends Component {
         console.log('玩家回合開始');
 
         this.removeAllListener();
+        this.effects.showCursor();
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
             const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
@@ -142,7 +143,7 @@ export class View extends Component {
             const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
             const grid = View.convertToGrid(localPos);
 
-            if(this.model.isValidMove(chessModel.player, grid.x, grid.y)){
+            if(this.model.isValidMoveByChess(chessModel.id, grid.x, grid.y)){
                 this.confirmMenu.open();
                 this.onPlayerMoveConfirmState(chessModel, grid);
             }else{
@@ -159,19 +160,16 @@ export class View extends Component {
         
         this.confirmMenu.btns[0].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
             this.confirmMenu.close();
-            this.onPlayerStartState();
             this.table.colorRanges.releaseAllNodes();
 
             const from = chessModel.pos;
-            this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
-
-            console.log('播放移動動畫');
-            this.effects.createChessMoveEffect(chessModel, new Vec2(from[0], from[1]), new Vec2(grid.x, grid.y));
-            
-            tween(this.node).delay(1.5).call(()=>{
-                this.updateChessed();
-                this.onPlayerEndState();
-            }).start();
+            try{
+                this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
+            }catch(e){
+                this.onPlayerStartState();
+                return;
+            }
+            this.onPlayerMoveState(chessModel, new Vec2(from[0], from[1]), grid);
         });
 
         this.confirmMenu.btns[1].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
@@ -179,6 +177,19 @@ export class View extends Component {
             this.onPlayerStartState();
             this.table.colorRanges.releaseAllNodes();
         });
+    }
+
+    onPlayerMoveState(chessModel:any, from:Vec2, to:Vec2){
+        console.log('播放移動動畫');
+        this.removeAllListener();
+
+        this.effects.hideCursor();
+        this.effects.createChessMoveEffect(chessModel, from, to);
+        
+        tween(this.node).delay(1.5).call(()=>{
+            this.updateChessed();
+            this.onPlayerEndState();
+        }).start();
     }
 
     onPlayerEndState(){

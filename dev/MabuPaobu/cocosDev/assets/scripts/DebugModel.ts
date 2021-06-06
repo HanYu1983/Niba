@@ -71,6 +71,17 @@ export class DebugModel extends Component {
     }
 
     /**
+     * 指定棋子是否在x,y的位置可以合法移動或者攻擊
+     * @param chessId 
+     * @param x 
+     * @param y 
+     */
+    isValidMoveByChess(chessId:number, x:number, y:number){
+        console.log('[isValidMoveByChess]幫補上方法,指定棋子是否在x,y的位置可以合法移動或者攻擊');
+        return true;
+    }
+
+    /**
      * 檢查給定的id是否為玩家
      * @param id 
      * @returns 
