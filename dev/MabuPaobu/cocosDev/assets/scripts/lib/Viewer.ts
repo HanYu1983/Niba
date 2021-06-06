@@ -22,11 +22,9 @@ export class Viewer extends Component {
     }
 
     close(){
-        if(this.isOpen){
-            this.isOpen = false;
-            this.node.scale = Vec3.ZERO;
-            this.doClose();
-        }
+        this.isOpen = false;
+        this.node.scale = Vec3.ZERO;
+        this.doClose();
     }
 
     protected doOpen(data?:any){

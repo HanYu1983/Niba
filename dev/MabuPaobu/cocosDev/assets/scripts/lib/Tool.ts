@@ -8,7 +8,7 @@ export class Tool {
         );
     }
 
-    static playSequence(node:Node, actions:any[], cb:()=>void, delay:number = 1){
+    static playSequence(node:Node, actions:any[], cb:()=>void, delay:number = 0){
         if(actions.length > 0){
             const t = tween(node);
             if(actions.length > 1){

@@ -1,10 +1,12 @@
 
-import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, Pool, tween } from 'cc';
+import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween } from 'cc';
 import { DebugModel } from './DebugModel';
+import { Chess } from './game/Chess';
 import { ChessMenu } from './game/ChessMenu';
 import { ConfirmMenu } from './game/ConfirmMenu';
 import { Effects } from './game/Effects';
 import { Table } from './game/Table';
+import { Pool } from './lib/Pool';
 import { Tool } from './lib/Tool';
 const { ccclass, property } = _decorator;
 
@@ -38,6 +40,8 @@ export class View extends Component {
         this.table.chesses.releaseAllNodes();
 
         const chess:Array<any> = this.model.getTable();
+        console.log(chess);
+        
         chess.forEach(elem=>{
             this.table.chesses.create(elem);
         });
@@ -179,9 +183,13 @@ export class View extends Component {
             switch(action.action){
                 case 0:
                     sequence.push(tween().call(()=>{
+                        
                         console.log('播放ai' + action.player + '移動');
+                        console.log(action);
 
                         const chessModel = this.model.getChessById(action.id);
+                        console.log(chessModel);
+                        
                         this.effects.createChessMoveEffect(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
                     }).delay(1.5).call(()=>{this.updateChessed();}));
                     break;
@@ -190,7 +198,7 @@ export class View extends Component {
                         console.log('播放切換玩家' + action.player + '動畫');
                         
                         this.effects.createTurnChangeEffect();
-                    }).delay(1.5));
+                    }).delay(1.1));
                     break;
             }
         });

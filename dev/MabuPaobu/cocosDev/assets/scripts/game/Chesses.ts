@@ -15,7 +15,6 @@ export class Chesses extends Component {
             let chessComp = chess.getComponent(Chess);
             if(chessComp){
                 chessComp.open(chessModel);
-                // chessComp.setNameAndColor(chessModel.type == 0 ? '馬' : '炮', chessModel.player == 0 ? Color.BLUE : Color.RED);
             }
             const pos = View.convertToPos(new Vec2(chessModel.pos[0], chessModel.pos[1]));
             chess.setPosition(pos);
@@ -23,6 +22,9 @@ export class Chesses extends Component {
     }
 
     releaseAllNodes(){
+        this.getComponent(Pool)?.getUsingNodes().forEach(elem=>{
+            elem.getComponent(Chess)?.close();
+        });
         this.getComponent(Pool)?.releaseAllNodes();
     }
 }

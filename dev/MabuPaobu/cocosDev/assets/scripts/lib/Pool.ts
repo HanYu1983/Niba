@@ -11,6 +11,9 @@ export class Pool extends Component {
     @property(CCInteger)
     count:number = 10;
 
+    // onGetNode:any;
+    // onReleaseNode:any;
+
     private _nodes:Array<Node> = [];
 
     private _usingNodes:Array<Node> = [];
@@ -27,6 +30,7 @@ export class Pool extends Component {
         }
         let node = this._nodes.pop();
         if(node){
+            // if(this.onGetNode) this.onGetNode(node);
             node.setScale(Vec3.ONE);
             if(!node.active) node.active = true;
 
@@ -36,6 +40,7 @@ export class Pool extends Component {
     }
 
     releaseNode(node:Node){
+        // if(this.onReleaseNode) this.onReleaseNode(node);
         node.setScale(Vec3.ZERO);
         this._nodes.push(node);
     }
@@ -52,6 +57,10 @@ export class Pool extends Component {
         node.setParent(this.node);
         node.setScale(Vec3.ZERO);
         this._nodes.push(node);
+    }
+
+    getUsingNodes(){
+        return this._usingNodes;
     }
 }
 
