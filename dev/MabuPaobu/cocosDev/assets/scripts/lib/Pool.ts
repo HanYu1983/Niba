@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, CCInteger, instantiate, Vec3 } from 'cc';
+import { _decorator, Component, Node, CCInteger, instantiate, Vec3, CCBoolean } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Pool')
@@ -11,7 +11,7 @@ export class Pool extends Component {
     @property(CCInteger)
     count:number = 0;
 
-    @property(Boolean)
+    @property(CCBoolean)
     log = false;
 
     // onGetNode:any;
