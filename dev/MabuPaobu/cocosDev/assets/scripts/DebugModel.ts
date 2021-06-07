@@ -1,5 +1,6 @@
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Vec2 } from 'cc';
+import { ActionModel, ActionType, ChessModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('DebugModel')
@@ -17,10 +18,10 @@ export class DebugModel extends Component {
      * 取得目前場上所有的棋子
      * @returns 
      */
-    getTable(){
+    getTable():ChessModel[]{
         return [
-            {id:0, type:0, pos:[5, 5], player:0},
-            {id:1, type:1, pos:[19, 19], player:1}
+            {id:0, type:0, pos:new Vec2(5, 5), player:0},
+            {id:1, type:1, pos:new Vec2(19, 19), player:1}
         ]
     }
 
@@ -30,12 +31,12 @@ export class DebugModel extends Component {
      * @param y 格子的y
      * @returns 
      */
-    getGridModel(x:number, y:number){
+    getGridModel(x:number, y:number):ChessModel | null{
 
         // if empty
         // return null;
         
-        return {id:4, type:1, pos:[x, y], player:0};
+        return {id:4, type:1, pos:new Vec2(x, y), player:0};
     }
 
     /**
@@ -43,9 +44,9 @@ export class DebugModel extends Component {
      * @param id 棋子id
      * @returns 
      */
-    getChessMoveRangeById(id:number){
+    getChessMoveRangeById(id:number):Vec2[]{
         return [
-            [0, 0], [0, 1], [0, 2]
+            new Vec2(0, 0), new Vec2(0, 1), new Vec2(0, 2)
         ]
     }
 
@@ -53,9 +54,9 @@ export class DebugModel extends Component {
      * 取得該玩家目前所有棋子的移動範圍
      * @param playerId 
      */
-    getPlayerAllChessMoveRange(playerId:number){
+    getPlayerAllChessMoveRange(playerId:number):Vec2[]{
         return [
-            [0, 0], [0, 1], [0, 2]
+            new Vec2(0, 0), new Vec2(0, 1), new Vec2(0, 2)
         ]
     }
 
@@ -66,7 +67,7 @@ export class DebugModel extends Component {
      * @param y 
      * @returns 
      */
-    isValidMove(playerId:number, x:number, y:number){
+    isValidMove(playerId:number, x:number, y:number):boolean{
         return true;
     }
 
@@ -76,7 +77,7 @@ export class DebugModel extends Component {
      * @param x 
      * @param y 
      */
-    isValidMoveByChess(chessId:number, x:number, y:number){
+    isValidMoveByChess(chessId:number, x:number, y:number):boolean{
         console.log('[isValidMoveByChess]幫補上方法,指定棋子是否在x,y的位置可以合法移動或者攻擊');
         return true;
     }
@@ -86,7 +87,7 @@ export class DebugModel extends Component {
      * @param id 
      * @returns 
      */
-    isPlayer(id:number){
+    isPlayer(id:number):boolean{
         return id == 0;
     }
 
@@ -94,7 +95,7 @@ export class DebugModel extends Component {
      * 取得當前玩家id
      * @returns 
      */
-    getCurrentPlayerId(){
+    getCurrentPlayerId():number{
         return 0;
     }
 
@@ -105,7 +106,7 @@ export class DebugModel extends Component {
      * @param y 
      * @returns 取得移動后的棋盤上的所有棋子
      */
-    playerMoveChess(id:number, x:number, y:number){
+    playerMoveChess(id:number, x:number, y:number):ChessModel[]{
         return this.getTable();
     }
 
@@ -113,14 +114,14 @@ export class DebugModel extends Component {
      * 玩家確認回合結束
      * @returns 回傳敵人ai的動畫序列
      */
-    playerEndTurn(){
+    playerEndTurn():ActionModel[]{
         return [
             // action 代表動作類型: 0是指棋子移動動畫, 1是指切換玩家的動畫
             // {action:1, player:1},
-            {action:0, id:0, from:[4, 0], to:[2, 2], player:1, table:[{id:0, type:0, pos:[5, 5], player:0}]},
+            {action:ActionType.MoveChess, id:0, from:new Vec2(4, 0), to:new Vec2(2, 2), player:1, table:[{id:0, type:0, pos:new Vec2(5, 5), player:0}]},
             // {action:1, player:2},
-            {action:0, id:2, from:[8, 0], to:[3, 1], player:2, table:[{id:1, type:1, pos:[5, 6], player:1}]},
-            {action:1, player:0}
+            {action:ActionType.MoveChess, id:2, from:new Vec2(8, 0), to:new Vec2(3, 1), player:2, table:[{id:1, type:1, pos:new Vec2(5, 6), player:1}]},
+            {action:ActionType.ChangeTurn, player:0}
         ]
     }
 
@@ -129,8 +130,8 @@ export class DebugModel extends Component {
      * @param id 
      * @returns 棋子資料
      */
-    getChessById(id:number){
-        return {id:0, type:0, pos:[5, 5], player:1}
+    getChessById(id:number):ChessModel{
+        return {id:0, type:0, pos:new Vec2(5, 5), player:1}
     }
 }
 

@@ -1,6 +1,7 @@
 
 import { _decorator, Component, Node, Color, Vec2 } from 'cc';
 import { Pool } from '../lib/Pool';
+import { ChessModel } from '../Type';
 import { View } from '../View';
 import { Chess } from './Chess';
 const { ccclass, property, requireComponent } = _decorator;
@@ -9,14 +10,14 @@ const { ccclass, property, requireComponent } = _decorator;
 @requireComponent(Pool)
 export class Chesses extends Component {
    
-    create(chessModel:any){
+    create(chessModel:ChessModel){
         const chess = this.getComponent(Pool)?.getNode();
         if(chess){
             let chessComp = chess.getComponent(Chess);
             if(chessComp){
                 chessComp.open(chessModel);
             }
-            const pos = View.convertToPos(new Vec2(chessModel.pos[0], chessModel.pos[1]));
+            const pos = View.convertToPos(chessModel.pos);
             chess.setPosition(pos);
         }
     }

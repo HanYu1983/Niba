@@ -1,6 +1,7 @@
 
-import { _decorator, Component, Node } from 'cc';
+import { _decorator, Component, Node, Vec2 } from 'cc';
 import { DebugModel } from './DebugModel';
+import { ActionType, ChessModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('Model')
@@ -11,9 +12,9 @@ export class Model extends DebugModel {
     activePlayer = 0
 
     table = [
-        { id: this.seqId++, type: 0, pos: [5, 5], player: 0 },
-        { id: this.seqId++, type: 1, pos: [19, 19], player: 1 },
-        { id: this.seqId++, type: 1, pos: [18, 19], player: 1 }
+        { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
+        { id: this.seqId++, type: 1, pos: new Vec2(19, 19), player: 1 },
+        { id: this.seqId++, type: 1, pos: new Vec2(18, 19), player: 1 }
     ]
 
     startGame() {
@@ -26,7 +27,7 @@ export class Model extends DebugModel {
 
     getGridModel(x: number, y: number) {
         const find = this.table.filter(chess => {
-            return chess.pos[0] == x && chess.pos[1] == y
+            return chess.pos.x == x && chess.pos.y == y
         })
         if (find.length == 0) {
             return null
@@ -37,7 +38,7 @@ export class Model extends DebugModel {
     getChessMoveRangeById(id: number) {
         const chess = this.getChessById(id)
         return [[1, 0], [0, 1], [-1, 0], [0, -1]].map(([ox, oy]) => {
-            return [chess.pos[0] + ox, chess.pos[1] + oy]
+            return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
         })
     }
 
@@ -64,7 +65,7 @@ export class Model extends DebugModel {
     isValidMove(playerId: number, x: number, y: number) {
         const posList = this.getPlayerAllChessMoveRange(playerId)
         const findPos = posList.filter(pos => {
-            return pos[0] == x && pos[1] == y
+            return x == x && y == y
         })
         if (findPos.length == 0) {
             return false
@@ -90,14 +91,14 @@ export class Model extends DebugModel {
         const chess = this.getChessById(id)
         const moveRange = this.getChessMoveRangeById(id)
         const findPos = moveRange.filter(pos => {
-            return pos[0] == x && pos[1] == y
+            return x == x && y == y
         })
         if (findPos.length == 0) {
             throw new Error(`chess(${id}) can not move to [${x}, ${y}]`)
         }
         const newChess = {
             ...chess,
-            pos: [x, y],
+            pos: new Vec2(x,y),
             id: this.seqId++,
         }
         this.table.push(newChess)
@@ -113,18 +114,18 @@ export class Model extends DebugModel {
             const activeChess = findChess[findChess.length - 1]
             const newChess = {
                 ...activeChess,
-                pos: [activeChess.pos[0], activeChess.pos[1] - 1],
+                pos: new Vec2(activeChess.pos.x, activeChess.pos.y - 1),
                 id: this.seqId++,
             }
             this.table.push(newChess)
             actions.push({
                 ...newChess,
-                action: 0,
+                action: ActionType.MoveChess,
                 from: activeChess.pos, to: newChess.pos,
                 table: [...this.table]
             })
         }
-        actions.push({ action: 1, player: 0, table: [...this.table] })
+        actions.push({ action: ActionType.ChangeTurn, player: 0, table: [...this.table] })
         return actions
     }
 

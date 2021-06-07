@@ -8,6 +8,7 @@ import { Effects } from './game/Effects';
 import { Table } from './game/Table';
 import { Pool } from './lib/Pool';
 import { Tool } from './lib/Tool';
+import { ActionType, ChessModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('View')
@@ -34,7 +35,7 @@ export class View extends Component {
         this.onPlayerStartState();
     }
 
-    private updateChessed(chess?:any[]){
+    private updateChessed(chess?:ChessModel[]){
         console.log('更新目前所有棋子');
         
         this.table.chesses.releaseAllNodes();
@@ -94,7 +95,7 @@ export class View extends Component {
         moveRange.forEach(elem=>{
             const node = this.table.colorRanges.getNode();
             if(node){
-                node.setPosition(View.convertToPosByArray(elem));
+                node.setPosition(View.convertToPos(elem));
             }
         });
     }
@@ -102,14 +103,14 @@ export class View extends Component {
     private showChessMoveRange(chessId:number){
         const moveRange = this.model.getChessMoveRangeById(chessId);   
         moveRange.forEach(elem=>{
+            console.log(elem);
+            
             const node = this.table.colorRanges.getNode();
-            if(node){
-                node.setPosition(View.convertToPosByArray(elem));
-            }
+            node?.setPosition(View.convertToPos(elem));
         });
     }
 
-    onPlayerClickEnemyChessState(chessModel:any){
+    onPlayerClickEnemyChessState(chessModel:ChessModel){
         console.log('玩家點擊敵人的棋子');
 
         this.removeAllListener();
@@ -124,7 +125,7 @@ export class View extends Component {
         });
     }
 
-    onPlayerClickSelfChessState(chessModel:any){
+    onPlayerClickSelfChessState(chessModel:ChessModel){
         console.log('玩家點擊自己的棋子');
 
         this.removeAllListener();
@@ -154,7 +155,7 @@ export class View extends Component {
         });
     }
 
-    onPlayerMoveConfirmState(chessModel:any, grid:Vec2){
+    onPlayerMoveConfirmState(chessModel:ChessModel, grid:Vec2){
         console.log('玩家確認移動');
         this.removeAllListener();
         
@@ -169,7 +170,7 @@ export class View extends Component {
                 this.onPlayerStartState();
                 return;
             }
-            this.onPlayerMoveState(chessModel, new Vec2(from[0], from[1]), grid);
+            this.onPlayerMoveState(chessModel, from, grid);
         });
 
         this.confirmMenu.btns[1].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
@@ -179,7 +180,7 @@ export class View extends Component {
         });
     }
 
-    onPlayerMoveState(chessModel:any, from:Vec2, to:Vec2){
+    onPlayerMoveState(chessModel:ChessModel, from:Vec2, to:Vec2){
         console.log('播放移動動畫');
         this.removeAllListener();
 
@@ -200,16 +201,18 @@ export class View extends Component {
         let sequence:any[] = [];
         result.forEach(action=>{
             switch(action.action){
-                case 0:
+                case ActionType.MoveChess:
                     sequence.push(tween().call(()=>{
                         
                         console.log('播放ai' + action.player + '移動');
 
                         const chessModel = this.model.getChessById(action.id);
-                        this.effects.createChessMoveEffect(chessModel, new Vec2(action.from[0], action.from[1]), new Vec2(action.to[0], action.to[1]));
+                        console.log('chessModel', chessModel);
+                        
+                        this.effects.createChessMoveEffect(chessModel, action.from, action.to);
                     }).delay(1.5).call(()=>{this.updateChessed(action.table);}));
                     break;
-                case 1:
+                case ActionType.ChangeTurn:
                     sequence.push(tween().call(()=>{
                         console.log('播放切換玩家' + action.player + '動畫');
                         
