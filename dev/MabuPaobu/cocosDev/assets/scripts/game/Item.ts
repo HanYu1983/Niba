@@ -1,15 +1,30 @@
 
-import { _decorator, Component, Node, Label } from 'cc';
+import { _decorator, Component, Node, Label, Vec3 } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Item')
 export class Item extends Component {
 
-    @property(Label)
-    lblName:Label;
+    @property(Node)
+    back:Node;
 
-    setName(name:string){
-        this.lblName.string = name;
+    @property(Node)
+    cover:Node;
+
+    start(){
+        this.showOver(false);
+    }
+
+    setValid(active:boolean){
+        this.back.setScale(active ? Vec3.ONE : Vec3.ZERO);
+    }
+
+    isValidItem(){
+        return this.back.scale.equals(Vec3.ONE);
+    }
+
+    showOver(active:boolean){
+        this.cover.setScale(active ? Vec3.ONE : Vec3.ZERO);
     }
 }
 

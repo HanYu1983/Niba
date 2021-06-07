@@ -1,18 +1,5 @@
 import { Vec2 } from "cc"
 
-// export type View = {
-// 	Render: (ui: UI) => void,
-// 	Alert: (msg: string) => void,
-// }
-
-// export type Model = {
-// 	OnKeyDown: (evt: any) => void,
-// 	OnKeyUp: (evt: any) => void,
-// 	Flush: () => void,
-// }
-
-
-
 export type ChessModel = {
     id: number, 
     type: number, 
@@ -25,11 +12,38 @@ export type ActionModel = {
     id?:number, 
     from?:Vec2, 
     to?:Vec2, 
-    player:number, 
+    player?:number, 
     table?:ChessModel[]
+}
+
+export type PlayerModel = {
+    id:number,
+    name:string,
+    score:number,
+    money:number,
+    itemValids:boolean[]
+}
+
+export type ConfirmModel = {
+    content:string,
+    yes:()=>void;
+    no:()=>void;
 }
 
 export enum ActionType {
 	MoveChess = "MoveChess",
-    ChangeTurn = 'ChangeTurn'
+    ChangeTurn = 'ChangeTurn',
+    Item = 'Item',
+}
+
+export enum DirectType {
+    Horizontal = 'Horizontal',
+    Vertical = 'Vertical'
+}
+
+export enum ItemName {
+    '炸彈',
+    '鐳射',
+    '轟爆炸彈',
+    '聚能光束'
 }

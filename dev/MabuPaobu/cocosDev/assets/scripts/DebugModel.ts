@@ -1,6 +1,6 @@
 
 import { _decorator, Component, Node, Vec2 } from 'cc';
-import { ActionModel, ActionType, ChessModel } from './Type';
+import { ActionModel, ActionType, ChessModel, DirectType, PlayerModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('DebugModel')
@@ -132,6 +132,38 @@ export class DebugModel extends Component {
      */
     getChessById(id:number):ChessModel{
         return {id:0, type:0, pos:new Vec2(5, 5), player:1}
+    }
+
+    /**
+     * 用id取得指定玩家資料
+     * @param id 
+     * @returns 
+     */
+    getPlayerInfoById(id:number):PlayerModel{
+        console.log('[getPlayerInfoById]用id取得指定玩家資料');
+        return {id:0, name:'vic', score:5, money:4, itemValids:[true, true, false, false]};
+    }
+
+    /**
+     * 取得道具消費, 目前是固定的, [3,4,5,8]
+     * @param id 
+     * @returns 
+     */
+    getItemCostById(id:number):number{
+        console.log('[getPlayerInfoById]取得道具消費');
+        return [3,4,5,8][id];
+    }
+
+    getItemAttackRangeById(id:number, grid:Vec2, dir:DirectType):Vec2[]{
+        console.log('[getItemAttackRangeById]取得道具在指定位置的攻擊範圍');
+        return [new Vec2(1,2), new Vec2(2,3), new Vec2(4,5), new Vec2(5,6)];
+    }
+
+    usingItemAtGrid(itemId:number, grid:Vec2, dir:DirectType):ActionModel[]{
+        console.log('[usingItemAtGrid]取得使用道具后的動畫序列');
+        return [
+            {action:ActionType.Item, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]}
+        ]
     }
 }
 

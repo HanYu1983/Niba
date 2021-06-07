@@ -1,14 +1,15 @@
 
-import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween } from 'cc';
+import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween, systemEvent, EventKeyboard } from 'cc';
 import { DebugModel } from './DebugModel';
 import { Chess } from './game/Chess';
 import { ChessMenu } from './game/ChessMenu';
 import { ConfirmMenu } from './game/ConfirmMenu';
 import { Effects } from './game/Effects';
+import { PlayerInfo } from './game/PlayerInfo';
 import { Table } from './game/Table';
 import { Pool } from './lib/Pool';
 import { Tool } from './lib/Tool';
-import { ActionType, ChessModel } from './Type';
+import { ActionModel, ActionType, ChessModel, DirectType, ItemName, PlayerModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('View')
@@ -26,13 +27,27 @@ export class View extends Component {
     @property(ConfirmMenu)
     confirmMenu:ConfirmMenu;
 
+    @property(PlayerInfo)
+    playerInfos:PlayerInfo[] = [];
+
     @property(Effects)
     effects:Effects;
 
     start(){
         this.model.startGame();
-        this.updateChessed();
+        this.updateAll();
         this.onPlayerStartState();
+    }
+
+    private updateAll(chess?:ChessModel[]){
+        this.updatePlayerInfo();
+        this.updateChessed(chess);
+    }
+
+    private updatePlayerInfo(){
+        for(let i = 0; i < this.playerInfos.length; ++i){
+            this.playerInfos[i].setInfo(this.model.getPlayerInfoById(i));
+        }
     }
 
     private updateChessed(chess?:ChessModel[]){
@@ -49,10 +64,16 @@ export class View extends Component {
     private removeAllListener(){
         console.log('--移除所有監聽');
 
+        systemEvent.off(SystemEventType.KEY_UP);
         this.table.node.off(SystemEventType.MOUSE_MOVE);
         this.table.node.off(SystemEventType.MOUSE_UP);
         this.confirmMenu.offAllListener();
         this.chessMenu.offAllListener();
+        this.getPlayerInfo().offAllListener();
+    }
+
+    private getPlayerInfo(){
+        return this.playerInfos[0];
     }
 
     onPlayerStartState(){
@@ -60,6 +81,12 @@ export class View extends Component {
 
         this.removeAllListener();
         this.effects.showCursor();
+
+        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
+            const item:Node | null = e.currentTarget as Node;
+            const itemId:number = +item?.name[item?.name.length-1];
+            this.onPlayerClickItemState(itemId);
+        });
 
         this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
             const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
@@ -88,6 +115,74 @@ export class View extends Component {
         });
     }
 
+    private onPlayerClickItemState(itemId:number){
+        console.log('玩家點自己的道具');
+        
+        this.removeAllListener();
+
+        let director = DirectType.Horizontal;
+        let lastGrid = new Vec2();
+
+        const showAttackRange = ()=>{
+            const attackRange:Vec2[] = this.model.getItemAttackRangeById(itemId, lastGrid, director);
+            this.showRange(attackRange);
+        }
+
+        systemEvent.on(SystemEventType.KEY_UP, (e:EventKeyboard)=>{
+            director = (director == DirectType.Horizontal) ? DirectType.Vertical : DirectType.Horizontal;
+            showAttackRange();
+        });
+        
+        this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
+            const grid = View.convertToGrid(localPos);
+            lastGrid = grid;
+            
+            this.table.setCursorByGrid(grid);
+            showAttackRange();
+        });
+
+        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
+            const grid = View.convertToGrid(localPos);
+
+            this.onPlayerUseItemClickMapConfirmState(itemId, grid, director);
+        });
+    }
+
+    private onPlayerUseItemClickMapConfirmState(itemId:number, grid:Vec2, director:DirectType){
+        this.removeAllListener();
+
+        const itemName = ItemName[itemId];
+        const itemCost = this.model.getItemCostById(itemId);
+        this.confirmMenu.open({
+            content:'確定要支付 ' + itemCost + ' 以使用 ' + itemName + ' 嗎?',
+            yes:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
+                this.effects.showCursor();
+                this.playerInfos[0].clearAllItemCover();
+                this.table.colorRanges.releaseAllNodes();
+
+                this.updatePlayerInfo();
+                const result = this.model.usingItemAtGrid(itemId, grid, director);
+                this.removeAllListener();
+                this.playAnimations(result, ()=>{
+                    this.onPlayerStartState();
+                });
+            },
+            no:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
+                this.effects.showCursor();
+                this.playerInfos[0].clearAllItemCover();
+                this.table.colorRanges.releaseAllNodes();
+
+                this.onPlayerStartState();
+            }
+        });
+    }
+
+    
+
     private showPlayerChessMoveRange(player:number){
         console.log('顯示玩家' + player +'移動範圍');
 
@@ -101,10 +196,12 @@ export class View extends Component {
     }
 
     private showChessMoveRange(chessId:number){
-        const moveRange = this.model.getChessMoveRangeById(chessId);   
-        moveRange.forEach(elem=>{
-            console.log(elem);
-            
+        const moveRange = this.model.getChessMoveRangeById(chessId); 
+        this.showRange(moveRange);
+    }
+
+    private showRange(range:Vec2[]){
+        range.forEach(elem=>{
             const node = this.table.colorRanges.getNode();
             node?.setPosition(View.convertToPos(elem));
         });
@@ -145,7 +242,6 @@ export class View extends Component {
             const grid = View.convertToGrid(localPos);
 
             if(this.model.isValidMoveByChess(chessModel.id, grid.x, grid.y)){
-                this.confirmMenu.open();
                 this.onPlayerMoveConfirmState(chessModel, grid);
             }else{
                 this.table.colorRanges.releaseAllNodes();
@@ -159,24 +255,26 @@ export class View extends Component {
         console.log('玩家確認移動');
         this.removeAllListener();
         
-        this.confirmMenu.btns[0].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            this.confirmMenu.close();
-            this.table.colorRanges.releaseAllNodes();
-
-            const from = chessModel.pos;
-            try{
-                this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
-            }catch(e){
+        this.confirmMenu.open({
+            content:'確定要移動到[' + grid.x + ',' + grid.y + ']嗎?',
+            yes:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
+                this.table.colorRanges.releaseAllNodes();
+    
+                const from = chessModel.pos;
+                try{
+                    this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
+                }catch(e){
+                    this.onPlayerStartState();
+                    return;
+                }
+                this.onPlayerMoveState(chessModel, from, grid);
+            },
+            no:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
                 this.onPlayerStartState();
-                return;
+                this.table.colorRanges.releaseAllNodes();
             }
-            this.onPlayerMoveState(chessModel, from, grid);
-        });
-
-        this.confirmMenu.btns[1].node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            this.confirmMenu.close();
-            this.onPlayerStartState();
-            this.table.colorRanges.releaseAllNodes();
         });
     }
 
@@ -188,7 +286,7 @@ export class View extends Component {
         this.effects.createChessMoveEffect(chessModel, from, to);
         
         tween(this.node).delay(1.5).call(()=>{
-            this.updateChessed();
+            this.updateAll();
             this.onPlayerEndState();
         }).start();
     }
@@ -197,9 +295,13 @@ export class View extends Component {
         console.log('玩家回合結束');
         this.removeAllListener();
 
-        const result:any[] = this.model.playerEndTurn();
+        const result:ActionModel[] = this.model.playerEndTurn();
+        this.playAnimations(result, ()=>{this.onPlayerStartState();});
+    }
+
+    private playAnimations(animations:ActionModel[], cb:()=>void){
         let sequence:any[] = [];
-        result.forEach(action=>{
+        animations.forEach(action=>{
             switch(action.action){
                 case ActionType.MoveChess:
                     sequence.push(tween().call(()=>{
@@ -207,10 +309,8 @@ export class View extends Component {
                         console.log('播放ai' + action.player + '移動');
 
                         const chessModel = this.model.getChessById(action.id);
-                        console.log('chessModel', chessModel);
-                        
                         this.effects.createChessMoveEffect(chessModel, action.from, action.to);
-                    }).delay(1.5).call(()=>{this.updateChessed(action.table);}));
+                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
                     break;
                 case ActionType.ChangeTurn:
                     sequence.push(tween().call(()=>{
@@ -219,9 +319,16 @@ export class View extends Component {
                         this.effects.createTurnChangeEffect();
                     }).delay(1.1));
                     break;
+                case ActionType.Item:
+                    sequence.push(tween().call(()=>{
+                        
+                        console.log('播放道具' + action.id + '效果');
+
+                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
+
             }
         });
-        Tool.playSequence(this.node, sequence, ()=>{this.onPlayerStartState();} );
+        Tool.playSequence(this.node, sequence, cb );
     }
 
     static convertToGrid(local:Vec2){

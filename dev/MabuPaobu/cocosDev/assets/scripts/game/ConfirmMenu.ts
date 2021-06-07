@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Label, Vec3 } from 'cc';
+import { _decorator, Component, Node, Label, Vec3, SystemEventType } from 'cc';
 import { MenuViewer } from '../lib/MenuViewer';
 const { ccclass, property } = _decorator;
 
@@ -13,8 +13,15 @@ export class ConfirmMenu extends MenuViewer {
         this.node.setPosition(Vec3.ZERO);
     }
 
-    setContent(content:string){
-        this.lblContent.string = content;
+    protected doOpen(data?:any){
+        this.lblContent.string = data.content;
+        this.btns[0].node.on(SystemEventType.MOUSE_UP, data.yes );
+        this.btns[1].node.on(SystemEventType.MOUSE_UP, data.no );
+    }
+
+    protected doClose(){
+        this.btns[0].node.off(SystemEventType.MOUSE_UP);
+        this.btns[1].node.off(SystemEventType.MOUSE_UP);
     }
 }
 
