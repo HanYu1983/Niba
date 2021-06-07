@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween, systemEvent, EventKeyboard } from 'cc';
+import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween, systemEvent, EventKeyboard, Label } from 'cc';
 import { DebugModel } from './DebugModel';
 import { Chess } from './game/Chess';
 import { ChessMenu } from './game/ChessMenu';
@@ -29,6 +29,9 @@ export class View extends Component {
 
     @property(PlayerInfo)
     playerInfos:PlayerInfo[] = [];
+
+    @property(Label)
+    hint:Label;
 
     @property(Effects)
     effects:Effects;
@@ -64,6 +67,7 @@ export class View extends Component {
     private removeAllListener(){
         console.log('--移除所有監聽');
 
+        this.hint.string = '';
         systemEvent.off(SystemEventType.KEY_UP);
         this.table.node.off(SystemEventType.MOUSE_MOVE);
         this.table.node.off(SystemEventType.MOUSE_UP);
@@ -80,6 +84,8 @@ export class View extends Component {
         console.log('玩家回合開始');
 
         this.removeAllListener();
+
+        this.hint.string = '點擊己方棋子來移動或者使用道具';
         this.effects.showCursor();
 
         this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
@@ -119,6 +125,8 @@ export class View extends Component {
         console.log('玩家點自己的道具');
         
         this.removeAllListener();
+
+        this.hint.string = '點擊地圖使用道具:R-旋轉道具使用方向';
 
         let director = DirectType.Horizontal;
         let lastGrid = new Vec2();
@@ -181,8 +189,6 @@ export class View extends Component {
         });
     }
 
-    
-
     private showPlayerChessMoveRange(player:number){
         console.log('顯示玩家' + player +'移動範圍');
 
@@ -226,6 +232,8 @@ export class View extends Component {
         console.log('玩家點擊自己的棋子');
 
         this.removeAllListener();
+
+        this.hint.string = '點擊地圖來進行移動或者攻擊';
 
         this.table.colorRanges.releaseAllNodes();
         this.showChessMoveRange(chessModel.id);
