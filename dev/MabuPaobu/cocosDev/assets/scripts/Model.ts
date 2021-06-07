@@ -1,7 +1,7 @@
 
 import { _decorator, Component, Node, Vec2 } from 'cc';
 import { DebugModel } from './DebugModel';
-import { ActionType, ChessModel, ActionModel } from './Type';
+import { ActionType, ChessModel, ActionModel, PlayerModel, DirectType } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('Model')
@@ -15,6 +15,13 @@ export class Model extends DebugModel {
         { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
         { id: this.seqId++, type: 1, pos: new Vec2(19, 19), player: 1 },
         { id: this.seqId++, type: 1, pos: new Vec2(18, 19), player: 1 }
+    ]
+
+    players: PlayerModel[] = [
+        { id: 0, name: 'vic', score: 5, money: 4, itemValids: [true, true, false, false] },
+        { id: 1, name: 'han', score: 5, money: 4, itemValids: [true, true, false, false] },
+        { id: 2, name: 'john', score: 5, money: 4, itemValids: [true, true, false, false] },
+        { id: 3, name: 'marry', score: 5, money: 4, itemValids: [true, true, false, false] }
     ]
 
     startGame() {
@@ -156,6 +163,48 @@ export class Model extends DebugModel {
             throw new Error(`chess(${id}) not found`)
         }
         return findChess[0]
+    }
+
+    getPlayerInfoById(id: number): PlayerModel {
+        const plyr = this.players[id]
+        if (plyr == null) {
+            throw new Error(`player(${id}) not found`)
+        }
+        return plyr
+    }
+
+    getItemCostById(id: number): number {
+        return [3, 4, 5, 8][id];
+    }
+
+    getItemAttackRangeById(id: number, grid: Vec2, dir: DirectType): Vec2[] {
+        const patterns = [
+            [
+                [1, 0], [1, 1], [1, -1]
+            ],
+            [
+                [1, 0], [2, 0], [3, 0]
+            ],
+            [
+                [1, 0]
+            ],
+            [
+                [1, 0], [2, 0]
+            ]
+        ]
+        const pattern = patterns[id]
+        if (pattern == null) {
+            throw new Error(`patterns[${id}] not found`)
+        }
+        return pattern.map(([ox, oy]) => {
+            return new Vec2(grid.x + ox, grid.y + oy)
+        })
+    }
+
+    usingItemAtGrid(itemId: number, grid: Vec2, dir: DirectType): ActionModel[] {
+        return [
+            { action: ActionType.Item, id: 0, to: new Vec2(2, 5), table: [{ id: 0, type: 0, pos: new Vec2(5, 5), player: 1 }] }
+        ]
     }
 }
 
