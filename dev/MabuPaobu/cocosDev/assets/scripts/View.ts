@@ -207,6 +207,7 @@ export class View extends Component {
     }
 
     private showRange(range:Vec2[]){
+        this.table.colorRanges.releaseAllNodes();
         range.forEach(elem=>{
             const node = this.table.colorRanges.getNode();
             node?.setPosition(View.convertToPos(elem));
