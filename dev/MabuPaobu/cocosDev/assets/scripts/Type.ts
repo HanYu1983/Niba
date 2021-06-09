@@ -13,6 +13,7 @@ export type ActionModel = {
     from?:Vec2, 
     to?:Vec2, 
     player?:number, 
+    score?:number,
     table?:ChessModel[]
 }
 
