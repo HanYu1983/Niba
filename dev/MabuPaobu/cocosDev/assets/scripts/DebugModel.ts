@@ -109,7 +109,7 @@ export class DebugModel extends Component {
     playerMoveChess(id:number, x:number, y:number):ActionModel[]{
         return [
             {action:ActionType.MoveChess, id:0, from:new Vec2(4, 0), to:new Vec2(2, 2), player:0, table:[{id:0, type:0, pos:new Vec2(5, 5), player:0}]},
-            {action:ActionType.KillChess, id:1, to:new Vec2(2, 2), player:1},
+            {action:ActionType.KillChess, id:1, to:new Vec2(2, 2), player:1, score:4},
         ]
     }
 
