@@ -1,7 +1,7 @@
 
 import { _decorator, Component, Node, Vec2 } from 'cc';
 import { DebugModel } from './DebugModel';
-import { ActionType, ChessModel, ActionModel, PlayerModel, DirectType } from './Type';
+import { ActionType, ChessModel, ActionModel, PlayerModel, DirectType, ItemName } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('Model')
@@ -213,27 +213,61 @@ export class Model extends DebugModel {
     }
 
     getItemAttackRangeById(id: number, grid: Vec2, dir: DirectType): Vec2[] {
-        const patterns = [
-            [
-                [1, 0], [1, 1], [1, -1]
-            ],
-            [
-                [1, 0], [2, 0], [3, 0]
-            ],
-            [
-                [1, 0]
-            ],
-            [
-                [1, 0], [2, 0]
-            ]
-        ]
-        const pattern = patterns[id]
-        if (pattern == null) {
-            throw new Error(`patterns[${id}] not found`)
+        switch (ItemName[id]) {
+            case '炸彈':
+            case '轟爆炸彈':
+                {
+                    let limit = 2
+                    if (ItemName[id] == '轟爆炸彈') {
+                        limit = 3
+                    }
+                    const result: Vec2[] = [grid]
+                    const stacks: number[][] = [[grid.x, grid.y, 0]]
+                    const opened: number[][] = [[grid.x, grid.y, 0]]
+                    while (stacks.length > 0) {
+                        const [cx, cy, step] = stacks[0];
+                        if (step == limit) {
+                            break
+                        }
+                        [[0, 1], [1, 0], [0, -1], [-1, 0]].forEach(([ox, oy]) => {
+                            const nextStep = [cx + ox, cy + oy, step + 1]
+                            if (opened.filter(v => v[0] == nextStep[0] && v[1] == nextStep[1]).length == 0) {
+                                result.push(new Vec2(nextStep[0], nextStep[1]))
+                                stacks.push(nextStep)
+                                opened.push(nextStep)
+                            }
+                        })
+                        stacks.shift()
+                    }
+                    return result
+                }
+            case '鐳射':
+            case '聚能光束':
+                {
+                    const result: Vec2[] = []
+                    for (let i = 0; i < 20; ++i) {
+                        switch (dir) {
+                            case DirectType.Vertical:
+                                result.push(new Vec2(grid.x, i))
+                                if (ItemName[id] == '聚能光束') {
+                                    result.push(new Vec2(grid.x + 1, i))
+                                }
+                                break
+                            case DirectType.Horizontal:
+                                result.push(new Vec2(i, grid.y))
+                                if (ItemName[id] == '聚能光束') {
+                                    result.push(new Vec2(i, grid.y + 1))
+                                }
+                                break
+                            default:
+                                throw new Error(`dir(${dir}) not found`)
+                        }
+                    }
+                    return result
+                }
+            default:
+                throw new Error(`ItemName[${id}] not found`)
         }
-        return pattern.map(([ox, oy]) => {
-            return new Vec2(grid.x + ox, grid.y + oy)
-        })
     }
 
     usingItemAtGrid(itemId: number, grid: Vec2, dir: DirectType): ActionModel[] {
