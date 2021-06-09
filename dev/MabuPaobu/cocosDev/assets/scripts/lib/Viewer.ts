@@ -5,24 +5,18 @@ const { ccclass, property } = _decorator;
 @ccclass('Viewer')
 export class Viewer extends Component {
 
-    private isOpen = true;
-    
     onLoad(){
         this.close();
     }
 
     open(data?:any){
-        if(!this.isOpen){
-            this.isOpen = true;
-            if(!this.node.active) this.node.active = true;
-        
-            this.node.scale = Vec3.ONE;
-            this.doOpen(data);
-        }
+        if(!this.node.active) this.node.active = true;
+    
+        this.node.scale = Vec3.ONE;
+        this.doOpen(data);
     }
 
     close(){
-        this.isOpen = false;
         this.node.scale = Vec3.ZERO;
         this.doClose();
     }

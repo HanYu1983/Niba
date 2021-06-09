@@ -306,13 +306,15 @@ export class View extends Component {
     }
 
     private playAnimations(animations:ActionModel[], cb:()=>void){
+        this.effects.hideCursor();
+
         let sequence:any[] = [];
         animations.forEach(action=>{
             switch(action.action){
                 case ActionType.MoveChess:
                     sequence.push(tween().call(()=>{
                         
-                        console.log('播放ai' + action.player + '移動');
+                        console.log('播放ai移動', action);
 
                         const chessModel = this.model.getChessById(action.id);
                         this.effects.createChessMoveEffect(chessModel, action.from, action.to);
@@ -321,6 +323,7 @@ export class View extends Component {
                 case ActionType.KillChess:
                     sequence.push(tween().call(()=>{
                         console.log('播放殺棋動畫', action);
+                        
                         if(action.to){
                             this.effects.createExplode(action.to);
                         }
@@ -328,7 +331,7 @@ export class View extends Component {
                     break;
                 case ActionType.ChangeTurn:
                     sequence.push(tween().call(()=>{
-                        console.log('播放切換玩家' + action.player + '動畫');
+                        console.log('播放切換玩家動畫', action);
                         
                         this.effects.createTurnChangeEffect();
                     }).delay(1.1));
@@ -336,7 +339,7 @@ export class View extends Component {
                 case ActionType.Item:
                     sequence.push(tween().call(()=>{
                         
-                        console.log('播放道具' + action.id + '效果');
+                        console.log('播放道具效果', action);
 
                     }).delay(1.5).call(()=>{this.updateAll(action.table);}));
 
