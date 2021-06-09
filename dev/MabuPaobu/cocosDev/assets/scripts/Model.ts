@@ -18,14 +18,16 @@ export class Model extends DebugModel {
     ]
 
     players: PlayerModel[] = [
-        { id: 0, name: 'vic', score: 5, money: 4, itemValids: [true, true, true, true] },
-        { id: 1, name: 'han', score: 5, money: 4, itemValids: [true, true, false, false] },
-        { id: 2, name: 'john', score: 5, money: 4, itemValids: [true, true, false, false] },
-        { id: 3, name: 'marry', score: 5, money: 4, itemValids: [true, true, false, false] }
+        { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
+        { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
+        { id: 2, name: 'john', score: 5, money: 10, itemValids: [true, true, false, false] },
+        { id: 3, name: 'marry', score: 5, money: 10, itemValids: [true, true, false, false] }
     ]
 
     startGame() {
-
+        for (const plyr of this.players) {
+            this.updateItemValids(plyr.id)
+        }
     }
 
     getTable(): ChessModel[] {
@@ -152,6 +154,7 @@ export class Model extends DebugModel {
             })
             this.players[activePlayer].score++
             this.players[activePlayer].money++
+            this.updateItemValids(activePlayer)
             actions.push({
                 action: ActionType.KillChess,
                 id: occupy[0].id,
@@ -273,12 +276,24 @@ export class Model extends DebugModel {
         }
     }
 
+    updateItemValids(playerId: number) {
+        const plyr = this.players[playerId]
+        if (plyr == null) {
+            throw new Error(`player(${playerId}) not found`)
+        }
+        for (let i = 0; i < plyr.itemValids.length; ++i) {
+            const isValid = plyr.money >= this.getItemCostById(i)
+            plyr.itemValids[i] = isValid
+        }
+    }
+
     usingItemAtGrid(itemId: number, grid: Vec2, dir: DirectType): ActionModel[] {
         const activePlayer = 0
         if (this.players[activePlayer].itemValids[itemId] == false) {
             throw new Error(`you don't have item(${itemId})`)
         }
-        this.players[activePlayer].itemValids[itemId] = false
+        this.players[activePlayer].money = Math.max(0, this.players[activePlayer].money - this.getItemCostById(itemId))
+        this.updateItemValids(activePlayer)
         const range = this.getItemAttackRangeById(itemId, grid, dir)
         const findChess = this.table.filter(chess => {
             return chess.player != activePlayer
