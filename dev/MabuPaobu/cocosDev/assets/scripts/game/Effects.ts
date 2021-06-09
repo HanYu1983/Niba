@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, tween, Vec2, Vec3 } from 'cc';
+import { _decorator, Component, Node, tween, Vec2, Vec3, Animation } from 'cc';
 import { Viewer } from '../lib/Viewer';
 import { View } from '../View';
 import { Chess } from './Chess';
@@ -18,8 +18,15 @@ export class Effects extends Component {
     @property(Chess)
     chess:Chess;
 
+    @property(Node)
+    explode:Node;
+
     @property(Viewer)
     turnChange:Viewer;
+
+    start(){
+        this.explode.setScale( Vec3.ZERO);
+    }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
         const from = View.convertToPos(fromGrid);
@@ -36,6 +43,17 @@ export class Effects extends Component {
             this.chess.close();
         }).
         start();
+    }
+
+    createExplode(grid:Vec2){
+        const pos = View.convertToPos(grid);
+        this.explode.setScale( Vec3.ONE );
+        this.explode.setPosition(pos);
+        this.explode.getComponent(Animation)?.play();
+
+        tween(this.node).delay(.5).call(()=>{
+            this.explode.setScale(Vec3.ZERO);
+        });
     }
 
     createTurnChangeEffect(){

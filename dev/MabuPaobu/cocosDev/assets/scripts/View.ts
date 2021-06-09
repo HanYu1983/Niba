@@ -316,13 +316,15 @@ export class View extends Component {
 
                         const chessModel = this.model.getChessById(action.id);
                         this.effects.createChessMoveEffect(chessModel, action.from, action.to);
-                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
+                    }).delay(1).call(()=>{this.updateAll(action.table);}));
                     break;
                 case ActionType.KillChess:
                     sequence.push(tween().call(()=>{
                         console.log('播放殺棋動畫', action);
-                        
-                    }).delay(1));
+                        if(action.to){
+                            this.effects.createExplode(action.to);
+                        }
+                    }).delay(.5).call(()=>{this.updateAll(action.table);}));
                     break;
                 case ActionType.ChangeTurn:
                     sequence.push(tween().call(()=>{

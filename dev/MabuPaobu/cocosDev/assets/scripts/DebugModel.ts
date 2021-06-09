@@ -109,7 +109,7 @@ export class DebugModel extends Component {
     playerMoveChess(id:number, x:number, y:number):ActionModel[]{
         return [
             {action:ActionType.MoveChess, id:0, from:new Vec2(4, 0), to:new Vec2(2, 2), player:0, table:[{id:0, type:0, pos:new Vec2(5, 5), player:0}]},
-            {action:ActionType.KillChess, id:1, to:new Vec2(2, 2), player:1, score:4},
+            {action:ActionType.KillChess, id:1, to:new Vec2(2, 2), player:1, score:4, table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]},
         ]
     }
 
@@ -165,7 +165,9 @@ export class DebugModel extends Component {
     usingItemAtGrid(itemId:number, grid:Vec2, dir:DirectType):ActionModel[]{
         console.log('[usingItemAtGrid]取得使用道具后的動畫序列');
         return [
-            {action:ActionType.Item, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]}
+            {action:ActionType.Item, id:0, to:new Vec2(2, 5)},
+            {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]},
+            {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]}
         ]
     }
 }
