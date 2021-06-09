@@ -13,8 +13,8 @@ export class Model extends DebugModel {
 
     table = [
         { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
-        { id: this.seqId++, type: 1, pos: new Vec2(19, 19), player: 1 },
-        { id: this.seqId++, type: 1, pos: new Vec2(18, 19), player: 1 }
+        { id: this.seqId++, type: 1, pos: new Vec2(10, 10), player: 1 },
+        { id: this.seqId++, type: 1, pos: new Vec2(8, 8), player: 1 }
     ]
 
     players: PlayerModel[] = [
@@ -47,7 +47,7 @@ export class Model extends DebugModel {
         const myChesses = this.table.filter(c => {
             return c.player == chess.player
         })
-        return [[1, 0], [0, 1], [-1, 0], [0, -1]].map(([ox, oy]) => {
+        return [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]].map(([ox, oy]) => {
             return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
         }).filter(pos => {
             const occupy = myChesses.filter(c => {
