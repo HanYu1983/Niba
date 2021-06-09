@@ -32,6 +32,7 @@ export type ConfirmModel = {
 
 export enum ActionType {
 	MoveChess = "MoveChess",
+    KillChess = 'KillChess',
     ChangeTurn = 'ChangeTurn',
     Item = 'Item',
 }

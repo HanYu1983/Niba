@@ -271,13 +271,14 @@ export class View extends Component {
                 this.table.colorRanges.releaseAllNodes();
     
                 const from = chessModel.pos;
+                let result:ActionModel[];
                 try{
-                    this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
+                    result = this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
+                    this.onPlayerMoveState(result);
                 }catch(e){
                     this.onPlayerStartState();
                     return;
                 }
-                this.onPlayerMoveState(chessModel, from, grid);
             },
             no:(e:SystemEventType.MOUSE_UP)=>{
                 this.confirmMenu.close();
@@ -287,17 +288,13 @@ export class View extends Component {
         });
     }
 
-    onPlayerMoveState(chessModel:ChessModel, from:Vec2, to:Vec2){
+    onPlayerMoveState(result:ActionModel[]){
         console.log('播放移動動畫');
         this.removeAllListener();
-
-        this.effects.hideCursor();
-        this.effects.createChessMoveEffect(chessModel, from, to);
-        
-        tween(this.node).delay(1.5).call(()=>{
+        this.playAnimations(result, ()=>{
             this.updateAll();
             this.onPlayerEndState();
-        }).start();
+        });
     }
 
     onPlayerEndState(){
@@ -320,6 +317,12 @@ export class View extends Component {
                         const chessModel = this.model.getChessById(action.id);
                         this.effects.createChessMoveEffect(chessModel, action.from, action.to);
                     }).delay(1.5).call(()=>{this.updateAll(action.table);}));
+                    break;
+                case ActionType.KillChess:
+                    sequence.push(tween().call(()=>{
+                        console.log('播放殺棋動畫', action);
+                        
+                    }).delay(1));
                     break;
                 case ActionType.ChangeTurn:
                     sequence.push(tween().call(()=>{
