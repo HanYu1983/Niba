@@ -13,7 +13,7 @@ export class Model extends DebugModel {
 
     table = [
         { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
-        { id: this.seqId++, type: 1, pos: new Vec2(10, 10), player: 1 },
+        { id: this.seqId++, type: 1, pos: new Vec2(7, 6), player: 1 },
         { id: this.seqId++, type: 1, pos: new Vec2(8, 8), player: 1 }
     ]
 
@@ -113,7 +113,7 @@ export class Model extends DebugModel {
         return this.activePlayer;
     }
 
-    playerMoveChess(id: number, x: number, y: number): ChessModel[] {
+    playerMoveChess(id: number, x: number, y: number): ActionModel[] {
         const chess = this.getChessById(id)
         const moveRange = this.getChessMoveRangeById(id)
         const findPos = moveRange.filter(pos => {
@@ -122,13 +122,42 @@ export class Model extends DebugModel {
         if (findPos.length == 0) {
             throw new Error(`chess(${id}) can not move to [${x}, ${y}]`)
         }
+        const occupy = this.table.filter(c => {
+            return c.pos.equals(new Vec2(x, y))
+        })
+        if (occupy.length) {
+            if (occupy[0].player == chess.player) {
+                throw new Error(`you can not eat your self. chess(${id}) move to (${x}, ${y})`)
+            }
+        }
+        const actions: ActionModel[] = []
         const newChess = {
             ...chess,
             pos: new Vec2(x, y),
             id: this.seqId++,
         }
         this.table.push(newChess)
-        return this.table
+        actions.push({
+            action: ActionType.MoveChess,
+            id: newChess.id,
+            from: chess.pos,
+            to: newChess.pos,
+            player: newChess.player,
+            table: [...this.table]
+        })
+        if (occupy.length) {
+            this.table = this.table.filter(c => {
+                return c.id != occupy[0].id
+            })
+            actions.push({
+                action: ActionType.KillChess,
+                id: occupy[0].id,
+                to: occupy[0].pos,
+                player: occupy[0].player,
+                table: [...this.table]
+            })
+        }
+        return actions
     }
 
     playerEndTurn(): ActionModel[] {
@@ -145,13 +174,19 @@ export class Model extends DebugModel {
             }
             this.table.push(newChess)
             actions.push({
-                ...newChess,
                 action: ActionType.MoveChess,
-                from: activeChess.pos, to: newChess.pos,
+                id: activeChess.id,
+                from: activeChess.pos,
+                to: newChess.pos,
+                player: newChess.player,
                 table: [...this.table]
             })
         }
-        actions.push({ action: ActionType.ChangeTurn, player: 0, table: [...this.table] })
+        actions.push({
+            action: ActionType.ChangeTurn,
+            player: 0,
+            table: [...this.table]
+        })
         return actions
     }
 
