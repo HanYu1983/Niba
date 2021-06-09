@@ -18,7 +18,7 @@ export class Model extends DebugModel {
     ]
 
     players: PlayerModel[] = [
-        { id: 0, name: 'vic', score: 5, money: 4, itemValids: [true, true, false, false] },
+        { id: 0, name: 'vic', score: 5, money: 4, itemValids: [true, true, true, true] },
         { id: 1, name: 'han', score: 5, money: 4, itemValids: [true, true, false, false] },
         { id: 2, name: 'john', score: 5, money: 4, itemValids: [true, true, false, false] },
         { id: 3, name: 'marry', score: 5, money: 4, itemValids: [true, true, false, false] }
@@ -114,6 +114,7 @@ export class Model extends DebugModel {
     }
 
     playerMoveChess(id: number, x: number, y: number): ActionModel[] {
+        const activePlayer = 0
         const chess = this.getChessById(id)
         const moveRange = this.getChessMoveRangeById(id)
         const findPos = moveRange.filter(pos => {
@@ -149,6 +150,8 @@ export class Model extends DebugModel {
             this.table = this.table.filter(c => {
                 return c.id != occupy[0].id
             })
+            this.players[activePlayer].score++
+            this.players[activePlayer].money++
             actions.push({
                 action: ActionType.KillChess,
                 id: occupy[0].id,
@@ -271,8 +274,36 @@ export class Model extends DebugModel {
     }
 
     usingItemAtGrid(itemId: number, grid: Vec2, dir: DirectType): ActionModel[] {
+        const activePlayer = 0
+        if (this.players[activePlayer].itemValids[itemId] == false) {
+            throw new Error(`you don't have item(${itemId})`)
+        }
+        this.players[activePlayer].itemValids[itemId] = false
+        const range = this.getItemAttackRangeById(itemId, grid, dir)
+        const findChess = this.table.filter(chess => {
+            return chess.player != activePlayer
+        })
+        const actions: ActionModel[] = findChess.map(chess => {
+            const inRange = range.filter(p => p.equals(chess.pos)).length > 0
+            if (inRange == false) {
+                return []
+            }
+            this.table = this.table.filter(target => {
+                return target.id != chess.id
+            })
+            this.players[activePlayer].score++
+            return [{
+                action: ActionType.KillChess,
+                id: chess.id,
+                to: chess.pos,
+                player: chess.player,
+                table: [...this.table]
+            }]
+        }).reduce((acc, c) => ([...acc, ...c]), [])
+
         return [
-            { action: ActionType.Item, id: 0, to: new Vec2(2, 5), table: [{ id: 0, type: 0, pos: new Vec2(5, 5), player: 1 }] }
+            { action: ActionType.Item, id: itemId, to: grid },
+            ...actions
         ]
     }
 }
