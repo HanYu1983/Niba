@@ -344,12 +344,38 @@ export class View extends Component {
                     }).delay(1.1));
                     break;
                 case ActionType.Item:
-                    sequence.push(tween().call(()=>{
-                        
-                        console.log('播放道具效果', action);
+                    console.log('播放道具效果', action);
 
-                    }).delay(1.5));
-
+                    if(action.hasOwnProperty('id')){
+                        switch(ItemName[action.id]){
+                            case '炸彈':
+                                sequence.push(tween().call(()=>{
+                                    if(action.to){
+                                        this.effects.createItemExplode(action.to);
+                                    }
+                                }).delay(1.2));
+                                break;
+                            case '鐳射':
+                                sequence.push(tween().call(()=>{
+                                    console.log('鐳射');
+                                    
+                                }).delay(1.2));
+                                break;
+                            case '轟爆炸彈':
+                                sequence.push(tween().call(()=>{
+                                    if(action.to){
+                                        this.effects.createItemExplode(action.to);
+                                    }
+                                }).delay(1.2));
+                                break;
+                            case '聚能光束':
+                                sequence.push(tween().call(()=>{
+                                    console.log('聚能光束');
+                                }).delay(1.2));
+                                break;
+                        }
+                    }
+                    break;
             }
         });
         Tool.playSequence(this.node, sequence, cb );

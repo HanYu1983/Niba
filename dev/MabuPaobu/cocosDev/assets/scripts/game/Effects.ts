@@ -21,8 +21,8 @@ export class Effects extends Component {
     @property(Chess)
     chess:Chess;
 
-    @property(KillEffect)
-    explode:KillEffect;
+    @property(Node)
+    itemExplode:Node;
 
     @property(Pool)
     killEffects:Pool;
@@ -31,7 +31,7 @@ export class Effects extends Component {
     turnChange:Viewer;
 
     start(){
-        this.explode.close();
+        this.itemExplode.setScale(Vec3.ZERO);
     }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
@@ -75,6 +75,17 @@ export class Effects extends Component {
         to(.3, {scale:new Vec3(1,0,1)}, {easing:'quadOut'}).
         call(()=>{this.turnChange.close();}).
         start();
+    }
+
+    createItemExplode(grid:Vec2){
+        const pos = View.convertToPos(grid);
+
+        this.itemExplode.setScale(Vec3.ONE);
+        this.itemExplode.setPosition(pos);
+        this.itemExplode.getComponent(Animation)?.play();
+        tween(this.node).delay(1.2).call(()=>{
+            this.itemExplode.setScale(Vec3.ZERO);
+        }).start();
     }
 
     showCursor(){
