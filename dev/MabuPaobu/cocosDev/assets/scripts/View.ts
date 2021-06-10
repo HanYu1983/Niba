@@ -320,11 +320,11 @@ export class View extends Component {
                 case ActionType.MoveChess:
                     sequence.push(tween().call(()=>{
                         
-                        console.log('播放ai移動', action);
+                        console.log('播放移動', action);
 
                         const chessModel = this.model.getChessById(action.id);
                         this.effects.createChessMoveEffect(chessModel, action.from, action.to);
-                    }).delay(1).call(()=>{this.updateAll(action.table);}));
+                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
                     break;
                 case ActionType.KillChess:
                     sequence.push(tween().call(()=>{
@@ -355,22 +355,22 @@ export class View extends Component {
                                 }).delay(1.2));
                                 break;
                             case ItemName.鐳射:
-                                // sequence.push(tween().call(()=>{
-                                //     console.log('鐳射');
+                                sequence.push(tween().call(()=>{
+                                    console.log('鐳射');
                                     
-                                // }).delay(1.2));
+                                }).delay(1.2));
                                 break;
                             case ItemName.轟爆炸彈:
-                                // sequence.push(tween().call(()=>{
-                                //     if(action.to){
-                                //         this.effects.createItemExplode(action.to);
-                                //     }
-                                // }).delay(1.2));
+                                sequence.push(tween().call(()=>{
+                                    if(action.to){
+                                        this.effects.createItemExplode(action.to);
+                                    }
+                                }).delay(1.2));
                                 break;
                             case ItemName.聚能光束:
-                                // sequence.push(tween().call(()=>{
-                                //     console.log('聚能光束');
-                                // }).delay(1.2));
+                                sequence.push(tween().call(()=>{
+                                    console.log('聚能光束');
+                                }).delay(1.2));
                                 break;
                         }
                     }
