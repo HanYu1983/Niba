@@ -341,7 +341,7 @@ export class View extends Component {
                         
                         console.log('播放道具效果', action);
 
-                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
+                    }).delay(1.5));
 
             }
         });
