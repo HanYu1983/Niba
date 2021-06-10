@@ -50,3 +50,10 @@ export enum ItemName {
     '轟爆炸彈',
     '聚能光束'
 }
+
+export const Items = [
+    ItemName.炸彈,
+    ItemName.鐳射,
+    ItemName.轟爆炸彈,
+    ItemName.聚能光束
+]

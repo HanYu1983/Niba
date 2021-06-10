@@ -9,7 +9,7 @@ import { PlayerInfo } from './game/PlayerInfo';
 import { Table } from './game/Table';
 import { Pool } from './lib/Pool';
 import { Tool } from './lib/Tool';
-import { ActionModel, ActionType, ChessModel, DirectType, ItemName, PlayerModel } from './Type';
+import { ActionModel, ActionType, ChessModel, DirectType, ItemName, Items, PlayerModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('View')
@@ -346,31 +346,31 @@ export class View extends Component {
                     console.log('播放道具效果', action);
 
                     if(action.hasOwnProperty('id')){
-                        switch(ItemName[action.id]){
-                            case '炸彈':
+                        switch(Items[action.id]){
+                            case ItemName.炸彈:
                                 sequence.push(tween().call(()=>{
                                     if(action.to){
                                         this.effects.createItemExplode(action.to);
                                     }
                                 }).delay(1.2));
                                 break;
-                            case '鐳射':
-                                sequence.push(tween().call(()=>{
-                                    console.log('鐳射');
+                            case ItemName.鐳射:
+                                // sequence.push(tween().call(()=>{
+                                //     console.log('鐳射');
                                     
-                                }).delay(1.2));
+                                // }).delay(1.2));
                                 break;
-                            case '轟爆炸彈':
-                                sequence.push(tween().call(()=>{
-                                    if(action.to){
-                                        this.effects.createItemExplode(action.to);
-                                    }
-                                }).delay(1.2));
+                            case ItemName.轟爆炸彈:
+                                // sequence.push(tween().call(()=>{
+                                //     if(action.to){
+                                //         this.effects.createItemExplode(action.to);
+                                //     }
+                                // }).delay(1.2));
                                 break;
-                            case '聚能光束':
-                                sequence.push(tween().call(()=>{
-                                    console.log('聚能光束');
-                                }).delay(1.2));
+                            case ItemName.聚能光束:
+                                // sequence.push(tween().call(()=>{
+                                //     console.log('聚能光束');
+                                // }).delay(1.2));
                                 break;
                         }
                     }
