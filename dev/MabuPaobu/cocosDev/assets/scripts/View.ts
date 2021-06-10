@@ -178,8 +178,8 @@ export class View extends Component {
                 this.playerInfos[0].clearAllItemCover();
                 this.table.colorRanges.releaseAllNodes();
 
-                this.updatePlayerInfo();
                 const result = this.model.usingItemAtGrid(itemId, grid, director);
+                this.updatePlayerInfo();
                 this.removeAllListener();
                 this.playAnimations(result, ()=>{
                     this.onPlayerStartState();
@@ -289,8 +289,7 @@ export class View extends Component {
             },
             no:(e:SystemEventType.MOUSE_UP)=>{
                 this.confirmMenu.close();
-                this.onPlayerStartState();
-                this.table.colorRanges.releaseAllNodes();
+                this.onPlayerClickSelfChessState(chessModel);
             }
         });
     }
