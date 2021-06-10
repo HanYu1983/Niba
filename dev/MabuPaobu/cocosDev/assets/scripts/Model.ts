@@ -160,6 +160,8 @@ export class Model extends DebugModel {
                 id: occupy[0].id,
                 to: occupy[0].pos,
                 player: occupy[0].player,
+                score:1,
+                money:1,
                 table: [...this.table]
             })
         }
@@ -312,6 +314,8 @@ export class Model extends DebugModel {
                 id: chess.id,
                 to: chess.pos,
                 player: chess.player,
+                score:1,
+                money:0,
                 table: [...this.table]
             }]
         }).reduce((acc, c) => ([...acc, ...c]), [])

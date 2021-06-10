@@ -1,9 +1,12 @@
 
 import { _decorator, Component, Node, tween, Vec2, Vec3, Animation } from 'cc';
+import { Pool } from '../lib/Pool';
 import { Viewer } from '../lib/Viewer';
+import { ActionModel } from '../Type';
 import { View } from '../View';
 import { Chess } from './Chess';
 import { ChessMoveEffect } from './ChessMoveEffect';
+import { KillEffect } from './KillEffect';
 const { ccclass, property } = _decorator;
 
 @ccclass('Effects')
@@ -18,14 +21,17 @@ export class Effects extends Component {
     @property(Chess)
     chess:Chess;
 
-    @property(Node)
-    explode:Node;
+    @property(KillEffect)
+    explode:KillEffect;
+
+    @property(Pool)
+    killEffects:Pool;
 
     @property(Viewer)
     turnChange:Viewer;
 
     start(){
-        this.explode.setScale( Vec3.ZERO);
+        this.explode.close();
     }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
@@ -45,15 +51,19 @@ export class Effects extends Component {
         start();
     }
 
-    createExplode(grid:Vec2){
+    createExplode(grid:Vec2, result:ActionModel){
         const pos = View.convertToPos(grid);
-        this.explode.setScale( Vec3.ONE );
-        this.explode.setPosition(pos);
-        this.explode.getComponent(Animation)?.play();
 
-        tween(this.node).delay(.5).call(()=>{
-            this.explode.setScale(Vec3.ZERO);
-        });
+        const explode = this.killEffects.getNode();
+        if(explode){
+            explode.getComponent(KillEffect)?.open(result);
+            explode.setPosition(pos);
+    
+            tween(this.node).delay(1).call(()=>{
+                explode.getComponent(KillEffect)?.close();
+                this.killEffects.releaseNode(explode);
+            }).start();
+        }
     }
 
     createTurnChangeEffect(){

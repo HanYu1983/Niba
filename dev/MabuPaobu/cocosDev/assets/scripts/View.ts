@@ -325,7 +325,7 @@ export class View extends Component {
                         console.log('播放殺棋動畫', action);
                         
                         if(action.to){
-                            this.effects.createExplode(action.to);
+                            this.effects.createExplode(action.to, action);
                         }
                     }).delay(.5).call(()=>{this.updateAll(action.table);}));
                     break;
