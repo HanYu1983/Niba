@@ -126,10 +126,17 @@ export class View extends Component {
         
         this.removeAllListener();
 
+        this.getPlayerInfo().selectItem(itemId);
         this.hint.string = '點擊地圖使用道具:R-旋轉道具使用方向';
 
         let director = DirectType.Horizontal;
         let lastGrid = new Vec2();
+
+        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
+            const item:Node | null = e.currentTarget as Node;
+            const itemId:number = +item?.name[item?.name.length-1];
+            this.onPlayerClickItemState(itemId);
+        });
 
         const showAttackRange = ()=>{
             const attackRange:Vec2[] = this.model.getItemAttackRangeById(itemId, lastGrid, director);

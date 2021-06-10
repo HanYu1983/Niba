@@ -10,11 +10,15 @@ export class KillEffect extends Viewer {
     @property(Label)
     content:Label;
 
+    @property(Label)
+    contentShadow:Label;
+
     doOpen(data?:any){
         let content = '';
         if (data.score > 0){ content += 'score+' + data.score};
         if (data.money > 0){ content += 'money+' + data.money};
         this.content.string = content;
+        this.contentShadow.string = content;
         this.node.getComponent(Animation)?.play()
     }
 }

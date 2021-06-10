@@ -32,6 +32,7 @@ export class PlayerInfo extends Component {
     clearAllItemCover(){
         for(let i = 0; i < this.items.length; ++i){
             this.items[i].getComponent(Item)?.showOver(false);
+            this.items[i].getComponent(Item)?.showSelect(false);
         }
     }
 
@@ -49,6 +50,12 @@ export class PlayerInfo extends Component {
                     item?.getComponent(Item)?.showOver(false);
                 });
             }
+        }
+    }
+
+    selectItem(id:number){
+        for(let i = 0; i < this.items.length; ++i){
+            this.items[i].getComponent(Item)?.showSelect(i == id);
         }
     }
 

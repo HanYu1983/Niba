@@ -11,8 +11,12 @@ export class Item extends Component {
     @property(Node)
     cover:Node;
 
+    @property(Node)
+    select:Node;
+
     start(){
         this.showOver(false);
+        this.showSelect(false);
     }
 
     setValid(active:boolean){
@@ -25,6 +29,10 @@ export class Item extends Component {
 
     showOver(active:boolean){
         this.cover.setScale(active ? Vec3.ONE : Vec3.ZERO);
+    }
+
+    showSelect(select:boolean){
+        this.select.setScale(select ? Vec3.ONE : Vec3.ZERO);
     }
 }
 
