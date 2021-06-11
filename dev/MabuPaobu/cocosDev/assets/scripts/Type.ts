@@ -12,6 +12,7 @@ export type ActionModel = {
     id?:number, 
     from?:Vec2, 
     to?:Vec2, 
+    dir?:DirectType,
     player?:number, 
     score?:number,
     money?:number,

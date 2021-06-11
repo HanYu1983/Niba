@@ -321,7 +321,7 @@ export class Model extends DebugModel {
         }).reduce((acc, c) => ([...acc, ...c]), [])
 
         return [
-            { action: ActionType.Item, id: itemId, to: grid },
+            { action: ActionType.Item, id: itemId, to: grid, dir:dir },
             ...actions
         ]
     }

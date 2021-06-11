@@ -2,7 +2,7 @@
 import { _decorator, Component, Node, tween, Vec2, Vec3, Animation } from 'cc';
 import { Pool } from '../lib/Pool';
 import { Viewer } from '../lib/Viewer';
-import { ActionModel } from '../Type';
+import { ActionModel, DirectType } from '../Type';
 import { View } from '../View';
 import { Chess } from './Chess';
 import { ChessMoveEffect } from './ChessMoveEffect';
@@ -24,6 +24,9 @@ export class Effects extends Component {
     @property(Node)
     itemExplode:Node;
 
+    @property(Node)
+    itemLaser:Node;
+
     @property(Pool)
     killEffects:Pool;
 
@@ -32,6 +35,7 @@ export class Effects extends Component {
 
     start(){
         this.itemExplode.setScale(Vec3.ZERO);
+        this.itemLaser.setScale(Vec3.ZERO);
     }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
@@ -85,6 +89,26 @@ export class Effects extends Component {
         this.itemExplode.getComponent(Animation)?.play();
         tween(this.node).delay(1.2).call(()=>{
             this.itemExplode.setScale(Vec3.ZERO);
+        }).start();
+    }
+
+    createLaser(grid:Vec2, dir:DirectType){
+        let pos = View.convertToPos(grid);
+        let rot = new Vec3();
+
+        if(dir == DirectType.Horizontal){
+            pos.x = 0;
+        }else{
+            pos.y = 0;
+            rot.z = 90;
+        }
+
+        this.itemLaser.setScale(Vec3.ONE);
+        this.itemLaser.setPosition(pos);
+        this.itemLaser.setRotationFromEuler(rot);
+        this.itemLaser.getComponent(Animation)?.play();
+        tween(this.node).delay(.8).call(()=>{
+            this.itemLaser.setScale(Vec3.ZERO);
         }).start();
     }
 

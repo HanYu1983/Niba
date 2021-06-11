@@ -357,8 +357,11 @@ export class View extends Component {
                             case ItemName.鐳射:
                                 sequence.push(tween().call(()=>{
                                     console.log('鐳射');
-                                    
-                                }).delay(1.2));
+
+                                    if(action.to && action.dir){
+                                        this.effects.createLaser(action.to, action.dir);
+                                    }
+                                }).delay(.8));
                                 break;
                             case ItemName.轟爆炸彈:
                                 sequence.push(tween().call(()=>{
