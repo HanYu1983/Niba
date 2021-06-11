@@ -16,7 +16,7 @@ export type ActionModel = {
     player?:number, 
     score?:number,
     money?:number,
-    table?:ChessModel[]
+    table?:ChessModel[],
 }
 
 export type PlayerModel = {
@@ -38,12 +38,19 @@ export enum ActionType {
     KillChess = 'KillChess',
     ChangeTurn = 'ChangeTurn',
     Item = 'Item',
+    GameOver = 'GameOver'
 }
 
 export enum DirectType {
     Horizontal = 'Horizontal',
     Vertical = 'Vertical'
 }
+
+// export enum GameOverType {
+//     Victory = 'Victory',
+//     Lose = 'Lose',
+//     Gaming = 'Gaming'
+// }
 
 export enum ItemName {
     '炸彈',

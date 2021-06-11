@@ -81,6 +81,9 @@ export class View extends Component {
     }
 
     onPlayerStartState(){
+
+        if(this.checkIsGameOver()) return;
+
         console.log('玩家回合開始');
 
         this.removeAllListener();
@@ -304,11 +307,39 @@ export class View extends Component {
     }
 
     onPlayerEndState(){
+        if(this.checkIsGameOver()) return;
+
         console.log('玩家回合結束');
         this.removeAllListener();
 
         const result:ActionModel[] = this.model.playerEndTurn();
         this.playAnimations(result, ()=>{this.onPlayerStartState();});
+    }
+
+    onGameOverState(){
+        this.removeAllListener();
+
+        this.confirmMenu.open({
+            content:'是否再來一局?',
+            yes:()=>{
+                this.confirmMenu.close();
+
+                this.model.restartGame();
+                this.updateAll();
+                this.onPlayerStartState();
+            },
+            no:()=>{
+                this.confirmMenu.close();
+            }
+        });
+    }
+
+    private checkIsGameOver(){
+        const gameover = this.model.isGameOver();
+        if(gameover){
+            this.onGameOverState();
+        }
+        return gameover;
     }
 
     private playAnimations(animations:ActionModel[], cb:()=>void){
@@ -340,7 +371,7 @@ export class View extends Component {
                         console.log('播放切換玩家動畫', action);
                         
                         this.effects.createTurnChangeEffect();
-                    }).delay(1.1));
+                    }).delay(1.2));
                     break;
                 case ActionType.Item:
                     console.log('播放道具效果', action);
@@ -377,6 +408,17 @@ export class View extends Component {
                                 break;
                         }
                     }
+                    break;
+                case ActionType.GameOver:
+                    sequence.push(tween().call(()=>{
+                        if(action.hasOwnProperty('id')){
+                            if(action.id){
+                                this.effects.createVictoryEffect();
+                            }else{
+                                this.effects.createLoseEffect();
+                            }
+                        }
+                    }).delay(2.4));
                     break;
             }
         });

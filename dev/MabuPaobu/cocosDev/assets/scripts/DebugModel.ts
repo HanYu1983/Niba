@@ -1,6 +1,6 @@
 
 import { _decorator, Component, Node, Vec2 } from 'cc';
-import { ActionModel, ActionType, ChessModel, DirectType, PlayerModel } from './Type';
+import { ActionModel, ActionType, ChessModel, DirectType, GameOverType, PlayerModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('DebugModel')
@@ -124,7 +124,8 @@ export class DebugModel extends Component {
             {action:ActionType.MoveChess, id:0, from:new Vec2(4, 0), to:new Vec2(2, 2), player:1, table:[{id:0, type:0, pos:new Vec2(5, 5), player:0}]},
             // {action:1, player:2},
             {action:ActionType.MoveChess, id:2, from:new Vec2(8, 0), to:new Vec2(3, 1), player:2, table:[{id:1, type:1, pos:new Vec2(5, 6), player:1}]},
-            {action:ActionType.ChangeTurn, player:0}
+            {action:ActionType.ChangeTurn, player:0},
+            {action:ActionType.GameOver, id:0}
         ]
     }
 
@@ -169,6 +170,15 @@ export class DebugModel extends Component {
             {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]},
             {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]}
         ]
+    }
+
+    isGameOver():boolean{
+        console.log('[isGameOver]游戲是否結束');
+        return false;
+    }
+
+    restartGame(){
+        console.log('[restartGame]游戲重新開始');
     }
 }
 

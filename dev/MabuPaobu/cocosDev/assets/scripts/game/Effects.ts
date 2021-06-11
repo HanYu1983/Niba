@@ -4,6 +4,7 @@ import { Pool } from '../lib/Pool';
 import { Viewer } from '../lib/Viewer';
 import { ActionModel, DirectType } from '../Type';
 import { View } from '../View';
+import { BigMsgEffect } from './BigMsgEffect';
 import { Chess } from './Chess';
 import { ChessMoveEffect } from './ChessMoveEffect';
 import { KillEffect } from './KillEffect';
@@ -36,8 +37,8 @@ export class Effects extends Component {
     @property(Pool)
     killEffects:Pool;
 
-    @property(Viewer)
-    turnChange:Viewer;
+    @property(BigMsgEffect)
+    turnChange:BigMsgEffect;
 
     start(){
         this.itemExplode.setScale(Vec3.ZERO);
@@ -79,14 +80,15 @@ export class Effects extends Component {
     }
 
     createTurnChangeEffect(){
-        this.turnChange.open();
-        this.turnChange.node.setScale(new Vec3(1, 0, 1));
+        this.createBigMsg('你的回合');
+    }
 
-        tween(this.turnChange.node).to(.3, {scale:Vec3.ONE}, {easing:'quadOut'}).
-        delay(.5).
-        to(.3, {scale:new Vec3(1,0,1)}, {easing:'quadOut'}).
-        call(()=>{this.turnChange.close();}).
-        start();
+    createVictoryEffect(){
+        this.createBigMsg('你獲勝了', 1);
+    }
+
+    createLoseEffect(){
+        this.createBigMsg('你被打敗了', 1);
     }
 
     createItemExplode(grid:Vec2){
@@ -103,6 +105,17 @@ export class Effects extends Component {
 
     createBigLaser(grid:Vec2, dir:DirectType){
         this.createLaserType(this.itemBigLaser, grid, dir, 2);
+    }
+
+    private createBigMsg(content:string, timescale = 1){
+        this.turnChange.open({content:content});
+        this.turnChange.node.setScale(new Vec3(1, 0, 1));
+
+        tween(this.turnChange.node).to(.3 * timescale, {scale:Vec3.ONE}, {easing:'quadOut'}).
+        delay(.5 * timescale).
+        to(.3 * timescale, {scale:new Vec3(1,0,1)}, {easing:'quadOut'}).
+        call(()=>{this.turnChange.close();}).
+        start();
     }
 
     private createExplodeType(explode:Node, grid:Vec2, time:number){
