@@ -27,6 +27,9 @@ export class Effects extends Component {
     @property(Node)
     itemLaser:Node;
 
+    @property(Node)
+    itemBigLaser:Node;
+
     @property(Pool)
     killEffects:Pool;
 
@@ -36,6 +39,7 @@ export class Effects extends Component {
     start(){
         this.itemExplode.setScale(Vec3.ZERO);
         this.itemLaser.setScale(Vec3.ZERO);
+        this.itemBigLaser.setScale(Vec3.ZERO);
     }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
@@ -93,6 +97,32 @@ export class Effects extends Component {
     }
 
     createLaser(grid:Vec2, dir:DirectType){
+        // let pos = View.convertToPos(grid);
+        // let rot = new Vec3();
+
+        // if(dir == DirectType.Horizontal){
+        //     pos.x = 0;
+        // }else{
+        //     pos.y = 0;
+        //     rot.z = 90;
+        // }
+
+        // this.itemLaser.setScale(Vec3.ONE);
+        // this.itemLaser.setPosition(pos);
+        // this.itemLaser.setRotationFromEuler(rot);
+        // this.itemLaser.getComponent(Animation)?.play();
+        // tween(this.node).delay(.8).call(()=>{
+        //     this.itemLaser.setScale(Vec3.ZERO);
+        // }).start();
+
+        this.createLaserType(this.itemLaser, grid, dir, .8);
+    }
+
+    createBigLaser(grid:Vec2, dir:DirectType){
+        this.createLaserType(this.itemBigLaser, grid, dir, 2);
+    }
+
+    private createLaserType(laser:Node, grid:Vec2, dir:DirectType, time:number){
         let pos = View.convertToPos(grid);
         let rot = new Vec3();
 
@@ -103,12 +133,12 @@ export class Effects extends Component {
             rot.z = 90;
         }
 
-        this.itemLaser.setScale(Vec3.ONE);
-        this.itemLaser.setPosition(pos);
-        this.itemLaser.setRotationFromEuler(rot);
-        this.itemLaser.getComponent(Animation)?.play();
-        tween(this.node).delay(.8).call(()=>{
-            this.itemLaser.setScale(Vec3.ZERO);
+        laser.setScale(Vec3.ONE);
+        laser.setPosition(pos);
+        laser.setRotationFromEuler(rot);
+        laser.getComponent(Animation)?.play();
+        tween(this.node).delay(time).call(()=>{
+            laser.setScale(Vec3.ZERO);
         }).start();
     }
 

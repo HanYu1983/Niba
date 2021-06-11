@@ -373,7 +373,11 @@ export class View extends Component {
                             case ItemName.聚能光束:
                                 sequence.push(tween().call(()=>{
                                     console.log('聚能光束');
-                                }).delay(1.2));
+
+                                    if(action.to && action.dir){
+                                        this.effects.createBigLaser(action.to, action.dir);
+                                    }
+                                }).delay(2));
                                 break;
                         }
                     }
