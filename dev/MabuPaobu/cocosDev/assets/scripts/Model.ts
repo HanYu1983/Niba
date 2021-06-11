@@ -11,20 +11,22 @@ export class Model extends DebugModel {
 
     activePlayer = 0
 
-    table = [
-        { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
-        { id: this.seqId++, type: 1, pos: new Vec2(7, 6), player: 1 },
-        { id: this.seqId++, type: 1, pos: new Vec2(8, 8), player: 1 }
-    ]
+    table: ChessModel[] = []
 
-    players: PlayerModel[] = [
-        { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
-        { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
-        { id: 2, name: 'john', score: 5, money: 10, itemValids: [true, true, false, false] },
-        { id: 3, name: 'marry', score: 5, money: 10, itemValids: [true, true, false, false] }
-    ]
+    players: PlayerModel[] = []
 
     startGame() {
+        this.players = [
+            { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
+            { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
+            { id: 2, name: 'john', score: 5, money: 10, itemValids: [true, true, false, false] },
+            { id: 3, name: 'marry', score: 5, money: 10, itemValids: [true, true, false, false] }
+        ]
+        this.table = [
+            { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
+            { id: this.seqId++, type: 1, pos: new Vec2(7, 6), player: 1 },
+            { id: this.seqId++, type: 1, pos: new Vec2(8, 8), player: 1 }
+        ]
         for (const plyr of this.players) {
             this.updateItemValids(plyr.id)
         }
@@ -102,13 +104,7 @@ export class Model extends DebugModel {
     }
 
     isPlayer(id: number): boolean {
-        try {
-            const chess = this.getChessById(id)
-            return chess.player == 0
-        } catch (e) {
-            console.log(e)
-            return false
-        }
+        return id == 0
     }
 
     getCurrentPlayerId(): number {
@@ -160,8 +156,8 @@ export class Model extends DebugModel {
                 id: occupy[0].id,
                 to: occupy[0].pos,
                 player: occupy[0].player,
-                score:1,
-                money:1,
+                score: 1,
+                money: 1,
                 table: [...this.table]
             })
         }
@@ -314,16 +310,31 @@ export class Model extends DebugModel {
                 id: chess.id,
                 to: chess.pos,
                 player: chess.player,
-                score:1,
-                money:0,
+                score: 1,
+                money: 0,
                 table: [...this.table]
             }]
         }).reduce((acc, c) => ([...acc, ...c]), [])
 
         return [
-            { action: ActionType.Item, id: itemId, to: grid, dir:dir },
+            { action: ActionType.Item, id: itemId, to: grid, dir: dir },
             ...actions
         ]
+    }
+
+    isGameOver(): boolean {
+        for (const plyr of this.players) {
+            if (plyr.id >= 2) {
+                continue
+            }
+            const myChesses = this.table.filter(chess => {
+                return chess.player == plyr.id
+            })
+            if (myChesses.length == 0) {
+                return true
+            }
+        }
+        return false;
     }
 }
 
