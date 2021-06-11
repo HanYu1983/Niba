@@ -356,8 +356,6 @@ export class View extends Component {
                                 break;
                             case ItemName.鐳射:
                                 sequence.push(tween().call(()=>{
-                                    console.log('鐳射');
-
                                     if(action.to && action.dir){
                                         this.effects.createLaser(action.to, action.dir);
                                     }
@@ -366,14 +364,12 @@ export class View extends Component {
                             case ItemName.轟爆炸彈:
                                 sequence.push(tween().call(()=>{
                                     if(action.to){
-                                        this.effects.createItemExplode(action.to);
+                                        this.effects.createBigExplode(action.to);
                                     }
-                                }).delay(1.2));
+                                }).delay(1.8));
                                 break;
                             case ItemName.聚能光束:
                                 sequence.push(tween().call(()=>{
-                                    console.log('聚能光束');
-
                                     if(action.to && action.dir){
                                         this.effects.createBigLaser(action.to, action.dir);
                                     }

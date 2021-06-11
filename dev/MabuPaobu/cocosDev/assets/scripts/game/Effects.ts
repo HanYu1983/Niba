@@ -25,6 +25,9 @@ export class Effects extends Component {
     itemExplode:Node;
 
     @property(Node)
+    itemBigExplode:Node;
+
+    @property(Node)
     itemLaser:Node;
 
     @property(Node)
@@ -40,6 +43,7 @@ export class Effects extends Component {
         this.itemExplode.setScale(Vec3.ZERO);
         this.itemLaser.setScale(Vec3.ZERO);
         this.itemBigLaser.setScale(Vec3.ZERO);
+        this.itemBigExplode.setScale(Vec3.ZERO);
     }
     
     createChessMoveEffect(chessModel:any, fromGrid:Vec2, toGrid:Vec2){
@@ -86,40 +90,30 @@ export class Effects extends Component {
     }
 
     createItemExplode(grid:Vec2){
-        const pos = View.convertToPos(grid);
+        this.createExplodeType(this.itemExplode, grid, 1.2);
+    }
 
-        this.itemExplode.setScale(Vec3.ONE);
-        this.itemExplode.setPosition(pos);
-        this.itemExplode.getComponent(Animation)?.play();
-        tween(this.node).delay(1.2).call(()=>{
-            this.itemExplode.setScale(Vec3.ZERO);
-        }).start();
+    createBigExplode(grid:Vec2){
+        this.createExplodeType(this.itemBigExplode, grid, 1.8);
     }
 
     createLaser(grid:Vec2, dir:DirectType){
-        // let pos = View.convertToPos(grid);
-        // let rot = new Vec3();
-
-        // if(dir == DirectType.Horizontal){
-        //     pos.x = 0;
-        // }else{
-        //     pos.y = 0;
-        //     rot.z = 90;
-        // }
-
-        // this.itemLaser.setScale(Vec3.ONE);
-        // this.itemLaser.setPosition(pos);
-        // this.itemLaser.setRotationFromEuler(rot);
-        // this.itemLaser.getComponent(Animation)?.play();
-        // tween(this.node).delay(.8).call(()=>{
-        //     this.itemLaser.setScale(Vec3.ZERO);
-        // }).start();
-
         this.createLaserType(this.itemLaser, grid, dir, .8);
     }
 
     createBigLaser(grid:Vec2, dir:DirectType){
         this.createLaserType(this.itemBigLaser, grid, dir, 2);
+    }
+
+    private createExplodeType(explode:Node, grid:Vec2, time:number){
+        const pos = View.convertToPos(grid);
+
+        explode.setScale(Vec3.ONE);
+        explode.setPosition(pos);
+        explode.getComponent(Animation)?.play();
+        tween(this.node).delay(time).call(()=>{
+            explode.setScale(Vec3.ZERO);
+        }).start();
     }
 
     private createLaserType(laser:Node, grid:Vec2, dir:DirectType, time:number){
