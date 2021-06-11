@@ -176,10 +176,6 @@ export class DebugModel extends Component {
         console.log('[isGameOver]游戲是否結束');
         return false;
     }
-
-    restartGame(){
-        console.log('[restartGame]游戲重新開始');
-    }
 }
 
 /**

@@ -37,6 +37,10 @@ export class View extends Component {
     effects:Effects;
 
     start(){
+        this.restartGame();
+    }
+
+    private restartGame(){
         this.model.startGame();
         this.updateAll();
         this.onPlayerStartState();
@@ -324,9 +328,7 @@ export class View extends Component {
             yes:()=>{
                 this.confirmMenu.close();
 
-                this.model.restartGame();
-                this.updateAll();
-                this.onPlayerStartState();
+                this.restartGame();
             },
             no:()=>{
                 this.confirmMenu.close();
