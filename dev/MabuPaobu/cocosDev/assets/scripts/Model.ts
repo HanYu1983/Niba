@@ -51,9 +51,18 @@ export class Model extends DebugModel {
         const myChesses = this.table.filter(c => {
             return c.player == chess.player
         })
-        return [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]].map(([ox, oy]) => {
-            return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
-        }).filter(pos => {
+        let posList: Vec2[] = []
+        if (chess.player == 0) {
+            posList = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]].map(([ox, oy]) => {
+                return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
+            })
+        } else {
+            for (let i = 0; i < 20; ++i) {
+                posList.push(new Vec2(chess.pos.x, i))
+                posList.push(new Vec2(i, chess.pos.y))
+            }
+        }
+        return posList.filter(pos => {
             const occupy = myChesses.filter(c => {
                 return c.pos.equals(pos)
             })
