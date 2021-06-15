@@ -170,6 +170,11 @@ export class Model extends DebugModel {
                 table: [...this.table]
             })
         }
+        if (this.isGameOver()) {
+            actions.push({
+                action: ActionType.GameOver,
+            })
+        }
         return actions
     }
 
@@ -324,7 +329,11 @@ export class Model extends DebugModel {
                 table: [...this.table]
             }]
         }).reduce((acc, c) => ([...acc, ...c]), [])
-
+        if (this.isGameOver()) {
+            actions.push({
+                action: ActionType.GameOver,
+            })
+        }
         return [
             { action: ActionType.Item, id: itemId, to: grid, dir: dir },
             ...actions
@@ -334,7 +343,7 @@ export class Model extends DebugModel {
     isGameOver(): boolean {
         for (const plyr of this.players) {
             if (plyr.id >= 2) {
-                continue
+                break
             }
             const myChesses = this.table.filter(chess => {
                 return chess.player == plyr.id
