@@ -173,6 +173,7 @@ export class Model extends DebugModel {
         if (this.isGameOver()) {
             actions.push({
                 action: ActionType.GameOver,
+                id: 1   // win
             })
         }
         return actions
@@ -332,6 +333,7 @@ export class Model extends DebugModel {
         if (this.isGameOver()) {
             actions.push({
                 action: ActionType.GameOver,
+                id: 1   // win
             })
         }
         return [
