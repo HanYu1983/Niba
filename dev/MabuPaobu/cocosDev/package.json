@@ -1,9 +1,9 @@
 {
+  "creator": {
+    "version": "3.2.0"
+  },
   "name": "cocosDev",
   "type": "3d",
   "uuid": "f958085c-b4c4-4a3a-ad00-f24d4a86c378",
-  "version": "3.1.0",
-  "creator": {
-    "version": "3.1.0"
-  }
+  "version": "3.2.0"
 }
