@@ -1,9 +1,15 @@
 
-import { _decorator, Component, Node, Vec3 } from 'cc';
+import { _decorator, Component, Node, Vec3, CCInteger, TERRAIN_HEIGHT_BASE } from 'cc';
 const { ccclass, property } = _decorator;
 
 @ccclass('Viewer')
 export class Viewer extends Component {
+
+    @property(Node)
+    pages:Node[] = [];
+
+    @property(CCInteger)
+    defaultPage:number = 0;
 
     onLoad(){
         this.close();
@@ -12,6 +18,8 @@ export class Viewer extends Component {
     open(data?:any){
         if(!this.node.active) this.node.active = true;
     
+        this.openTargetPage(this.defaultPage);
+
         this.node.scale = Vec3.ONE;
         this.doOpen(data);
     }
@@ -27,6 +35,23 @@ export class Viewer extends Component {
 
     protected doClose(){
 
+    }
+
+    private closeAllPages(){
+        this.pages.forEach(page=>{
+            page.setScale(Vec3.ZERO);
+        });
+    }
+
+    protected openTargetPage(id:number = 0){
+        this.closeAllPages();
+        if(id < this.pages.length){
+            this.pages[id].setScale(Vec3.ONE);
+        }
+    }
+
+    protected getTargetPage(id:number = 0):Node{
+        return this.pages[id];
     }
 }
 

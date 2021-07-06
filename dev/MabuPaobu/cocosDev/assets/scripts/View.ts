@@ -5,426 +5,42 @@ import { Chess } from './game/Chess';
 import { ChessMenu } from './game/ChessMenu';
 import { ConfirmMenu } from './game/ConfirmMenu';
 import { Effects } from './game/Effects';
+import { GamePage } from './game/GamePage';
 import { PlayerInfo } from './game/PlayerInfo';
 import { Table } from './game/Table';
 import { Pool } from './lib/Pool';
 import { Tool } from './lib/Tool';
+import { Viewer } from './lib/Viewer';
 import { ActionModel, ActionType, ChessModel, DirectType, ItemName, Items, PlayerModel } from './Type';
 const { ccclass, property } = _decorator;
 
 @ccclass('View')
-export class View extends Component {
-
-    @property(DebugModel)
-    model:DebugModel
-
-    @property(Table)
-    table:Table;
-
-    @property(ChessMenu)
-    chessMenu:ChessMenu;
-
-    @property(ConfirmMenu)
-    confirmMenu:ConfirmMenu;
-
-    @property(PlayerInfo)
-    playerInfos:PlayerInfo[] = [];
-
-    @property(Label)
-    hint:Label;
-
-    @property(Effects)
-    effects:Effects;
+export class View extends Viewer {
 
     start(){
-        this.restartGame();
+        this.open();
     }
 
-    private restartGame(){
-        this.model.startGame();
-        this.updateAll();
-        this.onPlayerStartState();
+    onTitlePageClickPlayer(evt:any, count:number){
+        console.log(count);
+        this.openGamePage();
+        this.getGamePage().getComponent(GamePage)?.restartGame(count);
     }
 
-    private updateAll(chess?:ChessModel[]){
-        this.updatePlayerInfo();
-        this.updateChessed(chess);
+    private openTitlePage(){
+        this.openTargetPage(0);
     }
 
-    private updatePlayerInfo(){
-        for(let i = 0; i < this.playerInfos.length; ++i){
-            this.playerInfos[i].setInfo(this.model.getPlayerInfoById(i));
-        }
+    private openGamePage(){
+        this.openTargetPage(1);
     }
 
-    private updateChessed(chess?:ChessModel[]){
-        console.log('更新目前所有棋子');
-        
-        this.table.chesses.releaseAllNodes();
-
-        let usingChess:any[] = chess ? chess : this.model.getTable();
-        usingChess.forEach(elem=>{
-            this.table.chesses.create(elem);
-        });
+    private getTitlePage(){
+        return this.pages[0];
     }
 
-    private removeAllListener(){
-        console.log('--移除所有監聽');
-
-        this.hint.string = '';
-        systemEvent.off(SystemEventType.KEY_UP);
-        this.table.node.off(SystemEventType.MOUSE_MOVE);
-        this.table.node.off(SystemEventType.MOUSE_UP);
-        this.confirmMenu.offAllListener();
-        this.chessMenu.offAllListener();
-        this.getPlayerInfo().offAllListener();
-    }
-
-    private getPlayerInfo(){
-        return this.playerInfos[0];
-    }
-
-    onPlayerStartState(){
-
-        if(this.checkIsGameOver()) return;
-
-        console.log('玩家回合開始');
-
-        this.removeAllListener();
-
-        this.hint.string = '點擊己方棋子來移動或者使用道具';
-        this.effects.showCursor();
-
-        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
-            const item:Node | null = e.currentTarget as Node;
-            const itemId:number = +item?.name[item?.name.length-1];
-            this.onPlayerClickItemState(itemId);
-        });
-
-        this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-        
-            this.table.setCursorByGrid(grid);
-        });
-
-        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-            const model = this.model.getGridModel(grid.x, grid.y);
-            
-            if(model){
-                // this.chessMenu.open();
-                // let pos = View.convertToPosByArray(model.pos);
-                // this.chessMenu.node.setPosition(pos.add(new Vec3(30, 0, 0)));
-
-                if(this.model.isPlayer(model.player)){
-                    this.onPlayerClickSelfChessState(model);
-                }else{
-                    // this.chessMenu.setButtonEnable([1]);
-                    this.onPlayerClickEnemyChessState(model);
-                }
-            }
-        });
-    }
-
-    private onPlayerClickItemState(itemId:number){
-        console.log('玩家點自己的道具');
-        
-        this.removeAllListener();
-
-        this.getPlayerInfo().selectItem(itemId);
-        this.hint.string = '點擊地圖使用道具:R-旋轉道具使用方向';
-
-        let director = DirectType.Horizontal;
-        let lastGrid = new Vec2();
-
-        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
-            const item:Node | null = e.currentTarget as Node;
-            const itemId:number = +item?.name[item?.name.length-1];
-            this.onPlayerClickItemState(itemId);
-        });
-
-        const showAttackRange = ()=>{
-            const attackRange:Vec2[] = this.model.getItemAttackRangeById(itemId, lastGrid, director);
-            this.showRange(attackRange);
-        }
-
-        systemEvent.on(SystemEventType.KEY_UP, (e:EventKeyboard)=>{
-            director = (director == DirectType.Horizontal) ? DirectType.Vertical : DirectType.Horizontal;
-            showAttackRange();
-        });
-        
-        this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-            lastGrid = grid;
-            
-            this.table.setCursorByGrid(grid);
-            showAttackRange();
-        });
-
-        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-
-            this.onPlayerUseItemClickMapConfirmState(itemId, grid, director);
-        });
-    }
-
-    private onPlayerUseItemClickMapConfirmState(itemId:number, grid:Vec2, director:DirectType){
-        this.removeAllListener();
-
-        const itemName = ItemName[itemId];
-        const itemCost = this.model.getItemCostById(itemId);
-        this.confirmMenu.open({
-            content:'確定要支付 ' + itemCost + ' 以使用 ' + itemName + ' 嗎?',
-            yes:(e:SystemEventType.MOUSE_UP)=>{
-                this.confirmMenu.close();
-                this.effects.showCursor();
-                this.playerInfos[0].clearAllItemCover();
-                this.table.colorRanges.releaseAllNodes();
-
-                const result = this.model.usingItemAtGrid(itemId, grid, director);
-                this.updatePlayerInfo();
-                this.removeAllListener();
-                this.playAnimations(result, ()=>{
-                    this.onPlayerStartState();
-                });
-            },
-            no:(e:SystemEventType.MOUSE_UP)=>{
-                this.confirmMenu.close();
-                this.effects.showCursor();
-                this.playerInfos[0].clearAllItemCover();
-                this.table.colorRanges.releaseAllNodes();
-
-                this.onPlayerStartState();
-            }
-        });
-    }
-
-    private showPlayerChessMoveRange(player:number){
-        console.log('顯示玩家' + player +'移動範圍');
-
-        const moveRange = this.model.getPlayerAllChessMoveRange(player);   
-        moveRange.forEach(elem=>{
-            const node = this.table.colorRanges.getNode();
-            if(node){
-                node.setPosition(View.convertToPos(elem));
-            }
-        });
-    }
-
-    private showChessMoveRange(chessId:number){
-        const moveRange = this.model.getChessMoveRangeById(chessId); 
-        this.showRange(moveRange);
-    }
-
-    private showRange(range:Vec2[]){
-        this.table.colorRanges.releaseAllNodes();
-        range.forEach(elem=>{
-            const node = this.table.colorRanges.getNode();
-            node?.setPosition(View.convertToPos(elem));
-        });
-    }
-
-    onPlayerClickEnemyChessState(chessModel:ChessModel){
-        console.log('玩家點擊敵人的棋子');
-
-        this.removeAllListener();
-
-        this.table.colorRanges.releaseAllNodes();
-        this.showPlayerChessMoveRange(chessModel.player);
-
-        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            this.table.colorRanges.releaseAllNodes();
-            this.onPlayerStartState();
-            // this.chessMenu.close();
-        });
-    }
-
-    onPlayerClickSelfChessState(chessModel:ChessModel){
-        console.log('玩家點擊自己的棋子');
-
-        this.removeAllListener();
-
-        this.hint.string = '點擊地圖來進行移動或者攻擊';
-
-        this.table.colorRanges.releaseAllNodes();
-        this.showChessMoveRange(chessModel.id);
-
-        this.table.node.on(SystemEventType.MOUSE_MOVE, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-        
-            this.table.setCursorByGrid(grid);
-        });
-
-        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
-            const localPos = Tool.getLocal(e.getUILocation(), e.currentTarget);
-            const grid = View.convertToGrid(localPos);
-
-            if(this.model.isValidMoveByChess(chessModel.id, grid.x, grid.y)){
-                this.onPlayerMoveConfirmState(chessModel, grid);
-            }else{
-                this.table.colorRanges.releaseAllNodes();
-                this.onPlayerStartState();
-                // this.chessMenu.close();
-            }
-        });
-    }
-
-    onPlayerMoveConfirmState(chessModel:ChessModel, grid:Vec2){
-        console.log('玩家確認移動');
-        this.removeAllListener();
-        
-        this.confirmMenu.open({
-            content:'確定要移動到[' + grid.x + ',' + grid.y + ']嗎?',
-            yes:(e:SystemEventType.MOUSE_UP)=>{
-                this.confirmMenu.close();
-                this.table.colorRanges.releaseAllNodes();
-    
-                const from = chessModel.pos;
-                let result:ActionModel[];
-                try{
-                    result = this.model.playerMoveChess(chessModel.id, grid.x, grid.y);
-                    this.onPlayerMoveState(result);
-                }catch(e){
-                    this.onPlayerStartState();
-                    return;
-                }
-            },
-            no:(e:SystemEventType.MOUSE_UP)=>{
-                this.confirmMenu.close();
-                this.onPlayerClickSelfChessState(chessModel);
-            }
-        });
-    }
-
-    onPlayerMoveState(result:ActionModel[]){
-        console.log('播放移動動畫');
-        this.removeAllListener();
-        this.playAnimations(result, ()=>{
-            this.updateAll();
-            this.onPlayerEndState();
-        });
-    }
-
-    onPlayerEndState(){
-        if(this.checkIsGameOver()) return;
-
-        console.log('玩家回合結束');
-        this.removeAllListener();
-
-        const result:ActionModel[] = this.model.playerEndTurn();
-        this.playAnimations(result, ()=>{this.onPlayerStartState();});
-    }
-
-    onGameOverState(){
-        this.removeAllListener();
-
-        this.confirmMenu.open({
-            content:'是否再來一局?',
-            yes:()=>{
-                this.confirmMenu.close();
-
-                this.restartGame();
-            },
-            no:()=>{
-                this.confirmMenu.close();
-            }
-        });
-    }
-
-    private checkIsGameOver(){
-        const gameover = this.model.isGameOver();
-        if(gameover){
-            this.onGameOverState();
-        }
-        return gameover;
-    }
-
-    private playAnimations(animations:ActionModel[], cb:()=>void){
-        this.effects.hideCursor();
-
-        let sequence:any[] = [];
-        animations.forEach(action=>{
-            switch(action.action){
-                case ActionType.MoveChess:
-                    sequence.push(tween().call(()=>{
-                        
-                        console.log('播放移動', action);
-
-                        const chessModel = this.model.getChessById(action.id);
-                        this.effects.createChessMoveEffect(chessModel, action.from, action.to);
-                    }).delay(1.5).call(()=>{this.updateAll(action.table);}));
-                    break;
-                case ActionType.KillChess:
-                    sequence.push(tween().call(()=>{
-                        console.log('播放殺棋動畫', action);
-                        
-                        if(action.to){
-                            this.effects.createExplode(action.to, action);
-                        }
-                    }).delay(.5).call(()=>{this.updateAll(action.table);}));
-                    break;
-                case ActionType.ChangeTurn:
-                    sequence.push(tween().call(()=>{
-                        console.log('播放切換玩家動畫', action);
-                        
-                        this.effects.createTurnChangeEffect();
-                    }).delay(1.2));
-                    break;
-                case ActionType.Item:
-                    console.log('播放道具效果', action);
-
-                    if(action.hasOwnProperty('id')){
-                        switch(Items[action.id]){
-                            case ItemName.炸彈:
-                                sequence.push(tween().call(()=>{
-                                    if(action.to){
-                                        this.effects.createItemExplode(action.to);
-                                    }
-                                }).delay(1.2));
-                                break;
-                            case ItemName.鐳射:
-                                sequence.push(tween().call(()=>{
-                                    if(action.to && action.dir){
-                                        this.effects.createLaser(action.to, action.dir);
-                                    }
-                                }).delay(.8));
-                                break;
-                            case ItemName.轟爆炸彈:
-                                sequence.push(tween().call(()=>{
-                                    if(action.to){
-                                        this.effects.createBigExplode(action.to);
-                                    }
-                                }).delay(1.8));
-                                break;
-                            case ItemName.聚能光束:
-                                sequence.push(tween().call(()=>{
-                                    if(action.to && action.dir){
-                                        this.effects.createBigLaser(action.to, action.dir);
-                                    }
-                                }).delay(2));
-                                break;
-                        }
-                    }
-                    break;
-                case ActionType.GameOver:
-                    sequence.push(tween().call(()=>{
-                        if(action.hasOwnProperty('id')){
-                            if(action.id){
-                                this.effects.createVictoryEffect();
-                            }else{
-                                this.effects.createLoseEffect();
-                            }
-                        }
-                    }).delay(2.4));
-                    break;
-            }
-        });
-        Tool.playSequence(this.node, sequence, cb );
+    private getGamePage(){
+        return this.pages[1];
     }
 
     static convertToGrid(local:Vec2){
@@ -442,6 +58,10 @@ export class View extends Component {
     }
 }
 
+
+function CCInteger(CCInteger: any) {
+    throw new Error('Function not implemented.');
+}
 /**
  * [1] Class member could be defined like this.
  * [2] Use `property` decorator if your want the member to be serializable.
