@@ -79,8 +79,8 @@ export class Effects extends Component {
         }
     }
 
-    createTurnChangeEffect(){
-        this.createBigMsg('你的回合');
+    createTurnChangeEffect(name:string){
+        this.createBigMsg(name + '的回合');
     }
 
     createVictoryEffect(){

@@ -15,7 +15,7 @@ export class Model extends DebugModel {
 
     players: PlayerModel[] = []
 
-    startGame() {
+    startGame(count:number = 2) {
         this.players = [
             { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
             { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },

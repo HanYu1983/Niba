@@ -3,7 +3,7 @@ import { _decorator, Component, Node, Label, EventKeyboard, systemEvent, SystemE
 import { DebugModel } from '../DebugModel';
 import { MenuViewer } from '../lib/MenuViewer';
 import { Tool } from '../lib/Tool';
-import { ChessModel, DirectType, ItemName, ActionModel, ActionType, Items } from '../Type';
+import { ChessModel, DirectType, ItemName, ActionModel, ActionType, Items, PlayerModel } from '../Type';
 import { View } from '../View';
 import { ChessMenu } from './ChessMenu';
 import { ConfirmMenu } from './ConfirmMenu';
@@ -43,9 +43,13 @@ export class GamePage extends Component {
         this.updateAll();
 
         this.gridMenu.close();
+        this.onPlayerStartAnimation(this.model.getCurrentPlayerId());
+    }
 
+    private onPlayerStartAnimation(playerId:number){
         tween(this.node).call(()=>{
-            this.effects.createTurnChangeEffect();
+            const playerInfo = this.model.getPlayerInfoById(playerId);
+            this.effects.createTurnChangeEffect(playerInfo.name);
         }).delay(1).call(()=>{
             this.onPlayerStartState();
         }).start();
@@ -119,7 +123,7 @@ export class GamePage extends Component {
             const model = this.model.getGridModel(grid.x, grid.y);
             
             if(model){
-                if(this.model.isPlayer(model.player)){
+                if(this.model.isCurrentPlayer(model.player)){
                     this.onPlayerClickSelfChessState(model);
                 }else{
                     this.onPlayerClickEnemyChessState(model);
@@ -259,7 +263,6 @@ export class GamePage extends Component {
         this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
             this.table.colorRanges.releaseAllNodes();
             this.onPlayerStartState();
-            // this.chessMenu.close();
         });
     }
 
@@ -289,7 +292,6 @@ export class GamePage extends Component {
             }else{
                 this.table.colorRanges.releaseAllNodes();
                 this.onPlayerStartState();
-                // this.chessMenu.close();
             }
         });
     }
@@ -336,8 +338,14 @@ export class GamePage extends Component {
         console.log('玩家回合結束');
         this.removeAllListener();
 
-        const result:ActionModel[] = this.model.playerEndTurn();
+        // 改成呼叫model當前玩家結束回合
+        const result:ActionModel[] = this.model.currentPlayerEndTurn();
         this.playAnimations(result, ()=>{this.onPlayerStartState();});
+
+        // 本來這邊是回合結束獲取敵人ai的行動
+        // 現在改成沒有ai的版本, 這裏就先不需要呼叫
+        // const result:ActionModel[] = this.model.playerEndTurn();
+        // this.playAnimations(result, ()=>{this.onPlayerStartState();});
     }
 
     onGameOverState(){
@@ -392,7 +400,8 @@ export class GamePage extends Component {
                     sequence.push(tween().call(()=>{
                         console.log('播放切換玩家動畫', action);
                         
-                        this.effects.createTurnChangeEffect();
+                        const playerInfo = this.model.getPlayerInfoById(action.player);
+                        this.effects.createTurnChangeEffect(playerInfo.name);
                     }).delay(1.2));
                     break;
                 case ActionType.Item:

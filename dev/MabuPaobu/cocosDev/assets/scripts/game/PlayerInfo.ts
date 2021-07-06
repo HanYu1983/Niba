@@ -17,6 +17,9 @@ export class PlayerInfo extends Component {
     money:Label;
 
     @property(Node)
+    cover:Node;    
+
+    @property(Node)
     items:Node[] = [];
 
     setInfo(info:PlayerModel){

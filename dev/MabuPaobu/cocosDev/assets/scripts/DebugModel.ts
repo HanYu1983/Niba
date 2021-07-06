@@ -5,13 +5,13 @@ const { ccclass, property } = _decorator;
 
 @ccclass('DebugModel')
 export class DebugModel extends Component {
+
     
     /**
      * 游戲開始,目前設定是20*20的格子
      */
-    startGame(){
+    startGame(count:number = 2){
         console.log('start game');
-        
     }
 
     /**
@@ -91,11 +91,17 @@ export class DebugModel extends Component {
         return id == 0;
     }
 
+    isCurrentPlayer(id:number):boolean{
+        console.log('[isCurrentPlayer]檢查給定的id是否為當前玩家');
+        return id == 0;
+    }
+
     /**
      * 取得當前玩家id
      * @returns 
      */
     getCurrentPlayerId():number{
+        console.log('[getCurrentPlayerId]取得取得當前玩家id');
         return 0;
     }
 
@@ -126,6 +132,13 @@ export class DebugModel extends Component {
             {action:ActionType.MoveChess, id:2, from:new Vec2(8, 0), to:new Vec2(3, 1), player:2, table:[{id:1, type:1, pos:new Vec2(5, 6), player:1}]},
             {action:ActionType.ChangeTurn, player:0},
             {action:ActionType.GameOver, id:0}
+        ]
+    }
+
+    currentPlayerEndTurn():ActionModel[]{
+        console.log('[currentPlayerEndTurn]當前玩家回合結束');
+        return [
+            {action:ActionType.ChangeTurn, player:0}
         ]
     }
 
