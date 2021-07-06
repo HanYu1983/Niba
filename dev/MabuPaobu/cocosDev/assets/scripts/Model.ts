@@ -15,13 +15,17 @@ export class Model extends DebugModel {
 
     players: PlayerModel[] = []
 
-    startGame(count:number = 2) {
-        this.players = [
+    playerCount = 0
+
+    startGame(count: number = 2) {
+        const defaultPlayers = [
             { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
             { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
             { id: 2, name: 'john', score: 5, money: 10, itemValids: [true, true, false, false] },
             { id: 3, name: 'marry', score: 5, money: 10, itemValids: [true, true, false, false] }
         ]
+        this.playerCount = count
+        this.players = defaultPlayers
         this.table = [
             { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
             { id: this.seqId++, type: 1, pos: new Vec2(7, 6), player: 1 },
@@ -121,7 +125,7 @@ export class Model extends DebugModel {
     }
 
     playerMoveChess(id: number, x: number, y: number): ActionModel[] {
-        const activePlayer = 0
+        const activePlayer = this.activePlayer
         const chess = this.getChessById(id)
         const moveRange = this.getChessMoveRangeById(id)
         const findPos = moveRange.filter(pos => {
@@ -301,7 +305,7 @@ export class Model extends DebugModel {
     }
 
     usingItemAtGrid(itemId: number, grid: Vec2, dir: DirectType): ActionModel[] {
-        const activePlayer = 0
+        const activePlayer = this.activePlayer
         if (this.players[activePlayer].itemValids[itemId] == false) {
             throw new Error(`you don't have item(${itemId})`)
         }
@@ -355,6 +359,17 @@ export class Model extends DebugModel {
             }
         }
         return false;
+    }
+
+    isCurrentPlayer(id: number): boolean {
+        return this.activePlayer == id
+    }
+
+    currentPlayerEndTurn(): ActionModel[] {
+        this.activePlayer = (this.activePlayer + 1) % this.playerCount
+        return [
+            { action: ActionType.ChangeTurn, player: this.activePlayer }
+        ]
     }
 }
 
