@@ -22,9 +22,13 @@ export class View extends Viewer {
     }
 
     onTitlePageClickPlayer(evt:any, count:number){
-        console.log(count);
         this.openGamePage();
         this.getGamePage().getComponent(GamePage)?.restartGame(count);
+    }
+
+    onGamePageClickReturnTitle(){
+        this.getGamePage().getComponent(GamePage)?.removeAllListener();
+        this.openTitlePage();
     }
 
     private openTitlePage(){

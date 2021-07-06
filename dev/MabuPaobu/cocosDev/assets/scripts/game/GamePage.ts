@@ -1,6 +1,7 @@
 
-import { _decorator, Component, Node, Label, EventKeyboard, systemEvent, SystemEventType, tween, Vec2 } from 'cc';
+import { _decorator, Component, Node, Label, EventKeyboard, systemEvent, SystemEventType, tween, Vec2, Vec3 } from 'cc';
 import { DebugModel } from '../DebugModel';
+import { MenuViewer } from '../lib/MenuViewer';
 import { Tool } from '../lib/Tool';
 import { ChessModel, DirectType, ItemName, ActionModel, ActionType, Items } from '../Type';
 import { View } from '../View';
@@ -22,6 +23,9 @@ export class GamePage extends Component {
     @property(ChessMenu)
     chessMenu:ChessMenu;
 
+    @property(MenuViewer)
+    gridMenu:MenuViewer;
+
     @property(ConfirmMenu)
     confirmMenu:ConfirmMenu;
 
@@ -37,7 +41,14 @@ export class GamePage extends Component {
     restartGame(count:number = 2){
         this.model.startGame();
         this.updateAll();
-        this.onPlayerStartState();
+
+        this.gridMenu.close();
+
+        tween(this.node).call(()=>{
+            this.effects.createTurnChangeEffect();
+        }).delay(1).call(()=>{
+            this.onPlayerStartState();
+        }).start();
     }
 
     private updateAll(chess?:ChessModel[]){
@@ -62,7 +73,7 @@ export class GamePage extends Component {
         });
     }
 
-    private removeAllListener(){
+    removeAllListener(){
         console.log('--移除所有監聽');
 
         this.hint.string = '';
@@ -108,18 +119,33 @@ export class GamePage extends Component {
             const model = this.model.getGridModel(grid.x, grid.y);
             
             if(model){
-                // this.chessMenu.open();
-                // let pos = View.convertToPosByArray(model.pos);
-                // this.chessMenu.node.setPosition(pos.add(new Vec3(30, 0, 0)));
-
                 if(this.model.isPlayer(model.player)){
                     this.onPlayerClickSelfChessState(model);
                 }else{
-                    // this.chessMenu.setButtonEnable([1]);
                     this.onPlayerClickEnemyChessState(model);
                 }
+            }else{
+                this.onPlayerClickGridState(grid);
             }
         });
+    }
+
+    private onPlayerClickGridState(grid:Vec2){
+        this.removeAllListener();
+        this.effects.hideCursor();
+        
+        this.openMenuAt(this.gridMenu, grid);
+
+        this.table.node.on(SystemEventType.MOUSE_UP, (e:any)=>{
+            this.gridMenu.close();
+            this.onPlayerStartState();
+        });
+    }
+
+    private openMenuAt(menu:MenuViewer, grid:Vec2, offset:Vec3 = Vec3.ZERO){
+        let pos = View.convertToPos(grid);
+        menu.open();
+        menu.node.setPosition(pos.add(offset));
     }
 
     private onPlayerClickItemState(itemId:number){
