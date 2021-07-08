@@ -27,9 +27,10 @@ export class Model extends DebugModel {
         this.playerCount = count
         this.players = defaultPlayers
         this.table = [
-            { id: this.seqId++, type: 0, pos: new Vec2(5, 5), player: 0 },
-            { id: this.seqId++, type: 1, pos: new Vec2(7, 6), player: 1 },
-            { id: this.seqId++, type: 1, pos: new Vec2(8, 8), player: 1 }
+            { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
+            { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 },
+            { id: this.seqId++, type: 0, pos: new Vec2(15, 4), player: 2 },
+            { id: this.seqId++, type: 1, pos: new Vec2(4, 15), player: 3 }
         ]
         for (const plyr of this.players) {
             this.updateItemValids(plyr.id)
@@ -52,26 +53,84 @@ export class Model extends DebugModel {
 
     getChessMoveRangeById(id: number): Vec2[] {
         const chess = this.getChessById(id)
-        const myChesses = this.table.filter(c => {
-            return c.player == chess.player
-        })
-        let posList: Vec2[] = []
-        if (chess.player == 0) {
-            posList = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]].map(([ox, oy]) => {
-                return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
-            })
-        } else {
-            for (let i = 0; i < 20; ++i) {
-                posList.push(new Vec2(chess.pos.x, i))
-                posList.push(new Vec2(i, chess.pos.y))
-            }
+        switch (chess.type) {
+            case 0:
+                {
+                    const myChesses = this.table.filter(c => {
+                        return c.player == chess.player
+                    })
+                    const posList = [[2, 1], [2, -1], [1, 2], [-1, 2], [-2, 1], [-2, -1], [1, -2], [-1, -2]].map(([ox, oy]) => {
+                        return new Vec2(chess.pos.x + ox, chess.pos.y + oy)
+                    }).filter(pos => {
+                        const occupy = myChesses.filter(c => {
+                            return c.pos.equals(pos)
+                        })
+                        return occupy.length == 0
+                    })
+                    return posList
+                }
+            case 1:
+                {
+                    let possiblePosList: Vec2[] = []
+                    for (let i = 0; i < 20; ++i) {
+                        possiblePosList.push(new Vec2(chess.pos.x, i))
+                        possiblePosList.push(new Vec2(i, chess.pos.y))
+                    }
+                    const occupyChessList = this.table.filter(c => {
+                        return possiblePosList.filter(c2 => c.pos.equals(c2)).length
+                    })
+                    const canEatPosList: Vec2[] = []
+                    const maxX = occupyChessList.filter(c => c.pos.x > chess.pos.x)
+                    if (maxX.length) {
+                        maxX.sort((a, b) => a.pos.x - b.pos.x)
+                        possiblePosList = possiblePosList.filter(c => c.x < maxX[0].pos.x)
+                        if (maxX.length > 1) {
+                            if (maxX[1].player != chess.player) {
+                                canEatPosList.push(maxX[1].pos)
+                            }
+                        }
+                    }
+                    const minX = occupyChessList.filter(c => c.pos.x < chess.pos.x)
+                    if (minX.length) {
+                        minX.sort((a, b) => b.pos.x - a.pos.x)
+                        possiblePosList = possiblePosList.filter(c => c.x > minX[0].pos.x)
+                        if (minX.length > 1) {
+                            if (minX[1].player != chess.player) {
+                                canEatPosList.push(minX[1].pos)
+                            }
+                        }
+                    }
+                    const maxY = occupyChessList.filter(c => c.pos.y > chess.pos.y)
+                    if (maxY.length) {
+                        maxY.sort((a, b) => a.pos.y - b.pos.y)
+                        possiblePosList = possiblePosList.filter(c => c.y < maxY[0].pos.y)
+                        if (maxY.length > 1) {
+                            if (maxY[1].player != chess.player) {
+                                canEatPosList.push(maxY[1].pos)
+                            }
+                        }
+                    }
+                    const minY = occupyChessList.filter(c => c.pos.y < chess.pos.y)
+                    if (minY.length) {
+                        minY.sort((a, b) => b.pos.y - a.pos.y)
+                        possiblePosList = possiblePosList.filter(c => c.y > minY[0].pos.y)
+                        if (minY.length > 1) {
+                            if (minY[1].player != chess.player) {
+                                canEatPosList.push(minY[1].pos)
+                            }
+                        }
+                    }
+                    const posList = possiblePosList.filter(pos => {
+                        const occupy = [chess].filter(c => {
+                            return c.pos.equals(pos)
+                        })
+                        return occupy.length == 0
+                    })
+                    return posList.concat(canEatPosList)
+                }
+            default:
+                throw new Error(`unknown type ${chess}`)
         }
-        return posList.filter(pos => {
-            const occupy = myChesses.filter(c => {
-                return c.pos.equals(pos)
-            })
-            return occupy.length == 0
-        })
     }
 
     getPlayerAllChessMoveRange(playerId: number): Vec2[] {
