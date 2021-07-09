@@ -1,6 +1,7 @@
 
-import { _decorator, Component, Node, Label, Sprite, Color } from 'cc';
+import { _decorator, Component, Node, Label, Sprite, Color, Vec3 } from 'cc';
 import { Viewer } from '../lib/Viewer';
+import { View } from '../View';
 const { ccclass, property } = _decorator;
 
 @ccclass('Chess')
@@ -11,6 +12,13 @@ export class Chess extends Viewer {
 
     @property(Sprite)
     backNode:Sprite = null;
+
+    @property(Node)
+    activeSpt:Node = null;
+
+    showActive(show:boolean){
+        this.activeSpt.setScale(show ? Vec3.ONE : Vec3.ZERO);
+    }
     
     private setNameAndColor(name:string, color:Color){
         this.lblName.string = name;
@@ -18,7 +26,8 @@ export class Chess extends Viewer {
     }
 
     protected doOpen(data?:any){
-        this.setNameAndColor(data.type == 0 ? '馬' : '炮', data.player == 0 ? Color.BLUE : Color.RED)
+        let color:Color = View.getPlayerColor(data.player);
+        this.setNameAndColor(data.type == 0 ? '馬' : '炮', color);
     }
 }
 

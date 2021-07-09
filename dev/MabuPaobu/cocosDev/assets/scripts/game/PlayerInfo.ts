@@ -1,11 +1,15 @@
 
-import { _decorator, Component, Node, Label, SystemEventType } from 'cc';
+import { _decorator, Component, Node, Label, SystemEventType, Sprite } from 'cc';
 import { PlayerModel } from '../Type';
+import { View } from '../View';
 import { Item } from './Item';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerInfo')
 export class PlayerInfo extends Component {
+
+    @property(Sprite)
+    back:Sprite;
     
     @property(Label)
     playerName:Label;
@@ -30,6 +34,7 @@ export class PlayerInfo extends Component {
             this.items[i].getComponent(Item)?.setValid(info.itemValids[i]);
             this.items[i].name = 'item_' + i;
         }
+        this.back.color = View.getPlayerColor(info.id);
     }
 
     clearAllItemCover(){

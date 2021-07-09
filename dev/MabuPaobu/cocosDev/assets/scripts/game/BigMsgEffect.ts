@@ -1,16 +1,20 @@
 
-import { _decorator, Component, Node, Label } from 'cc';
+import { _decorator, Component, Node, Label, Sprite } from 'cc';
 import { Viewer } from '../lib/Viewer';
 const { ccclass, property } = _decorator;
 
 @ccclass('BigMsgEffect')
 export class BigMsgEffect extends Viewer {
     
+    @property(Sprite)
+    back:Sprite;
+
     @property(Label)
     content:Label;
 
     doOpen(data?:any){
         this.content.string = data.content;
+        this.back.color = data.color;
     }
 }
 

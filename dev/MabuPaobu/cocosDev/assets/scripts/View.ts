@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween, systemEvent, EventKeyboard, Label } from 'cc';
+import { _decorator, Component, Node, SystemEventType, Vec2, Vec3, tween, systemEvent, EventKeyboard, Label, Color } from 'cc';
 import { DebugModel } from './DebugModel';
 import { Chess } from './game/Chess';
 import { ChessMenu } from './game/ChessMenu';
@@ -59,6 +59,10 @@ export class View extends Viewer {
 
     static convertToPosByArray(pos:Array<number>){
         return View.convertToPos(new Vec2(pos[0], pos[1]));
+    }
+
+    static getPlayerColor(id:number){
+        return [Color.BLUE, Color.RED, Color.YELLOW, Color.GREEN][id];
     }
 }
 

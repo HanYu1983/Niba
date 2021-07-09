@@ -10,12 +10,13 @@ const { ccclass, property, requireComponent } = _decorator;
 @requireComponent(Pool)
 export class Chesses extends Component {
    
-    create(chessModel:ChessModel){
+    create(chessModel:ChessModel, active = false){
         const chess = this.getComponent(Pool)?.getNode();
         if(chess){
             let chessComp = chess.getComponent(Chess);
             if(chessComp){
                 chessComp.open(chessModel);
+                chessComp.showActive(active);
             }
             const pos = View.convertToPos(chessModel.pos);
             chess.setPosition(pos);

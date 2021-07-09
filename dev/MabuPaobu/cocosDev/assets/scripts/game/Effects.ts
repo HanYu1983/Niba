@@ -1,13 +1,14 @@
 
-import { _decorator, Component, Node, tween, Vec2, Vec3, Animation } from 'cc';
+import { _decorator, Component, Node, tween, Vec2, Vec3, Animation, Color } from 'cc';
 import { Pool } from '../lib/Pool';
 import { Viewer } from '../lib/Viewer';
-import { ActionModel, DirectType } from '../Type';
+import { ActionModel, DirectType, PlayerModel } from '../Type';
 import { View } from '../View';
 import { BigMsgEffect } from './BigMsgEffect';
 import { Chess } from './Chess';
 import { ChessMoveEffect } from './ChessMoveEffect';
 import { KillEffect } from './KillEffect';
+import { PlayerInfo } from './PlayerInfo';
 const { ccclass, property } = _decorator;
 
 @ccclass('Effects')
@@ -79,16 +80,18 @@ export class Effects extends Component {
         }
     }
 
-    createTurnChangeEffect(name:string){
-        this.createBigMsg(name + '的回合');
+    createTurnChangeEffect(playerInfo:PlayerModel){
+        const msg = playerInfo.name + '的回合';
+        const color = View.getPlayerColor(playerInfo.id);
+        this.createBigMsg(msg, color);
     }
 
     createVictoryEffect(){
-        this.createBigMsg('你獲勝了', 1);
+        this.createBigMsg('你獲勝了', Color.BLUE, 1);
     }
 
     createLoseEffect(){
-        this.createBigMsg('你被打敗了', 1);
+        this.createBigMsg('你被打敗了', Color.RED, 1);
     }
 
     createItemExplode(grid:Vec2){
@@ -107,8 +110,8 @@ export class Effects extends Component {
         this.createLaserType(this.itemBigLaser, grid, dir, 2);
     }
 
-    private createBigMsg(content:string, timescale = 1){
-        this.turnChange.open({content:content});
+    private createBigMsg(content:string, color:Color = Color.BLUE, timescale = 1){
+        this.turnChange.open({content:content, color:color});
         this.turnChange.node.setScale(new Vec3(1, 0, 1));
 
         tween(this.turnChange.node).to(.3 * timescale, {scale:Vec3.ONE}, {easing:'quadOut'}).

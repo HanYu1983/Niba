@@ -39,7 +39,7 @@ export class GamePage extends Component {
     effects:Effects;
 
     restartGame(count:number = 2){
-        this.model.startGame();
+        this.model.startGame(count);
         this.updateAll();
 
         this.gridMenu.close();
@@ -49,7 +49,7 @@ export class GamePage extends Component {
     private onPlayerStartAnimation(playerId:number){
         tween(this.node).call(()=>{
             const playerInfo = this.model.getPlayerInfoById(playerId);
-            this.effects.createTurnChangeEffect(playerInfo.name);
+            this.effects.createTurnChangeEffect(playerInfo);
         }).delay(1).call(()=>{
             this.onPlayerStartState();
         }).start();
@@ -73,7 +73,7 @@ export class GamePage extends Component {
 
         let usingChess:any[] = chess ? chess : this.model.getTable();
         usingChess.forEach(elem=>{
-            this.table.chesses.create(elem);
+            this.table.chesses.create(elem, elem.player == this.model.getCurrentPlayerId());
         });
     }
 
@@ -340,6 +340,7 @@ export class GamePage extends Component {
 
         // 改成呼叫model當前玩家結束回合
         const result:ActionModel[] = this.model.currentPlayerEndTurn();
+        this.updateAll();
         this.playAnimations(result, ()=>{this.onPlayerStartState();});
 
         // 本來這邊是回合結束獲取敵人ai的行動
@@ -401,7 +402,7 @@ export class GamePage extends Component {
                         console.log('播放切換玩家動畫', action);
                         
                         const playerInfo = this.model.getPlayerInfoById(action.player);
-                        this.effects.createTurnChangeEffect(playerInfo.name);
+                        this.effects.createTurnChangeEffect(playerInfo);
                     }).delay(1.2));
                     break;
                 case ActionType.Item:
