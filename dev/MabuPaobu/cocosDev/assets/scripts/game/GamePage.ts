@@ -62,7 +62,8 @@ export class GamePage extends Component {
 
     private updatePlayerInfo(){
         for(let i = 0; i < this.playerInfos.length; ++i){
-            this.playerInfos[i].setInfo(this.model.getPlayerInfoById(i));
+            const info = this.model.getPlayerInfoById(i);
+            this.playerInfos[i].setInfo(info, info.id == this.model.getCurrentPlayerId());
         }
     }
 
@@ -86,11 +87,18 @@ export class GamePage extends Component {
         this.table.node.off(SystemEventType.MOUSE_UP);
         this.confirmMenu.offAllListener();
         this.chessMenu.offAllListener();
-        this.getPlayerInfo().offAllListener();
+        this.clearAllPlayerInfoListener();
     }
 
-    private getPlayerInfo(){
-        return this.playerInfos[0];
+    private clearAllPlayerInfoListener(){
+        this.playerInfos.forEach(info=>{
+            info.clearAllItemCover();
+            info.offAllListener();
+        });
+    }
+
+    private getPlayerInfo(id:number = 0){
+        return this.playerInfos[id];
     }
 
     onPlayerStartState(){
@@ -104,7 +112,7 @@ export class GamePage extends Component {
         this.hint.string = '點擊己方棋子來移動或者使用道具';
         this.effects.showCursor();
 
-        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
+        this.getPlayerInfo(this.model.getCurrentPlayerId()).addItemListener((e:MouseEvent)=>{
             const item:Node | null = e.currentTarget as Node;
             const itemId:number = +item?.name[item?.name.length-1];
             this.onPlayerClickItemState(itemId);
@@ -157,13 +165,13 @@ export class GamePage extends Component {
         
         this.removeAllListener();
 
-        this.getPlayerInfo().selectItem(itemId);
+        this.getPlayerInfo(this.model.getCurrentPlayerId()).selectItem(itemId);
         this.hint.string = '點擊地圖使用道具:R-旋轉道具使用方向';
 
         let director = DirectType.Horizontal;
         let lastGrid = new Vec2();
 
-        this.getPlayerInfo().addItemListener((e:MouseEvent)=>{
+        this.getPlayerInfo(this.model.getCurrentPlayerId()).addItemListener((e:MouseEvent)=>{
             const item:Node | null = e.currentTarget as Node;
             const itemId:number = +item?.name[item?.name.length-1];
             this.onPlayerClickItemState(itemId);

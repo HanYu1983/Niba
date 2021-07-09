@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, Label, SystemEventType, Sprite } from 'cc';
+import { _decorator, Component, Node, Label, SystemEventType, Sprite, Vec3 } from 'cc';
 import { PlayerModel } from '../Type';
 import { View } from '../View';
 import { Item } from './Item';
@@ -26,7 +26,7 @@ export class PlayerInfo extends Component {
     @property(Node)
     items:Node[] = [];
 
-    setInfo(info:PlayerModel){
+    setInfo(info:PlayerModel, active:boolean = false){
         this.playerName.string = info.name;
         this.score.string = info.score + '';
         this.money.string = info.money + '';
@@ -35,6 +35,7 @@ export class PlayerInfo extends Component {
             this.items[i].name = 'item_' + i;
         }
         this.back.color = View.getPlayerColor(info.id);
+        this.cover.setScale(active ? Vec3.ZERO : Vec3.ONE);
     }
 
     clearAllItemCover(){
