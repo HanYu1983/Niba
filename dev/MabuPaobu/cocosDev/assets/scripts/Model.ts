@@ -18,6 +18,7 @@ export class Model extends DebugModel {
     playerCount = 0
 
     startGame(count: number = 2) {
+        this.activePlayer = 0
         const defaultPlayers = [
             { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
             { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
@@ -406,18 +407,14 @@ export class Model extends DebugModel {
     }
 
     isGameOver(): boolean {
-        for (const plyr of this.players) {
-            if (plyr.id >= 2) {
-                break
-            }
-            const myChesses = this.table.filter(chess => {
-                return chess.player == plyr.id
-            })
-            if (myChesses.length == 0) {
-                return true
-            }
+        const myCount = this.table.filter(chess => {
+            return chess.player == this.activePlayer
+        }).length
+        // 只剩下自己棋子時就WIN
+        if (myCount == this.table.length) {
+            return true
         }
-        return false;
+        return false
     }
 
     isCurrentPlayer(id: number): boolean {
