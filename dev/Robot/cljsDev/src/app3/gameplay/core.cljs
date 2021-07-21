@@ -176,38 +176,60 @@
 
 
 (comment
-  (s/def ::unit-menu (s/keys :req-un [::unit ::options ::cursor]))
+  (s/def ::unit (s/keys :req-un [::position ::view-position]))
+  (s/def ::unit-menu (s/keys :req-un [::unit ::options ::view-options ::cursor]))
   (s/def ::state (s/or :unit-menu (s/and (s/keys :req-un [::unit-menu])
                                          #(not (contains? % ::battle-menu)))
                        :battle-menu (s/keys :req-un [::unit-menu ::battle-menu])))
 
-  (defmulti on-event (fn [ctx]
-                       (s/confirm ::state ctx)))
+  (s/def ::action (s/or :on-key-down (s/tuple keyword? keyword?)))
+
+  (defmulti on-event (fn [ctx evt]
+                       (cond
+                         (not (s/valid? ::state ctx))
+                         (s/explan ::state ctx)
+
+                         (not (s/valid? ::action evt))
+                         (s/explan ::action evt)
+
+                         :else
+                         [(first (s/confirm ::state ctx))
+                          (first (s/confirm ::action evt))])))
 
   (defmulti observe identity)
-
-
-
-  (defmethod on-event :default
-    []
-    (throw (js/Error. "xxxx")))
 
   (defmethod observe :unit-menu
     [ctx]
     ctx)
 
-  (defmethod on-event :start-page
-    [ctx cb]
-    (let [ctx (observe :start-page ctx)]
+  (defn render [ctx] ctx)
+
+  (defmethod on-event [:start-page :on-key-down]
+    [ctx evt cb]
+    (let [ctx (render (observe :start-page ctx))]
       (cb nil (merge ctx {:unit-menu {:unit 0 :options [] :cursor 0}}))))
 
+  (defn on-tick [ctx cb]
+    ; check custom state
+    (cb nil ctx))
 
-  (let [q (async/queue (fn [evt cb]
+  (defn reset-ctx [atom-ctx cb]
+    (fn [err ctx]
+      (if err
+        (cb err)
+        (do (reset! atom-ctx ctx)
+            (cb)))))
+
+  (let [atom-ctx (atom nil)
+        q (async/queue (fn [evt cb]
                          (cond
-                           (= evt true)
-                           (on-event cb)
+                           ; on-tick不要使用spec
+                           (= evt :tick)
+                           (on-tick @atom-ctx (reset-ctx atom-ctx cb))
 
+                           ; 重覆的事件可以使用rx過濾掉，減少spec的次數(比如[:on-key-down "s"])
+                           ; 按鍵的狀態存在state中，在tick中查詢
                            :else
-                           (cb))))
+                           (on-event @atom-ctx evt (reset-ctx atom-ctx cb)))))
         _ (set! js/model (clj->js {:on-next (fn [evt]
                                               (.push q evt))}))]))
