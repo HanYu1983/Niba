@@ -163,11 +163,51 @@
 
 
 #_(async/autoInject (js-obj "get_data" (fn [cb]
-                                       (cb nil ["data" "wow"]))
-                          "make_folder" (fn [cb]
-                                          (cb nil "folder"))
-                          "write_file" (fn [get_data make_folder cb]
-                                         (println get_data make_folder)
-                                         (cb nil "filename")))
-                  (fn [err result]
-                    (js/console.log err result)))
+                                         (cb nil ["data" "wow"]))
+                            "make_folder" (fn [cb]
+                                            (cb nil "folder"))
+                            "write_file" (fn [get_data make_folder cb]
+                                           (println get_data make_folder)
+                                           (cb nil "filename")))
+                    (fn [err result]
+                      (js/console.log err result)))
+
+
+
+
+(comment
+  (s/def ::unit-menu (s/keys :req-un [::unit ::options ::cursor]))
+  (s/def ::state (s/or :unit-menu (s/and (s/keys :req-un [::unit-menu])
+                                         #(not (contains? % ::battle-menu)))
+                       :battle-menu (s/keys :req-un [::unit-menu ::battle-menu])))
+
+  (defmulti on-event (fn [ctx]
+                       (s/confirm ::state ctx)))
+
+  (defmulti observe identity)
+
+
+
+  (defmethod on-event :default
+    []
+    (throw (js/Error. "xxxx")))
+
+  (defmethod observe :unit-menu
+    [ctx]
+    ctx)
+
+  (defmethod on-event :start-page
+    [ctx cb]
+    (let [ctx (observe :start-page ctx)]
+      (cb nil (merge ctx {:unit-menu {:unit 0 :options [] :cursor 0}}))))
+
+
+  (let [q (async/queue (fn [evt cb]
+                         (cond
+                           (= evt true)
+                           (on-event cb)
+
+                           :else
+                           (cb))))
+        _ (set! js/model (clj->js {:on-next (fn [evt]
+                                              (.push q evt))}))]))
