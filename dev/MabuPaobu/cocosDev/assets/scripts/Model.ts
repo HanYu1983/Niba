@@ -29,15 +29,15 @@ export class Model extends DebugModel {
         this.players = defaultPlayers
         if (count == 2) {
             this.table = [
-                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
-                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 }
+                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0, buffCount: 0 },
+                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1, buffCount: 0 }
             ]
         } else if (count == 4) {
             this.table = [
-                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
-                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 },
-                { id: this.seqId++, type: 0, pos: new Vec2(15, 4), player: 2 },
-                { id: this.seqId++, type: 1, pos: new Vec2(4, 15), player: 3 }
+                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0, buffCount: 0 },
+                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1, buffCount: 0 },
+                { id: this.seqId++, type: 0, pos: new Vec2(15, 4), player: 2, buffCount: 0 },
+                { id: this.seqId++, type: 1, pos: new Vec2(4, 15), player: 3, buffCount: 0 }
             ]
         } else {
             throw new Error(`unknown player count: ${count}`)
@@ -76,6 +76,14 @@ export class Model extends DebugModel {
                             return c.pos.equals(pos)
                         })
                         return occupy.length == 0
+                    }).filter(pos => {
+                        const findChess = this.table.filter(c => {
+                            return c.pos.equals(pos)
+                        })
+                        if (findChess.length == 0) {
+                            return true
+                        }
+                        return findChess[0].buffCount == 0
                     })
                     return posList
                 }
@@ -95,7 +103,7 @@ export class Model extends DebugModel {
                         maxX.sort((a, b) => a.pos.x - b.pos.x)
                         possiblePosList = possiblePosList.filter(c => c.x < maxX[0].pos.x)
                         if (maxX.length > 1) {
-                            if (maxX[1].player != chess.player) {
+                            if (maxX[1].player != chess.player && maxX[1].buffCount == 0) {
                                 canEatPosList.push(maxX[1].pos)
                             }
                         }
@@ -105,7 +113,7 @@ export class Model extends DebugModel {
                         minX.sort((a, b) => b.pos.x - a.pos.x)
                         possiblePosList = possiblePosList.filter(c => c.x > minX[0].pos.x)
                         if (minX.length > 1) {
-                            if (minX[1].player != chess.player) {
+                            if (minX[1].player != chess.player && minX[1].buffCount == 0) {
                                 canEatPosList.push(minX[1].pos)
                             }
                         }
@@ -115,7 +123,7 @@ export class Model extends DebugModel {
                         maxY.sort((a, b) => a.pos.y - b.pos.y)
                         possiblePosList = possiblePosList.filter(c => c.y < maxY[0].pos.y)
                         if (maxY.length > 1) {
-                            if (maxY[1].player != chess.player) {
+                            if (maxY[1].player != chess.player && maxY[1].buffCount == 0) {
                                 canEatPosList.push(maxY[1].pos)
                             }
                         }
@@ -125,7 +133,7 @@ export class Model extends DebugModel {
                         minY.sort((a, b) => b.pos.y - a.pos.y)
                         possiblePosList = possiblePosList.filter(c => c.y > minY[0].pos.y)
                         if (minY.length > 1) {
-                            if (minY[1].player != chess.player) {
+                            if (minY[1].player != chess.player && minY[1].buffCount == 0) {
                                 canEatPosList.push(minY[1].pos)
                             }
                         }
@@ -212,10 +220,11 @@ export class Model extends DebugModel {
             }
         }
         const actions: ActionModel[] = []
-        const newChess = {
+        const newChess: ChessModel = {
             ...chess,
             pos: new Vec2(x, y),
             id: this.seqId++,
+            buffCount: occupy.length > 0 ? 5 : 0
         }
         this.table.push(newChess)
         actions.push({
@@ -464,6 +473,12 @@ export class Model extends DebugModel {
             this.activePlayer = nextPlayerId
             break
         }
+        this.table.forEach(c => {
+            if (c.player != this.activePlayer) {
+                return
+            }
+            c.buffCount = Math.max(0, c.buffCount - 1)
+        })
         return [
             { action: ActionType.ChangeTurn, player: this.activePlayer }
         ]
