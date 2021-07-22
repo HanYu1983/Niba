@@ -450,6 +450,10 @@ export class Model extends DebugModel {
     }
 
     isGameOver(): boolean {
+        // 到達指定分數時勝
+        if (this.players[this.activePlayer].score >= 30) {
+            return true
+        }
         const myCount = this.table.filter(chess => {
             return chess.player == this.activePlayer
         }).length
