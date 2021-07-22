@@ -245,7 +245,7 @@ export class Model extends DebugModel {
             if (this.isPlayerDead(occupy[0].player)) {
                 actions.push({
                     action: ActionType.PlayerDead,
-                    id: occupy[0].player
+                    player: occupy[0].player
                 })
             }
         }
@@ -409,11 +409,18 @@ export class Model extends DebugModel {
                 table: [...this.table]
             }]
         }).reduce((acc, c) => ([...acc, ...c]), [])
-        for (let playerId = 0; playerId < this.playerCount; ++playerId) {
+
+        // 收集死掉棋子的玩家
+        const playerIds = Object.keys(actions.filter(action => {
+            return action.action == ActionType.KillChess
+        }).reduce((acc, curr) => {
+            return { ...acc, [curr.player + ""]: true }
+        }, {})).map(k => parseInt(k, 10))
+        for (const playerId of playerIds) {
             if (this.isPlayerDead(playerId)) {
                 actions.push({
                     action: ActionType.PlayerDead,
-                    id: playerId
+                    player: playerId
                 })
             }
         }
