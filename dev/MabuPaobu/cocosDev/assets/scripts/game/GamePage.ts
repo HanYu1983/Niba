@@ -46,6 +46,22 @@ export class GamePage extends Component {
         this.onPlayerStartAnimation(this.model.getCurrentPlayerId());
     }
 
+    private openBackToTitleDialog(){
+        this.removeAllListener();
+        this.gridMenu.close();
+        this.confirmMenu.open({
+            content:'確定要放棄這場游戲嗎?',
+            yes:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
+                View.inst.openTitlePage();
+            },
+            no:(e:SystemEventType.MOUSE_UP)=>{
+                this.confirmMenu.close();
+                this.onPlayerStartState();
+            }
+        })
+    }
+
     private onPlayerStartAnimation(playerId:number){
         tween(this.node).call(()=>{
             const playerInfo = this.model.getPlayerInfoById(playerId);
@@ -368,7 +384,7 @@ export class GamePage extends Component {
             this.effects.createAgainEffect();
         }).delay(2).call(()=>{
             View.inst.openTitlePage();
-            
+
             // this.confirmMenu.open({
             //     content:'游戲結束, ',
             //     yes:()=>{

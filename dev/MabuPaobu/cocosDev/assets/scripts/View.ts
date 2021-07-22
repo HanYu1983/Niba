@@ -30,8 +30,7 @@ export class View extends Viewer {
     }
 
     onGamePageClickReturnTitle(){
-        this.getGamePage().getComponent(GamePage)?.removeAllListener();
-        this.openTitlePage();
+        this.getGamePage().getComponent(GamePage)?.openBackToTitleDialog();
     }
 
     public openTitlePage(){
