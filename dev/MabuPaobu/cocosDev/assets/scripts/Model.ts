@@ -27,12 +27,21 @@ export class Model extends DebugModel {
         ]
         this.playerCount = count
         this.players = defaultPlayers
-        this.table = [
-            { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
-            { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 },
-            { id: this.seqId++, type: 0, pos: new Vec2(15, 4), player: 2 },
-            { id: this.seqId++, type: 1, pos: new Vec2(4, 15), player: 3 }
-        ]
+        if (count == 2) {
+            this.table = [
+                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
+                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 }
+            ]
+        } else if (count == 4) {
+            this.table = [
+                { id: this.seqId++, type: 0, pos: new Vec2(4, 4), player: 0 },
+                { id: this.seqId++, type: 1, pos: new Vec2(15, 15), player: 1 },
+                { id: this.seqId++, type: 0, pos: new Vec2(15, 4), player: 2 },
+                { id: this.seqId++, type: 1, pos: new Vec2(4, 15), player: 3 }
+            ]
+        } else {
+            throw new Error(`unknown player count: ${count}`)
+        }
         for (const plyr of this.players) {
             this.updateItemValids(plyr.id)
         }
@@ -233,13 +242,19 @@ export class Model extends DebugModel {
                 money: 1,
                 table: [...this.table]
             })
+            if (this.isPlayerDead(occupy[0].player)) {
+                actions.push({
+                    action: ActionType.PlayerDead,
+                    id: occupy[0].player
+                })
+            }
         }
-        if (this.isGameOver()) {
-            actions.push({
-                action: ActionType.GameOver,
-                id: 1   // win
-            })
-        }
+        // if (this.isGameOver()) {
+        //     actions.push({
+        //         action: ActionType.GameOver,
+        //         id: 1   // win
+        //     })
+        // }
         return actions
     }
 
@@ -394,16 +409,28 @@ export class Model extends DebugModel {
                 table: [...this.table]
             }]
         }).reduce((acc, c) => ([...acc, ...c]), [])
-        if (this.isGameOver()) {
-            actions.push({
-                action: ActionType.GameOver,
-                id: 1   // win
-            })
+        for (let playerId = 0; playerId < this.playerCount; ++playerId) {
+            if (this.isPlayerDead(playerId)) {
+                actions.push({
+                    action: ActionType.PlayerDead,
+                    id: playerId
+                })
+            }
         }
+        // if (this.isGameOver()) {
+        //     actions.push({
+        //         action: ActionType.GameOver,
+        //         id: 1   // win
+        //     })
+        // }
         return [
             { action: ActionType.Item, id: itemId, to: grid, dir: dir },
             ...actions
         ]
+    }
+    isPlayerDead(plyrId: number) {
+        const remainCount = this.table.filter(c => c.player == plyrId).length
+        return remainCount == 0
     }
 
     isGameOver(): boolean {
@@ -422,7 +449,14 @@ export class Model extends DebugModel {
     }
 
     currentPlayerEndTurn(): ActionModel[] {
-        this.activePlayer = (this.activePlayer + 1) % this.playerCount
+        for (let i = 0; i < this.playerCount; ++i) {
+            const nextPlayerId = (this.activePlayer + i + 1) % this.playerCount
+            if (this.isPlayerDead(nextPlayerId)) {
+                continue
+            }
+            this.activePlayer = nextPlayerId
+            break
+        }
         return [
             { action: ActionType.ChangeTurn, player: this.activePlayer }
         ]
