@@ -5,7 +5,7 @@ export type ChessModel = {
     type: number, 
     pos: Vec2, 
     player: number,
-    buffCount:0,
+    buffCount: number,
 }
 
 export type ActionModel = {
