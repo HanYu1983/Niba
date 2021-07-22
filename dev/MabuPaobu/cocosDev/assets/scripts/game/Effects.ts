@@ -86,12 +86,12 @@ export class Effects extends Component {
         this.createBigMsg(msg, color);
     }
 
-    createVictoryEffect(){
-        this.createBigMsg('你獲勝了', Color.BLUE, 1);
+    createVictoryEffect(name:string){
+        this.createBigMsg(name + '獲勝了', Color.BLUE, 1);
     }
 
-    createLoseEffect(){
-        this.createBigMsg('你被打敗了', Color.RED, 1);
+    createLoseEffect(name:string){
+        this.createBigMsg(name + '被打敗了', Color.RED, 1);
     }
 
     createItemExplode(grid:Vec2){

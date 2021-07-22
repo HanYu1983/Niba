@@ -360,17 +360,22 @@ export class GamePage extends Component {
     onGameOverState(){
         this.removeAllListener();
 
-        this.confirmMenu.open({
-            content:'是否再來一局?',
-            yes:()=>{
-                this.confirmMenu.close();
-
-                this.restartGame();
-            },
-            no:()=>{
-                this.confirmMenu.close();
-            }
-        });
+        tween(this.node).call(()=>{
+            const currentPlayer = this.model.getCurrentPlayerId();
+            const info = this.model.getPlayerInfoById(currentPlayer);
+            this.effects.createVictoryEffect(info.name);
+        }).delay(2).call(()=>{
+            this.confirmMenu.open({
+                content:'是否再來一局?',
+                yes:()=>{
+                    this.confirmMenu.close();
+                    this.restartGame();
+                },
+                no:()=>{
+                    this.confirmMenu.close();
+                }
+            });
+        }).start();
     }
 
     private checkIsGameOver(){
@@ -449,16 +454,22 @@ export class GamePage extends Component {
                         }
                     }
                     break;
-                case ActionType.GameOver:
+                case ActionType.PlayerDead:
                     sequence.push(tween().call(()=>{
-                        if(action.hasOwnProperty('id')){
-                            if(action.id){
-                                this.effects.createVictoryEffect();
-                            }else{
-                                this.effects.createLoseEffect();
-                            }
-                        }
-                    }).delay(2.4));
+                        const info = this.model.getPlayerInfoById(action.player);
+                        this.effects.createLoseEffect(info.name);
+                    }).delay(1));
+                    break;
+                case ActionType.GameOver:
+                    // sequence.push(tween().call(()=>{
+                    //     if(action.hasOwnProperty('id')){
+                    //         if(action.id){
+                    //             this.effects.createVictoryEffect();
+                    //         }else{
+                    //             this.effects.createLoseEffect();
+                    //         }
+                    //     }
+                    // }).delay(2.4));
                     break;
             }
         });

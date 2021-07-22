@@ -38,6 +38,7 @@ export enum ActionType {
     KillChess = 'KillChess',
     ChangeTurn = 'ChangeTurn',
     Item = 'Item',
+    PlayerDead = 'PlayerDead',
     GameOver = 'GameOver'
 }
 

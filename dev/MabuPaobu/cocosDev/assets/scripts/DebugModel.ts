@@ -131,14 +131,15 @@ export class DebugModel extends Component {
             // {action:1, player:2},
             {action:ActionType.MoveChess, id:2, from:new Vec2(8, 0), to:new Vec2(3, 1), player:2, table:[{id:1, type:1, pos:new Vec2(5, 6), player:1}]},
             {action:ActionType.ChangeTurn, player:0},
-            {action:ActionType.GameOver, id:0}
+            {action:ActionType.GameOver, id:0},
         ]
     }
 
     currentPlayerEndTurn():ActionModel[]{
         console.log('[currentPlayerEndTurn]當前玩家回合結束');
         return [
-            {action:ActionType.ChangeTurn, player:0}
+            {action:ActionType.ChangeTurn, player:0},
+            {action:ActionType.PlayerDead, player:2}
         ]
     }
 
@@ -181,7 +182,8 @@ export class DebugModel extends Component {
         return [
             {action:ActionType.Item, id:0, to:new Vec2(2, 5)},
             {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]},
-            {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]}
+            {action:ActionType.KillChess, id:0, to:new Vec2(2, 5), table:[{id:0, type:0, pos:new Vec2(5, 5), player:1}]},
+            {action:ActionType.PlayerDead, player:2}
         ]
     }
 
