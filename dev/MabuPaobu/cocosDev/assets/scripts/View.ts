@@ -29,12 +29,12 @@ export class View extends Viewer {
         this.getGamePage().getComponent(GamePage)?.restartGame(count);
     }
 
-    onGamePageClickReturnTitle(){
-        this.getGamePage().getComponent(GamePage)?.removeAllListener();
-        this.openTitlePage();
-    }
+    // onGamePageClickReturnTitle(){
+    //     this.getGamePage().getComponent(GamePage)?.removeAllListener();
+    //     this.openTitlePage();
+    // }
 
-    private openTitlePage(){
+    public openTitlePage(){
         this.openTargetPage(0);
     }
 

@@ -367,7 +367,8 @@ export class GamePage extends Component {
         }).delay(1).call(()=>{
             this.effects.createAgainEffect();
         }).delay(2).call(()=>{
-            View.inst.onGamePageClickReturnTitle();
+            View.inst.openTitlePage();
+            
             // this.confirmMenu.open({
             //     content:'游戲結束, ',
             //     yes:()=>{

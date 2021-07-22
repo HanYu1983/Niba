@@ -16,6 +16,12 @@ export class Chess extends Viewer {
     @property(Node)
     activeSpt:Node = null;
 
+    @property(Node)
+    buff:Node = null;
+
+    @property(Label)
+    buffCount:Label = null;
+
     showActive(show:boolean){
         this.activeSpt.setScale(show ? Vec3.ONE : Vec3.ZERO);
     }
@@ -25,9 +31,15 @@ export class Chess extends Viewer {
         this.backNode.color = color;
     }
 
+    private setBuff(count:number){
+        this.buff.setScale(count > 0 ? Vec3.ONE : Vec3.ZERO);
+        this.buffCount.string = count > 0 ? count + '' : '';
+    }
+
     protected doOpen(data?:any){
         let color:Color = View.getPlayerColor(data.player);
         this.setNameAndColor(data.type == 0 ? '馬' : '炮', color);
+        this.setBuff(data.buffCount);
     }
 }
 
