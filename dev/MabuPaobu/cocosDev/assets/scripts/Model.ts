@@ -20,10 +20,10 @@ export class Model extends DebugModel {
     startGame(count: number = 2) {
         this.activePlayer = 0
         const defaultPlayers = [
-            { id: 0, name: 'vic', score: 5, money: 10, itemValids: [true, true, true, true] },
-            { id: 1, name: 'han', score: 5, money: 10, itemValids: [true, true, false, false] },
-            { id: 2, name: 'john', score: 5, money: 10, itemValids: [true, true, false, false] },
-            { id: 3, name: 'marry', score: 5, money: 10, itemValids: [true, true, false, false] }
+            { id: 0, name: 'vic', score: 0, money: 0, itemValids: [false, false, false, false] },
+            { id: 1, name: 'han', score: 0, money: 0, itemValids: [false, false, false, false] },
+            { id: 2, name: 'john', score: 0, money: 0, itemValids: [false, false, false, false] },
+            { id: 3, name: 'marry', score: 0, money: 0, itemValids: [false, false, false, false] }
         ]
         this.playerCount = count
         this.players = defaultPlayers
