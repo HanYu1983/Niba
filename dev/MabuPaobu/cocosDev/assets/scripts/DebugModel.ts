@@ -20,8 +20,8 @@ export class DebugModel extends Component {
      */
     getTable():ChessModel[]{
         return [
-            {id:0, type:0, pos:new Vec2(5, 5), player:0},
-            {id:1, type:1, pos:new Vec2(19, 19), player:1}
+            {id:0, type:0, pos:new Vec2(5, 5), player:0, buffCount:2},
+            {id:1, type:1, pos:new Vec2(19, 19), player:1, buffCount:3}
         ]
     }
 
@@ -36,7 +36,7 @@ export class DebugModel extends Component {
         // if empty
         // return null;
         
-        return {id:4, type:1, pos:new Vec2(x, y), player:0};
+        return {id:4, type:1, pos:new Vec2(x, y), player:0, buffCount:1};
     }
 
     /**
@@ -149,7 +149,7 @@ export class DebugModel extends Component {
      * @returns 棋子資料
      */
     getChessById(id:number):ChessModel{
-        return {id:0, type:0, pos:new Vec2(5, 5), player:1}
+        return {id:0, type:0, pos:new Vec2(5, 5), player:1, buffCount:1}
     }
 
     /**

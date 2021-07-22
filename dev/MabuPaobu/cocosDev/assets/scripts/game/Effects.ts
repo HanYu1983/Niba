@@ -52,7 +52,11 @@ export class Effects extends Component {
         const from = View.convertToPos(fromGrid);
         const to = View.convertToPos(toGrid);
 
-        this.chess.open(chessModel);
+        // 移動特效用的棋子不需要顯示buff count
+        const clone = {...chessModel};
+        clone.buffCount = 0;
+
+        this.chess.open(clone);
         this.chess.node.setPosition(from);
 
         tween(this.chess.node).to(.5, {scale:new Vec3(1.2, 1.2, 1)}, {easing:'elasticOut'}).
