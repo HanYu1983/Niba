@@ -17,7 +17,10 @@ const { ccclass, property } = _decorator;
 @ccclass('View')
 export class View extends Viewer {
 
+    static inst:View;
+
     start(){
+        View.inst = this;
         this.open();
     }
 

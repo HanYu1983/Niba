@@ -364,17 +364,20 @@ export class GamePage extends Component {
             const currentPlayer = this.model.getCurrentPlayerId();
             const info = this.model.getPlayerInfoById(currentPlayer);
             this.effects.createVictoryEffect(info.name);
+        }).delay(1).call(()=>{
+            this.effects.createAgainEffect();
         }).delay(2).call(()=>{
-            this.confirmMenu.open({
-                content:'是否再來一局?',
-                yes:()=>{
-                    this.confirmMenu.close();
-                    this.restartGame();
-                },
-                no:()=>{
-                    this.confirmMenu.close();
-                }
-            });
+            View.inst.onGamePageClickReturnTitle();
+            // this.confirmMenu.open({
+            //     content:'游戲結束, ',
+            //     yes:()=>{
+            //         this.confirmMenu.close();
+            //         this.restartGame();
+            //     },
+            //     no:()=>{
+            //         this.confirmMenu.close();
+            //     }
+            // });
         }).start();
     }
 

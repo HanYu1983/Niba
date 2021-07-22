@@ -94,6 +94,10 @@ export class Effects extends Component {
         this.createBigMsg(name + '被打敗了', Color.RED, 1);
     }
 
+    createAgainEffect(){
+        this.createBigMsg('感謝你的游玩. 即將回到首頁.', Color.BLUE, 1);
+    }
+
     createItemExplode(grid:Vec2){
         this.createExplodeType(this.itemExplode, grid, 1.2);
     }
