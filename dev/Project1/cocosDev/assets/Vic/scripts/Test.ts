@@ -1,16 +1,16 @@
 
 import { _decorator, Component, Node } from 'cc';
-import { ChangePage } from './libs/ChangePage';
+import { ChangePage } from './tool/ChangePage';
 const { ccclass, property } = _decorator;
 
 @ccclass('Test')
 export class Test extends Component {
 
     @property(ChangePage)
-    change:ChangePage = null;
+    change: ChangePage | null = null;
 
-    start () {
-        this.change.openPage('TitlePage');
+    start() {
+        this.change?.openPage('TitlePage');
     }
 
     // update (deltaTime: number) {
