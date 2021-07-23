@@ -2,6 +2,7 @@
 import { _decorator, Component, macro, systemEvent, SystemEvent, EventKeyboard } from 'cc';
 import { getEventCenter } from '../Events';
 import { PlayerBody } from '../model/PlayerBody';
+import { DirectiveEvent } from '../types';
 const { ccclass, property } = _decorator;
 const rxjs = (window as any).rxjs
 
@@ -13,6 +14,24 @@ export class PlayerController extends Component {
             rxjs.operators.filter((entity: Component) => entity.getComponent(PlayerBody) != null && entity.getComponent(PlayerBody)?.isPlayerControl)
         ).subscribe((entity: Component) => {
             this.playerBody = entity.getComponent(PlayerBody)
+        })
+        getEventCenter().onDirective.subscribe((evt: DirectiveEvent) => {
+            if (evt.directives.length == 0) {
+                return
+            }
+            const [key, directive] = evt.directives[0]
+            if (directive[0] != "damage") {
+                return
+            }
+            const [_, damageValue] = directive
+            getEventCenter().onDirective.next({
+                ...evt,
+                directives: evt.directives.slice(1),
+                results: {
+                    ...evt.results,
+                    [key]: damageValue,
+                }
+            })
         })
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown.bind(this))
     }
