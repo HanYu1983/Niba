@@ -8,6 +8,7 @@ import { Model } from '../model/Model';
 @ccclass('Debug')
 export class Debug extends Component {
     start() {
+        getEventCenter().onClick.next("test event")
         // inject Model
         rxjs.combineLatest(getEventCenter().onModel).subscribe(([model]: [Model]) => {
             console.log(model)
@@ -16,7 +17,6 @@ export class Debug extends Component {
         getEventCenter().onClick.subscribe((evt: any) => {
             console.log("onNext:", evt)
         })
-        getEventCenter().onClick.next("test event")
     }
 }
 
