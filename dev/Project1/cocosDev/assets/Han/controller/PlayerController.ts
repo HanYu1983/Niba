@@ -20,18 +20,18 @@ export class PlayerController extends Component {
                 return
             }
             const [key, directive] = evt.directives[0]
-            if (directive[0] != "damage") {
+            if (directive[0] == "damage") {
+                const [_, damageValue] = directive
+                getEventCenter().onDirective.next({
+                    ...evt,
+                    directives: evt.directives.slice(1),
+                    results: {
+                        ...evt.results,
+                        [key]: damageValue,
+                    }
+                })
                 return
             }
-            const [_, damageValue] = directive
-            getEventCenter().onDirective.next({
-                ...evt,
-                directives: evt.directives.slice(1),
-                results: {
-                    ...evt.results,
-                    [key]: damageValue,
-                }
-            })
         })
         systemEvent.on(SystemEvent.EventType.KEY_DOWN, this.onKeyDown.bind(this))
     }
