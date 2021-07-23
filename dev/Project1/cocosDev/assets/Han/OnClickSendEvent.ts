@@ -1,15 +1,19 @@
 
 import { _decorator, Component, Node } from 'cc';
-const { ccclass, property } = _decorator;
 import { EventCenter } from './EventCenter';
+const { ccclass, property } = _decorator;
 
-@ccclass('Debug')
-export class Debug extends Component {
-    start() {
-        EventCenter.getOnClick().subscribe((evt: any) => {
-            console.log("onNext", evt)
-        })
-        EventCenter.getOnClick().next("ccc")
+@ccclass('OnClickSendEvent')
+export class OnClickSendEvent extends Component {
+    @property
+    eventId: string = ""
+
+    onLoad() {
+        this.node.on(Node.EventType.TOUCH_START, this.OnButtonPress, this);
+    }
+
+    OnButtonPress() {
+        EventCenter.getOnClick().next(this.eventId)
     }
 }
 

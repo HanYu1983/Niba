@@ -1,15 +1,16 @@
 
 import { _decorator, Component, Node } from 'cc';
+const rxjs = (window as any).rxjs
 const { ccclass, property } = _decorator;
-import { EventCenter } from './EventCenter';
 
-@ccclass('Debug')
-export class Debug extends Component {
-    start() {
-        EventCenter.getOnClick().subscribe((evt: any) => {
-            console.log("onNext", evt)
-        })
-        EventCenter.getOnClick().next("ccc")
+@ccclass('EventCenter')
+export class EventCenter extends Component {
+    private static onClick = null
+    static getOnClick(): any {
+        if (EventCenter.onClick == null) {
+            EventCenter.onClick = new rxjs.ReplaySubject()
+        }
+        return EventCenter.onClick
     }
 }
 
