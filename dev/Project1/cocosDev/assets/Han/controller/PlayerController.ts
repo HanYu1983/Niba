@@ -1,5 +1,5 @@
 
-import { _decorator, Component, Node, systemEvent, SystemEvent, EventKeyboard } from 'cc';
+import { _decorator, Component, macro, systemEvent, SystemEvent, EventKeyboard } from 'cc';
 import { getEventCenter } from '../Events';
 import { PlayerBody } from '../model/PlayerBody';
 const { ccclass, property } = _decorator;
@@ -23,26 +23,26 @@ export class PlayerController extends Component {
             return
         }
         switch (e.keyCode) {
-            case 87: // w
+            case macro.KEY.w:
                 {
                     //console.log("UP")
                     // update
                     this.playerBody?.forward(1000)
                 }
                 break
-            case 83: //s
+            case macro.KEY.s:
                 {
                     // update
                     this.playerBody?.forward(-1000)
                 }
                 break
-            case 65: //a
+            case macro.KEY.a:
                 {
                     // update
                     this.playerBody?.rotate(10)
                 }
                 break
-            case 68: //d
+            case macro.KEY.d:
                 {
                     // update
                     this.playerBody?.rotate(-10)
