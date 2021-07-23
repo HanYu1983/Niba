@@ -1,19 +1,13 @@
 
 import { _decorator, Component, Node } from 'cc';
-import { getEventCenter } from './Events';
+import { getEventCenter } from '../Events';
 const { ccclass, property } = _decorator;
 
-@ccclass('OnClickSendEvent')
-export class OnClickSendEvent extends Component {
-    @property
-    eventId: string = ""
-
-    onLoad() {
-        this.node.on(Node.EventType.TOUCH_START, this.OnButtonPress, this);
-    }
-
-    OnButtonPress() {
-        getEventCenter().onClick.next(this.eventId)
+@ccclass('Model')
+export class Model extends Component {
+    start() {
+        getEventCenter().onModel.next(this)
+        getEventCenter().onModel.complete()
     }
 }
 

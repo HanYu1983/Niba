@@ -1,22 +1,19 @@
 
 import { _decorator, Component, Node } from 'cc';
+import { getEventCenter } from '../Events';
 const { ccclass, property } = _decorator;
-const rxjs = (window as any).rxjs
-import { getEventCenter } from './Events';
-import { Model } from './Model';
 
-@ccclass('Debug')
-export class Debug extends Component {
-    start() {
-        // inject Model
-        rxjs.combineLatest(getEventCenter().onModel).subscribe(([model]: [Model]) => {
-            console.log(model)
-        })
-        // inject event
-        getEventCenter().onClick.subscribe((evt: any) => {
-            console.log("onNext:", evt)
-        })
-        getEventCenter().onClick.next("test event")
+@ccclass('OnClickSendEvent')
+export class OnClickSendEvent extends Component {
+    @property
+    eventId: string = ""
+
+    onLoad() {
+        this.node.on(Node.EventType.TOUCH_START, this.OnButtonPress, this);
+    }
+
+    OnButtonPress() {
+        getEventCenter().onClick.next(this.eventId)
     }
 }
 
