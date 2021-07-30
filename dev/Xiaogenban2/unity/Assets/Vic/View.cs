@@ -559,11 +559,14 @@ public class View : MonoBehaviour {
 
         if (ErrorOccurType == 0)
         {
+            bool isDiskSave = ModelInst.IsDiskSaveDirty();
+            bool isCloudSave = ModelInst.IsCloudSaveDirty();
             bool isPending = ModelInst.IsPendingDirty();
+            var text = "pending";
             if (isPending)
             {
                 GetMainPage().StateColor.color = Color.red;
-                GetMainPage().State.text = "等待儲存";
+                text = "等待儲存";
             }
             else
             {
@@ -572,36 +575,73 @@ public class View : MonoBehaviour {
                 switch (state)
                 {
                     case SaveWorkerState.Saved:
-                        bool isDiskSave = ModelInst.IsDiskSaveDirty();
-                        bool isCloudSave = ModelInst.IsCloudSaveDirty();
-                        if (!isPending && !isDiskSave && !isCloudSave)
-                        {
-                            GetMainPage().State.text = "儲存完畢";
-                        }
-                        else
-                        {
-                            GetMainPage().State.text = "狀況不對";
-                            ErrorOccurType = 1;
-                        }
+                        text = "儲存完畢";
                         break;
                     case SaveWorkerState.Starting:
-                        GetMainPage().State.text = "初使化";
+                        text = "初使化";
                         break;
                     case SaveWorkerState.Checking:
-                        GetMainPage().State.text = "小跟班";
+                        {
+                            text = "小跟班";
+                        }
                         break;
                     case SaveWorkerState.Pending:
-                        GetMainPage().State.text = "等待中";
+                        text = "等待中";
                         break;
                     case SaveWorkerState.Saving:
-                        GetMainPage().State.text = "儲存中";
+                        text = "儲存中";
                         GetMainPage().StateColor.color = Color.yellow;
                         break;
                     default:
-                        ErrorOccurType = 2;
                         break;
                 }
             }
+            text = text + (isDiskSave == false ? "O" : "X") + (isCloudSave == false ? "O" : "X");
+            GetMainPage().State.text = text;
+
+            //bool isPending = ModelInst.IsPendingDirty();
+            //if (isPending)
+            //{
+            //    GetMainPage().StateColor.color = Color.red;
+            //    GetMainPage().State.text = "等待儲存";
+            //}
+            //else
+            //{
+            //    SaveWorkerState state = ModelInst.GetSaveWorkerState();
+            //    GetMainPage().StateColor.color = Color.green;
+            //    switch (state)
+            //    {
+            //        case SaveWorkerState.Saved:
+            //            bool isDiskSave = ModelInst.IsDiskSaveDirty();
+            //            bool isCloudSave = ModelInst.IsCloudSaveDirty();
+            //            if (!isPending && !isDiskSave && !isCloudSave)
+            //            {
+            //                GetMainPage().State.text = "儲存完畢";
+            //            }
+            //            else
+            //            {
+            //                GetMainPage().State.text = "狀況不對";
+            //                ErrorOccurType = 1;
+            //            }
+            //            break;
+            //        case SaveWorkerState.Starting:
+            //            GetMainPage().State.text = "初使化";
+            //            break;
+            //        case SaveWorkerState.Checking:
+            //            GetMainPage().State.text = "小跟班";
+            //            break;
+            //        case SaveWorkerState.Pending:
+            //            GetMainPage().State.text = "等待中";
+            //            break;
+            //        case SaveWorkerState.Saving:
+            //            GetMainPage().State.text = "儲存中";
+            //            GetMainPage().StateColor.color = Color.yellow;
+            //            break;
+            //        default:
+            //            ErrorOccurType = 2;
+            //            break;
+            //    }
+            //}
         }
         else
         {
