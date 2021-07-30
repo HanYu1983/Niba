@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UnityScript.Steps;
 
 public class DataPage : Page
 {
     public Text TxtID;
     public Text TxtShowID;
     public InputField TxtInput;
+    public Button BtnSave;
 
     public string ID
     {
@@ -47,5 +49,10 @@ public class DataPage : Page
     {
         base.Open();
         ID = Model.GetUserID();
+    }
+
+    public void SetSaveEnable(bool enable)
+    {
+        BtnSave.interactable = enable;
     }
 }
