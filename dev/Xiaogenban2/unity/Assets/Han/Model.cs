@@ -147,13 +147,23 @@ public class Model : MonoBehaviour, IModel{
     {
         yield return null;
         var isDone = false;
+        Exception err = null;
         var saveWroker = new Thread(()=>
         {
-            Save(memonto);
-            isDone = true;
+            try{
+                Save(memonto);                
+            }catch(Exception e){
+                err = e;
+            }finally{
+                isDone = true;
+            }
         });
         saveWroker.Start();
         yield return new WaitUntil(() => isDone);
+        if( err != null ){
+            InvokeErrorAction(err);
+            err = null;
+        }
     }
 
     private SaveWorkerState saveState;
@@ -873,6 +883,7 @@ public class Model : MonoBehaviour, IModel{
             // 離線使用不中斷程式
             // 前端必須要顯示isCloudSaveDirty狀態來讓使用者判斷有沒有成功同步網路資料
             Debug.Log(e.Message);
+            InvokeErrorAction(e)
         }
         isCloudSaveLock = false;
     }
