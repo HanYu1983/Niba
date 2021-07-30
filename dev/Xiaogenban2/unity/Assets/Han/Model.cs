@@ -896,7 +896,7 @@ public class Model : MonoBehaviour, IModel
         catch (Exception e)
         {
             // 離線使用時不跳alert
-            // InvokeErrorAction(e);
+            InvokeErrorAction(e);
             // 前端必須要顯示isCloudSaveDirty狀態來讓使用者判斷有沒有成功同步網路資料
             Debug.Log(e.Message);
         }
