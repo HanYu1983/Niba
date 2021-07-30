@@ -35,9 +35,9 @@ public interface IModel
     void GetUserData(string id, UnityAction<bool> callback);
 
     void Load(UnityAction<bool> callback);
-    // 雲端是否同步成功. GetSaveWorkerState == Saved 時呼叫
+    // 雲端是否同步成功
     bool IsCloudSaveDirty();
-    // 本地端是否同步成功. GetSaveWorkerState == Saved 時呼叫
+    // 本地端是否同步成功
     bool IsDiskSaveDirty();
     // 是否存在還沒同步的內容
     bool IsPendingDirty();
